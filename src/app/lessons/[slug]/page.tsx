@@ -14,8 +14,9 @@ async function getLesson(slug: string) {
   return lesson
 }
 
-export default async function LessonPage({ params }: { params: { slug: string } }) {
-  const lesson = await getLesson(params.slug)
+export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const lesson = await getLesson(slug)
   
   if (!lesson) {
     notFound()
