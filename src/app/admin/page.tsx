@@ -13,7 +13,8 @@ export default function AdminPage() {
     slug: '',
     description: '',
     content: '',
-    order_index: 0
+    unit: '',
+    lesson_number: 1
   })
 
   // Define allowed admin emails
@@ -33,7 +34,7 @@ export default function AdminPage() {
       console.error('Error:', error)
     } else {
       alert('Lesson added successfully!')
-      setFormData({ title: '', slug: '', description: '', content: '', order_index: 0 })
+      setFormData({ title: '', slug: '', description: '', content: '', unit: '', lesson_number: 1 })
     }
   }
 
@@ -81,17 +82,32 @@ export default function AdminPage() {
       
       <div className="apple-card p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div className="space-y-3">
-              <label htmlFor="title" className="block text-sm font-semibold text-[#4A1A4A]">
-                Lesson Title
+              <label htmlFor="unit" className="block text-sm font-semibold text-[#4A1A4A]">
+                Unit
               </label>
               <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                id="unit"
+                value={formData.unit}
+                onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
                 className="apple-input border-0 bg-gray-50/80 focus:bg-white/90"
-                placeholder="Introduction to Forces"
+                placeholder="Mechanics"
+                required
+              />
+            </div>
+            
+            <div className="space-y-3">
+              <label htmlFor="lesson_number" className="block text-sm font-semibold text-[#4A1A4A]">
+                Lesson Number
+              </label>
+              <Input
+                id="lesson_number"
+                type="number"
+                min="1"
+                value={formData.lesson_number}
+                onChange={(e) => setFormData({ ...formData, lesson_number: parseInt(e.target.value) || 1 })}
+                className="apple-input border-0 bg-gray-50/80 focus:bg-white/90"
                 required
               />
             </div>
@@ -109,6 +125,20 @@ export default function AdminPage() {
                 required
               />
             </div>
+          </div>
+          
+          <div className="space-y-3">
+            <label htmlFor="title" className="block text-sm font-semibold text-[#4A1A4A]">
+              Lesson Title
+            </label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="apple-input border-0 bg-gray-50/80 focus:bg-white/90"
+              placeholder="Introduction to Forces"
+              required
+            />
           </div>
           
           <div className="space-y-3">

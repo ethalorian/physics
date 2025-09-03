@@ -11,7 +11,8 @@ export type Lesson = {
   slug: string
   content: string
   description?: string
-  order_index?: number
+  unit: string
+  lesson_number: number
   published: boolean
   created_at: string
 }
