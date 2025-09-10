@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import './globals.css'
 import { Inter } from 'next/font/google'
 import AuthProvider from '@/components/auth-provider'
@@ -8,6 +9,11 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 })
+
+export const metadata: Metadata = {
+  title: 'Antocci Physics',
+  description: 'Online Physics Classroom',
+}
 
 export default function RootLayout({
   children,

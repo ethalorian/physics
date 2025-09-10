@@ -1,6 +1,8 @@
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Sparkles } from 'lucide-react'
 
 async function getLessons() {
   const { data: lessons, error } = await supabase
@@ -11,17 +13,41 @@ async function getLessons() {
     .order('lesson_number', { ascending: true })
   
   if (error) throw error
-  return lessons
+  
+  // Add enhanced flags for specific lessons
+  const enhancedLessons = lessons?.map(lesson => ({
+    ...lesson,
+    // Mark unit conversion lessons as enhanced
+    isEnhanced: lesson.title?.toLowerCase().includes('unit conversion') || 
+                lesson.title?.toLowerCase().includes('conversion'),
+    // Mark recently created lessons as new (within last 7 days)
+    isNew: new Date(lesson.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000
+  }))
+  
+  return enhancedLessons || []
 }
 
-function groupLessonsByUnit(lessons: any[]) {
+interface Lesson {
+  id: string  // Changed from number to string for UUID
+  title: string
+  slug: string
+  description: string
+  unit: string
+  lesson_number: number
+  published: boolean
+  created_at: string
+  isNew?: boolean
+  isEnhanced?: boolean
+}
+
+function groupLessonsByUnit(lessons: Lesson[]) {
   const grouped = lessons.reduce((acc, lesson) => {
     if (!acc[lesson.unit]) {
       acc[lesson.unit] = []
     }
     acc[lesson.unit].push(lesson)
     return acc
-  }, {} as Record<string, any[]>)
+  }, {} as Record<string, Lesson[]>)
   
   return grouped
 }
@@ -55,7 +81,24 @@ export default async function LessonsPage() {
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {unitLessons.map((lesson) => (
                   <Link key={lesson.id} href={`/lessons/${lesson.slug}`} className="group">
-                    <Card className="apple-card hover:apple-shadow-lg transition-all duration-300 group-hover:scale-[1.02] border-0 overflow-hidden">
+                    <Card className="apple-card hover:apple-shadow-lg transition-all duration-300 group-hover:scale-[1.02] border-0 overflow-hidden relative">
+                      {/* Enhanced lesson indicator */}
+                      {lesson.isEnhanced && (
+                        <div className="absolute top-3 right-3 z-20">
+                          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" />
+                            Interactive
+                          </Badge>
+                        </div>
+                      )}
+                      {/* New lesson indicator */}
+                      {lesson.isNew && (
+                        <div className="absolute top-3 left-3 z-20">
+                          <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                            New!
+                          </Badge>
+                        </div>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-br from-[#C5B9E8]/20 via-[#B19CD9]/20 to-[#9A8AC0]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <CardHeader className="relative z-10 p-6">
                         <div className="flex items-start justify-between mb-3">

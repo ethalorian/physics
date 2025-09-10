@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "highlight.js/styles/atom-one-light.css";
+@import "katex/dist/katex.min.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -53,6 +55,13 @@
   --mauve: #B19CD9;
   --periwinkle: #C5B9E8;
   --cream: #F7F5F3;
+  
+  /* Gold Accent Colors */
+  --gold: #D4AF37;
+  --gold-light: #E4C441;
+  --gold-dark: #B8941F;
+  --gold-subtle: #F4E4C1;
+  --gold-glow: rgba(212, 175, 55, 0.2);
   
   /* Design System Colors */
   --background: #F7F5F3;
@@ -150,22 +159,54 @@
   border: 1px solid rgba(197, 185, 232, 0.3);
   border-radius: 1rem;
   box-shadow: 0 4px 16px 0 rgba(74, 26, 74, 0.08), 0 2px 4px 0 rgba(74, 26, 74, 0.04);
+  position: relative;
+}
+
+.apple-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(circle at top right, var(--gold-glow), transparent 70%);
+  border-radius: 0 1rem 0 0;
+  pointer-events: none;
 }
 
 .apple-button {
-  background: var(--royal-purple);
+  background: linear-gradient(135deg, var(--royal-purple), var(--deep-plum));
   color: var(--cream);
   font-weight: 500;
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
-  transition: all 0.2s;
-  box-shadow: 0 2px 8px 0 rgba(106, 76, 147, 0.2);
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px 0 rgba(106, 76, 147, 0.2), inset 0 1px 0 var(--gold-glow);
+  border: 1px solid var(--gold-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+  transition: left 0.5s;
 }
 
 .apple-button:hover {
-  background: var(--deep-plum);
+  background: linear-gradient(135deg, var(--deep-plum), var(--royal-purple));
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px 0 rgba(106, 76, 147, 0.3);
+  box-shadow: 0 4px 12px 0 rgba(106, 76, 147, 0.3), 0 0 20px var(--gold-glow);
+  border-color: var(--gold);
+}
+
+.apple-button:hover::before {
+  left: 100%;
 }
 
 .apple-button:active {
@@ -192,8 +233,9 @@
   background: rgba(247, 245, 243, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(177, 156, 217, 0.2);
-  box-shadow: 0 1px 3px 0 rgba(74, 26, 74, 0.08);
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, var(--gold), var(--royal-purple), var(--gold)) 1;
+  box-shadow: 0 1px 3px 0 rgba(74, 26, 74, 0.08), 0 2px 8px var(--gold-glow);
 }
 
 .apple-input {
@@ -227,4 +269,619 @@
   border-color: var(--royal-purple);
   box-shadow: 0 0 0 3px rgba(106, 76, 147, 0.1);
   background: var(--cream);
+}
+
+/* Docusaurus-style markdown rendering */
+.markdown-content {
+  line-height: 1.7;
+  color: var(--deep-plum);
+}
+
+.markdown-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--deep-plum);
+  margin: 2.5rem 0 1.5rem 0;
+  line-height: 1.2;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(to right, var(--gold), var(--royal-purple), var(--gold)) 1;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.markdown-content h1::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(to right, var(--gold), var(--royal-purple));
+  border-radius: 1.5px;
+}
+
+.markdown-content h2 {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: var(--deep-plum);
+  margin: 2.5rem 0 1rem 0;
+  line-height: 1.3;
+  position: relative;
+  padding: 0.75rem 0 0.75rem 2rem;
+  background: linear-gradient(135deg, rgba(197, 185, 232, 0.1), rgba(247, 245, 243, 0.8));
+  border-radius: 0.5rem;
+  border-left: 4px solid var(--royal-purple);
+}
+
+.markdown-content h2::before {
+  content: '📋';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+}
+
+.markdown-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--royal-purple);
+  margin: 2rem 0 0.75rem 0;
+  line-height: 1.4;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.markdown-content h3::before {
+  content: '▶';
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  color: var(--lavender);
+  font-size: 1rem;
+}
+
+.markdown-content h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--royal-purple);
+  margin: 1.5rem 0 0.5rem 0;
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.markdown-content h4::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  color: var(--mauve);
+  font-size: 0.8rem;
+}
+
+.markdown-content h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--royal-purple);
+  margin: 1.25rem 0 0.5rem 0;
+  position: relative;
+  padding-left: 1rem;
+}
+
+.markdown-content h5::before {
+  content: '◦';
+  position: absolute;
+  left: 0;
+  top: 0.2rem;
+  color: var(--mauve);
+  font-size: 0.8rem;
+}
+
+.markdown-content p {
+  margin: 1rem 0;
+  color: var(--deep-plum);
+  line-height: 1.7;
+  font-size: 1.1rem;
+}
+
+.markdown-content ul, .markdown-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.markdown-content li {
+  margin: 0.5rem 0;
+  color: var(--deep-plum);
+  line-height: 1.6;
+}
+
+.markdown-content li::marker {
+  color: var(--royal-purple);
+}
+
+.markdown-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, var(--periwinkle), var(--cream));
+  border-left: 4px solid var(--royal-purple);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  color: var(--deep-plum);
+  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.1);
+}
+
+.markdown-content blockquote p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.markdown-content code {
+  background: var(--periwinkle);
+  color: var(--deep-plum);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  border: 1px solid var(--mauve);
+}
+
+.markdown-content pre {
+  background: var(--deep-plum);
+  color: var(--cream);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.2);
+  border: 1px solid var(--royal-purple);
+  position: relative;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  font-size: 0.95rem;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: var(--cream);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.1);
+}
+
+.markdown-content th {
+  background: linear-gradient(135deg, var(--royal-purple), var(--lavender));
+  color: var(--cream);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.markdown-content td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--periwinkle);
+  color: var(--deep-plum);
+}
+
+.markdown-content tr:last-child td {
+  border-bottom: none;
+}
+
+.markdown-content tr:nth-child(even) td {
+  background: var(--periwinkle);
+}
+
+.markdown-content a {
+  color: var(--royal-purple);
+  text-decoration: none;
+  font-weight: 500;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.markdown-content a:hover {
+  color: var(--deep-plum);
+  border-bottom-color: var(--royal-purple);
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin: 1.5rem auto;
+  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.1);
+  border: 1px solid var(--periwinkle);
+  display: block;
+}
+
+.markdown-content hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(to right, var(--periwinkle), var(--mauve), var(--periwinkle));
+  margin: 2rem 0;
+  border-radius: 1px;
+}
+
+/* Enhanced math equations styling */
+.markdown-content .katex {
+  font-size: 1.15em;
+  color: var(--deep-plum);
+}
+
+.markdown-content .katex-display {
+  margin: 1.25rem 0;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, var(--cream), rgba(197, 185, 232, 0.05));
+  border-radius: 0.75rem;
+  border: 1px solid var(--periwinkle);
+  box-shadow: 0 4px 12px rgba(74, 26, 74, 0.08);
+  text-align: center;
+  overflow-x: auto;
+}
+
+.markdown-content .katex-display .katex {
+  font-size: 1.3em;
+  color: var(--deep-plum);
+}
+
+/* Inline math styling */
+.markdown-content .katex:not(.katex-display) {
+  background: rgba(197, 185, 232, 0.15);
+  padding: 0.1rem 0.3rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(177, 156, 217, 0.3);
+}
+
+/* Math in callouts */
+.markdown-content .admonition-info .katex,
+.markdown-content .admonition-caution .katex,
+.markdown-content .admonition-warning .katex,
+.markdown-content .admonition-tip .katex,
+.markdown-content .admonition-note .katex {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(177, 156, 217, 0.2);
+}
+
+/* Better fraction and expression spacing */
+.markdown-content .katex .frac-line {
+  border-bottom-color: var(--royal-purple);
+}
+
+.markdown-content .katex .sqrt > .root {
+  border-top-color: var(--royal-purple);
+}
+
+/* Enhanced code blocks with language labels */
+.markdown-content pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+  background: var(--royal-purple);
+  color: var(--cream);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* Docusaurus-style Admonitions/Callouts */
+.markdown-content .admonition {
+  margin: 1.5rem 0;
+  padding: 0;
+  border-radius: 0.75rem;
+  border: 1px solid;
+  box-shadow: 0 4px 16px rgba(74, 26, 74, 0.1);
+  overflow: hidden;
+  background: var(--cream);
+}
+
+/* Alternative class names that remark-admonitions might use */
+.markdown-content .admonition-info,
+.markdown-content .admonition-caution,
+.markdown-content .admonition-warning,
+.markdown-content .admonition-tip,
+.markdown-content .admonition-note {
+  margin: 1rem 0;
+  padding: 0.875rem 1rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid;
+  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.08);
+  position: relative;
+  display: block;
+}
+
+.markdown-content .admonition-info {
+  background: linear-gradient(135deg, rgba(197, 185, 232, 0.15), var(--cream));
+  border-left-color: var(--royal-purple);
+}
+
+.markdown-content .admonition-info::before {
+  content: 'ℹ️';
+  display: inline-block;
+  font-weight: 600;
+  color: var(--royal-purple);
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 0.1rem;
+}
+
+.markdown-content .admonition-caution {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), var(--cream));
+  border-left-color: #f59e0b;
+}
+
+.markdown-content .admonition-caution::before {
+  content: '⚠️';
+  display: inline-block;
+  font-weight: 600;
+  color: #d97706;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 0.1rem;
+}
+
+.markdown-content .admonition-warning {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), var(--cream));
+  border-left-color: #dc2626;
+}
+
+.markdown-content .admonition-warning::before {
+  content: '🚨';
+  display: inline-block;
+  font-weight: 600;
+  color: #dc2626;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 0.1rem;
+}
+
+.markdown-content .admonition-tip {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), var(--cream));
+  border-left-color: #16a34a;
+}
+
+.markdown-content .admonition-tip::before {
+  content: '💡';
+  display: inline-block;
+  font-weight: 600;
+  color: #16a34a;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 0.1rem;
+}
+
+.markdown-content .admonition-note {
+  background: linear-gradient(135deg, rgba(154, 138, 192, 0.15), var(--cream));
+  border-left-color: var(--lavender);
+}
+
+.markdown-content .admonition-note::before {
+  content: '📝';
+  display: inline-block;
+  font-weight: 600;
+  color: var(--lavender);
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  vertical-align: top;
+  margin-top: 0.1rem;
+}
+
+/* Enhanced callout formatting */
+.markdown-content .admonition-info p:first-child strong:first-child,
+.markdown-content .admonition-caution p:first-child strong:first-child,
+.markdown-content .admonition-warning p:first-child strong:first-child,
+.markdown-content .admonition-tip p:first-child strong:first-child,
+.markdown-content .admonition-note p:first-child strong:first-child {
+  color: inherit;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+}
+
+.markdown-content .admonition-info p,
+.markdown-content .admonition-caution p,
+.markdown-content .admonition-warning p,
+.markdown-content .admonition-tip p,
+.markdown-content .admonition-note p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--deep-plum);
+}
+
+
+
+
+
+/* Table of contents styling */
+.markdown-content .toc {
+  background: var(--cream);
+  border: 1px solid var(--periwinkle);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(74, 26, 74, 0.05);
+}
+
+.markdown-content .toc h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--royal-purple);
+  border: none;
+  padding: 0;
+}
+
+.markdown-content .toc ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.markdown-content .toc li {
+  margin: 0.25rem 0;
+}
+
+/* Gold Accent Utility Classes */
+.gold-accent {
+  color: var(--gold);
+}
+
+.gold-accent-bg {
+  background-color: var(--gold);
+}
+
+.gold-accent-border {
+  border-color: var(--gold);
+}
+
+.gold-glow {
+  box-shadow: 0 0 20px var(--gold-glow);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 10px var(--gold-glow);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+}
+
+.purple-gold-gradient {
+  background: linear-gradient(135deg, var(--royal-purple), var(--gold));
+}
+
+.gold-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.gold-shine::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  to {
+    left: 100%;
+  }
+}
+
+/* Gold hover effects */
+.hover-gold:hover {
+  color: var(--gold);
+  transition: color 0.3s;
+}
+
+.hover-gold-bg:hover {
+  background-color: var(--gold-subtle);
+  transition: background-color 0.3s;
+}
+
+.hover-gold-border:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 10px var(--gold-glow);
+  transition: all 0.3s;
+}
+
+/* Enhanced Lesson Styles */
+.lesson-interactive {
+  transition: all 0.3s ease-in-out;
+}
+
+.lesson-card-hover {
+  transition: all 0.3s ease;
+}
+
+.lesson-card-hover:hover {
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  transform: scale(1.02) translateY(-4px);
+}
+
+/* Train Tracks Animation */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.train-track-box {
+  animation: slide-in 0.5s ease-out;
+}
+
+/* Interactive Badge Pulse */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(251, 191, 36, 0);
+  }
+}
+
+.interactive-badge {
+  animation: pulse-glow 2s infinite;
+}
+
+/* Section Complete Animation */
+@keyframes check-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.section-complete {
+  animation: check-bounce 0.5s ease-out;
+}
+
+/* Progress Bar Smooth */
+.progress-smooth {
+  transition: width 0.5s ease-out;
+}
+
+/* Interactive Input Focus */
+.lesson-input:focus {
+  border-color: var(--royal-purple);
+  box-shadow: 0 0 0 3px rgba(106, 76, 147, 0.1);
+  outline: none;
+  transition: all 0.2s;
+}
+
+/* Answer Reveal Animation */
+@keyframes answer-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.answer-reveal {
+  animation: answer-reveal 0.3s ease-out;
 }

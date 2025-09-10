@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
-import { useSession } from 'next-auth/react'
+import { usePermissions } from '@/hooks/usePermissions'
 
 export default function AdminPage() {
-  const { data: session } = useSession()
+  const { isAuthenticated, canAccessAdmin, canCreateLessons, userRole } = usePermissions()
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -17,28 +17,32 @@ export default function AdminPage() {
     lesson_number: 1
   })
 
-  // Define allowed admin emails
-  const ADMIN_EMAILS = [
-    'antoccic@fitchburg.k12.ma.us', // Replace with your actual admin email
-    'craigantocci@gmail.com',// Add more admin emails here as needed
-  ]
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    const { error } = await supabase
-      .from('lessons')
-      .insert([{ ...formData, published: true }])
-    
-    if (error) {
-      console.error('Error:', error)
-    } else {
-      alert('Lesson added successfully!')
-      setFormData({ title: '', slug: '', description: '', content: '', unit: '', lesson_number: 1 })
+    try {
+      console.log('Submitting lesson data:', formData)
+      
+      const { data, error } = await supabase
+        .from('lessons')
+        .insert([{ ...formData, published: true }])
+        .select()
+      
+      if (error) {
+        console.error('Supabase error:', error)
+        alert(`Error creating lesson: ${error.message}`)
+      } else {
+        console.log('Lesson created successfully:', data)
+        alert('Lesson added successfully!')
+        setFormData({ title: '', slug: '', description: '', content: '', unit: '', lesson_number: 1 })
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err)
+      alert('An unexpected error occurred. Please try again.')
     }
   }
 
-  if (!session) {
+  if (!isAuthenticated) {
     return (
       <div className="max-w-md mx-auto mt-16 text-center">
         <div className="apple-card p-8">
@@ -49,10 +53,7 @@ export default function AdminPage() {
     )
   }
 
-  // Check if user is an admin
-  const isAdmin = session.user?.email && ADMIN_EMAILS.includes(session.user.email)
-
-  if (!isAdmin) {
+  if (!canAccessAdmin) {
     return (
       <div className="max-w-md mx-auto mt-16 text-center">
         <div className="apple-card p-8">
@@ -63,7 +64,25 @@ export default function AdminPage() {
           </div>
           <h2 className="text-2xl font-bold text-[#4A1A4A] mb-4">Access Denied</h2>
           <p className="text-[#6A4C93] mb-2">You don&apos;t have permission to access the admin panel.</p>
-          <p className="text-sm text-[#9A8AC0]">Signed in as: {session.user?.email}</p>
+          <p className="text-sm text-[#9A8AC0]">Your current role: {userRole}</p>
+          <p className="text-xs text-[#9A8AC0] mt-1">Only admins can access this page.</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!canCreateLessons) {
+    return (
+      <div className="max-w-md mx-auto mt-16 text-center">
+        <div className="apple-card p-8">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#B19CD9] to-[#9A8AC0] flex items-center justify-center">
+            <svg className="w-8 h-8 text-[#4A1A4A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-[#4A1A4A] mb-4">Insufficient Permissions</h2>
+          <p className="text-[#6A4C93] mb-2">You don&apos;t have permission to create lessons.</p>
+          <p className="text-sm text-[#9A8AC0]">Your current role: {userRole}</p>
         </div>
       </div>
     )
