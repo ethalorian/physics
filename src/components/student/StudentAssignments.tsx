@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 // Removed unused Textarea import
-import { supabase } from '@/lib/supabase'
+// import { supabase } from '@/lib/supabase' // Backend functionality disabled
 import { FileText, Search, Calendar, Clock, CheckCircle, AlertCircle, Upload } from 'lucide-react'
 import Link from 'next/link'
 
@@ -101,7 +101,7 @@ export default function StudentAssignments() {
         }
       ])
       
-    } catch (error) {
+    } catch {
       // Silent error handling
     } finally {
       setLoading(false)

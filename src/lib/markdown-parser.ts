@@ -1,4 +1,4 @@
-import { Question, Assignment } from '@/types/assignment'
+import { Question } from '@/types/assignment'
 
 export interface ParsedAssignment {
   title: string
@@ -131,7 +131,7 @@ function parseMultipleChoice(question: string, content: string, points: number, 
   
   const lines = content.split('\n')
   
-  lines.forEach((line, index) => {
+  lines.forEach((line) => {
     const match = line.match(/^([a-d]|[A-D])\)\s*(.+)/)
     if (match) {
       const optionText = match[2].trim()

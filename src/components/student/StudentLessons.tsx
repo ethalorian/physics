@@ -55,7 +55,7 @@ export default function StudentLessons() {
       // For now, progress remains empty since no placeholder data allowed
       setProgress([])
       
-    } catch (error) {
+    } catch {
       // Silent error handling
     } finally {
       setLoading(false)

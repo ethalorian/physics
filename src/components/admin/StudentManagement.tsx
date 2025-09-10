@@ -132,16 +132,11 @@ export default function StudentManagement() {
           console.log('Processing student - Full profile:', student.profile)
           console.log('Looking for email in:', {
             emailAddress: student.profile?.emailAddress,
-            email: student.profile?.email,
-            userEmail: student?.email,
             fullStudent: student
           })
           
           // Try multiple possible email field locations
           const email = student.profile?.emailAddress || 
-                       student.profile?.email || 
-                       student.email ||
-                       student.userEmail ||
                        'No email available'
           
           return {
