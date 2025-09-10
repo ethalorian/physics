@@ -141,8 +141,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
           assignment_id: assignment.id,
           user_id: session.user.id,
           answers: answers,
-          status: 'partial',
-          submitted_at: undefined
+          status: 'partial'
         } as Submission)
       }
     } catch (error) {

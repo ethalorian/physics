@@ -4,8 +4,18 @@ import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 
+interface Lesson {
+  id: string
+  title: string
+  slug: string
+  unit: string
+  lesson_number: number
+  published: boolean
+  created_at: string
+}
+
 export default function TestLessonsPage() {
-  const [lessons, setLessons] = useState<unknown[]>([])
+  const [lessons, setLessons] = useState<Lesson[]>([])
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [rawResponse, setRawResponse] = useState<unknown>(null)
