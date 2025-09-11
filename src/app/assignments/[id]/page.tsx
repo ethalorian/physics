@@ -2,10 +2,9 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Assignment, Submission, MultipleChoiceQuestion, NumericalQuestion } from '@/types/assignment'
-// import { supabase } from '@/lib/supabase' // Backend functionality disabled
+import { Assignment, Submission, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, OpenResponseGrade } from '@/types/assignment'
+import { useAssignments, saveSubmission } from '@/contexts/AssignmentContext'
 import { Button } from '@/components/ui/button'
-// Removed unused Card imports
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -15,79 +14,44 @@ import { Clock, CheckCircle, AlertCircle, Save } from 'lucide-react'
 export default function AssignmentPage({ params }: { params: { id: string } }) {
   const { data: session } = useSession()
   const router = useRouter()
+  const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [answers, setAnswers] = useState<Record<string, string | number | string[]>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [grading, setGrading] = useState(false)
+  const [openResponseGrades, setOpenResponseGrades] = useState<OpenResponseGrade[]>([])
 
   useEffect(() => {
     if (session) {
       fetchAssignmentAndSubmission()
     }
-  }, [session, params.id]) // fetchAssignmentAndSubmission is stable
+  }, [session, params.id])
 
   const fetchAssignmentAndSubmission = async () => {
     try {
-      // Backend functionality disabled - keeping frontend only
-      // const { data: assignmentData, error: assignmentError } = await supabase
-      //   .from('assignments')
-      //   .select(`
-      //     *,
-      //     lesson:lessons(title, slug)
-      //   `)
-      //   .eq('id', params.id)
-      //   .eq('published', true)
-      //   .single()
-      // if (assignmentError) throw assignmentError
-      // setAssignment(assignmentData)
-
-      // Mock data for frontend demo
-      const mockAssignment: Assignment = {
-        id: params.id,
-        title: 'Newton\'s Laws Quiz',
-        description: 'Test your understanding of Newton\'s three laws of motion',
-        instructions: 'Answer all questions. Show your work for calculation problems.',
-        lesson_id: '1',
-        lesson: { title: 'Newton\'s Laws', slug: 'newtons-laws' },
-        questions: [
-          {
-            id: 'q1',
-            type: 'multiple-choice',
-            question: 'What is Newton\'s first law?',
-            points: 5,
-            required: true,
-            options: [
-              'Objects at rest stay at rest',
-              'F = ma',
-              'Action-reaction pairs',
-              'Gravity pulls down'
-            ],
-            correctAnswer: 0
-          } as MultipleChoiceQuestion,
-          {
-            id: 'q2',
-            type: 'numerical',
-            question: 'Calculate the acceleration of a 10 kg object with 50 N force applied.',
-            points: 10,
-            required: true,
-            correctValue: 5,
-            unit: 'm/s²',
-            tolerance: 0.1
-          } as NumericalQuestion
-        ],
-        total_points: 15,
-        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        published: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      const assignmentData = getAssignmentById(params.id)
+      if (!assignmentData || !assignmentData.published) {
+        setAssignment(null)
+        setLoading(false)
+        return
       }
-      setAssignment(mockAssignment)
+      
+      setAssignment(assignmentData)
 
-      // Mock submission - empty for demo
-      setSubmission(null)
-      setAnswers({})
+      // Get existing submission
+      if (session?.user?.id) {
+        const existingSubmission = getSubmissionByAssignmentId(params.id, session.user.id)
+        if (existingSubmission) {
+          setSubmission(existingSubmission)
+          setAnswers(existingSubmission.answers)
+        } else {
+          setSubmission(null)
+          setAnswers({})
+        }
+      }
     } catch (error) {
       console.error('Error fetching assignment:', error)
     } finally {
@@ -107,43 +71,17 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
 
     setSaving(true)
     try {
-      // Backend functionality disabled - keeping frontend only
-      // const submissionData = {
-      //   assignment_id: assignment.id,
-      //   user_id: session.user.id,
-      //   answers: answers,
-      //   status: 'partial'
-      // }
-      // if (submission) {
-      //   const { error } = await supabase
-      //     .from('submissions')
-      //     .update({ answers: answers, status: 'partial' })
-      //     .eq('id', submission.id)
-      //   if (error) throw error
-      // } else {
-      //   const { data, error } = await supabase
-      //     .from('submissions')
-      //     .insert([submissionData])
-      //     .select()
-      //     .single()
-      //   if (error) throw error
-      //   setSubmission(data)
-      // }
-      
-      // Simulate save for frontend demo
-      console.log('Progress saved (frontend only):', answers)
-      alert('Progress saved locally (demo mode - no backend)')
-      
-      // Create mock submission
-      if (!submission) {
-        setSubmission({
-          id: Date.now().toString(),
-          assignment_id: assignment.id,
-          user_id: session.user.id,
-          answers: answers,
-          status: 'partial'
-        } as Submission)
+      const submissionData = {
+        assignment_id: assignment.id,
+        user_id: session.user.id,
+        answers: answers,
+        status: 'partial' as const
       }
+      
+      const savedSubmission = saveSubmission(submissionData)
+      setSubmission(savedSubmission)
+      
+      console.log('Progress saved:', answers)
     } catch (error) {
       console.error('Error saving progress:', error)
       alert('Error saving progress')
@@ -170,51 +108,26 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
       // Grade multiple choice and numerical questions immediately
       const gradedAnswers = await gradeAutoQuestions()
       
-      // Backend functionality disabled - keeping frontend only
-      // const submissionData = {
-      //   assignment_id: assignment.id,
-      //   user_id: session.user.id,
-      //   answers: answers,
-      //   score: gradedAnswers.totalScore,
-      //   max_score: assignment.total_points,
-      //   status: 'submitted',
-      //   submitted_at: new Date().toISOString()
-      // }
-      // if (submission) {
-      //   const { error } = await supabase
-      //     .from('submissions')
-      //     .update(submissionData)
-      //     .eq('id', submission.id)
-      //   if (error) throw error
-      // } else {
-      //   const { data, error } = await supabase
-      //     .from('submissions')
-      //     .insert([submissionData])
-      //     .select()
-      //     .single()
-      //   if (error) throw error
-      //   setSubmission(data)
-      // }
-      
-      // Simulate submission for frontend demo
-      console.log('Assignment submitted (frontend only):', {
-        answers,
-        score: gradedAnswers.totalScore,
-        max_score: assignment.total_points
-      })
-      alert(`Assignment submitted! Score: ${gradedAnswers.totalScore}/${assignment.total_points} (demo mode - no backend)`)
-      
-      // Update local state to show as submitted
-      setSubmission({
-        id: submission?.id || Date.now().toString(),
+      const submissionData = {
         assignment_id: assignment.id,
         user_id: session.user.id,
         answers: answers,
         score: gradedAnswers.totalScore,
         max_score: assignment.total_points,
-        status: 'submitted',
-        submitted_at: new Date().toISOString()
-      } as Submission)
+        feedback: gradedAnswers.feedback,
+        rubric_grades: openResponseGrades,
+        status: 'submitted' as const,
+        graded_at: new Date().toISOString()
+      }
+      
+      const savedSubmission = saveSubmission(submissionData)
+      setSubmission(savedSubmission)
+      
+      console.log('Assignment submitted:', {
+        answers,
+        score: gradedAnswers.totalScore,
+        max_score: assignment.total_points
+      })
 
       router.push(`/assignments/${assignment.id}/submitted`)
     } catch (error) {
@@ -229,6 +142,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
     let totalScore = 0
     const feedback: Record<string, string> = {}
 
+    // Grade traditional questions (multiple choice, numerical)
     assignment!.questions.forEach(question => {
       const answer = answers[question.id]
       
@@ -255,7 +169,61 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
       }
     })
 
+    // Grade open response questions with AI
+    const openResponseQuestions = assignment!.questions.filter(
+      q => q.type === 'open-response' && (q as OpenResponseQuestion).autoGrade
+    ) as OpenResponseQuestion[]
+
+    if (openResponseQuestions.length > 0) {
+      setGrading(true)
+      try {
+        const aiGrades = await gradeOpenResponseQuestions(openResponseQuestions)
+        setOpenResponseGrades(aiGrades)
+        
+        // Add AI scores to total
+        aiGrades.forEach(grade => {
+          totalScore += grade.totalScore
+          feedback[grade.questionId] = 'AI graded - see detailed feedback below'
+        })
+      } catch (error) {
+        console.error('Failed to grade open response questions:', error)
+        // Continue without AI grading
+      } finally {
+        setGrading(false)
+      }
+    }
+
     return { totalScore, feedback }
+  }
+
+  const gradeOpenResponseQuestions = async (questions: OpenResponseQuestion[]): Promise<OpenResponseGrade[]> => {
+    try {
+      const response = await fetch('/api/grade-assignment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          questions: questions,
+          answers: answers,
+          context: {
+            subject: 'Physics',
+            lessonTitle: assignment?.lesson?.title,
+            additionalContext: assignment?.description
+          }
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Failed to grade: ${response.statusText}`)
+      }
+
+      const result = await response.json()
+      return result.grades || []
+    } catch (error) {
+      console.error('Error grading open response questions:', error)
+      throw error
+    }
   }
 
   const getProgress = () => {
@@ -373,9 +341,9 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
               </Button>
               <Button 
                 onClick={submitAssignment} 
-                disabled={submitting || isDuePassed()}
+                disabled={submitting || grading || isDuePassed()}
               >
-                {submitting ? 'Submitting...' : 'Submit Assignment'}
+                {grading ? 'Grading with AI...' : submitting ? 'Submitting...' : 'Submit Assignment'}
               </Button>
             </div>
           )}
@@ -429,9 +397,9 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
               </Button>
               <Button 
                 onClick={submitAssignment} 
-                disabled={submitting || isDuePassed()}
+                disabled={submitting || grading || isDuePassed()}
               >
-                {submitting ? 'Submitting...' : 'Submit Assignment'}
+                {grading ? 'Grading with AI...' : submitting ? 'Submitting...' : 'Submit Assignment'}
               </Button>
             </div>
           </div>

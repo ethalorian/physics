@@ -1,7 +1,6 @@
 "use client"
 import { useSession, signIn, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -13,6 +12,7 @@ import {
 import Link from "next/link"
 import { usePermissions } from "@/hooks/usePermissions"
 import { useEffect, useState } from "react"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -21,6 +21,8 @@ export default function Navbar() {
     canAccessAdmin,
     userRole
   } = usePermissions()
+  
+  
   
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
@@ -35,22 +37,26 @@ export default function Navbar() {
   return (
     <nav className="apple-nav sticky top-0 z-50">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#D4AF37] bg-clip-text text-transparent hover:scale-105 transition-transform">
-          Antocci Physics
+        <Link href="/" className="group text-2xl font-bold text-foreground hover:text-primary hover:scale-105 transition-all duration-200 relative">
+          <span className="relative">
+            Antocci Physics
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/60 transition-all duration-300 group-hover:w-full"></span>
+          </span>
         </Link>
         
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
           {isLoading ? (
             // Loading state - minimal placeholder to prevent layout shift
             <div className="animate-pulse">
-              <div className="h-10 w-32 bg-[#C5B9E8]/20 rounded-full" />
+              <div className="h-10 w-32 bg-muted rounded-full" />
             </div>
           ) : isAuthenticated && session ? (
             <>
-              <div className="hidden md:flex items-center gap-1 bg-gradient-to-r from-[#C5B9E8]/40 to-[#D4AF37]/10 rounded-full p-1 border border-[#D4AF37]/20">
+              <div className="hidden md:flex items-center gap-1 bg-gradient-to-r from-secondary/60 to-primary/10 rounded-full p-1 border border-primary/30">
                 {/* Dashboard Link - directs to appropriate dashboard based on role */}
                 <Link href={canAccessAdmin ? "/admin/dashboard" : "/dashboard"}>
-                  <Button variant="ghost" className="rounded-full text-sm font-medium px-3 py-2 hover:bg-[#D4AF37]/20 hover:text-[#4A1A4A] transition-all">
+                  <Button variant="ghost" className="rounded-full text-sm font-medium px-3 py-2 hover:bg-primary/20 hover:text-primary transition-all">
                     Dashboard
                   </Button>
                 </Link>
@@ -58,30 +64,38 @@ export default function Navbar() {
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:ring-2 hover:ring-[#D4AF37]/50 transition-all duration-200">
-                    <Avatar className="h-10 w-10 ring-2 ring-[#D4AF37]/30 apple-shadow-sm">
-                      <AvatarImage 
-                        src={session.user?.image || ''} 
-                        alt={session.user?.name || 'User'} 
+                  <Button variant="ghost" className="relative h-10 w-10 rounded-full hover:ring-2 hover:ring-primary/50 transition-all duration-200 p-0 overflow-hidden ring-2 ring-primary/30 apple-shadow-sm">
+                    {session.user?.image ? (
+                      <img 
+                        src={session.user.image} 
+                        alt={session.user.name || 'User'}
+                        className="w-full h-full rounded-full object-cover"
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
                       />
-                      <AvatarFallback className="bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-[#F7F5F3] font-semibold">
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center">
                         {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
+                      </div>
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-64 apple-card mt-2" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal p-4">
                     <div className="flex items-center space-x-3">
-                      <Avatar className="h-12 w-12 ring-2 ring-gray-200">
-                        <AvatarImage 
-                          src={session.user?.image || ''} 
-                          alt={session.user?.name || 'User'} 
+                      {session.user?.image ? (
+                        <img 
+                          src={session.user.image} 
+                          alt={session.user.name || 'User'}
+                          className="h-12 w-12 rounded-full ring-2 ring-gray-200 object-cover"
+                          referrerPolicy="no-referrer"
+                          crossOrigin="anonymous"
                         />
-                        <AvatarFallback className="bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-[#F7F5F3] font-semibold">
+                      ) : (
+                        <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-[#F7F5F3] font-semibold flex items-center justify-center ring-2 ring-gray-200">
                           {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
+                        </div>
+                      )}
                       <div className="flex flex-col space-y-1">
                         <p className="text-sm font-semibold leading-none">
                           {session.user?.name}
@@ -92,10 +106,10 @@ export default function Navbar() {
                         <div className="flex items-center gap-2 mt-1">
                           <span className={`text-xs px-2 py-1 rounded-full font-medium border ${
                             userRole === 'admin' 
-                              ? 'bg-gradient-to-r from-[#D4AF37]/20 to-[#B8941F]/20 text-[#B8941F] border-[#D4AF37]/30' 
+                              ? 'bg-primary/20 text-primary border-primary/40 dark:bg-primary/25 dark:text-primary dark:border-primary/60' 
                               : userRole === 'teacher'
-                              ? 'bg-[#6A4C93]/10 text-[#6A4C93] border-[#6A4C93]/30'
-                              : 'bg-[#9A8AC0]/10 text-[#9A8AC0] border-[#9A8AC0]/30'
+                              ? 'bg-primary/15 text-primary border-primary/40 dark:bg-primary/20 dark:text-primary dark:border-primary/60'
+                              : 'bg-secondary/50 text-secondary-foreground border-secondary dark:bg-secondary dark:text-secondary-foreground dark:border-secondary/60'
                           }`}>
                             {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
                           </span>

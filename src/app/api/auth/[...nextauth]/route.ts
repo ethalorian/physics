@@ -1,11 +1,28 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 
-const { handlers } = NextAuth({
+// Extend the built-in session types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+    }
+  }
+}
+
+const { handlers, auth } = NextAuth({
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: "openid email profile"
+        }
+      }
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -17,12 +34,20 @@ const { handlers } = NextAuth({
     session: async ({ session, token }) => {
       if (session?.user && token.sub) {
         session.user.id = token.sub;
+        // Include the avatar image from the token
+        if (token.picture) {
+          session.user.image = token.picture as string;
+        }
       }
       return session;
     },
     jwt: async ({ user, token }) => {
       if (user) {
         token.sub = user.id;
+        // Store the avatar image in the token
+        if (user.image) {
+          token.picture = user.image;
+        }
       }
       return token;
     },
@@ -51,3 +76,4 @@ const { handlers } = NextAuth({
 })
 
 export const { GET, POST } = handlers
+export { auth }

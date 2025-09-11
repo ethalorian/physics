@@ -91,10 +91,11 @@ export default function AdminPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-8">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#9A8AC0] bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold text-[#4A1A4A] dark:text-[#FFFFFF] relative">
           Create New Lesson
+          <div className="absolute -bottom-2 left-0 w-28 h-1 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
         </h1>
-        <p className="text-lg text-[#6A4C93]">
+        <p className="text-lg text-[#6A4C93] dark:text-[#E8DDFF]">
           Add a new physics lesson to your curriculum
         </p>
       </div>

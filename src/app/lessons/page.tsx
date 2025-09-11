@@ -59,10 +59,11 @@ export default async function LessonsPage() {
   return (
     <div className="space-y-12">
       <div className="text-center space-y-4">
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#9A8AC0] bg-clip-text text-transparent">
+        <h1 className="text-5xl font-bold text-[#4A1A4A] dark:text-[#FFFFFF] relative">
           Physics Lessons
+          <div className="absolute -bottom-3 left-0 w-32 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
         </h1>
-        <p className="text-xl text-[#6A4C93] max-w-2xl mx-auto">
+        <p className="text-xl text-[#6A4C93] dark:text-[#E8DDFF] max-w-2xl mx-auto">
           Explore the fundamental concepts of physics through interactive lessons and engaging content.
         </p>
       </div>
@@ -85,7 +86,7 @@ export default async function LessonsPage() {
                       {/* Enhanced lesson indicator */}
                       {lesson.isEnhanced && (
                         <div className="absolute top-3 right-3 z-20">
-                          <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white flex items-center gap-1">
+                          <Badge className="bg-[#D4AF37] text-[#4A1A4A] flex items-center gap-1 font-medium border border-[#D4AF37]/30">
                             <Sparkles className="w-3 h-3" />
                             Interactive
                           </Badge>
@@ -94,7 +95,7 @@ export default async function LessonsPage() {
                       {/* New lesson indicator */}
                       {lesson.isNew && (
                         <div className="absolute top-3 left-3 z-20">
-                          <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white">
+                          <Badge className="bg-[#6A4C93] text-[#F7F5F3] border border-[#6A4C93]/30">
                             New!
                           </Badge>
                         </div>

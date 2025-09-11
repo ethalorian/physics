@@ -57,7 +57,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
             </div>
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Badge className="bg-gradient-to-r from-[#C5B9E8] to-[#B19CD9] text-[#4A1A4A]">
+                <Badge className="bg-[#D4AF37] text-[#4A1A4A] font-medium border border-[#D4AF37]/30">
                   {lesson.unit}
                 </Badge>
                 <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
@@ -84,7 +84,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
         <TabsList className="grid grid-cols-4 w-full max-w-2xl mx-auto h-auto p-1">
           <TabsTrigger 
             value="overview" 
-            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#6A4C93] data-[state=active]:to-[#9A8AC0] data-[state=active]:text-white"
+            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-[#6A4C93] data-[state=active]:text-white hover:bg-[#6A4C93]/10 transition-colors"
           >
             <Sparkles className="w-4 h-4" />
             <span className="text-xs font-medium">Overview</span>
@@ -92,7 +92,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
           </TabsTrigger>
           <TabsTrigger 
             value="bellringer"
-            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#6A4C93] data-[state=active]:to-[#9A8AC0] data-[state=active]:text-white"
+            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-[#6A4C93] data-[state=active]:text-white hover:bg-[#6A4C93]/10 transition-colors"
           >
             <Clock className="w-4 h-4" />
             <span className="text-xs font-medium">Bell Ringer</span>
@@ -100,7 +100,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
           </TabsTrigger>
           <TabsTrigger 
             value="practice"
-            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#6A4C93] data-[state=active]:to-[#9A8AC0] data-[state=active]:text-white"
+            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-[#6A4C93] data-[state=active]:text-white hover:bg-[#6A4C93]/10 transition-colors"
           >
             <Brain className="w-4 h-4" />
             <span className="text-xs font-medium">Practice</span>
@@ -108,7 +108,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
           </TabsTrigger>
           <TabsTrigger 
             value="exit"
-            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#6A4C93] data-[state=active]:to-[#9A8AC0] data-[state=active]:text-white"
+            className="flex flex-col items-center gap-1 py-3 data-[state=active]:bg-[#6A4C93] data-[state=active]:text-white hover:bg-[#6A4C93]/10 transition-colors"
           >
             <Target className="w-4 h-4" />
             <span className="text-xs font-medium">Exit Ticket</span>

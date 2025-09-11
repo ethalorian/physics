@@ -50,38 +50,39 @@ export default function Home() {
         {/* Title with Gold Accent */}
         <div className="space-y-4">
           <h1 className="text-6xl md:text-7xl font-bold relative">
-            <span className="bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#D4AF37] bg-clip-text text-transparent animate-gradient">
+            <span className="text-foreground relative">
               Antocci Physics
+              <span className="absolute inset-0 bg-gradient-to-r from-primary via-primary/60 to-primary/30 opacity-20 blur-sm -z-10"></span>
             </span>
-            {/* Gold underline accent */}
-            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent rounded-full" />
+            {/* Purple underline accent */}
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full" />
           </h1>
           
           {/* Simple Subtitle */}
-          <p className="text-xl md:text-2xl text-[#6A4C93]/80 font-light">
+          <p className="text-xl md:text-2xl text-primary/80 font-light">
             Welcome to your online physics classroom
           </p>
         </div>
 
-        {/* CTA Button with Gold Accents */}
+        {/* CTA Button */}
         <div className="pt-8">
           <Button 
             onClick={handleGetStarted}
-            className="group relative bg-gradient-to-r from-[#4A1A4A] to-[#6A4C93] text-white text-lg px-12 py-6 rounded-full hover:shadow-xl hover:scale-105 transition-all duration-300 border border-[#D4AF37]/30 overflow-hidden"
+            className="group relative bg-primary hover:bg-primary/80 text-primary-foreground text-lg px-12 py-6 rounded-full hover:shadow-xl hover:scale-105 transition-all duration-300 border border-primary/50 hover:border-primary overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-3">
               {session ? "Enter Classroom" : "Sign In to Get Started"}
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform text-[#D4AF37]" />
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
-            {/* Gold shimmer effect on hover */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37]/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+            {/* Shimmer effect on hover */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
           </Button>
         </div>
 
-        {/* Login hint with gold accent */}
+        {/* Login hint */}
         {!session && (
-          <p className="text-sm text-[#9A8AC0] pt-4">
-            Use your <span className="text-[#D4AF37] font-medium">school Google account</span> to sign in
+          <p className="text-sm text-muted-foreground pt-4">
+            Use your <span className="text-primary font-medium">school Google account</span> to sign in
           </p>
         )}
       </div>

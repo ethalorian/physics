@@ -44,18 +44,19 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
       <div className="apple-card p-8 md:p-12">
         <header className="text-center mb-12">
           <div className="inline-flex items-center gap-3 mb-4">
-            <span className="px-4 py-2 bg-gradient-to-r from-[#C5B9E8] to-[#B19CD9] text-[#4A1A4A] rounded-full text-sm font-semibold">
+            <span className="px-4 py-2 bg-[#C5B9E8] text-[#4A1A4A] rounded-full text-sm font-semibold border border-[#C5B9E8]/50">
               {lesson.unit}
             </span>
             <span className="w-8 h-8 bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-[#F7F5F3] rounded-full flex items-center justify-center font-bold text-sm">
               {lesson.lesson_number}
             </span>
           </div>
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#9A8AC0] bg-clip-text text-transparent leading-tight">
+          <h1 className="text-5xl font-bold mb-6 text-[#4A1A4A] dark:text-[#FFFFFF] leading-tight relative">
             {lesson.title}
+            <div className="absolute -bottom-2 left-0 w-20 h-1.5 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
           </h1>
           {lesson.description && (
-            <p className="text-xl text-[#6A4C93] max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-[#6A4C93] dark:text-[#E8DDFF] max-w-3xl mx-auto leading-relaxed">
               {lesson.description}
             </p>
           )}

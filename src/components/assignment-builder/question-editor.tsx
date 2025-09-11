@@ -1,6 +1,6 @@
 "use client"
 // Removed unused useState import
-import { Question, QuestionType, MultipleChoiceQuestion, ShortAnswerQuestion, EssayQuestion, NumericalQuestion } from '@/types/assignment'
+import { Question, QuestionType, MultipleChoiceQuestion, ShortAnswerQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,6 +8,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Trash2, Plus } from 'lucide-react'
+import { Label } from '@/components/ui/label'
+import RubricBuilder from './rubric-builder'
 
 interface QuestionEditorProps {
   question: Question
@@ -196,6 +198,81 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
           </div>
         )
 
+      case 'open-response':
+        const openResponseQuestion = question as OpenResponseQuestion
+        return (
+          <div className="space-y-6">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="autoGrade"
+                  checked={openResponseQuestion.autoGrade || false}
+                  onChange={(e) => updateQuestion({ autoGrade: e.target.checked })}
+                  className="rounded"
+                />
+                <Label htmlFor="autoGrade">Enable AI Auto-Grading</Label>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Uses OpenAI to automatically grade responses based on the rubric
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Sample Answer (Optional)</label>
+              <Textarea
+                value={openResponseQuestion.sampleAnswer || ''}
+                onChange={(e) => updateQuestion({ sampleAnswer: e.target.value })}
+                placeholder="Provide a sample high-quality answer for AI reference..."
+                rows={4}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                This helps the AI understand what constitutes a good response
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Min Length (words)</label>
+                <Input
+                  type="number"
+                  value={openResponseQuestion.minLength || ''}
+                  onChange={(e) => updateQuestion({ minLength: parseInt(e.target.value) || undefined })}
+                  placeholder="50"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Max Length (words)</label>
+                <Input
+                  type="number"
+                  value={openResponseQuestion.maxLength || ''}
+                  onChange={(e) => updateQuestion({ maxLength: parseInt(e.target.value) || undefined })}
+                  placeholder="500"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">Custom Grading Instructions (Optional)</label>
+              <Textarea
+                value={openResponseQuestion.gradePrompt || ''}
+                onChange={(e) => updateQuestion({ gradePrompt: e.target.value })}
+                placeholder="Additional instructions for the AI grader..."
+                rows={3}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Specific instructions to guide the AI&apos;s grading approach
+              </p>
+            </div>
+
+            <RubricBuilder
+              rubric={openResponseQuestion.rubric || []}
+              onRubricChange={(rubric) => updateQuestion({ rubric })}
+              maxPoints={question.points}
+            />
+          </div>
+        )
+
       default:
         return null
     }
@@ -240,6 +317,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 <SelectItem value="short-answer">Short Answer</SelectItem>
                 <SelectItem value="numerical">Numerical</SelectItem>
                 <SelectItem value="essay">Essay</SelectItem>
+                <SelectItem value="open-response">Open Response (AI Graded)</SelectItem>
               </SelectContent>
             </Select>
           </div>

@@ -1,6 +1,6 @@
 "use client"
 // Removed unused useState import
-import { Question, MultipleChoiceQuestion, ShortAnswerQuestion, EssayQuestion, NumericalQuestion } from '@/types/assignment'
+import { Question, MultipleChoiceQuestion, ShortAnswerQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 // Removed unused Button import
 import { Input } from '@/components/ui/input'
@@ -130,6 +130,66 @@ export default function QuestionRenderer({
               <p className="text-xs text-muted-foreground">
                 Tolerance: ± {numQuestion.tolerance}
               </p>
+            )}
+          </div>
+        )
+
+      case 'open-response':
+        const openResponseQuestion = question as OpenResponseQuestion
+        const wordCount = (answer as string || '').split(/\s+/).filter((word: string) => word.length > 0).length
+        return (
+          <div className="space-y-4">
+            <Textarea
+              value={answer || ''}
+              onChange={(e) => onAnswerChange(e.target.value)}
+              placeholder="Write your detailed response here..."
+              rows={8}
+              disabled={disabled}
+              className="min-h-[200px]"
+            />
+            
+            <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div>
+                Word count: {wordCount}
+                {openResponseQuestion.minLength && ` (minimum: ${openResponseQuestion.minLength})`}
+                {openResponseQuestion.maxLength && ` (maximum: ${openResponseQuestion.maxLength})`}
+              </div>
+              {openResponseQuestion.autoGrade && (
+                <div className="flex items-center gap-1">
+                  <Badge variant="secondary" className="text-xs">
+                    AI Graded
+                  </Badge>
+                </div>
+              )}
+            </div>
+
+            {/* Show rubric criteria to students */}
+            {openResponseQuestion.rubric && openResponseQuestion.rubric.length > 0 && (
+              <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="text-sm font-medium text-blue-900 mb-3">Grading Criteria:</h4>
+                <div className="space-y-2">
+                  {openResponseQuestion.rubric.map((criterion, index) => (
+                    <div key={criterion.id} className="text-sm">
+                      <div className="font-medium text-blue-800">
+                        {index + 1}. {criterion.name} ({criterion.maxPoints} points)
+                      </div>
+                      <div className="text-blue-700 ml-4">
+                        {criterion.description}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Show sample answer if provided and not disabled (i.e., after submission) */}
+            {showFeedback && openResponseQuestion.sampleAnswer && (
+              <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                <h4 className="text-sm font-medium text-green-900 mb-2">Sample Answer:</h4>
+                <div className="text-sm text-green-800 whitespace-pre-wrap">
+                  {openResponseQuestion.sampleAnswer}
+                </div>
+              </div>
             )}
           </div>
         )

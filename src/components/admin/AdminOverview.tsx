@@ -126,14 +126,14 @@ export default function AdminOverview() {
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       <Card className="apple-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-[#6A4C93]">
+          <CardTitle className="text-sm font-medium text-primary">
             Total Lessons
           </CardTitle>
-          <BookOpen className="h-4 w-4 text-[#9A8AC0]" />
+          <BookOpen className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-[#4A1A4A]">{stats.totalLessons}</div>
-          <p className="text-xs text-[#9A8AC0]">
+          <div className="text-2xl font-bold text-foreground">{stats.totalLessons}</div>
+          <p className="text-xs text-muted-foreground">
             Published lessons
           </p>
         </CardContent>
@@ -141,14 +141,14 @@ export default function AdminOverview() {
 
       <Card className="apple-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-[#6A4C93]">
+          <CardTitle className="text-sm font-medium text-primary">
             Active Assignments
           </CardTitle>
-          <FileText className="h-4 w-4 text-[#9A8AC0]" />
+          <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-[#4A1A4A]">{stats.activeAssignments}</div>
-          <p className="text-xs text-[#9A8AC0]">
+          <div className="text-2xl font-bold text-foreground">{stats.activeAssignments}</div>
+          <p className="text-xs text-muted-foreground">
             Not yet due ({stats.totalAssignments} total)
           </p>
         </CardContent>
@@ -156,14 +156,14 @@ export default function AdminOverview() {
 
       <Card className="apple-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-[#6A4C93]">
+          <CardTitle className="text-sm font-medium text-primary">
             Enrolled Students
           </CardTitle>
-          <Users className="h-4 w-4 text-[#9A8AC0]" />
+          <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-[#4A1A4A]">{stats.enrolledStudents}</div>
-          <p className="text-xs text-[#9A8AC0]">
+          <div className="text-2xl font-bold text-foreground">{stats.enrolledStudents}</div>
+          <p className="text-xs text-muted-foreground">
             {stats.enrolledStudents === 0 ? 'Connect Google Classroom' : 'From Google Classroom'}
           </p>
         </CardContent>
@@ -171,14 +171,14 @@ export default function AdminOverview() {
 
       <Card className="apple-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium text-[#6A4C93]">
+          <CardTitle className="text-sm font-medium text-primary">
             Content Created
           </CardTitle>
-          <GraduationCap className="h-4 w-4 text-[#9A8AC0]" />
+          <GraduationCap className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-[#4A1A4A]">{stats.totalLessons + stats.totalAssignments}</div>
-          <p className="text-xs text-[#9A8AC0]">
+          <div className="text-2xl font-bold text-foreground">{stats.totalLessons + stats.totalAssignments}</div>
+          <p className="text-xs text-muted-foreground">
             Total items published
           </p>
         </CardContent>

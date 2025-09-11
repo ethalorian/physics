@@ -4,6 +4,35 @@ const nextConfig: NextConfig = {
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser
   // No additional configuration needed for NEXT_PUBLIC_GOOGLE_CLIENT_ID
   
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh4.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh5.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'lh6.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
+  
   async headers() {
     return [
       {
@@ -17,8 +46,8 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://api.supabase.com https://classroom.googleapis.com https://www.googleapis.com",
+              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com https://*.googleusercontent.com",
+              "connect-src 'self' https://api.supabase.com https://lknifmjxelphrkwddnpw.supabase.co https://classroom.googleapis.com https://www.googleapis.com",
               "frame-src 'self' https://accounts.google.com https://content.googleapis.com",
               "object-src 'none'",
               "base-uri 'self'",

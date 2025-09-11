@@ -1,4 +1,4 @@
-export type QuestionType = 'multiple-choice' | 'short-answer' | 'essay' | 'numerical'
+export type QuestionType = 'multiple-choice' | 'short-answer' | 'essay' | 'numerical' | 'open-response'
 
 export interface BaseQuestion {
   id: string
@@ -36,7 +36,28 @@ export interface NumericalQuestion extends BaseQuestion {
   unit?: string
 }
 
-export type Question = MultipleChoiceQuestion | ShortAnswerQuestion | EssayQuestion | NumericalQuestion
+export interface RubricCriterion {
+  id: string
+  name: string
+  description: string
+  maxPoints: number
+  levels: {
+    score: number
+    description: string
+  }[]
+}
+
+export interface OpenResponseQuestion extends BaseQuestion {
+  type: 'open-response'
+  rubric: RubricCriterion[]
+  sampleAnswer?: string
+  minLength?: number
+  maxLength?: number
+  autoGrade?: boolean
+  gradePrompt?: string
+}
+
+export type Question = MultipleChoiceQuestion | ShortAnswerQuestion | EssayQuestion | NumericalQuestion | OpenResponseQuestion
 
 export interface Assignment {
   id: string
@@ -56,6 +77,20 @@ export interface Assignment {
   }
 }
 
+export interface RubricScore {
+  criterionId: string
+  score: number
+  feedback?: string
+}
+
+export interface OpenResponseGrade {
+  questionId: string
+  rubricScores: RubricScore[]
+  totalScore: number
+  overallFeedback?: string
+  aiGenerated?: boolean
+}
+
 export interface Submission {
   id: string
   assignment_id: string
@@ -64,6 +99,7 @@ export interface Submission {
   score?: number
   max_score?: number
   feedback?: Record<string, string>
+  rubric_grades?: OpenResponseGrade[]
   submitted_at: string
   graded_at?: string
   status: 'submitted' | 'graded' | 'partial'

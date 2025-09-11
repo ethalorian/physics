@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { usePermissions } from '@/hooks/usePermissions'
+import { useAssignments } from '@/contexts/AssignmentContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
@@ -58,10 +59,11 @@ export default function StudentDashboard() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#4A1A4A] via-[#6A4C93] to-[#9A8AC0] bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-[#4A1A4A] dark:text-[#FFFFFF] relative">
               My Dashboard
+              <div className="absolute -bottom-2 left-0 w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
             </h1>
-            <p className="text-lg text-[#6A4C93] mt-2">
+            <p className="text-lg text-[#6A4C93] dark:text-[#E8DDFF] mt-2">
               Welcome back, {session?.user?.name?.split(' ')[0] || 'Student'}!
             </p>
           </div>
@@ -111,27 +113,55 @@ export default function StudentDashboard() {
 
 // Overview component with live data
 function StudentOverview() {
+  const { assignments, submissions, getSubmissionByAssignmentId } = useAssignments()
+  const { data: session } = useSession()
+  
+  // Filter published assignments
+  const publishedAssignments = assignments.filter(assignment => assignment.published)
+  
+  // Calculate stats
+  const completedAssignments = publishedAssignments.filter(assignment => {
+    const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+    return submission !== undefined
+  })
+  
+  const upcomingAssignments = publishedAssignments.filter(assignment => {
+    const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
+    const now = new Date()
+    const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+    return dueDate && dueDate > now && !submission
+  })
+  
+  const gradedSubmissions = submissions.filter(s => s.score !== undefined)
+  const averageGrade = gradedSubmissions.length > 0 
+    ? Math.round(gradedSubmissions.reduce((sum, s) => sum + ((s.score || 0) / (s.max_score || 1) * 100), 0) / gradedSubmissions.length)
+    : 0
+
   return (
     <div className="space-y-6">
       {/* Progress Cards */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <ProgressCard
-          title="Lessons Completed"
-          icon={<BookOpen className="h-4 w-4 text-[#9A8AC0]" />}
+          title="Total Assignments"
+          value={publishedAssignments.length}
+          icon={<FileText className="h-4 w-4 text-[#9A8AC0]" />}
         />
         
         <ProgressCard
           title="Assignments Due"
+          value={upcomingAssignments.length}
           icon={<Clock className="h-4 w-4 text-[#9A8AC0]" />}
         />
         
         <ProgressCard
-          title="Assignments Completed"
+          title="Completed"
+          value={completedAssignments.length}
           icon={<CheckCircle className="h-4 w-4 text-[#9A8AC0]" />}
         />
         
         <ProgressCard
-          title="Overall Progress"
+          title="Average Grade"
+          value={gradedSubmissions.length > 0 ? `${averageGrade}%` : '-'}
           icon={<BarChart3 className="h-4 w-4 text-[#9A8AC0]" />}
         />
       </div>
@@ -145,10 +175,8 @@ function StudentOverview() {
   )
 }
 
-// Progress card component that fetches live data
-function ProgressCard({ title, icon }: { title: string, icon: React.ReactNode }) {
-  // This would fetch real data from your API
-  // For now, we'll return empty state since no placeholder data allowed
+// Progress card component with real data
+function ProgressCard({ title, value, icon }: { title: string, value: string | number, icon: React.ReactNode }) {
   return (
     <Card className="apple-card">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -158,9 +186,9 @@ function ProgressCard({ title, icon }: { title: string, icon: React.ReactNode })
         {icon}
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold text-[#4A1A4A]">-</div>
+        <div className="text-2xl font-bold text-[#4A1A4A]">{value}</div>
         <p className="text-xs text-[#9A8AC0]">
-          No data available
+          Current status
         </p>
       </CardContent>
     </Card>
@@ -169,21 +197,53 @@ function ProgressCard({ title, icon }: { title: string, icon: React.ReactNode })
 
 // Recent activity component
 function RecentActivity() {
+  const { submissions } = useAssignments()
+  
+  // Get recent submissions (last 5)
+  const recentSubmissions = submissions
+    .sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())
+    .slice(0, 5)
+
   return (
     <Card className="apple-card">
       <CardHeader>
         <CardTitle className="text-[#4A1A4A]">Recent Activity</CardTitle>
         <CardDescription className="text-[#6A4C93]">
-          Your latest interactions with lessons and assignments
+          Your latest submission activity
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col items-center justify-center py-8">
-          <AlertCircle className="h-12 w-12 text-[#9A8AC0] mb-4" />
-          <p className="text-[#6A4C93] text-center">
-            No recent activity to display
-          </p>
-        </div>
+        {recentSubmissions.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <AlertCircle className="h-12 w-12 text-[#9A8AC0] mb-4" />
+            <p className="text-[#6A4C93] text-center">
+              No recent activity to display
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {recentSubmissions.map((submission) => (
+              <div key={submission.id} className="flex items-center justify-between py-2 border-b border-[#E8E8E8] last:border-b-0">
+                <div>
+                  <p className="text-sm font-medium text-[#4A1A4A]">Assignment Submitted</p>
+                  <p className="text-xs text-[#9A8AC0]">
+                    {new Date(submission.submitted_at).toLocaleDateString()}
+                  </p>
+                </div>
+                {submission.score !== undefined && (
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-[#4A1A4A]">
+                      {submission.score}/{submission.max_score}
+                    </p>
+                    <p className="text-xs text-[#9A8AC0]">
+                      {Math.round((submission.score / (submission.max_score || 1)) * 100)}%
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   )
@@ -191,6 +251,22 @@ function RecentActivity() {
 
 // Upcoming deadlines component
 function UpcomingDeadlines() {
+  const { assignments, getSubmissionByAssignmentId } = useAssignments()
+  const { data: session } = useSession()
+  
+  // Get upcoming assignments (due within next 30 days, not submitted)
+  const upcomingDeadlines = assignments
+    .filter(assignment => {
+      if (!assignment.published || !assignment.due_date) return false
+      const dueDate = new Date(assignment.due_date)
+      const now = new Date()
+      const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
+      const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+      return dueDate > now && dueDate <= thirtyDaysFromNow && !submission
+    })
+    .sort((a, b) => new Date(a.due_date!).getTime() - new Date(b.due_date!).getTime())
+    .slice(0, 5)
+
   return (
     <Card className="apple-card">
       <CardHeader>
@@ -200,12 +276,41 @@ function UpcomingDeadlines() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col items-center justify-center py-8">
-          <Clock className="h-12 w-12 text-[#9A8AC0] mb-4" />
-          <p className="text-[#6A4C93] text-center">
-            No upcoming deadlines
-          </p>
-        </div>
+        {upcomingDeadlines.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8">
+            <Clock className="h-12 w-12 text-[#9A8AC0] mb-4" />
+            <p className="text-[#6A4C93] text-center">
+              No upcoming deadlines
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {upcomingDeadlines.map((assignment) => {
+              const dueDate = new Date(assignment.due_date!)
+              const now = new Date()
+              const daysUntilDue = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+              
+              return (
+                <div key={assignment.id} className="flex items-center justify-between py-2 border-b border-[#E8E8E8] last:border-b-0">
+                  <div>
+                    <p className="text-sm font-medium text-[#4A1A4A]">{assignment.title}</p>
+                    <p className="text-xs text-[#9A8AC0]">
+                      {assignment.total_points} points
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-medium text-[#4A1A4A]">
+                      {dueDate.toLocaleDateString()}
+                    </p>
+                    <p className={`text-xs ${daysUntilDue <= 3 ? 'text-red-600' : daysUntilDue <= 7 ? 'text-orange-600' : 'text-[#9A8AC0]'}`}>
+                      {daysUntilDue === 1 ? 'Due tomorrow' : `${daysUntilDue} days left`}
+                    </p>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
       </CardContent>
     </Card>
   )

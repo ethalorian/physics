@@ -1,151 +1,58 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { useAssignments } from '@/contexts/AssignmentContext'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-// Removed unused Textarea import
-// import { supabase } from '@/lib/supabase' // Backend functionality disabled
 import { FileText, Search, Calendar, Clock, CheckCircle, AlertCircle, Upload } from 'lucide-react'
 import Link from 'next/link'
-
-interface Assignment {
-  id: number
-  title: string
-  description: string
-  content: string
-  due_date: string
-  points: number
-  published: boolean
-  created_at: string
-}
-
-interface AssignmentSubmission {
-  id: number
-  assignment_id: number
-  student_id: string
-  content: string
-  submitted_at: string
-  grade?: number
-  feedback?: string
-}
+import { Assignment, Submission } from '@/types/assignment'
 
 export default function StudentAssignments() {
-  const [assignments, setAssignments] = useState<Assignment[]>([])
-  const [submissions, setSubmissions] = useState<AssignmentSubmission[]>([])
-  const [loading, setLoading] = useState(true)
+  const { assignments, submissions, loading, getSubmissionByAssignmentId } = useAssignments()
   const [searchTerm, setSearchTerm] = useState('')
 
-  useEffect(() => {
-    fetchAssignmentsAndSubmissions()
-  }, [])
-
-  const fetchAssignmentsAndSubmissions = async () => {
-    try {
-      setLoading(true)
-      
-      // Backend functionality disabled - keeping frontend only
-      // const { data: assignmentsData, error: assignmentsError } = await supabase
-      //   .from('assignments')
-      //   .select('*')
-      //   .eq('published', true)
-      //   .order('due_date', { ascending: true })
-      // 
-      // if (assignmentsError) throw assignmentsError
-      // setAssignments(assignmentsData || [])
-      
-      // Mock data for frontend demo
-      setAssignments([
-        {
-          id: 1,
-          title: 'Newton\'s Laws Quiz',
-          description: 'Test your understanding of Newton\'s three laws of motion',
-          content: 'Complete all questions showing your work.',
-          due_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-          points: 100,
-          published: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 2,
-          title: 'Energy and Work Problems',
-          description: 'Problem set on kinetic and potential energy',
-          content: 'Solve the following energy problems.',
-          due_date: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
-          points: 50,
-          published: true,
-          created_at: new Date().toISOString()
-        },
-        {
-          id: 3,
-          title: 'Waves and Sound Lab',
-          description: 'Experimental lab on wave properties',
-          content: 'Complete the lab exercises and submit your report.',
-          due_date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-          points: 75,
-          published: true,
-          created_at: new Date().toISOString()
-        }
-      ])
-      
-      // Mock submission data for demo
-      setSubmissions([
-        {
-          id: 1,
-          assignment_id: 3,
-          student_id: 'demo-student',
-          content: 'Lab report submitted',
-          submitted_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-          grade: 85,
-          feedback: 'Good work on the wave analysis!'
-        }
-      ])
-      
-    } catch {
-      // Silent error handling
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const getAssignmentSubmission = (assignmentId: number) => {
-    return submissions.find(s => s.assignment_id === assignmentId)
+  const getAssignmentSubmission = (assignmentId: string): Submission | undefined => {
+    return getSubmissionByAssignmentId(assignmentId)
   }
 
   const getStatusBadge = (assignment: Assignment) => {
     const submission = getAssignmentSubmission(assignment.id)
-    const dueDate = new Date(assignment.due_date)
+    const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
     const now = new Date()
     
     if (submission) {
-      if (submission.grade !== undefined) {
+      if (submission.score !== undefined) {
         return <Badge className="bg-blue-500 hover:bg-blue-600">Graded</Badge>
       }
       return <Badge className="bg-green-500 hover:bg-green-600">Submitted</Badge>
     }
     
-    if (dueDate < now) {
+    if (dueDate && dueDate < now) {
       return <Badge variant="destructive">Past Due</Badge>
-    } else if (dueDate.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000) {
+    } else if (dueDate && dueDate.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000) {
       return <Badge className="bg-orange-500 hover:bg-orange-600">Due Soon</Badge>
     } else {
       return <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">Not Started</Badge>
     }
   }
 
-  const filteredAssignments = assignments.filter(assignment =>
+  const publishedAssignments = assignments.filter(assignment => assignment.published)
+
+  const filteredAssignments = publishedAssignments.filter(assignment =>
     assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    assignment.description.toLowerCase().includes(searchTerm.toLowerCase())
+    (assignment.description && assignment.description.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
-  const upcomingAssignments = assignments.filter(assignment => {
-    const dueDate = new Date(assignment.due_date)
+  const upcomingAssignments = publishedAssignments.filter(assignment => {
+    const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
     const now = new Date()
     const submission = getAssignmentSubmission(assignment.id)
-    return dueDate > now && !submission
+    return dueDate && dueDate > now && !submission
   })
 
-  const completedAssignments = assignments.filter(assignment => {
+  const completedAssignments = publishedAssignments.filter(assignment => {
     const submission = getAssignmentSubmission(assignment.id)
     return submission !== undefined
   })
@@ -190,7 +97,7 @@ export default function StudentAssignments() {
               <FileText className="h-4 w-4 text-[#9A8AC0]" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">{assignments.length}</div>
+              <div className="text-2xl font-bold text-[#4A1A4A]">{publishedAssignments.length}</div>
             </CardContent>
           </Card>
 
@@ -227,11 +134,11 @@ export default function StudentAssignments() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-[#4A1A4A]">
-                {submissions.filter(s => s.grade !== undefined).length > 0 
-                  ? Math.round(submissions.filter(s => s.grade !== undefined).reduce((sum, s) => sum + (s.grade || 0), 0) / submissions.filter(s => s.grade !== undefined).length)
+                {submissions.filter(s => s.score !== undefined).length > 0 
+                  ? Math.round(submissions.filter(s => s.score !== undefined).reduce((sum, s) => sum + (s.score || 0), 0) / submissions.filter(s => s.score !== undefined).length)
                   : '-'
                 }
-                {submissions.filter(s => s.grade !== undefined).length > 0 && '%'}
+                {submissions.filter(s => s.score !== undefined).length > 0 && '%'}
               </div>
             </CardContent>
           </Card>
@@ -245,10 +152,10 @@ export default function StudentAssignments() {
             <CardContent className="flex flex-col items-center justify-center py-12">
               <FileText className="h-12 w-12 text-[#9A8AC0] mb-4" />
               <h3 className="text-lg font-medium text-[#4A1A4A] mb-2">
-                {assignments.length === 0 ? 'No assignments available' : 'No assignments match your search'}
+                {publishedAssignments.length === 0 ? 'No assignments available' : 'No assignments match your search'}
               </h3>
               <p className="text-[#6A4C93] text-center">
-                {assignments.length === 0 
+                {publishedAssignments.length === 0 
                   ? 'Your teacher hasn\'t published any assignments yet. Check back later!'
                   : 'Try adjusting your search terms to find the assignments you\'re looking for.'
                 }
@@ -265,11 +172,11 @@ export default function StudentAssignments() {
                     <div className="flex items-center gap-3">
                       {getStatusBadge(assignment)}
                       <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
-                        {assignment.points} pts
+                        {assignment.total_points} pts
                       </Badge>
-                      {submission?.grade !== undefined && (
+                      {submission?.score !== undefined && (
                         <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-                          {submission.grade}%
+                          {submission.score}/{submission.max_score} ({Math.round((submission.score / (submission.max_score || 1)) * 100)}%)
                         </Badge>
                       )}
                     </div>
@@ -285,10 +192,12 @@ export default function StudentAssignments() {
                 <CardContent>
                   <div className="flex items-center justify-between text-sm text-[#9A8AC0]">
                     <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        Due: {new Date(assignment.due_date).toLocaleDateString()}
-                      </span>
+                      {assignment.due_date && (
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          Due: {new Date(assignment.due_date).toLocaleDateString()}
+                        </span>
+                      )}
                       {submission && (
                         <span className="flex items-center gap-1">
                           <Upload className="h-4 w-4" />
@@ -297,10 +206,14 @@ export default function StudentAssignments() {
                       )}
                     </div>
                   </div>
-                  {submission?.feedback && (
+                  {submission?.feedback && Object.keys(submission.feedback).length > 0 && (
                     <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <p className="text-sm font-medium text-blue-800 mb-1">Teacher Feedback:</p>
-                      <p className="text-sm text-blue-700">{submission.feedback}</p>
+                      <p className="text-sm font-medium text-blue-800 mb-1">Feedback:</p>
+                      <div className="text-sm text-blue-700 space-y-1">
+                        {Object.entries(submission.feedback).map(([questionId, feedback]) => (
+                          <p key={questionId}>{feedback}</p>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </CardContent>

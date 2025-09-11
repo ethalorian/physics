@@ -3,6 +3,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import AuthProvider from '@/components/auth-provider'
 import Navbar from '@/components/navbar'
+import { AssignmentProvider } from '@/contexts/AssignmentContext'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -22,12 +23,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans bg-gradient-to-br from-[#F7F5F3] via-[#C5B9E8] to-[#B19CD9] min-h-screen antialiased`}>
+      <body className={`${inter.variable} font-sans bg-gradient-to-br from-background via-secondary/20 to-muted/30 min-h-screen antialiased`}>
         <AuthProvider>
-          <Navbar />
-          <main className="container mx-auto px-6 py-12">
-            {children}
-          </main>
+          <AssignmentProvider>
+            <Navbar />
+            <main className="container mx-auto px-6 py-12">
+              {children}
+            </main>
+          </AssignmentProvider>
         </AuthProvider>
       </body>
     </html>
