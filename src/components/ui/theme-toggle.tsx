@@ -68,13 +68,13 @@ export function ThemeToggle() {
       variant="ghost"
       size="sm"
       onClick={toggleTheme}
-      className="h-9 w-9 px-0 hover:bg-primary/20 hover:text-primary transition-all duration-200 rounded-full"
+      className="h-8 w-8 sm:h-9 sm:w-9 px-0 hover:bg-primary/20 hover:text-primary transition-all duration-200 rounded-full touch-manipulation"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
       {theme === 'light' ? (
-        <Moon className="h-4 w-4 text-primary hover:text-primary/80 transition-colors" />
+        <Moon className="h-3 w-3 sm:h-4 sm:w-4 text-primary hover:text-primary/80 transition-colors" />
       ) : (
-        <Sun className="h-4 w-4 text-primary hover:text-foreground transition-colors" />
+        <Sun className="h-3 w-3 sm:h-4 sm:w-4 text-primary hover:text-foreground transition-colors" />
       )}
     </Button>
   )

@@ -126,6 +126,22 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  
+  /* Mobile-first touch improvements */
+  @media (max-width: 640px) {
+    * {
+      touch-action: manipulation;
+    }
+    
+    button, [role="button"], input, textarea, select {
+      min-height: 44px; /* Apple's recommended minimum touch target */
+    }
+    
+    .apple-card {
+      margin: 0.5rem;
+      border-radius: 0.75rem;
+    }
+  }
 }
 
 /* Purple-themed design system */

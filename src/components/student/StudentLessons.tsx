@@ -111,7 +111,7 @@ export default function StudentLessons() {
 
       {/* Progress Overview */}
       {lessons.length > 0 && (
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-[#6A4C93]">

@@ -50,21 +50,21 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-0">
       {/* Header */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
           <div>
-            <h1 className="text-4xl font-bold text-foreground relative">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground relative">
               Admin Dashboard
-              <div className="absolute -bottom-2 left-0 w-28 h-1 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
+              <div className="absolute -bottom-1 sm:-bottom-2 left-0 w-20 sm:w-28 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
             </h1>
-            <p className="text-lg text-primary mt-2">
+            <p className="text-sm sm:text-base md:text-lg text-primary mt-1 sm:mt-2">
               Manage your physics classroom
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-foreground">
               Logged in as <span className="font-medium text-primary">{userRole}</span>
             </div>
           </div>
@@ -72,35 +72,35 @@ export default function AdminDashboard() {
       </div>
 
       {/* Dashboard Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:w-[600px] bg-secondary border border-border">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+        <TabsList className="grid w-full grid-cols-4 sm:max-w-[600px] bg-secondary border border-border p-1 h-auto">
           <TabsTrigger 
             value="overview" 
-            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all"
+            className="flex flex-col items-center justify-center gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all py-2 px-1 text-xs h-14 sm:h-12 sm:flex-row sm:gap-2 sm:text-sm sm:px-3 rounded-md"
           >
-            <BarChart3 className="h-4 w-4" />
-            Overview
+            <BarChart3 className="h-4 w-4 shrink-0" />
+            <span className="text-center leading-tight text-[10px] sm:text-xs">Overview</span>
           </TabsTrigger>
           <TabsTrigger 
             value="lessons" 
-            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all"
+            className="flex flex-col items-center justify-center gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all py-2 px-1 text-xs h-14 sm:h-12 sm:flex-row sm:gap-2 sm:text-sm sm:px-3 rounded-md"
           >
-            <BookOpen className="h-4 w-4" />
-            Lessons
+            <BookOpen className="h-4 w-4 shrink-0" />
+            <span className="text-center leading-tight text-[10px] sm:text-xs">Lessons</span>
           </TabsTrigger>
           <TabsTrigger 
             value="assignments" 
-            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all"
+            className="flex flex-col items-center justify-center gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all py-2 px-1 text-xs h-14 sm:h-12 sm:flex-row sm:gap-2 sm:text-sm sm:px-3 rounded-md"
           >
-            <FileText className="h-4 w-4" />
-            Assignments
+            <FileText className="h-4 w-4 shrink-0" />
+            <span className="text-center leading-tight text-[10px] sm:text-xs">Assignments</span>
           </TabsTrigger>
           <TabsTrigger 
             value="students" 
-            className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all"
+            className="flex flex-col items-center justify-center gap-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground text-foreground hover:bg-primary/10 font-medium transition-all py-2 px-1 text-xs h-14 sm:h-12 sm:flex-row sm:gap-2 sm:text-sm sm:px-3 rounded-md"
           >
-            <Users className="h-4 w-4" />
-            Students
+            <Users className="h-4 w-4 shrink-0" />
+            <span className="text-center leading-tight text-[10px] sm:text-xs">Students</span>
           </TabsTrigger>
         </TabsList>
 
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
                 Common tasks you can perform
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <CardContent className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <Button 
                 onClick={() => setActiveTab('lessons')}
                 className="flex items-center gap-2 h-auto p-4 justify-start bg-primary hover:bg-primary/80 text-primary-foreground transition-colors"

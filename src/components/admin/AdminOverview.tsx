@@ -92,7 +92,7 @@ export default function AdminOverview() {
 
   if (status === 'loading' || loading) {
     return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="apple-card">
             <CardContent className="p-6">
@@ -110,7 +110,7 @@ export default function AdminOverview() {
 
   if (status === 'unauthenticated') {
     return (
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="apple-card">
           <CardContent className="p-6">
             <div className="text-center">
@@ -123,7 +123,7 @@ export default function AdminOverview() {
   }
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
       <Card className="apple-card">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-primary">

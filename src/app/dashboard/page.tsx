@@ -77,18 +77,18 @@ export default function StudentDashboard() {
 
       {/* Dashboard Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 lg:w-[500px]">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Overview
+        <TabsList className="grid w-full grid-cols-3 sm:max-w-[500px] bg-secondary border border-border">
+          <TabsTrigger value="overview" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span>Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="lessons" className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            Lessons
+          <TabsTrigger value="lessons" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span>Lessons</span>
           </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Assignments
+          <TabsTrigger value="assignments" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
+            <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span>Assignments</span>
           </TabsTrigger>
         </TabsList>
 
@@ -140,7 +140,7 @@ function StudentOverview() {
   return (
     <div className="space-y-6">
       {/* Progress Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <ProgressCard
           title="Total Assignments"
           value={publishedAssignments.length}

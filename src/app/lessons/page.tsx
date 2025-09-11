@@ -79,7 +79,7 @@ export default async function LessonsPage() {
                 <div className="w-24 h-1 bg-gradient-to-r from-[#6A4C93] to-[#9A8AC0] mx-auto rounded-full"></div>
               </div>
               
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {unitLessons.map((lesson) => (
                   <Link key={lesson.id} href={`/lessons/${lesson.slug}`} className="group">
                     <Card className="apple-card hover:apple-shadow-lg transition-all duration-300 group-hover:scale-[1.02] border-0 overflow-hidden relative">
