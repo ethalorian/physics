@@ -21,9 +21,13 @@ const { handlers, auth } = NextAuth({
       authorization: {
         params: {
           scope: "openid email profile",
-          prompt: "select_account"
+          prompt: "select_account",
+          access_type: "offline",
+          response_type: "code"
         }
-      }
+      },
+      // Allow both HTTP and HTTPS in development
+      checks: process.env.NODE_ENV === "development" ? ["state"] : ["state", "pkce"],
     })
   ],
   secret: process.env.NEXTAUTH_SECRET,
@@ -66,14 +70,22 @@ const { handlers, auth } = NextAuth({
       
       return baseUrl
     },
+    signIn: async ({ account, profile }) => {
+      // You can add additional checks here if needed
+      // For example, to restrict to specific email domains:
+      // if (profile?.email && !profile.email.endsWith('@yourschool.edu')) {
+      //   return false;
+      // }
+      return true;
+    },
   },
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error',
   },
   trustHost: true,
-  // Explicitly disable debug in production to prevent warnings
-  debug: false,
+  // Enable debug in development to see more detailed errors
+  debug: process.env.NODE_ENV === "development",
 })
 
 export const { GET, POST } = handlers

@@ -23,7 +23,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans bg-gradient-to-br from-background via-secondary/20 to-muted/30 min-h-screen antialiased`}>
+      <body 
+        className={`${inter.variable} font-sans bg-gradient-to-br from-background via-secondary/20 to-muted/30 min-h-screen antialiased`}
+        suppressHydrationWarning={true}
+      >
         <AuthProvider>
           <AssignmentProvider>
             <Navbar />
