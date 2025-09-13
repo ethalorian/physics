@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Assignment, Submission, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, OpenResponseGrade } from '@/types/assignment'
@@ -24,13 +24,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
   const [grading, setGrading] = useState(false)
   const [openResponseGrades, setOpenResponseGrades] = useState<OpenResponseGrade[]>([])
 
-  useEffect(() => {
-    if (session) {
-      fetchAssignmentAndSubmission()
-    }
-  }, [session, params.id])
-
-  const fetchAssignmentAndSubmission = async () => {
+  const fetchAssignmentAndSubmission = useCallback(async () => {
     try {
       const assignmentData = getAssignmentById(params.id)
       if (!assignmentData || !assignmentData.published) {
@@ -57,7 +51,13 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, getAssignmentById, getSubmissionByAssignmentId, session])
+
+  useEffect(() => {
+    if (session) {
+      fetchAssignmentAndSubmission()
+    }
+  }, [session, fetchAssignmentAndSubmission])
 
   const updateAnswer = (questionId: string, answer: string | number | string[]) => {
     setAnswers(prev => ({

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import AuthProvider from '@/components/auth-provider'
 import Navbar from '@/components/navbar'
 import { AssignmentProvider } from '@/contexts/AssignmentContext'
+import { ToastProvider } from '@/providers/toast-provider'
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -28,12 +29,14 @@ export default function RootLayout({
         suppressHydrationWarning={true}
       >
         <AuthProvider>
-          <AssignmentProvider>
-            <Navbar />
-            <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-              {children}
-            </main>
-          </AssignmentProvider>
+          <ToastProvider>
+            <AssignmentProvider>
+              <Navbar />
+              <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+                {children}
+              </main>
+            </AssignmentProvider>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

@@ -1,13 +1,14 @@
 "use client"
 
+import { Suspense } from "react"
 import { signIn } from "next-auth/react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { AlertCircle, Home, RefreshCw, LogIn } from "lucide-react"
-import { useEffect, useState } from "react"
+import { AlertCircle, Home, RefreshCw } from "lucide-react"
+import { useState } from "react"
 
-export default function SignIn() {
+function SignInContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isSigningIn, setIsSigningIn] = useState(false)
@@ -150,7 +151,7 @@ export default function SignIn() {
             Having trouble signing in?
           </p>
           <div className="text-xs text-muted-foreground space-y-1">
-            <p>• Make sure you're using your school Google account</p>
+            <p>• Make sure you&apos;re using your school Google account</p>
             <p>• Clear your browser cookies and try again</p>
             <p>• Try a different browser or incognito mode</p>
             <p>• Contact your teacher for assistance</p>
@@ -158,5 +159,13 @@ export default function SignIn() {
         </div>
       </Card>
     </div>
+  )
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   )
 }

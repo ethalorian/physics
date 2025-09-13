@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
           { status: 400 }
         )
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to fetch data from Google Classroom' },
       { status: 500 }
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         )
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to perform action on Google Classroom' },
       { status: 500 }

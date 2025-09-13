@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { Assignment, Submission, OpenResponseQuestion } from '@/types/assignment'
 import { useAssignments } from '@/contexts/AssignmentContext'
@@ -42,13 +42,7 @@ export default function SubmittedPage({
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (session) {
-      fetchSubmissionDetails()
-    }
-  }, [session, params.id])
-
-  const fetchSubmissionDetails = async () => {
+  const fetchSubmissionDetails = useCallback(async () => {
     try {
       const assignmentData = getAssignmentById(params.id)
       if (!assignmentData) {
@@ -70,7 +64,13 @@ export default function SubmittedPage({
     } finally {
       setLoading(false)
     }
-  }
+  }, [params.id, getAssignmentById, getSubmissionByAssignmentId, session])
+
+  useEffect(() => {
+    if (session) {
+      fetchSubmissionDetails()
+    }
+  }, [session, fetchSubmissionDetails])
 
   if (loading) {
     return (

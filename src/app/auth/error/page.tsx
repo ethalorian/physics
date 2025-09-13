@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -7,7 +8,7 @@ import { AlertCircle, Home, LogIn, RefreshCw, ChevronLeft } from "lucide-react"
 import { signIn } from "next-auth/react"
 import { useState } from "react"
 
-export default function AuthError() {
+function AuthErrorContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isSigningIn, setIsSigningIn] = useState(false)
@@ -182,11 +183,11 @@ export default function AuthError() {
             </div>
             <div className="flex gap-2">
               <span className="text-primary">•</span>
-              <span>Clear your browser's cookies and cache</span>
+              <span>Clear your browser&apos;s cookies and cache</span>
             </div>
             <div className="flex gap-2">
               <span className="text-primary">•</span>
-              <span>Make sure you're using your school email (@yourschool.edu)</span>
+              <span>Make sure you&apos;re using your school email (@yourschool.edu)</span>
             </div>
             <div className="flex gap-2">
               <span className="text-primary">•</span>
@@ -196,5 +197,13 @@ export default function AuthError() {
         </div>
       </Card>
     </div>
+  )
+}
+
+export default function AuthError() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <AuthErrorContent />
+    </Suspense>
   )
 }

@@ -38,7 +38,7 @@ export default function CreateAssignmentPage() {
     if (totalPoints !== assignment.total_points) {
       setAssignment(prev => ({ ...prev, total_points: totalPoints }))
     }
-  }, [assignment.questions])
+  }, [assignment.questions, assignment.total_points])
 
   const fetchLessons = async () => {
     // Backend functionality disabled - keeping frontend only

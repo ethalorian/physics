@@ -898,3 +898,44 @@
 .answer-reveal {
   animation: answer-reveal 0.3s ease-out;
 }
+
+/* Toast Animations */
+@keyframes slide-in-from-top-full {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out-to-top-full {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.animate-in {
+  animation-duration: 300ms;
+  animation-fill-mode: both;
+}
+
+.slide-in-from-top-full {
+  animation-name: slide-in-from-top-full;
+}
+
+.animate-out {
+  animation-duration: 200ms;
+  animation-fill-mode: both;
+}
+
+.slide-out-to-top-full {
+  animation-name: slide-out-to-top-full;
+}

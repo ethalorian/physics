@@ -53,7 +53,7 @@ export default function AdminOverview() {
         if (!lessonsError) {
           newStats.totalLessons = lessonsCount || 0
         }
-      } catch (lessonsErr) {
+      } catch {
         // Silent error handling
       }
 
@@ -76,7 +76,7 @@ export default function AdminOverview() {
 
       setStats(newStats)
 
-    } catch (error) {
+    } catch {
       
       // Set default stats on error
       setStats({

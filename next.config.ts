@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser
   // No additional configuration needed for NEXT_PUBLIC_GOOGLE_CLIENT_ID
   
+  // Override NEXTAUTH_URL for local development to prevent fetch errors
+  env: {
+    NEXTAUTH_URL: process.env.NODE_ENV === 'development' 
+      ? 'http://localhost:3000' 
+      : process.env.NEXTAUTH_URL || 'https://www.antocciphysics.com',
+  },
+  
   images: {
     remotePatterns: [
       {

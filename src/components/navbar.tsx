@@ -80,6 +80,7 @@ export default function Navbar() {
                       className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full hover:ring-2 hover:ring-primary/50 transition-all duration-200 p-0 overflow-hidden ring-1 ring-primary/20 touch-manipulation"
                     >
                       {session.user?.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
                         <img 
                           src={session.user.image} 
                           alt={session.user.name || 'User'}
@@ -98,6 +99,7 @@ export default function Navbar() {
                     <DropdownMenuLabel className="font-normal p-3 sm:p-4">
                       <div className="flex items-center space-x-2 sm:space-x-3">
                         {session.user?.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
                           <img 
                             src={session.user.image} 
                             alt={session.user.name || 'User'}

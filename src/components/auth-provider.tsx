@@ -6,5 +6,18 @@ export default function AuthProvider({
 }: {
   children: React.ReactNode
 }) {
-  return <SessionProvider>{children}</SessionProvider>
+  // In development, use localhost URL to avoid fetch errors
+  const basePath = process.env.NODE_ENV === 'development' 
+    ? 'http://localhost:3000/api/auth'
+    : undefined
+  
+  return (
+    <SessionProvider 
+      basePath={basePath}
+      refetchInterval={0}
+      refetchOnWindowFocus={true}
+    >
+      {children}
+    </SessionProvider>
+  )
 }

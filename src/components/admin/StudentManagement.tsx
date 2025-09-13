@@ -1,13 +1,14 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List } from 'lucide-react'
 import { initializeGoogleClassroomAuth, googleClassroomAPI } from '@/lib/google-classroom'
+import { useToast } from '@/providers/toast-provider'
 
 interface Student {
   id: string
@@ -27,6 +28,7 @@ interface Course {
 }
 
 export default function StudentManagement() {
+  const { showToast } = useToast()
   const [students, setStudents] = useState<Student[]>([])
   const [courses, setCourses] = useState<Course[]>([])
   const [selectedCourse, setSelectedCourse] = useState<string>('')
@@ -42,11 +44,47 @@ export default function StudentManagement() {
     }
   }, [isConnected, courses, selectedCourse])
 
+  const fetchStudents = useCallback(async (courseId: string) => {
+    setLoading(true)
+    try {
+      if (isConnected) {
+        // Fetch from Google Classroom API
+        const classroomStudents = await googleClassroomAPI.getStudents(courseId)
+        
+        const formattedStudents: Student[] = classroomStudents.map(student => {
+          
+          // Try multiple possible email field locations
+          const email = student.profile?.emailAddress || 
+                       'No email available'
+          
+          return {
+            id: student.userId,
+            name: student.profile.name.fullName,
+            email: email,
+            profilePhoto: student.profile.photoUrl || student.profile?.photoUrl,
+            enrollmentState: 'ACTIVE', // Google Classroom API only returns active students
+            courseId: courseId
+          }
+        })
+        
+        setStudents(formattedStudents)
+      } else {
+        // No data available when not connected
+        setStudents([])
+      }
+    } catch {
+      // Show empty state on error
+      setStudents([])
+    } finally {
+      setLoading(false)
+    }
+  }, [isConnected])
+
   useEffect(() => {
     if (selectedCourse) {
       fetchStudents(selectedCourse)
     }
-  }, [selectedCourse])
+  }, [selectedCourse, fetchStudents])
 
   const connectToGoogleClassroom = async () => {
     setLoading(true)
@@ -69,7 +107,12 @@ export default function StudentManagement() {
       }
       
       setIsConnected(true)
-      alert('Connected to Google Classroom successfully!')
+      showToast({
+        title: "Connected Successfully!",
+        description: "You're now connected to Google Classroom",
+        variant: "success",
+        duration: 3000
+      })
     } catch (error) {
       let errorMessage = 'Failed to connect to Google Classroom.\n\n'
       
@@ -108,8 +151,14 @@ export default function StudentManagement() {
         errorMessage += 'Please try again.'
       }
       
-      alert(errorMessage)
+      showToast({
+        title: "Connection Failed",
+        description: errorMessage.split('\n')[0], // Show first line in toast
+        variant: "error",
+        duration: 5000
+      })
       console.error('Google Classroom connection error:', error)
+      console.error('Full error details:', errorMessage)
       console.error('📋 To fix OAuth issues, visit: https://console.cloud.google.com/apis/credentials/consent')
       console.error('📋 To enable Google Classroom API: https://console.cloud.google.com/apis/library/classroom.googleapis.com')
     } finally {
@@ -117,55 +166,15 @@ export default function StudentManagement() {
     }
   }
 
-  const fetchStudents = async (courseId: string) => {
-    setLoading(true)
-    try {
-      if (isConnected) {
-        // Fetch from Google Classroom API
-        const classroomStudents = await googleClassroomAPI.getStudents(courseId)
-        
-        // Debug: Log the raw data from Google Classroom
-        console.log('Raw Google Classroom students data:', classroomStudents)
-        
-        const formattedStudents: Student[] = classroomStudents.map(student => {
-          // Debug: Log individual student data
-          console.log('Processing student - Full profile:', student.profile)
-          console.log('Looking for email in:', {
-            emailAddress: student.profile?.emailAddress,
-            fullStudent: student
-          })
-          
-          // Try multiple possible email field locations
-          const email = student.profile?.emailAddress || 
-                       'No email available'
-          
-          return {
-            id: student.userId,
-            name: student.profile.name.fullName,
-            email: email,
-            profilePhoto: student.profile.photoUrl || student.profile?.photoUrl,
-            enrollmentState: 'ACTIVE', // Google Classroom API only returns active students
-            courseId: courseId
-          }
-        })
-        
-        console.log('Formatted students:', formattedStudents)
-        setStudents(formattedStudents)
-      } else {
-        // No data available when not connected
-        setStudents([])
-      }
-    } catch (error) {
-      // Show empty state on error
-      setStudents([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const refreshStudents = () => {
+  const refreshStudents = async () => {
     if (selectedCourse) {
-      fetchStudents(selectedCourse)
+      await fetchStudents(selectedCourse)
+      showToast({
+        title: "Students Refreshed",
+        description: `Updated ${filteredStudents.length} student${filteredStudents.length !== 1 ? 's' : ''}`,
+        variant: "success",
+        duration: 2000
+      })
     }
   }
 
@@ -184,6 +193,13 @@ export default function StudentManagement() {
     a.download = `students-${selectedCourse}-${new Date().toISOString().split('T')[0]}.csv`
     a.click()
     window.URL.revokeObjectURL(url)
+    
+    showToast({
+      title: "Export Complete",
+      description: `Exported ${filteredStudents.length} student${filteredStudents.length !== 1 ? 's' : ''} to CSV`,
+      variant: "success",
+      duration: 2000
+    })
   }
 
   const getStatusBadge = (status: string) => {

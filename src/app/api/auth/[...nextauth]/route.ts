@@ -70,7 +70,7 @@ const { handlers, auth } = NextAuth({
       
       return baseUrl
     },
-    signIn: async ({ account, profile }) => {
+    signIn: async () => {
       // You can add additional checks here if needed
       // For example, to restrict to specific email domains:
       // if (profile?.email && !profile.email.endsWith('@yourschool.edu')) {
