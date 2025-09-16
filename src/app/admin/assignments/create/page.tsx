@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { Assignment, Question, MultipleChoiceQuestion, OpenResponseQuestion } from '@/types/assignment'
+import { Assignment, Question, MultipleChoiceQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion } from '@/types/assignment'
 import { useAssignments } from '@/contexts/AssignmentContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,7 +10,14 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import QuestionEditor from '@/components/assignment-builder/question-editor'
-import { Plus, Save, Eye } from 'lucide-react'
+import { Plus, Save, Eye, Library, X } from 'lucide-react'
+import { PhysicsLevelInfo } from '@/components/physics-level-badge'
+import type { QuestionBankItem } from '@/types/question-bank'
+import dynamic from 'next/dynamic'
+
+const QuestionBankBrowser = dynamic(() => import('@/components/question-bank/QuestionBankBrowser'), {
+  ssr: false
+})
 
 export default function CreateAssignmentPage() {
   const { data: session } = useSession()
@@ -27,6 +34,7 @@ export default function CreateAssignmentPage() {
     published: false
   })
   const [saving, setSaving] = useState(false)
+  const [showQuestionBank, setShowQuestionBank] = useState(false)
 
   useEffect(() => {
     fetchLessons()
@@ -109,6 +117,36 @@ export default function CreateAssignmentPage() {
         minLength: 50,
         maxLength: 500
       } as OpenResponseQuestion
+    } else if (type === 'vocabulary-matching') {
+      newQuestion = {
+        id: `q-${Date.now()}`,
+        type: 'vocabulary-matching',
+        question: 'Vocabulary Matching Game',
+        points: 10,
+        vocabularyTerms: [],
+        instructions: 'Match each term with its correct definition.'
+      } as VocabularyMatchingQuestion
+    } else if (type === 'vocabulary-crossword') {
+      newQuestion = {
+        id: `q-${Date.now()}`,
+        type: 'vocabulary-crossword',
+        question: 'Vocabulary Crossword Puzzle',
+        points: 15,
+        vocabularyTerms: [],
+        gridSize: 15,
+        instructions: 'Complete the crossword puzzle using the vocabulary definitions as clues.'
+      } as VocabularyCrosswordQuestion
+    } else if (type === 'vocabulary-fill-blank') {
+      newQuestion = {
+        id: `q-${Date.now()}`,
+        type: 'vocabulary-fill-blank',
+        question: 'Fill in the Blanks',
+        points: 10,
+        vocabularyTerms: [],
+        sentences: [],
+        showWordBank: true,
+        instructions: 'Fill in the blanks with the correct vocabulary terms.'
+      } as VocabularyFillBlankQuestion
     } else {
       // Default fallback
       newQuestion = {
@@ -141,6 +179,34 @@ export default function CreateAssignmentPage() {
     }))
   }
 
+  const handleAddFromBank = (questionBankItem: QuestionBankItem) => {
+    // Convert question bank item to assignment question
+    const newQuestion: Question = {
+      ...questionBankItem.question,
+      id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    }
+    
+    setAssignment(prev => ({
+      ...prev,
+      questions: [...(prev.questions || []), newQuestion]
+    }))
+    
+    // Usage count will be incremented when question is used
+  }
+
+  const handleAddSelectedQuestions = (questionBankItems: QuestionBankItem[]) => {
+    const newQuestions: Question[] = questionBankItems.map(item => ({
+      ...item.question,
+      id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    }))
+    
+    setAssignment(prev => ({
+      ...prev,
+      questions: [...(prev.questions || []), ...newQuestions]
+    }))
+    
+    setShowQuestionBank(false)
+  }
 
   const saveAssignment = async (publish: boolean = false) => {
     if (!assignment.title || !assignment.questions?.length) {
@@ -198,6 +264,9 @@ export default function CreateAssignmentPage() {
           </Button>
         </div>
       </div>
+
+      {/* Physics Level Information */}
+      <PhysicsLevelInfo />
 
       <div className="space-y-6">
         {/* Basic Info */}
@@ -278,16 +347,26 @@ export default function CreateAssignmentPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold">Questions</h2>
             <div className="flex items-center gap-2">
+              <Button 
+                onClick={() => setShowQuestionBank(true)}
+                variant="outline"
+                className="bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200"
+              >
+                <Library className="h-4 w-4 mr-2" />
+                Question Bank
+              </Button>
               <Select onValueChange={(value) => addQuestion(value as Question['type'])}>
                 <SelectTrigger className="w-48">
                   <SelectValue placeholder="Add Question Type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="multiple-choice">Multiple Choice</SelectItem>
-                  <SelectItem value="short-answer">Short Answer</SelectItem>
+                  <SelectItem value="open-response">Open Response (AI Graded)</SelectItem>
                   <SelectItem value="numerical">Numerical</SelectItem>
                   <SelectItem value="essay">Essay</SelectItem>
-                  <SelectItem value="open-response">Open Response (AI Graded)</SelectItem>
+                  <SelectItem value="vocabulary-matching">Vocabulary Matching Game</SelectItem>
+                  <SelectItem value="vocabulary-crossword">Vocabulary Crossword</SelectItem>
+                  <SelectItem value="vocabulary-fill-blank">Fill in the Blank</SelectItem>
                 </SelectContent>
               </Select>
               <Button onClick={() => addQuestion()}>
@@ -319,6 +398,38 @@ export default function CreateAssignmentPage() {
           )}
         </div>
       </div>
+
+      {/* Question Bank Modal */}
+      {showQuestionBank && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-background rounded-lg shadow-xl w-full max-w-6xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold">Question Bank</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Click on any question to add it to your assignment
+                </p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowQuestionBank(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <QuestionBankBrowser
+                onSelectQuestion={(question: QuestionBankItem) => {
+                  handleAddFromBank(question)
+                  setShowQuestionBank(false)
+                }}
+                selectionMode={false}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

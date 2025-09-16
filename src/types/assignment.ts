@@ -1,4 +1,4 @@
-export type QuestionType = 'multiple-choice' | 'short-answer' | 'essay' | 'numerical' | 'open-response'
+export type QuestionType = 'multiple-choice' | 'open-response' | 'essay' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank'
 
 export interface BaseQuestion {
   id: string
@@ -6,6 +6,7 @@ export interface BaseQuestion {
   question: string
   points: number
   required?: boolean
+  scenarioImage?: string // URL or base64 of generated physics scenario image
 }
 
 export interface MultipleChoiceQuestion extends BaseQuestion {
@@ -15,18 +16,18 @@ export interface MultipleChoiceQuestion extends BaseQuestion {
   explanation?: string
 }
 
-export interface ShortAnswerQuestion extends BaseQuestion {
-  type: 'short-answer'
-  expectedAnswer?: string
-  keywords?: string[]
-  maxLength?: number
-}
+// Short answer removed - consolidated into open-response with AI grading
 
 export interface EssayQuestion extends BaseQuestion {
   type: 'essay'
   rubric?: string
   minLength?: number
   maxLength?: number
+  autoGrade?: boolean  // Enable AI grading
+  gradePrompt?: string  // Custom grading instructions
+  correctConcepts?: string[]  // Key concepts that should be mentioned
+  commonMisconceptions?: string[]  // Common wrong ideas to check for  
+  sampleAnswer?: string  // Example of a good answer
 }
 
 export interface NumericalQuestion extends BaseQuestion {
@@ -34,6 +35,7 @@ export interface NumericalQuestion extends BaseQuestion {
   correctValue: number
   tolerance?: number
   unit?: string
+  unitOptions?: string[] // Multiple unit options for students to choose from
 }
 
 export interface RubricCriterion {
@@ -50,14 +52,51 @@ export interface RubricCriterion {
 export interface OpenResponseQuestion extends BaseQuestion {
   type: 'open-response'
   rubric: RubricCriterion[]
-  sampleAnswer?: string
-  minLength?: number
-  maxLength?: number
-  autoGrade?: boolean
-  gradePrompt?: string
+  correctConcepts?: string[]  // Key physics concepts that should be mentioned
+  commonMisconceptions?: string[]  // Common wrong ideas to check for  
+  sampleAnswer?: string  // Example of a good answer
+  minLength?: number  // Minimum character requirement
+  maxLength?: number  // Character limit
+  autoGrade?: boolean  // Enable AI grading
+  gradePrompt?: string  // Custom grading instructions
+  requiresExplanation?: boolean  // Whether student must explain reasoning
 }
 
-export type Question = MultipleChoiceQuestion | ShortAnswerQuestion | EssayQuestion | NumericalQuestion | OpenResponseQuestion
+// Vocabulary types
+export interface VocabularyTerm {
+  id: string
+  term: string
+  definition: string
+  category?: string
+  difficulty?: 'easy' | 'medium' | 'hard'
+}
+
+export interface VocabularyMatchingQuestion extends BaseQuestion {
+  type: 'vocabulary-matching'
+  vocabularyTerms: VocabularyTerm[]
+  instructions?: string
+}
+
+export interface VocabularyCrosswordQuestion extends BaseQuestion {
+  type: 'vocabulary-crossword'
+  vocabularyTerms: VocabularyTerm[]
+  gridSize?: number // Default 15x15
+  instructions?: string
+}
+
+export interface VocabularyFillBlankQuestion extends BaseQuestion {
+  type: 'vocabulary-fill-blank'
+  vocabularyTerms: VocabularyTerm[]
+  sentences: {
+    id: string
+    text: string // Text with {term} placeholders
+    termId: string // Which vocabulary term fills the blank
+  }[]
+  showWordBank?: boolean // Whether to show available terms
+  instructions?: string
+}
+
+export type Question = MultipleChoiceQuestion | OpenResponseQuestion | EssayQuestion | NumericalQuestion | VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion
 
 export interface Assignment {
   id: string
@@ -95,7 +134,7 @@ export interface Submission {
   id: string
   assignment_id: string
   user_id: string
-  answers: Record<string, string | number | string[]>
+  answers: Record<string, string | number | string[] | Record<string, unknown>>
   score?: number
   max_score?: number
   feedback?: Record<string, string>

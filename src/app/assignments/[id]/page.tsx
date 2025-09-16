@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback } from 'react'
+import { use, useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Assignment, Submission, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, OpenResponseGrade } from '@/types/assignment'
@@ -9,15 +9,17 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import QuestionRenderer from '@/components/assignment-taking/question-renderer'
+import ProgressScoreboard from '@/components/assignment-taking/ProgressScoreboard'
 import { Clock, CheckCircle, AlertCircle, Save } from 'lucide-react'
 
-export default function AssignmentPage({ params }: { params: { id: string } }) {
+export default function AssignmentPage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params)
   const { data: session } = useSession()
   const router = useRouter()
   const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
-  const [answers, setAnswers] = useState<Record<string, string | number | string[]>>({})
+  const [answers, setAnswers] = useState<Record<string, string | number | string[] | Record<string, any>>>({})
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -26,7 +28,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
 
   const fetchAssignmentAndSubmission = useCallback(async () => {
     try {
-      const assignmentData = getAssignmentById(params.id)
+      const assignmentData = getAssignmentById(resolvedParams.id)
       if (!assignmentData || !assignmentData.published) {
         setAssignment(null)
         setLoading(false)
@@ -37,7 +39,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
 
       // Get existing submission
       if (session?.user?.id) {
-        const existingSubmission = getSubmissionByAssignmentId(params.id, session.user.id)
+        const existingSubmission = getSubmissionByAssignmentId(resolvedParams.id, session.user.id)
         if (existingSubmission) {
           setSubmission(existingSubmission)
           setAnswers(existingSubmission.answers)
@@ -51,7 +53,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
     } finally {
       setLoading(false)
     }
-  }, [params.id, getAssignmentById, getSubmissionByAssignmentId, session])
+  }, [resolvedParams.id, getAssignmentById, getSubmissionByAssignmentId, session])
 
   useEffect(() => {
     if (session) {
@@ -59,7 +61,7 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
     }
   }, [session, fetchAssignmentAndSubmission])
 
-  const updateAnswer = (questionId: string, answer: string | number | string[]) => {
+  const updateAnswer = (questionId: string, answer: string | number | string[] | Record<string, any>) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: answer
@@ -156,13 +158,32 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
         }
       } else if (question.type === 'numerical') {
         const numQuestion = question as NumericalQuestion
-        const numAnswer = parseFloat(answer as string)
+        let numAnswer: number
+        let selectedUnit = ''
+        
+        // Parse answer based on whether units are selectable
+        if (numQuestion.unitOptions && typeof answer === 'string' && answer.includes('|')) {
+          const parts = (answer as string).split('|')
+          numAnswer = parseFloat(parts[0])
+          selectedUnit = parts[1] || ''
+        } else {
+          numAnswer = parseFloat(answer as string)
+        }
+        
         const correct = numQuestion.correctValue
         const tolerance = numQuestion.tolerance || 0
         
-        if (!isNaN(numAnswer) && Math.abs(numAnswer - correct) <= tolerance) {
+        // Check both value and unit
+        const valueCorrect = !isNaN(numAnswer) && Math.abs(numAnswer - correct) <= tolerance
+        const unitCorrect = !numQuestion.unitOptions || selectedUnit === numQuestion.unit
+        
+        if (valueCorrect && unitCorrect) {
           totalScore += question.points
           feedback[question.id] = 'Correct!'
+        } else if (valueCorrect && !unitCorrect) {
+          feedback[question.id] = `Incorrect unit. Expected: ${numQuestion.unit}`
+        } else if (!valueCorrect && unitCorrect) {
+          feedback[question.id] = `Incorrect value. Expected: ${correct} ± ${tolerance}`
         } else {
           feedback[question.id] = `Incorrect. Expected: ${correct}${numQuestion.unit ? ` ${numQuestion.unit}` : ''}`
         }
@@ -270,6 +291,14 @@ export default function AssignmentPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="max-w-4xl mx-auto">
+      {/* Progress Scoreboard Drawer */}
+      {!isSubmitted() && (
+        <ProgressScoreboard 
+          assignment={assignment} 
+          answers={answers}
+        />
+      )}
+      
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-start justify-between mb-4">

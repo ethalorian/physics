@@ -216,7 +216,7 @@ export default function Home() {
           background-size: 300% 300%;
           animation: gradient 6s ease infinite;
         }
-        :global(.bg-300\\%) {
+        :global(.bg-size-300) {
           background-size: 300% 300%;
         }
         :global(.animate-float) {

@@ -1,0 +1,213 @@
+---
+alwaysApply: true
+description: Question Bank system architecture and implementation patterns
+---
+
+# Question Bank System
+
+The Question Bank is a centralized repository for physics questions with advanced filtering, AI generation, and usage tracking capabilities.
+
+## Core Architecture
+
+### Data Structure
+Questions are stored with comprehensive metadata defined in [src/types/question-bank.ts](mdc:src/types/question-bank.ts):
+
+```typescript
+export interface QuestionBankItem {
+  id: string
+  question: Question              // Full question object from assignment types
+  unit: string                   // Physics unit (e.g., "unit-1")
+  lesson: string                 // Specific lesson (e.g., "lesson-1-1") 
+  topics: string[]               // Physics topics/concepts
+  difficulty: 'easy' | 'medium' | 'hard'
+  usage_count: number            // Tracks how often question is used
+  tags?: string[]                // Custom tags for organization
+  estimated_time?: number        // Minutes to complete
+  cognitive_level?: string       // Bloom's taxonomy level
+  standards?: string[]           // Educational standards (NGSS, etc.)
+}
+```
+
+### Physics Curriculum Structure
+Questions are organized by the physics curriculum defined in [src/data/physics-units.ts](mdc:src/data/physics-units.ts):
+
+- **Units**: Major topics (Motion, Forces, Energy, etc.)
+- **Lessons**: Specific concepts within units
+- **Topics**: Granular physics concepts for tagging
+
+## Context Management
+
+### QuestionBankProvider
+**File**: [src/contexts/QuestionBankContext.tsx](mdc:src/contexts/QuestionBankContext.tsx)
+
+Provides centralized state management for:
+- Question CRUD operations
+- Filtering and search
+- Usage analytics
+- Permission-based access
+
+```typescript
+const {
+  questions,           // All questions
+  filteredQuestions,   // Filtered results
+  filters,            // Current filter state
+  stats,              // Usage statistics
+  addQuestion,        // Create new question
+  updateQuestion,     // Modify existing
+  deleteQuestion,     // Remove question
+  searchQuestions,    // Text search
+  incrementUsageCount // Track usage
+} = useQuestionBank()
+```
+
+### Lazy Loading & Permissions
+The context only loads data for authorized users (admin/teacher):
+
+```typescript
+const userRole = getUserRole(session?.user?.email)
+const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
+
+// Only initialize for authorized users
+useEffect(() => {
+  if (session?.user?.id && canAccessQuestionBank && !initialized) {
+    initializeData()
+  }
+}, [session, canAccessQuestionBank, initialized])
+```
+
+## Database Integration
+
+### API Endpoints
+**Base**: [src/app/api/question-bank/route.ts](mdc:src/app/api/question-bank/route.ts)
+
+- `GET /api/question-bank` - Fetch questions with filters
+- `POST /api/question-bank` - Create new question
+- `PUT /api/question-bank` - Update existing question  
+- `DELETE /api/question-bank` - Remove question
+
+**Additional endpoints**:
+- [src/app/api/question-bank/units/route.ts](mdc:src/app/api/question-bank/units/route.ts) - Get curriculum units
+- [src/app/api/question-bank/usage/route.ts](mdc:src/app/api/question-bank/usage/route.ts) - Track question usage
+
+### Database Schema
+**File**: [supabase/migrations/create_question_bank_tables.sql](mdc:supabase/migrations/create_question_bank_tables.sql)
+
+Key tables:
+- `question_bank` - Main question storage
+- `units` - Physics units/curriculum structure  
+- `lessons` - Lesson organization
+- `question_usage` - Usage tracking and analytics
+
+## Advanced Features
+
+### Filtering System
+**Interface**: [src/types/question-bank.ts](mdc:src/types/question-bank.ts)
+
+```typescript
+export interface QuestionBankFilters {
+  units?: string[]              // Filter by physics units
+  lessons?: string[]            // Filter by specific lessons
+  topics?: string[]             // Filter by physics topics
+  difficulty?: ('easy' | 'medium' | 'hard')[]
+  questionTypes?: string[]      // Multiple choice, open response, etc.
+  searchText?: string          // Full-text search
+  tags?: string[]              // Custom tag filtering
+  cognitive_levels?: string[]   // Bloom's taxonomy levels
+}
+```
+
+### Usage Analytics
+The system tracks comprehensive usage statistics:
+
+```typescript
+export interface QuestionBankStats {
+  total_questions: number
+  by_unit: Record<string, number>           // Questions per unit
+  by_difficulty: {                          // Difficulty distribution
+    easy: number
+    medium: number  
+    hard: number
+  }
+  by_type: Record<string, number>           // Question type distribution
+  most_used: QuestionBankItem[]             // Top 5 most used
+  recently_added: QuestionBankItem[]        // 5 newest questions
+}
+```
+
+### Question Management Operations
+
+#### Adding Questions
+```typescript
+await addQuestion({
+  question: questionObject,      // Full Question type
+  unit: 'unit-1',               // Physics unit
+  lesson: 'lesson-1-1',         // Specific lesson
+  topics: ['velocity', 'speed'], // Physics concepts
+  difficulty: 'medium',         // Difficulty level
+  tags: ['kinematics'],         // Custom tags
+  cognitive_level: 'apply'      // Bloom's level
+})
+```
+
+#### Bulk Operations
+```typescript
+// Import multiple questions
+await importQuestions(questionsArray)
+
+// Export selected questions
+const exported = exportQuestions(['q1', 'q2', 'q3'])
+
+// Duplicate existing question
+await duplicateQuestion('question-id')
+```
+
+## UI Components
+
+### Question Bank Browser
+**File**: [src/components/question-bank/QuestionBankBrowser.tsx](mdc:src/components/question-bank/QuestionBankBrowser.tsx)
+- Advanced filtering interface
+- Search functionality
+- Question preview and selection
+
+### Question Editor
+**File**: [src/components/question-bank/QuestionEditor.tsx](mdc:src/components/question-bank/QuestionEditor.tsx)
+- Full question creation/editing
+- AI-powered option generation
+- Physics calculation tools
+- Scenario image generation
+
+### Admin Interface  
+**File**: [src/app/admin/question-bank/page.tsx](mdc:src/app/admin/question-bank/page.tsx)
+- Question bank management dashboard
+- Usage analytics display
+- Bulk operations interface
+
+## Integration with Assignments
+
+### Question Selection
+When building assignments, teachers can:
+- Browse the question bank with filters
+- Search by physics concepts
+- Preview questions before adding
+- Track which questions are most effective
+
+### Usage Tracking
+```typescript
+// Increment usage count when question is added to assignment
+await incrementUsageCount(questionId, assignmentId)
+```
+
+### Add to Bank Modal
+**File**: [src/components/question-bank/AddToQuestionBankModal.tsx](mdc:src/components/question-bank/AddToQuestionBankModal.tsx)
+- Quick way to add assignment questions to the bank
+- Automatic metadata extraction
+- Physics unit/lesson association
+
+## Key Implementation Files
+
+- [src/contexts/QuestionBankContext.tsx](mdc:src/contexts/QuestionBankContext.tsx) - Context provider
+- [src/types/question-bank.ts](mdc:src/types/question-bank.ts) - Type definitions
+- [src/app/api/question-bank/route.ts](mdc:src/app/api/question-bank/route.ts) - Main API
+- [src/components/question-bank/](mdc:src/components/question-bank/) - UI components
+- [src/data/physics-units.ts](mdc:src/data/physics-units.ts) - Curriculum structure
+- [supabase/migrations/create_question_bank_tables.sql](mdc:supabase/migrations/create_question_bank_tables.sql) - Database schema

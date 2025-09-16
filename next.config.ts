@@ -4,6 +4,12 @@ const nextConfig: NextConfig = {
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser
   // No additional configuration needed for NEXT_PUBLIC_GOOGLE_CLIENT_ID
   
+  // ESLint configuration for production builds
+  eslint: {
+    // Only fail build on ESLint errors, not warnings
+    ignoreDuringBuilds: false,
+  },
+  
   // Override NEXTAUTH_URL for local development to prevent fetch errors
   env: {
     NEXTAUTH_URL: process.env.NODE_ENV === 'development' 

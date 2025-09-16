@@ -215,12 +215,24 @@ function parseShortAnswer(question: string, content: string, points: number, id:
 
   return {
     id,
-    type: 'short-answer',
+    type: 'open-response',
     question,
     points,
-    expectedAnswer,
-    keywords,
-    maxLength
+    rubric: [{
+      id: 'content',
+      name: 'Content Quality',
+      description: 'Quality and accuracy of the response',
+      maxPoints: points,
+      levels: [
+        { score: points, description: 'Excellent understanding with all key concepts' },
+        { score: Math.floor(points * 0.7), description: 'Good understanding with most key concepts' },
+        { score: Math.floor(points * 0.4), description: 'Basic understanding with some key concepts' },
+        { score: 0, description: 'Little to no understanding shown' }
+      ]
+    }],
+    correctConcepts: keywords,
+    maxLength,
+    autoGrade: true
   } as Question
 }
 

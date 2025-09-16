@@ -1,0 +1,308 @@
+---
+alwaysApply: true
+description: API routes, database patterns, and external service integrations
+---
+
+# API Routes & Database Patterns
+
+The application uses **Next.js 15 App Router** API routes with **Supabase** PostgreSQL database and various external service integrations.
+
+## Database Architecture
+
+### Supabase Configuration
+**File**: [src/lib/supabase.ts](mdc:src/lib/supabase.ts)
+
+```typescript
+export const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+)
+```
+
+### Database Schema
+**File**: [supabase/migrations/create_question_bank_tables.sql](mdc:supabase/migrations/create_question_bank_tables.sql)
+
+Key tables:
+- **`question_bank`** - Core question storage with JSONB question data
+- **`units`** - Physics curriculum units
+- **`lessons`** - Individual lessons within units  
+- **`question_usage`** - Usage tracking and analytics
+- **`assignments`** - Assignment metadata (if using DB storage)
+- **`submissions`** - Student submission data
+
+### JSONB Storage Pattern
+Questions are stored as JSONB for flexibility:
+
+```sql
+CREATE TABLE question_bank (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  question_data JSONB NOT NULL,        -- Full Question object
+  question_text TEXT NOT NULL,         -- Searchable text
+  question_type TEXT NOT NULL,         -- For filtering
+  unit_id TEXT NOT NULL,
+  lesson_id TEXT NOT NULL,
+  topics TEXT[] DEFAULT '{}',
+  tags TEXT[] DEFAULT '{}',
+  difficulty TEXT CHECK (difficulty IN ('easy', 'medium', 'hard')),
+  usage_count INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+## API Route Patterns
+
+### Authentication Middleware
+All API routes use consistent auth checking:
+
+```typescript
+import { auth } from '@/app/api/auth/[...nextauth]/route'
+
+export async function GET(request: Request) {
+  const session = await auth()
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  
+  // Role-based access control
+  const userRole = session.user?.role || 'student'
+  if (userRole !== 'admin' && userRole !== 'teacher') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+}
+```
+
+### Question Bank API
+**File**: [src/app/api/question-bank/route.ts](mdc:src/app/api/question-bank/route.ts)
+
+**GET** - Fetch questions with filtering:
+```typescript
+// Build dynamic query with filters
+let query = supabase
+  .from('question_bank')
+  .select(`
+    *,
+    unit:units(id, name),
+    lesson:lessons(id, name)
+  `)
+  .order('created_at', { ascending: false })
+
+// Apply filters conditionally
+if (unitId) query = query.eq('unit_id', unitId)
+if (difficulty) query = query.eq('difficulty', difficulty)
+if (topics?.length > 0) query = query.contains('topics', topics)
+if (searchText) query = query.ilike('question_text', `%${searchText}%`)
+```
+
+**POST** - Create new question:
+```typescript
+const questionData = {
+  question_data: body.question,          // Full Question object
+  unit_id: body.unit_id,
+  lesson_id: body.lesson_id,
+  question_type: body.question.type,     // Extracted for filtering
+  question_text: body.question.question, // Extracted for search
+  points: body.question.points || 0,
+  difficulty: body.difficulty,
+  topics: body.topics || [],
+  created_by: session.user.id
+}
+```
+
+### Specialized Endpoints
+
+#### Units API
+**File**: [src/app/api/question-bank/units/route.ts](mdc:src/app/api/question-bank/units/route.ts)
+- Fetches curriculum structure
+- Returns units with nested lessons
+- Used for organizing questions
+
+#### Usage Tracking
+**File**: [src/app/api/question-bank/usage/route.ts](mdc:src/app/api/question-bank/usage/route.ts)
+- Increments question usage counts
+- Tracks which assignments use which questions
+- Provides analytics data
+
+## AI Service Integrations
+
+### OpenAI Configuration
+**File**: [src/lib/openai-grading.ts](mdc:src/lib/openai-grading.ts)
+
+```typescript
+import OpenAI from 'openai'
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+})
+```
+
+### Multiple Choice Generation
+**File**: [src/app/api/generate-mc-options/route.ts](mdc:src/app/api/generate-mc-options/route.ts)
+
+```typescript
+const prompt = `
+Generate 4 multiple choice options for this physics question: ${questionText}
+
+Requirements:
+- One correct answer
+- Three plausible distractors based on common misconceptions
+- Include detailed explanations for why each option is correct/incorrect
+- Focus on physics concepts: ${topic}
+`
+
+const response = await openai.chat.completions.create({
+  model: "gpt-4",
+  messages: [{ role: "user", content: prompt }],
+  temperature: 0.7
+})
+```
+
+### Answer Generation
+**File**: [src/app/api/generate-answer/route.ts](mdc:src/app/api/generate-answer/route.ts)
+- Generates detailed solutions to physics problems
+- Provides step-by-step explanations
+- Includes relevant physics principles
+
+### Scenario Image Generation  
+**File**: [src/app/api/generate-scenario-image/route.ts](mdc:src/app/api/generate-scenario-image/route.ts)
+- Creates physics diagram images using DALL-E
+- Generates visual scenarios for word problems
+- Optimizes images for educational use
+
+### Open Response Grading
+**File**: [src/app/api/grade-open-response/route.ts](mdc:src/app/api/grade-open-response/route.ts)
+
+```typescript
+const gradingPrompt = `
+You are a physics teacher grading a student response.
+
+Question: ${question}
+Student Answer: ${studentAnswer}
+Rubric: ${JSON.stringify(rubric)}
+Key Concepts: ${correctConcepts}
+Common Misconceptions: ${commonMisconceptions}
+
+Grade according to the rubric and provide:
+1. Score for each criterion
+2. Specific feedback
+3. Overall assessment
+4. Suggestions for improvement
+`
+```
+
+## External Service Patterns
+
+### Google Classroom Integration
+**File**: [src/lib/google-classroom.ts](mdc:src/lib/google-classroom.ts)
+
+```typescript
+export async function createGoogleClassroomAssignment(
+  assignment: Assignment,
+  classroomId: string,
+  accessToken: string
+) {
+  const classroomAssignment = {
+    title: assignment.title,
+    description: assignment.description,
+    materials: [{
+      link: {
+        url: `${process.env.NEXTAUTH_URL}/assignments/${assignment.id}`,
+        title: "Complete Assignment"
+      }
+    }],
+    maxPoints: assignment.total_points,
+    dueDate: assignment.due_date ? formatDateForClassroom(assignment.due_date) : undefined
+  }
+  
+  // Create via Google Classroom API
+}
+```
+
+### Image Proxy Service
+**File**: [src/app/api/proxy-image/route.ts](mdc:src/app/api/proxy-image/route.ts)
+- Proxies external images to avoid CORS issues
+- Caches images for performance
+- Handles image optimization
+
+## Error Handling Patterns
+
+### Consistent Error Responses
+```typescript
+// Standardized error format
+return NextResponse.json(
+  { error: 'Descriptive error message' }, 
+  { status: 400 }
+)
+
+// Error logging
+console.error('Context for debugging:', error)
+```
+
+### Database Error Handling
+```typescript
+const { data, error } = await supabase
+  .from('question_bank')
+  .insert(questionData)
+
+if (error) {
+  console.error('Database error:', error)
+  return NextResponse.json(
+    { error: error.message }, 
+    { status: 500 }
+  )
+}
+```
+
+### Rate Limiting & Quotas
+- OpenAI API calls are throttled
+- Database queries are optimized with indexes
+- LocalStorage usage is monitored
+
+## Caching Strategies
+
+### API Response Caching
+- Units/lessons cached in context
+- Question bank results cached with filters
+- Usage statistics cached for performance
+
+### Client-Side Storage
+- LocalStorage for assignments/submissions
+- SessionStorage for temporary data
+- Context state for active session data
+
+## Data Transformation Patterns
+
+### Database to Context Mapping
+```typescript
+// Transform database format to context format
+const transformedQuestions: QuestionBankItem[] = data.map((item: any) => ({
+  id: item.id,
+  question: item.question_data,        // JSONB to Question object
+  unit: item.unit_id,
+  lesson: item.lesson_id,
+  topics: item.topics || [],
+  difficulty: item.difficulty,
+  usage_count: item.usage_count,
+  created_at: item.created_at,
+  updated_at: item.updated_at
+}))
+```
+
+### Question Storage Optimization
+```typescript
+// Extract searchable fields from JSONB
+if (updates.question_data) {
+  updates.question_text = updates.question_data.question
+  updates.question_type = updates.question_data.type
+  updates.points = updates.question_data.points || 0
+}
+```
+
+## Key API Files
+
+- [src/app/api/question-bank/route.ts](mdc:src/app/api/question-bank/route.ts) - Main question CRUD
+- [src/app/api/generate-*/](mdc:src/app/api/) - AI generation endpoints
+- [src/app/api/grade-*/](mdc:src/app/api/) - Grading services
+- [src/app/api/auth/[...nextauth]/route.ts](mdc:src/app/api/auth/[...nextauth]/route.ts) - Authentication
+- [src/lib/supabase.ts](mdc:src/lib/supabase.ts) - Database client
+- [src/lib/google-classroom.ts](mdc:src/lib/google-classroom.ts) - External integration

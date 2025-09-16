@@ -1,0 +1,322 @@
+---
+alwaysApply: true
+description: Assignment creation, management, and student submission system
+---
+
+# Assignment Management System
+
+The assignment system handles the complete lifecycle from creation to grading, with support for multiple question types and AI-powered features.
+
+## Core Data Models
+
+### Assignment Structure
+**File**: [src/types/assignment.ts](mdc:src/types/assignment.ts)
+
+```typescript
+export interface Assignment {
+  id: string
+  lesson_id?: string           // Optional lesson association
+  title: string
+  description?: string
+  instructions?: string
+  questions: Question[]        // Array of questions
+  total_points: number        // Sum of all question points
+  due_date?: string
+  published: boolean          // Draft vs published state
+  created_at: string
+  updated_at: string
+  lesson?: {                  // Populated lesson data
+    title: string
+    slug: string
+  }
+}
+```
+
+### Question Types
+The system supports four main question types:
+
+#### Multiple Choice
+```typescript
+export interface MultipleChoiceQuestion extends BaseQuestion {
+  type: 'multiple-choice'
+  options: string[]           // Answer choices
+  correctAnswer: number       // Index of correct answer
+  explanation?: string        // Why answer is correct
+}
+```
+
+#### Open Response (AI Graded)
+```typescript
+export interface OpenResponseQuestion extends BaseQuestion {
+  type: 'open-response'
+  rubric: RubricCriterion[]          // Grading criteria
+  correctConcepts?: string[]         // Key physics concepts
+  commonMisconceptions?: string[]    // Wrong ideas to check for
+  sampleAnswer?: string             // Example good answer
+  autoGrade?: boolean              // Enable AI grading
+  gradePrompt?: string             // Custom grading instructions
+}
+```
+
+#### Numerical Answer
+```typescript
+export interface NumericalQuestion extends BaseQuestion {
+  type: 'numerical'
+  correctValue: number        // Expected numeric answer
+  tolerance?: number          // Acceptable error range
+  unit?: string              // Required unit
+  unitOptions?: string[]     // Unit choices for students
+}
+```
+
+#### Essay (Manual Grading)
+```typescript
+export interface EssayQuestion extends BaseQuestion {
+  type: 'essay'
+  rubric?: string           // Grading guidelines
+  minLength?: number        // Minimum character count
+  maxLength?: number        // Maximum character count
+}
+```
+
+## Context Management
+
+### AssignmentProvider
+**File**: [src/contexts/AssignmentContext.tsx](mdc:src/contexts/AssignmentContext.tsx)
+
+Provides centralized assignment and submission management:
+
+```typescript
+const {
+  assignments,              // All assignments
+  submissions,             // Student submissions
+  loading,                 // Loading state
+  createAssignment,        // Create new assignment
+  updateAssignment,        // Modify existing
+  deleteAssignment,        // Remove assignment
+  getAssignmentById,       // Fetch specific assignment
+  getSubmissionByAssignmentId, // Get student submission
+  refreshAssignments,      // Reload from storage
+  refreshSubmissions       // Reload submissions
+} = useAssignments()
+```
+
+### Local Storage Strategy
+The context uses localStorage for persistence with smart data management:
+
+```typescript
+// Strip large data (base64 images) before storing
+function stripLargeData(assignment: Assignment): Assignment {
+  return {
+    ...assignment,
+    questions: assignment.questions.map(q => ({
+      ...q,
+      scenarioImage: q.scenarioImage?.startsWith('data:image') ? null : q.scenarioImage
+    }))
+  }
+}
+
+// Handle quota exceeded errors gracefully
+function safeLocalStorageSet(key: string, data: any): boolean {
+  // Automatic cleanup and fallback strategies
+}
+```
+
+## Assignment Creation Workflow
+
+### Assignment Builder
+**File**: [src/app/admin/assignments/create/page.tsx](mdc:src/app/admin/assignments/create/page.tsx)
+
+Multi-step creation process:
+1. **Basic Info**: Title, description, instructions, due date
+2. **Question Creation**: Add/edit questions with AI assistance  
+3. **Review**: Preview final assignment before publishing
+
+### Question Editor
+**File**: [src/components/assignment-builder/question-editor.tsx](mdc:src/components/assignment-builder/question-editor.tsx)
+
+Advanced question creation with:
+- **AI Option Generation**: Auto-generate multiple choice options
+- **Physics Calculator**: Auto-calculate numerical answers
+- **Scenario Images**: AI-generated physics diagrams
+- **Rubric Builder**: Create detailed grading criteria
+
+#### AI-Powered Features
+
+**Multiple Choice Generation**:
+```typescript
+const handleGenerateOptions = async () => {
+  const response = await fetch('/api/generate-mc-options', {
+    method: 'POST',
+    body: JSON.stringify({
+      questionText: question.question,
+      topic: question.topic
+    })
+  })
+  // Auto-populate options and correct answer
+}
+```
+
+**Physics Calculations**:
+```typescript
+const solution = calculatePhysicsSolution(question.question)
+if (solution) {
+  updateQuestion({
+    correctValue: solution.value,
+    unit: solution.unit,
+    unitOptions: generateIncorrectUnits(solution.unit)
+  })
+}
+```
+
+**Scenario Image Generation**:
+```typescript
+const response = await fetch('/api/generate-scenario-image', {
+  method: 'POST',
+  body: JSON.stringify({
+    questionText: question.question,
+    physicsContext: extractPhysicsContext(question.question)
+  })
+})
+```
+
+## Student Assignment Experience
+
+### Assignment Taking Interface
+**File**: [src/components/assignment-taking/question-renderer.tsx](mdc:src/components/assignment-taking/question-renderer.tsx)
+
+Renders different question types with:
+- **Progress tracking**: Visual progress bar
+- **Auto-save**: Saves answers as student types
+- **Math rendering**: KaTeX for mathematical expressions
+- **Image display**: Physics scenario images
+- **Validation**: Required field checking
+
+### Submission Handling
+**File**: [src/contexts/AssignmentContext.tsx](mdc:src/contexts/AssignmentContext.tsx)
+
+```typescript
+export function saveSubmission(submission: Omit<Submission, 'id' | 'submitted_at'>) {
+  const newSubmission: Submission = {
+    ...submission,
+    id: `submission-${Date.now()}`,
+    submitted_at: new Date().toISOString()
+  }
+  
+  // Replace existing submission for same assignment/user
+  const filteredSubmissions = existingSubmissions.filter(
+    sub => !(sub.assignment_id === submission.assignment_id && 
+             sub.user_id === submission.user_id)
+  )
+  
+  localStorage.setItem('physics-submissions', JSON.stringify([
+    ...filteredSubmissions, 
+    newSubmission
+  ]))
+}
+```
+
+## Grading System
+
+### Automatic Grading
+**Multiple Choice & Numerical**: Instant grading with score calculation
+**Open Response**: AI-powered grading using OpenAI API
+
+### AI Grading Implementation
+**File**: [src/app/api/grade-open-response/route.ts](mdc:src/app/api/grade-open-response/route.ts)
+
+```typescript
+const gradingPrompt = `
+Grade this physics response using the provided rubric.
+Question: ${question.question}
+Student Answer: ${studentAnswer}
+Rubric: ${JSON.stringify(question.rubric)}
+Expected Concepts: ${question.correctConcepts}
+Common Misconceptions: ${question.commonMisconceptions}
+`
+
+const response = await openai.chat.completions.create({
+  model: "gpt-4",
+  messages: [{ role: "user", content: gradingPrompt }]
+})
+```
+
+### Rubric System
+**File**: [src/components/assignment-builder/rubric-builder.tsx](mdc:src/components/assignment-builder/rubric-builder.tsx)
+
+Detailed rubric creation with:
+- **Multiple criteria**: Different aspects of the answer
+- **Point scales**: Flexible scoring systems
+- **Level descriptions**: Clear expectations for each score
+
+```typescript
+export interface RubricCriterion {
+  id: string
+  name: string              // e.g., "Physics Concepts"
+  description: string       // What this measures
+  maxPoints: number        // Maximum possible points
+  levels: {
+    score: number          // Points for this level
+    description: string    // What earns this score
+  }[]
+}
+```
+
+## Assignment Management
+
+### Admin Dashboard
+**File**: [src/app/admin/assignments/page.tsx](mdc:src/app/admin/assignments/page.tsx)
+
+- View all assignments
+- Track submission rates
+- Quick edit/delete actions
+- Publish/unpublish assignments
+
+### Submission Review
+**File**: [src/app/assignments/[id]/submitted/page.tsx](mdc:src/app/assignments/[id]/submitted/page.tsx)
+
+- View all student submissions
+- Manual grading interface
+- Feedback provision
+- Grade export capabilities
+
+## Key Integration Points
+
+### Question Bank Integration
+- Import questions from question bank
+- Add assignment questions to bank
+- Track question usage across assignments
+
+### Lesson Association
+- Link assignments to specific lessons
+- Contextual assignment delivery
+- Progress tracking by lesson
+
+### Google Classroom Integration
+**File**: [src/lib/google-classroom.ts](mdc:src/lib/google-classroom.ts)
+- Export assignments to Google Classroom
+- Sync student rosters
+- Grade passback capabilities
+
+## Storage & Performance
+
+### LocalStorage Management
+The system implements sophisticated localStorage management:
+- **Quota monitoring**: Tracks storage usage
+- **Automatic cleanup**: Removes large data when needed
+- **Graceful degradation**: Falls back to minimal data storage
+- **Error recovery**: Handles quota exceeded scenarios
+
+### Data Optimization
+- **Lazy loading**: Only load assignments when needed
+- **Image optimization**: Strip base64 images from stored data
+- **Selective persistence**: Store only essential data long-term
+
+## Key Implementation Files
+
+- [src/contexts/AssignmentContext.tsx](mdc:src/contexts/AssignmentContext.tsx) - Core state management
+- [src/types/assignment.ts](mdc:src/types/assignment.ts) - Type definitions
+- [src/components/assignment-builder/](mdc:src/components/assignment-builder/) - Creation tools
+- [src/components/assignment-taking/](mdc:src/components/assignment-taking/) - Student interface
+- [src/app/admin/assignments/](mdc:src/app/admin/assignments/) - Management UI
+- [src/app/api/grade-*/](mdc:src/app/api/) - Grading APIs

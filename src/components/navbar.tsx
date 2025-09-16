@@ -13,6 +13,7 @@ import Link from "next/link"
 import { usePermissions } from "@/hooks/usePermissions"
 import { useEffect, useState } from "react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
+import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -21,6 +22,9 @@ export default function Navbar() {
     canAccessAdmin,
     userRole
   } = usePermissions()
+  
+  // Check if user can access question bank (admin or teacher)
+  const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
   
   
   
@@ -39,13 +43,19 @@ export default function Navbar() {
       <div className="w-full px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Brand Logo - Mobile Optimized */}
-          <Link href="/" className="group font-bold text-foreground hover:text-primary transition-all duration-200 relative flex-shrink-0">
-            <span className="relative text-base sm:text-lg md:text-xl lg:text-2xl">
-              <span className="block sm:hidden">Antocci</span>
-              <span className="hidden sm:block">Antocci Physics</span>
-              <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/60 transition-all duration-300 group-hover:w-full"></span>
-            </span>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link href="/" className="group font-bold text-foreground hover:text-primary transition-all duration-200 relative flex-shrink-0">
+              <span className="relative text-base sm:text-lg md:text-xl lg:text-2xl">
+                <span className="block sm:hidden">Antocci</span>
+                <span className="hidden sm:block">Antocci Physics</span>
+                <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/60 transition-all duration-300 group-hover:w-full"></span>
+              </span>
+            </Link>
+            {/* Physics Level Badge - Hidden on Mobile */}
+            <div className="hidden md:block">
+              <PhysicsLevelBadge variant="compact" />
+            </div>
+          </div>
           
           {/* Right Side - Mobile First Layout */}
           <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
@@ -68,6 +78,34 @@ export default function Navbar() {
                     <span className="block sm:hidden text-lg">•</span>
                   </Button>
                 </Link>
+                
+                {/* Question Bank Link - For admin/teacher only */}
+                {canAccessQuestionBank && (
+                  <Link href="/admin/question-bank">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-8 sm:h-9 px-2 sm:px-3 rounded-full text-xs sm:text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all touch-manipulation"
+                    >
+                      <span className="hidden sm:block">Question Bank</span>
+                      <span className="block sm:hidden">QB</span>
+                    </Button>
+                  </Link>
+                )}
+                
+                {/* Vocabulary Link - For admin/teacher only */}
+                {canAccessQuestionBank && (
+                  <Link href="/admin/vocabulary">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-8 sm:h-9 px-2 sm:px-3 rounded-full text-xs sm:text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all touch-manipulation"
+                    >
+                      <span className="hidden sm:block">Vocabulary</span>
+                      <span className="block sm:hidden">VC</span>
+                    </Button>
+                  </Link>
+                )}
                 
                 {/* Theme Toggle */}
                 <ThemeToggle />

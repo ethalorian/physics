@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/app/api/auth/[...nextauth]/route'
+import { auth } from '@/lib/auth'
 import { gradeOpenResponse, batchGradeOpenResponses, GradingContext } from '@/lib/openai-grading'
 import { OpenResponseQuestion } from '@/types/assignment'
 

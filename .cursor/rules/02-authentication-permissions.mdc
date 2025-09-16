@@ -1,0 +1,157 @@
+---
+alwaysApply: true
+description: Authentication system and role-based permissions in the Physics Classroom
+---
+
+# Authentication & Permissions System
+
+The application uses **NextAuth.js v5** with **Supabase** for authentication and a custom role-based permission system.
+
+## Authentication Setup
+
+### Provider Configuration
+- **File**: [src/components/auth-provider.tsx](mdc:src/components/auth-provider.tsx)
+- Uses `SessionProvider` from NextAuth.js
+- Configured for development localhost URLs
+- Handles session management and token refresh
+
+### NextAuth Configuration
+- **File**: [src/app/api/auth/[...nextauth]/route.ts](mdc:src/app/api/auth/[...nextauth]/route.ts)
+- Integrates with Supabase using `@auth/supabase-adapter`
+- Handles OAuth providers and session management
+
+## Role-Based Permission System
+
+### User Roles
+Defined in [src/lib/permissions.ts](mdc:src/lib/permissions.ts):
+
+```typescript
+export type UserRole = 'student' | 'teacher' | 'admin'
+```
+
+### Role Assignment
+Roles are determined by **email address** using predefined lists:
+
+```typescript
+// Admin emails (full access)
+export const ADMIN_EMAILS = [
+  'antoccic@fitchburg.k12.ma.us',
+  'craigantocci@gmail.com'
+]
+
+// Teacher emails (includes all admin emails)
+export const TEACHER_EMAILS = [
+  ...ADMIN_EMAILS,
+  // Add teacher-only emails here
+]
+```
+
+### Permission Matrix
+
+| Permission | Student | Teacher | Admin |
+|------------|---------|---------|-------|
+| View Lessons | ✅ | ✅ | ✅ |
+| View Assignments | ✅ | ✅ | ✅ |
+| Create Assignments | ❌ | ✅ | ✅ |
+| Manage Assignments | ❌ | ✅ | ✅ |
+| Access Admin Panel | ❌ | ❌ | ✅ |
+| Create Lessons | ❌ | ❌ | ✅ |
+
+### Permission Checking
+
+```typescript
+// Get user role
+const role = getUserRole(session?.user?.email)
+
+// Check specific permission
+const canCreate = hasPermission(email, 'canCreateAssignments')
+
+// Get all permissions for role
+const permissions = getUserPermissions(role)
+```
+
+## Authentication Patterns
+
+### Session Access
+```typescript
+import { useSession } from 'next-auth/react'
+
+const { data: session, status } = useSession()
+const userRole = getUserRole(session?.user?.email)
+```
+
+### API Route Protection
+```typescript
+import { auth } from '@/app/api/auth/[...nextauth]/route'
+
+const session = await auth()
+if (!session?.user?.id) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+}
+
+// Role-based access
+const userRole = session.user?.role || 'student'
+if (userRole !== 'admin' && userRole !== 'teacher') {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+}
+```
+
+### Component-Level Protection
+```typescript
+import { getUserRole } from '@/lib/permissions'
+
+const userRole = getUserRole(session?.user?.email)
+const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
+
+if (!canAccessQuestionBank) {
+  return <div>Access denied</div>
+}
+```
+
+## Context Integration
+
+### Question Bank Access
+The [QuestionBankContext](mdc:src/contexts/QuestionBankContext.tsx) automatically checks permissions:
+
+```typescript
+const userRole = getUserRole(session?.user?.email)
+const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
+
+// Only load data for authorized users
+useEffect(() => {
+  if (session?.user?.id && canAccessQuestionBank && !initialized) {
+    initializeData()
+  }
+}, [session, canAccessQuestionBank, initialized])
+```
+
+## Navigation & UI
+
+### Conditional Rendering
+Components use role checks to show/hide features:
+
+```typescript
+{userRole === 'admin' && (
+  <AdminPanel />
+)}
+
+{(userRole === 'admin' || userRole === 'teacher') && (
+  <TeacherTools />
+)}
+```
+
+### Route Protection
+Pages check permissions and redirect unauthorized users:
+
+```typescript
+if (!hasPermission(session?.user?.email, 'canAccessAdmin')) {
+  redirect('/dashboard')
+}
+```
+
+## Key Files
+
+- [src/lib/permissions.ts](mdc:src/lib/permissions.ts) - Core permission system
+- [src/components/auth-provider.tsx](mdc:src/components/auth-provider.tsx) - Auth wrapper
+- [src/hooks/usePermissions.ts](mdc:src/hooks/usePermissions.ts) - Permission hooks
+- [src/app/api/auth/[...nextauth]/route.ts](mdc:src/app/api/auth/[...nextauth]/route.ts) - NextAuth config

@@ -1,0 +1,468 @@
+"use client"
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
+import { VocabularyTerm } from '@/types/assignment'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
+
+interface VocabularySet {
+  id: string
+  name: string
+  description?: string
+  unit?: string
+  lesson?: string
+  terms: VocabularyTerm[]
+  created_by?: string
+  created_at: string
+  updated_at: string
+}
+
+interface VocabularyContextType {
+  vocabularySets: VocabularySet[]
+  loading: boolean
+  error: string | null
+  createVocabularySet: (vocabularySet: Omit<VocabularySet, 'id' | 'created_at' | 'updated_at'>) => Promise<void>
+  updateVocabularySet: (id: string, updates: Partial<VocabularySet>) => Promise<void>
+  deleteVocabularySet: (id: string) => Promise<void>
+  getVocabularySetById: (id: string) => VocabularySet | undefined
+  addTermToSet: (setId: string, term: Omit<VocabularyTerm, 'id'>) => Promise<void>
+  updateTerm: (setId: string, termId: string, updates: Partial<VocabularyTerm>) => Promise<void>
+  deleteTerm: (setId: string, termId: string) => Promise<void>
+  refreshVocabularySets: () => Promise<void>
+}
+
+const VocabularyContext = createContext<VocabularyContextType | undefined>(undefined)
+
+export function VocabularyProvider({ children }: { children: ReactNode }) {
+  const { data: session } = useSession()
+  const [vocabularySets, setVocabularySets] = useState<VocabularySet[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  // Check if user can access vocabulary management
+  const userRole = getUserRole(session?.user?.email)
+  const canAccessVocabulary = userRole === 'admin' || userRole === 'teacher'
+
+  // Load vocabulary sets from API
+  const refreshVocabularySets = useCallback(async () => {
+    if (!canAccessVocabulary) return
+
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const response = await fetch('/api/vocabulary')
+      if (!response.ok) {
+        throw new Error('Failed to fetch vocabulary sets')
+      }
+      
+      const vocabularySets = await response.json()
+      setVocabularySets(vocabularySets)
+    } catch (error) {
+      console.error('Error loading vocabulary sets:', error)
+      setError('Failed to load vocabulary sets')
+      
+      // Fallback to localStorage for existing data
+      try {
+        const stored = localStorage.getItem('physics-vocabulary-sets')
+        if (stored) {
+          const parsedSets = JSON.parse(stored)
+          setVocabularySets(parsedSets)
+        } else {
+          // Initialize with sample data if nothing exists
+          const { initializeVocabularyData, sampleVocabularySets } = await import('@/utils/vocabulary-init')
+          initializeVocabularyData()
+          setVocabularySets(sampleVocabularySets)
+        }
+      } catch (fallbackError) {
+        console.error('Fallback to localStorage failed:', fallbackError)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }, [canAccessVocabulary])
+
+  useEffect(() => {
+    if (session?.user?.id && canAccessVocabulary) {
+      refreshVocabularySets()
+    }
+  }, [session, canAccessVocabulary, refreshVocabularySets])
+
+  const createVocabularySet = async (vocabularySetData: Omit<VocabularySet, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const response = await fetch('/api/vocabulary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: vocabularySetData.name,
+          description: vocabularySetData.description,
+          unit: vocabularySetData.unit,
+          lesson: vocabularySetData.lesson,
+          terms: vocabularySetData.terms
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API failed, falling back to localStorage')
+        const newSet: VocabularySet = {
+          ...vocabularySetData,
+          id: `vocab-set-${Date.now()}`,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          created_by: session?.user?.id
+        }
+
+        const updatedSets = [...vocabularySets, newSet]
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error creating vocabulary set:', error)
+      throw error
+    }
+  }
+
+  const updateVocabularySet = async (id: string, updates: Partial<VocabularySet>) => {
+    try {
+      const currentSet = vocabularySets.find(set => set.id === id)
+      if (!currentSet) throw new Error('Vocabulary set not found')
+
+      const response = await fetch('/api/vocabulary', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          name: updates.name || currentSet.name,
+          description: updates.description || currentSet.description,
+          unit: updates.unit || currentSet.unit,
+          lesson: updates.lesson || currentSet.lesson,
+          terms: updates.terms || currentSet.terms
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API update failed, falling back to localStorage')
+        const updatedSets = vocabularySets.map(set =>
+          set.id === id 
+            ? { ...set, ...updates, updated_at: new Date().toISOString() }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error updating vocabulary set:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.map(set =>
+          set.id === id 
+            ? { ...set, ...updates, updated_at: new Date().toISOString() }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully updated in localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback update failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  const deleteVocabularySet = async (id: string) => {
+    try {
+      const response = await fetch(`/api/vocabulary?id=${id}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API delete failed, falling back to localStorage')
+        const updatedSets = vocabularySets.filter(set => set.id !== id)
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error deleting vocabulary set:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.filter(set => set.id !== id)
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully deleted from localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback delete failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  const getVocabularySetById = (id: string): VocabularySet | undefined => {
+    return vocabularySets.find(set => set.id === id)
+  }
+
+  const addTermToSet = async (setId: string, termData: Omit<VocabularyTerm, 'id'>) => {
+    try {
+      const currentSet = vocabularySets.find(set => set.id === setId)
+      if (!currentSet) throw new Error('Vocabulary set not found')
+
+      const updatedTerms = [...currentSet.terms, { ...termData, id: `temp-${Date.now()}` }]
+      
+      const response = await fetch('/api/vocabulary', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: setId,
+          name: currentSet.name,
+          description: currentSet.description,
+          unit: currentSet.unit,
+          lesson: currentSet.lesson,
+          terms: updatedTerms
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API add term failed, falling back to localStorage')
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? { 
+                ...set, 
+                terms: [...set.terms, { ...termData, id: `term-${Date.now()}` }],
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error adding term to set:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? { 
+                ...set, 
+                terms: [...set.terms, { ...termData, id: `term-${Date.now()}` }],
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully added term in localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback add term failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  const updateTerm = async (setId: string, termId: string, updates: Partial<VocabularyTerm>) => {
+    try {
+      const currentSet = vocabularySets.find(set => set.id === setId)
+      if (!currentSet) throw new Error('Vocabulary set not found')
+
+      const updatedTerms = currentSet.terms.map(term =>
+        term.id === termId ? { ...term, ...updates } : term
+      )
+      
+      const response = await fetch('/api/vocabulary', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: setId,
+          name: currentSet.name,
+          description: currentSet.description,
+          unit: currentSet.unit,
+          lesson: currentSet.lesson,
+          terms: updatedTerms
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API update term failed, falling back to localStorage')
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? {
+                ...set,
+                terms: set.terms.map(term =>
+                  term.id === termId ? { ...term, ...updates } : term
+                ),
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error updating term:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? {
+                ...set,
+                terms: set.terms.map(term =>
+                  term.id === termId ? { ...term, ...updates } : term
+                ),
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully updated term in localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback update term failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  const deleteTerm = async (setId: string, termId: string) => {
+    try {
+      const currentSet = vocabularySets.find(set => set.id === setId)
+      if (!currentSet) throw new Error('Vocabulary set not found')
+
+      const updatedTerms = currentSet.terms.filter(term => term.id !== termId)
+      
+      const response = await fetch('/api/vocabulary', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: setId,
+          name: currentSet.name,
+          description: currentSet.description,
+          unit: currentSet.unit,
+          lesson: currentSet.lesson,
+          terms: updatedTerms
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API delete term failed, falling back to localStorage')
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? {
+                ...set,
+                terms: set.terms.filter(term => term.id !== termId),
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error deleting term:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.map(set =>
+          set.id === setId
+            ? {
+                ...set,
+                terms: set.terms.filter(term => term.id !== termId),
+                updated_at: new Date().toISOString()
+              }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully deleted term in localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback delete term failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  const value: VocabularyContextType = {
+    vocabularySets,
+    loading,
+    error,
+    createVocabularySet,
+    updateVocabularySet,
+    deleteVocabularySet,
+    getVocabularySetById,
+    addTermToSet,
+    updateTerm,
+    deleteTerm,
+    refreshVocabularySets
+  }
+
+  return (
+    <VocabularyContext.Provider value={value}>
+      {children}
+    </VocabularyContext.Provider>
+  )
+}
+
+export function useVocabulary() {
+  const context = useContext(VocabularyContext)
+  if (!context) {
+    throw new Error('useVocabulary must be used within a VocabularyProvider')
+  }
+  return context
+}
+
+export type { VocabularySet }

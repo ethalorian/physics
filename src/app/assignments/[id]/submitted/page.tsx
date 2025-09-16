@@ -1,5 +1,5 @@
 "use client"
-import { useState, useEffect, useCallback } from 'react'
+import { use, useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { Assignment, Submission, OpenResponseQuestion } from '@/types/assignment'
 import { useAssignments } from '@/contexts/AssignmentContext'
@@ -34,8 +34,9 @@ import RubricFeedback from '@/components/assignment-taking/rubric-feedback'
 export default function SubmittedPage({ 
   params 
 }: { 
-  params: { id: string } 
+  params: Promise<{ id: string }> 
 }) {
+  const resolvedParams = use(params)
   const { data: session } = useSession()
   const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
@@ -44,7 +45,7 @@ export default function SubmittedPage({
 
   const fetchSubmissionDetails = useCallback(async () => {
     try {
-      const assignmentData = getAssignmentById(params.id)
+      const assignmentData = getAssignmentById(resolvedParams.id)
       if (!assignmentData) {
         setAssignment(null)
         setSubmission(null)
@@ -56,7 +57,7 @@ export default function SubmittedPage({
 
       // Get submission for this assignment
       if (session?.user?.id) {
-        const submissionData = getSubmissionByAssignmentId(params.id, session.user.id)
+        const submissionData = getSubmissionByAssignmentId(resolvedParams.id, session.user.id)
         setSubmission(submissionData || null)
       }
     } catch (error) {
@@ -64,7 +65,7 @@ export default function SubmittedPage({
     } finally {
       setLoading(false)
     }
-  }, [params.id, getAssignmentById, getSubmissionByAssignmentId, session])
+  }, [resolvedParams.id, getAssignmentById, getSubmissionByAssignmentId, session])
 
   useEffect(() => {
     if (session) {
