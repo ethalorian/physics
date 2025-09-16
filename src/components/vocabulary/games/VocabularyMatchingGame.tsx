@@ -87,7 +87,7 @@ export default function VocabularyMatchingGame({
       })
       setCardStates(newCardStates)
     }
-  }, [showResults, matches])
+  }, [showResults, matches, cardStates])
 
   // Call onAnswer when matches change
   useEffect(() => {

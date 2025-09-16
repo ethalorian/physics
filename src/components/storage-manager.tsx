@@ -31,7 +31,7 @@ export function StorageManager() {
       clearImageData()
       refreshStats()
       setMessage('Image data cleared successfully')
-    } catch (error) {
+    } catch {
       setMessage('Error clearing image data')
     } finally {
       setIsClearing(false)
@@ -45,7 +45,7 @@ export function StorageManager() {
       const success = smartCleanup()
       refreshStats()
       setMessage(success ? 'Smart cleanup completed' : 'Cleanup had limited effect')
-    } catch (error) {
+    } catch {
       setMessage('Error during cleanup')
     } finally {
       setIsClearing(false)
@@ -62,7 +62,7 @@ export function StorageManager() {
         setMessage('All physics data cleared')
         // Reload page to reset state
         setTimeout(() => window.location.reload(), 1500)
-      } catch (error) {
+      } catch {
         setMessage('Error clearing storage')
       } finally {
         setIsClearing(false)

@@ -1,11 +1,9 @@
 "use client"
-import { useState, useEffect } from 'react'
-import { Assignment, Question, MultipleChoiceQuestion, NumericalQuestion } from '@/types/assignment'
-import { Badge } from '@/components/ui/badge'
+import { useState, useEffect, useCallback } from 'react'
+import { Assignment, MultipleChoiceQuestion, NumericalQuestion } from '@/types/assignment'
 import { Progress } from '@/components/ui/progress'
-import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Trophy, Target, CheckCircle2, Clock, Zap, ChevronRight, ChevronLeft, X } from 'lucide-react'
+import { Trophy, Target, CheckCircle2, Zap, ChevronRight, ChevronLeft, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface ProgressScoreboardProps {
@@ -24,7 +22,7 @@ export default function ProgressScoreboard({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   // Calculate points earned from current answers
-  const calculatePointsEarned = () => {
+  const calculatePointsEarned = useCallback(() => {
     let earned = 0
     let answered = 0
 
@@ -70,13 +68,13 @@ export default function ProgressScoreboard({
     })
 
     return { earned, answered }
-  }
+  }, [assignment.questions, answers])
 
   useEffect(() => {
     const { earned, answered } = calculatePointsEarned()
     setPointsEarned(earned)
     setQuestionsAnswered(answered)
-  }, [answers, assignment])
+  }, [calculatePointsEarned])
 
   const totalQuestions = assignment.questions.length
   const totalPoints = assignment.total_points

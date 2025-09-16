@@ -165,7 +165,6 @@ export function simplifyNumber(value: number): number {
   const niceNumbers = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000]
   
   // Find the closest "nice" number
-  let closest = value
   let minDiff = Math.abs(value)
   
   for (const nice of niceNumbers) {
@@ -174,7 +173,6 @@ export function simplifyNumber(value: number): number {
       const diff = Math.abs(value - candidate)
       if (diff < minDiff) {
         minDiff = diff
-        closest = candidate
       }
     }
     

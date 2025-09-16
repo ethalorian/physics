@@ -9,9 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { CheckCircle2, XCircle, Award, Sparkles, Info, Image as ImageIcon, Wand2, RefreshCw } from 'lucide-react'
-import MathMarkdown from '@/components/MathMarkdown'
 import VocabularyMatchingGame from '@/components/vocabulary/games/VocabularyMatchingGame'
 import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
 import VocabularyFillBlankGame from '@/components/vocabulary/games/VocabularyFillBlankGame'
@@ -38,7 +36,6 @@ export default function QuestionRenderer({
   const [generatedImage, setGeneratedImage] = useState<string | null>(null)
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false)
-  const [generatedAnswer, setGeneratedAnswer] = useState<string>('')
 
   const handleGenerateImage = async () => {
     setIsGeneratingImage(true)
@@ -92,7 +89,6 @@ export default function QuestionRenderer({
 
       const data = await response.json()
       if (data.sampleAnswer) {
-        setGeneratedAnswer(data.sampleAnswer)
         onAnswerChange(data.sampleAnswer)
       }
     } catch (error) {
