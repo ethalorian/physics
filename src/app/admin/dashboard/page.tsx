@@ -15,7 +15,6 @@ import LessonManagement from '@/components/admin/LessonManagement'
 import AssignmentManagement from '@/components/admin/AssignmentManagement'
 import StudentManagement from '@/components/admin/StudentManagement'
 import AdminOverview from '@/components/admin/AdminOverview'
-import { StorageManager } from '@/components/storage-manager'
 
 export default function AdminDashboard() {
   const { isAuthenticated, canAccessAdmin, userRole } = usePermissions()
@@ -108,19 +107,6 @@ export default function AdminDashboard() {
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
           <AdminOverview />
-
-          {/* Storage Management */}
-          <Card className="apple-card">
-            <CardHeader>
-              <CardTitle className="text-foreground">Storage Management</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Manage your browser&apos;s local storage for assignments and data
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <StorageManager />
-            </CardContent>
-          </Card>
 
           {/* Quick Actions */}
           <Card className="apple-card">
