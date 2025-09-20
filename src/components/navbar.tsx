@@ -1,5 +1,13 @@
 "use client"
+
+// React/Next.js imports
+import { useEffect, useState } from "react"
+import Link from "next/link"
+
+// External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
+
+// Internal imports
 import { Button } from "@/components/ui/button"
 import { 
   DropdownMenu, 
@@ -9,11 +17,9 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
-import Link from "next/link"
-import { usePermissions } from "@/hooks/usePermissions"
-import { useEffect, useState } from "react"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
+import { usePermissions } from "@/hooks/usePermissions"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -22,12 +28,7 @@ export default function Navbar() {
     canAccessAdmin,
     userRole
   } = usePermissions()
-  
-  // Check if user can access question bank (admin or teacher)
-  const canAccessQuestionBank = userRole === 'admin' || userRole === 'teacher'
-  
-  
-  
+
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
 
@@ -79,33 +80,6 @@ export default function Navbar() {
                   </Button>
                 </Link>
                 
-                {/* Question Bank Link - For admin/teacher only */}
-                {canAccessQuestionBank && (
-                  <Link href="/admin/question-bank">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="h-8 sm:h-9 px-2 sm:px-3 rounded-full text-xs sm:text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all touch-manipulation"
-                    >
-                      <span className="hidden sm:block">Question Bank</span>
-                      <span className="block sm:hidden">QB</span>
-                    </Button>
-                  </Link>
-                )}
-                
-                {/* Vocabulary Link - For admin/teacher only */}
-                {canAccessQuestionBank && (
-                  <Link href="/admin/vocabulary">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="h-8 sm:h-9 px-2 sm:px-3 rounded-full text-xs sm:text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all touch-manipulation"
-                    >
-                      <span className="hidden sm:block">Vocabulary</span>
-                      <span className="block sm:hidden">VC</span>
-                    </Button>
-                  </Link>
-                )}
                 
                 {/* Theme Toggle */}
                 <ThemeToggle />

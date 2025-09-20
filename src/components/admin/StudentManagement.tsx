@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List } from 'lucide-react'
+import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List, Database, Upload, TestTube } from 'lucide-react'
 import { initializeGoogleClassroomAuth, googleClassroomAPI } from '@/lib/google-classroom'
 import { useToast } from '@/providers/toast-provider'
 
@@ -36,6 +36,11 @@ export default function StudentManagement() {
   const [searchTerm, setSearchTerm] = useState('')
   const [isConnected, setIsConnected] = useState(false)
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid')
+  const [importing, setImporting] = useState(false)
+  const [accessToken, setAccessToken] = useState<string | null>(null)
+  const [importedStudents, setImportedStudents] = useState<Student[]>([])
+  const [showImportedData, setShowImportedData] = useState(false)
+  const [testing, setTesting] = useState(false)
 
   useEffect(() => {
     // Only initialize with real data when connected
@@ -107,6 +112,7 @@ export default function StudentManagement() {
       }
       
       setIsConnected(true)
+      setAccessToken(accessToken)
       showToast({
         title: "Connected Successfully!",
         description: "You're now connected to Google Classroom",
@@ -178,6 +184,188 @@ export default function StudentManagement() {
     }
   }
 
+  const syncRosterData = async () => {
+    if (!selectedCourse || !accessToken) {
+      showToast({
+        title: "Sync Failed",
+        description: "Please select a course and ensure you're connected to Google Classroom",
+        variant: "error",
+        duration: 3000
+      })
+      return
+    }
+
+    setLoading(true)
+    try {
+      // First refresh from Google Classroom
+      await fetchStudents(selectedCourse)
+      
+      // Then import/sync to database
+      await importRosterToDatabase()
+      
+      showToast({
+        title: "Sync Complete",
+        description: "Roster data synchronized between Google Classroom and database",
+        variant: "success",
+        duration: 3000
+      })
+    } catch (error) {
+      console.error('Sync error:', error)
+      showToast({
+        title: "Sync Failed",
+        description: "Failed to synchronize roster data",
+        variant: "error",
+        duration: 3000
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const importRosterToDatabase = async () => {
+    if (!selectedCourse || !accessToken) {
+      showToast({
+        title: "Import Failed",
+        description: "Please select a course and ensure you're connected to Google Classroom",
+        variant: "error",
+        duration: 3000
+      })
+      return
+    }
+
+    setImporting(true)
+    try {
+      const response = await fetch('/api/roster/import', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          courseId: selectedCourse,
+          accessToken: accessToken
+        })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('Import API error:', errorData)
+        
+        let errorMessage = errorData.error || 'Failed to import roster'
+        if (errorData.hints && errorData.hints.length > 0) {
+          errorMessage += '\n\nSuggestions:\n' + errorData.hints.map((hint: string) => `• ${hint}`).join('\n')
+        }
+        
+        throw new Error(errorMessage)
+      }
+
+      const result = await response.json()
+      console.log('Import result:', result)
+      
+      showToast({
+        title: "Roster Imported Successfully!",
+        description: `Imported ${result.studentsSynced}/${result.studentsTotal} students to database`,
+        variant: "success",
+        duration: 5000
+      })
+
+      // Fetch the imported data to display
+      await fetchImportedRoster()
+
+    } catch (error) {
+      console.error('Roster import error:', error)
+      
+      let errorMessage = "Failed to import roster to database"
+      if (error instanceof Error) {
+        errorMessage = error.message
+      }
+      
+      showToast({
+        title: "Import Failed",
+        description: errorMessage.split('\n')[0], // Show first line in toast
+        variant: "error",
+        duration: 8000
+      })
+      
+      // Log full error details for debugging
+      console.error('Full error details:', error)
+      console.error('📋 Troubleshooting steps:')
+      console.error('1. Check if database migration was run successfully')
+      console.error('2. Verify Supabase connection is working')
+      console.error('3. Check browser network tab for API response details')
+      console.error('4. Ensure Google Classroom access token is valid')
+    } finally {
+      setImporting(false)
+    }
+  }
+
+  const fetchImportedRoster = async () => {
+    if (!selectedCourse) return
+
+    try {
+      const response = await fetch(`/api/roster/import?course_id=${selectedCourse}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        const formattedStudents: Student[] = data.students.map((student: any) => ({
+          id: student.google_user_id,
+          name: student.name,
+          email: student.email,
+          profilePhoto: student.profile_photo_url,
+          enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
+          courseId: selectedCourse
+        }))
+        
+        setImportedStudents(formattedStudents)
+        setShowImportedData(true)
+      }
+    } catch (error) {
+      console.error('Error fetching imported roster:', error)
+    }
+  }
+
+  const testDatabaseSetup = async () => {
+    setTesting(true)
+    try {
+      const response = await fetch('/api/roster/test')
+      const result = await response.json()
+      
+      console.log('Database test results:', result)
+      
+      if (result.success) {
+        showToast({
+          title: "Database Ready!",
+          description: "All database components are properly set up",
+          variant: "success",
+          duration: 3000
+        })
+      } else {
+        const failedTests = Object.entries(result.tests)
+          .filter(([_, passed]) => !passed)
+          .map(([test, _]) => test.replace('_', ' '))
+        
+        showToast({
+          title: "Database Setup Issues",
+          description: `Missing: ${failedTests.join(', ')}`,
+          variant: "error",
+          duration: 8000
+        })
+        
+        console.error('Failed tests:', failedTests)
+        console.error('Recommendations:', result.recommendations)
+      }
+    } catch (error) {
+      console.error('Database test error:', error)
+      showToast({
+        title: "Test Failed",
+        description: "Could not test database setup",
+        variant: "error",
+        duration: 3000
+      })
+    } finally {
+      setTesting(false)
+    }
+  }
+
   const exportStudentList = () => {
     const csv = [
       'Name,Email,Google Profile Photo,Status,Last Activity,Course ID',
@@ -215,7 +403,8 @@ export default function StudentManagement() {
     }
   }
 
-  const filteredStudents = students.filter(student =>
+  const currentStudents = showImportedData ? importedStudents : students
+  const filteredStudents = currentStudents.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     student.email.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -230,23 +419,76 @@ export default function StudentManagement() {
         </div>
         <div className="flex gap-3">
           {!isConnected ? (
-            <Button
-              onClick={connectToGoogleClassroom}
-              disabled={loading}
-              className="bg-gradient-to-r from-[#9A8AC0] to-[#B19CD9] hover:from-[#AA9AD0] hover:to-[#C1ACE9]"
-            >
-              {loading ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              ) : (
-                <UserCheck className="h-4 w-4 mr-2" />
-              )}
-              Connect Google Classroom
-            </Button>
+            <>
+              <Button
+                onClick={testDatabaseSetup}
+                disabled={testing}
+                variant="outline"
+                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+              >
+                {testing ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <TestTube className="h-4 w-4 mr-2" />
+                )}
+                Test Database
+              </Button>
+              <Button
+                onClick={connectToGoogleClassroom}
+                disabled={loading}
+                className="bg-gradient-to-r from-[#9A8AC0] to-[#B19CD9] hover:from-[#AA9AD0] hover:to-[#C1ACE9]"
+              >
+                {loading ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <UserCheck className="h-4 w-4 mr-2" />
+                )}
+                Connect Google Classroom
+              </Button>
+            </>
           ) : (
             <>
+              <Button
+                onClick={testDatabaseSetup}
+                disabled={testing}
+                variant="outline"
+                size="sm"
+                className="border-orange-500 text-orange-600 hover:bg-orange-50"
+              >
+                {testing ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <TestTube className="h-4 w-4 mr-2" />
+                )}
+                Test DB
+              </Button>
               <Button variant="outline" onClick={refreshStudents} disabled={loading}>
                 <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
+              </Button>
+              <Button 
+                onClick={syncRosterData} 
+                disabled={loading || importing || !selectedCourse}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                {loading ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Upload className="h-4 w-4 mr-2" />
+                )}
+                Sync to Database
+              </Button>
+              <Button 
+                onClick={importRosterToDatabase} 
+                disabled={importing || loading || !selectedCourse}
+                variant="outline"
+              >
+                {importing ? (
+                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Database className="h-4 w-4 mr-2" />
+                )}
+                Import Only
               </Button>
               <Button variant="outline" onClick={exportStudentList}>
                 <Download className="h-4 w-4 mr-2" />
@@ -281,6 +523,35 @@ export default function StudentManagement() {
         </Card>
       ) : (
         <>
+          {/* Data Source Toggle */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-2">
+              <Button
+                variant={!showImportedData ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowImportedData(false)}
+              >
+                Google Classroom
+              </Button>
+              <Button
+                variant={showImportedData ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowImportedData(true)
+                  fetchImportedRoster()
+                }}
+                disabled={!selectedCourse}
+              >
+                Database ({importedStudents.length})
+              </Button>
+            </div>
+            {showImportedData && (
+              <div className="text-sm text-muted-foreground">
+                Showing students imported to database for progress tracking
+              </div>
+            )}
+          </div>
+
           {/* Course Selection and Search */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
@@ -329,16 +600,30 @@ export default function StudentManagement() {
           </div>
 
           {/* Students Overview */}
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
             <Card className="apple-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-[#6A4C93]">
-                  Total Students
+                  Google Classroom
                 </CardTitle>
                 <Users className="h-4 w-4 text-[#9A8AC0]" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-[#4A1A4A]">{students.length}</div>
+                <p className="text-xs text-muted-foreground">Students enrolled</p>
+              </CardContent>
+            </Card>
+
+            <Card className="apple-card">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium text-[#6A4C93]">
+                  Database
+                </CardTitle>
+                <Database className="h-4 w-4 text-[#9A8AC0]" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-[#4A1A4A]">{importedStudents.length}</div>
+                <p className="text-xs text-muted-foreground">Imported for tracking</p>
               </CardContent>
             </Card>
 
@@ -351,7 +636,7 @@ export default function StudentManagement() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-[#4A1A4A]">
-                  {students.filter(s => s.enrollmentState === 'ACTIVE').length}
+                  {currentStudents.filter(s => s.enrollmentState === 'ACTIVE').length}
                 </div>
               </CardContent>
             </Card>
@@ -359,14 +644,20 @@ export default function StudentManagement() {
             <Card className="apple-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-[#6A4C93]">
-                  Pending Invites
+                  {showImportedData ? 'Sync Status' : 'Pending Invites'}
                 </CardTitle>
                 <RefreshCw className="h-4 w-4 text-[#9A8AC0]" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-[#4A1A4A]">
-                  {students.filter(s => s.enrollmentState === 'INVITED').length}
+                  {showImportedData 
+                    ? `${Math.round((importedStudents.length / Math.max(students.length, 1)) * 100)}%`
+                    : currentStudents.filter(s => s.enrollmentState === 'INVITED').length
+                  }
                 </div>
+                <p className="text-xs text-muted-foreground">
+                  {showImportedData ? 'Synced to database' : 'Awaiting response'}
+                </p>
               </CardContent>
             </Card>
           </div>

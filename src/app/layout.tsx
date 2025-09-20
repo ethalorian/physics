@@ -1,11 +1,17 @@
+// React/Next.js imports
 import type { Metadata } from 'next'
-import './globals.css'
 import { Inter } from 'next/font/google'
+
+// Styles
+import './globals.css'
+
+// Internal components and providers
 import AuthProvider from '@/components/auth-provider'
 import Navbar from '@/components/navbar'
 import { AssignmentProvider } from '@/contexts/AssignmentContext'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
+import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
 import { ToastProvider } from '@/providers/toast-provider'
 
 const inter = Inter({ 
@@ -34,12 +40,14 @@ export default function RootLayout({
           <ToastProvider>
             <QuestionBankProvider>
               <VocabularyProvider>
-                <AssignmentProvider>
-                  <Navbar />
-                  <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-                    {children}
-                  </main>
-                </AssignmentProvider>
+                <StudentActivityProvider>
+                  <AssignmentProvider>
+                    <Navbar />
+                    <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+                      {children}
+                    </main>
+                  </AssignmentProvider>
+                </StudentActivityProvider>
               </VocabularyProvider>
             </QuestionBankProvider>
           </ToastProvider>

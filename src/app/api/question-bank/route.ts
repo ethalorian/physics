@@ -1,4 +1,7 @@
+// Next.js imports
 import { NextResponse } from 'next/server'
+
+// Internal imports
 import { auth } from '@/lib/auth'
 import { supabase } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'

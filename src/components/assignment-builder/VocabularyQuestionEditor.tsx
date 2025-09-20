@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyTerm } from '@/types/assignment'
+import { VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion, VocabularyTerm } from '@/types/assignment'
 import { VocabularySet } from '@/contexts/VocabularyContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,10 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Plus, Trash2, BookOpen, Shuffle, Wand2 } from 'lucide-react'
+import { Plus, Trash2, BookOpen, Shuffle, Wand2, Target } from 'lucide-react'
 import VocabularySetManager from '@/components/vocabulary/VocabularySetManager'
 
-type VocabularyQuestion = VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion
+type VocabularyQuestion = VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion
 
 interface VocabularyQuestionEditorProps {
   question: VocabularyQuestion
@@ -178,6 +178,7 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
             {question.type === 'vocabulary-matching' && 'Vocabulary Matching Game'}
             {question.type === 'vocabulary-crossword' && 'Vocabulary Crossword Game'}
             {question.type === 'vocabulary-fill-blank' && 'Fill in the Blank Game'}
+            {question.type === 'vocabulary-hangman' && 'Vocabulary Hangman Game'}
           </CardTitle>
           <Button variant="outline" size="icon" onClick={onDelete}>
             <Trash2 className="w-4 h-4" />
@@ -248,6 +249,54 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
                   onCheckedChange={(checked) => updateQuestion({ showWordBank: checked } as Partial<VocabularyFillBlankQuestion>)}
                 />
                 <Label htmlFor="show-word-bank">Show word bank</Label>
+              </div>
+            )}
+
+            {question.type === 'vocabulary-hangman' && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="max-wrong-guesses">Max Wrong Guesses</Label>
+                  <Select 
+                    value={String((question as VocabularyHangmanQuestion).maxWrongGuesses || 6)} 
+                    onValueChange={(value) => updateQuestion({ maxWrongGuesses: parseInt(value) } as Partial<VocabularyHangmanQuestion>)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="4">4 (Hard)</SelectItem>
+                      <SelectItem value="6">6 (Normal)</SelectItem>
+                      <SelectItem value="8">8 (Easy)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="words-per-game">Words Per Game</Label>
+                  <Select 
+                    value={String((question as VocabularyHangmanQuestion).wordsPerGame || 10)} 
+                    onValueChange={(value) => updateQuestion({ wordsPerGame: parseInt(value) } as Partial<VocabularyHangmanQuestion>)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="5">5 words</SelectItem>
+                      <SelectItem value="10">10 words</SelectItem>
+                      <SelectItem value="15">15 words</SelectItem>
+                      <SelectItem value="20">20 words</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="col-span-2">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="show-definitions"
+                      checked={(question as VocabularyHangmanQuestion).showDefinitions !== false}
+                      onCheckedChange={(checked) => updateQuestion({ showDefinitions: checked } as Partial<VocabularyHangmanQuestion>)}
+                    />
+                    <Label htmlFor="show-definitions">Show definitions as hints</Label>
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -449,6 +498,9 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
               }
               {question.type === 'vocabulary-fill-blank' && 
                 `Students will fill in ${(question as VocabularyFillBlankQuestion).sentences?.length || 0} sentences using ${(question.vocabularyTerms || []).length} vocabulary terms.`
+              }
+              {question.type === 'vocabulary-hangman' && 
+                `Students will play hangman with ${Math.min((question as VocabularyHangmanQuestion).wordsPerGame || 10, (question.vocabularyTerms || []).length)} physics terms. ${(question as VocabularyHangmanQuestion).maxWrongGuesses || 6} wrong guesses allowed per word.`
               }
             </div>
           </div>

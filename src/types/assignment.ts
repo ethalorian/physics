@@ -1,4 +1,31 @@
-export type QuestionType = 'multiple-choice' | 'open-response' | 'essay' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank'
+export type QuestionType = 'multiple-choice' | 'open-response' | 'essay' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank' | 'vocabulary-hangman'
+
+// Lesson-related types
+export interface LessonVideo {
+  id: string
+  title: string
+  youtubeId: string
+  duration?: string
+  description?: string
+  timestamp?: number // For starting at specific time
+}
+
+export interface Lesson {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  content?: string
+  unit: string
+  lesson_number: number
+  published: boolean
+  videos?: LessonVideo[]
+  objectives?: string[]
+  estimated_time?: number // in minutes
+  isEnhanced?: boolean // Flag for enhanced lesson view
+  created_at: string
+  updated_at: string
+}
 
 export interface BaseQuestion {
   id: string
@@ -96,7 +123,17 @@ export interface VocabularyFillBlankQuestion extends BaseQuestion {
   instructions?: string
 }
 
-export type Question = MultipleChoiceQuestion | OpenResponseQuestion | EssayQuestion | NumericalQuestion | VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion
+export interface VocabularyHangmanQuestion extends BaseQuestion {
+  type: 'vocabulary-hangman'
+  vocabularyTerms: VocabularyTerm[]
+  difficulty?: 'easy' | 'medium' | 'hard'
+  maxWrongGuesses?: number // Default 6
+  showDefinitions?: boolean // Whether to show definitions as hints
+  wordsPerGame?: number // How many words in one game (default 10)
+  instructions?: string
+}
+
+export type Question = MultipleChoiceQuestion | OpenResponseQuestion | EssayQuestion | NumericalQuestion | VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion
 
 export interface Assignment {
   id: string

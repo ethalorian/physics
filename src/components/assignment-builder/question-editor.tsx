@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { Question, QuestionType, MultipleChoiceQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion } from '@/types/assignment'
+import { Question, QuestionType, MultipleChoiceQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,10 +37,10 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
   const [showMisconceptions, setShowMisconceptions] = useState(false)
 
   // Handle vocabulary questions with specialized editor
-  if (question.type === 'vocabulary-matching' || question.type === 'vocabulary-crossword' || question.type === 'vocabulary-fill-blank') {
+  if (question.type === 'vocabulary-matching' || question.type === 'vocabulary-crossword' || question.type === 'vocabulary-fill-blank' || question.type === 'vocabulary-hangman') {
     return (
       <VocabularyQuestionEditor 
-        question={question as VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion}
+        question={question as VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion}
         onUpdate={onUpdate}
         onDelete={onDelete}
       />
@@ -684,6 +684,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 <SelectItem value="vocabulary-matching">Vocabulary Matching</SelectItem>
                 <SelectItem value="vocabulary-crossword">Vocabulary Crossword</SelectItem>
                 <SelectItem value="vocabulary-fill-blank">Vocabulary Fill in the Blank</SelectItem>
+                <SelectItem value="vocabulary-hangman">Vocabulary Hangman</SelectItem>
               </SelectContent>
             </Select>
           </div>

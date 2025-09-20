@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate": "node scripts/run-migrations-simple.js"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",

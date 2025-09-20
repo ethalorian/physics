@@ -23,6 +23,9 @@ export type Lesson = {
   unit: string
   lesson_number: number
   published: boolean
+  videos?: any[]  // Array of video objects
+  objectives?: string[]  // Array of learning objectives
+  estimated_time?: number  // Estimated time in minutes
   created_at: string
   updated_at?: string
 }

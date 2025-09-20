@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { supabase } from '@/lib/supabase'
-import { Plus, Edit, Trash2, BookOpen } from 'lucide-react'
+import { Plus, Edit, Trash2, BookOpen, Eye, ExternalLink } from 'lucide-react'
 
 interface Lesson {
   id: string  // Changed from number to string for UUID
@@ -299,6 +299,34 @@ export default function LessonManagement() {
                     </div>
                   </div>
                   <div className="flex gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      asChild
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                    >
+                      <a 
+                        href={`/lessons/${lesson.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Preview as Student"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </a>
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      asChild
+                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                    >
+                      <a 
+                        href={`/admin/lessons/${lesson.id}/preview`}
+                        title="Admin Preview"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </Button>
                     <Button size="sm" variant="outline" onClick={() => handleEdit(lesson)}>
                       <Edit className="h-4 w-4" />
                     </Button>

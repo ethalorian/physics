@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Assignment, Submission, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, OpenResponseGrade } from '@/types/assignment'
 import { useAssignments, saveSubmission } from '@/contexts/AssignmentContext'
+import { useActivityTracking } from '@/contexts/StudentActivityContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -17,6 +18,7 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
   const { data: session } = useSession()
   const router = useRouter()
   const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
+  const { recordAssignmentStart, recordAssignmentSubmission } = useActivityTracking()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [answers, setAnswers] = useState<Record<string, string | number | string[] | Record<string, any>>>({})
@@ -25,6 +27,8 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
   const [submitting, setSubmitting] = useState(false)
   const [grading, setGrading] = useState(false)
   const [openResponseGrades, setOpenResponseGrades] = useState<OpenResponseGrade[]>([])
+  const [startTime, setStartTime] = useState<string | null>(null)
+  const [hasRecordedStart, setHasRecordedStart] = useState(false)
 
   const fetchAssignmentAndSubmission = useCallback(async () => {
     try {
@@ -60,6 +64,16 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
       fetchAssignmentAndSubmission()
     }
   }, [session, fetchAssignmentAndSubmission])
+
+  // Record assignment start when user first accesses the assignment
+  useEffect(() => {
+    if (assignment && session?.user?.id && !hasRecordedStart && !submission) {
+      const now = new Date().toISOString()
+      setStartTime(now)
+      setHasRecordedStart(true)
+      recordAssignmentStart(assignment.id)
+    }
+  }, [assignment, session, hasRecordedStart, submission, recordAssignmentStart])
 
   const updateAnswer = (questionId: string, answer: string | number | string[] | Record<string, any>) => {
     setAnswers(prev => ({
@@ -125,10 +139,20 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
       const savedSubmission = saveSubmission(submissionData)
       setSubmission(savedSubmission)
       
+      // Record submission activity with timing data
+      const timeSpent = startTime ? Math.floor((new Date().getTime() - new Date(startTime).getTime()) / 1000) : undefined
+      await recordAssignmentSubmission(
+        assignment.id,
+        submissionData,
+        startTime || undefined,
+        timeSpent
+      )
+      
       console.log('Assignment submitted:', {
         answers,
         score: gradedAnswers.totalScore,
-        max_score: assignment.total_points
+        max_score: assignment.total_points,
+        timeSpent: timeSpent ? `${Math.floor(timeSpent / 60)}m ${timeSpent % 60}s` : 'Unknown'
       })
 
       router.push(`/assignments/${assignment.id}/submitted`)

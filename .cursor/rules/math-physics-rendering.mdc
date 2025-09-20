@@ -1,0 +1,218 @@
+---
+description: "Mathematical content rendering and physics-specific patterns"
+---
+
+# Math & Physics Content Rendering
+
+## KaTeX Mathematical Expressions
+
+### MathMarkdown Component Usage
+Always use [src/components/MathMarkdown.tsx](mdc:src/components/MathMarkdown.tsx) for rendering mathematical content:
+
+```typescript
+import MathMarkdown from '@/components/MathMarkdown'
+
+// Inline math expressions
+<MathMarkdown content="The kinetic energy formula is \\( KE = \\frac{1}{2}mv^2 \\)" />
+
+// Display math blocks
+<MathMarkdown content="\\[ F = ma \\]" />
+
+// Complex physics equations
+<MathMarkdown content="\\[ \\vec{F}_{net} = m\\vec{a} = m\\frac{d\\vec{v}}{dt} \\]" />
+```
+
+### Mathematical Syntax Standards
+Follow these patterns for consistent math rendering:
+
+#### Basic Syntax
+- **Inline math**: `\\( expression \\)`
+- **Display math**: `\\[ expression \\]`
+- **Fractions**: `\\frac{numerator}{denominator}`
+- **Superscripts**: `x^2`, `v^{initial}`
+- **Subscripts**: `x_0`, `F_{gravity}`
+
+#### Physics-Specific Notation
+```latex
+# Vectors
+\\vec{v}         # velocity vector
+\\vec{F}         # force vector
+\\hat{i}         # unit vector
+
+# Greek letters
+\\theta          # angle theta
+\\omega          # angular velocity
+\\Delta x        # change in position
+\\mu             # coefficient of friction
+
+# Common physics expressions
+\\frac{1}{2}mv^2                    # kinetic energy
+F = ma                              # Newton's second law
+v = v_0 + at                        # kinematic equation
+\\vec{F}_{net} = \\sum \\vec{F}     # net force
+```
+
+#### Units and Measurements
+```latex
+# Proper unit spacing
+5.0 \\text{ m/s}        # velocity
+9.8 \\text{ m/s}^2      # acceleration
+100 \\text{ N}          # force
+\\text{kg} \\cdot \\text{m/s}^2  # compound units
+```
+
+## Physics Calculator Integration
+
+### Automatic Answer Generation
+Use [src/utils/physics-calculator.ts](mdc:src/utils/physics-calculator.ts) for computational problems:
+
+```typescript
+import { calculatePhysicsSolution } from '@/utils/physics-calculator'
+
+const questionText = "A car accelerates from 0 to 30 m/s in 5 seconds. What is the acceleration?"
+const solution = calculatePhysicsSolution(questionText)
+
+if (solution) {
+  setCorrectValue(solution.value)      // 6
+  setUnit(solution.unit)               // "m/s²"
+  setSteps(solution.steps)             // ["a = Δv/Δt", "a = (30-0)/5", "a = 6 m/s²"]
+}
+```
+
+### Numerical Question Patterns
+```typescript
+interface NumericalQuestion extends BaseQuestion {
+  type: 'numerical'
+  correctValue: number
+  tolerance?: number        // Acceptable error range (default: 5%)
+  unit?: string            // Required unit
+  unitOptions?: string[]   // Multiple choice for units
+  showWork?: boolean       // Require step-by-step solution
+  significantFigures?: number  // Required precision
+}
+```
+
+## Scenario Image Generation
+
+### Physics Diagram Prompts
+Structure image generation prompts for educational diagrams:
+
+```typescript
+const generatePhysicsDiagram = async (questionText: string, physicsContext: string) => {
+  const prompt = `
+Create a clear, educational physics diagram showing:
+- ${physicsContext}
+- Black and white line drawing style
+- Clear labels for all components
+- Standard physics conventions (arrows for vectors, etc.)
+- Simple, clean illustration suitable for students
+- No background, focus on the physics setup
+
+Question context: ${questionText}
+`
+  
+  return await generateImage(prompt)
+}
+```
+
+### Common Physics Scenarios
+```typescript
+const physicsScenarios = {
+  kinematics: "object motion with velocity and acceleration vectors",
+  forces: "force diagrams with labeled force vectors",
+  energy: "energy transformations and conservation",
+  waves: "wave propagation showing amplitude and wavelength",
+  electricity: "circuit diagrams with current flow",
+  magnetism: "magnetic field lines and force directions"
+}
+```
+
+## Accessibility for Mathematical Content
+
+### Screen Reader Support
+```typescript
+// Provide descriptive alt text for equations
+<span aria-label="Force equals mass times acceleration">
+  <MathMarkdown content="\\[ F = ma \\]" />
+</span>
+
+// Use semantic markup for physics problems
+<div role="math" aria-label="Kinematic equation: velocity equals initial velocity plus acceleration times time">
+  <MathMarkdown content="\\[ v = v_0 + at \\]" />
+</div>
+```
+
+### Text Alternatives
+```typescript
+// Always provide text descriptions alongside visual math
+<div className="physics-equation">
+  <MathMarkdown content="\\[ KE = \\frac{1}{2}mv^2 \\]" />
+  <p className="sr-only">
+    Kinetic energy equals one half times mass times velocity squared
+  </p>
+</div>
+```
+
+## Performance Optimization
+
+### Lazy Loading KaTeX
+The MathMarkdown component already handles lazy loading:
+
+```typescript
+useEffect(() => {
+  const loadKatex = async () => {
+    const katex = await import('katex')
+    // Render math expressions
+  }
+  loadKatex()
+}, [content])
+```
+
+### Caching Rendered Math
+```typescript
+const mathCache = new Map<string, string>()
+
+const renderMath = useMemo(() => {
+  if (mathCache.has(content)) {
+    return mathCache.get(content)
+  }
+  
+  const rendered = katex.renderToString(content, options)
+  mathCache.set(content, rendered)
+  return rendered
+}, [content])
+```
+
+## Common Physics Patterns
+
+### Problem Structure
+```typescript
+interface PhysicsProblem {
+  given: string[]          // Known values
+  find: string            // What to solve for
+  diagram?: string        // Scenario image URL
+  solution: {
+    steps: string[]       // Solution steps
+    finalAnswer: {
+      value: number
+      unit: string
+      significantFigures: number
+    }
+  }
+}
+```
+
+### Unit Conversion Support
+```typescript
+const unitConversions = {
+  length: { m: 1, cm: 0.01, mm: 0.001, km: 1000 },
+  time: { s: 1, min: 60, hr: 3600 },
+  mass: { kg: 1, g: 0.001 },
+  force: { N: 1, kN: 1000 }
+}
+
+const convertUnits = (value: number, fromUnit: string, toUnit: string, category: string): number => {
+  const conversions = unitConversions[category]
+  return (value * conversions[fromUnit]) / conversions[toUnit]
+}
+```

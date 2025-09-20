@@ -1,0 +1,224 @@
+---
+description: "Physics education specific patterns and requirements"
+---
+
+# Physics Education Patterns
+
+## Mathematical Content Rendering
+
+### KaTeX Integration
+Use [src/components/MathMarkdown.tsx](mdc:src/components/MathMarkdown.tsx) for all mathematical content:
+
+```typescript
+import MathMarkdown from '@/components/MathMarkdown'
+
+// Render physics equations
+<MathMarkdown content="The kinetic energy formula is \\( KE = \\frac{1}{2}mv^2 \\)" />
+
+// Display math blocks
+<MathMarkdown content="\\[ F = ma \\]" />
+```
+
+### Math Syntax Standards
+- Inline math: `\\( E = mc^2 \\)`
+- Display math: `\\[ F = ma \\]`
+- Common physics symbols: `\\vec{v}`, `\\Delta x`, `\\theta`
+- Units: Use proper spacing `\\text{m/s}^2`
+
+## Question Types Architecture
+
+### Question Type Definitions
+Reference [src/types/assignment.ts](mdc:src/types/assignment.ts) for all question types:
+
+```typescript
+// Multiple Choice
+interface MultipleChoiceQuestion extends BaseQuestion {
+  type: 'multiple-choice'
+  options: string[]
+  correctAnswer: number
+  explanation?: string
+}
+
+// Numerical Answer
+interface NumericalQuestion extends BaseQuestion {
+  type: 'numerical'
+  correctValue: number
+  tolerance?: number
+  unit?: string
+  unitOptions?: string[]
+}
+```
+
+### Physics Calculation Integration
+Use [src/utils/physics-calculator.ts](mdc:src/utils/physics-calculator.ts) for automatic answer generation:
+
+```typescript
+import { calculatePhysicsSolution } from '@/utils/physics-calculator'
+
+const solution = calculatePhysicsSolution(questionText)
+if (solution) {
+  setCorrectValue(solution.value)
+  setUnit(solution.unit)
+}
+```
+
+## Curriculum Organization
+
+### Physics Units Structure
+Follow [src/data/physics-units.ts](mdc:src/data/physics-units.ts) for curriculum organization:
+
+```typescript
+export const physicsUnits = {
+  'unit-1': {
+    title: 'Motion in One Dimension',
+    lessons: {
+      'lesson-1-1': { title: 'Position and Displacement' },
+      'lesson-1-2': { title: 'Velocity and Speed' }
+    }
+  }
+}
+```
+
+### Topic Tagging
+Use consistent physics concept tags:
+- Kinematics: `['velocity', 'acceleration', 'displacement']`
+- Forces: `['newton-laws', 'friction', 'tension']`
+- Energy: `['kinetic-energy', 'potential-energy', 'conservation']`
+
+## AI-Generated Content
+
+### Question Generation Prompts
+Structure physics-specific prompts:
+
+```typescript
+const prompt = `
+Generate a physics question about ${topic}.
+
+Requirements:
+- Grade level: ${gradeLevel}
+- Difficulty: ${difficulty}
+- Include relevant physics principles
+- Provide step-by-step solution
+- Include common misconceptions as distractors
+
+Physics Context:
+- Units: Use SI units
+- Significant figures: Appropriate for level
+- Real-world applications: ${context}
+`
+```
+
+### Scenario Image Generation
+Use physics-appropriate image generation:
+
+```typescript
+const imagePrompt = `
+Create a clear physics diagram showing:
+- ${physicsScenario}
+- Label key components
+- Use standard physics conventions
+- Simple, educational style
+- Black and white line drawing
+`
+```
+
+## Grading and Assessment
+
+### Rubric Standards
+Create physics-specific rubrics:
+
+```typescript
+const physicsRubric: RubricCriterion[] = [
+  {
+    name: 'Physics Concepts',
+    description: 'Understanding of relevant physics principles',
+    maxPoints: 4,
+    levels: [
+      { score: 4, description: 'Demonstrates complete understanding' },
+      { score: 3, description: 'Shows good understanding with minor gaps' },
+      { score: 2, description: 'Partial understanding with some misconceptions' },
+      { score: 1, description: 'Limited understanding' },
+      { score: 0, description: 'No evidence of understanding' }
+    ]
+  }
+]
+```
+
+### Auto-Grading Patterns
+For numerical answers:
+
+```typescript
+const isCorrect = Math.abs(studentAnswer - correctValue) <= tolerance
+const partialCredit = Math.max(0, 1 - Math.abs(studentAnswer - correctValue) / correctValue)
+```
+
+## Student Progress Tracking
+
+### Activity Tracking
+Use [src/contexts/StudentActivityContext.tsx](mdc:src/contexts/StudentActivityContext.tsx) for progress monitoring:
+
+```typescript
+const { trackActivity } = useStudentActivity()
+
+// Track lesson engagement
+trackActivity({
+  type: 'lesson_view',
+  lesson_id: lessonId,
+  duration: timeSpent
+})
+
+// Track assignment progress
+trackActivity({
+  type: 'assignment_progress',
+  assignment_id: assignmentId,
+  question_id: questionId,
+  correct: isCorrect
+})
+```
+
+## Accessibility for Physics Content
+
+### Screen Reader Support
+```typescript
+// Provide alt text for physics diagrams
+<img 
+  src={scenarioImage} 
+  alt="Physics diagram showing a block on an inclined plane with forces labeled"
+  className="physics-diagram"
+/>
+
+// Use proper headings for problem structure
+<h3>Given Information</h3>
+<h3>Find</h3>
+<h3>Solution</h3>
+```
+
+### Mathematical Accessibility
+```typescript
+// Provide text alternatives for equations
+<span aria-label="Force equals mass times acceleration">
+  <MathMarkdown content="\\[ F = ma \\]" />
+</span>
+```
+
+## Performance for Educational Content
+
+### Large Dataset Handling
+```typescript
+// Paginate question banks
+const { data, error } = await supabase
+  .from('question_bank')
+  .select('*')
+  .range(startIndex, endIndex)
+  .order('usage_count', { ascending: false })
+```
+
+### Image Optimization
+```typescript
+// Optimize physics diagrams
+const optimizedImage = await optimizePhysicsImage(originalImage, {
+  maxWidth: 800,
+  quality: 85,
+  format: 'webp'
+})
+```

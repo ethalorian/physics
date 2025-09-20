@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { Question, MultipleChoiceQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion } from '@/types/assignment'
+import { Question, MultipleChoiceQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -13,6 +13,7 @@ import { CheckCircle2, XCircle, Award, Sparkles, Info, Image as ImageIcon, Wand2
 import VocabularyMatchingGame from '@/components/vocabulary/games/VocabularyMatchingGame'
 import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
 import VocabularyFillBlankGame from '@/components/vocabulary/games/VocabularyFillBlankGame'
+import VocabularyHangmanGame from '@/components/vocabulary/games/VocabularyHangmanGame'
 
 interface QuestionRendererProps {
   question: Question
@@ -432,6 +433,26 @@ export default function QuestionRenderer({
             showResults={showFeedback}
             initialAnswer={answer as { answers: Record<string, string> }}
             disabled={disabled}
+          />
+        )
+
+      case 'vocabulary-hangman':
+        const hangmanQuestion = question as VocabularyHangmanQuestion
+        return (
+          <VocabularyHangmanGame
+            vocabularyTerms={hangmanQuestion.vocabularyTerms || []}
+            difficulty={hangmanQuestion.difficulty}
+            showDefinitions={hangmanQuestion.showDefinitions}
+            maxWrongGuesses={hangmanQuestion.maxWrongGuesses}
+            onGameComplete={(score, totalWords, timeSpent) => {
+              onAnswerChange({
+                score,
+                totalWords,
+                timeSpent,
+                completed: true,
+                timestamp: new Date().toISOString()
+              })
+            }}
           />
         )
 

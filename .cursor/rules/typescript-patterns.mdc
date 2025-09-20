@@ -1,0 +1,85 @@
+---
+globs: *.ts,*.tsx
+---
+
+# TypeScript & React Development Patterns
+
+## Import Organization
+Always organize imports in this order:
+```typescript
+// 1. React/Next.js imports
+import { useEffect, useState } from 'react'
+import { NextRequest, NextResponse } from 'next/server'
+
+// 2. External package imports
+import { ethers } from 'ethers'
+import { useSession } from 'next-auth/react'
+
+// 3. Internal imports with @/ prefix
+import { useAssignments } from '@/contexts/AssignmentContext'
+import { Button } from '@/components/ui/button'
+```
+
+## Component Patterns
+
+### Function Declarations
+Use function declarations for components:
+```typescript
+export function ComponentName({ prop1, prop2 }: ComponentProps) {
+  // Component logic
+}
+```
+
+### TypeScript Interfaces
+Always define interfaces for component props:
+```typescript
+interface ComponentProps {
+  title: string
+  onAction: (data: any) => void
+  children?: React.ReactNode
+}
+```
+
+### State Management
+- Use `useState` for component-local state
+- Use `useRef` for non-rendering values and caching
+- Use `useCallback` for event handlers and context functions
+- Use `useMemo` for expensive computations
+- Context providers for global state with custom hooks
+
+## Context Pattern
+Follow the established context pattern:
+```typescript
+const SomeContext = createContext<SomeContextType | undefined>(undefined)
+
+export function SomeProvider({ children }: { children: React.ReactNode }) {
+  // Provider implementation
+}
+
+export function useSome() {
+  const context = useContext(SomeContext)
+  if (!context) {
+    throw new Error('useSome must be used within SomeProvider')
+  }
+  return context
+}
+```
+
+## Error Handling
+Always wrap async operations in try-catch blocks:
+```typescript
+try {
+  const result = await someAsyncOperation()
+  // Handle success
+} catch (error) {
+  console.error('Operation failed:', error)
+  // Handle error appropriately
+}
+```
+
+## Type Safety Rules
+- Use strict TypeScript mode
+- Avoid `any` type - use specific types or `unknown`
+- Use optional chaining for potentially undefined values
+- Define return types for functions when not obvious
+- Use const assertions for immutable data

@@ -19,14 +19,10 @@ import {
   Award
 } from 'lucide-react'
 
+import { Lesson } from '@/types/assignment'
+
 interface EnhancedLessonViewProps {
-  lesson: {
-    unit: string
-    lesson_number: number
-    title: string
-    description: string
-    content: string
-  }
+  lesson: Lesson
 }
 
 export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) {
@@ -65,7 +61,7 @@ export default function EnhancedLessonView({ lesson }: EnhancedLessonViewProps) 
                 </Badge>
               </div>
               <h1 className="text-3xl font-bold text-[#4A1A4A]">{lesson.title}</h1>
-              <p className="text-[#6A4C93] mt-1">{lesson.description}</p>
+              {lesson.description && <p className="text-[#6A4C93] mt-1">{lesson.description}</p>}
             </div>
           </div>
           <div className="text-right">
