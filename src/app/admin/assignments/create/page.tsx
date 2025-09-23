@@ -194,19 +194,7 @@ export default function CreateAssignmentPage() {
     // Usage count will be incremented when question is used
   }
 
-  const handleAddSelectedQuestions = (questionBankItems: QuestionBankItem[]) => {
-    const newQuestions: Question[] = questionBankItems.map(item => ({
-      ...item.question,
-      id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-    }))
-    
-    setAssignment(prev => ({
-      ...prev,
-      questions: [...(prev.questions || []), ...newQuestions]
-    }))
-    
-    setShowQuestionBank(false)
-  }
+  // Removed unused handleAddSelectedQuestions function
 
   const saveAssignment = async (publish: boolean = false) => {
     if (!assignment.title || !assignment.questions?.length) {

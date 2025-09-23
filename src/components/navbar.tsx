@@ -20,14 +20,22 @@ import {
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 import { usePermissions } from "@/hooks/usePermissions"
+import { useViewMode } from "@/contexts/ViewModeContext"
+import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
+  const { viewMode } = useViewMode()
+  
+  // Use original permissions for actual user role
+  const { userRole } = usePermissions()
+  
+  // Use view-aware permissions for navigation decisions
   const {
     isAuthenticated,
     canAccessAdmin,
-    userRole
-  } = usePermissions()
+    effectiveRole
+  } = useViewAwarePermissions(viewMode)
 
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
@@ -133,14 +141,19 @@ export default function Navbar() {
                           </p>
                           <div className="flex items-center gap-2 mt-1">
                             <span className={`text-xs px-2 py-1 rounded-full font-medium border ${
-                              userRole === 'admin' 
+                              effectiveRole === 'admin' 
                                 ? 'bg-primary/20 text-primary border-primary/40' 
-                                : userRole === 'teacher'
+                                : effectiveRole === 'teacher'
                                 ? 'bg-primary/15 text-primary border-primary/40'
                                 : 'bg-secondary/50 text-secondary-foreground border-secondary'
                             }`}>
-                              {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                              {effectiveRole.charAt(0).toUpperCase() + effectiveRole.slice(1)}
                             </span>
+                            {viewMode === 'student' && userRole !== 'student' && (
+                              <span className="text-xs px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-700 border border-blue-300">
+                                View Mode
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>

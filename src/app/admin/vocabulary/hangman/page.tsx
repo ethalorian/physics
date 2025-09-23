@@ -13,7 +13,7 @@ import Link from 'next/link'
 import VocabularyHangmanGame from '@/components/vocabulary/games/VocabularyHangmanGame'
 
 export default function VocabularyHangmanPage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const { vocabularySets, loading } = useVocabulary()
   const [selectedSetId, setSelectedSetId] = useState<string>('')
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
@@ -24,6 +24,17 @@ export default function VocabularyHangmanPage() {
     timeSpent: number
   } | null>(null)
   
+  // Wait for session to load before checking permissions
+  if (status === 'loading') {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+  
   // Check if user has admin/teacher access
   const userRole = getUserRole(session?.user?.email)
   if (userRole !== 'admin' && userRole !== 'teacher') {
@@ -31,9 +42,17 @@ export default function VocabularyHangmanPage() {
   }
 
   const selectedSet = vocabularySets.find(set => set.id === selectedSetId)
-  const availableTerms = selectedSet?.terms.filter(term => 
-    !difficulty || term.difficulty === difficulty || !term.difficulty
-  ) || []
+  
+  // Apply proper difficulty filtering
+  const availableTerms = selectedSet?.terms.filter(term => {
+    if (difficulty === 'easy') {
+      return term.difficulty === 'easy' || !term.difficulty
+    } else if (difficulty === 'hard') {
+      return term.difficulty === 'hard' || !term.difficulty
+    }
+    // For medium difficulty, use all terms (no filtering)
+    return true
+  }) || []
 
   const handleGameComplete = (score: number, totalWords: number, timeSpent: number) => {
     setGameResults({ score, totalWords, timeSpent })

@@ -1,0 +1,164 @@
+---
+description: "Vocabulary games system architecture and patterns"
+---
+
+# Vocabulary Games System Architecture
+
+The vocabulary games system provides interactive educational games for physics vocabulary learning with consistent UI patterns and game mechanics.
+
+## Core Architecture
+
+### Game Types
+- **Hangman Game**: [VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx)
+- **Crossword Game**: [VocabularyCrosswordGame.tsx](mdc:src/components/vocabulary/games/VocabularyCrosswordGame.tsx)
+- **Matching Game**: [VocabularyMatchingGame.tsx](mdc:src/components/vocabulary/games/VocabularyMatchingGame.tsx)
+- **Fill-in-the-Blank**: [VocabularyFillBlankGame.tsx](mdc:src/components/vocabulary/games/VocabularyFillBlankGame.tsx)
+
+### Game Pages Structure
+All vocabulary game pages follow the same pattern:
+- **Hangman Page**: [src/app/admin/vocabulary/hangman/page.tsx](mdc:src/app/admin/vocabulary/hangman/page.tsx)
+- **Crossword Page**: [src/app/admin/vocabulary/crossword/page.tsx](mdc:src/app/admin/vocabulary/crossword/page.tsx)
+
+### Management Interface
+- **Main Page**: [src/app/admin/vocabulary/page.tsx](mdc:src/app/admin/vocabulary/page.tsx)
+- **Set Manager**: [VocabularySetManager.tsx](mdc:src/components/vocabulary/VocabularySetManager.tsx)
+
+## Data Flow
+
+### Context Provider
+All games use [VocabularyContext.tsx](mdc:src/contexts/VocabularyContext.tsx) for:
+- Vocabulary set management
+- Term CRUD operations
+- Loading states and error handling
+- LocalStorage fallback for offline functionality
+
+### Game State Management
+```typescript
+interface GameState {
+  currentTerm: VocabularyTerm | null
+  gameStatus: 'playing' | 'won' | 'lost'
+  score: number
+  startTime: number
+  hintsUsed: number
+}
+```
+
+## UI Patterns
+
+### Consistent Page Layout
+All game pages must follow this structure:
+1. **Header**: Back button + game title with icon
+2. **Game Results**: Success card when game completes
+3. **Two-Column Layout**: Game Setup (left) + How to Play (right)
+4. **Available Sets**: Grid of vocabulary sets at bottom
+5. **Game Interface**: Full-width game component when playing
+
+### Required Sections
+- **Game Setup Card**: Vocabulary set selection + difficulty + start button
+- **How to Play Card**: Numbered steps + scoring information
+- **Available Vocabulary Sets**: Grid display of all sets
+
+### Styling Consistency
+- Use same card styling and spacing patterns
+- Purple theme for buttons (`bg-purple-600 hover:bg-purple-700`)
+- Numbered instruction steps with blue circular badges
+- Green success cards for game completion
+- Consistent icon usage (Target, Grid3x3, BookOpen, etc.)
+
+## Game Component Interface
+
+### Standard Props Pattern
+```typescript
+interface VocabularyGameProps {
+  vocabularyTerms: VocabularyTerm[]
+  onGameComplete?: (score: number, totalWords: number, timeSpent: number) => void
+  difficulty?: 'easy' | 'medium' | 'hard'
+  showDefinitions?: boolean
+  disabled?: boolean
+}
+```
+
+### Game Completion Handling
+All games should call `onGameComplete` with:
+- Final score
+- Total words attempted
+- Time spent (in seconds)
+
+## Permission System
+
+### Access Control
+All vocabulary game pages require admin/teacher permissions:
+```typescript
+const userRole = getUserRole(session?.user?.email)
+if (userRole !== 'admin' && userRole !== 'teacher') {
+  redirect('/dashboard')
+}
+```
+
+### Session Loading
+Always check session loading state before permission checks:
+```typescript
+if (status === 'loading') {
+  return <LoadingSpinner />
+}
+```
+
+## Game Mechanics
+
+### Difficulty Levels
+- **Easy**: 10 points per word, more forgiving rules
+- **Medium**: 20 points per word, standard rules  
+- **Hard**: 30 points per word, challenging rules
+
+### Hint System
+- Hints should cost points (-5 points typically)
+- Provide meaningful assistance without giving away answers
+- Track hint usage for scoring
+
+### Definition Display
+- **Hangman**: Show definition immediately as the main clue
+- **Crossword**: Use definitions as crossword clues
+- **Other games**: Context-appropriate definition usage
+
+## Integration Points
+
+### Vocabulary Context
+Always use the vocabulary context for data:
+```typescript
+const { vocabularySets, loading, error } = useVocabulary()
+```
+
+### Navigation
+Consistent navigation patterns:
+- Back to vocabulary management
+- Game setup to game interface
+- Game completion to results/restart
+
+### Responsive Design
+All games must be mobile-friendly:
+- Responsive grid layouts
+- Touch-friendly interactions
+- Appropriate sizing for different screens
+
+## Development Guidelines
+
+### Component Organization
+- Game components in `src/components/vocabulary/games/`
+- Game pages in `src/app/admin/vocabulary/[game]/`
+- Shared utilities in vocabulary context
+
+### State Management
+- Use `useState` for component-local game state
+- Use `useCallback` for game functions to prevent re-renders
+- Use `useEffect` for game initialization and cleanup
+
+### Error Handling
+- Graceful fallbacks for missing vocabulary sets
+- Loading states during data fetching
+- Clear error messages for users
+
+### Testing Considerations
+- Test with different vocabulary set sizes
+- Verify responsive behavior
+- Test permission restrictions
+- Validate game completion flows

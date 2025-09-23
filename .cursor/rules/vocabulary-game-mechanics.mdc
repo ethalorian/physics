@@ -1,0 +1,240 @@
+---
+description: "Vocabulary games mechanics and scoring systems"
+---
+
+# Vocabulary Games Mechanics and Scoring
+
+## Game Design Principles
+
+### Educational Focus
+- **Definitions First**: Always show definitions prominently to aid learning
+- **Immediate Feedback**: Provide instant validation and correction
+- **Progressive Difficulty**: Support easy/medium/hard difficulty levels
+- **Hint Systems**: Offer helpful hints that maintain educational value
+
+### Engagement Patterns
+- **Clear Objectives**: Each game has obvious win conditions
+- **Progress Tracking**: Visual indicators of completion
+- **Scoring Systems**: Point-based rewards for correct answers
+- **Time Awareness**: Optional time tracking for competitive elements
+
+## Scoring Systems
+
+### Standard Point Values
+- **Easy Difficulty**: 10 points per correct answer
+- **Medium Difficulty**: 20 points per correct answer  
+- **Hard Difficulty**: 30 points per correct answer
+
+### Point Deductions
+- **Hints Used**: -5 points per hint
+- **Wrong Answers**: Varies by game type
+  - Hangman: No deduction for wrong letters
+  - Crossword: No deduction (self-correcting)
+  - Matching: No deduction (can retry)
+
+### Bonus Points
+- **Perfect Games**: +50 bonus points for no hints/mistakes
+- **Speed Bonus**: +1 point per second under target time (optional)
+- **Streak Bonus**: +5 points for consecutive correct answers
+
+## Game-Specific Mechanics
+
+### Hangman Game
+**File**: [VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx)
+
+#### Core Mechanics
+- **Definition Display**: Show definition immediately as the main clue
+- **Letter Guessing**: Click letters or type to guess
+- **Wrong Guess Limit**: 6 wrong guesses (adjustable by difficulty)
+- **Hint System**: Suggest helpful letters (vowels first, then common consonants)
+
+#### Scoring Rules
+```typescript
+// Base points by difficulty
+const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
+
+// Final score calculation
+const wordScore = Math.max(0, basePoints - (hintsUsed * 5))
+```
+
+#### Letter Hint Algorithm
+```typescript
+const getLetterHint = () => {
+  const unguessedLetters = word.filter(letter => !guessedLetters.has(letter))
+  const vowels = unguessedLetters.filter(letter => 'AEIOU'.includes(letter))
+  const commonConsonants = unguessedLetters.filter(letter => 'RSTLNM'.includes(letter))
+  
+  return vowels[0] || commonConsonants[0] || unguessedLetters[0]
+}
+```
+
+### Crossword Game
+**File**: [VocabularyCrosswordGame.tsx](mdc:src/components/vocabulary/games/VocabularyCrosswordGame.tsx)
+
+#### Core Mechanics
+- **Grid Generation**: Automatic crossword grid creation with intersections
+- **Clue System**: Definitions serve as crossword clues
+- **Interactive Input**: Click cells and type answers
+- **Auto-Validation**: Real-time checking of answers
+
+#### Grid Generation Algorithm
+- **Intersection Finding**: Look for common letters between words
+- **Placement Strategy**: Place longest words first, then intersect shorter ones
+- **Grid Optimization**: Minimize empty space while maximizing word placement
+
+#### Scoring Rules
+```typescript
+// Score per completed word
+const wordScore = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
+
+// Bonus for grid completion
+const completionBonus = allWordsComplete ? 50 : 0
+```
+
+### Matching Game
+**File**: [VocabularyMatchingGame.tsx](mdc:src/components/vocabulary/games/VocabularyMatchingGame.tsx)
+
+#### Core Mechanics
+- **Card Matching**: Match terms with their definitions
+- **Visual Feedback**: Highlight selected cards and matches
+- **Error Handling**: Allow retries for incorrect matches
+- **Shuffle System**: Randomize card positions each game
+
+#### Matching Algorithm
+```typescript
+const processMatch = (termCard: string, definitionCard: string) => {
+  const isCorrectMatch = termCard.replace('term-', '') === definitionCard.replace('def-', '')
+  
+  if (isCorrectMatch) {
+    // Lock in the match
+    setMatches(prev => ({ ...prev, [termCard]: definitionCard }))
+    updateScore(getPointsForMatch())
+  } else {
+    // Show error state and allow retry
+    showMatchError(termCard, definitionCard)
+  }
+}
+```
+
+### Fill-in-the-Blank Game
+**File**: [VocabularyFillBlankGame.tsx](mdc:src/components/vocabulary/games/VocabularyFillBlankGame.tsx)
+
+#### Core Mechanics
+- **Context Sentences**: Terms used in physics context
+- **Input Validation**: Check answers against correct terms
+- **Partial Credit**: Accept close answers (case-insensitive)
+- **Multiple Blanks**: Support multiple terms per sentence
+
+#### Answer Validation
+```typescript
+const validateAnswer = (userAnswer: string, correctTerm: string) => {
+  const normalizedUser = userAnswer.toLowerCase().trim()
+  const normalizedCorrect = correctTerm.toLowerCase().trim()
+  
+  // Exact match
+  if (normalizedUser === normalizedCorrect) return 'correct'
+  
+  // Close match (Levenshtein distance)
+  if (getEditDistance(normalizedUser, normalizedCorrect) <= 1) return 'close'
+  
+  return 'incorrect'
+}
+```
+
+## Difficulty Implementation
+
+### Easy Mode Adjustments
+- **More Attempts**: Increase wrong guess limits
+- **Better Hints**: More generous hint systems
+- **Simpler Terms**: Filter to easier vocabulary
+- **Visual Aids**: Additional visual cues
+
+### Medium Mode (Default)
+- **Standard Rules**: Balanced gameplay
+- **Normal Hints**: Standard hint cost and frequency
+- **Mixed Terms**: All difficulty levels included
+- **Fair Scoring**: Standard point values
+
+### Hard Mode Adjustments
+- **Fewer Attempts**: Reduce wrong guess limits
+- **Expensive Hints**: Higher hint costs
+- **Complex Terms**: Focus on harder vocabulary
+- **Time Pressure**: Optional time limits
+
+## Hint Systems
+
+### Effective Hint Design
+- **Educational Value**: Hints should teach, not just give answers
+- **Progressive Disclosure**: Start with subtle hints, get more specific
+- **Cost Balance**: Meaningful point deduction without discouraging use
+- **Game-Appropriate**: Hints match the game's learning objectives
+
+### Implementation Pattern
+```typescript
+const useHint = useCallback(() => {
+  if (hintsUsed >= maxHints) return
+  
+  setGameState(prev => ({
+    ...prev,
+    hintsUsed: prev.hintsUsed + 1,
+    score: Math.max(0, prev.score - 5)
+  }))
+  
+  setShowHint(true)
+}, [hintsUsed, maxHints])
+```
+
+## Progress Tracking
+
+### Game State Management
+```typescript
+interface GameState {
+  currentTerm: VocabularyTerm | null
+  guessedLetters: Set<string>
+  wrongGuesses: number
+  gameStatus: 'playing' | 'won' | 'lost'
+  score: number
+  currentWordIndex: number
+  startTime: number
+  hintsUsed: number
+}
+```
+
+### Completion Tracking
+- **Individual Words**: Track completion of each vocabulary term
+- **Overall Progress**: Show progress through the entire set
+- **Performance Metrics**: Accuracy, speed, hint usage
+- **Learning Analytics**: Track which terms are most challenging
+
+## Accessibility Considerations
+
+### Keyboard Navigation
+- **Tab Order**: Logical tab progression through interactive elements
+- **Enter/Space**: Activate buttons and make selections
+- **Arrow Keys**: Navigate grid-based games (crossword)
+- **Escape**: Exit modals or return to previous state
+
+### Screen Reader Support
+- **ARIA Labels**: Descriptive labels for all interactive elements
+- **Live Regions**: Announce game state changes
+- **Structured Content**: Proper heading hierarchy
+- **Alternative Text**: Describe visual game elements
+
+### Visual Accessibility
+- **Color Contrast**: Meet WCAG AA standards
+- **Focus Indicators**: Clear focus states for keyboard users
+- **Text Size**: Readable font sizes at all zoom levels
+- **Color Independence**: Don't rely solely on color for information
+
+## Performance Optimization
+
+### State Management
+- **Minimal Re-renders**: Use useCallback and useMemo appropriately
+- **Efficient Updates**: Batch state updates when possible
+- **Memory Management**: Clean up game state on unmount
+
+### Rendering Optimization
+- **Virtual Scrolling**: For large vocabulary sets
+- **Lazy Loading**: Load game components only when needed
+- **Debounced Input**: Prevent excessive validation calls
+- **Optimized Grid**: Efficient crossword grid rendering

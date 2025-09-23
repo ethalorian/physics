@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List, Database, Upload, TestTube } from 'lucide-react'
+import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List, Database, Upload } from 'lucide-react'
 import { initializeGoogleClassroomAuth, googleClassroomAPI } from '@/lib/google-classroom'
 import { useToast } from '@/providers/toast-provider'
 
@@ -40,7 +40,6 @@ export default function StudentManagement() {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [importedStudents, setImportedStudents] = useState<Student[]>([])
   const [showImportedData, setShowImportedData] = useState(false)
-  const [testing, setTesting] = useState(false)
 
   useEffect(() => {
     // Only initialize with real data when connected
@@ -53,6 +52,7 @@ export default function StudentManagement() {
     setLoading(true)
     try {
       if (isConnected) {
+        console.log('🔍 Fetching Google Classroom students for course:', courseId)
         // Fetch from Google Classroom API
         const classroomStudents = await googleClassroomAPI.getStudents(courseId)
         
@@ -72,6 +72,7 @@ export default function StudentManagement() {
           }
         })
         
+        console.log('📊 Google Classroom students for course', courseId, ':', formattedStudents.length)
         setStudents(formattedStudents)
       } else {
         // No data available when not connected
@@ -85,11 +86,51 @@ export default function StudentManagement() {
     }
   }, [isConnected])
 
+  const fetchImportedRoster = useCallback(async () => {
+    if (!selectedCourse) return
+
+    try {
+      console.log('🔍 Fetching imported students for course:', selectedCourse)
+      const response = await fetch(`/api/roster/import?course_id=${selectedCourse}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('📊 Database API response:', data)
+        console.log('📊 Students returned from database:', data.students?.length || 0)
+        
+        const formattedStudents: Student[] = data.students.map((student: any) => ({
+          id: student.google_user_id,
+          name: student.name,
+          email: student.email,
+          profilePhoto: student.profile_photo_url,
+          enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
+          courseId: selectedCourse
+        }))
+        
+        console.log('📊 Formatted students for course', selectedCourse, ':', formattedStudents.length)
+        setImportedStudents(formattedStudents)
+        
+        // Log comparison for debugging
+        console.log('📊 Database vs Google Classroom comparison:')
+        console.log('   - Database students:', formattedStudents.length)
+        console.log('   - Course ID:', selectedCourse)
+      } else {
+        console.log('❌ Failed to fetch imported roster:', response.status, response.statusText)
+        setImportedStudents([])
+      }
+    } catch (error) {
+      console.error('Error fetching imported roster:', error)
+      setImportedStudents([])
+    }
+  }, [selectedCourse])
+
   useEffect(() => {
     if (selectedCourse) {
       fetchStudents(selectedCourse)
+      // Also fetch imported students to update the database count
+      fetchImportedRoster()
     }
-  }, [selectedCourse, fetchStudents])
+  }, [selectedCourse, fetchStudents, fetchImportedRoster])
 
   const connectToGoogleClassroom = async () => {
     setLoading(true)
@@ -100,15 +141,34 @@ export default function StudentManagement() {
       
       // Fetch courses to verify connection
       const courses = await googleClassroomAPI.getCourses()
-      setCourses(courses.map(course => ({
-        id: course.id,
-        name: course.name,
-        section: course.section || 'No section',
-        studentCount: 0 // Will be updated when students are fetched
-      })))
       
-      if (courses.length > 0) {
-        setSelectedCourse(courses[0].id)
+      // Fetch student counts for each course
+      const coursesWithStudentCounts = await Promise.all(
+        courses.map(async (course) => {
+          try {
+            const students = await googleClassroomAPI.getStudents(course.id)
+            return {
+              id: course.id,
+              name: course.name,
+              section: course.section || 'No section',
+              studentCount: students.length
+            }
+          } catch (error) {
+            console.error(`Failed to fetch students for course ${course.id}:`, error)
+            return {
+              id: course.id,
+              name: course.name,
+              section: course.section || 'No section',
+              studentCount: 0 // Fallback to 0 if fetch fails
+            }
+          }
+        })
+      )
+      
+      setCourses(coursesWithStudentCounts)
+      
+      if (coursesWithStudentCounts.length > 0) {
+        setSelectedCourse(coursesWithStudentCounts[0].id)
       }
       
       setIsConnected(true)
@@ -298,73 +358,6 @@ export default function StudentManagement() {
     }
   }
 
-  const fetchImportedRoster = async () => {
-    if (!selectedCourse) return
-
-    try {
-      const response = await fetch(`/api/roster/import?course_id=${selectedCourse}`)
-      
-      if (response.ok) {
-        const data = await response.json()
-        const formattedStudents: Student[] = data.students.map((student: any) => ({
-          id: student.google_user_id,
-          name: student.name,
-          email: student.email,
-          profilePhoto: student.profile_photo_url,
-          enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
-          courseId: selectedCourse
-        }))
-        
-        setImportedStudents(formattedStudents)
-        setShowImportedData(true)
-      }
-    } catch (error) {
-      console.error('Error fetching imported roster:', error)
-    }
-  }
-
-  const testDatabaseSetup = async () => {
-    setTesting(true)
-    try {
-      const response = await fetch('/api/roster/test')
-      const result = await response.json()
-      
-      console.log('Database test results:', result)
-      
-      if (result.success) {
-        showToast({
-          title: "Database Ready!",
-          description: "All database components are properly set up",
-          variant: "success",
-          duration: 3000
-        })
-      } else {
-        const failedTests = Object.entries(result.tests)
-          .filter(([_, passed]) => !passed)
-          .map(([test, _]) => test.replace('_', ' '))
-        
-        showToast({
-          title: "Database Setup Issues",
-          description: `Missing: ${failedTests.join(', ')}`,
-          variant: "error",
-          duration: 8000
-        })
-        
-        console.error('Failed tests:', failedTests)
-        console.error('Recommendations:', result.recommendations)
-      }
-    } catch (error) {
-      console.error('Database test error:', error)
-      showToast({
-        title: "Test Failed",
-        description: "Could not test database setup",
-        variant: "error",
-        duration: 3000
-      })
-    } finally {
-      setTesting(false)
-    }
-  }
 
   const exportStudentList = () => {
     const csv = [
@@ -421,19 +414,6 @@ export default function StudentManagement() {
           {!isConnected ? (
             <>
               <Button
-                onClick={testDatabaseSetup}
-                disabled={testing}
-                variant="outline"
-                className="border-orange-500 text-orange-600 hover:bg-orange-50"
-              >
-                {testing ? (
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <TestTube className="h-4 w-4 mr-2" />
-                )}
-                Test Database
-              </Button>
-              <Button
                 onClick={connectToGoogleClassroom}
                 disabled={loading}
                 className="bg-gradient-to-r from-[#9A8AC0] to-[#B19CD9] hover:from-[#AA9AD0] hover:to-[#C1ACE9]"
@@ -448,20 +428,6 @@ export default function StudentManagement() {
             </>
           ) : (
             <>
-              <Button
-                onClick={testDatabaseSetup}
-                disabled={testing}
-                variant="outline"
-                size="sm"
-                className="border-orange-500 text-orange-600 hover:bg-orange-50"
-              >
-                {testing ? (
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                ) : (
-                  <TestTube className="h-4 w-4 mr-2" />
-                )}
-                Test DB
-              </Button>
               <Button variant="outline" onClick={refreshStudents} disabled={loading}>
                 <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 Refresh
@@ -536,9 +502,9 @@ export default function StudentManagement() {
               <Button
                 variant={showImportedData ? "default" : "outline"}
                 size="sm"
-                onClick={() => {
+                onClick={async () => {
                   setShowImportedData(true)
-                  fetchImportedRoster()
+                  await fetchImportedRoster()
                 }}
                 disabled={!selectedCourse}
               >

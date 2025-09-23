@@ -1,7 +1,10 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { usePermissions } from '@/hooks/usePermissions'
+import { useViewMode } from '@/contexts/ViewModeContext'
+import { useViewAwarePermissions } from '@/hooks/useViewAwarePermissions'
 import { useAssignments } from '@/contexts/AssignmentContext'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
@@ -10,25 +13,29 @@ import {
   BarChart3,
   Clock,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  EyeOff
 } from 'lucide-react'
 import StudentLessons from '@/components/student/StudentLessons'
 import StudentAssignments from '@/components/student/StudentAssignments'
+import { StudentAssignmentView } from '@/components/assignment-system/StudentAssignmentView'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
 export default function StudentDashboard() {
   const { data: session } = useSession()
-  const { isAuthenticated, userRole, canAccessAdmin } = usePermissions()
+  const { userRole } = usePermissions()
+  const { viewMode, toggleViewMode } = useViewMode()
+  const { isAuthenticated, canAccessAdmin } = useViewAwarePermissions(viewMode)
   const [activeTab, setActiveTab] = useState('overview')
   const router = useRouter()
 
   useEffect(() => {
-    // If user is an admin, redirect to admin dashboard
-    if (isAuthenticated && canAccessAdmin) {
+    // Only redirect if user is an admin AND not in student view mode
+    if (isAuthenticated && canAccessAdmin && viewMode !== 'student') {
       router.replace('/admin/dashboard')
     }
-  }, [isAuthenticated, canAccessAdmin, router])
+  }, [isAuthenticated, canAccessAdmin, viewMode, router])
 
   if (!isAuthenticated) {
     return (
@@ -41,8 +48,8 @@ export default function StudentDashboard() {
     )
   }
 
-  // If admin, show loading while redirect happens
-  if (canAccessAdmin) {
+  // If admin and not in student view mode, show loading while redirect happens
+  if (canAccessAdmin && viewMode !== 'student') {
     return (
       <div className="max-w-md mx-auto mt-16 text-center">
         <div className="apple-card p-8">
@@ -67,9 +74,27 @@ export default function StudentDashboard() {
               Welcome back, {session?.user?.name?.split(' ')[0] || 'Student'}!
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="text-sm text-[#9A8AC0]">
-              Role: <span className="font-medium text-[#6A4C93] capitalize">{userRole}</span>
+          <div className="flex items-center space-x-2">
+            {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') && (
+              <Button
+                onClick={() => {
+                  toggleViewMode()
+                  router.push('/admin/dashboard')
+                }}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <EyeOff className="h-4 w-4" />
+                <span className="hidden sm:inline">Exit Student View</span>
+                <span className="sm:hidden">Exit</span>
+              </Button>
+            )}
+            <div className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground">
+              <span>Logged in as</span>
+              <div className="font-medium text-foreground capitalize">
+                {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') ? 'Admin' : userRole}
+              </div>
             </div>
           </div>
         </div>
@@ -77,18 +102,18 @@ export default function StudentDashboard() {
 
       {/* Dashboard Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 sm:max-w-[500px] bg-secondary border border-border">
-          <TabsTrigger value="overview" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
-            <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>Overview</span>
+        <TabsList className="grid w-full max-w-md grid-cols-3">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
-          <TabsTrigger value="lessons" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
-            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>Lessons</span>
+          <TabsTrigger value="lessons" className="flex items-center gap-2">
+            <BookOpen className="h-4 w-4" />
+            <span className="hidden sm:inline">Lessons</span>
           </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 py-2 sm:py-3 text-xs sm:text-sm">
-            <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span>Assignments</span>
+          <TabsTrigger value="assignments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Assignments</span>
           </TabsTrigger>
         </TabsList>
 
@@ -104,7 +129,7 @@ export default function StudentDashboard() {
 
         {/* Assignments Tab */}
         <TabsContent value="assignments">
-          <StudentAssignments />
+          <StudentAssignmentView />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,16 +1,33 @@
 # Antocci Physics Classroom
 
-An interactive online physics education platform built with Next.js, featuring Google Classroom integration, AI-powered grading, and dynamic lesson content.
+A comprehensive Next.js 15 physics education platform with AI-powered question generation, interactive lessons, advanced analytics, and seamless Google Classroom integration.
+
+## 📚 Documentation
+
+- **[Setup Guides](docs/SETUP_GUIDES.md)** - Database setup, migrations, and configuration
+- **[Features Overview](docs/FEATURES.md)** - Comprehensive feature documentation
+- **[Assignment System](docs/ASSIGNMENT_SYSTEM.md)** - Complete assignment management documentation
+
+## 🎯 Key Features
+
+- **AI-Powered Tools** - Question generation, grading, and scenario images
+- **Interactive Lessons** - Math rendering, video integration, progress tracking
+- **Assignment System** - Assign lessons and homework to classes or individual students
+- **Question Bank System** - Centralized repository with advanced filtering
+- **Student Analytics** - Real-time engagement and performance tracking
+- **Mobile-First Design** - Optimized for all devices and screen sizes
+- **Role-Based Access** - Student, Teacher, and Admin permissions
 
 ## 🚀 Features
 
 ### Core Functionality
 - **Interactive Physics Lessons** - Engaging, step-by-step physics lessons with real-time feedback
+- **Assignment System** - Assign lessons and homework to entire classes or individual students
 - **Google Authentication** - Secure login with school Google accounts
 - **Google Classroom Integration** - Import student rosters and sync with existing classes
 - **AI-Powered Grading** - OpenAI integration for automatic grading of open-response questions
 - **Assignment Management** - Create, distribute, and grade assignments with custom rubrics
-- **Progress Tracking** - Monitor student progress and performance analytics
+- **Progress Tracking** - Monitor student progress and performance analytics with real-time completion rates
 
 ### Technical Features
 - **Next.js 15** with App Router

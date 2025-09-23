@@ -5,6 +5,7 @@
  * This script runs the SQL migrations against your Supabase database
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { createClient } = require('@supabase/supabase-js');
 const fs = require('fs');
 const path = require('path');
@@ -30,7 +31,7 @@ async function runSQLFile(filePath) {
     const sql = fs.readFileSync(filePath, 'utf8');
     
     console.log(`🚀 Executing SQL from ${path.basename(filePath)}...`);
-    const { data, error } = await supabase.rpc('exec_sql', { sql_query: sql });
+    const { error } = await supabase.rpc('exec_sql', { sql_query: sql });
     
     if (error) {
       // If the RPC doesn't exist, try a different approach

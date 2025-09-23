@@ -1,0 +1,294 @@
+---
+globs: src/app/admin/vocabulary/**/*.tsx
+---
+
+# Vocabulary Games UI Patterns
+
+## Consistent Page Layout Requirements
+
+### Header Pattern
+All vocabulary game pages MUST use this exact header structure:
+
+```typescript
+<div className="flex items-center gap-4">
+  <Link href="/admin/vocabulary">
+    <Button variant="outline" size="sm">
+      <ArrowLeft className="h-4 w-4 mr-2" />
+      Back to Vocabulary
+    </Button>
+  </Link>
+  <div>
+    <h1 className="text-3xl font-bold tracking-tight mb-2 flex items-center gap-3">
+      <GameIcon className="h-8 w-8 text-blue-600" />
+      Physics [GameName]
+    </h1>
+    <p className="text-muted-foreground">
+      [Game description]
+    </p>
+  </div>
+</div>
+```
+
+### Game Results Card
+Success results must use this exact pattern:
+
+```typescript
+{gameResults && (
+  <Card className="border-green-200 bg-green-50">
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2 text-green-800">
+        <Trophy className="h-5 w-5" />
+        Game Complete!
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="text-center">
+          <div className="text-2xl font-bold text-green-700">
+            {gameResults.score}/{gameResults.totalWords}
+          </div>
+          <p className="text-sm text-green-600">Words Completed</p>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-green-700">
+            {Math.round((gameResults.score / gameResults.totalWords) * 100)}%
+          </div>
+          <p className="text-sm text-green-600">Accuracy</p>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-green-700">
+            {gameResults.timeSpent > 0 ? `${Math.floor(gameResults.timeSpent / 60)}m` : '--'}
+          </div>
+          <p className="text-sm text-green-600">Time Spent</p>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+)}
+```
+
+### Two-Column Layout Structure
+Main content must use this exact grid structure:
+
+```typescript
+<div className="grid gap-6 lg:grid-cols-2">
+  {/* Left Column - Game Setup */}
+  <div className="space-y-6">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <GameIcon className="h-5 w-5" />
+          Game Setup
+        </CardTitle>
+        <CardDescription>
+          Choose your vocabulary set and difficulty
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Form content */}
+      </CardContent>
+    </Card>
+  </div>
+
+  {/* Right Column - How to Play */}
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2">
+        <BookOpen className="h-5 w-5" />
+        How to Play
+      </CardTitle>
+      <CardDescription>
+        Learn the rules of Physics [GameName]
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      {/* Instructions content */}
+    </CardContent>
+  </Card>
+</div>
+```
+
+### How to Play Instructions
+Use numbered steps with this exact pattern:
+
+```typescript
+<div className="space-y-3">
+  <div className="flex items-start gap-3">
+    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-semibold flex-shrink-0">
+      1
+    </div>
+    <div>
+      <h4 className="font-medium">[Step title]</h4>
+      <p className="text-sm text-muted-foreground">
+        [Step description]
+      </p>
+    </div>
+  </div>
+  {/* Repeat for steps 2, 3, etc. */}
+</div>
+```
+
+### Scoring Section
+Include scoring information with this exact pattern:
+
+```typescript
+<div className="border-t pt-4">
+  <h4 className="font-medium mb-3">Scoring:</h4>
+  <div className="grid grid-cols-3 gap-4 text-center">
+    <div className="bg-green-50 p-3 rounded-lg">
+      <div className="font-semibold text-green-700">Easy</div>
+      <div className="text-sm text-green-600">10 pts/word</div>
+    </div>
+    <div className="bg-blue-50 p-3 rounded-lg">
+      <div className="font-semibold text-blue-700">Medium</div>
+      <div className="text-sm text-blue-600">20 pts/word</div>
+    </div>
+    <div className="bg-purple-50 p-3 rounded-lg">
+      <div className="font-semibold text-purple-700">Hard</div>
+      <div className="text-sm text-purple-600">30 pts/word</div>
+    </div>
+  </div>
+</div>
+```
+
+### Available Vocabulary Sets Section
+Must include this section at the bottom:
+
+```typescript
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center gap-2">
+      <BookOpen className="h-5 w-5" />
+      Available Vocabulary Sets
+    </CardTitle>
+    <CardDescription>
+      Your physics vocabulary collections
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {vocabularySets.map((set) => (
+        <Card key={set.id} className="cursor-pointer transition-colors hover:bg-muted/50">
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base">{set.name}</CardTitle>
+              <Badge variant="outline">{set.unit || 'unit-1'}</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-0">
+            <CardDescription className="mb-3">
+              {set.description}
+            </CardDescription>
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>{set.terms.length} terms</span>
+              <span>{set.unit || 'unit-1'}</span>
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  </CardContent>
+</Card>
+```
+
+## Form Components
+
+### Vocabulary Set Selection
+```typescript
+<div className="space-y-2">
+  <label className="text-sm font-medium">Vocabulary Set</label>
+  <Select value={selectedSetId} onValueChange={setSelectedSetId}>
+    <SelectTrigger>
+      <SelectValue placeholder="Select a vocabulary set" />
+    </SelectTrigger>
+    <SelectContent>
+      {vocabularySets.map((set) => (
+        <SelectItem key={set.id} value={set.id}>
+          {set.name} ({set.terms.length} terms)
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+```
+
+### Difficulty Selection
+```typescript
+<div className="space-y-2">
+  <label className="text-sm font-medium">Difficulty</label>
+  <Select value={difficulty} onValueChange={(value: 'easy' | 'medium' | 'hard') => setDifficulty(value)}>
+    <SelectTrigger>
+      <SelectValue />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="easy">Easy ([game-specific description])</SelectItem>
+      <SelectItem value="medium">Medium ([game-specific description])</SelectItem>
+      <SelectItem value="hard">Hard ([game-specific description])</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+```
+
+### Start Game Button
+```typescript
+<Button 
+  onClick={startNewGame}
+  disabled={!selectedSetId || availableTerms.length === 0}
+  className="w-full bg-purple-600 hover:bg-purple-700"
+>
+  <Target className="h-4 w-4 mr-2" />
+  Start [GameName] Game
+</Button>
+```
+
+## Icon Requirements
+
+### Game-Specific Icons
+- **Hangman**: `Target` icon
+- **Crossword**: `Grid3x3` icon
+- **Matching**: `Users` icon (or appropriate)
+- **Fill-in-Blank**: `BookOpen` icon (or appropriate)
+
+### Universal Icons
+- **Back navigation**: `ArrowLeft`
+- **Instructions**: `BookOpen`
+- **Success**: `Trophy`
+- **Start game**: `Target` (or game-specific icon)
+
+## Color Scheme Standards
+
+### Background Colors
+- **Success cards**: `bg-green-50`, `border-green-200`
+- **Difficulty badges**: 
+  - Easy: `bg-green-50`, `text-green-700`
+  - Medium: `bg-blue-50`, `text-blue-700`
+  - Hard: `bg-purple-50`, `text-purple-700`
+
+### Text Colors
+- **Success text**: `text-green-800`, `text-green-700`, `text-green-600`
+- **Icons**: `text-blue-600` for game icons
+- **Muted text**: `text-muted-foreground`
+
+### Interactive Elements
+- **Primary buttons**: `bg-purple-600 hover:bg-purple-700`
+- **Outline buttons**: `variant="outline"`
+- **Hover states**: `hover:bg-muted/50`
+
+## Spacing and Layout
+
+### Container Structure
+```typescript
+<div className="container mx-auto px-4 py-8 space-y-8">
+  {/* All page content */}
+</div>
+```
+
+### Card Spacing
+- **Between cards**: `space-y-6` or `gap-6`
+- **Within cards**: `space-y-4` for content
+- **Card grids**: `gap-4` for grid items
+
+### Responsive Breakpoints
+- **Two-column**: `lg:grid-cols-2`
+- **Three-column**: `md:grid-cols-2 lg:grid-cols-3`
+- **Mobile-first**: Always design for mobile, enhance for desktop

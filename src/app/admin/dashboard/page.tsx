@@ -1,21 +1,23 @@
 "use client"
 import { useState } from 'react'
 import { usePermissions } from '@/hooks/usePermissions'
+import { useViewMode } from '@/contexts/ViewModeContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   BookOpen, 
   FileText, 
-  Users, 
-  Plus,
+  Users,
   BarChart3,
   Database,
   BookMarked,
   ArrowRight,
   TrendingUp,
   Settings,
-  ExternalLink
+  ExternalLink,
+  Eye,
+  EyeOff
 } from 'lucide-react'
 import LessonManagement from '@/components/admin/LessonManagement'
 import AssignmentManagement from '@/components/admin/AssignmentManagement'
@@ -24,12 +26,17 @@ import AdminOverview from '@/components/admin/AdminOverview'
 import QuickLessonPreview from '@/components/admin/QuickLessonPreview'
 import StudentActivityDashboard from '@/components/admin/StudentActivityDashboard'
 import StudentDetailView from '@/components/admin/StudentDetailView'
+import { AssignmentManager } from '@/components/assignment-system/AssignmentManager'
+
+// Import student dashboard for view mode
+import { lazy, Suspense } from 'react'
+const StudentDashboard = lazy(() => import('@/app/dashboard/page'))
 
 export default function AdminDashboard() {
   const { isAuthenticated, canAccessAdmin, userRole } = usePermissions()
+  const { toggleViewMode, canToggleView, isViewModeOverride } = useViewMode()
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
-  const [showStudentDetail, setShowStudentDetail] = useState(false)
 
   if (!isAuthenticated) {
     return (
@@ -60,17 +67,62 @@ export default function AdminDashboard() {
     )
   }
 
+  // If in student view mode, show the student dashboard with integrated toggle
+  if (isViewModeOverride) {
+    return (
+      <Suspense fallback={
+        <div className="flex items-center justify-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      }>
+        <StudentDashboard />
+      </Suspense>
+    )
+  }
+
   return (
     <div className="container mx-auto py-8 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            {isViewModeOverride && (
+              <div className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">
+                Student View
+              </div>
+            )}
+          </div>
           <p className="text-muted-foreground">
-            Manage your physics classroom and monitor student progress
+            {isViewModeOverride 
+              ? "Viewing the dashboard as a student would see it"
+              : "Manage your physics classroom and monitor student progress"
+            }
           </p>
         </div>
         <div className="flex items-center space-x-2">
+          {canToggleView && (
+            <Button
+              onClick={toggleViewMode}
+              variant={isViewModeOverride ? "default" : "outline"}
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              {isViewModeOverride ? (
+                <>
+                  <EyeOff className="h-4 w-4" />
+                  <span className="hidden sm:inline">Exit Student View</span>
+                  <span className="sm:hidden">Exit</span>
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  <span className="hidden sm:inline">View as Student</span>
+                  <span className="sm:hidden">Student</span>
+                </>
+              )}
+            </Button>
+          )}
           <div className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground">
             <span>Logged in as</span>
             <div className="font-medium text-foreground capitalize">{userRole}</div>
@@ -80,7 +132,7 @@ export default function AdminDashboard() {
 
       {/* Main Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-4">
+        <TabsList className="grid w-full max-w-2xl grid-cols-5">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Overview</span>
@@ -88,6 +140,10 @@ export default function AdminDashboard() {
           <TabsTrigger value="content" className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" />
             <span className="hidden sm:inline">Content</span>
+          </TabsTrigger>
+          <TabsTrigger value="assignments" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            <span className="hidden sm:inline">Assignments</span>
           </TabsTrigger>
           <TabsTrigger value="students" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
@@ -117,6 +173,13 @@ export default function AdminDashboard() {
                   <div className="text-xs text-blue-700">View and organize lessons</div>
                 </button>
                 <button
+                  onClick={() => setActiveTab('assignments')}
+                  className="w-full text-left p-3 bg-purple-50 hover:bg-purple-100 rounded-lg border border-purple-200 transition-colors"
+                >
+                  <div className="font-medium text-purple-900">Assignment System</div>
+                  <div className="text-xs text-purple-700">Assign lessons and homework to classes</div>
+                </button>
+                <button
                   onClick={() => setActiveTab('students')}
                   className="w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg border border-green-200 transition-colors"
                 >
@@ -128,7 +191,7 @@ export default function AdminDashboard() {
           </div>
 
           {/* Quick Navigation Cards */}
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-4">
             <Card 
               className="cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
               onClick={() => setActiveTab('content')}
@@ -141,6 +204,22 @@ export default function AdminDashboard() {
                 <div className="text-2xl font-bold text-blue-600">Manage</div>
                 <p className="text-xs text-muted-foreground">
                   View and organize existing lessons and assignments
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="cursor-pointer transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+              onClick={() => setActiveTab('assignments')}
+            >
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Assignment System</CardTitle>
+                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-purple-600">Assign</div>
+                <p className="text-xs text-muted-foreground">
+                  Assign lessons and homework to classes and students
                 </p>
               </CardContent>
             </Card>
@@ -208,6 +287,17 @@ export default function AdminDashboard() {
           </Tabs>
         </TabsContent>
 
+        {/* Assignments Tab */}
+        <TabsContent value="assignments" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Assignment System</h2>
+              <p className="text-muted-foreground">Assign lessons and homework to classes and students</p>
+            </div>
+          </div>
+          <AssignmentManager />
+        </TabsContent>
+
         {/* Students Tab */}
         <TabsContent value="students" className="space-y-6">
           {selectedStudent ? (
@@ -215,7 +305,6 @@ export default function AdminDashboard() {
               studentEmail={selectedStudent} 
               onBack={() => {
                 setSelectedStudent(null)
-                setShowStudentDetail(false)
               }}
             />
           ) : (
@@ -248,7 +337,6 @@ export default function AdminDashboard() {
                     selectedStudent={selectedStudent || undefined}
                     onStudentSelect={(email) => {
                       setSelectedStudent(email)
-                      setShowStudentDetail(true)
                     }}
                   />
                 </TabsContent>

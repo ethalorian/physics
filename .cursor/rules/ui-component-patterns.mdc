@@ -1,0 +1,572 @@
+---
+alwaysApply: true
+description: "UI component patterns using shadcn/ui and Tailwind CSS"
+---
+
+# UI Component Patterns & Design System
+
+## shadcn/ui Component Usage
+
+### Base Component Structure
+Use shadcn/ui components from [src/components/ui/](mdc:src/components/ui/) as building blocks:
+
+```typescript
+// Import shadcn/ui components
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+
+// Component composition
+export default function FormComponent() {
+  return (
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>Form Title</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="input">Label</Label>
+          <Input id="input" placeholder="Enter value" />
+        </div>
+        <Button type="submit" className="w-full">
+          Submit
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}
+```
+
+### Button Variants and Usage
+Use consistent button patterns as defined in [src/components/ui/button.tsx](mdc:src/components/ui/button.tsx):
+
+```typescript
+// Button variants
+<Button variant="default">Primary Action</Button>
+<Button variant="secondary">Secondary Action</Button>
+<Button variant="outline">Outline Button</Button>
+<Button variant="ghost">Ghost Button</Button>
+<Button variant="destructive">Delete Action</Button>
+
+// Button sizes
+<Button size="sm">Small</Button>
+<Button size="default">Default</Button>
+<Button size="lg">Large</Button>
+<Button size="icon"><Icon className="h-4 w-4" /></Button>
+
+// Loading states
+<Button disabled={loading}>
+  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+  {loading ? 'Loading...' : 'Submit'}
+</Button>
+```
+
+### Form Components
+Structure forms consistently:
+
+```typescript
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
+interface FormData {
+  title: string
+  description: string
+  type: string
+}
+
+export default function FormExample() {
+  const [formData, setFormData] = useState<FormData>({
+    title: '',
+    description: '',
+    type: ''
+  })
+  
+  const [errors, setErrors] = useState<Partial<FormData>>({})
+  
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Validation
+    const newErrors: Partial<FormData> = {}
+    if (!formData.title.trim()) newErrors.title = 'Title is required'
+    if (!formData.type) newErrors.type = 'Type is required'
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      return
+    }
+    
+    // Submit logic
+  }
+  
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="title">Title *</Label>
+        <Input
+          id="title"
+          value={formData.title}
+          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+          className={errors.title ? 'border-destructive' : ''}
+        />
+        {errors.title && (
+          <p className="text-sm text-destructive">{errors.title}</p>
+        )}
+      </div>
+      
+      <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={formData.description}
+          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+          rows={3}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <Label>Type *</Label>
+        <Select 
+          value={formData.type} 
+          onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}
+        >
+          <SelectTrigger className={errors.type ? 'border-destructive' : ''}>
+            <SelectValue placeholder="Select type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="option1">Option 1</SelectItem>
+            <SelectItem value="option2">Option 2</SelectItem>
+          </SelectContent>
+        </Select>
+        {errors.type && (
+          <p className="text-sm text-destructive">{errors.type}</p>
+        )}
+      </div>
+      
+      <Button type="submit" className="w-full">
+        Submit Form
+      </Button>
+    </form>
+  )
+}
+```
+
+## Tailwind CSS Patterns
+
+### Layout Patterns
+Use consistent layout classes:
+
+```typescript
+// Container patterns
+<div className="container mx-auto px-4">          // Main container
+<div className="max-w-4xl mx-auto">               // Content width limit
+<div className="w-full max-w-md mx-auto">         // Form container
+
+// Grid layouts
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {/* Grid items */}
+</div>
+
+// Flex layouts
+<div className="flex items-center justify-between"> // Header layout
+<div className="flex flex-col space-y-4">          // Vertical stack
+<div className="flex items-center space-x-2">      // Horizontal row
+
+// Responsive spacing
+<div className="p-4 md:p-6 lg:p-8">              // Responsive padding
+<div className="space-y-4 md:space-y-6">          // Responsive vertical spacing
+```
+
+### Color and Theme Patterns
+Use CSS variables for theming as defined in [src/app/globals.css](mdc:src/app/globals.css):
+
+```typescript
+// Background colors
+<div className="bg-background">                   // Main background
+<div className="bg-card">                         // Card background
+<div className="bg-muted">                        // Muted background
+<div className="bg-primary">                      // Primary color
+<div className="bg-secondary">                    // Secondary color
+
+// Text colors
+<p className="text-foreground">                   // Primary text
+<p className="text-muted-foreground">             // Secondary text
+<p className="text-primary">                      // Primary colored text
+<p className="text-destructive">                  // Error text
+
+// Border colors
+<div className="border border-border">            // Default border
+<div className="border-destructive">              // Error border
+<div className="border-primary">                  // Primary border
+```
+
+### Interactive States
+Implement consistent hover and focus states:
+
+```typescript
+// Button-like interactions
+<div className="cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
+  Clickable content
+</div>
+
+// Focus states for accessibility
+<button className="focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+  Accessible button
+</button>
+
+// Disabled states
+<button 
+  disabled={isDisabled}
+  className="disabled:opacity-50 disabled:cursor-not-allowed"
+>
+  Button
+</button>
+```
+
+## Custom Component Patterns
+
+### Physics-Specific Components
+Create reusable physics education components:
+
+```typescript
+// Physics Level Badge - use existing component
+import PhysicsLevelBadge from '@/components/physics-level-badge'
+
+<PhysicsLevelBadge level="intermediate" />
+
+// Math Markdown - use existing component
+import MathMarkdown from '@/components/MathMarkdown'
+
+<MathMarkdown content="The equation is \\( F = ma \\)" />
+
+// Question Renderer - use existing component
+import QuestionRenderer from '@/components/assignment-taking/question-renderer'
+
+<QuestionRenderer
+  question={question}
+  answer={answer}
+  onAnswerChange={handleAnswerChange}
+  disabled={isSubmitted}
+/>
+```
+
+### Modal and Dialog Patterns
+Use consistent modal patterns:
+
+```typescript
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+
+export default function ModalExample() {
+  const [isOpen, setIsOpen] = useState(false)
+  
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button>Open Modal</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Modal Title</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          {/* Modal content */}
+        </div>
+        <div className="flex justify-end space-x-2">
+          <Button variant="outline" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit}>
+            Confirm
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+```
+
+### Loading States
+Implement consistent loading patterns:
+
+```typescript
+// Loading spinner
+import { Loader2 } from 'lucide-react'
+
+const LoadingSpinner = () => (
+  <div className="flex items-center justify-center p-8">
+    <Loader2 className="h-8 w-8 animate-spin" />
+  </div>
+)
+
+// Skeleton loading
+const SkeletonCard = () => (
+  <div className="space-y-3">
+    <div className="h-4 bg-muted rounded animate-pulse" />
+    <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+    <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
+  </div>
+)
+
+// Loading states in components
+if (loading) {
+  return <LoadingSpinner />
+}
+
+if (error) {
+  return (
+    <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+      <p className="text-destructive font-medium">Error: {error}</p>
+    </div>
+  )
+}
+```
+
+## Navigation Patterns
+
+### Navbar Component
+Follow the pattern in [src/components/navbar.tsx](mdc:src/components/navbar.tsx):
+
+```typescript
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
+import Link from 'next/link'
+
+export default function Navbar() {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  
+  return (
+    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4">
+        <div className="flex h-14 items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Link href="/" className="font-bold text-lg">
+              Physics Classroom
+            </Link>
+            
+            {/* Role-based navigation */}
+            {(userRole === 'admin' || userRole === 'teacher') && (
+              <Link 
+                href="/admin" 
+                className="text-sm font-medium hover:text-primary transition-colors"
+              >
+                Admin
+              </Link>
+            )}
+          </div>
+          
+          {/* User menu */}
+          <div className="flex items-center space-x-2">
+            {session ? (
+              <UserMenu session={session} />
+            ) : (
+              <Button asChild>
+                <Link href="/auth/signin">Sign In</Link>
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+    </nav>
+  )
+}
+```
+
+### Breadcrumb Navigation
+Implement breadcrumbs for deep navigation:
+
+```typescript
+import { ChevronRight } from 'lucide-react'
+import Link from 'next/link'
+
+interface BreadcrumbItem {
+  label: string
+  href?: string
+}
+
+interface BreadcrumbProps {
+  items: BreadcrumbItem[]
+}
+
+export default function Breadcrumb({ items }: BreadcrumbProps) {
+  return (
+    <nav className="flex items-center space-x-1 text-sm text-muted-foreground">
+      {items.map((item, index) => (
+        <div key={index} className="flex items-center">
+          {index > 0 && <ChevronRight className="h-4 w-4 mx-1" />}
+          {item.href ? (
+            <Link 
+              href={item.href}
+              className="hover:text-foreground transition-colors"
+            >
+              {item.label}
+            </Link>
+          ) : (
+            <span className="text-foreground font-medium">{item.label}</span>
+          )}
+        </div>
+      ))}
+    </nav>
+  )
+}
+```
+
+## Data Display Patterns
+
+### Table Patterns
+Create consistent table layouts:
+
+```typescript
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+
+interface DataTableProps<T> {
+  data: T[]
+  columns: {
+    key: keyof T
+    label: string
+    render?: (value: T[keyof T], item: T) => React.ReactNode
+  }[]
+}
+
+export default function DataTable<T>({ data, columns }: DataTableProps<T>) {
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {columns.map((column) => (
+              <TableHead key={String(column.key)}>{column.label}</TableHead>
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((item, index) => (
+            <TableRow key={index}>
+              {columns.map((column) => (
+                <TableCell key={String(column.key)}>
+                  {column.render 
+                    ? column.render(item[column.key], item)
+                    : String(item[column.key])
+                  }
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  )
+}
+```
+
+### Card Layouts
+Use consistent card patterns:
+
+```typescript
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+
+interface ItemCardProps {
+  title: string
+  description?: string
+  status: 'active' | 'inactive' | 'pending'
+  actions?: React.ReactNode
+}
+
+export default function ItemCard({ title, description, status, actions }: ItemCardProps) {
+  return (
+    <Card className="hover:shadow-md transition-shadow">
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between">
+          <CardTitle className="text-lg">{title}</CardTitle>
+          <Badge variant={status === 'active' ? 'default' : 'secondary'}>
+            {status}
+          </Badge>
+        </div>
+      </CardHeader>
+      {(description || actions) && (
+        <CardContent>
+          {description && (
+            <p className="text-muted-foreground mb-4">{description}</p>
+          )}
+          {actions && (
+            <div className="flex justify-end space-x-2">
+              {actions}
+            </div>
+          )}
+        </CardContent>
+      )}
+    </Card>
+  )
+}
+```
+
+## Accessibility Patterns
+
+### ARIA Labels and Roles
+Ensure proper accessibility:
+
+```typescript
+// Form accessibility
+<div className="space-y-2">
+  <Label htmlFor="email">Email Address</Label>
+  <Input
+    id="email"
+    type="email"
+    aria-describedby="email-error"
+    aria-invalid={!!errors.email}
+  />
+  {errors.email && (
+    <p id="email-error" className="text-sm text-destructive" role="alert">
+      {errors.email}
+    </p>
+  )}
+</div>
+
+// Button accessibility
+<Button
+  aria-label="Delete item"
+  aria-describedby="delete-help"
+  onClick={handleDelete}
+>
+  <Trash2 className="h-4 w-4" />
+</Button>
+<div id="delete-help" className="sr-only">
+  This action cannot be undone
+</div>
+
+// Navigation accessibility
+<nav role="navigation" aria-label="Main navigation">
+  {/* Navigation items */}
+</nav>
+```
+
+### Focus Management
+Handle focus appropriately:
+
+```typescript
+import { useRef, useEffect } from 'react'
+
+export default function Modal({ isOpen }: { isOpen: boolean }) {
+  const firstFocusableRef = useRef<HTMLButtonElement>(null)
+  
+  useEffect(() => {
+    if (isOpen && firstFocusableRef.current) {
+      firstFocusableRef.current.focus()
+    }
+  }, [isOpen])
+  
+  return (
+    <div>
+      <Button ref={firstFocusableRef}>First focusable element</Button>
+      {/* Other modal content */}
+    </div>
+  )
+}
+```

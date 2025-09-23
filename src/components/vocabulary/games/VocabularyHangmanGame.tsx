@@ -75,11 +75,18 @@ export default function VocabularyHangmanGame({
     if (vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
-      if (difficulty !== 'medium') {
+      
+      // Only filter if difficulty is not medium, and include terms without difficulty
+      if (difficulty === 'easy') {
         filteredTerms = vocabularyTerms.filter(term => 
-          term.difficulty === difficulty || !term.difficulty
+          term.difficulty === 'easy' || !term.difficulty
+        )
+      } else if (difficulty === 'hard') {
+        filteredTerms = vocabularyTerms.filter(term => 
+          term.difficulty === 'hard' || !term.difficulty
         )
       }
+      // For medium difficulty, use all terms (no filtering)
       
       // Shuffle and select terms for the game
       const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
@@ -95,7 +102,20 @@ export default function VocabularyHangmanGame({
   }, [vocabularyTerms, difficulty])
 
   const resetGame = useCallback(() => {
-    const shuffled = [...vocabularyTerms].sort(() => Math.random() - 0.5)
+    // Apply same difficulty filtering as initialization
+    let filteredTerms = vocabularyTerms
+    
+    if (difficulty === 'easy') {
+      filteredTerms = vocabularyTerms.filter(term => 
+        term.difficulty === 'easy' || !term.difficulty
+      )
+    } else if (difficulty === 'hard') {
+      filteredTerms = vocabularyTerms.filter(term => 
+        term.difficulty === 'hard' || !term.difficulty
+      )
+    }
+    
+    const shuffled = [...filteredTerms].sort(() => Math.random() - 0.5)
     const gameTerms = shuffled.slice(0, Math.min(10, shuffled.length))
     
     setGameWords(gameTerms)
@@ -111,7 +131,31 @@ export default function VocabularyHangmanGame({
     })
     setCurrentGuess('')
     setShowHint(false)
-  }, [vocabularyTerms])
+  }, [vocabularyTerms, difficulty])
+
+  // Get a helpful letter hint
+  const getLetterHint = useCallback(() => {
+    if (!gameState.currentTerm) return 'A'
+    
+    const word = gameState.currentTerm.term.toUpperCase()
+    const unguessedLetters = word
+      .split('')
+      .filter(letter => letter.match(/[A-Z]/) && !gameState.guessedLetters.has(letter))
+    
+    if (unguessedLetters.length === 0) return 'A'
+    
+    // Prioritize vowels first, then common consonants
+    const vowels = unguessedLetters.filter(letter => 'AEIOU'.includes(letter))
+    const commonConsonants = unguessedLetters.filter(letter => 'RSTLNM'.includes(letter))
+    
+    if (vowels.length > 0) {
+      return vowels[0]
+    } else if (commonConsonants.length > 0) {
+      return commonConsonants[0]
+    } else {
+      return unguessedLetters[0]
+    }
+  }, [gameState.currentTerm, gameState.guessedLetters])
 
   const makeGuess = useCallback((letter: string) => {
     if (!gameState.currentTerm || gameState.gameStatus !== 'playing') return
@@ -401,34 +445,42 @@ export default function VocabularyHangmanGame({
                 </Badge>
               </div>
 
-              {/* Definition Hint */}
-              {showDefinitions && (
+              {/* Definition - Always Visible */}
+              {showDefinitions && gameState.currentTerm?.definition && (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Definition:</h4>
-                    {!showHint && (
-                      <Button 
-                        onClick={useHint} 
-                        size="sm" 
-                        variant="outline"
-                        className="text-blue-600 border-blue-600"
-                      >
-                        <Lightbulb className="h-3 w-3 mr-1" />
-                        Hint (-5 pts)
-                      </Button>
-                    )}
-                  </div>
-                  {showHint ? (
-                    <p className="text-sm text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      {gameState.currentTerm.definition}
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
-                      Click &quot;Hint&quot; to reveal the definition
-                    </p>
-                  )}
+                  <h4 className="font-medium">Definition:</h4>
+                  <p className="text-sm text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200">
+                    {gameState.currentTerm.definition}
+                  </p>
                 </div>
               )}
+
+              {/* Letter Hint */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium">Need help with letters?</h4>
+                  {!showHint && (
+                    <Button 
+                      onClick={useHint} 
+                      size="sm" 
+                      variant="outline"
+                      className="text-blue-600 border-blue-600"
+                    >
+                      <Lightbulb className="h-3 w-3 mr-1" />
+                      Letter Hint (-5 pts)
+                    </Button>
+                  )}
+                </div>
+                {showHint ? (
+                  <p className="text-sm text-muted-foreground p-3 bg-green-50 rounded-lg border border-green-200">
+                    💡 Try the letter: <strong className="text-green-700">{getLetterHint()}</strong>
+                  </p>
+                ) : (
+                  <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-lg">
+                    Click &quot;Letter Hint&quot; to reveal a helpful letter
+                  </p>
+                )}
+              </div>
             </CardContent>
           </Card>
 

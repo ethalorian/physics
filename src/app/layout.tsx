@@ -9,9 +9,11 @@ import './globals.css'
 import AuthProvider from '@/components/auth-provider'
 import Navbar from '@/components/navbar'
 import { AssignmentProvider } from '@/contexts/AssignmentContext'
+import { AssignmentSystemProvider } from '@/contexts/AssignmentSystemContext'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
+import { ViewModeProvider } from '@/contexts/ViewModeContext'
 import { ToastProvider } from '@/providers/toast-provider'
 
 const inter = Inter({ 
@@ -38,18 +40,22 @@ export default function RootLayout({
       >
         <AuthProvider>
           <ToastProvider>
-            <QuestionBankProvider>
-              <VocabularyProvider>
-                <StudentActivityProvider>
-                  <AssignmentProvider>
-                    <Navbar />
-                    <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-                      {children}
-                    </main>
-                  </AssignmentProvider>
-                </StudentActivityProvider>
-              </VocabularyProvider>
-            </QuestionBankProvider>
+            <ViewModeProvider>
+              <QuestionBankProvider>
+                <VocabularyProvider>
+                  <StudentActivityProvider>
+                    <AssignmentProvider>
+                      <AssignmentSystemProvider>
+                        <Navbar />
+                        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+                          {children}
+                        </main>
+                      </AssignmentSystemProvider>
+                    </AssignmentProvider>
+                  </StudentActivityProvider>
+                </VocabularyProvider>
+              </QuestionBankProvider>
+            </ViewModeProvider>
           </ToastProvider>
         </AuthProvider>
       </body>

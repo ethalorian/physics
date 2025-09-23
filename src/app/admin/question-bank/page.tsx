@@ -7,7 +7,7 @@ import QuestionBankBrowser from '@/components/question-bank/QuestionBankBrowser'
 import QuestionBankQuestionEditor from '@/components/question-bank/QuestionEditor'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Download, Upload, Plus, BarChart3, Edit } from 'lucide-react'
+import { BookOpen, Download, Upload, Plus, Edit } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 export default function QuestionBankPage() {
