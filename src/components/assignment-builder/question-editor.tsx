@@ -582,26 +582,29 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
   return (
     <>
       <Card className="mb-4">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-lg">Question</CardTitle>
-              <Badge variant="secondary">{question.type.replace('-', ' ')}</Badge>
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <CardTitle className="text-base sm:text-lg">Question</CardTitle>
+              <Badge variant="secondary" className="text-xs">
+                {question.type.replace('-', ' ')}
+              </Badge>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 self-start sm:self-auto">
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={() => setShowAddToBank(true)}
-                className="bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200"
+                className="bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200 text-xs sm:text-sm px-2 sm:px-3"
                 title="Save to Question Bank"
                 disabled={!question.question || question.question.trim() === ''}
               >
-                <BookPlus className="h-4 w-4 mr-1" />
-                Save to Bank
+                <BookPlus className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                <span className="hidden xs:inline">Save to Bank</span>
+                <span className="xs:hidden">Bank</span>
               </Button>
-              <Button variant="outline" size="sm" onClick={onDelete}>
-                <Trash2 className="h-4 w-4" />
+              <Button variant="outline" size="sm" onClick={onDelete} className="px-2 sm:px-3">
+                <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </div>
           </div>
@@ -666,14 +669,14 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
           )}
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2">Question Type</label>
             <Select
               value={question.type}
               onValueChange={(value: QuestionType) => updateQuestion({ type: value })}
             >
-              <SelectTrigger>
+              <SelectTrigger className="h-10 sm:h-11">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -695,6 +698,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
               value={question.points}
               onChange={(e) => updateQuestion({ points: parseInt(e.target.value) || 0 })}
               min="0"
+              className="h-10 sm:h-11"
             />
           </div>
         </div>

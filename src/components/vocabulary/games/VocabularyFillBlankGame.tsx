@@ -160,11 +160,11 @@ export default function VocabularyFillBlankGame({
     const answerStatus = getAnswerStatus(sentence.id, !showResults) // Use real-time feedback when not in results mode
     
     return (
-      <div key={sentence.id} className="flex items-center gap-2 flex-wrap">
-        <span>{parts[0]}</span>
+      <div key={sentence.id} className="flex items-center gap-2 flex-wrap text-sm sm:text-base">
+        <span className="break-words">{parts[0]}</span>
         <div 
           className={cn(
-            "relative inline-block min-w-40 min-h-12",
+            "relative inline-block min-w-32 sm:min-w-40 min-h-10 sm:min-h-12 max-w-full",
             question.showWordBank && "border-2 rounded-lg",
             // Empty state styling
             question.showWordBank && !userAnswer && "border-dashed border-primary/40 bg-primary/5",

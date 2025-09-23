@@ -321,22 +321,22 @@ export default function VocabularyConcentrationGame({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid gap-4 md:grid-cols-4 text-center">
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{gameState.score}</div>
-              <div className="text-sm text-green-600">Final Score</div>
+          <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-4 text-center">
+            <div className="p-3 sm:p-4 bg-white rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.score}</div>
+              <div className="text-xs sm:text-sm text-green-600">Final Score</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{gameState.matches}/{gameState.totalPairs}</div>
-              <div className="text-sm text-green-600">Pairs Found</div>
+            <div className="p-3 sm:p-4 bg-white rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.matches}/{gameState.totalPairs}</div>
+              <div className="text-xs sm:text-sm text-green-600">Pairs Found</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{gameState.moves}</div>
-              <div className="text-sm text-green-600">Total Moves</div>
+            <div className="p-3 sm:p-4 bg-white rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-green-700">{gameState.moves}</div>
+              <div className="text-xs sm:text-sm text-green-600">Total Moves</div>
             </div>
-            <div className="p-4 bg-white rounded-lg">
-              <div className="text-2xl font-bold text-green-700">{accuracy}%</div>
-              <div className="text-sm text-green-600">Efficiency</div>
+            <div className="p-3 sm:p-4 bg-white rounded-lg">
+              <div className="text-lg sm:text-2xl font-bold text-green-700">{accuracy}%</div>
+              <div className="text-xs sm:text-sm text-green-600">Efficiency</div>
             </div>
           </div>
           
@@ -355,22 +355,22 @@ export default function VocabularyConcentrationGame({
     <div className="space-y-6">
       {/* Game Header */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">
-                {gameState.matches} of {gameState.totalPairs} pairs found
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+              <Badge variant="outline" className="text-xs sm:text-sm">
+                {gameState.matches}/{gameState.totalPairs} pairs
               </Badge>
-              <Badge variant="outline" className="capitalize">
+              <Badge variant="outline" className="capitalize text-xs sm:text-sm">
                 {difficulty} • {gameState.moves} moves
               </Badge>
-              <Badge variant="outline">
-                {gameState.score} points
+              <Badge variant="outline" className="text-xs sm:text-sm">
+                {gameState.score} pts
               </Badge>
             </div>
             <div className="flex items-center gap-2">
               <Eye className={`h-4 w-4 ${gameState.selectedCards.length > 0 ? 'text-blue-600' : 'text-muted-foreground'}`} />
-              <span className="text-sm font-medium">
+              <span className="text-xs sm:text-sm font-medium">
                 {gameState.selectedCards.length}/2 selected
               </span>
             </div>
@@ -382,8 +382,8 @@ export default function VocabularyConcentrationGame({
 
       {/* Game Grid */}
       <Card>
-        <CardContent className="p-6">
-          <div className={`grid gap-3 ${getGridColumns()}`}>
+        <CardContent className="p-3 sm:p-4 md:p-6">
+          <div className={`grid gap-2 sm:gap-3 ${getGridColumns()}`}>
             {gameCards.map((card) => (
               <div
                 key={card.id}

@@ -86,54 +86,54 @@ export default function StudentAssignments() {
         />
       </div>
 
-      {/* Assignment Overview */}
+      {/* Assignment Overview - Mobile optimized */}
       {assignments.length > 0 && (
-        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
                 Total Assignments
               </CardTitle>
-              <FileText className="h-4 w-4 text-[#9A8AC0]" />
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">{publishedAssignments.length}</div>
+            <CardContent className="pt-2">
+              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{publishedAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
                 Completed
               </CardTitle>
-              <CheckCircle className="h-4 w-4 text-[#9A8AC0]" />
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">{completedAssignments.length}</div>
+            <CardContent className="pt-2">
+              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{completedAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
                 Upcoming
               </CardTitle>
-              <Clock className="h-4 w-4 text-[#9A8AC0]" />
+              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">{upcomingAssignments.length}</div>
+            <CardContent className="pt-2">
+              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{upcomingAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
-                Average Grade
+              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
+                Avg Grade
               </CardTitle>
-              <AlertCircle className="h-4 w-4 text-[#9A8AC0]" />
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">
+            <CardContent className="pt-2">
+              <div className="text-lg sm:text-2xl font-bold text-[#4A1A4A]">
                 {submissions.filter(s => s.score !== undefined).length > 0 
                   ? Math.round(submissions.filter(s => s.score !== undefined).reduce((sum, s) => sum + (s.score || 0), 0) / submissions.filter(s => s.score !== undefined).length)
                   : '-'
@@ -167,41 +167,45 @@ export default function StudentAssignments() {
             const submission = getAssignmentSubmission(assignment.id)
             return (
               <Card key={assignment.id} className="apple-card hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {getStatusBadge(assignment)}
-                      <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
-                        {assignment.total_points} pts
-                      </Badge>
-                      {submission?.score !== undefined && (
-                        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-                          {submission.score}/{submission.max_score} ({Math.round((submission.score / (submission.max_score || 1)) * 100)}%)
+                <CardHeader className="pb-3">
+                  {/* Mobile-first layout: stack badges and button */}
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex flex-wrap items-center gap-2 flex-1 mr-2">
+                        {getStatusBadge(assignment)}
+                        <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93] text-xs">
+                          {assignment.total_points} pts
                         </Badge>
-                      )}
+                        {submission?.score !== undefined && (
+                          <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 text-xs">
+                            {submission.score}/{submission.max_score} ({Math.round((submission.score / (submission.max_score || 1)) * 100)}%)
+                          </Badge>
+                        )}
+                      </div>
+                      <Link href={`/assignments/${assignment.id}`} className="flex-shrink-0">
+                        <Button size="sm" className="bg-gradient-to-r from-[#6A4C93] to-[#9A8AC0] hover:from-[#7A5CA3] hover:to-[#AA9AD0] text-xs sm:text-sm px-2 sm:px-3">
+                          <span className="hidden sm:inline">{submission ? 'View Submission' : 'Start Assignment'}</span>
+                          <span className="sm:hidden">{submission ? 'View' : 'Start'}</span>
+                        </Button>
+                      </Link>
                     </div>
-                    <Link href={`/assignments/${assignment.id}`}>
-                      <Button size="sm" className="bg-gradient-to-r from-[#6A4C93] to-[#9A8AC0] hover:from-[#7A5CA3] hover:to-[#AA9AD0]">
-                        {submission ? 'View Submission' : 'Start Assignment'}
-                      </Button>
-                    </Link>
                   </div>
                   <CardTitle className="text-[#4A1A4A]">{assignment.title}</CardTitle>
                   <CardDescription className="text-[#6A4C93]">{assignment.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between text-sm text-[#9A8AC0]">
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-[#9A8AC0]">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                       {assignment.due_date && (
                         <span className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          Due: {new Date(assignment.due_date).toLocaleDateString()}
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="truncate">Due: {new Date(assignment.due_date).toLocaleDateString()}</span>
                         </span>
                       )}
                       {submission && (
                         <span className="flex items-center gap-1">
-                          <Upload className="h-4 w-4" />
-                          Submitted: {new Date(submission.submitted_at).toLocaleDateString()}
+                          <Upload className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <span className="truncate">Submitted: {new Date(submission.submitted_at).toLocaleDateString()}</span>
                         </span>
                       )}
                     </div>

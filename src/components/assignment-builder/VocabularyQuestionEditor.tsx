@@ -210,7 +210,7 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="question-points">Points</Label>
               <Input
@@ -219,6 +219,7 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
                 min="1"
                 value={question.points}
                 onChange={(e) => updateQuestion({ points: parseInt(e.target.value) || 1 })}
+                className="h-10 sm:h-11"
               />
             </div>
 

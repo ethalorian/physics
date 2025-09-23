@@ -61,20 +61,20 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
+    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+      {/* Header - Mobile optimized */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-4xl font-bold text-[#4A1A4A] dark:text-[#FFFFFF] relative">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#4A1A4A] dark:text-[#FFFFFF] relative">
               My Dashboard
-              <div className="absolute -bottom-2 left-0 w-24 h-1 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
+              <div className="absolute -bottom-1 sm:-bottom-2 left-0 w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-[#D4AF37] to-[#6A4C93] rounded-full" />
             </h1>
-            <p className="text-lg text-[#6A4C93] dark:text-[#E8DDFF] mt-2">
+            <p className="text-sm sm:text-base md:text-lg text-[#6A4C93] dark:text-[#E8DDFF] mt-2">
               Welcome back, {session?.user?.name?.split(' ')[0] || 'Student'}!
             </p>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 self-start sm:self-auto">
             {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') && (
               <Button
                 onClick={() => {
@@ -100,20 +100,23 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {/* Dashboard Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Overview</span>
+      {/* Dashboard Tabs - Mobile optimized */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
+        <TabsList className="grid w-full max-w-md grid-cols-3 h-10 sm:h-11">
+          <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline sm:inline">Overview</span>
+            <span className="xs:hidden sm:hidden">•</span>
           </TabsTrigger>
-          <TabsTrigger value="lessons" className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            <span className="hidden sm:inline">Lessons</span>
+          <TabsTrigger value="lessons" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline sm:inline">Lessons</span>
+            <span className="xs:hidden sm:hidden">•</span>
           </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">Assignments</span>
+          <TabsTrigger value="assignments" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+            <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="hidden xs:inline sm:inline">Assignments</span>
+            <span className="xs:hidden sm:hidden">•</span>
           </TabsTrigger>
         </TabsList>
 

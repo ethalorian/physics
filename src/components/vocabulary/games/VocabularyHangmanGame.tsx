@@ -413,11 +413,11 @@ export default function VocabularyHangmanGame({
 
       {/* Main Game Area */}
       {gameState.gameStatus === 'playing' && gameState.currentTerm && (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
           {/* Hangman Drawing & Word */}
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="flex items-center justify-between text-base sm:text-lg">
                 <span>Guess the Word</span>
                 <div className="flex items-center gap-2">
                   <Heart className="h-4 w-4 text-red-500" />
@@ -427,20 +427,20 @@ export default function VocabularyHangmanGame({
                 </div>
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4 sm:space-y-6">
               {/* Hangman Drawing */}
               <div className="flex justify-center">
-                <pre className="text-sm font-mono text-muted-foreground leading-tight">
+                <pre className="text-xs sm:text-sm font-mono text-muted-foreground leading-tight overflow-hidden">
                   {HANGMAN_STAGES[gameState.wrongGuesses]}
                 </pre>
               </div>
 
               {/* Word Display */}
               <div className="text-center">
-                <div className="text-3xl font-mono font-bold tracking-wider text-primary mb-4">
+                <div className="text-xl sm:text-2xl md:text-3xl font-mono font-bold tracking-wider text-primary mb-4 break-all">
                   {renderWord()}
                 </div>
-                <Badge variant="outline" className="text-sm">
+                <Badge variant="outline" className="text-xs sm:text-sm">
                   {gameState.currentTerm.category || 'Physics Term'}
                 </Badge>
               </div>
@@ -448,8 +448,8 @@ export default function VocabularyHangmanGame({
               {/* Definition - Always Visible */}
               {showDefinitions && gameState.currentTerm?.definition && (
                 <div className="space-y-2">
-                  <h4 className="font-medium">Definition:</h4>
-                  <p className="text-sm text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-sm sm:text-base">Definition:</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200 break-words">
                     {gameState.currentTerm.definition}
                   </p>
                 </div>

@@ -473,21 +473,24 @@ export default function VocabularyCrosswordGame({
                         status === 'correct' && showResults && "bg-green-50 border-green-200",
                         status === 'incorrect' && showResults && "bg-red-50 border-red-200"
                       )}>
-                        <CardContent className="p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-bold">{clue.number}.</span>
-                            <span className="text-sm">{clue.clue}</span>
+                        <CardContent className="p-2 sm:p-3">
+                          <div className="flex items-start gap-2 mb-2">
+                            <span className="font-bold text-sm flex-shrink-0">{clue.number}.</span>
+                            <span className="text-xs sm:text-sm break-words flex-1">{clue.clue}</span>
                             {showResults && status && (
-                              status === 'correct' ? 
-                                <CheckCircle className="w-4 h-4 text-green-600" /> :
-                                <XCircle className="w-4 h-4 text-red-600" />
+                              <div className="flex-shrink-0">
+                                {status === 'correct' ? 
+                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" /> :
+                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                                }
+                              </div>
                             )}
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-0.5 sm:gap-1 flex-wrap">
                             {Array.from({ length: clue.length }, (_, i) => (
                               <Input
                                 key={i}
-                                className="w-8 h-8 text-center p-0 font-mono font-bold"
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-center p-0 font-mono font-bold text-xs sm:text-sm flex-shrink-0"
                                 maxLength={1}
                                 value={userAnswer[i] || ''}
                                 onChange={(e) => handleCellChange(clue.id, i, e.target.value)}
@@ -528,21 +531,24 @@ export default function VocabularyCrosswordGame({
                         status === 'correct' && showResults && "bg-green-50 border-green-200",
                         status === 'incorrect' && showResults && "bg-red-50 border-red-200"
                       )}>
-                        <CardContent className="p-3">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-bold">{clue.number}.</span>
-                            <span className="text-sm">{clue.clue}</span>
+                        <CardContent className="p-2 sm:p-3">
+                          <div className="flex items-start gap-2 mb-2">
+                            <span className="font-bold text-sm flex-shrink-0">{clue.number}.</span>
+                            <span className="text-xs sm:text-sm break-words flex-1">{clue.clue}</span>
                             {showResults && status && (
-                              status === 'correct' ? 
-                                <CheckCircle className="w-4 h-4 text-green-600" /> :
-                                <XCircle className="w-4 h-4 text-red-600" />
+                              <div className="flex-shrink-0">
+                                {status === 'correct' ? 
+                                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" /> :
+                                  <XCircle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                                }
+                              </div>
                             )}
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-0.5 sm:gap-1 flex-wrap">
                             {Array.from({ length: clue.length }, (_, i) => (
                               <Input
                                 key={i}
-                                className="w-8 h-8 text-center p-0 font-mono font-bold"
+                                className="w-6 h-6 sm:w-8 sm:h-8 text-center p-0 font-mono font-bold text-xs sm:text-sm flex-shrink-0"
                                 maxLength={1}
                                 value={userAnswer[i] || ''}
                                 onChange={(e) => handleCellChange(clue.id, i, e.target.value)}

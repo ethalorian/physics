@@ -6,6 +6,7 @@ import Link from "next/link"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
+import { Menu, X, BookOpen, FileText, Settings, Home, Users } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -17,6 +18,7 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 import { usePermissions } from "@/hooks/usePermissions"
@@ -39,6 +41,7 @@ export default function Navbar() {
 
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -47,25 +50,91 @@ export default function Navbar() {
   // Show loading state while session is loading to prevent hydration mismatch
   const isLoading = !mounted || status === "loading"
 
+  // Navigation items based on user role and authentication
+  const getNavigationItems = () => {
+    if (!isAuthenticated) return []
+    
+    const items = [
+      { href: "/dashboard", label: "Dashboard", icon: Home },
+      { href: "/lessons", label: "Lessons", icon: BookOpen },
+    ]
+
+    if (canAccessAdmin) {
+      items.push(
+        { href: "/admin/dashboard", label: "Admin Dashboard", icon: Settings },
+        { href: "/admin/assignments", label: "Manage Assignments", icon: FileText },
+        { href: "/admin/question-bank", label: "Question Bank", icon: BookOpen },
+        { href: "/admin/vocabulary", label: "Vocabulary Games", icon: Users }
+      )
+    }
+
+    return items
+  }
+
+  const navigationItems = getNavigationItems()
+
   return (
-    <nav className="apple-nav sticky top-0 z-50">
+    <nav className="sticky top-0 z-50 border-b bg-background backdrop-blur-sm shadow-sm">
       <div className="w-full px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Brand Logo - Mobile Optimized */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Link href="/" className="group font-bold text-foreground hover:text-primary transition-all duration-200 relative flex-shrink-0">
-              <span className="relative text-base sm:text-lg md:text-xl lg:text-2xl">
-                <span className="block sm:hidden">Antocci</span>
+              <span className="relative text-sm sm:text-base md:text-lg lg:text-xl">
+                <span className="block sm:hidden">Physics</span>
                 <span className="hidden sm:block">Antocci Physics</span>
                 <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/60 transition-all duration-300 group-hover:w-full"></span>
               </span>
             </Link>
             {/* Physics Level Badge - Hidden on Mobile */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <PhysicsLevelBadge variant="compact" />
             </div>
           </div>
           
+          {/* Mobile Hamburger Menu - Only show when authenticated and has nav items */}
+          {isAuthenticated && navigationItems.length > 0 && (
+            <div className="md:hidden">
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+                    <Menu className="h-5 w-5" />
+                    <span className="sr-only">Open navigation menu</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[280px] sm:w-[300px] p-0">
+                  <SheetHeader className="p-6 pb-4 border-b">
+                    <SheetTitle className="text-left">Navigation</SheetTitle>
+                  </SheetHeader>
+                  <div className="flex flex-col py-4">
+                    {navigationItems.map((item) => {
+                      const Icon = item.icon
+                      return (
+                        <SheetClose asChild key={item.href}>
+                          <Link
+                            href={item.href}
+                            className="flex items-center gap-3 px-6 py-4 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                          >
+                            <Icon className="h-5 w-5" />
+                            {item.label}
+                          </Link>
+                        </SheetClose>
+                      )
+                    })}
+                    
+                    {/* Theme toggle in mobile menu */}
+                    <div className="px-6 py-4 border-t mt-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium">Theme</span>
+                        <ThemeToggle />
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+          )}
+
           {/* Right Side - Mobile First Layout */}
           <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
             {isLoading ? (
@@ -89,8 +158,10 @@ export default function Navbar() {
                 </Link>
                 
                 
-                {/* Theme Toggle */}
-                <ThemeToggle />
+                {/* Theme Toggle - Hidden on mobile (available in hamburger menu) */}
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
                 
                 {/* User Menu */}
                 <DropdownMenu>
@@ -170,8 +241,10 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                {/* Theme Toggle for non-authenticated users */}
-                <ThemeToggle />
+                {/* Theme Toggle for non-authenticated users - Hidden on mobile */}
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
                 
                 {/* Sign In Button - Mobile Optimized */}
                 <Button 

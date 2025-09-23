@@ -167,39 +167,44 @@ export default function QuestionBankBrowser({
 
   return (
     <div className="space-y-4">
-      {/* Search and Filter Bar */}
-      <div className="flex gap-2">
+      {/* Search and Filter Bar - Mobile optimized */}
+      <div className="flex flex-col sm:flex-row gap-2">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search questions, topics, or tags..."
+            placeholder="Search questions..."
             value={filters.searchText || ''}
             onChange={(e) => handleSearch(e.target.value)}
-            className="pl-10"
+            className="pl-10 h-10 sm:h-11"
           />
         </div>
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-          className={showFilters ? 'bg-primary text-primary-foreground' : ''}
-        >
-          <Filter className="h-4 w-4 mr-2" />
-          Filters
-          {(filters.units?.length || filters.difficulty?.length || filters.questionTypes?.length) ? (
-            <Badge className="ml-2" variant="secondary">
-              {(filters.units?.length || 0) + (filters.difficulty?.length || 0) + (filters.questionTypes?.length || 0)}
-            </Badge>
-          ) : null}
-        </Button>
-        {(filters.units?.length || filters.difficulty?.length || filters.questionTypes?.length || filters.searchText) && (
+        <div className="flex gap-2">
           <Button
-            variant="ghost"
-            onClick={clearFilters}
+            variant="outline"
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex-1 sm:flex-initial ${showFilters ? 'bg-primary text-primary-foreground' : ''}`}
             size="sm"
           >
-            <X className="h-4 w-4" />
+            <Filter className="h-4 w-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Filters</span>
+            <span className="xs:hidden">•</span>
+            {(filters.units?.length || filters.difficulty?.length || filters.questionTypes?.length) ? (
+              <Badge className="ml-1 sm:ml-2" variant="secondary">
+                {(filters.units?.length || 0) + (filters.difficulty?.length || 0) + (filters.questionTypes?.length || 0)}
+              </Badge>
+            ) : null}
           </Button>
-        )}
+          {(filters.units?.length || filters.difficulty?.length || filters.questionTypes?.length || filters.searchText) && (
+            <Button
+              variant="ghost"
+              onClick={clearFilters}
+              size="sm"
+              className="px-2 sm:px-3"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Filter Panel */}
@@ -284,22 +289,22 @@ export default function QuestionBankBrowser({
         </Card>
       )}
 
-      {/* Stats Summary */}
-      <div className="grid grid-cols-4 gap-2 text-center">
-        <Card className="p-3">
-          <div className="text-2xl font-bold">{stats.total_questions}</div>
-          <div className="text-xs text-muted-foreground">Total Questions</div>
+      {/* Stats Summary - Mobile optimized */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center">
+        <Card className="p-2 sm:p-3">
+          <div className="text-lg sm:text-2xl font-bold">{stats.total_questions}</div>
+          <div className="text-xs text-muted-foreground">Total</div>
         </Card>
-        <Card className="p-3">
-          <div className="text-2xl font-bold">{filteredQuestions.length}</div>
+        <Card className="p-2 sm:p-3">
+          <div className="text-lg sm:text-2xl font-bold">{filteredQuestions.length}</div>
           <div className="text-xs text-muted-foreground">Filtered</div>
         </Card>
-        <Card className="p-3">
-          <div className="text-2xl font-bold">{selectedQuestions.length}</div>
+        <Card className="p-2 sm:p-3">
+          <div className="text-lg sm:text-2xl font-bold">{selectedQuestions.length}</div>
           <div className="text-xs text-muted-foreground">Selected</div>
         </Card>
-        <Card className="p-3">
-          <div className="text-2xl font-bold">{units.length}</div>
+        <Card className="p-2 sm:p-3">
+          <div className="text-lg sm:text-2xl font-bold">{units.length}</div>
           <div className="text-xs text-muted-foreground">Units</div>
         </Card>
       </div>
@@ -333,20 +338,20 @@ export default function QuestionBankBrowser({
                 onClick={() => selectionMode && handleQuestionSelect(item)}
               >
                 <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between gap-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge className={getDifficultyColor(item.difficulty)}>
+                      <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
+                        <Badge className={`${getDifficultyColor(item.difficulty)} text-xs`}>
                           {item.difficulty}
                         </Badge>
-                        <Badge className={getTypeColor(item.question.type)}>
+                        <Badge className={`${getTypeColor(item.question.type)} text-xs`}>
                           {item.question.type.replace('-', ' ')}
                         </Badge>
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="text-xs">
                           {item.question.points} pts
                         </Badge>
                         {item.cognitive_level && (
-                          <span title={item.cognitive_level}>
+                          <span title={item.cognitive_level} className="text-sm">
                             {getCognitiveLevelIcon(item.cognitive_level)}
                           </span>
                         )}
@@ -359,7 +364,7 @@ export default function QuestionBankBrowser({
                         {item.usage_count > 0 && (
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <BarChart3 className="h-3 w-3" />
-                            Used {item.usage_count}x
+                            {item.usage_count}x
                           </div>
                         )}
                       </div>

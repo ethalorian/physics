@@ -284,11 +284,11 @@ export default function VocabularyMatchingGame({
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
         {/* Terms Column */}
-        <div className="space-y-4">
-          <h4 className="font-semibold text-center text-lg border-b pb-2">Terms</h4>
-          <div className="space-y-3">
+        <div className="space-y-3 sm:space-y-4">
+          <h4 className="font-semibold text-center text-base sm:text-lg border-b pb-2">Terms</h4>
+          <div className="space-y-2 sm:space-y-3">
             {shuffledTerms.map((term) => {
               const cardId = `term-${term.id}`
               
@@ -298,22 +298,22 @@ export default function VocabularyMatchingGame({
                   className={getCardClassName(cardId, "")}
                   onClick={() => handleCardClick(cardId, 'term')}
                 >
-                  <CardContent className="p-4">
+                  <CardContent className="p-3 sm:p-4">
                     <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <span className="font-semibold text-lg">{term.term}</span>
+                      <div className="flex-1 min-w-0 pr-2">
+                        <span className="font-semibold text-sm sm:text-base lg:text-lg block truncate">{term.term}</span>
                         {term.category && (
-                          <div className="text-xs text-muted-foreground mt-1">
+                          <div className="text-xs text-muted-foreground mt-1 truncate">
                             {term.category}
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {showResults && cardStates[cardId]?.status === 'correct' && (
-                          <CheckCircle className="w-6 h-6 text-green-600" />
+                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
                         )}
                         {showResults && cardStates[cardId]?.status === 'incorrect' && (
-                          <XCircle className="w-6 h-6 text-red-600" />
+                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
                         )}
                       </div>
                     </div>
@@ -325,9 +325,9 @@ export default function VocabularyMatchingGame({
         </div>
 
         {/* Definitions Column */}
-        <div className="space-y-4">
-          <h4 className="font-semibold text-center text-lg border-b pb-2">Definitions</h4>
-          <div className="space-y-3">
+        <div className="space-y-3 sm:space-y-4">
+          <h4 className="font-semibold text-center text-base sm:text-lg border-b pb-2">Definitions</h4>
+          <div className="space-y-2 sm:space-y-3">
             {shuffledDefinitions.map((term) => {
               const cardId = `def-${term.id}`
               
@@ -337,10 +337,23 @@ export default function VocabularyMatchingGame({
                   className={getCardClassName(cardId, "")}
                   onClick={() => handleCardClick(cardId, 'definition')}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <span className="text-sm leading-relaxed">{term.definition}</span>
+                  <CardContent className="p-3 sm:p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1 min-w-0 pr-2">
+                        <span className="text-xs sm:text-sm leading-relaxed block break-words">{term.definition}</span>
+                        {term.category && (
+                          <div className="text-xs text-muted-foreground mt-2 truncate">
+                            {term.category}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {showResults && cardStates[cardId]?.status === 'correct' && (
+                          <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
+                        )}
+                        {showResults && cardStates[cardId]?.status === 'incorrect' && (
+                          <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
+                        )}
                       </div>
                     </div>
                   </CardContent>

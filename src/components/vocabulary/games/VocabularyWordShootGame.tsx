@@ -379,24 +379,24 @@ export default function VocabularyWordShootGame({
     <div className="space-y-4">
       {/* Game Header */}
       <Card>
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">
-                Question {gameState.questionsAnswered + 1} of {Math.min(gameLength, gameTerms.length)}
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+              <Badge variant="outline" className="text-xs sm:text-sm">
+                {gameState.questionsAnswered + 1} of {Math.min(gameLength, gameTerms.length)}
               </Badge>
-              <Badge variant="outline" className="capitalize">
-                {difficulty} • {gameState.score} points
+              <Badge variant="outline" className="capitalize text-xs sm:text-sm">
+                {difficulty} • {gameState.score} pts
               </Badge>
               {gameState.streak > 0 && (
-                <Badge className="bg-yellow-100 text-yellow-800">
-                  🔥 {gameState.streak} streak
+                <Badge className="bg-yellow-100 text-yellow-800 text-xs sm:text-sm">
+                  🔥 {gameState.streak}
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               {Array.from({ length: gameState.lives }).map((_, i) => (
-                <Heart key={i} className="h-5 w-5 text-red-500 fill-current" />
+                <Heart key={i} className="h-4 w-4 sm:h-5 sm:w-5 text-red-500 fill-current" />
               ))}
             </div>
           </div>
@@ -407,12 +407,12 @@ export default function VocabularyWordShootGame({
 
       {/* Current Definition */}
       <Card>
-        <CardHeader className="text-center pb-4">
-          <CardTitle className="text-lg">Find the term that matches:</CardTitle>
+        <CardHeader className="text-center pb-3 sm:pb-4">
+          <CardTitle className="text-sm sm:text-base md:text-lg">Find the term that matches:</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-xl text-blue-900 font-medium">
+          <div className="text-center p-3 sm:p-4 md:p-6 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-sm sm:text-base md:text-xl text-blue-900 font-medium break-words">
               {gameState.currentDefinition}
             </p>
           </div>

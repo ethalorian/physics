@@ -115,7 +115,7 @@ export default function QuestionRenderer({
               {mcQuestion.options?.map((option: string, index: number) => (
                 <div 
                   key={index} 
-                  className={`relative flex items-center p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${
+                  className={`relative flex items-center p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${
                     answer?.toString() === index.toString()
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
                       : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
@@ -125,8 +125,8 @@ export default function QuestionRenderer({
                       : ''
                   }`}
                 >
-                  <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mr-3" />
-                  <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer text-base">
+                  <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mr-2 sm:mr-3 flex-shrink-0" />
+                  <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer text-sm sm:text-base leading-relaxed">
                     {option}
                   </Label>
                   {showFeedback && mcQuestion.correctAnswer === index && (
@@ -159,9 +159,9 @@ export default function QuestionRenderer({
               value={typeof answer === 'string' ? answer : ''}
               onChange={(e) => onAnswerChange(e.target.value)}
               placeholder="Write your essay here..."
-              rows={8}
+              rows={6}
               disabled={disabled}
-              className="text-base p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors"
+              className="text-sm sm:text-base p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors min-h-[120px] sm:min-h-[160px]"
             />
             <div className="flex items-center justify-between mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex items-center gap-2">
@@ -215,7 +215,7 @@ export default function QuestionRenderer({
         
         return (
           <div className="space-y-3">
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <div className="flex-1">
                 <Input
                   type="number"
@@ -230,7 +230,7 @@ export default function QuestionRenderer({
                   }}
                   placeholder="Enter your answer"
                   disabled={disabled}
-                  className="text-lg p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors font-mono"
+                  className="text-base sm:text-lg p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors font-mono"
                 />
               </div>
               
@@ -240,7 +240,7 @@ export default function QuestionRenderer({
                   onValueChange={(value) => onAnswerChange(`${numValue}|${value}`)}
                   disabled={disabled}
                 >
-                  <SelectTrigger className="w-40 h-full text-base font-semibold border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30">
+                  <SelectTrigger className="w-full sm:w-40 h-full text-sm sm:text-base font-semibold border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30">
                     <SelectValue placeholder="Select unit" />
                   </SelectTrigger>
                   <SelectContent>
@@ -325,9 +325,9 @@ export default function QuestionRenderer({
               value={typeof answer === 'string' ? answer : ''}
               onChange={(e) => onAnswerChange(e.target.value)}
               placeholder="Explain your answer using physics concepts. Be sure to address all key concepts listed above..."
-              rows={8}
+              rows={6}
               disabled={disabled}
-              className="min-h-[200px] text-base p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors"
+              className="min-h-[150px] sm:min-h-[200px] text-sm sm:text-base p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors"
             />
             
             <div className="flex items-center justify-between mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
@@ -462,18 +462,18 @@ export default function QuestionRenderer({
   }
 
   return (
-    <div className={`relative mb-8 transition-all duration-300 ${
+    <div className={`relative mb-4 sm:mb-6 md:mb-8 transition-all duration-300 ${
       showFeedback 
         ? isCorrect 
-          ? 'ring-2 ring-green-400 ring-offset-4 rounded-2xl' 
-          : 'ring-2 ring-red-400 ring-offset-4 rounded-2xl'
+          ? 'ring-1 sm:ring-2 ring-green-400 ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl' 
+          : 'ring-1 sm:ring-2 ring-red-400 ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl'
         : ''
     }`}>
-      {/* Modern card with gradient border on hover */}
-      <Card className="overflow-hidden border-0 shadow-xl hover:shadow-2xl transition-shadow duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
-        {/* Cinematic image section */}
+      {/* Modern card with gradient border on hover - Mobile optimized */}
+      <Card className="overflow-hidden border-0 shadow-lg sm:shadow-xl hover:shadow-xl sm:hover:shadow-2xl transition-shadow duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+        {/* Cinematic image section - Mobile responsive */}
         {question.scenarioImage && (
-          <div className="relative h-96 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
+          <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
             <img
               src={question.scenarioImage}
               alt="Physics scenario visualization"
@@ -481,11 +481,12 @@ export default function QuestionRenderer({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             
-            {/* Overlay badges on image */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30 font-semibold">
+            {/* Overlay badges on image - Mobile responsive */}
+            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex items-center gap-1 sm:gap-2">
+              <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30 font-semibold text-xs sm:text-sm">
                 <Award className="w-3 h-3 mr-1" />
-                {question.points} points
+                <span className="hidden xs:inline">{question.points} pts</span>
+                <span className="xs:hidden">{question.points}</span>
               </Badge>
               {showFeedback && (
                 <Badge className={`backdrop-blur-md font-semibold ${
@@ -502,24 +503,24 @@ export default function QuestionRenderer({
               )}
             </div>
 
-            {/* Question text overlay on image bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight drop-shadow-lg">
+            {/* Question text overlay on image bottom - Mobile responsive */}
+            <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight drop-shadow-lg">
                 {question.question}
               </h2>
             </div>
           </div>
         )}
         
-        {/* AI Generation Buttons */}
+        {/* AI Generation Buttons - Mobile responsive */}
         {!disabled && !question.scenarioImage && !generatedImage && (
-          <div className="px-6 pt-4">
+          <div className="px-3 sm:px-4 md:px-6 pt-3 sm:pt-4">
             <Button
               onClick={handleGenerateImage}
               disabled={isGeneratingImage}
               variant="outline"
               size="sm"
-              className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+              className="w-full sm:w-auto bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200 text-sm"
             >
               {isGeneratingImage ? (
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin text-purple-600" />
@@ -572,16 +573,16 @@ export default function QuestionRenderer({
           </div>
         )}
         
-        {/* If no image, show question in header with modern styling */}
+        {/* If no image, show question in header with modern styling - Mobile responsive */}
         {!question.scenarioImage && !generatedImage && (
-          <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-8">
-            <div className="space-y-4">
+          <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-6 md:p-8">
+            <div className="space-y-3 sm:space-y-4">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-2xl md:text-3xl font-bold leading-tight">
+                <CardTitle className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight pr-2">
                   {question.question}
                 </CardTitle>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                 <Badge className="bg-white/20 backdrop-blur text-white border-white/30 font-semibold">
                   <Award className="w-4 h-4 mr-1" />
                   {question.points} points
@@ -604,17 +605,17 @@ export default function QuestionRenderer({
           </CardHeader>
         )}
         
-        {/* Modern content section with better spacing */}
-        <CardContent className="p-8">
-          <div className="space-y-6">
-            {/* Answer input section with modern styling */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+        {/* Modern content section with better spacing - Mobile responsive */}
+        <CardContent className="p-4 sm:p-6 md:p-8">
+          <div className="space-y-4 sm:space-y-6">
+            {/* Answer input section with modern styling - Mobile responsive */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
               {renderInput()}
             </div>
             
-            {/* Modern feedback section */}
+            {/* Modern feedback section - Mobile responsive */}
             {showFeedback && feedback && (
-              <div className={`relative overflow-hidden rounded-xl p-6 ${
+              <div className={`relative overflow-hidden rounded-lg sm:rounded-xl p-4 sm:p-6 ${
                 isCorrect 
                   ? 'bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 dark:from-green-900/20 dark:to-emerald-900/20' 
                   : 'bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 dark:from-red-900/20 dark:to-pink-900/20'
