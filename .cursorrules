@@ -1,0 +1,415 @@
+# Physics Classroom - Cursor Rules
+
+## Project Overview
+This is a **Next.js 15** TypeScript application for online physics education with assignment management, question banking, and vocabulary games.
+
+### Core Technology Stack
+- **Framework**: Next.js 15 with App Router + React 19 + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui components + Radix UI primitives  
+- **Database**: Supabase (PostgreSQL) with real-time features
+- **Authentication**: NextAuth.js v5 with Supabase adapter
+- **AI Integration**: OpenAI API for question generation and grading
+- **Math Rendering**: KaTeX for mathematical expressions
+
+## Code Style & Patterns
+
+### Import Organization
+Always organize imports in this exact order:
+```typescript
+// 1. React/Next.js imports
+import { useEffect, useState } from 'react'
+import { NextRequest, NextResponse } from 'next/server'
+
+// 2. External package imports
+import { useSession } from 'next-auth/react'
+
+// 3. Internal imports with @/ prefix
+import { Button } from '@/components/ui/button'
+import { useAssignments } from '@/contexts/AssignmentContext'
+```
+
+### Component Structure
+Use this consistent component pattern:
+```typescript
+// Import organization (follow above)
+// Component definition
+interface ComponentNameProps {
+  // Props interface
+}
+
+export default function ComponentName({ prop1, prop2 }: ComponentNameProps) {
+  // State declarations
+  const [state, setState] = useState<StateType>(initialValue)
+  
+  // Context usage
+  const { data, actions } = useContext()
+  
+  // Effects
+  useEffect(() => {
+    // Effect logic
+  }, [dependencies])
+  
+  // Event handlers
+  const handleAction = useCallback((data: DataType) => {
+    // Handler logic
+  }, [dependencies])
+  
+  // Render
+  return (
+    <div className="component-container">
+      {/* JSX content */}
+    </div>
+  )
+}
+```
+
+### TypeScript Requirements
+- Use TypeScript strict mode
+- No `any` types - use specific types or `unknown`
+- All functions should have explicit return types when not obvious
+- Define interfaces for all props and complex data structures
+- Use const assertions for immutable data
+
+## Physics Education Patterns
+
+### Mathematical Content
+- Always use KaTeX for math expressions: `\( inline \)` and `\[ display \]`
+- Use MathMarkdown component for rendering mathematical content
+- Follow standard physics notation: `v_0`, `\Delta x`, `\vec{v}`
+- Include proper units in physics calculations: `\( 9.8 \, \text{m/s}^2 \)`
+
+### Question Types
+Support these question types with proper TypeScript interfaces:
+- `multiple-choice` - Options with correct answer index
+- `numerical` - Numeric answer with unit and tolerance
+- `open-response` - AI-graded with rubric criteria
+- `essay` - Manual grading with guidelines
+
+### Physics Curriculum
+Follow the curriculum structure in `src/data/physics-units.ts`:
+- Units: Major topics (Motion, Forces, Energy, etc.)
+- Lessons: Specific concepts within units (`lesson-1-1`)
+- Topics: Granular physics concepts for tagging
+
+## Authentication & Permissions
+
+### Role-Based Access Control
+Always check permissions using the established pattern:
+```typescript
+import { getUserRole, hasPermission } from '@/lib/permissions'
+
+const userRole = getUserRole(session?.user?.email)
+const canAccess = hasPermission(session?.user?.email, 'canCreateAssignments')
+
+// Role hierarchy: student < teacher < admin
+```
+
+### API Route Protection
+All API routes must include authentication:
+```typescript
+import { auth } from '@/app/api/auth/[...nextauth]/route'
+
+const session = await auth()
+if (!session?.user?.email) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+}
+
+const userRole = getUserRole(session.user.email)
+if (userRole !== 'admin' && userRole !== 'teacher') {
+  return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+}
+```
+
+## Database Patterns
+
+### Supabase Integration
+- Use the configured client from `src/lib/supabase.ts`
+- Store questions as JSONB for flexibility
+- Use proper error handling with try-catch blocks
+- Implement row-level security policies
+
+### Data Validation
+Always validate inputs:
+```typescript
+// API route validation
+if (!body.title || !body.questions?.length) {
+  return NextResponse.json(
+    { error: 'Missing required fields' }, 
+    { status: 400 }
+  )
+}
+
+// Type validation
+if (typeof body.points !== 'number') {
+  return NextResponse.json(
+    { error: 'Points must be a number' }, 
+    { status: 400 }
+  )
+}
+```
+
+## Context Management
+
+### Provider Pattern
+Follow the established provider hierarchy:
+```
+AuthProvider (NextAuth)
+└── ToastProvider (Notifications)
+    └── QuestionBankProvider (Question management)
+        └── AssignmentProvider (Assignment management)
+            └── VocabularyProvider (Vocabulary games)
+```
+
+### Context Hooks
+Always provide custom hooks for contexts:
+```typescript
+export function useContextName() {
+  const context = useContext(ContextName)
+  if (!context) {
+    throw new Error('useContextName must be used within ContextNameProvider')
+  }
+  return context
+}
+```
+
+## UI Component Guidelines
+
+### shadcn/ui Usage
+- Use components from `src/components/ui/` as base building blocks
+- Follow established button variants: default, secondary, outline, ghost, destructive
+- Use consistent form patterns with proper validation and error display
+- Implement loading states with spinners or skeleton components
+
+### Styling Conventions
+```typescript
+// Use cn utility for conditional classes
+import { cn } from '@/lib/utils'
+
+const classes = cn(
+  "base-classes",
+  condition && "conditional-classes",
+  className
+)
+
+// Follow color scheme
+// Primary: physics purple theme
+// Text: proper contrast ratios
+// Interactive: hover and focus states
+```
+
+### Responsive Design
+- Use Tailwind responsive prefixes: `sm:`, `md:`, `lg:`
+- Implement mobile-first design approach
+- Test on different screen sizes
+
+## Error Handling
+
+### Component Error States
+```typescript
+if (loading) {
+  return (
+    <div className="flex items-center justify-center p-8">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
+  )
+}
+
+if (error) {
+  return (
+    <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+      <p className="text-destructive font-medium">Error: {error}</p>
+    </div>
+  )
+}
+```
+
+### API Error Handling
+```typescript
+try {
+  const result = await operation()
+  return NextResponse.json({ data: result })
+} catch (error) {
+  console.error('Operation failed:', error)
+  return NextResponse.json(
+    { error: 'Internal server error' }, 
+    { status: 500 }
+  )
+}
+```
+
+## Performance Optimization
+
+### React Optimization
+```typescript
+// Memoize expensive calculations
+const expensiveValue = useMemo(() => {
+  return heavyCalculation(data)
+}, [data])
+
+// Memoize event handlers
+const handleClick = useCallback((id: string) => {
+  onItemClick(id)
+}, [onItemClick])
+
+// Memoize components when appropriate
+const MemoizedComponent = React.memo(ExpensiveComponent)
+```
+
+### Database Optimization
+- Use specific selects instead of `*`
+- Implement proper indexing on frequently queried fields
+- Use pagination for large datasets
+- Cache frequently accessed data
+
+## AI Integration Patterns
+
+### OpenAI API Usage
+- Use environment variables for API keys
+- Implement proper error handling for API failures
+- Structure prompts for educational context
+- Handle rate limiting gracefully
+
+### Question Generation
+```typescript
+const prompt = `
+Generate a physics question about ${topic}.
+Requirements:
+- Appropriate for ${difficulty} level
+- Include proper physics notation
+- Provide detailed explanation
+- Focus on conceptual understanding
+`
+```
+
+## Testing Requirements
+
+### Test Organization
+- Place test files adjacent to source: `Component.test.tsx`
+- Use describe blocks for logical grouping
+- Mock external dependencies (Supabase, OpenAI)
+- Test utility functions in isolation
+
+### Test Patterns
+```typescript
+import { render, screen } from '@testing-library/react'
+import { AssignmentProvider } from '@/contexts/AssignmentContext'
+
+const renderWithProvider = (component: React.ReactElement) => {
+  return render(
+    <AssignmentProvider>
+      {component}
+    </AssignmentProvider>
+  )
+}
+```
+
+## Accessibility Standards
+
+### ARIA Support
+- Use proper ARIA labels for interactive elements
+- Provide screen reader alternatives for visual content
+- Ensure keyboard navigation works
+- Use semantic HTML elements
+
+### Focus Management
+```typescript
+const buttonRef = useRef<HTMLButtonElement>(null)
+
+useEffect(() => {
+  if (isOpen) {
+    buttonRef.current?.focus()
+  }
+}, [isOpen])
+```
+
+## File Organization
+
+### Directory Structure
+```
+src/
+├── app/                     # Next.js App Router pages
+├── components/              # React components
+│   ├── admin/              # Admin-specific
+│   ├── assignment-builder/ # Creation tools
+│   ├── assignment-taking/  # Student interface
+│   ├── question-bank/      # Question management
+│   ├── vocabulary/         # Vocabulary games
+│   └── ui/                 # shadcn/ui base components
+├── contexts/               # React Context providers
+├── lib/                    # Shared utilities
+├── types/                  # TypeScript definitions
+└── utils/                  # Utility functions
+```
+
+### Naming Conventions
+- PascalCase for components: `UserCard.tsx`, `AssignmentBuilder.tsx`
+- camelCase for functions and variables
+- SCREAMING_SNAKE_CASE for constants
+- kebab-case for file names when not components
+
+## Development Workflow
+
+### Commands
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run test` - Run tests
+
+### Git Commit Messages
+```
+type(scope): description
+
+feat(assignments): add AI-powered question generation
+fix(auth): resolve session persistence issue
+docs(readme): update installation instructions
+```
+
+## Environment Variables
+Required environment variables:
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_key
+NEXTAUTH_SECRET=your_nextauth_secret
+OPENAI_API_KEY=your_openai_key
+```
+
+## Code Quality Checklist
+
+Before submitting code:
+- [ ] All imports organized correctly
+- [ ] TypeScript types are specific and accurate
+- [ ] Error handling is implemented
+- [ ] Authentication checks in place (if needed)
+- [ ] Tests written and passing
+- [ ] Accessibility considerations addressed
+- [ ] Performance optimizations applied
+- [ ] Mathematical expressions use proper KaTeX syntax
+- [ ] Physics concepts follow educational standards
+
+## Common Patterns to Follow
+
+### Assignment Management
+- Use AssignmentContext for state management
+- Support all question types (multiple-choice, numerical, open-response, essay)
+- Implement proper grading workflows
+- Track student progress and analytics
+
+### Question Bank Integration
+- Use QuestionBankContext for centralized question management
+- Organize questions by physics units and lessons
+- Support advanced filtering and search
+- Track question usage analytics
+
+### Vocabulary Games
+- Use VocabularyContext for game state
+- Implement consistent game mechanics
+- Support multiple game types (hangman, matching, word shoot, etc.)
+- Track student progress and scores
+
+### Student Activity Tracking
+- Use StudentActivityContext for progress monitoring
+- Implement comprehensive analytics
+- Support lesson and assignment tracking
+- Provide teacher dashboards
+
+Remember: This is an educational application focused on physics learning. Always prioritize educational effectiveness, accessibility, and student engagement in your code decisions.

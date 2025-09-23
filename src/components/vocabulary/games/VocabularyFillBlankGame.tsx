@@ -171,7 +171,7 @@ export default function VocabularyFillBlankGame({
             // Filled state styling with real-time feedback
             !showResults && userAnswer && answerStatus === 'correct' && "border-green-500 bg-green-100",
             !showResults && userAnswer && answerStatus === 'incorrect' && "border-red-500 bg-red-100", 
-            !showResults && userAnswer && !answerStatus && "border-blue-400 bg-blue-50",
+            !showResults && userAnswer && !answerStatus && "border-blue-400 bg-blue-50 dark:bg-blue-900/30",
             // Results mode styling
             showResults && answerStatus === 'correct' && "border-green-500 bg-green-100",
             showResults && answerStatus === 'incorrect' && "border-red-500 bg-red-100"

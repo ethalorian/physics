@@ -225,16 +225,16 @@ export default function VocabularyMatchingGame({
         'border-gray-200 bg-white cursor-pointer hover:shadow-lg transform hover:-translate-y-1': state.status === 'unselected',
         
         // Selected state - blue highlight, interactive
-        'border-blue-400 bg-blue-50 ring-2 ring-blue-200 scale-105 cursor-pointer': state.status === 'selected',
+        'border-blue-400 bg-blue-50 dark:bg-blue-900/30 ring-2 ring-blue-200 dark:ring-blue-700 scale-105 cursor-pointer': state.status === 'selected',
         
         // Correct match - green, NOT interactive, looks "pressed in"
-        'border-green-600 bg-green-300 text-green-900 cursor-default shadow-inner scale-95': state.status === 'correct',
+        'border-green-600 bg-green-300 dark:bg-green-900/50 text-green-900 dark:text-green-100 cursor-default shadow-inner scale-95': state.status === 'correct',
         
         // Incorrect match - red
         'border-red-400 bg-red-100 text-red-800 cursor-pointer': state.status === 'incorrect',
         
         // Flashing red animation (wrong answer)
-        'border-red-500 bg-red-200 animate-pulse cursor-pointer': state.status === 'flashing',
+        'border-red-500 bg-red-200 dark:bg-red-900/50 animate-pulse cursor-pointer': state.status === 'flashing',
         
         // Flashing green animation (correct answer)
         'border-green-500 bg-green-200 animate-pulse cursor-pointer scale-105': state.status === 'flashing-success',

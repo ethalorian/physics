@@ -17,19 +17,19 @@ export default function RubricFeedback({ grade, rubric, showDetails = true }: Ru
 
   const getScoreColor = (score: number, maxScore: number) => {
     const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0
-    if (percentage >= 90) return 'text-green-600 bg-green-50 border-green-200'
-    if (percentage >= 80) return 'text-blue-600 bg-blue-50 border-blue-200'
-    if (percentage >= 70) return 'text-yellow-600 bg-yellow-50 border-yellow-200'
-    if (percentage >= 60) return 'text-orange-600 bg-orange-50 border-orange-200'
-    return 'text-red-600 bg-red-50 border-red-200'
+    if (percentage >= 90) return 'text-green-600 bg-green-50 border-green-200 dark:text-green-300 dark:bg-green-900/30 dark:border-green-700'
+    if (percentage >= 80) return 'text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-300 dark:bg-blue-900/30 dark:border-blue-700'
+    if (percentage >= 70) return 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:text-yellow-300 dark:bg-yellow-900/30 dark:border-yellow-700'
+    if (percentage >= 60) return 'text-orange-600 bg-orange-50 border-orange-200 dark:text-orange-300 dark:bg-orange-900/30 dark:border-orange-700'
+    return 'text-red-600 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-900/30 dark:border-red-700'
   }
 
   const getOverallScoreColor = () => {
-    if (scorePercentage >= 90) return 'text-green-600'
-    if (scorePercentage >= 80) return 'text-blue-600'
-    if (scorePercentage >= 70) return 'text-yellow-600'
-    if (scorePercentage >= 60) return 'text-orange-600'
-    return 'text-red-600'
+    if (scorePercentage >= 90) return 'text-green-600 dark:text-green-300'
+    if (scorePercentage >= 80) return 'text-blue-600 dark:text-blue-300'
+    if (scorePercentage >= 70) return 'text-yellow-600 dark:text-yellow-300'
+    if (scorePercentage >= 60) return 'text-orange-600 dark:text-orange-300'
+    return 'text-red-600 dark:text-red-300'
   }
 
   return (

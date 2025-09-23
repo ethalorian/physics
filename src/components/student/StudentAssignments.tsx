@@ -34,7 +34,7 @@ export default function StudentAssignments() {
     } else if (dueDate && dueDate.getTime() - now.getTime() < 7 * 24 * 60 * 60 * 1000) {
       return <Badge className="bg-orange-500 hover:bg-orange-600">Due Soon</Badge>
     } else {
-      return <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">Not Started</Badge>
+      return <Badge variant="outline">Not Started</Badge>
     }
   }
 
@@ -70,14 +70,14 @@ export default function StudentAssignments() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#4A1A4A]">My Assignments</h2>
-          <p className="text-[#6A4C93]">Track your assignment progress and submissions</p>
+          <h2 className="text-2xl font-bold text-foreground">My Assignments</h2>
+          <p className="text-muted-foreground">Track your assignment progress and submissions</p>
         </div>
       </div>
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9A8AC0]" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search assignments..."
           value={searchTerm}
@@ -91,49 +91,49 @@ export default function StudentAssignments() {
         <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">
                 Total Assignments
               </CardTitle>
-              <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
             <CardContent className="pt-2">
-              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{publishedAssignments.length}</div>
+              <div className="text-xl sm:text-2xl font-bold text-foreground">{publishedAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">
                 Completed
               </CardTitle>
-              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
+              <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
             <CardContent className="pt-2">
-              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{completedAssignments.length}</div>
+              <div className="text-xl sm:text-2xl font-bold text-foreground">{completedAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">
                 Upcoming
               </CardTitle>
-              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
+              <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
             <CardContent className="pt-2">
-              <div className="text-xl sm:text-2xl font-bold text-[#4A1A4A]">{upcomingAssignments.length}</div>
+              <div className="text-xl sm:text-2xl font-bold text-foreground">{upcomingAssignments.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium text-[#6A4C93] leading-tight">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground leading-tight">
                 Avg Grade
               </CardTitle>
-              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-[#9A8AC0] flex-shrink-0" />
+              <AlertCircle className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />
             </CardHeader>
             <CardContent className="pt-2">
-              <div className="text-lg sm:text-2xl font-bold text-[#4A1A4A]">
+              <div className="text-lg sm:text-2xl font-bold text-foreground">
                 {submissions.filter(s => s.score !== undefined).length > 0 
                   ? Math.round(submissions.filter(s => s.score !== undefined).reduce((sum, s) => sum + (s.score || 0), 0) / submissions.filter(s => s.score !== undefined).length)
                   : '-'
@@ -150,11 +150,11 @@ export default function StudentAssignments() {
         {filteredAssignments.length === 0 ? (
           <Card className="apple-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <FileText className="h-12 w-12 text-[#9A8AC0] mb-4" />
-              <h3 className="text-lg font-medium text-[#4A1A4A] mb-2">
+              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2">
                 {publishedAssignments.length === 0 ? 'No assignments available' : 'No assignments match your search'}
               </h3>
-              <p className="text-[#6A4C93] text-center">
+              <p className="text-muted-foreground text-center">
                 {publishedAssignments.length === 0 
                   ? 'Your teacher hasn\'t published any assignments yet. Check back later!'
                   : 'Try adjusting your search terms to find the assignments you\'re looking for.'
@@ -173,7 +173,7 @@ export default function StudentAssignments() {
                     <div className="flex items-start justify-between">
                       <div className="flex flex-wrap items-center gap-2 flex-1 mr-2">
                         {getStatusBadge(assignment)}
-                        <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93] text-xs">
+                        <Badge variant="outline" className="text-xs">
                           {assignment.total_points} pts
                         </Badge>
                         {submission?.score !== undefined && (
@@ -190,11 +190,11 @@ export default function StudentAssignments() {
                       </Link>
                     </div>
                   </div>
-                  <CardTitle className="text-[#4A1A4A]">{assignment.title}</CardTitle>
-                  <CardDescription className="text-[#6A4C93]">{assignment.description}</CardDescription>
+                  <CardTitle className="text-foreground">{assignment.title}</CardTitle>
+                  <CardDescription className="text-muted-foreground">{assignment.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-[#9A8AC0]">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs sm:text-sm text-muted-foreground">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                       {assignment.due_date && (
                         <span className="flex items-center gap-1">

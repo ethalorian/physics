@@ -57,6 +57,7 @@ export default function Navbar() {
     const items = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
+      { href: "/vocabulary", label: "Vocabulary Games", icon: Users },
     ]
 
     if (canAccessAdmin) {
@@ -64,7 +65,7 @@ export default function Navbar() {
         { href: "/admin/dashboard", label: "Admin Dashboard", icon: Settings },
         { href: "/admin/assignments", label: "Manage Assignments", icon: FileText },
         { href: "/admin/question-bank", label: "Question Bank", icon: BookOpen },
-        { href: "/admin/vocabulary", label: "Vocabulary Games", icon: Users }
+        { href: "/admin/vocabulary", label: "Manage Vocabulary", icon: Settings }
       )
     }
 

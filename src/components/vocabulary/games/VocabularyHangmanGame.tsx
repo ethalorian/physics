@@ -318,10 +318,10 @@ export default function VocabularyHangmanGame({
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600'
-    if (score >= 60) return 'text-blue-600'
-    if (score >= 40) return 'text-yellow-600'
-    return 'text-red-600'
+    if (score >= 80) return 'text-green-600 dark:text-green-300'
+    if (score >= 60) return 'text-blue-600 dark:text-blue-300'
+    if (score >= 40) return 'text-yellow-600 dark:text-yellow-300'
+    return 'text-red-600 dark:text-red-300'
   }
 
   if (gameWords.length === 0) {
@@ -449,7 +449,7 @@ export default function VocabularyHangmanGame({
               {showDefinitions && gameState.currentTerm?.definition && (
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm sm:text-base">Definition:</h4>
-                  <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-blue-50 rounded-lg border border-blue-200 break-words">
+                  <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700 break-words">
                     {gameState.currentTerm.definition}
                   </p>
                 </div>

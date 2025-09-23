@@ -411,8 +411,8 @@ export default function VocabularyWordShootGame({
           <CardTitle className="text-sm sm:text-base md:text-lg">Find the term that matches:</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center p-3 sm:p-4 md:p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-sm sm:text-base md:text-xl text-blue-900 font-medium break-words">
+          <div className="text-center p-3 sm:p-4 md:p-6 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700">
+            <p className="text-sm sm:text-base md:text-xl text-blue-900 dark:text-blue-100 font-medium break-words">
               {gameState.currentDefinition}
             </p>
           </div>
