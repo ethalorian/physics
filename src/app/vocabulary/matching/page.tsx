@@ -55,8 +55,8 @@ export default function StudentVocabularyMatchingPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (results: { score: number, totalMatches: number, timeSpent: number }) => {
-    setGameResults(results)
+  const handleGameComplete = (score: number, totalMatches: number, timeSpent: number) => {
+    setGameResults({ score, totalMatches, timeSpent })
     setGameStarted(false)
   }
 

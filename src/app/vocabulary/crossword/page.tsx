@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Grid3x3, Trophy, BookOpen, RotateCcw } from 'lucide-react'
 import Link from 'next/link'
-import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
+import VocabularyCrosswordGameWrapper from '@/components/vocabulary/games/VocabularyCrosswordGameWrapper'
 
 export default function StudentVocabularyCrosswordPage() {
   const { data: session, status } = useSession()
@@ -54,8 +54,8 @@ export default function StudentVocabularyCrosswordPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (results: { score: number, totalWords: number, timeSpent: number }) => {
-    setGameResults(results)
+  const handleGameComplete = (score: number, totalWords: number, timeSpent: number) => {
+    setGameResults({ score, totalWords, timeSpent })
     setGameStarted(false)
   }
 
@@ -79,7 +79,7 @@ export default function StudentVocabularyCrosswordPage() {
             </Button>
           </div>
           
-          <VocabularyCrosswordGame
+          <VocabularyCrosswordGameWrapper
             vocabularyTerms={availableTerms}
             difficulty={difficulty}
             onGameComplete={handleGameComplete}

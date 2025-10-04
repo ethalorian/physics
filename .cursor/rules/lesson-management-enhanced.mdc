@@ -1,0 +1,227 @@
+---
+description: "Enhanced lesson management interface patterns and UX improvements"
+---
+
+# Enhanced Lesson Management System
+
+## Unified Interface Pattern
+
+The lesson management interface provides all functionality from a single screen without requiring navigation to separate pages.
+
+**File**: [src/components/admin/LessonManagement.tsx](mdc:src/components/admin/LessonManagement.tsx)
+
+## Key Features
+
+### Dashboard Statistics
+Shows at-a-glance metrics at the top:
+```typescript
+const stats = {
+  totalLessons: lessons.length,
+  totalVideos: lessons.reduce((sum, l) => sum + (l.videos?.length || 0), 0),
+  published: lessons.filter(l => l.published).length,
+  draft: lessons.filter(l => !l.published).length,
+  unitCount: new Set(lessons.map(l => l.unit)).size
+}
+```
+
+Display pattern:
+```tsx
+<div className="flex items-center gap-4 mt-3">
+  <div className="flex items-center gap-2 text-sm">
+    <BookOpen className="h-4 w-4 text-blue-600" />
+    <span className="font-semibold">{stats.totalLessons}</span>
+    <span className="text-gray-600">Lessons</span>
+  </div>
+  {/* More stats... */}
+</div>
+```
+
+### Enhanced Lesson Cards
+
+Each lesson card displays:
+- **Expandable/Collapsible** - Click chevron to toggle details
+- **Status Badges** - Published/Draft with icons
+- **Quick Stats Row**:
+  - Video count with icon
+  - Objectives count
+  - Estimated time
+  - Content status indicator
+
+```tsx
+<div className="flex items-center gap-4 mt-3 text-sm">
+  <div className="flex items-center gap-1.5">
+    <Video className="h-4 w-4 text-purple-600" />
+    <span className="font-medium">{lesson.videos?.length || 0}</span>
+    <span className="text-gray-600">videos</span>
+  </div>
+  {/* More stats... */}
+</div>
+```
+
+### Inline Actions
+All actions available without leaving the page:
+- **Video Icon (purple)** - Opens inline video manager
+- **Eye Icon (blue)** - Preview as student (new tab)
+- **Edit Icon (gray)** - Edit lesson details
+- **Trash Icon (red)** - Delete lesson
+
+### Expandable Details
+When expanded, lesson cards show:
+- **Metadata** - Slug, created/updated dates
+- **Learning Objectives** - Full list with numbering
+- **Videos** - List with play links to YouTube
+
+### Inline Video Management
+Clicking the video icon reveals LessonVideoManager directly in the card:
+```tsx
+{isManagingVideos && (
+  <CardContent className="pt-4 border-t bg-purple-50/30">
+    <LessonVideoManager
+      lessonId={lesson.id}
+      lessonTitle={lesson.title}
+      initialVideos={lesson.videos || []}
+      onSave={(videos) => handleVideoSave(lesson.id, videos)}
+    />
+  </CardContent>
+)}
+```
+
+## State Management Pattern
+
+```typescript
+const [expandedLesson, setExpandedLesson] = useState<string | null>(null)
+const [managingVideos, setManagingVideos] = useState<string | null>(null)
+
+const toggleExpand = (lessonId: string) => {
+  setExpandedLesson(prev => prev === lessonId ? null : lessonId)
+}
+
+const isExpanded = expandedLesson === lesson.id
+const isManagingVideos = managingVideos === lesson.id
+```
+
+## Visual Hierarchy
+
+### Collapsed State
+```
+┌─ LESSON CARD ───────────────────────────┐
+│ ▶ Lesson 1 | Kinematics | ✓ Published  │
+│ Newton's First Law                       │
+│ Description text here                    │
+│ 3 videos • 5 objectives • 30min • ✓ Content │
+│ [🎬] [👁️] [✏️] [🗑️]                       │
+└──────────────────────────────────────────┘
+```
+
+### Expanded State
+```
+┌─ LESSON CARD ───────────────────────────┐
+│ ▼ Lesson 1 | Kinematics | ✓ Published  │
+│ Newton's First Law                       │
+│ Description text here                    │
+│ 3 videos • 5 objectives • 30min • ✓ Content │
+│ [🎬] [👁️] [✏️] [🗑️]                       │
+│ ─────────────────────────────────────────│
+│ Slug: newtons-first-law                  │
+│ Created: Jan 15, 2024                    │
+│ Updated: Jan 20, 2024                    │
+│                                          │
+│ Learning Objectives:                     │
+│ 1. Understand inertia                    │
+│ 2. Apply Newton's First Law              │
+│                                          │
+│ Videos:                                  │
+│ ▶ Introduction (5:30) [Open ↗]          │
+│ ▶ Examples (8:15) [Open ↗]              │
+└──────────────────────────────────────────┘
+```
+
+### Video Management Mode
+```
+┌─ LESSON CARD ───────────────────────────┐
+│ [Header and stats as above]              │
+│ ─────────────────────────────────────────│
+│ 📹 Manage Videos                         │
+│                                          │
+│ [Full LessonVideoManager component]     │
+│ - Add videos                             │
+│ - Edit video details                     │
+│ - Manage questions (⚡ icon)             │
+│ - Reorder videos                         │
+│                                          │
+│ [Save All Changes]                       │
+└──────────────────────────────────────────┘
+```
+
+## Color Coding
+
+### Status Badges
+```typescript
+{lesson.published ? (
+  <Badge className="bg-green-100 text-green-800 border-green-200">
+    <CheckCircle className="h-3 w-3 mr-1" />
+    Published
+  </Badge>
+) : (
+  <Badge variant="secondary">
+    <XCircle className="h-3 w-3 mr-1" />
+    Draft
+  </Badge>
+)}
+```
+
+### Stat Icons
+- **Video** - Purple (`text-purple-600`)
+- **Objectives** - Blue (`text-blue-600`)
+- **Time** - Orange (`text-orange-600`)
+- **Content** - Green (`text-green-600`)
+
+### Action Buttons
+- **Video Management** - Purple hover (`hover:bg-purple-50`)
+- **Preview** - Blue hover (`hover:bg-blue-50`)
+- **Edit** - Gray hover (`hover:bg-gray-50`)
+- **Delete** - Red hover (`hover:bg-red-50`)
+
+## Database Integration
+
+### Fetch Lessons
+```typescript
+const { data, error } = await supabase
+  .from('lessons')
+  .select('*')
+  .order('unit', { ascending: true })
+  .order('lesson_number', { ascending: true })
+```
+
+### Save Videos with Questions
+```typescript
+const { error } = await supabase
+  .from('lessons')
+  .update({ videos: updatedVideos })
+  .eq('id', lessonId)
+```
+
+## Performance Optimizations
+
+- **Conditional Rendering** - Only render expanded content when needed
+- **Inline Management** - Avoid page navigations
+- **Efficient Updates** - Only update changed lessons
+- **Optimistic UI** - Immediate visual feedback
+
+## Accessibility
+
+- **Keyboard Navigation** - All interactive elements keyboard accessible
+- **ARIA Labels** - Clear labels on icon-only buttons
+- **Focus Management** - Proper focus order
+- **Screen Reader Support** - Descriptive text for all actions
+
+## Integration Points
+
+- **Video Management** - [src/components/admin/LessonVideoManager.tsx](mdc:src/components/admin/LessonVideoManager.tsx)
+- **Question Editor** - [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx)
+- **Student View** - [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx)
+- **Admin Dashboard** - [src/app/admin/dashboard/page.tsx](mdc:src/app/admin/dashboard/page.tsx)
+
+## Related Documentation
+- [docs/LESSONS_SYSTEM_GUIDE.md](mdc:docs/LESSONS_SYSTEM_GUIDE.md)
+- [docs/INTERACTIVE_VIDEO_QUESTIONS.md](mdc:docs/INTERACTIVE_VIDEO_QUESTIONS.md)

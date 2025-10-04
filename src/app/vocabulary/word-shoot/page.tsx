@@ -55,8 +55,8 @@ export default function StudentVocabularyWordShootPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (results: { score: number, totalQuestions: number, timeSpent: number }) => {
-    setGameResults(results)
+  const handleGameComplete = (score: number, totalQuestions: number, timeSpent: number) => {
+    setGameResults({ score, totalQuestions, timeSpent })
     setGameStarted(false)
   }
 

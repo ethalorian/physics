@@ -1,5 +1,5 @@
 "use client"
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -574,7 +574,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     )
   }, [currentValues, getDisplayText, getTermSize, formatValue])
 
-  const renderFraction = useCallback((numerator: JSX.Element, denominator: JSX.Element, key: string) => {
+  const renderFraction = useCallback((numerator: React.ReactElement, denominator: React.ReactElement, key: string) => {
     return (
       <div key={key} className="inline-flex flex-col items-center mx-4">
         <div className="flex items-center justify-center pb-1">
@@ -604,7 +604,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
     })
 
     // Create equation based on what we're solving for and the original equation structure
-    const equationElements: JSX.Element[] = [
+    const equationElements: React.ReactElement[] = [
       resultElement,
       <span key="equals" className="mx-4 text-3xl font-bold text-gray-600 flex items-center">=</span>
     ]
@@ -749,7 +749,7 @@ export default function EquationVisualizer({ className }: EquationVisualizerProp
       </span>
     ))
 
-    let analysisElements: JSX.Element[] = []
+    let analysisElements: React.ReactElement[] = []
     
     if (currentEquation.id === 'force-equation') {
       analysisElements = [

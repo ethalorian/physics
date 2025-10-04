@@ -1,0 +1,417 @@
+---
+description: "YouTube Player API integration patterns and best practices"
+---
+
+# YouTube Player API Integration
+
+## Configuration
+
+### Content Security Policy
+**File**: [next.config.ts](mdc:next.config.ts)
+
+Required CSP directives for YouTube embeds:
+```typescript
+async headers() {
+  return [{
+    source: '/(.*)',
+    headers: [{
+      key: 'Content-Security-Policy',
+      value: [
+        "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com",
+        "img-src 'self' ... https://i.ytimg.com https://img.youtube.com"
+      ].join('; ')
+    }]
+  }]
+}
+```
+
+**Important**: Server restart required after CSP changes.
+
+## Privacy-Enhanced Embeds
+
+Always use `youtube-nocookie.com` for student privacy:
+```typescript
+const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?${params}`
+```
+
+## Player API Loading Pattern
+
+### Global Type Declaration
+```typescript
+declare global {
+  interface Window {
+    YT: any
+    onYouTubeIframeAPIReady: () => void
+  }
+}
+```
+
+### Loading Script
+```typescript
+useEffect(() => {
+  if (typeof window === 'undefined') return
+
+  // Check if already loaded
+  if (window.YT && window.YT.Player) {
+    initializePlayer()
+    return
+  }
+
+  // Load script
+  const tag = document.createElement('script')
+  tag.src = 'https://www.youtube.com/iframe_api'
+  const firstScriptTag = document.getElementsByTagName('script')[0]
+  firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+
+  // Set callback
+  window.onYouTubeIframeAPIReady = () => {
+    initializePlayer()
+  }
+
+  // Cleanup
+  return () => {
+    if (playerRef.current) {
+      try {
+        playerRef.current.destroy()
+      } catch (e) {
+        console.error('Error destroying player:', e)
+      }
+    }
+  }
+}, [videoId])
+```
+
+### Retry Mechanism
+For reliability, implement retry logic:
+```typescript
+// Fallback: Try every second for up to 10 seconds
+const retryInterval = setInterval(() => {
+  if (window.YT && window.YT.Player && !playerRef.current) {
+    initializePlayer()
+    clearInterval(retryInterval)
+  }
+}, 1000)
+
+const cleanup = setTimeout(() => {
+  clearInterval(retryInterval)
+}, 10000)
+```
+
+## Player Initialization
+
+### Safe Initialization
+```typescript
+const initializePlayer = () => {
+  if (!containerRef.current) return
+  if (playerRef.current) return // Already initialized
+
+  // Create a div for the player
+  const playerDiv = document.createElement('div')
+  containerRef.current.appendChild(playerDiv)
+  
+  playerRef.current = new window.YT.Player(playerDiv, {
+    videoId: youtubeId,
+    width: '100%',
+    height: '360',
+    playerVars: {
+      autoplay: 0,
+      controls: 1,
+      modestbranding: 1,
+      rel: 0,
+      fs: 1,
+      enablejsapi: 1,
+      origin: window.location.origin
+    },
+    events: {
+      onReady: (event) => handleReady(event),
+      onStateChange: (event) => handleStateChange(event),
+      onError: (event) => console.error('YouTube error:', event.data)
+    }
+  })
+}
+```
+
+## Event Handlers
+
+### onReady Event
+```typescript
+onReady: (event: any) => {
+  setIsPlayerReady(true)
+  
+  // Get actual video duration
+  if (typeof event.target.getDuration === 'function') {
+    const duration = event.target.getDuration()
+    if (typeof duration === 'number' && duration > 0) {
+      onDurationDetected?.(Math.floor(duration))
+    }
+  }
+}
+```
+
+### onStateChange Event
+```typescript
+onStateChange: (event: any) => {
+  // YT.PlayerState.ENDED = 0
+  // YT.PlayerState.PLAYING = 1
+  // YT.PlayerState.PAUSED = 2
+  
+  if (event.data === 0) {
+    handleVideoEnd() // Reset to start, show replay prompt
+  } else if (event.data === 1) {
+    setIsPlaying(true)
+    startTimeChecking() // For interactive questions
+  } else {
+    setIsPlaying(false)
+    stopTimeChecking()
+  }
+}
+```
+
+## Player Control Methods
+
+### Always Use Safety Checks
+```typescript
+const handlePlayPause = () => {
+  if (!playerRef.current || !isPlayerReady) return
+  
+  try {
+    if (isPlaying) {
+      if (typeof playerRef.current.pauseVideo === 'function') {
+        playerRef.current.pauseVideo()
+      }
+    } else {
+      if (typeof playerRef.current.playVideo === 'function') {
+        playerRef.current.playVideo()
+      }
+    }
+  } catch (error) {
+    console.error('Error controlling playback:', error)
+  }
+}
+```
+
+### Seeking
+```typescript
+const handleSeek = (timestamp: number) => {
+  if (!playerRef.current || !isPlayerReady) return
+  
+  try {
+    if (typeof playerRef.current.seekTo === 'function') {
+      playerRef.current.seekTo(timestamp, true)
+    }
+  } catch (error) {
+    console.error('Error seeking:', error)
+  }
+}
+```
+
+### Getting Current Time
+```typescript
+const startTimeUpdates = () => {
+  updateInterval.current = setInterval(() => {
+    if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+      try {
+        const time = playerRef.current.getCurrentTime()
+        if (typeof time === 'number' && !isNaN(time)) {
+          onTimeChange(time)
+        }
+      } catch (error) {
+        // Silently fail if not ready
+      }
+    }
+  }, 100) // Update 10x per second
+}
+```
+
+## Duration Detection
+
+### Auto-Detection Pattern
+```typescript
+const [actualDuration, setActualDuration] = useState<number | null>(null)
+const [detectedDuration, setDetectedDuration] = useState<number | null>(null)
+
+// In onReady event
+const videoDuration = event.target.getDuration()
+if (typeof videoDuration === 'number' && videoDuration > 0) {
+  setActualDuration(videoDuration)
+  onDurationDetected?.(Math.floor(videoDuration))
+}
+
+// Use detected duration
+const displayDuration = actualDuration || fallbackDuration
+```
+
+### Visual Feedback
+```tsx
+{actualDuration && actualDuration !== duration && (
+  <div className="bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+    ✓ Detected actual video length: <strong>{secondsToMMSS(actualDuration)}</strong>
+  </div>
+)}
+```
+
+## Time Formatting Utilities
+
+```typescript
+function secondsToMMSS(seconds: number): string {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
+
+function durationToSeconds(duration: string): number {
+  const parts = duration.split(':').map(Number)
+  if (parts.length === 2) {
+    return parts[0] * 60 + parts[1]
+  } else if (parts.length === 3) {
+    return parts[0] * 3600 + parts[1] * 60 + parts[2]
+  }
+  return 0
+}
+```
+
+## Loading States
+
+### Player Loading
+```tsx
+<div className="relative bg-black rounded-lg overflow-hidden aspect-video">
+  <div ref={containerRef} className="w-full h-full" />
+  {!isPlayerReady && (
+    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/80">
+      <div className="text-center text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
+        <p className="text-sm">Loading video player...</p>
+      </div>
+    </div>
+  )}
+</div>
+```
+
+### Controls Loading
+```tsx
+{!isPlayerReady && (
+  <div className="text-center py-4 text-gray-600">
+    <p className="text-sm font-medium">⏳ Initializing video controls...</p>
+    <p className="text-xs mt-1">Controls will be available in a moment</p>
+  </div>
+)}
+```
+
+## Replay Functionality
+
+### End Detection and Prompt
+```typescript
+const handleVideoEnd = () => {
+  // Reset to beginning
+  if (playerRef.current && playerRef.current.seekTo) {
+    playerRef.current.seekTo(timestamp || 0)
+    playerRef.current.pauseVideo()
+  }
+  setShowReplayPrompt(true)
+}
+
+const handleReplay = () => {
+  if (playerRef.current && playerRef.current.playVideo) {
+    playerRef.current.seekTo(timestamp || 0)
+    playerRef.current.playVideo()
+  }
+  setShowReplayPrompt(false)
+}
+```
+
+### Replay Modal
+```tsx
+{showReplayPrompt && (
+  <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
+    <div className="bg-white rounded-xl p-6 max-w-sm shadow-2xl">
+      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+        <CheckCircle className="h-8 w-8 text-white" />
+      </div>
+      <h3 className="text-xl font-bold mb-2">Video Complete!</h3>
+      <p className="text-gray-600 text-sm mb-4">
+        Would you like to watch it again?
+      </p>
+      <div className="flex gap-3">
+        <Button onClick={handleReplay}>Watch Again</Button>
+        <Button variant="outline" onClick={handleDismiss}>Continue</Button>
+      </div>
+    </div>
+  </div>
+)}
+```
+
+## Best Practices
+
+### 1. Always Check Player Ready State
+```typescript
+if (!playerRef.current || !isPlayerReady) return
+```
+
+### 2. Use Type Checking for Methods
+```typescript
+if (typeof playerRef.current.methodName === 'function') {
+  playerRef.current.methodName()
+}
+```
+
+### 3. Wrap in Try-Catch
+```typescript
+try {
+  playerRef.current.someMethod()
+} catch (error) {
+  console.error('Player error:', error)
+}
+```
+
+### 4. Clean Up Intervals
+```typescript
+return () => {
+  if (timeCheckInterval.current) {
+    clearInterval(timeCheckInterval.current)
+  }
+  if (playerRef.current) {
+    try {
+      playerRef.current.destroy()
+    } catch (e) {
+      console.error('Cleanup error:', e)
+    }
+  }
+}
+```
+
+### 5. Handle Slow Initialization
+- Show loading states immediately
+- Disable controls until ready
+- Provide visual feedback ("Loading...")
+- Use retry mechanism for reliability
+
+## Common Issues
+
+### Player Methods Not Found
+**Cause**: Calling methods before player is ready
+**Solution**: Check `isPlayerReady` state and method existence
+
+### CSP Violations
+**Cause**: YouTube domains not in frame-src
+**Solution**: Add to CSP, restart server
+
+### Duration Shows Wrong Value
+**Cause**: Using fallback before detection
+**Solution**: Wait for onReady event, use detected duration
+
+### Multiple Players on Same Page
+**Cause**: Shared global callback
+**Solution**: Preserve original callback:
+```typescript
+const originalCallback = window.onYouTubeIframeAPIReady
+window.onYouTubeIframeAPIReady = () => {
+  initializePlayer()
+  if (originalCallback) originalCallback()
+}
+```
+
+## Related Files
+- [next.config.ts](mdc:next.config.ts) - CSP configuration
+- [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx) - Student player
+- [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx) - Teacher editor

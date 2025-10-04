@@ -14,12 +14,7 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    accessToken?: string
-    refreshToken?: string
-  }
-}
+// JWT augmentation removed - not needed for NextAuth v5
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [

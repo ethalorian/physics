@@ -54,8 +54,8 @@ export default function StudentVocabularyHangmanPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (results: { score: number, totalWords: number, timeSpent: number }) => {
-    setGameResults(results)
+  const handleGameComplete = (score: number, totalWords: number, timeSpent: number) => {
+    setGameResults({ score, totalWords, timeSpent })
     setGameStarted(false)
   }
 

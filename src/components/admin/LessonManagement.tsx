@@ -148,7 +148,16 @@ export default function LessonManagement() {
       }
       
       // Reset form and refresh lessons
-      setFormData({ title: '', slug: '', description: '', content: '', unit: '', lesson_number: 1 })
+      setFormData({ 
+        title: '', 
+        slug: '', 
+        description: '', 
+        content: '', 
+        unit: '', 
+        lesson_number: 1,
+        estimated_time: 30,
+        objectives: []
+      })
       setIsCreating(false)
       setEditingLesson(null)
       fetchLessons()
@@ -165,7 +174,9 @@ export default function LessonManagement() {
       description: lesson.description,
       content: lesson.content,
       unit: lesson.unit,
-      lesson_number: lesson.lesson_number
+      lesson_number: lesson.lesson_number,
+      estimated_time: lesson.estimated_time || 30,
+      objectives: lesson.objectives || []
     })
     setEditingLesson(lesson)
     setIsCreating(true)

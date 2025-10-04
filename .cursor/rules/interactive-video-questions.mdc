@@ -1,0 +1,288 @@
+---
+description: "Interactive video questions system (EdPuzzle-style) patterns and implementation"
+---
+
+# Interactive Video Questions System
+
+## Overview
+The interactive video questions system allows teachers to add questions at specific timestamps in lesson videos. Videos automatically pause at these points and require students to answer before continuing - similar to EdPuzzle.
+
+## Core Data Structures
+
+### VideoQuestion Type
+Located in [src/types/assignment.ts](mdc:src/types/assignment.ts):
+
+```typescript
+interface VideoQuestion {
+  id: string
+  timestamp: number // When to pause video (in seconds)
+  question: Question // Any question type (MC, numerical, open-response, essay)
+  answered?: boolean
+  studentAnswer?: any
+  score?: number
+}
+
+interface LessonVideo {
+  id: string
+  title: string
+  youtubeId: string
+  duration?: string
+  description?: string
+  timestamp?: number // For starting at specific time
+  questions?: VideoQuestion[] // EdPuzzle-like embedded questions
+}
+```
+
+## Teacher Interface Components
+
+### VideoQuestionEditor
+**File**: [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx)
+
+Features:
+- **Visual Timeline** - Interactive gradient timeline showing video duration
+- **Embedded Video Player** - YouTube player with scrubbing controls
+- **Auto-Duration Detection** - Gets actual video length from YouTube API
+- **Click-to-Add Questions** - Click "Add Question Here" button at any timestamp
+- **Question Management** - Edit, delete, reorder questions
+- **Full Question Builder** - Integrates with existing QuestionEditor component
+
+Usage pattern:
+```typescript
+<VideoQuestionEditor
+  videoId={video.id}
+  videoTitle={video.title}
+  youtubeId={video.youtubeId}
+  videoDuration={video.duration}
+  initialQuestions={video.questions || []}
+  onSave={(questions) => handleSave(video.id, questions)}
+  onClose={() => setEditingQuestionsId(null)}
+/>
+```
+
+### Integration in LessonVideoManager
+**File**: [src/components/admin/LessonVideoManager.tsx](mdc:src/components/admin/LessonVideoManager.tsx)
+
+Teachers access the question editor by:
+1. Clicking the purple AlertCircle icon (⚡) on any video
+2. Visual timeline editor appears inline
+3. Scrub video to find perfect moment
+4. Click "Add Question Here" button
+5. Use full question builder with AI tools
+6. Save all questions to database
+
+## Student Experience Components
+
+### YouTubeEmbed with Question Detection
+**File**: [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx)
+
+Features:
+- **Time Checking** - Monitors video playback every 500ms
+- **Auto-Pause** - Pauses video at question timestamps (±1 second window)
+- **Question Modal** - Beautiful overlay with question
+- **Instant Feedback** - For MC and numerical questions
+- **Auto-Resume** - Continues video after correct answer
+- **One-Time Display** - Questions only show once per session
+
+Implementation pattern:
+```typescript
+// Load YouTube IFrame API
+useEffect(() => {
+  // Load API script
+  // Initialize player with event handlers
+}, [videoId])
+
+// Check for questions while playing
+const startTimeChecking = () => {
+  timeCheckInterval.current = setInterval(() => {
+    const currentTime = playerRef.current.getCurrentTime()
+    
+    const unansweredQuestion = questions.find(q => 
+      !answeredQuestions.has(q.id) && 
+      currentTime >= q.timestamp && 
+      currentTime < q.timestamp + 1
+    )
+
+    if (unansweredQuestion) {
+      playerRef.current.pauseVideo()
+      setCurrentQuestion(unansweredQuestion)
+    }
+  }, 500)
+}
+```
+
+### VideoQuestionModal Component
+**File**: [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx)
+
+Modal that appears when video pauses:
+- Uses QuestionRenderer for consistency
+- Provides instant feedback for auto-gradable questions
+- Integrates with OpenAI grading for open responses
+- Shows point values
+- "Continue Video" button after correct answer
+
+## YouTube Player API Integration
+
+### CSP Configuration
+**File**: [next.config.ts](mdc:next.config.ts)
+
+Required Content Security Policy directives:
+```typescript
+"frame-src 'self' https://accounts.google.com https://content.googleapis.com https://www.youtube.com https://www.youtube-nocookie.com"
+"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.youtube.com https://s.ytimg.com"
+"img-src 'self' data: blob: ... https://i.ytimg.com https://img.youtube.com"
+```
+
+### Player Initialization Pattern
+```typescript
+// Load YouTube IFrame API
+const tag = document.createElement('script')
+tag.src = 'https://www.youtube.com/iframe_api'
+document.getElementsByTagName('script')[0].parentNode?.insertBefore(tag, firstScriptTag)
+
+// Initialize player when ready
+window.onYouTubeIframeAPIReady = () => {
+  playerRef.current = new window.YT.Player(containerDiv, {
+    videoId: youtubeId,
+    playerVars: {
+      enablejsapi: 1,
+      origin: window.location.origin
+    },
+    events: {
+      onReady: (event) => {
+        // Get actual duration
+        const duration = event.target.getDuration()
+        onDurationDetected(duration)
+      },
+      onStateChange: (event) => {
+        // Detect video end (event.data === 0)
+        // Detect playing (event.data === 1)
+      }
+    }
+  })
+}
+```
+
+### Safety Checks
+Always check if methods exist before calling:
+```typescript
+if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
+  playerRef.current.seekTo(timestamp, true)
+}
+```
+
+## Visual Timeline Implementation
+
+### Timeline Component Features
+- Gradient background (blue → purple → pink)
+- Click anywhere to add question
+- Numbered question markers showing points
+- Hover tooltips with timestamp and type
+- Red playhead showing current video position
+- Auto-sorts questions by timestamp
+
+### Scrubbing Controls
+- Play/Pause button
+- Skip back 5 seconds
+- Skip forward 5 seconds
+- Slider for frame-accurate scrubbing
+- Real-time timestamp display (MM:SS / MM:SS)
+- "Add Question Here" button at current time
+
+## Question Flow
+
+### Teacher Workflow
+1. Navigate to lesson management
+2. Click video icon on lesson
+3. Click question icon on specific video
+4. Video player loads with timeline
+5. Scrub to find perfect moment
+6. Click "Add Question Here"
+7. Question editor appears with timestamp pre-filled
+8. Create question using AI tools
+9. Click "Save Question"
+10. Repeat for additional questions
+11. Click "Save All Questions" when done
+
+### Student Workflow
+1. Start watching lesson video
+2. Video plays normally
+3. Reaches question timestamp → auto-pauses
+4. Modal appears: "Video Paused - Answer to continue"
+5. Student answers question
+6. Receives instant feedback
+7. Clicks "Continue Video" after correct answer
+8. Video resumes from same position
+9. Process repeats for each question
+
+## Best Practices
+
+### Question Timing
+- Add questions **after** key concepts are explained
+- Space questions 2-3 minutes apart
+- Don't overwhelm students with too many questions
+- Recommended: 1 question per 2-3 minutes of video
+
+### Question Types
+- **Multiple Choice** - Conceptual understanding checks
+- **Numerical** - Calculation practice  
+- **Open Response** - Deep understanding with AI grading
+- **Essay** - Extended explanations (manual grading)
+
+### Points Allocation
+- Quick checks (MC): 1-3 points
+- Calculations (Numerical): 3-5 points
+- Explanations (Open Response): 5-10 points
+
+## Database Storage
+
+Questions are stored in the `lessons` table as JSONB:
+```sql
+{
+  "videos": [
+    {
+      "id": "vid-123",
+      "youtubeId": "abc123",
+      "questions": [
+        {
+          "id": "vq-1",
+          "timestamp": 45,
+          "question": { /* full Question object */ }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## AI Integration
+
+Works with existing OpenAI systems:
+- **Generate Options** - `/api/generate-mc-options`
+- **Generate Answer** - `/api/generate-answer`  
+- **Grade Open Response** - `/api/grade-open-response`
+- **Scenario Images** - `/api/generate-scenario-image`
+
+## Troubleshooting
+
+### Video Not Loading
+- Check CSP headers include YouTube domains
+- Verify YouTube API script loaded (Network tab)
+- Wait 2-3 seconds for player initialization
+
+### Questions Not Pausing Video
+- Ensure questions have valid timestamps (< video duration)
+- Check browser console for errors
+- Verify YouTube Player API initialized (check `isPlayerReady`)
+
+### Duration Shows 5:00 Instead of Actual
+- YouTube API needs time to load
+- Auto-detection happens on `onReady` event
+- Blue banner shows "✓ Detected actual video length: X:XX"
+
+## Related Files
+- [src/types/assignment.ts](mdc:src/types/assignment.ts) - Type definitions
+- [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx) - Teacher editor
+- [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx) - Student player
+- [src/components/admin/LessonVideoManager.tsx](mdc:src/components/admin/LessonVideoManager.tsx) - Video management
+- [next.config.ts](mdc:next.config.ts) - CSP configuration
+- [docs/INTERACTIVE_VIDEO_QUESTIONS.md](mdc:docs/INTERACTIVE_VIDEO_QUESTIONS.md) - User guide
