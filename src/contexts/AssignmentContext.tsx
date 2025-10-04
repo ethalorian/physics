@@ -1,153 +1,37 @@
 "use client"
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
-import { Assignment, Submission, Question } from '@/types/assignment'
+import { getUserRole } from '@/lib/permissions'
+import { Assignment, Submission } from '@/types/assignment'
 
 interface AssignmentContextType {
   assignments: Assignment[]
   submissions: Submission[]
   loading: boolean
-  createAssignment: (assignment: Omit<Assignment, 'id' | 'created_at' | 'updated_at'>) => Promise<void>
-  updateAssignment: (id: string, updates: Partial<Assignment>) => Promise<void>
+  error: string | null
+  createAssignment: (assignment: Omit<Assignment, 'id' | 'created_at' | 'updated_at'>) => Promise<Assignment>
+  updateAssignment: (id: string, updates: Partial<Assignment>) => Promise<Assignment>
   deleteAssignment: (id: string) => Promise<void>
   getAssignmentById: (id: string) => Assignment | undefined
   getSubmissionByAssignmentId: (assignmentId: string, userId?: string) => Submission | undefined
+  saveSubmission: (submission: Omit<Submission, 'id' | 'created_at' | 'updated_at'>) => Promise<Submission>
+  updateSubmission: (id: string, updates: Partial<Submission>) => Promise<Submission>
   refreshAssignments: () => Promise<void>
   refreshSubmissions: () => Promise<void>
 }
 
 const AssignmentContext = createContext<AssignmentContextType | undefined>(undefined)
 
-// Helper function to strip large data from assignments before storing
-function stripLargeData(assignment: Assignment): Assignment {
-  return {
-    ...assignment,
-    questions: assignment.questions.map(q => ({
-      ...q,
-      // Remove base64 images which can be very large
-      scenarioImage: q.scenarioImage?.startsWith('data:image') ? undefined : q.scenarioImage
-    }))
-  }
-}
-
-// Helper function to safely store in localStorage with error handling
-function safeLocalStorageSet(key: string, data: unknown[]): boolean {
-  try {
-    // Strip large data before storing
-    const dataToStore = data.map((item: unknown) => 
-      (item as Assignment).questions ? stripLargeData(item as Assignment) : item
-    )
-    
-    const stringified = JSON.stringify(dataToStore)
-    const sizeInMB = new Blob([stringified]).size / (1024 * 1024)
-    
-    // Warn if data is getting large
-    if (sizeInMB > 2) {
-      console.warn(`Storage data is ${sizeInMB.toFixed(2)}MB - approaching localStorage limits`)
-    }
-    
-    // Check if we're close to quota
-    if (sizeInMB > 4) {
-      console.error('Data too large for localStorage, stripping additional data...')
-      // Strip even more data if needed
-      const minimalData = dataToStore.map((item: unknown) => ({
-        ...(item as Assignment),
-        questions: (item as Assignment).questions?.map((q: Question) => ({
-          ...q,
-          scenarioImage: undefined,
-          explanation: undefined,
-          sampleAnswer: undefined
-        }))
-      }))
-      localStorage.setItem(key, JSON.stringify(minimalData))
-      return true
-    }
-    
-    // Try to store
-    localStorage.setItem(key, stringified)
-    return true
-  } catch (error: unknown) {
-    if (error instanceof Error && error.name === 'QuotaExceededError') {
-      console.error('localStorage quota exceeded. Clearing old data...')
-      
-      // Try to clear old data and retry
-      try {
-        // Clear other potential large items first
-        const keysToCheck = ['physics-submissions', 'physics-temp-data', 'physics-cache']
-        keysToCheck.forEach(k => {
-          if (localStorage.getItem(k)) {
-            localStorage.removeItem(k)
-            console.log(`Cleared ${k} from localStorage`)
-          }
-        })
-        
-        // Store minimal data only
-        const minimalData = data.map((item: unknown) => {
-          const assignment = item as Assignment
-          return {
-            id: assignment.id,
-            title: assignment.title,
-            description: assignment.description,
-            lesson_id: assignment.lesson_id,
-            total_points: assignment.total_points,
-            published: assignment.published,
-            created_at: assignment.created_at,
-            updated_at: assignment.updated_at,
-            questions: assignment.questions?.map((q: Question) => ({
-              id: q.id,
-              type: q.type,
-              question: q.question,
-              points: q.points,
-              ...(q.type === 'multiple-choice' && { options: (q as any).options }),
-              ...(q.type === 'multiple-choice' && { correctAnswer: (q as any).correctAnswer }),
-              ...(q.type === 'open-response' && { rubric: (q as any).rubric })
-            }))
-          }
-        })
-        
-        localStorage.setItem(key, JSON.stringify(minimalData))
-        console.log('Successfully stored minimal data after quota exceeded')
-        return true
-      } catch (retryError) {
-        console.error('Failed to store even minimal data:', retryError)
-        alert('Storage quota exceeded. Assignment saved in memory but not persisted. Consider clearing browser data.')
-        return false
-      }
-    }
-    console.error('localStorage error:', error)
-    return false
-  }
-}
-
 export function AssignmentProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
   const [assignments, setAssignments] = useState<Assignment[]>([])
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
+  // Fetch assignments on mount and when session changes
   useEffect(() => {
-    // Clean up localStorage on mount if needed
-    try {
-      const assignmentsSize = localStorage.getItem('physics-assignments')?.length || 0
-      const submissionsSize = localStorage.getItem('physics-submissions')?.length || 0
-      const totalSizeMB = (assignmentsSize + submissionsSize) / (1024 * 1024)
-      
-      if (totalSizeMB > 3) {
-        console.warn(`localStorage is using ${totalSizeMB.toFixed(2)}MB. Consider cleanup.`)
-        
-        // If very large, do automatic cleanup of images
-        if (totalSizeMB > 4) {
-          const assignments = JSON.parse(localStorage.getItem('physics-assignments') || '[]')
-          const cleaned = assignments.map((a: Assignment) => stripLargeData(a))
-          safeLocalStorageSet('physics-assignments', cleaned)
-          console.log('Automatically cleaned up large data from localStorage')
-        }
-      }
-    } catch (error) {
-      console.error('Error checking localStorage:', error)
-    }
-    
-    if (session) {
+    if (session?.user) {
       refreshAssignments()
       refreshSubmissions()
     } else {
@@ -157,123 +41,246 @@ export function AssignmentProvider({ children }: { children: ReactNode }) {
     }
   }, [session])
 
-  const refreshAssignments = async () => {
+  // Fetch assignments from API
+  const refreshAssignments = useCallback(async () => {
+    if (!session?.user) return
+
     try {
       setLoading(true)
-      // In a real app, this would fetch from your backend
-      // For now, we'll use localStorage to persist assignments across sessions
-      const stored = localStorage.getItem('physics-assignments')
-      if (stored) {
-        const parsedAssignments = JSON.parse(stored)
-        setAssignments(parsedAssignments)
-      } else {
-        setAssignments([])
+      setError(null)
+
+      const response = await fetch('/api/assignments')
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch assignments')
       }
-    } catch (error) {
-      console.error('Error refreshing assignments:', error)
+
+      const data = await response.json()
+      setAssignments(data)
+
+    } catch (err) {
+      console.error('Error refreshing assignments:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load assignments')
       setAssignments([])
     } finally {
       setLoading(false)
     }
-  }
+  }, [session])
 
-  const refreshSubmissions = async () => {
+  // Fetch submissions from API
+  const refreshSubmissions = useCallback(async () => {
+    if (!session?.user?.id) return
+
     try {
-      // In a real app, this would fetch from your backend
-      // For now, we'll use localStorage to persist submissions
-      const stored = localStorage.getItem('physics-submissions')
-      if (stored) {
-        const parsedSubmissions = JSON.parse(stored)
-        setSubmissions(parsedSubmissions)
-      } else {
-        setSubmissions([])
+      setError(null)
+
+      const response = await fetch('/api/submissions')
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch submissions')
       }
-    } catch (error) {
-      console.error('Error refreshing submissions:', error)
+
+      const data = await response.json()
+      setSubmissions(data)
+
+    } catch (err) {
+      console.error('Error refreshing submissions:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load submissions')
       setSubmissions([])
     }
-  }
+  }, [session])
 
-  const createAssignment = async (assignmentData: Omit<Assignment, 'id' | 'created_at' | 'updated_at'>) => {
+  // Create new assignment
+  const createAssignment = useCallback(async (
+    assignmentData: Omit<Assignment, 'id' | 'created_at' | 'updated_at'>
+  ): Promise<Assignment> => {
     try {
-      const newAssignment: Assignment = {
-        ...assignmentData,
-        id: `assignment-${Date.now()}`,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+      const response = await fetch('/api/assignments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(assignmentData)
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to create assignment')
       }
 
-      const updatedAssignments = [...assignments, newAssignment]
-      setAssignments(updatedAssignments)
+      const newAssignment = await response.json()
       
-      // Persist to localStorage with error handling
-      safeLocalStorageSet('physics-assignments', updatedAssignments)
+      // Update local state
+      setAssignments(prev => [newAssignment, ...prev])
       
-      console.log('Assignment created:', newAssignment)
-    } catch (error) {
-      console.error('Error creating assignment:', error)
-      throw error
-    }
-  }
+      return newAssignment
 
-  const updateAssignment = async (id: string, updates: Partial<Assignment>) => {
+    } catch (err) {
+      console.error('Error creating assignment:', err)
+      throw err
+    }
+  }, [])
+
+  // Update assignment
+  const updateAssignment = useCallback(async (
+    id: string,
+    updates: Partial<Assignment>
+  ): Promise<Assignment> => {
     try {
-      const updatedAssignments = assignments.map(assignment =>
-        assignment.id === id 
-          ? { ...assignment, ...updates, updated_at: new Date().toISOString() }
-          : assignment
+      const response = await fetch('/api/assignments', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...updates })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to update assignment')
+      }
+
+      const updatedAssignment = await response.json()
+      
+      // Update local state
+      setAssignments(prev => 
+        prev.map(a => a.id === id ? updatedAssignment : a)
       )
       
-      setAssignments(updatedAssignments)
-      safeLocalStorageSet('physics-assignments', updatedAssignments)
-      
-      console.log('Assignment updated:', id, updates)
-    } catch (error) {
-      console.error('Error updating assignment:', error)
-      throw error
-    }
-  }
+      return updatedAssignment
 
-  const deleteAssignment = async (id: string) => {
+    } catch (err) {
+      console.error('Error updating assignment:', err)
+      throw err
+    }
+  }, [])
+
+  // Delete assignment
+  const deleteAssignment = useCallback(async (id: string): Promise<void> => {
     try {
-      const updatedAssignments = assignments.filter(assignment => assignment.id !== id)
-      setAssignments(updatedAssignments)
-      safeLocalStorageSet('physics-assignments', updatedAssignments)
+      const response = await fetch(`/api/assignments?id=${id}`, {
+        method: 'DELETE'
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to delete assignment')
+      }
+
+      // Update local state
+      setAssignments(prev => prev.filter(a => a.id !== id))
       
-      // Also remove related submissions
-      const updatedSubmissions = submissions.filter(submission => submission.assignment_id !== id)
-      setSubmissions(updatedSubmissions)
-      safeLocalStorageSet('physics-submissions', updatedSubmissions)
-      
-      console.log('Assignment deleted:', id)
-    } catch (error) {
-      console.error('Error deleting assignment:', error)
-      throw error
+      // Also remove associated submissions
+      setSubmissions(prev => prev.filter(s => s.assignment_id !== id))
+
+    } catch (err) {
+      console.error('Error deleting assignment:', err)
+      throw err
     }
-  }
+  }, [])
 
-  const getAssignmentById = (id: string): Assignment | undefined => {
-    return assignments.find(assignment => assignment.id === id)
-  }
+  // Save submission (create or update)
+  const saveSubmission = useCallback(async (
+    submissionData: Omit<Submission, 'id' | 'created_at' | 'updated_at'>
+  ): Promise<Submission> => {
+    try {
+      const response = await fetch('/api/submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submissionData)
+      })
 
-  const getSubmissionByAssignmentId = (assignmentId: string, userId?: string): Submission | undefined => {
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to save submission')
+      }
+
+      const savedSubmission = await response.json()
+      
+      // Update local state
+      setSubmissions(prev => {
+        const existing = prev.findIndex(
+          s => s.assignment_id === savedSubmission.assignment_id && 
+               s.user_id === savedSubmission.user_id
+        )
+        
+        if (existing >= 0) {
+          // Update existing
+          const newSubmissions = [...prev]
+          newSubmissions[existing] = savedSubmission
+          return newSubmissions
+        } else {
+          // Add new
+          return [savedSubmission, ...prev]
+        }
+      })
+      
+      return savedSubmission
+
+    } catch (err) {
+      console.error('Error saving submission:', err)
+      throw err
+    }
+  }, [])
+
+  // Update submission
+  const updateSubmission = useCallback(async (
+    id: string,
+    updates: Partial<Submission>
+  ): Promise<Submission> => {
+    try {
+      const response = await fetch('/api/submissions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, ...updates })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to update submission')
+      }
+
+      const updatedSubmission = await response.json()
+      
+      // Update local state
+      setSubmissions(prev => 
+        prev.map(s => s.id === id ? updatedSubmission : s)
+      )
+      
+      return updatedSubmission
+
+    } catch (err) {
+      console.error('Error updating submission:', err)
+      throw err
+    }
+  }, [])
+
+  // Get assignment by ID from local state
+  const getAssignmentById = useCallback((id: string): Assignment | undefined => {
+    return assignments.find(a => a.id === id)
+  }, [assignments])
+
+  // Get submission by assignment ID and user ID
+  const getSubmissionByAssignmentId = useCallback((
+    assignmentId: string,
+    userId?: string
+  ): Submission | undefined => {
     const targetUserId = userId || session?.user?.id
     if (!targetUserId) return undefined
     
-    return submissions.find(submission => 
-      submission.assignment_id === assignmentId && submission.user_id === targetUserId
+    return submissions.find(s => 
+      s.assignment_id === assignmentId && s.user_id === targetUserId
     )
-  }
+  }, [submissions, session])
 
   const value: AssignmentContextType = {
     assignments,
     submissions,
     loading,
+    error,
     createAssignment,
     updateAssignment,
     deleteAssignment,
     getAssignmentById,
     getSubmissionByAssignmentId,
+    saveSubmission,
+    updateSubmission,
     refreshAssignments,
     refreshSubmissions
   }
@@ -285,6 +292,7 @@ export function AssignmentProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// Hook to use the assignment context
 export function useAssignments() {
   const context = useContext(AssignmentContext)
   if (context === undefined) {
@@ -293,44 +301,21 @@ export function useAssignments() {
   return context
 }
 
-// Submission management functions
-export function saveSubmission(submission: Omit<Submission, 'id' | 'submitted_at'>) {
-  try {
-    const newSubmission: Submission = {
-      ...submission,
-      id: `submission-${Date.now()}`,
-      submitted_at: new Date().toISOString()
-    }
+// Export saveSubmission as standalone function for compatibility
+export async function saveSubmission(
+  submissionData: Omit<Submission, 'id' | 'created_at' | 'updated_at'>
+): Promise<Submission> {
+  const response = await fetch('/api/submissions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(submissionData)
+  })
 
-    const stored = localStorage.getItem('physics-submissions')
-    const existingSubmissions = stored ? JSON.parse(stored) : []
-    
-    // Remove any existing submission for this assignment/user combo
-    const filteredSubmissions = existingSubmissions.filter(
-      (sub: Submission) => !(sub.assignment_id === submission.assignment_id && sub.user_id === submission.user_id)
-    )
-    
-    const updatedSubmissions = [...filteredSubmissions, newSubmission]
-    localStorage.setItem('physics-submissions', JSON.stringify(updatedSubmissions))
-    
-    return newSubmission
-  } catch (error) {
-    console.error('Error saving submission:', error)
-    throw error
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to save submission')
   }
+
+  return await response.json()
 }
 
-export function getSubmission(assignmentId: string, userId: string): Submission | undefined {
-  try {
-    const stored = localStorage.getItem('physics-submissions')
-    if (!stored) return undefined
-    
-    const submissions = JSON.parse(stored)
-    return submissions.find((sub: Submission) => 
-      sub.assignment_id === assignmentId && sub.user_id === userId
-    )
-  } catch (error) {
-    console.error('Error getting submission:', error)
-    return undefined
-  }
-}

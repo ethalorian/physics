@@ -1,6 +1,15 @@
 export type QuestionType = 'multiple-choice' | 'open-response' | 'essay' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank' | 'vocabulary-hangman'
 
 // Lesson-related types
+export interface VideoQuestion {
+  id: string
+  timestamp: number // When to pause video (in seconds)
+  question: Question // Any question type
+  answered?: boolean
+  studentAnswer?: any
+  score?: number
+}
+
 export interface LessonVideo {
   id: string
   title: string
@@ -8,6 +17,7 @@ export interface LessonVideo {
   duration?: string
   description?: string
   timestamp?: number // For starting at specific time
+  questions?: VideoQuestion[] // EdPuzzle-like embedded questions
 }
 
 export interface Lesson {

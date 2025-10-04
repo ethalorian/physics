@@ -14,7 +14,8 @@ import {
   Trophy,
   Play,
   ArrowRight,
-  Gamepad2
+  Gamepad2,
+  Calculator
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -72,6 +73,15 @@ const vocabularyGames = [
     color: 'bg-teal-500',
     difficulty: 'Easy',
     href: '/vocabulary/concentration'
+  },
+  {
+    id: 'equation-visualizer',
+    title: 'Equation Visualizer',
+    description: 'Interactive tool to explore how physics terms relate in equations',
+    icon: Calculator,
+    color: 'bg-purple-500',
+    difficulty: 'Educational',
+    href: '/vocabulary/equation-visualizer'
   }
 ]
 
@@ -179,7 +189,7 @@ export default function VocabularyGamesHub() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn't uploaded any vocabulary sets yet. Games will be available once vocabulary sets are added to the system.
+              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Games will be available once vocabulary sets are added to the system.
             </p>
             <Button variant="outline" asChild>
               <Link href="/dashboard">

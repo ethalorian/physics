@@ -15,9 +15,11 @@ import {
   X, 
   Play,
   ExternalLink,
-  GripVertical
+  GripVertical,
+  AlertCircle
 } from 'lucide-react'
-import { LessonVideo } from '@/types/assignment'
+import { LessonVideo, VideoQuestion, Question } from '@/types/assignment'
+import VideoQuestionEditor from './VideoQuestionEditor'
 
 interface LessonVideoManagerProps {
   lessonId: string
@@ -196,6 +198,7 @@ export default function LessonVideoManager({
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [editingQuestionsId, setEditingQuestionsId] = useState<string | null>(null)
 
   const handleSaveVideo = (video: LessonVideo) => {
     if (editingId) {
@@ -234,6 +237,16 @@ export default function LessonVideoManager({
     setVideos(newVideos)
   }
 
+  const handleQuestionsSave = async (videoId: string, questions: VideoQuestion[]) => {
+    // Update video with new questions
+    setVideos(prev => prev.map(v => 
+      v.id === videoId ? { ...v, questions } : v
+    ))
+    setEditingQuestionsId(null)
+  }
+
+  const editingQuestionsVideo = videos.find(v => v.id === editingQuestionsId)
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -261,6 +274,23 @@ export default function LessonVideoManager({
           </Button>
         </div>
       </div>
+
+      {/* Question Editor */}
+      {editingQuestionsVideo && (
+        <Card className="border-2 border-purple-300 shadow-xl">
+          <CardContent className="p-6">
+            <VideoQuestionEditor
+              videoId={editingQuestionsVideo.id}
+              videoTitle={editingQuestionsVideo.title}
+              youtubeId={editingQuestionsVideo.youtubeId}
+              videoDuration={editingQuestionsVideo.duration}
+              initialQuestions={editingQuestionsVideo.questions || []}
+              onSave={(questions) => handleQuestionsSave(editingQuestionsVideo.id, questions)}
+              onClose={() => setEditingQuestionsId(null)}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Add New Video Form */}
       {isAddingNew && (
@@ -302,6 +332,11 @@ export default function LessonVideoManager({
                                 {video.duration}
                               </Badge>
                             )}
+                            {video.questions && video.questions.length > 0 && (
+                              <Badge className="text-xs bg-purple-100 text-purple-700 border-purple-300">
+                                ⚡ {video.questions.length} question{video.questions.length !== 1 ? 's' : ''}
+                              </Badge>
+                            )}
                             <span className="text-xs text-gray-500">
                               ID: {video.youtubeId}
                             </span>
@@ -309,6 +344,16 @@ export default function LessonVideoManager({
                         </div>
                         
                         <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingQuestionsId(video.id)}
+                            disabled={editingId !== null || isAddingNew}
+                            className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            title="Add Interactive Questions"
+                          >
+                            <AlertCircle className="h-3 w-3" />
+                          </Button>
                           <Button
                             size="sm"
                             variant="ghost"

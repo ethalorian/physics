@@ -72,7 +72,7 @@ export default function VocabularyHangmanGame({
 
   // Initialize game with filtered vocabulary terms
   useEffect(() => {
-    if (vocabularyTerms.length > 0) {
+    if (vocabularyTerms && vocabularyTerms.length > 0) {
       // Filter by difficulty if specified
       let filteredTerms = vocabularyTerms
       

@@ -82,12 +82,11 @@ export default function StudentVocabularyQuizBowlPage() {
           </div>
           
           <VocabularyQuizBowlGame
-            vocabularySet={selectedSet}
+            vocabularyTerms={availableTerms}
             difficulty={difficulty}
             timeLimit={timeLimit}
             totalQuestions={totalQuestions}
             onGameComplete={handleGameComplete}
-            availableTerms={availableTerms}
           />
         </div>
       </div>
@@ -194,7 +193,7 @@ export default function StudentVocabularyQuizBowlPage() {
                 <SelectContent>
                   <SelectItem value="easy">Easy (≤8 letters)</SelectItem>
                   <SelectItem value="medium">Medium (9-12 letters)</SelectItem>
-                  <SelectItem value="hard">Hard (>12 letters)</SelectItem>
+                  <SelectItem value="hard">Hard (&gt;12 letters)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -360,7 +359,7 @@ export default function StudentVocabularyQuizBowlPage() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn't uploaded any vocabulary sets yet. Check back later or contact your teacher.
+              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Check back later or contact your teacher.
             </p>
             <Button variant="outline" asChild>
               <Link href="/vocabulary">

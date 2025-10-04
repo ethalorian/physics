@@ -6,10 +6,29 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { supabase } from '@/lib/supabase'
-import { Plus, Edit, Trash2, BookOpen, Eye, ExternalLink } from 'lucide-react'
+import { 
+  Plus, 
+  Edit, 
+  Trash2, 
+  BookOpen, 
+  Eye, 
+  ExternalLink, 
+  ChevronDown,
+  ChevronRight,
+  Play,
+  Clock,
+  Target,
+  FileText,
+  Video,
+  Settings,
+  CheckCircle,
+  XCircle
+} from 'lucide-react'
+import LessonVideoManager from './LessonVideoManager'
+import { LessonVideo } from '@/types/assignment'
 
 interface Lesson {
-  id: string  // Changed from number to string for UUID
+  id: string
   title: string
   slug: string
   description: string
@@ -18,6 +37,10 @@ interface Lesson {
   lesson_number: number
   published: boolean
   created_at: string
+  updated_at: string
+  estimated_time?: number
+  objectives?: string[]
+  videos?: LessonVideo[]
 }
 
 export default function LessonManagement() {
@@ -25,13 +48,17 @@ export default function LessonManagement() {
   const [isCreating, setIsCreating] = useState(false)
   const [editingLesson, setEditingLesson] = useState<Lesson | null>(null)
   const [loading, setLoading] = useState(true)
+  const [expandedLesson, setExpandedLesson] = useState<string | null>(null)
+  const [managingVideos, setManagingVideos] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
     description: '',
     content: '',
     unit: '',
-    lesson_number: 1
+    lesson_number: 1,
+    estimated_time: 30,
+    objectives: [] as string[]
   })
 
   // Fetch lessons
@@ -44,6 +71,7 @@ export default function LessonManagement() {
       const { data, error } = await supabase
         .from('lessons')
         .select('*')
+        .order('unit', { ascending: true })
         .order('lesson_number', { ascending: true })
       
       if (error) {
@@ -72,6 +100,28 @@ export default function LessonManagement() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleVideoSave = async (lessonId: string, videos: LessonVideo[]) => {
+    try {
+      const { error } = await supabase
+        .from('lessons')
+        .update({ videos })
+        .eq('id', lessonId)
+      
+      if (error) throw error
+      
+      alert('Videos saved successfully!')
+      setManagingVideos(null)
+      fetchLessons()
+    } catch (error) {
+      console.error('Error saving videos:', error)
+      alert('Error saving videos. Please try again.')
+    }
+  }
+
+  const toggleExpand = (lessonId: string) => {
+    setExpandedLesson(prev => prev === lessonId ? null : lessonId)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,7 +190,16 @@ export default function LessonManagement() {
   }
 
   const resetForm = () => {
-    setFormData({ title: '', slug: '', description: '', content: '', unit: '', lesson_number: 1 })
+    setFormData({ 
+      title: '', 
+      slug: '', 
+      description: '', 
+      content: '', 
+      unit: '', 
+      lesson_number: 1,
+      estimated_time: 30,
+      objectives: []
+    })
     setIsCreating(false)
     setEditingLesson(null)
   }
@@ -153,13 +212,46 @@ export default function LessonManagement() {
     )
   }
 
+  // Calculate statistics
+  const stats = {
+    totalLessons: lessons.length,
+    totalVideos: lessons.reduce((sum, l) => sum + (l.videos?.length || 0), 0),
+    published: lessons.filter(l => l.published).length,
+    draft: lessons.filter(l => !l.published).length,
+    unitCount: new Set(lessons.map(l => l.unit)).size
+  }
+
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header with Stats */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-[#4A1A4A]">Lesson Management</h2>
-          <p className="text-[#6A4C93]">Create and manage physics lessons</p>
+          <p className="text-[#6A4C93]">Create and manage physics lessons - All functionality in one place</p>
+          
+          {/* Quick Stats */}
+          <div className="flex items-center gap-4 mt-3">
+            <div className="flex items-center gap-2 text-sm">
+              <BookOpen className="h-4 w-4 text-blue-600" />
+              <span className="font-semibold">{stats.totalLessons}</span>
+              <span className="text-gray-600">Lessons</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Video className="h-4 w-4 text-purple-600" />
+              <span className="font-semibold">{stats.totalVideos}</span>
+              <span className="text-gray-600">Videos</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <span className="font-semibold">{stats.published}</span>
+              <span className="text-gray-600">Published</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <FileText className="h-4 w-4 text-orange-600" />
+              <span className="font-semibold">{stats.draft}</span>
+              <span className="text-gray-600">Draft</span>
+            </div>
+          </div>
         </div>
         <Button
           onClick={() => setIsCreating(true)}
@@ -264,7 +356,7 @@ export default function LessonManagement() {
         </Card>
       )}
 
-      {/* Lessons List */}
+      {/* Lessons List - Enhanced with expandable details */}
       <div className="grid gap-4">
         {lessons.length === 0 ? (
           <Card className="apple-card">
@@ -284,73 +376,217 @@ export default function LessonManagement() {
             </CardContent>
           </Card>
         ) : (
-          lessons.map((lesson) => (
-            <Card key={lesson.id} className="apple-card">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
-                        Lesson {lesson.lesson_number}
-                      </Badge>
-                      <Badge variant="outline" className="text-[#9A8AC0] border-[#9A8AC0]">
-                        {lesson.unit}
-                      </Badge>
+          lessons.map((lesson) => {
+            const isExpanded = expandedLesson === lesson.id
+            const isManagingVideos = managingVideos === lesson.id
+            
+            return (
+              <Card key={lesson.id} className="apple-card">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => toggleExpand(lesson.id)}
+                          className="h-6 w-6 p-0"
+                        >
+                          {isExpanded ? (
+                            <ChevronDown className="h-4 w-4" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
+                          Lesson {lesson.lesson_number}
+                        </Badge>
+                        <Badge variant="outline" className="text-[#9A8AC0] border-[#9A8AC0]">
+                          {lesson.unit}
+                        </Badge>
+                        {lesson.published ? (
+                          <Badge className="bg-green-100 text-green-800 border-green-200">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Published
+                          </Badge>
+                        ) : (
+                          <Badge variant="secondary">
+                            <XCircle className="h-3 w-3 mr-1" />
+                            Draft
+                          </Badge>
+                        )}
+                      </div>
+                      <CardTitle className="text-[#4A1A4A] text-xl mb-1">
+                        {lesson.title}
+                      </CardTitle>
+                      <CardDescription className="text-[#6A4C93]">
+                        {lesson.description}
+                      </CardDescription>
+                      
+                      {/* Quick Stats Row */}
+                      <div className="flex items-center gap-4 mt-3 text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <Video className="h-4 w-4 text-purple-600" />
+                          <span className="font-medium">{lesson.videos?.length || 0}</span>
+                          <span className="text-gray-600">videos</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Target className="h-4 w-4 text-blue-600" />
+                          <span className="font-medium">{lesson.objectives?.length || 0}</span>
+                          <span className="text-gray-600">objectives</span>
+                        </div>
+                        {lesson.estimated_time && (
+                          <div className="flex items-center gap-1.5">
+                            <Clock className="h-4 w-4 text-orange-600" />
+                            <span className="font-medium">{lesson.estimated_time}</span>
+                            <span className="text-gray-600">min</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1.5">
+                          <FileText className="h-4 w-4 text-green-600" />
+                          <span className="text-gray-600">
+                            {lesson.content ? '✓ Content' : '✗ No content'}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      asChild
-                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                    >
-                      <a 
-                        href={`/lessons/${lesson.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 ml-4">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => setManagingVideos(isManagingVideos ? null : lesson.id)}
+                        className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                        title="Manage Videos"
+                      >
+                        <Video className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        asChild
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                         title="Preview as Student"
                       >
-                        <Eye className="h-4 w-4" />
-                      </a>
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline"
-                      asChild
-                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                    >
-                      <a 
-                        href={`/admin/lessons/${lesson.id}/preview`}
-                        title="Admin Preview"
+                        <a 
+                          href={`/lessons/${lesson.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </a>
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleEdit(lesson)}
+                        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                        title="Edit Lesson"
                       >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </Button>
-                    <Button size="sm" variant="outline" onClick={() => handleEdit(lesson)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="outline" 
-                      onClick={() => handleDelete(lesson.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        onClick={() => handleDelete(lesson.id)}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        title="Delete Lesson"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <CardTitle className="text-[#4A1A4A]">{lesson.title}</CardTitle>
-                <CardDescription className="text-[#6A4C93]">{lesson.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex items-center justify-between text-sm text-[#9A8AC0]">
-                  <span>Created: {new Date(lesson.created_at).toLocaleDateString()}</span>
-                  <span>Slug: {lesson.slug}</span>
-                </div>
-              </CardContent>
-            </Card>
-          ))
+                </CardHeader>
+                
+                {/* Expanded Details */}
+                {isExpanded && (
+                  <CardContent className="pt-0 space-y-4 border-t">
+                    <div className="grid md:grid-cols-2 gap-4 mt-4">
+                      {/* Left Column */}
+                      <div className="space-y-3">
+                        <div>
+                          <div className="text-xs font-medium text-gray-500 mb-1">Slug</div>
+                          <div className="text-sm font-mono bg-gray-50 p-2 rounded">{lesson.slug}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-gray-500 mb-1">Created</div>
+                          <div className="text-sm">{new Date(lesson.created_at).toLocaleString()}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs font-medium text-gray-500 mb-1">Updated</div>
+                          <div className="text-sm">{new Date(lesson.updated_at).toLocaleString()}</div>
+                        </div>
+                      </div>
+                      
+                      {/* Right Column - Objectives */}
+                      <div>
+                        <div className="text-xs font-medium text-gray-500 mb-2">Learning Objectives</div>
+                        {lesson.objectives && lesson.objectives.length > 0 ? (
+                          <div className="space-y-1.5">
+                            {lesson.objectives.map((obj, idx) => (
+                              <div key={idx} className="flex items-start gap-2 text-sm">
+                                <span className="text-blue-600 font-bold">{idx + 1}.</span>
+                                <span className="text-gray-700">{obj}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-400 italic">No objectives defined</div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Videos List */}
+                    {lesson.videos && lesson.videos.length > 0 && (
+                      <div>
+                        <div className="text-xs font-medium text-gray-500 mb-2">Videos</div>
+                        <div className="space-y-2">
+                          {lesson.videos.map((video, idx) => (
+                            <div key={video.id} className="flex items-center gap-3 bg-purple-50 p-2 rounded text-sm">
+                              <Play className="h-4 w-4 text-purple-600" />
+                              <div className="flex-1">
+                                <div className="font-medium">{video.title}</div>
+                                {video.duration && (
+                                  <div className="text-xs text-gray-600">{video.duration}</div>
+                                )}
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                asChild
+                                className="h-7"
+                              >
+                                <a 
+                                  href={`https://youtube.com/watch?v=${video.youtubeId}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="h-3 w-3" />
+                                </a>
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                )}
+                
+                {/* Video Management Section */}
+                {isManagingVideos && (
+                  <CardContent className="pt-4 border-t bg-purple-50/30">
+                    <LessonVideoManager
+                      lessonId={lesson.id}
+                      lessonTitle={lesson.title}
+                      initialVideos={lesson.videos || []}
+                      onSave={(videos) => handleVideoSave(lesson.id, videos)}
+                    />
+                  </CardContent>
+                )}
+              </Card>
+            )
+          })
         )}
       </div>
     </div>

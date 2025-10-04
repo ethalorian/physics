@@ -91,10 +91,11 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
         assignment_id: assignment.id,
         user_id: session.user.id,
         answers: answers,
-        status: 'partial' as const
+        status: 'partial' as const,
+        submitted_at: new Date().toISOString()
       }
       
-      const savedSubmission = saveSubmission(submissionData)
+      const savedSubmission = await saveSubmission(submissionData)
       setSubmission(savedSubmission)
       
       console.log('Progress saved:', answers)
@@ -133,10 +134,11 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
         feedback: gradedAnswers.feedback,
         rubric_grades: openResponseGrades,
         status: 'submitted' as const,
+        submitted_at: new Date().toISOString(),
         graded_at: new Date().toISOString()
       }
       
-      const savedSubmission = saveSubmission(submissionData)
+      const savedSubmission = await saveSubmission(submissionData)
       setSubmission(savedSubmission)
       
       // Record submission activity with timing data

@@ -81,11 +81,10 @@ export default function StudentVocabularyMatchingPage() {
           </div>
           
           <VocabularyMatchingGameWrapper
-            vocabularySet={selectedSet}
+            vocabularyTerms={availableTerms}
             difficulty={difficulty}
             maxMatches={maxMatches}
             onGameComplete={handleGameComplete}
-            availableTerms={availableTerms}
           />
         </div>
       </div>
@@ -187,7 +186,7 @@ export default function StudentVocabularyMatchingPage() {
                 <SelectContent>
                   <SelectItem value="easy">Easy (≤8 letters)</SelectItem>
                   <SelectItem value="medium">Medium (9-12 letters)</SelectItem>
-                  <SelectItem value="hard">Hard (>12 letters)</SelectItem>
+                  <SelectItem value="hard">Hard (&gt;12 letters)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -298,7 +297,7 @@ export default function StudentVocabularyMatchingPage() {
                 💡 Pro Tip
               </div>
               <div className="text-sm text-blue-700 dark:text-blue-300">
-                Try to remember the positions of cards you've seen. This memory game rewards careful attention!
+                Try to remember the positions of cards you&apos;ve seen. This memory game rewards careful attention!
               </div>
             </div>
 
@@ -326,7 +325,7 @@ export default function StudentVocabularyMatchingPage() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn't uploaded any vocabulary sets yet. Check back later or contact your teacher.
+              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Check back later or contact your teacher.
             </p>
             <Button variant="outline" asChild>
               <Link href="/vocabulary">

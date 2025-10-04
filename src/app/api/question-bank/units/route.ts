@@ -11,23 +11,40 @@ export async function GET(request: Request) {
     }
 
     // Try to fetch from database first
-    const { data, error } = await supabase
+    // Note: units and lessons are not directly related via foreign key
+    // We fetch them separately and combine client-side
+    const { data: unitsData, error: unitsError } = await supabase
       .from('units')
-      .select(`
-        *,
-        lessons (*)
-      `)
+      .select('*')
       .order('order_index', { ascending: true })
 
-    if (error) {
-      console.error('Database units table not found, falling back to static data:', error)
+    if (unitsError) {
+      console.error('Database units table not found, falling back to static data:', unitsError)
       
       // Fallback to static physics units data
       const { physicsUnits } = await import('@/data/physics-units')
       return NextResponse.json(physicsUnits)
     }
 
-    return NextResponse.json(data || [])
+    // Fetch lessons separately
+    const { data: lessonsData, error: lessonsError } = await supabase
+      .from('lessons')
+      .select('id, title, unit, lesson_number, published')
+      .order('lesson_number', { ascending: true })
+
+    if (lessonsError) {
+      console.error('Error fetching lessons:', lessonsError)
+      // Return units without lessons
+      return NextResponse.json(unitsData || [])
+    }
+
+    // Combine units with their lessons
+    const unitsWithLessons = (unitsData || []).map(unit => ({
+      ...unit,
+      lessons: (lessonsData || []).filter(lesson => lesson.unit === unit.id)
+    }))
+
+    return NextResponse.json(unitsWithLessons)
   } catch (error) {
     console.error('Error in GET /api/question-bank/units:', error)
     

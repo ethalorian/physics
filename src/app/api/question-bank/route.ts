@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       .select(`
         *,
         unit:units(id, name),
-        lesson:lessons(id, name)
+        lesson:lessons(id, title)
       `)
       .order('created_at', { ascending: false })
 

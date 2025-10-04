@@ -81,11 +81,10 @@ export default function StudentVocabularyWordShootPage() {
           </div>
           
           <VocabularyWordShootGame
-            vocabularySet={selectedSet}
+            vocabularyTerms={availableTerms}
             difficulty={difficulty}
             gameLength={gameLength}
             onGameComplete={handleGameComplete}
-            availableTerms={availableTerms}
           />
         </div>
       </div>
@@ -192,7 +191,7 @@ export default function StudentVocabularyWordShootPage() {
                 <SelectContent>
                   <SelectItem value="easy">Easy (≤8 letters)</SelectItem>
                   <SelectItem value="medium">Medium (9-12 letters)</SelectItem>
-                  <SelectItem value="hard">Hard (>12 letters)</SelectItem>
+                  <SelectItem value="hard">Hard (&gt;12 letters)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -282,7 +281,7 @@ export default function StudentVocabularyWordShootPage() {
                 <div>
                   <div className="font-medium text-foreground">Stay Alive</div>
                   <div className="text-sm text-muted-foreground">
-                    Don't let wrong answers hit you - you have limited lives
+                    Don&apos;t let wrong answers hit you - you have limited lives
                   </div>
                 </div>
               </div>
@@ -341,7 +340,7 @@ export default function StudentVocabularyWordShootPage() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn't uploaded any vocabulary sets yet. Check back later or contact your teacher.
+              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Check back later or contact your teacher.
             </p>
             <Button variant="outline" asChild>
               <Link href="/vocabulary">

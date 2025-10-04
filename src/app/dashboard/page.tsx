@@ -403,7 +403,7 @@ function QuickActions() {
                     View Assignments
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    Check what's due
+                    Check what&apos;s due
                   </div>
                 </div>
               </div>

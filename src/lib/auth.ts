@@ -10,6 +10,14 @@ declare module "next-auth" {
       email?: string | null
       image?: string | null
     }
+    accessToken?: string
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    accessToken?: string
+    refreshToken?: string
   }
 }
 
@@ -20,7 +28,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          scope: "openid email profile",
+          scope: [
+            "openid",
+            "email",
+            "profile",
+            // Google Classroom scopes
+            "https://www.googleapis.com/auth/classroom.courses.readonly",
+            "https://www.googleapis.com/auth/classroom.rosters.readonly",
+            "https://www.googleapis.com/auth/classroom.coursework.students",
+            "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly",
+          ].join(" "),
           prompt: "select_account",
           access_type: "offline",
           response_type: "code"
@@ -43,16 +60,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (token.picture) {
           session.user.image = token.picture as string;
         }
+        // Include the Google access token for API calls
+        if (token.accessToken) {
+          session.accessToken = token.accessToken as string;
+        }
       }
       return session;
     },
-    jwt: async ({ user, token }) => {
+    jwt: async ({ user, token, account }) => {
       if (user) {
         token.sub = user.id;
         // Store the avatar image in the token
         if (user.image) {
           token.picture = user.image;
         }
+      }
+      // Store Google access token from the account
+      if (account?.access_token) {
+        token.accessToken = account.access_token;
+      }
+      if (account?.refresh_token) {
+        token.refreshToken = account.refresh_token;
       }
       return token;
     },

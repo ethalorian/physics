@@ -59,8 +59,8 @@ export default function StudentVocabularyConcentrationPage() {
   // Calculate required pairs for grid size
   const requiredPairs = gridSize === '4x4' ? 8 : gridSize === '6x6' ? 18 : 32
 
-  const handleGameComplete = (results: { score: number, totalPairs: number, timeSpent: number, moves: number }) => {
-    setGameResults(results)
+  const handleGameComplete = (score: number, totalPairs: number, timeSpent: number) => {
+    setGameResults({ score, totalPairs, timeSpent, moves: 0 })
     setGameStarted(false)
   }
 
@@ -85,11 +85,10 @@ export default function StudentVocabularyConcentrationPage() {
           </div>
           
           <VocabularyConcentrationGame
-            vocabularySet={selectedSet}
+            vocabularyTerms={availableTerms}
             difficulty={difficulty}
-            gridSize={gridSize}
+            numberOfPairs={requiredPairs}
             onGameComplete={handleGameComplete}
-            availableTerms={availableTerms}
           />
         </div>
       </div>
@@ -200,7 +199,7 @@ export default function StudentVocabularyConcentrationPage() {
                 <SelectContent>
                   <SelectItem value="easy">Easy (≤8 letters)</SelectItem>
                   <SelectItem value="medium">Medium (9-12 letters)</SelectItem>
-                  <SelectItem value="hard">Hard (>12 letters)</SelectItem>
+                  <SelectItem value="hard">Hard (&gt;12 letters)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -350,7 +349,7 @@ export default function StudentVocabularyConcentrationPage() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn't uploaded any vocabulary sets yet. Check back later or contact your teacher.
+              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Check back later or contact your teacher.
             </p>
             <Button variant="outline" asChild>
               <Link href="/vocabulary">
