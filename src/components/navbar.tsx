@@ -6,7 +6,7 @@ import Link from "next/link"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, X, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope } from "lucide-react"
+import { Menu, X, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope, Calculator } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"

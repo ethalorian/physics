@@ -54,6 +54,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             // Google Classroom scopes
             "https://www.googleapis.com/auth/classroom.courses.readonly",
             "https://www.googleapis.com/auth/classroom.rosters.readonly",
+            "https://www.googleapis.com/auth/classroom.rosters",
+            "https://www.googleapis.com/auth/classroom.profile.emails", // Required for student emails!
             "https://www.googleapis.com/auth/classroom.coursework.students",
             "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly",
           ].join(" "),

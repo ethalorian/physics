@@ -36,6 +36,39 @@ export default function SimulationsPage() {
   const [simulations] = useState<Simulation[]>([
     {
       id: '1',
+      title: 'Measurement, Precision & Accuracy',
+      description: 'Learn to measure with proper precision and understand the difference between accuracy and precision. Practice reading measurements from various instruments.',
+      slug: 'measurement-precision',
+      difficulty: 'beginner',
+      unit: 'Lab Skills',
+      estimatedTime: 20,
+      published: true,
+      isFeatured: true
+    },
+    {
+      id: '2',
+      title: 'Freefall Cliff Lab',
+      description: 'Help a traveler measure cliff height by dropping a stone! Watch position traces every 0.25 seconds and use the freefall equation h = ½gt² to calculate the height.',
+      slug: 'freefall-cliff',
+      difficulty: 'intermediate',
+      unit: 'Unit 1: Motion',
+      estimatedTime: 20,
+      published: true,
+      isFeatured: true
+    },
+    {
+      id: '3',
+      title: 'Uniformly Accelerated Motion',
+      description: 'Watch a car drop oil spots every second to visualize constant acceleration. Explore all four kinematic equations and see how spacing patterns reveal acceleration.',
+      slug: 'uniformly-accelerated-motion',
+      difficulty: 'intermediate',
+      unit: 'Unit 1: Motion',
+      estimatedTime: 25,
+      published: true,
+      isFeatured: false
+    },
+    {
+      id: '4',
       title: 'Constant Velocity Motion Lab',
       description: 'Control a walker\'s motion and collect position data. Observe constant velocity in 1D motion and analyze position-time graphs.',
       slug: 'constant-velocity',
@@ -43,10 +76,10 @@ export default function SimulationsPage() {
       unit: 'Unit 1: Motion',
       estimatedTime: 15,
       published: true,
-      isFeatured: true
+      isFeatured: false
     },
     {
-      id: '2',
+      id: '5',
       title: 'Projectile Motion Lab',
       description: 'Launch projectiles and analyze 2D motion under gravity. Explore range, height, and trajectory with interactive controls.',
       slug: 'projectile-motion',
@@ -54,7 +87,7 @@ export default function SimulationsPage() {
       unit: 'Unit 1: Motion',
       estimatedTime: 20,
       published: true,
-      isFeatured: true
+      isFeatured: false
     }
   ])
 

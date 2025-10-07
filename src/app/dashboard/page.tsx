@@ -16,7 +16,8 @@ import {
   CheckCircle,
   AlertCircle,
   EyeOff,
-  Gamepad2
+  Gamepad2,
+  Calculator
 } from 'lucide-react'
 import StudentLessons from '@/components/student/StudentLessons'
 import StudentAssignments from '@/components/student/StudentAssignments'
@@ -373,60 +374,143 @@ function QuickActions() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Link href="/lessons">
-            <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                  <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <div className="font-medium text-foreground group-hover:text-primary">
-                    Browse Lessons
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link href="/lessons">
+              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                    <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Explore physics concepts
+                  <div>
+                    <div className="font-medium text-foreground group-hover:text-primary">
+                      Browse Lessons
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Explore physics concepts
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+            
+            <Link href="/assignments">
+              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                    <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground group-hover:text-primary">
+                      View Assignments
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Check what&apos;s due
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+            
+            <Link href="/vocabulary">
+              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                    <Gamepad2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground group-hover:text-primary">
+                      Vocabulary Games
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Practice physics terms
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+            
+            <Link href="/simulations">
+              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
+                    <BookOpen className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground group-hover:text-primary">
+                      Simulations
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Interactive physics tools
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </div>
           
-          <Link href="/assignments">
-            <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                  <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
-                </div>
-                <div>
-                  <div className="font-medium text-foreground group-hover:text-primary">
-                    View Assignments
+          <div className="pt-2">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">Teaching Tools</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <Link href="/simulations/slope-calculator">
+                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-orange-100 dark:bg-orange-900/20 rounded">
+                      <Calculator className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
+                        Slope Calculator
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Kinematics graphs
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Check what&apos;s due
+                </div>
+              </Link>
+              
+              <Link href="/simulations/distance-displacement">
+                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-green-100 dark:bg-green-900/20 rounded">
+                      <svg className="h-4 w-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
+                        Distance vs Displacement
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Vector concepts
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
+              
+              <Link href="/simulations/area-under-curve">
+                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
+                  <div className="flex items-center space-x-2">
+                    <div className="p-1.5 bg-blue-100 dark:bg-blue-900/20 rounded">
+                      <svg className="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
+                        Area Under Curve
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        Displacement & Δv
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
             </div>
-          </Link>
-          
-          <Link href="/vocabulary">
-            <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                  <Gamepad2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                </div>
-                <div>
-                  <div className="font-medium text-foreground group-hover:text-primary">
-                    Vocabulary Games
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Practice physics terms
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Link>
+          </div>
         </div>
       </CardContent>
     </Card>
