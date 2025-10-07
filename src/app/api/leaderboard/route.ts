@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 
     // Get all unique users from different tables
     const usersSet = new Set<string>()
-    const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: any }>()
+    const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: any; image?: string | null }>()
 
     // Fetch game scores
     let gameQuery = supabase
