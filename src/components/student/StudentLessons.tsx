@@ -4,7 +4,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { supabase } from '@/lib/supabase'
 import { BookOpen, Search, Clock, CheckCircle, Eye } from 'lucide-react'
 import Link from 'next/link'
 
@@ -40,23 +39,23 @@ export default function StudentLessons() {
     try {
       setLoading(true)
       
-      // Fetch published lessons
-      const { data: lessonsData, error: lessonsError } = await supabase
-        .from('lessons')
-        .select('*')
-        .eq('published', true)
-        .order('lesson_number', { ascending: true })
+      // Fetch lessons from API (handles auth and RLS properly)
+      const response = await fetch('/api/lessons/published')
       
-      if (lessonsError) throw lessonsError
+      if (!response.ok) {
+        throw new Error('Failed to fetch lessons')
+      }
       
-      setLessons(lessonsData || [])
+      const data = await response.json()
+      setLessons(data.lessons || [])
       
       // TODO: Fetch user progress when user system is implemented
       // For now, progress remains empty since no placeholder data allowed
       setProgress([])
       
-    } catch {
-      // Silent error handling
+    } catch (error) {
+      console.error('Error fetching lessons:', error)
+      setLessons([])
     } finally {
       setLoading(false)
     }

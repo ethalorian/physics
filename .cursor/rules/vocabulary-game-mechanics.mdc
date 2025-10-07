@@ -4,432 +4,347 @@ description: Vocabulary games mechanics and scoring systems
 
 # Vocabulary Game Mechanics
 
-## Game Flow Pattern
+## Spaced Repetition System
 
-Every vocabulary game follows this lifecycle:
-
+### Review Scheduling
 ```typescript
-// 1. Initialize
-const initializeGame = () => {
-  setGameState({
-    status: 'ready',
-    score: 0,
-    lives: 3,
-    currentIndex: 0,
-    streak: 0
-  })
-}
-
-// 2. Start
-const startGame = () => {
-  setGameState(prev => ({
-    ...prev,
-    status: 'playing',
-    startTime: Date.now()
-  }))
-}
-
-// 3. Process Answer
-const checkAnswer = (userAnswer: string) => {
-  const correct = userAnswer.toLowerCase() === correctAnswer.toLowerCase()
+function calculateNextReviewDate(
+  masteryLevel: number,
+  correctStreak: number
+): Date {
+  // Intervals based on mastery (in days)
+  const intervals = {
+    beginner: [1, 2, 4, 7],           // < 50% mastery
+    intermediate: [7, 14, 30],         // 50-80% mastery
+    advanced: [30, 60, 90, 180]        // > 80% mastery
+  }
   
-  if (correct) {
-    handleCorrectAnswer()
-  } else {
-    handleIncorrectAnswer()
-  }
-}
-
-// 4. Complete
-const completeGame = () => {
-  const finalScore = calculateFinalScore()
-  saveGameCompletion(finalScore)
-  setGameState(prev => ({ ...prev, status: 'completed' }))
-}
-```
-
-## Difficulty System
-
-### Difficulty Selection
-```typescript
-interface DifficultySettings {
-  easy: {
-    lives: 5
-    timeLimit: null // No time limit
-    hintsAvailable: 3
-    scoreMultiplier: 1.0
-  }
-  medium: {
-    lives: 3
-    timeLimit: 60 // seconds per term
-    hintsAvailable: 2
-    scoreMultiplier: 1.5
-  }
-  hard: {
-    lives: 1
-    timeLimit: 30
-    hintsAvailable: 0
-    scoreMultiplier: 2.0
-  }
+  let category: keyof typeof intervals
+  if (masteryLevel < 50) category = 'beginner'
+  else if (masteryLevel < 80) category = 'intermediate'
+  else category = 'advanced'
+  
+  const intervalIndex = Math.min(correctStreak, intervals[category].length - 1)
+  const daysUntilReview = intervals[category][intervalIndex]
+  
+  const nextReview = new Date()
+  nextReview.setDate(nextReview.getDate() + daysUntilReview)
+  
+  return nextReview
 }
 ```
+
+## Difficulty Adaptation
 
 ### Dynamic Difficulty Adjustment
 ```typescript
-const adjustDifficulty = (performance: GamePerformance) => {
-  // Increase difficulty if performing well
-  if (performance.accuracy > 0.9 && performance.avgTime < 10) {
-    return 'hard'
-  }
-  // Decrease if struggling
-  if (performance.accuracy < 0.5) {
-    return 'easy'
-  }
-  return 'medium'
-}
-```
-
-## Scoring Components
-
-### Points Calculation
-```typescript
-interface ScoreFactors {
-  basePoints: number        // Fixed per question
-  speedBonus: number       // Based on time taken
-  streakBonus: number      // Consecutive correct
-  difficultyMultiplier: number // 1.0, 1.5, 2.0
-  perfectBonus: number     // All correct, no hints
-  hintPenalty: number      // -20 per hint used
+interface DifficultyState {
+  currentLevel: number    // 1-10
+  consecutiveCorrect: number
+  consecutiveWrong: number
+  adaptationRate: number  // How fast to adjust
 }
 
-const calculateQuestionScore = (factors: ScoreFactors): number => {
-  const {
-    basePoints,
-    speedBonus,
-    streakBonus,
-    difficultyMultiplier,
-    perfectBonus,
-    hintPenalty
-  } = factors
+function adjustDifficulty(
+  state: DifficultyState,
+  wasCorrect: boolean
+): DifficultyState {
+  const newState = { ...state }
   
-  return Math.floor(
-    (basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty) 
-    * difficultyMultiplier
-  )
-}
-```
-
-### Speed Bonus Calculation
-```typescript
-const calculateSpeedBonus = (timeElapsed: number, difficulty: string): number => {
-  const thresholds = {
-    easy: { fast: 15, medium: 30 },
-    medium: { fast: 10, medium: 20 },
-    hard: { fast: 5, medium: 10 }
-  }
-  
-  const { fast, medium } = thresholds[difficulty]
-  
-  if (timeElapsed < fast) return 50
-  if (timeElapsed < medium) return 25
-  return 0
-}
-```
-
-### Streak System
-```typescript
-const updateStreak = (correct: boolean) => {
-  if (correct) {
-    setStreak(prev => {
-      const newStreak = prev + 1
-      
-      // Milestone bonuses
-      if (newStreak === 5) showMessage('🔥 5 in a row! +50 bonus')
-      if (newStreak === 10) showMessage('⚡ Unstoppable! +100 bonus')
-      
-      return newStreak
-    })
-  } else {
-    setStreak(0)
-  }
-}
-
-const getStreakBonus = (streak: number): number => {
-  if (streak >= 10) return 100
-  if (streak >= 5) return 50
-  return streak * 5 // 5 points per consecutive correct
-}
-```
-
-## Lives System
-
-### Lives Management
-```typescript
-const handleLivesSystem = () => {
-  const decrementLife = () => {
-    setLives(prev => {
-      const newLives = prev - 1
-      
-      if (newLives === 0) {
-        endGame('lives_depleted')
-      } else if (newLives === 1) {
-        showWarning('⚠️ Last life remaining!')
-      }
-      
-      return newLives
-    })
-  }
-  
-  const earnExtraLife = () => {
-    setLives(prev => Math.min(prev + 1, 5)) // Max 5 lives
-    showMessage('❤️ Extra life earned!')
-  }
-  
-  return { decrementLife, earnExtraLife }
-}
-```
-
-### Lives Earning Conditions
-```typescript
-// Earn extra life for milestones
-if (score % 500 === 0 && score > 0) {
-  earnExtraLife()
-}
-
-// Earn for perfect streak
-if (streak === 10) {
-  earnExtraLife()
-}
-```
-
-## Hint System
-
-### Hint Implementation
-```typescript
-const useHint = (term: VocabularyTerm, hintLevel: number) => {
-  if (hintsRemaining === 0) {
-    showMessage('No hints remaining')
-    return null
-  }
-  
-  setHintsRemaining(prev => prev - 1)
-  setHintsUsed(prev => prev + 1)
-  
-  // Progressive hints
-  switch (hintLevel) {
-    case 1:
-      // Show first letter
-      return term.term[0] + '_'.repeat(term.term.length - 1)
+  if (wasCorrect) {
+    newState.consecutiveCorrect++
+    newState.consecutiveWrong = 0
     
-    case 2:
-      // Show definition start
-      return term.definition.substring(0, 20) + '...'
-    
-    case 3:
-      // Show related term
-      return `Related to: ${term.relatedTerms?.[0] || 'N/A'}`
-    
-    default:
-      return null
-  }
-}
-```
-
-### Hint UI Pattern
-```typescript
-<Button
-  onClick={requestHint}
-  disabled={hintsRemaining === 0}
-  variant="outline"
-  size="sm"
->
-  <Lightbulb className="h-4 w-4 mr-2" />
-  Hint ({hintsRemaining} left)
-  <span className="text-xs text-muted-foreground ml-2">
-    -20 points
-  </span>
-</Button>
-```
-
-## Timer System
-
-### Countdown Timer
-```typescript
-const useGameTimer = (duration: number, onExpire: () => void) => {
-  const [timeRemaining, setTimeRemaining] = useState(duration)
-  const [isPaused, setIsPaused] = useState(false)
-  
-  useEffect(() => {
-    if (isPaused || timeRemaining <= 0) return
-    
-    const interval = setInterval(() => {
-      setTimeRemaining(prev => {
-        if (prev <= 1) {
-          onExpire()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-    
-    return () => clearInterval(interval)
-  }, [timeRemaining, isPaused, onExpire])
-  
-  return {
-    timeRemaining,
-    isPaused,
-    pause: () => setIsPaused(true),
-    resume: () => setIsPaused(false),
-    reset: () => setTimeRemaining(duration)
-  }
-}
-```
-
-### Time Pressure Visual
-```typescript
-<div className={cn(
-  "transition-colors duration-300",
-  timeRemaining < 10 && "text-destructive animate-pulse",
-  timeRemaining < 5 && "text-red-600 font-bold"
-)}>
-  ⏱️ {formatTime(timeRemaining)}
-</div>
-```
-
-## Combo System
-
-### Combo Tracking
-```typescript
-const updateCombo = (correct: boolean) => {
-  if (correct) {
-    setCombo(prev => {
-      const newCombo = prev + 1
-      const multiplier = getComboMultiplier(newCombo)
-      
-      if (newCombo % 5 === 0) {
-        showComboNotification(newCombo, multiplier)
-      }
-      
-      return newCombo
-    })
-  } else {
-    setCombo(0)
-    setComboMultiplier(1.0)
-  }
-}
-
-const getComboMultiplier = (combo: number): number => {
-  if (combo >= 20) return 3.0
-  if (combo >= 15) return 2.5
-  if (combo >= 10) return 2.0
-  if (combo >= 5) return 1.5
-  return 1.0
-}
-```
-
-### Combo Display
-```typescript
-{combo >= 3 && (
-  <motion.div
-    initial={{ scale: 0 }}
-    animate={{ scale: 1 }}
-    className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full"
-  >
-    <span className="text-2xl font-bold">{combo}x</span>
-    <span className="text-sm ml-2">COMBO!</span>
-  </motion.div>
-)}
-```
-
-## Power-Ups System
-
-### Power-Up Types
-```typescript
-type PowerUp = 
-  | 'freeze_time'      // Pause timer for 10 seconds
-  | 'reveal_answer'    // Show correct answer
-  | 'double_points'    // 2x points for next 3 questions
-  | 'extra_life'       // Add one life
-  | 'skip_question'    // Move to next without penalty
-
-interface PowerUpState {
-  available: PowerUp[]
-  active: PowerUp | null
-  uses: Record<PowerUp, number>
-}
-```
-
-### Power-Up Activation
-```typescript
-const activatePowerUp = (powerUp: PowerUp) => {
-  if (!isPowerUpAvailable(powerUp)) return
-  
-  setPowerUpState(prev => ({
-    ...prev,
-    active: powerUp,
-    uses: {
-      ...prev.uses,
-      [powerUp]: (prev.uses[powerUp] || 0) + 1
+    // Increase difficulty after 3 correct
+    if (newState.consecutiveCorrect >= 3) {
+      newState.currentLevel = Math.min(10, 
+        newState.currentLevel + state.adaptationRate
+      )
+      newState.consecutiveCorrect = 0
     }
-  }))
+  } else {
+    newState.consecutiveWrong++
+    newState.consecutiveCorrect = 0
+    
+    // Decrease difficulty after 2 wrong
+    if (newState.consecutiveWrong >= 2) {
+      newState.currentLevel = Math.max(1, 
+        newState.currentLevel - state.adaptationRate
+      )
+      newState.consecutiveWrong = 0
+    }
+  }
   
-  // Apply power-up effect
-  switch (powerUp) {
-    case 'freeze_time':
-      pauseTimer(10000)
+  return newState
+}
+```
+
+## Game-Specific Mechanics
+
+### Hangman Hints System
+```typescript
+interface HintSystem {
+  hintsAvailable: number
+  hintTypes: {
+    revealVowel: { cost: 10, cooldown: 0 }
+    revealConsonant: { cost: 15, cooldown: 0 }
+    showDefinition: { cost: 5, cooldown: 0 }
+    removeWrongLetters: { cost: 20, cooldown: 30 }
+  }
+}
+
+function useHint(
+  hintType: keyof HintSystem['hintTypes'],
+  gameState: HangmanGameState
+): HangmanGameState {
+  const hint = HINTS[hintType]
+  
+  if (gameState.score < hint.cost) {
+    return gameState // Not enough points
+  }
+  
+  const newState = { ...gameState }
+  newState.score -= hint.cost
+  newState.hintsUsed++
+  
+  switch (hintType) {
+    case 'revealVowel':
+      // Reveal random unguessed vowel
+      const vowels = 'AEIOU'.split('')
+      const unguessedVowels = vowels.filter(
+        v => !newState.guessedLetters.includes(v)
+      )
+      if (unguessedVowels.length) {
+        const vowel = unguessedVowels[Math.floor(Math.random() * unguessedVowels.length)]
+        newState.guessedLetters.push(vowel)
+      }
       break
-    case 'double_points':
-      setPointsMultiplier(2.0)
-      setQuestionsWithDoublePoints(3)
-      break
-    case 'extra_life':
-      setLives(prev => prev + 1)
-      break
+    
+    // Other hint implementations
+  }
+  
+  return newState
+}
+```
+
+### Word Shoot Mechanics
+```typescript
+interface WordShootPhysics {
+  gravity: number          // Pixels per frame²
+  terminalVelocity: number // Max fall speed
+  windFactor: number       // Horizontal drift
+}
+
+function updateFallingWords(
+  words: FallingWord[],
+  deltaTime: number,
+  physics: WordShootPhysics
+): FallingWord[] {
+  return words.map(word => {
+    // Apply gravity
+    let newSpeed = word.speed + physics.gravity * deltaTime
+    newSpeed = Math.min(newSpeed, physics.terminalVelocity)
+    
+    // Update position
+    const newY = word.y + newSpeed * deltaTime
+    const newX = word.x + Math.sin(Date.now() / 1000) * physics.windFactor
+    
+    return {
+      ...word,
+      x: newX,
+      y: newY,
+      speed: newSpeed
+    }
+  }).filter(word => word.y < window.innerHeight) // Remove off-screen
+}
+
+function checkCollision(
+  word: FallingWord,
+  shooterPosition: number,
+  selectedDefinition: string
+): boolean {
+  const isInRange = Math.abs(word.x - shooterPosition) < 50
+  const isCorrectDefinition = word.term.definition === selectedDefinition
+  
+  return isInRange && isCorrectDefinition
+}
+```
+
+### Speed Quiz Timer System
+```typescript
+interface TimerState {
+  totalTime: number        // Total time for quiz
+  timeRemaining: number
+  timePerQuestion: number
+  bonusTimePerCorrect: number
+}
+
+function handleQuizAnswer(
+  isCorrect: boolean,
+  timerState: TimerState
+): TimerState {
+  const newState = { ...timerState }
+  
+  if (isCorrect) {
+    // Add bonus time for correct answer
+    newState.timeRemaining += timerState.bonusTimePerCorrect
+    newState.timeRemaining = Math.min(
+      newState.timeRemaining,
+      timerState.totalTime
+    )
+  } else {
+    // Penalty: no bonus time
+    // Could also subtract time for wrong answers
+  }
+  
+  return newState
+}
+```
+
+## Combo and Streak Systems
+
+### Streak Bonuses
+```typescript
+interface StreakSystem {
+  current: number
+  best: number
+  multiplier: number
+  milestones: { count: number, bonus: number }[]
+}
+
+function updateStreak(
+  streak: StreakSystem,
+  isCorrect: boolean,
+  baseScore: number
+): { newStreak: StreakSystem, scoreBonus: number } {
+  if (!isCorrect) {
+    return {
+      newStreak: { ...streak, current: 0, multiplier: 1.0 },
+      scoreBonus: 0
+    }
+  }
+  
+  const newStreak = { ...streak }
+  newStreak.current++
+  newStreak.best = Math.max(newStreak.best, newStreak.current)
+  
+  // Calculate multiplier (caps at 3x)
+  newStreak.multiplier = Math.min(3.0, 1.0 + (newStreak.current * 0.1))
+  
+  // Check for milestone bonuses
+  let bonusPoints = 0
+  const milestone = streak.milestones.find(
+    m => m.count === newStreak.current
+  )
+  if (milestone) {
+    bonusPoints = milestone.bonus
+  }
+  
+  const totalBonus = Math.floor(baseScore * (newStreak.multiplier - 1)) + bonusPoints
+  
+  return { newStreak, scoreBonus: totalBonus }
+}
+```
+
+### Combo System for Matching Game
+```typescript
+interface ComboSystem {
+  currentCombo: number
+  comboTimer: number        // Seconds until combo breaks
+  comboThreshold: number    // Seconds between matches for combo
+}
+
+function updateCombo(
+  combo: ComboSystem,
+  matchTime: number
+): ComboSystem {
+  const timeSinceLastMatch = Date.now() - matchTime
+  
+  if (timeSinceLastMatch <= combo.comboThreshold * 1000) {
+    return {
+      ...combo,
+      currentCombo: combo.currentCombo + 1,
+      comboTimer: combo.comboThreshold
+    }
+  } else {
+    return {
+      ...combo,
+      currentCombo: 0,
+      comboTimer: combo.comboThreshold
+    }
   }
 }
 ```
 
-## Results Summary
+## Achievement System
 
-### End Game Summary
+### Achievement Definitions
 ```typescript
-interface GameSummary {
-  totalQuestions: number
-  correctAnswers: number
-  accuracy: number
-  totalScore: number
-  timeElapsed: number
-  highestStreak: number
-  hintsUsed: number
-  livesRemaining: number
-  perfect: boolean
-  rank: string // S, A, B, C, D, F
+interface Achievement {
+  id: string
+  name: string
+  description: string
+  icon: string
+  condition: (stats: PlayerStats) => boolean
+  reward: { type: 'badge' | 'points' | 'unlock', value: any }
 }
 
-const generateGameSummary = (): GameSummary => {
-  const accuracy = correctAnswers / totalQuestions
-  const perfect = accuracy === 1 && hintsUsed === 0
-  
-  return {
-    totalQuestions,
-    correctAnswers,
-    accuracy,
-    totalScore: finalScore,
-    timeElapsed: Date.now() - startTime,
-    highestStreak: maxStreak,
-    hintsUsed,
-    livesRemaining: lives,
-    perfect,
-    rank: calculateRank(accuracy, finalScore)
+const ACHIEVEMENTS: Achievement[] = [
+  {
+    id: 'perfect_game',
+    name: 'Perfect Game',
+    description: 'Complete a game with 100% accuracy',
+    icon: '🎯',
+    condition: (stats) => stats.accuracy === 100 && stats.questionsAnswered >= 10,
+    reward: { type: 'points', value: 500 }
+  },
+  {
+    id: 'speed_demon',
+    name: 'Speed Demon',
+    description: 'Answer 20 questions in under 60 seconds',
+    icon: '⚡',
+    condition: (stats) => stats.questionsAnswered >= 20 && stats.timeTaken < 60,
+    reward: { type: 'badge', value: 'speed_demon' }
+  },
+  {
+    id: 'vocabulary_master',
+    name: 'Vocabulary Master',
+    description: 'Reach 100% mastery on 50 terms',
+    icon: '👑',
+    condition: (stats) => stats.termsMastered >= 50,
+    reward: { type: 'unlock', value: 'expert_mode' }
   }
+]
+```
+
+## Power-ups and Boosters
+
+### Power-up System
+```typescript
+interface PowerUp {
+  id: string
+  type: 'time_freeze' | 'double_points' | 'auto_complete' | 'shield'
+  duration: number        // Seconds active
+  cooldown: number       // Seconds before reuse
+  cost: number          // Score cost to activate
 }
 
-const calculateRank = (accuracy: number, score: number): string => {
-  if (accuracy === 1 && score >= 1000) return 'S'
-  if (accuracy >= 0.9 && score >= 800) return 'A'
-  if (accuracy >= 0.75 && score >= 600) return 'B'
-  if (accuracy >= 0.6 && score >= 400) return 'C'
-  if (accuracy >= 0.5) return 'D'
-  return 'F'
+function activatePowerUp(
+  powerUp: PowerUp,
+  gameState: any
+): any {
+  if (gameState.score < powerUp.cost) return gameState
+  
+  const newState = { 
+    ...gameState,
+    score: gameState.score - powerUp.cost,
+    activePowerUps: [...gameState.activePowerUps, {
+      ...powerUp,
+      activatedAt: Date.now(),
+      expiresAt: Date.now() + powerUp.duration * 1000
+    }]
+  }
+  
+  return newState
 }
 ```

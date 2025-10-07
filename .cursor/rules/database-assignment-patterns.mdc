@@ -1,233 +1,168 @@
 ---
 description: Database patterns and SQL practices for the assignment system
+globs: *.sql,**/api/**/*.ts
 ---
 
-# Database & Assignment Patterns
+# Database & SQL Patterns
 
-## Supabase Client Usage
+## Supabase Client
 
-Always use the configured client from [supabase.ts](mdc:src/lib/supabase.ts):
+Always use the configured client from [src/lib/supabase.ts](mdc:src/lib/supabase.ts):
 
 ```typescript
 import { supabase } from '@/lib/supabase'
 
-// Never create new clients - use the singleton
+// Query with proper typing
 const { data, error } = await supabase
   .from('table_name')
   .select('*')
+  .eq('column', value)
+
+// Always check for errors
+if (error) {
+  console.error('Database error:', error)
+  return NextResponse.json({ error: error.message }, { status: 500 })
+}
 ```
 
 ## JSONB Storage Pattern
 
-Questions and complex objects stored as JSONB:
+Questions stored as JSONB in `question_bank` table:
 
-```typescript
-// Insert with JSONB
-const { data, error } = await supabase
-  .from('question_bank')
-  .insert({
-    question_data: questionObject, // Stored as JSONB
-    question_text: questionObject.question, // Extracted for search
-    question_type: questionObject.type, // Extracted for filtering
-    unit_id: 'unit-1',
-    topics: ['velocity', 'acceleration']
-  })
-
-// Query JSONB fields
-const { data } = await supabase
-  .from('question_bank')
-  .select('question_data')
-  .eq('question_type', 'multiple-choice')
+```sql
+CREATE TABLE question_bank (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  question_data JSONB NOT NULL,        -- Full Question object
+  question_text TEXT NOT NULL,         -- Searchable text
+  question_type TEXT NOT NULL,         -- For filtering
+  unit_id TEXT NOT NULL,
+  lesson_id TEXT NOT NULL,
+  topics TEXT[] DEFAULT '{}',
+  difficulty TEXT CHECK (difficulty IN ('easy', 'medium', 'hard')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-## Filtering Patterns
+## Row Level Security (RLS)
 
-### Dynamic Query Building
+Current migration: [supabase/migrations/enable_rls_security.sql](mdc:supabase/migrations/enable_rls_security.sql)
+
+### RLS Pattern for Tables
+```sql
+-- Enable RLS
+ALTER TABLE table_name ENABLE ROW LEVEL SECURITY;
+
+-- Admin/Teacher access
+CREATE POLICY "Admins and teachers can manage"
+ON table_name
+FOR ALL
+TO authenticated
+USING (
+  auth.jwt() ->> 'email' IN (
+    SELECT email FROM admin_emails
+    UNION
+    SELECT email FROM teacher_emails
+  )
+);
+
+-- Student read access
+CREATE POLICY "Students can view own data"
+ON table_name
+FOR SELECT
+TO authenticated
+USING (user_id = auth.uid());
+```
+
+## Performance Optimizations
+
+From [supabase/migrations/optimize_rls_performance.sql](mdc:supabase/migrations/optimize_rls_performance.sql):
+
+### Indexes
+```sql
+-- Text search
+CREATE INDEX idx_question_text_search 
+ON question_bank USING gin(to_tsvector('english', question_text));
+
+-- Filtering columns
+CREATE INDEX idx_unit_lesson 
+ON question_bank (unit_id, lesson_id);
+
+-- Common queries
+CREATE INDEX idx_difficulty_published 
+ON assignments (difficulty, published) WHERE published = true;
+```
+
+### Materialized Views
+```sql
+-- Pre-compute expensive queries
+CREATE MATERIALIZED VIEW student_progress_summary AS
+SELECT 
+  student_id,
+  COUNT(*) as total_assignments,
+  AVG(score) as average_score
+FROM submissions
+GROUP BY student_id;
+
+-- Refresh strategy
+REFRESH MATERIALIZED VIEW CONCURRENTLY student_progress_summary;
+```
+
+## Query Patterns
+
+### Filtering with Supabase
 ```typescript
-let query = supabase.from('question_bank').select('*')
+// Dynamic query building
+let query = supabase
+  .from('question_bank')
+  .select('*')
+  .order('created_at', { ascending: false })
 
-// Add filters conditionally
+// Apply filters conditionally
 if (unitId) query = query.eq('unit_id', unitId)
 if (difficulty) query = query.eq('difficulty', difficulty)
-if (topics?.length > 0) query = query.contains('topics', topics)
+if (topics?.length) query = query.contains('topics', topics)
 if (searchText) query = query.ilike('question_text', `%${searchText}%`)
 
 const { data, error } = await query
 ```
 
-### Array Operations
+### Joins and Relations
 ```typescript
-// Contains any of these values
-.overlaps('topics', ['velocity', 'speed'])
-
-// Contains all of these values
-.contains('topics', ['velocity'])
-
-// Array length
-.not('topics', 'is', null)
-```
-
-## Relationship Loading
-
-### Join Patterns
-```typescript
-// Load related data in one query
+// Join with related tables
 const { data } = await supabase
   .from('assignments')
   .select(`
     *,
-    lesson:lessons(title, slug),
-    submissions:assignment_submissions(
-      student_id,
-      score,
-      submitted_at
-    )
+    lesson:lessons(id, title, slug),
+    submissions:assignment_submissions(*)
   `)
   .eq('published', true)
 ```
 
-## Transaction Safety
+## Function Security
 
-### Upsert Pattern
-```typescript
-// Update if exists, insert if not
-const { data, error } = await supabase
-  .from('student_progress')
-  .upsert({
-    student_id: userId,
-    assignment_id: assignmentId,
-    progress: 75,
-    updated_at: new Date().toISOString()
-  }, {
-    onConflict: 'student_id,assignment_id'
-  })
+From [supabase/migrations/fix_function_search_paths.sql](mdc:supabase/migrations/fix_function_search_paths.sql):
+
+```sql
+-- Set proper search path for security
+CREATE OR REPLACE FUNCTION function_name()
+RETURNS type
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, auth
+AS $$
+BEGIN
+  -- Function logic
+END;
+$$;
 ```
 
-### Atomic Updates
-```typescript
-// Increment counters atomically
-const { data } = await supabase
-  .rpc('increment_usage_count', {
-    question_id: questionId,
-    amount: 1
-  })
-```
-
-## Performance Optimization
-
-### Index Usage
-Ensure queries use indexed columns:
-- `unit_id`, `lesson_id` for filtering
-- `created_at` for sorting
-- `question_type`, `difficulty` for common filters
-- `student_id`, `assignment_id` for progress queries
-
-### Pagination
-```typescript
-const PAGE_SIZE = 50
-
-const { data, error } = await supabase
-  .from('question_bank')
-  .select('*')
-  .order('created_at', { ascending: false })
-  .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
-```
-
-### Counting
-```typescript
-// Efficient count without loading data
-const { count, error } = await supabase
-  .from('assignments')
-  .select('*', { count: 'exact', head: true })
-  .eq('published', true)
-```
-
-## Error Handling
-
-### Standard Pattern
-```typescript
-try {
-  const { data, error } = await supabase
-    .from('table_name')
-    .insert(insertData)
-  
-  if (error) throw error
-  
-  return NextResponse.json({ data })
-} catch (error) {
-  console.error('Database operation failed:', error)
-  return NextResponse.json(
-    { error: 'Internal server error' }, 
-    { status: 500 }
-  )
-}
-```
-
-### Specific Error Handling
-```typescript
-if (error) {
-  // Unique constraint violation
-  if (error.code === '23505') {
-    return NextResponse.json(
-      { error: 'Record already exists' },
-      { status: 409 }
-    )
-  }
-  
-  // Foreign key violation
-  if (error.code === '23503') {
-    return NextResponse.json(
-      { error: 'Referenced record not found' },
-      { status: 400 }
-    )
-  }
-  
-  throw error
-}
-```
-
-## Caching Strategy
-
-Use [api-cache.ts](mdc:src/lib/api-cache.ts) for frequently accessed data:
+## Transaction Patterns
 
 ```typescript
-import { apiCache } from '@/lib/api-cache'
-
-// Check cache first
-const cacheKey = `question-bank-${unitId}-${difficulty}`
-const cached = apiCache.get<QuestionBankItem[]>(cacheKey)
-if (cached) return cached
-
-// Fetch from database
-const { data } = await supabase.from('question_bank').select('*')
-
-// Cache the result (5 minute default)
-apiCache.set(cacheKey, data, 5 * 60 * 1000)
-return data
-```
-
-## Common Queries
-
-### Student Assignment Progress
-```typescript
-const { data } = await supabase
-  .from('student_assignment_assignments')
-  .select(`
-    *,
-    assignment:assignment_assignments(
-      *,
-      assignment:assignments(title, total_points)
-    )
-  `)
-  .eq('student_id', userId)
-  .order('assigned_at', { ascending: false })
-```
-
-### Course Analytics
-```typescript
-const { data } = await supabase
-  .from('lesson_assignments')
-  .select('id, completion_rate, avg_time_spent')
-  .eq('course_id', courseId)
-  .gte('completion_rate', 0)
+// Use transactions for related operations
+const { data, error } = await supabase.rpc('create_assignment_with_questions', {
+  assignment_data: assignmentData,
+  questions_data: questionsData
+})
 ```

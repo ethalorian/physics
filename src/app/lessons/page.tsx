@@ -1,18 +1,22 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Sparkles } from 'lucide-react'
 
 async function getLessons() {
-  const { data: lessons, error } = await supabase
+  // Use supabaseAdmin for server-side rendering (bypasses RLS)
+  const { data: lessons, error } = await supabaseAdmin
     .from('lessons')
     .select('*')
     .eq('published', true)
     .order('unit', { ascending: true })
     .order('lesson_number', { ascending: true })
   
-  if (error) throw error
+  if (error) {
+    console.error('Error fetching lessons:', error)
+    return []
+  }
   
   // Add enhanced flags for specific lessons
   const enhancedLessons = lessons?.map(lesson => ({

@@ -52,10 +52,7 @@ export async function POST(request: NextRequest) {
         p_section: course.section || null,
         p_description: course.description || null,
         p_room: course.room || null,
-        p_owner_id: course.ownerId || session.user.id,
-        p_course_state: course.courseState || 'ACTIVE',
-        p_creation_time: course.creationTime ? new Date(course.creationTime) : null,
-        p_update_time: course.updateTime ? new Date(course.updateTime) : null
+        p_teacher_email: session.user.email
       })
 
     if (courseError) {
@@ -71,7 +68,7 @@ export async function POST(request: NextRequest) {
         hint: 'Check if database tables and functions exist'
       }, { status: 500 })
     }
-    console.log('✅ Course synced successfully')
+    console.log('✅ Course synced successfully, course UUID:', courseData)
 
     // Fetch students from Google Classroom
     console.log('👥 Fetching students from Google Classroom...')
@@ -82,37 +79,38 @@ export async function POST(request: NextRequest) {
     const errors: string[] = []
 
     // Sync each student to database
+    console.log(`👥 Syncing ${students.length} students to course UUID: ${courseData}`)
     for (const student of students) {
       try {
         const email = student.profile?.emailAddress || `${student.userId}@unknown.com`
         const fullName = student.profile?.name?.fullName || 'Unknown Student'
-        const firstName = student.profile?.name?.givenName || null
-        const lastName = student.profile?.name?.familyName || null
         const photoUrl = student.profile?.photoUrl || null
 
-        const { error: studentError } = await supabaseAdmin
+        console.log(`  📝 Syncing student: ${fullName} (${email})`)
+
+        const { data: studentData, error: studentError } = await supabaseAdmin
           .rpc('sync_student', {
             p_google_user_id: student.userId,
             p_email: email,
             p_name: fullName,
-            p_first_name: firstName,
-            p_last_name: lastName,
-            p_profile_photo_url: photoUrl,
-            p_course_id: courseId,
-            p_enrollment_state: 'ACTIVE'
+            p_photo_url: photoUrl,
+            p_course_id: courseData // Use the UUID returned from sync_course
           })
 
         if (studentError) {
-          console.error(`Error syncing student ${student.userId}:`, studentError)
-          errors.push(`Failed to sync student: ${fullName}`)
+          console.error(`  ❌ Error syncing student ${fullName}:`, studentError)
+          errors.push(`Failed to sync student: ${fullName} - ${studentError.message}`)
         } else {
+          console.log(`  ✅ Student synced successfully: ${fullName}, student UUID: ${studentData}`)
           syncedStudents++
         }
       } catch (studentErr) {
-        console.error(`Error processing student ${student.userId}:`, studentErr)
+        console.error(`  ❌ Exception processing student:`, studentErr)
         errors.push(`Failed to process student: ${student.profile?.name?.fullName || student.userId}`)
       }
     }
+    
+    console.log(`✅ Synced ${syncedStudents} out of ${students.length} students`)
 
     // Update course student count
     await supabaseAdmin.rpc('update_course_student_counts')
@@ -199,9 +197,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Course not found' }, { status: 404 })
     }
 
-    // Get students for the course
+    // Get students for the course (use internal UUID, not Google course ID)
     const { data: studentsData, error: studentsError } = await supabaseAdmin
-      .rpc('get_course_students', { p_course_id: courseId })
+      .rpc('get_course_students', { p_course_id: courseData.id })
 
     if (studentsError) {
       console.error('Error fetching students:', studentsError)

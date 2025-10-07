@@ -109,8 +109,8 @@ CREATE POLICY "Units are writable by admins"
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
--- Lessons: Students can view published lessons, teachers can manage all
-CREATE POLICY "Lessons are viewable by students"
+-- Lessons: Students can view published lessons, admins/teachers can see and edit ALL
+CREATE POLICY "Lessons viewable by all authenticated users"
   ON public.lessons FOR SELECT
   TO authenticated
   USING (
@@ -118,8 +118,22 @@ CREATE POLICY "Lessons are viewable by students"
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
-CREATE POLICY "Lessons are writable by admins"
-  ON public.lessons FOR ALL
+CREATE POLICY "Lessons manageable by admins and teachers"
+  ON public.lessons FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Lessons updatable by admins and teachers"
+  ON public.lessons FOR UPDATE
+  TO authenticated
+  USING (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Lessons deletable by admins and teachers"
+  ON public.lessons FOR DELETE
   TO authenticated
   USING (
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
@@ -211,7 +225,7 @@ CREATE POLICY "Users can manage their own verification tokens"
 -- RLS POLICIES - ASSIGNMENTS
 -- ============================================================================
 
--- Assignments: Teachers can manage, students can view published assignments
+-- Assignments: Students view published only, admins/teachers can see and edit ALL
 CREATE POLICY "Assignments viewable by authenticated users"
   ON public.assignments FOR SELECT
   TO authenticated
@@ -220,8 +234,22 @@ CREATE POLICY "Assignments viewable by authenticated users"
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
-CREATE POLICY "Assignments writable by teachers"
-  ON public.assignments FOR ALL
+CREATE POLICY "Assignments insertable by admins and teachers"
+  ON public.assignments FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Assignments updatable by admins and teachers"
+  ON public.assignments FOR UPDATE
+  TO authenticated
+  USING (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Assignments deletable by admins and teachers"
+  ON public.assignments FOR DELETE
   TO authenticated
   USING (
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
@@ -278,19 +306,33 @@ CREATE POLICY "Assignment analytics viewable by teachers"
 -- RLS POLICIES - ASSIGNMENT SYSTEM (Lesson & Homework Assignments)
 -- ============================================================================
 
--- Lesson Assignments: Teachers can manage, students can view their assignments
-CREATE POLICY "Lesson assignments manageable by teachers"
-  ON public.lesson_assignments FOR ALL
+-- Lesson Assignments: Admins/teachers see ALL, students see only their published assignments
+CREATE POLICY "Lesson assignments viewable by authenticated users"
+  ON public.lesson_assignments FOR SELECT
+  TO authenticated
+  USING (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid())) OR
+    published = true
+  );
+
+CREATE POLICY "Lesson assignments insertable by admins and teachers"
+  ON public.lesson_assignments FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Lesson assignments updatable by admins and teachers"
+  ON public.lesson_assignments FOR UPDATE
   TO authenticated
   USING (
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
-CREATE POLICY "Lesson assignments viewable by assigned students"
-  ON public.lesson_assignments FOR SELECT
+CREATE POLICY "Lesson assignments deletable by admins and teachers"
+  ON public.lesson_assignments FOR DELETE
   TO authenticated
   USING (
-    published = true OR
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
@@ -316,19 +358,33 @@ CREATE POLICY "System can create student lesson assignments"
   TO authenticated
   WITH CHECK (true);
 
--- Assignment Assignments (Homework): Teachers can manage
-CREATE POLICY "Homework assignments manageable by teachers"
-  ON public.assignment_assignments FOR ALL
+-- Assignment Assignments (Homework): Admins/teachers see ALL, students see only published
+CREATE POLICY "Homework assignments viewable by authenticated users"
+  ON public.assignment_assignments FOR SELECT
+  TO authenticated
+  USING (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid())) OR
+    published = true
+  );
+
+CREATE POLICY "Homework assignments insertable by admins and teachers"
+  ON public.assignment_assignments FOR INSERT
+  TO authenticated
+  WITH CHECK (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Homework assignments updatable by admins and teachers"
+  ON public.assignment_assignments FOR UPDATE
   TO authenticated
   USING (
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 
-CREATE POLICY "Homework assignments viewable by assigned students"
-  ON public.assignment_assignments FOR SELECT
+CREATE POLICY "Homework assignments deletable by admins and teachers"
+  ON public.assignment_assignments FOR DELETE
   TO authenticated
   USING (
-    published = true OR
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
   );
 

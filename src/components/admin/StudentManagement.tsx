@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from 'react'
+import { useSession } from 'next-auth/react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -28,6 +29,7 @@ interface Course {
 }
 
 export default function StudentManagement() {
+  const { data: session } = useSession()
   const { showToast } = useToast()
   const [students, setStudents] = useState<Student[]>([])
   const [courses, setCourses] = useState<Course[]>([])
@@ -40,6 +42,72 @@ export default function StudentManagement() {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [importedStudents, setImportedStudents] = useState<Student[]>([])
   const [showImportedData, setShowImportedData] = useState(false)
+
+  // Define fetchCourses before it's used in useEffect
+  const fetchCourses = useCallback(async () => {
+    try {
+      // Fetch courses from Google Classroom
+      const courses = await googleClassroomAPI.getCourses()
+      
+      // Fetch student counts for each course
+      const coursesWithStudentCounts = await Promise.all(
+        courses.map(async (course) => {
+          try {
+            const students = await googleClassroomAPI.getStudents(course.id)
+            return {
+              id: course.id,
+              name: course.name,
+              section: course.section || 'No section',
+              studentCount: students.length
+            }
+          } catch (error) {
+            console.error(`Failed to fetch students for course ${course.id}:`, error)
+            return {
+              id: course.id,
+              name: course.name,
+              section: course.section || 'No section',
+              studentCount: 0
+            }
+          }
+        })
+      )
+      
+      setCourses(coursesWithStudentCounts)
+      
+      if (coursesWithStudentCounts.length > 0 && !selectedCourse) {
+        setSelectedCourse(coursesWithStudentCounts[0].id)
+      }
+      
+      return coursesWithStudentCounts
+    } catch (error) {
+      console.error('Error fetching courses:', error)
+      throw error
+    }
+  }, [selectedCourse])
+
+  // Auto-connect using NextAuth session token
+  useEffect(() => {
+    if (session?.accessToken && !isConnected) {
+      console.log('✅ Found Google access token in session, attempting auto-connect...')
+      setLoading(true)
+      setAccessToken(session.accessToken)
+      googleClassroomAPI.setAccessToken(session.accessToken)
+      
+      // Try to fetch courses to verify token is valid
+      fetchCourses()
+        .then(() => {
+          setIsConnected(true)
+          console.log('✅ Auto-connected successfully!')
+        })
+        .catch((error) => {
+          console.warn('⚠️ Session token expired or invalid, need to reconnect:', error)
+          // Token is expired or invalid, clear it and show connect button
+          setAccessToken(null)
+          setIsConnected(false)
+        })
+        .finally(() => setLoading(false))
+    }
+  }, [session?.accessToken, isConnected, fetchCourses])
 
   useEffect(() => {
     // Only initialize with real data when connected
@@ -152,41 +220,12 @@ export default function StudentManagement() {
       // Clear any existing tokens to force re-authentication with new scopes
       const accessToken = await initializeGoogleClassroomAuth()
       googleClassroomAPI.setAccessToken(accessToken)
+      setAccessToken(accessToken)
       
       // Fetch courses to verify connection
-      const courses = await googleClassroomAPI.getCourses()
-      
-      // Fetch student counts for each course
-      const coursesWithStudentCounts = await Promise.all(
-        courses.map(async (course) => {
-          try {
-            const students = await googleClassroomAPI.getStudents(course.id)
-            return {
-              id: course.id,
-              name: course.name,
-              section: course.section || 'No section',
-              studentCount: students.length
-            }
-          } catch (error) {
-            console.error(`Failed to fetch students for course ${course.id}:`, error)
-            return {
-              id: course.id,
-              name: course.name,
-              section: course.section || 'No section',
-              studentCount: 0 // Fallback to 0 if fetch fails
-            }
-          }
-        })
-      )
-      
-      setCourses(coursesWithStudentCounts)
-      
-      if (coursesWithStudentCounts.length > 0) {
-        setSelectedCourse(coursesWithStudentCounts[0].id)
-      }
+      await fetchCourses()
       
       setIsConnected(true)
-      setAccessToken(accessToken)
       showToast({
         title: "Connected Successfully!",
         description: "You're now connected to Google Classroom",

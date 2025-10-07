@@ -124,13 +124,57 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.picture = user.image;
         }
       }
-      // Store Google access token from the account
+      
+      // Store Google access token from the account (first sign-in)
       if (account?.access_token) {
         token.accessToken = account.access_token;
+        token.accessTokenExpires = account.expires_at ? account.expires_at * 1000 : Date.now() + 3600 * 1000;
       }
       if (account?.refresh_token) {
         token.refreshToken = account.refresh_token;
       }
+      
+      // Return token if it hasn't expired
+      if (token.accessTokenExpires && Date.now() < (token.accessTokenExpires as number)) {
+        return token;
+      }
+      
+      // Access token has expired, try to refresh it
+      if (token.refreshToken) {
+        try {
+          const response = await fetch('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              client_id: process.env.GOOGLE_CLIENT_ID!,
+              client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+              grant_type: 'refresh_token',
+              refresh_token: token.refreshToken as string,
+            }),
+          });
+
+          const refreshedTokens = await response.json();
+
+          if (!response.ok) {
+            throw refreshedTokens;
+          }
+
+          return {
+            ...token,
+            accessToken: refreshedTokens.access_token,
+            accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+          };
+        } catch (error) {
+          console.error('Error refreshing access token:', error);
+          // Return token as-is, will need to re-authenticate
+          return {
+            ...token,
+            error: 'RefreshAccessTokenError',
+          };
+        }
+      }
+      
       return token;
     },
     redirect: async ({ url, baseUrl }) => {

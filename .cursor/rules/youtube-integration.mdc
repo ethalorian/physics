@@ -1,12 +1,12 @@
 ---
-description: "YouTube Player API integration patterns and best practices"
+description: YouTube Player API integration patterns and best practices
 ---
 
 # YouTube Player API Integration
 
-## Basic YouTube Player Setup
+## Player Initialization
 
-### Loading the API
+### Loading the IFrame API
 ```typescript
 'use client'
 
@@ -15,134 +15,95 @@ import { useEffect, useRef, useState } from 'react'
 // Extend Window interface for YouTube API
 declare global {
   interface Window {
-    YT: any
+    YT: typeof YT
     onYouTubeIframeAPIReady: () => void
   }
 }
 
-const useYouTubeAPI = () => {
-  const [apiReady, setApiReady] = useState(false)
+function useYouTubePlayer(videoId: string) {
+  const playerRef = useRef<YT.Player | null>(null)
+  const [isReady, setIsReady] = useState(false)
   
   useEffect(() => {
     // Check if API already loaded
-    if (window.YT && window.YT.Player) {
-      setApiReady(true)
+    if (window.YT) {
+      initializePlayer()
       return
     }
     
-    // Load YouTube IFrame API script
+    // Load YouTube IFrame API
     const tag = document.createElement('script')
     tag.src = 'https://www.youtube.com/iframe_api'
-    tag.async = true
-    
     const firstScriptTag = document.getElementsByTagName('script')[0]
     firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
     
-    // API ready callback
+    // Set callback for when API is ready
     window.onYouTubeIframeAPIReady = () => {
-      setApiReady(true)
+      initializePlayer()
     }
     
-    return () => {
-      // Cleanup if component unmounts
-      window.onYouTubeIframeAPIReady = () => {}
-    }
-  }, [])
-  
-  return apiReady
-}
-```
-
-## Player Component
-
-### Full-Featured YouTube Player
-```typescript
-interface YouTubePlayerProps {
-  videoId: string
-  onReady?: (player: any) => void
-  onStateChange?: (state: number) => void
-  onTimeUpdate?: (currentTime: number) => void
-  autoplay?: boolean
-  controls?: boolean
-  startSeconds?: number
-}
-
-export function YouTubePlayer({
-  videoId,
-  onReady,
-  onStateChange,
-  onTimeUpdate,
-  autoplay = false,
-  controls = true,
-  startSeconds = 0
-}: YouTubePlayerProps) {
-  const playerRef = useRef<any>(null)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const timeUpdateIntervalRef = useRef<NodeJS.Timeout>()
-  const apiReady = useYouTubeAPI()
-  
-  useEffect(() => {
-    if (!apiReady || !containerRef.current) return
-    
-    // Initialize player
-    playerRef.current = new window.YT.Player(containerRef.current, {
-      videoId,
-      playerVars: {
-        autoplay: autoplay ? 1 : 0,
-        controls: controls ? 1 : 0,
-        start: startSeconds,
-        modestbranding: 1,
-        rel: 0,
-        iv_load_policy: 3
-      },
-      events: {
-        onReady: (event: any) => {
-          onReady?.(event.target)
-          
-          // Start time update interval
-          if (onTimeUpdate) {
-            timeUpdateIntervalRef.current = setInterval(() => {
-              const currentTime = event.target.getCurrentTime()
-              onTimeUpdate(currentTime)
-            }, 500)
-          }
+    function initializePlayer() {
+      playerRef.current = new window.YT.Player('youtube-player', {
+        videoId: videoId,
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+          modestbranding: 1,
+          rel: 0
         },
-        onStateChange: (event: any) => {
-          onStateChange?.(event.data)
-          
-          // Clear interval when paused or ended
-          if (event.data !== window.YT.PlayerState.PLAYING) {
-            if (timeUpdateIntervalRef.current) {
-              clearInterval(timeUpdateIntervalRef.current)
-            }
-          }
+        events: {
+          onReady: handleReady,
+          onStateChange: handleStateChange,
+          onError: handleError
         }
-      }
-    })
+      })
+    }
     
     return () => {
-      // Cleanup
-      if (timeUpdateIntervalRef.current) {
-        clearInterval(timeUpdateIntervalRef.current)
-      }
-      if (playerRef.current) {
-        playerRef.current.destroy()
-      }
+      playerRef.current?.destroy()
     }
-  }, [apiReady, videoId])
+  }, [videoId])
   
-  return (
-    <div 
-      ref={containerRef}
-      className="aspect-video w-full bg-black rounded-lg overflow-hidden"
-    />
-  )
+  return { player: playerRef.current, isReady }
 }
 ```
 
-## Player State Management
+## Player Control Methods
 
-### Player States
+### Essential Controls
+```typescript
+interface YouTubePlayerControls {
+  play: () => void
+  pause: () => void
+  stop: () => void
+  seekTo: (seconds: number, allowSeekAhead: boolean) => void
+  getCurrentTime: () => Promise<number>
+  getDuration: () => Promise<number>
+  getPlayerState: () => YT.PlayerState
+  setVolume: (volume: number) => void
+  mute: () => void
+  unMute: () => void
+}
+
+function createPlayerControls(player: YT.Player): YouTubePlayerControls {
+  return {
+    play: () => player.playVideo(),
+    pause: () => player.pauseVideo(),
+    stop: () => player.stopVideo(),
+    seekTo: (seconds, allowSeekAhead) => player.seekTo(seconds, allowSeekAhead),
+    getCurrentTime: () => Promise.resolve(player.getCurrentTime()),
+    getDuration: () => Promise.resolve(player.getDuration()),
+    getPlayerState: () => player.getPlayerState(),
+    setVolume: (volume) => player.setVolume(volume),
+    mute: () => player.mute(),
+    unMute: () => player.unMute()
+  }
+}
+```
+
+## Player States and Events
+
+### State Management
 ```typescript
 enum YouTubePlayerState {
   UNSTARTED = -1,
@@ -153,376 +114,279 @@ enum YouTubePlayerState {
   CUED = 5
 }
 
-const getPlayerStateLabel = (state: number): string => {
-  switch (state) {
-    case YouTubePlayerState.UNSTARTED: return 'Not Started'
-    case YouTubePlayerState.ENDED: return 'Ended'
-    case YouTubePlayerState.PLAYING: return 'Playing'
-    case YouTubePlayerState.PAUSED: return 'Paused'
-    case YouTubePlayerState.BUFFERING: return 'Buffering'
-    case YouTubePlayerState.CUED: return 'Cued'
-    default: return 'Unknown'
-  }
-}
-```
-
-### State Change Handler
-```typescript
-const handlePlayerStateChange = (state: number) => {
-  switch (state) {
-    case YouTubePlayerState.PLAYING:
-      setIsPlaying(true)
-      setIsPaused(false)
-      break
-      
-    case YouTubePlayerState.PAUSED:
-      setIsPlaying(false)
-      setIsPaused(true)
-      break
-      
-    case YouTubePlayerState.ENDED:
-      setIsPlaying(false)
-      handleVideoComplete()
-      break
-      
-    case YouTubePlayerState.BUFFERING:
-      // Optional: show loading indicator
-      setIsBuffering(true)
-      break
-  }
-}
-```
-
-## Player Controls
-
-### Custom Control Interface
-```typescript
-interface PlayerControls {
-  play: () => void
-  pause: () => void
-  seekTo: (seconds: number) => void
-  getCurrentTime: () => number
-  getDuration: () => number
-  getVolume: () => number
-  setVolume: (volume: number) => void
-  mute: () => void
-  unMute: () => void
-  isMuted: () => boolean
-}
-
-const usePlayerControls = (player: any): PlayerControls | null => {
-  if (!player) return null
-  
-  return {
-    play: () => player.playVideo(),
-    pause: () => player.pauseVideo(),
-    seekTo: (seconds: number) => player.seekTo(seconds, true),
-    getCurrentTime: () => player.getCurrentTime(),
-    getDuration: () => player.getDuration(),
-    getVolume: () => player.getVolume(),
-    setVolume: (volume: number) => player.setVolume(volume),
-    mute: () => player.mute(),
-    unMute: () => player.unMute(),
-    isMuted: () => player.isMuted()
-  }
-}
-```
-
-### Custom Controls UI
-```typescript
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Slider } from '@/components/ui/slider'
-
-export function VideoControls({ controls }: { controls: PlayerControls }) {
+function usePlayerState(player: YT.Player | null) {
+  const [playerState, setPlayerState] = useState<YouTubePlayerState>(
+    YouTubePlayerState.UNSTARTED
+  )
   const [isPlaying, setIsPlaying] = useState(false)
-  const [volume, setVolume] = useState(100)
-  const [isMuted, setIsMuted] = useState(false)
+  
+  useEffect(() => {
+    if (!player) return
+    
+    const handleStateChange = (event: YT.OnStateChangeEvent) => {
+      setPlayerState(event.data)
+      setIsPlaying(event.data === YouTubePlayerState.PLAYING)
+      
+      // Custom event handling
+      switch (event.data) {
+        case YouTubePlayerState.ENDED:
+          handleVideoEnded()
+          break
+        case YouTubePlayerState.PLAYING:
+          handleVideoPlaying()
+          break
+        case YouTubePlayerState.PAUSED:
+          handleVideoPaused()
+          break
+      }
+    }
+    
+    // Note: Event binding happens in player initialization
+  }, [player])
+  
+  return { playerState, isPlaying }
+}
+```
+
+## Time Tracking and Progress
+
+### Progress Monitoring
+```typescript
+function useVideoProgress(player: YT.Player | null, onProgress?: (progress: number) => void) {
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [progress, setProgress] = useState(0)
   
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      controls.pause()
-    } else {
-      controls.play()
+  useEffect(() => {
+    if (!player) return
+    
+    const updateProgress = async () => {
+      const time = await player.getCurrentTime()
+      const dur = await player.getDuration()
+      
+      setCurrentTime(time)
+      setDuration(dur)
+      
+      const prog = dur > 0 ? (time / dur) * 100 : 0
+      setProgress(prog)
+      
+      onProgress?.(prog)
     }
-    setIsPlaying(!isPlaying)
-  }
+    
+    // Update every 100ms for smooth progress
+    const interval = setInterval(updateProgress, 100)
+    
+    return () => clearInterval(interval)
+  }, [player, onProgress])
   
-  const toggleMute = () => {
-    if (isMuted) {
-      controls.unMute()
-    } else {
-      controls.mute()
-    }
-    setIsMuted(!isMuted)
+  return { currentTime, duration, progress }
+}
+```
+
+### Timestamp Utilities
+```typescript
+function formatTime(seconds: number): string {
+  const minutes = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${minutes}:${secs.toString().padStart(2, '0')}`
+}
+
+function parseTimestamp(timestamp: string): number {
+  const parts = timestamp.split(':').map(Number)
+  if (parts.length === 2) {
+    return parts[0] * 60 + parts[1] // MM:SS
+  } else if (parts.length === 3) {
+    return parts[0] * 3600 + parts[1] * 60 + parts[2] // HH:MM:SS
   }
+  return 0
+}
+```
+
+## Custom Controls UI
+
+### Progress Bar Component
+```typescript
+function VideoProgressBar({ 
+  player, 
+  currentTime, 
+  duration,
+  markers = [] 
+}: VideoProgressBarProps) {
+  const [isDragging, setIsDragging] = useState(false)
+  const progressRef = useRef<HTMLDivElement>(null)
   
-  const handleVolumeChange = (value: number[]) => {
-    const newVolume = value[0]
-    setVolume(newVolume)
-    controls.setVolume(newVolume)
-    setIsMuted(newVolume === 0)
-  }
-  
-  const skip = (seconds: number) => {
-    const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
-    controls.seekTo(newTime)
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!player || !progressRef.current) return
+    
+    const rect = progressRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const percentage = x / rect.width
+    const newTime = duration * percentage
+    
+    player.seekTo(newTime, true)
   }
   
   return (
-    <div className="flex items-center space-x-4 p-4 bg-background border rounded-lg">
-      {/* Play/Pause */}
-      <Button variant="ghost" size="icon" onClick={togglePlayPause}>
-        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-      </Button>
-      
-      {/* Skip buttons */}
-      <Button variant="ghost" size="icon" onClick={() => skip(-10)}>
-        <SkipBack className="h-5 w-5" />
-      </Button>
-      <Button variant="ghost" size="icon" onClick={() => skip(10)}>
-        <SkipForward className="h-5 w-5" />
-      </Button>
-      
+    <div 
+      ref={progressRef}
+      className="relative h-2 bg-gray-700 rounded-full cursor-pointer group"
+      onClick={handleSeek}
+    >
       {/* Progress bar */}
-      <div className="flex-1">
-        <Slider
-          value={[currentTime]}
-          max={duration}
-          step={1}
-          onValueChange={(value) => controls.seekTo(value[0])}
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-1">
-          <span>{formatTime(currentTime)}</span>
-          <span>{formatTime(duration)}</span>
-        </div>
+      <div 
+        className="absolute h-full bg-red-600 rounded-full transition-all"
+        style={{ width: `${(currentTime / duration) * 100}%` }}
+      />
+      
+      {/* Hover preview */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+        {/* Could show thumbnail preview here */}
       </div>
       
-      {/* Volume control */}
-      <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" onClick={toggleMute}>
-          {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
-        </Button>
-        <Slider
-          value={[volume]}
-          max={100}
-          step={1}
-          className="w-24"
-          onValueChange={handleVolumeChange}
+      {/* Time markers (for questions, chapters, etc.) */}
+      {markers.map((marker, i) => (
+        <button
+          key={i}
+          className="absolute w-3 h-3 bg-yellow-500 rounded-full -top-0.5 transform -translate-x-1/2"
+          style={{ left: `${(marker.time / duration) * 100}%` }}
+          onClick={(e) => {
+            e.stopPropagation()
+            player.seekTo(marker.time, true)
+          }}
+          title={marker.label}
         />
-      </div>
+      ))}
     </div>
   )
 }
 ```
 
-## Progress Tracking
-
-### Watch Time Tracking
-```typescript
-const useWatchTimeTracking = (
-  player: any,
-  lessonId: string,
-  userId: string
-) => {
-  const watchedSegments = useRef<Set<number>>(new Set())
-  const lastSaveTime = useRef<number>(0)
-  
-  const trackWatchTime = useCallback(async (currentTime: number) => {
-    // Track in 5-second segments
-    const segment = Math.floor(currentTime / 5)
-    watchedSegments.current.add(segment)
-    
-    // Save every 30 seconds
-    const now = Date.now()
-    if (now - lastSaveTime.current > 30000) {
-      const watchedSeconds = watchedSegments.current.size * 5
-      
-      await saveWatchProgress({
-        lessonId,
-        userId,
-        watchedSeconds,
-        lastPosition: currentTime,
-        updatedAt: new Date().toISOString()
-      })
-      
-      lastSaveTime.current = now
-    }
-  }, [lessonId, userId])
-  
-  return { trackWatchTime, watchedSegments: watchedSegments.current }
-}
-```
-
-## Video Metadata
-
-### Extracting Video Info
-```typescript
-interface VideoMetadata {
-  title: string
-  description: string
-  thumbnailUrl: string
-  duration: number
-  author: string
-}
-
-const fetchVideoMetadata = async (videoId: string): Promise<VideoMetadata> => {
-  // Using YouTube Data API (requires API key)
-  const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,contentDetails&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-  )
-  
-  const data = await response.json()
-  const video = data.items[0]
-  
-  return {
-    title: video.snippet.title,
-    description: video.snippet.description,
-    thumbnailUrl: video.snippet.thumbnails.high.url,
-    duration: parseYouTubeDuration(video.contentDetails.duration),
-    author: video.snippet.channelTitle
-  }
-}
-
-// Parse ISO 8601 duration (PT1H2M10S) to seconds
-const parseYouTubeDuration = (duration: string): number => {
-  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/)
-  if (!match) return 0
-  
-  const hours = parseInt(match[1]) || 0
-  const minutes = parseInt(match[2]) || 0
-  const seconds = parseInt(match[3]) || 0
-  
-  return hours * 3600 + minutes * 60 + seconds
-}
-```
-
-## Playlist Support
+## Playlist Management
 
 ### Playlist Player
 ```typescript
-interface PlaylistPlayerProps {
-  playlistId: string
-  onVideoChange?: (videoId: string, index: number) => void
+interface PlaylistVideo {
+  id: string
+  videoId: string
+  title: string
+  description?: string
+  duration: number
+  order: number
 }
 
-export function PlaylistPlayer({ playlistId, onVideoChange }: PlaylistPlayerProps) {
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
-  const playerRef = useRef<any>(null)
+function usePlaylist(videos: PlaylistVideo[]) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentVideo, setCurrentVideo] = useState(videos[0])
   
-  useEffect(() => {
-    if (!window.YT) return
-    
-    playerRef.current = new window.YT.Player('playlist-player', {
-      playerVars: {
-        listType: 'playlist',
-        list: playlistId,
-        autoplay: 1
-      },
-      events: {
-        onStateChange: (event: any) => {
-          if (event.data === window.YT.PlayerState.PLAYING) {
-            const videoData = event.target.getVideoData()
-            const playlistIndex = event.target.getPlaylistIndex()
-            
-            setCurrentVideoIndex(playlistIndex)
-            onVideoChange?.(videoData.video_id, playlistIndex)
-          }
-        }
-      }
-    })
-  }, [playlistId])
+  const nextVideo = useCallback(() => {
+    if (currentIndex < videos.length - 1) {
+      const newIndex = currentIndex + 1
+      setCurrentIndex(newIndex)
+      setCurrentVideo(videos[newIndex])
+    }
+  }, [currentIndex, videos])
   
-  return <div id="playlist-player" className="aspect-video w-full" />
+  const previousVideo = useCallback(() => {
+    if (currentIndex > 0) {
+      const newIndex = currentIndex - 1
+      setCurrentIndex(newIndex)
+      setCurrentVideo(videos[newIndex])
+    }
+  }, [currentIndex, videos])
+  
+  const selectVideo = useCallback((index: number) => {
+    if (index >= 0 && index < videos.length) {
+      setCurrentIndex(index)
+      setCurrentVideo(videos[index])
+    }
+  }, [videos])
+  
+  return {
+    currentVideo,
+    currentIndex,
+    nextVideo,
+    previousVideo,
+    selectVideo,
+    hasNext: currentIndex < videos.length - 1,
+    hasPrevious: currentIndex > 0
+  }
+}
+```
+
+## Error Handling
+
+### Player Error Management
+```typescript
+enum YouTubeErrorCode {
+  INVALID_PARAMETER = 2,
+  HTML5_ERROR = 5,
+  VIDEO_NOT_FOUND = 100,
+  NOT_EMBEDDABLE = 101,
+  NOT_EMBEDDABLE_DISGUISED = 150
+}
+
+function handlePlayerError(event: YT.OnErrorEvent) {
+  const errorMessages = {
+    [YouTubeErrorCode.INVALID_PARAMETER]: 'Invalid video parameter',
+    [YouTubeErrorCode.HTML5_ERROR]: 'HTML5 player error',
+    [YouTubeErrorCode.VIDEO_NOT_FOUND]: 'Video not found',
+    [YouTubeErrorCode.NOT_EMBEDDABLE]: 'Video cannot be embedded',
+    [YouTubeErrorCode.NOT_EMBEDDABLE_DISGUISED]: 'Video cannot be embedded (restricted)'
+  }
+  
+  const message = errorMessages[event.data as YouTubeErrorCode] || 'Unknown error'
+  console.error('YouTube Player Error:', message)
+  
+  // Show user-friendly error
+  toast.error(`Video Error: ${message}`)
 }
 ```
 
 ## Performance Optimization
 
-### Lazy Loading Videos
+### Lazy Loading Pattern
 ```typescript
-const LazyYouTubePlayer = ({ videoId }: { videoId: string }) => {
-  const [loadPlayer, setLoadPlayer] = useState(false)
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+function LazyYouTubePlayer({ videoId }: { videoId: string }) {
+  const [shouldLoad, setShouldLoad] = useState(false)
+  const thumbnailRef = useRef<HTMLDivElement>(null)
   
-  if (!loadPlayer) {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShouldLoad(true)
+        }
+      },
+      { threshold: 0.25 }
+    )
+    
+    if (thumbnailRef.current) {
+      observer.observe(thumbnailRef.current)
+    }
+    
+    return () => observer.disconnect()
+  }, [])
+  
+  if (!shouldLoad) {
     return (
       <div 
-        className="relative aspect-video w-full cursor-pointer group"
-        onClick={() => setLoadPlayer(true)}
+        ref={thumbnailRef}
+        className="relative cursor-pointer"
+        onClick={() => setShouldLoad(true)}
       >
         <img 
-          src={thumbnailUrl} 
+          src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
           alt="Video thumbnail"
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full"
         />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+        <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center">
-            <Play className="h-10 w-10 text-white ml-1" />
+            <Play className="w-10 h-10 text-white ml-1" />
           </div>
         </div>
       </div>
     )
   }
   
-  return <YouTubePlayer videoId={videoId} autoplay />
+  return <YouTubePlayer videoId={videoId} />
 }
-```
-
-## Error Handling
-
-```typescript
-const handlePlayerError = (error: any) => {
-  const errorMessages = {
-    2: 'Invalid video ID',
-    5: 'HTML5 player error',
-    100: 'Video not found or private',
-    101: 'Video owner disabled embedding',
-    150: 'Video owner disabled embedding'
-  }
-  
-  const message = errorMessages[error.data] || 'Unknown error occurred'
-  console.error('YouTube Player Error:', message)
-  
-  // Show user-friendly error
-  toast({
-    title: 'Video Error',
-    description: message,
-    variant: 'destructive'
-  })
-}
-```
-
-## Utility Functions
-
-```typescript
-// Format seconds to HH:MM:SS or MM:SS
-const formatTime = (seconds: number): string => {
-  const hours = Math.floor(seconds / 3600)
-  const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = Math.floor(seconds % 60)
-  
-  if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
-  }
-  return `${minutes}:${secs.toString().padStart(2, '0')}`
-}
-
-// Extract video ID from YouTube URL
-const extractVideoId = (url: string): string | null => {
-  const patterns = [
-    /youtube\.com\/watch\?v=([^&]+)/,
-    /youtube\.com\/embed\/([^?]+)/,
-    /youtu\.be\/([^?]+)/
-  ]
-  
-  for (const pattern of patterns) {
-    const match = url.match(pattern)
-    if (match) return match[1]
-  }
-  
-  return null
-}
-```

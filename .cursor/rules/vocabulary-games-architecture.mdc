@@ -1,320 +1,292 @@
 ---
 description: Vocabulary games system architecture and patterns
+globs: **/vocabulary/**/*.tsx,**/vocabulary/**/*.ts
 ---
 
-# Vocabulary Games Architecture
+# Vocabulary Games System
 
-## Core Context
+## Core Architecture
 
-[VocabularyContext.tsx](mdc:src/contexts/VocabularyContext.tsx) manages all vocabulary game state:
+### Vocabulary Context
+[src/contexts/VocabularyContext.tsx](mdc:src/contexts/VocabularyContext.tsx) - Central state management:
 
 ```typescript
-import { useVocabulary } from '@/contexts/VocabularyContext'
-
 const {
-  vocabularyUnits,
-  completedGames,
-  totalPoints,
-  streakDays,
-  playGame,
-  completeGame,
-  resetGame
+  vocabularyTerms,        // All physics terms
+  studentProgress,        // Individual progress
+  gameScores,            // Leaderboard data
+  addTerm,               // Add new term
+  updateProgress,        // Track learning
+  saveGameScore,         // Record game results
+  getTermsByUnit         // Filter by physics unit
 } = useVocabulary()
+```
+
+### Vocabulary Term Structure
+```typescript
+interface VocabularyTerm {
+  id: string
+  term: string               // Physics term
+  definition: string         // Clear definition
+  unit_id: string           // Physics unit
+  lesson_id?: string        // Optional lesson link
+  example_sentence?: string // Usage example
+  difficulty: 'easy' | 'medium' | 'hard'
+  tags?: string[]           // Additional categorization
+  created_at: string
+}
 ```
 
 ## Game Types
 
-### 1. Hangman ([VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx))
-- Word guessing with physics terms
-- Letter-by-letter guessing
-- Visual hangman progression
-- Scoring: Base points × difficulty multiplier
+### 1. Hangman (Classic)
+[src/app/vocabulary/hangman/page.tsx](mdc:src/app/vocabulary/hangman/page.tsx)
+
+```typescript
+interface HangmanGameState {
+  term: VocabularyTerm
+  guessedLetters: string[]
+  wrongGuesses: number
+  maxWrongGuesses: number
+  hintsUsed: number
+  score: number
+}
+```
 
 ### 2. Matching Game
-- Match terms to definitions
-- Card-flip mechanic
-- Time-based scoring
-- Bonus for consecutive matches
+[src/app/vocabulary/matching/page.tsx](mdc:src/app/vocabulary/matching/page.tsx)
+
+```typescript
+interface MatchingCard {
+  id: string
+  content: string
+  type: 'term' | 'definition'
+  termId: string
+  isFlipped: boolean
+  isMatched: boolean
+}
+```
 
 ### 3. Word Shoot
-- Fast-paced vocabulary practice
-- Falling words to catch
-- Combo multipliers
-- Speed bonuses
-
-### 4. Fill in the Blank
-- Context-based completion
-- Multiple choice or type-in
-- Physics equation support with KaTeX
-- Partial credit for close answers
-
-## Vocabulary Structure
+[src/app/vocabulary/word-shoot/page.tsx](mdc:src/app/vocabulary/word-shoot/page.tsx)
 
 ```typescript
-interface VocabularyTerm {
+interface FallingWord {
   id: string
-  term: string
-  definition: string
-  unit: string
-  difficulty: 'easy' | 'medium' | 'hard'
-  example?: string
-  relatedTerms?: string[]
-  tags?: string[]
-}
-
-interface VocabularyUnit {
-  id: string
-  unitNumber: number
-  name: string
-  description: string
-  terms: VocabularyTerm[]
+  term: VocabularyTerm
+  x: number              // Horizontal position
+  y: number              // Vertical position
+  speed: number          // Fall speed
+  definition: string     // What to shoot
 }
 ```
 
-## Game State Management
+### 4. Speed Quiz
+[src/app/vocabulary/speed-quiz/page.tsx](mdc:src/app/vocabulary/speed-quiz/page.tsx)
 
-### Starting a Game
 ```typescript
-const handleStartGame = (gameType: VocabularyGameType, unitId: string) => {
-  playGame(gameType, unitId)
-  
-  // Initialize game-specific state
-  setGameState({
-    started: true,
-    currentTerm: 0,
-    score: 0,
-    lives: 3,
-    timeStarted: Date.now()
-  })
+interface SpeedQuizState {
+  currentTerm: VocabularyTerm
+  options: string[]      // 4 definition choices
+  timeRemaining: number  // Countdown timer
+  streak: number        // Correct answers in a row
+  score: number
 }
 ```
 
-### Completing a Game
-```typescript
-const handleGameComplete = async (score: number, perfect: boolean) => {
-  const gameData = {
-    gameType,
-    unitId,
-    score,
-    timeElapsed: Date.now() - gameState.timeStarted,
-    perfect,
-    difficulty: selectedDifficulty
-  }
-  
-  await completeGame(gameData)
-  
-  // Update leaderboard
-  await fetch('/api/leaderboard', {
-    method: 'POST',
-    body: JSON.stringify(gameData)
-  })
-}
-```
+## Game Components
+
+All game components in [src/components/vocabulary/](mdc:src/components/vocabulary/):
+- `HangmanGame.tsx` - Hangman game logic
+- `MatchingGame.tsx` - Card matching interface
+- `WordShootGame.tsx` - Falling words game
+- `VocabularyGameCard.tsx` - Game selection cards
+- `VocabularyLeaderboard.tsx` - Score display
 
 ## Scoring System
 
-### Base Calculation
+### Base Score Calculation
 ```typescript
-const calculateScore = (params: {
-  correct: boolean
-  timeElapsed: number
-  difficulty: string
-  streak: number
-  hintsUsed: number
-}) => {
-  let baseScore = 100
+function calculateScore(gameType: string, performance: GamePerformance): number {
+  const basePoints = {
+    'hangman': 100,
+    'matching': 150,
+    'word-shoot': 200,
+    'speed-quiz': 50
+  }
   
-  // Difficulty multiplier
+  const base = basePoints[gameType]
   const difficultyMultiplier = {
-    easy: 1.0,
-    medium: 1.5,
-    hard: 2.0
-  }[params.difficulty]
+    'easy': 1.0,
+    'medium': 1.5,
+    'hard': 2.0
+  }
   
-  // Time bonus (faster = more points)
-  const timeBonus = Math.max(0, 50 - Math.floor(params.timeElapsed / 1000))
+  // Calculate with bonuses
+  let score = base * difficultyMultiplier[performance.difficulty]
+  
+  // Time bonus (if applicable)
+  if (performance.timeBonus) {
+    score += Math.floor(performance.timeRemaining * 10)
+  }
   
   // Streak bonus
-  const streakBonus = params.streak * 10
+  if (performance.streak > 3) {
+    score *= (1 + (performance.streak - 3) * 0.1)
+  }
   
-  // Hint penalty
-  const hintPenalty = params.hintsUsed * 20
+  // Accuracy bonus
+  const accuracy = performance.correct / performance.total
+  if (accuracy > 0.8) {
+    score *= 1.2
+  }
   
-  return Math.floor(
-    (baseScore + timeBonus + streakBonus - hintPenalty) * difficultyMultiplier
-  )
+  return Math.floor(score)
 }
 ```
 
-## Database Storage
+## Progress Tracking
 
-### Game Completion Record
+### Student Progress Model
 ```typescript
-const { data, error } = await supabase
-  .from('vocabulary_game_completions')
-  .insert({
-    student_id: userId,
-    game_type: gameType,
-    unit_id: unitId,
-    score: score,
-    time_elapsed: timeElapsed,
-    perfect: perfect,
-    completed_at: new Date().toISOString()
-  })
+interface VocabularyProgress {
+  student_id: string
+  term_id: string
+  mastery_level: number        // 0-100
+  times_practiced: number
+  times_correct: number
+  times_incorrect: number
+  last_practiced: string
+  next_review_due?: string     // Spaced repetition
+}
 ```
 
-### Leaderboard Query
+### Mastery Calculation
 ```typescript
+function calculateMastery(progress: VocabularyProgress): number {
+  const accuracy = progress.times_correct / progress.times_practiced
+  const recency = daysSince(progress.last_practiced)
+  
+  // Decay over time (spaced repetition)
+  const decayFactor = Math.max(0.5, 1 - (recency / 30))
+  
+  return Math.floor(accuracy * decayFactor * 100)
+}
+```
+
+## Leaderboard System
+
+[src/app/api/leaderboard/route.ts](mdc:src/app/api/leaderboard/route.ts):
+
+```typescript
+interface LeaderboardEntry {
+  student_id: string
+  student_name: string
+  total_score: number
+  games_played: number
+  average_score: number
+  highest_streak: number
+  rank: number
+}
+
+// Fetch leaderboard with filters
 const { data } = await supabase
-  .from('vocabulary_game_completions')
+  .from('vocabulary_scores')
   .select(`
-    student_id,
-    score,
-    students(name, email)
+    *,
+    student:students(name, email)
   `)
   .eq('game_type', gameType)
   .order('score', { ascending: false })
   .limit(10)
 ```
 
-## UI Patterns
+## AI Integration
 
-### Game Layout Structure
-```typescript
-<div className="flex flex-col h-screen">
-  {/* Header with score and lives */}
-  <div className="flex justify-between items-center p-4">
-    <ScoreDisplay score={score} />
-    <LivesDisplay lives={lives} />
-    <TimerDisplay elapsed={timeElapsed} />
-  </div>
-  
-  {/* Game area */}
-  <div className="flex-1 flex items-center justify-center">
-    <GameContent />
-  </div>
-  
-  {/* Controls */}
-  <div className="p-4">
-    <GameControls />
-  </div>
-</div>
-```
-
-### Progress Indicators
-```typescript
-<Progress 
-  value={(currentTerm / totalTerms) * 100}
-  className="w-full"
-/>
-<p className="text-sm text-muted-foreground mt-2">
-  Term {currentTerm + 1} of {totalTerms}
-</p>
-```
-
-## Animation Patterns
-
-Use Framer Motion for game animations:
+### Generate Example Sentences
+[src/app/api/generate-vocab-sentences/route.ts](mdc:src/app/api/generate-vocab-sentences/route.ts):
 
 ```typescript
-import { motion, AnimatePresence } from 'framer-motion'
+const prompt = `
+Generate 3 example sentences using the physics term "${term}".
 
-<AnimatePresence mode="wait">
-  <motion.div
-    key={currentTerm}
-    initial={{ opacity: 0, x: 100 }}
-    animate={{ opacity: 1, x: 0 }}
-    exit={{ opacity: 0, x: -100 }}
-    transition={{ duration: 0.3 }}
-  >
-    <TermCard term={terms[currentTerm]} />
-  </motion.div>
-</AnimatePresence>
-```
+Definition: ${definition}
+Context: High school physics
 
-## Accessibility
+Requirements:
+- Use the term correctly in physics context
+- Make sentences educational and clear
+- Show different usage patterns
+`
 
-### Keyboard Controls
-```typescript
-useEffect(() => {
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') handleSubmit()
-    if (e.key === 'Escape') handlePause()
-    if (e.key === ' ' && canUseHint) useHint()
-  }
-  
-  window.addEventListener('keydown', handleKeyPress)
-  return () => window.removeEventListener('keydown', handleKeyPress)
-}, [handleSubmit, handlePause, canUseHint])
-```
-
-### Screen Reader Support
-```typescript
-<div 
-  role="status" 
-  aria-live="polite"
-  aria-atomic="true"
-  className="sr-only"
->
-  {`Score: ${score}. Lives remaining: ${lives}. Current term ${currentTerm + 1} of ${totalTerms}`}
-</div>
-```
-
-## Performance Optimization
-
-### Vocabulary Loading
-```typescript
-// Preload vocabulary for selected unit
-useEffect(() => {
-  if (selectedUnit) {
-    const terms = vocabularyUnits.find(u => u.id === selectedUnit)?.terms
-    setPreloadedTerms(terms)
-  }
-}, [selectedUnit, vocabularyUnits])
-```
-
-### Audio Preloading
-```typescript
-// Preload sound effects
-useEffect(() => {
-  const sounds = {
-    correct: new Audio('/sounds/correct.mp3'),
-    incorrect: new Audio('/sounds/incorrect.mp3'),
-    complete: new Audio('/sounds/complete.mp3')
-  }
-  
-  // Preload
-  Object.values(sounds).forEach(sound => sound.load())
-  
-  setSoundEffects(sounds)
-}, [])
-```
-
-## Testing Patterns
-
-```typescript
-describe('VocabularyGame', () => {
-  it('should calculate score correctly', () => {
-    const score = calculateScore({
-      correct: true,
-      timeElapsed: 5000,
-      difficulty: 'medium',
-      streak: 3,
-      hintsUsed: 1
-    })
-    
-    expect(score).toBeGreaterThan(0)
-  })
-  
-  it('should track completion', async () => {
-    await completeGame({
-      gameType: 'hangman',
-      unitId: 'unit-1',
-      score: 500,
-      perfect: true
-    })
-    
-    expect(completedGames).toHaveLength(1)
-  })
+const response = await openai.chat.completions.create({
+  model: 'gpt-4',
+  messages: [{ role: 'user', content: prompt }]
 })
+```
+
+## Game UI Patterns
+
+### Game Layout
+```typescript
+function GameLayout({ 
+  title, 
+  score, 
+  timer, 
+  children 
+}: GameLayoutProps) {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-purple-900 to-blue-900 p-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Header with score and timer */}
+        <div className="flex justify-between items-center mb-6 text-white">
+          <h1 className="text-3xl font-bold">{title}</h1>
+          <div className="flex gap-4">
+            <div className="text-xl">Score: {score}</div>
+            {timer && <div className="text-xl">Time: {timer}s</div>}
+          </div>
+        </div>
+        
+        {/* Game content */}
+        {children}
+      </div>
+    </div>
+  )
+}
+```
+
+### Game Over Screen
+```typescript
+function GameOverScreen({ 
+  score, 
+  accuracy,
+  onReplay, 
+  onExit 
+}: GameOverProps) {
+  return (
+    <Card className="max-w-md mx-auto">
+      <CardHeader>
+        <CardTitle className="text-center text-2xl">Game Over!</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="text-center">
+          <p className="text-4xl font-bold text-primary">{score}</p>
+          <p className="text-muted-foreground">Final Score</p>
+        </div>
+        <div className="text-center">
+          <p className="text-2xl">{accuracy}%</p>
+          <p className="text-muted-foreground">Accuracy</p>
+        </div>
+      </CardContent>
+      <CardFooter className="flex gap-2">
+        <Button onClick={onReplay} className="flex-1">
+          Play Again
+        </Button>
+        <Button onClick={onExit} variant="outline" className="flex-1">
+          Exit
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
 ```

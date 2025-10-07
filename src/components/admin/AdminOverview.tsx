@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { supabase } from '@/lib/supabase'
 import { BookOpen, FileText, Users, GraduationCap } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
@@ -35,48 +34,25 @@ export default function AdminOverview() {
     try {
       setLoading(true)
       
-      // Initialize stats object
-      const newStats = {
-        totalLessons: 0,
-        totalAssignments: 0,
-        activeAssignments: 0,
-        enrolledStudents: 0
+      // Fetch stats from API (handles auth properly)
+      const response = await fetch('/api/admin/stats')
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch admin stats')
       }
       
-      // Fetch lessons count with better error handling
-      try {
-        const { count: lessonsCount, error: lessonsError } = await supabase
-          .from('lessons')
-          .select('*', { count: 'exact', head: true })
-          .eq('published', true)
-        
-        if (!lessonsError) {
-          newStats.totalLessons = lessonsCount || 0
-        }
-      } catch {
-        // Silent error handling
-      }
+      const data = await response.json()
+      
+      // Update stats from API response
+      setStats({
+        totalLessons: data.stats.publishedLessons || 0,
+        totalAssignments: data.stats.publishedAssignments || 0,
+        activeAssignments: data.stats.activeAssignments || 0,
+        enrolledStudents: data.stats.enrolledStudents || 0
+      })
 
-      // Backend functionality disabled for assignments - using mock data
-      // try {
-      //   const { count: assignmentsCount, error: assignmentsError } = await supabase
-      //     .from('assignments')
-      //     .select('*', { count: 'exact', head: true })
-      //     .eq('published', true)
-      //   if (!assignmentsError) {
-      //     newStats.totalAssignments = assignmentsCount || 0
-      //   }
-      // } catch (assignmentsErr) {
-      //   // Silent error handling
-      // }
-
-      // Mock assignment counts for frontend demo
-      newStats.totalAssignments = 3  // Mock total assignments
-      newStats.activeAssignments = 2  // Mock active assignments
-
-      setStats(newStats)
-
-    } catch {
+    } catch (error) {
+      console.error('Error fetching admin stats:', error)
       
       // Set default stats on error
       setStats({

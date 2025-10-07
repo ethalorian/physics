@@ -1,29 +1,25 @@
 ---
-description: "Interactive video questions system (EdPuzzle-style) patterns and implementation"
+description: Interactive video questions system (EdPuzzle-style) patterns and implementation
 ---
 
 # Interactive Video Questions System
 
-## Overview
+## YouTube Player API Integration
 
-Embed questions at specific timestamps in YouTube videos for interactive learning experiences. Core implementation in lesson content pages.
-
-## Video Player Integration
-
-### YouTube Player Setup
+### Player Setup Pattern
 ```typescript
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
 interface YouTubePlayer {
-  getCurrentTime: () => number
-  pauseVideo: () => void
-  playVideo: () => void
-  seekTo: (seconds: number) => void
+  playVideo(): void
+  pauseVideo(): void
+  seekTo(seconds: number, allowSeekAhead: boolean): void
+  getCurrentTime(): Promise<number>
+  getPlayerState(): number
 }
 
-const useYouTubePlayer = (videoId: string) => {
+function VideoPlayer({ videoId, onTimeUpdate }: Props) {
   const playerRef = useRef<YouTubePlayer | null>(null)
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null)
   
   useEffect(() => {
     // Load YouTube IFrame API
@@ -32,401 +28,201 @@ const useYouTubePlayer = (videoId: string) => {
     document.head.appendChild(tag)
     
     window.onYouTubeIframeAPIReady = () => {
-      const ytPlayer = new window.YT.Player('youtube-player', {
+      playerRef.current = new window.YT.Player('player', {
         videoId: videoId,
         events: {
-          onReady: (event) => {
-            playerRef.current = event.target
-            setPlayer(event.target)
-          },
-          onStateChange: handleStateChange
+          onStateChange: handleStateChange,
+          onReady: handleReady
         }
       })
     }
   }, [videoId])
-  
-  return { player, playerRef }
 }
 ```
 
-## Question Timing System
+## Video Question Structure
 
-### Question Marker Structure
 ```typescript
 interface VideoQuestion {
   id: string
-  timestamp: number // seconds into video
-  question: string
-  type: 'multiple-choice' | 'open-response' | 'true-false'
-  options?: string[]
-  correctAnswer?: number | string
-  explanation?: string
-  allowSkip: boolean
-  requireCorrect: boolean // Must answer correctly to continue
+  timestamp: number           // When to pause (seconds)
+  question: Question          // Use existing Question types
+  answered: boolean
+  score?: number
+  attempts?: number
 }
 
 interface VideoLesson {
-  videoId: string
+  id: string
   title: string
-  description: string
+  video_id: string           // YouTube video ID
   questions: VideoQuestion[]
-  duration: number
+  total_duration: number     // Video length in seconds
 }
 ```
 
-### Time-Based Question Triggering
+## Pause and Question Display
+
+### Time Monitoring Pattern
 ```typescript
-const useVideoQuestions = (
-  player: YouTubePlayer | null,
-  questions: VideoQuestion[]
-) => {
-  const [currentQuestion, setCurrentQuestion] = useState<VideoQuestion | null>(null)
-  const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(new Set())
-  const checkIntervalRef = useRef<NodeJS.Timeout>()
+function useVideoTimeMonitor(player: YouTubePlayer, questions: VideoQuestion[]) {
+  const [currentTime, setCurrentTime] = useState(0)
+  const [activeQuestion, setActiveQuestion] = useState<VideoQuestion | null>(null)
   
   useEffect(() => {
-    if (!player) return
-    
-    // Check current time every 500ms
-    checkIntervalRef.current = setInterval(() => {
-      const currentTime = player.getCurrentTime()
+    const interval = setInterval(async () => {
+      if (!player) return
       
-      // Find question at current timestamp
-      const questionAtTime = questions.find(q => 
-        Math.abs(q.timestamp - currentTime) < 0.5 && 
-        !answeredQuestions.has(q.id)
+      const time = await player.getCurrentTime()
+      setCurrentTime(time)
+      
+      // Check if we hit a question timestamp
+      const question = questions.find(q => 
+        !q.answered && 
+        Math.abs(time - q.timestamp) < 0.5
       )
       
-      if (questionAtTime) {
+      if (question) {
         player.pauseVideo()
-        setCurrentQuestion(questionAtTime)
+        setActiveQuestion(question)
       }
-    }, 500)
+    }, 100)
     
-    return () => {
-      if (checkIntervalRef.current) {
-        clearInterval(checkIntervalRef.current)
-      }
-    }
-  }, [player, questions, answeredQuestions])
+    return () => clearInterval(interval)
+  }, [player, questions])
   
-  return {
-    currentQuestion,
-    setCurrentQuestion,
-    answeredQuestions,
-    setAnsweredQuestions
-  }
+  return { currentTime, activeQuestion }
 }
 ```
 
 ## Question Overlay Component
 
-### Modal Question Display
 ```typescript
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-
-interface VideoQuestionModalProps {
-  question: VideoQuestion
-  onAnswer: (answer: string | number, correct: boolean) => void
-  onSkip?: () => void
-}
-
-export function VideoQuestionModal({
-  question,
+function VideoQuestionOverlay({ 
+  question, 
   onAnswer,
-  onSkip
-}: VideoQuestionModalProps) {
-  const [selectedAnswer, setSelectedAnswer] = useState<string | number>('')
-  const [showFeedback, setShowFeedback] = useState(false)
-  const [isCorrect, setIsCorrect] = useState(false)
-  
-  const handleSubmit = () => {
-    const correct = selectedAnswer === question.correctAnswer
-    setIsCorrect(correct)
-    setShowFeedback(true)
-    
-    if (!question.requireCorrect || correct) {
-      setTimeout(() => {
-        onAnswer(selectedAnswer, correct)
-      }, 2000)
-    }
-  }
-  
+  onSkip 
+}: VideoQuestionOverlayProps) {
   return (
-    <Dialog open={true} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>
-            Question at {formatTimestamp(question.timestamp)}
-          </DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-4">
-          <p className="text-lg">{question.question}</p>
-          
-          {question.type === 'multiple-choice' && (
-            <RadioGroup 
-              value={String(selectedAnswer)} 
-              onValueChange={setSelectedAnswer}
-            >
-              {question.options?.map((option, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={String(index)} id={`option-${index}`} />
-                  <label htmlFor={`option-${index}`}>{option}</label>
-                </div>
-              ))}
-            </RadioGroup>
-          )}
-          
-          {showFeedback && (
-            <div className={cn(
-              "p-4 rounded-lg",
-              isCorrect ? "bg-green-100 dark:bg-green-900" : "bg-red-100 dark:bg-red-900"
-            )}>
-              <p className="font-medium">
-                {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
-              </p>
-              {question.explanation && (
-                <p className="mt-2 text-sm">{question.explanation}</p>
-              )}
-            </div>
-          )}
-          
-          <div className="flex justify-between">
-            {question.allowSkip && !showFeedback && (
-              <Button variant="ghost" onClick={onSkip}>
-                Skip
-              </Button>
-            )}
-            
-            <Button 
-              onClick={handleSubmit}
-              disabled={!selectedAnswer || showFeedback}
-              className="ml-auto"
-            >
-              Submit Answer
-            </Button>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+    <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
+      <Card className="max-w-2xl w-full mx-4">
+        <CardHeader>
+          <CardTitle>Question at {formatTime(question.timestamp)}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {/* Render question using existing QuestionRenderer */}
+          <QuestionRenderer
+            question={question.question}
+            answer={answer}
+            onAnswerChange={setAnswer}
+          />
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button variant="outline" onClick={onSkip}>
+            Skip Question
+          </Button>
+          <Button onClick={() => onAnswer(answer)}>
+            Submit Answer
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   )
 }
 ```
 
 ## Progress Tracking
 
-### Video Progress State
 ```typescript
 interface VideoProgress {
-  lessonId: string
-  videoId: string
-  watchedDuration: number // total seconds watched
-  questionsAnswered: {
-    questionId: string
-    answer: string | number
-    correct: boolean
-    timestamp: number
-    attemptedAt: string
-  }[]
-  completed: boolean
-  completedAt?: string
+  lesson_id: string
+  student_id: string
+  current_time: number
+  questions_answered: number
+  questions_correct: number
+  total_questions: number
+  completion_percentage: number
+  last_watched: string
 }
-```
 
-### Saving Progress
-```typescript
-const saveVideoProgress = async (progress: VideoProgress) => {
-  const { data, error } = await supabase
+// Save progress periodically
+const saveProgress = async (progress: VideoProgress) => {
+  await supabase
     .from('video_lesson_progress')
-    .upsert({
-      student_id: userId,
-      lesson_id: progress.lessonId,
-      video_id: progress.videoId,
-      watched_duration: progress.watchedDuration,
-      questions_answered: progress.questionsAnswered,
-      completed: progress.completed,
-      completed_at: progress.completedAt,
-      updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'student_id,lesson_id'
+    .upsert(progress, {
+      onConflict: 'lesson_id,student_id'
     })
-  
-  if (error) throw error
-  return data
 }
 ```
 
-## Timeline Markers
+## Video Controls Enhancement
 
-### Visual Question Indicators
+### Custom Controls with Questions
 ```typescript
-const VideoTimeline = ({ 
-  duration, 
+function VideoControls({ 
+  player, 
   questions,
   currentTime 
-}: {
-  duration: number
-  questions: VideoQuestion[]
-  currentTime: number
-}) => {
+}: VideoControlsProps) {
   return (
-    <div className="relative w-full h-2 bg-muted rounded-full mt-2">
-      {/* Progress bar */}
-      <div 
-        className="absolute h-full bg-primary rounded-full transition-all"
-        style={{ width: `${(currentTime / duration) * 100}%` }}
-      />
-      
-      {/* Question markers */}
-      {questions.map(q => (
-        <div
-          key={q.id}
-          className="absolute top-0 w-3 h-3 bg-yellow-500 rounded-full transform -translate-y-1/4"
-          style={{ left: `${(q.timestamp / duration) * 100}%` }}
-          title={`Question at ${formatTimestamp(q.timestamp)}`}
+    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-4">
+      {/* Progress bar with question markers */}
+      <div className="relative h-2 bg-gray-700 rounded mb-2">
+        <div 
+          className="absolute h-full bg-primary rounded"
+          style={{ width: `${(currentTime / totalDuration) * 100}%` }}
         />
-      ))}
-    </div>
-  )
-}
-```
-
-## Admin Question Editor
-
-### Adding Questions to Videos
-```typescript
-interface VideoQuestionEditorProps {
-  videoId: string
-  duration: number
-  existingQuestions: VideoQuestion[]
-  onSave: (questions: VideoQuestion[]) => void
-}
-
-export function VideoQuestionEditor({
-  videoId,
-  duration,
-  existingQuestions,
-  onSave
-}: VideoQuestionEditorProps) {
-  const [questions, setQuestions] = useState<VideoQuestion[]>(existingQuestions)
-  const [editingQuestion, setEditingQuestion] = useState<VideoQuestion | null>(null)
-  
-  const addQuestion = (timestamp: number) => {
-    const newQuestion: VideoQuestion = {
-      id: `q-${Date.now()}`,
-      timestamp,
-      question: '',
-      type: 'multiple-choice',
-      options: ['', '', '', ''],
-      correctAnswer: 0,
-      allowSkip: false,
-      requireCorrect: false
-    }
-    
-    setEditingQuestion(newQuestion)
-  }
-  
-  return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Video Questions</h3>
-        <Button onClick={() => addQuestion(0)}>
-          Add Question
-        </Button>
+        
+        {/* Question markers */}
+        {questions.map(q => (
+          <button
+            key={q.id}
+            className={cn(
+              "absolute w-3 h-3 rounded-full -top-0.5",
+              q.answered ? "bg-green-500" : "bg-yellow-500"
+            )}
+            style={{ left: `${(q.timestamp / totalDuration) * 100}%` }}
+            onClick={() => player.seekTo(q.timestamp, true)}
+          />
+        ))}
       </div>
       
-      {/* Question list */}
-      <div className="space-y-2">
-        {questions
-          .sort((a, b) => a.timestamp - b.timestamp)
-          .map(q => (
-            <div key={q.id} className="flex items-center justify-between p-4 border rounded-lg">
-              <div>
-                <p className="font-medium">{formatTimestamp(q.timestamp)}</p>
-                <p className="text-sm text-muted-foreground">{q.question}</p>
-              </div>
-              <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setEditingQuestion(q)}
-                >
-                  Edit
-                </Button>
-                <Button 
-                  variant="destructive" 
-                  size="sm"
-                  onClick={() => removeQuestion(q.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </div>
-          ))}
-      </div>
+      {/* Play/pause, time display, etc. */}
     </div>
   )
 }
 ```
 
-## Completion Criteria
+## Analytics and Insights
 
-### Video Lesson Completion
-```typescript
-const checkVideoCompletion = (progress: VideoProgress): boolean => {
-  // Must watch at least 80% of video
-  const watchPercentage = progress.watchedDuration / videoDuration
-  const watchedEnough = watchPercentage >= 0.8
-  
-  // Must answer all required questions correctly
-  const allQuestionsAnswered = videoQuestions.every(q => 
-    progress.questionsAnswered.some(a => 
-      a.questionId === q.id && 
-      (!q.requireCorrect || a.correct)
-    )
-  )
-  
-  return watchedEnough && allQuestionsAnswered
-}
-```
-
-## Utility Functions
+Track video engagement metrics:
 
 ```typescript
-// Format seconds to MM:SS
-const formatTimestamp = (seconds: number): string => {
-  const mins = Math.floor(seconds / 60)
-  const secs = Math.floor(seconds % 60)
-  return `${mins}:${secs.toString().padStart(2, '0')}`
-}
-
-// Parse timestamp string to seconds
-const parseTimestamp = (timestamp: string): number => {
-  const [mins, secs] = timestamp.split(':').map(Number)
-  return mins * 60 + secs
+interface VideoAnalytics {
+  total_views: number
+  average_completion: number
+  question_accuracy: {
+    [questionId: string]: {
+      attempts: number
+      correct: number
+      accuracy_rate: number
+    }
+  }
+  common_drop_off_points: number[]  // Timestamps where students stop
+  rewatch_segments: {
+    start: number
+    end: number
+    rewatch_count: number
+  }[]
 }
 ```
 
-## Database Schema
+## Best Practices
 
-```sql
-CREATE TABLE video_lesson_progress (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  student_id UUID NOT NULL REFERENCES students(id),
-  lesson_id TEXT NOT NULL,
-  video_id TEXT NOT NULL,
-  watched_duration INTEGER DEFAULT 0,
-  questions_answered JSONB DEFAULT '[]'::jsonb,
-  completed BOOLEAN DEFAULT FALSE,
-  completed_at TIMESTAMPTZ,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(student_id, lesson_id)
-);
-
-CREATE INDEX idx_video_progress_student ON video_lesson_progress(student_id);
-CREATE INDEX idx_video_progress_lesson ON video_lesson_progress(lesson_id);
-```
+1. **Question Placement**: Place questions at natural pause points
+2. **Question Density**: 1 question per 2-3 minutes of video
+3. **Allow Rewinding**: Let students review before questions
+4. **Progress Persistence**: Save progress every 5 seconds
+5. **Mobile Friendly**: Use YouTube mobile player on small screens
+6. **Retry Logic**: Allow multiple attempts on questions
+7. **Skip Option**: Let students skip and return later

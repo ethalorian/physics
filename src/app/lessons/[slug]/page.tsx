@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import MathMarkdown from '@/components/MathMarkdown'
 import EnhancedLessonView from '@/components/lessons/EnhancedLessonView'
@@ -7,14 +7,18 @@ import StudentLessonViewer from '@/components/lessons/StudentLessonViewer'
 import { Lesson } from '@/types/assignment'
 
 async function getLesson(slug: string): Promise<Lesson | null> {
-  const { data: lesson, error } = await supabase
+  // Use supabaseAdmin for server-side rendering
+  const { data: lesson, error } = await supabaseAdmin
     .from('lessons')
     .select('*')
     .eq('slug', slug)
     .eq('published', true)
     .single()
   
-  if (error || !lesson) return null
+  if (error || !lesson) {
+    console.error('Error fetching lesson:', error)
+    return null
+  }
   
   // Parse videos JSON if it exists
   let videos = []

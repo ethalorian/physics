@@ -1,16 +1,20 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
 import { Lesson } from '@/types/assignment'
 import AdminLessonPreview from '@/components/admin/AdminLessonPreview'
 
 async function getLesson(id: string): Promise<Lesson | null> {
-  const { data: lesson, error } = await supabase
+  // Use supabaseAdmin for server-side rendering (admin can view unpublished)
+  const { data: lesson, error } = await supabaseAdmin
     .from('lessons')
     .select('*')
     .eq('id', id)
     .single()
   
-  if (error || !lesson) return null
+  if (error || !lesson) {
+    console.error('Error fetching lesson for preview:', error)
+    return null
+  }
   
   // Parse videos JSON if it exists
   let videos = []

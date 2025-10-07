@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Eye, ExternalLink, Play, Target, Clock } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 
 interface QuickLesson {
   id: string
@@ -29,17 +28,25 @@ export default function QuickLessonPreview() {
 
   const fetchRecentLessons = async () => {
     try {
-      const { data, error } = await supabase
-        .from('lessons')
-        .select('id, title, slug, unit, lesson_number, videos, objectives, estimated_time, created_at')
-        .eq('published', true)
-        .order('created_at', { ascending: false })
-        .limit(5)
+      // Fetch lessons from API (handles auth properly)
+      const response = await fetch('/api/lessons/published')
 
-      if (error) throw error
+      if (!response.ok) {
+        throw new Error('Failed to fetch lessons')
+      }
+
+      const data = await response.json()
+      const allLessons = data.lessons || []
+
+      // Get the 5 most recent lessons
+      const recentLessons = allLessons
+        .sort((a: QuickLesson, b: QuickLesson) => 
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .slice(0, 5)
 
       // Parse videos JSON for each lesson
-      const parsedLessons = data?.map(lesson => {
+      const parsedLessons = recentLessons.map((lesson: QuickLesson) => {
         let videos = []
         if (lesson.videos) {
           try {
@@ -51,11 +58,12 @@ export default function QuickLessonPreview() {
           }
         }
         return { ...lesson, videos }
-      }) || []
+      })
 
       setLessons(parsedLessons)
     } catch (error) {
       console.error('Error fetching recent lessons:', error)
+      setLessons([])
     } finally {
       setLoading(false)
     }

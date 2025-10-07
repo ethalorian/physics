@@ -1,634 +1,153 @@
 ---
-description: "Enhanced lesson management interface patterns and UX improvements"
+description: Enhanced lesson management interface patterns and UX improvements
 ---
 
-# Enhanced Lesson Management System
+# Lesson Management System
 
-## Lesson Data Structure
+## Lesson Structure
 
-### Core Lesson Interface
+Lessons organized by physics curriculum in [src/data/physics-units.ts](mdc:src/data/physics-units.ts):
+
 ```typescript
 interface Lesson {
   id: string
-  slug: string
-  unit_id: string
   title: string
-  description: string
-  content: string // Markdown with KaTeX math
-  objectives: string[]
-  prerequisites: string[]
-  difficulty: 'easy' | 'medium' | 'hard'
-  estimated_time: number // minutes
-  published: boolean
-  video_id?: string
-  simulation_ids?: string[]
-  vocabulary_terms?: string[]
-  practice_questions?: string[]
+  slug: string              // URL-friendly identifier
+  unit_id: string          // Physics unit reference
+  order_index: number      // Display order
+  content: string          // Markdown with KaTeX math
+  objectives: string[]     // Learning objectives
+  vocabulary: string[]     // Key physics terms
+  published: boolean       // Draft vs published
   created_at: string
   updated_at: string
 }
 ```
 
-## Lesson Editor Component
+## Lesson Pages
 
-### Rich Content Editor
+### Student View
+[src/app/lessons/[slug]/page.tsx](mdc:src/app/lessons/[slug]/page.tsx) - Dynamic lesson display:
 ```typescript
-'use client'
+// Fetch lesson by slug
+const { data: lesson } = await supabase
+  .from('lessons')
+  .select('*')
+  .eq('slug', params.slug)
+  .eq('published', true)
+  .single()
 
-import { useState, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
-import MathMarkdown from '@/components/MathMarkdown'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-interface LessonEditorProps {
-  lesson?: Lesson
-  onSave: (lesson: Partial<Lesson>) => Promise<void>
-  onCancel: () => void
-}
-
-export function LessonEditor({ lesson, onSave, onCancel }: LessonEditorProps) {
-  const [formData, setFormData] = useState<Partial<Lesson>>(
-    lesson || {
-      title: '',
-      description: '',
-      content: '',
-      objectives: [''],
-      prerequisites: [],
-      difficulty: 'medium',
-      estimated_time: 30,
-      published: false
-    }
-  )
-  
-  const [activeTab, setActiveTab] = useState<'edit' | 'preview'>('edit')
-  const [saving, setSaving] = useState(false)
-  
-  const updateField = (field: keyof Lesson, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }))
-  }
-  
-  const addObjective = () => {
-    setFormData(prev => ({
-      ...prev,
-      objectives: [...(prev.objectives || []), '']
-    }))
-  }
-  
-  const updateObjective = (index: number, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      objectives: prev.objectives?.map((obj, i) => i === index ? value : obj)
-    }))
-  }
-  
-  const removeObjective = (index: number) => {
-    setFormData(prev => ({
-      ...prev,
-      objectives: prev.objectives?.filter((_, i) => i !== index)
-    }))
-  }
-  
-  const handleSave = async () => {
-    setSaving(true)
-    try {
-      await onSave(formData)
-    } finally {
-      setSaving(false)
-    }
-  }
-  
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Basic Info */}
-      <div className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Lesson Title *</Label>
-          <Input
-            id="title"
-            value={formData.title}
-            onChange={(e) => updateField('title', e.target.value)}
-            placeholder="e.g., Newton&apos;s First Law of Motion"
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="description">Description</Label>
-          <Textarea
-            id="description"
-            value={formData.description}
-            onChange={(e) => updateField('description', e.target.value)}
-            placeholder="Brief description of the lesson"
-            rows={3}
-          />
-        </div>
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="difficulty">Difficulty</Label>
-            <Select
-              value={formData.difficulty}
-              onValueChange={(value) => updateField('difficulty', value)}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="easy">Easy</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="hard">Hard</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="time">Estimated Time (minutes)</Label>
-            <Input
-              id="time"
-              type="number"
-              value={formData.estimated_time}
-              onChange={(e) => updateField('estimated_time', parseInt(e.target.value))}
-            />
-          </div>
-        </div>
-      </div>
-      
-      {/* Learning Objectives */}
-      <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label>Learning Objectives</Label>
-          <Button variant="outline" size="sm" onClick={addObjective}>
-            Add Objective
-          </Button>
-        </div>
-        {formData.objectives?.map((objective, index) => (
-          <div key={index} className="flex space-x-2">
-            <Input
-              value={objective}
-              onChange={(e) => updateObjective(index, e.target.value)}
-              placeholder={`Objective ${index + 1}`}
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => removeObjective(index)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-      
-      {/* Content Editor with Preview */}
-      <div className="space-y-2">
-        <Label>Lesson Content</Label>
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
-          <TabsList>
-            <TabsTrigger value="edit">Edit</TabsTrigger>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="edit" className="mt-4">
-            <Textarea
-              value={formData.content}
-              onChange={(e) => updateField('content', e.target.value)}
-              placeholder="Write lesson content with markdown. Use \\( ... \\) for inline math and \\[ ... \\] for display math."
-              rows={20}
-              className="font-mono text-sm"
-            />
-            <p className="text-sm text-muted-foreground mt-2">
-              Supports Markdown and KaTeX math notation
-            </p>
-          </TabsContent>
-          
-          <TabsContent value="preview" className="mt-4">
-            <div className="border rounded-lg p-6 min-h-[400px] bg-background">
-              <MathMarkdown content={formData.content || '*No content yet*'} />
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
-      
-      {/* Media Integration */}
-      <div className="space-y-4 border-t pt-4">
-        <h3 className="text-lg font-medium">Media Integration</h3>
-        
-        <div className="space-y-2">
-          <Label htmlFor="video">YouTube Video ID</Label>
-          <Input
-            id="video"
-            value={formData.video_id || ''}
-            onChange={(e) => updateField('video_id', e.target.value)}
-            placeholder="e.g., dQw4w9WgXcQ"
-          />
-        </div>
-      </div>
-      
-      {/* Actions */}
-      <div className="flex justify-between items-center border-t pt-4">
-        <div className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            id="published"
-            checked={formData.published}
-            onChange={(e) => updateField('published', e.target.checked)}
-          />
-          <Label htmlFor="published">Publish lesson</Label>
-        </div>
-        
-        <div className="flex space-x-2">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} disabled={saving}>
-            {saving ? 'Saving...' : lesson ? 'Update Lesson' : 'Create Lesson'}
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
+// Use MathMarkdown for content rendering
+<MathMarkdown content={lesson.content} />
 ```
 
-## Lesson Display Component
+### Admin Management
+[src/app/admin/lessons/page.tsx](mdc:src/app/admin/lessons/page.tsx) - CRUD interface:
+- Create/edit lessons
+- Preview before publishing
+- Manage lesson order
+- Track student progress
 
-### Student Lesson View
+## Math Content Rendering
+
+ALWAYS use [src/components/MathMarkdown.tsx](mdc:src/components/MathMarkdown.tsx) for physics content:
+
 ```typescript
 import MathMarkdown from '@/components/MathMarkdown'
-import { YouTubePlayer } from '@/components/YouTubePlayer'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 
-interface LessonViewProps {
-  lesson: Lesson
-  onComplete?: () => void
-  showProgress?: boolean
-  progress?: number
-}
+// Inline math
+const content = "The equation is \\( F = ma \\)"
 
-export function LessonView({ 
-  lesson, 
-  onComplete, 
-  showProgress = false,
-  progress = 0 
-}: LessonViewProps) {
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="space-y-4">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">{lesson.title}</h1>
-            <p className="text-muted-foreground mt-2">{lesson.description}</p>
-          </div>
-          <Badge variant={
-            lesson.difficulty === 'easy' ? 'secondary' :
-            lesson.difficulty === 'medium' ? 'default' :
-            'destructive'
-          }>
-            {lesson.difficulty}
-          </Badge>
-        </div>
-        
-        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-          <span>⏱️ {lesson.estimated_time} minutes</span>
-          <span>📚 Unit {lesson.unit_id}</span>
-        </div>
-        
-        {showProgress && (
-          <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>Progress</span>
-              <span>{progress}%</span>
-            </div>
-            <Progress value={progress} />
-          </div>
-        )}
-      </div>
-      
-      {/* Learning Objectives */}
-      {lesson.objectives && lesson.objectives.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Learning Objectives</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {lesson.objectives.map((objective, index) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2">✓</span>
-                  <span>{objective}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Video Content */}
-      {lesson.video_id && (
-        <Card>
-          <CardContent className="p-4">
-            <YouTubePlayer videoId={lesson.video_id} />
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Main Content */}
-      <Card>
-        <CardContent className="p-6 prose prose-lg max-w-none dark:prose-invert">
-          <MathMarkdown content={lesson.content} />
-        </CardContent>
-      </Card>
-      
-      {/* Vocabulary Terms */}
-      {lesson.vocabulary_terms && lesson.vocabulary_terms.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Key Vocabulary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {lesson.vocabulary_terms.map((term, index) => (
-                <Badge key={index} variant="outline">
-                  {term}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Completion Button */}
-      {onComplete && (
-        <div className="flex justify-center">
-          <Button size="lg" onClick={onComplete}>
-            Mark as Complete
-          </Button>
-        </div>
-      )}
-    </div>
-  )
-}
-```
-
-## Lesson Navigation
-
-### Unit-Based Lesson List
-```typescript
-interface LessonListProps {
-  unitId: string
-  lessons: Lesson[]
-  currentLessonId?: string
-  onSelectLesson: (lesson: Lesson) => void
-}
-
-export function LessonList({
-  unitId,
-  lessons,
-  currentLessonId,
-  onSelectLesson
-}: LessonListProps) {
-  const unitLessons = lessons
-    .filter(l => l.unit_id === unitId && l.published)
-    .sort((a, b) => a.slug.localeCompare(b.slug))
-  
-  return (
-    <div className="space-y-2">
-      {unitLessons.map((lesson, index) => (
-        <button
-          key={lesson.id}
-          onClick={() => onSelectLesson(lesson)}
-          className={cn(
-            "w-full text-left p-4 rounded-lg border transition-colors",
-            "hover:bg-accent hover:text-accent-foreground",
-            currentLessonId === lesson.id && "bg-primary text-primary-foreground"
-          )}
-        >
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">{index + 1}. {lesson.title}</p>
-              <p className="text-sm opacity-80">{lesson.estimated_time} min</p>
-            </div>
-            <Badge variant={lesson.difficulty === 'hard' ? 'destructive' : 'secondary'}>
-              {lesson.difficulty}
-            </Badge>
-          </div>
-        </button>
-      ))}
-    </div>
-  )
-}
-```
-
-## Progress Tracking
-
-### Lesson Progress Management
-```typescript
-interface LessonProgress {
-  lessonId: string
-  userId: string
-  status: 'not_started' | 'in_progress' | 'completed'
-  progress_percentage: number
-  time_spent: number // seconds
-  last_accessed: string
-  completed_at?: string
-  quiz_score?: number
-}
-
-const updateLessonProgress = async (
-  lessonId: string,
-  userId: string,
-  updates: Partial<LessonProgress>
-) => {
-  const { data, error } = await supabase
-    .from('lesson_progress')
-    .upsert({
-      lesson_id: lessonId,
-      user_id: userId,
-      ...updates,
-      last_accessed: new Date().toISOString()
-    }, {
-      onConflict: 'lesson_id,user_id'
-    })
-  
-  if (error) throw error
-  return data
-}
-
-// Track reading progress
-const useReadingProgress = (lessonId: string, userId: string) => {
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const saveProgressRef = useRef<NodeJS.Timeout>()
-  
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight
-      const scrolled = window.scrollY
-      const progress = Math.round((scrolled / scrollHeight) * 100)
-      
-      setScrollProgress(progress)
-      
-      // Debounced save
-      if (saveProgressRef.current) {
-        clearTimeout(saveProgressRef.current)
-      }
-      
-      saveProgressRef.current = setTimeout(() => {
-        updateLessonProgress(lessonId, userId, {
-          progress_percentage: progress,
-          status: progress >= 90 ? 'completed' : 'in_progress'
-        })
-      }, 2000)
-    }
-    
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [lessonId, userId])
-  
-  return scrollProgress
-}
-```
-
-## Content Templates
-
-### Common Lesson Patterns
-```typescript
-// Problem-solving lesson template
-const problemSolvingTemplate = `
-# [Topic Name]
-
-## Introduction
-[Brief introduction to the concept]
-
-## Key Concepts
-### Concept 1
-[Explanation with math: \\( formula \\)]
-
-### Concept 2
-[Explanation]
-
-## Step-by-Step Example
-**Problem:** [Problem statement]
-
-**Given:**
-- Variable 1: value with unit
-- Variable 2: value with unit
-
-**Find:** [What to solve for]
-
-**Solution:**
-\\[
-\\begin{aligned}
-step 1 &= equation \\\\
-step 2 &= result \\\\
-\\end{aligned}
-\\]
-
-## Practice Problems
-Try these on your own:
-1. [Problem 1]
-2. [Problem 2]
-
-## Summary
-- Key point 1
-- Key point 2
+// Display math
+const content = `
+\\[ v = v_0 + at \\]
+\\[ x = x_0 + v_0t + \\frac{1}{2}at^2 \\]
 `
 
-// Conceptual lesson template
-const conceptualTemplate = `
-# [Topic Name]
-
-## Real-World Connection
-[Engaging example or scenario]
-
-## The Big Idea
-[Core concept explanation]
-
-## Common Misconceptions
-### Misconception 1
-❌ **Wrong idea:** [misconception]
-✓ **Correct understanding:** [correction]
-
-## Visual Representation
-[Description of diagram or simulation]
-
-## Checking Understanding
-- Question 1?
-- Question 2?
-
-## Extensions
-For advanced learners:
-- [Advanced topic 1]
-- [Advanced topic 2]
-`
+<MathMarkdown content={content} />
 ```
 
-## API Routes
+### KaTeX Syntax Rules
+- Inline: `\( expression \)`
+- Display: `\[ expression \]`
+- Subscripts: `v_0`, `v_f`
+- Superscripts: `v^2`, `m^3`
+- Fractions: `\frac{numerator}{denominator}`
+- Greek letters: `\alpha`, `\beta`, `\Delta`
+- Vectors: `\vec{v}`, `\vec{F}`
+- Units: `\text{m/s}`, `\text{kg}`
 
-### Lesson CRUD Operations
+## Lesson Components
+
+### Student Interface
+[src/components/student/StudentLessons.tsx](mdc:src/components/student/StudentLessons.tsx):
+- Browse lessons by unit
+- Track completion status
+- Quick access to assignments
+
+### Admin Components
+[src/components/admin/QuickLessonPreview.tsx](mdc:src/components/admin/QuickLessonPreview.tsx):
+- Preview lesson rendering
+- Edit mode toggle
+- Publish workflow
+
+## Lesson APIs
+
+[src/app/api/lessons/](mdc:src/app/api/lessons/):
+- `route.ts` - List and create lessons
+- `[id]/route.ts` - Update/delete specific lesson
+- `published/route.ts` - Fetch published lessons only
+
+### API Security Pattern
 ```typescript
-// GET /api/lessons
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const unitId = searchParams.get('unit')
-  const published = searchParams.get('published') !== 'false'
-  
-  let query = supabase
-    .from('lessons')
-    .select('*')
-    .order('slug', { ascending: true })
-  
-  if (unitId) query = query.eq('unit_id', unitId)
-  if (published) query = query.eq('published', true)
-  
-  const { data, error } = await query
-  
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
-  }
-  
-  return NextResponse.json({ data })
-}
-
-// POST /api/lessons
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const session = await auth()
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  const userRole = getUserRole(session?.user?.email)
   
-  const userRole = getUserRole(session.user.email)
+  // Only admins can create lessons
   if (userRole !== 'admin') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
   
-  const body = await request.json()
-  
-  // Generate slug from title
-  const slug = body.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-  
-  const { data, error } = await supabase
-    .from('lessons')
-    .insert({
-      ...body,
-      slug,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    })
-    .select()
-    .single()
-  
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+  // Process request
+}
+```
+
+## Lesson Assignment Integration
+
+Link lessons to assignments using `lesson_id`:
+
+```typescript
+interface Assignment {
+  lesson_id?: string      // Optional lesson reference
+  lesson?: {              // Populated lesson data
+    title: string
+    slug: string
   }
-  
-  return NextResponse.json({ data }, { status: 201 })
+}
+
+// Fetch assignment with lesson
+const { data } = await supabase
+  .from('assignments')
+  .select(`
+    *,
+    lesson:lessons(id, title, slug)
+  `)
+  .eq('id', assignmentId)
+```
+
+## Lesson Progress Tracking
+
+Track student progress in `student_lesson_assignments` table:
+
+```typescript
+interface LessonProgress {
+  student_id: string
+  lesson_id: string
+  status: 'assigned' | 'started' | 'in_progress' | 'completed'
+  progress_percentage?: number
+  time_spent: number        // seconds
+  started_at?: string
+  completed_at?: string
 }
 ```
