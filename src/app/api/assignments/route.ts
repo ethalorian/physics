@@ -26,10 +26,7 @@ export async function GET(request: NextRequest) {
     // Build query
     let query = supabaseAdmin
       .from('assignments')
-      .select(`
-        *,
-        lesson:lessons(id, title, slug)
-      `)
+      .select('*')
       .order('created_at', { ascending: false })
 
     // Students can only see published assignments
