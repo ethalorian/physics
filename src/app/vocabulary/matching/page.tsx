@@ -55,9 +55,33 @@ export default function StudentVocabularyMatchingPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (score: number, totalMatches: number, timeSpent: number) => {
-    setGameResults({ score, totalMatches, timeSpent })
+  const handleGameComplete = async (score: number, totalMatches: number, timeSpent: number) => {
+    const results = { score, totalMatches, timeSpent }
+    setGameResults(results)
     setGameStarted(false)
+
+    // Save to database
+    if (selectedSetId && session?.user?.id) {
+      try {
+        await fetch('/api/student-progress/game-scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vocabulary_set_id: selectedSetId,
+            game_type: 'matching',
+            score: score,
+            max_score: totalMatches * 10,
+            accuracy: (score / (totalMatches * 10)) * 100,
+            time_spent: timeSpent,
+            difficulty: difficulty,
+            terms_completed: totalMatches,
+            terms_total: totalMatches
+          })
+        })
+      } catch (error) {
+        console.error('Error saving game score:', error)
+      }
+    }
   }
 
   const resetGame = () => {

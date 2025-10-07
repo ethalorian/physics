@@ -54,9 +54,33 @@ export default function StudentVocabularyHangmanPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (score: number, totalWords: number, timeSpent: number) => {
-    setGameResults({ score, totalWords, timeSpent })
+  const handleGameComplete = async (score: number, totalWords: number, timeSpent: number) => {
+    const results = { score, totalWords, timeSpent }
+    setGameResults(results)
     setGameStarted(false)
+
+    // Save to database
+    if (selectedSetId && session?.user?.id) {
+      try {
+        await fetch('/api/student-progress/game-scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vocabulary_set_id: selectedSetId,
+            game_type: 'hangman',
+            score: score,
+            max_score: totalWords * 10,
+            accuracy: (score / (totalWords * 10)) * 100,
+            time_spent: timeSpent,
+            difficulty: difficulty,
+            terms_completed: totalWords,
+            terms_total: totalWords
+          })
+        })
+      } catch (error) {
+        console.error('Error saving game score:', error)
+      }
+    }
   }
 
   const resetGame = () => {

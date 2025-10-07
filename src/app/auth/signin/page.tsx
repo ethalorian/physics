@@ -5,16 +5,25 @@ import { signIn } from "next-auth/react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { AlertCircle, Home, RefreshCw } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { AlertCircle, Home, RefreshCw, User, Lock } from "lucide-react"
 import { useState } from "react"
 
 function SignInContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const [isSigningIn, setIsSigningIn] = useState(false)
+  const [testEmail, setTestEmail] = useState("")
+  const [testPassword, setTestPassword] = useState("")
+  const [testError, setTestError] = useState("")
+  const [showTestAccounts, setShowTestAccounts] = useState(false)
   
   const error = searchParams.get("error")
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+  
+  // Check if we're in development mode
+  const isDevelopment = process.env.NODE_ENV === "development"
   
   // Map error codes to user-friendly messages
   const getErrorMessage = (errorCode: string | null) => {
@@ -55,6 +64,59 @@ function SignInContent() {
 
   const handleGoHome = () => {
     router.push("/")
+  }
+
+  const handleTestSignIn = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setTestError("")
+    setIsSigningIn(true)
+    
+    try {
+      const result = await signIn("test-credentials", {
+        email: testEmail,
+        password: testPassword,
+        callbackUrl,
+        redirect: false,
+      })
+      
+      if (result?.error) {
+        setTestError("Invalid email or password")
+        setIsSigningIn(false)
+      } else if (result?.ok) {
+        router.push(callbackUrl)
+      }
+    } catch (error) {
+      console.error("Test sign-in error:", error)
+      setTestError("An error occurred during sign-in")
+      setIsSigningIn(false)
+    }
+  }
+
+  const handleQuickTestLogin = async (email: string, password: string) => {
+    setTestEmail(email)
+    setTestPassword(password)
+    setTestError("")
+    setIsSigningIn(true)
+    
+    try {
+      const result = await signIn("test-credentials", {
+        email,
+        password,
+        callbackUrl,
+        redirect: false,
+      })
+      
+      if (result?.error) {
+        setTestError("Invalid credentials")
+        setIsSigningIn(false)
+      } else if (result?.ok) {
+        router.push(callbackUrl)
+      }
+    } catch (error) {
+      console.error("Test sign-in error:", error)
+      setTestError("An error occurred during sign-in")
+      setIsSigningIn(false)
+    }
   }
 
   return (
@@ -144,6 +206,127 @@ function SignInContent() {
             )}
           </div>
         </div>
+
+        {/* Test Accounts Section (Development Only) */}
+        {isDevelopment && (
+          <div className="space-y-4 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={() => setShowTestAccounts(!showTestAccounts)}
+              className="w-full"
+            >
+              <User className="w-4 h-4 mr-2" />
+              {showTestAccounts ? "Hide" : "Show"} Test Accounts
+            </Button>
+
+            {showTestAccounts && (
+              <div className="space-y-4">
+                {testError && (
+                  <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-3 text-sm text-destructive">
+                    {testError}
+                  </div>
+                )}
+
+                {/* Quick Login Buttons */}
+                <div className="space-y-2">
+                  <p className="text-sm font-medium">Quick Login:</p>
+                  <div className="grid gap-2">
+                    <Button
+                      onClick={() => handleQuickTestLogin("student@test.com", "student123")}
+                      disabled={isSigningIn}
+                      variant="outline"
+                      className="justify-start"
+                      size="sm"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Student Account
+                    </Button>
+                    <Button
+                      onClick={() => handleQuickTestLogin("teacher@test.com", "teacher123")}
+                      disabled={isSigningIn}
+                      variant="outline"
+                      className="justify-start"
+                      size="sm"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Teacher Account
+                    </Button>
+                    <Button
+                      onClick={() => handleQuickTestLogin("admin@test.com", "admin123")}
+                      disabled={isSigningIn}
+                      variant="outline"
+                      className="justify-start"
+                      size="sm"
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Admin Account
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Manual Login Form */}
+                <div className="pt-2 border-t">
+                  <p className="text-sm font-medium mb-3">Or enter credentials manually:</p>
+                  <form onSubmit={handleTestSignIn} className="space-y-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="test-email">Email</Label>
+                      <Input
+                        id="test-email"
+                        type="text"
+                        placeholder="student@test.com"
+                        value={testEmail}
+                        onChange={(e) => setTestEmail(e.target.value)}
+                        disabled={isSigningIn}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="test-password">Password</Label>
+                      <Input
+                        id="test-password"
+                        type="password"
+                        placeholder="Enter password"
+                        value={testPassword}
+                        onChange={(e) => setTestPassword(e.target.value)}
+                        disabled={isSigningIn}
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      disabled={isSigningIn || !testEmail || !testPassword}
+                      className="w-full"
+                      size="sm"
+                    >
+                      {isSigningIn ? (
+                        <>
+                          <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                          Signing in...
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 mr-2" />
+                          Sign in with Test Account
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </div>
+
+                {/* Test Account Info */}
+                <div className="bg-muted/50 rounded-lg p-3 text-xs space-y-2">
+                  <p className="font-medium">Available Test Accounts:</p>
+                  <div className="space-y-1 text-muted-foreground">
+                    <p>• <strong>student@test.com</strong> / student123</p>
+                    <p>• <strong>teacher@test.com</strong> / teacher123</p>
+                    <p>• <strong>admin@test.com</strong> / admin123</p>
+                  </div>
+                  <p className="text-amber-600 dark:text-amber-500 font-medium mt-2">
+                    ⚠️ Test accounts only available in development mode
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Help Text */}
         <div className="text-center space-y-2 pt-4 border-t">

@@ -6,24 +6,17 @@ import Link from "next/link"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, X, BookOpen, FileText, Settings, Home, Users } from "lucide-react"
+import { Menu, X, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 import { usePermissions } from "@/hooks/usePermissions"
 import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
+import UserContextSheet from "@/components/UserContextSheet"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -57,13 +50,16 @@ export default function Navbar() {
     const items = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
+      { href: "/simulations", label: "Simulations", icon: Microscope },
       { href: "/vocabulary", label: "Vocabulary Games", icon: Users },
+      { href: "/gamification", label: "Leaderboard", icon: Trophy },
     ]
 
     if (canAccessAdmin) {
       items.push(
         { href: "/admin/dashboard", label: "Admin Dashboard", icon: Settings },
         { href: "/admin/assignments", label: "Manage Assignments", icon: FileText },
+        { href: "/admin/simulations", label: "Manage Simulations", icon: Microscope },
         { href: "/admin/question-bank", label: "Question Bank", icon: BookOpen },
         { href: "/admin/vocabulary", label: "Manage Vocabulary", icon: Settings }
       )
@@ -164,81 +160,28 @@ export default function Navbar() {
                   <ThemeToggle />
                 </div>
                 
-                {/* User Menu */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full hover:ring-2 hover:ring-primary/50 transition-all duration-200 p-0 overflow-hidden ring-1 ring-primary/20 touch-manipulation"
-                    >
-                      {session.user?.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img 
-                          src={session.user.image} 
-                          alt={session.user.name || 'User'}
-                          className="w-full h-full rounded-full object-cover"
-                          referrerPolicy="no-referrer"
-                          crossOrigin="anonymous"
-                        />
-                      ) : (
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center text-xs sm:text-sm">
-                          {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                        </div>
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-64 sm:w-72 apple-card mt-1" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal p-3 sm:p-4">
-                      <div className="flex items-center space-x-2 sm:space-x-3">
-                        {session.user?.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img 
-                            src={session.user.image} 
-                            alt={session.user.name || 'User'}
-                            className="h-10 w-10 sm:h-12 sm:w-12 rounded-full ring-2 ring-border object-cover"
-                            referrerPolicy="no-referrer"
-                            crossOrigin="anonymous"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center ring-2 ring-border">
-                            {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                          </div>
-                        )}
-                        <div className="flex flex-col space-y-1 min-w-0 flex-1">
-                          <p className="text-sm font-semibold leading-none truncate">
-                            {session.user?.name}
-                          </p>
-                          <p className="text-xs leading-none text-muted-foreground truncate">
-                            {session.user?.email}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className={`text-xs px-2 py-1 rounded-full font-medium border ${
-                              effectiveRole === 'admin' 
-                                ? 'bg-primary/20 text-primary border-primary/40' 
-                                : effectiveRole === 'teacher'
-                                ? 'bg-primary/15 text-primary border-primary/40'
-                                : 'bg-secondary/50 text-secondary-foreground border-secondary'
-                            }`}>
-                              {effectiveRole.charAt(0).toUpperCase() + effectiveRole.slice(1)}
-                            </span>
-                            {viewMode === 'student' && userRole !== 'student' && (
-                              <span className="text-xs px-2 py-1 rounded-full font-medium bg-blue-100 text-blue-700 border border-blue-300">
-                                View Mode
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                {/* User Menu - Direct Sheet Trigger */}
+                <UserContextSheet>
+                  <Button 
+                    variant="ghost" 
+                    className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full hover:ring-2 hover:ring-primary/50 transition-all duration-200 p-0 overflow-hidden ring-1 ring-primary/20 touch-manipulation"
+                  >
+                    {session.user?.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img 
+                        src={session.user.image} 
+                        alt={session.user.name || 'User'}
+                        className="w-full h-full rounded-full object-cover"
+                        referrerPolicy="no-referrer"
+                        crossOrigin="anonymous"
+                      />
+                    ) : (
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center text-xs sm:text-sm">
+                        {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem 
-                      onClick={() => signOut({ callbackUrl: "/" })} 
-                      className="m-2 rounded-lg text-destructive hover:bg-destructive/10 hover:text-destructive font-medium min-h-[44px] flex items-center"
-                    >
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                    )}
+                  </Button>
+                </UserContextSheet>
               </>
             ) : (
               <>

@@ -59,9 +59,34 @@ export default function StudentVocabularyConcentrationPage() {
   // Calculate required pairs for grid size
   const requiredPairs = gridSize === '4x4' ? 8 : gridSize === '6x6' ? 18 : 32
 
-  const handleGameComplete = (score: number, totalPairs: number, timeSpent: number) => {
-    setGameResults({ score, totalPairs, timeSpent, moves: 0 })
+  const handleGameComplete = async (score: number, totalPairs: number, timeSpent: number) => {
+    const results = { score, totalPairs, timeSpent, moves: 0 }
+    setGameResults(results)
     setGameStarted(false)
+
+    // Save to database
+    if (selectedSetId && session?.user?.id) {
+      try {
+        await fetch('/api/student-progress/game-scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vocabulary_set_id: selectedSetId,
+            game_type: 'concentration',
+            score: score,
+            max_score: totalPairs * 10, // Assuming 10 points per match
+            accuracy: (score / (totalPairs * 10)) * 100,
+            time_spent: timeSpent,
+            difficulty: difficulty,
+            terms_completed: totalPairs,
+            terms_total: totalPairs,
+            perfect_game: score === totalPairs * 10
+          })
+        })
+      } catch (error) {
+        console.error('Error saving game score:', error)
+      }
+    }
   }
 
   const resetGame = () => {

@@ -35,6 +35,7 @@ interface StudentLessonViewerProps {
   lesson: {
     id: string
     title: string
+    slug?: string
     description?: string
     content?: string
     unit: string
@@ -561,20 +562,62 @@ export default function StudentLessonViewer({
     })) || []
   )
   const [progress, setProgress] = useState(0)
-  const [isContentExpanded, setIsContentExpanded] = useState(false)
+  const [startTime] = useState(Date.now())
+  const [videoQuestionsAnswered, setVideoQuestionsAnswered] = useState(0)
+  const [videoQuestionsCorrect, setVideoQuestionsCorrect] = useState(0)
 
-  // Calculate progress based on completed objectives
+  // Calculate progress and save to database
   useEffect(() => {
     const completedCount = objectives.filter(obj => obj.completed).length
     const newProgress = objectives.length > 0 ? (completedCount / objectives.length) * 100 : 0
     setProgress(newProgress)
     onProgress?.(lesson.id, newProgress)
 
-    // Mark lesson complete if all objectives are done
+    // Save progress to database
+    const saveProgress = async () => {
+      const timeSpent = Math.floor((Date.now() - startTime) / 1000)
+      const totalVideoQuestions = lesson.videos?.reduce((sum, v) => sum + (v.questions?.length || 0), 0) || 0
+
+      try {
+        await fetch('/api/student-progress/lessons', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            lesson_id: lesson.id,
+            lesson_slug: lesson.slug || null,
+            status: newProgress === 100 ? 'completed' : newProgress > 0 ? 'in_progress' : 'not_started',
+            progress_percentage: newProgress,
+            objectives_completed: completedCount,
+            objectives_total: objectives.length,
+            videos_watched: currentVideoIndex + 1,
+            videos_total: lesson.videos?.length || 0,
+            video_questions_answered: videoQuestionsAnswered,
+            video_questions_correct: videoQuestionsCorrect,
+            video_questions_total: totalVideoQuestions,
+            time_spent: timeSpent,
+            started_at: new Date(startTime).toISOString()
+          })
+        })
+      } catch (error) {
+        console.error('Error saving lesson progress:', error)
+      }
+    }
+
+    // Debounce saves - only save every 10 seconds or on completion
+    const saveTimer = setTimeout(() => {
+      if (newProgress > 0) {
+        saveProgress()
+      }
+    }, 10000)
+
+    // Save immediately on completion
     if (newProgress === 100 && objectives.length > 0) {
+      saveProgress()
       onComplete?.(lesson.id)
     }
-  }, [objectives, lesson.id, onProgress, onComplete])
+
+    return () => clearTimeout(saveTimer)
+  }, [objectives, lesson.id, lesson.slug, lesson.videos, currentVideoIndex, videoQuestionsAnswered, videoQuestionsCorrect, startTime, onProgress, onComplete])
 
   const toggleObjective = (id: string) => {
     setObjectives(prev => 
@@ -645,8 +688,55 @@ export default function StudentLessonViewer({
                     timestamp={currentVideo.timestamp}
                     questions={currentVideo.questions}
                     onQuestionAnswer={async (questionId, answer) => {
-                      // Handle question answer - could save to database or track progress
-                      console.log('Question answered:', questionId, answer)
+                      // Track question stats
+                      setVideoQuestionsAnswered(prev => prev + 1)
+                      
+                      // Check if correct (for MC and numerical)
+                      const question = currentVideo.questions?.find(q => q.id === questionId)
+                      let isCorrect = false
+                      let score = 0
+
+                      if (question) {
+                        if (question.question.type === 'multiple-choice') {
+                          const mcQ = question.question as any
+                          isCorrect = answer === mcQ.correctAnswer
+                          score = isCorrect ? question.question.points : 0
+                        } else if (question.question.type === 'numerical') {
+                          const numQ = question.question as any
+                          const tolerance = numQ.tolerance || 0.01
+                          const percentError = Math.abs((parseFloat(answer) - numQ.correctValue) / numQ.correctValue)
+                          isCorrect = percentError <= tolerance
+                          score = isCorrect ? question.question.points : 0
+                        } else {
+                          // Open response - assume correct for now (will be graded later)
+                          isCorrect = true
+                          score = question.question.points
+                        }
+
+                        if (isCorrect) {
+                          setVideoQuestionsCorrect(prev => prev + 1)
+                        }
+
+                        // Save response to database
+                        try {
+                          await fetch('/api/student-progress/video-questions', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              lesson_id: lesson.id,
+                              video_id: currentVideo.id,
+                              question_id: questionId,
+                              answer: answer,
+                              is_correct: isCorrect,
+                              score: score,
+                              max_score: question.question.points,
+                              time_to_answer: 0 // Could track this with timer
+                            })
+                          })
+                        } catch (error) {
+                          console.error('Error saving video question response:', error)
+                        }
+                      }
                     }}
                     className="w-full shadow-lg"
                   />

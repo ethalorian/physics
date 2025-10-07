@@ -56,9 +56,33 @@ export default function StudentVocabularyQuizBowlPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = (score: number, totalQuestions: number, timeSpent: number) => {
-    setGameResults({ score, totalQuestions, timeSpent })
+  const handleGameComplete = async (score: number, totalQuestions: number, timeSpent: number) => {
+    const results = { score, totalQuestions, timeSpent }
+    setGameResults(results)
     setGameStarted(false)
+
+    // Save to database
+    if (selectedSetId && session?.user?.id) {
+      try {
+        await fetch('/api/student-progress/game-scores', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            vocabulary_set_id: selectedSetId,
+            game_type: 'quiz-bowl',
+            score: score,
+            max_score: totalQuestions * 10,
+            accuracy: (score / (totalQuestions * 10)) * 100,
+            time_spent: timeSpent,
+            difficulty: difficulty,
+            terms_completed: totalQuestions,
+            terms_total: totalQuestions
+          })
+        })
+      } catch (error) {
+        console.error('Error saving game score:', error)
+      }
+    }
   }
 
   const resetGame = () => {

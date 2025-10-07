@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
+import CredentialsProvider from "next-auth/providers/credentials"
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -14,7 +15,30 @@ declare module "next-auth" {
   }
 }
 
-// JWT augmentation removed - not needed for NextAuth v5
+// Test user accounts (only available in development)
+const TEST_USERS = [
+  {
+    id: "test-student-1",
+    email: "student@test.com",
+    name: "Test Student",
+    password: "student123",
+    role: "student"
+  },
+  {
+    id: "test-teacher-1",
+    email: "teacher@test.com",
+    name: "Test Teacher",
+    password: "teacher123",
+    role: "teacher"
+  },
+  {
+    id: "test-admin-1",
+    email: "admin@test.com",
+    name: "Test Admin",
+    password: "admin123",
+    role: "admin"
+  }
+]
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -40,7 +64,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       // Allow both HTTP and HTTPS in development
       checks: process.env.NODE_ENV === "development" ? ["state"] : ["state", "pkce"],
-    })
+    }),
+    // Test credentials provider (only in development)
+    ...(process.env.NODE_ENV === "development" ? [
+      CredentialsProvider({
+        id: "test-credentials",
+        name: "Test Account",
+        credentials: {
+          email: { label: "Email", type: "text" },
+          password: { label: "Password", type: "password" }
+        },
+        async authorize(credentials) {
+          if (!credentials?.email || !credentials?.password) {
+            return null
+          }
+
+          const user = TEST_USERS.find(
+            u => u.email === credentials.email && u.password === credentials.password
+          )
+
+          if (user) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+            }
+          }
+
+          return null
+        }
+      })
+    ] : [])
   ],
   secret: process.env.NEXTAUTH_SECRET,
   session: {

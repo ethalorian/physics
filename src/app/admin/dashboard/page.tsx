@@ -17,7 +17,8 @@ import {
   Settings,
   ExternalLink,
   Eye,
-  EyeOff
+  EyeOff,
+  Microscope
 } from 'lucide-react'
 import LessonManagement from '@/components/admin/LessonManagement'
 import AssignmentManagement from '@/components/admin/AssignmentManagement'
@@ -27,6 +28,7 @@ import QuickLessonPreview from '@/components/admin/QuickLessonPreview'
 import StudentActivityDashboard from '@/components/admin/StudentActivityDashboard'
 import StudentDetailView from '@/components/admin/StudentDetailView'
 import { AssignmentManager } from '@/components/assignment-system/AssignmentManager'
+import Gradebook from '@/components/admin/Gradebook'
 
 // Import student dashboard for view mode
 import { lazy, Suspense } from 'react'
@@ -132,7 +134,7 @@ export default function AdminDashboard() {
 
       {/* Main Navigation */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full max-w-2xl grid-cols-5">
+        <TabsList className="grid w-full max-w-3xl grid-cols-6">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Overview</span>
@@ -144,6 +146,10 @@ export default function AdminDashboard() {
           <TabsTrigger value="assignments" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
             <span className="hidden sm:inline">Assignments</span>
+          </TabsTrigger>
+          <TabsTrigger value="gradebook" className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            <span className="hidden sm:inline">Gradebook</span>
           </TabsTrigger>
           <TabsTrigger value="students" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
@@ -186,6 +192,16 @@ export default function AdminDashboard() {
                   <div className="font-medium text-green-900">View Students</div>
                   <div className="text-xs text-green-700">Monitor progress and analytics</div>
                 </button>
+                <a
+                  href="/admin/simulations"
+                  className="w-full text-left p-3 bg-amber-50 hover:bg-amber-100 rounded-lg border border-amber-200 transition-colors block"
+                >
+                  <div className="font-medium text-amber-900 flex items-center gap-2">
+                    <Microscope className="h-4 w-4" />
+                    Manage Simulations
+                  </div>
+                  <div className="text-xs text-amber-700">Create and manage physics labs</div>
+                </a>
               </div>
             </div>
           </div>
@@ -296,6 +312,11 @@ export default function AdminDashboard() {
             </div>
           </div>
           <AssignmentManager />
+        </TabsContent>
+
+        {/* Gradebook Tab */}
+        <TabsContent value="gradebook" className="space-y-6">
+          <Gradebook />
         </TabsContent>
 
         {/* Students Tab */}

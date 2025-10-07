@@ -62,11 +62,17 @@ export default function StudentManagement() {
           const email = student.profile?.emailAddress || 
                        'No email available'
           
+          // Proxy Google profile photos through our API to avoid CORS issues
+          const photoUrl = student.profile.photoUrl || student.profile?.photoUrl
+          const proxiedPhotoUrl = photoUrl 
+            ? `/api/proxy-image?url=${encodeURIComponent(photoUrl)}`
+            : undefined
+          
           return {
             id: student.userId,
             name: student.profile.name.fullName,
             email: email,
-            profilePhoto: student.profile.photoUrl || student.profile?.photoUrl,
+            profilePhoto: proxiedPhotoUrl,
             enrollmentState: 'ACTIVE', // Google Classroom API only returns active students
             courseId: courseId
           }
@@ -98,14 +104,22 @@ export default function StudentManagement() {
         console.log('📊 Database API response:', data)
         console.log('📊 Students returned from database:', data.students?.length || 0)
         
-        const formattedStudents: Student[] = data.students.map((student: any) => ({
-          id: student.google_user_id,
-          name: student.name,
-          email: student.email,
-          profilePhoto: student.profile_photo_url,
-          enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
-          courseId: selectedCourse
-        }))
+        const formattedStudents: Student[] = data.students.map((student: any) => {
+          // Proxy Google profile photos through our API to avoid CORS issues
+          const photoUrl = student.profile_photo_url
+          const proxiedPhotoUrl = photoUrl 
+            ? `/api/proxy-image?url=${encodeURIComponent(photoUrl)}`
+            : undefined
+          
+          return {
+            id: student.google_user_id,
+            name: student.name,
+            email: student.email,
+            profilePhoto: proxiedPhotoUrl,
+            enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
+            courseId: selectedCourse
+          }
+        })
         
         console.log('📊 Formatted students for course', selectedCourse, ':', formattedStudents.length)
         setImportedStudents(formattedStudents)

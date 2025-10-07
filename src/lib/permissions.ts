@@ -14,12 +14,16 @@ export interface UserPermissions {
 export const ADMIN_EMAILS = [
   'antoccic@fitchburg.k12.ma.us',
   'craigantocci@gmail.com',
+  // Test accounts (only in development)
+  ...(process.env.NODE_ENV === 'development' ? ['admin@test.com'] : []),
   // Add more admin emails here as needed
 ]
 
 // Define teacher emails (you can expand this list)
 export const TEACHER_EMAILS = [
   ...ADMIN_EMAILS, // Admins are also teachers
+  // Test accounts (only in development)
+  ...(process.env.NODE_ENV === 'development' ? ['teacher@test.com'] : []),
   // Add teacher-only emails here
 ]
 

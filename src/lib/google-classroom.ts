@@ -108,7 +108,6 @@ class GoogleClassroomAPI {
     try {
       // Explicitly request all profile fields including email
       const response = await this.makeRequest(`/courses/${courseId}/students?fields=students(userId,profile(id,name,emailAddress,photoUrl))`) as { students?: GoogleClassroomStudent[] }
-      console.log('Google Classroom API response for students:', response)
       return response.students || []
     } catch (error) {
       console.error('Error fetching students:', error)
