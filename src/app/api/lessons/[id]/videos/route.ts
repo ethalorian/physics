@@ -46,7 +46,7 @@ export async function PUT(
     if (objectives !== undefined) updateData.objectives = objectives
     if (estimated_time !== undefined) updateData.estimated_time = estimated_time
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('lessons')
       .update(updateData)
       .eq('id', id)
@@ -84,7 +84,7 @@ export async function GET(
   try {
     const { id } = await params
 
-    const { data: lesson, error } = await supabase
+    const { data: lesson, error } = await supabaseAdmin
       .from('lessons')
       .select('id, title, videos, objectives, estimated_time')
       .eq('id', id)

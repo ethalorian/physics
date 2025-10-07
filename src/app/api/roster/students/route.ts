@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const activeOnly = searchParams.get('active_only') === 'true'
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('students')
       .select('*')
       .order('name', { ascending: true })
@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
     // Get course information if courseId is provided
     let courseInfo = null
     if (courseId) {
-      const { data: course } = await supabase
+      const { data: course } = await supabaseAdmin
         .from('courses')
         .select('*')
         .eq('google_course_id', courseId)

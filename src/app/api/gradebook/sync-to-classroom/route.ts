@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch gradebook entries to sync
-    const { data: entries, error: fetchError } = await supabase
+    const { data: entries, error: fetchError } = await supabaseAdmin
       .from('gradebook_entries')
       .select('*')
       .in('id', gradebook_entry_ids)
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
           const classroomData = await classroomResponse.json()
           
           // Update gradebook entry as synced
-          await supabase
+          await supabaseAdmin
             .from('gradebook_entries')
             .update({
               synced_to_classroom: true,

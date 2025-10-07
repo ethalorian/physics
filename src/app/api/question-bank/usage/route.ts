@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     }
 
     // Log the usage
-    const { error: logError } = await supabase
+    const { error: logError } = await supabaseAdmin
       .from('question_usage_log')
       .insert([{
         question_id: questionId,
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     }
 
     // Increment usage count
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .rpc('increment_question_usage', { question_id: questionId })
 
     if (updateError) {

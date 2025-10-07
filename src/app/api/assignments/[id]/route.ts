@@ -21,7 +21,7 @@ export async function GET(
     const userRole = getUserRole(session.user.email)
 
     // Fetch assignment
-    const { data: assignment, error } = await supabase
+    const { data: assignment, error } = await supabaseAdmin
       .from('assignments')
       .select(`
         *,

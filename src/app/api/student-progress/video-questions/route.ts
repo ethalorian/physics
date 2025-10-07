@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       time_to_answer: body.time_to_answer || null
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('video_question_responses')
       .insert(responseData)
       .select()
@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
     const lessonId = searchParams.get('lesson_id')
     const videoId = searchParams.get('video_id')
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('video_question_responses')
       .select('*')
       .eq('user_id', userId)

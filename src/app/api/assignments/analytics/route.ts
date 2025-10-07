@@ -19,22 +19,22 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch lesson assignments analytics
-    const { data: lessonAssignments, error: lessonError } = await supabase
+    const { data: lessonAssignments, error: lessonError } = await supabaseAdmin
       .from('lesson_assignments')
       .select('*')
 
     // Fetch homework assignments analytics
-    const { data: homeworkAssignments, error: homeworkError } = await supabase
+    const { data: homeworkAssignments, error: homeworkError } = await supabaseAdmin
       .from('assignment_assignments')
       .select('*')
 
     // Fetch student lesson progress
-    const { data: studentLessonProgress, error: studentLessonError } = await supabase
+    const { data: studentLessonProgress, error: studentLessonError } = await supabaseAdmin
       .from('student_lesson_assignments')
       .select('*')
 
     // Fetch student assignment progress
-    const { data: studentAssignmentProgress, error: studentAssignmentError } = await supabase
+    const { data: studentAssignmentProgress, error: studentAssignmentError } = await supabaseAdmin
       .from('student_assignment_assignments')
       .select('*')
 

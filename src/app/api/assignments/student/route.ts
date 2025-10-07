@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     
     if (userRole === 'student') {
       // Find student record for this user
-      const { data: student, error: studentError } = await supabase
+      const { data: student, error: studentError } = await supabaseAdmin
         .from('students')
         .select('id')
         .eq('email', session.user.email)
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch lesson assignments if not filtered to assignments only
     if (!filters.assignment_type || filters.assignment_type === 'lesson') {
-      let lessonQuery = supabase
+      let lessonQuery = supabaseAdmin
         .from('student_lesson_assignments')
         .select(`
           id, lesson_assignment_id, student_id, status, started_at, completed_at,
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
 
     // Fetch assignment assignments if not filtered to lessons only
     if (!filters.assignment_type || filters.assignment_type === 'assignment') {
-      let assignmentQuery = supabase
+      let assignmentQuery = supabaseAdmin
         .from('student_assignment_assignments')
         .select(`
           id, assignment_assignment_id, student_id, status, started_at, submitted_at,
@@ -190,7 +190,7 @@ export async function PUT(request: NextRequest) {
 
     // Students can only update their own assignments
     if (userRole === 'student') {
-      const { data: student, error: studentError } = await supabase
+      const { data: student, error: studentError } = await supabaseAdmin
         .from('students')
         .select('id')
         .eq('email', session.user.email)
@@ -227,7 +227,7 @@ export async function PUT(request: NextRequest) {
 
     let result
     if (assignment_type === 'lesson') {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('student_lesson_assignments')
         .update(filteredUpdateData)
         .eq('lesson_assignment_id', assignment_id)
@@ -241,7 +241,7 @@ export async function PUT(request: NextRequest) {
       }
       result = data
     } else if (assignment_type === 'assignment') {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('student_assignment_assignments')
         .update(filteredUpdateData)
         .eq('assignment_assignment_id', assignment_id)

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // Internal imports
 import { auth } from '@/lib/auth'
-import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
+import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 import { Assignment } from '@/types/assignment'
 

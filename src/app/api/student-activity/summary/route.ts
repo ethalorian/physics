@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const studentEmail = searchParams.get('student_email')
 
     // Get activity summary using the database function
-    const { data: summaryData, error: summaryError } = await supabase
+    const { data: summaryData, error: summaryError } = await supabaseAdmin
       .rpc('get_student_activity_summary', {
         p_user_email: studentEmail
       })
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
     // Get recent lesson progress
     promises.push(
-      supabase
+      supabaseAdmin
         .from('lesson_progress')
         .select(`
           *,
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
 
     // Get recent assignment submissions
     promises.push(
-      supabase
+      supabaseAdmin
         .from('assignment_submissions')
         .select('*')
         .eq(studentEmail ? 'user_email' : 'user_email', studentEmail || '')
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
 
     // Get assignment analytics
     promises.push(
-      supabase
+      supabaseAdmin
         .from('assignment_analytics')
         .select('*')
         .order('last_calculated', { ascending: false })

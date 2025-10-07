@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     // Try to fetch from database first
     // Note: units and lessons are not directly related via foreign key
     // We fetch them separately and combine client-side
-    const { data: unitsData, error: unitsError } = await supabase
+    const { data: unitsData, error: unitsError } = await supabaseAdmin
       .from('units')
       .select('*')
       .order('order_index', { ascending: true })
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     }
 
     // Fetch lessons separately
-    const { data: lessonsData, error: lessonsError } = await supabase
+    const { data: lessonsData, error: lessonsError } = await supabaseAdmin
       .from('lessons')
       .select('id, title, unit, lesson_number, published')
       .order('lesson_number', { ascending: true })
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
 
     const body = await request.json()
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('units')
       .insert([body])
       .select()

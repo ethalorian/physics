@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     console.log('🧪 Testing database connection and tables...')
     
     const tests = {
-      supabase_connection: false,
+      supabaseAdmin_connection: false,
       students_table: false,
       courses_table: false,
       sync_course_function: false,
@@ -29,16 +29,16 @@ export async function GET(request: NextRequest) {
 
     // Test Supabase connection
     try {
-      const { data, error } = await supabase.from('lessons').select('count').limit(1)
-      tests.supabase_connection = !error
-      console.log('✅ Supabase connection:', tests.supabase_connection)
+      const { data, error } = await supabaseAdmin.from('lessons').select('count').limit(1)
+      tests.supabaseAdmin_connection = !error
+      console.log('✅ Supabase connection:', tests.supabaseAdmin_connection)
     } catch (err) {
       console.log('❌ Supabase connection failed:', err)
     }
 
     // Test students table
     try {
-      const { error } = await supabase.from('students').select('count').limit(1)
+      const { error } = await supabaseAdmin.from('students').select('count').limit(1)
       tests.students_table = !error
       console.log('✅ Students table exists:', tests.students_table)
     } catch (err) {
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     // Test courses table
     try {
-      const { error } = await supabase.from('courses').select('count').limit(1)
+      const { error } = await supabaseAdmin.from('courses').select('count').limit(1)
       tests.courses_table = !error
       console.log('✅ Courses table exists:', tests.courses_table)
     } catch (err) {
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
 
     // Test student_activity table
     try {
-      const { error } = await supabase.from('student_activity').select('count').limit(1)
+      const { error } = await supabaseAdmin.from('student_activity').select('count').limit(1)
       tests.student_activity_table = !error
       console.log('✅ Student activity table exists:', tests.student_activity_table)
     } catch (err) {
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
 
     // Test sync_course function
     try {
-      const { error } = await supabase.rpc('sync_course', {
+      const { error } = await supabaseAdmin.rpc('sync_course', {
         p_google_course_id: 'test-course-id',
         p_name: 'Test Course'
       })
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
       
       // Clean up test data
       if (!error) {
-        await supabase.from('courses').delete().eq('google_course_id', 'test-course-id')
+        await supabaseAdmin.from('courses').delete().eq('google_course_id', 'test-course-id')
       }
     } catch (err) {
       console.log('❌ sync_course function test failed:', err)
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     // Test sync_student function
     try {
-      const { error } = await supabase.rpc('sync_student', {
+      const { error } = await supabaseAdmin.rpc('sync_student', {
         p_google_user_id: 'test-user-id',
         p_email: 'test@example.com',
         p_name: 'Test Student',
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
       
       // Clean up test data
       if (!error) {
-        await supabase.from('students').delete().eq('google_user_id', 'test-user-id')
+        await supabaseAdmin.from('students').delete().eq('google_user_id', 'test-user-id')
       }
     } catch (err) {
       console.log('❌ sync_student function test failed:', err)

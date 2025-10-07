@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     // Sync course to database
     console.log('💾 Syncing course to database...')
-    const { data: courseData, error: courseError } = await supabase
+    const { data: courseData, error: courseError } = await supabaseAdmin
       .rpc('sync_course', {
         p_google_course_id: course.id,
         p_name: course.name,
@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
         const lastName = student.profile?.name?.familyName || null
         const photoUrl = student.profile?.photoUrl || null
 
-        const { error: studentError } = await supabase
+        const { error: studentError } = await supabaseAdmin
           .rpc('sync_student', {
             p_google_user_id: student.userId,
             p_email: email,
@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Update course student count
-    await supabase.rpc('update_course_student_counts')
+    await supabaseAdmin.rpc('update_course_student_counts')
 
     // Return results
     const response = {
@@ -188,7 +188,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get course information
-    const { data: courseData, error: courseError } = await supabase
+    const { data: courseData, error: courseError } = await supabaseAdmin
       .from('courses')
       .select('*')
       .eq('google_course_id', courseId)
@@ -200,7 +200,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get students for the course
-    const { data: studentsData, error: studentsError } = await supabase
+    const { data: studentsData, error: studentsError } = await supabaseAdmin
       .rpc('get_course_students', { p_course_id: courseId })
 
     if (studentsError) {

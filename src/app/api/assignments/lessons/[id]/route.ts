@@ -20,7 +20,7 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
     }
 
-    const { data: assignment, error } = await supabase
+    const { data: assignment, error } = await supabaseAdmin
       .from('lesson_assignments')
       .select(`
         *,
@@ -74,7 +74,7 @@ export async function PUT(
     const body = await request.json()
 
     // Get existing assignment to check permissions
-    const { data: existingAssignment, error: fetchError } = await supabase
+    const { data: existingAssignment, error: fetchError } = await supabaseAdmin
       .from('lesson_assignments')
       .select('id, assigned_by')
       .eq('id', params.id)
@@ -101,7 +101,7 @@ export async function PUT(
     if (body.is_active !== undefined) updateData.is_active = body.is_active
     if (body.published !== undefined) updateData.published = body.published
 
-    const { data: assignment, error: updateError } = await supabase
+    const { data: assignment, error: updateError } = await supabaseAdmin
       .from('lesson_assignments')
       .update(updateData)
       .eq('id', params.id)
@@ -148,7 +148,7 @@ export async function DELETE(
     }
 
     // Get existing assignment to check permissions
-    const { data: existingAssignment, error: fetchError } = await supabase
+    const { data: existingAssignment, error: fetchError } = await supabaseAdmin
       .from('lesson_assignments')
       .select('id, assigned_by, total_started')
       .eq('id', params.id)
@@ -168,7 +168,7 @@ export async function DELETE(
     // Check if any students have started the assignment
     if (existingAssignment.total_started > 0) {
       // Instead of deleting, mark as inactive
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('lesson_assignments')
         .update({ is_active: false, published: false })
         .eq('id', params.id)
@@ -183,7 +183,7 @@ export async function DELETE(
       })
     } else {
       // Safe to delete since no one has started
-      const { error: deleteError } = await supabase
+      const { error: deleteError } = await supabaseAdmin
         .from('lesson_assignments')
         .delete()
         .eq('id', params.id)

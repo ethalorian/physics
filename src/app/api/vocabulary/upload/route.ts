@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         }
 
         // Create vocabulary set
-        const { data: vocabularySet, error: setError } = await supabase
+        const { data: vocabularySet, error: setError } = await supabaseAdmin
           .from('vocabulary_sets')
           .insert([{
             name: setData.name,
@@ -70,13 +70,13 @@ export async function POST(request: Request) {
             }
           })
 
-          const { error: termsError } = await supabase
+          const { error: termsError } = await supabaseAdmin
             .from('vocabulary_terms')
             .insert(termsData)
 
           if (termsError) {
             // Clean up the vocabulary set if terms failed
-            await supabase.from('vocabulary_sets').delete().eq('id', vocabularySet.id)
+            await supabaseAdmin.from('vocabulary_sets').delete().eq('id', vocabularySet.id)
             errors.push(`Failed to add terms for "${setData.name}": ${termsError.message}`)
             continue
           }

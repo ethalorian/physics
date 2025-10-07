@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Upsert (insert or update if exists)
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('lesson_progress')
       .upsert(progressData, {
         onConflict: 'user_id,lesson_id'
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     const lessonId = searchParams.get('lesson_id')
     const status = searchParams.get('status')
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('lesson_progress')
       .select('*')
       .eq('user_id', userId)

@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       game_data: body.game_data || {}
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('vocabulary_game_scores')
       .insert(gameScoreData)
       .select()
@@ -71,7 +71,7 @@ export async function GET(request: NextRequest) {
     const vocabularySetId = searchParams.get('vocabulary_set_id')
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('vocabulary_game_scores')
       .select('*')
       .eq('user_id', userId)

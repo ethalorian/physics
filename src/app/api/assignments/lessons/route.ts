@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('lesson_assignments')
       .select(`
         *,
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify lesson exists
-    const { data: lesson, error: lessonError } = await supabase
+    const { data: lesson, error: lessonError } = await supabaseAdmin
       .from('lessons')
       .select('id, title, slug')
       .eq('id', body.lesson_id)
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 
     // If assigning to course, verify course exists
     if (body.course_id) {
-      const { data: course, error: courseError } = await supabase
+      const { data: course, error: courseError } = await supabaseAdmin
         .from('courses')
         .select('id, google_course_id')
         .eq('google_course_id', body.course_id)
@@ -136,7 +136,7 @@ export async function POST(request: NextRequest) {
 
     // If assigning to specific students, verify they exist
     if (body.assigned_students && body.assigned_students.length > 0) {
-      const { data: students, error: studentsError } = await supabase
+      const { data: students, error: studentsError } = await supabaseAdmin
         .from('students')
         .select('id')
         .in('id', body.assigned_students)
@@ -163,7 +163,7 @@ export async function POST(request: NextRequest) {
       published: body.published !== undefined ? body.published : true
     }
 
-    const { data: assignment, error: insertError } = await supabase
+    const { data: assignment, error: insertError } = await supabaseAdmin
       .from('lesson_assignments')
       .insert(assignmentData)
       .select(`

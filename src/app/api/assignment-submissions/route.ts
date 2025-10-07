@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0')
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('assignment_submissions')
       .select('*')
       .order('time_submitted', { ascending: false })
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use the database function to record submission
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .rpc('record_assignment_submission', {
         p_assignment_id: assignment_id,
         p_user_id: session.user.id || session.user.email,
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
 
     // If question scores provided, update the submission record
     if (question_scores && data) {
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabaseAdmin
         .from('assignment_submissions')
         .update({ question_scores })
         .eq('id', data)
@@ -162,7 +162,7 @@ export async function PUT(request: NextRequest) {
       updates.graded_at = new Date().toISOString()
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('assignment_submissions')
       .update(updates)
       .eq('id', submission_id)
