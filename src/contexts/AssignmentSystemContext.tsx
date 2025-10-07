@@ -441,12 +441,19 @@ export function AssignmentSystemProvider({ children }: { children: ReactNode }) 
     }
   }, [studentLessonAssignments, studentAssignmentAssignments])
   
-  // Initialize data on mount
+  // LAZY LOADING: Only initialize when user navigates to assignment-related pages
   useEffect(() => {
-    if (session?.user?.email) {
+    if (!session?.user?.email) return
+    
+    const shouldAutoInit = typeof window !== 'undefined' && 
+      (window.location.pathname.includes('/assignments') || 
+       window.location.pathname.includes('/admin'))
+    
+    if (shouldAutoInit) {
       if (userRole === 'admin' || userRole === 'teacher') {
         fetchAssignments()
-        fetchAnalytics()
+        // Defer analytics fetch - it's not critical for initial render
+        setTimeout(() => fetchAnalytics(), 1000)
       } else if (userRole === 'student') {
         fetchStudentAssignments()
       }

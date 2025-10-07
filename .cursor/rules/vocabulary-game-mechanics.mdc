@@ -1,240 +1,435 @@
 ---
-description: "Vocabulary games mechanics and scoring systems"
+description: Vocabulary games mechanics and scoring systems
 ---
 
-# Vocabulary Games Mechanics and Scoring
+# Vocabulary Game Mechanics
 
-## Game Design Principles
+## Game Flow Pattern
 
-### Educational Focus
-- **Definitions First**: Always show definitions prominently to aid learning
-- **Immediate Feedback**: Provide instant validation and correction
-- **Progressive Difficulty**: Support easy/medium/hard difficulty levels
-- **Hint Systems**: Offer helpful hints that maintain educational value
+Every vocabulary game follows this lifecycle:
 
-### Engagement Patterns
-- **Clear Objectives**: Each game has obvious win conditions
-- **Progress Tracking**: Visual indicators of completion
-- **Scoring Systems**: Point-based rewards for correct answers
-- **Time Awareness**: Optional time tracking for competitive elements
-
-## Scoring Systems
-
-### Standard Point Values
-- **Easy Difficulty**: 10 points per correct answer
-- **Medium Difficulty**: 20 points per correct answer  
-- **Hard Difficulty**: 30 points per correct answer
-
-### Point Deductions
-- **Hints Used**: -5 points per hint
-- **Wrong Answers**: Varies by game type
-  - Hangman: No deduction for wrong letters
-  - Crossword: No deduction (self-correcting)
-  - Matching: No deduction (can retry)
-
-### Bonus Points
-- **Perfect Games**: +50 bonus points for no hints/mistakes
-- **Speed Bonus**: +1 point per second under target time (optional)
-- **Streak Bonus**: +5 points for consecutive correct answers
-
-## Game-Specific Mechanics
-
-### Hangman Game
-**File**: [VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx)
-
-#### Core Mechanics
-- **Definition Display**: Show definition immediately as the main clue
-- **Letter Guessing**: Click letters or type to guess
-- **Wrong Guess Limit**: 6 wrong guesses (adjustable by difficulty)
-- **Hint System**: Suggest helpful letters (vowels first, then common consonants)
-
-#### Scoring Rules
 ```typescript
-// Base points by difficulty
-const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
+// 1. Initialize
+const initializeGame = () => {
+  setGameState({
+    status: 'ready',
+    score: 0,
+    lives: 3,
+    currentIndex: 0,
+    streak: 0
+  })
+}
 
-// Final score calculation
-const wordScore = Math.max(0, basePoints - (hintsUsed * 5))
-```
+// 2. Start
+const startGame = () => {
+  setGameState(prev => ({
+    ...prev,
+    status: 'playing',
+    startTime: Date.now()
+  }))
+}
 
-#### Letter Hint Algorithm
-```typescript
-const getLetterHint = () => {
-  const unguessedLetters = word.filter(letter => !guessedLetters.has(letter))
-  const vowels = unguessedLetters.filter(letter => 'AEIOU'.includes(letter))
-  const commonConsonants = unguessedLetters.filter(letter => 'RSTLNM'.includes(letter))
+// 3. Process Answer
+const checkAnswer = (userAnswer: string) => {
+  const correct = userAnswer.toLowerCase() === correctAnswer.toLowerCase()
   
-  return vowels[0] || commonConsonants[0] || unguessedLetters[0]
+  if (correct) {
+    handleCorrectAnswer()
+  } else {
+    handleIncorrectAnswer()
+  }
+}
+
+// 4. Complete
+const completeGame = () => {
+  const finalScore = calculateFinalScore()
+  saveGameCompletion(finalScore)
+  setGameState(prev => ({ ...prev, status: 'completed' }))
 }
 ```
 
-### Crossword Game
-**File**: [VocabularyCrosswordGame.tsx](mdc:src/components/vocabulary/games/VocabularyCrosswordGame.tsx)
+## Difficulty System
 
-#### Core Mechanics
-- **Grid Generation**: Automatic crossword grid creation with intersections
-- **Clue System**: Definitions serve as crossword clues
-- **Interactive Input**: Click cells and type answers
-- **Auto-Validation**: Real-time checking of answers
-
-#### Grid Generation Algorithm
-- **Intersection Finding**: Look for common letters between words
-- **Placement Strategy**: Place longest words first, then intersect shorter ones
-- **Grid Optimization**: Minimize empty space while maximizing word placement
-
-#### Scoring Rules
+### Difficulty Selection
 ```typescript
-// Score per completed word
-const wordScore = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
-
-// Bonus for grid completion
-const completionBonus = allWordsComplete ? 50 : 0
-```
-
-### Matching Game
-**File**: [VocabularyMatchingGame.tsx](mdc:src/components/vocabulary/games/VocabularyMatchingGame.tsx)
-
-#### Core Mechanics
-- **Card Matching**: Match terms with their definitions
-- **Visual Feedback**: Highlight selected cards and matches
-- **Error Handling**: Allow retries for incorrect matches
-- **Shuffle System**: Randomize card positions each game
-
-#### Matching Algorithm
-```typescript
-const processMatch = (termCard: string, definitionCard: string) => {
-  const isCorrectMatch = termCard.replace('term-', '') === definitionCard.replace('def-', '')
-  
-  if (isCorrectMatch) {
-    // Lock in the match
-    setMatches(prev => ({ ...prev, [termCard]: definitionCard }))
-    updateScore(getPointsForMatch())
-  } else {
-    // Show error state and allow retry
-    showMatchError(termCard, definitionCard)
+interface DifficultySettings {
+  easy: {
+    lives: 5
+    timeLimit: null // No time limit
+    hintsAvailable: 3
+    scoreMultiplier: 1.0
+  }
+  medium: {
+    lives: 3
+    timeLimit: 60 // seconds per term
+    hintsAvailable: 2
+    scoreMultiplier: 1.5
+  }
+  hard: {
+    lives: 1
+    timeLimit: 30
+    hintsAvailable: 0
+    scoreMultiplier: 2.0
   }
 }
 ```
 
-### Fill-in-the-Blank Game
-**File**: [VocabularyFillBlankGame.tsx](mdc:src/components/vocabulary/games/VocabularyFillBlankGame.tsx)
-
-#### Core Mechanics
-- **Context Sentences**: Terms used in physics context
-- **Input Validation**: Check answers against correct terms
-- **Partial Credit**: Accept close answers (case-insensitive)
-- **Multiple Blanks**: Support multiple terms per sentence
-
-#### Answer Validation
+### Dynamic Difficulty Adjustment
 ```typescript
-const validateAnswer = (userAnswer: string, correctTerm: string) => {
-  const normalizedUser = userAnswer.toLowerCase().trim()
-  const normalizedCorrect = correctTerm.toLowerCase().trim()
-  
-  // Exact match
-  if (normalizedUser === normalizedCorrect) return 'correct'
-  
-  // Close match (Levenshtein distance)
-  if (getEditDistance(normalizedUser, normalizedCorrect) <= 1) return 'close'
-  
-  return 'incorrect'
+const adjustDifficulty = (performance: GamePerformance) => {
+  // Increase difficulty if performing well
+  if (performance.accuracy > 0.9 && performance.avgTime < 10) {
+    return 'hard'
+  }
+  // Decrease if struggling
+  if (performance.accuracy < 0.5) {
+    return 'easy'
+  }
+  return 'medium'
 }
 ```
 
-## Difficulty Implementation
+## Scoring Components
 
-### Easy Mode Adjustments
-- **More Attempts**: Increase wrong guess limits
-- **Better Hints**: More generous hint systems
-- **Simpler Terms**: Filter to easier vocabulary
-- **Visual Aids**: Additional visual cues
-
-### Medium Mode (Default)
-- **Standard Rules**: Balanced gameplay
-- **Normal Hints**: Standard hint cost and frequency
-- **Mixed Terms**: All difficulty levels included
-- **Fair Scoring**: Standard point values
-
-### Hard Mode Adjustments
-- **Fewer Attempts**: Reduce wrong guess limits
-- **Expensive Hints**: Higher hint costs
-- **Complex Terms**: Focus on harder vocabulary
-- **Time Pressure**: Optional time limits
-
-## Hint Systems
-
-### Effective Hint Design
-- **Educational Value**: Hints should teach, not just give answers
-- **Progressive Disclosure**: Start with subtle hints, get more specific
-- **Cost Balance**: Meaningful point deduction without discouraging use
-- **Game-Appropriate**: Hints match the game's learning objectives
-
-### Implementation Pattern
+### Points Calculation
 ```typescript
-const useHint = useCallback(() => {
-  if (hintsUsed >= maxHints) return
+interface ScoreFactors {
+  basePoints: number        // Fixed per question
+  speedBonus: number       // Based on time taken
+  streakBonus: number      // Consecutive correct
+  difficultyMultiplier: number // 1.0, 1.5, 2.0
+  perfectBonus: number     // All correct, no hints
+  hintPenalty: number      // -20 per hint used
+}
+
+const calculateQuestionScore = (factors: ScoreFactors): number => {
+  const {
+    basePoints,
+    speedBonus,
+    streakBonus,
+    difficultyMultiplier,
+    perfectBonus,
+    hintPenalty
+  } = factors
   
-  setGameState(prev => ({
+  return Math.floor(
+    (basePoints + speedBonus + streakBonus + perfectBonus - hintPenalty) 
+    * difficultyMultiplier
+  )
+}
+```
+
+### Speed Bonus Calculation
+```typescript
+const calculateSpeedBonus = (timeElapsed: number, difficulty: string): number => {
+  const thresholds = {
+    easy: { fast: 15, medium: 30 },
+    medium: { fast: 10, medium: 20 },
+    hard: { fast: 5, medium: 10 }
+  }
+  
+  const { fast, medium } = thresholds[difficulty]
+  
+  if (timeElapsed < fast) return 50
+  if (timeElapsed < medium) return 25
+  return 0
+}
+```
+
+### Streak System
+```typescript
+const updateStreak = (correct: boolean) => {
+  if (correct) {
+    setStreak(prev => {
+      const newStreak = prev + 1
+      
+      // Milestone bonuses
+      if (newStreak === 5) showMessage('🔥 5 in a row! +50 bonus')
+      if (newStreak === 10) showMessage('⚡ Unstoppable! +100 bonus')
+      
+      return newStreak
+    })
+  } else {
+    setStreak(0)
+  }
+}
+
+const getStreakBonus = (streak: number): number => {
+  if (streak >= 10) return 100
+  if (streak >= 5) return 50
+  return streak * 5 // 5 points per consecutive correct
+}
+```
+
+## Lives System
+
+### Lives Management
+```typescript
+const handleLivesSystem = () => {
+  const decrementLife = () => {
+    setLives(prev => {
+      const newLives = prev - 1
+      
+      if (newLives === 0) {
+        endGame('lives_depleted')
+      } else if (newLives === 1) {
+        showWarning('⚠️ Last life remaining!')
+      }
+      
+      return newLives
+    })
+  }
+  
+  const earnExtraLife = () => {
+    setLives(prev => Math.min(prev + 1, 5)) // Max 5 lives
+    showMessage('❤️ Extra life earned!')
+  }
+  
+  return { decrementLife, earnExtraLife }
+}
+```
+
+### Lives Earning Conditions
+```typescript
+// Earn extra life for milestones
+if (score % 500 === 0 && score > 0) {
+  earnExtraLife()
+}
+
+// Earn for perfect streak
+if (streak === 10) {
+  earnExtraLife()
+}
+```
+
+## Hint System
+
+### Hint Implementation
+```typescript
+const useHint = (term: VocabularyTerm, hintLevel: number) => {
+  if (hintsRemaining === 0) {
+    showMessage('No hints remaining')
+    return null
+  }
+  
+  setHintsRemaining(prev => prev - 1)
+  setHintsUsed(prev => prev + 1)
+  
+  // Progressive hints
+  switch (hintLevel) {
+    case 1:
+      // Show first letter
+      return term.term[0] + '_'.repeat(term.term.length - 1)
+    
+    case 2:
+      // Show definition start
+      return term.definition.substring(0, 20) + '...'
+    
+    case 3:
+      // Show related term
+      return `Related to: ${term.relatedTerms?.[0] || 'N/A'}`
+    
+    default:
+      return null
+  }
+}
+```
+
+### Hint UI Pattern
+```typescript
+<Button
+  onClick={requestHint}
+  disabled={hintsRemaining === 0}
+  variant="outline"
+  size="sm"
+>
+  <Lightbulb className="h-4 w-4 mr-2" />
+  Hint ({hintsRemaining} left)
+  <span className="text-xs text-muted-foreground ml-2">
+    -20 points
+  </span>
+</Button>
+```
+
+## Timer System
+
+### Countdown Timer
+```typescript
+const useGameTimer = (duration: number, onExpire: () => void) => {
+  const [timeRemaining, setTimeRemaining] = useState(duration)
+  const [isPaused, setIsPaused] = useState(false)
+  
+  useEffect(() => {
+    if (isPaused || timeRemaining <= 0) return
+    
+    const interval = setInterval(() => {
+      setTimeRemaining(prev => {
+        if (prev <= 1) {
+          onExpire()
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [timeRemaining, isPaused, onExpire])
+  
+  return {
+    timeRemaining,
+    isPaused,
+    pause: () => setIsPaused(true),
+    resume: () => setIsPaused(false),
+    reset: () => setTimeRemaining(duration)
+  }
+}
+```
+
+### Time Pressure Visual
+```typescript
+<div className={cn(
+  "transition-colors duration-300",
+  timeRemaining < 10 && "text-destructive animate-pulse",
+  timeRemaining < 5 && "text-red-600 font-bold"
+)}>
+  ⏱️ {formatTime(timeRemaining)}
+</div>
+```
+
+## Combo System
+
+### Combo Tracking
+```typescript
+const updateCombo = (correct: boolean) => {
+  if (correct) {
+    setCombo(prev => {
+      const newCombo = prev + 1
+      const multiplier = getComboMultiplier(newCombo)
+      
+      if (newCombo % 5 === 0) {
+        showComboNotification(newCombo, multiplier)
+      }
+      
+      return newCombo
+    })
+  } else {
+    setCombo(0)
+    setComboMultiplier(1.0)
+  }
+}
+
+const getComboMultiplier = (combo: number): number => {
+  if (combo >= 20) return 3.0
+  if (combo >= 15) return 2.5
+  if (combo >= 10) return 2.0
+  if (combo >= 5) return 1.5
+  return 1.0
+}
+```
+
+### Combo Display
+```typescript
+{combo >= 3 && (
+  <motion.div
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    className="absolute top-4 right-4 bg-primary text-white px-4 py-2 rounded-full"
+  >
+    <span className="text-2xl font-bold">{combo}x</span>
+    <span className="text-sm ml-2">COMBO!</span>
+  </motion.div>
+)}
+```
+
+## Power-Ups System
+
+### Power-Up Types
+```typescript
+type PowerUp = 
+  | 'freeze_time'      // Pause timer for 10 seconds
+  | 'reveal_answer'    // Show correct answer
+  | 'double_points'    // 2x points for next 3 questions
+  | 'extra_life'       // Add one life
+  | 'skip_question'    // Move to next without penalty
+
+interface PowerUpState {
+  available: PowerUp[]
+  active: PowerUp | null
+  uses: Record<PowerUp, number>
+}
+```
+
+### Power-Up Activation
+```typescript
+const activatePowerUp = (powerUp: PowerUp) => {
+  if (!isPowerUpAvailable(powerUp)) return
+  
+  setPowerUpState(prev => ({
     ...prev,
-    hintsUsed: prev.hintsUsed + 1,
-    score: Math.max(0, prev.score - 5)
+    active: powerUp,
+    uses: {
+      ...prev.uses,
+      [powerUp]: (prev.uses[powerUp] || 0) + 1
+    }
   }))
   
-  setShowHint(true)
-}, [hintsUsed, maxHints])
-```
-
-## Progress Tracking
-
-### Game State Management
-```typescript
-interface GameState {
-  currentTerm: VocabularyTerm | null
-  guessedLetters: Set<string>
-  wrongGuesses: number
-  gameStatus: 'playing' | 'won' | 'lost'
-  score: number
-  currentWordIndex: number
-  startTime: number
-  hintsUsed: number
+  // Apply power-up effect
+  switch (powerUp) {
+    case 'freeze_time':
+      pauseTimer(10000)
+      break
+    case 'double_points':
+      setPointsMultiplier(2.0)
+      setQuestionsWithDoublePoints(3)
+      break
+    case 'extra_life':
+      setLives(prev => prev + 1)
+      break
+  }
 }
 ```
 
-### Completion Tracking
-- **Individual Words**: Track completion of each vocabulary term
-- **Overall Progress**: Show progress through the entire set
-- **Performance Metrics**: Accuracy, speed, hint usage
-- **Learning Analytics**: Track which terms are most challenging
+## Results Summary
 
-## Accessibility Considerations
+### End Game Summary
+```typescript
+interface GameSummary {
+  totalQuestions: number
+  correctAnswers: number
+  accuracy: number
+  totalScore: number
+  timeElapsed: number
+  highestStreak: number
+  hintsUsed: number
+  livesRemaining: number
+  perfect: boolean
+  rank: string // S, A, B, C, D, F
+}
 
-### Keyboard Navigation
-- **Tab Order**: Logical tab progression through interactive elements
-- **Enter/Space**: Activate buttons and make selections
-- **Arrow Keys**: Navigate grid-based games (crossword)
-- **Escape**: Exit modals or return to previous state
+const generateGameSummary = (): GameSummary => {
+  const accuracy = correctAnswers / totalQuestions
+  const perfect = accuracy === 1 && hintsUsed === 0
+  
+  return {
+    totalQuestions,
+    correctAnswers,
+    accuracy,
+    totalScore: finalScore,
+    timeElapsed: Date.now() - startTime,
+    highestStreak: maxStreak,
+    hintsUsed,
+    livesRemaining: lives,
+    perfect,
+    rank: calculateRank(accuracy, finalScore)
+  }
+}
 
-### Screen Reader Support
-- **ARIA Labels**: Descriptive labels for all interactive elements
-- **Live Regions**: Announce game state changes
-- **Structured Content**: Proper heading hierarchy
-- **Alternative Text**: Describe visual game elements
-
-### Visual Accessibility
-- **Color Contrast**: Meet WCAG AA standards
-- **Focus Indicators**: Clear focus states for keyboard users
-- **Text Size**: Readable font sizes at all zoom levels
-- **Color Independence**: Don't rely solely on color for information
-
-## Performance Optimization
-
-### State Management
-- **Minimal Re-renders**: Use useCallback and useMemo appropriately
-- **Efficient Updates**: Batch state updates when possible
-- **Memory Management**: Clean up game state on unmount
-
-### Rendering Optimization
-- **Virtual Scrolling**: For large vocabulary sets
-- **Lazy Loading**: Load game components only when needed
-- **Debounced Input**: Prevent excessive validation calls
-- **Optimized Grid**: Efficient crossword grid rendering
+const calculateRank = (accuracy: number, score: number): string => {
+  if (accuracy === 1 && score >= 1000) return 'S'
+  if (accuracy >= 0.9 && score >= 800) return 'A'
+  if (accuracy >= 0.75 && score >= 600) return 'B'
+  if (accuracy >= 0.6 && score >= 400) return 'C'
+  if (accuracy >= 0.5) return 'D'
+  return 'F'
+}
+```

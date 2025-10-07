@@ -1,42 +1,36 @@
 # Antocci Physics Classroom
 
-A comprehensive Next.js 15 physics education platform with AI-powered question generation, interactive lessons, advanced analytics, and seamless Google Classroom integration.
+A comprehensive Next.js 15 physics education platform with AI-powered question generation, interactive lessons, vocabulary games, advanced analytics, and seamless Google Classroom integration.
 
 ## 📚 Documentation
 
-- **[Setup Guides](docs/SETUP_GUIDES.md)** - Database setup, migrations, and configuration
+- **[Setup Guides](docs/SETUP_GUIDES.md)** - Database setup and configuration
 - **[Features Overview](docs/FEATURES.md)** - Comprehensive feature documentation
-- **[Assignment System](docs/ASSIGNMENT_SYSTEM.md)** - Complete assignment management documentation
+- **[Assignment System Guide](docs/ASSIGNMENTS_SYSTEM_GUIDE.md)** - Assignment management documentation
+- **[Lesson System Guide](docs/LESSONS_SYSTEM_GUIDE.md)** - Lesson creation and management
+- **[Deployment Checklist](DEPLOYMENT_CHECKLIST.md)** - Production deployment steps
 
 ## 🎯 Key Features
 
-- **AI-Powered Tools** - Question generation, grading, and scenario images
-- **Interactive Lessons** - Math rendering, video integration, progress tracking
-- **Assignment System** - Assign lessons and homework to classes or individual students
-- **Question Bank System** - Centralized repository with advanced filtering
-- **Student Analytics** - Real-time engagement and performance tracking
-- **Mobile-First Design** - Optimized for all devices and screen sizes
-- **Role-Based Access** - Student, Teacher, and Admin permissions
+- **🤖 AI-Powered Tools** - Question generation, automatic grading, and physics scenario images
+- **📖 Interactive Lessons** - KaTeX math rendering, YouTube video integration, progress tracking
+- **📝 Assignment System** - Assign lessons and homework to classes or individual students
+- **🎯 Question Bank** - Centralized repository with advanced filtering and usage analytics
+- **🎮 Vocabulary Games** - Hangman, matching, word shoot, and fill-in-the-blank games
+- **📊 Student Analytics** - Real-time engagement metrics and performance tracking
+- **🎨 Modern UI** - shadcn/ui components, responsive design, dark mode support
+- **🔐 Role-Based Access** - Student, Teacher, and Admin permission levels
 
-## 🚀 Features
+## 🚀 Technical Stack
 
-### Core Functionality
-- **Interactive Physics Lessons** - Engaging, step-by-step physics lessons with real-time feedback
-- **Assignment System** - Assign lessons and homework to entire classes or individual students
-- **Google Authentication** - Secure login with school Google accounts
-- **Google Classroom Integration** - Import student rosters and sync with existing classes
-- **AI-Powered Grading** - OpenAI integration for automatic grading of open-response questions
-- **Assignment Management** - Create, distribute, and grade assignments with custom rubrics
-- **Progress Tracking** - Monitor student progress and performance analytics with real-time completion rates
-
-### Technical Features
-- **Next.js 15** with App Router
-- **TypeScript** for type safety
-- **Tailwind CSS** for styling
-- **Supabase** for database and real-time features
-- **NextAuth** for authentication
-- **Toast Notifications** for user feedback
-- **Responsive Design** for all devices
+- **Framework**: Next.js 15 with App Router + React 19
+- **Language**: TypeScript (strict mode)
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **Database**: Supabase (PostgreSQL) with real-time features
+- **Authentication**: NextAuth.js v5 with Google OAuth
+- **AI Integration**: OpenAI API (GPT-4 for grading)
+- **Math Rendering**: KaTeX for physics equations
+- **State Management**: React Context API with custom providers
 
 ## 📋 Prerequisites
 
@@ -61,25 +55,13 @@ npm install
 
 3. **Set up environment variables**
 
-Create a `.env.local` file in the root directory:
+Copy `env.example` to `.env.local` and fill in your values:
 
-```env
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-key
-
-# Google OAuth
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-
-# OpenAI
-OPENAI_API_KEY=your-openai-api-key
+```bash
+cp env.example .env.local
 ```
+
+Then edit `.env.local` with your actual credentials. See [env.example](env.example) for required variables.
 
 4. **Configure Google OAuth**
 
@@ -174,20 +156,52 @@ npm run test:coverage
 
 ## 🚀 Deployment
 
-### Deploy to Vercel
+### Recommended: Deploy to Vercel
 
-1. Push your code to GitHub
-2. Import project in [Vercel](https://vercel.com)
-3. Add environment variables
-4. Deploy
+1. **Push to GitHub**
+   ```bash
+   git push origin main
+   ```
 
-### Deploy to Other Platforms
+2. **Import to Vercel**
+   - Visit [vercel.com](https://vercel.com)
+   - Click "Import Project"
+   - Select your GitHub repository
 
-The app can be deployed to any platform that supports Next.js:
-- Netlify
-- AWS Amplify
-- Google Cloud Run
-- Self-hosted with Node.js
+3. **Configure Environment Variables**
+   Add all required variables from `.env.local`:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXTAUTH_SECRET` (generate with: `openssl rand -base64 32`)
+   - `NEXTAUTH_URL` (your production URL)
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+   - `OPENAI_API_KEY`
+
+4. **Update Google OAuth**
+   - Add production callback URL in Google Cloud Console
+   - `https://yourdomain.com/api/auth/callback/google`
+
+5. **Deploy**
+   - Vercel will automatically build and deploy
+   - Monitor build logs for any errors
+
+### Pre-Deployment Checklist
+
+See [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) for complete checklist including:
+- Database migrations
+- Environment variable verification
+- Security review
+- Performance optimization
+- Testing procedures
+
+### Alternative Platforms
+
+The app can be deployed to any platform supporting Next.js 15:
+- **Netlify**: Similar process to Vercel
+- **Railway**: Good for full-stack apps with database
+- **AWS Amplify**: Enterprise deployments
+- **Self-hosted**: Docker or PM2 with Node.js 18+
 
 ## 🛠️ Development
 

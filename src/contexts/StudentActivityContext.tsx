@@ -150,9 +150,13 @@ export function StudentActivityProvider({ children }: { children: ReactNode }) {
   const userRole = getUserRole(session?.user?.email)
   const canAccessActivityData = userRole === 'admin' || userRole === 'teacher'
 
-  // Initialize data on mount for authorized users
+  // LAZY LOADING: Only initialize when user navigates to pages that need activity data
   useEffect(() => {
-    if (session?.user?.id && canAccessActivityData && !initialized) {
+    const shouldAutoInit = typeof window !== 'undefined' && 
+      (window.location.pathname.includes('/admin') || 
+       window.location.pathname === '/dashboard')
+    
+    if (shouldAutoInit && session?.user?.id && canAccessActivityData && !initialized) {
       initializeData()
     }
   }, [session, canAccessActivityData, initialized])

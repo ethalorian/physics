@@ -123,9 +123,13 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
     }
   }, [canAccessQuestionBank, initialized, fetchUnits, fetchQuestions])
 
-  // Load units and questions only for authorized users
+  // LAZY LOADING: Only load when user navigates to question bank pages
   useEffect(() => {
-    if (session?.user?.id && canAccessQuestionBank && !initialized) {
+    const shouldAutoInit = typeof window !== 'undefined' && 
+      (window.location.pathname.includes('/admin/question-bank') || 
+       window.location.pathname.includes('/admin/assignments/create'))
+    
+    if (shouldAutoInit && session?.user?.id && canAccessQuestionBank && !initialized) {
       initializeData()
     }
   }, [session, canAccessQuestionBank, initialized, initializeData])

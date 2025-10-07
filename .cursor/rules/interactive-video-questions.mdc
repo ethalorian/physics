@@ -5,284 +5,428 @@ description: "Interactive video questions system (EdPuzzle-style) patterns and i
 # Interactive Video Questions System
 
 ## Overview
-The interactive video questions system allows teachers to add questions at specific timestamps in lesson videos. Videos automatically pause at these points and require students to answer before continuing - similar to EdPuzzle.
 
-## Core Data Structures
+Embed questions at specific timestamps in YouTube videos for interactive learning experiences. Core implementation in lesson content pages.
 
-### VideoQuestion Type
-Located in [src/types/assignment.ts](mdc:src/types/assignment.ts):
+## Video Player Integration
 
+### YouTube Player Setup
+```typescript
+import { useRef, useEffect, useState } from 'react'
+
+interface YouTubePlayer {
+  getCurrentTime: () => number
+  pauseVideo: () => void
+  playVideo: () => void
+  seekTo: (seconds: number) => void
+}
+
+const useYouTubePlayer = (videoId: string) => {
+  const playerRef = useRef<YouTubePlayer | null>(null)
+  const [player, setPlayer] = useState<YouTubePlayer | null>(null)
+  
+  useEffect(() => {
+    // Load YouTube IFrame API
+    const tag = document.createElement('script')
+    tag.src = 'https://www.youtube.com/iframe_api'
+    document.head.appendChild(tag)
+    
+    window.onYouTubeIframeAPIReady = () => {
+      const ytPlayer = new window.YT.Player('youtube-player', {
+        videoId: videoId,
+        events: {
+          onReady: (event) => {
+            playerRef.current = event.target
+            setPlayer(event.target)
+          },
+          onStateChange: handleStateChange
+        }
+      })
+    }
+  }, [videoId])
+  
+  return { player, playerRef }
+}
+```
+
+## Question Timing System
+
+### Question Marker Structure
 ```typescript
 interface VideoQuestion {
   id: string
-  timestamp: number // When to pause video (in seconds)
-  question: Question // Any question type (MC, numerical, open-response, essay)
-  answered?: boolean
-  studentAnswer?: any
-  score?: number
+  timestamp: number // seconds into video
+  question: string
+  type: 'multiple-choice' | 'open-response' | 'true-false'
+  options?: string[]
+  correctAnswer?: number | string
+  explanation?: string
+  allowSkip: boolean
+  requireCorrect: boolean // Must answer correctly to continue
 }
 
-interface LessonVideo {
-  id: string
+interface VideoLesson {
+  videoId: string
   title: string
-  youtubeId: string
-  duration?: string
-  description?: string
-  timestamp?: number // For starting at specific time
-  questions?: VideoQuestion[] // EdPuzzle-like embedded questions
+  description: string
+  questions: VideoQuestion[]
+  duration: number
 }
 ```
 
-## Teacher Interface Components
-
-### VideoQuestionEditor
-**File**: [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx)
-
-Features:
-- **Visual Timeline** - Interactive gradient timeline showing video duration
-- **Embedded Video Player** - YouTube player with scrubbing controls
-- **Auto-Duration Detection** - Gets actual video length from YouTube API
-- **Click-to-Add Questions** - Click "Add Question Here" button at any timestamp
-- **Question Management** - Edit, delete, reorder questions
-- **Full Question Builder** - Integrates with existing QuestionEditor component
-
-Usage pattern:
+### Time-Based Question Triggering
 ```typescript
-<VideoQuestionEditor
-  videoId={video.id}
-  videoTitle={video.title}
-  youtubeId={video.youtubeId}
-  videoDuration={video.duration}
-  initialQuestions={video.questions || []}
-  onSave={(questions) => handleSave(video.id, questions)}
-  onClose={() => setEditingQuestionsId(null)}
-/>
-```
-
-### Integration in LessonVideoManager
-**File**: [src/components/admin/LessonVideoManager.tsx](mdc:src/components/admin/LessonVideoManager.tsx)
-
-Teachers access the question editor by:
-1. Clicking the purple AlertCircle icon (⚡) on any video
-2. Visual timeline editor appears inline
-3. Scrub video to find perfect moment
-4. Click "Add Question Here" button
-5. Use full question builder with AI tools
-6. Save all questions to database
-
-## Student Experience Components
-
-### YouTubeEmbed with Question Detection
-**File**: [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx)
-
-Features:
-- **Time Checking** - Monitors video playback every 500ms
-- **Auto-Pause** - Pauses video at question timestamps (±1 second window)
-- **Question Modal** - Beautiful overlay with question
-- **Instant Feedback** - For MC and numerical questions
-- **Auto-Resume** - Continues video after correct answer
-- **One-Time Display** - Questions only show once per session
-
-Implementation pattern:
-```typescript
-// Load YouTube IFrame API
-useEffect(() => {
-  // Load API script
-  // Initialize player with event handlers
-}, [videoId])
-
-// Check for questions while playing
-const startTimeChecking = () => {
-  timeCheckInterval.current = setInterval(() => {
-    const currentTime = playerRef.current.getCurrentTime()
+const useVideoQuestions = (
+  player: YouTubePlayer | null,
+  questions: VideoQuestion[]
+) => {
+  const [currentQuestion, setCurrentQuestion] = useState<VideoQuestion | null>(null)
+  const [answeredQuestions, setAnsweredQuestions] = useState<Set<string>>(new Set())
+  const checkIntervalRef = useRef<NodeJS.Timeout>()
+  
+  useEffect(() => {
+    if (!player) return
     
-    const unansweredQuestion = questions.find(q => 
-      !answeredQuestions.has(q.id) && 
-      currentTime >= q.timestamp && 
-      currentTime < q.timestamp + 1
-    )
-
-    if (unansweredQuestion) {
-      playerRef.current.pauseVideo()
-      setCurrentQuestion(unansweredQuestion)
-    }
-  }, 500)
-}
-```
-
-### VideoQuestionModal Component
-**File**: [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx)
-
-Modal that appears when video pauses:
-- Uses QuestionRenderer for consistency
-- Provides instant feedback for auto-gradable questions
-- Integrates with OpenAI grading for open responses
-- Shows point values
-- "Continue Video" button after correct answer
-
-## YouTube Player API Integration
-
-### CSP Configuration
-**File**: [next.config.ts](mdc:next.config.ts)
-
-Required Content Security Policy directives:
-```typescript
-"frame-src 'self' https://accounts.google.com https://content.googleapis.com https://www.youtube.com https://www.youtube-nocookie.com"
-"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.youtube.com https://s.ytimg.com"
-"img-src 'self' data: blob: ... https://i.ytimg.com https://img.youtube.com"
-```
-
-### Player Initialization Pattern
-```typescript
-// Load YouTube IFrame API
-const tag = document.createElement('script')
-tag.src = 'https://www.youtube.com/iframe_api'
-document.getElementsByTagName('script')[0].parentNode?.insertBefore(tag, firstScriptTag)
-
-// Initialize player when ready
-window.onYouTubeIframeAPIReady = () => {
-  playerRef.current = new window.YT.Player(containerDiv, {
-    videoId: youtubeId,
-    playerVars: {
-      enablejsapi: 1,
-      origin: window.location.origin
-    },
-    events: {
-      onReady: (event) => {
-        // Get actual duration
-        const duration = event.target.getDuration()
-        onDurationDetected(duration)
-      },
-      onStateChange: (event) => {
-        // Detect video end (event.data === 0)
-        // Detect playing (event.data === 1)
+    // Check current time every 500ms
+    checkIntervalRef.current = setInterval(() => {
+      const currentTime = player.getCurrentTime()
+      
+      // Find question at current timestamp
+      const questionAtTime = questions.find(q => 
+        Math.abs(q.timestamp - currentTime) < 0.5 && 
+        !answeredQuestions.has(q.id)
+      )
+      
+      if (questionAtTime) {
+        player.pauseVideo()
+        setCurrentQuestion(questionAtTime)
+      }
+    }, 500)
+    
+    return () => {
+      if (checkIntervalRef.current) {
+        clearInterval(checkIntervalRef.current)
       }
     }
-  })
+  }, [player, questions, answeredQuestions])
+  
+  return {
+    currentQuestion,
+    setCurrentQuestion,
+    answeredQuestions,
+    setAnsweredQuestions
+  }
 }
 ```
 
-### Safety Checks
-Always check if methods exist before calling:
+## Question Overlay Component
+
+### Modal Question Display
 ```typescript
-if (playerRef.current && typeof playerRef.current.seekTo === 'function') {
-  playerRef.current.seekTo(timestamp, true)
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+
+interface VideoQuestionModalProps {
+  question: VideoQuestion
+  onAnswer: (answer: string | number, correct: boolean) => void
+  onSkip?: () => void
 }
-```
 
-## Visual Timeline Implementation
-
-### Timeline Component Features
-- Gradient background (blue → purple → pink)
-- Click anywhere to add question
-- Numbered question markers showing points
-- Hover tooltips with timestamp and type
-- Red playhead showing current video position
-- Auto-sorts questions by timestamp
-
-### Scrubbing Controls
-- Play/Pause button
-- Skip back 5 seconds
-- Skip forward 5 seconds
-- Slider for frame-accurate scrubbing
-- Real-time timestamp display (MM:SS / MM:SS)
-- "Add Question Here" button at current time
-
-## Question Flow
-
-### Teacher Workflow
-1. Navigate to lesson management
-2. Click video icon on lesson
-3. Click question icon on specific video
-4. Video player loads with timeline
-5. Scrub to find perfect moment
-6. Click "Add Question Here"
-7. Question editor appears with timestamp pre-filled
-8. Create question using AI tools
-9. Click "Save Question"
-10. Repeat for additional questions
-11. Click "Save All Questions" when done
-
-### Student Workflow
-1. Start watching lesson video
-2. Video plays normally
-3. Reaches question timestamp → auto-pauses
-4. Modal appears: "Video Paused - Answer to continue"
-5. Student answers question
-6. Receives instant feedback
-7. Clicks "Continue Video" after correct answer
-8. Video resumes from same position
-9. Process repeats for each question
-
-## Best Practices
-
-### Question Timing
-- Add questions **after** key concepts are explained
-- Space questions 2-3 minutes apart
-- Don't overwhelm students with too many questions
-- Recommended: 1 question per 2-3 minutes of video
-
-### Question Types
-- **Multiple Choice** - Conceptual understanding checks
-- **Numerical** - Calculation practice  
-- **Open Response** - Deep understanding with AI grading
-- **Essay** - Extended explanations (manual grading)
-
-### Points Allocation
-- Quick checks (MC): 1-3 points
-- Calculations (Numerical): 3-5 points
-- Explanations (Open Response): 5-10 points
-
-## Database Storage
-
-Questions are stored in the `lessons` table as JSONB:
-```sql
-{
-  "videos": [
-    {
-      "id": "vid-123",
-      "youtubeId": "abc123",
-      "questions": [
-        {
-          "id": "vq-1",
-          "timestamp": 45,
-          "question": { /* full Question object */ }
-        }
-      ]
+export function VideoQuestionModal({
+  question,
+  onAnswer,
+  onSkip
+}: VideoQuestionModalProps) {
+  const [selectedAnswer, setSelectedAnswer] = useState<string | number>('')
+  const [showFeedback, setShowFeedback] = useState(false)
+  const [isCorrect, setIsCorrect] = useState(false)
+  
+  const handleSubmit = () => {
+    const correct = selectedAnswer === question.correctAnswer
+    setIsCorrect(correct)
+    setShowFeedback(true)
+    
+    if (!question.requireCorrect || correct) {
+      setTimeout(() => {
+        onAnswer(selectedAnswer, correct)
+      }, 2000)
     }
-  ]
+  }
+  
+  return (
+    <Dialog open={true} onOpenChange={() => {}}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>
+            Question at {formatTimestamp(question.timestamp)}
+          </DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          <p className="text-lg">{question.question}</p>
+          
+          {question.type === 'multiple-choice' && (
+            <RadioGroup 
+              value={String(selectedAnswer)} 
+              onValueChange={setSelectedAnswer}
+            >
+              {question.options?.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={String(index)} id={`option-${index}`} />
+                  <label htmlFor={`option-${index}`}>{option}</label>
+                </div>
+              ))}
+            </RadioGroup>
+          )}
+          
+          {showFeedback && (
+            <div className={cn(
+              "p-4 rounded-lg",
+              isCorrect ? "bg-green-100 dark:bg-green-900" : "bg-red-100 dark:bg-red-900"
+            )}>
+              <p className="font-medium">
+                {isCorrect ? '✅ Correct!' : '❌ Incorrect'}
+              </p>
+              {question.explanation && (
+                <p className="mt-2 text-sm">{question.explanation}</p>
+              )}
+            </div>
+          )}
+          
+          <div className="flex justify-between">
+            {question.allowSkip && !showFeedback && (
+              <Button variant="ghost" onClick={onSkip}>
+                Skip
+              </Button>
+            )}
+            
+            <Button 
+              onClick={handleSubmit}
+              disabled={!selectedAnswer || showFeedback}
+              className="ml-auto"
+            >
+              Submit Answer
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
 }
 ```
 
-## AI Integration
+## Progress Tracking
 
-Works with existing OpenAI systems:
-- **Generate Options** - `/api/generate-mc-options`
-- **Generate Answer** - `/api/generate-answer`  
-- **Grade Open Response** - `/api/grade-open-response`
-- **Scenario Images** - `/api/generate-scenario-image`
+### Video Progress State
+```typescript
+interface VideoProgress {
+  lessonId: string
+  videoId: string
+  watchedDuration: number // total seconds watched
+  questionsAnswered: {
+    questionId: string
+    answer: string | number
+    correct: boolean
+    timestamp: number
+    attemptedAt: string
+  }[]
+  completed: boolean
+  completedAt?: string
+}
+```
 
-## Troubleshooting
+### Saving Progress
+```typescript
+const saveVideoProgress = async (progress: VideoProgress) => {
+  const { data, error } = await supabase
+    .from('video_lesson_progress')
+    .upsert({
+      student_id: userId,
+      lesson_id: progress.lessonId,
+      video_id: progress.videoId,
+      watched_duration: progress.watchedDuration,
+      questions_answered: progress.questionsAnswered,
+      completed: progress.completed,
+      completed_at: progress.completedAt,
+      updated_at: new Date().toISOString()
+    }, {
+      onConflict: 'student_id,lesson_id'
+    })
+  
+  if (error) throw error
+  return data
+}
+```
 
-### Video Not Loading
-- Check CSP headers include YouTube domains
-- Verify YouTube API script loaded (Network tab)
-- Wait 2-3 seconds for player initialization
+## Timeline Markers
 
-### Questions Not Pausing Video
-- Ensure questions have valid timestamps (< video duration)
-- Check browser console for errors
-- Verify YouTube Player API initialized (check `isPlayerReady`)
+### Visual Question Indicators
+```typescript
+const VideoTimeline = ({ 
+  duration, 
+  questions,
+  currentTime 
+}: {
+  duration: number
+  questions: VideoQuestion[]
+  currentTime: number
+}) => {
+  return (
+    <div className="relative w-full h-2 bg-muted rounded-full mt-2">
+      {/* Progress bar */}
+      <div 
+        className="absolute h-full bg-primary rounded-full transition-all"
+        style={{ width: `${(currentTime / duration) * 100}%` }}
+      />
+      
+      {/* Question markers */}
+      {questions.map(q => (
+        <div
+          key={q.id}
+          className="absolute top-0 w-3 h-3 bg-yellow-500 rounded-full transform -translate-y-1/4"
+          style={{ left: `${(q.timestamp / duration) * 100}%` }}
+          title={`Question at ${formatTimestamp(q.timestamp)}`}
+        />
+      ))}
+    </div>
+  )
+}
+```
 
-### Duration Shows 5:00 Instead of Actual
-- YouTube API needs time to load
-- Auto-detection happens on `onReady` event
-- Blue banner shows "✓ Detected actual video length: X:XX"
+## Admin Question Editor
 
-## Related Files
-- [src/types/assignment.ts](mdc:src/types/assignment.ts) - Type definitions
-- [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx) - Teacher editor
-- [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx) - Student player
-- [src/components/admin/LessonVideoManager.tsx](mdc:src/components/admin/LessonVideoManager.tsx) - Video management
-- [next.config.ts](mdc:next.config.ts) - CSP configuration
-- [docs/INTERACTIVE_VIDEO_QUESTIONS.md](mdc:docs/INTERACTIVE_VIDEO_QUESTIONS.md) - User guide
+### Adding Questions to Videos
+```typescript
+interface VideoQuestionEditorProps {
+  videoId: string
+  duration: number
+  existingQuestions: VideoQuestion[]
+  onSave: (questions: VideoQuestion[]) => void
+}
+
+export function VideoQuestionEditor({
+  videoId,
+  duration,
+  existingQuestions,
+  onSave
+}: VideoQuestionEditorProps) {
+  const [questions, setQuestions] = useState<VideoQuestion[]>(existingQuestions)
+  const [editingQuestion, setEditingQuestion] = useState<VideoQuestion | null>(null)
+  
+  const addQuestion = (timestamp: number) => {
+    const newQuestion: VideoQuestion = {
+      id: `q-${Date.now()}`,
+      timestamp,
+      question: '',
+      type: 'multiple-choice',
+      options: ['', '', '', ''],
+      correctAnswer: 0,
+      allowSkip: false,
+      requireCorrect: false
+    }
+    
+    setEditingQuestion(newQuestion)
+  }
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-medium">Video Questions</h3>
+        <Button onClick={() => addQuestion(0)}>
+          Add Question
+        </Button>
+      </div>
+      
+      {/* Question list */}
+      <div className="space-y-2">
+        {questions
+          .sort((a, b) => a.timestamp - b.timestamp)
+          .map(q => (
+            <div key={q.id} className="flex items-center justify-between p-4 border rounded-lg">
+              <div>
+                <p className="font-medium">{formatTimestamp(q.timestamp)}</p>
+                <p className="text-sm text-muted-foreground">{q.question}</p>
+              </div>
+              <div className="flex space-x-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setEditingQuestion(q)}
+                >
+                  Edit
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="sm"
+                  onClick={() => removeQuestion(q.id)}
+                >
+                  Delete
+                </Button>
+              </div>
+            </div>
+          ))}
+      </div>
+    </div>
+  )
+}
+```
+
+## Completion Criteria
+
+### Video Lesson Completion
+```typescript
+const checkVideoCompletion = (progress: VideoProgress): boolean => {
+  // Must watch at least 80% of video
+  const watchPercentage = progress.watchedDuration / videoDuration
+  const watchedEnough = watchPercentage >= 0.8
+  
+  // Must answer all required questions correctly
+  const allQuestionsAnswered = videoQuestions.every(q => 
+    progress.questionsAnswered.some(a => 
+      a.questionId === q.id && 
+      (!q.requireCorrect || a.correct)
+    )
+  )
+  
+  return watchedEnough && allQuestionsAnswered
+}
+```
+
+## Utility Functions
+
+```typescript
+// Format seconds to MM:SS
+const formatTimestamp = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60)
+  const secs = Math.floor(seconds % 60)
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}
+
+// Parse timestamp string to seconds
+const parseTimestamp = (timestamp: string): number => {
+  const [mins, secs] = timestamp.split(':').map(Number)
+  return mins * 60 + secs
+}
+```
+
+## Database Schema
+
+```sql
+CREATE TABLE video_lesson_progress (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  student_id UUID NOT NULL REFERENCES students(id),
+  lesson_id TEXT NOT NULL,
+  video_id TEXT NOT NULL,
+  watched_duration INTEGER DEFAULT 0,
+  questions_answered JSONB DEFAULT '[]'::jsonb,
+  completed BOOLEAN DEFAULT FALSE,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(student_id, lesson_id)
+);
+
+CREATE INDEX idx_video_progress_student ON video_lesson_progress(student_id);
+CREATE INDEX idx_video_progress_lesson ON video_lesson_progress(lesson_id);
+```

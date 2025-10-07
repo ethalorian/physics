@@ -1,366 +1,233 @@
 ---
-globs: supabase/migrations/create_assignment_system_tables.sql,src/app/api/assignments/**
 description: Database patterns and SQL practices for the assignment system
 ---
 
-# Database Assignment System Patterns
+# Database & Assignment Patterns
 
-## Table Design Principles
+## Supabase Client Usage
 
-### Assignment Tables Structure
-The assignment system uses a dual-table approach for flexibility:
+Always use the configured client from [supabase.ts](mdc:src/lib/supabase.ts):
 
-#### Main Assignment Tables
-- **`lesson_assignments`** - Assigns lessons to courses/students
-- **`assignment_assignments`** - Assigns homework to courses/students
-
-Both tables follow the same pattern:
-```sql
-CREATE TABLE IF NOT EXISTS lesson_assignments (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
-  
-  -- Assignment target (either course or individual students)
-  course_id TEXT, -- Google Classroom course ID (optional)
-  assigned_students UUID[], -- Array of student UUIDs (optional)
-  
-  -- Assignment details
-  assigned_by TEXT NOT NULL,
-  assigned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  due_date TIMESTAMPTZ,
-  
-  -- Status and analytics
-  total_assigned INTEGER DEFAULT 0,
-  total_started INTEGER DEFAULT 0,
-  total_completed INTEGER DEFAULT 0,
-  
-  -- Constraints
-  CHECK (course_id IS NOT NULL OR assigned_students IS NOT NULL),
-  CHECK (NOT (course_id IS NOT NULL AND assigned_students IS NOT NULL))
-);
-```
-
-#### Individual Progress Tables
-- **`student_lesson_assignments`** - Individual student progress on lessons
-- **`student_assignment_assignments`** - Individual student progress on homework
-
-### Key Design Decisions
-
-#### Flexible Assignment Targeting
-Use CHECK constraints to ensure exactly one targeting method:
-```sql
--- Must assign to course OR students, but not both
-CHECK (course_id IS NOT NULL OR assigned_students IS NOT NULL),
-CHECK (NOT (course_id IS NOT NULL AND assigned_students IS NOT NULL))
-```
-
-#### Array-Based Student Assignment
-Store multiple student IDs efficiently:
-```sql
-assigned_students UUID[], -- Array of student UUIDs
-```
-
-Query individual assignments:
-```sql
-SELECT * FROM lesson_assignments 
-WHERE assigned_students @> ARRAY['student-uuid']::UUID[];
-```
-
-#### Comprehensive Status Tracking
-Use enums for consistent status values:
-```sql
-status TEXT DEFAULT 'assigned' CHECK (
-  status IN ('assigned', 'started', 'in_progress', 'completed', 'overdue')
-)
-```
-
-## Automatic Data Management
-
-### Trigger Functions
-Automatically create individual student assignments when assigning to courses:
-
-```sql
-CREATE OR REPLACE FUNCTION create_student_lesson_assignments()
-RETURNS TRIGGER AS $$
-BEGIN
-  -- If assigning to a course, create individual student assignments
-  IF NEW.course_id IS NOT NULL THEN
-    INSERT INTO student_lesson_assignments (lesson_assignment_id, student_id)
-    SELECT NEW.id, s.id
-    FROM students s
-    WHERE s.course_id = NEW.course_id
-      AND s.is_active = TRUE
-      AND s.enrollment_state = 'ACTIVE';
-    
-    -- Update total_assigned count
-    UPDATE lesson_assignments 
-    SET total_assigned = (
-      SELECT COUNT(*)
-      FROM students 
-      WHERE course_id = NEW.course_id 
-        AND is_active = TRUE 
-        AND enrollment_state = 'ACTIVE'
-    )
-    WHERE id = NEW.id;
-  END IF;
-  
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-### Analytics Updates
-Automatically update completion statistics:
-```sql
-CREATE OR REPLACE FUNCTION update_lesson_assignment_analytics()
-RETURNS TRIGGER AS $$
-BEGIN
-  UPDATE lesson_assignments 
-  SET 
-    total_started = (
-      SELECT COUNT(*)
-      FROM student_lesson_assignments 
-      WHERE lesson_assignment_id = NEW.lesson_assignment_id
-        AND status IN ('started', 'in_progress', 'completed')
-    ),
-    total_completed = (
-      SELECT COUNT(*)
-      FROM student_lesson_assignments 
-      WHERE lesson_assignment_id = NEW.lesson_assignment_id
-        AND status = 'completed'
-    ),
-    updated_at = NOW()
-  WHERE id = NEW.lesson_assignment_id;
-  
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-```
-
-## Query Patterns
-
-### Efficient Assignment Retrieval
-Use proper joins for comprehensive data:
-```sql
-SELECT 
-  la.*,
-  l.title as lesson_title,
-  l.description as lesson_description,
-  c.name as course_name,
-  c.student_count,
-  COUNT(sla.id) as assigned_count,
-  COUNT(CASE WHEN sla.status = 'completed' THEN 1 END) as completed_count
-FROM lesson_assignments la
-JOIN lessons l ON la.lesson_id = l.id
-LEFT JOIN courses c ON la.course_id = c.google_course_id
-LEFT JOIN student_lesson_assignments sla ON la.id = sla.lesson_assignment_id
-WHERE la.is_active = true
-  AND la.published = true
-GROUP BY la.id, l.id, c.id
-ORDER BY la.assigned_at DESC;
-```
-
-### Student Assignment Queries
-Efficient student-specific queries:
-```sql
--- Get all assignments for a student
-SELECT 
-  sla.*,
-  la.due_date,
-  la.instructions,
-  l.title,
-  l.description,
-  l.estimated_time
-FROM student_lesson_assignments sla
-JOIN lesson_assignments la ON sla.lesson_assignment_id = la.id
-JOIN lessons l ON la.lesson_id = l.id
-WHERE sla.student_id = $1
-  AND la.is_active = true
-  AND la.published = true
-ORDER BY la.assigned_at DESC;
-```
-
-### Overdue Assignment Detection
-Use date functions for overdue queries:
-```sql
--- Find overdue assignments
-SELECT 
-  sla.*,
-  la.due_date,
-  la.title,
-  s.name as student_name,
-  s.email as student_email
-FROM student_lesson_assignments sla
-JOIN lesson_assignments la ON sla.lesson_assignment_id = la.id
-JOIN students s ON sla.student_id = s.id
-WHERE la.due_date < NOW()
-  AND sla.status NOT IN ('completed', 'graded')
-  AND la.is_active = true
-ORDER BY la.due_date ASC;
-```
-
-## Index Strategy
-
-### Performance Indexes
-Create indexes on frequently queried columns:
-```sql
--- Assignment queries
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_lesson_id ON lesson_assignments(lesson_id);
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_course_id ON lesson_assignments(course_id);
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_assigned_by ON lesson_assignments(assigned_by);
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_due_date ON lesson_assignments(due_date);
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_published ON lesson_assignments(published);
-
--- Student assignment queries
-CREATE INDEX IF NOT EXISTS idx_student_lesson_assignments_student_id ON student_lesson_assignments(student_id);
-CREATE INDEX IF NOT EXISTS idx_student_lesson_assignments_status ON student_lesson_assignments(status);
-CREATE INDEX IF NOT EXISTS idx_student_lesson_assignments_lesson_assignment_id ON student_lesson_assignments(lesson_assignment_id);
-
--- Array search optimization
-CREATE INDEX IF NOT EXISTS idx_lesson_assignments_assigned_students ON lesson_assignments USING GIN (assigned_students);
-```
-
-### Composite Indexes
-For complex queries:
-```sql
--- Student + status queries
-CREATE INDEX IF NOT EXISTS idx_student_assignments_student_status 
-ON student_lesson_assignments(student_id, status);
-
--- Assignment + date queries
-CREATE INDEX IF NOT EXISTS idx_assignments_active_due_date 
-ON lesson_assignments(is_active, published, due_date);
-```
-
-## Data Integrity
-
-### Foreign Key Constraints
-Maintain referential integrity:
-```sql
--- Lesson assignments must reference valid lessons
-lesson_id UUID NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
-
--- Student assignments must reference valid assignments and students
-lesson_assignment_id UUID NOT NULL REFERENCES lesson_assignments(id) ON DELETE CASCADE,
-student_id UUID NOT NULL REFERENCES students(id) ON DELETE CASCADE,
-```
-
-### Unique Constraints
-Prevent duplicate assignments:
-```sql
--- One assignment record per student per lesson assignment
-UNIQUE(lesson_assignment_id, student_id)
-```
-
-### Check Constraints
-Enforce business rules:
-```sql
--- Progress percentage must be valid
-progress_percentage INTEGER DEFAULT 0 CHECK (progress_percentage >= 0 AND progress_percentage <= 100),
-
--- Valid status values
-status TEXT DEFAULT 'assigned' CHECK (status IN ('assigned', 'started', 'in_progress', 'completed', 'overdue')),
-
--- Assignment targeting rules
-CHECK (course_id IS NOT NULL OR assigned_students IS NOT NULL),
-CHECK (NOT (course_id IS NOT NULL AND assigned_students IS NOT NULL))
-```
-
-## Migration Patterns
-
-### Safe Schema Updates
-Always use IF NOT EXISTS for additive changes:
-```sql
-CREATE TABLE IF NOT EXISTS lesson_assignments (
-  -- table definition
-);
-
-CREATE INDEX IF NOT EXISTS idx_name ON table_name(column);
-
-ALTER TABLE table_name ADD COLUMN IF NOT EXISTS new_column TEXT;
-```
-
-### Trigger Management
-Drop and recreate triggers for updates:
-```sql
-DROP TRIGGER IF EXISTS trigger_name ON table_name;
-CREATE TRIGGER trigger_name
-  AFTER INSERT OR UPDATE ON table_name
-  FOR EACH ROW EXECUTE FUNCTION function_name();
-```
-
-## API Integration Patterns
-
-### Supabase Query Building
-Use proper query construction:
 ```typescript
-// TypeScript query building
-let query = supabase
-  .from('lesson_assignments')
+import { supabase } from '@/lib/supabase'
+
+// Never create new clients - use the singleton
+const { data, error } = await supabase
+  .from('table_name')
+  .select('*')
+```
+
+## JSONB Storage Pattern
+
+Questions and complex objects stored as JSONB:
+
+```typescript
+// Insert with JSONB
+const { data, error } = await supabase
+  .from('question_bank')
+  .insert({
+    question_data: questionObject, // Stored as JSONB
+    question_text: questionObject.question, // Extracted for search
+    question_type: questionObject.type, // Extracted for filtering
+    unit_id: 'unit-1',
+    topics: ['velocity', 'acceleration']
+  })
+
+// Query JSONB fields
+const { data } = await supabase
+  .from('question_bank')
+  .select('question_data')
+  .eq('question_type', 'multiple-choice')
+```
+
+## Filtering Patterns
+
+### Dynamic Query Building
+```typescript
+let query = supabase.from('question_bank').select('*')
+
+// Add filters conditionally
+if (unitId) query = query.eq('unit_id', unitId)
+if (difficulty) query = query.eq('difficulty', difficulty)
+if (topics?.length > 0) query = query.contains('topics', topics)
+if (searchText) query = query.ilike('question_text', `%${searchText}%`)
+
+const { data, error } = await query
+```
+
+### Array Operations
+```typescript
+// Contains any of these values
+.overlaps('topics', ['velocity', 'speed'])
+
+// Contains all of these values
+.contains('topics', ['velocity'])
+
+// Array length
+.not('topics', 'is', null)
+```
+
+## Relationship Loading
+
+### Join Patterns
+```typescript
+// Load related data in one query
+const { data } = await supabase
+  .from('assignments')
   .select(`
     *,
-    lesson:lessons(id, title, slug, description),
-    course:courses!lesson_assignments_course_id_fkey(id, name, section),
-    student_assignments:student_lesson_assignments(
-      id, status, progress_percentage,
-      student:students(id, name, email)
+    lesson:lessons(title, slug),
+    submissions:assignment_submissions(
+      student_id,
+      score,
+      submitted_at
     )
   `)
-  .eq('is_active', true)
   .eq('published', true)
-  .order('assigned_at', { ascending: false })
-
-// Apply filters conditionally
-if (courseId) query = query.eq('course_id', courseId)
-if (assignedBy) query = query.eq('assigned_by', assignedBy)
 ```
 
-### Error Handling
-Handle database errors gracefully:
-```typescript
-const { data, error } = await supabase
-  .from('lesson_assignments')
-  .insert(assignmentData)
+## Transaction Safety
 
-if (error) {
-  console.error('Database error:', error)
+### Upsert Pattern
+```typescript
+// Update if exists, insert if not
+const { data, error } = await supabase
+  .from('student_progress')
+  .upsert({
+    student_id: userId,
+    assignment_id: assignmentId,
+    progress: 75,
+    updated_at: new Date().toISOString()
+  }, {
+    onConflict: 'student_id,assignment_id'
+  })
+```
+
+### Atomic Updates
+```typescript
+// Increment counters atomically
+const { data } = await supabase
+  .rpc('increment_usage_count', {
+    question_id: questionId,
+    amount: 1
+  })
+```
+
+## Performance Optimization
+
+### Index Usage
+Ensure queries use indexed columns:
+- `unit_id`, `lesson_id` for filtering
+- `created_at` for sorting
+- `question_type`, `difficulty` for common filters
+- `student_id`, `assignment_id` for progress queries
+
+### Pagination
+```typescript
+const PAGE_SIZE = 50
+
+const { data, error } = await supabase
+  .from('question_bank')
+  .select('*')
+  .order('created_at', { ascending: false })
+  .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1)
+```
+
+### Counting
+```typescript
+// Efficient count without loading data
+const { count, error } = await supabase
+  .from('assignments')
+  .select('*', { count: 'exact', head: true })
+  .eq('published', true)
+```
+
+## Error Handling
+
+### Standard Pattern
+```typescript
+try {
+  const { data, error } = await supabase
+    .from('table_name')
+    .insert(insertData)
   
-  // Handle specific error types
-  if (error.code === '23505') { // Unique violation
-    return NextResponse.json({ error: 'Assignment already exists' }, { status: 409 })
-  }
+  if (error) throw error
   
-  if (error.code === '23503') { // Foreign key violation
-    return NextResponse.json({ error: 'Referenced record not found' }, { status: 400 })
-  }
-  
-  return NextResponse.json({ error: 'Database error' }, { status: 500 })
+  return NextResponse.json({ data })
+} catch (error) {
+  console.error('Database operation failed:', error)
+  return NextResponse.json(
+    { error: 'Internal server error' }, 
+    { status: 500 }
+  )
 }
 ```
 
-## Backup and Maintenance
-
-### Regular Maintenance
-Clean up old assignment data:
-```sql
--- Archive completed assignments older than 1 year
-UPDATE lesson_assignments 
-SET is_active = false 
-WHERE created_at < NOW() - INTERVAL '1 year'
-  AND total_completed = total_assigned;
-
--- Clean up reminder records for completed assignments
-DELETE FROM assignment_reminders 
-WHERE is_sent = true 
-  AND created_at < NOW() - INTERVAL '30 days';
+### Specific Error Handling
+```typescript
+if (error) {
+  // Unique constraint violation
+  if (error.code === '23505') {
+    return NextResponse.json(
+      { error: 'Record already exists' },
+      { status: 409 }
+    )
+  }
+  
+  // Foreign key violation
+  if (error.code === '23503') {
+    return NextResponse.json(
+      { error: 'Referenced record not found' },
+      { status: 400 }
+    )
+  }
+  
+  throw error
+}
 ```
 
-### Performance Monitoring
-Monitor slow queries and optimize:
-```sql
--- Find slow assignment queries
-SELECT query, mean_time, calls 
-FROM pg_stat_statements 
-WHERE query LIKE '%lesson_assignments%'
-ORDER BY mean_time DESC;
+## Caching Strategy
+
+Use [api-cache.ts](mdc:src/lib/api-cache.ts) for frequently accessed data:
+
+```typescript
+import { apiCache } from '@/lib/api-cache'
+
+// Check cache first
+const cacheKey = `question-bank-${unitId}-${difficulty}`
+const cached = apiCache.get<QuestionBankItem[]>(cacheKey)
+if (cached) return cached
+
+// Fetch from database
+const { data } = await supabase.from('question_bank').select('*')
+
+// Cache the result (5 minute default)
+apiCache.set(cacheKey, data, 5 * 60 * 1000)
+return data
+```
+
+## Common Queries
+
+### Student Assignment Progress
+```typescript
+const { data } = await supabase
+  .from('student_assignment_assignments')
+  .select(`
+    *,
+    assignment:assignment_assignments(
+      *,
+      assignment:assignments(title, total_points)
+    )
+  `)
+  .eq('student_id', userId)
+  .order('assigned_at', { ascending: false })
+```
+
+### Course Analytics
+```typescript
+const { data } = await supabase
+  .from('lesson_assignments')
+  .select('id, completion_rate, avg_time_spent')
+  .eq('course_id', courseId)
+  .gte('completion_rate', 0)
 ```

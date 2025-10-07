@@ -1,331 +1,130 @@
 ---
-globs: src/components/assignment-system/**,src/app/api/assignments/**,src/contexts/AssignmentSystemContext.tsx
 description: Development patterns and best practices for assignment system components
 ---
 
-# Assignment System Development Patterns
+# Assignment System Development Guide
 
-## Component Development Standards
+## Overview
+The assignment system enables teachers to assign lessons and homework to classes/students with comprehensive tracking. Core files: [AssignmentSystemContext.tsx](mdc:src/contexts/AssignmentSystemContext.tsx), [assignment-system.ts](mdc:src/types/assignment-system.ts)
 
-### Assignment System Components
-All assignment system components should follow these patterns:
+## Context Usage Pattern
 
-#### Context Usage
-Always use the AssignmentSystemProvider for state management:
 ```typescript
 import { useAssignmentSystem } from '@/contexts/AssignmentSystemContext'
 
 const {
-  allAssignments,
+  lessonAssignments,
+  homeworkAssignments,
   studentAssignments,
-  loading,
   createLessonAssignment,
-  updateStudentAssignmentStatus
+  createHomeworkAssignment,
+  updateStudentProgress
 } = useAssignmentSystem()
 ```
 
-#### Role-Based Rendering
-Check user permissions before rendering sensitive content:
+## API Route Structure
+
+All assignment system APIs follow this pattern:
+
 ```typescript
-import { useSession } from 'next-auth/react'
-import { getUserRole } from '@/lib/permissions'
+// Authentication check
+const session = await auth()
+if (!session?.user?.email) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+}
 
-const { data: session } = useSession()
-const userRole = getUserRole(session?.user?.email)
-
+// Role-based access
+const userRole = getUserRole(session.user.email)
 if (userRole !== 'admin' && userRole !== 'teacher') {
-  return <AccessDeniedMessage />
-}
-```
-
-#### Assignment Type Handling
-Use type guards for assignment-specific logic:
-```typescript
-const getActionButton = (assignment: UnifiedStudentAssignment) => {
-  if (assignment.type === 'assignment' && 
-      assignment.attempts_used >= assignment.max_attempts) {
-    return <Button disabled>Max attempts used</Button>
-  }
-  
-  if (assignment.status === 'completed' || assignment.status === 'graded') {
-    return <ReviewButton assignment={assignment} />
-  }
-  
-  return <StartButton assignment={assignment} />
-}
-```
-
-## API Development Patterns
-
-### Error Handling
-Consistent error handling across all assignment API endpoints:
-```typescript
-try {
-  const { data, error } = await supabase
-    .from('lesson_assignments')
-    .insert(assignmentData)
-    
-  if (error) throw error
-  return NextResponse.json({ assignment: data })
-} catch (error) {
-  console.error('Assignment creation error:', error)
-  return NextResponse.json(
-    { error: 'Failed to create assignment' }, 
-    { status: 500 }
-  )
-}
-```
-
-### Permission Validation
-Always validate permissions before database operations:
-```typescript
-// For updates/deletes, check ownership
-const { data: existingAssignment } = await supabase
-  .from('lesson_assignments')
-  .select('assigned_by')
-  .eq('id', assignmentId)
-  .single()
-
-if (userRole !== 'admin' && existingAssignment.assigned_by !== session.user.id) {
   return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 }
-```
 
-### Query Optimization
-Use efficient database queries with proper joins:
-```typescript
-let query = supabase
+// Supabase operation with error handling
+const { data, error } = await supabase
   .from('lesson_assignments')
-  .select(`
-    *,
-    lesson:lessons(id, title, slug, description),
-    course:courses!lesson_assignments_course_id_fkey(id, name, section),
-    student_assignments:student_lesson_assignments(
-      id, status, progress_percentage,
-      student:students(id, name, email)
-    )
-  `)
-  .order('created_at', { ascending: false })
+  .select('*')
+  
+if (error) throw error
 ```
 
-## Form Development
+## Assignment Types
 
-### Assignment Creation Forms
-Use consistent form patterns with proper validation:
+### Lesson Assignments
+- Assign entire lessons to courses or specific students
+- Track progress through lesson content
+- Status: `assigned` → `started` → `in_progress` → `completed`
+
+### Homework Assignments
+- Assign question-based assignments with grading
+- Support attempt limits and time constraints
+- Status: `assigned` → `started` → `submitted` → `graded`
+
+## Student Progress Tracking
+
+Always update progress with:
 ```typescript
-const [formData, setFormData] = useState<CreateLessonAssignmentRequest>({
-  lesson_id: '',
-  course_id: undefined,
-  assigned_students: undefined,
-  due_date: undefined,
-  published: true
-})
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  
-  // Validation
-  if (!formData.lesson_id) {
-    alert('Please select a lesson')
-    return
+await updateStudentProgress(
+  'lesson', // or 'assignment'
+  assignmentId,
+  {
+    status: 'in_progress',
+    progress_percentage: 75,
+    time_spent: 1800, // seconds
+    last_accessed: new Date().toISOString()
   }
-  
-  // Ensure only one targeting method
-  if (formData.course_id && formData.assigned_students) {
-    alert('Cannot assign to both course and individual students')
-    return
-  }
-  
-  try {
-    await createLessonAssignment(formData)
-    onSuccess()
-  } catch (error) {
-    console.error('Error creating assignment:', error)
-    alert('Failed to create assignment')
-  }
-}
-```
-
-### Date Handling
-Use date-fns for consistent date operations:
-```typescript
-import { format, parseISO, isAfter, differenceInDays } from 'date-fns'
-
-const getDueDateInfo = (assignment: UnifiedStudentAssignment) => {
-  if (!assignment.due_date) return null
-  
-  const dueDate = parseISO(assignment.due_date)
-  const now = new Date()
-  const isOverdue = isAfter(now, dueDate)
-  const daysUntilDue = differenceInDays(dueDate, now)
-  
-  if (isOverdue) {
-    return <OverdueIndicator daysOverdue={Math.abs(daysUntilDue)} />
-  }
-  
-  return <DueDateDisplay date={dueDate} daysUntil={daysUntilDue} />
-}
-```
-
-## Status Management
-
-### Status Badge Rendering
-Consistent status indicators across components:
-```typescript
-const getStatusBadge = (assignment: UnifiedStudentAssignment) => {
-  const now = new Date()
-  const isOverdue = assignment.due_date && isAfter(now, parseISO(assignment.due_date))
-  
-  if (assignment.status === 'completed' || assignment.status === 'graded') {
-    return <Badge className="bg-green-500">Completed</Badge>
-  }
-  
-  if (isOverdue && !['completed', 'graded', 'submitted'].includes(assignment.status)) {
-    return <Badge variant="destructive">Overdue</Badge>
-  }
-  
-  if (assignment.status === 'in_progress' || assignment.status === 'started') {
-    return <Badge className="bg-yellow-500">In Progress</Badge>
-  }
-  
-  return <Badge variant="outline">Not Started</Badge>
-}
-```
-
-### Progress Tracking
-Update progress efficiently with debouncing:
-```typescript
-import { useCallback } from 'react'
-import { debounce } from 'lodash'
-
-const debouncedUpdateProgress = useCallback(
-  debounce(async (assignmentId: string, progress: number) => {
-    await updateStudentAssignmentStatus('lesson', assignmentId, studentId, {
-      status: progress === 100 ? 'completed' : 'in_progress',
-      progress_percentage: progress,
-      last_accessed: new Date().toISOString()
-    })
-  }, 1000),
-  [updateStudentAssignmentStatus, studentId]
 )
 ```
 
-## Filtering and Search
+## Database Patterns
 
-### Unified Filter Implementation
-Consistent filtering patterns across views:
+### Query with Relationships
 ```typescript
-const filteredAssignments = assignments.filter(assignment => {
-  const matchesSearch = assignment.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                       assignment.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  
-  const matchesStatus = selectedStatus === 'all' || assignment.status === selectedStatus
-  const matchesType = selectedType === 'all' || assignment.type === selectedType
-  
-  return matchesSearch && matchesStatus && matchesType
-})
+const { data } = await supabase
+  .from('lesson_assignments')
+  .select(`
+    *,
+    lesson:lessons(*),
+    course:courses(name, id)
+  `)
+  .eq('published', true)
 ```
 
-### Overdue Detection
-Consistent overdue logic:
+### Filtering Student View
 ```typescript
-const isOverdue = (assignment: UnifiedStudentAssignment): boolean => {
-  if (!assignment.due_date) return false
-  
-  const dueDate = parseISO(assignment.due_date)
-  const now = new Date()
-  
-  return isAfter(now, dueDate) && 
-         !['completed', 'graded', 'submitted'].includes(assignment.status)
+// Students see only their assignments
+if (userRole === 'student') {
+  query = query.or(`assigned_students.cs.{${userId}},course_id.in.(${userCourseIds.join(',')})`)
 }
 ```
 
-## Analytics and Reporting
+## Component Patterns
 
-### Completion Rate Calculations
-```typescript
-const getCompletionRate = (assignment: UnifiedAssignment): number => {
-  if (assignment.total_assigned === 0) return 0
-  return (assignment.total_completed / assignment.total_assigned) * 100
-}
+### Assignment Cards
+Display assignments with consistent structure:
+- Title with lesson/assignment name
+- Due date with visual indicators (overdue in red)
+- Progress bar showing completion percentage
+- Status badge (assigned, in progress, completed)
+- Action button (Start, Continue, Review)
 
-const getOverallProgress = (assignments: UnifiedStudentAssignment[]): number => {
-  if (assignments.length === 0) return 0
-  
-  const completedCount = assignments.filter(a => 
-    ['completed', 'graded'].includes(a.status)
-  ).length
-  
-  return (completedCount / assignments.length) * 100
-}
-```
+### Analytics Display
+Show teacher analytics:
+- Completion rates by course
+- Student progress charts
+- Time spent statistics
+- Overdue assignment alerts
 
-## Testing Patterns
+## Common Pitfalls
 
-### Component Testing
-Test assignment system components with proper mocking:
-```typescript
-import { render, screen } from '@testing-library/react'
-import { AssignmentSystemProvider } from '@/contexts/AssignmentSystemContext'
+1. **Always check user role** before showing admin/teacher features
+2. **Handle missing course data** - students may not be enrolled
+3. **Validate due dates** - check for overdue status on display
+4. **Update analytics** - increment completion rates when status changes
+5. **Check attempt limits** - prevent submission if attempts exceeded
 
-const renderWithProvider = (component: React.ReactElement) => {
-  return render(
-    <AssignmentSystemProvider>
-      {component}
-    </AssignmentSystemProvider>
-  )
-}
+## Integration Points
 
-describe('StudentAssignmentView', () => {
-  it('displays assignments correctly', () => {
-    renderWithProvider(<StudentAssignmentView />)
-    expect(screen.getByText('My Assignments')).toBeInTheDocument()
-  })
-})
-```
-
-### API Testing
-Mock Supabase responses for API testing:
-```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => ({
-          single: jest.fn(() => Promise.resolve({ data: mockAssignment, error: null }))
-        }))
-      }))
-    }))
-  }
-}))
-```
-
-## Performance Considerations
-
-### Lazy Loading
-Load assignment data only when needed:
-```typescript
-useEffect(() => {
-  if (session?.user?.email && !initialized) {
-    if (userRole === 'admin' || userRole === 'teacher') {
-      fetchAssignments()
-    } else if (userRole === 'student') {
-      fetchStudentAssignments()
-    }
-    setInitialized(true)
-  }
-}, [session, userRole, initialized])
-```
-
-### Memoization
-Use React.memo and useMemo for expensive operations:
-```typescript
-const AssignmentCard = React.memo(({ assignment }: { assignment: UnifiedAssignment }) => {
-  const completionRate = useMemo(() => 
-    getCompletionRate(assignment), 
-    [assignment.total_assigned, assignment.total_completed]
-  )
-  
-  return <Card>...</Card>
-})
-```
+- Google Classroom: Pull courses from [courses table](mdc:supabase/migrations/create_student_activity_tables.sql)
+- Existing Assignments: Link to [AssignmentContext](mdc:src/contexts/AssignmentContext.tsx) for homework
+- Lessons: Reference [lessons API](mdc:src/app/api/lessons/route.ts)
+- Permissions: Use [permissions.ts](mdc:src/lib/permissions.ts) for role checks

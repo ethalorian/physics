@@ -81,8 +81,13 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     }
   }, [canAccessVocabulary])
 
+  // LAZY LOADING: Only load vocabulary when user navigates to vocabulary pages
   useEffect(() => {
-    if (session?.user?.id && canAccessVocabulary) {
+    const shouldAutoInit = typeof window !== 'undefined' && 
+      (window.location.pathname.includes('/vocabulary') || 
+       window.location.pathname.includes('/admin/vocabulary'))
+    
+    if (shouldAutoInit && session?.user?.id && canAccessVocabulary) {
       refreshVocabularySets()
     }
   }, [session, canAccessVocabulary, refreshVocabularySets])

@@ -1,164 +1,320 @@
 ---
-description: "Vocabulary games system architecture and patterns"
+description: Vocabulary games system architecture and patterns
 ---
 
-# Vocabulary Games System Architecture
+# Vocabulary Games Architecture
 
-The vocabulary games system provides interactive educational games for physics vocabulary learning with consistent UI patterns and game mechanics.
+## Core Context
 
-## Core Architecture
+[VocabularyContext.tsx](mdc:src/contexts/VocabularyContext.tsx) manages all vocabulary game state:
 
-### Game Types
-- **Hangman Game**: [VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx)
-- **Crossword Game**: [VocabularyCrosswordGame.tsx](mdc:src/components/vocabulary/games/VocabularyCrosswordGame.tsx)
-- **Matching Game**: [VocabularyMatchingGame.tsx](mdc:src/components/vocabulary/games/VocabularyMatchingGame.tsx)
-- **Fill-in-the-Blank**: [VocabularyFillBlankGame.tsx](mdc:src/components/vocabulary/games/VocabularyFillBlankGame.tsx)
-
-### Game Pages Structure
-All vocabulary game pages follow the same pattern:
-- **Hangman Page**: [src/app/admin/vocabulary/hangman/page.tsx](mdc:src/app/admin/vocabulary/hangman/page.tsx)
-- **Crossword Page**: [src/app/admin/vocabulary/crossword/page.tsx](mdc:src/app/admin/vocabulary/crossword/page.tsx)
-
-### Management Interface
-- **Main Page**: [src/app/admin/vocabulary/page.tsx](mdc:src/app/admin/vocabulary/page.tsx)
-- **Set Manager**: [VocabularySetManager.tsx](mdc:src/components/vocabulary/VocabularySetManager.tsx)
-
-## Data Flow
-
-### Context Provider
-All games use [VocabularyContext.tsx](mdc:src/contexts/VocabularyContext.tsx) for:
-- Vocabulary set management
-- Term CRUD operations
-- Loading states and error handling
-- LocalStorage fallback for offline functionality
-
-### Game State Management
 ```typescript
-interface GameState {
-  currentTerm: VocabularyTerm | null
-  gameStatus: 'playing' | 'won' | 'lost'
-  score: number
-  startTime: number
-  hintsUsed: number
+import { useVocabulary } from '@/contexts/VocabularyContext'
+
+const {
+  vocabularyUnits,
+  completedGames,
+  totalPoints,
+  streakDays,
+  playGame,
+  completeGame,
+  resetGame
+} = useVocabulary()
+```
+
+## Game Types
+
+### 1. Hangman ([VocabularyHangmanGame.tsx](mdc:src/components/vocabulary/games/VocabularyHangmanGame.tsx))
+- Word guessing with physics terms
+- Letter-by-letter guessing
+- Visual hangman progression
+- Scoring: Base points × difficulty multiplier
+
+### 2. Matching Game
+- Match terms to definitions
+- Card-flip mechanic
+- Time-based scoring
+- Bonus for consecutive matches
+
+### 3. Word Shoot
+- Fast-paced vocabulary practice
+- Falling words to catch
+- Combo multipliers
+- Speed bonuses
+
+### 4. Fill in the Blank
+- Context-based completion
+- Multiple choice or type-in
+- Physics equation support with KaTeX
+- Partial credit for close answers
+
+## Vocabulary Structure
+
+```typescript
+interface VocabularyTerm {
+  id: string
+  term: string
+  definition: string
+  unit: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  example?: string
+  relatedTerms?: string[]
+  tags?: string[]
 }
+
+interface VocabularyUnit {
+  id: string
+  unitNumber: number
+  name: string
+  description: string
+  terms: VocabularyTerm[]
+}
+```
+
+## Game State Management
+
+### Starting a Game
+```typescript
+const handleStartGame = (gameType: VocabularyGameType, unitId: string) => {
+  playGame(gameType, unitId)
+  
+  // Initialize game-specific state
+  setGameState({
+    started: true,
+    currentTerm: 0,
+    score: 0,
+    lives: 3,
+    timeStarted: Date.now()
+  })
+}
+```
+
+### Completing a Game
+```typescript
+const handleGameComplete = async (score: number, perfect: boolean) => {
+  const gameData = {
+    gameType,
+    unitId,
+    score,
+    timeElapsed: Date.now() - gameState.timeStarted,
+    perfect,
+    difficulty: selectedDifficulty
+  }
+  
+  await completeGame(gameData)
+  
+  // Update leaderboard
+  await fetch('/api/leaderboard', {
+    method: 'POST',
+    body: JSON.stringify(gameData)
+  })
+}
+```
+
+## Scoring System
+
+### Base Calculation
+```typescript
+const calculateScore = (params: {
+  correct: boolean
+  timeElapsed: number
+  difficulty: string
+  streak: number
+  hintsUsed: number
+}) => {
+  let baseScore = 100
+  
+  // Difficulty multiplier
+  const difficultyMultiplier = {
+    easy: 1.0,
+    medium: 1.5,
+    hard: 2.0
+  }[params.difficulty]
+  
+  // Time bonus (faster = more points)
+  const timeBonus = Math.max(0, 50 - Math.floor(params.timeElapsed / 1000))
+  
+  // Streak bonus
+  const streakBonus = params.streak * 10
+  
+  // Hint penalty
+  const hintPenalty = params.hintsUsed * 20
+  
+  return Math.floor(
+    (baseScore + timeBonus + streakBonus - hintPenalty) * difficultyMultiplier
+  )
+}
+```
+
+## Database Storage
+
+### Game Completion Record
+```typescript
+const { data, error } = await supabase
+  .from('vocabulary_game_completions')
+  .insert({
+    student_id: userId,
+    game_type: gameType,
+    unit_id: unitId,
+    score: score,
+    time_elapsed: timeElapsed,
+    perfect: perfect,
+    completed_at: new Date().toISOString()
+  })
+```
+
+### Leaderboard Query
+```typescript
+const { data } = await supabase
+  .from('vocabulary_game_completions')
+  .select(`
+    student_id,
+    score,
+    students(name, email)
+  `)
+  .eq('game_type', gameType)
+  .order('score', { ascending: false })
+  .limit(10)
 ```
 
 ## UI Patterns
 
-### Consistent Page Layout
-All game pages must follow this structure:
-1. **Header**: Back button + game title with icon
-2. **Game Results**: Success card when game completes
-3. **Two-Column Layout**: Game Setup (left) + How to Play (right)
-4. **Available Sets**: Grid of vocabulary sets at bottom
-5. **Game Interface**: Full-width game component when playing
-
-### Required Sections
-- **Game Setup Card**: Vocabulary set selection + difficulty + start button
-- **How to Play Card**: Numbered steps + scoring information
-- **Available Vocabulary Sets**: Grid display of all sets
-
-### Styling Consistency
-- Use same card styling and spacing patterns
-- Purple theme for buttons (`bg-purple-600 hover:bg-purple-700`)
-- Numbered instruction steps with blue circular badges
-- Green success cards for game completion
-- Consistent icon usage (Target, Grid3x3, BookOpen, etc.)
-
-## Game Component Interface
-
-### Standard Props Pattern
+### Game Layout Structure
 ```typescript
-interface VocabularyGameProps {
-  vocabularyTerms: VocabularyTerm[]
-  onGameComplete?: (score: number, totalWords: number, timeSpent: number) => void
-  difficulty?: 'easy' | 'medium' | 'hard'
-  showDefinitions?: boolean
-  disabled?: boolean
-}
+<div className="flex flex-col h-screen">
+  {/* Header with score and lives */}
+  <div className="flex justify-between items-center p-4">
+    <ScoreDisplay score={score} />
+    <LivesDisplay lives={lives} />
+    <TimerDisplay elapsed={timeElapsed} />
+  </div>
+  
+  {/* Game area */}
+  <div className="flex-1 flex items-center justify-center">
+    <GameContent />
+  </div>
+  
+  {/* Controls */}
+  <div className="p-4">
+    <GameControls />
+  </div>
+</div>
 ```
 
-### Game Completion Handling
-All games should call `onGameComplete` with:
-- Final score
-- Total words attempted
-- Time spent (in seconds)
-
-## Permission System
-
-### Access Control
-All vocabulary game pages require admin/teacher permissions:
+### Progress Indicators
 ```typescript
-const userRole = getUserRole(session?.user?.email)
-if (userRole !== 'admin' && userRole !== 'teacher') {
-  redirect('/dashboard')
-}
+<Progress 
+  value={(currentTerm / totalTerms) * 100}
+  className="w-full"
+/>
+<p className="text-sm text-muted-foreground mt-2">
+  Term {currentTerm + 1} of {totalTerms}
+</p>
 ```
 
-### Session Loading
-Always check session loading state before permission checks:
+## Animation Patterns
+
+Use Framer Motion for game animations:
+
 ```typescript
-if (status === 'loading') {
-  return <LoadingSpinner />
-}
+import { motion, AnimatePresence } from 'framer-motion'
+
+<AnimatePresence mode="wait">
+  <motion.div
+    key={currentTerm}
+    initial={{ opacity: 0, x: 100 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -100 }}
+    transition={{ duration: 0.3 }}
+  >
+    <TermCard term={terms[currentTerm]} />
+  </motion.div>
+</AnimatePresence>
 ```
 
-## Game Mechanics
+## Accessibility
 
-### Difficulty Levels
-- **Easy**: 10 points per word, more forgiving rules
-- **Medium**: 20 points per word, standard rules  
-- **Hard**: 30 points per word, challenging rules
-
-### Hint System
-- Hints should cost points (-5 points typically)
-- Provide meaningful assistance without giving away answers
-- Track hint usage for scoring
-
-### Definition Display
-- **Hangman**: Show definition immediately as the main clue
-- **Crossword**: Use definitions as crossword clues
-- **Other games**: Context-appropriate definition usage
-
-## Integration Points
-
-### Vocabulary Context
-Always use the vocabulary context for data:
+### Keyboard Controls
 ```typescript
-const { vocabularySets, loading, error } = useVocabulary()
+useEffect(() => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') handleSubmit()
+    if (e.key === 'Escape') handlePause()
+    if (e.key === ' ' && canUseHint) useHint()
+  }
+  
+  window.addEventListener('keydown', handleKeyPress)
+  return () => window.removeEventListener('keydown', handleKeyPress)
+}, [handleSubmit, handlePause, canUseHint])
 ```
 
-### Navigation
-Consistent navigation patterns:
-- Back to vocabulary management
-- Game setup to game interface
-- Game completion to results/restart
+### Screen Reader Support
+```typescript
+<div 
+  role="status" 
+  aria-live="polite"
+  aria-atomic="true"
+  className="sr-only"
+>
+  {`Score: ${score}. Lives remaining: ${lives}. Current term ${currentTerm + 1} of ${totalTerms}`}
+</div>
+```
 
-### Responsive Design
-All games must be mobile-friendly:
-- Responsive grid layouts
-- Touch-friendly interactions
-- Appropriate sizing for different screens
+## Performance Optimization
 
-## Development Guidelines
+### Vocabulary Loading
+```typescript
+// Preload vocabulary for selected unit
+useEffect(() => {
+  if (selectedUnit) {
+    const terms = vocabularyUnits.find(u => u.id === selectedUnit)?.terms
+    setPreloadedTerms(terms)
+  }
+}, [selectedUnit, vocabularyUnits])
+```
 
-### Component Organization
-- Game components in `src/components/vocabulary/games/`
-- Game pages in `src/app/admin/vocabulary/[game]/`
-- Shared utilities in vocabulary context
+### Audio Preloading
+```typescript
+// Preload sound effects
+useEffect(() => {
+  const sounds = {
+    correct: new Audio('/sounds/correct.mp3'),
+    incorrect: new Audio('/sounds/incorrect.mp3'),
+    complete: new Audio('/sounds/complete.mp3')
+  }
+  
+  // Preload
+  Object.values(sounds).forEach(sound => sound.load())
+  
+  setSoundEffects(sounds)
+}, [])
+```
 
-### State Management
-- Use `useState` for component-local game state
-- Use `useCallback` for game functions to prevent re-renders
-- Use `useEffect` for game initialization and cleanup
+## Testing Patterns
 
-### Error Handling
-- Graceful fallbacks for missing vocabulary sets
-- Loading states during data fetching
-- Clear error messages for users
-
-### Testing Considerations
-- Test with different vocabulary set sizes
-- Verify responsive behavior
-- Test permission restrictions
-- Validate game completion flows
+```typescript
+describe('VocabularyGame', () => {
+  it('should calculate score correctly', () => {
+    const score = calculateScore({
+      correct: true,
+      timeElapsed: 5000,
+      difficulty: 'medium',
+      streak: 3,
+      hintsUsed: 1
+    })
+    
+    expect(score).toBeGreaterThan(0)
+  })
+  
+  it('should track completion', async () => {
+    await completeGame({
+      gameType: 'hangman',
+      unitId: 'unit-1',
+      score: 500,
+      perfect: true
+    })
+    
+    expect(completedGames).toHaveLength(1)
+  })
+})
+```

@@ -4,414 +4,525 @@ description: "YouTube Player API integration patterns and best practices"
 
 # YouTube Player API Integration
 
-## Configuration
+## Basic YouTube Player Setup
 
-### Content Security Policy
-**File**: [next.config.ts](mdc:next.config.ts)
-
-Required CSP directives for YouTube embeds:
+### Loading the API
 ```typescript
-async headers() {
-  return [{
-    source: '/(.*)',
-    headers: [{
-      key: 'Content-Security-Policy',
-      value: [
-        "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.youtube.com https://s.ytimg.com",
-        "img-src 'self' ... https://i.ytimg.com https://img.youtube.com"
-      ].join('; ')
-    }]
-  }]
-}
-```
+'use client'
 
-**Important**: Server restart required after CSP changes.
+import { useEffect, useRef, useState } from 'react'
 
-## Privacy-Enhanced Embeds
-
-Always use `youtube-nocookie.com` for student privacy:
-```typescript
-const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?${params}`
-```
-
-## Player API Loading Pattern
-
-### Global Type Declaration
-```typescript
+// Extend Window interface for YouTube API
 declare global {
   interface Window {
     YT: any
     onYouTubeIframeAPIReady: () => void
   }
 }
+
+const useYouTubeAPI = () => {
+  const [apiReady, setApiReady] = useState(false)
+  
+  useEffect(() => {
+    // Check if API already loaded
+    if (window.YT && window.YT.Player) {
+      setApiReady(true)
+      return
+    }
+    
+    // Load YouTube IFrame API script
+    const tag = document.createElement('script')
+    tag.src = 'https://www.youtube.com/iframe_api'
+    tag.async = true
+    
+    const firstScriptTag = document.getElementsByTagName('script')[0]
+    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
+    
+    // API ready callback
+    window.onYouTubeIframeAPIReady = () => {
+      setApiReady(true)
+    }
+    
+    return () => {
+      // Cleanup if component unmounts
+      window.onYouTubeIframeAPIReady = () => {}
+    }
+  }, [])
+  
+  return apiReady
+}
 ```
 
-### Loading Script
+## Player Component
+
+### Full-Featured YouTube Player
 ```typescript
-useEffect(() => {
-  if (typeof window === 'undefined') return
+interface YouTubePlayerProps {
+  videoId: string
+  onReady?: (player: any) => void
+  onStateChange?: (state: number) => void
+  onTimeUpdate?: (currentTime: number) => void
+  autoplay?: boolean
+  controls?: boolean
+  startSeconds?: number
+}
 
-  // Check if already loaded
-  if (window.YT && window.YT.Player) {
-    initializePlayer()
-    return
-  }
-
-  // Load script
-  const tag = document.createElement('script')
-  tag.src = 'https://www.youtube.com/iframe_api'
-  const firstScriptTag = document.getElementsByTagName('script')[0]
-  firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag)
-
-  // Set callback
-  window.onYouTubeIframeAPIReady = () => {
-    initializePlayer()
-  }
-
-  // Cleanup
-  return () => {
-    if (playerRef.current) {
-      try {
+export function YouTubePlayer({
+  videoId,
+  onReady,
+  onStateChange,
+  onTimeUpdate,
+  autoplay = false,
+  controls = true,
+  startSeconds = 0
+}: YouTubePlayerProps) {
+  const playerRef = useRef<any>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const timeUpdateIntervalRef = useRef<NodeJS.Timeout>()
+  const apiReady = useYouTubeAPI()
+  
+  useEffect(() => {
+    if (!apiReady || !containerRef.current) return
+    
+    // Initialize player
+    playerRef.current = new window.YT.Player(containerRef.current, {
+      videoId,
+      playerVars: {
+        autoplay: autoplay ? 1 : 0,
+        controls: controls ? 1 : 0,
+        start: startSeconds,
+        modestbranding: 1,
+        rel: 0,
+        iv_load_policy: 3
+      },
+      events: {
+        onReady: (event: any) => {
+          onReady?.(event.target)
+          
+          // Start time update interval
+          if (onTimeUpdate) {
+            timeUpdateIntervalRef.current = setInterval(() => {
+              const currentTime = event.target.getCurrentTime()
+              onTimeUpdate(currentTime)
+            }, 500)
+          }
+        },
+        onStateChange: (event: any) => {
+          onStateChange?.(event.data)
+          
+          // Clear interval when paused or ended
+          if (event.data !== window.YT.PlayerState.PLAYING) {
+            if (timeUpdateIntervalRef.current) {
+              clearInterval(timeUpdateIntervalRef.current)
+            }
+          }
+        }
+      }
+    })
+    
+    return () => {
+      // Cleanup
+      if (timeUpdateIntervalRef.current) {
+        clearInterval(timeUpdateIntervalRef.current)
+      }
+      if (playerRef.current) {
         playerRef.current.destroy()
-      } catch (e) {
-        console.error('Error destroying player:', e)
       }
     }
-  }
-}, [videoId])
-```
-
-### Retry Mechanism
-For reliability, implement retry logic:
-```typescript
-// Fallback: Try every second for up to 10 seconds
-const retryInterval = setInterval(() => {
-  if (window.YT && window.YT.Player && !playerRef.current) {
-    initializePlayer()
-    clearInterval(retryInterval)
-  }
-}, 1000)
-
-const cleanup = setTimeout(() => {
-  clearInterval(retryInterval)
-}, 10000)
-```
-
-## Player Initialization
-
-### Safe Initialization
-```typescript
-const initializePlayer = () => {
-  if (!containerRef.current) return
-  if (playerRef.current) return // Already initialized
-
-  // Create a div for the player
-  const playerDiv = document.createElement('div')
-  containerRef.current.appendChild(playerDiv)
+  }, [apiReady, videoId])
   
-  playerRef.current = new window.YT.Player(playerDiv, {
-    videoId: youtubeId,
-    width: '100%',
-    height: '360',
-    playerVars: {
-      autoplay: 0,
-      controls: 1,
-      modestbranding: 1,
-      rel: 0,
-      fs: 1,
-      enablejsapi: 1,
-      origin: window.location.origin
-    },
-    events: {
-      onReady: (event) => handleReady(event),
-      onStateChange: (event) => handleStateChange(event),
-      onError: (event) => console.error('YouTube error:', event.data)
+  return (
+    <div 
+      ref={containerRef}
+      className="aspect-video w-full bg-black rounded-lg overflow-hidden"
+    />
+  )
+}
+```
+
+## Player State Management
+
+### Player States
+```typescript
+enum YouTubePlayerState {
+  UNSTARTED = -1,
+  ENDED = 0,
+  PLAYING = 1,
+  PAUSED = 2,
+  BUFFERING = 3,
+  CUED = 5
+}
+
+const getPlayerStateLabel = (state: number): string => {
+  switch (state) {
+    case YouTubePlayerState.UNSTARTED: return 'Not Started'
+    case YouTubePlayerState.ENDED: return 'Ended'
+    case YouTubePlayerState.PLAYING: return 'Playing'
+    case YouTubePlayerState.PAUSED: return 'Paused'
+    case YouTubePlayerState.BUFFERING: return 'Buffering'
+    case YouTubePlayerState.CUED: return 'Cued'
+    default: return 'Unknown'
+  }
+}
+```
+
+### State Change Handler
+```typescript
+const handlePlayerStateChange = (state: number) => {
+  switch (state) {
+    case YouTubePlayerState.PLAYING:
+      setIsPlaying(true)
+      setIsPaused(false)
+      break
+      
+    case YouTubePlayerState.PAUSED:
+      setIsPlaying(false)
+      setIsPaused(true)
+      break
+      
+    case YouTubePlayerState.ENDED:
+      setIsPlaying(false)
+      handleVideoComplete()
+      break
+      
+    case YouTubePlayerState.BUFFERING:
+      // Optional: show loading indicator
+      setIsBuffering(true)
+      break
+  }
+}
+```
+
+## Player Controls
+
+### Custom Control Interface
+```typescript
+interface PlayerControls {
+  play: () => void
+  pause: () => void
+  seekTo: (seconds: number) => void
+  getCurrentTime: () => number
+  getDuration: () => number
+  getVolume: () => number
+  setVolume: (volume: number) => void
+  mute: () => void
+  unMute: () => void
+  isMuted: () => boolean
+}
+
+const usePlayerControls = (player: any): PlayerControls | null => {
+  if (!player) return null
+  
+  return {
+    play: () => player.playVideo(),
+    pause: () => player.pauseVideo(),
+    seekTo: (seconds: number) => player.seekTo(seconds, true),
+    getCurrentTime: () => player.getCurrentTime(),
+    getDuration: () => player.getDuration(),
+    getVolume: () => player.getVolume(),
+    setVolume: (volume: number) => player.setVolume(volume),
+    mute: () => player.mute(),
+    unMute: () => player.unMute(),
+    isMuted: () => player.isMuted()
+  }
+}
+```
+
+### Custom Controls UI
+```typescript
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Slider } from '@/components/ui/slider'
+
+export function VideoControls({ controls }: { controls: PlayerControls }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [volume, setVolume] = useState(100)
+  const [isMuted, setIsMuted] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [duration, setDuration] = useState(0)
+  
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      controls.pause()
+    } else {
+      controls.play()
     }
+    setIsPlaying(!isPlaying)
+  }
+  
+  const toggleMute = () => {
+    if (isMuted) {
+      controls.unMute()
+    } else {
+      controls.mute()
+    }
+    setIsMuted(!isMuted)
+  }
+  
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0]
+    setVolume(newVolume)
+    controls.setVolume(newVolume)
+    setIsMuted(newVolume === 0)
+  }
+  
+  const skip = (seconds: number) => {
+    const newTime = Math.max(0, Math.min(duration, currentTime + seconds))
+    controls.seekTo(newTime)
+  }
+  
+  return (
+    <div className="flex items-center space-x-4 p-4 bg-background border rounded-lg">
+      {/* Play/Pause */}
+      <Button variant="ghost" size="icon" onClick={togglePlayPause}>
+        {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+      </Button>
+      
+      {/* Skip buttons */}
+      <Button variant="ghost" size="icon" onClick={() => skip(-10)}>
+        <SkipBack className="h-5 w-5" />
+      </Button>
+      <Button variant="ghost" size="icon" onClick={() => skip(10)}>
+        <SkipForward className="h-5 w-5" />
+      </Button>
+      
+      {/* Progress bar */}
+      <div className="flex-1">
+        <Slider
+          value={[currentTime]}
+          max={duration}
+          step={1}
+          onValueChange={(value) => controls.seekTo(value[0])}
+        />
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+          <span>{formatTime(currentTime)}</span>
+          <span>{formatTime(duration)}</span>
+        </div>
+      </div>
+      
+      {/* Volume control */}
+      <div className="flex items-center space-x-2">
+        <Button variant="ghost" size="icon" onClick={toggleMute}>
+          {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
+        </Button>
+        <Slider
+          value={[volume]}
+          max={100}
+          step={1}
+          className="w-24"
+          onValueChange={handleVolumeChange}
+        />
+      </div>
+    </div>
+  )
+}
+```
+
+## Progress Tracking
+
+### Watch Time Tracking
+```typescript
+const useWatchTimeTracking = (
+  player: any,
+  lessonId: string,
+  userId: string
+) => {
+  const watchedSegments = useRef<Set<number>>(new Set())
+  const lastSaveTime = useRef<number>(0)
+  
+  const trackWatchTime = useCallback(async (currentTime: number) => {
+    // Track in 5-second segments
+    const segment = Math.floor(currentTime / 5)
+    watchedSegments.current.add(segment)
+    
+    // Save every 30 seconds
+    const now = Date.now()
+    if (now - lastSaveTime.current > 30000) {
+      const watchedSeconds = watchedSegments.current.size * 5
+      
+      await saveWatchProgress({
+        lessonId,
+        userId,
+        watchedSeconds,
+        lastPosition: currentTime,
+        updatedAt: new Date().toISOString()
+      })
+      
+      lastSaveTime.current = now
+    }
+  }, [lessonId, userId])
+  
+  return { trackWatchTime, watchedSegments: watchedSegments.current }
+}
+```
+
+## Video Metadata
+
+### Extracting Video Info
+```typescript
+interface VideoMetadata {
+  title: string
+  description: string
+  thumbnailUrl: string
+  duration: number
+  author: string
+}
+
+const fetchVideoMetadata = async (videoId: string): Promise<VideoMetadata> => {
+  // Using YouTube Data API (requires API key)
+  const response = await fetch(
+    `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=snippet,contentDetails&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  )
+  
+  const data = await response.json()
+  const video = data.items[0]
+  
+  return {
+    title: video.snippet.title,
+    description: video.snippet.description,
+    thumbnailUrl: video.snippet.thumbnails.high.url,
+    duration: parseYouTubeDuration(video.contentDetails.duration),
+    author: video.snippet.channelTitle
+  }
+}
+
+// Parse ISO 8601 duration (PT1H2M10S) to seconds
+const parseYouTubeDuration = (duration: string): number => {
+  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/)
+  if (!match) return 0
+  
+  const hours = parseInt(match[1]) || 0
+  const minutes = parseInt(match[2]) || 0
+  const seconds = parseInt(match[3]) || 0
+  
+  return hours * 3600 + minutes * 60 + seconds
+}
+```
+
+## Playlist Support
+
+### Playlist Player
+```typescript
+interface PlaylistPlayerProps {
+  playlistId: string
+  onVideoChange?: (videoId: string, index: number) => void
+}
+
+export function PlaylistPlayer({ playlistId, onVideoChange }: PlaylistPlayerProps) {
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
+  const playerRef = useRef<any>(null)
+  
+  useEffect(() => {
+    if (!window.YT) return
+    
+    playerRef.current = new window.YT.Player('playlist-player', {
+      playerVars: {
+        listType: 'playlist',
+        list: playlistId,
+        autoplay: 1
+      },
+      events: {
+        onStateChange: (event: any) => {
+          if (event.data === window.YT.PlayerState.PLAYING) {
+            const videoData = event.target.getVideoData()
+            const playlistIndex = event.target.getPlaylistIndex()
+            
+            setCurrentVideoIndex(playlistIndex)
+            onVideoChange?.(videoData.video_id, playlistIndex)
+          }
+        }
+      }
+    })
+  }, [playlistId])
+  
+  return <div id="playlist-player" className="aspect-video w-full" />
+}
+```
+
+## Performance Optimization
+
+### Lazy Loading Videos
+```typescript
+const LazyYouTubePlayer = ({ videoId }: { videoId: string }) => {
+  const [loadPlayer, setLoadPlayer] = useState(false)
+  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+  
+  if (!loadPlayer) {
+    return (
+      <div 
+        className="relative aspect-video w-full cursor-pointer group"
+        onClick={() => setLoadPlayer(true)}
+      >
+        <img 
+          src={thumbnailUrl} 
+          alt="Video thumbnail"
+          className="w-full h-full object-cover rounded-lg"
+        />
+        <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
+          <div className="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center">
+            <Play className="h-10 w-10 text-white ml-1" />
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  return <YouTubePlayer videoId={videoId} autoplay />
+}
+```
+
+## Error Handling
+
+```typescript
+const handlePlayerError = (error: any) => {
+  const errorMessages = {
+    2: 'Invalid video ID',
+    5: 'HTML5 player error',
+    100: 'Video not found or private',
+    101: 'Video owner disabled embedding',
+    150: 'Video owner disabled embedding'
+  }
+  
+  const message = errorMessages[error.data] || 'Unknown error occurred'
+  console.error('YouTube Player Error:', message)
+  
+  // Show user-friendly error
+  toast({
+    title: 'Video Error',
+    description: message,
+    variant: 'destructive'
   })
 }
 ```
 
-## Event Handlers
-
-### onReady Event
-```typescript
-onReady: (event: any) => {
-  setIsPlayerReady(true)
-  
-  // Get actual video duration
-  if (typeof event.target.getDuration === 'function') {
-    const duration = event.target.getDuration()
-    if (typeof duration === 'number' && duration > 0) {
-      onDurationDetected?.(Math.floor(duration))
-    }
-  }
-}
-```
-
-### onStateChange Event
-```typescript
-onStateChange: (event: any) => {
-  // YT.PlayerState.ENDED = 0
-  // YT.PlayerState.PLAYING = 1
-  // YT.PlayerState.PAUSED = 2
-  
-  if (event.data === 0) {
-    handleVideoEnd() // Reset to start, show replay prompt
-  } else if (event.data === 1) {
-    setIsPlaying(true)
-    startTimeChecking() // For interactive questions
-  } else {
-    setIsPlaying(false)
-    stopTimeChecking()
-  }
-}
-```
-
-## Player Control Methods
-
-### Always Use Safety Checks
-```typescript
-const handlePlayPause = () => {
-  if (!playerRef.current || !isPlayerReady) return
-  
-  try {
-    if (isPlaying) {
-      if (typeof playerRef.current.pauseVideo === 'function') {
-        playerRef.current.pauseVideo()
-      }
-    } else {
-      if (typeof playerRef.current.playVideo === 'function') {
-        playerRef.current.playVideo()
-      }
-    }
-  } catch (error) {
-    console.error('Error controlling playback:', error)
-  }
-}
-```
-
-### Seeking
-```typescript
-const handleSeek = (timestamp: number) => {
-  if (!playerRef.current || !isPlayerReady) return
-  
-  try {
-    if (typeof playerRef.current.seekTo === 'function') {
-      playerRef.current.seekTo(timestamp, true)
-    }
-  } catch (error) {
-    console.error('Error seeking:', error)
-  }
-}
-```
-
-### Getting Current Time
-```typescript
-const startTimeUpdates = () => {
-  updateInterval.current = setInterval(() => {
-    if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
-      try {
-        const time = playerRef.current.getCurrentTime()
-        if (typeof time === 'number' && !isNaN(time)) {
-          onTimeChange(time)
-        }
-      } catch (error) {
-        // Silently fail if not ready
-      }
-    }
-  }, 100) // Update 10x per second
-}
-```
-
-## Duration Detection
-
-### Auto-Detection Pattern
-```typescript
-const [actualDuration, setActualDuration] = useState<number | null>(null)
-const [detectedDuration, setDetectedDuration] = useState<number | null>(null)
-
-// In onReady event
-const videoDuration = event.target.getDuration()
-if (typeof videoDuration === 'number' && videoDuration > 0) {
-  setActualDuration(videoDuration)
-  onDurationDetected?.(Math.floor(videoDuration))
-}
-
-// Use detected duration
-const displayDuration = actualDuration || fallbackDuration
-```
-
-### Visual Feedback
-```tsx
-{actualDuration && actualDuration !== duration && (
-  <div className="bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
-    ✓ Detected actual video length: <strong>{secondsToMMSS(actualDuration)}</strong>
-  </div>
-)}
-```
-
-## Time Formatting Utilities
+## Utility Functions
 
 ```typescript
-function secondsToMMSS(seconds: number): string {
-  const mins = Math.floor(seconds / 60)
+// Format seconds to HH:MM:SS or MM:SS
+const formatTime = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
   const secs = Math.floor(seconds % 60)
-  return `${mins}:${secs.toString().padStart(2, '0')}`
-}
-
-function durationToSeconds(duration: string): number {
-  const parts = duration.split(':').map(Number)
-  if (parts.length === 2) {
-    return parts[0] * 60 + parts[1]
-  } else if (parts.length === 3) {
-    return parts[0] * 3600 + parts[1] * 60 + parts[2]
+  
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
   }
-  return 0
+  return `${minutes}:${secs.toString().padStart(2, '0')}`
 }
-```
 
-## Loading States
-
-### Player Loading
-```tsx
-<div className="relative bg-black rounded-lg overflow-hidden aspect-video">
-  <div ref={containerRef} className="w-full h-full" />
-  {!isPlayerReady && (
-    <div className="absolute inset-0 flex items-center justify-center bg-gray-900/80">
-      <div className="text-center text-white">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-3"></div>
-        <p className="text-sm">Loading video player...</p>
-      </div>
-    </div>
-  )}
-</div>
-```
-
-### Controls Loading
-```tsx
-{!isPlayerReady && (
-  <div className="text-center py-4 text-gray-600">
-    <p className="text-sm font-medium">⏳ Initializing video controls...</p>
-    <p className="text-xs mt-1">Controls will be available in a moment</p>
-  </div>
-)}
-```
-
-## Replay Functionality
-
-### End Detection and Prompt
-```typescript
-const handleVideoEnd = () => {
-  // Reset to beginning
-  if (playerRef.current && playerRef.current.seekTo) {
-    playerRef.current.seekTo(timestamp || 0)
-    playerRef.current.pauseVideo()
+// Extract video ID from YouTube URL
+const extractVideoId = (url: string): string | null => {
+  const patterns = [
+    /youtube\.com\/watch\?v=([^&]+)/,
+    /youtube\.com\/embed\/([^?]+)/,
+    /youtu\.be\/([^?]+)/
+  ]
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern)
+    if (match) return match[1]
   }
-  setShowReplayPrompt(true)
-}
-
-const handleReplay = () => {
-  if (playerRef.current && playerRef.current.playVideo) {
-    playerRef.current.seekTo(timestamp || 0)
-    playerRef.current.playVideo()
-  }
-  setShowReplayPrompt(false)
+  
+  return null
 }
 ```
-
-### Replay Modal
-```tsx
-{showReplayPrompt && (
-  <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-20">
-    <div className="bg-white rounded-xl p-6 max-w-sm shadow-2xl">
-      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
-        <CheckCircle className="h-8 w-8 text-white" />
-      </div>
-      <h3 className="text-xl font-bold mb-2">Video Complete!</h3>
-      <p className="text-gray-600 text-sm mb-4">
-        Would you like to watch it again?
-      </p>
-      <div className="flex gap-3">
-        <Button onClick={handleReplay}>Watch Again</Button>
-        <Button variant="outline" onClick={handleDismiss}>Continue</Button>
-      </div>
-    </div>
-  </div>
-)}
-```
-
-## Best Practices
-
-### 1. Always Check Player Ready State
-```typescript
-if (!playerRef.current || !isPlayerReady) return
-```
-
-### 2. Use Type Checking for Methods
-```typescript
-if (typeof playerRef.current.methodName === 'function') {
-  playerRef.current.methodName()
-}
-```
-
-### 3. Wrap in Try-Catch
-```typescript
-try {
-  playerRef.current.someMethod()
-} catch (error) {
-  console.error('Player error:', error)
-}
-```
-
-### 4. Clean Up Intervals
-```typescript
-return () => {
-  if (timeCheckInterval.current) {
-    clearInterval(timeCheckInterval.current)
-  }
-  if (playerRef.current) {
-    try {
-      playerRef.current.destroy()
-    } catch (e) {
-      console.error('Cleanup error:', e)
-    }
-  }
-}
-```
-
-### 5. Handle Slow Initialization
-- Show loading states immediately
-- Disable controls until ready
-- Provide visual feedback ("Loading...")
-- Use retry mechanism for reliability
-
-## Common Issues
-
-### Player Methods Not Found
-**Cause**: Calling methods before player is ready
-**Solution**: Check `isPlayerReady` state and method existence
-
-### CSP Violations
-**Cause**: YouTube domains not in frame-src
-**Solution**: Add to CSP, restart server
-
-### Duration Shows Wrong Value
-**Cause**: Using fallback before detection
-**Solution**: Wait for onReady event, use detected duration
-
-### Multiple Players on Same Page
-**Cause**: Shared global callback
-**Solution**: Preserve original callback:
-```typescript
-const originalCallback = window.onYouTubeIframeAPIReady
-window.onYouTubeIframeAPIReady = () => {
-  initializePlayer()
-  if (originalCallback) originalCallback()
-}
-```
-
-## Related Files
-- [next.config.ts](mdc:next.config.ts) - CSP configuration
-- [src/components/lessons/StudentLessonViewer.tsx](mdc:src/components/lessons/StudentLessonViewer.tsx) - Student player
-- [src/components/admin/VideoQuestionEditor.tsx](mdc:src/components/admin/VideoQuestionEditor.tsx) - Teacher editor
