@@ -19,9 +19,12 @@ NEXT_PUBLIC_YOUTUBE_API_KEY=your_youtube_api_key (for video metadata)
 
 ### 2. Database Setup
 - [ ] Run Supabase migrations in production
+- [ ] **CRITICAL**: Apply RLS security migration (`supabase/migrations/enable_rls_security.sql`)
+- [ ] Update admin emails in `is_admin_or_teacher()` function
 - [ ] Verify all tables exist
-- [ ] Set up Row Level Security (RLS) policies
+- [ ] Verify Row Level Security is enabled on all tables
 - [ ] Create necessary indexes for performance
+- [ ] Test permissions with different user roles
 
 ### 3. Authentication Configuration
 - [ ] Update NextAuth allowed callback URLs in production

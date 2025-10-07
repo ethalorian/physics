@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 import { StudentAssignmentFilters } from '@/types/assignment-system'
 

@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // Internal imports
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 import { Submission } from '@/types/assignment'
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status')
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('submissions')
       .select('*')
       .order('created_at', { ascending: false })
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Use upsert (insert or update if exists)
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('submissions')
       .upsert(submissionData, {
         onConflict: 'assignment_id,user_id'  // Update if this combination exists
@@ -140,7 +140,7 @@ export async function PUT(request: NextRequest) {
     
     if (userRole === 'student') {
       // Students can only update their own submissions and only if not yet submitted
-      const { data: existingSubmission } = await supabase
+      const { data: existingSubmission } = await supabaseAdmin
         .from('submissions')
         .select('user_id, status')
         .eq('id', id)
@@ -164,7 +164,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update submission
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('submissions')
       .update(updates)
       .eq('id', id)
@@ -213,7 +213,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete submission
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('submissions')
       .delete()
       .eq('id', id)

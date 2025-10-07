@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 // GET - Fetch gradebook entries
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const itemType = searchParams.get('item_type')
     const status = searchParams.get('status')
 
-    let query = supabase
+    let query = supabaseAdmin
       .from('gradebook_entries')
       .select('*')
       .order('created_at', { ascending: false })
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
       synced_to_classroom: false
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('gradebook_entries')
       .upsert(gradebookData, {
         onConflict: 'user_id,item_type,item_id'

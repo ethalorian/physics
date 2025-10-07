@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 // GET - Get all courses for assignment creation
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const activeOnly = searchParams.get('active_only') !== 'false' // Default to true
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('courses')
       .select('id, google_course_id, name, section, description, room, course_state, student_count, created_at, updated_at')
       .order('name', { ascending: true })

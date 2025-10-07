@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 // GET - Retrieve student activity data (admin/teacher only)
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0')
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('student_activity')
       .select(`
         *,
@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     // Use the database function for lesson views to update progress
     if (activity_type === 'lesson_view' && lesson_id) {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .rpc('record_lesson_view', {
           p_user_id: activityData.user_id,
           p_user_email: activityData.user_email,
@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
     }
 
     // For other activity types, insert directly
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('student_activity')
       .insert(activityData)
       .select()

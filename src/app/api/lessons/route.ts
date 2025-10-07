@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 // GET - Get all lessons for assignment creation
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
     const published = searchParams.get('published') !== 'false' // Default to true
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('lessons')
       .select('id, title, slug, description, unit, lesson_number, estimated_time, objectives, published')
       .order('unit', { ascending: true })

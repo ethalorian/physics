@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 // Internal imports
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 import { Assignment } from '@/types/assignment'
 
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const includeStats = searchParams.get('include_stats') === 'true'
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('assignments')
       .select(`
         *,
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     if (includeStats && (userRole === 'admin' || userRole === 'teacher')) {
       const assignmentsWithStats = await Promise.all(
         (assignments || []).map(async (assignment) => {
-          const { data: stats } = await supabase
+          const { data: stats } = await supabaseAdmin
             .rpc('calculate_assignment_stats', { assignment_uuid: assignment.id })
             .single()
 
@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert into database
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('assignments')
       .insert([assignmentData])
       .select(`
@@ -186,7 +186,7 @@ export async function PUT(request: NextRequest) {
     }
 
     // Update assignment
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('assignments')
       .update(updates)
       .eq('id', id)
@@ -238,7 +238,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete assignment (submissions will cascade delete)
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('assignments')
       .delete()
       .eq('id', id)

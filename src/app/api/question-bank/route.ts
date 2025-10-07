@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 // Internal imports
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 export async function GET(request: Request) {
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
     const tags = searchParams.get('tags')?.split(',').filter(Boolean)
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('question_bank')
       .select(`
         *,
@@ -95,7 +95,7 @@ export async function POST(request: Request) {
       usage_count: 0
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('question_bank')
       .insert([questionData])
       .select()
@@ -140,7 +140,7 @@ export async function PUT(request: Request) {
       updates.points = updates.question_data.points || 0
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('question_bank')
       .update(updates)
       .eq('id', id)
@@ -179,7 +179,7 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Question ID is required' }, { status: 400 })
     }
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('question_bank')
       .delete()
       .eq('id', id)

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 
 // GET - Fetch platform leaderboard
 export async function GET(request: NextRequest) {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: any; image?: string | null }>()
 
     // Fetch game scores
-    let gameQuery = supabase
+    let gameQuery = supabaseAdmin
       .from('vocabulary_game_scores')
       .select('user_id, user_email, score')
     if (dateFilter) {
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const { data: gameScores } = await gameQuery
 
     // Fetch lesson progress
-    let lessonQuery = supabase
+    let lessonQuery = supabaseAdmin
       .from('lesson_progress')
       .select('user_id, user_email, progress_percentage, video_questions_correct')
     if (dateFilter) {
@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
     const { data: lessonProgress } = await lessonQuery
 
     // Fetch assignment submissions
-    let submissionQuery = supabase
+    let submissionQuery = supabaseAdmin
       .from('submissions')
       .select('user_id, score')
       .eq('status', 'graded')
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
     // Get student names and images from roster
     const userIds = Array.from(userDataMap.keys())
     if (userIds.length > 0) {
-      const { data: students } = await supabase
+      const { data: students } = await supabaseAdmin
         .from('students')
         .select('id, name, email, profile_image')
         .in('id', userIds)

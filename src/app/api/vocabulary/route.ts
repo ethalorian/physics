@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdminAdmin } from '@/lib/supabaseAdmin'
 import { getUserRole } from '@/lib/permissions'
 
 export async function GET(request: Request) {
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
 
     if (setId) {
       // Get specific vocabulary set with terms
-      const { data: vocabularySet, error: setError } = await supabase
+      const { data: vocabularySet, error: setError } = await supabaseAdmin
         .from('vocabulary_sets')
         .select(`
           *,
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
       return NextResponse.json(vocabularySet)
     } else {
       // Get all vocabulary sets with terms
-      const { data: vocabularySets, error } = await supabase
+      const { data: vocabularySets, error } = await supabaseAdmin
         .from('vocabulary_sets')
         .select(`
           *,
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     const { name, description, unit, lesson, terms } = body
 
     // Create vocabulary set
-    const { data: vocabularySet, error: setError } = await supabase
+    const { data: vocabularySet, error: setError } = await supabaseAdmin
       .from('vocabulary_sets')
       .insert([{
         name,
@@ -132,14 +132,14 @@ export async function POST(request: Request) {
         order_index: index
       }))
 
-      const { error: termsError } = await supabase
+      const { error: termsError } = await supabaseAdmin
         .from('vocabulary_terms')
         .insert(termsData)
 
       if (termsError) {
         console.error('Error adding terms:', termsError)
         // Clean up the vocabulary set if terms failed
-        await supabase.from('vocabulary_sets').delete().eq('id', vocabularySet.id)
+        await supabaseAdmin.from('vocabulary_sets').delete().eq('id', vocabularySet.id)
         return NextResponse.json({ error: 'Failed to add terms' }, { status: 500 })
       }
     }
@@ -166,7 +166,7 @@ export async function PUT(request: Request) {
     }
 
     // Update vocabulary set
-    const { data: vocabularySet, error: setError } = await supabase
+    const { data: vocabularySet, error: setError } = await supabaseAdmin
       .from('vocabulary_sets')
       .update({
         name,
@@ -187,7 +187,7 @@ export async function PUT(request: Request) {
     // Update terms if provided
     if (terms) {
       // Delete existing terms
-      await supabase
+      await supabaseAdmin
         .from('vocabulary_terms')
         .delete()
         .eq('vocabulary_set_id', id)
@@ -203,7 +203,7 @@ export async function PUT(request: Request) {
           order_index: index
         }))
 
-        const { error: termsError } = await supabase
+        const { error: termsError } = await supabaseAdmin
           .from('vocabulary_terms')
           .insert(termsData)
 
@@ -236,7 +236,7 @@ export async function DELETE(request: Request) {
     }
 
     // Delete vocabulary set (terms will be deleted automatically due to CASCADE)
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('vocabulary_sets')
       .delete()
       .eq('id', id)
