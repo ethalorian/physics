@@ -36,6 +36,7 @@ DROP FUNCTION IF EXISTS public.is_admin_or_teacher(TEXT) CASCADE;
 
 -- Reference/Static Data Tables (Read-only for students, writable for admins)
 ALTER TABLE public.units ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.lessons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.question_bank ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.question_usage_log ENABLE ROW LEVEL SECURITY;
 
@@ -103,6 +104,22 @@ CREATE POLICY "Units are viewable by all authenticated users"
 
 CREATE POLICY "Units are writable by admins"
   ON public.units FOR ALL
+  TO authenticated
+  USING (
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+-- Lessons: Students can view published lessons, teachers can manage all
+CREATE POLICY "Lessons are viewable by students"
+  ON public.lessons FOR SELECT
+  TO authenticated
+  USING (
+    published = true OR
+    is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
+  );
+
+CREATE POLICY "Lessons are writable by admins"
+  ON public.lessons FOR ALL
   TO authenticated
   USING (
     is_admin_or_teacher((SELECT email FROM public.users WHERE id = auth.uid()))
