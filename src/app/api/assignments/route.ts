@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       instructions: body.instructions || null,
       questions: body.questions,
       total_points,
-      lesson_id: body.lesson_id || null,
+      lesson_id: (body.lesson_id && body.lesson_id !== '') ? body.lesson_id : null,
       due_date: body.due_date || null,
       published: body.published || false,
       created_by: session.user.email

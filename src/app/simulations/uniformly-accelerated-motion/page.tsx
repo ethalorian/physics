@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Play, Pause, RotateCcw, Car, Zap, Gauge } from 'lucide-react'
 import Link from 'next/link'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 
 interface OilSpot {
   x: number
@@ -26,7 +27,16 @@ interface SimulationState {
   oilSpots: OilSpot[]
 }
 
-export default function UniformlyAcceleratedMotion() {
+// Internal component with simulation logic
+function UniformlyAcceleratedMotionContent({
+  onInteraction,
+  onComplete,
+  requestAIHint
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+  requestAIHint: (question: string) => Promise<string>
+}) {
   const [initialVelocity, setInitialVelocity] = useState([5])
   const [acceleration, setAcceleration] = useState([2])
   const [selectedFormula, setSelectedFormula] = useState<number | null>(null)
@@ -37,8 +47,9 @@ export default function UniformlyAcceleratedMotion() {
     velocity: initialVelocity[0],
     oilSpots: []
   })
+  const [hasCompletedRun, setHasCompletedRun] = useState(false)
 
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | null>(null)
   const lastTimeRef = useRef<number>(0)
   const lastOilDropRef = useRef<number>(0)
   const lastDisplayUpdateRef = useRef<number>(0)
@@ -124,11 +135,24 @@ export default function UniformlyAcceleratedMotion() {
   }, [v0])
 
   const toggleSimulation = useCallback(() => {
-    setSimulationState(prev => ({
-      ...prev,
-      isRunning: !prev.isRunning
-    }))
-  }, [])
+    setSimulationState(prev => {
+      const newState = {
+        ...prev,
+        isRunning: !prev.isRunning
+      }
+      
+      // Track start/pause
+      onInteraction(newState.isRunning ? 'start-simulation' : 'pause-simulation', {
+        initialVelocity: v0,
+        acceleration: a,
+        currentTime: prev.time,
+        currentPosition: prev.position,
+        oilSpots: prev.oilSpots.length
+      })
+      
+      return newState
+    })
+  }, [onInteraction, v0, a])
 
   // Animation loop - optimized for smooth 60fps
   useEffect(() => {
@@ -206,6 +230,20 @@ export default function UniformlyAcceleratedMotion() {
           velocity: newVelocity,
           oilSpots: [...oilSpotsRef.current]
         }))
+        
+        // Track completion on first full run
+        if (!hasCompletedRun) {
+          setHasCompletedRun(true)
+          onComplete({
+            initialVelocity: v0,
+            acceleration: a,
+            finalTime: newTime,
+            finalPosition: newPosition,
+            finalVelocity: newVelocity,
+            oilSpots: oilSpotsRef.current.length
+          }, 100) // Full completion score
+        }
+        
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current)
         }
@@ -273,7 +311,10 @@ export default function UniformlyAcceleratedMotion() {
                     </div>
                     <Slider
                       value={initialVelocity}
-                      onValueChange={setInitialVelocity}
+                      onValueChange={(val) => {
+                        setInitialVelocity(val)
+                        onInteraction('change-initial-velocity', { value: val[0] })
+                      }}
                       min={0}
                       max={20}
                       step={1}
@@ -295,7 +336,10 @@ export default function UniformlyAcceleratedMotion() {
                     </div>
                     <Slider
                       value={acceleration}
-                      onValueChange={setAcceleration}
+                      onValueChange={(val) => {
+                        setAcceleration(val)
+                        onInteraction('change-acceleration', { value: val[0] })
+                      }}
                       min={-5}
                       max={5}
                       step={0.5}
@@ -615,5 +659,18 @@ export default function UniformlyAcceleratedMotion() {
         </Tabs>
       </div>
     </div>
+  )
+}
+
+// Wrapped export with tracking
+export default function UniformlyAcceleratedMotion() {
+  return (
+    <SimulationWrapper
+      simulationSlug="uniformly-accelerated-motion"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <UniformlyAcceleratedMotionContent {...props} />}
+    </SimulationWrapper>
   )
 }

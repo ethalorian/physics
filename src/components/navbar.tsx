@@ -3,6 +3,7 @@
 // React/Next.js imports
 import { useEffect, useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
@@ -21,6 +22,7 @@ import UserContextSheet from "@/components/UserContextSheet"
 export default function Navbar() {
   const { data: session, status } = useSession()
   const { viewMode } = useViewMode()
+  const pathname = usePathname()
   
   // Use original permissions for actual user role
   const { userRole } = usePermissions()
@@ -50,6 +52,7 @@ export default function Navbar() {
     const items = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
+      { href: "/assignments", label: "Assignments", icon: FileText },
       { href: "/simulations", label: "Simulations", icon: Microscope },
       { href: "/vocabulary", label: "Vocabulary Games", icon: Users },
       { href: "/gamification", label: "Leaderboard", icon: Trophy },
@@ -106,11 +109,16 @@ export default function Navbar() {
                   <div className="flex flex-col py-4">
                     {navigationItems.map((item) => {
                       const Icon = item.icon
+                      const isActive = pathname === item.href
                       return (
                         <SheetClose asChild key={item.href}>
                           <Link
                             href={item.href}
-                            className="flex items-center gap-3 px-6 py-4 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+                            className={`flex items-center gap-3 px-6 py-4 text-sm font-medium transition-colors ${
+                              isActive 
+                                ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                                : 'hover:bg-accent hover:text-accent-foreground'
+                            }`}
                           >
                             <Icon className="h-5 w-5" />
                             {item.label}

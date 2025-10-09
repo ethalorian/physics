@@ -30,7 +30,7 @@ import {
   MoreVertical, Edit, Trash2, Eye, Copy, Send,
   TrendingUp, Clock, CheckCircle2, AlertCircle,
   BookOpen, Target, Award, BarChart3, Settings,
-  GraduationCap, ClipboardList, Sparkles
+  GraduationCap, ClipboardList, Sparkles, Microscope, Loader2
 } from 'lucide-react'
 import { format, isAfter, isBefore, parseISO } from 'date-fns'
 import { CreateLessonAssignmentForm, CreateHomeworkAssignmentForm } from '@/components/assignment-system/CreateAssignmentForms'
@@ -61,7 +61,27 @@ export default function UnifiedAssignmentHub() {
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [sortBy, setSortBy] = useState<string>('newest')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
-  const [createType, setCreateType] = useState<'homework' | 'lesson'>('homework')
+  const [createType, setCreateType] = useState<'homework' | 'lesson' | 'simulation'>('homework')
+  const [simulations, setSimulations] = useState<any[]>([])
+  const [loadingSimulations, setLoadingSimulations] = useState(false)
+  const [selectedSimulation, setSelectedSimulation] = useState<any>(null)
+
+  // Load simulations when dialog opens
+  useEffect(() => {
+    if (createDialogOpen && createType === 'simulation' && simulations.length === 0) {
+      setLoadingSimulations(true)
+      fetch('/api/simulations')
+        .then(res => res.json())
+        .then(data => {
+          setSimulations(data.simulations || [])
+          setLoadingSimulations(false)
+        })
+        .catch(error => {
+          console.error('Failed to load simulations:', error)
+          setLoadingSimulations(false)
+        })
+    }
+  }, [createDialogOpen, createType, simulations.length])
 
   // Combined statistics - MUST be before early returns
   const stats = useMemo(() => {
@@ -278,32 +298,117 @@ export default function UnifiedAssignmentHub() {
                 <DialogHeader>
                   <DialogTitle>Create New Assignment</DialogTitle>
                 </DialogHeader>
-                <Tabs value={createType} onValueChange={(v) => setCreateType(v as 'homework' | 'lesson')}>
-                  <TabsList className="grid w-full grid-cols-2">
+                <Tabs value={createType} onValueChange={(v) => setCreateType(v as 'homework' | 'lesson' | 'simulation')}>
+                  <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="homework" className="flex items-center gap-2">
                       <ClipboardList className="h-4 w-4" />
-                      Homework Assignment
+                      Homework
                     </TabsTrigger>
                     <TabsTrigger value="lesson" className="flex items-center gap-2">
                       <BookOpen className="h-4 w-4" />
-                      Assign Lesson
+                      Lesson
+                    </TabsTrigger>
+                    <TabsTrigger value="simulation" className="flex items-center gap-2">
+                      <Microscope className="h-4 w-4" />
+                      Simulation
                     </TabsTrigger>
                   </TabsList>
                   <TabsContent value="homework" className="mt-4">
                     <div className="space-y-4">
-                      <p className="text-sm text-muted-foreground">
-                        Create a new homework assignment with custom questions, AI grading, and more.
-                      </p>
+                      <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+                        <h4 className="font-semibold flex items-center gap-2">
+                          <ClipboardList className="h-4 w-4" />
+                          Homework Assignment
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Create custom homework with multiple question types including:
+                        </p>
+                        <ul className="text-sm text-muted-foreground space-y-1 pl-4">
+                          <li>• Multiple choice questions</li>
+                          <li>• Open-response questions with AI grading</li>
+                          <li>• Numerical problems with unit checking</li>
+                          <li>• Essay questions with custom rubrics</li>
+                        </ul>
+                      </div>
                       <Link href="/admin/assignments/create" onClick={() => setCreateDialogOpen(false)}>
                         <Button className="w-full" size="lg">
                           <Sparkles className="h-4 w-4 mr-2" />
-                          Go to Assignment Builder
+                          Open Assignment Builder
                         </Button>
                       </Link>
                     </div>
                   </TabsContent>
                   <TabsContent value="lesson" className="mt-4">
                     <CreateLessonAssignmentForm onSuccess={() => setCreateDialogOpen(false)} />
+                  </TabsContent>
+                  <TabsContent value="simulation" className="mt-4">
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Assign an interactive physics simulation lab to your students with custom rubrics and assessment criteria.
+                      </p>
+                      
+                      {loadingSimulations ? (
+                        <div className="flex items-center justify-center py-8">
+                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                          <span className="ml-2 text-muted-foreground">Loading simulations...</span>
+                        </div>
+                      ) : simulations.length === 0 ? (
+                        <div className="text-center py-8">
+                          <Microscope className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                          <p className="text-muted-foreground">No simulations available</p>
+                        </div>
+                      ) : (
+                        <div className="grid gap-3 max-h-96 overflow-y-auto">
+                          {simulations.map((sim) => (
+                            <Card 
+                              key={sim.id} 
+                              className="cursor-pointer hover:border-primary/50 transition-colors"
+                              onClick={() => {
+                                // For now, link to the simulation assignment creation page
+                                setCreateDialogOpen(false)
+                                window.location.href = '/admin/assignments/create-simulation'
+                              }}
+                            >
+                              <CardHeader className="pb-3">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <CardTitle className="text-base">{sim.title}</CardTitle>
+                                    <CardDescription className="text-sm mt-1">
+                                      {sim.description}
+                                    </CardDescription>
+                                  </div>
+                                  <Badge variant="outline" className="ml-2 capitalize">
+                                    {sim.difficulty || 'intermediate'}
+                                  </Badge>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="pt-0">
+                                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                  {sim.unit && (
+                                    <span className="flex items-center gap-1">
+                                      <BookOpen className="h-3 w-3" />
+                                      {sim.unit}
+                                    </span>
+                                  )}
+                                  {sim.estimated_time && (
+                                    <span className="flex items-center gap-1">
+                                      <Clock className="h-3 w-3" />
+                                      {sim.estimated_time} min
+                                    </span>
+                                  )}
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      )}
+                      
+                      <div className="pt-2 border-t">
+                        <p className="text-xs text-muted-foreground text-center">
+                          Click on a simulation to create an assignment
+                        </p>
+                      </div>
+                    </div>
                   </TabsContent>
                 </Tabs>
               </DialogContent>

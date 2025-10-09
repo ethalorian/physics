@@ -82,18 +82,20 @@ export async function POST(request: NextRequest) {
     console.log(`👥 Syncing ${students.length} students to course UUID: ${courseData}`)
     for (const student of students) {
       try {
-        const email = student.profile?.emailAddress || `${student.userId}@unknown.com`
+        // Use Google User ID as the unique identifier (no email needed)
+        const googleUserId = student.userId
         const fullName = student.profile?.name?.fullName || 'Unknown Student'
-        const photoUrl = student.profile?.photoUrl || null
+        // Generate a unique identifier based on Google User ID for internal use
+        const internalEmail = `${googleUserId}@classroom.local`
 
-        console.log(`  📝 Syncing student: ${fullName} (${email})`)
+        console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId})`)
 
         const { data: studentData, error: studentError } = await supabaseAdmin
           .rpc('sync_student', {
-            p_google_user_id: student.userId,
-            p_email: email,
+            p_google_user_id: googleUserId,
+            p_email: internalEmail, // Use internal identifier instead of real email
             p_name: fullName,
-            p_photo_url: photoUrl,
+            p_photo_url: null, // No photo URL needed
             p_course_id: courseData // Use the UUID returned from sync_course
           })
 

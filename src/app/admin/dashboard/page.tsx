@@ -18,7 +18,10 @@ import {
   ExternalLink,
   Eye,
   EyeOff,
-  Microscope
+  Microscope,
+  Target,
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react'
 import LessonManagement from '@/components/admin/LessonManagement'
 import AssignmentManagement from '@/components/admin/AssignmentManagement'
@@ -27,7 +30,6 @@ import AdminOverview from '@/components/admin/AdminOverview'
 import QuickLessonPreview from '@/components/admin/QuickLessonPreview'
 import StudentActivityDashboard from '@/components/admin/StudentActivityDashboard'
 import StudentDetailView from '@/components/admin/StudentDetailView'
-import { AssignmentManager } from '@/components/assignment-system/AssignmentManager'
 import Gradebook from '@/components/admin/Gradebook'
 
 // Import student dashboard for view mode
@@ -303,15 +305,63 @@ export default function AdminDashboard() {
           </Tabs>
         </TabsContent>
 
-        {/* Assignments Tab */}
+        {/* Assignments Tab - Now redirects to unified assignment hub */}
         <TabsContent value="assignments" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">Assignment System</h2>
-              <p className="text-muted-foreground">Assign lessons and homework to classes and students</p>
-            </div>
-          </div>
-          <AssignmentManager />
+          <Card className="border-2 border-primary/20">
+            <CardHeader>
+              <CardTitle className="text-2xl">Assignment Hub</CardTitle>
+              <CardDescription>
+                Complete assignment management has been moved to a dedicated page for better organization
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-3">
+                  <h3 className="font-semibold flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-primary" />
+                    What you can do:
+                  </h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      Create and manage homework assignments
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      Assign lessons and homework to classes
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      View student submissions and grade work
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-600" />
+                      Track assignment analytics and progress
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <h3 className="font-semibold">Quick Links:</h3>
+                  <div className="space-y-2">
+                    <Button asChild className="w-full justify-start" size="lg">
+                      <a href="/admin/assignments">
+                        <Target className="h-5 w-5 mr-2" />
+                        Go to Assignment Hub
+                        <ArrowRight className="h-5 w-5 ml-auto" />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" className="w-full justify-start">
+                      <a href="/admin/assignments/create">
+                        <Sparkles className="h-5 w-5 mr-2" />
+                        Create New Homework
+                      </a>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Gradebook Tab */}

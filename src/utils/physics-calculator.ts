@@ -18,8 +18,44 @@ export function calculatePhysicsSolution(questionText: string): { value: number;
   // Extract numerical values from the question
   const numbers = extractNumbers(questionText)
   
-  // Kinematics equations
-  if (lowerText.includes('velocity') || lowerText.includes('speed')) {
+  // Distance = Speed × Time calculations
+  if (lowerText.includes('distance')) {
+    // Look for speed/velocity and time
+    const speed = extractSpeed(questionText)
+    const time = extractTime(questionText)
+    
+    if (speed && time) {
+      // Convert units if needed
+      const speedValue = speed.value
+      const speedUnit = speed.unit
+      let timeValue = time.value
+      let timeUnit = time.unit
+      
+      // Convert time to hours if speed is in miles/hour or km/hour
+      if ((speedUnit === 'mph' || speedUnit === 'km/h') && timeUnit === 'minutes') {
+        timeValue = timeValue / 60 // Convert minutes to hours
+        timeUnit = 'hours'
+      }
+      
+      // Calculate distance
+      const distance = speedValue * timeValue
+      
+      // Determine output unit based on speed unit
+      let distanceUnit = 'miles'
+      if (speedUnit === 'mph') {
+        distanceUnit = 'miles'
+      } else if (speedUnit === 'km/h') {
+        distanceUnit = 'km'
+      } else if (speedUnit === 'm/s') {
+        distanceUnit = 'm'
+      }
+      
+      return { value: roundToSignificantFigures(distance, 3), unit: distanceUnit }
+    }
+  }
+  
+  // Kinematics equations - Speed/Velocity calculations
+  if (lowerText.includes('velocity') || lowerText.includes('speed') || lowerText.includes('how fast')) {
     if (lowerText.includes('acceleration') && lowerText.includes('time')) {
       // v = v0 + at
       const acceleration = numbers.find(n => n.text.includes('m/s²') || n.text.includes('m/s^2'))
@@ -33,12 +69,13 @@ export function calculatePhysicsSolution(questionText: string): { value: number;
       }
     }
     
-    if (lowerText.includes('distance') && lowerText.includes('time')) {
-      // v = d/t
+    // Check for distance/time to calculate speed (v = d/t)
+    // Look for patterns like "travels X meters in Y seconds"
+    if (lowerText.includes('travel') || lowerText.includes('move') || lowerText.includes('distance')) {
       const distance = numbers.find(n => n.text.includes('m') && !n.text.includes('m/s'))
       const time = numbers.find(n => n.text.includes('s') && !n.text.includes('m/s'))
       
-      if (distance && time) {
+      if (distance && time && time.value > 0) {
         const velocity = distance.value / time.value
         return { value: roundToSignificantFigures(velocity, 3), unit: 'm/s' }
       }
@@ -175,6 +212,62 @@ function extractNumbers(text: string): { value: number; text: string }[] {
   }
   
   return matches
+}
+
+/**
+ * Extract speed/velocity from question text with unit recognition
+ */
+function extractSpeed(text: string): { value: number; unit: string } | null {
+  // Check for miles per hour
+  let match = text.match(/(\d+\.?\d*)\s*(?:miles?\s*per\s*hour|mph)/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'mph' }
+  }
+  
+  // Check for kilometers per hour
+  match = text.match(/(\d+\.?\d*)\s*(?:kilometers?\s*per\s*hour|km\/h|kph)/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'km/h' }
+  }
+  
+  // Check for meters per second
+  match = text.match(/(\d+\.?\d*)\s*(?:meters?\s*per\s*second|m\/s)/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'm/s' }
+  }
+  
+  // Check for feet per second
+  match = text.match(/(\d+\.?\d*)\s*(?:feet\s*per\s*second|ft\/s|fps)/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'ft/s' }
+  }
+  
+  return null
+}
+
+/**
+ * Extract time from question text with unit recognition
+ */
+function extractTime(text: string): { value: number; unit: string } | null {
+  // Check for minutes
+  let match = text.match(/(\d+\.?\d*)\s*minutes?/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'minutes' }
+  }
+  
+  // Check for hours
+  match = text.match(/(\d+\.?\d*)\s*hours?/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'hours' }
+  }
+  
+  // Check for seconds (be careful not to match m/s)
+  match = text.match(/(\d+\.?\d*)\s*seconds?(?!\s*\/)/i)
+  if (match) {
+    return { value: parseFloat(match[1]), unit: 'seconds' }
+  }
+  
+  return null
 }
 
 function roundToSignificantFigures(num: number, sigFigs: number): number {
@@ -803,21 +896,47 @@ function shuffleArray<T>(array: T[]): T[] {
 export function generateIncorrectUnits(correctUnit: string): string[] {
   // Common unit confusion patterns for high school physics
   const unitConfusions: Record<string, string[]> = {
+    // Distance units
+    'miles': ['km', 'm', 'ft', 'mph', 'yards'],
+    'km': ['miles', 'm', 'km/h', 'mm', 'cm'],
+    'ft': ['m', 'yards', 'inches', 'miles', 'ft/s'],
+    
+    // Speed units
+    'mph': ['km/h', 'm/s', 'ft/s', 'miles', 'minutes'],
+    'km/h': ['mph', 'm/s', 'km', 'km/min', 'm/min'],
     'm/s': ['m/s²', 'km/h', 'm', 's', 'km/s'],
+    
+    // Acceleration
     'm/s²': ['m/s', 'm', 's²', 'N/kg', 'km/s²'],
+    
+    // Force and Energy
     'N': ['kg', 'N/m', 'J', 'kg·m/s', 'Pa'],
     'J': ['N', 'W', 'N·m/s', 'kg', 'J/s'],
     'W': ['J', 'J/s²', 'N·m', 'W/s', 'kW'],
+    
+    // Mass and Weight
     'kg': ['N', 'g', 'kg/m³', 'lb', 'kg·m'],
+    
+    // Basic units
     'm': ['m²', 'cm', 'km', 'm/s', 'ft'],
     's': ['ms', 'min', 'h', 's²', 'Hz'],
+    
+    // Frequency
     'Hz': ['s', '1/s²', 'rad/s', 'rpm', 'kHz'],
+    
+    // Pressure
     'Pa': ['N', 'N/m', 'J/m³', 'atm', 'psi'],
+    
+    // Electrical
     'V': ['J', 'W', 'A', 'Ω', 'J/C'],
     'A': ['V', 'C', 'W', 'Ω', 'C/s'],
     'Ω': ['V', 'A', 'W', 'S', 'V/A²'],
     'C': ['A', 'V', 'J', 'e', 'A·s'],
+    
+    // Momentum
     'kg·m/s': ['N·s', 'J', 'kg·m/s²', 'N', 'kg·m'],
+    
+    // Other physics units
     'm/s³': ['m/s²', 'm/s', 'N/kg·s', 'W/kg', 'Hz/s'],
     'rad': ['°', 'rad/s', 'm', 'dimensionless', 'rev'],
     'rad/s': ['Hz', 'rpm', '°/s', 'rad', 'm/s'],

@@ -1,6 +1,16 @@
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { 
+  encryptToken, 
+  decryptToken, 
+  getInitialScopes,
+  getSecureClientCredentials,
+  handleTokenRefreshError,
+  isTokenExpired,
+  logOAuthClientUsage,
+  validateOAuthConfig
+} from './oauth-security'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -12,6 +22,8 @@ declare module "next-auth" {
       image?: string | null
     }
     accessToken?: string
+    tokenError?: string
+    requiresReauth?: boolean
   }
 }
 
@@ -40,32 +52,42 @@ const TEST_USERS = [
   }
 ]
 
+// Validate OAuth configuration on startup in production
+if (process.env.NODE_ENV === 'production') {
+  try {
+    validateOAuthConfig()
+  } catch (error) {
+    console.error('OAuth configuration validation failed:', error)
+    // In production, we should fail fast if OAuth is misconfigured
+    throw error
+  }
+}
+
+// Get secure credentials
+const credentials = process.env.NODE_ENV === 'production' 
+  ? getSecureClientCredentials() 
+  : {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+    }
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: credentials.clientId,
+      clientSecret: credentials.clientSecret,
       authorization: {
         params: {
-          scope: [
-            "openid",
-            "email",
-            "profile",
-            // Google Classroom scopes
-            "https://www.googleapis.com/auth/classroom.courses.readonly",
-            "https://www.googleapis.com/auth/classroom.rosters.readonly",
-            "https://www.googleapis.com/auth/classroom.rosters",
-            "https://www.googleapis.com/auth/classroom.profile.emails", // Required for student emails!
-            "https://www.googleapis.com/auth/classroom.coursework.students",
-            "https://www.googleapis.com/auth/classroom.student-submissions.students.readonly",
-          ].join(" "),
+          // Best practice: Use incremental authorization
+          // Start with minimal scopes, request more as needed
+          scope: getInitialScopes().join(" "),
           prompt: "select_account",
           access_type: "offline",
           response_type: "code"
         }
       },
-      // Allow both HTTP and HTTPS in development
-      checks: process.env.NODE_ENV === "development" ? ["state"] : ["state", "pkce"],
+      // Use PKCE for enhanced security (recommended by Google)
+      checks: ["state", "pkce"],
     }),
     // Test credentials provider (only in development)
     ...(process.env.NODE_ENV === "development" ? [
@@ -111,9 +133,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (token.picture) {
           session.user.image = token.picture as string;
         }
-        // Include the Google access token for API calls
-        if (token.accessToken) {
-          session.accessToken = token.accessToken as string;
+        
+        // Check for token errors that require re-authentication
+        if (token.error === 'RefreshAccessTokenError') {
+          session.tokenError = 'Your session has expired. Please sign in again.';
+          session.requiresReauth = true;
+        } else if (token.accessToken) {
+          try {
+            // Decrypt the access token for use
+            const decryptedToken = process.env.TOKEN_ENCRYPTION_KEY 
+              ? decryptToken(token.accessToken as string)
+              : token.accessToken as string;
+            session.accessToken = decryptedToken;
+          } catch (error) {
+            console.error('Failed to decrypt access token:', error);
+            session.tokenError = 'Session error. Please sign in again.';
+            session.requiresReauth = true;
+          }
         }
       }
       return session;
@@ -129,29 +165,47 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       
       // Store Google access token from the account (first sign-in)
       if (account?.access_token) {
-        token.accessToken = account.access_token;
+        // Best practice: Encrypt tokens before storage
+        const encryptedToken = process.env.TOKEN_ENCRYPTION_KEY
+          ? encryptToken(account.access_token)
+          : account.access_token;
+        
+        token.accessToken = encryptedToken;
         token.accessTokenExpires = account.expires_at ? account.expires_at * 1000 : Date.now() + 3600 * 1000;
-      }
-      if (account?.refresh_token) {
-        token.refreshToken = account.refresh_token;
+        
+        // Log OAuth client usage for monitoring
+        await logOAuthClientUsage(credentials.clientId, 'auth');
       }
       
-      // Return token if it hasn't expired
-      if (token.accessTokenExpires && Date.now() < (token.accessTokenExpires as number)) {
+      if (account?.refresh_token) {
+        // Best practice: Encrypt refresh tokens
+        const encryptedRefreshToken = process.env.TOKEN_ENCRYPTION_KEY
+          ? encryptToken(account.refresh_token)
+          : account.refresh_token;
+        token.refreshToken = encryptedRefreshToken;
+      }
+      
+      // Check if token is expired (with 5-minute buffer)
+      if (token.accessTokenExpires && !isTokenExpired(token.accessTokenExpires as number)) {
         return token;
       }
       
-      // Access token has expired, try to refresh it
+      // Access token has expired or will expire soon, try to refresh it
       if (token.refreshToken) {
         try {
+          // Decrypt refresh token for use
+          const refreshToken = process.env.TOKEN_ENCRYPTION_KEY
+            ? decryptToken(token.refreshToken as string)
+            : token.refreshToken as string;
+          
           const response = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
-              client_id: process.env.GOOGLE_CLIENT_ID!,
-              client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+              client_id: credentials.clientId,
+              client_secret: credentials.clientSecret,
               grant_type: 'refresh_token',
-              refresh_token: token.refreshToken as string,
+              refresh_token: refreshToken,
             }),
           });
 
@@ -160,19 +214,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (!response.ok) {
             throw refreshedTokens;
           }
+          
+          // Log successful refresh
+          await logOAuthClientUsage(credentials.clientId, 'refresh');
+          
+          // Encrypt the new tokens
+          const encryptedNewToken = process.env.TOKEN_ENCRYPTION_KEY
+            ? encryptToken(refreshedTokens.access_token)
+            : refreshedTokens.access_token;
 
           return {
             ...token,
-            accessToken: refreshedTokens.access_token,
+            accessToken: encryptedNewToken,
             accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
-            refreshToken: refreshedTokens.refresh_token ?? token.refreshToken, // Fall back to old refresh token
+            refreshToken: refreshedTokens.refresh_token 
+              ? (process.env.TOKEN_ENCRYPTION_KEY 
+                ? encryptToken(refreshedTokens.refresh_token)
+                : refreshedTokens.refresh_token)
+              : token.refreshToken, // Fall back to old refresh token
           };
         } catch (error) {
-          console.error('Error refreshing access token:', error);
-          // Return token as-is, will need to re-authenticate
+          // Best practice: Handle refresh token errors properly
+          const errorResult = await handleTokenRefreshError(
+            error, 
+            token.email as string
+          );
+          
           return {
             ...token,
-            error: 'RefreshAccessTokenError',
+            ...errorResult
           };
         }
       }

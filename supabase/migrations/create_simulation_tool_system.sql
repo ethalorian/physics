@@ -48,12 +48,12 @@ CREATE TABLE IF NOT EXISTS simulations (
   embed_count INTEGER DEFAULT 0
 );
 
--- Indexes for simulations
-CREATE INDEX idx_simulations_category ON simulations(category);
-CREATE INDEX idx_simulations_unit ON simulations(unit);
-CREATE INDEX idx_simulations_published ON simulations(published);
-CREATE INDEX idx_simulations_tags ON simulations USING GIN(tags);
-CREATE INDEX idx_simulations_slug ON simulations(slug);
+-- Indexes for simulations (safe to re-run)
+CREATE INDEX IF NOT EXISTS idx_simulations_category ON simulations(category);
+CREATE INDEX IF NOT EXISTS idx_simulations_unit ON simulations(unit);
+CREATE INDEX IF NOT EXISTS idx_simulations_published ON simulations(published);
+CREATE INDEX IF NOT EXISTS idx_simulations_tags ON simulations USING GIN(tags);
+CREATE INDEX IF NOT EXISTS idx_simulations_slug ON simulations(slug);
 
 -- ============================================================================
 -- TOOLS TABLE
@@ -93,11 +93,11 @@ CREATE TABLE IF NOT EXISTS tools (
   use_count INTEGER DEFAULT 0
 );
 
--- Indexes for tools
-CREATE INDEX idx_tools_category ON tools(category);
-CREATE INDEX idx_tools_type ON tools(tool_type);
-CREATE INDEX idx_tools_published ON tools(published);
-CREATE INDEX idx_tools_slug ON tools(slug);
+-- Indexes for tools (safe to re-run)
+CREATE INDEX IF NOT EXISTS idx_tools_category ON tools(category);
+CREATE INDEX IF NOT EXISTS idx_tools_type ON tools(tool_type);
+CREATE INDEX IF NOT EXISTS idx_tools_published ON tools(published);
+CREATE INDEX IF NOT EXISTS idx_tools_slug ON tools(slug);
 
 -- ============================================================================
 -- INTERACTIVE LESSONS TABLE
@@ -129,8 +129,8 @@ CREATE TABLE IF NOT EXISTS interactive_lessons (
   UNIQUE(lesson_id) -- One interactive lesson per regular lesson
 );
 
--- Index for interactive lessons
-CREATE INDEX idx_interactive_lessons_lesson_id ON interactive_lessons(lesson_id);
+-- Index for interactive lessons (safe to re-run)
+CREATE INDEX IF NOT EXISTS idx_interactive_lessons_lesson_id ON interactive_lessons(lesson_id);
 
 -- ============================================================================
 -- SIMULATION ACTIVITY TABLE (Student Progress)
@@ -164,11 +164,11 @@ CREATE TABLE IF NOT EXISTS simulation_activity (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Indexes for simulation activity
-CREATE INDEX idx_simulation_activity_student ON simulation_activity(student_id);
-CREATE INDEX idx_simulation_activity_simulation ON simulation_activity(simulation_id);
-CREATE INDEX idx_simulation_activity_lesson ON simulation_activity(lesson_id);
-CREATE INDEX idx_simulation_activity_created ON simulation_activity(created_at DESC);
+-- Indexes for simulation activity (safe to re-run)
+CREATE INDEX IF NOT EXISTS idx_simulation_activity_student ON simulation_activity(student_id);
+CREATE INDEX IF NOT EXISTS idx_simulation_activity_simulation ON simulation_activity(simulation_id);
+CREATE INDEX IF NOT EXISTS idx_simulation_activity_lesson ON simulation_activity(lesson_id);
+CREATE INDEX IF NOT EXISTS idx_simulation_activity_created ON simulation_activity(created_at DESC);
 
 -- ============================================================================
 -- INTERACTIVE LESSON PROGRESS TABLE
@@ -207,11 +207,11 @@ CREATE TABLE IF NOT EXISTS interactive_lesson_progress (
   UNIQUE(student_id, lesson_id)
 );
 
--- Indexes for interactive lesson progress
-CREATE INDEX idx_interactive_progress_student ON interactive_lesson_progress(student_id);
-CREATE INDEX idx_interactive_progress_lesson ON interactive_lesson_progress(lesson_id);
-CREATE INDEX idx_interactive_progress_status ON interactive_lesson_progress(status);
-CREATE INDEX idx_interactive_progress_updated ON interactive_lesson_progress(updated_at DESC);
+-- Indexes for interactive lesson progress (safe to re-run)
+CREATE INDEX IF NOT EXISTS idx_interactive_progress_student ON interactive_lesson_progress(student_id);
+CREATE INDEX IF NOT EXISTS idx_interactive_progress_lesson ON interactive_lesson_progress(lesson_id);
+CREATE INDEX IF NOT EXISTS idx_interactive_progress_status ON interactive_lesson_progress(status);
+CREATE INDEX IF NOT EXISTS idx_interactive_progress_updated ON interactive_lesson_progress(updated_at DESC);
 
 -- ============================================================================
 -- RLS (Row Level Security) POLICIES
@@ -225,10 +225,12 @@ ALTER TABLE simulation_activity ENABLE ROW LEVEL SECURITY;
 ALTER TABLE interactive_lesson_progress ENABLE ROW LEVEL SECURITY;
 
 -- Simulations: Public can view published, admins can do everything
+DROP POLICY IF EXISTS "Anyone can view published simulations" ON simulations;
 CREATE POLICY "Anyone can view published simulations"
   ON simulations FOR SELECT
   USING (published = true);
 
+DROP POLICY IF EXISTS "Admins can manage simulations" ON simulations;
 CREATE POLICY "Admins can manage simulations"
   ON simulations FOR ALL
   USING (auth.jwt() ->> 'email' IN (
@@ -236,10 +238,12 @@ CREATE POLICY "Admins can manage simulations"
   ));
 
 -- Tools: Public can view published, admins can manage
+DROP POLICY IF EXISTS "Anyone can view published tools" ON tools;
 CREATE POLICY "Anyone can view published tools"
   ON tools FOR SELECT
   USING (published = true);
 
+DROP POLICY IF EXISTS "Admins can manage tools" ON tools;
 CREATE POLICY "Admins can manage tools"
   ON tools FOR ALL
   USING (auth.jwt() ->> 'email' IN (
@@ -247,10 +251,12 @@ CREATE POLICY "Admins can manage tools"
   ));
 
 -- Interactive Lessons: Students can view their assigned lessons
+DROP POLICY IF EXISTS "Students can view interactive lessons" ON interactive_lessons;
 CREATE POLICY "Students can view interactive lessons"
   ON interactive_lessons FOR SELECT
   USING (true); -- Will be refined with lesson assignments
 
+DROP POLICY IF EXISTS "Admins can manage interactive lessons" ON interactive_lessons;
 CREATE POLICY "Admins can manage interactive lessons"
   ON interactive_lessons FOR ALL
   USING (auth.jwt() ->> 'email' IN (
@@ -258,18 +264,22 @@ CREATE POLICY "Admins can manage interactive lessons"
   ));
 
 -- Simulation Activity: Students own their activity
+DROP POLICY IF EXISTS "Students can view their own simulation activity" ON simulation_activity;
 CREATE POLICY "Students can view their own simulation activity"
   ON simulation_activity FOR SELECT
   USING (student_id::text = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Students can create their own simulation activity" ON simulation_activity;
 CREATE POLICY "Students can create their own simulation activity"
   ON simulation_activity FOR INSERT
   WITH CHECK (student_id::text = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Students can update their own simulation activity" ON simulation_activity;
 CREATE POLICY "Students can update their own simulation activity"
   ON simulation_activity FOR UPDATE
   USING (student_id::text = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Teachers can view all simulation activity" ON simulation_activity;
 CREATE POLICY "Teachers can view all simulation activity"
   ON simulation_activity FOR SELECT
   USING (auth.jwt() ->> 'email' IN (
@@ -277,14 +287,17 @@ CREATE POLICY "Teachers can view all simulation activity"
   ));
 
 -- Interactive Lesson Progress: Similar to simulation activity
+DROP POLICY IF EXISTS "Students can view their own progress" ON interactive_lesson_progress;
 CREATE POLICY "Students can view their own progress"
   ON interactive_lesson_progress FOR SELECT
   USING (student_id::text = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Students can manage their own progress" ON interactive_lesson_progress;
 CREATE POLICY "Students can manage their own progress"
   ON interactive_lesson_progress FOR ALL
   USING (student_id::text = auth.uid()::text);
 
+DROP POLICY IF EXISTS "Teachers can view all progress" ON interactive_lesson_progress;
 CREATE POLICY "Teachers can view all progress"
   ON interactive_lesson_progress FOR SELECT
   USING (auth.jwt() ->> 'email' IN (
@@ -331,7 +344,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger to automatically calculate percentage
+-- Trigger to automatically calculate percentage (safe to re-run)
+DROP TRIGGER IF EXISTS calculate_progress_percentage ON interactive_lesson_progress;
 CREATE TRIGGER calculate_progress_percentage
   BEFORE INSERT OR UPDATE ON interactive_lesson_progress
   FOR EACH ROW
@@ -359,6 +373,22 @@ INSERT INTO simulations (
   ARRAY['precision', 'accuracy', 'measurement', 'error analysis'],
   TRUE,
   FALSE,
+  TRUE,
+  'system'
+),
+(
+  'Constant Velocity Motion Lab',
+  'constant-velocity',
+  'Control a walker''s motion and collect position data. Observe constant velocity in 1D motion and analyze position-time graphs to find velocity from slope.',
+  'kinematics',
+  'unit-1',
+  'beginner',
+  '/simulations/constant-velocity',
+  15,
+  ARRAY['Understand constant velocity motion', 'Collect and analyze position-time data', 'Calculate velocity from graph slope'],
+  ARRAY['velocity', 'kinematics', 'graphs', 'data collection'],
+  TRUE,
+  TRUE,
   TRUE,
   'system'
 ),

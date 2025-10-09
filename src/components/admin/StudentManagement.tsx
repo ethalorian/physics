@@ -10,12 +10,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, List, Database, Upload } from 'lucide-react'
 import { initializeGoogleClassroomAuth, googleClassroomAPI } from '@/lib/google-classroom'
 import { useToast } from '@/providers/toast-provider'
+import IncrementalAuth from '@/components/auth/IncrementalAuth'
 
 interface Student {
   id: string
   name: string
-  email: string
-  profilePhoto?: string
+  googleUserId: string  // Use Google User ID as the primary identifier
   enrollmentState: 'ACTIVE' | 'INVITED' | 'DECLINED'
   lastActivity?: string
   courseId: string
@@ -42,6 +42,7 @@ export default function StudentManagement() {
   const [accessToken, setAccessToken] = useState<string | null>(null)
   const [importedStudents, setImportedStudents] = useState<Student[]>([])
   const [showImportedData, setShowImportedData] = useState(false)
+  const [needsClassroomScope, setNeedsClassroomScope] = useState(false)
 
   // Define fetchCourses before it's used in useEffect
   const fetchCourses = useCallback(async () => {
@@ -87,7 +88,7 @@ export default function StudentManagement() {
 
   // Auto-connect using NextAuth session token
   useEffect(() => {
-    if (session?.accessToken && !isConnected) {
+    if (session?.accessToken && !isConnected && !needsClassroomScope) {
       console.log('✅ Found Google access token in session, attempting auto-connect...')
       setLoading(true)
       setAccessToken(session.accessToken)
@@ -97,17 +98,32 @@ export default function StudentManagement() {
       fetchCourses()
         .then(() => {
           setIsConnected(true)
+          setNeedsClassroomScope(false)
           console.log('✅ Auto-connected successfully!')
         })
         .catch((error) => {
-          console.warn('⚠️ Session token expired or invalid, need to reconnect:', error)
-          // Token is expired or invalid, clear it and show connect button
-          setAccessToken(null)
-          setIsConnected(false)
+          console.warn('⚠️ Session token issue:', error)
+          
+          // Check if it's a scope error
+          if (error.message?.includes('insufficient authentication scopes') || 
+              error.message?.includes('PERMISSION_DENIED')) {
+            console.log('📋 Need additional Google Classroom scopes')
+            setNeedsClassroomScope(true)
+            setAccessToken(null)
+            setIsConnected(false)
+            showToast({
+              title: "Additional Permissions Required",
+              description: "This feature requires access to Google Classroom."
+            })
+          } else {
+            // Token is expired or invalid, clear it and show connect button
+            setAccessToken(null)
+            setIsConnected(false)
+          }
         })
         .finally(() => setLoading(false))
     }
-  }, [session?.accessToken, isConnected, fetchCourses])
+  }, [session?.accessToken, isConnected, needsClassroomScope, fetchCourses, showToast])
 
   useEffect(() => {
     // Only initialize with real data when connected
@@ -125,22 +141,10 @@ export default function StudentManagement() {
         const classroomStudents = await googleClassroomAPI.getStudents(courseId)
         
         const formattedStudents: Student[] = classroomStudents.map(student => {
-          
-          // Try multiple possible email field locations
-          const email = student.profile?.emailAddress || 
-                       'No email available'
-          
-          // Proxy Google profile photos through our API to avoid CORS issues
-          const photoUrl = student.profile.photoUrl || student.profile?.photoUrl
-          const proxiedPhotoUrl = photoUrl 
-            ? `/api/proxy-image?url=${encodeURIComponent(photoUrl)}`
-            : undefined
-          
           return {
             id: student.userId,
             name: student.profile.name.fullName,
-            email: email,
-            profilePhoto: proxiedPhotoUrl,
+            googleUserId: student.userId,  // Use Google User ID
             enrollmentState: 'ACTIVE', // Google Classroom API only returns active students
             courseId: courseId
           }
@@ -173,17 +177,10 @@ export default function StudentManagement() {
         console.log('📊 Students returned from database:', data.students?.length || 0)
         
         const formattedStudents: Student[] = data.students.map((student: any) => {
-          // Proxy Google profile photos through our API to avoid CORS issues
-          const photoUrl = student.profile_photo_url
-          const proxiedPhotoUrl = photoUrl 
-            ? `/api/proxy-image?url=${encodeURIComponent(photoUrl)}`
-            : undefined
-          
           return {
             id: student.google_user_id,
             name: student.name,
-            email: student.email,
-            profilePhoto: proxiedPhotoUrl,
+            googleUserId: student.google_user_id,  // Use Google User ID
             enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
             courseId: selectedCourse
           }
@@ -414,9 +411,9 @@ export default function StudentManagement() {
 
   const exportStudentList = () => {
     const csv = [
-      'Name,Email,Google Profile Photo,Status,Last Activity,Course ID',
+      'Name,Google User ID,Status,Last Activity,Course ID',
       ...filteredStudents.map(student => 
-        `"${student.name}","${student.email}","${student.profilePhoto || 'No photo'}","${student.enrollmentState}","${student.lastActivity ? new Date(student.lastActivity).toLocaleDateString() : 'Never'}","${student.courseId || selectedCourse}"`
+        `"${student.name}","${student.googleUserId}","${student.enrollmentState}","${student.lastActivity ? new Date(student.lastActivity).toLocaleDateString() : 'Never'}","${student.courseId || selectedCourse}"`
       )
     ].join('\n')
     
@@ -452,7 +449,7 @@ export default function StudentManagement() {
   const currentStudents = showImportedData ? importedStudents : students
   const filteredStudents = currentStudents.filter(student =>
     student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    student.email.toLowerCase().includes(searchTerm.toLowerCase())
+    student.googleUserId.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   return (
@@ -518,7 +515,22 @@ export default function StudentManagement() {
         </div>
       </div>
 
-      {!isConnected ? (
+      {needsClassroomScope ? (
+        <IncrementalAuth 
+          feature="classroom"
+          onSuccess={() => {
+            setNeedsClassroomScope(false)
+            // Refresh the page to retry with new permissions
+            window.location.reload()
+          }}
+          onError={(error) => {
+            showToast({
+              title: "Authorization Failed",
+              description: error
+            })
+          }}
+        />
+      ) : !isConnected ? (
         <Card className="apple-card">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <GraduationCap className="h-12 w-12 text-[#9A8AC0] mb-4" />
@@ -704,31 +716,15 @@ export default function StudentManagement() {
                     <CardContent className="flex items-center justify-between p-6">
                       <div className="flex items-center space-x-4">
                         <Avatar className="h-16 w-16 ring-2 ring-[#E6DCF9] ring-offset-2">
-                          <AvatarImage 
-                            src={student.profilePhoto} 
-                            alt={student.name}
-                            className="object-cover"
-                          />
                           <AvatarFallback className="bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-white font-semibold text-lg">
                             {student.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1">
                           <h3 className="font-semibold text-[#4A1A4A] text-lg">{student.name}</h3>
-                          {student.email ? (
-                            <p className="text-sm text-[#6A4C93] font-medium mt-1">
-                              📧 {student.email}
-                            </p>
-                          ) : (
-                            <p className="text-sm text-red-500 font-medium mt-1">
-                              ⚠️ Email not available
-                            </p>
-                          )}
-                          {student.profilePhoto && (
-                            <p className="text-xs text-green-600 mt-1">
-                              ✓ Google account connected
-                            </p>
-                          )}
+                          <p className="text-sm text-[#6A4C93] font-medium mt-1">
+                            🆔 {student.googleUserId}
+                          </p>
                           {student.lastActivity && (
                             <p className="text-xs text-[#9A8AC0] mt-1">
                               Last active: {new Date(student.lastActivity).toLocaleDateString()}
@@ -751,10 +747,9 @@ export default function StudentManagement() {
                       <tr>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Profile</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Name</th>
-                        <th className="text-left p-4 font-semibold text-[#4A1A4A]">Email</th>
+                        <th className="text-left p-4 font-semibold text-[#4A1A4A]">Google User ID</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Status</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Last Activity</th>
-                        <th className="text-left p-4 font-semibold text-[#4A1A4A]">Google Account</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -762,28 +757,16 @@ export default function StudentManagement() {
                         <tr key={student.id} className={index % 2 === 0 ? 'bg-white' : 'bg-[#FAFAFA]'}>
                           <td className="p-4">
                             <Avatar className="h-10 w-10">
-                              <AvatarImage 
-                                src={student.profilePhoto} 
-                                alt={student.name}
-                                className="object-cover"
-                              />
                               <AvatarFallback className="bg-gradient-to-br from-[#6A4C93] to-[#4A1A4A] text-white text-sm">
                                 {student.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
                               </AvatarFallback>
                             </Avatar>
                           </td>
                           <td className="p-4 font-medium text-[#4A1A4A]">{student.name}</td>
-                          <td className="p-4 text-[#6A4C93]">{student.email || 'Not available'}</td>
+                          <td className="p-4 text-[#6A4C93]">{student.googleUserId}</td>
                           <td className="p-4">{getStatusBadge(student.enrollmentState)}</td>
                           <td className="p-4 text-[#9A8AC0] text-sm">
                             {student.lastActivity ? new Date(student.lastActivity).toLocaleDateString() : 'Never'}
-                          </td>
-                          <td className="p-4">
-                            {student.profilePhoto ? (
-                              <span className="text-green-600 text-sm">✓ Connected</span>
-                            ) : (
-                              <span className="text-gray-400 text-sm">Not connected</span>
-                            )}
                           </td>
                         </tr>
                       ))}

@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Play, RotateCcw, Mountain, Droplets, Timer, Calculator, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 
 interface PositionTrace {
   y: number
@@ -20,7 +21,16 @@ interface Trial {
   traces: PositionTrace[]
 }
 
-export default function FreefallCliffLab() {
+// Internal component with simulation logic
+function FreefallCliffLabContent({
+  onInteraction,
+  onComplete,
+  requestAIHint
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+  requestAIHint: (question: string) => Promise<string>
+}) {
   const [isDropping, setIsDropping] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [stonePosition, setStonePosition] = useState(0)
@@ -30,7 +40,7 @@ export default function FreefallCliffLab() {
   const [isExampleMode, setIsExampleMode] = useState(true) // Start with example
   const [cliffHeight, setCliffHeight] = useState(45) // Example: 45m
 
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
   const lastTimeRef = useRef<number>(0)
   const lastTraceRef = useRef<number>(0)
   const startTimeRef = useRef<number>(0)
@@ -58,12 +68,18 @@ export default function FreefallCliffLab() {
   }, [])
 
   const startRandomMode = useCallback(() => {
+    const newHeight = Math.floor(Math.random() * 30 + 40) // Random 40-70m
     setIsExampleMode(false)
-    setCliffHeight(Math.floor(Math.random() * 30 + 40)) // Random 40-70m
+    setCliffHeight(newHeight)
     setTrials([])
     setShowAnalysis(false)
     reset()
-  }, [reset])
+    
+    // Track starting random mode
+    onInteraction('start-random-mode', {
+      cliffHeight: newHeight
+    })
+  }, [reset, onInteraction])
 
   const dropStone = useCallback(() => {
     if (isDropping) return
@@ -71,7 +87,14 @@ export default function FreefallCliffLab() {
     reset()
     setIsDropping(true)
     setTraces([{ y: 0, time: 0 }]) // Initial position
-  }, [isDropping, reset])
+    
+    // Track stone drop
+    onInteraction('drop-stone', {
+      cliffHeight,
+      isExampleMode,
+      trialNumber: trials.length + 1
+    })
+  }, [isDropping, reset, onInteraction, cliffHeight, isExampleMode, trials.length])
 
   const calculateHeight = useCallback((time: number) => {
     // h = (1/2) * g * t²
@@ -118,11 +141,22 @@ export default function FreefallCliffLab() {
       if (newPosition >= cliffHeight) {
         const finalTime = Math.sqrt((2 * cliffHeight) / g) // Accurate time when hitting water
         
-        setTrials(prev => [...prev, {
+        const newTrial = {
           fallTime: finalTime,
           calculatedHeight: calculateHeight(finalTime),
           traces: [...traces, { y: cliffHeight, time: finalTime }]
-        }])
+        }
+        
+        setTrials(prev => [...prev, newTrial])
+        
+        // Track trial completion
+        onInteraction('trial-completed', {
+          cliffHeight,
+          fallTime: finalTime,
+          calculatedHeight: newTrial.calculatedHeight,
+          trialNumber: trials.length + 1,
+          isExampleMode
+        })
         
         setIsDropping(false)
         setCurrentTime(finalTime)
@@ -144,7 +178,7 @@ export default function FreefallCliffLab() {
         cancelAnimationFrame(animationFrameRef.current)
       }
     }
-  }, [isDropping, cliffHeight, calculateHeight, traces])
+  }, [isDropping, cliffHeight, calculateHeight, traces, trials, onInteraction, isExampleMode])
 
   const averageFallTime = trials.length > 0
     ? trials.reduce((sum, t) => sum + t.fallTime, 0) / trials.length
@@ -522,7 +556,32 @@ export default function FreefallCliffLab() {
                       </div>
 
                       <Button 
-                        onClick={() => setShowAnalysis(true)}
+                        onClick={() => {
+                          setShowAnalysis(true)
+                          
+                          // Track answer check
+                          const errorPercent = Math.abs(averageCalculatedHeight - cliffHeight) / cliffHeight * 100
+                          const score = Math.max(0, 100 - errorPercent * 2) // Score based on accuracy
+                          
+                          onInteraction('check-answer', {
+                            cliffHeight,
+                            averageCalculatedHeight,
+                            averageFallTime,
+                            trials: trials.length,
+                            errorPercent,
+                            score
+                          })
+                          
+                          // Mark as complete if they did at least 3 trials
+                          if (trials.length >= 3) {
+                            onComplete({
+                              cliffHeight,
+                              calculatedHeight: averageCalculatedHeight,
+                              trials: trials.length,
+                              averageError: Math.abs(averageCalculatedHeight - cliffHeight)
+                            }, Math.round(score))
+                          }
+                        }}
                         className="w-full"
                         variant="default"
                       >
@@ -777,5 +836,18 @@ export default function FreefallCliffLab() {
         }
       `}</style>
     </div>
+  )
+}
+
+// Wrapped export with tracking
+export default function FreefallCliffLab() {
+  return (
+    <SimulationWrapper
+      simulationSlug="freefall-cliff"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <FreefallCliffLabContent {...props} />}
+    </SimulationWrapper>
   )
 }

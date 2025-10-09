@@ -53,43 +53,43 @@ export default function MathMarkdown({ content }: MathMarkdownProps) {
       if (typeof window !== 'undefined' && containerRef.current) {
         const katex = await import('katex')
       
-      // Process display math
-      const displayMath = containerRef.current.querySelectorAll('.math-display')
-      displayMath.forEach((element) => {
-        try {
-          const math = element.textContent || ''
-          element.innerHTML = katex.renderToString(math, { 
-            displayMode: true,
-            throwOnError: false,
-            macros: {
-              "\\tfrac": "\\frac"
-            }
-          })
-          element.className = 'katex-display math-display'
-        } catch (e) {
-          console.log('KaTeX display error:', e)
-          element.innerHTML = `<code>Error rendering: ${element.textContent}</code>`
-        }
-      })
+        // Process display math
+        const displayMath = containerRef.current.querySelectorAll('.math-display')
+        displayMath.forEach((element) => {
+          try {
+            const math = element.textContent || ''
+            element.innerHTML = katex.renderToString(math, { 
+              displayMode: true,
+              throwOnError: false,
+              macros: {
+                "\\tfrac": "\\frac"
+              }
+            })
+            element.className = 'katex-display math-display'
+          } catch (e) {
+            console.log('KaTeX display error:', e)
+            element.innerHTML = `<code>Error rendering: ${element.textContent}</code>`
+          }
+        })
 
-      // Process inline math
-      const inlineMath = containerRef.current.querySelectorAll('.math-inline')
-      inlineMath.forEach((element) => {
-        try {
-          const math = element.textContent || ''
-          element.innerHTML = katex.renderToString(math, { 
-            displayMode: false,
-            throwOnError: false,
-            macros: {
-              "\\tfrac": "\\frac"
-            }
-          })
-          element.className = 'katex math-inline'
-        } catch (e) {
-          console.log('KaTeX inline error:', e)
-          element.innerHTML = `<code>Error: ${element.textContent}</code>`
-        }
-      })
+        // Process inline math
+        const inlineMath = containerRef.current.querySelectorAll('.math-inline')
+        inlineMath.forEach((element) => {
+          try {
+            const math = element.textContent || ''
+            element.innerHTML = katex.renderToString(math, { 
+              displayMode: false,
+              throwOnError: false,
+              macros: {
+                "\\tfrac": "\\frac"
+              }
+            })
+            element.className = 'katex math-inline'
+          } catch (e) {
+            console.log('KaTeX inline error:', e)
+            element.innerHTML = `<code>Error: ${element.textContent}</code>`
+          }
+        })
       }
     }
     loadKatex()

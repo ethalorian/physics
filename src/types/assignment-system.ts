@@ -99,6 +99,61 @@ export interface AssignmentAssignment {
   students?: StudentInfo[]
 }
 
+export interface SimulationAssignment {
+  id: string
+  simulation_id: string // References simulation from simulations table
+  
+  // Assignment target (either course or individual students)
+  course_id?: string // Google Classroom course ID
+  assigned_students?: string[] // Array of student UUIDs
+  
+  // Assignment details
+  assigned_by: string // Teacher/admin user ID who made the assignment
+  assigned_at: string
+  due_date?: string
+  
+  // Assignment configuration
+  title?: string // Override simulation title if needed
+  instructions?: string // Special instructions for this assignment
+  min_time_required?: number // Minimum time in simulation (minutes)
+  requires_data_export: boolean // Must export data from simulation
+  
+  // Assessment (Phase 1 - Standards-based rubric)
+  rubric_id?: string // References simulation_rubrics table
+  questions?: any[] // Optional questions to accompany simulation
+  
+  // Status and tracking
+  is_active: boolean
+  published: boolean // Whether students can see this assignment
+  
+  // Analytics
+  total_assigned: number // Number of students assigned
+  total_started: number // Number who started
+  total_completed: number // Number who completed simulation
+  total_submitted: number // Number who submitted questions (if any)
+  
+  created_at: string
+  updated_at: string
+  
+  // Populated data
+  simulation?: {
+    id: string
+    title: string
+    slug: string
+    description?: string
+    category: string
+    difficulty: string
+    estimated_time?: number
+  }
+  course?: {
+    id: string
+    name: string
+    section?: string
+    student_count: number
+  }
+  students?: StudentInfo[]
+}
+
 export interface StudentLessonAssignment {
   id: string
   lesson_assignment_id: string
@@ -161,6 +216,47 @@ export interface StudentAssignmentAssignment {
   // Populated data
   student?: StudentInfo
   assignment_assignment?: AssignmentAssignment
+}
+
+export interface StudentSimulationAssignment {
+  id: string
+  simulation_assignment_id: string
+  student_id: string
+  
+  // Individual student status
+  status: 'assigned' | 'started' | 'in_progress' | 'completed' | 'submitted' | 'graded' | 'overdue'
+  started_at?: string
+  completed_at?: string // When simulation was completed
+  submitted_at?: string // When questions were submitted (if any)
+  
+  // Simulation completion tracking
+  simulation_completed: boolean
+  time_spent_in_simulation: number // Total time in seconds
+  interactions_count: number // Number of interactions logged
+  data_exported: boolean // Whether student exported data
+  
+  // Question responses (if assignment has questions)
+  question_responses?: any[] // Array of QuestionResponse objects
+  
+  // Time tracking
+  total_time_spent: number // Total time including questions (seconds)
+  last_accessed?: string
+  
+  // Grading (Phase 1 - Standards-based)
+  letter_grade?: 'A' | 'B' | 'C' | 'Fail' // Standards-based grade
+  score?: number // Numeric score if questions included
+  max_score?: number
+  rubric_scores?: Record<string, number> // Scores for each rubric criterion
+  feedback?: string
+  graded_at?: string
+  graded_by?: string
+  
+  created_at: string
+  updated_at: string
+  
+  // Populated data
+  student?: StudentInfo
+  simulation_assignment?: SimulationAssignment
 }
 
 export interface AssignmentReminder {
@@ -248,12 +344,29 @@ export interface CreateAssignmentAssignmentRequest {
   published?: boolean
 }
 
+export interface CreateSimulationAssignmentRequest {
+  simulation_id: string
+  course_id?: string
+  assigned_students?: string[]
+  due_date?: string
+  title?: string
+  instructions?: string
+  min_time_required?: number
+  requires_data_export?: boolean
+  rubric_id?: string
+  questions?: any[]
+  published?: boolean
+}
+
 export interface UpdateStudentAssignmentStatusRequest {
-  status: StudentLessonAssignment['status'] | StudentAssignmentAssignment['status']
+  status: StudentLessonAssignment['status'] | StudentAssignmentAssignment['status'] | StudentSimulationAssignment['status']
   progress_percentage?: number
   time_spent?: number
+  simulation_completed?: boolean
+  data_exported?: boolean
   score?: number
   max_score?: number
+  letter_grade?: 'A' | 'B' | 'C' | 'Fail'
   feedback?: string
 }
 
@@ -265,14 +378,14 @@ export interface AssignmentFilters {
   due_date_to?: string
   is_active?: boolean
   published?: boolean
-  assignment_type?: 'lesson' | 'assignment'
+  assignment_type?: 'lesson' | 'assignment' | 'simulation'
 }
 
 export interface StudentAssignmentFilters {
   student_id?: string
   course_id?: string
   status?: string
-  assignment_type?: 'lesson' | 'assignment'
+  assignment_type?: 'lesson' | 'assignment' | 'simulation'
   due_date_from?: string
   due_date_to?: string
   overdue_only?: boolean
@@ -284,6 +397,7 @@ export interface AssignmentAnalytics {
   total_assignments: number
   total_lesson_assignments: number
   total_homework_assignments: number
+  total_simulation_assignments: number
   
   by_status: {
     assigned: number
@@ -299,8 +413,8 @@ export interface AssignmentAnalytics {
     completion_rate: number
   }>
   
-  recent_assignments: Array<LessonAssignment | AssignmentAssignment>
-  overdue_assignments: Array<StudentLessonAssignment | StudentAssignmentAssignment>
+  recent_assignments: Array<LessonAssignment | AssignmentAssignment | SimulationAssignment>
+  overdue_assignments: Array<StudentLessonAssignment | StudentAssignmentAssignment | StudentSimulationAssignment>
   
   completion_rates: {
     overall: number
@@ -308,6 +422,7 @@ export interface AssignmentAnalytics {
     by_assignment_type: {
       lessons: number
       assignments: number
+      simulations: number
     }
   }
 }
@@ -324,23 +439,26 @@ export interface StudentProgress {
   
   completion_rate: number
   average_score?: number
+  average_letter_grade?: string // For simulation standards-based grades
   total_time_spent: number // in seconds
   
   recent_activity: Array<{
-    type: 'lesson' | 'assignment'
+    type: 'lesson' | 'assignment' | 'simulation'
     title: string
     status: string
     last_accessed?: string
     completed_at?: string
     score?: number
+    letter_grade?: 'A' | 'B' | 'C' | 'Fail'
   }>
 }
 
 // Utility types
 
-export type AssignmentType = 'lesson' | 'assignment'
+export type AssignmentType = 'lesson' | 'assignment' | 'simulation'
 export type AssignmentStatus = 'assigned' | 'started' | 'in_progress' | 'completed' | 'submitted' | 'graded' | 'overdue'
 export type ReminderType = 'due_soon' | 'overdue' | 'incomplete'
+export type LetterGrade = 'A' | 'B' | 'C' | 'Fail'
 
 // Combined types for unified views
 
@@ -377,7 +495,7 @@ export interface UnifiedAssignment {
 export interface UnifiedStudentAssignment {
   id: string
   type: AssignmentType
-  content_id: string // lesson_id or assignment_id
+  content_id: string // lesson_id, assignment_id, or simulation_id
   title: string
   description?: string
   instructions?: string
@@ -399,6 +517,7 @@ export interface UnifiedStudentAssignment {
   score?: number
   max_score?: number
   percentage?: number
+  letter_grade?: LetterGrade // For standards-based simulation grading
   feedback?: string
   graded_at?: string
   
@@ -406,6 +525,10 @@ export interface UnifiedStudentAssignment {
   attempts_used?: number
   max_attempts?: number
   current_submission_id?: string
+  
+  // Simulation-specific
+  simulation_completed?: boolean
+  data_exported?: boolean
   
   created_at: string
   updated_at: string

@@ -27,8 +27,6 @@ export interface GoogleClassroomStudent {
       familyName: string
       fullName: string
     }
-    emailAddress: string
-    photoUrl?: string
   }
   studentWorkFolder?: {
     id: string
@@ -48,8 +46,6 @@ export interface GoogleClassroomEnrollment {
       familyName: string
       fullName: string
     }
-    emailAddress: string
-    photoUrl?: string
   }
 }
 
@@ -106,8 +102,8 @@ class GoogleClassroomAPI {
    */
   async getStudents(courseId: string): Promise<GoogleClassroomStudent[]> {
     try {
-      // Explicitly request all profile fields including email
-      const response = await this.makeRequest(`/courses/${courseId}/students?fields=students(userId,profile(id,name,emailAddress,photoUrl))`) as { students?: GoogleClassroomStudent[] }
+      // Request only essential profile fields (name only, no email or photo)
+      const response = await this.makeRequest(`/courses/${courseId}/students?fields=students(userId,profile(id,name))`) as { students?: GoogleClassroomStudent[] }
       return response.students || []
     } catch (error) {
       console.error('Error fetching students:', error)
@@ -201,7 +197,7 @@ export async function initializeGoogleClassroomAuth(): Promise<string> {
       // Initialize the token client
       const tokenClient = window.google.accounts.oauth2.initTokenClient({
         client_id: clientId,
-        scope: 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.rosters https://www.googleapis.com/auth/classroom.profile.emails https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
+        scope: 'https://www.googleapis.com/auth/classroom.courses.readonly https://www.googleapis.com/auth/classroom.rosters.readonly https://www.googleapis.com/auth/classroom.rosters',
         callback: (response: TokenResponse) => {
           if (response.error) {
             // Provide more detailed error information

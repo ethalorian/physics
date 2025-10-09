@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Check, X, RotateCcw, Target, Ruler, Move } from 'lucide-react'
 import Link from 'next/link'
+import { SimulationWrapper, AIHintButton } from '@/components/simulations/SimulationWrapper'
 
 interface MeasurementDevice {
   name: string
@@ -617,7 +618,16 @@ function InteractiveMeasurement({ device }: InteractiveMeasurementProps) {
   )
 }
 
-export default function MeasurementPrecisionSimulation() {
+// Internal component with simulation logic
+function MeasurementPrecisionSimulationContent({ 
+  onInteraction, 
+  onComplete, 
+  requestAIHint 
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+  requestAIHint: (question: string) => Promise<string>
+}) {
   const [selectedDevice, setSelectedDevice] = useState<MeasurementDevice>(devices[0])
   const [currentProblem, setCurrentProblem] = useState<MeasurementProblem | null>(null)
   const [userAnswer, setUserAnswer] = useState('')
@@ -625,6 +635,7 @@ export default function MeasurementPrecisionSimulation() {
   const [score, setScore] = useState({ correct: 0, total: 0 })
   const [showHint, setShowHint] = useState(false)
   const [demoDevice, setDemoDevice] = useState<MeasurementDevice>(devices[0])
+  const [aiHint, setAiHint] = useState<string | null>(null)
 
   const generateProblem = useCallback((device: MeasurementDevice) => {
     const trueValue = Number((Math.random() * (device.range[1] - device.range[0] - 10) + 5).toFixed(1))
@@ -649,7 +660,15 @@ export default function MeasurementPrecisionSimulation() {
     setUserAnswer('')
     setFeedback(null)
     setShowHint(false)
-  }, [])
+    
+    // Track problem generation
+    onInteraction('generate-problem', {
+      device: device.name,
+      precision: device.precision,
+      trueValue,
+      objectPosition
+    })
+  }, [onInteraction])
 
   const checkAnswer = useCallback(() => {
     if (!currentProblem || !userAnswer) return
@@ -669,7 +688,8 @@ export default function MeasurementPrecisionSimulation() {
 
     const correct = isCorrectValue && hasCorrectPrecision
 
-    setScore(prev => ({ correct: prev.correct + (correct ? 1 : 0), total: prev.total + 1 }))
+    const newScore = { correct: score.correct + (correct ? 1 : 0), total: score.total + 1 }
+    setScore(newScore)
 
     if (correct) {
       setFeedback({
@@ -687,7 +707,25 @@ export default function MeasurementPrecisionSimulation() {
         message: `Not quite. The correct measurement is approximately ${objectPosition.toFixed(expectedDecimals)} ${device.unit}. Remember to read the scale carefully.`
       })
     }
-  }, [currentProblem, userAnswer])
+    
+    // Track answer attempt
+    onInteraction('check-answer', {
+      device: device.name,
+      userAnswer: answer,
+      correctAnswer: objectPosition,
+      correct,
+      hasCorrectPrecision,
+      newScore
+    })
+    
+    // If student has done 5+ problems with good accuracy, mark as complete
+    if (newScore.total >= 5 && newScore.correct / newScore.total >= 0.6) {
+      onComplete({ 
+        totalAttempts: newScore.total,
+        correctAnswers: newScore.correct 
+      }, Math.round((newScore.correct / newScore.total) * 100))
+    }
+  }, [currentProblem, userAnswer, score, onInteraction, onComplete])
 
   const resetScore = useCallback(() => {
     setScore({ correct: 0, total: 0 })
@@ -1104,5 +1142,18 @@ export default function MeasurementPrecisionSimulation() {
         </Tabs>
       </div>
     </div>
+  )
+}
+
+// Wrapped export with tracking
+export default function MeasurementPrecisionSimulation() {
+  return (
+    <SimulationWrapper
+      simulationSlug="measurement-precision"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <MeasurementPrecisionSimulationContent {...props} />}
+    </SimulationWrapper>
   )
 }

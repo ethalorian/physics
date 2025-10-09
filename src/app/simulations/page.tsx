@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -12,7 +12,9 @@ import {
   Search,
   TrendingUp,
   Clock,
-  BookOpen
+  BookOpen,
+  Database,
+  AlertCircle
 } from 'lucide-react'
 
 interface Simulation {
@@ -27,13 +29,8 @@ interface Simulation {
   isFeatured?: boolean
 }
 
-export default function SimulationsPage() {
-  const { data: session } = useSession()
-  const router = useRouter()
-  const [searchQuery, setSearchQuery] = useState('')
-
-  // Mock simulations data - in production this would come from database
-  const [simulations] = useState<Simulation[]>([
+// Mock data as fallback (for backward compatibility)
+const MOCK_SIMULATIONS: Simulation[] = [
     {
       id: '1',
       title: 'Measurement, Precision & Accuracy',
@@ -47,6 +44,17 @@ export default function SimulationsPage() {
     },
     {
       id: '2',
+      title: 'Constant Velocity Motion Lab',
+      description: 'Control a walker\'s motion and collect position data. Observe constant velocity in 1D motion and analyze position-time graphs.',
+      slug: 'constant-velocity',
+      difficulty: 'beginner',
+      unit: 'Unit 1: Motion',
+      estimatedTime: 15,
+      published: true,
+      isFeatured: true
+    },
+    {
+      id: '3',
       title: 'Freefall Cliff Lab',
       description: 'Help a traveler measure cliff height by dropping a stone! Watch position traces every 0.25 seconds and use the freefall equation h = ½gt² to calculate the height.',
       slug: 'freefall-cliff',
@@ -54,27 +62,16 @@ export default function SimulationsPage() {
       unit: 'Unit 1: Motion',
       estimatedTime: 20,
       published: true,
-      isFeatured: true
+      isFeatured: false
     },
     {
-      id: '3',
+      id: '4',
       title: 'Uniformly Accelerated Motion',
       description: 'Watch a car drop oil spots every second to visualize constant acceleration. Explore all four kinematic equations and see how spacing patterns reveal acceleration.',
       slug: 'uniformly-accelerated-motion',
       difficulty: 'intermediate',
       unit: 'Unit 1: Motion',
       estimatedTime: 25,
-      published: true,
-      isFeatured: false
-    },
-    {
-      id: '4',
-      title: 'Constant Velocity Motion Lab',
-      description: 'Control a walker\'s motion and collect position data. Observe constant velocity in 1D motion and analyze position-time graphs.',
-      slug: 'constant-velocity',
-      difficulty: 'beginner',
-      unit: 'Unit 1: Motion',
-      estimatedTime: 15,
       published: true,
       isFeatured: false
     },
@@ -89,7 +86,58 @@ export default function SimulationsPage() {
       published: true,
       isFeatured: false
     }
-  ])
+]
+
+export default function SimulationsPage() {
+  const { data: session } = useSession()
+  const router = useRouter()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [simulations, setSimulations] = useState<Simulation[]>(MOCK_SIMULATIONS)
+  const [isUsingDatabase, setIsUsingDatabase] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  // Try to load from database, fallback to mock data
+  useEffect(() => {
+    async function loadSimulations() {
+      try {
+        const response = await fetch('/api/simulations?published=true')
+        
+        if (response.ok) {
+          const data = await response.json()
+          
+          if (data.simulations && data.simulations.length > 0) {
+            // Map database format to display format
+            const mappedSims = data.simulations.map((sim: any) => ({
+              id: sim.id,
+              title: sim.title,
+              description: sim.description || '',
+              slug: sim.slug,
+              difficulty: sim.difficulty || 'intermediate',
+              unit: sim.unit,
+              estimatedTime: sim.estimated_time || 20,
+              published: sim.published,
+              // Feature beginner labs, lab-skills, or high-viewed sims
+              isFeatured: sim.difficulty === 'beginner' || sim.category === 'lab-skills' || sim.view_count > 10
+            }))
+            
+            setSimulations(mappedSims)
+            setIsUsingDatabase(true)
+            console.log('✓ Loaded simulations from database')
+          } else {
+            console.log('ℹ️ Using mock data (no simulations in database yet)')
+          }
+        } else {
+          console.log('ℹ️ Using mock data (database not available)')
+        }
+      } catch (error) {
+        console.log('ℹ️ Using mock data (error loading from database):', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadSimulations()
+  }, [])
 
   const filteredSimulations = simulations.filter(sim => 
     sim.published && (
@@ -112,14 +160,40 @@ export default function SimulationsPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Physics Simulations</h1>
-        <p className="text-muted-foreground">
-          Interactive labs and experiments to explore physics concepts
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Physics Simulations</h1>
+            <p className="text-muted-foreground">
+              Interactive labs and experiments to explore physics concepts
+            </p>
+          </div>
+          {isUsingDatabase && (
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+              <Database className="h-3 w-3 mr-1" />
+              Database Active
+            </Badge>
+          )}
+          {!isUsingDatabase && (
+            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
+              <AlertCircle className="h-3 w-3 mr-1" />
+              Mock Data
+            </Badge>
+          )}
+        </div>
       </div>
 
       {/* Search Bar */}

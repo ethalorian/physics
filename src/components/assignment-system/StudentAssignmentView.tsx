@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { 
   Calendar, Clock, BookOpen, FileText, Play, CheckCircle, 
-  AlertTriangle, XCircle, Eye, RotateCcw, Timer
+  AlertTriangle, XCircle, Eye, RotateCcw, Timer, FlaskConical
 } from 'lucide-react'
 import { useAssignmentSystem } from '@/contexts/AssignmentSystemContext'
 import { UnifiedStudentAssignment, StudentAssignmentFilters } from '@/types/assignment-system'
@@ -93,6 +93,17 @@ export function StudentAssignmentView({ studentId }: StudentAssignmentViewProps)
     const now = new Date()
     const isOverdue = assignment.due_date && isAfter(now, parseISO(assignment.due_date))
     
+    // Show letter grade for graded simulation assignments
+    if (assignment.type === 'simulation' && assignment.letter_grade) {
+      const gradeColors = {
+        'A': 'bg-green-500 hover:bg-green-600',
+        'B': 'bg-blue-500 hover:bg-blue-600',
+        'C': 'bg-yellow-500 hover:bg-yellow-600',
+        'Fail': 'bg-red-500 hover:bg-red-600'
+      }
+      return <Badge className={gradeColors[assignment.letter_grade]}>Grade: {assignment.letter_grade}</Badge>
+    }
+    
     if (assignment.status === 'completed' || assignment.status === 'graded') {
       return <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
     }
@@ -153,6 +164,43 @@ export function StudentAssignmentView({ studentId }: StudentAssignmentViewProps)
   const getActionButton = (assignment: UnifiedStudentAssignment) => {
     const isOverdue = assignment.due_date && isAfter(new Date(), parseISO(assignment.due_date))
     
+    // Simulation-specific handling
+    if (assignment.type === 'simulation') {
+      const simulationSlug = assignment.content_id // Assuming content_id is the slug for simulations
+      
+      if (assignment.status === 'completed' || assignment.status === 'graded') {
+        return (
+          <Button variant="outline" size="sm" asChild>
+            <Link href={`/simulations/${simulationSlug}`}>
+              <Eye className="h-4 w-4 mr-2" />
+              View Results
+            </Link>
+          </Button>
+        )
+      }
+      
+      if (assignment.status === 'in_progress' || assignment.status === 'started') {
+        return (
+          <Button size="sm" asChild className="bg-purple-600 hover:bg-purple-700">
+            <Link href={`/simulations/${simulationSlug}`}>
+              <FlaskConical className="h-4 w-4 mr-2" />
+              Continue Lab
+            </Link>
+          </Button>
+        )
+      }
+      
+      return (
+        <Button size="sm" asChild disabled={!!isOverdue} className="bg-purple-600 hover:bg-purple-700">
+          <Link href={`/simulations/${simulationSlug}`}>
+            <FlaskConical className="h-4 w-4 mr-2" />
+            Start Lab
+          </Link>
+        </Button>
+      )
+    }
+    
+    // Original handling for lessons and assignments
     if (assignment.status === 'completed' || assignment.status === 'graded') {
       return (
         <Button variant="outline" size="sm" asChild>
@@ -204,7 +252,15 @@ export function StudentAssignmentView({ studentId }: StudentAssignmentViewProps)
   }
 
   const getTypeIcon = (type: string) => {
-    return type === 'lesson' ? <BookOpen className="h-4 w-4" /> : <FileText className="h-4 w-4" />
+    switch (type) {
+      case 'lesson':
+        return <BookOpen className="h-4 w-4" />
+      case 'simulation':
+        return <FlaskConical className="h-4 w-4 text-purple-600" />
+      case 'assignment':
+      default:
+        return <FileText className="h-4 w-4" />
+    }
   }
 
   if (studentLoading) {
@@ -222,7 +278,7 @@ export function StudentAssignmentView({ studentId }: StudentAssignmentViewProps)
         <div>
           <h2 className="text-2xl font-bold">My Assignments</h2>
           <p className="text-muted-foreground">
-            Track your lessons and homework assignments
+            Track your lessons, homework, and simulation labs
           </p>
         </div>
       </div>

@@ -315,7 +315,7 @@ export function CreateLessonAssignmentForm({
                               }}
                             />
                             <Label htmlFor={`student-${student.id}`} className="text-sm font-normal cursor-pointer">
-                              {student.name} ({student.email})
+                              {student.name} (ID: {student.google_user_id || student.id})
                             </Label>
                           </div>
                         ))
@@ -691,7 +691,7 @@ export function CreateHomeworkAssignmentForm({
                               }}
                             />
                             <Label htmlFor={`student-hw-${student.id}`} className="text-sm font-normal cursor-pointer">
-                              {student.name} ({student.email})
+                              {student.name} (ID: {student.google_user_id || student.id})
                             </Label>
                           </div>
                         ))

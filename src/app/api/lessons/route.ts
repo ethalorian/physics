@@ -1,9 +1,11 @@
+// Next.js imports
 import { NextRequest, NextResponse } from 'next/server'
+
+// Internal imports
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
-// GET - Get all lessons for assignment creation
+// GET - Fetch lessons
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
@@ -11,28 +13,28 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
     const { searchParams } = new URL(request.url)
-    const unit = searchParams.get('unit')
-    const published = searchParams.get('published') !== 'false' // Default to true
-
+    const unitId = searchParams.get('unit_id')
+    const slug = searchParams.get('slug')
+    const published = searchParams.get('published')
+    
     // Build query
     let query = supabaseAdmin
       .from('lessons')
-      .select('id, title, slug, description, unit, lesson_number, estimated_time, objectives, published')
-      .order('unit', { ascending: true })
-      .order('lesson_number', { ascending: true })
+      .select('*')
+      .order('unit_id, order_index', { ascending: true })
 
     // Apply filters
-    if (unit) {
-      query = query.eq('unit', unit)
+    if (unitId) {
+      query = query.eq('unit_id', unitId)
     }
-    if (published) {
-      query = query.eq('published', true)
+    
+    if (slug) {
+      query = query.eq('slug', slug)
+    }
+    
+    if (published !== null) {
+      query = query.eq('published', published === 'true')
     }
 
     const { data: lessons, error } = await query
@@ -42,18 +44,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ 
-      lessons: lessons || [],
-      totalCount: lessons?.length || 0
-    })
+    return NextResponse.json(lessons || [])
 
   } catch (error) {
-    console.error('Lessons API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
+    console.error('Error in GET /api/lessons:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
-
-

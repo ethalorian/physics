@@ -14,6 +14,7 @@ import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
 import { ViewModeProvider } from '@/contexts/ViewModeContext'
+import { SimulationProvider } from '@/contexts/SimulationContext'
 import { ToastProvider } from '@/providers/toast-provider'
 
 const inter = Inter({ 
@@ -43,16 +44,18 @@ export default function RootLayout({
             <ViewModeProvider>
               <QuestionBankProvider>
                 <VocabularyProvider>
-                  <StudentActivityProvider>
-                    <AssignmentProvider>
-                      <AssignmentSystemProvider>
-                        <Navbar />
-                        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-                          {children}
-                        </main>
-                      </AssignmentSystemProvider>
-                    </AssignmentProvider>
-                  </StudentActivityProvider>
+                  <SimulationProvider>
+                    <StudentActivityProvider>
+                      <AssignmentProvider>
+                        <AssignmentSystemProvider>
+                          <Navbar />
+                          <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+                            {children}
+                          </main>
+                        </AssignmentSystemProvider>
+                      </AssignmentProvider>
+                    </StudentActivityProvider>
+                  </SimulationProvider>
                 </VocabularyProvider>
               </QuestionBankProvider>
             </ViewModeProvider>

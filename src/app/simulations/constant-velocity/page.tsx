@@ -2,11 +2,16 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
   ArrowLeft,
   Play,
@@ -18,7 +23,10 @@ import {
   Info,
   ChevronLeft,
   ChevronRight,
-  Square
+  Square,
+  FileText,
+  Plus,
+  Settings
 } from 'lucide-react'
 
 interface DataPoint {
@@ -29,8 +37,20 @@ interface DataPoint {
 
 type Direction = 'forward' | 'backward' | 'stopped'
 
-export default function ConstantVelocityLab() {
+// Internal component with simulation logic
+function ConstantVelocityLabContent({
+  onInteraction,
+  onComplete,
+  requestAIHint
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+  requestAIHint: (question: string) => Promise<string>
+}) {
   const router = useRouter()
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
 
   // Simulation state
   const [isRunning, setIsRunning] = useState(false)
@@ -39,9 +59,46 @@ export default function ConstantVelocityLab() {
   const [position, setPosition] = useState(0) // meters from origin
   const [dataPoints, setDataPoints] = useState<DataPoint[]>([])
   const [currentTime, setCurrentTime] = useState(0)
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
   
   const dataIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const animationIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const totalSimulationTime = useRef(0)
+
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=constant-velocity')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isRunning) {
+        totalSimulationTime.current += 1
+      }
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [isRunning])
 
   // Collect data every second
   useEffect(() => {
@@ -97,10 +154,23 @@ export default function ConstantVelocityLab() {
 
   const handleStart = () => {
     setIsRunning(true)
+    onInteraction('start', { speed, direction, position })
   }
 
   const handlePause = () => {
     setIsRunning(false)
+    onInteraction('pause', { currentTime, position, dataPoints: dataPoints.length })
+    
+    // Mark as complete if they collected 10+ data points
+    if (dataPoints.length >= 10) {
+      setSimulationCompleted(true)
+      onComplete({
+        totalTime: currentTime,
+        totalDataPoints: dataPoints.length,
+        finalPosition: position,
+        averageSpeed: speed
+      }, 100)
+    }
   }
 
   const handleReset = () => {
@@ -109,10 +179,12 @@ export default function ConstantVelocityLab() {
     setPosition(0)
     setCurrentTime(0)
     setDataPoints([])
+    onInteraction('reset', {})
   }
 
   const handleDirection = (dir: Direction) => {
     setDirection(dir)
+    onInteraction('change-direction', { direction: dir, speed })
   }
 
   const handleExportData = () => {
@@ -160,7 +232,44 @@ export default function ConstantVelocityLab() {
               Control a walker&apos;s motion and collect position data. Observe constant velocity in 1D motion.
             </p>
           </div>
-          <Badge variant="default">Beginner</Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="default">Beginner</Badge>
+            {isAdmin && (
+              <div className="flex gap-2">
+                {assignments.length > 0 && (
+                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    <FileText className="h-3 w-3 mr-1" />
+                    {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -417,7 +526,10 @@ export default function ConstantVelocityLab() {
                 </div>
                 <Slider
                   value={[speed]}
-                  onValueChange={([value]) => setSpeed(value)}
+                  onValueChange={([value]) => {
+                    setSpeed(value)
+                    onInteraction('change-speed', { speed: value })
+                  }}
                   min={0.5}
                   max={3}
                   step={0.1}
@@ -540,6 +652,51 @@ export default function ConstantVelocityLab() {
           </Card>
         </div>
       </div>
+
+      {/* Assignment Components */}
+      {!isAdmin && (
+        <SimulationAssignment
+          simulationSlug="constant-velocity"
+          simulationTime={totalSimulationTime.current}
+          simulationCompleted={simulationCompleted}
+          simulationData={{
+            dataPoints: dataPoints,
+            finalPosition: position,
+            totalTime: currentTime,
+            averageSpeed: speed
+          }}
+        />
+      )}
+
+      {isAdmin && showAssignmentEditor && (
+        <SimulationAssignmentEditor
+          isOpen={showAssignmentEditor}
+          onClose={() => {
+            setShowAssignmentEditor(false)
+            setEditingAssignment(null)
+          }}
+          simulationSlug="constant-velocity"
+          assignment={editingAssignment}
+          onSave={(assignment) => {
+            loadAssignments()
+            setShowAssignmentEditor(false)
+            setEditingAssignment(null)
+          }}
+        />
+      )}
     </div>
+  )
+}
+
+// Wrapped export with tracking
+export default function ConstantVelocityLab() {
+  return (
+    <SimulationWrapper
+      simulationSlug="constant-velocity"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <ConstantVelocityLabContent {...props} />}
+    </SimulationWrapper>
   )
 }

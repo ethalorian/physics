@@ -13,8 +13,10 @@ import {
   Settings,
   BarChart3,
   Eye,
-  Plus
+  Loader2
 } from 'lucide-react'
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 interface Simulation {
   id: string
@@ -32,29 +34,74 @@ export default function AdminSimulationsPage() {
   const router = useRouter()
   const userRole = getUserRole(session?.user?.email)
 
-  // Mock simulations data - in production this would come from database
-  const [simulations] = useState<Simulation[]>([
-    {
-      id: '1',
-      title: 'Constant Velocity Motion Lab',
-      description: 'Control a walker\'s motion and collect position data. Observe constant velocity in 1D motion.',
-      slug: 'constant-velocity',
-      difficulty: 'beginner',
-      unit: 'Unit 1: Motion',
-      published: true,
-      totalPlays: 156
-    },
-    {
-      id: '2',
-      title: 'Projectile Motion Lab',
-      description: 'Launch projectiles and analyze 2D motion under gravity. Explore range, height, and trajectory.',
-      slug: 'projectile-motion',
-      difficulty: 'intermediate',
-      unit: 'Unit 1: Motion',
-      published: true,
-      totalPlays: 89
+  const [simulations, setSimulations] = useState<Simulation[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch simulations from database
+  const loadSimulations = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/simulations?published=all')
+      
+      if (response.ok) {
+        const data = await response.json()
+        const mappedSims = (data.simulations || []).map((sim: any) => ({
+          id: sim.id,
+          title: sim.title,
+          description: sim.description || '',
+          slug: sim.slug,
+          difficulty: sim.difficulty || 'intermediate',
+          unit: sim.unit,
+          published: sim.published,
+          totalPlays: sim.view_count || 0
+        }))
+        setSimulations(mappedSims)
+      } else {
+        console.log('Could not load simulations from database')
+      }
+    } catch (error) {
+      console.error('Error loading simulations:', error)
+    } finally {
+      setLoading(false)
     }
-  ])
+  }
+
+  useEffect(() => {
+    if (status !== 'loading') {
+      loadSimulations()
+    }
+  }, [status])
+
+  // Toggle published status
+  const togglePublished = async (id: string, currentStatus: boolean) => {
+    try {
+      const response = await fetch('/api/simulations', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          published: !currentStatus
+        })
+      })
+
+      if (response.ok) {
+        // Update local state
+        setSimulations(prev => 
+          prev.map(sim => 
+            sim.id === id ? { ...sim, published: !currentStatus } : sim
+          )
+        )
+        console.log('✓ Published status updated')
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        console.error('Failed to update published status:', response.status, errorData)
+        alert(`Failed to update: ${errorData.error || 'Unknown error'}\n\nMake sure you've run the database migration first.`)
+      }
+    } catch (error) {
+      console.error('Error updating simulation:', error)
+      alert('Error: Could not connect to database. Have you run the migration?')
+    }
+  }
 
   // Handle authentication redirect in useEffect
   useEffect(() => {
@@ -70,11 +117,11 @@ export default function AdminSimulationsPage() {
     }
   }, [session, status, userRole, router])
 
-  // Show loading while checking auth
-  if (status === 'loading') {
+  // Show loading while checking auth or loading simulations
+  if (status === 'loading' || (loading && simulations.length === 0)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -83,7 +130,7 @@ export default function AdminSimulationsPage() {
   if (!session || (userRole !== 'admin' && userRole !== 'teacher')) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -121,9 +168,11 @@ export default function AdminSimulationsPage() {
               Manage interactive physics simulations and labs
             </p>
           </div>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Simulation
+          <Button asChild variant="outline">
+            <a href="/admin/simulations/analytics">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View Analytics
+            </a>
           </Button>
         </div>
       </div>
@@ -175,10 +224,13 @@ export default function AdminSimulationsPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {Math.round(
-                simulations.reduce((sum, s) => sum + (s.totalPlays || 0), 0) / 
-                simulations.length
-              )}
+              {simulations.length > 0 
+                ? Math.round(
+                    simulations.reduce((sum, s) => sum + (s.totalPlays || 0), 0) / 
+                    simulations.length
+                  )
+                : 0
+              }
             </div>
           </CardContent>
         </Card>
@@ -192,34 +244,31 @@ export default function AdminSimulationsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <Play className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-semibold mb-2">No simulations yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Create your first interactive physics simulation
+              <h3 className="text-lg font-semibold mb-2">No simulations available</h3>
+              <p className="text-muted-foreground">
+                Physics simulations will appear here once they are added to the system
               </p>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Simulation
-              </Button>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {simulations.map((simulation) => (
               <Card key={simulation.id} className="hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
-                    <Badge 
-                      variant={simulation.published ? "default" : "secondary"}
-                      className="mb-2"
-                    >
-                      {simulation.published ? 'Published' : 'Draft'}
-                    </Badge>
-                    <Badge 
-                      variant="outline" 
-                      className={getDifficultyColor(simulation.difficulty)}
-                    >
-                      {simulation.difficulty}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge 
+                        variant={simulation.published ? "default" : "secondary"}
+                      >
+                        {simulation.published ? 'Published' : 'Draft'}
+                      </Badge>
+                      <Badge 
+                        variant="outline" 
+                        className={getDifficultyColor(simulation.difficulty)}
+                      >
+                        {simulation.difficulty}
+                      </Badge>
+                    </div>
                   </div>
                   <CardTitle className="text-lg">{simulation.title}</CardTitle>
                   <CardDescription className="line-clamp-2">
@@ -227,7 +276,7 @@ export default function AdminSimulationsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="text-sm text-muted-foreground">
                       {simulation.unit}
                     </div>
@@ -235,9 +284,21 @@ export default function AdminSimulationsPage() {
                     {simulation.totalPlays !== undefined && (
                       <div className="flex items-center text-sm text-muted-foreground">
                         <Play className="h-4 w-4 mr-1" />
-                        <span>{simulation.totalPlays} plays</span>
+                        <span>{simulation.totalPlays} views</span>
                       </div>
                     )}
+
+                    {/* Published Toggle */}
+                    <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                      <Label htmlFor={`published-${simulation.id}`} className="text-sm font-medium cursor-pointer">
+                        Published
+                      </Label>
+                      <Switch
+                        id={`published-${simulation.id}`}
+                        checked={simulation.published}
+                        onCheckedChange={() => togglePublished(simulation.id, simulation.published)}
+                      />
+                    </div>
 
                     <div className="flex gap-2 pt-2">
                       <Button 
@@ -252,14 +313,7 @@ export default function AdminSimulationsPage() {
                       <Button 
                         variant="outline" 
                         size="sm"
-                        className="flex-1"
-                      >
-                        <Settings className="h-4 w-4 mr-2" />
-                        Edit
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
+                        onClick={() => router.push(`/admin/simulations/analytics`)}
                       >
                         <BarChart3 className="h-4 w-4" />
                       </Button>
