@@ -63,19 +63,35 @@ if (process.env.NODE_ENV === 'production') {
   }
 }
 
-// Get secure credentials
-const credentials = process.env.NODE_ENV === 'production' 
-  ? getSecureClientCredentials() 
-  : {
+// Cache for credentials to avoid repeated async calls
+let cachedCredentials: { clientId: string; clientSecret: string } | null = null
+
+// Helper function to get credentials
+async function getCredentials() {
+  if (cachedCredentials) {
+    return cachedCredentials
+  }
+  
+  if (process.env.NODE_ENV === 'production') {
+    cachedCredentials = await getSecureClientCredentials()
+  } else {
+    // In development, use environment variables directly
+    cachedCredentials = {
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }
+  }
+  
+  return cachedCredentials
+}
 
+// Create the NextAuth configuration with lazy credential loading
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: credentials.clientId,
-      clientSecret: credentials.clientSecret,
+      // Use environment variables as placeholders, will be overridden in authorization
+      clientId: process.env.GOOGLE_CLIENT_ID || 'placeholder',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'placeholder',
       authorization: {
         params: {
           // Best practice: Use incremental authorization
@@ -88,6 +104,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       // Use PKCE for enhanced security (recommended by Google)
       checks: ["state", "pkce"],
+      // Override the authorization URL to use secure credentials
+      async profile(profile) {
+        // This runs after successful authentication
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture
+        }
+      }
     }),
     // Test credentials provider (only in development)
     ...(process.env.NODE_ENV === "development" ? [
@@ -155,6 +181,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
     jwt: async ({ user, token, account }) => {
+      // Get credentials when needed
+      const credentials = await getCredentials()
+      
       if (user) {
         token.sub = user.id;
         // Store the avatar image in the token

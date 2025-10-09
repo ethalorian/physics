@@ -227,18 +227,40 @@ export function isTokenExpired(expiresAt: number): boolean {
  * Securely stores client credentials
  * Best practice: Handle client credentials securely
  */
-export function getSecureClientCredentials() {
-  // In production, these should come from a secure secret manager
-  // like Google Cloud Secret Manager, AWS Secrets Manager, etc.
+export async function getSecureClientCredentials() {
+  // Import dynamically to avoid circular dependencies
+  const { SecretManagerFactory, getCachedSecret } = await import('./secret-manager')
   
-  if (process.env.NODE_ENV === 'production') {
-    // TODO: Integrate with secret manager
-    console.warn('Using environment variables for client credentials. Consider using a secret manager.')
+  // Check if a proper secret manager is configured
+  const isProperlyConfigured = SecretManagerFactory.isConfigured()
+  
+  if (process.env.NODE_ENV === 'production' && !isProperlyConfigured) {
+    console.warn('Warning: Using environment variables for client credentials in production')
+    console.warn('Consider configuring a secret manager for enhanced security:')
+    console.warn('  - Google Cloud Secret Manager: Set GCP_PROJECT_ID')
+    console.warn('  - Vercel: Deploy to Vercel platform')
+    console.warn('  - Or set ALLOW_ENV_SECRETS=true to suppress this warning')
+  }
+  
+  // Retrieve credentials from secret manager with fallback to env vars
+  const [clientId, clientSecret] = await Promise.all([
+    getCachedSecret('google-client-id', 'GOOGLE_CLIENT_ID'),
+    getCachedSecret('google-client-secret', 'GOOGLE_CLIENT_SECRET')
+  ])
+  
+  if (!clientId || !clientSecret) {
+    throw new Error('Google OAuth credentials not found in secret manager or environment variables')
+  }
+  
+  // Only warn about development secrets if we detect them
+  if (process.env.NODE_ENV === 'production' && clientSecret.includes('GOCSPX-')) {
+    console.warn('Warning: Using a development client secret in production')
+    console.warn('Please regenerate your OAuth client credentials for production use')
   }
   
   return {
-    clientId: process.env.GOOGLE_CLIENT_ID!,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET!
+    clientId,
+    clientSecret
   }
 }
 
