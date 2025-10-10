@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,7 +11,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
-import { RotateCcw, TrendingUp, Gauge, MapPin, Lightbulb } from 'lucide-react'
+import { RotateCcw, TrendingUp, Gauge, MapPin, Lightbulb, Plus, Settings, FileText } from 'lucide-react'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface Point {
   x: number
@@ -36,13 +41,58 @@ const presets = {
   ]
 }
 
-export default function AreaUnderCurvePage() {
+function AreaUnderCurveContent({
+  onInteraction,
+  onComplete
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+}) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const [graphType, setGraphType] = useState<GraphType>('velocity-time')
   const [point1, setPoint1] = useState<Point>({ x: 0, y: 5 })
   const [point2, setPoint2] = useState<Point>({ x: 4, y: 5 })
   const [numRectangles, setNumRectangles] = useState(4) // For position-time approximation
   const [v0, setV0] = useState(0) // Initial velocity for position-time
   const [acceleration, setAcceleration] = useState(0) // Acceleration for position-time
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=area-under-curve')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
   
   const orderedPoints = point1.x <= point2.x 
     ? { p1: point1, p2: point2 }
@@ -179,11 +229,53 @@ export default function AreaUnderCurvePage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold">Area Under the Curve - Interactive Tutorial</h1>
-          <p className="text-muted-foreground text-lg">
-            Discover how calculating areas under graphs reveals important physics quantities!
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold">Area Under the Curve - Interactive Tutorial</h1>
+              <Badge variant="default">Advanced</Badge>
+              {isAdmin && assignments.length > 0 && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <FileText className="h-3 w-3 mr-1" />
+                  {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Discover how calculating areas under graphs reveals important physics quantities!
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
         
         {/* Quick Presets */}
@@ -643,8 +735,54 @@ export default function AreaUnderCurvePage() {
             <RealWorldExamplesCard graphType={graphType} areaResult={areaResult} orderedPoints={orderedPoints} />
           </TabsContent>
         </Tabs>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="area-under-curve"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              graphType,
+              area: areaResult.area,
+              shape: areaResult.shape,
+              point1,
+              point2,
+              numRectangles
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="area-under-curve"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
+  )
+}
+
+export default function AreaUnderCurvePage() {
+  return (
+    <SimulationWrapper
+      simulationSlug="area-under-curve"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <AreaUnderCurveContent {...props} />}
+    </SimulationWrapper>
   )
 }
 

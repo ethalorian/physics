@@ -1,15 +1,20 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Plus, Settings, FileText } from 'lucide-react'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface Point {
   x: number
@@ -18,7 +23,18 @@ interface Point {
 
 type GraphContext = 'kinematics' | 'generic'
 
-export default function SlopeCalculatorPage() {
+function SlopeCalculatorContent({
+  onInteraction,
+  onComplete
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+}) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const [point1, setPoint1] = useState<Point>({ x: 0, y: 0 })
   const [point2, setPoint2] = useState<Point>({ x: 4, y: 8 })
   const [context, setContext] = useState<GraphContext>('kinematics')
@@ -29,6 +45,40 @@ export default function SlopeCalculatorPage() {
   const [v0, setV0] = useState(2) // Initial velocity
   const [acceleration, setAcceleration] = useState(0) // Acceleration
   const [timeRange, setTimeRange] = useState(4) // Time duration
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=slope-calculator')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
   
   // Update points from equation when in equation mode
   useEffect(() => {
@@ -103,11 +153,53 @@ export default function SlopeCalculatorPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold">Slope Calculator & Kinematics Visualizer</h1>
-          <p className="text-muted-foreground text-lg">
-            Calculate slope and understand the relationships between position, velocity, and acceleration in kinematics.
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold">Slope Calculator & Kinematics Visualizer</h1>
+              <Badge variant="default">Intermediate</Badge>
+              {isAdmin && assignments.length > 0 && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <FileText className="h-3 w-3 mr-1" />
+                  {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Calculate slope and understand the relationships between position, velocity, and acceleration in kinematics.
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -786,8 +878,55 @@ Both equations describe the same line! Use whichever is easier for your problem.
             </CardContent>
           </Card>
         </div>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="slope-calculator"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              slope: positionResult?.slope || 0,
+              point1,
+              point2,
+              context,
+              inputMode,
+              velocity: context === 'kinematics' ? velocity : undefined,
+              acceleration: context === 'kinematics' ? actualAcceleration : undefined
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="slope-calculator"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
+  )
+}
+
+export default function SlopeCalculatorPage() {
+  return (
+    <SimulationWrapper
+      simulationSlug="slope-calculator"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <SlopeCalculatorContent {...props} />}
+    </SimulationWrapper>
   )
 }
 

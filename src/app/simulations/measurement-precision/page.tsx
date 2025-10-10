@@ -1,15 +1,19 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ArrowLeft, Check, X, RotateCcw, Target, Ruler, Move } from 'lucide-react'
+import { ArrowLeft, Check, X, RotateCcw, Target, Ruler, Move, Plus, Settings, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface MeasurementDevice {
   name: string
@@ -623,6 +627,11 @@ function MeasurementPrecisionSimulationContent({
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
 }) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const [selectedDevice, setSelectedDevice] = useState<MeasurementDevice>(devices[0])
   const [currentProblem, setCurrentProblem] = useState<MeasurementProblem | null>(null)
   const [userAnswer, setUserAnswer] = useState('')
@@ -630,6 +639,39 @@ function MeasurementPrecisionSimulationContent({
   const [score, setScore] = useState({ correct: 0, total: 0 })
   const [showHint, setShowHint] = useState(false)
   const [demoDevice, setDemoDevice] = useState<MeasurementDevice>(devices[0])
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=measurement-precision')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const generateProblem = useCallback((device: MeasurementDevice) => {
     const trueValue = Number((Math.random() * (device.range[1] - device.range[0] - 10) + 5).toFixed(1))
@@ -740,12 +782,50 @@ function MeasurementPrecisionSimulationContent({
               <h1 className="text-3xl font-bold text-gray-900">Measurement, Precision & Accuracy</h1>
               <p className="text-gray-600 mt-1">Learn to measure with proper precision and understand accuracy</p>
             </div>
+            <Badge variant="default">Beginner</Badge>
+            {isAdmin && assignments.length > 0 && (
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <FileText className="h-3 w-3 mr-1" />
+                {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+              </Badge>
+            )}
           </div>
-          {score.total > 0 && (
-            <Badge variant="secondary" className="text-lg px-4 py-2">
-              Score: {score.correct}/{score.total}
-            </Badge>
-          )}
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
+            {score.total > 0 && (
+              <Badge variant="secondary" className="text-lg px-4 py-2">
+                Score: {score.correct}/{score.total}
+              </Badge>
+            )}
+          </div>
         </div>
 
         <Tabs defaultValue="learn" className="w-full">
@@ -1134,6 +1214,37 @@ function MeasurementPrecisionSimulationContent({
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="measurement-precision"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={score.total >= 5}
+            simulationData={{
+              score,
+              selectedDevice: selectedDevice.name,
+              accuracy: score.total > 0 ? (score.correct / score.total) * 100 : 0
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="measurement-precision"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
   )

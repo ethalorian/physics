@@ -1,12 +1,16 @@
 "use client"
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
-import { RotateCcw, Play, Pause, Info, Trophy, TrendingUp, Activity } from 'lucide-react'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { RotateCcw, Play, Pause, Info, Trophy, TrendingUp, Activity, Plus, Settings, FileText } from 'lucide-react'
 import MathMarkdown from '@/components/MathMarkdown'
 import { Line } from 'recharts'
 import { LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
@@ -472,8 +476,13 @@ function SumoForcesContent({
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
 }) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<SumoPhysicsEngine | null>(null)
+  const totalSimulationTime = useRef(0)
   
   const [simulationState, setSimulationState] = useState<SimulationState>({
     redMass: 150,
@@ -492,6 +501,55 @@ function SumoForcesContent({
   
   const [kinematicsData, setKinematicsData] = useState<KinematicsData[]>([])
   const [showKinematics, setShowKinematics] = useState(false)
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=sumo-forces')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (simulationState.isRunning) {
+        totalSimulationTime.current += 1
+      }
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [simulationState.isRunning])
+  
+  // Track winner for completion
+  useEffect(() => {
+    if (simulationState.winner && !simulationCompleted) {
+      setSimulationCompleted(true)
+      onComplete({
+        winner: simulationState.winner,
+        time: simulationState.time,
+        redForce: simulationState.redForce,
+        blueForce: simulationState.blueForce
+      }, 100)
+    }
+  }, [simulationState.winner, simulationCompleted, simulationState, onComplete])
   
   // Memoize chart data to prevent unnecessary re-renders
   const memoizedKinematicsData = useMemo(() => [...kinematicsData], [kinematicsData])
@@ -585,13 +643,51 @@ function SumoForcesContent({
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl">Sumo Wrestling Forces</CardTitle>
-                <p className="text-muted-foreground mt-1">
-                  Explore Newton&apos;s Second Law through sumo wrestling!
-                </p>
+              <div className="flex items-center gap-3">
+                <div>
+                  <CardTitle className="text-2xl">Sumo Wrestling Forces</CardTitle>
+                  <p className="text-muted-foreground mt-1">
+                    Explore Newton&apos;s Second Law through sumo wrestling!
+                  </p>
+                </div>
+                <Badge variant="default">Intermediate</Badge>
+                {isAdmin && assignments.length > 0 && (
+                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    <FileText className="h-3 w-3 mr-1" />
+                    {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
               </div>
               <div className="flex gap-2">
+                {isAdmin && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingAssignment(null)
+                        setShowAssignmentEditor(true)
+                      }}
+                      className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Assignment
+                    </Button>
+                    {assignments.length > 0 && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingAssignment(assignments[0])
+                          setShowAssignmentEditor(true)
+                        }}
+                      >
+                        <Settings className="h-4 w-4 mr-1" />
+                        Manage
+                      </Button>
+                    )}
+                  </>
+                )}
                 <Button
                   variant="outline"
                   onClick={() => setShowKinematics(!showKinematics)}
@@ -866,6 +962,42 @@ function SumoForcesContent({
             </div>
           </CardContent>
         </Card>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="sumo-forces"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              winner: simulationState.winner,
+              redForce: simulationState.redForce,
+              blueForce: simulationState.blueForce,
+              redMass: simulationState.redMass,
+              blueMass: simulationState.blueMass,
+              netForce: simulationState.netForce,
+              acceleration: simulationState.acceleration,
+              time: simulationState.time
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="sumo-forces"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
   )

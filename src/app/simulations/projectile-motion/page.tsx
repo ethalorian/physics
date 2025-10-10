@@ -2,11 +2,16 @@
 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
   ArrowLeft,
   Play,
@@ -15,7 +20,10 @@ import {
   Download,
   BarChart3,
   Table as TableIcon,
-  Info
+  Info,
+  Plus,
+  Settings,
+  FileText
 } from 'lucide-react'
 
 // ============================================================================
@@ -534,10 +542,21 @@ class ProjectileSimulation {
 // MAIN COMPONENT
 // ============================================================================
 
-export default function ProjectileMotionLab() {
+function ProjectileMotionLabContent({
+  onInteraction,
+  onComplete
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+}) {
   const router = useRouter()
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const simulationRef = useRef<ProjectileSimulation | null>(null)
+  const totalSimulationTime = useRef(0)
 
   // Launch parameters
   const [initialSpeed, setInitialSpeed] = useState(20)
@@ -553,6 +572,42 @@ export default function ProjectileMotionLab() {
   const [trajectory, setTrajectory] = useState<{ x: number; y: number }[]>([])
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=projectile-motion')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (isRunning) {
+        totalSimulationTime.current += 1
+      }
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [isRunning])
 
   // Initialize simulation
   useEffect(() => {
@@ -581,34 +636,39 @@ export default function ProjectileMotionLab() {
   const handleLaunch = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.launch(initialSpeed, launchAngle, initialHeight)
+      onInteraction('launch', { initialSpeed, launchAngle, initialHeight })
     }
-  }, [initialSpeed, launchAngle, initialHeight])
+  }, [initialSpeed, launchAngle, initialHeight, onInteraction])
 
   const handlePause = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.pause()
+      onInteraction('pause', { time: currentState.time })
     }
-  }, [])
+  }, [currentState.time, onInteraction])
 
   const handleResume = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.resume()
+      onInteraction('resume', { time: currentState.time })
     }
-  }, [])
+  }, [currentState.time, onInteraction])
 
   const handleReset = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.reset()
+      onInteraction('reset', {})
     }
-  }, [])
+  }, [onInteraction])
 
   const handleResetScore = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.resetScore()
       setHits(0)
       setMisses(0)
+      onInteraction('reset_score', {})
     }
-  }, [])
+  }, [onInteraction])
 
   const handleExportData = useCallback(() => {
     const csv = [
@@ -655,13 +715,52 @@ export default function ProjectileMotionLab() {
         </Button>
         
         <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Projectile Motion Lab</h1>
-            <p className="text-muted-foreground">
-              Launch projectiles and analyze 2D motion under gravity. HTML5 Canvas simulation.
-            </p>
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Projectile Motion Lab</h1>
+              <p className="text-muted-foreground">
+                Launch projectiles and analyze 2D motion under gravity. HTML5 Canvas simulation.
+              </p>
+            </div>
+            <Badge variant="default">Intermediate</Badge>
+            {isAdmin && assignments.length > 0 && (
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <FileText className="h-3 w-3 mr-1" />
+                {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+              </Badge>
+            )}
           </div>
-          <Badge variant="default">Intermediate</Badge>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -1039,6 +1138,52 @@ export default function ProjectileMotionLab() {
           </Card>
         </div>
       </div>
+
+      {/* Assignment Components */}
+      {!isAdmin && (
+        <SimulationAssignment
+          simulationSlug="projectile-motion"
+          simulationTime={totalSimulationTime.current}
+          simulationCompleted={simulationCompleted}
+          simulationData={{
+            dataPoints,
+            hits,
+            misses,
+            accuracy: hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0,
+            currentState,
+            predictions
+          }}
+        />
+      )}
+
+      {isAdmin && showAssignmentEditor && (
+        <SimulationAssignmentEditor
+          isOpen={showAssignmentEditor}
+          onClose={() => {
+            setShowAssignmentEditor(false)
+            setEditingAssignment(null)
+          }}
+          simulationSlug="projectile-motion"
+          assignment={editingAssignment}
+          onSave={(assignment) => {
+            loadAssignments()
+            setShowAssignmentEditor(false)
+            setEditingAssignment(null)
+          }}
+        />
+      )}
     </div>
+  )
+}
+
+export default function ProjectileMotionLab() {
+  return (
+    <SimulationWrapper
+      simulationSlug="projectile-motion"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <ProjectileMotionLabContent {...props} />}
+    </SimulationWrapper>
   )
 }

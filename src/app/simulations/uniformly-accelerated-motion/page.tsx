@@ -1,15 +1,19 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ArrowLeft, Play, Pause, RotateCcw, Car, Zap, Gauge } from 'lucide-react'
+import { ArrowLeft, Play, Pause, RotateCcw, Car, Zap, Gauge, Plus, Settings, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface OilSpot {
   x: number
@@ -37,6 +41,11 @@ function UniformlyAcceleratedMotionContent({
   onComplete: (data: Record<string, any>, score?: number) => void
   requestAIHint: (question: string) => Promise<string>
 }) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const [initialVelocity, setInitialVelocity] = useState([5])
   const [acceleration, setAcceleration] = useState([2])
   const [selectedFormula, setSelectedFormula] = useState<number | null>(null)
@@ -48,6 +57,11 @@ function UniformlyAcceleratedMotionContent({
     oilSpots: []
   })
   const [hasCompletedRun, setHasCompletedRun] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
 
   const animationFrameRef = useRef<number | null>(null)
   const lastTimeRef = useRef<number>(0)
@@ -61,6 +75,34 @@ function UniformlyAcceleratedMotionContent({
   const oilSpotsRef = useRef<OilSpot[]>([])
   const carElementRef = useRef<HTMLDivElement>(null)
   const velocityArrowRef = useRef<HTMLDivElement>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=uniformly-accelerated-motion')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const v0 = initialVelocity[0]
   const a = acceleration[0]
@@ -282,6 +324,44 @@ function UniformlyAcceleratedMotionContent({
               <h1 className="text-3xl font-bold text-gray-900">Uniformly Accelerated Motion</h1>
               <p className="text-gray-600 mt-1">Visualize constant acceleration with oil spot patterns</p>
             </div>
+            <Badge variant="default">Intermediate</Badge>
+            {isAdmin && assignments.length > 0 && (
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <FileText className="h-3 w-3 mr-1" />
+                {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+              </Badge>
+            )}
+          </div>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -657,6 +737,40 @@ function UniformlyAcceleratedMotionContent({
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="uniformly-accelerated-motion"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={hasCompletedRun}
+            simulationData={{
+              initialVelocity: v0,
+              acceleration: a,
+              finalPosition: simulationState.position,
+              finalVelocity: simulationState.velocity,
+              oilSpots: simulationState.oilSpots.length,
+              time: simulationState.time
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="uniformly-accelerated-motion"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
   )

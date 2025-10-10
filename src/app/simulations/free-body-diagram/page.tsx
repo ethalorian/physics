@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -7,7 +9,9 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
-import { RotateCcw, Info, HelpCircle, Move, Download, Trash2 } from 'lucide-react'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { RotateCcw, Info, HelpCircle, Move, Download, Trash2, Plus, Settings, FileText } from 'lucide-react'
 import MathMarkdown from '@/components/MathMarkdown'
 
 // ============================================================================
@@ -606,8 +610,13 @@ function FreeBodyDiagramContent({
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
 }) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<FreeBodyDiagramEngine | null>(null)
+  const totalSimulationTime = useRef(0)
   
   const [simulationState, setSimulationState] = useState<SimulationState>({
     mass: 5,
@@ -623,6 +632,40 @@ function FreeBodyDiagramContent({
   
   const [selectedPreset, setSelectedPreset] = useState('custom')
   const [showHelp, setShowHelp] = useState(false)
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=free-body-diagram')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   // Initialize simulation
   useEffect(() => {
@@ -761,13 +804,51 @@ function FreeBodyDiagramContent({
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-2xl">Free Body Diagram Lab</CardTitle>
-                <p className="text-muted-foreground mt-1">
-                  Explore Newton&apos;s Second Law: F = ma
-                </p>
+              <div className="flex items-center gap-3">
+                <div>
+                  <CardTitle className="text-2xl">Free Body Diagram Lab</CardTitle>
+                  <p className="text-muted-foreground mt-1">
+                    Explore Newton&apos;s Second Law: F = ma
+                  </p>
+                </div>
+                <Badge variant="default">Intermediate</Badge>
+                {isAdmin && assignments.length > 0 && (
+                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                    <FileText className="h-3 w-3 mr-1" />
+                    {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                  </Badge>
+                )}
               </div>
               <div className="flex gap-2">
+                {isAdmin && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        setEditingAssignment(null)
+                        setShowAssignmentEditor(true)
+                      }}
+                      className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                    >
+                      <Plus className="h-4 w-4 mr-1" />
+                      Add Assignment
+                    </Button>
+                    {assignments.length > 0 && (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingAssignment(assignments[0])
+                          setShowAssignmentEditor(true)
+                        }}
+                      >
+                        <Settings className="h-4 w-4 mr-1" />
+                        Manage
+                      </Button>
+                    )}
+                  </>
+                )}
                 <Button 
                   variant="outline" 
                   size="icon"
@@ -1018,6 +1099,42 @@ function FreeBodyDiagramContent({
             </Card>
           </div>
         </div>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="free-body-diagram"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              mass: simulationState.mass,
+              forces: simulationState.forces,
+              netForce: simulationState.netForce,
+              acceleration: simulationState.acceleration,
+              netForceMagnitude: Math.sqrt(
+                simulationState.netForce.x ** 2 + 
+                simulationState.netForce.y ** 2
+              )
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="free-body-diagram"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
   )

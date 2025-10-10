@@ -1,13 +1,18 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
-import { RotateCcw, Move, Bug } from 'lucide-react'
+import { RotateCcw, Move, Bug, Plus, Settings, FileText } from 'lucide-react'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface Point {
   x: number
@@ -18,7 +23,18 @@ interface PathPoint extends Point {
   timestamp: number
 }
 
-export default function DistanceDisplacementPage() {
+function DistanceDisplacementContent({
+  onInteraction,
+  onComplete
+}: {
+  onInteraction: (action: string, data: Record<string, any>) => void
+  onComplete: (data: Record<string, any>, score?: number) => void
+}) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [bug, setBug] = useState<Point>({ x: 300, y: 300 })
   const [initialPosition, setInitialPosition] = useState<Point>({ x: 300, y: 300 })
@@ -31,6 +47,40 @@ export default function DistanceDisplacementPage() {
   const [isShiftPressed, setIsShiftPressed] = useState(false)
   const [dragStartPos, setDragStartPos] = useState<Point | null>(null)
   const [lockedAxis, setLockedAxis] = useState<'x' | 'y' | null>(null)
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=distance-displacement')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
   
   const canvasWidth = 700
   const canvasHeight = 600
@@ -471,11 +521,53 @@ export default function DistanceDisplacementPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
-        <div className="space-y-2">
-          <h1 className="text-3xl md:text-4xl font-bold">Distance vs Displacement Visualizer</h1>
-          <p className="text-muted-foreground text-lg">
-            Move the bug around to see the difference between distance traveled and displacement!
-          </p>
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl md:text-4xl font-bold">Distance vs Displacement Visualizer</h1>
+              <Badge variant="default">Beginner</Badge>
+              {isAdmin && assignments.length > 0 && (
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <FileText className="h-3 w-3 mr-1" />
+                  {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+                </Badge>
+              )}
+            </div>
+            <p className="text-muted-foreground text-lg">
+              Move the bug around to see the difference between distance traveled and displacement!
+            </p>
+          </div>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -702,7 +794,53 @@ Moving the origin changes the **position vectors** but the **displacement stays 
             `} />
           </CardContent>
         </Card>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="distance-displacement"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              distance: dist,
+              displacement: disp.magnitude,
+              displacementX: disp.dx,
+              displacementY: disp.dy,
+              angle: disp.angle,
+              pathLength: path.length
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="distance-displacement"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
     </div>
+  )
+}
+
+export default function DistanceDisplacementPage() {
+  return (
+    <SimulationWrapper
+      simulationSlug="distance-displacement"
+      trackProgress={true}
+      aiEnabled={true}
+    >
+      {(props) => <DistanceDisplacementContent {...props} />}
+    </SimulationWrapper>
   )
 }

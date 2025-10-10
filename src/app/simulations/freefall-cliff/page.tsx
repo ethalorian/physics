@@ -1,14 +1,18 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSession } from 'next-auth/react'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ArrowLeft, Play, RotateCcw, Mountain, Droplets, Timer, Calculator, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Play, RotateCcw, Mountain, Droplets, Timer, Calculator, AlertCircle, Plus, Settings, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import SimulationAssignment from '@/components/simulations/SimulationAssignment'
+import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
 interface PositionTrace {
   y: number
@@ -29,6 +33,11 @@ function FreefallCliffLabContent({
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
 }) {
+  const { data: session } = useSession()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
+  const totalSimulationTime = useRef(0)
+  
   const [isDropping, setIsDropping] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [stonePosition, setStonePosition] = useState(0)
@@ -37,12 +46,46 @@ function FreefallCliffLabContent({
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [isExampleMode, setIsExampleMode] = useState(true) // Start with example
   const [cliffHeight, setCliffHeight] = useState(45) // Example: 45m
-
+  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Assignment state
+  const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
+  const [assignments, setAssignments] = useState<any[]>([])
+  const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
   const animationFrameRef = useRef<number | undefined>(undefined)
   const lastTimeRef = useRef<number>(0)
   const lastTraceRef = useRef<number>(0)
   const startTimeRef = useRef<number>(0)
   const stoneElementRef = useRef<HTMLDivElement>(null)
+  
+  // Load assignments for admin
+  useEffect(() => {
+    if (isAdmin) {
+      loadAssignments()
+    }
+  }, [isAdmin])
+  
+  const loadAssignments = async () => {
+    try {
+      const response = await fetch('/api/simulations/assignments?simulation_slug=freefall-cliff')
+      if (response.ok) {
+        const data = await response.json()
+        setAssignments(data.assignments || [])
+      }
+    } catch (error) {
+      console.error('Error loading assignments:', error)
+    }
+  }
+  
+  // Track total simulation time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      totalSimulationTime.current += 1
+    }, 1000)
+    
+    return () => clearInterval(interval)
+  }, [])
 
   const g = 9.8 // m/s²
   const pixelsPerMeter = 6 // Visual scaling
@@ -200,6 +243,44 @@ function FreefallCliffLabContent({
               <h1 className="text-3xl font-bold text-gray-900">Freefall Cliff Lab</h1>
               <p className="text-gray-600 mt-1">Use physics to measure cliff height by dropping a stone</p>
             </div>
+            <Badge variant="default">Intermediate</Badge>
+            {isAdmin && assignments.length > 0 && (
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <FileText className="h-3 w-3 mr-1" />
+                {assignments.length} Assignment{assignments.length > 1 ? 's' : ''}
+              </Badge>
+            )}
+          </div>
+          <div className="flex gap-2">
+            {isAdmin && (
+              <>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingAssignment(null)
+                    setShowAssignmentEditor(true)
+                  }}
+                  className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Assignment
+                </Button>
+                {assignments.length > 0 && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setEditingAssignment(assignments[0])
+                      setShowAssignmentEditor(true)
+                    }}
+                  >
+                    <Settings className="h-4 w-4 mr-1" />
+                    Manage
+                  </Button>
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -824,6 +905,39 @@ function FreefallCliffLabContent({
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Assignment Components */}
+        {!isAdmin && (
+          <SimulationAssignment
+            simulationSlug="freefall-cliff"
+            simulationTime={totalSimulationTime.current}
+            simulationCompleted={simulationCompleted}
+            simulationData={{
+              trials,
+              averageFallTime,
+              averageCalculatedHeight,
+              cliffHeight,
+              isExampleMode
+            }}
+          />
+        )}
+
+        {isAdmin && showAssignmentEditor && (
+          <SimulationAssignmentEditor
+            isOpen={showAssignmentEditor}
+            onClose={() => {
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+            simulationSlug="freefall-cliff"
+            assignment={editingAssignment}
+            onSave={(assignment) => {
+              loadAssignments()
+              setShowAssignmentEditor(false)
+              setEditingAssignment(null)
+            }}
+          />
+        )}
       </div>
 
       <style jsx global>{`
