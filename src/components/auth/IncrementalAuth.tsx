@@ -11,7 +11,7 @@ import {
   DialogTitle 
 } from '@/components/ui/dialog'
 import { AlertCircle, Lock, CheckCircle } from 'lucide-react'
-import { getClassroomScopes, getAssignmentScopes } from '@/lib/oauth-security'
+import { getClassroomScopes, getAssignmentScopes } from '@/lib/oauth-scopes'
 
 interface IncrementalAuthProps {
   feature: 'classroom' | 'assignments' | 'roster'

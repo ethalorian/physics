@@ -1,6 +1,9 @@
 /**
  * Secret Manager Interface and Implementations
  * Provides secure access to sensitive configuration values
+ * 
+ * Note: This module should only be imported server-side.
+ * It relies on Node.js built-in modules that are excluded from the client bundle.
  */
 
 // Dynamic import for optional dependency
@@ -45,7 +48,7 @@ class GoogleSecretManager implements SecretManager {
     this.initPromise = (async () => {
       try {
         // Try to dynamically import the Google Cloud Secret Manager
-        // @ts-expect-error - Optional dependency, will be null if not installed
+        // Optional dependency, will be null if not installed
         const secretManagerModule = await import('@google-cloud/secret-manager').catch(() => null)
         
         if (!secretManagerModule) {

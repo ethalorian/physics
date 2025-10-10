@@ -10,6 +10,31 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: false,
   },
   
+  // Webpack configuration to handle server-only modules
+  webpack: (config, { isServer }) => {
+    // Exclude Node.js built-in modules and server-only packages from client bundle
+    // This fixes the "Module not found: Can't resolve 'net'" error
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        net: false,
+        tls: false,
+        dns: false,
+        fs: false,
+        http2: false,
+        child_process: false,
+        crypto: false,
+      };
+      
+      // Exclude server-only packages from client bundle
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '@google-cloud/secret-manager': false,
+      };
+    }
+    return config;
+  },
+  
   // Override NEXTAUTH_URL for local development to prevent fetch errors
   env: {
     NEXTAUTH_URL: process.env.NODE_ENV === 'development' 
