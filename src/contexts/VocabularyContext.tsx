@@ -54,36 +54,70 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
       setLoading(true)
       setError(null)
       
+      // Clear old localStorage data that might not have published field
+      // This ensures students get fresh data from the API with proper filtering
+      const VOCAB_VERSION = 'v2' // Increment this to clear old cached data
+      const cachedVersion = localStorage.getItem('physics-vocabulary-version')
+      if (cachedVersion !== VOCAB_VERSION) {
+        console.log('Clearing old vocabulary cache...')
+        localStorage.removeItem('physics-vocabulary-sets')
+        localStorage.setItem('physics-vocabulary-version', VOCAB_VERSION)
+      }
+      
       const response = await fetch('/api/vocabulary')
       if (!response.ok) {
         throw new Error('Failed to fetch vocabulary sets')
       }
       
       const vocabularySets = await response.json()
+      
+      // Debug logging
+      console.log('🔍 Vocabulary API Response:', {
+        totalSets: vocabularySets.length,
+        sets: vocabularySets.map((s: any) => ({ 
+          id: s.id, 
+          name: s.name, 
+          published: s.published,
+          terms: s.terms?.length || 0
+        })),
+        userRole,
+        canAccessVocabulary
+      })
+      
       setVocabularySets(vocabularySets)
+      
+      // Only admins/teachers cache to localStorage (students always use API)
+      if (canAccessVocabulary) {
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(vocabularySets))
+        } catch (storageError) {
+          console.warn('Could not cache vocabulary sets:', storageError)
+        }
+      }
     } catch (error) {
       console.error('Error loading vocabulary sets:', error)
       setError('Failed to load vocabulary sets')
       
-      // Fallback to localStorage for existing data
-      try {
-        const stored = localStorage.getItem('physics-vocabulary-sets')
-        if (stored) {
-          const parsedSets = JSON.parse(stored)
-          setVocabularySets(parsedSets)
-        } else {
-          // Initialize with sample data if nothing exists
-          const { initializeVocabularyData, sampleVocabularySets } = await import('@/utils/vocabulary-init')
-          initializeVocabularyData()
-          setVocabularySets(sampleVocabularySets)
+      // Only fallback to localStorage for admin/teachers, NOT students
+      // Students should always get data from API to respect published status
+      if (canAccessVocabulary) {
+        try {
+          const stored = localStorage.getItem('physics-vocabulary-sets')
+          if (stored) {
+            const parsedSets = JSON.parse(stored)
+            setVocabularySets(parsedSets)
+          }
+        } catch (fallbackError) {
+          console.error('Fallback to localStorage failed:', fallbackError)
         }
-      } catch (fallbackError) {
-        console.error('Fallback to localStorage failed:', fallbackError)
+      } else {
+        // For students, show empty state if API fails - don't use old cached data
+        setVocabularySets([])
       }
     } finally {
       setLoading(false)
     }
-  }, [canAccessVocabulary])
+  }, [session?.user?.id, canAccessVocabulary])
 
   // LAZY LOADING: Only load vocabulary when user navigates to vocabulary pages
   useEffect(() => {
@@ -499,6 +533,22 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
 
   // Filter published vocabulary sets for students
   const publishedVocabularySets = vocabularySets.filter(set => set.published)
+  
+  // Debug: Log filtered published sets
+  useEffect(() => {
+    if (vocabularySets.length > 0) {
+      console.log('📚 Published Vocabulary Sets:', {
+        total: vocabularySets.length,
+        published: publishedVocabularySets.length,
+        unpublished: vocabularySets.length - publishedVocabularySets.length,
+        userRole,
+        details: publishedVocabularySets.map(s => ({ 
+          name: s.name, 
+          terms: s.terms.length 
+        }))
+      })
+    }
+  }, [vocabularySets, publishedVocabularySets, userRole])
 
   const value: VocabularyContextType = {
     vocabularySets,
