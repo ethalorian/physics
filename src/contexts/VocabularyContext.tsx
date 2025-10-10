@@ -11,6 +11,7 @@ interface VocabularySet {
   unit?: string
   lesson?: string
   terms: VocabularyTerm[]
+  published: boolean
   created_by?: string
   created_at: string
   updated_at: string
@@ -18,6 +19,7 @@ interface VocabularySet {
 
 interface VocabularyContextType {
   vocabularySets: VocabularySet[]
+  publishedVocabularySets: VocabularySet[]
   loading: boolean
   error: string | null
   createVocabularySet: (vocabularySet: Omit<VocabularySet, 'id' | 'created_at' | 'updated_at'>) => Promise<void>
@@ -28,6 +30,7 @@ interface VocabularyContextType {
   updateTerm: (setId: string, termId: string, updates: Partial<VocabularyTerm>) => Promise<void>
   deleteTerm: (setId: string, termId: string) => Promise<void>
   refreshVocabularySets: () => Promise<void>
+  publishVocabularySet: (id: string, published: boolean) => Promise<void>
 }
 
 const VocabularyContext = createContext<VocabularyContextType | undefined>(undefined)
@@ -43,8 +46,9 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   const canAccessVocabulary = userRole === 'admin' || userRole === 'teacher'
 
   // Load vocabulary sets from API
+  // Students can load to see published sets, admin/teachers see all
   const refreshVocabularySets = useCallback(async () => {
-    if (!canAccessVocabulary) return
+    if (!session?.user?.id) return
 
     try {
       setLoading(true)
@@ -87,10 +91,11 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
       (window.location.pathname.includes('/vocabulary') || 
        window.location.pathname.includes('/admin/vocabulary'))
     
-    if (shouldAutoInit && session?.user?.id && canAccessVocabulary) {
+    // Load for all logged-in users (students see published, admin/teachers see all)
+    if (shouldAutoInit && session?.user?.id) {
       refreshVocabularySets()
     }
-  }, [session, canAccessVocabulary, refreshVocabularySets])
+  }, [session?.user?.id, refreshVocabularySets])
 
   const createVocabularySet = async (vocabularySetData: Omit<VocabularySet, 'id' | 'created_at' | 'updated_at'>) => {
     try {
@@ -112,6 +117,7 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
         const newSet: VocabularySet = {
           ...vocabularySetData,
           id: `vocab-set-${Date.now()}`,
+          published: vocabularySetData.published || false,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
           created_by: session?.user?.id
@@ -441,8 +447,62 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const publishVocabularySet = async (id: string, published: boolean) => {
+    try {
+      const response = await fetch('/api/vocabulary', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          published
+        })
+      })
+
+      if (!response.ok) {
+        // Fallback to localStorage when API fails
+        console.log('API publish failed, falling back to localStorage')
+        const updatedSets = vocabularySets.map(set =>
+          set.id === id
+            ? { ...set, published, updated_at: new Date().toISOString() }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        
+        try {
+          localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        } catch (storageError) {
+          console.error('localStorage error:', storageError)
+        }
+        return
+      }
+
+      // Refresh the vocabulary sets to get the updated list
+      await refreshVocabularySets()
+    } catch (error) {
+      console.error('Error publishing vocabulary set:', error)
+      // Fallback to localStorage even on network errors
+      try {
+        const updatedSets = vocabularySets.map(set =>
+          set.id === id
+            ? { ...set, published, updated_at: new Date().toISOString() }
+            : set
+        )
+        setVocabularySets(updatedSets)
+        localStorage.setItem('physics-vocabulary-sets', JSON.stringify(updatedSets))
+        console.log('Successfully updated published status in localStorage as fallback')
+      } catch (fallbackError) {
+        console.error('Fallback publish failed:', fallbackError)
+        throw error
+      }
+    }
+  }
+
+  // Filter published vocabulary sets for students
+  const publishedVocabularySets = vocabularySets.filter(set => set.published)
+
   const value: VocabularyContextType = {
     vocabularySets,
+    publishedVocabularySets,
     loading,
     error,
     createVocabularySet,
@@ -452,7 +512,8 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     addTermToSet,
     updateTerm,
     deleteTerm,
-    refreshVocabularySets
+    refreshVocabularySets,
+    publishVocabularySet
   }
 
   return (

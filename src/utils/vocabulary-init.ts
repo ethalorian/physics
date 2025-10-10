@@ -7,6 +7,7 @@ export interface VocabularySet {
   unit?: string
   lesson?: string
   terms: VocabularyTerm[]
+  published: boolean
   created_by?: string
   created_at: string
   updated_at: string
@@ -56,6 +57,7 @@ export const sampleVocabularySets: VocabularySet[] = [
         difficulty: 'hard'
       }
     ],
+    published: true,
     created_by: 'system',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -103,6 +105,7 @@ export const sampleVocabularySets: VocabularySet[] = [
         difficulty: 'medium'
       }
     ],
+    published: true,
     created_by: 'system',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
@@ -150,6 +153,7 @@ export const sampleVocabularySets: VocabularySet[] = [
         difficulty: 'hard'
       }
     ],
+    published: true,
     created_by: 'system',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()

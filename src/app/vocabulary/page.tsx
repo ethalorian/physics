@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useVocabulary } from '@/contexts/VocabularyContext'
+import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -87,7 +88,9 @@ const vocabularyGames = [
 
 export default function VocabularyGamesHub() {
   const { data: session, status } = useSession()
-  const { vocabularySets, loading } = useVocabulary()
+  const { vocabularySets, publishedVocabularySets, loading } = useVocabulary()
+  const userRole = getUserRole(session?.user?.email)
+  const isAdmin = userRole === 'admin' || userRole === 'teacher'
   
   if (status === 'loading' || loading) {
     return (
@@ -112,7 +115,9 @@ export default function VocabularyGamesHub() {
     )
   }
 
-  const availableSets = vocabularySets.filter(set => set.terms.length > 0)
+  // Students only see published sets, admin/teachers see all sets
+  const visibleSets = isAdmin ? vocabularySets : publishedVocabularySets
+  const availableSets = visibleSets.filter(set => set.terms.length > 0)
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-8">
@@ -189,7 +194,9 @@ export default function VocabularyGamesHub() {
               No Vocabulary Sets Available
             </h3>
             <p className="text-muted-foreground mb-6">
-              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Games will be available once vocabulary sets are added to the system.
+              {isAdmin 
+                ? "Create your first vocabulary set to get started with vocabulary games."
+                : "Your teacher hasn't published any vocabulary sets yet. Games will be available once vocabulary sets are published."}
             </p>
             <Button variant="outline" asChild>
               <Link href="/dashboard">

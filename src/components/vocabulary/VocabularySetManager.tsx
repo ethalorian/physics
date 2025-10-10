@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Trash2, Edit, BookOpen, Save, X, Upload } from 'lucide-react'
+import { Plus, Trash2, Edit, BookOpen, Save, X, Upload, Eye, EyeOff } from 'lucide-react'
 import { physicsUnits } from '@/data/physics-units'
 import VocabularyUploader from './VocabularyUploader'
 
@@ -18,7 +18,7 @@ interface VocabularySetManagerProps {
 }
 
 export default function VocabularySetManager({ onSelectSet, selectedSetId }: VocabularySetManagerProps) {
-  const { vocabularySets, createVocabularySet, deleteVocabularySet, addTermToSet, deleteTerm, loading, error } = useVocabulary()
+  const { vocabularySets, createVocabularySet, deleteVocabularySet, addTermToSet, deleteTerm, publishVocabularySet, loading, error } = useVocabulary()
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [showUploader, setShowUploader] = useState(false)
   const [editingSetId, setEditingSetId] = useState<string | null>(null)
@@ -35,13 +35,22 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
     difficulty: 'medium' as 'easy' | 'medium' | 'hard'
   })
 
+  const handlePublishToggle = async (setId: string, currentPublishedStatus: boolean) => {
+    try {
+      await publishVocabularySet(setId, !currentPublishedStatus)
+    } catch (error) {
+      console.error('Error toggling publish status:', error)
+    }
+  }
+
   const handleCreateSet = async () => {
     if (!newSetData.name.trim()) return
 
     try {
       await createVocabularySet({
         ...newSetData,
-        terms: []
+        terms: [],
+        published: false
       })
       setNewSetData({ name: '', description: '', unit: '', lesson: '' })
       setShowCreateForm(false)
@@ -208,9 +217,40 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                         {physicsUnits.find(u => u.id === set.unit)?.name || set.unit}
                       </Badge>
                     )}
+                    <Badge variant={set.published ? "default" : "secondary"} className={set.published ? "bg-green-600" : ""}>
+                      {set.published ? (
+                        <>
+                          <Eye className="w-3 h-3 mr-1" />
+                          Published
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff className="w-3 h-3 mr-1" />
+                          Draft
+                        </>
+                      )}
+                    </Badge>
                   </div>
                 </div>
                 <div className="flex gap-2">
+                  <Button
+                    variant={set.published ? "outline" : "default"}
+                    size="sm"
+                    onClick={() => handlePublishToggle(set.id, set.published)}
+                    className={set.published ? "" : "bg-green-600 hover:bg-green-700"}
+                  >
+                    {set.published ? (
+                      <>
+                        <EyeOff className="w-4 h-4 mr-2" />
+                        Unpublish
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Publish
+                      </>
+                    )}
+                  </Button>
                   {onSelectSet && (
                     <Button
                       variant={selectedSetId === set.id ? "default" : "outline"}

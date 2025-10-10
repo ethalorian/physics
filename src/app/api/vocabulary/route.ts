@@ -54,6 +54,7 @@ export async function GET(request: Request) {
         description: set.description,
         unit: set.unit_id,
         lesson: set.lesson_id,
+        published: set.published || false,
         terms: set.vocabulary_terms.map((term: any) => ({
           id: term.id,
           term: term.term,
@@ -90,7 +91,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { name, description, unit, lesson, terms } = body
 
-    // Create vocabulary set
+    // Create vocabulary set (default to unpublished)
     const { data: vocabularySet, error: setError } = await supabaseAdmin
       .from('vocabulary_sets')
       .insert([{
@@ -98,6 +99,7 @@ export async function POST(request: Request) {
         description,
         unit_id: unit,
         lesson_id: lesson,
+        published: false,
         created_by: session.user.id
       }])
       .select()
@@ -159,22 +161,27 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json()
-    const { id, name, description, unit, lesson, terms } = body
+    const { id, name, description, unit, lesson, terms, published } = body
 
     if (!id) {
       return NextResponse.json({ error: 'Vocabulary set ID is required' }, { status: 400 })
     }
 
+    // Build update object - only include fields that are provided
+    const updateData: Record<string, any> = {
+      updated_at: new Date().toISOString()
+    }
+    
+    if (name !== undefined) updateData.name = name
+    if (description !== undefined) updateData.description = description
+    if (unit !== undefined) updateData.unit_id = unit
+    if (lesson !== undefined) updateData.lesson_id = lesson
+    if (published !== undefined) updateData.published = published
+
     // Update vocabulary set
     const { data: vocabularySet, error: setError } = await supabaseAdmin
       .from('vocabulary_sets')
-      .update({
-        name,
-        description,
-        unit_id: unit,
-        lesson_id: lesson,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single()

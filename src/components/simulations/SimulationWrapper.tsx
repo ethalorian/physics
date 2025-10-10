@@ -89,43 +89,52 @@ export function SimulationWrapper({
     loadSimulation()
   }, [simulationSlug, getSimulationBySlug])
 
-  // Start activity tracking
+  // Start activity tracking - timer starts immediately when user is logged in
   useEffect(() => {
     if (!session?.user?.id || !trackProgress || isTracking) {
+      console.log('⏸️ Timer check:', {
+        hasSession: !!session?.user?.id,
+        trackProgress,
+        isTracking,
+        message: !session?.user?.id ? 'No session - not logged in' : 
+                 !trackProgress ? 'Tracking disabled' : 
+                 isTracking ? 'Already tracking' : 'Should start tracking'
+      })
       return
     }
 
     async function initializeTracking() {
       try {
-        // If we don't have simulationId yet, still start local tracking
-        if (!simulationId) {
-          console.log('ℹ️ Starting local tracking (simulation not in database yet)')
-          setIsTracking(true)
-          startTimeRef.current = Date.now()
-          
-          // Start timer
-          timerIntervalRef.current = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000)
-            setTimeSpent(elapsed)
-          }, 1000)
-          return
-        }
+        console.log('⏱️ Initializing timer for simulation:', simulationSlug)
         
-        const id = await startActivity(simulationId, lessonId, stepId)
-        setActivityId(id)
+        // Always start local tracking immediately - don't wait for database
         setIsTracking(true)
         startTimeRef.current = Date.now()
         
-        // Start timer
+        // Start timer - updates every second
         timerIntervalRef.current = setInterval(() => {
           const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000)
           setTimeSpent(elapsed)
         }, 1000)
         
-        console.log('✓ Activity tracking started:', id)
+        console.log('✓ Timer started successfully')
+        
+        // Try to register in database (async, don't wait)
+        if (simulationId) {
+          try {
+            const id = await startActivity(simulationId, lessonId, stepId)
+            setActivityId(id)
+            console.log('✓ Database activity tracking started:', id)
+          } catch (dbErr) {
+            console.warn('⚠️ Database tracking unavailable (continuing with local tracking):', dbErr)
+          }
+        } else {
+          console.log('ℹ️ Simulation not in database yet - local tracking only')
+        }
+        
       } catch (err) {
-        console.error('⚠️ Database tracking unavailable, using local tracking only:', err)
-        // Continue with local tracking only
+        console.error('⚠️ Error initializing tracking:', err)
+        // Still try to start timer even if there's an error
         setIsTracking(true)
         startTimeRef.current = Date.now()
         
@@ -140,10 +149,11 @@ export function SimulationWrapper({
 
     return () => {
       if (timerIntervalRef.current) {
+        console.log('⏹️ Stopping timer, total time:', timeSpent, 'seconds')
         clearInterval(timerIntervalRef.current)
       }
     }
-  }, [simulationId, session, trackProgress, isTracking, startActivity, lessonId, stepId])
+  }, [session?.user?.id, trackProgress, isTracking, simulationSlug])
 
   // Record interaction
   const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
