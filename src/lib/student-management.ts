@@ -126,6 +126,7 @@ export async function checkStudentCourseAssignment(
   studentId: string
 ): Promise<{ hasAssignment: boolean; courseCount: number; courses: any[] }> {
   try {
+    // Check ACTIVE enrollments
     const { data: enrollments, error } = await supabaseAdmin
       .from('course_students')
       .select(`

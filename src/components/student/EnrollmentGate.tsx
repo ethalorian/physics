@@ -11,7 +11,6 @@ import { AlertCircle, UserCheck, RefreshCw } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import JoinCourseWithCode from './JoinCourseWithCode'
-import { getStudentEnrollmentStatus } from '@/lib/student-management'
 import { getUserRole } from '@/lib/permissions'
 
 interface EnrollmentGateProps {
@@ -42,7 +41,6 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
     // Check user role - admins and teachers bypass enrollment check
     const userRole = getUserRole(session.user.email)
     if (userRole === 'admin' || userRole === 'teacher') {
-      console.log('Admin/Teacher using student view - bypassing enrollment check')
       setStatus({
         hasAccount: true,
         hasAssignment: true, // Bypass enrollment requirement
@@ -56,10 +54,21 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
 
     setCheckingEnrollment(true)
     try {
-      const enrollmentStatus = await getStudentEnrollmentStatus(session.user.email)
+      // Call API endpoint to check enrollment
+      const response = await fetch('/api/enrollment/status')
+      const enrollmentStatus = await response.json()
+      
       setStatus(enrollmentStatus)
     } catch (error) {
       console.error('Error checking enrollment:', error)
+      // Fallback to unenrolled state on error
+      setStatus({
+        hasAccount: false,
+        hasAssignment: false,
+        needsEnrollment: true,
+        student: null,
+        courses: []
+      })
     } finally {
       setLoading(false)
       setCheckingEnrollment(false)
@@ -71,8 +80,34 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
   }, [session?.user?.email])
 
   const handleEnrollmentSuccess = async () => {
-    // Recheck enrollment status after successful join
-    await checkEnrollment()
+    // Immediately recheck enrollment after successful join
+    setCheckingEnrollment(true)
+    
+    // Small delay to ensure database transaction is committed
+    await new Promise(resolve => setTimeout(resolve, 300))
+    
+    try {
+      // Call API endpoint to check enrollment
+      const response = await fetch('/api/enrollment/status')
+      const enrollmentStatus = await response.json()
+      
+      setStatus(enrollmentStatus)
+      
+      if (!enrollmentStatus.needsEnrollment) {
+        // Force component re-render by updating state
+        setLoading(false)
+      } else {
+        // Try one more time after another delay
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        const retryResponse = await fetch('/api/enrollment/status')
+        const retryStatus = await retryResponse.json()
+        setStatus(retryStatus)
+      }
+    } catch (error) {
+      console.error('Error refreshing enrollment:', error)
+    } finally {
+      setCheckingEnrollment(false)
+    }
   }
 
   // Show loading state

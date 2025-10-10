@@ -24,10 +24,10 @@ interface UnassignedStudent {
 }
 
 interface Course {
-  id: string
+  id: string // Database UUID
   name: string
   section?: string
-  google_course_id: string
+  google_course_id: string // Google Classroom ID
 }
 
 export default function UnassignedStudentsManager() {
@@ -108,16 +108,16 @@ export default function UnassignedStudentsManager() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to assign student')
+        throw new Error(data.error || data.details || 'Failed to assign student')
       }
 
       showToast({
         title: 'Success',
-        description: 'Student assigned to course successfully!'
+        description: data.message || 'Student assigned to course successfully!'
       })
 
       // Refresh the list
-      fetchUnassignedStudents()
+      await fetchUnassignedStudents()
 
       // Clear selection
       setSelectedCourses(prev => {
@@ -127,8 +127,9 @@ export default function UnassignedStudentsManager() {
       })
 
     } catch (error) {
+      console.error('Student assignment error:', error)
       showToast({
-        title: 'Error',
+        title: 'Assignment Failed',
         description: error instanceof Error ? error.message : 'Failed to assign student',
         variant: 'error'
       })
@@ -250,7 +251,10 @@ export default function UnassignedStudentsManager() {
                       ) : (
                         courses.map((course) => (
                           <SelectItem key={course.id} value={course.id}>
-                            {course.name} {course.section && `(${course.section})`}
+                            {course.name} {course.section && `(${course.section})`} 
+                            <span className="text-xs text-muted-foreground ml-2">
+                              [DB: {course.id.substring(0, 8)}...]
+                            </span>
                           </SelectItem>
                         ))
                       )}

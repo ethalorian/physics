@@ -69,15 +69,37 @@ export async function POST(request: NextRequest) {
       }, { status: 400 })
     }
 
-    // For teachers (non-admin), verify they own this course
-    if (userRole === 'teacher') {
-      const { data: course } = await supabaseAdmin
-        .from('courses')
-        .select('teacher_email')
-        .eq('id', courseId)
-        .single()
+    // Verify student exists in database
+    const { data: studentCheck, error: studentCheckError } = await supabaseAdmin
+      .from('students')
+      .select('id, email, name')
+      .eq('id', studentId)
+      .single()
 
-      if (!course || course.teacher_email !== session.user.email) {
+    if (studentCheckError || !studentCheck) {
+      return NextResponse.json({ 
+        error: 'Student not found in database',
+        details: `Student ID: ${studentId} - ${studentCheckError?.message || 'Not found'}` 
+      }, { status: 404 })
+    }
+
+    // Verify course exists in database
+    const { data: courseCheck, error: courseCheckError } = await supabaseAdmin
+      .from('courses')
+      .select('id, name, google_course_id, teacher_email')
+      .eq('id', courseId)
+      .single()
+
+    if (courseCheckError || !courseCheck) {
+      return NextResponse.json({ 
+        error: 'Course not found in database',
+        details: `Course ID: ${courseId} - ${courseCheckError?.message || 'Not found'}` 
+      }, { status: 404 })
+    }
+
+    // For teachers (non-admin), verify they own this course
+    if (userRole === 'teacher' && courseCheck.teacher_email) {
+      if (courseCheck.teacher_email !== session.user.email) {
         return NextResponse.json({ 
           error: 'You can only assign students to your own courses' 
         }, { status: 403 })
@@ -85,15 +107,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Use the database function to assign student
+    // Note: Pass null for enrolled_by since we use NextAuth (not Supabase Auth)
     const { data, error } = await supabaseAdmin
       .rpc('assign_student_to_course', {
         p_student_id: studentId,
         p_course_id: courseId,
-        p_assigned_by: session.user.id
+        p_assigned_by: null
       })
 
     if (error) {
-      console.error('Error assigning student:', error)
+      console.error('Database function error:', error)
       return NextResponse.json({ 
         error: 'Failed to assign student to course',
         details: error.message 
@@ -102,9 +125,9 @@ export async function POST(request: NextRequest) {
 
     const result = data[0]
 
-    if (!result.success) {
+    if (!result || !result.success) {
       return NextResponse.json({ 
-        error: result.message 
+        error: result?.message || 'Unknown error from database function'
       }, { status: 400 })
     }
 

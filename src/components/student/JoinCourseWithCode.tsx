@@ -2,6 +2,7 @@
 
 // React/Next.js imports
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 // External imports
 import { Check, Key, ArrowRight, RefreshCw, AlertCircle } from 'lucide-react'
@@ -19,6 +20,7 @@ interface JoinCourseWithCodeProps {
 
 export default function JoinCourseWithCode({ onSuccess }: JoinCourseWithCodeProps) {
   const { showToast } = useToast()
+  const router = useRouter()
   const [joinCode, setJoinCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [validating, setValidating] = useState(false)
@@ -85,13 +87,21 @@ export default function JoinCourseWithCode({ onSuccess }: JoinCourseWithCodeProp
 
       showToast({
         title: 'Success!',
-        description: `You&apos;ve been enrolled in ${data.course.name}`
+        description: `You&apos;ve been enrolled in ${data.course.name}. Redirecting...`
       })
 
       setJoinCode('')
       setValidationResult(null)
 
-      onSuccess?.(data.course)
+      // Call success callback if provided - this triggers enrollment recheck
+      if (onSuccess) {
+        onSuccess(data.course)
+      }
+
+      // Force a full page reload to completely refresh enrollment status
+      setTimeout(() => {
+        window.location.href = '/dashboard'
+      }, 1500)
 
     } catch (error) {
       showToast({

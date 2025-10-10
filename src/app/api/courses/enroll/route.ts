@@ -22,43 +22,108 @@ export async function POST(request: NextRequest) {
     // Normalize join code (uppercase, trim whitespace)
     const normalizedCode = joinCode.toUpperCase().trim()
 
-    // Use the database function to enroll student
-    const { data, error } = await supabaseAdmin
-      .rpc('enroll_student_with_code', {
-        p_student_email: session.user.email,
-        p_join_code: normalizedCode
-      })
+    // Find course by join code
+    const { data: course, error: courseError } = await supabaseAdmin
+      .from('courses')
+      .select('id, name, section, join_code_enabled, join_code_expires_at, max_enrollments')
+      .eq('join_code', normalizedCode)
+      .single()
 
-    if (error) {
-      console.error('Enrollment error:', error)
+    if (courseError || !course) {
       return NextResponse.json({ 
-        error: 'Failed to process enrollment',
-        details: error.message 
-      }, { status: 500 })
+        error: 'Invalid join code' 
+      }, { status: 404 })
     }
 
-    // The function returns a row with success, message, course_id, course_name
-    const result = data[0]
-
-    if (!result.success) {
+    // Validate join code is active
+    if (!course.join_code_enabled) {
       return NextResponse.json({ 
-        error: result.message 
+        error: 'This join code is no longer active' 
       }, { status: 400 })
     }
 
-    // Fetch full course details for response
-    const { data: courseData } = await supabaseAdmin
-      .from('courses')
-      .select('id, name, section, description, teacher_email')
-      .eq('id', result.course_id)
-      .single()
+    if (course.join_code_expires_at && new Date(course.join_code_expires_at) < new Date()) {
+      return NextResponse.json({ 
+        error: 'This join code has expired' 
+      }, { status: 400 })
+    }
+
+    // Find or create student record
+    const { data: studentRecord } = await supabaseAdmin
+      .from('students')
+      .select('id, email, name')
+      .eq('email', session.user.email)
+      .maybeSingle()
+
+    let studentId: string
+
+    if (!studentRecord) {
+      // Create student record
+      const { data: newStudent, error: createError } = await supabaseAdmin
+        .from('students')
+        .insert({
+          email: session.user.email,
+          name: session.user.name || session.user.email.split('@')[0],
+          google_user_id: session.user.id || `user_${Date.now()}`
+        })
+        .select()
+        .single()
+
+      if (createError || !newStudent) {
+        console.error('Failed to create student record:', createError)
+        return NextResponse.json({ 
+          error: 'Failed to create student record',
+          details: createError?.message || 'Unknown error'
+        }, { status: 500 })
+      }
+
+      studentId = newStudent.id
+    } else {
+      studentId = studentRecord.id
+    }
+
+    // Check if already enrolled
+    const { data: existing } = await supabaseAdmin
+      .from('course_students')
+      .select('id')
+      .eq('course_id', course.id)
+      .eq('student_id', studentId)
+      .maybeSingle()
+
+    if (existing) {
+      return NextResponse.json({
+        success: true,
+        message: 'Already enrolled in this course',
+        course: { id: course.id, name: course.name, section: course.section }
+      })
+    }
+
+    // Enroll student (enrolled_by omitted to avoid FK constraint to auth.users)
+    const { error: enrollError } = await supabaseAdmin
+      .from('course_students')
+      .insert({
+        course_id: course.id,
+        student_id: studentId,
+        enrollment_state: 'ACTIVE',
+        enrolled_via: 'join_code',
+        enrolled_at: new Date().toISOString()
+      })
+
+    if (enrollError) {
+      console.error('Enrollment failed:', enrollError)
+      return NextResponse.json({ 
+        error: 'Failed to enroll in course',
+        details: enrollError.message 
+      }, { status: 500 })
+    }
 
     return NextResponse.json({
       success: true,
-      message: result.message,
-      course: courseData || {
-        id: result.course_id,
-        name: result.course_name
+      message: 'Successfully enrolled in course',
+      course: {
+        id: course.id,
+        name: course.name,
+        section: course.section
       }
     })
 

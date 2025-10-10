@@ -92,21 +92,11 @@ export function SimulationWrapper({
   // Start activity tracking - timer starts immediately when user is logged in
   useEffect(() => {
     if (!session?.user?.id || !trackProgress || isTracking) {
-      console.log('⏸️ Timer check:', {
-        hasSession: !!session?.user?.id,
-        trackProgress,
-        isTracking,
-        message: !session?.user?.id ? 'No session - not logged in' : 
-                 !trackProgress ? 'Tracking disabled' : 
-                 isTracking ? 'Already tracking' : 'Should start tracking'
-      })
       return
     }
 
     async function initializeTracking() {
       try {
-        console.log('⏱️ Initializing timer for simulation:', simulationSlug)
-        
         // Always start local tracking immediately - don't wait for database
         setIsTracking(true)
         startTimeRef.current = Date.now()
@@ -117,23 +107,18 @@ export function SimulationWrapper({
           setTimeSpent(elapsed)
         }, 1000)
         
-        console.log('✓ Timer started successfully')
-        
         // Try to register in database (async, don't wait)
         if (simulationId) {
           try {
             const id = await startActivity(simulationId, lessonId, stepId)
             setActivityId(id)
-            console.log('✓ Database activity tracking started:', id)
           } catch (dbErr) {
-            console.warn('⚠️ Database tracking unavailable (continuing with local tracking):', dbErr)
+            console.warn('Simulation tracking unavailable:', dbErr)
           }
-        } else {
-          console.log('ℹ️ Simulation not in database yet - local tracking only')
         }
         
       } catch (err) {
-        console.error('⚠️ Error initializing tracking:', err)
+        console.error('Error initializing simulation tracking:', err)
         // Still try to start timer even if there's an error
         setIsTracking(true)
         startTimeRef.current = Date.now()
@@ -149,7 +134,6 @@ export function SimulationWrapper({
 
     return () => {
       if (timerIntervalRef.current) {
-        console.log('⏹️ Stopping timer, total time:', timeSpent, 'seconds')
         clearInterval(timerIntervalRef.current)
       }
     }
