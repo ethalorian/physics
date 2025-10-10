@@ -467,12 +467,10 @@ class SumoPhysicsEngine {
 
 function SumoForcesContent({
   onInteraction,
-  onComplete,
-  requestAIHint
+  onComplete
 }: {
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
-  requestAIHint: (question: string) => Promise<string>
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<SumoPhysicsEngine | null>(null)
@@ -888,11 +886,10 @@ export default function SumoForcesPage() {
         }
       }}
     >
-      {({ onInteraction, onComplete, requestAIHint }) => (
+      {({ onInteraction, onComplete }) => (
         <SumoForcesContent 
           onInteraction={onInteraction}
           onComplete={onComplete}
-          requestAIHint={requestAIHint}
         />
       )}
     </SimulationWrapper>

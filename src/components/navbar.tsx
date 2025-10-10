@@ -6,8 +6,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 // External package imports
-import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, X, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope, Calculator } from "lucide-react"
+import { useSession, signIn } from "next-auth/react"
+import { Menu, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -24,14 +24,10 @@ export default function Navbar() {
   const { viewMode } = useViewMode()
   const pathname = usePathname()
   
-  // Use original permissions for actual user role
-  const { userRole } = usePermissions()
-  
   // Use view-aware permissions for navigation decisions
   const {
     isAuthenticated,
-    canAccessAdmin,
-    effectiveRole
+    canAccessAdmin
   } = useViewAwarePermissions(viewMode)
 
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content

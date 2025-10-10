@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Check, X, RotateCcw, Target, Ruler, Move } from 'lucide-react'
 import Link from 'next/link'
-import { SimulationWrapper, AIHintButton } from '@/components/simulations/SimulationWrapper'
+import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 
 interface MeasurementDevice {
   name: string
@@ -468,7 +468,6 @@ function InteractiveMeasurement({ device }: InteractiveMeasurementProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleMouseDown = () => setIsDragging(true)
-  const handleMouseUp = () => setIsDragging(false)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isDragging || !containerRef.current) return
@@ -508,8 +507,6 @@ function InteractiveMeasurement({ device }: InteractiveMeasurementProps) {
     : 0
   const displayValue = rawValue.toFixed(decimalPlaces)
 
-  // Find nearest marking for visual feedback
-  const nearestMarking = Math.round(rawValue / device.minorDivision) * device.minorDivision
 
   return (
     <div className="space-y-4">
@@ -621,12 +618,10 @@ function InteractiveMeasurement({ device }: InteractiveMeasurementProps) {
 // Internal component with simulation logic
 function MeasurementPrecisionSimulationContent({ 
   onInteraction, 
-  onComplete, 
-  requestAIHint 
+  onComplete
 }: {
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
-  requestAIHint: (question: string) => Promise<string>
 }) {
   const [selectedDevice, setSelectedDevice] = useState<MeasurementDevice>(devices[0])
   const [currentProblem, setCurrentProblem] = useState<MeasurementProblem | null>(null)
@@ -635,7 +630,6 @@ function MeasurementPrecisionSimulationContent({
   const [score, setScore] = useState({ correct: 0, total: 0 })
   const [showHint, setShowHint] = useState(false)
   const [demoDevice, setDemoDevice] = useState<MeasurementDevice>(devices[0])
-  const [aiHint, setAiHint] = useState<string | null>(null)
 
   const generateProblem = useCallback((device: MeasurementDevice) => {
     const trueValue = Number((Math.random() * (device.range[1] - device.range[0] - 10) + 5).toFixed(1))

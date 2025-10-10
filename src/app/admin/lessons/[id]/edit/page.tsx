@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import { Lesson } from '@/types/assignment'
 import AdminLessonEditor from '@/components/admin/AdminLessonEditor'
 

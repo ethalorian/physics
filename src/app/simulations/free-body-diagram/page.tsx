@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
-import { RotateCcw, Play, Pause, Info, HelpCircle, Move, Download, Trash2 } from 'lucide-react'
+import { RotateCcw, Info, HelpCircle, Move, Download, Trash2 } from 'lucide-react'
 import MathMarkdown from '@/components/MathMarkdown'
 
 // ============================================================================
@@ -94,10 +94,10 @@ class FreeBodyDiagramEngine {
   private setupEventListeners() {
     this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e))
     this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e))
-    this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e))
+    this.canvas.addEventListener('mouseup', () => this.handleMouseUp())
     this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e))
     this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e))
-    this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e))
+    this.canvas.addEventListener('touchend', () => this.handleTouchEnd())
     window.addEventListener('resize', () => this.resizeCanvas())
   }
 
@@ -192,7 +192,7 @@ class FreeBodyDiagramEngine {
     }
   }
 
-  private handleMouseUp(e: MouseEvent) {
+  private handleMouseUp() {
     this.isDraggingObject = false
     this.dragOffset = null
     
@@ -225,9 +225,8 @@ class FreeBodyDiagramEngine {
     }
   }
 
-  private handleTouchEnd(e: TouchEvent) {
-    const mouseEvent = new MouseEvent('mouseup', {})
-    this.handleMouseUp(mouseEvent)
+  private handleTouchEnd() {
+    this.handleMouseUp()
   }
 
   private getForceEndpoint(force: ForceVector): Vector2D {
@@ -602,12 +601,10 @@ class FreeBodyDiagramEngine {
 
 function FreeBodyDiagramContent({
   onInteraction,
-  onComplete,
-  requestAIHint
+  onComplete
 }: {
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
-  requestAIHint: (question: string) => Promise<string>
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<FreeBodyDiagramEngine | null>(null)
@@ -1041,11 +1038,10 @@ export default function FreeBodyDiagramPage() {
         }
       }}
     >
-      {({ onInteraction, onComplete, requestAIHint }) => (
+      {({ onInteraction, onComplete }) => (
         <FreeBodyDiagramContent 
           onInteraction={onInteraction}
           onComplete={onComplete}
-          requestAIHint={requestAIHint}
         />
       )}
     </SimulationWrapper>

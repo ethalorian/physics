@@ -19,7 +19,6 @@ interface Point {
 type GraphContext = 'kinematics' | 'generic'
 
 export default function SlopeCalculatorPage() {
-  const { data: session } = useSession()
   const [point1, setPoint1] = useState<Point>({ x: 0, y: 0 })
   const [point2, setPoint2] = useState<Point>({ x: 4, y: 8 })
   const [context, setContext] = useState<GraphContext>('kinematics')
@@ -88,11 +87,6 @@ export default function SlopeCalculatorPage() {
     ? acceleration
     : 0
   
-  const velocityResult = context === 'kinematics' ? {
-    slope: actualAcceleration,
-    deltaY: 0,
-    deltaX: orderedPoints.p2.x - orderedPoints.p1.x
-  } : null
   
   const handleReset = () => {
     setPoint1({ x: 0, y: 0 })

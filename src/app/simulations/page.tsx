@@ -89,7 +89,6 @@ const MOCK_SIMULATIONS: Simulation[] = [
 ]
 
 export default function SimulationsPage() {
-  const { data: session } = useSession()
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [simulations, setSimulations] = useState<Simulation[]>(MOCK_SIMULATIONS)

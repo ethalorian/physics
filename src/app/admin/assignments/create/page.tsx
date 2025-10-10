@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { Assignment, Question, MultipleChoiceQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion } from '@/types/assignment'
 import { useAssignments } from '@/contexts/AssignmentContext'
 import { Button } from '@/components/ui/button'
@@ -15,8 +14,7 @@ import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Breadcrumb } from '@/components/ui/breadcrumb'
 import QuestionEditor from '@/components/assignment-builder/question-editor'
-import { Plus, Save, Eye, Library, X, ChevronRight, Clock, BarChart3, Target, Sparkles, Home, FileText, Zap, BookOpen, Tag, TrendingUp } from 'lucide-react'
-import { PhysicsLevelInfo } from '@/components/physics-level-badge'
+import { Plus, Save, Eye, Library, X, ChevronRight, Clock, BarChart3, Target, Sparkles, FileText, Tag, TrendingUp } from 'lucide-react'
 import type { QuestionBankItem } from '@/types/question-bank'
 import { physicsUnits } from '@/data/physics-units'
 import dynamic from 'next/dynamic'
@@ -29,7 +27,6 @@ export default function CreateAssignmentPage() {
   const { data: session } = useSession()
   const router = useRouter()
   const { createAssignment } = useAssignments()
-  const [lessons, setLessons] = useState<Array<{id: string, title: string, slug: string}>>([])
   const [dbLessons, setDbLessons] = useState<Record<string, string>>({}) // Maps slug to UUID
   const [assignment, setAssignment] = useState<Partial<Assignment>>({
     title: '',
@@ -113,22 +110,10 @@ export default function CreateAssignmentPage() {
           }
         })
         setDbLessons(mapping)
-        
-        // Also set the lessons array for backward compatibility
-        setLessons(data.map((l: any) => ({
-          id: l.id,
-          title: l.title,
-          slug: l.slug
-        })))
       }
     } catch (error) {
       console.error('Error fetching lessons:', error)
-      // Fall back to mock data
-      setLessons([
-        { id: '1', title: 'Newton\'s Laws', slug: 'newtons-laws' },
-        { id: '2', title: 'Energy and Work', slug: 'energy-work' },
-        { id: '3', title: 'Waves and Sound', slug: 'waves-sound' }
-      ])
+      // Lessons will use static data from physicsUnits if DB fetch fails
     }
   }
 
@@ -291,18 +276,6 @@ export default function CreateAssignmentPage() {
     setSelectedTags(prev => prev.filter(t => t !== tag))
   }
 
-  // Get available physics topics from selected unit
-  const getAvailableTopics = () => {
-    const unit = physicsUnits.find(u => u.id === selectedUnit)
-    if (!unit) return []
-    
-    // Extract topics from lessons
-    const topics = new Set<string>()
-    unit.lessons.forEach(lesson => {
-      lesson.objectives?.forEach(obj => topics.add(lesson.name))
-    })
-    return Array.from(topics)
-  }
 
   const saveAssignment = async (publish: boolean = false) => {
     if (!assignment.title || !assignment.questions?.length) {

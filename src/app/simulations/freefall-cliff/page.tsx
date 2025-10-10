@@ -24,12 +24,10 @@ interface Trial {
 // Internal component with simulation logic
 function FreefallCliffLabContent({
   onInteraction,
-  onComplete,
-  requestAIHint
+  onComplete
 }: {
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
-  requestAIHint: (question: string) => Promise<string>
 }) {
   const [isDropping, setIsDropping] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -117,7 +115,6 @@ function FreefallCliffLabContent({
         lastTraceRef.current = timestamp
       }
 
-      const deltaTime = (timestamp - lastTimeRef.current) / 1000
       lastTimeRef.current = timestamp
 
       const elapsedTime = (timestamp - startTimeRef.current) / 1000

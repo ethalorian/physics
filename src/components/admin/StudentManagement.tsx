@@ -11,6 +11,8 @@ import { Users, RefreshCw, Search, Download, UserCheck, GraduationCap, Grid3x3, 
 import { initializeGoogleClassroomAuth, googleClassroomAPI } from '@/lib/google-classroom'
 import { useToast } from '@/providers/toast-provider'
 import IncrementalAuth from '@/components/auth/IncrementalAuth'
+import CourseJoinCodeManager from '@/components/admin/CourseJoinCodeManager'
+import UnassignedStudentsManager from '@/components/admin/UnassignedStudentsManager'
 
 interface Student {
   id: string
@@ -26,6 +28,10 @@ interface Course {
   name: string
   section: string
   studentCount: number
+  join_code?: string | null
+  join_code_enabled?: boolean
+  join_code_expires_at?: string | null
+  max_enrollments?: number | null
 }
 
 export default function StudentManagement() {
@@ -48,38 +54,67 @@ export default function StudentManagement() {
   const fetchCourses = useCallback(async () => {
     try {
       // Fetch courses from Google Classroom
+      // Note: Token should be set on googleClassroomAPI before calling this
       const courses = await googleClassroomAPI.getCourses()
       
-      // Fetch student counts for each course
-      const coursesWithStudentCounts = await Promise.all(
+      // Fetch course data from our database (including join codes)
+      let dbCoursesMap = new Map()
+      try {
+        const dbResponse = await fetch('/api/roster/courses')
+        if (dbResponse.ok) {
+          const dbData = await dbResponse.json()
+          if (dbData.courses) {
+            dbCoursesMap = new Map(
+              dbData.courses.map((c: any) => [c.google_course_id, c])
+            )
+          }
+        }
+      } catch (error) {
+        console.warn('Could not fetch database course info:', error)
+      }
+      
+      // Fetch student counts and merge with database info
+      const coursesWithData = await Promise.all(
         courses.map(async (course) => {
           try {
             const students = await googleClassroomAPI.getStudents(course.id)
+            const dbCourse = dbCoursesMap.get(course.id)
+            
             return {
               id: course.id,
               name: course.name,
               section: course.section || 'No section',
-              studentCount: students.length
+              studentCount: students.length,
+              join_code: dbCourse?.join_code || null,
+              join_code_enabled: dbCourse?.join_code_enabled || false,
+              join_code_expires_at: dbCourse?.join_code_expires_at || null,
+              max_enrollments: dbCourse?.max_enrollments || null
             }
           } catch (error) {
             console.error(`Failed to fetch students for course ${course.id}:`, error)
+            const dbCourse = dbCoursesMap.get(course.id)
+            
             return {
               id: course.id,
               name: course.name,
               section: course.section || 'No section',
-              studentCount: 0
+              studentCount: 0,
+              join_code: dbCourse?.join_code || null,
+              join_code_enabled: dbCourse?.join_code_enabled || false,
+              join_code_expires_at: dbCourse?.join_code_expires_at || null,
+              max_enrollments: dbCourse?.max_enrollments || null
             }
           }
         })
       )
       
-      setCourses(coursesWithStudentCounts)
+      setCourses(coursesWithData)
       
-      if (coursesWithStudentCounts.length > 0 && !selectedCourse) {
-        setSelectedCourse(coursesWithStudentCounts[0].id)
+      if (coursesWithData.length > 0 && !selectedCourse) {
+        setSelectedCourse(coursesWithData[0].id)
       }
       
-      return coursesWithStudentCounts
+      return coursesWithData
     } catch (error) {
       console.error('Error fetching courses:', error)
       throw error
@@ -89,41 +124,12 @@ export default function StudentManagement() {
   // Auto-connect using NextAuth session token
   useEffect(() => {
     if (session?.accessToken && !isConnected && !needsClassroomScope) {
-      console.log('✅ Found Google access token in session, attempting auto-connect...')
-      setLoading(true)
-      setAccessToken(session.accessToken)
-      googleClassroomAPI.setAccessToken(session.accessToken)
-      
-      // Try to fetch courses to verify token is valid
-      fetchCourses()
-        .then(() => {
-          setIsConnected(true)
-          setNeedsClassroomScope(false)
-          console.log('✅ Auto-connected successfully!')
-        })
-        .catch((error) => {
-          console.warn('⚠️ Session token issue:', error)
-          
-          // Check if it's a scope error
-          if (error.message?.includes('insufficient authentication scopes') || 
-              error.message?.includes('PERMISSION_DENIED')) {
-            console.log('📋 Need additional Google Classroom scopes')
-            setNeedsClassroomScope(true)
-            setAccessToken(null)
-            setIsConnected(false)
-            showToast({
-              title: "Additional Permissions Required",
-              description: "This feature requires access to Google Classroom."
-            })
-          } else {
-            // Token is expired or invalid, clear it and show connect button
-            setAccessToken(null)
-            setIsConnected(false)
-          }
-        })
-        .finally(() => setLoading(false))
+      console.log('Session has access token, but Google Classroom connection not attempted yet')
+      console.log('User will need to click "Connect to Google Classroom" button')
+      // Don't auto-connect - let user explicitly connect
+      // This avoids unnecessary API calls and errors
     }
-  }, [session?.accessToken, isConnected, needsClassroomScope, fetchCourses, showToast])
+  }, [session?.accessToken, isConnected, needsClassroomScope])
 
   useEffect(() => {
     // Only initialize with real data when connected
@@ -554,6 +560,9 @@ export default function StudentManagement() {
         </Card>
       ) : (
         <>
+          {/* Unassigned Students Manager - Show first as it's important */}
+          <UnassignedStudentsManager />
+
           {/* Data Source Toggle */}
           <div className="flex items-center gap-4 mb-4">
             <div className="flex items-center gap-2">
@@ -629,6 +638,22 @@ export default function StudentManagement() {
               </Button>
             </div>
           </div>
+
+          {/* Course Join Code Manager - Show when course is selected */}
+          {selectedCourse && (
+            <CourseJoinCodeManager
+              courseId={selectedCourse}
+              courseName={courses.find(c => c.id === selectedCourse)?.name || 'Selected Course'}
+              currentJoinCode={courses.find(c => c.id === selectedCourse)?.join_code}
+              joinCodeEnabled={courses.find(c => c.id === selectedCourse)?.join_code_enabled}
+              joinCodeExpiresAt={courses.find(c => c.id === selectedCourse)?.join_code_expires_at}
+              maxEnrollments={courses.find(c => c.id === selectedCourse)?.max_enrollments}
+              onUpdate={async () => {
+                // Refresh courses to get updated join code info
+                await fetchCourses()
+              }}
+            />
+          )}
 
           {/* Students Overview */}
           <div className="grid gap-4 md:grid-cols-4">

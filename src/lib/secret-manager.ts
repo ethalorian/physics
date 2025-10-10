@@ -45,14 +45,15 @@ class GoogleSecretManager implements SecretManager {
     this.initPromise = (async () => {
       try {
         // Try to dynamically import the Google Cloud Secret Manager
-        const module = await import('@google-cloud/secret-manager').catch(() => null)
+        // @ts-expect-error - Optional dependency, will be null if not installed
+        const secretManagerModule = await import('@google-cloud/secret-manager').catch(() => null)
         
-        if (!module) {
-          console.log('Google Cloud Secret Manager package not installed. Run: npm install @google-cloud/secret-manager')
+        if (!secretManagerModule) {
+          console.log('Google Cloud Secret Manager package not installed (optional for development)')
           return
         }
         
-        SecretManagerServiceClient = module.SecretManagerServiceClient
+        SecretManagerServiceClient = secretManagerModule.SecretManagerServiceClient
         
         // Only initialize if credentials are available
         if (process.env.GOOGLE_APPLICATION_CREDENTIALS || process.env.GCP_SERVICE_ACCOUNT_KEY) {
@@ -176,7 +177,7 @@ class GoogleSecretManager implements SecretManager {
     try {
       const parent = `projects/${this.projectId}`
       const [secrets] = await this.client.listSecrets({ parent })
-      return secrets.map(secret => secret.name?.split('/').pop() || '').filter(Boolean)
+      return secrets.map((secret: any) => secret.name?.split('/').pop() || '').filter(Boolean)
     } catch (error) {
       throw new Error(`Failed to list secrets: ${error}`)
     }
@@ -426,6 +427,3 @@ export async function getCachedSecret(
 export function clearSecretCache() {
   secretCache.clear()
 }
-
-// Export types for external use
-export type { SecretManagerConfig }

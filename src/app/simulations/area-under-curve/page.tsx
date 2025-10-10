@@ -40,7 +40,6 @@ export default function AreaUnderCurvePage() {
   const [graphType, setGraphType] = useState<GraphType>('velocity-time')
   const [point1, setPoint1] = useState<Point>({ x: 0, y: 5 })
   const [point2, setPoint2] = useState<Point>({ x: 4, y: 5 })
-  const [showBreakdown, setShowBreakdown] = useState(true)
   const [numRectangles, setNumRectangles] = useState(4) // For position-time approximation
   const [v0, setV0] = useState(0) // Initial velocity for position-time
   const [acceleration, setAcceleration] = useState(0) // Acceleration for position-time

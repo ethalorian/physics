@@ -29,7 +29,6 @@ interface DataPoint {
 export default function SimulationPage() {
   const params = useParams()
   const router = useRouter()
-  const simulationId = params.id as string
 
   // Simulation state
   const [isRunning, setIsRunning] = useState(false)
@@ -236,7 +235,7 @@ export default function SimulationPage() {
                         {/* Simple X-Y trajectory graph */}
                         <svg className="w-full h-full">
                           <polyline
-                            points={dataPoints.map((d, i) => {
+                            points={dataPoints.map((d) => {
                               const x = (d.x / maxX) * 100
                               const y = 100 - (d.y / maxY) * 100
                               return `${x},${y}`

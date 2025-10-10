@@ -14,7 +14,7 @@ import { FileText, AlertCircle } from "lucide-react"
 import Link from "next/link"
 
 export default function AssignmentsPage() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
   const { isAuthenticated } = usePermissions()
   const router = useRouter()
 

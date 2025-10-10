@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, FlaskConical, CheckCircle } from 'lucide-react'
+import { ArrowLeft, FlaskConical } from 'lucide-react'
 import { CreateSimulationAssignmentForm } from '@/components/assignment-system/CreateSimulationAssignmentForm'
 import { getUserRole } from '@/lib/permissions'
 

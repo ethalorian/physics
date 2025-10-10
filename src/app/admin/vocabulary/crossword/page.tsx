@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Grid3x3, Trophy, Users, BookOpen, Target } from 'lucide-react'
+import { ArrowLeft, Grid3x3, Trophy, BookOpen, Target } from 'lucide-react'
 import Link from 'next/link'
 import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
 

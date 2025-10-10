@@ -11,6 +11,7 @@ import {
   logOAuthClientUsage,
   validateOAuthConfig
 } from './oauth-security'
+import { ensureStudentRecord } from './student-management'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -292,10 +293,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       
       return baseUrl
     },
-    signIn: async () => {
+    signIn: async ({ user, account }) => {
+      // Ensure student record exists in database
+      if (user?.email && user?.id) {
+        try {
+          const result = await ensureStudentRecord(
+            user.email,
+            user.id,
+            user.name
+          )
+          
+          if (result.isNew) {
+            console.log(`✅ Created new student record for ${user.email}`)
+          } else {
+            console.log(`✓ Student record already exists for ${user.email}`)
+          }
+        } catch (error) {
+          console.error('Error ensuring student record:', error)
+          // Don't block sign-in if student record creation fails
+        }
+      }
+      
       // You can add additional checks here if needed
       // For example, to restrict to specific email domains:
-      // if (profile?.email && !profile.email.endsWith('@yourschool.edu')) {
+      // if (user?.email && !user.email.endsWith('@yourschool.edu')) {
       //   return false;
       // }
       return true;

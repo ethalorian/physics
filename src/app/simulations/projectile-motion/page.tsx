@@ -15,8 +15,7 @@ import {
   Download,
   BarChart3,
   Table as TableIcon,
-  Info,
-  Crosshair
+  Info
 } from 'lucide-react'
 
 // ============================================================================

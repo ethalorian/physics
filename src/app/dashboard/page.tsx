@@ -5,7 +5,6 @@ import { useViewMode } from '@/contexts/ViewModeContext'
 import { useViewAwarePermissions } from '@/hooks/useViewAwarePermissions'
 import { useAssignments } from '@/contexts/AssignmentContext'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
@@ -20,12 +19,11 @@ import {
   Calculator
 } from 'lucide-react'
 import StudentLessons from '@/components/student/StudentLessons'
-import StudentAssignments from '@/components/student/StudentAssignments'
 import VocabularyGamesOverview from '@/components/student/VocabularyGamesOverview'
 import { StudentAssignmentView } from '@/components/assignment-system/StudentAssignmentView'
+import EnrollmentGate from '@/components/student/EnrollmentGate'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useVocabulary } from '@/contexts/VocabularyContext'
 import Link from 'next/link'
 
 export default function StudentDashboard() {
@@ -67,9 +65,10 @@ export default function StudentDashboard() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
-      {/* Header - Mobile optimized */}
-      <div className="space-y-3 sm:space-y-4">
+    <EnrollmentGate>
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
+        {/* Header - Mobile optimized */}
+        <div className="space-y-3 sm:space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground relative">
@@ -151,7 +150,8 @@ export default function StudentDashboard() {
           <VocabularyGamesOverview />
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </EnrollmentGate>
   )
 }
 

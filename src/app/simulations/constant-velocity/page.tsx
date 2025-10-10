@@ -40,12 +40,10 @@ type Direction = 'forward' | 'backward' | 'stopped'
 // Internal component with simulation logic
 function ConstantVelocityLabContent({
   onInteraction,
-  onComplete,
-  requestAIHint
+  onComplete
 }: {
   onInteraction: (action: string, data: Record<string, any>) => void
   onComplete: (data: Record<string, any>, score?: number) => void
-  requestAIHint: (question: string) => Promise<string>
 }) {
   const router = useRouter()
   const { data: session } = useSession()
@@ -427,7 +425,7 @@ function ConstantVelocityLabContent({
 
                           {/* Data line */}
                           <polyline
-                            points={dataPoints.map((d, i) => {
+                            points={dataPoints.map((d) => {
                               const x = (d.time / Math.max(...dataPoints.map(p => p.time), 1)) * 100
                               const y = 50 - ((d.position - minPos) / posRange - 0.5) * 90
                               return `${x},${y}`

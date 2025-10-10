@@ -1,7 +1,6 @@
 "use client"
 import { useState, useEffect, useMemo } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { getUserRole } from '@/lib/permissions'
 import { useAssignments } from '@/contexts/AssignmentContext'
@@ -29,11 +28,11 @@ import {
   Plus, Search, Filter, Calendar, Users, FileText, 
   MoreVertical, Edit, Trash2, Eye, Copy, Send,
   TrendingUp, Clock, CheckCircle2, AlertCircle,
-  BookOpen, Target, Award, BarChart3, Settings,
+  BookOpen, Target, Award, BarChart3,
   GraduationCap, ClipboardList, Sparkles, Microscope, Loader2
 } from 'lucide-react'
 import { format, isAfter, isBefore, parseISO } from 'date-fns'
-import { CreateLessonAssignmentForm, CreateHomeworkAssignmentForm } from '@/components/assignment-system/CreateAssignmentForms'
+import { CreateLessonAssignmentForm } from '@/components/assignment-system/CreateAssignmentForms'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 export default function UnifiedAssignmentHub() {
@@ -64,7 +63,6 @@ export default function UnifiedAssignmentHub() {
   const [createType, setCreateType] = useState<'homework' | 'lesson' | 'simulation'>('homework')
   const [simulations, setSimulations] = useState<any[]>([])
   const [loadingSimulations, setLoadingSimulations] = useState(false)
-  const [selectedSimulation, setSelectedSimulation] = useState<any>(null)
 
   // Load simulations when dialog opens
   useEffect(() => {
