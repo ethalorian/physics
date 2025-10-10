@@ -14,31 +14,57 @@ export async function GET(request: Request) {
     const setId = searchParams.get('setId')
 
     if (setId) {
+      // Check user role
+      const userRole = getUserRole(session.user?.email)
+      const isStudent = userRole === 'student'
+
       // Get specific vocabulary set with terms
-      const { data: vocabularySet, error: setError } = await supabaseAdmin
+      let query = supabaseAdmin
         .from('vocabulary_sets')
         .select(`
           *,
           vocabulary_terms (*)
         `)
         .eq('id', setId)
-        .single()
+
+      // Students can only access published sets
+      if (isStudent) {
+        query = query.eq('published', true)
+      }
+
+      const { data: vocabularySet, error: setError } = await query.single()
 
       if (setError) {
         console.error('Error fetching vocabulary set:', setError)
         return NextResponse.json({ error: setError.message }, { status: 500 })
       }
 
+      // If student tries to access unpublished set, return 403
+      if (isStudent && !vocabularySet.published) {
+        return NextResponse.json({ error: 'This vocabulary set is not published' }, { status: 403 })
+      }
+
       return NextResponse.json(vocabularySet)
     } else {
-      // Get all vocabulary sets with terms
-      const { data: vocabularySets, error } = await supabaseAdmin
+      // Check user role to determine what vocabulary sets to show
+      const userRole = getUserRole(session.user?.email)
+      const isStudent = userRole === 'student'
+
+      // Build query - students only see published sets
+      let query = supabaseAdmin
         .from('vocabulary_sets')
         .select(`
           *,
           vocabulary_terms (*)
         `)
         .order('created_at', { ascending: false })
+
+      // Filter for students: only show published vocabulary sets
+      if (isStudent) {
+        query = query.eq('published', true)
+      }
+
+      const { data: vocabularySets, error } = await query
 
       if (error) {
         console.error('Database vocabulary tables not found, falling back to localStorage:', error)
