@@ -238,7 +238,10 @@ async function getTeacherDashboard(
     simulation_embedded: 0
   }
   assignments.forEach(a => {
-    assignmentsByType[a.assignment_type]++
+    const type = a.assignment_type as keyof typeof assignmentsByType
+    if (type in assignmentsByType) {
+      assignmentsByType[type]++
+    }
   })
 
   // Get all progress records
@@ -389,13 +392,15 @@ async function getStudentDashboard(studentEmail: string): Promise<StudentDashboa
   }
 
   progressRecords.forEach(p => {
-    const type = p.assignment!.assignment_type
-    assignmentsByType[type].total++
-    if (['completed', 'submitted', 'graded'].includes(p.status)) {
-      assignmentsByType[type].completed++
-    }
-    if (['started', 'in_progress'].includes(p.status)) {
-      assignmentsByType[type].in_progress++
+    const type = p.assignment!.assignment_type as keyof typeof assignmentsByType
+    if (type in assignmentsByType) {
+      assignmentsByType[type].total++
+      if (['completed', 'submitted', 'graded'].includes(p.status)) {
+        assignmentsByType[type].completed++
+      }
+      if (['started', 'in_progress'].includes(p.status)) {
+        assignmentsByType[type].in_progress++
+      }
     }
   })
 

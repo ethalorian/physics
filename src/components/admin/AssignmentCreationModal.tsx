@@ -196,7 +196,7 @@ export function AssignmentCreationModal({
     if (!selectedContent) {
       showToast({
         title: 'Error',
-        message: 'Please select content to assign',
+        description: 'Please select content to assign',
         variant: 'error'
       })
       return
@@ -205,7 +205,7 @@ export function AssignmentCreationModal({
     if (!selectedCourse && selectedStudents.length === 0) {
       showToast({
         title: 'Error',
-        message: 'Please select a course or specific students',
+        description: 'Please select a course or specific students',
         variant: 'error'
       })
       return
@@ -244,7 +244,7 @@ export function AssignmentCreationModal({
 
       showToast({
         title: 'Success',
-        message: 'Assignment created successfully',
+        description: 'Assignment created successfully',
         variant: 'success'
       })
 
@@ -254,7 +254,7 @@ export function AssignmentCreationModal({
       console.error('Error creating assignment:', error)
       showToast({
         title: 'Error',
-        message: error instanceof Error ? error.message : 'Failed to create assignment',
+        description: error instanceof Error ? error.message : 'Failed to create assignment',
         variant: 'error'
       })
     } finally {

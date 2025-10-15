@@ -25,6 +25,7 @@ interface SimulationLessonViewProps {
     objectives?: string[]
     prerequisites?: string[]
     simulation_id: string
+    unit?: string
     simulation?: {
       id: string
       slug: string
@@ -146,7 +147,7 @@ export default function SimulationLessonView({
           <div className="space-y-4">
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span>{lesson.unit_id?.toUpperCase()}</span>
+              <span>{lesson.unit?.toUpperCase()}</span>
               <span>›</span>
               <span>{lesson.title}</span>
             </div>
@@ -262,10 +263,7 @@ export default function SimulationLessonView({
                   <Loader2 className="h-8 w-8 animate-spin" />
                 </div>
               }>
-                <SimulationComponent 
-                  embedded={true}
-                  onComplete={handleSimulationComplete}
-                />
+                <SimulationComponent />
               </Suspense>
             </CardContent>
           </Card>

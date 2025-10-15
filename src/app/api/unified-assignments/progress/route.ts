@@ -149,7 +149,7 @@ export async function PUT(request: NextRequest) {
       }
 
       // Students cannot set certain fields
-      const studentUpdates = {
+      const studentUpdates: Record<string, unknown> = {
         status: updates.status,
         progress_percentage: updates.progress_percentage,
         time_spent: updates.time_spent,

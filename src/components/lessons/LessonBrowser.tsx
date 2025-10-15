@@ -104,7 +104,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   }, [searchTerm, filterUnit, filterType, filterDifficulty])
 
   // Get unique units
-  const units = Array.from(new Set(lessons.map(l => l.unit).filter(Boolean))).sort()
+  const units = Array.from(new Set(lessons.map(l => l.unit).filter((u): u is string => Boolean(u)))).sort()
 
   // Filter lessons locally if needed
   const filteredLessons = lessons.filter(lesson => {

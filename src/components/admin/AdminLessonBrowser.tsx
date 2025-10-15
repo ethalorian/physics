@@ -255,7 +255,7 @@ export default function AdminLessonBrowser() {
   }
 
   // Get unique units
-  const units = Array.from(new Set(lessons.map(l => l.unit).filter(Boolean))).sort()
+  const units = Array.from(new Set(lessons.map(l => l.unit).filter((u): u is string => Boolean(u)))).sort()
 
   // Filter lessons locally
   const filteredLessons = lessons.filter(lesson => {

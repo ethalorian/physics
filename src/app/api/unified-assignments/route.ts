@@ -57,14 +57,17 @@ export async function GET(request: NextRequest) {
       query = query.eq('assigned_by', session.user.email)
     } else {
       // Students see only their assigned assignments
+      // First get the assignment IDs for this student
+      const { data: studentProgress } = await supabase
+        .from('student_assignment_progress')
+        .select('unified_assignment_id')
+        .eq('student_email', session.user.email)
+      
+      const assignmentIds = studentProgress?.map(p => p.unified_assignment_id) || []
+      
       query = query
         .eq('published', true)
-        .in('id', 
-          supabase
-            .from('student_assignment_progress')
-            .select('unified_assignment_id')
-            .eq('student_email', session.user.email)
-        )
+        .in('id', assignmentIds.length > 0 ? assignmentIds : ['']) // Empty string to return no results if no assignments
     }
 
     // Apply filters
