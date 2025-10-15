@@ -57,6 +57,30 @@ interface Lesson {
   created_at: string
 }
 
+interface SimulationOption {
+  id: string
+  slug: string
+  title: string
+  description?: string
+  category?: string
+  unit?: string
+}
+
+interface LessonData {
+  title: string
+  slug: string
+  description: string
+  unit: string
+  lesson_number: number
+  lesson_type: 'video' | 'simulation' | 'markdown'
+  estimated_time: number
+  objectives: string[]
+  published: boolean
+  content?: string
+  video_url?: string
+  simulation_id?: string
+}
+
 export default function AdminLessonBrowser() {
   const router = useRouter()
   const [lessons, setLessons] = useState<Lesson[]>([])
@@ -81,7 +105,7 @@ export default function AdminLessonBrowser() {
     simulation_id: '',
     video_url: ''
   })
-  const [availableSimulations, setAvailableSimulations] = useState<any[]>([])
+  const [availableSimulations, setAvailableSimulations] = useState<SimulationOption[]>([])
 
   useEffect(() => {
     fetchLessons()
@@ -158,7 +182,7 @@ export default function AdminLessonBrowser() {
     setLoading(true)
     
     try {
-      const lessonData: any = {
+      const lessonData: LessonData = {
         title: formData.title,
         slug: formData.slug,
         description: formData.description,

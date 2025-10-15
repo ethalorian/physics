@@ -91,7 +91,7 @@ export default function AssignmentsPage() {
           <div>
             <h3 className="text-lg font-semibold mb-2">Assignment System Upgrade</h3>
             <p className="text-muted-foreground mb-4">
-              We're migrating to a new unified assignment system with better tracking and features.
+              We&apos;re migrating to a new unified assignment system with better tracking and features.
             </p>
             <p className="text-sm text-muted-foreground">
               Your teacher will notify you when the new system is ready!

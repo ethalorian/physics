@@ -76,7 +76,7 @@ export default function SimulationLessonView({
   // Calculate progress
   const calculateProgress = useCallback(() => {
     let completed = 0
-    let total = 3 // pre-questions, simulation, post-questions
+    const total = 3 // pre-questions, simulation, post-questions
 
     if (preQuestions.length === 0 || preQuestionsAnswered) completed++
     if (simulationCompleted) completed++

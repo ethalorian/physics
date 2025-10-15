@@ -40,14 +40,24 @@ export function clearPhysicsStorage(): void {
 /**
  * Clear only image data from assignments in localStorage
  */
+interface AssignmentData {
+  questions?: QuestionData[]
+  [key: string]: unknown
+}
+
+interface QuestionData {
+  scenarioImage?: string | null
+  [key: string]: unknown
+}
+
 export function clearImageData(): void {
   try {
-    const assignments = JSON.parse(localStorage.getItem('physics-assignments') || '[]')
-    const cleaned = assignments.map((assignment: unknown) => ({
-      ...(assignment as Record<string, unknown>),
-      questions: (assignment as any).questions?.map((q: unknown) => ({
-        ...(q as Record<string, unknown>),
-        scenarioImage: (q as any).scenarioImage?.startsWith('data:image') ? null : (q as any).scenarioImage
+    const assignments = JSON.parse(localStorage.getItem('physics-assignments') || '[]') as AssignmentData[]
+    const cleaned = assignments.map((assignment) => ({
+      ...assignment,
+      questions: assignment.questions?.map((q) => ({
+        ...q,
+        scenarioImage: q.scenarioImage?.startsWith('data:image') ? null : q.scenarioImage
       }))
     }))
     

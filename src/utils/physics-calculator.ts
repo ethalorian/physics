@@ -3,12 +3,6 @@
  * Uses algebra-based formulas only, suitable for students with Algebra 1 skills
  */
 
-interface PhysicsContext {
-  equation?: string
-  variables?: Record<string, number>
-  targetVariable?: string
-}
-
 // Use g=10 m/s² for high school simplicity (instead of GRAVITY)
 const GRAVITY = 10 
 

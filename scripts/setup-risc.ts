@@ -10,6 +10,7 @@ import { setupRisc, getStreamConfiguration, getStreamStatus } from '../src/lib/r
 import dotenv from 'dotenv'
 import path from 'path'
 import fs from 'fs'
+import * as readline from 'readline'
 
 // Load environment variables
 dotenv.config({ path: path.join(process.cwd(), '.env.local') })
@@ -123,7 +124,6 @@ async function main() {
       // Ask if user wants to update
       log('\nRISC is already configured. Do you want to update it? (y/n)', colors.yellow)
       
-      const readline = require('readline')
       const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout
