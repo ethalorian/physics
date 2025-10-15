@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import StudentLessons from '@/components/student/StudentLessons'
 import VocabularyGamesOverview from '@/components/student/VocabularyGamesOverview'
-import { StudentAssignmentView } from '@/components/assignment-system/StudentAssignmentView'
+// import { StudentAssignmentView } from '@/components/assignment-system/StudentAssignmentView' // Removed - migrating to unified hub
 import EnrollmentGate from '@/components/student/EnrollmentGate'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
@@ -142,7 +142,20 @@ export default function StudentDashboard() {
 
         {/* Assignments Tab */}
         <TabsContent value="assignments">
-          <StudentAssignmentView />
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Assignments</CardTitle>
+              <CardDescription>View and complete your assigned work</CardDescription>
+            </CardHeader>
+            <CardContent className="text-center py-8">
+              <p className="text-muted-foreground mb-4">
+                Student assignment view is being migrated to the new unified system.
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Check back soon for an improved assignment experience!
+              </p>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Vocabulary Tab */}

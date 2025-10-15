@@ -162,16 +162,39 @@ This document maps out the complete site navigation structure, page hierarchy, a
 - Area Under Curve → `/simulations/area-under-curve`
 
 ### Individual Simulation
-**Route:** `/simulations/[id]`  
-**Component:** `src/app/simulations/[id]/page.tsx`  
+**Route:** `/simulations/[slug]`  
+**Component:** `src/app/simulations/[slug]/page.tsx` (specific simulation pages)
 **Access:** All authenticated users
+
+**Available Simulations:**
+Each simulation has its own dedicated page:
+- `/simulations/constant-velocity` - Constant Velocity Motion Lab
+- `/simulations/uniformly-accelerated-motion` - Uniformly Accelerated Motion
+- `/simulations/freefall-cliff` - Freefall Cliff Lab
+- `/simulations/projectile-motion` - Projectile Motion Lab
+- `/simulations/car-race` - Car Race Kinematics
+- `/simulations/race-track` - Race Track Analysis
+- `/simulations/monkey-hunter` - Monkey Hunter Lab
+- `/simulations/vacuum-chamber` - Vacuum Chamber Freefall
+- `/simulations/astronaut-thrust` - Astronaut Thrust Lab
+- `/simulations/carts-third-law` - Newton's Third Law Carts
+- `/simulations/riverboat-crossing` - Riverboat Crossing
+- `/simulations/atwood-machine` - Atwood Machine
+- `/simulations/maze-vectors` - Vector Maze Navigation
+- `/simulations/free-body-diagram` - Free Body Diagram Tool
+- `/simulations/sumo-forces` - Sumo Forces Simulation
+- `/simulations/measurement-precision` - Measurement & Precision Lab
+- `/simulations/slope-calculator` - Slope Calculator Tool
+- `/simulations/distance-displacement` - Distance vs Displacement
+- `/simulations/area-under-curve` - Area Under Curve Tool
 
 **Features:**
 - Interactive physics simulation
 - Real-time calculations
 - Data collection
-- AI assistance (some simulations)
+- AI assistance (most simulations)
 - Activity tracking
+- Assignment integration
 
 ---
 
@@ -446,7 +469,7 @@ Landing (/)
     │   └→ Take Assignment (/assignments/[id])
     │       └→ Submitted (/assignments/[id]/submitted)
     ├→ Simulations (/simulations)
-    │   └→ Individual Simulation (/simulations/[id])
+    │   └→ Individual Simulation (/simulations/[slug])
     └→ Vocabulary (/vocabulary)
         └→ Individual Game (/vocabulary/[game])
 ```

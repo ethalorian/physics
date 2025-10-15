@@ -23,7 +23,7 @@ import {
   CheckCircle2,
   Sparkles
 } from 'lucide-react'
-import LessonManagement from '@/components/admin/LessonManagement'
+import AdminLessonBrowser from '@/components/admin/AdminLessonBrowser'
 import AssignmentManagement from '@/components/admin/AssignmentManagement'
 import StudentManagement from '@/components/admin/StudentManagement'
 import AdminOverview from '@/components/admin/AdminOverview'
@@ -296,7 +296,7 @@ export default function AdminDashboard() {
             </TabsList>
             
             <TabsContent value="lessons" className="space-y-4">
-              <LessonManagement />
+              <AdminLessonBrowser />
             </TabsContent>
             
             <TabsContent value="assignments" className="space-y-4">
@@ -344,17 +344,17 @@ export default function AdminDashboard() {
                 <div className="space-y-3">
                   <h3 className="font-semibold">Quick Links:</h3>
                   <div className="space-y-2">
-                    <Button asChild className="w-full justify-start" size="lg">
-                      <a href="/admin/assignments">
+                    <Button asChild className="w-full justify-start bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90" size="lg">
+                      <a href="/admin/assignment-hub">
                         <Target className="h-5 w-5 mr-2" />
-                        Go to Assignment Hub
+                        Global Assignment Hub
                         <ArrowRight className="h-5 w-5 ml-auto" />
                       </a>
                     </Button>
                     <Button asChild variant="outline" className="w-full justify-start">
                       <a href="/admin/assignments/create">
                         <Sparkles className="h-5 w-5 mr-2" />
-                        Create New Homework
+                        Build Homework Questions
                       </a>
                     </Button>
                   </div>

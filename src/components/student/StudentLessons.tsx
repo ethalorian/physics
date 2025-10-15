@@ -95,6 +95,12 @@ export default function StudentLessons() {
           <h2 className="text-2xl font-bold text-[#4A1A4A]">My Lessons</h2>
           <p className="text-[#6A4C93]">Track your progress through physics concepts</p>
         </div>
+        <Link href="/lessons">
+          <Button className="bg-gradient-to-r from-[#4A1A4A] to-[#6A4C93] hover:from-[#5A2A5A] hover:to-[#7A5CA3]">
+            <BookOpen className="h-4 w-4 mr-2" />
+            Browse All Lessons
+          </Button>
+        </Link>
       </div>
 
       {/* Search */}

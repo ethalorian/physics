@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation"
 
 // Internal imports
 import { PageHeader } from "@/components/ui/page-header"
-import { StudentAssignmentView } from "@/components/assignment-system/StudentAssignmentView"
+// import { StudentAssignmentView } from "@/components/assignment-system/StudentAssignmentView" // Removed - migrating to unified hub
 import { usePermissions } from "@/hooks/usePermissions"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -79,7 +79,26 @@ export default function AssignmentsPage() {
       />
 
       {/* Assignment View Component */}
-      <StudentAssignmentView />
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Assignments</CardTitle>
+          <CardDescription>View and complete your assigned work</CardDescription>
+        </CardHeader>
+        <CardContent className="text-center py-8 space-y-4">
+          <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+            <FileText className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Assignment System Upgrade</h3>
+            <p className="text-muted-foreground mb-4">
+              We're migrating to a new unified assignment system with better tracking and features.
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Your teacher will notify you when the new system is ready!
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

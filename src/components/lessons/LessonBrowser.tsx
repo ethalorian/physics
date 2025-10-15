@@ -1,0 +1,434 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { 
+  Search,
+  Filter,
+  Play,
+  CheckCircle,
+  Lock,
+  Video,
+  Microscope,
+  BookOpen,
+  Clock,
+  Target,
+  TrendingUp,
+  Award,
+  Sparkles,
+  Loader2
+} from 'lucide-react'
+
+interface Lesson {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  unit?: string
+  lesson_number?: number
+  lesson_type: 'video' | 'simulation' | 'markdown'
+  difficulty?: 'beginner' | 'intermediate' | 'advanced'
+  estimated_time?: number
+  objectives?: string[]
+  simulation?: {
+    id: string
+    slug: string
+    title: string
+    description?: string
+    difficulty?: string
+    estimated_time?: number
+  }
+  progress?: number
+  isNew?: boolean
+  order_index?: number
+}
+
+interface LessonBrowserProps {
+  initialLessons?: Lesson[]
+  initialProgress?: Record<string, number>
+}
+
+export default function LessonBrowser({ initialLessons = [], initialProgress = {} }: LessonBrowserProps) {
+  const router = useRouter()
+  const [lessons, setLessons] = useState<Lesson[]>(initialLessons)
+  const [progress, setProgress] = useState<Record<string, number>>(initialProgress)
+  const [loading, setLoading] = useState(!initialLessons.length)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterUnit, setFilterUnit] = useState('all')
+  const [filterType, setFilterType] = useState('all')
+  const [filterDifficulty, setFilterDifficulty] = useState('all')
+
+  // Fetch lessons on mount if not provided
+  useEffect(() => {
+    if (!initialLessons.length) {
+      fetchLessons()
+    }
+  }, [initialLessons.length])
+
+  const fetchLessons = async () => {
+    try {
+      setLoading(true)
+      const params = new URLSearchParams()
+      if (filterUnit !== 'all') params.append('unit', filterUnit)
+      if (filterType !== 'all') params.append('lesson_type', filterType)
+      if (filterDifficulty !== 'all') params.append('difficulty', filterDifficulty)
+      if (searchTerm) params.append('search', searchTerm)
+
+      const response = await fetch(`/api/lessons/published?${params.toString()}`)
+      if (!response.ok) throw new Error('Failed to fetch lessons')
+
+      const data = await response.json()
+      setLessons(data.lessons || [])
+      setProgress(data.progress || {})
+    } catch (error) {
+      console.error('Error fetching lessons:', error)
+      setLessons([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Refetch when filters change
+  useEffect(() => {
+    if (initialLessons.length === 0) {
+      const timer = setTimeout(() => {
+        fetchLessons()
+      }, 300) // Debounce
+      return () => clearTimeout(timer)
+    }
+  }, [searchTerm, filterUnit, filterType, filterDifficulty])
+
+  // Get unique units
+  const units = Array.from(new Set(lessons.map(l => l.unit).filter(Boolean))).sort()
+
+  // Filter lessons locally if needed
+  const filteredLessons = lessons.filter(lesson => {
+    if (searchTerm && !lesson.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !lesson.description?.toLowerCase().includes(searchTerm.toLowerCase())) {
+      return false
+    }
+    return true
+  })
+
+  // Group by unit
+  const lessonsByUnit = filteredLessons.reduce((acc, lesson) => {
+    const unit = lesson.unit || 'Other'
+    if (!acc[unit]) acc[unit] = []
+    acc[unit].push(lesson)
+    return acc
+  }, {} as Record<string, Lesson[]>)
+
+  // Calculate stats
+  const totalLessons = lessons.length
+  const completedCount = Object.values(progress).filter(p => p === 100).length
+  const inProgressCount = Object.values(progress).filter(p => p > 0 && p < 100).length
+  const simulationCount = lessons.filter(l => l.lesson_type === 'simulation').length
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading lessons...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header with Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold">{totalLessons}</div>
+                <div className="text-xs text-muted-foreground">Total Lessons</div>
+              </div>
+              <BookOpen className="h-8 w-8 text-blue-500 opacity-50" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold text-green-600">{completedCount}</div>
+                <div className="text-xs text-muted-foreground">Completed</div>
+              </div>
+              <CheckCircle className="h-8 w-8 text-green-500 opacity-50" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold text-blue-600">{inProgressCount}</div>
+                <div className="text-xs text-muted-foreground">In Progress</div>
+              </div>
+              <TrendingUp className="h-8 w-8 text-blue-500 opacity-50" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-2xl font-bold text-purple-600">{simulationCount}</div>
+                <div className="text-xs text-muted-foreground">Simulations</div>
+              </div>
+              <Microscope className="h-8 w-8 text-purple-500 opacity-50" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card>
+        <CardContent className="py-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search lessons..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            {/* Unit Filter */}
+            <Select value={filterUnit} onValueChange={setFilterUnit}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="All Units" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Units</SelectItem>
+                {units.map(unit => (
+                  <SelectItem key={unit} value={unit}>{unit}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Type Filter */}
+            <Select value={filterType} onValueChange={setFilterType}>
+              <SelectTrigger className="w-full md:w-48">
+                <SelectValue placeholder="All Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="simulation">🔬 Simulations</SelectItem>
+                <SelectItem value="video">📹 Videos</SelectItem>
+                <SelectItem value="markdown">📖 Reading</SelectItem>
+              </SelectContent>
+            </Select>
+
+            {/* Difficulty Filter */}
+            <Select value={filterDifficulty} onValueChange={setFilterDifficulty}>
+              <SelectTrigger className="w-full md:w-40">
+                <SelectValue placeholder="All Levels" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="beginner">Beginner</SelectItem>
+                <SelectItem value="intermediate">Intermediate</SelectItem>
+                <SelectItem value="advanced">Advanced</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Lessons by Unit */}
+      <div className="space-y-8">
+        {Object.keys(lessonsByUnit).sort().map(unitId => (
+          <div key={unitId}>
+            <div className="flex items-center gap-3 mb-4">
+              <h2 className="text-2xl font-bold">{unitId}</h2>
+              <Badge variant="secondary">
+                {lessonsByUnit[unitId].length} lessons
+              </Badge>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {lessonsByUnit[unitId]
+                .sort((a, b) => (a.lesson_number || 0) - (b.lesson_number || 0))
+                .map(lesson => (
+                  <LessonCard 
+                    key={lesson.id} 
+                    lesson={lesson} 
+                    progress={progress[lesson.id] || 0}
+                  />
+                ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* No Results */}
+      {filteredLessons.length === 0 && (
+        <Card>
+          <CardContent className="py-12 text-center text-muted-foreground">
+            <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <p>No lessons match your filters.</p>
+            <Button 
+              variant="link" 
+              onClick={() => {
+                setSearchTerm('')
+                setFilterUnit('all')
+                setFilterType('all')
+                setFilterDifficulty('all')
+              }}
+            >
+              Clear filters
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// Lesson Card Component
+function LessonCard({ 
+  lesson, 
+  progress
+}: { 
+  lesson: Lesson
+  progress: number
+}) {
+  const router = useRouter()
+
+  const getTypeInfo = () => {
+    switch (lesson.lesson_type) {
+      case 'video':
+        return { icon: Video, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' }
+      case 'simulation':
+        return { icon: Microscope, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' }
+      default:
+        return { icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' }
+    }
+  }
+
+  const typeInfo = getTypeInfo()
+  const TypeIcon = typeInfo.icon
+  const isCompleted = progress === 100
+  const isStarted = progress > 0
+
+  return (
+    <Card 
+      className={`hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden ${
+        isCompleted ? 'border-green-200 bg-green-50/30' : ''
+      }`}
+      onClick={() => router.push(`/lessons/${lesson.slug}`)}
+    >
+      {/* Progress Bar */}
+      {progress > 0 && (
+        <div className="absolute top-0 left-0 right-0 h-1 bg-muted">
+          <div 
+            className={`h-full transition-all ${isCompleted ? 'bg-green-500' : 'bg-primary'}`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      )}
+
+      {/* New Badge */}
+      {lesson.isNew && (
+        <div className="absolute top-3 right-3 z-10">
+          <Badge className="bg-yellow-500 text-white flex items-center gap-1">
+            <Sparkles className="h-3 w-3" />
+            New
+          </Badge>
+        </div>
+      )}
+
+      <CardHeader className="pb-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className={`p-2 rounded-lg ${typeInfo.bg} ${typeInfo.border} border`}>
+            <TypeIcon className={`h-5 w-5 ${typeInfo.color}`} />
+          </div>
+          <div className="flex gap-1">
+            {lesson.difficulty && (
+              <Badge variant="outline" className="text-xs">
+                {lesson.difficulty}
+              </Badge>
+            )}
+            {isCompleted && (
+              <Badge variant="default" className="text-xs bg-green-600">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Done
+              </Badge>
+            )}
+          </div>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-3">
+        <div>
+          <CardTitle className="text-lg mb-1 group-hover:text-primary transition-colors">
+            {lesson.title}
+          </CardTitle>
+          {lesson.description && (
+            <p className="text-sm text-muted-foreground line-clamp-2">
+              {lesson.description}
+            </p>
+          )}
+        </div>
+
+        {/* Meta Info */}
+        <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          {lesson.estimated_time && (
+            <div className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>{lesson.estimated_time} min</span>
+            </div>
+          )}
+          {lesson.objectives && lesson.objectives.length > 0 && (
+            <div className="flex items-center gap-1">
+              <Target className="h-3 w-3" />
+              <span>{lesson.objectives.length} objectives</span>
+            </div>
+          )}
+        </div>
+
+        {/* Action Button */}
+        <Button 
+          className="w-full" 
+          variant={isCompleted ? "outline" : "default"}
+          onClick={(e) => {
+            e.stopPropagation()
+            router.push(`/lessons/${lesson.slug}`)
+          }}
+        >
+          {isCompleted ? (
+            <>
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Review
+            </>
+          ) : isStarted ? (
+            <>
+              <Play className="h-4 w-4 mr-2" />
+              Continue ({progress.toFixed(0)}%)
+            </>
+          ) : (
+            <>
+              <Play className="h-4 w-4 mr-2" />
+              Start Lesson
+            </>
+          )}
+        </Button>
+      </CardContent>
+    </Card>
+  )
+}

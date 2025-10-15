@@ -13,7 +13,8 @@ import {
   Brain,
   GraduationCap,
   Calendar,
-  Target
+  Target,
+  Sparkles
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -26,8 +27,8 @@ const navigationSections = [
     title: "Dashboard & Analytics",
     description: "Monitor student progress and system overview",
     items: [
-      { href: "/admin/dashboard", label: "Admin Dashboard", icon: BarChart3, description: "System overview and analytics" },
-      { href: "/admin/assignments-system", label: "Assignment System", icon: Calendar, description: "Manage lesson and homework assignments" }
+      { href: "/admin/assignment-hub", label: "Global Assignment Hub", icon: Target, description: "Assign and track ALL content types - lessons, homework, vocabulary, and simulations", featured: true },
+      { href: "/admin/dashboard", label: "Admin Dashboard", icon: BarChart3, description: "System overview and analytics" }
     ]
   },
   {
@@ -35,7 +36,7 @@ const navigationSections = [
     description: "Create and manage educational content",
     items: [
       { href: "/admin/lessons", label: "Manage Lessons", icon: GraduationCap, description: "Create and edit physics lessons" },
-      { href: "/admin/assignments", label: "Manage Assignments", icon: FileText, description: "Create and manage homework assignments" },
+      { href: "/admin/assignments/create", label: "Homework Question Builder", icon: FileText, description: "Build homework with questions, AI grading, and rubrics" },
       { href: "/admin/question-bank", label: "Question Bank", icon: Brain, description: "Centralized question repository" }
     ]
   },
@@ -72,14 +73,16 @@ export default function AdminNavigation({ className }: AdminNavigationProps) {
               {section.items.map((item) => {
                 const IconComponent = item.icon
                 const isActive = pathname === item.href
+                const isFeatured = 'featured' in item && item.featured
                 
                 return (
                   <Link key={item.href} href={item.href}>
                     <div className={cn(
                       "group p-4 rounded-lg border transition-all hover:shadow-md",
+                      isFeatured && "border-2 border-primary/40 bg-gradient-to-r from-primary/10 to-secondary/10 shadow-lg",
                       isActive 
                         ? "border-primary bg-primary/5 shadow-sm" 
-                        : "border-border hover:border-primary/20 hover:bg-accent/50"
+                        : !isFeatured && "border-border hover:border-primary/20 hover:bg-accent/50"
                     )}>
                       <div className="flex items-start space-x-4">
                         <div className={cn(
