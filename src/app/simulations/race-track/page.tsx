@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import { 
   ArrowLeft,
   Play,
@@ -357,7 +360,15 @@ function RaceTrackSimulationContent({
   const [laps, setLaps] = useState(0)
   const [time, setTime] = useState(0)
   const [dataPoints, setDataPoints] = useState<DataPoint[]>([])
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('race-track')
+  const actionLabelsMap = getActionLabels('race-track')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -515,12 +526,21 @@ function RaceTrackSimulationContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
   const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setSpeed(speed)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { speed })
+      handleInteraction('start', { speed })
     }
   }
 
@@ -528,12 +548,11 @@ function RaceTrackSimulationContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time, distance, displacement, laps, dataPoints: dataPoints.length })
+      handleInteraction('pause', { time, distance, displacement, laps, dataPoints: dataPoints.length })
       
       // Mark as complete if they collected 10+ data points
-      if (dataPoints.length >= 10) {
-        setSimulationCompleted(true)
-        onComplete({
+      if (dataPoints.length >= 10 && !completionState.isCompleted) {
+        markComplete({
           totalTime: time,
           totalDistance: distance,
           finalDisplacement: displacement,
@@ -559,7 +578,8 @@ function RaceTrackSimulationContent({
       setTime(0)
       previousDisplacement.current = 0
       previousTime.current = 0
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
+      resetCompletion() // Reset completion tracking
     }
   }
 
@@ -568,7 +588,7 @@ function RaceTrackSimulationContent({
     if (engineRef.current) {
       engineRef.current.setSpeed(value)
     }
-    onInteraction('change-speed', { speed: value })
+    handleInteraction('speed_changed', { speed: value })
   }
 
   const handleExportData = () => {
@@ -665,6 +685,16 @@ function RaceTrackSimulationContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Visualization */}
@@ -1166,7 +1196,7 @@ function RaceTrackSimulationContent({
         <SimulationAssignment
           simulationSlug="race-track"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: dataPoints,
             finalDistance: distance,

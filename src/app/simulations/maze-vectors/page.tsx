@@ -1,13 +1,16 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
@@ -495,7 +498,7 @@ function MazeVectorsContent({
       setMagnitude(0)
       setHasWon(false)
       setMoveCount(0)
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
     }
   }
 
@@ -560,6 +563,16 @@ function MazeVectorsContent({
         </div>
       </div>
 
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Maze */}
         <div className="lg:col-span-2 space-y-6">
@@ -597,7 +610,10 @@ function MazeVectorsContent({
                     Final position: ({position.x.toFixed(2)}, {position.y.toFixed(2)})
                   </div>
                   <Button 
-                    onClick={handleReset}
+                    onClick={() => {
+                      handleReset()
+                      resetCompletion() // Reset completion tracking
+                    }}
                     className="mt-2"
                     size="sm"
                   >

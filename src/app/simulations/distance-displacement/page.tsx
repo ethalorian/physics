@@ -11,6 +11,9 @@ import { Badge } from '@/components/ui/badge'
 import MathMarkdown from '@/components/MathMarkdown'
 import { RotateCcw, Move, Bug, Plus, Settings, FileText } from 'lucide-react'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
@@ -47,7 +50,15 @@ function DistanceDisplacementContent({
   const [isShiftPressed, setIsShiftPressed] = useState(false)
   const [dragStartPos, setDragStartPos] = useState<Point | null>(null)
   const [lockedAxis, setLockedAxis] = useState<'x' | 'y' | null>(null)
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('distance-displacement')
+  const actionLabelsMap = getActionLabels('distance-displacement')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -502,6 +513,7 @@ function DistanceDisplacementContent({
   
   const handleReset = () => {
     const resetPos = { x: 300, y: 300 }
+      resetCompletion() // Reset completion tracking
     setBug(resetPos)
     setInitialPosition(resetPos)
     setPath([{ x: resetPos.x, y: resetPos.y, timestamp: Date.now() }])
@@ -800,7 +812,7 @@ Moving the origin changes the **position vectors** but the **displacement stays 
           <SimulationAssignment
             simulationSlug="distance-displacement"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               distance: dist,
               displacement: disp.magnitude,

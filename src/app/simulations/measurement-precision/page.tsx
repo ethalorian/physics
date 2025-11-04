@@ -12,6 +12,9 @@ import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Check, X, RotateCcw, Target, Ruler, Move, Plus, Settings, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
@@ -189,6 +192,16 @@ function AccuracyPrecisionExercise() {
           Make up to 10 measurements, then click &quot;Show Results&quot; to see how you did!
         </p>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Input Section */}
@@ -698,7 +711,7 @@ function MeasurementPrecisionSimulationContent({
     setShowHint(false)
     
     // Track problem generation
-    onInteraction('generate-problem', {
+    handleInteraction('generate-problem', {
       device: device.name,
       precision: device.precision,
       trueValue,
@@ -745,7 +758,7 @@ function MeasurementPrecisionSimulationContent({
     }
     
     // Track answer attempt
-    onInteraction('check-answer', {
+    handleInteraction('check-answer', {
       device: device.name,
       userAnswer: answer,
       correctAnswer: objectPosition,

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { Assignment, Question, MultipleChoiceQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion } from '@/types/assignment'
-import { useAssignments } from '@/contexts/AssignmentContext'
+import { useAssignments } from '@/contexts/ConsolidatedAssignmentContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -292,8 +292,9 @@ export default function CreateAssignmentPage() {
     try {
       await createAssignment({
         ...assignment as Omit<Assignment, 'id' | 'created_at' | 'updated_at'>,
+        type: 'homework' as const,
         published: publish,
-        total_points: assignment.total_points || 0,
+        maxScore: assignment.total_points || 0,
         questions: assignment.questions || []
       })
       

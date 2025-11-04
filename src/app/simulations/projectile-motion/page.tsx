@@ -12,6 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { QuickAssignButton } from '@/components/simulations/QuickAssignButton'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import { 
   ArrowLeft,
   Play,
@@ -572,7 +576,15 @@ function ProjectileMotionLabContent({
   const [trajectory, setTrajectory] = useState<{ x: number; y: number }[]>([])
   const [hits, setHits] = useState(0)
   const [misses, setMisses] = useState(0)
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('projectile-motion')
+  const actionLabelsMap = getActionLabels('projectile-motion')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -633,42 +645,52 @@ function ProjectileMotionLabContent({
     }
   }, [])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
   const handleLaunch = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.launch(initialSpeed, launchAngle, initialHeight)
-      onInteraction('launch', { initialSpeed, launchAngle, initialHeight })
+      handleInteraction('launch', { initialSpeed, launchAngle, initialHeight })
     }
-  }, [initialSpeed, launchAngle, initialHeight, onInteraction])
+  }, [initialSpeed, launchAngle, initialHeight, handleInteraction])
 
   const handlePause = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.pause()
-      onInteraction('pause', { time: currentState.time })
+      handleInteraction('pause', { time: currentState.time })
     }
-  }, [currentState.time, onInteraction])
+  }, [currentState.time, handleInteraction])
 
   const handleResume = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.resume()
-      onInteraction('resume', { time: currentState.time })
+      handleInteraction('resume', { time: currentState.time })
     }
-  }, [currentState.time, onInteraction])
+  }, [currentState.time, handleInteraction])
 
   const handleReset = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.reset()
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
+      resetCompletion() // Reset completion tracking
     }
-  }, [onInteraction])
+  }, [handleInteraction, resetCompletion])
 
   const handleResetScore = useCallback(() => {
     if (simulationRef.current) {
       simulationRef.current.resetScore()
       setHits(0)
       setMisses(0)
-      onInteraction('reset_score', {})
+      handleInteraction('reset_score', {})
     }
-  }, [onInteraction])
+  }, [handleInteraction])
 
   const handleExportData = useCallback(() => {
     const csv = [
@@ -733,6 +755,10 @@ function ProjectileMotionLabContent({
           <div className="flex gap-2">
             {isAdmin && (
               <>
+                <QuickAssignButton
+                  simulationTitle="Projectile Motion Lab"
+                  simulationSlug="projectile-motion"
+                />
                 <Button
                   size="sm"
                   variant="outline"
@@ -763,6 +789,16 @@ function ProjectileMotionLabContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Visualization */}
@@ -984,7 +1020,10 @@ function ProjectileMotionLabContent({
                 </div>
                 <Slider
                   value={[initialSpeed]}
-                  onValueChange={([value]) => setInitialSpeed(value)}
+                  onValueChange={([value]) => {
+                    setInitialSpeed(value)
+                    handleInteraction('velocity_changed', { velocity: value })
+                  }}
                   min={5}
                   max={50}
                   step={1}
@@ -999,7 +1038,10 @@ function ProjectileMotionLabContent({
                 </div>
                 <Slider
                   value={[launchAngle]}
-                  onValueChange={([value]) => setLaunchAngle(value)}
+                  onValueChange={([value]) => {
+                    setLaunchAngle(value)
+                    handleInteraction('angle_changed', { angle: value })
+                  }}
                   min={0}
                   max={90}
                   step={1}
@@ -1144,7 +1186,7 @@ function ProjectileMotionLabContent({
         <SimulationAssignment
           simulationSlug="projectile-motion"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints,
             hits,

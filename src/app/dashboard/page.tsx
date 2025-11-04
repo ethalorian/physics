@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { usePermissions } from '@/hooks/usePermissions'
 import { useViewMode } from '@/contexts/ViewModeContext'
 import { useViewAwarePermissions } from '@/hooks/useViewAwarePermissions'
-import { useAssignments } from '@/contexts/AssignmentContext'
+import { useAssignments } from '@/contexts/ConsolidatedAssignmentContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -189,7 +189,7 @@ function StudentOverview() {
     return dueDate && dueDate > now && !submission
   })
   
-  const gradedSubmissions = submissions.filter(s => s.score !== undefined)
+  const gradedSubmissions = (submissions || []).filter(s => s.score !== undefined)
   const averageGrade = gradedSubmissions.length > 0 
     ? Math.round(gradedSubmissions.reduce((sum, s) => sum + ((s.score || 0) / (s.max_score || 1) * 100), 0) / gradedSubmissions.length)
     : 0

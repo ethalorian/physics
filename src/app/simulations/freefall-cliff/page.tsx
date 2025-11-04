@@ -11,6 +11,9 @@ import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowLeft, Play, RotateCcw, Mountain, Droplets, Timer, Calculator, AlertCircle, Plus, Settings, FileText } from 'lucide-react'
 import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
@@ -46,7 +49,15 @@ function FreefallCliffLabContent({
   const [showAnalysis, setShowAnalysis] = useState(false)
   const [isExampleMode, setIsExampleMode] = useState(true) // Start with example
   const [cliffHeight, setCliffHeight] = useState(45) // Example: 45m
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('freefall-cliff')
+  const actionLabelsMap = getActionLabels('freefall-cliff')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -117,7 +128,7 @@ function FreefallCliffLabContent({
     reset()
     
     // Track starting random mode
-    onInteraction('start-random-mode', {
+    handleInteraction('start-random-mode', {
       cliffHeight: newHeight
     })
   }, [reset, onInteraction])
@@ -130,7 +141,7 @@ function FreefallCliffLabContent({
     setTraces([{ y: 0, time: 0 }]) // Initial position
     
     // Track stone drop
-    onInteraction('drop-stone', {
+    handleInteraction('drop-stone', {
       cliffHeight,
       isExampleMode,
       trialNumber: trials.length + 1
@@ -190,7 +201,7 @@ function FreefallCliffLabContent({
         setTrials(prev => [...prev, newTrial])
         
         // Track trial completion
-        onInteraction('trial-completed', {
+        handleInteraction('trial-completed', {
           cliffHeight,
           fallTime: finalTime,
           calculatedHeight: newTrial.calculatedHeight,
@@ -283,6 +294,15 @@ function FreefallCliffLabContent({
             )}
           </div>
         </div>
+
+        {/* Progress Indicator (for students) */}
+        {!isAdmin && (
+          <SimulationProgress 
+            state={completionState}
+            actionLabels={actionLabelsMap}
+            hideWhenComplete={false}
+          />
+        )}
 
         <Tabs defaultValue="lab" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -641,7 +661,7 @@ function FreefallCliffLabContent({
                           const errorPercent = Math.abs(averageCalculatedHeight - cliffHeight) / cliffHeight * 100
                           const score = Math.max(0, 100 - errorPercent * 2) // Score based on accuracy
                           
-                          onInteraction('check-answer', {
+                          handleInteraction('check-answer', {
                             cliffHeight,
                             averageCalculatedHeight,
                             averageFallTime,
@@ -911,7 +931,7 @@ function FreefallCliffLabContent({
           <SimulationAssignment
             simulationSlug="freefall-cliff"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               trials,
               averageFallTime,

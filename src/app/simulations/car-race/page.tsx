@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import { 
   ArrowLeft,
   Play,
@@ -404,7 +407,15 @@ function CarRaceContent({
     finishedA: false,
     finishedB: false
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('car-race')
+  const actionLabelsMap = getActionLabels('car-race')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -438,9 +449,8 @@ function CarRaceContent({
             velocityB: data.velocityB
           }
 
-          if ((data.finishedA || data.finishedB) && !simulationCompleted) {
-            setSimulationCompleted(true)
-            onComplete({
+          if ((data.finishedA || data.finishedB) && !completionState.isCompleted) {
+            markComplete({
               winner: data.finishedB && (!data.finishedA || data.positionB > data.positionA) ? 'B' : 'A',
               overtaken: data.overtaken,
               overtakeTime: data.overtakeTime,
@@ -519,13 +529,22 @@ function CarRaceContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
   const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setCarA(velocityA, startDelayA)
       engineRef.current.setCarB(velocityB, startDelayB)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { velocityA, velocityB, startDelayA, startDelayB })
+      handleInteraction('start', { velocityA, velocityB, startDelayA, startDelayB })
     }
   }
 
@@ -533,7 +552,7 @@ function CarRaceContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time, dataPoints: raceData.length })
+      handleInteraction('pause', { time: currentData.time, dataPoints: raceData.length })
     }
   }
 
@@ -542,8 +561,8 @@ function CarRaceContent({
       engineRef.current.reset()
       setIsRunning(false)
       setRaceData([])
-      setSimulationCompleted(false)
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
+      resetCompletion() // Reset completion tracking
     }
   }
 
@@ -665,6 +684,16 @@ function CarRaceContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Race View */}
@@ -904,7 +933,10 @@ function CarRaceContent({
                   </div>
                   <Slider
                     value={[velocityA]}
-                    onValueChange={([value]) => setVelocityA(value)}
+                    onValueChange={([value]) => {
+                      setVelocityA(value)
+                      handleInteraction('speed_changed_a', { speed: value })
+                    }}
                     min={5}
                     max={40}
                     step={5}
@@ -937,7 +969,10 @@ function CarRaceContent({
                   </div>
                   <Slider
                     value={[velocityB]}
-                    onValueChange={([value]) => setVelocityB(value)}
+                    onValueChange={([value]) => {
+                      setVelocityB(value)
+                      handleInteraction('speed_changed_b', { speed: value })
+                    }}
                     min={5}
                     max={40}
                     step={5}
@@ -1083,7 +1118,7 @@ function CarRaceContent({
         <SimulationAssignment
           simulationSlug="car-race"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: raceData,
             overtaken: currentData.overtaken,

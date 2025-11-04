@@ -2,7 +2,7 @@
 import { use, useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { Assignment, Submission, OpenResponseQuestion } from '@/types/assignment'
-import { useAssignments } from '@/contexts/AssignmentContext'
+import { useAssignments } from '@/contexts/ConsolidatedAssignmentContext'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'

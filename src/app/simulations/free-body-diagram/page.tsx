@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,11 +8,16 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Progress } from '@/components/ui/progress'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { QuickAssignButton } from '@/components/simulations/QuickAssignButton'
 import { RotateCcw, Info, HelpCircle, Move, Download, Trash2, Plus, Settings, FileText } from 'lucide-react'
 import MathMarkdown from '@/components/MathMarkdown'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 
 // ============================================================================
 // TYPES AND INTERFACES
@@ -23,14 +28,29 @@ interface Vector2D {
   y: number
 }
 
+type ForceType = 'applied' | 'gravity' | 'normal' | 'friction' | 'tension' | 'air-resistance' | 'spring' | 'custom'
+
 interface ForceVector {
   id: string
   name: string
+  type: ForceType
   magnitude: number
   angle: number // in degrees
   color: string
   position: Vector2D // where to draw the vector from
   isDragging: boolean
+}
+
+// Force type configurations
+const FORCE_TYPE_CONFIG: Record<ForceType, { label: string; color: string; defaultAngle: number }> = {
+  applied: { label: 'Applied Force', color: '#FF6B6B', defaultAngle: 0 },
+  gravity: { label: 'Gravity (Weight)', color: '#9333EA', defaultAngle: -90 },
+  normal: { label: 'Normal Force', color: '#3B82F6', defaultAngle: 90 },
+  friction: { label: 'Friction', color: '#78716C', defaultAngle: 180 },
+  tension: { label: 'Tension', color: '#10B981', defaultAngle: 45 },
+  'air-resistance': { label: 'Air Resistance', color: '#06B6D4', defaultAngle: 180 },
+  spring: { label: 'Spring Force', color: '#EC4899', defaultAngle: 0 },
+  custom: { label: 'Custom Force', color: '#F59E0B', defaultAngle: 0 }
 }
 
 interface SimulationState {
@@ -73,6 +93,7 @@ class FreeBodyDiagramEngine {
         {
           id: 'force1',
           name: 'Applied Force',
+          type: 'applied',
           magnitude: 20,
           angle: 0,
           color: '#FF6B6B',
@@ -263,13 +284,15 @@ class FreeBodyDiagramEngine {
     this.onUpdate(this.state)
   }
 
-  public addForce(name: string, color: string) {
+  public addForce(forceType: ForceType, customName?: string) {
+    const config = FORCE_TYPE_CONFIG[forceType]
     const newForce: ForceVector = {
       id: `force${Date.now()}`,
-      name,
+      name: customName || config.label,
+      type: forceType,
       magnitude: 10,
-      angle: Math.random() * 360,
-      color,
+      angle: config.defaultAngle,
+      color: config.color,
       position: { x: 0, y: 0 },
       isDragging: false
     }
@@ -300,6 +323,20 @@ class FreeBodyDiagramEngine {
     }
   }
 
+  public setForceType(id: string, forceType: ForceType) {
+    const force = this.state.forces.find(f => f.id === id)
+    if (force) {
+      const config = FORCE_TYPE_CONFIG[forceType]
+      force.type = forceType
+      force.name = config.label
+      force.color = config.color
+      // Optionally update angle to default for that force type
+      // force.angle = config.defaultAngle
+      this.updatePhysics()
+      this.render()
+    }
+  }
+
   public toggleGrid() {
     this.state.showGrid = !this.state.showGrid
     this.render()
@@ -319,6 +356,7 @@ class FreeBodyDiagramEngine {
     this.state.forces = [{
       id: 'force1',
       name: 'Applied Force',
+      type: 'applied',
       magnitude: 20,
       angle: 0,
       color: '#FF6B6B',
@@ -632,7 +670,17 @@ function FreeBodyDiagramContent({
   
   const [selectedPreset, setSelectedPreset] = useState('custom')
   const [showHelp, setShowHelp] = useState(false)
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  const [selectedForceType, setSelectedForceType] = useState<ForceType>('applied')
+  
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('free-body-diagram')
+  const actionLabelsMap = getActionLabels('free-body-diagram')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -658,7 +706,7 @@ function FreeBodyDiagramContent({
     }
   }
   
-  // Track total simulation time
+  // Track total simulation time (for backward compatibility)
   useEffect(() => {
     const interval = setInterval(() => {
       totalSimulationTime.current += 1
@@ -681,74 +729,114 @@ function FreeBodyDiagramContent({
     }
   }, [])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+
   // Handle preset changes
   const loadPreset = (preset: string) => {
     if (!engineRef.current) return
     
-    engineRef.current.reset()
-    onInteraction('preset_loaded', { preset })
+    // Clear all forces first
+    const currentState = engineRef.current.getState()
+    currentState.forces.forEach(force => {
+      engineRef.current?.removeForce(force.id)
+    })
+    
+    handleInteraction('preset_loaded', { preset })
     
     switch (preset) {
       case 'balanced':
         engineRef.current.setMass(10)
-        engineRef.current.addForce('Force 1', '#FF6B6B')
-        engineRef.current.addForce('Force 2', '#4ECDC4')
-        engineRef.current.setForceProperty('force1', 'magnitude', 30)
-        engineRef.current.setForceProperty('force1', 'angle', 0)
-        // Note: We'd need to get the actual force IDs for this to work properly
+        engineRef.current.addForce('applied')
+        engineRef.current.addForce('friction')
+        // Get the newly added forces
+        setTimeout(() => {
+          const state = engineRef.current?.getState()
+          if (state && state.forces.length >= 2) {
+            engineRef.current?.setForceProperty(state.forces[0].id, 'magnitude', 30)
+            engineRef.current?.setForceProperty(state.forces[0].id, 'angle', 0)
+            engineRef.current?.setForceProperty(state.forces[1].id, 'magnitude', 30)
+            engineRef.current?.setForceProperty(state.forces[1].id, 'angle', 180)
+          }
+        }, 10)
         break
       
       case 'unbalanced':
         engineRef.current.setMass(5)
-        engineRef.current.addForce('Push', '#FF6B6B')
-        engineRef.current.setForceProperty('force1', 'magnitude', 50)
-        engineRef.current.setForceProperty('force1', 'angle', 45)
+        engineRef.current.addForce('applied')
+        setTimeout(() => {
+          const state = engineRef.current?.getState()
+          if (state && state.forces.length >= 1) {
+            engineRef.current?.setForceProperty(state.forces[0].id, 'magnitude', 50)
+            engineRef.current?.setForceProperty(state.forces[0].id, 'angle', 45)
+          }
+        }, 10)
         break
       
       case 'gravity':
         engineRef.current.setMass(2)
-        engineRef.current.addForce('Weight', '#9333EA')
-        engineRef.current.setForceProperty('force1', 'magnitude', 19.6)
-        engineRef.current.setForceProperty('force1', 'angle', -90)
+        engineRef.current.addForce('gravity')
+        setTimeout(() => {
+          const state = engineRef.current?.getState()
+          if (state && state.forces.length >= 1) {
+            engineRef.current?.setForceProperty(state.forces[0].id, 'magnitude', 19.6)
+          }
+        }, 10)
         break
       
       case 'friction':
         engineRef.current.setMass(8)
-        engineRef.current.addForce('Applied', '#FF6B6B')
-        engineRef.current.addForce('Friction', '#78716C')
-        engineRef.current.setForceProperty('force1', 'magnitude', 40)
-        engineRef.current.setForceProperty('force1', 'angle', 0)
-        // Set friction opposite to applied force
+        engineRef.current.addForce('applied')
+        engineRef.current.addForce('friction')
+        setTimeout(() => {
+          const state = engineRef.current?.getState()
+          if (state && state.forces.length >= 2) {
+            engineRef.current?.setForceProperty(state.forces[0].id, 'magnitude', 40)
+            engineRef.current?.setForceProperty(state.forces[0].id, 'angle', 0)
+            engineRef.current?.setForceProperty(state.forces[1].id, 'magnitude', 20)
+            engineRef.current?.setForceProperty(state.forces[1].id, 'angle', 180)
+          }
+        }, 10)
         break
     }
   }
 
   const handleReset = () => {
     engineRef.current?.reset()
-    onInteraction('reset', {})
+    handleInteraction('reset', {})
+    resetCompletion() // Reset completion tracking
   }
 
   const handleAddForce = () => {
-    const colors = ['#FF6B6B', '#4ECDC4', '#9333EA', '#F59E0B', '#10B981']
     const forceCount = simulationState.forces.length
-    const color = colors[forceCount % colors.length]
-    engineRef.current?.addForce(`Force ${forceCount + 1}`, color)
-    onInteraction('force_added', { forceCount: forceCount + 1 })
+    engineRef.current?.addForce(selectedForceType)
+    handleInteraction('force_added', { forceCount: forceCount + 1, forceType: selectedForceType })
   }
 
   const handleRemoveForce = (id: string) => {
     engineRef.current?.removeForce(id)
-    onInteraction('force_removed', { forceId: id })
+    handleInteraction('force_removed', { forceId: id })
   }
 
   const handleMassChange = (value: number[]) => {
     engineRef.current?.setMass(value[0])
-    onInteraction('mass_changed', { mass: value[0] })
+    handleInteraction('mass_changed', { mass: value[0] })
   }
 
   const handleForceChange = (id: string, property: 'magnitude' | 'angle', value: number) => {
     engineRef.current?.setForceProperty(id, property, value)
-    onInteraction('force_modified', { forceId: id, property, value })
+    handleInteraction('force_modified', { forceId: id, property, value })
+  }
+
+  const handleForceTypeChange = (id: string, forceType: ForceType) => {
+    engineRef.current?.setForceType(id, forceType)
+    handleInteraction('force_type_changed', { forceId: id, forceType })
   }
 
   const handleExportData = () => {
@@ -756,8 +844,13 @@ function FreeBodyDiagramContent({
       mass: simulationState.mass,
       forces: simulationState.forces.map(f => ({
         name: f.name,
+        type: f.type,
         magnitude: f.magnitude,
-        angle: f.angle
+        angle: f.angle,
+        components: {
+          x: f.magnitude * Math.cos(f.angle * Math.PI / 180),
+          y: f.magnitude * Math.sin(f.angle * Math.PI / 180)
+        }
       })),
       netForce: {
         x: simulationState.netForce.x,
@@ -784,7 +877,7 @@ function FreeBodyDiagramContent({
     a.download = `free-body-diagram-${Date.now()}.json`
     a.click()
     
-    onComplete(data, 100)
+    markComplete(data, 100)
   }
 
   const netForceMagnitude = Math.sqrt(
@@ -822,6 +915,10 @@ function FreeBodyDiagramContent({
               <div className="flex gap-2">
                 {isAdmin && (
                   <>
+                    <QuickAssignButton
+                      simulationTitle="Free Body Diagram"
+                      simulationSlug="free-body-diagram"
+                    />
                     <Button
                       size="sm"
                       variant="outline"
@@ -863,6 +960,15 @@ function FreeBodyDiagramContent({
             </div>
           </CardHeader>
         </Card>
+
+        {/* Progress Indicator (for students) */}
+        {!isAdmin && (
+          <SimulationProgress 
+            state={completionState}
+            actionLabels={actionLabelsMap}
+            hideWhenComplete={false}
+          />
+        )}
 
         {/* Help Card */}
         {showHelp && (
@@ -990,12 +1096,32 @@ function FreeBodyDiagramContent({
                   </Select>
                 </div>
 
+                <div className="space-y-2">
+                  <Label>Force Type to Add</Label>
+                  <Select value={selectedForceType} onValueChange={(value) => setSelectedForceType(value as ForceType)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="applied">Applied Force</SelectItem>
+                      <SelectItem value="gravity">Gravity (Weight)</SelectItem>
+                      <SelectItem value="normal">Normal Force</SelectItem>
+                      <SelectItem value="friction">Friction</SelectItem>
+                      <SelectItem value="tension">Tension</SelectItem>
+                      <SelectItem value="air-resistance">Air Resistance</SelectItem>
+                      <SelectItem value="spring">Spring Force</SelectItem>
+                      <SelectItem value="custom">Custom Force</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <Button 
                   onClick={handleAddForce} 
                   className="w-full"
-                  disabled={simulationState.forces.length >= 5}
+                  disabled={simulationState.forces.length >= 10}
                 >
-                  Add Force Vector
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add {FORCE_TYPE_CONFIG[selectedForceType].label}
                 </Button>
               </CardContent>
             </Card>
@@ -1008,9 +1134,9 @@ function FreeBodyDiagramContent({
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {simulationState.forces.map((force) => (
-                    <div key={force.id} className="space-y-2 p-2 border rounded">
-                      <div className="flex items-center justify-between">
-                        <Badge style={{ backgroundColor: force.color }}>
+                    <div key={force.id} className="space-y-2 p-3 border rounded-lg bg-card/50">
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge style={{ backgroundColor: force.color }} className="text-white">
                           {force.name}
                         </Badge>
                         <Button
@@ -1021,21 +1147,44 @@ function FreeBodyDiagramContent({
                           <Trash2 className="h-3 w-3" />
                         </Button>
                       </div>
+                      
+                      <div className="space-y-1">
+                        <Label className="text-xs">Force Type</Label>
+                        <Select 
+                          value={force.type} 
+                          onValueChange={(value) => handleForceTypeChange(force.id, value as ForceType)}
+                        >
+                          <SelectTrigger className="h-8 text-xs">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="applied">Applied Force</SelectItem>
+                            <SelectItem value="gravity">Gravity (Weight)</SelectItem>
+                            <SelectItem value="normal">Normal Force</SelectItem>
+                            <SelectItem value="friction">Friction</SelectItem>
+                            <SelectItem value="tension">Tension</SelectItem>
+                            <SelectItem value="air-resistance">Air Resistance</SelectItem>
+                            <SelectItem value="spring">Spring Force</SelectItem>
+                            <SelectItem value="custom">Custom Force</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
                       <div className="space-y-1">
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="w-16">Magnitude:</span>
+                          <span className="w-20 text-muted-foreground">Magnitude:</span>
                           <Slider
                             value={[force.magnitude]}
                             onValueChange={(value) => handleForceChange(force.id, 'magnitude', value[0])}
                             min={0}
-                            max={100}
-                            step={1}
+                            max={200}
+                            step={0.5}
                             className="flex-1"
                           />
-                          <span className="w-12 text-right">{force.magnitude.toFixed(0)} N</span>
+                          <span className="w-14 text-right font-mono">{force.magnitude.toFixed(1)} N</span>
                         </div>
                         <div className="flex items-center gap-2 text-xs">
-                          <span className="w-16">Angle:</span>
+                          <span className="w-20 text-muted-foreground">Angle:</span>
                           <Slider
                             value={[force.angle]}
                             onValueChange={(value) => handleForceChange(force.id, 'angle', value[0])}
@@ -1044,7 +1193,7 @@ function FreeBodyDiagramContent({
                             step={1}
                             className="flex-1"
                           />
-                          <span className="w-12 text-right">{force.angle.toFixed(0)}°</span>
+                          <span className="w-14 text-right font-mono">{force.angle.toFixed(0)}°</span>
                         </div>
                       </div>
                     </div>
@@ -1105,10 +1254,17 @@ function FreeBodyDiagramContent({
           <SimulationAssignment
             simulationSlug="free-body-diagram"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               mass: simulationState.mass,
-              forces: simulationState.forces,
+              forces: simulationState.forces.map(f => ({
+                id: f.id,
+                name: f.name,
+                type: f.type,
+                magnitude: f.magnitude,
+                angle: f.angle,
+                color: f.color
+              })),
               netForce: simulationState.netForce,
               acceleration: simulationState.acceleration,
               netForceMagnitude: Math.sqrt(

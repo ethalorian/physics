@@ -8,8 +8,8 @@ import './globals.css'
 // Internal components and providers
 import AuthProvider from '@/components/auth-provider'
 import Navbar from '@/components/navbar'
-import { AssignmentProvider } from '@/contexts/AssignmentContext'
-import { AssignmentSystemProvider } from '@/contexts/AssignmentSystemContext'
+import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
+import { ConsolidatedAssignmentProvider } from '@/contexts/ConsolidatedAssignmentContext'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
@@ -46,14 +46,13 @@ export default function RootLayout({
                 <VocabularyProvider>
                   <SimulationProvider>
                     <StudentActivityProvider>
-                      <AssignmentProvider>
-                        <AssignmentSystemProvider>
-                          <Navbar />
-                          <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-                            {children}
-                          </main>
-                        </AssignmentSystemProvider>
-                      </AssignmentProvider>
+                      <ConsolidatedAssignmentProvider>
+                        <Navbar />
+                        <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 md:py-12">
+                          {children}
+                        </main>
+                        <QuickTestAccountSwitcher />
+                      </ConsolidatedAssignmentProvider>
                     </StudentActivityProvider>
                   </SimulationProvider>
                 </VocabularyProvider>

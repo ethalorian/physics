@@ -8,6 +8,9 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { RotateCcw, Play, Pause, Info, Trophy, TrendingUp, Activity, Plus, Settings, FileText } from 'lucide-react'
@@ -501,7 +504,15 @@ function SumoForcesContent({
   
   const [kinematicsData, setKinematicsData] = useState<KinematicsData[]>([])
   const [showKinematics, setShowKinematics] = useState(false)
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('sumo-forces')
+  const actionLabelsMap = getActionLabels('sumo-forces')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -540,8 +551,8 @@ function SumoForcesContent({
   
   // Track winner for completion
   useEffect(() => {
-    if (simulationState.winner && !simulationCompleted) {
-      setSimulationCompleted(true)
+    if (simulationState.winner && !completionState.isCompleted) {
+      markComplete({}, 100)
       onComplete({
         winner: simulationState.winner,
         time: simulationState.time,
@@ -571,9 +582,18 @@ function SumoForcesContent({
     }
   }, [])
   
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     engineRef.current?.start()
-    onInteraction('simulation_started', { 
+    handleInteraction('simulation_started', { 
       redForce: simulationState.redForce,
       blueForce: simulationState.blueForce,
       netForce: simulationState.netForce
@@ -582,32 +602,32 @@ function SumoForcesContent({
   
   const handlePause = () => {
     engineRef.current?.pause()
-    onInteraction('simulation_paused', { time: simulationState.time })
+    handleInteraction('simulation_paused', { time: simulationState.time })
   }
   
   const handleReset = () => {
     engineRef.current?.reset()
-    onInteraction('simulation_reset', {})
+    handleInteraction('simulation_reset', {})
   }
   
   const handleRedForceChange = (value: number[]) => {
     engineRef.current?.setRedForce(value[0])
-    onInteraction('red_force_changed', { force: value[0] })
+    handleInteraction('red_force_changed', { force: value[0] })
   }
   
   const handleBlueForceChange = (value: number[]) => {
     engineRef.current?.setBlueForce(value[0])
-    onInteraction('blue_force_changed', { force: value[0] })
+    handleInteraction('blue_force_changed', { force: value[0] })
   }
   
   const handleRedMassChange = (value: number[]) => {
     engineRef.current?.setRedMass(value[0])
-    onInteraction('red_mass_changed', { mass: value[0] })
+    handleInteraction('red_mass_changed', { mass: value[0] })
   }
   
   const handleBlueMassChange = (value: number[]) => {
     engineRef.current?.setBlueMass(value[0])
-    onInteraction('blue_mass_changed', { mass: value[0] })
+    handleInteraction('blue_mass_changed', { mass: value[0] })
   }
   
   const loadPreset = (preset: string) => {
@@ -633,7 +653,7 @@ function SumoForcesContent({
         engineRef.current?.setBlueForce(600)
         break
     }
-    onInteraction('preset_loaded', { preset })
+    handleInteraction('preset_loaded', { preset })
   }
   
   return (
@@ -702,6 +722,15 @@ function SumoForcesContent({
             </div>
           </CardHeader>
         </Card>
+        
+        {/* Progress Indicator (for students) */}
+        {!isAdmin && (
+          <SimulationProgress 
+            state={completionState}
+            actionLabels={actionLabelsMap}
+            hideWhenComplete={false}
+          />
+        )}
         
         {/* Main Content */}
         <div className="grid lg:grid-cols-3 gap-6">
@@ -968,7 +997,7 @@ function SumoForcesContent({
           <SimulationAssignment
             simulationSlug="sumo-forces"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               winner: simulationState.winner,
               redForce: simulationState.redForce,

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
@@ -470,7 +473,15 @@ function VacuumChamberContent({
     featherLanded: false,
     ballLanded: false
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('vacuum-chamber')
+  const actionLabelsMap = getActionLabels('vacuum-chamber')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -509,8 +520,8 @@ function VacuumChamberContent({
           }
 
           // Check if both landed
-          if (data.featherLanded && data.ballLanded && !simulationCompleted) {
-            setSimulationCompleted(true)
+          if (data.featherLanded && data.ballLanded && !completionState.isCompleted) {
+            markComplete({}, 100)
             onComplete({
               airDensity: airDensity,
               featherTime: data.time,
@@ -592,12 +603,21 @@ function VacuumChamberContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setAirDensity(airDensity)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { airDensity })
+      handleInteraction('start', { airDensity })
     }
   }
 
@@ -605,7 +625,7 @@ function VacuumChamberContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time, dataPoints: fallData.length })
+      handleInteraction('pause', { time: currentData.time, dataPoints: fallData.length })
     }
   }
 
@@ -614,8 +634,8 @@ function VacuumChamberContent({
       engineRef.current.reset()
       setIsRunning(false)
       setFallData([])
-      setSimulationCompleted(false)
-      onInteraction('reset', {})
+      // Completion reset handled by resetCompletion()
+      handleInteraction('reset', {})
     }
   }
 
@@ -624,7 +644,7 @@ function VacuumChamberContent({
     if (engineRef.current) {
       engineRef.current.setAirDensity(value)
     }
-    onInteraction('change-air-density', { airDensity: value })
+    handleInteraction('change-air-density', { airDensity: value })
   }
 
   const handleExportData = () => {
@@ -720,6 +740,16 @@ function VacuumChamberContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Chamber */}
@@ -1056,7 +1086,10 @@ function VacuumChamberContent({
                   )}
                 </Button>
                 <Button 
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset()
+                    resetCompletion() // Reset completion tracking
+                  }}
                   variant="outline"
                   className="w-full"
                 >
@@ -1135,7 +1168,7 @@ function VacuumChamberContent({
         <SimulationAssignment
           simulationSlug="vacuum-chamber"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: fallData,
             airDensity: airDensity,

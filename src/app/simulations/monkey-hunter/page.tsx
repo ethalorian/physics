@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
@@ -641,7 +644,15 @@ function MonkeyHunterContent({
     hit: false,
     hitTime: 0
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('monkey-hunter')
+  const actionLabelsMap = getActionLabels('monkey-hunter')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -671,8 +682,8 @@ function MonkeyHunterContent({
         (data) => {
           setCurrentData(data)
           
-          if (data.hit && !simulationCompleted) {
-            setSimulationCompleted(true)
+          if (data.hit && !completionState.isCompleted) {
+            markComplete({}, 100)
             onComplete({
               hit: true,
               hitTime: data.hitTime,
@@ -722,14 +733,23 @@ function MonkeyHunterContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setMonkeyPosition(2 + monkeyDistance, monkeyHeight)
       engineRef.current.setLaunchSpeed(dartSpeed)
       engineRef.current.setAimMode(aimAtMonkey)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('fire', { monkeyHeight, monkeyDistance, dartSpeed, aimMode: aimAtMonkey })
+      handleInteraction('fire', { monkeyHeight, monkeyDistance, dartSpeed, aimMode: aimAtMonkey })
     }
   }
 
@@ -737,7 +757,7 @@ function MonkeyHunterContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time })
+      handleInteraction('pause', { time: currentData.time })
     }
   }
 
@@ -746,8 +766,8 @@ function MonkeyHunterContent({
       engineRef.current.reset()
       setIsRunning(false)
       setTrajectoryData([])
-      setSimulationCompleted(false)
-      onInteraction('reset', {})
+      // Completion reset handled by resetCompletion()
+      handleInteraction('reset', {})
     }
   }
 
@@ -826,6 +846,16 @@ function MonkeyHunterContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Scene */}
@@ -1035,7 +1065,10 @@ function MonkeyHunterContent({
                   Fire Dart
                 </Button>
                 <Button 
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset()
+                    resetCompletion() // Reset completion tracking
+                  }}
                   variant="outline"
                   className="w-full"
                 >
@@ -1097,7 +1130,7 @@ function MonkeyHunterContent({
         <SimulationAssignment
           simulationSlug="monkey-hunter"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             hit: currentData.hit,
             hitTime: currentData.hitTime,

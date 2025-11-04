@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
@@ -376,7 +379,15 @@ function AstronautThrustContent({
     forceY: 0,
     forceMagnitude: 0
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('astronaut-thrust')
+  const actionLabelsMap = getActionLabels('astronaut-thrust')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -508,7 +519,16 @@ function AstronautThrustContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     if (engineRef.current) {
       // Set initial velocity if specified
       const vx = initialVelocity * Math.cos(velocityAngle * Math.PI / 180)
@@ -522,7 +542,7 @@ function AstronautThrustContent({
       
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { thrustMagnitude, thrustAngle, initialVelocity, velocityAngle })
+      handleInteraction('start', { thrustMagnitude, thrustAngle, initialVelocity, velocityAngle })
     }
   }
 
@@ -530,11 +550,11 @@ function AstronautThrustContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time, dataPoints: kinematicsData.length })
+      handleInteraction('pause', { time: currentData.time, dataPoints: kinematicsData.length })
       
       // Mark as complete if they collected 10+ data points
       if (kinematicsData.length >= 10) {
-        setSimulationCompleted(true)
+        markComplete({}, 100)
         onComplete({
           totalTime: currentData.time,
           dataPoints: kinematicsData.length,
@@ -563,7 +583,7 @@ function AstronautThrustContent({
         forceY: 0,
         forceMagnitude: 0
       })
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
     }
   }
 
@@ -660,6 +680,16 @@ function AstronautThrustContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Space View */}
@@ -978,7 +1008,7 @@ function AstronautThrustContent({
                         const fx = value * Math.cos(thrustAngle * Math.PI / 180)
                         const fy = value * Math.sin(thrustAngle * Math.PI / 180)
                         engineRef.current.setThrustForce(fx, fy)
-                        onInteraction('adjust-thrust', { magnitude: value, angle: thrustAngle })
+                        handleInteraction('adjust-thrust', { magnitude: value, angle: thrustAngle })
                       }
                     }}
                     min={0}
@@ -999,7 +1029,7 @@ function AstronautThrustContent({
                         const fx = thrustMagnitude * Math.cos(value * Math.PI / 180)
                         const fy = thrustMagnitude * Math.sin(value * Math.PI / 180)
                         engineRef.current.setThrustForce(fx, fy)
-                        onInteraction('adjust-angle', { magnitude: thrustMagnitude, angle: value })
+                        handleInteraction('adjust-angle', { magnitude: thrustMagnitude, angle: value })
                       }
                     }}
                     min={0}
@@ -1029,7 +1059,10 @@ function AstronautThrustContent({
                   )}
                 </Button>
                 <Button 
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset()
+                    resetCompletion() // Reset completion tracking
+                  }}
                   variant="outline"
                   className="w-full"
                 >
@@ -1114,7 +1147,7 @@ function AstronautThrustContent({
         <SimulationAssignment
           simulationSlug="astronaut-thrust"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: kinematicsData,
             maxSpeed: Math.max(...kinematicsData.map(d => d.speed), 0),

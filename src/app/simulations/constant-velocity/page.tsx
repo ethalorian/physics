@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import { 
   ArrowLeft,
   Play,
@@ -57,7 +60,16 @@ function ConstantVelocityLabContent({
   const [position, setPosition] = useState(0) // meters from origin
   const [dataPoints, setDataPoints] = useState<DataPoint[]>([])
   const [currentTime, setCurrentTime] = useState(0)
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('constant-velocity')
+  const actionLabelsMap = getActionLabels('constant-velocity')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -150,19 +162,27 @@ function ConstantVelocityLabContent({
     }
   }, [currentTime])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
   const handleStart = () => {
     setIsRunning(true)
-    onInteraction('start', { speed, direction, position })
+    handleInteraction('start', { speed, direction, position })
   }
 
   const handlePause = () => {
     setIsRunning(false)
-    onInteraction('pause', { currentTime, position, dataPoints: dataPoints.length })
+    handleInteraction('pause', { currentTime, position, dataPoints: dataPoints.length })
     
     // Mark as complete if they collected 10+ data points
-    if (dataPoints.length >= 10) {
-      setSimulationCompleted(true)
-      onComplete({
+    if (dataPoints.length >= 10 && !completionState.isCompleted) {
+      markComplete({
         totalTime: currentTime,
         totalDataPoints: dataPoints.length,
         finalPosition: position,
@@ -177,12 +197,18 @@ function ConstantVelocityLabContent({
     setPosition(0)
     setCurrentTime(0)
     setDataPoints([])
-    onInteraction('reset', {})
+    handleInteraction('reset', {})
+    resetCompletion() // Reset completion tracking
   }
 
   const handleDirection = (dir: Direction) => {
     setDirection(dir)
-    onInteraction('change-direction', { direction: dir, speed })
+    handleInteraction('change-direction', { direction: dir, speed })
+    
+    // Track speed_changed when actually changing direction/speed
+    if (dir !== 'stopped') {
+      handleInteraction('speed_changed', { speed, direction: dir })
+    }
   }
 
   const handleExportData = () => {
@@ -270,6 +296,16 @@ function ConstantVelocityLabContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Visualization */}
@@ -656,7 +692,7 @@ function ConstantVelocityLabContent({
         <SimulationAssignment
           simulationSlug="constant-velocity"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: dataPoints,
             finalPosition: position,

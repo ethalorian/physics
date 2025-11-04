@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -10,6 +10,9 @@ import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 import { 
@@ -486,7 +489,15 @@ function CartsThirdLawContent({
     forceOnB: 0,
     time: 0
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('carts-third-law')
+  const actionLabelsMap = getActionLabels('carts-third-law')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -596,13 +607,22 @@ function CartsThirdLawContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setMasses(massA, massB)
       engineRef.current.setInteractionForce(interactionForce)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { massA, massB, interactionForce })
+      handleInteraction('start', { massA, massB, interactionForce })
     }
   }
 
@@ -610,10 +630,10 @@ function CartsThirdLawContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time, dataPoints: kinematicsData.length })
+      handleInteraction('pause', { time: currentData.time, dataPoints: kinematicsData.length })
       
       if (kinematicsData.length >= 10) {
-        setSimulationCompleted(true)
+        markComplete({}, 100)
         const totalMomentum = massA * currentData.velocityA + massB * currentData.velocityB
         onComplete({
           totalTime: currentData.time,
@@ -630,7 +650,7 @@ function CartsThirdLawContent({
       engineRef.current.reset()
       setIsRunning(false)
       setKinematicsData([])
-      onInteraction('reset', {})
+      handleInteraction('reset', {})
     }
   }
 
@@ -730,6 +750,16 @@ function CartsThirdLawContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Visualization */}
@@ -1066,7 +1096,10 @@ function CartsThirdLawContent({
                   )}
                 </Button>
                 <Button 
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset()
+                    resetCompletion() // Reset completion tracking
+                  }}
                   variant="outline"
                   className="w-full"
                 >
@@ -1140,7 +1173,7 @@ function CartsThirdLawContent({
         <SimulationAssignment
           simulationSlug="carts-third-law"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             dataPoints: kinematicsData,
             totalMomentum: totalMomentum,

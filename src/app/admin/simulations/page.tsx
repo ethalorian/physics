@@ -10,7 +10,6 @@ import { Badge } from '@/components/ui/badge'
 import { 
   ArrowLeft,
   Play,
-  Settings,
   BarChart3,
   Eye,
   Loader2

@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { 
   Brain, 
-  Clock, 
   AlertCircle,
   CheckCircle,
   Loader2 
@@ -208,32 +207,75 @@ export function SimulationWrapper({
     <div className="space-y-4">
       {/* Tracking Status Bar (optional) */}
       {trackProgress && isTracking && (
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-          <CardContent className="py-3">
+        <Card className={`border-2 transition-all duration-500 ${
+          isCompleted 
+            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 shadow-lg' 
+            : 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200'
+        }`}>
+          <CardContent className="py-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="h-4 w-4 text-blue-600" />
-                  <span className="font-medium">Time: {Math.floor(timeSpent / 60)}:{String(timeSpent % 60).padStart(2, '0')}</span>
-                </div>
-                
-                {/* AI Help badge removed - students work independently (Phase 4) */}
+              <div className="flex items-center gap-3">
+                {isCompleted ? (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <CheckCircle className="h-8 w-8 text-green-600 animate-in zoom-in duration-300" />
+                        <div className="absolute inset-0 animate-ping">
+                          <CheckCircle className="h-8 w-8 text-green-400 opacity-75" />
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-green-800 text-lg">Simulation Complete!</h3>
+                        <p className="text-xs text-green-600">Great job exploring the physics concepts</p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="relative flex items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="relative">
+                          <div className="h-8 w-8 rounded-full border-3 border-blue-300 border-t-blue-600 animate-spin" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="h-4 w-4 rounded-full bg-blue-600 animate-pulse" />
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-blue-800">Simulation Active</h3>
+                        <p className="text-xs text-blue-600">Explore and interact with the simulation</p>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
               
               <div className="flex items-center gap-2">
                 {isCompleted ? (
-                  <Badge variant="default" className="bg-green-600">
-                    <CheckCircle className="h-3 w-3 mr-1" />
-                    Completed
+                  <Badge className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 text-sm font-semibold">
+                    <CheckCircle className="h-4 w-4 mr-1.5" />
+                    COMPLETED
                   </Badge>
                 ) : (
-                  <Badge variant="secondary">
-                    <Loader2 className="h-3 w-3 mr-1 animate-pulse" />
-                    In Progress
+                  <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 text-sm font-semibold animate-pulse">
+                    <div className="flex items-center gap-1.5">
+                      <div className="h-2 w-2 bg-white rounded-full animate-bounce" />
+                      IN PROGRESS
+                    </div>
                   </Badge>
                 )}
               </div>
             </div>
+            
+            {/* Progress indicator bar */}
+            {!isCompleted && (
+              <div className="mt-3">
+                <div className="h-1 bg-blue-200 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse-slow" 
+                       style={{ width: '60%' }} />
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

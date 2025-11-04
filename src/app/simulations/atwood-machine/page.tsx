@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import { 
   ArrowLeft,
   Play,
@@ -563,7 +566,15 @@ function AtwoodMachineContent({
     equilibriumType: 'static' as 'static' | 'dynamic' | 'accelerating',
     targetReached: false
   })
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('atwood-machine')
+  const actionLabelsMap = getActionLabels('atwood-machine')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
 
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -597,8 +608,8 @@ function AtwoodMachineContent({
             tension: data.tension
           }
 
-          if (data.targetReached && !simulationCompleted) {
-            setSimulationCompleted(true)
+          if (data.targetReached && !completionState.isCompleted) {
+            markComplete({}, 100)
             onComplete({
               time: data.time,
               acceleration: data.acceleration,
@@ -683,13 +694,22 @@ function AtwoodMachineContent({
     return () => clearInterval(interval)
   }, [isRunning])
 
-  const handleStart = () => {
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    handleInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
+    const handleStart = () => {
     if (engineRef.current) {
       engineRef.current.setMasses(mass1, mass2)
       engineRef.current.setTargetDistance(targetDistance)
       engineRef.current.start()
       setIsRunning(true)
-      onInteraction('start', { mass1, mass2, targetDistance })
+      handleInteraction('start', { mass1, mass2, targetDistance })
     }
   }
 
@@ -697,7 +717,7 @@ function AtwoodMachineContent({
     if (engineRef.current) {
       engineRef.current.pause()
       setIsRunning(false)
-      onInteraction('pause', { time: currentData.time })
+      handleInteraction('pause', { time: currentData.time })
     }
   }
 
@@ -706,8 +726,8 @@ function AtwoodMachineContent({
       engineRef.current.reset()
       setIsRunning(false)
       setPulleyData([])
-      setSimulationCompleted(false)
-      onInteraction('reset', {})
+      // Completion reset handled by resetCompletion()
+      handleInteraction('reset', {})
     }
   }
 
@@ -806,6 +826,16 @@ function AtwoodMachineContent({
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator (for students) */}
+      {!isAdmin && (
+        <SimulationProgress 
+          state={completionState}
+          actionLabels={actionLabelsMap}
+          hideWhenComplete={false}
+          className="mb-6"
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Pulley System */}
@@ -1084,7 +1114,10 @@ function AtwoodMachineContent({
                   Release System
                 </Button>
                 <Button 
-                  onClick={handleReset}
+                  onClick={() => {
+                    handleReset()
+                    resetCompletion() // Reset completion tracking
+                  }}
                   variant="outline"
                   className="w-full"
                 >
@@ -1174,7 +1207,7 @@ function AtwoodMachineContent({
         <SimulationAssignment
           simulationSlug="atwood-machine"
           simulationTime={totalSimulationTime.current}
-          simulationCompleted={simulationCompleted}
+          simulationCompleted={completionState.isCompleted}
           simulationData={{
             time: currentData.time,
             acceleration: currentData.acceleration,

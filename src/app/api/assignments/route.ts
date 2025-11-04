@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
-import { Assignment } from '@/types/assignment'
 
 // GET - Fetch assignments
 export async function GET(request: NextRequest) {

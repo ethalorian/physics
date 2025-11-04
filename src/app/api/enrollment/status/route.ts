@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { getStudentEnrollmentStatus } from '@/lib/student-management'
 
 // GET - Check current user's enrollment status
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await auth()
     if (!session?.user?.email) {

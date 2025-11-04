@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server'
 // Internal imports
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 export async function GET(request: Request) {
   try {

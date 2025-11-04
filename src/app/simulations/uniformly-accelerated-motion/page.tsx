@@ -14,6 +14,9 @@ import Link from 'next/link'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 
 interface OilSpot {
   x: number
@@ -56,7 +59,15 @@ function UniformlyAcceleratedMotionContent({
     velocity: initialVelocity[0],
     oilSpots: []
   })
-  const [hasCompletedRun, setHasCompletedRun] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('uniformly-accelerated-motion')
+  const actionLabelsMap = getActionLabels('uniformly-accelerated-motion')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -174,8 +185,19 @@ function UniformlyAcceleratedMotionContent({
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current)
     }
-  }, [v0])
+    
+    resetCompletion() // Reset completion tracking
+  }, [v0, resetCompletion])
 
+  // Enhanced interaction tracking wrapper
+  const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
+    // Call the original onInteraction from SimulationWrapper
+    onInteraction(action, data)
+    
+    // Track with standardized system
+    trackInteraction(action, data)
+  }, [onInteraction, trackInteraction])
+  
   const toggleSimulation = useCallback(() => {
     setSimulationState(prev => {
       const newState = {
@@ -184,7 +206,7 @@ function UniformlyAcceleratedMotionContent({
       }
       
       // Track start/pause
-      onInteraction(newState.isRunning ? 'start-simulation' : 'pause-simulation', {
+      handleInteraction(newState.isRunning ? 'start' : 'pause', {
         initialVelocity: v0,
         acceleration: a,
         currentTime: prev.time,
@@ -194,7 +216,7 @@ function UniformlyAcceleratedMotionContent({
       
       return newState
     })
-  }, [onInteraction, v0, a])
+  }, [handleInteraction, v0, a])
 
   // Animation loop - optimized for smooth 60fps
   useEffect(() => {
@@ -276,7 +298,7 @@ function UniformlyAcceleratedMotionContent({
         // Track completion on first full run
         if (!hasCompletedRun) {
           setHasCompletedRun(true)
-          onComplete({
+          markComplete({
             initialVelocity: v0,
             acceleration: a,
             finalTime: newTime,
@@ -365,6 +387,15 @@ function UniformlyAcceleratedMotionContent({
           </div>
         </div>
 
+        {/* Progress Indicator (for students) */}
+        {!isAdmin && (
+          <SimulationProgress 
+            state={completionState}
+            actionLabels={actionLabelsMap}
+            hideWhenComplete={false}
+          />
+        )}
+
         <Tabs defaultValue="simulation" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="simulation">Interactive Simulation</TabsTrigger>
@@ -393,7 +424,7 @@ function UniformlyAcceleratedMotionContent({
                       value={initialVelocity}
                       onValueChange={(val) => {
                         setInitialVelocity(val)
-                        onInteraction('change-initial-velocity', { value: val[0] })
+                        handleInteraction('initial_velocity_changed', { value: val[0] })
                       }}
                       min={0}
                       max={20}
@@ -418,7 +449,7 @@ function UniformlyAcceleratedMotionContent({
                       value={acceleration}
                       onValueChange={(val) => {
                         setAcceleration(val)
-                        onInteraction('change-acceleration', { value: val[0] })
+                        handleInteraction('acceleration_changed', { value: val[0] })
                       }}
                       min={-5}
                       max={5}
@@ -743,7 +774,7 @@ function UniformlyAcceleratedMotionContent({
           <SimulationAssignment
             simulationSlug="uniformly-accelerated-motion"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={hasCompletedRun}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               initialVelocity: v0,
               acceleration: a,

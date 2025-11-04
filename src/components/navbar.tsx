@@ -6,8 +6,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 // External package imports
-import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope } from "lucide-react"
+import { useSession, signIn, signOut } from "next-auth/react"
+import { Menu, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope, LogOut } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -163,6 +163,17 @@ export default function Navbar() {
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div>
+                
+                {/* Quick Sign Out Button */}
+                <Button
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                  variant="outline"
+                  size="sm"
+                  className="text-destructive border-destructive/20 hover:bg-destructive hover:text-white hover:border-destructive px-2 sm:px-3 text-xs sm:text-sm h-8 sm:h-9"
+                >
+                  <LogOut className="h-3.5 w-3.5 sm:mr-1.5" />
+                  <span className="hidden sm:inline">Sign Out</span>
+                </Button>
                 
                 {/* User Menu - Direct Sheet Trigger */}
                 <UserContextSheet>

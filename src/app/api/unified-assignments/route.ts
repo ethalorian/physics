@@ -2,12 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
 import { supabase } from '@/lib/supabase'
-import { CreateUnifiedAssignmentRequest, AssignmentFilters } from '@/types/unified-assignment'
 
 /**
- * GET /api/unified-assignments
- * Fetch unified assignments with optional filtering
+ * Unified Assignment API
+ * Handles all assignment types: lesson, homework, vocabulary, simulation, simulation_embedded
  */
+
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
@@ -17,116 +17,66 @@ export async function GET(request: NextRequest) {
 
     const userRole = getUserRole(session.user.email)
     const { searchParams } = new URL(request.url)
+    
+    // Query parameters
+    const assignmentType = searchParams.get('type')
+    const courseId = searchParams.get('course_id')
+    const published = searchParams.get('published')
+    const assignedBy = searchParams.get('assigned_by')
 
-    // Parse filters
-    const filters: AssignmentFilters = {
-      assignment_type: searchParams.get('assignment_type') as any,
-      course_id: searchParams.get('course_id') || undefined,
-      student_id: searchParams.get('student_id') || undefined,
-      status: searchParams.get('status') as any,
-      due_before: searchParams.get('due_before') || undefined,
-      due_after: searchParams.get('due_after') || undefined,
-      search_query: searchParams.get('search') || undefined,
-      include_drafts: searchParams.get('include_drafts') === 'true',
-      overdue_only: searchParams.get('overdue_only') === 'true',
-      needs_grading: searchParams.get('needs_grading') === 'true'
-    }
-
-    // Build query based on user role
+    // Build query
     let query = supabase
       .from('unified_assignments')
-      .select(`
-        *,
-        course:courses!inner(
-          id,
-          name,
-          google_course_id
-        ),
-        tags:assignment_tags(
-          id,
-          tag_name,
-          tag_category
-        )
-      `)
-
-    // Teachers see their own assignments
-    if (userRole === 'admin' || userRole === 'teacher') {
-      if (!filters.include_drafts) {
-        query = query.eq('published', true)
-      }
-      query = query.eq('assigned_by', session.user.email)
-    } else {
-      // Students see only their assigned assignments
-      // First get the assignment IDs for this student
-      const { data: studentProgress } = await supabase
-        .from('student_assignment_progress')
-        .select('unified_assignment_id')
-        .eq('student_email', session.user.email)
-      
-      const assignmentIds = studentProgress?.map(p => p.unified_assignment_id) || []
-      
-      query = query
-        .eq('published', true)
-        .in('id', assignmentIds.length > 0 ? assignmentIds : ['']) // Empty string to return no results if no assignments
-    }
+      .select('*')
+      .order('created_at', { ascending: false })
 
     // Apply filters
-    if (filters.assignment_type) {
-      if (Array.isArray(filters.assignment_type)) {
-        query = query.in('assignment_type', filters.assignment_type)
-      } else {
-        query = query.eq('assignment_type', filters.assignment_type)
-      }
+    if (assignmentType) {
+      query = query.eq('assignment_type', assignmentType)
     }
-
-    if (filters.course_id) {
-      query = query.eq('course_id', filters.course_id)
+    
+    if (courseId) {
+      query = query.eq('course_id', courseId)
     }
-
-    if (filters.due_before) {
-      query = query.lte('due_date', filters.due_before)
+    
+    if (published === 'true') {
+      query = query.eq('published', true)
+    } else if (published === 'false') {
+      query = query.eq('published', false)
     }
-
-    if (filters.due_after) {
-      query = query.gte('due_date', filters.due_after)
+    
+    // Teachers can only see their own assignments (unless admin)
+    if (userRole === 'teacher' && !assignedBy) {
+      query = query.eq('assigned_by', session.user.email)
+    } else if (assignedBy) {
+      query = query.eq('assigned_by', assignedBy)
     }
-
-    if (filters.overdue_only) {
+    
+    // Students can only see published assignments assigned to them
+    if (userRole === 'student') {
       query = query
-        .lt('due_date', new Date().toISOString())
-        .not('due_date', 'is', null)
+        .eq('published', true)
+        .or(`course_id.eq.${courseId},assigned_students.cs.{${session.user.id}}`)
     }
-
-    if (filters.search_query) {
-      query = query.or(`title.ilike.%${filters.search_query}%,description.ilike.%${filters.search_query}%`)
-    }
-
-    // Order by due date (upcoming first) then created date
-    query = query.order('due_date', { ascending: true, nullsFirst: false })
-                 .order('created_at', { ascending: false })
 
     const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching unified assignments:', error)
+      console.error('Error fetching assignments:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json(data || [])
+    return NextResponse.json({ assignments: data || [] })
 
-  } catch (error) {
-    console.error('API Error:', error)
+  } catch (error: any) {
+    console.error('API error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch assignments', message: error.message },
       { status: 500 }
     )
   }
 }
 
-/**
- * POST /api/unified-assignments
- * Create a new unified assignment
- */
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
@@ -139,249 +89,196 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const body: CreateUnifiedAssignmentRequest = await request.json()
+    const body = await request.json()
 
-    // Validate required fields
-    if (!body.assignment_type || !body.reference_id || !body.title) {
+    // Validation
+    if (!body.assignment_type) {
       return NextResponse.json(
-        { error: 'Missing required fields: assignment_type, reference_id, title' },
+        { error: 'Assignment type is required' },
         { status: 400 }
       )
     }
 
-    // Must assign to either a course or specific students
-    if (!body.course_id && (!body.assigned_students || body.assigned_students.length === 0)) {
+    if (!body.title) {
       return NextResponse.json(
-        { error: 'Must assign to either a course_id or assigned_students' },
+        { error: 'Title is required' },
         { status: 400 }
       )
     }
 
-    // Prepare assignment data
+    if (!body.course_id && !body.assigned_students?.length) {
+      return NextResponse.json(
+        { error: 'Must specify either course_id or assigned_students' },
+        { status: 400 }
+      )
+    }
+
+    // Handle reference_id based on type
+    let referenceId = body.reference_id
+
+    // For homework type, ensure we have questions
+    if (body.assignment_type === 'homework' && !referenceId) {
+      if (!body.questions || body.questions.length === 0) {
+        return NextResponse.json(
+          { error: 'Homework assignments require questions or a reference_id' },
+          { status: 400 }
+        )
+      }
+      // Questions will be stored in the submission_data field for now
+      // In production, you might want to create a separate homework record first
+      referenceId = `homework_${Date.now()}`
+    }
+
+    // For simulations, validate the reference exists
+    if (body.assignment_type === 'simulation' || body.assignment_type === 'simulation_embedded') {
+      if (!referenceId) {
+        return NextResponse.json(
+          { error: 'Simulation assignments require a simulation reference' },
+          { status: 400 }
+        )
+      }
+    }
+
+    // Calculate total assigned students
+    let totalAssigned = 0
+    if (body.course_id) {
+      // Get course student count
+      const { data: course } = await supabase
+        .from('courses')
+        .select('student_count')
+        .eq('id', body.course_id)
+        .single()
+      
+      totalAssigned = course?.student_count || 0
+    } else if (body.assigned_students) {
+      totalAssigned = body.assigned_students.length
+    }
+
+    // Create assignment
     const assignmentData = {
       assignment_type: body.assignment_type,
-      reference_id: body.reference_id,
+      reference_id: referenceId || null,
       title: body.title,
-      description: body.description,
-      instructions: body.instructions,
-      course_id: body.course_id,
-      assigned_students: body.assigned_students,
+      description: body.description || null,
+      instructions: body.instructions || null,
+      course_id: body.course_id || null,
+      assigned_students: body.assigned_students || null,
+      assigned_at: new Date().toISOString(),
       available_from: body.available_from || new Date().toISOString(),
-      due_date: body.due_date,
-      closes_at: body.closes_at,
+      due_date: body.due_date || null,
+      closes_at: body.closes_at || null,
       max_attempts: body.max_attempts || 1,
-      time_limit: body.time_limit,
-      allow_late_submission: body.allow_late_submission ?? true,
-      requires_completion: body.requires_completion ?? true,
-      max_score: body.max_score,
+      time_limit: body.time_limit || null,
+      allow_late_submission: body.allow_late_submission !== false,
+      requires_completion: body.requires_completion !== false,
+      max_score: body.max_score || body.total_points || null,
       weight: body.weight || 1.0,
-      published: body.published ?? false,
-      assigned_by: session.user.email
+      published: body.published !== false,
+      assigned_by: session.user.email,
+      total_assigned: totalAssigned,
+      total_started: 0,
+      total_completed: 0,
+      total_submitted: 0
     }
 
-    // Create the assignment
-    const { data: assignment, error: assignmentError } = await supabase
+    // Insert into database
+    const { data: assignment, error } = await supabase
       .from('unified_assignments')
       .insert(assignmentData)
-      .select(`
-        *,
-        course:courses(
-          id,
-          name,
-          google_course_id
-        )
-      `)
+      .select()
       .single()
 
-    if (assignmentError) {
-      console.error('Error creating assignment:', assignmentError)
-      return NextResponse.json(
-        { error: assignmentError.message },
-        { status: 500 }
-      )
+    if (error) {
+      console.error('Error creating assignment:', error)
+      
+      // Check if table doesn't exist
+      if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
+        return NextResponse.json(
+          { 
+            error: 'Database not configured',
+            message: 'The unified_assignments table does not exist. Please run the migration.',
+            hint: 'Run the create_unified_assignment_hub.sql migration'
+          },
+          { status: 500 }
+        )
+      }
+      
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    // Create tags if provided
-    if (body.tags && body.tags.length > 0) {
-      const tagData = body.tags.map(tag => ({
-        unified_assignment_id: assignment.id,
-        tag_name: tag,
-        tag_category: 'custom'
-      }))
+    // Create individual student progress records
+    if (assignment && (body.course_id || body.assigned_students)) {
+      if (body.course_id) {
+        // Get all students in the course
+        const { data: enrollments } = await supabase
+          .from('student_courses')
+          .select('student_id, student_email')
+          .eq('course_id', body.course_id)
+        
+        if (enrollments) {
+          for (const enrollment of enrollments) {
+            const progressData = {
+              unified_assignment_id: assignment.id,
+              student_id: enrollment.student_id,
+              student_email: enrollment.student_email || enrollment.student_id,
+              status: 'assigned',
+              progress_percentage: 0,
+              attempt_number: 1,
+              attempts_used: 0,
+              time_spent: 0,
+              is_late: false,
+              is_excused: false,
+              needs_attention: false
+            }
+            
+            await supabase
+              .from('student_assignment_progress')
+              .insert(progressData)
+          }
+        }
+      } else if (body.assigned_students) {
+        // Create progress for specific students
+        for (const studentId of body.assigned_students) {
+          const progressData = {
+            unified_assignment_id: assignment.id,
+            student_id: studentId,
+            student_email: studentId, // Will need to lookup email
+            status: 'assigned',
+            progress_percentage: 0,
+            attempt_number: 1,
+            attempts_used: 0,
+            time_spent: 0,
+            is_late: false,
+            is_excused: false,
+            needs_attention: false
+          }
+          
+          await supabase
+            .from('student_assignment_progress')
+            .insert(progressData)
+        }
+      }
+    }
 
+    // Store questions if it's a homework assignment with inline questions
+    if (body.assignment_type === 'homework' && body.questions) {
+      // Store questions in a separate table or as part of the assignment metadata
+      // For now, we'll store them in the assignment record itself
       await supabase
-        .from('assignment_tags')
-        .insert(tagData)
+        .from('unified_assignments')
+        .update({ 
+          submission_data: { questions: body.questions } 
+        })
+        .eq('id', assignment.id)
     }
 
-    // Trigger will automatically create student_assignment_progress records
+    return NextResponse.json(assignment)
 
-    return NextResponse.json(assignment, { status: 201 })
-
-  } catch (error) {
-    console.error('API Error:', error)
+  } catch (error: any) {
+    console.error('API error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to create assignment', message: error.message },
       { status: 500 }
     )
   }
 }
-
-/**
- * PUT /api/unified-assignments
- * Update an existing unified assignment
- */
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    const body = await request.json()
-    const { id, ...updates } = body
-
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Assignment ID is required' },
-        { status: 400 }
-      )
-    }
-
-    // Verify ownership
-    const { data: existing } = await supabase
-      .from('unified_assignments')
-      .select('assigned_by')
-      .eq('id', id)
-      .single()
-
-    if (!existing) {
-      return NextResponse.json(
-        { error: 'Assignment not found' },
-        { status: 404 }
-      )
-    }
-
-    if (existing.assigned_by !== session.user.email && userRole !== 'admin') {
-      return NextResponse.json(
-        { error: 'You can only update your own assignments' },
-        { status: 403 }
-      )
-    }
-
-    // Update the assignment
-    const { data, error } = await supabase
-      .from('unified_assignments')
-      .update(updates)
-      .eq('id', id)
-      .select(`
-        *,
-        course:courses(
-          id,
-          name,
-          google_course_id
-        ),
-        tags:assignment_tags(
-          id,
-          tag_name,
-          tag_category
-        )
-      `)
-      .single()
-
-    if (error) {
-      console.error('Error updating assignment:', error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json(data)
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
-
-/**
- * DELETE /api/unified-assignments
- * Delete a unified assignment
- */
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    const { searchParams } = new URL(request.url)
-    const id = searchParams.get('id')
-
-    if (!id) {
-      return NextResponse.json(
-        { error: 'Assignment ID is required' },
-        { status: 400 }
-      )
-    }
-
-    // Verify ownership
-    const { data: existing } = await supabase
-      .from('unified_assignments')
-      .select('assigned_by')
-      .eq('id', id)
-      .single()
-
-    if (!existing) {
-      return NextResponse.json(
-        { error: 'Assignment not found' },
-        { status: 404 }
-      )
-    }
-
-    if (existing.assigned_by !== session.user.email && userRole !== 'admin') {
-      return NextResponse.json(
-        { error: 'You can only delete your own assignments' },
-        { status: 403 }
-      )
-    }
-
-    // Delete the assignment (cascade will delete related records)
-    const { error } = await supabase
-      .from('unified_assignments')
-      .delete()
-      .eq('id', id)
-
-    if (error) {
-      console.error('Error deleting assignment:', error)
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      )
-    }
-
-    return NextResponse.json({ success: true })
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
-

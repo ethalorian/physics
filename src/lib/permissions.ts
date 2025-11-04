@@ -15,7 +15,10 @@ export const ADMIN_EMAILS = [
   'antoccic@fitchburg.k12.ma.us',
   'craigantocci@gmail.com',
   // Test accounts (only in development)
-  ...(process.env.NODE_ENV === 'development' ? ['admin@test.com'] : []),
+  ...(process.env.NODE_ENV === 'development' ? [
+    'admin@test.com',
+    'admin.test@example.com'
+  ] : []),
   // Add more admin emails here as needed
 ]
 
@@ -23,7 +26,10 @@ export const ADMIN_EMAILS = [
 export const TEACHER_EMAILS = [
   ...ADMIN_EMAILS, // Admins are also teachers
   // Test accounts (only in development)
-  ...(process.env.NODE_ENV === 'development' ? ['teacher@test.com'] : []),
+  ...(process.env.NODE_ENV === 'development' ? [
+    'teacher@test.com',
+    'teacher.test@example.com'
+  ] : []),
   // Add teacher-only emails here
 ]
 
@@ -32,6 +38,27 @@ export const TEACHER_EMAILS = [
  */
 export function getUserRole(email: string | null | undefined): UserRole {
   if (!email) return 'student'
+  
+  // In development, check for test account patterns
+  if (process.env.NODE_ENV === 'development') {
+    const lowerEmail = email.toLowerCase()
+    
+    // Check for test account patterns
+    if (lowerEmail.includes('admin.test') || lowerEmail.includes('test.admin')) {
+      return 'admin'
+    }
+    if (lowerEmail.includes('teacher.test') || lowerEmail.includes('test.teacher')) {
+      return 'teacher'
+    }
+    if (lowerEmail.includes('student.test') || lowerEmail.includes('test.student')) {
+      return 'student'
+    }
+    
+    // Check environment variable overrides
+    if (process.env.NEXT_PUBLIC_TEST_ADMIN_EMAIL === email) return 'admin'
+    if (process.env.NEXT_PUBLIC_TEST_TEACHER_EMAIL === email) return 'teacher'
+    if (process.env.NEXT_PUBLIC_TEST_STUDENT_EMAIL === email) return 'student'
+  }
   
   if (ADMIN_EMAILS.includes(email)) {
     return 'admin'

@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ArrowRight, Plus, Settings, FileText } from 'lucide-react'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
@@ -45,7 +48,15 @@ function SlopeCalculatorContent({
   const [v0, setV0] = useState(2) // Initial velocity
   const [acceleration, setAcceleration] = useState(0) // Acceleration
   const [timeRange, setTimeRange] = useState(4) // Time duration
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('slope-calculator')
+  const actionLabelsMap = getActionLabels('slope-calculator')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -178,7 +189,8 @@ function SlopeCalculatorContent({
                   onClick={() => {
                     setEditingAssignment(null)
                     setShowAssignmentEditor(true)
-                  }}
+                    resetCompletion() // Reset completion tracking
+  }}
                   className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
                 >
                   <Plus className="h-4 w-4 mr-1" />
@@ -884,7 +896,7 @@ Both equations describe the same line! Use whichever is easier for your problem.
           <SimulationAssignment
             simulationSlug="slope-calculator"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               slope: positionResult?.slope || 0,
               point1,

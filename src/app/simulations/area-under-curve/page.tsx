@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
 import { RotateCcw, TrendingUp, Gauge, MapPin, Lightbulb, Plus, Settings, FileText } from 'lucide-react'
 import { SimulationWrapper } from '@/components/simulations/SimulationWrapper'
+import { useSimulationCompletion } from '@/hooks/useSimulationCompletion'
+import SimulationProgress from '@/components/simulations/SimulationProgress'
+import { getSimulationCriteria, getActionLabels } from '@/config/simulationCompletionCriteria'
 import SimulationAssignment from '@/components/simulations/SimulationAssignment'
 import SimulationAssignmentEditor from '@/components/simulations/SimulationAssignmentEditor'
 
@@ -59,7 +62,15 @@ function AreaUnderCurveContent({
   const [numRectangles, setNumRectangles] = useState(4) // For position-time approximation
   const [v0, setV0] = useState(0) // Initial velocity for position-time
   const [acceleration, setAcceleration] = useState(0) // Acceleration for position-time
-  const [simulationCompleted, setSimulationCompleted] = useState(false)
+  // Use standardized completion tracking
+  const completionConfig = getSimulationCriteria('area-under-curve')
+  const actionLabelsMap = getActionLabels('area-under-curve')
+  const {
+    state: completionState,
+    trackInteraction,
+    markComplete,
+    reset: resetCompletion
+  } = useSimulationCompletion(completionConfig, onComplete)
   
   // Assignment state
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
@@ -187,6 +198,7 @@ function AreaUnderCurveContent({
     if (preset.v0 !== undefined) setV0(preset.v0)
     if (preset.a !== undefined) setAcceleration(preset.a)
   }
+      resetCompletion() // Reset completion tracking
   
   const loadPreset = (preset: any) => {
     setPoint1(preset.p1)
@@ -741,7 +753,7 @@ function AreaUnderCurveContent({
           <SimulationAssignment
             simulationSlug="area-under-curve"
             simulationTime={totalSimulationTime.current}
-            simulationCompleted={simulationCompleted}
+            simulationCompleted={completionState.isCompleted}
             simulationData={{
               graphType,
               area: areaResult.area,
