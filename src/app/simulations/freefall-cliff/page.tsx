@@ -128,7 +128,7 @@ function FreefallCliffLabContent({
     reset()
     
     // Track starting random mode
-    handleInteraction('start-random-mode', {
+    onInteraction('start-random-mode', {
       cliffHeight: newHeight
     })
   }, [reset, onInteraction])
@@ -141,7 +141,7 @@ function FreefallCliffLabContent({
     setTraces([{ y: 0, time: 0 }]) // Initial position
     
     // Track stone drop
-    handleInteraction('drop-stone', {
+    onInteraction('drop-stone', {
       cliffHeight,
       isExampleMode,
       trialNumber: trials.length + 1
@@ -201,7 +201,7 @@ function FreefallCliffLabContent({
         setTrials(prev => [...prev, newTrial])
         
         // Track trial completion
-        handleInteraction('trial-completed', {
+        onInteraction('trial-completed', {
           cliffHeight,
           fallTime: finalTime,
           calculatedHeight: newTrial.calculatedHeight,
@@ -661,7 +661,7 @@ function FreefallCliffLabContent({
                           const errorPercent = Math.abs(averageCalculatedHeight - cliffHeight) / cliffHeight * 100
                           const score = Math.max(0, 100 - errorPercent * 2) // Score based on accuracy
                           
-                          handleInteraction('check-answer', {
+                          onInteraction('check-answer', {
                             cliffHeight,
                             averageCalculatedHeight,
                             averageFallTime,

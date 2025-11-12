@@ -260,7 +260,7 @@ function RecentActivity() {
   const { submissions } = useAssignments()
   
   // Get recent submissions (last 5)
-  const recentSubmissions = submissions
+  const recentSubmissions = (submissions || [])
     .sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())
     .slice(0, 5)
 
@@ -355,7 +355,7 @@ function UpcomingDeadlines() {
                   <div>
                     <p className="text-sm font-medium text-foreground">{assignment.title}</p>
                     <p className="text-xs text-muted-foreground">
-                      {assignment.total_points} points
+                      {assignment.max_score || 0} points
                     </p>
                   </div>
                   <div className="text-right">
