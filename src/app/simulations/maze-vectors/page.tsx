@@ -614,7 +614,7 @@ function MazeVectorsContent({
                   <Button 
                     onClick={() => {
                       handleReset()
-                      resetCompletion() // Reset completion tracking
+                      // resetCompletion() // Reset completion tracking - not implemented yet
                     }}
                     className="mt-2"
                     size="sm"
