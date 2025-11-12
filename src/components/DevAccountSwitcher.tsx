@@ -66,7 +66,7 @@ const TEST_ACCOUNTS = [
 
 export function DevAccountSwitcher() {
   const { data: session, status } = useSession()
-  const { toast } = useToast()
+  const { showToast } = useToast()
   const [isOpen, setIsOpen] = useState(false)
   const [isDevelopment, setIsDevelopment] = useState(false)
   const [copiedEmail, setCopiedEmail] = useState<string | null>(null)
@@ -131,7 +131,7 @@ export function DevAccountSwitcher() {
       // Reset copied state after 2 seconds
       setTimeout(() => setCopiedEmail(null), 2000)
       
-      toast({
+      showToast({
         title: "Email Copied!",
         description: (
           <div className="space-y-1">
@@ -161,7 +161,7 @@ export function DevAccountSwitcher() {
       }
     } catch (error) {
       console.error('Failed to copy:', error)
-      toast({
+      showToast({
         title: "Failed to copy",
         description: "Please copy manually",
         variant: "destructive",
