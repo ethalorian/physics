@@ -828,6 +828,7 @@ function AtwoodMachineContent({
       </div>
 
       {/* Progress Indicator (for students) */}
+      {/* Temporarily disabled - completion state not implemented yet
       {!isAdmin && (
         <SimulationProgress 
           state={completionState}
@@ -836,6 +837,7 @@ function AtwoodMachineContent({
           className="mb-6"
         />
       )}
+      */}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Pulley System */}
