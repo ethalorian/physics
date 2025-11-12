@@ -73,6 +73,9 @@ function UniformlyAcceleratedMotionContent({
   const [showAssignmentEditor, setShowAssignmentEditor] = useState(false)
   const [assignments, setAssignments] = useState<any[]>([])
   const [editingAssignment, setEditingAssignment] = useState<any>(null)
+  
+  // Track if simulation has completed a run
+  const [hasCompletedRun, setHasCompletedRun] = useState(false)
 
   const animationFrameRef = useRef<number | null>(null)
   const lastTimeRef = useRef<number>(0)
