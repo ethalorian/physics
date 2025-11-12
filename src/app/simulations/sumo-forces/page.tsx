@@ -560,7 +560,7 @@ function SumoForcesContent({
         blueForce: simulationState.blueForce
       }, 100)
     }
-  }, [simulationState.winner, simulationCompleted, simulationState, onComplete])
+  }, [simulationState.winner, completionState.isCompleted, simulationState, onComplete, markComplete])
   
   // Memoize chart data to prevent unnecessary re-renders
   const memoizedKinematicsData = useMemo(() => [...kinematicsData], [kinematicsData])
