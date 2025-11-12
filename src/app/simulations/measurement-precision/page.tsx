@@ -194,6 +194,7 @@ function AccuracyPrecisionExercise() {
       </div>
 
       {/* Progress Indicator (for students) */}
+      {/* Temporarily disabled - completion state not implemented yet
       {!isAdmin && (
         <SimulationProgress 
           state={completionState}
@@ -202,6 +203,7 @@ function AccuracyPrecisionExercise() {
           className="mb-6"
         />
       )}
+      */}
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Input Section */}
@@ -711,7 +713,7 @@ function MeasurementPrecisionSimulationContent({
     setShowHint(false)
     
     // Track problem generation
-    handleInteraction('generate-problem', {
+    onInteraction('generate-problem', {
       device: device.name,
       precision: device.precision,
       trueValue,
@@ -758,7 +760,7 @@ function MeasurementPrecisionSimulationContent({
     }
     
     // Track answer attempt
-    handleInteraction('check-answer', {
+    onInteraction('check-answer', {
       device: device.name,
       userAnswer: answer,
       correctAnswer: objectPosition,
