@@ -133,12 +133,7 @@ export function DevAccountSwitcher() {
       
       showToast({
         title: "Email Copied!",
-        description: (
-          <div className="space-y-1">
-            <p className="font-mono text-xs">{account.email}</p>
-            <p className="text-xs opacity-70">Password: {account.password}</p>
-          </div>
-        ),
+        description: `${account.email} | Password: ${account.password}`,
         duration: 5000,
       })
 
