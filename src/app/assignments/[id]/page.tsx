@@ -17,7 +17,7 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
   const resolvedParams = use(params)
   const { data: session } = useSession()
   const router = useRouter()
-  const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
+  const { getLegacyAssignment, getSubmissionByAssignmentId } = useAssignments()
   const { recordAssignmentStart, recordAssignmentSubmission } = useActivityTracking()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
@@ -32,7 +32,7 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
 
   const fetchAssignmentAndSubmission = useCallback(async () => {
     try {
-      const assignmentData = getAssignmentById(resolvedParams.id)
+      const assignmentData = getLegacyAssignment(resolvedParams.id)
       if (!assignmentData || !assignmentData.published) {
         setAssignment(null)
         setLoading(false)
@@ -42,7 +42,7 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
       setAssignment(assignmentData)
 
       // Get existing submission
-      if (session?.user?.id) {
+      if (session?.user?.id && getSubmissionByAssignmentId) {
         const existingSubmission = getSubmissionByAssignmentId(resolvedParams.id, session.user.id)
         if (existingSubmission) {
           setSubmission(existingSubmission)
@@ -57,7 +57,7 @@ export default function AssignmentPage({ params }: { params: Promise<{ id: strin
     } finally {
       setLoading(false)
     }
-  }, [resolvedParams.id, getAssignmentById, getSubmissionByAssignmentId, session])
+  }, [resolvedParams.id, getLegacyAssignment, getSubmissionByAssignmentId, session])
 
   useEffect(() => {
     if (session) {

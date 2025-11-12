@@ -178,14 +178,14 @@ function StudentOverview() {
   
   // Calculate stats
   const completedAssignments = publishedAssignments.filter(assignment => {
-    const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+    const submission = getSubmissionByAssignmentId?.(assignment.id, session?.user?.id)
     return submission !== undefined
   })
   
   const upcomingAssignments = publishedAssignments.filter(assignment => {
     const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
     const now = new Date()
-    const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+    const submission = getSubmissionByAssignmentId?.(assignment.id, session?.user?.id)
     return dueDate && dueDate > now && !submission
   })
   
@@ -321,7 +321,7 @@ function UpcomingDeadlines() {
       const dueDate = new Date(assignment.due_date)
       const now = new Date()
       const thirtyDaysFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000)
-      const submission = getSubmissionByAssignmentId(assignment.id, session?.user?.id)
+      const submission = getSubmissionByAssignmentId?.(assignment.id, session?.user?.id)
       return dueDate > now && dueDate <= thirtyDaysFromNow && !submission
     })
     .sort((a, b) => new Date(a.due_date!).getTime() - new Date(b.due_date!).getTime())

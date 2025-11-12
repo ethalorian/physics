@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server'
 
 // Internal imports
 import { auth } from '@/lib/auth'
+import { getUserRole } from '@/lib/permissions'
 import { supabaseAdmin } from '@/lib/supabase'
 
 export async function GET(request: Request) {

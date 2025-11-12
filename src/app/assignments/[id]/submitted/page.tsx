@@ -38,14 +38,14 @@ export default function SubmittedPage({
 }) {
   const resolvedParams = use(params)
   const { data: session } = useSession()
-  const { getAssignmentById, getSubmissionByAssignmentId } = useAssignments()
+  const { getLegacyAssignment, getSubmissionByAssignmentId } = useAssignments()
   const [assignment, setAssignment] = useState<Assignment | null>(null)
   const [submission, setSubmission] = useState<Submission | null>(null)
   const [loading, setLoading] = useState(true)
 
   const fetchSubmissionDetails = useCallback(async () => {
     try {
-      const assignmentData = getAssignmentById(resolvedParams.id)
+      const assignmentData = getLegacyAssignment(resolvedParams.id)
       if (!assignmentData) {
         setAssignment(null)
         setSubmission(null)
@@ -56,7 +56,7 @@ export default function SubmittedPage({
       setAssignment(assignmentData)
 
       // Get submission for this assignment
-      if (session?.user?.id) {
+      if (session?.user?.id && getSubmissionByAssignmentId) {
         const submissionData = getSubmissionByAssignmentId(resolvedParams.id, session.user.id)
         setSubmission(submissionData || null)
       }
@@ -65,7 +65,7 @@ export default function SubmittedPage({
     } finally {
       setLoading(false)
     }
-  }, [resolvedParams.id, getAssignmentById, getSubmissionByAssignmentId, session])
+  }, [resolvedParams.id, getLegacyAssignment, getSubmissionByAssignmentId, session])
 
   useEffect(() => {
     if (session) {
