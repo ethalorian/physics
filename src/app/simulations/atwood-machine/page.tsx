@@ -697,7 +697,7 @@ function AtwoodMachineContent({
   // Enhanced interaction tracking wrapper
   const handleInteraction = useCallback((action: string, data: Record<string, any>) => {
     // Call the original onInteraction from SimulationWrapper
-    handleInteraction(action, data)
+    onInteraction(action, data)
     
     // Track with standardized system
     trackInteraction(action, data)

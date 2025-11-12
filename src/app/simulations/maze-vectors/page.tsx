@@ -498,7 +498,7 @@ function MazeVectorsContent({
       setMagnitude(0)
       setHasWon(false)
       setMoveCount(0)
-      handleInteraction('reset', {})
+      onInteraction('reset', {})
     }
   }
 
