@@ -119,12 +119,13 @@ export default function AssignmentManagement() {
                         Due: {new Date(assignment.due_date).toLocaleDateString()}
                       </span>
                     )}
-                    <span>{assignment.questions?.length || 0} questions • {assignment.max_score || 0} points</span>
+                    <span>{assignment.max_score || 0} points</span>
                   </div>
                   <span>Created: {new Date(assignment.created_at).toLocaleDateString()}</span>
                 </div>
                 
-                {/* Question types summary */}
+                {/* Question types summary - disabled for UnifiedAssignment type */}
+                {/* NOTE: UnifiedAssignment doesn't have direct questions property
                 {assignment.questions && assignment.questions.length > 0 && (
                   <div className="flex flex-wrap gap-1 mt-2">
                     {assignment.questions
@@ -146,6 +147,7 @@ export default function AssignmentManagement() {
                     }
                   </div>
                 )}
+                */}
               </CardContent>
             </Card>
           ))
