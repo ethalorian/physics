@@ -159,7 +159,7 @@ export function DevAccountSwitcher() {
       showToast({
         title: "Failed to copy",
         description: "Please copy manually",
-        variant: "destructive",
+        variant: "error",
         duration: 3000,
       })
     }
