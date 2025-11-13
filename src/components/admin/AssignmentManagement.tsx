@@ -88,7 +88,7 @@ export default function AssignmentManagement() {
                   <div className="flex items-center gap-3">
                     {getStatusBadge(assignment)}
                     <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
-                      {assignment.total_points} pts
+                      {assignment.max_score || 0} pts
                     </Badge>
                   </div>
                   <div className="flex gap-2">
@@ -119,7 +119,7 @@ export default function AssignmentManagement() {
                         Due: {new Date(assignment.due_date).toLocaleDateString()}
                       </span>
                     )}
-                    <span>{assignment.questions?.length || 0} questions • {assignment.total_points} points</span>
+                    <span>{assignment.questions?.length || 0} questions • {assignment.max_score || 0} points</span>
                   </div>
                   <span>Created: {new Date(assignment.created_at).toLocaleDateString()}</span>
                 </div>
