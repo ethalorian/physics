@@ -14,7 +14,7 @@ export default function StudentAssignments() {
   const [searchTerm, setSearchTerm] = useState('')
 
   const getAssignmentSubmission = (assignmentId: string): Submission | undefined => {
-    return getSubmissionByAssignmentId(assignmentId)
+    return getSubmissionByAssignmentId?.(assignmentId)
   }
 
   const getStatusBadge = (assignment: Assignment) => {
