@@ -79,7 +79,7 @@ const TEST_ACCOUNTS = [
 
 export function EnhancedDevAccountSwitcher() {
   const { data: session, status } = useSession()
-  const { toast } = useToast()
+  const { showToast } = useToast()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
@@ -142,16 +142,16 @@ export function EnhancedDevAccountSwitcher() {
   const handleSignOut = async () => {
     try {
       await signOut({ callbackUrl: '/' })
-      toast({
+      showToast({
         title: "Signed Out",
         description: "Successfully signed out",
       })
     } catch (error) {
       console.error('Sign out error:', error)
-      toast({
+      showToast({
         title: "Error",
         description: "Failed to sign out",
-        variant: "destructive"
+        variant: "error"
       })
     }
   }
@@ -165,7 +165,7 @@ export function EnhancedDevAccountSwitcher() {
     }
     
     // Quick sign in with test account
-    toast({
+    showToast({
       title: "Switching Account",
       description: `Signing in as ${account.name}...`,
     })
@@ -177,7 +177,7 @@ export function EnhancedDevAccountSwitcher() {
     signIn('google', { callbackUrl: '/dashboard' })
     
     setTimeout(() => {
-      toast({
+      showToast({
         title: "Credentials Copied",
         description: `Email: ${account.email} | Password: ${account.password}`,
       })
@@ -190,7 +190,7 @@ export function EnhancedDevAccountSwitcher() {
     await navigator.clipboard.writeText(credentials)
     setCopiedEmail(account.email)
     
-    toast({
+    showToast({
       title: "Credentials Copied!",
       description: `${account.name} credentials copied to clipboard`,
     })
