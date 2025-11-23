@@ -25,7 +25,7 @@ import { Assignment, Submission, Question } from '@/types/assignment'
 // TYPE DEFINITIONS
 // ============================================================================
 
-export interface CreateAssignmentParams {
+interface CreateAssignmentParams {
   type: AssignmentType
   title: string
   description?: string
@@ -61,7 +61,7 @@ export interface CreateAssignmentParams {
   published?: boolean
 }
 
-export interface UpdateAssignmentParams {
+interface UpdateAssignmentParams {
   title?: string
   description?: string
   instructions?: string
@@ -73,7 +73,7 @@ export interface UpdateAssignmentParams {
   config?: any
 }
 
-export interface StudentProgressParams {
+interface StudentProgressParams {
   assignmentId: string
   status?: AssignmentStatus
   progress?: number
