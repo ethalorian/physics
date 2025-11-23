@@ -450,12 +450,10 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       score: progress.score || undefined,
       max_score: progress.max_score || undefined,
       feedback: undefined, // StudentAssignmentProgress has feedback as string, but Submission expects Record<string, string>
-      rubric_grades: progress.rubric_scores || undefined,
-      status: progress.status as 'draft' | 'submitted' | 'graded',
-      submitted_at: progress.submitted_at || undefined,
-      graded_at: progress.graded_at || undefined,
-      created_at: progress.created_at,
-      updated_at: progress.updated_at
+      rubric_grades: undefined, // Type mismatch: rubric_scores is Record<string, ...> but rubric_grades expects OpenResponseGrade[]
+      status: progress.status === 'graded' ? 'graded' : progress.status === 'submitted' ? 'submitted' : 'partial',
+      submitted_at: progress.submitted_at || new Date().toISOString(),
+      graded_at: progress.graded_at || undefined
     }
   }, [getStudentProgress])
   
@@ -467,7 +465,7 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
     
     // Find the student progress for this assignment
     const progress = studentProgress.find(p => 
-      p.assignment_id === assignmentId && p.student_id === targetStudentId
+      p.unified_assignment_id === assignmentId && p.student_id === targetStudentId
     )
     
     if (!progress) return undefined
@@ -475,20 +473,16 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
     // Convert to legacy Submission format
     return {
       id: progress.id,
-      assignment_id: progress.assignment_id,
-      student_id: progress.student_id,
-      student_name: progress.student_name || '',
-      student_email: progress.student_email || '',
-      answers: progress.progress_data?.answers || [],
+      assignment_id: progress.unified_assignment_id,
+      user_id: progress.student_id,
+      answers: (progress.submission_data?.answers || {}) as Record<string, string | number | string[] | Record<string, unknown>>,
       score: progress.score ?? undefined,
       max_score: progress.max_score ?? undefined,
-      feedback: progress.feedback || undefined,
-      time_spent: progress.time_spent || 0,
-      simulation_data: progress.progress_data?.simulation_data,
-      submitted_at: progress.submitted_at || undefined,
+      rubric_grades: undefined, // Type mismatch: rubric_scores is incompatible with OpenResponseGrade[]
+      feedback: undefined, // Type mismatch: StudentAssignmentProgress has feedback as string, Submission expects Record<string, string>
+      submitted_at: progress.submitted_at || new Date().toISOString(),
       graded_at: progress.graded_at || undefined,
-      created_at: progress.created_at,
-      updated_at: progress.updated_at
+      status: progress.status === 'graded' ? 'graded' : progress.status === 'submitted' ? 'submitted' : 'partial'
     }
   }, [studentProgress, session])
   
@@ -496,20 +490,16 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
   const submissions: Submission[] = useMemo(() => {
     return studentProgress.map(progress => ({
       id: progress.id,
-      assignment_id: progress.assignment_id,
-      student_id: progress.student_id,
-      student_name: progress.student_name || '',
-      student_email: progress.student_email || '',
-      answers: progress.progress_data?.answers || [],
+      assignment_id: progress.unified_assignment_id,
+      user_id: progress.student_id,
+      answers: (progress.submission_data?.answers || {}) as Record<string, string | number | string[] | Record<string, unknown>>,
       score: progress.score ?? undefined,
       max_score: progress.max_score ?? undefined,
-      feedback: progress.feedback || undefined,
-      time_spent: progress.time_spent || 0,
-      simulation_data: progress.progress_data?.simulation_data,
-      submitted_at: progress.submitted_at || undefined,
+      rubric_grades: undefined, // Type mismatch: rubric_scores is incompatible with OpenResponseGrade[]
+      feedback: undefined, // Type mismatch: StudentAssignmentProgress has feedback as string, Submission expects Record<string, string>
+      submitted_at: progress.submitted_at || new Date().toISOString(),
       graded_at: progress.graded_at || undefined,
-      created_at: progress.created_at,
-      updated_at: progress.updated_at
+      status: progress.status === 'graded' ? 'graded' : progress.status === 'submitted' ? 'submitted' : 'partial'
     }))
   }, [studentProgress])
   
