@@ -54,7 +54,7 @@ export function useSimulationCompletion(
   
   // Timer reference
   const startTimeRef = useRef(Date.now())
-  const timerRef = useRef<NodeJS.Timeout>()
+  const timerRef = useRef<NodeJS.Timeout | null>(null)
   
   // Start timer on mount
   useEffect(() => {
