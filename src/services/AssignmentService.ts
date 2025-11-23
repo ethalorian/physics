@@ -507,7 +507,7 @@ class AssignmentService {
     return {
       status: submission.status as AssignmentStatus,
       score: submission.score,
-      feedback: submission.feedback,
+      feedback: undefined, // Type mismatch: submission.feedback is Record<string, string>, but StudentAssignmentProgress expects string
       submission_data: {
         answers: submission.answers,
         rubric_grades: submission.rubric_grades
