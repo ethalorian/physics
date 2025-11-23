@@ -223,7 +223,6 @@ class AssignmentService {
       requiresCompletion: original.requires_completion,
       maxScore: original.max_score,
       weight: original.weight,
-      config: original.config,
       published: false  // Always create as draft
     })
   }
@@ -470,7 +469,6 @@ class AssignmentService {
         courseId,
         maxAttempts: original.max_attempts,
         timeLimit: original.time_limit,
-        config: original.config,
         published: true
       })
     )
