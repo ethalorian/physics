@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { FileText, Search, Calendar, Clock, CheckCircle, AlertCircle, Upload } from 'lucide-react'
 import Link from 'next/link'
-import { Assignment, Submission } from '@/types/assignment'
+import { Submission } from '@/types/assignment'
+import { UnifiedAssignment } from '@/types/unified-assignment'
 
 export default function StudentAssignments() {
   const { assignments, submissions, loading, getSubmissionByAssignmentId } = useAssignments()
@@ -17,7 +18,7 @@ export default function StudentAssignments() {
     return getSubmissionByAssignmentId?.(assignmentId)
   }
 
-  const getStatusBadge = (assignment: Assignment) => {
+  const getStatusBadge = (assignment: UnifiedAssignment) => {
     const submission = getAssignmentSubmission(assignment.id)
     const dueDate = assignment.due_date ? new Date(assignment.due_date) : null
     const now = new Date()
@@ -134,11 +135,11 @@ export default function StudentAssignments() {
             </CardHeader>
             <CardContent className="pt-2">
               <div className="text-lg sm:text-2xl font-bold text-foreground">
-                {submissions.filter(s => s.score !== undefined).length > 0 
-                  ? Math.round(submissions.filter(s => s.score !== undefined).reduce((sum, s) => sum + (s.score || 0), 0) / submissions.filter(s => s.score !== undefined).length)
+                {(submissions || []).filter(s => s.score !== undefined).length > 0 
+                  ? Math.round((submissions || []).filter(s => s.score !== undefined).reduce((sum, s) => sum + (s.score || 0), 0) / (submissions || []).filter(s => s.score !== undefined).length)
                   : '-'
                 }
-                {submissions.filter(s => s.score !== undefined).length > 0 && '%'}
+                {(submissions || []).filter(s => s.score !== undefined).length > 0 && '%'}
               </div>
             </CardContent>
           </Card>
@@ -174,7 +175,7 @@ export default function StudentAssignments() {
                       <div className="flex flex-wrap items-center gap-2 flex-1 mr-2">
                         {getStatusBadge(assignment)}
                         <Badge variant="outline" className="text-xs">
-                          {assignment.total_points} pts
+                          {assignment.max_score || 0} pts
                         </Badge>
                         {submission?.score !== undefined && (
                           <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200 text-xs">

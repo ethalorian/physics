@@ -85,7 +85,7 @@ const ConsolidatedAssignmentContext = createContext<ConsolidatedAssignmentContex
 export function ConsolidatedAssignmentProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
   const userRole = getUserRole(session?.user?.email)
-  const { toast } = useToast()
+  const { showToast } = useToast()
   
   // State
   const [assignments, setAssignments] = useState<UnifiedAssignment[]>([])
@@ -164,7 +164,7 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
     try {
       const assignment = await assignmentService.createAssignment(params)
       setAssignments(prev => [...prev, assignment])
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Assignment created successfully',
         variant: 'success'
@@ -172,93 +172,93 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       return assignment
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to create assignment'
-      toast?.({
+      showToast({
         title: 'Error',
         description: message,
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const updateAssignment = useCallback(async (id: string, params: UpdateAssignmentParams) => {
     try {
       const updated = await assignmentService.updateAssignment(id, params)
       setAssignments(prev => prev.map(a => a.id === id ? updated : a))
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Assignment updated successfully',
         variant: 'success'
       })
       return updated
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to update assignment',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const deleteAssignment = useCallback(async (id: string) => {
     try {
       await assignmentService.deleteAssignment(id)
       setAssignments(prev => prev.filter(a => a.id !== id))
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Assignment deleted successfully',
         variant: 'success'
       })
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to delete assignment',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const duplicateAssignment = useCallback(async (id: string, newTitle?: string) => {
     try {
       const duplicated = await assignmentService.duplicateAssignment(id, newTitle)
       setAssignments(prev => [...prev, duplicated])
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Assignment duplicated successfully',
         variant: 'success'
       })
       return duplicated
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to duplicate assignment',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const publishAssignment = useCallback(async (id: string, published: boolean) => {
     try {
       const updated = await assignmentService.setPublishStatus(id, published)
       setAssignments(prev => prev.map(a => a.id === id ? updated : a))
-      toast?.({
+      showToast({
         title: 'Success',
         description: published ? 'Assignment published' : 'Assignment unpublished',
         variant: 'success'
       })
       return updated
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to update publish status',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   // ========================================
   // STUDENT OPERATIONS
@@ -270,14 +270,14 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       setStudentProgress(prev => [...prev, progress])
       return progress
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to start assignment',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const saveProgress = useCallback(async (params: StudentProgressParams) => {
     try {
@@ -303,21 +303,21 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       setStudentProgress(prev => 
         prev.map(p => p.unified_assignment_id === assignmentId ? result : p)
       )
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Assignment submitted successfully',
         variant: 'success'
       })
       return result
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to submit assignment',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   // ========================================
   // QUERY OPERATIONS
@@ -355,41 +355,41 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
         options
       )
       setAssignments(prev => [...prev, assignment])
-      toast?.({
+      showToast({
         title: 'Success',
         description: 'Simulation assigned successfully',
         variant: 'success'
       })
       return assignment
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to assign simulation',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   const batchAssign = useCallback(async (assignmentId: string, courseIds: string[]) => {
     try {
       const assignments = await assignmentService.batchAssign(assignmentId, courseIds)
       setAssignments(prev => [...prev, ...assignments])
-      toast?.({
+      showToast({
         title: 'Success',
         description: `Assignment created for ${courseIds.length} courses`,
         variant: 'success'
       })
       return assignments
     } catch (err) {
-      toast?.({
+      showToast({
         title: 'Error',
         description: 'Failed to batch assign',
         variant: 'error'
       })
       throw err
     }
-  }, [toast])
+  }, [showToast])
   
   // ========================================
   // ANALYTICS
@@ -422,18 +422,18 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
     if (!unified || unified.assignment_type !== 'homework') return undefined
     
     // Convert unified assignment to legacy format
+    // Note: Questions would need to be fetched separately using reference_id
     return {
       id: unified.id,
       title: unified.title,
       description: unified.description || '',
       instructions: unified.instructions || '',
-      questions: unified.questions || [],
+      questions: [], // Questions are stored separately and would need to be fetched using reference_id
       total_points: unified.max_score || 0,
       due_date: unified.due_date || undefined,
       published: unified.published,
       created_at: unified.created_at,
-      updated_at: unified.updated_at,
-      created_by: unified.assigned_by
+      updated_at: unified.updated_at
     }
   }, [getAssignmentById])
   
@@ -446,7 +446,7 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       id: progress.id,
       assignment_id: assignmentId,
       user_id: progress.student_id,
-      answers: progress.submission_data?.answers || {},
+      answers: progress.submission_data?.answers || {} as Record<string, string | number | string[] | Record<string, unknown>>,
       score: progress.score || undefined,
       max_score: progress.max_score || undefined,
       feedback: progress.feedback || undefined,
