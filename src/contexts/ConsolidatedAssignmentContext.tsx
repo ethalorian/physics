@@ -446,10 +446,10 @@ export function ConsolidatedAssignmentProvider({ children }: { children: ReactNo
       id: progress.id,
       assignment_id: assignmentId,
       user_id: progress.student_id,
-      answers: progress.submission_data?.answers || {} as Record<string, string | number | string[] | Record<string, unknown>>,
+      answers: (progress.submission_data?.answers || {}) as Record<string, string | number | string[] | Record<string, unknown>>,
       score: progress.score || undefined,
       max_score: progress.max_score || undefined,
-      feedback: progress.feedback || undefined,
+      feedback: undefined, // StudentAssignmentProgress has feedback as string, but Submission expects Record<string, string>
       rubric_grades: progress.rubric_scores || undefined,
       status: progress.status as 'draft' | 'submitted' | 'graded',
       submitted_at: progress.submitted_at || undefined,
