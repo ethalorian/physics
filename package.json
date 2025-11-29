@@ -3,13 +3,17 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "migrate": "node scripts/run-migrations.js",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache",
+    "db:migrate": "tsx scripts/run-migration.ts",
+    "db:seed": "tsx scripts/create-simulation-lessons.sql",
     "setup:risc": "tsx scripts/setup-risc.ts",
-    "db:migrate": "npm run migrate"
+    "test:secret-manager": "tsx scripts/test-secret-manager.ts"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",

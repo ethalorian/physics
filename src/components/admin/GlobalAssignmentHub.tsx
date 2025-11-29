@@ -17,8 +17,10 @@ import {
   TrendingUp,
   Users,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Settings2
 } from 'lucide-react'
+import Link from 'next/link'
 import { UnifiedAssignment, TeacherDashboardSummary, AssignmentType } from '@/types/unified-assignment'
 import { AssignmentCreationModal } from './AssignmentCreationModal'
 import { AssignmentListView } from './AssignmentListView'
@@ -62,10 +64,13 @@ export default function GlobalAssignmentHub({ defaultTab = 'overview' }: GlobalA
       const response = await fetch('/api/unified-assignments')
       if (response.ok) {
         const data = await response.json()
-        setAssignments(data)
+        // Handle both array response and object with assignments property
+        const assignmentList = Array.isArray(data) ? data : (data?.assignments || [])
+        setAssignments(assignmentList)
       }
     } catch (error) {
       console.error('Error loading assignments:', error)
+      setAssignments([]) // Ensure we always have an array on error
     } finally {
       setLoading(false)
     }
@@ -196,66 +201,115 @@ export default function GlobalAssignmentHub({ defaultTab = 'overview' }: GlobalA
         <CardHeader>
           <CardTitle>Quick Create Assignment</CardTitle>
           <CardDescription>
-            Choose what type of content you want to assign to students
+            Choose what type of content you want to assign to students. 
+            <span className="text-primary"> Content must be created and published before it can be assigned.</span>
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button
-              variant="outline"
-              className="h-24 flex-col space-y-2"
-              onClick={() => handleCreateAssignment('lesson')}
-            >
-              <BookOpen className="h-8 w-8 text-blue-600" />
-              <div>
-                <div className="font-semibold">Assign Lesson</div>
-                <div className="text-xs text-muted-foreground">
-                  {dashboardSummary?.assignments_by_type.lesson || 0} active
+            {/* Lessons */}
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="h-24 w-full flex-col space-y-2"
+                onClick={() => handleCreateAssignment('lesson')}
+              >
+                <BookOpen className="h-8 w-8 text-blue-600" />
+                <div>
+                  <div className="font-semibold">Assign Lesson</div>
+                  <div className="text-xs text-muted-foreground">
+                    {dashboardSummary?.assignments_by_type.lesson || 0} active
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+              <Link 
+                href="/admin/dashboard" 
+                className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-blue-600 transition-colors"
+              >
+                <Settings2 className="h-3 w-3" />
+                Manage Lessons
+              </Link>
+            </div>
 
-            <Button
-              variant="outline"
-              className="h-24 flex-col space-y-2"
-              onClick={() => handleCreateAssignment('homework')}
-            >
-              <FileText className="h-8 w-8 text-green-600" />
-              <div>
-                <div className="font-semibold">Assign Homework</div>
-                <div className="text-xs text-muted-foreground">
-                  {dashboardSummary?.assignments_by_type.homework || 0} active
+            {/* Homework */}
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="h-24 w-full flex-col space-y-2"
+                onClick={() => handleCreateAssignment('homework')}
+              >
+                <FileText className="h-8 w-8 text-green-600" />
+                <div>
+                  <div className="font-semibold">Assign Homework</div>
+                  <div className="text-xs text-muted-foreground">
+                    {dashboardSummary?.assignments_by_type.homework || 0} active
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+              <Link 
+                href="/admin/assignments/create" 
+                className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-green-600 transition-colors"
+              >
+                <Plus className="h-3 w-3" />
+                Create Homework
+              </Link>
+            </div>
 
-            <Button
-              variant="outline"
-              className="h-24 flex-col space-y-2"
-              onClick={() => handleCreateAssignment('vocabulary')}
-            >
-              <BookMarked className="h-8 w-8 text-purple-600" />
-              <div>
-                <div className="font-semibold">Assign Vocabulary</div>
-                <div className="text-xs text-muted-foreground">
-                  {dashboardSummary?.assignments_by_type.vocabulary || 0} active
+            {/* Vocabulary */}
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="h-24 w-full flex-col space-y-2"
+                onClick={() => handleCreateAssignment('vocabulary')}
+              >
+                <BookMarked className="h-8 w-8 text-purple-600" />
+                <div>
+                  <div className="font-semibold">Assign Vocabulary</div>
+                  <div className="text-xs text-muted-foreground">
+                    {dashboardSummary?.assignments_by_type.vocabulary || 0} active
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+              <Link 
+                href="/admin/vocabulary" 
+                className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-purple-600 transition-colors"
+              >
+                <Settings2 className="h-3 w-3" />
+                Manage Vocabulary Sets
+              </Link>
+            </div>
 
-            <Button
-              variant="outline"
-              className="h-24 flex-col space-y-2"
-              onClick={() => handleCreateAssignment('simulation')}
-            >
-              <Beaker className="h-8 w-8 text-orange-600" />
-              <div>
-                <div className="font-semibold">Assign Simulation</div>
-                <div className="text-xs text-muted-foreground">
-                  {dashboardSummary?.assignments_by_type.simulation || 0} active
+            {/* Simulations */}
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                className="h-24 w-full flex-col space-y-2"
+                onClick={() => handleCreateAssignment('simulation')}
+              >
+                <Beaker className="h-8 w-8 text-orange-600" />
+                <div>
+                  <div className="font-semibold">Assign Simulation</div>
+                  <div className="text-xs text-muted-foreground">
+                    {dashboardSummary?.assignments_by_type.simulation || 0} active
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+              <Link 
+                href="/admin/simulations" 
+                className="flex items-center justify-center gap-1 text-xs text-muted-foreground hover:text-orange-600 transition-colors"
+              >
+                <Settings2 className="h-3 w-3" />
+                Manage Simulations
+              </Link>
+            </div>
+          </div>
+
+          {/* Helpful tip */}
+          <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              <strong>💡 Tip:</strong> Need to create content first? Click the &quot;Manage&quot; links above each button 
+              to create and publish lessons, vocabulary sets, homework, or simulations before assigning them.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -300,7 +354,7 @@ export default function GlobalAssignmentHub({ defaultTab = 'overview' }: GlobalA
 
         <TabsContent value="needs-attention">
           <AssignmentListView
-            assignments={assignments.filter(a => {
+            assignments={(assignments || []).filter(a => {
               const needsGrading = a.total_submitted > 0
               const hasOverdue = a.total_assigned > a.total_completed && a.due_date && new Date(a.due_date) < new Date()
               return needsGrading || hasOverdue

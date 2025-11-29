@@ -120,29 +120,17 @@ export default function VocabularyGamesHub() {
   const availableSets = visibleSets.filter(set => set.terms.length > 0)
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-8">
-      {/* Header */}
-      <div className="text-center space-y-4">
-        <div className="flex items-center justify-center space-x-3">
-          <Gamepad2 className="h-8 w-8 text-primary" />
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground">
-            Vocabulary Games
-          </h1>
+    <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
+      {/* Header - consistent with other pages */}
+      <div className="flex items-center gap-3">
+        <div className="p-2.5 bg-primary/10 rounded-xl">
+          <Gamepad2 className="h-6 w-6 text-primary" />
         </div>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Practice physics vocabulary through fun, interactive games. Choose from different difficulty levels and game types to reinforce your learning.
-        </p>
-        
-        {/* Vocabulary Sets Info */}
-        <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
-          <div className="flex items-center space-x-2">
-            <BookOpen className="h-4 w-4" />
-            <span>{availableSets.length} vocabulary sets available</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Trophy className="h-4 w-4" />
-            <span>Track your progress</span>
-          </div>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Games</h1>
+          <p className="text-sm text-muted-foreground">
+            Practice physics vocabulary through interactive games • {availableSets.length} sets available
+          </p>
         </div>
       </div>
 

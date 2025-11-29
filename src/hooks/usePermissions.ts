@@ -1,52 +1,58 @@
 import { useSession } from "next-auth/react"
 import { getUserRole, getUserPermissions, hasPermission, type UserRole, type UserPermissions } from "@/lib/permissions"
 
+// ============================================================================
+// BASE PERMISSIONS HOOK
+// ============================================================================
+
 /**
  * Custom hook for checking user permissions
+ * @param viewModeOverride Optional view mode override ('student' to view as student)
  */
-export function usePermissions() {
+export function usePermissions(viewModeOverride?: 'admin' | 'student') {
   const { data: session, status } = useSession()
   
   const userEmail = session?.user?.email
-  const userRole: UserRole = getUserRole(userEmail)
-  const permissions: UserPermissions = getUserPermissions(userRole)
+  const actualUserRole: UserRole = getUserRole(userEmail)
+  
+  // Determine effective role based on view mode override
+  const isElevatedUser = actualUserRole === 'admin' || actualUserRole === 'teacher'
+  const isViewModeActive = viewModeOverride === 'student' && isElevatedUser
+  const effectiveRole: UserRole = isViewModeActive ? 'student' : actualUserRole
+  
+  const permissions: UserPermissions = getUserPermissions(effectiveRole)
   
   /**
-   * Check if the current user has a specific permission
+   * Check if the current user has a specific permission (considering view mode)
    */
   const checkPermission = (permission: keyof UserPermissions): boolean => {
+    if (isViewModeActive) {
+      return getUserPermissions('student')[permission]
+    }
     return hasPermission(userEmail, permission)
   }
-  
-  /**
-   * Check if the current user is authenticated
-   */
-  const isAuthenticated = status === "authenticated"
-  
-  /**
-   * Check if the current user is loading
-   */
-  const isLoading = status === "loading"
   
   return {
     // User info
     userEmail,
-    userRole,
-    isAuthenticated,
-    isLoading,
+    userRole: actualUserRole,
+    effectiveRole,
+    isAuthenticated: status === "authenticated",
+    isLoading: status === "loading",
     
-    // Permissions object
+    // Permissions
     permissions,
-    
-    // Permission checker function
     checkPermission,
     
-    // Convenience methods for common checks
+    // Convenience permission checks
     canViewLessons: checkPermission('canViewLessons'),
     canViewAssignments: checkPermission('canViewAssignments'),
     canCreateAssignments: checkPermission('canCreateAssignments'),
     canManageAssignments: checkPermission('canManageAssignments'),
     canAccessAdmin: checkPermission('canAccessAdmin'),
     canCreateLessons: checkPermission('canCreateLessons'),
+    
+    // View mode info
+    isViewModeOverride: isViewModeActive
   }
 }

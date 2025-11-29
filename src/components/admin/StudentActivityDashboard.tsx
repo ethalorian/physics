@@ -87,7 +87,7 @@ export default function StudentActivityDashboard({
     const csvData = [
       'Student Name,Email,Lessons Viewed,Assignments Submitted,Avg Score,Last Activity,Status',
       ...filteredStudents.map(student => 
-        `"${student.user_name}","${student.user_email}",${student.total_lessons_viewed},${student.total_assignments_submitted},${student.avg_assignment_score}%,"${new Date(student.last_activity).toLocaleDateString()}","${getStudentStatus(student)}"`
+        `"${student.user_name || 'Unknown'}","${student.user_email || ''}",${student.total_lessons_viewed || 0},${student.total_assignments_submitted || 0},${student.avg_assignment_score || 0}%,"${student.last_activity ? new Date(student.last_activity).toLocaleDateString() : 'N/A'}","${getStudentStatus(student)}"`
       )
     ].join('\n')
     
@@ -133,10 +133,12 @@ export default function StudentActivityDashboard({
     }
   }
 
-  const filteredStudents = studentSummaries
+  const filteredStudents = (studentSummaries || [])
     .filter(student => {
-      const matchesSearch = student.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          student.user_email.toLowerCase().includes(searchTerm.toLowerCase())
+      const userName = student.user_name || ''
+      const userEmail = student.user_email || ''
+      const matchesSearch = userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          userEmail.toLowerCase().includes(searchTerm.toLowerCase())
       
       if (!matchesSearch) return false
       
@@ -151,11 +153,11 @@ export default function StudentActivityDashboard({
     .sort((a, b) => {
       switch (sortBy) {
         case 'name':
-          return a.user_name.localeCompare(b.user_name)
+          return (a.user_name || '').localeCompare(b.user_name || '')
         case 'activity':
-          return new Date(b.last_activity).getTime() - new Date(a.last_activity).getTime()
+          return new Date(b.last_activity || 0).getTime() - new Date(a.last_activity || 0).getTime()
         case 'score':
-          return b.avg_assignment_score - a.avg_assignment_score
+          return (b.avg_assignment_score || 0) - (a.avg_assignment_score || 0)
         default:
           return 0
       }
@@ -262,7 +264,7 @@ export default function StudentActivityDashboard({
               <CardContent>
                 <div className="text-2xl font-bold">
                   {studentSummaries.length > 0 
-                    ? Math.round(studentSummaries.reduce((acc, s) => acc + s.avg_assignment_score, 0) / studentSummaries.length)
+                    ? Math.round(studentSummaries.reduce((acc, s) => acc + (s.avg_assignment_score || 0), 0) / studentSummaries.length)
                     : 0}%
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -291,7 +293,7 @@ export default function StudentActivityDashboard({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {studentSummaries.reduce((acc, s) => acc + s.total_lessons_viewed, 0)}
+                  {studentSummaries.reduce((acc, s) => acc + (s.total_lessons_viewed || 0), 0)}
                 </div>
                 <p className="text-xs text-muted-foreground">
                   Total lesson views
@@ -375,13 +377,13 @@ export default function StudentActivityDashboard({
 
           {/* Students List */}
           <div className="grid gap-4">
-            {filteredStudents.map((student) => {
+            {filteredStudents.map((student, index) => {
               const status = getStudentStatus(student)
               const recentSubmissions = submissions.filter(s => s.user_email === student.user_email).slice(0, 3)
               
               return (
                 <Card 
-                  key={student.user_email} 
+                  key={student.user_email || `student-${index}`} 
                   className="apple-card hover:shadow-lg transition-shadow cursor-pointer"
                   onClick={() => onStudentSelect?.(student.user_email)}
                 >
@@ -390,24 +392,24 @@ export default function StudentActivityDashboard({
                       <div className="flex items-center space-x-4">
                         <Avatar className="h-12 w-12">
                           <AvatarFallback className="bg-primary/10 text-primary">
-                            {student.user_name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                            {(student.user_name || 'U').split(' ').map(n => n[0] || '').join('').toUpperCase().slice(0, 2) || 'U'}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <h3 className="font-semibold text-foreground">{student.user_name}</h3>
-                          <p className="text-sm text-muted-foreground">{student.user_email}</p>
+                          <h3 className="font-semibold text-foreground">{student.user_name || 'Unknown'}</h3>
+                          <p className="text-sm text-muted-foreground">{student.user_email || ''}</p>
                           <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <Eye className="h-3 w-3" />
-                              {student.total_lessons_viewed} lessons
+                              {student.total_lessons_viewed || 0} lessons
                             </span>
                             <span className="flex items-center gap-1">
                               <FileText className="h-3 w-3" />
-                              {student.total_assignments_submitted} submissions
+                              {student.total_assignments_submitted || 0} submissions
                             </span>
                             <span className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
-                              {new Date(student.last_activity).toLocaleDateString()}
+                              {student.last_activity ? new Date(student.last_activity).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
                         </div>

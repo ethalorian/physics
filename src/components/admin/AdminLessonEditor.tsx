@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { supabase } from '@/lib/supabase'
 import { Lesson, LessonVideo } from '@/types/assignment'
 import { 
   Save, 
@@ -20,7 +19,8 @@ import {
   Target,
   Clock,
   BookOpen,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import LessonVideoManager from './LessonVideoManager'
@@ -32,6 +32,7 @@ interface AdminLessonEditorProps {
 export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showVideoManager, setShowVideoManager] = useState(false)
   
@@ -53,9 +54,10 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
     setError(null)
     
     try {
-      const { error: updateError } = await supabase
-        .from('lessons')
-        .update({
+      const response = await fetch(`/api/lessons/${lesson.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           title: formData.title,
           slug: formData.slug,
           description: formData.description,
@@ -64,12 +66,15 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
           lesson_number: formData.lesson_number,
           estimated_time: formData.estimated_time,
           objectives: formData.objectives,
-          published: formData.published,
-          updated_at: new Date().toISOString()
+          published: formData.published
         })
-        .eq('id', lesson.id)
+      })
+
+      const data = await response.json()
       
-      if (updateError) throw updateError
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to save lesson')
+      }
       
       // Redirect back to preview page
       router.push(`/admin/lessons/${lesson.id}/preview`)
@@ -84,12 +89,16 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
 
   const handleVideoSave = async (videos: LessonVideo[]) => {
     try {
-      const { error } = await supabase
-        .from('lessons')
-        .update({ videos })
-        .eq('id', lesson.id)
+      const response = await fetch(`/api/lessons/${lesson.id}/videos`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videos })
+      })
       
-      if (error) throw error
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to save videos')
+      }
       
       setShowVideoManager(false)
       router.refresh()
@@ -125,18 +134,28 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
       return
     }
 
+    setDeleting(true)
     try {
-      const { error: deleteError } = await supabase
-        .from('lessons')
-        .delete()
-        .eq('id', lesson.id)
+      const response = await fetch(`/api/lessons/${lesson.id}`, {
+        method: 'DELETE'
+      })
+
+      const data = await response.json()
       
-      if (deleteError) throw deleteError
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete lesson')
+      }
+
+      if (data.unpublished) {
+        alert('Lesson has existing assignments and was unpublished instead of deleted.')
+      }
       
       router.push('/admin/dashboard')
     } catch (err) {
       console.error('Error deleting lesson:', err)
       setError(err instanceof Error ? err.message : 'Failed to delete lesson')
+    } finally {
+      setDeleting(false)
     }
   }
 
@@ -182,9 +201,14 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                 variant="destructive"
                 size="sm"
                 onClick={handleDelete}
+                disabled={deleting}
               >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                {deleting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Trash2 className="h-4 w-4 mr-2" />
+                )}
+                {deleting ? 'Deleting...' : 'Delete'}
               </Button>
             </div>
           </div>

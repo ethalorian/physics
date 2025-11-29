@@ -763,6 +763,43 @@ function AdminLessonCard({
   onRefresh: () => void
 }) {
   const router = useRouter()
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const handleDelete = async () => {
+    if (!confirm(`Are you sure you want to delete "${lesson.title}"? This action cannot be undone.`)) {
+      return
+    }
+
+    console.log('Deleting lesson:', { id: lesson.id, title: lesson.title })
+    
+    setIsDeleting(true)
+    try {
+      const url = `/api/lessons/${lesson.id}`
+      console.log('DELETE request to:', url)
+      
+      const response = await fetch(url, {
+        method: 'DELETE'
+      })
+
+      const data = await response.json()
+      console.log('Delete response:', { status: response.status, data })
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to delete lesson')
+      }
+
+      if (data.unpublished) {
+        alert('Lesson has existing assignments and was unpublished instead of deleted.')
+      }
+
+      onRefresh()
+    } catch (error) {
+      console.error('Error deleting lesson:', error)
+      alert(error instanceof Error ? error.message : 'Failed to delete lesson')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
 
   const getTypeInfo = () => {
     switch (lesson.lesson_type) {
@@ -841,7 +878,7 @@ function AdminLessonCard({
         </div>
 
         {/* Admin Actions */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t">
+        <div className="grid grid-cols-4 gap-2 pt-2 border-t">
           <Button 
             variant="outline" 
             size="sm"
@@ -868,6 +905,20 @@ function AdminLessonCard({
           >
             <Play className="h-3 w-3" />
             Preview
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            {isDeleting ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <Trash2 className="h-3 w-3" />
+            )}
+            {isDeleting ? '...' : 'Delete'}
           </Button>
         </div>
       </CardContent>

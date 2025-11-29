@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, BookOpen, FileText, Settings, Home, Users, Trophy, Microscope, LogOut } from "lucide-react"
+import { Menu, BookOpen, FileText, Settings, Home, Gamepad2, Trophy, Microscope, LogOut } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -45,22 +45,20 @@ export default function Navbar() {
   const getNavigationItems = () => {
     if (!isAuthenticated) return []
     
+    // Core student navigation items - streamlined for clear user journey
     const items = [
       { href: "/dashboard", label: "Dashboard", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
       { href: "/assignments", label: "Assignments", icon: FileText },
       { href: "/simulations", label: "Simulations", icon: Microscope },
-      { href: "/vocabulary", label: "Vocabulary Games", icon: Users },
-      { href: "/gamification", label: "Leaderboard", icon: Trophy },
+      { href: "/vocabulary", label: "Games", icon: Gamepad2 },
+      { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ]
 
+    // Simplified admin navigation - one entry point
     if (canAccessAdmin) {
       items.push(
-        { href: "/admin/dashboard", label: "Admin Dashboard", icon: Settings },
-        { href: "/admin/assignments", label: "Manage Assignments", icon: FileText },
-        { href: "/admin/simulations", label: "Manage Simulations", icon: Microscope },
-        { href: "/admin/question-bank", label: "Question Bank", icon: BookOpen },
-        { href: "/admin/vocabulary", label: "Manage Vocabulary", icon: Settings }
+        { href: "/admin/dashboard", label: "Admin", icon: Settings }
       )
     }
 
@@ -70,16 +68,18 @@ export default function Navbar() {
   const navigationItems = getNavigationItems()
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background backdrop-blur-sm shadow-sm">
-      <div className="w-full px-3 sm:px-4 md:px-6 py-2 sm:py-3 md:py-4">
+    <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          {/* Brand Logo - Mobile Optimized */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            <Link href="/" className="group font-bold text-foreground hover:text-primary transition-all duration-200 relative flex-shrink-0">
-              <span className="relative text-sm sm:text-base md:text-lg lg:text-xl">
+          {/* Brand Logo - Apple-style clean typography with earth tones */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Link href="/" className="group flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors duration-200">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-600/25">
+                <span className="text-white text-sm font-bold">φ</span>
+              </div>
+              <span className="text-base sm:text-lg tracking-tight">
                 <span className="block sm:hidden">Physics</span>
                 <span className="hidden sm:block">Antocci Physics</span>
-                <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-primary/60 transition-all duration-300 group-hover:w-full"></span>
               </span>
             </Link>
             {/* Physics Level Badge - Hidden on Mobile */}
@@ -98,11 +98,11 @@ export default function Navbar() {
                     <span className="sr-only">Open navigation menu</span>
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[280px] sm:w-[300px] p-0">
-                  <SheetHeader className="p-6 pb-4 border-b">
-                    <SheetTitle className="text-left">Navigation</SheetTitle>
+                <SheetContent side="left" className="w-[300px] sm:w-[320px] p-0 bg-background/95 backdrop-blur-xl">
+                  <SheetHeader className="p-6 pb-5 border-b border-border/50">
+                    <SheetTitle className="text-left text-lg font-semibold tracking-tight">Navigation</SheetTitle>
                   </SheetHeader>
-                  <div className="flex flex-col py-4">
+                  <div className="flex flex-col py-3">
                     {navigationItems.map((item) => {
                       const Icon = item.icon
                       const isActive = pathname === item.href
@@ -110,13 +110,13 @@ export default function Navbar() {
                         <SheetClose asChild key={item.href}>
                           <Link
                             href={item.href}
-                            className={`flex items-center gap-3 px-6 py-4 text-sm font-medium transition-colors ${
+                            className={`flex items-center gap-3 mx-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
                               isActive 
-                                ? 'bg-primary/10 text-primary border-l-4 border-primary' 
-                                : 'hover:bg-accent hover:text-accent-foreground'
+                                ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/25' 
+                                : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                             }`}
                           >
-                            <Icon className="h-5 w-5" />
+                            <Icon className={`h-5 w-5 ${isActive ? '' : 'opacity-70'}`} />
                             {item.label}
                           </Link>
                         </SheetClose>
@@ -124,9 +124,9 @@ export default function Navbar() {
                     })}
                     
                     {/* Theme toggle in mobile menu */}
-                    <div className="px-6 py-4 border-t mt-2">
+                    <div className="mx-3 px-4 py-4 border-t border-border/50 mt-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Theme</span>
+                        <span className="text-sm font-medium text-muted-foreground">Appearance</span>
                         <ThemeToggle />
                       </div>
                     </div>
@@ -137,49 +137,36 @@ export default function Navbar() {
           )}
 
           {/* Right Side - Mobile First Layout */}
-          <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             {isLoading ? (
-              // Loading state
-              <div className="animate-pulse flex items-center gap-1">
-                <div className="h-8 w-8 bg-muted rounded-full" />
-                <div className="hidden sm:block h-8 w-20 bg-muted rounded-full" />
+              // Loading state - Apple-style skeleton
+              <div className="animate-pulse flex items-center gap-2">
+                <div className="h-9 w-9 bg-muted rounded-full" />
+                <div className="hidden sm:block h-9 w-24 bg-muted rounded-full" />
               </div>
             ) : isAuthenticated && session ? (
               <>
-                {/* Dashboard Link - Always visible but responsive */}
-                <Link href={canAccessAdmin ? "/admin/dashboard" : "/dashboard"}>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    className="h-8 sm:h-9 px-2 sm:px-3 rounded-full text-xs sm:text-sm font-medium hover:bg-primary/20 hover:text-primary transition-all touch-manipulation"
-                  >
-                    <span className="hidden sm:block">Dashboard</span>
-                    <span className="block sm:hidden text-lg">•</span>
-                  </Button>
-                </Link>
-                
-                
-                {/* Theme Toggle - Hidden on mobile (available in hamburger menu) */}
+                {/* Theme Toggle - Hidden on mobile */}
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div>
                 
-                {/* Quick Sign Out Button */}
+                {/* Sign Out - Subtle ghost style */}
                 <Button
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  variant="outline"
+                  variant="ghost"
                   size="sm"
-                  className="text-destructive border-destructive/20 hover:bg-destructive hover:text-white hover:border-destructive px-2 sm:px-3 text-xs sm:text-sm h-8 sm:h-9"
+                  className="h-9 px-3 rounded-full text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
                 >
-                  <LogOut className="h-3.5 w-3.5 sm:mr-1.5" />
-                  <span className="hidden sm:inline">Sign Out</span>
+                  <LogOut className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-2">Sign Out</span>
                 </Button>
                 
-                {/* User Menu - Direct Sheet Trigger */}
+                {/* User Avatar - Apple-style with ring on hover */}
                 <UserContextSheet>
                   <Button 
                     variant="ghost" 
-                    className="relative h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-full hover:ring-2 hover:ring-primary/50 transition-all duration-200 p-0 overflow-hidden ring-1 ring-primary/20 touch-manipulation"
+                    className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background"
                   >
                     {session.user?.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -191,7 +178,7 @@ export default function Navbar() {
                         crossOrigin="anonymous"
                       />
                     ) : (
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center text-xs sm:text-sm">
+                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center text-sm">
                         {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
                       </div>
                     )}
@@ -200,19 +187,18 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                {/* Theme Toggle for non-authenticated users - Hidden on mobile */}
+                {/* Theme Toggle for non-authenticated users */}
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div>
                 
-                {/* Sign In Button - Mobile Optimized */}
+                {/* Sign In Button - Apple-style pill */}
                 <Button 
                   onClick={() => signIn("google", { callbackUrl: "/dashboard" })} 
                   size="sm"
-                  className="bg-primary hover:bg-primary/80 text-primary-foreground px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-medium transition-all touch-manipulation"
+                  className="h-9 px-5 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30"
                 >
-                  <span className="hidden sm:block">Sign In</span>
-                  <span className="block sm:hidden">Sign In</span>
+                  Sign In
                 </Button>
               </>
             )}

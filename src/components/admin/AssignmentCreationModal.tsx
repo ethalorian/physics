@@ -11,9 +11,10 @@ import { Switch } from '@/components/ui/switch'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { format } from 'date-fns'
-import { CalendarIcon, Loader2 } from 'lucide-react'
+import { CalendarIcon, Loader2, AlertCircle, ExternalLink } from 'lucide-react'
 import { AssignmentType, CreateUnifiedAssignmentRequest } from '@/types/unified-assignment'
 import { useToast } from '@/providers/toast-provider'
+import Link from 'next/link'
 
 interface AssignmentCreationModalProps {
   isOpen: boolean
@@ -109,13 +110,16 @@ export function AssignmentCreationModal({
       const response = await fetch('/api/courses')
       if (response.ok) {
         const data = await response.json()
-        setCourses(data)
-        if (data.length > 0) {
-          setSelectedCourse(data[0].google_course_id)
+        // Handle different API response formats
+        const courseList = Array.isArray(data) ? data : (data?.courses || [])
+        setCourses(courseList)
+        if (courseList.length > 0) {
+          setSelectedCourse(courseList[0].google_course_id)
         }
       }
     } catch (error) {
       console.error('Error loading courses:', error)
+      setCourses([]) // Ensure we always have an array
     }
   }
 
@@ -134,10 +138,8 @@ export function AssignmentCreationModal({
           endpoint = '/api/vocabulary/sets?published=true'
           break
         case 'simulation':
+        case 'simulation_embedded': // Treat as regular simulation for now
           endpoint = '/api/simulations'
-          break
-        case 'simulation_embedded':
-          endpoint = '/api/simulations/embedded'
           break
       }
 
@@ -298,13 +300,18 @@ export function AssignmentCreationModal({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="lesson">Lesson</SelectItem>
-                    <SelectItem value="homework">Homework Assignment</SelectItem>
-                    <SelectItem value="vocabulary">Vocabulary Set</SelectItem>
-                    <SelectItem value="simulation">Simulation</SelectItem>
-                    <SelectItem value="simulation_embedded">Simulation (with questions)</SelectItem>
+                    <SelectItem value="lesson">📖 Lesson</SelectItem>
+                    <SelectItem value="homework">📝 Homework Assignment</SelectItem>
+                    <SelectItem value="vocabulary">🎮 Vocabulary Set</SelectItem>
+                    <SelectItem value="simulation">🔬 Simulation</SelectItem>
                   </SelectContent>
                 </Select>
+                <p className="text-xs text-muted-foreground">
+                  {assignmentType === 'lesson' && 'Assign reading, video, or simulation-based lessons'}
+                  {assignmentType === 'homework' && 'Assign question-based homework with auto/AI grading'}
+                  {assignmentType === 'vocabulary' && 'Assign vocabulary sets for game-based practice'}
+                  {assignmentType === 'simulation' && 'Assign interactive physics simulations'}
+                </p>
               </div>
 
               <div className="space-y-2">
@@ -328,7 +335,7 @@ export function AssignmentCreationModal({
                   </Select>
                 )}
                 {contentOptions.length === 0 && !loading && (
-                  <p className="text-sm text-muted-foreground">No content available for this type</p>
+                  <NoContentHelp type={assignmentType} onClose={onClose} />
                 )}
               </div>
 
@@ -374,14 +381,18 @@ export function AssignmentCreationModal({
                   <Label>Select Course</Label>
                   <Select value={selectedCourse} onValueChange={setSelectedCourse}>
                     <SelectTrigger>
-                      <SelectValue />
+                      <SelectValue placeholder="Select a course" />
                     </SelectTrigger>
                     <SelectContent>
-                      {courses.map(course => (
-                        <SelectItem key={course.google_course_id} value={course.google_course_id}>
-                          {course.name}
-                        </SelectItem>
-                      ))}
+                      {(courses || []).length === 0 ? (
+                        <SelectItem value="none" disabled>No courses available</SelectItem>
+                      ) : (
+                        (courses || []).map(course => (
+                          <SelectItem key={course.google_course_id} value={course.google_course_id}>
+                            {course.name}
+                          </SelectItem>
+                        ))
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
@@ -389,7 +400,7 @@ export function AssignmentCreationModal({
                 <div className="space-y-2">
                   <Label>Select Students</Label>
                   <div className="border rounded-md p-4 max-h-60 overflow-y-auto">
-                    {students.map(student => (
+                    {(students || []).map(student => (
                       <label key={student.id} className="flex items-center space-x-2 py-2">
                         <input
                           type="checkbox"
@@ -548,6 +559,107 @@ export function AssignmentCreationModal({
         </div>
       </DialogContent>
     </Dialog>
+  )
+}
+
+/**
+ * Helper component shown when no content is available for a given type
+ * Provides guidance on where to create the content
+ */
+function NoContentHelp({ type, onClose }: { type: AssignmentType; onClose: () => void }) {
+  const contentInfo = {
+    lesson: {
+      title: 'Lessons',
+      description: 'Create reading, video, or simulation-based lessons that students can complete.',
+      createPath: '/admin/dashboard',
+      createLabel: 'Go to Content → New Lesson',
+      steps: [
+        'Go to Admin Dashboard → Content tab',
+        'Click "New Lesson" button',
+        'Fill in lesson details and content',
+        'Toggle "Published" to ON',
+        'Return here to assign the lesson'
+      ]
+    },
+    homework: {
+      title: 'Homework Assignments',
+      description: 'Build question-based assignments with multiple choice, numerical, and open-response questions.',
+      createPath: '/admin/assignments/create',
+      createLabel: 'Create Homework Assignment',
+      steps: [
+        'Click the link below to create a new assignment',
+        'Add questions (supports AI generation)',
+        'Publish the assignment',
+        'Return here to assign to students'
+      ]
+    },
+    vocabulary: {
+      title: 'Vocabulary Sets',
+      description: 'Create word sets that students can practice with interactive games like hangman, matching, and quiz bowl.',
+      createPath: '/admin/vocabulary',
+      createLabel: 'Go to Vocabulary Management',
+      steps: [
+        'Click the link below to manage vocabulary',
+        'Create a new vocabulary set',
+        'Add terms with definitions',
+        'Toggle "Published" to ON',
+        'Return here to assign the set'
+      ]
+    },
+    simulation: {
+      title: 'Simulations',
+      description: 'Interactive physics labs are pre-built. You need to publish existing simulations to make them assignable.',
+      createPath: '/admin/simulations',
+      createLabel: 'Go to Simulation Management',
+      steps: [
+        'Click the link below to manage simulations',
+        'Find the simulation you want to assign',
+        'Toggle "Published" to ON',
+        'Return here to assign it to students'
+      ]
+    },
+    simulation_embedded: {
+      title: 'Simulations with Questions',
+      description: 'These are simulations that include embedded assessment questions.',
+      createPath: '/admin/simulations',
+      createLabel: 'Go to Simulation Management',
+      steps: [
+        'This feature requires simulations with embedded questions',
+        'Check simulation management for available options'
+      ]
+    }
+  }
+
+  const info = contentInfo[type]
+
+  return (
+    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 space-y-3">
+      <div className="flex items-start gap-3">
+        <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+        <div className="space-y-2">
+          <h4 className="font-semibold text-amber-900">No {info.title} Available</h4>
+          <p className="text-sm text-amber-800">{info.description}</p>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-md p-3 border border-amber-100">
+        <p className="text-sm font-medium text-amber-900 mb-2">To create content:</p>
+        <ol className="text-xs text-amber-800 space-y-1 list-decimal list-inside">
+          {info.steps.map((step, i) => (
+            <li key={i}>{step}</li>
+          ))}
+        </ol>
+      </div>
+
+      <div className="flex gap-2">
+        <Link href={info.createPath} onClick={onClose}>
+          <Button size="sm" variant="default" className="gap-2">
+            {info.createLabel}
+            <ExternalLink className="h-3 w-3" />
+          </Button>
+        </Link>
+      </div>
+    </div>
   )
 }
 

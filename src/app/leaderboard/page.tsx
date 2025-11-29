@@ -1,0 +1,390 @@
+"use client"
+
+import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { 
+  Trophy, 
+  Medal, 
+  Target,
+  TrendingUp,
+  Flame,
+  Crown,
+  Star,
+  Zap,
+  Gamepad2,
+  BookOpen,
+  FileText,
+  User
+} from 'lucide-react'
+import Link from 'next/link'
+import TrendingLeaders from '@/components/gamification/TrendingLeaders'
+import StreakTracker from '@/components/gamification/StreakTracker'
+import DailyChallenge from '@/components/gamification/DailyChallenge'
+
+interface LeaderboardEntry {
+  rank: number
+  user_id: string
+  name: string
+  email: string
+  image: string | null
+  total_points: number
+  activities: {
+    games: number
+    lessons: number
+    assignments: number
+  }
+  is_current_user: boolean
+}
+
+export default function LeaderboardPage() {
+  const { data: session, status } = useSession()
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [period, setPeriod] = useState<'all-time' | 'week' | 'month'>('all-time')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      if (!session) return
+      
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/leaderboard?period=${period}&limit=50`)
+        if (response.ok) {
+          const data = await response.json()
+          setLeaderboard(data)
+        } else {
+          setError('Failed to load leaderboard')
+        }
+      } catch (err) {
+        console.error('Error fetching leaderboard:', err)
+        setError('Failed to load leaderboard')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLeaderboard()
+  }, [session, period])
+
+  // Find current user's rank
+  const currentUserEntry = leaderboard.find(entry => entry.is_current_user)
+  const currentUserRank = currentUserEntry?.rank
+
+  // Mock trending data (in real app, this would come from API)
+  const trendingLeaders = leaderboard.slice(0, 5).map((entry, idx) => ({
+    rank: idx + 1,
+    name: entry.name,
+    points_gained: Math.floor(Math.random() * 200) + 50,
+    trend: 'up' as const,
+    current_rank: entry.rank,
+    previous_rank: entry.rank + Math.floor(Math.random() * 3)
+  }))
+
+  // Mock streak data (in real app, this would come from API)
+  const streakData = {
+    currentStreak: 5,
+    longestStreak: 12,
+    totalDays: 23
+  }
+
+  // Mock daily challenge
+  const dailyChallenge = {
+    id: '1',
+    title: 'Play 3 Vocabulary Games',
+    description: 'Complete any 3 vocabulary games to earn bonus points',
+    type: 'games' as const,
+    target: 3,
+    current: 1,
+    points_reward: 50,
+    expires_at: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString()
+  }
+
+  const getRankIcon = (rank: number) => {
+    if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />
+    if (rank === 2) return <Medal className="h-5 w-5 text-gray-400" />
+    if (rank === 3) return <Medal className="h-5 w-5 text-amber-600" />
+    return <span className="text-muted-foreground font-bold">#{rank}</span>
+  }
+
+  const getRankStyle = (rank: number) => {
+    if (rank === 1) return 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border-yellow-500/30'
+    if (rank === 2) return 'bg-gradient-to-r from-gray-400/20 to-slate-400/20 border-gray-400/30'
+    if (rank === 3) return 'bg-gradient-to-r from-amber-600/20 to-orange-600/20 border-amber-600/30'
+    return ''
+  }
+
+  if (status === 'loading') {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!session) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        <Card>
+          <CardHeader className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <Trophy className="h-8 w-8 text-primary-foreground" />
+            </div>
+            <CardTitle>Sign In to View Leaderboard</CardTitle>
+            <CardDescription>
+              See where you rank among your classmates!
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Button asChild>
+              <Link href="/auth/signin">Sign In</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-6xl space-y-8">
+      {/* Header - consistent with other pages */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2.5 bg-primary/10 rounded-xl">
+          <Trophy className="h-6 w-6 text-primary" />
+        </div>
+        <div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Leaderboard</h1>
+          <p className="text-sm text-muted-foreground">
+            Compete with your classmates and earn points
+          </p>
+        </div>
+      </div>
+
+      {/* Current User Stats Banner */}
+      {currentUserEntry && (
+        <Card className="max-w-lg bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+          <CardContent className="py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden">
+                  {currentUserEntry.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img 
+                      src={currentUserEntry.image} 
+                      alt="" 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <User className="h-6 w-6 text-primary" />
+                  )}
+                </div>
+                <div className="text-left">
+                  <p className="font-semibold">Your Rank</p>
+                  <p className="text-2xl font-bold text-primary">#{currentUserRank}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground">Total Points</p>
+                <p className="text-2xl font-bold">{currentUserEntry.total_points.toLocaleString()}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Main Leaderboard */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  Top Performers
+                </CardTitle>
+                <div className="flex gap-2">
+                  <Button
+                    variant={period === 'week' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setPeriod('week')}
+                  >
+                    Week
+                  </Button>
+                  <Button
+                    variant={period === 'month' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setPeriod('month')}
+                  >
+                    Month
+                  </Button>
+                  <Button
+                    variant={period === 'all-time' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setPeriod('all-time')}
+                  >
+                    All Time
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : error ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>{error}</p>
+                </div>
+              ) : leaderboard.length === 0 ? (
+                <div className="text-center py-12 text-muted-foreground">
+                  <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="font-medium mb-2">No data yet</p>
+                  <p className="text-sm">Start playing games and completing lessons to appear on the leaderboard!</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {leaderboard.map((entry) => (
+                    <div
+                      key={entry.user_id}
+                      className={`flex items-center gap-4 p-3 rounded-lg border transition-colors hover:bg-muted/50 ${
+                        entry.is_current_user ? 'bg-primary/5 border-primary/20' : ''
+                      } ${getRankStyle(entry.rank)}`}
+                    >
+                      {/* Rank */}
+                      <div className="w-10 flex justify-center">
+                        {getRankIcon(entry.rank)}
+                      </div>
+
+                      {/* Avatar */}
+                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {entry.image ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img 
+                            src={entry.image} 
+                            alt="" 
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <User className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </div>
+
+                      {/* Name & Activities */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={`font-semibold truncate ${entry.is_current_user ? 'text-primary' : ''}`}>
+                            {entry.name}
+                          </span>
+                          {entry.is_current_user && (
+                            <Badge variant="outline" className="text-xs">You</Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                          <span className="flex items-center gap-1">
+                            <Gamepad2 className="h-3 w-3" />
+                            {entry.activities.games} games
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <BookOpen className="h-3 w-3" />
+                            {entry.activities.lessons} lessons
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <FileText className="h-3 w-3" />
+                            {entry.activities.assignments} assignments
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Points */}
+                      <div className="text-right">
+                        <div className="font-bold text-lg">{entry.total_points.toLocaleString()}</div>
+                        <div className="text-xs text-muted-foreground">points</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Streak Tracker */}
+          <StreakTracker {...streakData} />
+
+          {/* Daily Challenge */}
+          <DailyChallenge 
+            challenge={dailyChallenge}
+            onStart={() => window.location.href = '/vocabulary'}
+          />
+
+          {/* Trending Leaders */}
+          <TrendingLeaders leaders={trendingLeaders} />
+        </div>
+      </div>
+
+      {/* How to Earn Points */}
+      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Zap className="h-5 w-5 text-primary" />
+            How to Earn Points
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
+              <div className="p-2 bg-purple-500/10 rounded-lg">
+                <Gamepad2 className="h-5 w-5 text-purple-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm">Vocabulary Games</h4>
+                <p className="text-xs text-muted-foreground">Earn points for every game completed</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
+              <div className="p-2 bg-blue-500/10 rounded-lg">
+                <BookOpen className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm">Complete Lessons</h4>
+                <p className="text-xs text-muted-foreground">1 point per % progress + video question bonus</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
+              <div className="p-2 bg-green-500/10 rounded-lg">
+                <FileText className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm">Submit Assignments</h4>
+                <p className="text-xs text-muted-foreground">Earn your assignment score as points</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
+              <div className="p-2 bg-orange-500/10 rounded-lg">
+                <Target className="h-5 w-5 text-orange-600" />
+              </div>
+              <div>
+                <h4 className="font-semibold text-sm">Daily Challenges</h4>
+                <p className="text-xs text-muted-foreground">Complete challenges for bonus points</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
+

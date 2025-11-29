@@ -1,37 +1,29 @@
 "use client"
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { usePermissions } from '@/hooks/usePermissions'
 import { useViewMode } from '@/contexts/ViewModeContext'
 import { useViewAwarePermissions } from '@/hooks/useViewAwarePermissions'
 import { useAssignments } from '@/contexts/ConsolidatedAssignmentContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
-  BookOpen, 
   FileText, 
   BarChart3,
   Clock,
   CheckCircle,
   AlertCircle,
   EyeOff,
-  Gamepad2,
-  Calculator
+  ArrowRight
 } from 'lucide-react'
-import StudentLessons from '@/components/student/StudentLessons'
-import VocabularyGamesOverview from '@/components/student/VocabularyGamesOverview'
-// import { StudentAssignmentView } from '@/components/assignment-system/StudentAssignmentView' // Removed - migrating to unified hub
 import EnrollmentGate from '@/components/student/EnrollmentGate'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 export default function StudentDashboard() {
   const { data: session } = useSession()
   const { userRole } = usePermissions()
   const { viewMode, toggleViewMode } = useViewMode()
   const { isAuthenticated, canAccessAdmin } = useViewAwarePermissions(viewMode)
-  const [activeTab, setActiveTab] = useState('overview')
   const router = useRouter()
 
   useEffect(() => {
@@ -66,103 +58,40 @@ export default function StudentDashboard() {
 
   return (
     <EnrollmentGate>
-      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
-        {/* Header - Mobile optimized */}
-        <div className="space-y-3 sm:space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground relative">
-              My Dashboard
-              <div className="absolute -bottom-1 sm:-bottom-2 left-0 w-16 sm:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
-            </h1>
-            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mt-2">
-              Welcome back, {session?.user?.name?.split(' ')[0] || 'Student'}!
-            </p>
-          </div>
-          <div className="flex items-center space-x-2 self-start sm:self-auto">
-            {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') && (
-              <Button
-                onClick={() => {
-                  toggleViewMode()
-                  router.push('/admin/dashboard')
-                }}
-                variant="outline"
-                size="sm"
-                className="flex items-center gap-2"
-              >
-                <EyeOff className="h-4 w-4" />
-                <span className="hidden sm:inline">Exit Student View</span>
-                <span className="sm:hidden">Exit</span>
-              </Button>
-            )}
-            <div className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground">
-              <span>Logged in as</span>
-              <div className="font-medium text-foreground capitalize">
-                {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') ? 'Admin' : userRole}
-              </div>
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+        {/* Hero Header */}
+        <div className="space-y-2">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-muted-foreground tracking-wide">
+                Welcome back
+              </p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                {session?.user?.name?.split(' ')[0] || 'Student'}
+              </h1>
+            </div>
+            <div className="flex items-center gap-3">
+              {viewMode === 'student' && (userRole === 'admin' || userRole === 'teacher') && (
+                <Button
+                  onClick={() => {
+                    toggleViewMode()
+                    router.push('/admin/dashboard')
+                  }}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-full"
+                >
+                  <EyeOff className="h-4 w-4 mr-2" />
+                  <span className="hidden sm:inline">Exit Student View</span>
+                  <span className="sm:hidden">Exit</span>
+                </Button>
+              )}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Dashboard Tabs - Mobile optimized */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-6">
-        <TabsList className="grid w-full max-w-lg grid-cols-4 h-10 sm:h-11">
-          <TabsTrigger value="overview" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline sm:inline">Overview</span>
-            <span className="xs:hidden sm:hidden">•</span>
-          </TabsTrigger>
-          <TabsTrigger value="lessons" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <BookOpen className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline sm:inline">Lessons</span>
-            <span className="xs:hidden sm:hidden">•</span>
-          </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline sm:inline">Assignments</span>
-            <span className="xs:hidden sm:hidden">•</span>
-          </TabsTrigger>
-          <TabsTrigger value="vocabulary" className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
-            <Gamepad2 className="h-3 w-3 sm:h-4 sm:w-4" />
-            <span className="hidden xs:inline sm:inline">Games</span>
-            <span className="xs:hidden sm:hidden">•</span>
-          </TabsTrigger>
-        </TabsList>
-
-        {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          <StudentOverview />
-        </TabsContent>
-
-        {/* Lessons Tab */}
-        <TabsContent value="lessons">
-          <StudentLessons />
-        </TabsContent>
-
-        {/* Assignments Tab */}
-        <TabsContent value="assignments">
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Assignments</CardTitle>
-              <CardDescription>View and complete your assigned work</CardDescription>
-            </CardHeader>
-            <CardContent className="text-center py-8">
-              <p className="text-muted-foreground mb-4">
-                Student assignment view is being migrated to the new unified system.
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Check back soon for an improved assignment experience!
-              </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Vocabulary Tab */}
-        <TabsContent value="vocabulary">
-          <VocabularyGamesOverview />
-        </TabsContent>
-      </Tabs>
+        {/* Main Content - No Tabs, Direct Overview */}
+        <StudentOverview />
       </div>
     </EnrollmentGate>
   )
@@ -223,8 +152,8 @@ function StudentOverview() {
         />
       </div>
 
-      {/* Quick Actions */}
-      <QuickActions />
+      {/* Next Steps - Priority Actions */}
+      <NextSteps />
       
       {/* Recent Activity */}
       <RecentActivity />
@@ -235,21 +164,23 @@ function StudentOverview() {
   )
 }
 
-// Progress card component with real data
+// Progress card component - Apple-style stat card
 function ProgressCard({ title, value, icon }: { title: string, value: string | number, icon: React.ReactNode }) {
   return (
-    <Card className="apple-card">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">
-          {title}
-        </CardTitle>
-        {icon}
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold text-foreground">{value}</div>
-        <p className="text-xs text-muted-foreground">
-          Current status
-        </p>
+    <Card className="group relative overflow-hidden border-0 bg-gradient-to-br from-card to-card/80 shadow-lg shadow-black/5 dark:shadow-black/20 hover:shadow-xl transition-all duration-300">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="p-2.5 rounded-xl bg-muted/80">
+            {icon}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <div className="text-3xl font-bold tracking-tight text-foreground">{value}</div>
+          <p className="text-sm font-medium text-muted-foreground">
+            {title}
+          </p>
+        </div>
       </CardContent>
     </Card>
   )
@@ -376,156 +307,117 @@ function UpcomingDeadlines() {
   )
 }
 
-// Quick Actions component
-function QuickActions() {
+// Next Steps component - Shows personalized, contextual actions
+function NextSteps() {
+  const { assignments, getSubmissionByAssignmentId } = useAssignments()
+  const { data: session } = useSession()
+  const router = useRouter()
+  
+  // Find assignments that need attention
+  const publishedAssignments = assignments.filter(a => a.published)
+  const now = new Date()
+  
+  // Priority 1: Assignments due soon (within 3 days)
+  const dueSoon = publishedAssignments.filter(a => {
+    if (!a.due_date) return false
+    const dueDate = new Date(a.due_date)
+    const daysUntil = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    const submission = getSubmissionByAssignmentId?.(a.id, session?.user?.id)
+    return daysUntil <= 3 && daysUntil >= 0 && !submission
+  }).slice(0, 2)
+  
+  // Priority 2: Incomplete assignments (started but not finished)
+  const inProgress = publishedAssignments.filter(a => {
+    const submission = getSubmissionByAssignmentId?.(a.id, session?.user?.id)
+    return submission && submission.status === 'partial'
+  }).slice(0, 1)
+  
+  const hasUrgentActions = dueSoon.length > 0 || inProgress.length > 0
+  
+  if (!hasUrgentActions) {
+    // Show encouraging message when all caught up
+    return (
+      <Card className="border-2 border-dashed border-emerald-500/30 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 dark:from-emerald-950/20 dark:to-emerald-900/10">
+        <CardContent className="flex items-center gap-4 py-6">
+          <div className="p-3 bg-emerald-500/20 rounded-xl">
+            <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-semibold text-foreground">All Caught Up!</h3>
+            <p className="text-sm text-muted-foreground">
+              No urgent assignments. Explore lessons or practice vocabulary games.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => router.push('/lessons')}>
+            Browse Lessons
+            <ArrowRight className="h-4 w-4 ml-2" />
+          </Button>
+        </CardContent>
+      </Card>
+    )
+  }
+  
   return (
-    <Card className="apple-card">
-      <CardHeader>
-        <CardTitle className="text-foreground">Quick Actions</CardTitle>
-        <CardDescription className="text-muted-foreground">
-          Jump into learning activities
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Link href="/lessons">
-              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                    <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground group-hover:text-primary">
-                      Browse Lessons
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Explore physics concepts
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            
-            <Link href="/assignments">
-              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                    <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground group-hover:text-primary">
-                      View Assignments
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Check what&apos;s due
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            
-            <Link href="/vocabulary">
-              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                    <Gamepad2 className="h-5 w-5 text-purple-600 dark:text-purple-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground group-hover:text-primary">
-                      Vocabulary Games
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Practice physics terms
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-            
-            <Link href="/simulations">
-              <div className="group p-4 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-teal-100 dark:bg-teal-900/20 rounded-lg">
-                    <BookOpen className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground group-hover:text-primary">
-                      Simulations
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Interactive physics tools
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </div>
+    <div className="space-y-4">
+      <div>
+        <h2 className="text-lg font-semibold text-foreground mb-1">Next Steps</h2>
+        <p className="text-sm text-muted-foreground">Priority tasks that need your attention</p>
+      </div>
+      
+      <div className="space-y-3">
+        {/* Due Soon Items */}
+        {dueSoon.map((assignment) => {
+          const dueDate = new Date(assignment.due_date!)
+          const daysUntil = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
           
-          <div className="pt-2">
-            <h3 className="text-sm font-semibold text-muted-foreground mb-3">Teaching Tools</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <Link href="/simulations/slope-calculator">
-                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 bg-orange-100 dark:bg-orange-900/20 rounded">
-                      <Calculator className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
-                        Slope Calculator
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Kinematics graphs
-                      </div>
-                    </div>
-                  </div>
+          return (
+            <Card 
+              key={assignment.id} 
+              className="border-l-4 border-l-amber-500 hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => router.push(`/assignments/${assignment.id}`)}
+            >
+              <CardContent className="flex items-center gap-4 py-4">
+                <div className="p-2.5 bg-amber-500/10 rounded-xl">
+                  <Clock className="h-5 w-5 text-amber-600" />
                 </div>
-              </Link>
-              
-              <Link href="/simulations/distance-displacement">
-                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 bg-green-100 dark:bg-green-900/20 rounded">
-                      <svg className="h-4 w-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
-                        Distance vs Displacement
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Vector concepts
-                      </div>
-                    </div>
-                  </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-foreground truncate">{assignment.title}</h3>
+                  <p className="text-sm text-amber-600 dark:text-amber-400 font-medium">
+                    {daysUntil === 0 ? 'Due today!' : daysUntil === 1 ? 'Due tomorrow' : `Due in ${daysUntil} days`}
+                  </p>
                 </div>
-              </Link>
-              
-              <Link href="/simulations/area-under-curve">
-                <div className="group p-3 rounded-lg border border-border hover:border-primary/20 hover:bg-accent/50 transition-all cursor-pointer">
-                  <div className="flex items-center space-x-2">
-                    <div className="p-1.5 bg-blue-100 dark:bg-blue-900/20 rounded">
-                      <svg className="h-4 w-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-sm font-medium text-foreground group-hover:text-primary">
-                        Area Under Curve
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Displacement & Δv
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+                <Button size="sm">
+                  Start Now
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        })}
+        
+        {/* In Progress Items */}
+        {inProgress.map((assignment) => (
+          <Card 
+            key={assignment.id} 
+            className="border-l-4 border-l-blue-500 hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => router.push(`/assignments/${assignment.id}`)}
+          >
+            <CardContent className="flex items-center gap-4 py-4">
+              <div className="p-2.5 bg-blue-500/10 rounded-xl">
+                <FileText className="h-5 w-5 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-foreground truncate">{assignment.title}</h3>
+                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">In progress - continue where you left off</p>
+              </div>
+              <Button size="sm" variant="outline">
+                Continue
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
   )
 }

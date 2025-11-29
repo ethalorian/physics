@@ -83,11 +83,10 @@ Click **"Create Assignment"** and follow the 3-step wizard:
 #### Step 1: Select Content
 
 **Assignment Type Options:**
-- **Lesson** - Assign reading material and videos
-- **Homework Assignment** - Traditional question sets
-- **Vocabulary Set** - Word games and practice
-- **Simulation** - Interactive physics tools
-- **Simulation (with questions)** - Embedded assessments
+- **📖 Lesson** - Assign reading material, videos, or simulation-based lessons
+- **📝 Homework Assignment** - Question sets with auto/AI grading
+- **🎮 Vocabulary Set** - Word games and practice
+- **🔬 Simulation** - Interactive physics labs
 
 **Content Selection:**
 - Browse available content of selected type

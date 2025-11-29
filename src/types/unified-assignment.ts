@@ -355,3 +355,49 @@ export interface GradePassbackConfig {
   last_synced_at?: string
 }
 
+// ============================================================================
+// LEGACY ASSIGNMENT SYSTEM TYPES (for backwards compatibility)
+// ============================================================================
+
+/**
+ * Legacy request type for creating lesson assignments
+ */
+export interface CreateLessonAssignmentRequest {
+  lesson_id: string
+  course_id?: string
+  assigned_students?: string[]
+  due_date?: string
+  title?: string
+  instructions?: string
+  estimated_time?: number
+  published?: boolean
+}
+
+/**
+ * Legacy request type for creating homework assignments
+ */
+export interface CreateAssignmentAssignmentRequest {
+  assignment_id: string
+  course_id?: string
+  assigned_students?: string[]
+  due_date?: string
+  title?: string
+  instructions?: string
+  max_attempts?: number
+  time_limit?: number
+  published?: boolean
+}
+
+/**
+ * Legacy filters for student assignment queries
+ */
+export interface StudentAssignmentFilters {
+  student_id?: string
+  course_id?: string
+  status?: string
+  assignment_type?: 'lesson' | 'assignment' | 'simulation'
+  due_date_from?: string
+  due_date_to?: string
+  overdue_only?: boolean
+}
+
