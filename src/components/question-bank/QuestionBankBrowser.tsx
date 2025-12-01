@@ -144,7 +144,7 @@ export default function QuestionBankBrowser({
       case 'multiple-choice': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
       case 'open-response': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
       case 'numerical': return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300'
-      case 'essay': return 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300'
+      // Essay type removed - consolidated into open-response
       default: return 'bg-secondary text-secondary-foreground'
     }
   }
@@ -461,7 +461,7 @@ export default function QuestionBankBrowser({
                                   : 'bg-gray-50'
                               }`}
                             >
-                              {idx + 1}. {option}
+                              <span className="font-medium">{idx + 1}.</span> <MathMarkdown content={option} />
                               {idx === mcQuestion.correctAnswer && (
                                 <Badge className="ml-2 bg-green-100 text-green-800">Correct</Badge>
                               )}
@@ -470,7 +470,7 @@ export default function QuestionBankBrowser({
                         })}
                         {'explanation' in item.question && item.question.explanation && (
                           <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                            <strong>Explanation:</strong> {item.question.explanation}
+                            <strong>Explanation:</strong> <MathMarkdown content={item.question.explanation as string} />
                           </div>
                         )}
                       </div>
@@ -484,7 +484,7 @@ export default function QuestionBankBrowser({
                               {item.question.correctConcepts.map((concept, idx) => (
                                 <li key={idx} className="flex items-start gap-1">
                                   <span className="text-green-600">✓</span>
-                                  {concept}
+                                  <MathMarkdown content={concept} />
                                 </li>
                               ))}
                             </ul>
@@ -492,7 +492,7 @@ export default function QuestionBankBrowser({
                         )}
                         {item.question.sampleAnswer && (
                           <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
-                            <strong>Sample Answer:</strong> {item.question.sampleAnswer}
+                            <strong>Sample Answer:</strong> <MathMarkdown content={item.question.sampleAnswer as string} />
                           </div>
                         )}
                       </div>
@@ -500,7 +500,7 @@ export default function QuestionBankBrowser({
                     {item.question.type === 'numerical' && 'correctValue' in item.question && (
                       <div className="space-y-2">
                         <div className="text-sm">
-                          <strong>Answer:</strong> {item.question.correctValue} {item.question.unit}
+                          <strong>Answer:</strong> <MathMarkdown content={`${item.question.correctValue} ${item.question.unit || ''}`} />
                           {item.question.tolerance && (
                             <span className="text-muted-foreground"> (±{item.question.tolerance})</span>
                           )}

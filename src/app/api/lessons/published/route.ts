@@ -131,6 +131,58 @@ export async function GET(request: NextRequest) {
         }
       }
 
+      // Parse TA reactions if present
+      let taReactions = null
+      if (lesson.ta_reactions) {
+        try {
+          taReactions = typeof lesson.ta_reactions === 'string'
+            ? JSON.parse(lesson.ta_reactions)
+            : lesson.ta_reactions
+        } catch (e) {
+          console.warn('Failed to parse TA reactions:', e)
+          taReactions = null
+        }
+      }
+
+      // Parse key terms if present
+      let keyTerms = []
+      if (lesson.key_terms) {
+        try {
+          keyTerms = typeof lesson.key_terms === 'string'
+            ? JSON.parse(lesson.key_terms)
+            : lesson.key_terms
+        } catch (e) {
+          console.warn('Failed to parse key terms:', e)
+          keyTerms = []
+        }
+      }
+
+      // Parse check for understanding if present
+      let checkForUnderstanding = []
+      if (lesson.check_for_understanding) {
+        try {
+          checkForUnderstanding = typeof lesson.check_for_understanding === 'string'
+            ? JSON.parse(lesson.check_for_understanding)
+            : lesson.check_for_understanding
+        } catch (e) {
+          console.warn('Failed to parse check for understanding:', e)
+          checkForUnderstanding = []
+        }
+      }
+
+      // Parse generation metadata if present
+      let generationMetadata = null
+      if (lesson.generation_metadata) {
+        try {
+          generationMetadata = typeof lesson.generation_metadata === 'string'
+            ? JSON.parse(lesson.generation_metadata)
+            : lesson.generation_metadata
+        } catch (e) {
+          console.warn('Failed to parse generation metadata:', e)
+          generationMetadata = null
+        }
+      }
+
       // Calculate if lesson is new (within last 7 days)
       const isNew = lesson.created_at ? new Date(lesson.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000 : false
 
@@ -138,6 +190,10 @@ export async function GET(request: NextRequest) {
         ...lesson,
         videos,
         embedded_questions: embeddedQuestions,
+        ta_reactions: taReactions,
+        key_terms: keyTerms,
+        check_for_understanding: checkForUnderstanding,
+        generation_metadata: generationMetadata,
         progress: progress[lesson.id] || 0,
         isNew,
         // Set default lesson_type if not present

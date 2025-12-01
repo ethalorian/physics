@@ -26,8 +26,25 @@ import {
   Award,
   BarChart3,
   ListChecks,
-  Home
+  Home,
+  GraduationCap
 } from 'lucide-react'
+
+interface TAReaction {
+  reaction: string
+  taName: string
+  generatedAt: string
+}
+
+interface KeyTerm {
+  term: string
+  definition: string
+}
+
+interface CheckQuestion {
+  question: string
+  answer: string
+}
 
 interface UnifiedLessonViewerProps {
   lesson: {
@@ -54,6 +71,21 @@ interface UnifiedLessonViewerProps {
     difficulty?: string
     estimated_time?: number
     unit?: string
+    // New fields for enhanced reading lessons
+    ta_reactions?: {
+      jose?: TAReaction
+      marialys?: TAReaction
+    }
+    key_terms?: KeyTerm[]
+    check_for_understanding?: CheckQuestion[]
+    mastery_level?: string
+    generation_metadata?: {
+      topic?: string
+      environments?: string[]
+      wordCount?: number
+      generatedAt?: string
+      aiModel?: string
+    }
   }
   onProgress?: (lessonId: string, progress: number) => void
   onComplete?: (lessonId: string) => void
@@ -267,7 +299,11 @@ export default function UnifiedLessonViewer({
                     )}
                     
                     {lesson.lesson_type === 'markdown' && lesson.content && (
-                      <MarkdownLessonContent lesson={lesson} onComplete={onComplete} />
+                      <MarkdownLessonContent 
+                        lesson={lesson} 
+                        onComplete={onComplete}
+                        onProgressUpdate={(p) => setProgress(p)}
+                      />
                     )}
                   </TabsContent>
 
@@ -524,36 +560,454 @@ function VideoLessonContent({
   return <StudentLessonViewer lesson={lesson} />
 }
 
-// Markdown Lesson Content (Legacy)
+// Markdown Lesson Content - Enhanced with all reading lesson features
 function MarkdownLessonContent({ 
   lesson,
-  onComplete 
+  onComplete,
+  onProgressUpdate
 }: { 
   lesson: any
   onComplete?: (id: string) => void
+  onProgressUpdate?: (progress: number) => void
 }) {
+  const [contentRead, setContentRead] = useState(false)
+  const [questionsCompleted, setQuestionsCompleted] = useState<Record<string, boolean>>({})
+  const [checkAnswersRevealed, setCheckAnswersRevealed] = useState<Record<number, boolean>>({})
+  const [taReactionsRead, setTaReactionsRead] = useState({ jose: false, marialys: false })
+  const [expandedTerms, setExpandedTerms] = useState<Record<number, boolean>>({})
+
+  // Calculate overall progress
+  const calculateProgress = () => {
+    const components: boolean[] = []
+    
+    // Content read (30%)
+    components.push(contentRead)
+    
+    // Embedded questions answered (40%)
+    if (lesson.embedded_questions?.length > 0) {
+      const answeredCount = Object.values(questionsCompleted).filter(Boolean).length
+      const allAnswered = answeredCount === lesson.embedded_questions.length
+      components.push(allAnswered)
+    }
+    
+    // Check for understanding (20%)
+    if (lesson.check_for_understanding?.length > 0) {
+      const revealedCount = Object.values(checkAnswersRevealed).filter(Boolean).length
+      const allRevealed = revealedCount === lesson.check_for_understanding.length
+      components.push(allRevealed)
+    }
+    
+    // TA reactions read (10%)
+    if (lesson.ta_reactions?.jose || lesson.ta_reactions?.marialys) {
+      const taRead = (lesson.ta_reactions?.jose ? taReactionsRead.jose : true) && 
+                     (lesson.ta_reactions?.marialys ? taReactionsRead.marialys : true)
+      components.push(taRead)
+    }
+    
+    const completedComponents = components.filter(Boolean).length
+    return components.length > 0 ? (completedComponents / components.length) * 100 : 0
+  }
+
+  const progress = calculateProgress()
+
+  useEffect(() => {
+    onProgressUpdate?.(progress)
+    if (progress === 100) {
+      onComplete?.(lesson.id)
+    }
+  }, [progress, lesson.id, onComplete, onProgressUpdate])
+
   return (
-    <div className="space-y-6">
-      <Card className="bg-blue-50 border-blue-200 border-2">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-blue-600" />
-            Reading Material
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-blue-900">
-            Read through the lesson content and work through examples.
-          </p>
+    <div className="space-y-8">
+      {/* Reading Progress Indicator */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 border-2">
+        <CardContent className="py-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-blue-600" />
+              <span className="font-semibold text-blue-900">Your Progress</span>
+            </div>
+            <Badge variant={progress === 100 ? "default" : "secondary"} className={progress === 100 ? "bg-green-600" : ""}>
+              {progress.toFixed(0)}% Complete
+            </Badge>
+          </div>
+          <Progress value={progress} className="h-2" />
+          <div className="flex flex-wrap gap-3 mt-3 text-xs">
+            <span className={`flex items-center gap-1 ${contentRead ? 'text-green-600' : 'text-slate-500'}`}>
+              {contentRead ? <CheckCircle className="h-3 w-3" /> : <span className="w-3 h-3 rounded-full border" />}
+              Read Content
+            </span>
+            {lesson.embedded_questions?.length > 0 && (
+              <span className={`flex items-center gap-1 ${Object.values(questionsCompleted).filter(Boolean).length === lesson.embedded_questions.length ? 'text-green-600' : 'text-slate-500'}`}>
+                {Object.values(questionsCompleted).filter(Boolean).length === lesson.embedded_questions.length ? <CheckCircle className="h-3 w-3" /> : <span className="w-3 h-3 rounded-full border" />}
+                Answer Questions ({Object.values(questionsCompleted).filter(Boolean).length}/{lesson.embedded_questions.length})
+              </span>
+            )}
+            {lesson.check_for_understanding?.length > 0 && (
+              <span className={`flex items-center gap-1 ${Object.values(checkAnswersRevealed).filter(Boolean).length === lesson.check_for_understanding.length ? 'text-green-600' : 'text-slate-500'}`}>
+                {Object.values(checkAnswersRevealed).filter(Boolean).length === lesson.check_for_understanding.length ? <CheckCircle className="h-3 w-3" /> : <span className="w-3 h-3 rounded-full border" />}
+                Check Understanding
+              </span>
+            )}
+            {(lesson.ta_reactions?.jose || lesson.ta_reactions?.marialys) && (
+              <span className={`flex items-center gap-1 ${(taReactionsRead.jose || !lesson.ta_reactions?.jose) && (taReactionsRead.marialys || !lesson.ta_reactions?.marialys) ? 'text-green-600' : 'text-slate-500'}`}>
+                {(taReactionsRead.jose || !lesson.ta_reactions?.jose) && (taReactionsRead.marialys || !lesson.ta_reactions?.marialys) ? <CheckCircle className="h-3 w-3" /> : <span className="w-3 h-3 rounded-full border" />}
+                Read TA Tips
+              </span>
+            )}
+          </div>
         </CardContent>
       </Card>
 
+      {/* Main Lesson Content */}
       {lesson.content && (
         <Card>
-          <CardContent className="py-6 prose prose-slate max-w-none">
+        <CardHeader>
+          <CardTitle className="text-lg flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-blue-600" />
+              Lesson Content
+          </CardTitle>
+        </CardHeader>
+          <CardContent className="prose prose-slate max-w-none">
             <MathMarkdown content={lesson.content} />
+            {!contentRead && (
+              <div className="mt-6 pt-6 border-t">
+                <Button onClick={() => setContentRead(true)} className="w-full">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Mark as Read
+                </Button>
+              </div>
+            )}
+            {contentRead && (
+              <div className="mt-6 pt-6 border-t flex items-center gap-2 text-green-600">
+                <CheckCircle className="h-5 w-5" />
+                <span className="font-medium">Content completed!</span>
+              </div>
+            )}
           </CardContent>
         </Card>
+      )}
+
+      {/* Embedded Questions */}
+      {lesson.embedded_questions && lesson.embedded_questions.length > 0 && (
+        <Card className="border-2 border-violet-200">
+          <CardHeader className="bg-violet-50">
+            <CardTitle className="text-lg flex items-center gap-2 text-violet-900">
+              <ListChecks className="h-5 w-5" />
+              Check Your Understanding ({Object.values(questionsCompleted).filter(Boolean).length}/{lesson.embedded_questions.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            {lesson.embedded_questions.map((q: any, idx: number) => (
+              <EmbeddedQuestionCard 
+                key={q.id || idx}
+                question={q}
+                number={idx + 1}
+                completed={questionsCompleted[q.id || idx]}
+                onComplete={(correct) => {
+                  setQuestionsCompleted(prev => ({...prev, [q.id || idx]: true}))
+                }}
+              />
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Key Terms / Vocabulary */}
+      {lesson.key_terms && lesson.key_terms.length > 0 && (
+        <Card className="border-2 border-amber-200">
+          <CardHeader className="bg-amber-50">
+            <CardTitle className="text-lg flex items-center gap-2 text-amber-900">
+              <BookOpen className="h-5 w-5" />
+              Key Terms ({lesson.key_terms.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-4">
+            <div className="grid md:grid-cols-2 gap-3">
+              {lesson.key_terms.map((term: KeyTerm, idx: number) => (
+                <div 
+                  key={idx}
+                  className="p-3 rounded-lg bg-white border border-amber-100 hover:border-amber-300 transition-colors cursor-pointer"
+                  onClick={() => setExpandedTerms(prev => ({...prev, [idx]: !prev[idx]}))}
+                >
+                  <div className="font-semibold text-amber-800 flex items-center justify-between">
+                    {term.term}
+                    <ChevronRight className={`h-4 w-4 transition-transform ${expandedTerms[idx] ? 'rotate-90' : ''}`} />
+                  </div>
+                  {expandedTerms[idx] && (
+                    <div className="text-sm text-slate-600 mt-2 pt-2 border-t border-amber-100">
+                      {term.definition}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* TA Reactions - Jose & Marialys */}
+      {(lesson.ta_reactions?.jose || lesson.ta_reactions?.marialys) && (
+        <Card className="border-2 border-indigo-200">
+          <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
+            <CardTitle className="text-lg flex items-center gap-2 text-indigo-900">
+              <span className="text-xl">🎓</span>
+              Student TA Insights
+            </CardTitle>
+            <p className="text-sm text-indigo-600 mt-1">
+              Your student Teaching Assistants share their thoughts on this lesson
+            </p>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="grid md:grid-cols-2 gap-4">
+              {lesson.ta_reactions?.jose && (
+                <TAReactionCard 
+                  ta="jose"
+                  reaction={lesson.ta_reactions.jose}
+                  read={taReactionsRead.jose}
+                  onRead={() => setTaReactionsRead(prev => ({...prev, jose: true}))}
+                />
+              )}
+              {lesson.ta_reactions?.marialys && (
+                <TAReactionCard 
+                  ta="marialys"
+                  reaction={lesson.ta_reactions.marialys}
+                  read={taReactionsRead.marialys}
+                  onRead={() => setTaReactionsRead(prev => ({...prev, marialys: true}))}
+                />
+              )}
+            </div>
+        </CardContent>
+      </Card>
+      )}
+
+      {/* Check for Understanding */}
+      {lesson.check_for_understanding && lesson.check_for_understanding.length > 0 && (
+        <Card className="border-2 border-emerald-200">
+          <CardHeader className="bg-emerald-50">
+            <CardTitle className="text-lg flex items-center gap-2 text-emerald-900">
+              <Target className="h-5 w-5" />
+              Final Check ({Object.values(checkAnswersRevealed).filter(Boolean).length}/{lesson.check_for_understanding.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            {lesson.check_for_understanding.map((item: CheckQuestion, idx: number) => (
+              <div key={idx} className="p-4 rounded-lg bg-white border border-emerald-100">
+                <div className="font-medium text-emerald-800 mb-3">
+                  Q{idx + 1}: {item.question}
+                </div>
+                {!checkAnswersRevealed[idx] ? (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setCheckAnswersRevealed(prev => ({...prev, [idx]: true}))}
+                    className="border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                  >
+                    Reveal Answer
+                  </Button>
+                ) : (
+                  <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                    <div className="text-sm text-emerald-800">
+                      <MathMarkdown content={item.answer} skipAutoDetect={true} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Completion Message */}
+      {progress === 100 && (
+        <Card className="border-2 border-green-300 bg-gradient-to-r from-green-50 to-emerald-50">
+          <CardContent className="py-8 text-center">
+            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            <h3 className="text-xl font-bold text-green-900 mb-2">🎉 Lesson Complete!</h3>
+            <p className="text-green-700">
+              Great job! You've completed all sections of this lesson.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// Embedded Question Card Component
+function EmbeddedQuestionCard({ 
+  question, 
+  number, 
+  completed,
+  onComplete 
+}: { 
+  question: any
+  number: number
+  completed?: boolean
+  onComplete: (correct: boolean) => void
+}) {
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [showResult, setShowResult] = useState(false)
+  const [reflectionText, setReflectionText] = useState('')
+
+  const isCorrect = question.correctAnswer !== undefined && selectedAnswer === question.correctAnswer
+
+  const handleSubmit = () => {
+    setShowResult(true)
+    onComplete(isCorrect)
+  }
+
+  if (completed && showResult) {
+    return (
+      <div className={`p-4 rounded-lg border-2 ${isCorrect ? 'border-green-300 bg-green-50' : 'border-amber-300 bg-amber-50'}`}>
+        <div className="flex items-start gap-3">
+          <div className={`w-8 h-8 rounded-full flex items-center justify-center ${isCorrect ? 'bg-green-200' : 'bg-amber-200'}`}>
+            {isCorrect ? <CheckCircle className="h-5 w-5 text-green-700" /> : <AlertCircle className="h-5 w-5 text-amber-700" />}
+          </div>
+          <div className="flex-1">
+            <div className="font-medium mb-2">Q{number}: {question.question}</div>
+            <div className={`text-sm ${isCorrect ? 'text-green-700' : 'text-amber-700'}`}>
+              {isCorrect ? '✓ Correct!' : `The correct answer was: ${question.options?.[question.correctAnswer]}`}
+            </div>
+            {question.explanation && (
+              <div className="mt-2 p-2 rounded bg-white/50 text-sm">
+                <MathMarkdown content={question.explanation} skipAutoDetect={true} />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="p-4 rounded-lg border border-violet-200 bg-white">
+      <div className="flex items-start gap-3">
+        <div className="w-8 h-8 rounded-full bg-violet-100 flex items-center justify-center flex-shrink-0">
+          <span className="font-bold text-violet-700">{number}</span>
+        </div>
+        <div className="flex-1 space-y-3">
+          <div className="font-medium">{question.question}</div>
+          
+          {/* Multiple Choice */}
+          {question.options && (
+            <div className="space-y-2">
+              {question.options.map((option: string, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedAnswer(idx)}
+                  disabled={showResult}
+                  className={`w-full p-3 text-left rounded-lg border transition-all ${
+                    selectedAnswer === idx 
+                      ? 'border-violet-500 bg-violet-50' 
+                      : 'border-slate-200 hover:border-violet-300'
+                  }`}
+                >
+                  <span className="font-medium mr-2">{String.fromCharCode(65 + idx)}.</span>
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+          
+          {/* Reflection/Open Response */}
+          {question.type === 'reflection' || question.type === 'open-response' ? (
+            <div className="space-y-2">
+              <textarea
+                value={reflectionText}
+                onChange={(e) => setReflectionText(e.target.value)}
+                placeholder="Type your response..."
+                className="w-full p-3 border rounded-lg min-h-[100px] resize-none focus:outline-none focus:ring-2 focus:ring-violet-300"
+                disabled={showResult}
+              />
+            </div>
+          ) : null}
+
+          {/* Submit Button */}
+          {!showResult && (
+            <Button 
+              onClick={handleSubmit}
+              disabled={question.options ? selectedAnswer === null : !reflectionText.trim()}
+              className="bg-violet-600 hover:bg-violet-700"
+            >
+              Submit Answer
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// TA Reaction Card Component  
+function TAReactionCard({ 
+  ta, 
+  reaction, 
+  read,
+  onRead 
+}: { 
+  ta: 'jose' | 'marialys'
+  reaction: TAReaction
+  read: boolean
+  onRead: () => void
+}) {
+  const [expanded, setExpanded] = useState(false)
+  
+  const taInfo = {
+    jose: {
+      emoji: '⚽🏐',
+      name: 'Jose',
+      title: 'Volleyball & Soccer • Energy Expert',
+      bgClass: 'bg-gradient-to-br from-blue-100 to-indigo-100',
+      borderClass: 'border-blue-300',
+      textClass: 'text-blue-900',
+      accentClass: 'text-blue-700'
+    },
+    marialys: {
+      emoji: '🏃‍♀️🥏',
+      name: 'Marialys',
+      title: 'Track & Field • Forces Expert',
+      bgClass: 'bg-gradient-to-br from-purple-100 to-pink-100',
+      borderClass: 'border-purple-300',
+      textClass: 'text-purple-900',
+      accentClass: 'text-purple-700'
+    }
+  }
+
+  const info = taInfo[ta]
+
+  useEffect(() => {
+    if (expanded && !read) {
+      onRead()
+    }
+  }, [expanded, read, onRead])
+
+  return (
+    <div className={`rounded-xl border-2 overflow-hidden ${info.bgClass} ${info.borderClass}`}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="w-full p-4 flex items-center gap-3 hover:bg-white/30 transition-colors"
+      >
+        <span className="text-2xl">{info.emoji}</span>
+        <div className="flex-1 text-left">
+          <div className={`font-bold ${info.textClass}`}>{info.name}</div>
+          <div className="text-xs text-slate-600">{info.title}</div>
+        </div>
+        <div className="flex items-center gap-2">
+          {read && <CheckCircle className="h-4 w-4 text-green-600" />}
+          <ChevronRight className={`h-5 w-5 transition-transform ${expanded ? 'rotate-90' : ''}`} />
+        </div>
+      </button>
+      
+      {expanded && (
+        <div className="px-4 pb-4">
+          {/* Clean plain text content */}
+          <div className={`text-sm leading-relaxed whitespace-pre-wrap ${info.textClass}`}>
+            {reaction.reaction}
+          </div>
+        </div>
       )}
     </div>
   )
@@ -618,7 +1072,9 @@ function QuestionCard({ question, number }: { question: any; number: number }) {
           </div>
           <div className="flex-1">
             <div className="flex items-start justify-between gap-2 mb-2">
-              <div className="text-sm font-medium">{question.question?.question || 'Question'}</div>
+              <div className="text-sm font-medium">
+                <MathMarkdown content={question.question?.question || 'Question'} />
+              </div>
               <Badge variant="secondary">{question.question?.points || 0} pts</Badge>
             </div>
             <div className="flex items-center gap-2">

@@ -1,4 +1,5 @@
-export type QuestionType = 'multiple-choice' | 'open-response' | 'essay' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank' | 'vocabulary-hangman'
+// Essay type removed - consolidated into open-response with flexible rubric system
+export type QuestionType = 'multiple-choice' | 'open-response' | 'numerical' | 'vocabulary-matching' | 'vocabulary-crossword' | 'vocabulary-fill-blank' | 'vocabulary-hangman'
 
 // Lesson-related types
 export interface VideoQuestion {
@@ -54,25 +55,56 @@ export interface MultipleChoiceQuestion extends BaseQuestion {
 }
 
 // Short answer removed - consolidated into open-response with AI grading
+// Essay type removed - consolidated into open-response with flexible rubric system
 
-export interface EssayQuestion extends BaseQuestion {
-  type: 'essay'
-  rubric?: string
-  minLength?: number
-  maxLength?: number
-  autoGrade?: boolean  // Enable AI grading
-  gradePrompt?: string  // Custom grading instructions
-  correctConcepts?: string[]  // Key concepts that should be mentioned
-  commonMisconceptions?: string[]  // Common wrong ideas to check for  
-  sampleAnswer?: string  // Example of a good answer
-}
-
+/**
+ * Enhanced Numerical Question Type
+ * 
+ * Supports AI-powered word problem generation and solving.
+ * Can generate step-by-step solutions and explanations.
+ */
 export interface NumericalQuestion extends BaseQuestion {
   type: 'numerical'
+  
+  // Answer Configuration
   correctValue: number
-  tolerance?: number
-  unit?: string
-  unitOptions?: string[] // Multiple unit options for students to choose from
+  tolerance?: number  // Acceptable margin of error (default 0.01 or 1%)
+  unit?: string  // The correct unit (e.g., 'm/s', 'N', 'J')
+  unitOptions?: string[]  // Multiple unit options for students to choose from
+  
+  // Problem Context (for AI generation and grading)
+  topic?: string  // Physics topic (e.g., 'kinematics', 'forces', 'energy')
+  difficulty?: 'easy' | 'medium' | 'hard'
+  
+  // Given Values (extracted or provided)
+  givenValues?: {
+    name: string  // e.g., 'initial velocity', 'mass'
+    symbol: string  // e.g., 'v₀', 'm'
+    value: number
+    unit: string
+  }[]
+  
+  // Solution Details (can be AI-generated)
+  formula?: string  // The main formula used (e.g., 'v = d/t', 'F = ma')
+  formulaLatex?: string  // LaTeX version for rendering
+  solutionSteps?: {
+    step: number
+    description: string
+    equation?: string  // LaTeX equation
+    result?: string
+  }[]
+  explanation?: string  // Conceptual explanation of the solution
+  
+  // Common Mistakes
+  commonMistakes?: {
+    incorrectValue: number
+    incorrectUnit?: string
+    misconception: string
+  }[]
+  
+  // AI Generation Metadata
+  generatedByAI?: boolean
+  solutionGeneratedByAI?: boolean
 }
 
 export interface RubricCriterion {
@@ -86,17 +118,42 @@ export interface RubricCriterion {
   }[]
 }
 
+/**
+ * Unified Open Response Question Type
+ * 
+ * This is the single, flexible question type for all written responses.
+ * Consolidates the former "essay" and "open-response" types.
+ * 
+ * Features:
+ * - Flexible rubric system (can be empty for simple questions or detailed for complex ones)
+ * - AI-powered rubric generation from question text
+ * - AI-powered sample answer generation
+ * - AI-powered grading with detailed feedback
+ * - Support for key concepts and common misconceptions
+ */
 export interface OpenResponseQuestion extends BaseQuestion {
   type: 'open-response'
-  rubric: RubricCriterion[]
-  correctConcepts?: string[]  // Key physics concepts that should be mentioned
-  commonMisconceptions?: string[]  // Common wrong ideas to check for  
-  sampleAnswer?: string  // Example of a good answer
-  minLength?: number  // Minimum character requirement
-  maxLength?: number  // Character limit
+  
+  // Rubric Configuration - flexible: can be empty, simple, or detailed
+  rubric: RubricCriterion[]  // Structured rubric criteria (can be AI-generated)
+  
+  // AI Grading Features
   autoGrade?: boolean  // Enable AI grading
-  gradePrompt?: string  // Custom grading instructions
+  gradePrompt?: string  // Custom instructions for AI grader
+  
+  // Content Guidance
+  correctConcepts?: string[]  // Key physics concepts that should be mentioned
+  commonMisconceptions?: string[]  // Common wrong ideas to check for
+  sampleAnswer?: string  // Example of a good answer (can be AI-generated)
+  
+  // Response Requirements
+  minLength?: number  // Minimum word requirement
+  maxLength?: number  // Maximum word limit
   requiresExplanation?: boolean  // Whether student must explain reasoning
+  
+  // AI Generation Metadata
+  rubricGeneratedByAI?: boolean  // Whether rubric was AI-generated
+  sampleAnswerGeneratedByAI?: boolean  // Whether sample answer was AI-generated
 }
 
 // Vocabulary types
@@ -143,7 +200,7 @@ export interface VocabularyHangmanQuestion extends BaseQuestion {
   instructions?: string
 }
 
-export type Question = MultipleChoiceQuestion | OpenResponseQuestion | EssayQuestion | NumericalQuestion | VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion
+export type Question = MultipleChoiceQuestion | OpenResponseQuestion | NumericalQuestion | VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion
 
 export interface Assignment {
   id: string

@@ -63,6 +63,36 @@ export async function POST(request: NextRequest) {
       lessonData.simulation_id = body.simulation_id
     }
 
+    // Add embedded questions if provided
+    if (body.embedded_questions && Array.isArray(body.embedded_questions)) {
+      lessonData.embedded_questions = JSON.stringify(body.embedded_questions)
+    }
+
+    // Add TA reactions if provided (Jose & Marialys student TAs)
+    if (body.ta_reactions) {
+      lessonData.ta_reactions = JSON.stringify(body.ta_reactions)
+    }
+
+    // Add key terms/vocabulary if provided
+    if (body.key_terms && Array.isArray(body.key_terms)) {
+      lessonData.key_terms = JSON.stringify(body.key_terms)
+    }
+
+    // Add check for understanding questions if provided
+    if (body.check_for_understanding && Array.isArray(body.check_for_understanding)) {
+      lessonData.check_for_understanding = JSON.stringify(body.check_for_understanding)
+    }
+
+    // Add mastery level if provided
+    if (body.mastery_level) {
+      lessonData.mastery_level = body.mastery_level
+    }
+
+    // Add generation metadata if provided
+    if (body.generation_metadata) {
+      lessonData.generation_metadata = JSON.stringify(body.generation_metadata)
+    }
+
     // Insert using admin client (bypasses RLS)
     const { data, error } = await supabaseAdmin
       .from('lessons')

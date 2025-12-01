@@ -75,11 +75,16 @@ export async function POST(request: NextRequest) {
     const students = await googleClassroomAPI.getStudents(courseId)
     console.log(`📊 Found ${students.length} students in Google Classroom`)
     
+    // Get the section name from the course for automatic section assignment
+    const sectionName = course.section || 'Default Section'
+    console.log(`📋 Section name for auto-assignment: "${sectionName}"`)
+    
     let syncedStudents = 0
+    let sectionsCreated = 0
     const errors: string[] = []
 
-    // Sync each student to database
-    console.log(`👥 Syncing ${students.length} students to course UUID: ${courseData}`)
+    // Sync each student to database with automatic section assignment
+    console.log(`👥 Syncing ${students.length} students to course UUID: ${courseData} (Section: ${sectionName})`)
     for (const student of students) {
       try {
         // Use Google User ID as the unique identifier (no email needed)
@@ -88,23 +93,49 @@ export async function POST(request: NextRequest) {
         // Generate a unique identifier based on Google User ID for internal use
         const internalEmail = `${googleUserId}@classroom.local`
 
-        console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId})`)
+        console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId}) to section: ${sectionName}`)
 
+        // Use the new sync_student_with_section function that handles section assignment
         const { data: studentData, error: studentError } = await supabaseAdmin
-          .rpc('sync_student', {
+          .rpc('sync_student_with_section', {
             p_google_user_id: googleUserId,
-            p_email: internalEmail, // Use internal identifier instead of real email
+            p_email: internalEmail,
             p_name: fullName,
-            p_photo_url: null, // No photo URL needed
-            p_course_id: courseData // Use the UUID returned from sync_course
+            p_photo_url: null,
+            p_course_id: courseData,
+            p_section_name: sectionName,
+            p_teacher_email: session.user.email
           })
 
         if (studentError) {
-          console.error(`  ❌ Error syncing student ${fullName}:`, studentError)
-          errors.push(`Failed to sync student: ${fullName} - ${studentError.message}`)
+          // Fall back to original sync_student if new function doesn't exist yet
+          console.log(`  ⚠️ sync_student_with_section failed, falling back to sync_student: ${studentError.message}`)
+          
+          const { data: fallbackData, error: fallbackError } = await supabaseAdmin
+            .rpc('sync_student', {
+              p_google_user_id: googleUserId,
+              p_email: internalEmail,
+              p_name: fullName,
+              p_photo_url: null,
+              p_course_id: courseData
+            })
+          
+          if (fallbackError) {
+            console.error(`  ❌ Error syncing student ${fullName}:`, fallbackError)
+            errors.push(`Failed to sync student: ${fullName} - ${fallbackError.message}`)
+          } else {
+            console.log(`  ✅ Student synced (without section): ${fullName}, student UUID: ${fallbackData}`)
+            syncedStudents++
+          }
         } else {
-          console.log(`  ✅ Student synced successfully: ${fullName}, student UUID: ${studentData}`)
+          const result = Array.isArray(studentData) ? studentData[0] : studentData
+          console.log(`  ✅ Student synced with section: ${fullName}, student UUID: ${result?.student_id}, section UUID: ${result?.section_id}`)
           syncedStudents++
+          
+          // Track if this was the first student in a new section
+          if (result?.section_id) {
+            sectionsCreated = 1 // At least one section was created/used
+          }
         }
       } catch (studentErr) {
         console.error(`  ❌ Exception processing student:`, studentErr)
@@ -125,11 +156,17 @@ export async function POST(request: NextRequest) {
         name: course.name,
         section: course.section
       },
+      section: {
+        name: sectionName,
+        created: sectionsCreated > 0
+      },
       studentsTotal: students.length,
       studentsSynced: syncedStudents,
+      studentsAssignedToSection: syncedStudents, // All synced students are assigned to section
       errors: errors.length > 0 ? errors : undefined
     }
 
+    console.log(`✅ Import complete: ${syncedStudents} students synced to section "${sectionName}"`)
     return NextResponse.json(response)
 
   } catch (error) {

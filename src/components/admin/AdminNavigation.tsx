@@ -6,15 +6,15 @@ import { Button } from '@/components/ui/button'
 import { 
   BarChart3, 
   FileText, 
-  BookOpen, 
-  Users, 
   Settings,
   Gamepad2,
   Brain,
   GraduationCap,
-  Calendar,
   Target,
-  Sparkles
+  Sparkles,
+  Image,
+  Video,
+  Wand2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -35,7 +35,9 @@ const navigationSections = [
     title: "Content Management",
     description: "Create and manage educational content",
     items: [
-      { href: "/admin/lessons", label: "Manage Lessons", icon: GraduationCap, description: "Create and edit physics lessons" },
+      { href: "/admin/lessons", label: "Manage Lessons", icon: GraduationCap, description: "View, create, and edit all lesson types (reading, video, simulation)" },
+      { href: "/admin/reading-generator", label: "AI Reading Generator", icon: Sparkles, description: "Generate reading lessons with AI - customize mastery level, physics topics, and real-world contexts", featured: true },
+      { href: "/admin/media-generator", label: "AI Media Studio", icon: Wand2, description: "Generate physics images and videos with Imagen 4 & Veo 3.1 - diagrams, scenarios, experiments", featured: true },
       { href: "/admin/assignments/create", label: "Homework Question Builder", icon: FileText, description: "Build homework with questions, AI grading, and rubrics" },
       { href: "/admin/question-bank", label: "Question Bank", icon: Brain, description: "Centralized question repository" }
     ]
@@ -135,22 +137,22 @@ export default function AdminNavigation({ className }: AdminNavigationProps) {
             <div className="flex items-start space-x-2">
               <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
               <div>
-                <div className="font-medium text-foreground">Start with Lessons</div>
-                <div className="text-muted-foreground">Create physics lessons before building assignments</div>
+                <div className="font-medium text-foreground">Generate AI Media</div>
+                <div className="text-muted-foreground">Create physics diagrams, scenarios, and videos instantly</div>
+              </div>
+            </div>
+            <div className="flex items-start space-x-2">
+              <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
+              <div>
+                <div className="font-medium text-foreground">Use AI for Reading Lessons</div>
+                <div className="text-muted-foreground">Generate tailored content with embedded questions</div>
               </div>
             </div>
             <div className="flex items-start space-x-2">
               <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
               <div>
                 <div className="font-medium text-foreground">Build Question Bank</div>
-                <div className="text-muted-foreground">Add questions to reuse across multiple assignments</div>
-              </div>
-            </div>
-            <div className="flex items-start space-x-2">
-              <div className="w-1.5 h-1.5 bg-primary rounded-full mt-2 flex-shrink-0" />
-              <div>
-                <div className="font-medium text-foreground">Upload Vocabulary</div>
-                <div className="text-muted-foreground">Add vocabulary sets for interactive games</div>
+                <div className="text-muted-foreground">Add questions with AI-generated images to reuse</div>
               </div>
             </div>
           </div>

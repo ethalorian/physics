@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react'
-import { Question, MultipleChoiceQuestion, EssayQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion } from '@/types/assignment'
+import { Question, MultipleChoiceQuestion, NumericalQuestion, OpenResponseQuestion, VocabularyMatchingQuestion, VocabularyCrosswordQuestion, VocabularyFillBlankQuestion, VocabularyHangmanQuestion } from '@/types/assignment'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,6 +14,7 @@ import VocabularyMatchingGame from '@/components/vocabulary/games/VocabularyMatc
 import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
 import VocabularyFillBlankGame from '@/components/vocabulary/games/VocabularyFillBlankGame'
 import VocabularyHangmanGame from '@/components/vocabulary/games/VocabularyHangmanGame'
+import MathMarkdown from '@/components/MathMarkdown'
 
 interface QuestionRendererProps {
   question: Question
@@ -127,7 +128,7 @@ export default function QuestionRenderer({
                 >
                   <RadioGroupItem value={index.toString()} id={`option-${index}`} className="mr-2 sm:mr-3 flex-shrink-0" />
                   <Label htmlFor={`option-${index}`} className="flex-1 cursor-pointer text-sm sm:text-base leading-relaxed">
-                    {option}
+                    <MathMarkdown content={option} />
                   </Label>
                   {showFeedback && mcQuestion.correctAnswer === index && (
                     <CheckCircle2 className="w-5 h-5 text-green-500 absolute right-4" />
@@ -141,7 +142,9 @@ export default function QuestionRenderer({
                   <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
                   <div>
                     <p className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">Explanation</p>
-                    <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">{mcQuestion.explanation}</p>
+                    <div className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                      <MathMarkdown content={mcQuestion.explanation} />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -149,56 +152,7 @@ export default function QuestionRenderer({
           </div>
         )
 
-      // Short-answer removed - consolidated into open-response
-
-      case 'essay':
-        const essayQuestion = question as EssayQuestion
-        return (
-          <div className="space-y-2">
-            <Textarea
-              value={typeof answer === 'string' ? answer : ''}
-              onChange={(e) => onAnswerChange(e.target.value)}
-              placeholder="Write your essay here..."
-              rows={6}
-              disabled={disabled}
-              className="text-sm sm:text-base p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors min-h-[120px] sm:min-h-[160px]"
-            />
-            <div className="flex items-center justify-between mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-              <div className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Word count: <span className="font-semibold text-gray-800 dark:text-gray-200">
-                    {(answer as string || '').split(/\s+/).filter((word: string) => word.length > 0).length}
-                  </span>
-                </span>
-                {essayQuestion.autoGrade && (
-                  <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 dark:from-purple-900/30 dark:to-indigo-900/30 dark:text-purple-300 font-semibold">
-                    <Sparkles className="w-3 h-3 mr-1" />
-                    AI Essay Grading
-                  </Badge>
-                )}
-              </div>
-              {(essayQuestion.minLength || essayQuestion.maxLength) && (
-                <span className="text-xs text-gray-500 dark:text-gray-500">
-                  {essayQuestion.minLength && `Min: ${essayQuestion.minLength}`}
-                  {essayQuestion.minLength && essayQuestion.maxLength && ' • '}
-                  {essayQuestion.maxLength && `Max: ${essayQuestion.maxLength}`}
-                </span>
-              )}
-            </div>
-            {essayQuestion.rubric && (
-              <div className="mt-4 p-5 bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl border border-gray-200 dark:border-gray-700">
-                <div className="flex items-start gap-3">
-                  <Info className="w-5 h-5 text-gray-600 dark:text-gray-400 mt-0.5" />
-                  <div>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1">Grading Rubric</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap leading-relaxed">{essayQuestion.rubric}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        )
+      // Short-answer and Essay removed - consolidated into open-response
 
       case 'numerical':
         const numQuestion = question as NumericalQuestion
@@ -391,7 +345,7 @@ export default function QuestionRenderer({
                   <div className="flex-1">
                     <h4 className="text-base font-semibold text-green-900 dark:text-green-100 mb-2">Sample Answer</h4>
                     <div className="text-sm text-green-800 dark:text-green-200 whitespace-pre-wrap leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 backdrop-blur">
-                      {openResponseQuestion.sampleAnswer}
+                      <MathMarkdown content={openResponseQuestion.sampleAnswer} />
                     </div>
                   </div>
                 </div>
@@ -505,9 +459,9 @@ export default function QuestionRenderer({
 
             {/* Question text overlay on image bottom - Mobile responsive */}
             <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight drop-shadow-lg">
-                {question.question}
-              </h2>
+              <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight drop-shadow-lg [&_.markdown-content]:text-white [&_.katex]:text-white">
+                <MathMarkdown content={question.question} />
+              </div>
             </div>
           </div>
         )}
@@ -556,9 +510,9 @@ export default function QuestionRenderer({
 
             {/* Question text overlay on image bottom */}
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight drop-shadow-lg">
-                {question.question}
-              </h2>
+              <div className="text-2xl md:text-3xl font-bold text-white leading-tight drop-shadow-lg [&_.markdown-content]:text-white [&_.katex]:text-white">
+                <MathMarkdown content={question.question} />
+              </div>
             </div>
             
             {/* Remove image button */}
@@ -578,8 +532,8 @@ export default function QuestionRenderer({
           <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-6 md:p-8">
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight pr-2">
-                  {question.question}
+                <CardTitle className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight pr-2 [&_.markdown-content]:text-white [&_.katex]:text-white">
+                  <MathMarkdown content={question.question} />
                 </CardTitle>
               </div>
               <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
@@ -636,11 +590,11 @@ export default function QuestionRenderer({
                     }`}>
                       Feedback
                     </p>
-                    <p className={`text-sm leading-relaxed ${
+                    <div className={`text-sm leading-relaxed ${
                       isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'
                     }`}>
-                      {feedback}
-                    </p>
+                      <MathMarkdown content={feedback} />
+                    </div>
                   </div>
                 </div>
               </div>

@@ -236,15 +236,16 @@ function parseShortAnswer(question: string, content: string, points: number, id:
   } as Question
 }
 
+// Essay type removed - converted to open-response
 function parseEssay(question: string, content: string, points: number, id: string): Question {
-  let rubric = ''
+  let rubricDescription = ''
   let minLength = 100
   let maxLength = 1000
 
   // Look for rubric
   const rubricMatch = content.match(/rubric:?\s*([\s\S]+?)(?=min|max|$)/i)
   if (rubricMatch) {
-    rubric = rubricMatch[1].trim()
+    rubricDescription = rubricMatch[1].trim()
   }
 
   // Look for length requirements
@@ -258,14 +259,39 @@ function parseEssay(question: string, content: string, points: number, id: strin
     maxLength = parseInt(maxMatch[1])
   }
 
+  // Convert to structured open-response format
   return {
     id,
-    type: 'essay',
+    type: 'open-response',
     question,
     points,
-    rubric,
+    rubric: [{
+      id: `${id}-content`,
+      name: 'Content & Understanding',
+      description: rubricDescription || 'Demonstrates understanding of the topic',
+      maxPoints: Math.floor(points * 0.6),
+      levels: [
+        { score: Math.floor(points * 0.6), description: 'Excellent - comprehensive understanding with specific details' },
+        { score: Math.floor(points * 0.45), description: 'Good - solid understanding with some details' },
+        { score: Math.floor(points * 0.3), description: 'Fair - basic understanding' },
+        { score: 0, description: 'Limited understanding shown' }
+      ]
+    }, {
+      id: `${id}-explanation`,
+      name: 'Explanation & Communication',
+      description: 'Clear organization and scientific communication',
+      maxPoints: Math.floor(points * 0.4),
+      levels: [
+        { score: Math.floor(points * 0.4), description: 'Clear, well-organized, uses proper terminology' },
+        { score: Math.floor(points * 0.3), description: 'Mostly clear with minor issues' },
+        { score: Math.floor(points * 0.2), description: 'Some clarity issues' },
+        { score: 0, description: 'Unclear or disorganized' }
+      ]
+    }],
     minLength,
-    maxLength
+    maxLength,
+    autoGrade: true,
+    requiresExplanation: true
   } as Question
 }
 

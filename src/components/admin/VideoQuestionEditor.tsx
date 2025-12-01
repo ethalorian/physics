@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { VideoQuestion, Question } from '@/types/assignment'
 import QuestionEditor from '@/components/assignment-builder/question-editor'
+import MathMarkdown from '@/components/MathMarkdown'
 
 // Declare YouTube IFrame API types
 declare global {
@@ -525,7 +526,8 @@ export default function VideoQuestionEditor({
         tolerance: 0.01,
         unit: 'm/s'
       }
-    } else if (type === 'open-response') {
+    } else {
+      // Default to open-response for written answers
       return {
         ...baseQuestion,
         type: 'open-response',
@@ -546,13 +548,6 @@ export default function VideoQuestionEditor({
           }
         ],
         autoGrade: true
-      }
-    } else {
-      return {
-        ...baseQuestion,
-        type: 'essay',
-        minLength: 100,
-        maxLength: 1000
       }
     }
   }
@@ -886,9 +881,9 @@ export default function VideoQuestionEditor({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 truncate">
-                    {q.question.question}
-                  </p>
+                  <div className="font-medium text-gray-900 truncate">
+                    <MathMarkdown content={q.question.question} />
+                  </div>
                   <p className="text-sm text-gray-600">
                     {q.question.points} point{q.question.points !== 1 ? 's' : ''}
                   </p>

@@ -21,6 +21,7 @@ interface Student {
   enrollmentState: 'ACTIVE' | 'INVITED' | 'DECLINED'
   lastActivity?: string
   courseId: string
+  sectionName?: string  // Section name for display
 }
 
 interface Course {
@@ -32,6 +33,15 @@ interface Course {
   join_code_enabled?: boolean
   join_code_expires_at?: string | null
   max_enrollments?: number | null
+}
+
+interface Section {
+  section_id: string
+  section_name: string
+  description: string | null
+  student_count: number
+  is_active: boolean
+  created_at: string
 }
 
 export default function StudentManagement() {
@@ -49,6 +59,8 @@ export default function StudentManagement() {
   const [importedStudents, setImportedStudents] = useState<Student[]>([])
   const [showImportedData, setShowImportedData] = useState(false)
   const [needsClassroomScope, setNeedsClassroomScope] = useState(false)
+  const [sections, setSections] = useState<Section[]>([])
+  const [selectedSection, setSelectedSection] = useState<string>('')
 
   // Define fetchCourses before it's used in useEffect
   const fetchCourses = useCallback(async () => {
@@ -170,6 +182,31 @@ export default function StudentManagement() {
     }
   }, [isConnected])
 
+  // Fetch sections for a course from the database
+  const fetchCourseSections = useCallback(async (courseUUID: string) => {
+    try {
+      console.log('📂 Fetching sections for course UUID:', courseUUID)
+      const response = await fetch(`/api/sections?course_id=${courseUUID}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log('📂 Sections found:', data.sections?.length || 0)
+        setSections(data.sections || [])
+        
+        // Auto-select first section if available
+        if (data.sections?.length > 0 && !selectedSection) {
+          setSelectedSection(data.sections[0].section_id)
+        }
+      } else {
+        console.log('📂 No sections found or API not available yet')
+        setSections([])
+      }
+    } catch (error) {
+      console.log('📂 Sections API not available:', error)
+      setSections([])
+    }
+  }, [selectedSection])
+
   const fetchImportedRoster = useCallback(async () => {
     if (!selectedCourse) return
 
@@ -182,23 +219,33 @@ export default function StudentManagement() {
         console.log('📊 Database API response:', data)
         console.log('📊 Students returned from database:', data.students?.length || 0)
         
+        // Get the section name from the course data
+        const courseSectionName = data.course?.section || 'Default Section'
+        
         const formattedStudents: Student[] = data.students.map((student: any) => {
           return {
             id: student.google_user_id,
             name: student.name,
             googleUserId: student.google_user_id,  // Use Google User ID
             enrollmentState: student.enrollment_state as 'ACTIVE' | 'INVITED' | 'DECLINED',
-            courseId: selectedCourse
+            courseId: selectedCourse,
+            sectionName: courseSectionName  // Add section name to student
           }
         })
         
         console.log('📊 Formatted students for course', selectedCourse, ':', formattedStudents.length)
         setImportedStudents(formattedStudents)
         
+        // Also fetch sections for this course (using the course UUID from database)
+        if (data.course?.id) {
+          await fetchCourseSections(data.course.id)
+        }
+        
         // Log comparison for debugging
         console.log('📊 Database vs Google Classroom comparison:')
         console.log('   - Database students:', formattedStudents.length)
         console.log('   - Course ID:', selectedCourse)
+        console.log('   - Section name:', courseSectionName)
       } else {
         console.log('❌ Failed to fetch imported roster:', response.status, response.statusText)
         setImportedStudents([])
@@ -207,7 +254,7 @@ export default function StudentManagement() {
       console.error('Error fetching imported roster:', error)
       setImportedStudents([])
     }
-  }, [selectedCourse])
+  }, [selectedCourse, fetchCourseSections])
 
   useEffect(() => {
     if (selectedCourse) {
@@ -377,9 +424,10 @@ export default function StudentManagement() {
       const result = await response.json()
       console.log('Import result:', result)
       
+      const sectionInfo = result.section?.name ? ` to section "${result.section.name}"` : ''
       showToast({
         title: "Roster Imported Successfully!",
-        description: `Imported ${result.studentsSynced}/${result.studentsTotal} students to database`,
+        description: `Imported ${result.studentsSynced}/${result.studentsTotal} students${sectionInfo}`,
         variant: "success",
         duration: 5000
       })
@@ -686,37 +734,76 @@ export default function StudentManagement() {
             <Card className="apple-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-[#6A4C93]">
-                  Active Students
+                  Sections
                 </CardTitle>
-                <UserCheck className="h-4 w-4 text-[#9A8AC0]" />
+                <GraduationCap className="h-4 w-4 text-[#9A8AC0]" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-[#4A1A4A]">
-                  {currentStudents.filter(s => s.enrollmentState === 'ACTIVE').length}
-                </div>
+                <div className="text-2xl font-bold text-[#4A1A4A]">{sections.length}</div>
+                <p className="text-xs text-muted-foreground">
+                  {sections.length > 0 
+                    ? sections.map(s => s.section_name).join(', ').slice(0, 30) + (sections.map(s => s.section_name).join(', ').length > 30 ? '...' : '')
+                    : 'Auto-created on import'}
+                </p>
               </CardContent>
             </Card>
 
             <Card className="apple-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-[#6A4C93]">
-                  {showImportedData ? 'Sync Status' : 'Pending Invites'}
+                  {showImportedData ? 'Sync Status' : 'Active Students'}
                 </CardTitle>
-                <RefreshCw className="h-4 w-4 text-[#9A8AC0]" />
+                <UserCheck className="h-4 w-4 text-[#9A8AC0]" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-[#4A1A4A]">
                   {showImportedData 
                     ? `${Math.round((importedStudents.length / Math.max(students.length, 1)) * 100)}%`
-                    : currentStudents.filter(s => s.enrollmentState === 'INVITED').length
+                    : currentStudents.filter(s => s.enrollmentState === 'ACTIVE').length
                   }
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {showImportedData ? 'Synced to database' : 'Awaiting response'}
+                  {showImportedData ? 'Synced to database' : 'Enrolled and active'}
                 </p>
               </CardContent>
             </Card>
           </div>
+
+          {/* Section Filter - Show when sections exist */}
+          {sections.length > 0 && showImportedData && (
+            <Card className="apple-card">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-sm font-medium text-[#6A4C93] flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4" />
+                  Class Sections
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    variant={selectedSection === '' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setSelectedSection('')}
+                  >
+                    All Sections ({importedStudents.length})
+                  </Button>
+                  {sections.map((section) => (
+                    <Button
+                      key={section.section_id}
+                      variant={selectedSection === section.section_id ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedSection(section.section_id)}
+                    >
+                      {section.section_name} ({section.student_count})
+                    </Button>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  💡 Students are automatically assigned to sections when imported from Google Classroom based on the course&apos;s section name.
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Students List */}
           <div className="space-y-4">
@@ -750,6 +837,11 @@ export default function StudentManagement() {
                           <p className="text-sm text-[#6A4C93] font-medium mt-1">
                             🆔 {student.googleUserId}
                           </p>
+                          {student.sectionName && showImportedData && (
+                            <p className="text-xs text-[#9A8AC0] mt-1">
+                              📚 Section: {student.sectionName}
+                            </p>
+                          )}
                           {student.lastActivity && (
                             <p className="text-xs text-[#9A8AC0] mt-1">
                               Last active: {new Date(student.lastActivity).toLocaleDateString()}
@@ -773,6 +865,7 @@ export default function StudentManagement() {
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Profile</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Name</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Google User ID</th>
+                        {showImportedData && <th className="text-left p-4 font-semibold text-[#4A1A4A]">Section</th>}
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Status</th>
                         <th className="text-left p-4 font-semibold text-[#4A1A4A]">Last Activity</th>
                       </tr>
@@ -789,6 +882,11 @@ export default function StudentManagement() {
                           </td>
                           <td className="p-4 font-medium text-[#4A1A4A]">{student.name}</td>
                           <td className="p-4 text-[#6A4C93]">{student.googleUserId}</td>
+                          {showImportedData && (
+                            <td className="p-4 text-[#9A8AC0]">
+                              {student.sectionName || 'Not assigned'}
+                            </td>
+                          )}
                           <td className="p-4">{getStatusBadge(student.enrollmentState)}</td>
                           <td className="p-4 text-[#9A8AC0] text-sm">
                             {student.lastActivity ? new Date(student.lastActivity).toLocaleDateString() : 'Never'}

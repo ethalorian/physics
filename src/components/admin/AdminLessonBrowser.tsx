@@ -27,12 +27,14 @@ import {
   FileText,
   Copy,
   AlertCircle,
-  X
+  X,
+  Wand2
 } from 'lucide-react'
 import Link from 'next/link'
 import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
 import { useSession } from 'next-auth/react'
+import MediaGenerator from '@/components/admin/MediaGenerator'
 
 interface Lesson {
   id: string
@@ -332,29 +334,51 @@ export default function AdminLessonBrowser() {
 
   return (
     <div className="space-y-6">
-      {/* Header with Create Button */}
+      {/* Header with Create Buttons */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Lesson Management</h2>
           <p className="text-muted-foreground">Create and manage physics lessons - All functionality in one place</p>
         </div>
-        <Button 
-          size="lg" 
-          className="gap-2"
-          onClick={() => setIsCreating(!isCreating)}
-        >
-          {isCreating ? (
-            <>
-              <X className="h-5 w-5" />
-              Cancel
-            </>
-          ) : (
-            <>
-              <Plus className="h-5 w-5" />
-              New Lesson
-            </>
-          )}
-        </Button>
+        <div className="flex gap-2">
+          <Link href="/admin/media-generator">
+            <Button 
+              variant="outline"
+              size="lg" 
+              className="gap-2 border-cyan-300 text-cyan-700 hover:bg-cyan-50"
+            >
+              <Sparkles className="h-5 w-5" />
+              AI Media Studio
+            </Button>
+          </Link>
+          <Link href="/admin/reading-generator">
+            <Button 
+              variant="outline"
+              size="lg" 
+              className="gap-2 border-violet-300 text-violet-700 hover:bg-violet-50"
+            >
+              <Wand2 className="h-5 w-5" />
+              AI Reading
+            </Button>
+          </Link>
+          <Button 
+            size="lg" 
+            className="gap-2"
+            onClick={() => setIsCreating(!isCreating)}
+          >
+            {isCreating ? (
+              <>
+                <X className="h-5 w-5" />
+                Cancel
+              </>
+            ) : (
+              <>
+                <Plus className="h-5 w-5" />
+                New Lesson
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Create Form */}

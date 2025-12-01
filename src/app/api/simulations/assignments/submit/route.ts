@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
             score += question.points || 0
           }
         }
-        // Open response and essay questions need manual or AI grading
+        // Open response questions need manual or AI grading
       })
     }
 
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: updateError.message }, { status: 500 })
       }
 
-      // If submitted, trigger AI grading for open response/essay questions
+      // If submitted, trigger AI grading for open response questions
       if (body.submit) {
         await triggerAIGrading(updated.id, assignment, body.answers)
       }
@@ -169,7 +169,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: createError.message }, { status: 500 })
       }
 
-      // If submitted, trigger AI grading for open response/essay questions
+      // If submitted, trigger AI grading for open response questions
       if (body.submit) {
         await triggerAIGrading(created.id, assignment, body.answers)
       }
@@ -201,8 +201,7 @@ async function triggerAIGrading(submissionId: string, assignment: any, answers: 
       const question = questions[i]
       const answer = answers[`question_${i}`]
 
-      if ((question.type === 'open-response' || question.type === 'essay') && 
-          question.autoGrade && answer) {
+      if (question.type === 'open-response' && question.autoGrade && answer) {
         
         // Call AI grading endpoint
         const response = await fetch(`${process.env.NEXTAUTH_URL}/api/grade-open-response`, {
