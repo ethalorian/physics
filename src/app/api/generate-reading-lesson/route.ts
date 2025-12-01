@@ -280,6 +280,8 @@ interface GeneratedLesson {
     environments?: string[]
     generatedAt: string
     wordCount: number
+    alignedStandards?: { code: string; title: string }[]
+    aiModel?: string
   }
 }
 
