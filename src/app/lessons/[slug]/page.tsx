@@ -27,35 +27,35 @@ async function getLesson(slug: string) {
     return null
   }
   
-  // Parse JSONB fields
-  let videos = []
-  if (lesson.videos) {
+  // Parse JSONB fields - helper function
+  const parseJsonField = <T>(field: unknown, fieldName: string, defaultValue: T): T => {
+    if (!field) return defaultValue
     try {
-      videos = typeof lesson.videos === 'string' 
-        ? JSON.parse(lesson.videos) 
-        : lesson.videos
+      return typeof field === 'string' ? JSON.parse(field) : field
     } catch (e) {
-      console.warn('Failed to parse lesson videos:', e)
-      videos = []
+      console.warn(`Failed to parse ${fieldName}:`, e)
+      return defaultValue
     }
   }
 
-  let embeddedQuestions = []
-  if (lesson.embedded_questions) {
-    try {
-      embeddedQuestions = typeof lesson.embedded_questions === 'string'
-        ? JSON.parse(lesson.embedded_questions)
-        : lesson.embedded_questions
-    } catch (e) {
-      console.warn('Failed to parse embedded questions:', e)
-      embeddedQuestions = []
-    }
-  }
+  // Parse all JSONB fields for full lesson content
+  const videos = parseJsonField(lesson.videos, 'videos', [])
+  const embeddedQuestions = parseJsonField(lesson.embedded_questions, 'embedded_questions', [])
+  const taReactions = parseJsonField(lesson.ta_reactions, 'ta_reactions', null)
+  const keyTerms = parseJsonField(lesson.key_terms, 'key_terms', [])
+  const checkForUnderstanding = parseJsonField(lesson.check_for_understanding, 'check_for_understanding', [])
+  const generationMetadata = parseJsonField(lesson.generation_metadata, 'generation_metadata', null)
+  const objectives = parseJsonField(lesson.objectives, 'objectives', [])
   
   return {
     ...lesson,
     videos,
-    embedded_questions: embeddedQuestions
+    embedded_questions: embeddedQuestions,
+    ta_reactions: taReactions,
+    key_terms: keyTerms,
+    check_for_understanding: checkForUnderstanding,
+    generation_metadata: generationMetadata,
+    objectives
   }
 }
 

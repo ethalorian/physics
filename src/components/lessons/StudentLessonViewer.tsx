@@ -24,12 +24,8 @@ import {
 import MathMarkdown from '@/components/MathMarkdown'
 import QuestionRenderer from '@/components/assignment-taking/question-renderer'
 import { Question, VideoQuestion } from '@/types/assignment'
-
-interface LessonObjective {
-  id: string
-  text: string
-  completed?: boolean
-}
+import LessonTargetMastery from '@/components/mastery/LessonTargetMastery'
+import { LearningTarget, MasteryRecord } from '@/data/curriculum-types'
 
 interface StudentLessonViewerProps {
   lesson: {
@@ -54,6 +50,10 @@ interface StudentLessonViewerProps {
   }
   onProgress?: (lessonId: string, progress: number) => void
   onComplete?: (lessonId: string) => void
+  /** This lesson's learning targets (new content layer). When present, mastery replaces the old objective checkboxes. */
+  targets?: LearningTarget[]
+  /** This student's mastery records, for showing per-target level + trend. */
+  masteryRecords?: MasteryRecord[]
 }
 
 // Declare YouTube IFrame API types
@@ -508,72 +508,29 @@ function CollapsibleSection({
   )
 }
 
-// Learning objectives component
-function LearningObjectives({ 
-  objectives, 
-  onObjectiveToggle 
-}: { 
-  objectives: LessonObjective[]
-  onObjectiveToggle: (id: string) => void
-}) {
-  return (
-    <div className="space-y-3">
-      {objectives.map((objective) => (
-        <div
-          key={objective.id}
-          className="flex items-start gap-3 p-3 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
-          onClick={() => onObjectiveToggle(objective.id)}
-        >
-          <div className={`mt-0.5 transition-colors ${
-            objective.completed 
-              ? 'text-green-600' 
-              : 'text-gray-400'
-          }`}>
-            <CheckCircle className={`h-5 w-5 ${
-              objective.completed ? 'fill-current' : ''
-            }`} />
-          </div>
-          <div className="flex-1">
-            <p className={`text-sm leading-relaxed transition-colors ${
-              objective.completed 
-                ? 'text-gray-600 line-through' 
-                : 'text-gray-900'
-            }`}>
-              {objective.text}
-            </p>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-export default function StudentLessonViewer({ 
+export default function StudentLessonViewer({
   lesson, 
   onProgress,
   onComplete 
 }: StudentLessonViewerProps) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
-  const [objectives, setObjectives] = useState<LessonObjective[]>(() => 
-    lesson.objectives?.map((text, index) => ({
-      id: `obj-${index}`,
-      text,
-      completed: false
-    })) || []
-  )
   const [progress, setProgress] = useState(0)
   const [startTime] = useState(Date.now())
   const [videoQuestionsAnswered, setVideoQuestionsAnswered] = useState(0)
   const [videoQuestionsCorrect, setVideoQuestionsCorrect] = useState(0)
 
-  // Calculate progress and save to database
+  const videosTotal = lesson.videos?.length || 0
+
+  // Engagement progress (NOT mastery): how much of the lesson the student has worked
+  // through. Mastery lives only in the growth lines — see <LessonTargetMastery /> below
+  // and the MasteryGrowth dashboard. "Complete" here means "engaged with," never "mastered."
   useEffect(() => {
-    const completedCount = objectives.filter(obj => obj.completed).length
-    const newProgress = objectives.length > 0 ? (completedCount / objectives.length) * 100 : 0
+    const videosWatched = Math.min(currentVideoIndex + 1, videosTotal)
+    const newProgress = videosTotal > 0 ? Math.round((videosWatched / videosTotal) * 100) : 0
     setProgress(newProgress)
     onProgress?.(lesson.id, newProgress)
 
-    // Save progress to database
+    // Save engagement to database
     const saveProgress = async () => {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000)
       const totalVideoQuestions = lesson.videos?.reduce((sum, v) => sum + (v.questions?.length || 0), 0) || 0
@@ -587,10 +544,10 @@ export default function StudentLessonViewer({
             lesson_slug: lesson.slug || null,
             status: newProgress === 100 ? 'completed' : newProgress > 0 ? 'in_progress' : 'not_started',
             progress_percentage: newProgress,
-            objectives_completed: completedCount,
-            objectives_total: objectives.length,
-            videos_watched: currentVideoIndex + 1,
-            videos_total: lesson.videos?.length || 0,
+            objectives_completed: 0,
+            objectives_total: 0,
+            videos_watched: videosWatched,
+            videos_total: videosTotal,
             video_questions_answered: videoQuestionsAnswered,
             video_questions_correct: videoQuestionsCorrect,
             video_questions_total: totalVideoQuestions,
@@ -603,29 +560,21 @@ export default function StudentLessonViewer({
       }
     }
 
-    // Debounce saves - only save every 10 seconds or on completion
+    // Debounce saves - only save every 10 seconds or on full engagement
     const saveTimer = setTimeout(() => {
       if (newProgress > 0) {
         saveProgress()
       }
     }, 10000)
 
-    // Save immediately on completion
-    if (newProgress === 100 && objectives.length > 0) {
+    // Save immediately when the student has worked through everything
+    if (newProgress === 100 && videosTotal > 0) {
       saveProgress()
       onComplete?.(lesson.id)
     }
 
     return () => clearTimeout(saveTimer)
-  }, [objectives, lesson.id, lesson.slug, lesson.videos, currentVideoIndex, videoQuestionsAnswered, videoQuestionsCorrect, startTime, onProgress, onComplete])
-
-  const toggleObjective = (id: string) => {
-    setObjectives(prev => 
-      prev.map(obj => 
-        obj.id === id ? { ...obj, completed: !obj.completed } : obj
-      )
-    )
-  }
+  }, [videosTotal, lesson.id, lesson.slug, lesson.videos, currentVideoIndex, videoQuestionsAnswered, videoQuestionsCorrect, startTime, onProgress, onComplete])
 
   const currentVideo = lesson.videos?.[currentVideoIndex]
   const hasMultipleVideos = (lesson.videos?.length || 0) > 1
@@ -658,12 +607,12 @@ export default function StudentLessonViewer({
             </p>
           )}
           
-          {/* Progress bar */}
-          {objectives.length > 0 && (
+          {/* Engagement progress (not mastery) */}
+          {videosTotal > 0 && (
             <div className="mt-3">
               <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                <span>Progress</span>
-                <span>{Math.round(progress)}% Complete</span>
+                <span>Lesson engagement</span>
+                <span>{Math.round(progress)}% watched</span>
               </div>
               <Progress value={progress} className="h-2" />
             </div>
@@ -851,7 +800,7 @@ export default function StudentLessonViewer({
                   <div className="flex-1">
                     <h3 className="font-semibold text-green-900 mb-1">Ready to Learn?</h3>
                     <p className="text-sm text-green-700">
-                      Watch the video above, then complete the learning objectives below to master this lesson!
+                      Watch the video, then build your mastery on this lesson&apos;s targets below.
                     </p>
                   </div>
                 </div>
@@ -868,7 +817,7 @@ export default function StudentLessonViewer({
                   <div className="flex-1">
                     <h3 className="font-semibold text-green-900 mb-1">Ready to Learn?</h3>
                     <p className="text-sm text-green-700">
-                      Watch the video above, then complete the learning objectives below to master this lesson!
+                      Watch the video, then build your mastery on this lesson&apos;s targets below.
                     </p>
                   </div>
                 </div>
@@ -877,19 +826,24 @@ export default function StudentLessonViewer({
           </div>
         )}
 
-        {/* Learning Objectives */}
-        {objectives.length > 0 && (
+        {/* Your mastery on this lesson (replaces self-checked objectives) */}
+        {(targets?.length || lesson.objectives?.length) ? (
           <CollapsibleSection
-            title="Learning Objectives"
+            title="Your mastery on this lesson"
             defaultOpen={true}
             icon={Target}
           >
-            <LearningObjectives 
-              objectives={objectives}
-              onObjectiveToggle={toggleObjective}
-            />
+            {targets?.length ? (
+              <LessonTargetMastery targets={targets} records={masteryRecords ?? []} />
+            ) : (
+              <ul className="space-y-2">
+                {lesson.objectives!.map((text, index) => (
+                  <li key={index} className="text-sm text-gray-700 leading-relaxed">{text}</li>
+                ))}
+              </ul>
+            )}
           </CollapsibleSection>
-        )}
+        ) : null}
 
         {/* Lesson Content */}
         {lesson.content && (
@@ -904,8 +858,8 @@ export default function StudentLessonViewer({
           </CollapsibleSection>
         )}
 
-        {/* Completion Status */}
-        {progress === 100 && (
+        {/* Engagement complete (not mastery) */}
+        {progress === 100 && videosTotal > 0 && (
           <Card className="border-green-200 bg-green-50">
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
@@ -913,9 +867,9 @@ export default function StudentLessonViewer({
                   <CheckCircle className="h-5 w-5 text-green-600 fill-current" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-green-900">Lesson Complete!</h3>
+                  <h3 className="font-semibold text-green-900">You&apos;ve worked through this lesson</h3>
                   <p className="text-sm text-green-700">
-                    Great job! You&apos;ve completed all learning objectives.
+                    Nice — you&apos;ve been through everything here. Your mastery shows up in your growth, not a checkbox.
                   </p>
                 </div>
               </div>
