@@ -85,7 +85,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com https://*.googleusercontent.com https://i.ytimg.com https://img.youtube.com",
-              "connect-src 'self' https://api.supabase.com https://lknifmjxelphrkwddnpw.supabase.co https://classroom.googleapis.com https://www.googleapis.com",
+              `connect-src 'self' https://api.supabase.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ymszffulqmkqgvhioege.supabase.co'} https://classroom.googleapis.com https://www.googleapis.com`,
               "frame-src 'self' https://accounts.google.com https://content.googleapis.com https://www.youtube.com https://www.youtube-nocookie.com",
               "object-src 'none'",
               "base-uri 'self'",
