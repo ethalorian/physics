@@ -509,9 +509,11 @@ function CollapsibleSection({
 }
 
 export default function StudentLessonViewer({
-  lesson, 
+  lesson,
   onProgress,
-  onComplete 
+  onComplete,
+  targets,
+  masteryRecords
 }: StudentLessonViewerProps) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
   const [progress, setProgress] = useState(0)

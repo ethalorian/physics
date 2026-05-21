@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getUserRole } from '@/lib/permissions'
 
 // GET /api/mastery/roster
 // Returns the signed-in teacher's students as { id, name, email }.
@@ -18,7 +19,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const role = session.user.role
+    const role = getUserRole(session.user.email)
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can view a roster' }, { status: 403 })
     }

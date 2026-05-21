@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getUserRole } from '@/lib/permissions'
 import { LearningTarget, MasteryRecord, Domain, RubricDimension } from '@/data/curriculum-types'
 
 // GET /api/mastery/dashboard?unit_id=unit-1[&user_id=...]
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const role = session.user.role
+    const role = getUserRole(session.user.email)
     const isStaff = role === 'admin' || role === 'teacher'
 
     const { searchParams } = new URL(request.url)

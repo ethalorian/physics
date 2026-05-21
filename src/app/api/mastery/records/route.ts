@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getUserRole } from '@/lib/permissions'
 
 // POST /api/mastery/records
 // Records a single Marzano observation (1-3) for a student on a target.
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const role = session.user.role
+    const role = getUserRole(session.user.email)
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can record mastery' }, { status: 403 })
     }

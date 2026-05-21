@@ -28,10 +28,10 @@ async function getLesson(slug: string) {
   }
   
   // Parse JSONB fields - helper function
-  const parseJsonField = <T>(field: unknown, fieldName: string, defaultValue: T): T => {
+  const parseJsonField = <T,>(field: unknown, fieldName: string, defaultValue: T): T => {
     if (!field) return defaultValue
     try {
-      return typeof field === 'string' ? JSON.parse(field) : field
+      return (typeof field === 'string' ? JSON.parse(field) : field) as T
     } catch (e) {
       console.warn(`Failed to parse ${fieldName}:`, e)
       return defaultValue
