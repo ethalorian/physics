@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import { useSimEmbedded } from './embed-context'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,7 +56,12 @@ interface SimulationAssignmentEditorProps {
   onSave: (assignment: SimulationAssignment) => void
 }
 
-export default function SimulationAssignmentEditor({
+export default function SimulationAssignmentEditor(props: SimulationAssignmentEditorProps) {
+  if (useSimEmbedded()) return null
+  return <SimulationAssignmentEditorInner {...props} />
+}
+
+function SimulationAssignmentEditorInner({
   isOpen,
   onClose,
   simulationSlug,

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
+import { useSimEmbedded } from './embed-context'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -55,7 +56,12 @@ interface SimulationAssignmentProps {
   onComplete?: (score: number, percentage: number) => void
 }
 
-export default function SimulationAssignment({
+export default function SimulationAssignment(props: SimulationAssignmentProps) {
+  if (useSimEmbedded()) return null
+  return <SimulationAssignmentInner {...props} />
+}
+
+function SimulationAssignmentInner({
   simulationSlug,
   simulationTime = 0,
   simulationCompleted = false,

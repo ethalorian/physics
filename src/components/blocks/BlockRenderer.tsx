@@ -7,6 +7,8 @@ import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import { useBlockResponses } from './useBlockResponses'
+import { SIM_COMPONENTS } from '@/components/simulations/registry'
+import { SimEmbedContext } from '@/components/simulations/embed-context'
 
 const C = {
   indigo: 'var(--foreground)',
@@ -83,14 +85,22 @@ function TextCapture({
 
 // GEWA is now the staged interactive component in ./GewaInteractive.
 
-function SimEmbed({ slug, title }: { slug: string; title?: string }) {
+// Render the actual simulation component INLINE (no iframe). The SimEmbedContext
+// tells the sim's shared chrome (assignment editor, etc.) to hide itself.
+function SimEmbed({ slug }: { slug: string }) {
+  const Sim = SIM_COMPONENTS[slug]
+  if (!Sim) {
+    return (
+      <div className="rounded-lg border p-4 text-sm" style={{ borderColor: C.hairline, color: C.muted }}>
+        Simulation &ldquo;{slug}&rdquo; isn&apos;t available.
+      </div>
+    )
+  }
   return (
     <div className="rounded-lg border overflow-hidden" style={{ borderColor: C.hairline }}>
-      <div className="flex items-center justify-between px-3 py-2" style={{ background: C.tint }}>
-        <span className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>{title ?? 'Interactive simulation'}</span>
-        <a href={`/simulations/${slug}`} target="_blank" rel="noreferrer" className="text-xs" style={{ color: C.lavender }}>Open full screen ↗</a>
-      </div>
-      <iframe src={`/simulations/${slug}`} title={title ?? slug} style={{ width: '100%', height: 520, border: 'none' }} />
+      <SimEmbedContext.Provider value={true}>
+        <Sim />
+      </SimEmbedContext.Provider>
     </div>
   )
 }
