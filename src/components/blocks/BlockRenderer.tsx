@@ -97,7 +97,10 @@ function SimEmbed({ slug }: { slug: string }) {
     )
   }
   return (
-    <div className="rounded-lg border overflow-hidden" style={{ borderColor: C.hairline }}>
+    <div className="rounded-lg border overflow-hidden sim-embed-clean" style={{ borderColor: C.hairline }}>
+      {/* The sim's own "back to simulations" button is its only ArrowLeft icon —
+          hide it inside a lesson so students don't navigate away. */}
+      <style>{`.sim-embed-clean button:has(svg.lucide-arrow-left),.sim-embed-clean a:has(svg.lucide-arrow-left){display:none !important}`}</style>
       <SimEmbedContext.Provider value={true}>
         <Sim />
       </SimEmbedContext.Provider>
