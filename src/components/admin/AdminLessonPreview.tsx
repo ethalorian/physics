@@ -22,7 +22,7 @@ import {
   Info
 } from 'lucide-react'
 import { Lesson } from '@/types/assignment'
-import StudentLessonViewer from '@/components/lessons/StudentLessonViewer'
+import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import MathMarkdown from '@/components/MathMarkdown'
 import LessonVideoManager from '@/components/admin/LessonVideoManager'
 
@@ -183,11 +183,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
         {viewMode === 'student' ? (
           <div className={getDeviceClasses()}>
             <div className={`${getDeviceHeight()} overflow-auto bg-white`}>
-              <StudentLessonViewer 
-                lesson={lesson}
-                onProgress={(id, progress) => console.log(`Preview progress: ${progress}%`)}
-                onComplete={(id) => console.log('Preview lesson completed')}
-              />
+              <BlockLessonViewer lesson={lesson} />
             </div>
           </div>
         ) : (
