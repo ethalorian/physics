@@ -45,8 +45,19 @@ export default function Navbar() {
   const getNavigationItems = () => {
     if (!isAuthenticated) return []
     
-    // Core student navigation items - streamlined for clear user journey
-    const items = [
+    // Staff get a focused tool bar (the Admin Home launches everything else);
+    // students get their own journey. "View as student" flips canAccessAdmin off,
+    // so staff can still preview the student nav.
+    if (canAccessAdmin) {
+      return [
+        { href: "/admin/home", label: "Home", icon: Home },
+        { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
+        { href: "/admin/store", label: "Rewards", icon: Gift },
+        { href: "/admin/dashboard", label: "Admin", icon: Settings },
+      ]
+    }
+
+    return [
       { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
       { href: "/assignments", label: "Assignments", icon: FileText },
@@ -56,18 +67,6 @@ export default function Navbar() {
       { href: "/store", label: "Store", icon: Gift },
       { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ]
-
-    // Admin / teacher navigation
-    if (canAccessAdmin) {
-      items.push(
-        { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
-        { href: "/admin/mastery", label: "Mastery", icon: TrendingUp },
-        { href: "/admin/store", label: "Rewards", icon: Gift },
-        { href: "/admin/dashboard", label: "Admin", icon: Settings }
-      )
-    }
-
-    return items
   }
 
   const navigationItems = getNavigationItems()

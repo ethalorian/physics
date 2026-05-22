@@ -29,9 +29,9 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (session) {
-      // Students land on the new home hub; staff keep their dashboard.
+      // Students land on the student hub; staff land on the admin command center.
       const role = getUserRole(session.user?.email);
-      router.push(role === "student" ? "/home" : "/dashboard");
+      router.push(role === "student" ? "/home" : "/admin/home");
     } else {
       // New sign-ins are students by default → land on the home hub.
       signIn("google", { callbackUrl: "/home" });
