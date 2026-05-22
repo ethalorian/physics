@@ -35,6 +35,22 @@ function cellStyle(b: 0 | 1 | 2 | 3): CSSProperties {
   return { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
 }
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
+
+// Flatten a captured block response to a short text blob for the AI assist.
+function workToText(r: unknown): string {
+  if (r && typeof r === 'object') {
+    const o = r as Record<string, unknown>
+    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o) {
+      return ['given', 'equation', 'work', 'answer'].filter((k) => o[k]).map((k) => `${k}: ${o[k]}`).join('; ')
+    }
+    if ('pattern' in o || 'interpret' in o) {
+      return [o.pattern ? `pattern: ${o.pattern}` : '', o.interpret ? `interpret: ${o.interpret}` : ''].filter(Boolean).join('; ')
+    }
+    if ('strokes' in o) return '[drawing]'
+    return JSON.stringify(o)
+  }
+  return String(r ?? '')
+}
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
 function ResponseView({ response }: { response: unknown }) {
@@ -95,6 +111,8 @@ export default function ControlRoomPage() {
   const [workLoading, setWorkLoading] = useState(false)
   const [evidence, setEvidence] = useState('observation')
   const [saving, setSaving] = useState(false)
+  const [suggestion, setSuggestion] = useState<{ level: number; rationale: string } | null>(null)
+  const [suggesting, setSuggesting] = useState(false)
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -113,6 +131,7 @@ export default function ControlRoomPage() {
   const openCell = useCallback((studentId: string, targetId: string) => {
     setSel({ studentId, targetId })
     setWork(null)
+    setSuggestion(null)
     setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}`)
       .then((r) => r.json())
@@ -120,7 +139,29 @@ export default function ControlRoomPage() {
       .catch(() => setWorkLoading(false))
   }, [unitId])
 
-  const closeDrawer = () => { setSel(null); setWork(null) }
+  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null) }
+
+  const suggestRating = async () => {
+    if (!work || !selTarget) return
+    setSuggesting(true)
+    const workText = work.work
+      .map((w) => `${w.lessonTitle}${w.blockType ? ` (${w.blockType})` : ''}: ${workToText(w.response)}`)
+      .join('\n')
+    try {
+      const res = await fetch('/api/mastery/suggest-rating', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ targetStatement: selTarget.statement, work: workText }),
+      })
+      const d = await res.json()
+      if (res.ok) setSuggestion({ level: d.level, rationale: d.rationale })
+      else setSuggestion({ level: 0, rationale: d.error ?? 'Could not suggest a rating' })
+    } catch {
+      setSuggestion({ level: 0, rationale: 'Could not reach the AI assist' })
+    } finally {
+      setSuggesting(false)
+    }
+  }
 
   const saveRating = async (level: 1 | 2 | 3) => {
     if (!sel || !grid) return
@@ -287,6 +328,26 @@ export default function ControlRoomPage() {
                   {EVIDENCE.map((ev) => <option key={ev} value={ev}>{ev}</option>)}
                 </select>
               </div>
+              <button
+                onClick={suggestRating}
+                disabled={suggesting || !work || work.work.length === 0}
+                className="w-full mb-2 rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-50"
+                style={{ borderColor: 'color-mix(in oklch, var(--primary) 40%, var(--border))', color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}
+              >
+                {suggesting ? 'Asking Claude…' : '✨ Suggest a rating (Claude)'}
+              </button>
+              {suggestion && (
+                <div className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
+                  {suggestion.level >= 1 && suggestion.level <= 3 ? (
+                    <>
+                      <b>Claude suggests: {levelWord(suggestion.level)} ({suggestion.level})</b> — {suggestion.rationale}
+                      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — tap a level to record it.</div>
+                    </>
+                  ) : (
+                    <span style={{ color: 'var(--muted-foreground)' }}>{suggestion.rationale}</span>
+                  )}
+                </div>
+              )}
               <div className="flex gap-2">
                 {[1, 2, 3].map((lvl) => (
                   <button
@@ -298,6 +359,7 @@ export default function ControlRoomPage() {
                       padding: '12px 0', fontSize: 13, cursor: 'pointer', border: '1.5px solid var(--border)',
                       background: lvl === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lvl === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
                       color: lvl === 1 ? 'var(--destructive)' : lvl === 2 ? 'var(--reward-foreground)' : 'var(--success)',
+                      boxShadow: suggestion && suggestion.level === lvl ? '0 0 0 2px var(--primary)' : undefined,
                     }}
                   >
                     {lvl} · {levelWord(lvl)}
