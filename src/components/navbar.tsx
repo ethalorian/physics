@@ -47,7 +47,7 @@ export default function Navbar() {
     
     // Core student navigation items - streamlined for clear user journey
     const items = [
-      { href: "/dashboard", label: "Dashboard", icon: Home },
+      { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
       { href: "/assignments", label: "Assignments", icon: FileText },
       { href: "/simulations", label: "Simulations", icon: Microscope },
@@ -222,7 +222,7 @@ export default function Navbar() {
                 
                 {/* Sign In Button - Apple-style pill */}
                 <Button 
-                  onClick={() => signIn("google", { callbackUrl: "/dashboard" })} 
+                  onClick={() => signIn("google", { callbackUrl: "/home" })}
                   size="sm"
                   className="h-9 px-5 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all duration-200 hover:shadow-xl hover:shadow-primary/30"
                 >

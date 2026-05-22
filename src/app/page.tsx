@@ -5,6 +5,7 @@ import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ArrowRight, Atom, Sparkles, BookOpen, Users, Trophy, Zap, Brain, Rocket } from "lucide-react";
+import { getUserRole } from "@/lib/permissions";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -28,11 +29,12 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (session) {
-      // If logged in, go to dashboard
-      router.push("/dashboard");
+      // Students land on the new home hub; staff keep their dashboard.
+      const role = getUserRole(session.user?.email);
+      router.push(role === "student" ? "/home" : "/dashboard");
     } else {
-      // If not logged in, sign in first with dashboard as callback
-      signIn("google", { callbackUrl: "/dashboard" });
+      // New sign-ins are students by default → land on the home hub.
+      signIn("google", { callbackUrl: "/home" });
     }
   };
 
