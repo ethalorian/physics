@@ -10,7 +10,10 @@ import { getUserRole } from '@/lib/permissions'
 
 const DAY = 24 * 60 * 60 * 1000
 
-type StudentRow = { google_user_id: string | null; name: string | null; email: string | null; teacher_email: string | null }
+// NOTE: students has no teacher_email column; teacher↔student attribution does not
+// exist in the schema yet. Until it does, colleague-adoption rows stay empty and
+// the pulse/engagement/feature panels (which don't need attribution) carry the view.
+type StudentRow = { google_user_id: string | null; name: string | null; email: string | null; teacher_email?: string | null }
 type ActivityRow = { user_id: string | null; created_at: string }
 type MasteryRow = { user_id: string | null; observed_at: string }
 type AssignmentRow = { created_by: string | null; created_at: string | null }
@@ -31,7 +34,7 @@ export async function GET() {
     // --- students (roster, with teacher attribution) -----------------------
     let students: StudentRow[] = []
     try {
-      const { data } = await supabaseAdmin.from('students').select('google_user_id, name, email, teacher_email')
+      const { data } = await supabaseAdmin.from('students').select('google_user_id, name, email')
       students = (data ?? []) as StudentRow[]
     } catch { students = [] }
     const studentIds = students.map((s) => s.google_user_id).filter((x): x is string => !!x)
