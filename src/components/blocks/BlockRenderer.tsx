@@ -7,13 +7,13 @@ import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import { useBlockResponses } from './useBlockResponses'
 
 const C = {
-  indigo: '#2D2A4A',
-  muted: '#6B6890',
-  lavender: '#9B8EC4',
-  sage: '#7FA68B',
-  periwinkle: '#B8C4DB',
-  hairline: '#E7E4F0',
-  tint: '#F4F2FA',
+  indigo: 'var(--foreground)',
+  muted: 'var(--muted-foreground)',
+  lavender: 'var(--primary)',
+  sage: 'var(--success)',
+  periwinkle: 'var(--muted-foreground)',
+  hairline: 'var(--border)',
+  tint: 'var(--secondary)',
 }
 
 type SaveFn = (blockId: string, blockType: string, response: unknown) => void
@@ -30,7 +30,7 @@ function MarzanoInput({ value, onSave }: { value?: number; onSave: (n: number) =
   ]
   return (
     <div>
-      <div className="text-sm font-medium" style={{ color: '#4A4470' }}>Where are you right now?</div>
+      <div className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>Where are you right now?</div>
       <div className="flex flex-wrap gap-2 mt-2">
         {levels.map((l) => (
           <button
@@ -39,8 +39,8 @@ function MarzanoInput({ value, onSave }: { value?: number; onSave: (n: number) =
             className="text-sm rounded-md border px-3 py-1.5"
             style={{
               borderColor: C.hairline,
-              background: value === l.v ? C.sage : '#fff',
-              color: value === l.v ? '#fff' : C.indigo,
+              background: value === l.v ? C.sage : 'var(--card)',
+              color: value === l.v ? 'var(--card)' : C.indigo,
             }}
           >
             {l.v} · {l.label}
@@ -69,10 +69,10 @@ function TextCapture({
         placeholder={placeholder}
         rows={4}
         className="w-full rounded-md border p-2 text-sm"
-        style={{ borderColor: C.hairline, color: C.indigo, background: '#fff' }}
+        style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}
       />
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { onSave(text); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: '#fff' }}>Save</button>
+        <button onClick={() => { onSave(text); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}>Save</button>
         {saved && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
       </div>
     </div>
@@ -85,13 +85,13 @@ function GewaInput({ prompt, givenHint, equationHint, value, onSave }: { prompt:
   const [saved, setSaved] = useState(false)
   const field = (key: keyof GewaValue, label: string, hint?: string) => (
     <div>
-      <div className="text-xs font-medium" style={{ color: '#4A4470' }}>{label}{hint ? ` — ${hint}` : ''}</div>
+      <div className="text-xs font-medium" style={{ color: 'var(--secondary-foreground)' }}>{label}{hint ? ` — ${hint}` : ''}</div>
       <textarea
         value={g[key] ?? ''}
         onChange={(e) => { setG((p) => ({ ...p, [key]: e.target.value })); setSaved(false) }}
         rows={key === 'work' ? 4 : 2}
         className="w-full rounded-md border p-2 text-sm mt-1"
-        style={{ borderColor: C.hairline, color: C.indigo, background: '#fff' }}
+        style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}
       />
     </div>
   )
@@ -105,7 +105,7 @@ function GewaInput({ prompt, givenHint, equationHint, value, onSave }: { prompt:
         {field('answer', 'ANSWER')}
       </div>
       <div className="flex items-center gap-2 mt-2">
-        <button onClick={() => { onSave(g); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: '#fff' }}>Save work</button>
+        <button onClick={() => { onSave(g); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}>Save work</button>
         {saved && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
       </div>
     </div>
@@ -116,7 +116,7 @@ function SimEmbed({ slug, title }: { slug: string; title?: string }) {
   return (
     <div className="rounded-lg border overflow-hidden" style={{ borderColor: C.hairline }}>
       <div className="flex items-center justify-between px-3 py-2" style={{ background: C.tint }}>
-        <span className="text-sm font-medium" style={{ color: '#4A4470' }}>{title ?? 'Interactive simulation'}</span>
+        <span className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>{title ?? 'Interactive simulation'}</span>
         <a href={`/simulations/${slug}`} target="_blank" rel="noreferrer" className="text-xs" style={{ color: C.lavender }}>Open full screen ↗</a>
       </div>
       <iframe src={`/simulations/${slug}`} title={title ?? slug} style={{ width: '100%', height: 520, border: 'none' }} />
@@ -129,7 +129,7 @@ function SimEmbed({ slug, title }: { slug: string; title?: string }) {
 // ---------------------------------------------------------------------------
 
 function Card({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-lg border p-4" style={{ borderColor: C.hairline, background: '#fff' }}>{children}</div>
+  return <div className="rounded-lg border p-4" style={{ borderColor: C.hairline, background: 'var(--card)' }}>{children}</div>
 }
 
 function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
@@ -163,7 +163,7 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
     case 'vocab':
       return (
         <Card>
-          <div className="text-xs font-medium mb-2" style={{ color: '#4A4470' }}>Key terms</div>
+          <div className="text-xs font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Key terms</div>
           <dl className="space-y-1.5">
             {b.terms.map((t, i) => (
               <div key={i} className="text-sm">
@@ -178,7 +178,7 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
     case 'worked_example':
       return (
         <Card>
-          <div className="text-xs font-medium mb-1" style={{ color: '#4A4470' }}>Worked example</div>
+          <div className="text-xs font-medium mb-1" style={{ color: 'var(--secondary-foreground)' }}>Worked example</div>
           <p className="text-sm mb-1" style={{ color: C.indigo }}>{b.prompt}</p>
           <div className="text-sm" style={{ color: C.muted }}>
             {b.given && <div><b>Given:</b> {b.given}</div>}

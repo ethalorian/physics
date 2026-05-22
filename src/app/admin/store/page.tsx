@@ -5,7 +5,15 @@ import { useCallback, useEffect, useState } from 'react'
 interface Reward { id: string; name: string; description?: string; cost_points: number; category?: string; active: boolean }
 interface Redemption { id: string; user_email?: string; reward_name: string; cost_points: number; status: string; created_at: string }
 
-const C = { indigo: '#2D2A4A', muted: '#6B6890', lavender: '#9B8EC4', sage: '#7FA68B', hairline: '#E7E4F0', tint: '#F4F2FA' }
+const C = {
+  indigo: 'var(--foreground)',
+  muted: 'var(--muted-foreground)',
+  lavender: 'var(--primary)',
+  sage: 'var(--success)',
+  hairline: 'var(--border)',
+  tint: 'var(--secondary)',
+  reward: 'var(--reward)',
+}
 
 export default function AdminStorePage() {
   const [rewards, setRewards] = useState<Reward[]>([])
@@ -53,30 +61,30 @@ export default function AdminStorePage() {
   return (
     <div className="max-w-3xl mx-auto p-4" style={{ color: C.indigo }}>
       <h1 className="text-xl font-medium mb-3">Rewards store</h1>
-      {error && <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: '#FBEFEF', color: '#8A4A4A' }}>{error}</div>}
+      {error && <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{error}</div>}
       {loading && <p className="text-sm" style={{ color: C.muted }}>Loading…</p>}
 
-      <h2 className="text-sm font-medium mb-2" style={{ color: '#4A4470' }}>Redemptions to fulfill</h2>
+      <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Redemptions to fulfill</h2>
       {pending.length === 0 ? (
         <p className="text-sm mb-5" style={{ color: C.muted }}>No pending redemptions.</p>
       ) : (
-        <div className="rounded-lg border bg-white px-4 mb-5" style={{ borderColor: C.hairline }}>
+        <div className="rounded-lg border bg-card px-4 mb-5" style={{ borderColor: C.hairline }}>
           {pending.map((r, i) => (
-            <div key={r.id} className="flex flex-wrap items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}>
+            <div key={r.id} className="flex flex-wrap items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
               <span className="flex-1 min-w-[10rem] text-sm">
                 <span style={{ color: C.indigo }}>{r.reward_name}</span>
                 <span style={{ color: C.muted }}> · {r.user_email}</span>
               </span>
               <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} pts</span>
               <button onClick={() => setStatus(r.id, 'fulfilled')} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, background: C.sage, color: '#fff' }}>Fulfill</button>
-              <button onClick={() => setStatus(r.id, 'denied')} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.muted, background: '#fff' }}>Deny</button>
+              <button onClick={() => setStatus(r.id, 'denied')} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.muted, background: 'var(--card)' }}>Deny</button>
             </div>
           ))}
         </div>
       )}
 
-      <h2 className="text-sm font-medium mb-2" style={{ color: '#4A4470' }}>Catalog</h2>
-      <div className="rounded-lg border bg-white p-3 mb-3" style={{ borderColor: C.hairline }}>
+      <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Catalog</h2>
+      <div className="rounded-lg border bg-card p-3 mb-3" style={{ borderColor: C.hairline }}>
         <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))' }}>
           <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Reward name" className="rounded-md border px-2 py-1 text-sm" style={{ borderColor: C.hairline }} />
           <input value={form.cost_points} onChange={(e) => setForm({ ...form, cost_points: e.target.value })} placeholder="Cost (pts)" type="number" className="rounded-md border px-2 py-1 text-sm" style={{ borderColor: C.hairline }} />
@@ -85,21 +93,21 @@ export default function AdminStorePage() {
         </div>
         <button onClick={addReward} className="text-xs rounded-md border px-3 py-1 mt-2" style={{ borderColor: C.hairline, background: C.lavender, color: '#fff' }}>Add reward</button>
       </div>
-      <div className="rounded-lg border bg-white px-4 mb-5" style={{ borderColor: C.hairline }}>
+      <div className="rounded-lg border bg-card px-4 mb-5" style={{ borderColor: C.hairline }}>
         {rewards.map((r, i) => (
-          <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}>
+          <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
             <span className="flex-1 text-sm" style={{ color: r.active ? C.indigo : C.muted }}>{r.name}{!r.active && ' (hidden)'}</span>
-            <span className="text-sm" style={{ color: C.lavender }}>{r.cost_points} pts</span>
+            <span className="text-sm" style={{ color: C.reward }}>{r.cost_points} pts</span>
           </div>
         ))}
       </div>
 
       {done.length > 0 && (
         <>
-          <h2 className="text-sm font-medium mb-2" style={{ color: '#4A4470' }}>History</h2>
-          <div className="rounded-lg border bg-white px-4" style={{ borderColor: C.hairline }}>
+          <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>History</h2>
+          <div className="rounded-lg border bg-card px-4" style={{ borderColor: C.hairline }}>
             {done.slice(0, 30).map((r, i) => (
-              <div key={r.id} className="flex items-center gap-3 py-2" style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}>
+              <div key={r.id} className="flex items-center gap-3 py-2" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
                 <span className="flex-1 text-sm" style={{ color: C.muted }}>{r.reward_name} · {r.user_email}</span>
                 <span className="text-xs" style={{ color: r.status === 'fulfilled' ? C.sage : '#C08B8B' }}>{r.status}</span>
               </div>

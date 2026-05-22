@@ -109,22 +109,22 @@ export default function DoodleCanvas({
   }
 
   return (
-    <div className="rounded-lg border p-3" style={{ borderColor: '#E7E4F0', background: '#fff' }}>
-      <p className="text-sm font-medium mb-1" style={{ color: '#4A4470' }}>{instruction}</p>
+    <div className="rounded-lg border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <p className="text-sm font-medium mb-1" style={{ color: 'var(--secondary-foreground)' }}>{instruction}</p>
       {prompts && prompts.length > 0 && (
-        <ol className="text-sm mb-2 ml-4 list-decimal" style={{ color: '#6B6890' }}>
+        <ol className="text-sm mb-2 ml-4 list-decimal" style={{ color: 'var(--muted-foreground)' }}>
           {prompts.map((p, i) => <li key={i} className="leading-snug">{p}</li>)}
         </ol>
       )}
       <div className="flex items-center gap-2 mb-2">
-        <span className="text-xs" style={{ color: '#6B6890' }}>Color:</span>
+        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Color:</span>
         {colors.map((c) => (
           <button
             key={c}
             onClick={() => setColor(c)}
             aria-label={`color ${c}`}
             className="rounded-full"
-            style={{ width: 22, height: 22, background: c, border: color === c ? '3px solid #2D2A4A' : '1px solid #E7E4F0' }}
+            style={{ width: 22, height: 22, background: c, border: color === c ? '3px solid var(--foreground)' : '1px solid var(--border)' }}
           />
         ))}
       </div>
@@ -136,13 +136,13 @@ export default function DoodleCanvas({
         onPointerMove={onMove}
         onPointerUp={onUp}
         onPointerLeave={onUp}
-        style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid #9B8EC4', borderRadius: 8, cursor: 'crosshair' }}
+        style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, cursor: 'crosshair' }}
       />
       <div className="flex items-center gap-2 mt-2">
-        <button onClick={save} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: '#E7E4F0', background: '#fff', color: '#2D2A4A' }}>Save drawing</button>
-        <button onClick={undo} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: '#E7E4F0', background: '#fff', color: '#6B6890' }}>Undo</button>
-        <button onClick={clear} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: '#E7E4F0', background: '#fff', color: '#6B6890' }}>Clear</button>
-        {saved && <span className="text-xs" style={{ color: '#7FA68B' }}>Saved ✓</span>}
+        <button onClick={save} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Save drawing</button>
+        <button onClick={undo} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)' }}>Undo</button>
+        <button onClick={clear} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)' }}>Clear</button>
+        {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
       </div>
     </div>
   )
