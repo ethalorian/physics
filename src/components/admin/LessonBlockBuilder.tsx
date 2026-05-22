@@ -84,7 +84,7 @@ const mkId = () => `b${Math.random().toString(36).slice(2, 8)}`
 function fromDocument(doc: BlockDocument | undefined): BlockState[] {
   const blocks = doc?.blocks ?? []
   return blocks.map((b): BlockState => {
-    const { id, type, ...rest } = b as { id?: string; type: string } & Record<string, unknown>
+    const { id, type, ...rest } = b as unknown as { id?: string; type: string } & Record<string, unknown>
     return { id: id || mkId(), type, data: rest }
   })
 }
