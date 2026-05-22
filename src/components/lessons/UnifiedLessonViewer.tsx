@@ -356,19 +356,6 @@ export default function UnifiedLessonViewer({
                     <span className="font-medium">{lesson.unit || '—'}</span>
                   </div>
                 </div>
-
-                <div className="pt-4 border-t space-y-2">
-                  <Button className="w-full" size="sm">
-                    <Play className="h-4 w-4 mr-2" />
-                    {progress > 0 ? 'Continue Lesson' : 'Start Lesson'}
-                  </Button>
-                  {progress === 100 && (
-                    <Button variant="outline" className="w-full" size="sm">
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Review Lesson
-                    </Button>
-                  )}
-                </div>
               </CardContent>
             </Card>
 
@@ -388,14 +375,10 @@ export default function UnifiedLessonViewer({
                   title="Main Content" 
                   isActive
                 />
-                <LearningPathItem 
-                  status={progress === 100 ? 'complete' : 'locked'} 
-                  title="Assessment" 
+                <LearningPathItem
+                  status={progress === 100 ? 'complete' : 'locked'}
+                  title="Assessment"
                   count={lesson.embedded_questions?.length || 0}
-                />
-                <LearningPathItem 
-                  status="locked" 
-                  title="Next Lesson" 
                 />
               </CardContent>
             </Card>
@@ -415,10 +398,6 @@ export default function UnifiedLessonViewer({
                   >
                     <Microscope className="h-4 w-4 mr-2" />
                     Open in Simulation Mode
-                  </Button>
-                  <Button variant="outline" size="sm" className="w-full justify-start">
-                    <FileText className="h-4 w-4 mr-2" />
-                    View Instructions
                   </Button>
                 </CardContent>
               </Card>

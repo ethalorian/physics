@@ -808,23 +808,6 @@ export default function StudentLessonViewer({
                 </div>
               </CardContent>
             </Card>
-
-            {/* Call-to-Action for Video Engagement */}
-            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-full">
-                    <Target className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-green-900 mb-1">Ready to Learn?</h3>
-                    <p className="text-sm text-green-700">
-                      Watch the video, then build your mastery on this lesson&apos;s targets below.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         )}
 

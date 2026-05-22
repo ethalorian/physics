@@ -1,7 +1,26 @@
 import { supabaseAdmin } from '@/lib/supabase'
 import { notFound } from 'next/navigation'
-import UnifiedLessonViewer from '@/components/lessons/UnifiedLessonViewer'
+import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import LessonActivityTracker from '@/components/lessons/LessonActivityTracker'
+
+type SiblingRow = { slug: string; title: string; lesson_number: number }
+
+// Prev/next within the same unit (by lesson_number) for the lesson footer nav.
+async function getNav(unit: string | null | undefined, currentSlug: string) {
+  if (!unit) return { prev: null, next: null }
+  const { data } = await supabaseAdmin
+    .from('lessons')
+    .select('slug, title, lesson_number')
+    .eq('unit', unit)
+    .eq('published', true)
+    .order('lesson_number', { ascending: true })
+  const list = (data ?? []) as SiblingRow[]
+  const i = list.findIndex((l) => l.slug === currentSlug)
+  return {
+    prev: i > 0 ? { slug: list[i - 1].slug, title: list[i - 1].title } : null,
+    next: i >= 0 && i < list.length - 1 ? { slug: list[i + 1].slug, title: list[i + 1].title } : null,
+  }
+}
 
 async function getLesson(slug: string) {
   // Fetch lesson with simulation data
@@ -67,9 +86,12 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
     notFound()
   }
 
+  // All lessons are curriculum block lessons now; the legacy viewer is retired.
+  const nav = await getNav(lesson.unit, slug)
+
   return (
     <LessonActivityTracker lessonId={lesson.id}>
-      <UnifiedLessonViewer lesson={lesson} />
+      <BlockLessonViewer lesson={lesson} nav={nav} />
     </LessonActivityTracker>
   )
 }
