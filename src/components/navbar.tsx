@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, BookOpen, FileText, Settings, Home, Gamepad2, Trophy, Microscope, LogOut, Gift, TrendingUp } from "lucide-react"
+import { Menu, BookOpen, FileText, Settings, Home, Gamepad2, Trophy, Microscope, LogOut, Gift, TrendingUp, LayoutGrid } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -60,6 +60,7 @@ export default function Navbar() {
     // Admin / teacher navigation
     if (canAccessAdmin) {
       items.push(
+        { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
         { href: "/admin/mastery", label: "Mastery", icon: TrendingUp },
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings }
