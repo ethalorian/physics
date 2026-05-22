@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { CAPTURE_BLOCK_TYPES, ContentBlock } from '@/data/content-blocks'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
 // Body: { lesson_id, block_id, block_type, response }
@@ -31,6 +32,55 @@ export async function POST(request: NextRequest) {
       console.error('Error saving block response:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+
+    // Earning loop (best-effort): log activity + recompute lesson engagement so the
+    // work feeds the activity feed, streaks, leaderboard points, and the dashboard.
+    try {
+      await supabaseAdmin.from('student_activity').insert({
+        user_id: session.user.id,
+        user_email: session.user.email,
+        activity_type: 'lesson_block',
+        lesson_id: body.lesson_id,
+      })
+
+      const { data: lessonRow } = await supabaseAdmin
+        .from('lessons')
+        .select('slug, content_blocks')
+        .eq('id', body.lesson_id)
+        .single()
+      const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
+      const captureIds = blocks
+        .filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type))
+        .map((b) => b.id)
+
+      if (captureIds.length > 0) {
+        const { data: resp } = await supabaseAdmin
+          .from('block_responses')
+          .select('block_id')
+          .eq('user_id', session.user.id)
+          .eq('lesson_id', body.lesson_id)
+          .in('block_id', captureIds)
+        const done = new Set((resp ?? []).map((r) => r.block_id))
+        const pct = Math.round((done.size / captureIds.length) * 100)
+        const completed = pct >= 100
+        await supabaseAdmin.from('lesson_progress').upsert(
+          {
+            user_id: session.user.id,
+            user_email: session.user.email,
+            lesson_id: body.lesson_id,
+            lesson_slug: lessonRow?.slug ?? null,
+            status: completed ? 'completed' : 'in_progress',
+            progress_percentage: pct,
+            last_accessed_at: new Date().toISOString(),
+            completed_at: completed ? new Date().toISOString() : null,
+          },
+          { onConflict: 'user_id,lesson_id' },
+        )
+      }
+    } catch (e) {
+      console.error('block save side-effects failed:', e)
+    }
+
     return NextResponse.json(data, { status: 201 })
   } catch (error) {
     console.error('Error in POST /api/lessons/blocks:', error)

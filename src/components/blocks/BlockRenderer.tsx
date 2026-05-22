@@ -203,7 +203,10 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
       return (
         <DoodleCanvas
           instruction={b.instruction}
+          prompts={b.prompts}
+          scaffoldSvg={b.scaffoldSvg}
           imageUrl={b.imageUrl}
+          palette={b.palette}
           initialStrokes={((saved as { strokes?: Stroke[] })?.strokes) ?? []}
           onSave={(strokes) => save(b.id, 'doodle', { strokes })}
         />

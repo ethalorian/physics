@@ -75,8 +75,11 @@ export interface SentenceFrameBlock extends BaseBlock {
 
 export interface DoodleBlock extends BaseBlock {
   type: 'doodle';
-  instruction: string;        // "Complete the doodle. Add the arrows…"
-  imageUrl?: string;          // print-centric; web renders the image to annotate/skip
+  instruction: string;        // one-line framing
+  prompts?: string[];         // explicit, numbered directions for what to draw (scaffolding)
+  scaffoldSvg?: string;       // pre-drawn scaffold the student completes (faint background)
+  imageUrl?: string;          // alternative raster scaffold
+  palette?: string[];         // colors offered to the student (defaults provided)
 }
 
 export interface SimEmbedBlock extends BaseBlock {

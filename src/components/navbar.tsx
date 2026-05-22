@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, BookOpen, FileText, Settings, Home, Gamepad2, Trophy, Microscope, LogOut } from "lucide-react"
+import { Menu, BookOpen, FileText, Settings, Home, Gamepad2, Trophy, Microscope, LogOut, Gift, TrendingUp } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -52,12 +52,16 @@ export default function Navbar() {
       { href: "/assignments", label: "Assignments", icon: FileText },
       { href: "/simulations", label: "Simulations", icon: Microscope },
       { href: "/vocabulary", label: "Games", icon: Gamepad2 },
+      { href: "/dashboard/growth", label: "My Growth", icon: TrendingUp },
+      { href: "/store", label: "Store", icon: Gift },
       { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
     ]
 
-    // Simplified admin navigation - one entry point
+    // Admin / teacher navigation
     if (canAccessAdmin) {
       items.push(
+        { href: "/admin/mastery", label: "Mastery", icon: TrendingUp },
+        { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings }
       )
     }
@@ -88,6 +92,30 @@ export default function Navbar() {
             </div>
           </div>
           
+          {/* Desktop navigation links */}
+          {isAuthenticated && navigationItems.length > 0 && (
+            <div className="hidden md:flex items-center gap-1">
+              {navigationItems.map((item) => {
+                const Icon = item.icon
+                const isActive = pathname === item.href
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span className="hidden lg:inline">{item.label}</span>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
+
           {/* Mobile Hamburger Menu - Only show when authenticated and has nav items */}
           {isAuthenticated && navigationItems.length > 0 && (
             <div className="md:hidden">
