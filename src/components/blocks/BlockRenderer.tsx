@@ -5,6 +5,7 @@ import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
+import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import { useBlockResponses } from './useBlockResponses'
 
 const C = {
@@ -187,6 +188,8 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
       return <Card><TextCapture prompt={b.prompt} frame={b.frame} value={saved as string | undefined} onSave={(t) => save(b.id, 'exit_ticket', t)} /></Card>
     case 'gewa':
       return <Card><GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} /></Card>
+    case 'data_table':
+      return <Card><DataBlockInteractive columns={b.columns} rows={b.rows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onSave={(v) => save(b.id, 'data_table', v)} /></Card>
     case 'observation':
       return (
         <Card>

@@ -125,6 +125,10 @@ export interface DataTableBlock extends BaseBlock {
   capture: true;
   columns: string[];
   rows: number;               // blank rows for lab data
+  plot?: boolean;             // show the live graph (default true when ≥2 columns)
+  xCol?: number;              // column index for x-axis (default 0)
+  yCol?: number;              // column index for y-axis (default 1)
+  patternPrompt?: string;     // optional override for the "what pattern?" prompt
 }
 
 export interface ObservationBlock extends BaseBlock {
