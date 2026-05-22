@@ -22,6 +22,7 @@ type Icon = LucideIcon
 
 const TOOLS: { href: string; label: string; desc: string; icon: Icon; accent: string }[] = [
   { href: '/admin/control-room', label: 'Control Room', desc: 'Class mastery grid — rate from student work', icon: LayoutGrid, accent: 'var(--primary)' },
+  { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement & feature usage', icon: Activity, accent: 'var(--success)' },
   { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions & manage the points store', icon: Gift, accent: 'var(--reward)' },
   { href: '/admin/mastery', label: 'Mastery entry', desc: 'Log 1-2-3 ratings per student', icon: TrendingUp, accent: 'var(--success)' },
   { href: '/admin/question-bank', label: 'Question bank', desc: 'Author and organize items', icon: Database, accent: 'var(--primary)' },
