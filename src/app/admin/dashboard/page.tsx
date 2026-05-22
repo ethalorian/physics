@@ -1,296 +1,110 @@
-"use client"
-import { useState } from 'react'
-import { usePermissions } from '@/hooks/usePermissions'
-import { useViewMode } from '@/contexts/ViewModeContext'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  BookOpen, 
-  FileText, 
-  Users,
-  BarChart3,
-  TrendingUp,
-  Eye,
-  EyeOff,
-  Microscope,
-  Plus,
-  Gamepad2,
-  Database,
-  RefreshCw
-} from 'lucide-react'
-import AdminOverview from '@/components/admin/AdminOverview'
-import StudentActivityDashboard from '@/components/admin/StudentActivityDashboard'
-import StudentDetailView from '@/components/admin/StudentDetailView'
-import StudentManagement from '@/components/admin/StudentManagement'
-import Gradebook from '@/components/admin/Gradebook'
-import GlobalAssignmentHub from '@/components/admin/GlobalAssignmentHub'
-import AdminLessonBrowser from '@/components/admin/AdminLessonBrowser'
+import { auth } from '@/lib/auth'
+import { getUserRole } from '@/lib/permissions'
+import { redirect } from 'next/navigation'
+import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
 
-// Import student dashboard for view mode
-import { lazy, Suspense } from 'react'
-const StudentDashboard = lazy(() => import('@/app/dashboard/page'))
+// Manage hub — the real application: author lessons as content blocks, per unit.
+// (The launcher lives at /admin/home; this is where content gets built.)
 
-export default function AdminDashboard() {
-  const { isAuthenticated, canAccessAdmin, userRole } = usePermissions()
-  const { toggleViewMode, canToggleView, isViewModeOverride } = useViewMode()
-  const [activeTab, setActiveTab] = useState('overview')
-  const [selectedStudent, setSelectedStudent] = useState<string | null>(null)
-  const [studentView, setStudentView] = useState<'activity' | 'roster'>('activity')
+type LessonRow = {
+  id: string
+  slug: string
+  title: string
+  unit: string | null
+  lesson_number: number | null
+  published: boolean
+  content_blocks: { blocks?: unknown[] } | null
+}
+type UnitRow = { id: string; name: string; order_index: number }
 
-  if (!isAuthenticated) {
+function blockCount(l: LessonRow): number {
+  return Array.isArray(l.content_blocks?.blocks) ? l.content_blocks!.blocks!.length : 0
+}
+
+export default async function AdminManagePage() {
+  const session = await auth()
+  const role = session?.user?.email ? getUserRole(session.user.email) : 'student'
+  if (role !== 'admin' && role !== 'teacher') redirect('/home')
+
+  const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
+  const units = (unitRows ?? []) as UnitRow[]
+
+  const { data: lessonRows } = await supabaseAdmin
+    .from('lessons')
+    .select('id, slug, title, unit, lesson_number, published, content_blocks')
+  const lessons = (lessonRows ?? []) as LessonRow[]
+  lessons.sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
+
+  const { count: studentCount } = await supabaseAdmin.from('students').select('*', { count: 'exact', head: true })
+
+  const authored = lessons.filter((l) => blockCount(l) > 0).length
+  const lessonsByUnit = (unitName: string) => lessons.filter((l) => l.unit === unitName)
+  const orphanLessons = lessons.filter((l) => !units.some((u) => u.name === l.unit))
+
+  const tile = (value: number | string, label: string, accent: string) => (
+    <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <div className="text-2xl font-bold" style={{ color: accent }}>{value}</div>
+      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
+    </div>
+  )
+
+  const lessonRow = (l: LessonRow) => {
+    const n = blockCount(l)
     return (
-      <div className="max-w-md mx-auto mt-16 text-center">
-        <div className="bg-card border rounded-xl p-8 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">Authentication Required</h2>
-          <p className="text-muted-foreground mb-6">Please sign in to access the admin dashboard.</p>
+      <div key={l.id} className="flex items-center gap-3 flex-wrap py-3" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="flex-1 min-w-[12rem]">
+          <div className="text-sm font-medium">{l.lesson_number ? `${l.lesson_number}. ` : ''}{l.title}</div>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
+            {n > 0
+              ? <span style={{ color: 'var(--success)' }}>{n} block{n === 1 ? '' : 's'} authored</span>
+              : <span style={{ color: 'var(--destructive)' }}>Needs blocks</span>}
+            {!l.published && <span> · draft</span>}
+          </div>
         </div>
+        <Link href={`/admin/lessons/${l.id}/build`} className="text-xs font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Build blocks</Link>
+        <Link href={`/lessons/${l.slug}`} target="_blank" className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Preview</Link>
+        <Link href={`/admin/lessons/${l.id}/edit`} className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>Settings</Link>
       </div>
-    )
-  }
-
-  if (!canAccessAdmin) {
-    return (
-      <div className="max-w-md mx-auto mt-16 text-center">
-        <div className="bg-card border rounded-xl p-8 shadow-sm">
-          <h2 className="text-2xl font-bold mb-4">Access Denied</h2>
-          <p className="text-muted-foreground mb-2">You don&apos;t have permission to access the admin dashboard.</p>
-          <p className="text-sm text-muted-foreground">Your current role: {userRole}</p>
-        </div>
-      </div>
-    )
-  }
-
-  // If in student view mode, show the student dashboard
-  if (isViewModeOverride) {
-    return (
-      <Suspense fallback={
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      }>
-        <StudentDashboard />
-      </Suspense>
     )
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      {/* Compact Header */}
-      <div className="flex items-center justify-between">
+    <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Teacher Dashboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Manage your physics classroom
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">Manage</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Author your curriculum lessons as content blocks, unit by unit.</p>
         </div>
-        <div className="flex items-center gap-2">
-          {canToggleView && (
-            <Button
-              onClick={toggleViewMode}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <Eye className="h-4 w-4" />
-              <span className="hidden sm:inline">Student View</span>
-            </Button>
-          )}
-        </div>
+        <Link href="/admin/home" className="text-sm font-semibold rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>← Command center</Link>
       </div>
 
-      {/* Simplified 5-Tab Navigation */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full max-w-2xl grid-cols-5">
-          <TabsTrigger value="overview" className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            <span className="hidden sm:inline">Overview</span>
-          </TabsTrigger>
-          <TabsTrigger value="assignments" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">Assign</span>
-          </TabsTrigger>
-          <TabsTrigger value="gradebook" className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
-            <span className="hidden sm:inline">Grades</span>
-          </TabsTrigger>
-          <TabsTrigger value="students" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <span className="hidden sm:inline">Students</span>
-          </TabsTrigger>
-          <TabsTrigger value="content" className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" />
-            <span className="hidden sm:inline">Content</span>
-          </TabsTrigger>
-        </TabsList>
+      <div className="grid gap-3 my-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
+        {tile(lessons.length, 'Lessons', 'var(--primary)')}
+        {tile(authored, 'Authored as blocks', 'var(--success)')}
+        {tile(lessons.length - authored, 'Still need blocks', 'var(--destructive)')}
+        {tile(studentCount ?? 0, 'Enrolled students', 'var(--reward-foreground)')}
+      </div>
 
-        {/* ============================================= */}
-        {/* OVERVIEW TAB - Clean summary, no redundancy  */}
-        {/* ============================================= */}
-        <TabsContent value="overview" className="space-y-6">
-          <AdminOverview />
-        </TabsContent>
-
-        {/* ============================================= */}
-        {/* ASSIGNMENTS TAB - Full hub embedded directly */}
-        {/* ============================================= */}
-        <TabsContent value="assignments" className="space-y-6">
-          <GlobalAssignmentHub defaultTab="all" />
-        </TabsContent>
-
-        {/* ============================================= */}
-        {/* GRADEBOOK TAB                               */}
-        {/* ============================================= */}
-        <TabsContent value="gradebook" className="space-y-6">
-          <Gradebook />
-        </TabsContent>
-
-        {/* ============================================= */}
-        {/* STUDENTS TAB - Full student management      */}
-        {/* ============================================= */}
-        <TabsContent value="students" className="space-y-6">
-          {selectedStudent ? (
-            <StudentDetailView 
-              studentEmail={selectedStudent} 
-              onBack={() => setSelectedStudent(null)}
-            />
-          ) : (
-            <>
-              {/* View Toggle */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-bold tracking-tight">Students</h2>
-                  <p className="text-sm text-muted-foreground">
-                    {studentView === 'activity' ? 'Monitor student progress and engagement' : 'Sync roster from Google Classroom'}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant={studentView === 'activity' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setStudentView('activity')}
-                  >
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Activity
-                  </Button>
-                  <Button
-                    variant={studentView === 'roster' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setStudentView('roster')}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Roster Sync
-                  </Button>
-                </div>
-              </div>
-
-              {/* Content based on view */}
-              {studentView === 'activity' ? (
-                <StudentActivityDashboard 
-                  selectedStudent={selectedStudent || undefined}
-                  onStudentSelect={(email) => setSelectedStudent(email)}
-                />
-              ) : (
-                <StudentManagement />
-              )}
-            </>
-          )}
-        </TabsContent>
-
-        {/* ============================================= */}
-        {/* CONTENT TAB - All content management         */}
-        {/* ============================================= */}
-        <TabsContent value="content" className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold tracking-tight">Content Management</h2>
-              <p className="text-sm text-muted-foreground">Create and manage all educational content</p>
-            </div>
+      {units.map((u) => {
+        const us = lessonsByUnit(u.name)
+        if (us.length === 0) return null
+        return (
+          <div key={u.id} className="rounded-2xl border p-4 mb-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <div className="text-sm font-bold mb-1">{u.name}</div>
+            {us.map(lessonRow)}
           </div>
+        )
+      })}
 
-          {/* Content Quick Actions */}
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Link href="/admin/assignments/create">
-              <Card className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all h-full">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 bg-purple-500/10 rounded-lg">
-                      <Plus className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <CardTitle className="text-base">Create Assignment</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">Build homework with questions and AI grading</p>
-                </CardContent>
-              </Card>
-            </Link>
+      {orphanLessons.length > 0 && (
+        <div className="rounded-2xl border p-4 mb-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="text-sm font-bold mb-1">Other lessons</div>
+          {orphanLessons.map(lessonRow)}
+        </div>
+      )}
 
-            <Link href="/admin/simulations">
-              <Card className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all h-full">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 bg-amber-500/10 rounded-lg">
-                      <Microscope className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <CardTitle className="text-base">Simulations</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">Manage interactive physics labs</p>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link href="/admin/vocabulary">
-              <Card className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all h-full">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 bg-green-500/10 rounded-lg">
-                      <Gamepad2 className="h-5 w-5 text-green-600" />
-                    </div>
-                    <CardTitle className="text-base">Vocabulary</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">Create vocabulary sets for games</p>
-                </CardContent>
-              </Card>
-            </Link>
-
-            <Link href="/admin/question-bank">
-              <Card className="cursor-pointer hover:shadow-md hover:border-primary/50 transition-all h-full">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 bg-blue-500/10 rounded-lg">
-                      <Database className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <CardTitle className="text-base">Question Bank</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-xs text-muted-foreground">Centralized question repository</p>
-                </CardContent>
-              </Card>
-            </Link>
-          </div>
-
-          {/* Lessons Browser */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5" />
-                Lessons
-              </CardTitle>
-              <CardDescription>View and edit your physics lessons</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <AdminLessonBrowser />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+      {lessons.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No lessons yet.</p>}
     </div>
   )
 }
