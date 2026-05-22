@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
     const lessonIds = lessons.map((l) => l.id)
 
     // The student's block work for those lessons — latest per (lesson, block)
-    let work: { lessonTitle: string; blockType: string | null; blockId: string; response: unknown; createdAt: string }[] = []
+    const work: { lessonTitle: string; blockType: string | null; blockId: string; response: unknown; createdAt: string }[] = []
     if (lessonIds.length > 0) {
       const { data: blockRows } = await supabaseAdmin
         .from('block_responses')
