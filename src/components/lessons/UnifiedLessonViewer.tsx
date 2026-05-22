@@ -10,7 +10,7 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import MathMarkdown from '@/components/MathMarkdown'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
-import { ContentBlock } from '@/data/content-blocks'
+import { BlockDocument } from '@/data/content-blocks'
 import StudentLessonViewer from '@/components/lessons/StudentLessonViewer'
 import { 
   CheckCircle, 
@@ -67,7 +67,7 @@ interface UnifiedLessonViewerProps {
       estimated_time?: number
     }
     embedded_questions?: any[]
-    content_blocks?: ContentBlock[]
+    content_blocks?: BlockDocument
     question_timing?: 'before' | 'after' | 'mixed'
     objectives?: string[]
     prerequisites?: string[]
@@ -289,8 +289,8 @@ export default function UnifiedLessonViewer({
                 <CardContent className="pt-6">
                   {/* Content Tab */}
                   <TabsContent value="content" className="mt-0 space-y-6">
-                    {lesson.content_blocks && lesson.content_blocks.length > 0 ? (
-                      <BlockRenderer blocks={lesson.content_blocks} lessonId={lesson.id} />
+                    {lesson.content_blocks && lesson.content_blocks.blocks && lesson.content_blocks.blocks.length > 0 ? (
+                      <BlockRenderer blocks={lesson.content_blocks.blocks} lessonId={lesson.id} />
                     ) : (
                       <>
                         {lesson.lesson_type === 'simulation' && lesson.simulation && (
