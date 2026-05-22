@@ -4,6 +4,7 @@ import { useState } from 'react'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
+import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import { useBlockResponses } from './useBlockResponses'
 
 const C = {
@@ -79,38 +80,7 @@ function TextCapture({
   )
 }
 
-interface GewaValue { given?: string; equation?: string; work?: string; answer?: string }
-function GewaInput({ prompt, givenHint, equationHint, value, onSave }: { prompt: string; givenHint?: string; equationHint?: string; value?: GewaValue; onSave: (v: GewaValue) => void }) {
-  const [g, setG] = useState<GewaValue>(value ?? {})
-  const [saved, setSaved] = useState(false)
-  const field = (key: keyof GewaValue, label: string, hint?: string) => (
-    <div>
-      <div className="text-xs font-medium" style={{ color: 'var(--secondary-foreground)' }}>{label}{hint ? ` — ${hint}` : ''}</div>
-      <textarea
-        value={g[key] ?? ''}
-        onChange={(e) => { setG((p) => ({ ...p, [key]: e.target.value })); setSaved(false) }}
-        rows={key === 'work' ? 4 : 2}
-        className="w-full rounded-md border p-2 text-sm mt-1"
-        style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}
-      />
-    </div>
-  )
-  return (
-    <div>
-      <p className="text-sm mb-2" style={{ color: C.indigo }}>{prompt}</p>
-      <div className="space-y-2">
-        {field('given', 'GIVEN', givenHint)}
-        {field('equation', 'EQUATION', equationHint)}
-        {field('work', 'WORK')}
-        {field('answer', 'ANSWER')}
-      </div>
-      <div className="flex items-center gap-2 mt-2">
-        <button onClick={() => { onSave(g); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}>Save work</button>
-        {saved && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
-      </div>
-    </div>
-  )
-}
+// GEWA is now the staged interactive component in ./GewaInteractive.
 
 function SimEmbed({ slug, title }: { slug: string; title?: string }) {
   return (
@@ -216,7 +186,7 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
     case 'exit_ticket':
       return <Card><TextCapture prompt={b.prompt} frame={b.frame} value={saved as string | undefined} onSave={(t) => save(b.id, 'exit_ticket', t)} /></Card>
     case 'gewa':
-      return <Card><GewaInput prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} /></Card>
+      return <Card><GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} /></Card>
     case 'observation':
       return (
         <Card>

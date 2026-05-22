@@ -97,6 +97,7 @@ export interface GewaBlock extends BaseBlock {
   prompt: string;
   givenHint?: string;
   equationHint?: string;      // student fills GIVEN / EQUATION / WORK / ANSWER; saved + AI-gradable
+  equationOptions?: string[]; // optional equation bank (recognition-by-sight); falls back to a kinematics set
 }
 
 export interface ExitTicketBlock extends BaseBlock {

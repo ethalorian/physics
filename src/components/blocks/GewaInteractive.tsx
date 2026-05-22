@@ -1,0 +1,192 @@
+"use client"
+
+import { useState } from 'react'
+
+// Saved shape stays string-based so the teacher control-room rate-from-work
+// drawer (which reads given/equation/work/answer) keeps rendering it.
+export interface GewaValue {
+  given?: string
+  equation?: string
+  work?: string
+  answer?: string
+}
+
+interface Chip { sym: string; val: string; unit: string }
+
+interface GewaInteractiveProps {
+  prompt: string
+  givenHint?: string
+  equationHint?: string
+  equationOptions?: string[]
+  value?: GewaValue
+  onSave: (v: GewaValue) => void
+}
+
+const DEFAULT_EQUATIONS = ['v = d / t', 'd = v × t', 'a = Δv / Δt', 'v = v₀ + a·t', 'd = v₀·t + ½at²']
+const SYMBOLS = ['d', 't', 'v', 'a', 'v₀', 'x', 'm', 'F']
+const UNITS = ['m', 'km', 'cm', 's', 'min', 'h', 'm/s', 'km/h', 'm/s²', 'kg', 'N']
+
+function parseGiven(s?: string): Chip[] {
+  if (!s) return [{ sym: '', val: '', unit: '' }]
+  const parts = s.split(';').map((p) => p.trim()).filter(Boolean)
+  if (parts.length === 0) return [{ sym: '', val: '', unit: '' }]
+  return parts.map((piece): Chip => {
+    const m = piece.match(/^(\S+)\s*=\s*([\d.\-]+)\s*(.*)$/)
+    if (m) return { sym: m[1], val: m[2], unit: (m[3] || '').trim() }
+    return { sym: '', val: piece, unit: '' }
+  })
+}
+
+const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
+
+export default function GewaInteractive({ prompt, givenHint, equationHint, equationOptions, value, onSave }: GewaInteractiveProps) {
+  const equations = equationOptions && equationOptions.length > 0 ? equationOptions : DEFAULT_EQUATIONS
+  const [chips, setChips] = useState<Chip[]>(parseGiven(value?.given))
+  const [equation, setEquation] = useState(value?.equation ?? '')
+  const [work, setWork] = useState(value?.work ?? '')
+  const [answer, setAnswer] = useState(value?.answer ?? '')
+  const [nudges, setNudges] = useState<{ ok: boolean; msg: string }[]>([])
+  const [saved, setSaved] = useState(false)
+
+  const setChip = (i: number, patch: Partial<Chip>) => {
+    setChips((prev) => prev.map((c, idx) => (idx === i ? { ...c, ...patch } : c)))
+    setSaved(false)
+  }
+  const addChip = () => setChips((prev) => [...prev, { sym: '', val: '', unit: '' }])
+  const removeChip = (i: number) => setChips((prev) => (prev.length > 1 ? prev.filter((_, idx) => idx !== i) : prev))
+
+  const givenString = () =>
+    chips
+      .filter((c) => c.sym || c.val)
+      .map((c) => `${c.sym}${c.sym ? ' = ' : ''}${c.val}${c.unit ? ' ' + c.unit : ''}`.trim())
+      .join('; ')
+
+  const buildValue = (): GewaValue => ({ given: givenString(), equation, work, answer })
+
+  const runCheck = () => {
+    const filled = chips.filter((c) => c.sym || c.val).length
+    const n: { ok: boolean; msg: string }[] = [
+      filled >= 2 ? { ok: true, msg: `You listed ${filled} knowns.` } : { ok: false, msg: 'Add at least the two knowns the problem gives you.' },
+      equation ? { ok: true, msg: `Equation chosen: ${equation}.` } : { ok: false, msg: 'Choose an equation before you solve.' },
+      work.trim().length > 8 ? { ok: true, msg: 'You showed your substitution and steps.' } : { ok: false, msg: 'Show your work — substitute the values into your equation.' },
+      /[a-z/]/i.test(answer) && /\d/.test(answer) ? { ok: true, msg: 'Your answer has a number and a unit.' } : { ok: false, msg: 'Your answer needs both a number and a unit.' },
+    ]
+    setNudges(n)
+  }
+
+  const handleSave = () => {
+    onSave(buildValue())
+    setSaved(true)
+    runCheck()
+  }
+
+  const badge = (l: string, color: string) => (
+    <span className="grid place-items-center font-extrabold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: 'var(--primary-foreground)' }}>{l}</span>
+  )
+
+  return (
+    <div className="flex flex-col gap-4">
+      <p className="text-sm" style={{ color: 'var(--foreground)' }}>{prompt}</p>
+
+      {/* GIVEN */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">{badge('G', 'var(--primary)')}<span className="text-sm font-semibold">Given — pull out what you know</span></div>
+        {givenHint && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{givenHint}</p>}
+        <div className="flex flex-col gap-2">
+          {chips.map((c, i) => (
+            <div key={i} className="flex items-center gap-2 flex-wrap">
+              <select value={c.sym} onChange={(e) => setChip(i, { sym: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 80, fontWeight: 700 }}>
+                <option value="">sym</option>
+                {SYMBOLS.map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+              <span style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>=</span>
+              <input value={c.val} onChange={(e) => setChip(i, { val: e.target.value })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 100 }} />
+              <select value={c.unit} onChange={(e) => setChip(i, { unit: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 92 }}>
+                <option value="">unit</option>
+                {UNITS.map((u) => <option key={u} value={u}>{u}</option>)}
+              </select>
+              <button onClick={() => removeChip(i)} className="ml-auto text-lg" style={{ color: 'var(--muted-foreground)' }} aria-label="remove">×</button>
+            </div>
+          ))}
+        </div>
+        <button onClick={addChip} className="mt-2 rounded-lg border px-3 py-2 text-xs font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--primary)', borderStyle: 'dashed' }}>+ Add a known</button>
+      </div>
+
+      {/* EQUATION */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">{badge('E', 'var(--primary)')}<span className="text-sm font-semibold">Equation — recognize the one that fits</span></div>
+        {equationHint && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{equationHint}</p>}
+        <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))' }}>
+          {equations.map((eq) => {
+            const sel = equation === eq
+            return (
+              <button
+                key={eq}
+                onClick={() => { setEquation(eq); setSaved(false) }}
+                className="rounded-lg border px-3 py-2.5 text-center"
+                style={{
+                  borderColor: sel ? 'var(--primary)' : 'var(--border)',
+                  background: sel ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : 'var(--card)',
+                  fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: 15, color: 'var(--foreground)',
+                }}
+              >
+                {eq}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* WORK */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">{badge('W', 'var(--success)')}<span className="text-sm font-semibold">Work — substitute and solve</span></div>
+        {equation && (
+          <div className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--foreground)' }}>
+            Working from: <b style={{ fontFamily: 'Georgia, serif' }}>{equation}</b>
+          </div>
+        )}
+        <textarea
+          value={work}
+          onChange={(e) => { setWork(e.target.value); setSaved(false) }}
+          rows={4}
+          placeholder="Substitute your knowns and show every step — units included."
+          className="w-full rounded-lg border p-3 text-sm"
+          style={{ ...fieldBg, fontFamily: 'Georgia, serif', lineHeight: 1.7 }}
+        />
+      </div>
+
+      {/* ANSWER */}
+      <div>
+        <div className="flex items-center gap-2 mb-2">{badge('A', 'var(--success)')}<span className="text-sm font-semibold">Answer — a number with meaning</span></div>
+        <input
+          value={answer}
+          onChange={(e) => { setAnswer(e.target.value); setSaved(false) }}
+          placeholder="e.g.  36,000 km/h — the asteroid covers 36,000 km every hour"
+          className="w-full rounded-lg border p-3 text-sm"
+          style={fieldBg}
+        />
+      </div>
+
+      {/* check + save */}
+      <div className="flex items-center gap-2">
+        <button onClick={runCheck} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Check my work</button>
+        <button onClick={handleSave} className="rounded-lg px-3 py-2 text-sm font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Save work</button>
+        {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
+      </div>
+
+      {nudges.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {nudges.map((nd, i) => (
+            <div key={i} className="flex items-start gap-2 rounded-lg px-3 py-2 text-sm" style={{ background: nd.ok ? 'color-mix(in oklch, var(--success) 13%, transparent)' : 'color-mix(in oklch, var(--reward) 18%, transparent)', color: nd.ok ? 'var(--success)' : 'var(--reward-foreground)' }}>
+              <span style={{ fontWeight: 800 }}>{nd.ok ? '✓' : '⚠'}</span>
+              <span>{nd.msg}</span>
+            </div>
+          ))}
+          <p className="text-xs" style={{ color: 'var(--muted-foreground)', fontStyle: 'italic' }}>
+            These check your setup, not whether the number is &ldquo;right.&rdquo; Your teacher reads your work and sets your mastery score.
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
