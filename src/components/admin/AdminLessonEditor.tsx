@@ -184,11 +184,18 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
             
             <div className="flex gap-2">
               <Button
+                size="sm"
+                onClick={() => router.push(`/admin/lessons/${lesson.id}/build`)}
+              >
+                <BookOpen className="h-4 w-4 mr-2" />
+                Build blocks
+              </Button>
+              <Button
                 variant="outline"
                 size="sm"
                 asChild
               >
-                <a 
+                <a
                   href={`/lessons/${formData.slug}`}
                   target="_blank"
                   rel="noopener noreferrer"
