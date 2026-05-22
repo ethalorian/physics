@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import {
   LayoutGrid, Gift, TrendingUp, Database, Microscope, Gamepad2,
-  FileText, Settings, Eye, Users, Activity, BookOpen, Award, Sparkles,
+  Settings, Eye, Users, Activity, BookOpen, Award, Sparkles,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -28,7 +28,6 @@ const TOOLS: { href: string; label: string; desc: string; icon: Icon; accent: st
   { href: '/admin/question-bank', label: 'Question bank', desc: 'Author and organize items', icon: Database, accent: 'var(--primary)' },
   { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the 15 interactive labs', icon: Microscope, accent: 'var(--primary)' },
   { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the 7 review games', icon: Gamepad2, accent: 'var(--reward)' },
-  { href: '/admin/assignments/create', label: 'New assignment', desc: 'Create work that earns points', icon: FileText, accent: 'var(--success)' },
   { href: '/admin/dashboard', label: 'Admin tools', desc: 'Roster, sections, media & more', icon: Settings, accent: 'var(--muted-foreground)' },
   { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
 ]
