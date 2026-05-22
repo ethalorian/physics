@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BlockDocument } from '@/data/content-blocks'
 
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
 // ---------------------------------------------------------------------------
-type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms'
+type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref'
 interface FieldDef { key: string; label: string; kind: FieldKind; options?: string[]; placeholder?: string }
 interface BlockDef { type: string; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
@@ -43,7 +43,7 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'wordBank', label: 'Word bank', kind: 'stringlist' },
   ] },
   { type: 'sim_embed', label: 'Simulation embed', group: 'Teach', fields: [
-    { key: 'simulationSlug', label: 'Simulation slug', kind: 'text' },
+    { key: 'simulationSlug', label: 'Simulation', kind: 'simref' },
   ] },
   { type: 'doodle', label: 'Doodle / sketch', group: 'Practice', capture: true, fields: [
     { key: 'instruction', label: 'Instruction', kind: 'text' },
@@ -98,6 +98,16 @@ export default function LessonBlockBuilder({
   const [blocks, setBlocks] = useState<BlockState[]>(fromDocument(initial))
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
+  const [sims, setSims] = useState<{ slug: string; title: string }[]>([])
+
+  useEffect(() => {
+    fetch('/api/simulations')
+      .then((r) => r.json())
+      .then((d: { simulations?: { slug: string; title: string }[] }) => {
+        setSims((d.simulations ?? []).map((s) => ({ slug: s.slug, title: s.title })))
+      })
+      .catch(() => {})
+  }, [])
 
   const addBlock = (type: string) => setBlocks((prev) => [...prev, { id: mkId(), type, data: {} }])
   const removeBlock = (id: string) => setBlocks((prev) => prev.filter((b) => b.id !== id))
@@ -168,7 +178,7 @@ export default function LessonBlockBuilder({
                 </div>
                 <div className="flex flex-col gap-3">
                   {(def?.fields ?? []).map((f) => (
-                    <FieldEditor key={f.key} field={f} value={b.data[f.key]} onChange={(v) => setField(b.id, f.key, v)} />
+                    <FieldEditor key={f.key} field={f} value={b.data[f.key]} sims={sims} onChange={(v) => setField(b.id, f.key, v)} />
                   ))}
                 </div>
               </div>
@@ -200,8 +210,22 @@ export default function LessonBlockBuilder({
 // ---------------------------------------------------------------------------
 // Field editors
 // ---------------------------------------------------------------------------
-function FieldEditor({ field, value, onChange }: { field: FieldDef; value: unknown; onChange: (v: unknown) => void }) {
+function FieldEditor({ field, value, onChange, sims }: { field: FieldDef; value: unknown; onChange: (v: unknown) => void; sims?: { slug: string; title: string }[] }) {
   const label = <div className="text-xs font-semibold mb-1" style={{ color: 'var(--secondary-foreground)' }}>{field.label}</div>
+
+  if (field.kind === 'simref') {
+    const cur = String(value ?? '')
+    const list = sims ?? []
+    return (
+      <div>{label}
+        <select value={cur} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border p-2 text-sm" style={inputStyle}>
+          <option value="">Choose a simulation…</option>
+          {cur && !list.some((s) => s.slug === cur) && <option value={cur}>{cur} (current)</option>}
+          {list.map((s) => <option key={s.slug} value={s.slug}>{s.title}</option>)}
+        </select>
+      </div>
+    )
+  }
 
   if (field.kind === 'textarea') {
     return <div>{label}<textarea value={String(value ?? '')} onChange={(e) => onChange(e.target.value)} rows={3} className="w-full rounded-lg border p-2 text-sm" style={inputStyle} /></div>
