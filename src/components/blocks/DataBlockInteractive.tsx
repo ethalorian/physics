@@ -28,7 +28,7 @@ function blankGrid(cols: number, rows: number): string[][] {
 const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
 
 export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, patternPrompt, value, onSave }: DataBlockProps) {
-  const cols = columns.length > 0 ? columns : ['x', 'y']
+  const cols = columns && columns.length > 0 ? columns : ['x', 'y']
   const xi = xCol ?? 0
   const yi = yCol ?? 1
   const showPlot = (plot ?? cols.length >= 2) && cols.length >= 2

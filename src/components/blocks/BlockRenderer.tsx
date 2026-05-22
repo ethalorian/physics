@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, Component, type ReactNode } from 'react'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
@@ -136,7 +136,7 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
         <Card>
           <div className="text-xs font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Key terms</div>
           <dl className="space-y-1.5">
-            {b.terms.map((t, i) => (
+            {(b.terms ?? []).map((t, i) => (
               <div key={i} className="text-sm">
                 <span style={{ color: C.indigo, fontWeight: 500 }}>{t.term}</span>
                 {t.cognate && <span style={{ color: C.muted }}> · {t.cognate}</span>}
@@ -203,12 +203,31 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
   }
 }
 
+// One block crashing must never take down the whole lesson — contain it.
+class BlockBoundary extends Component<{ label?: string; children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  componentDidCatch(error: unknown) { console.error('Block render error', this.props.label, error) }
+  render() {
+    if (this.state.failed) {
+      return (
+        <div className="text-sm rounded-lg border p-3" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)', background: 'var(--card)' }}>
+          This part of the lesson couldn&apos;t load.
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
+
 export default function BlockRenderer({ blocks, lessonId }: { blocks: ContentBlock[]; lessonId: string }) {
   const { responses, save } = useBlockResponses(lessonId)
   return (
     <div className="space-y-5">
       {blocks.map((b) => (
-        <div key={b.id}>{renderBlock(b, responses[b.id]?.response, save)}</div>
+        <div key={b.id}>
+          <BlockBoundary label={b.type}>{renderBlock(b, responses[b.id]?.response, save)}</BlockBoundary>
+        </div>
       ))}
     </div>
   )
