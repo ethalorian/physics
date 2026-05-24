@@ -5,14 +5,15 @@ import { RotationCalendar } from '@/lib/rotation'
 export async function loadRotationCalendar(): Promise<RotationCalendar> {
   const { data } = await supabaseAdmin
     .from('rotation_calendar')
-    .select('anchor_date, anchor_p1_block, no_school_dates')
+    .select('anchor_date, anchor_p1_block, no_school_dates, cycle_offset')
     .eq('id', 'default')
     .maybeSingle()
-  const row = data as { anchor_date: string | null; anchor_p1_block: string | null; no_school_dates: string[] | null } | null
+  const row = data as { anchor_date: string | null; anchor_p1_block: string | null; no_school_dates: string[] | null; cycle_offset: number | null } | null
   return {
     anchor_date: row?.anchor_date ?? null,
     anchor_p1_block: row?.anchor_p1_block ?? null,
     no_school_dates: row?.no_school_dates ?? [],
+    cycle_offset: row?.cycle_offset ?? 0,
   }
 }
 

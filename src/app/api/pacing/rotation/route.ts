@@ -29,7 +29,7 @@ export async function PUT(request: NextRequest) {
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     if (getUserRole(session.user.email) !== 'admin') return NextResponse.json({ error: 'Only the admin can set the rotation calendar' }, { status: 403 })
 
-    const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[] }
+    const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[]; cycle_offset?: number }
     const p1 = body.anchor_p1_block ? body.anchor_p1_block.toUpperCase() : null
     if (p1 && !ROTATING_BLOCKS.includes(p1 as typeof ROTATING_BLOCKS[number])) {
       return NextResponse.json({ error: 'Period-1 block must be A–F (G is fixed at period 2)' }, { status: 400 })
@@ -40,6 +40,7 @@ export async function PUT(request: NextRequest) {
       anchor_date: body.anchor_date ?? null,
       anchor_p1_block: p1,
       no_school_dates: Array.isArray(body.no_school_dates) ? body.no_school_dates : [],
+      cycle_offset: Number.isInteger(body.cycle_offset) ? body.cycle_offset : 0,
       updated_at: new Date().toISOString(),
     }
     const { error } = await supabaseAdmin.from('rotation_calendar').upsert(row, { onConflict: 'id' })

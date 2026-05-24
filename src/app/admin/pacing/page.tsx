@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders } from 'lucide-react'
+import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
 import { getUserRole } from '@/lib/permissions'
+import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
 
 interface Course { id: string; name: string; section: string | null; google_course_id: string | null }
 interface PlanItem { index: number; title: string; lessonId: string | null; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number }
@@ -98,6 +99,7 @@ function RotationEditor() {
   const [anchorDate, setAnchorDate] = useState('')
   const [p1, setP1] = useState('A')
   const [noSchool, setNoSchool] = useState<string[]>([])
+  const [offset, setOffset] = useState(0)
   const [newOff, setNewOff] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -110,19 +112,39 @@ function RotationEditor() {
       setAnchorDate(c.anchor_date ?? '')
       setP1(c.anchor_p1_block ?? 'A')
       setNoSchool(c.no_school_dates ?? [])
+      setOffset(c.cycle_offset ?? 0)
       setLoaded(true)
     }).catch(() => setLoaded(true))
   }, [open, loaded])
 
-  const save = async () => {
+  const persist = async (over: { offset?: number } = {}) => {
     setSaving(true); setSaved(false)
     try {
       const res = await fetch('/api/pacing/rotation', {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ anchor_date: anchorDate || null, anchor_p1_block: p1, no_school_dates: noSchool }),
+        body: JSON.stringify({ anchor_date: anchorDate || null, anchor_p1_block: p1, no_school_dates: noSchool, cycle_offset: over.offset ?? offset }),
       })
       if (res.ok) setSaved(true)
     } finally { setSaving(false) }
+  }
+  const save = () => persist()
+  const nudge = (delta: number) => { const next = offset + delta; setOffset(next); persist({ offset: next }) }
+
+  // Live readout: resolve the next school day from today using the current fields.
+  const cal: RotationCalendar = { anchor_date: anchorDate || null, anchor_p1_block: p1, no_school_dates: noSchool, cycle_offset: offset }
+  let readout: string | null = null
+  if (anchorDate) {
+    const noSet = new Set(noSchool)
+    const d = new Date()
+    d.setUTCHours(0, 0, 0, 0)
+    let guard = 0
+    while (!isSchoolDay(d, noSet) && guard < 14) { d.setUTCDate(d.getUTCDate() + 1); guard++ }
+    const cd = cycleDayForDate(cal, d)
+    if (cd !== null) {
+      const B = ROTATING_BLOCKS
+      const order = `P1 ${B[cd]} · P2 G · P3 ${B[(cd + 1) % 6]} · P4 ${B[(cd + 2) % 6]} · P5 ${B[(cd + 3) % 6]} (long) · P6 ${B[(cd + 4) % 6]}`
+      readout = `${d.toISOString().slice(0, 10)} → Day ${cd + 1}: ${order} — ${droppedBlock(cd)} drops`
+    }
   }
 
   return (
@@ -164,6 +186,24 @@ function RotationEditor() {
                 className="text-xs rounded-md border px-2 py-1" style={{ borderColor: 'var(--border)' }}>Add</button>
             </div>
           </div>
+          {/* nudge to make the rotation current */}
+          <div className="mt-4 rounded-xl border p-3" style={{ borderColor: 'var(--border)' }}>
+            <div className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>
+              If the live rotation has drifted (snow day, late start, assembly), nudge it until the next school day below matches reality. Offset: <b style={{ color: 'var(--foreground)' }}>{offset > 0 ? `+${offset}` : offset}</b>
+            </div>
+            <div className="flex items-center gap-2">
+              <button onClick={() => nudge(-1)} disabled={saving || !anchorDate}
+                className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
+                <ChevronLeft size={14} /> Back a day
+              </button>
+              <button onClick={() => nudge(1)} disabled={saving || !anchorDate}
+                className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
+                Forward a day <ChevronRight size={14} />
+              </button>
+            </div>
+            {readout && <div className="text-xs mt-2 font-medium" style={{ color: 'var(--foreground)' }}>{readout}</div>}
+          </div>
+
           <div className="flex items-center gap-2 mt-3">
             <button onClick={save} disabled={saving || !anchorDate}
               className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving || !anchorDate ? 0.6 : 1 }}>

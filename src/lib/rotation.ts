@@ -21,6 +21,7 @@ export interface RotationCalendar {
   anchor_date: string | null       // 'YYYY-MM-DD' — a known school day
   anchor_p1_block: string | null   // block in period 1 on anchor_date (A-F)
   no_school_dates: string[]
+  cycle_offset: number             // manual nudge to shift the whole rotation +/- days
 }
 
 function utc(d: string): Date { return new Date(d + 'T00:00:00Z') }
@@ -57,7 +58,8 @@ export function cycleDayForDate(cal: RotationCalendar, date: Date): number | nul
   // school days elapsed since anchor (anchor itself = index 0)
   const elapsed = schoolDaysBetween(anchor, date, noSchool) - 1
   if (elapsed < 0) return null
-  return (anchorPos + elapsed) % 6
+  const offset = cal.cycle_offset ?? 0
+  return (((anchorPos + elapsed + offset) % 6) + 6) % 6
 }
 
 // Which rotating block drops on a given cycle day.
