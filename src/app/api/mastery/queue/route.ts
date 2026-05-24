@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
 // The grading queue: every roster student with UNGRADED work in the unit (block
@@ -42,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     // roster (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin.from('students').select('google_user_id, name').order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.eq('teacher_email', session.user.email)
+    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(session.user.email))
     const { data: sr } = await sQuery
     const students = ((sr ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name ?? 'Student' }))
     const studentIds = students.map((s) => s.id)

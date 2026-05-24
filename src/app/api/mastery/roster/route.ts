@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/roster
 // Returns the signed-in teacher's students as { id, name, email }.
@@ -29,9 +30,10 @@ export async function GET() {
       .select('google_user_id, name, email')
       .order('name', { ascending: true })
 
-    // Admins see all students; teachers see their own.
+    // Admins see all students; teachers see students enrolled in courses they own
+    // (students has no teacher_email column — scope flows through courses).
     if (role === 'teacher') {
-      query = query.eq('teacher_email', session.user.email)
+      query = query.in('google_user_id', await getTeacherStudentGids(session.user.email))
     }
 
     const { data, error } = await query

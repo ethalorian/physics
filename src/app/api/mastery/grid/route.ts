@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/grid?unit_id=unit-1
 // Class mastery grid: every student (the teacher's roster) x every learning target
@@ -49,7 +50,7 @@ export async function GET(request: NextRequest) {
       .from('students')
       .select('google_user_id, name, email')
       .order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.eq('teacher_email', session.user.email)
+    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(session.user.email))
     const { data: studentRowsRaw } = await sQuery
     const students = ((studentRowsRaw ?? []) as StudentRow[])
       .filter((s) => s.google_user_id)

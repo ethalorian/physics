@@ -66,6 +66,19 @@ export async function GET() {
       }
 
       if (courses && courses.length > 0) {
+        // courses.student_count is unreliable (the count RPC is a no-op), so for
+        // staff compute live enrollment counts from course_students.
+        const countByCourse = new Map<string, number>()
+        if (userRole !== 'student') {
+          const { data: cs } = await supabaseAdmin
+            .from('course_students')
+            .select('course_id')
+            .in('course_id', courses.map((c) => c.id))
+          for (const row of (cs ?? []) as { course_id: string }[]) {
+            countByCourse.set(row.course_id, (countByCourse.get(row.course_id) ?? 0) + 1)
+          }
+        }
+
         // Transform to consistent format
         const formattedCourses = courses.map(course => ({
           id: course.id || course.google_course_id,
@@ -73,7 +86,7 @@ export async function GET() {
           name: course.name,
           section: course.section,
           description: course.description,
-          student_count: course.student_count || 0,
+          student_count: countByCourse.get(course.id) ?? course.student_count ?? 0,
           teacher_email: course.teacher_email,
           created_at: course.created_at,
           updated_at: course.updated_at

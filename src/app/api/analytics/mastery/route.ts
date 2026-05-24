@@ -14,7 +14,9 @@ import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 // course_students.student_id references students.id (UUID), so we bridge
 // UUID -> google_user_id to attach class membership to the analytics students.
 
-type StudentRow = { id: string; google_user_id: string | null; name: string | null; teacher_email: string | null }
+// NOTE: the students table has NO teacher_email column — a student's teacher is
+// derived from the course(s) they're enrolled in (courses.teacher_email).
+type StudentRow = { id: string; google_user_id: string | null; name: string | null }
 type TargetRow = { id: string; statement: string; domain: string; unit_id: string; order_index: number }
 type UnitRow = { id: string; name: string; order_index: number }
 type CourseRow = { id: string; name: string | null; section: string | null; teacher_email: string | null }
@@ -32,7 +34,7 @@ export async function GET() {
     const [unitsRes, targetsRes, studentsRes, coursesRes, csRes] = await Promise.all([
       supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true }),
       supabaseAdmin.from('learning_targets').select('id, statement, domain, unit_id, order_index').order('order_index', { ascending: true }),
-      supabaseAdmin.from('students').select('id, google_user_id, name, teacher_email'),
+      supabaseAdmin.from('students').select('id, google_user_id, name'),
       supabaseAdmin.from('courses').select('id, name, section, teacher_email'),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
     ])
@@ -58,13 +60,18 @@ export async function GET() {
       arr.push(gid)
       classMembers.set(cs.course_id, arr)
     }
-    // google_user_id -> [courseId]
+    // google_user_id -> [courseId], and google_user_id -> teacher (first course wins)
+    const teacherByCourse = new Map<string, string | null>()
+    for (const c of courseRows) teacherByCourse.set(c.id, c.teacher_email)
     const classIdsByStudent = new Map<string, string[]>()
+    const teacherByStudent = new Map<string, string>()
     for (const [courseId, gids] of classMembers) {
       for (const gid of gids) {
         const arr = classIdsByStudent.get(gid) ?? []
         arr.push(courseId)
         classIdsByStudent.set(gid, arr)
+        const t = teacherByCourse.get(courseId)
+        if (t && !teacherByStudent.has(gid)) teacherByStudent.set(gid, t)
       }
     }
 
@@ -78,16 +85,18 @@ export async function GET() {
 
     const students = studentRows
       .filter((s) => s.google_user_id)
-      .map((s) => ({
-        id: s.google_user_id as string,
-        name: s.name ?? 'Student',
-        teacher: s.teacher_email,
-        classIds: classIdsByStudent.get(s.google_user_id as string) ?? [],
-      }))
+      .map((s) => {
+        const gid = s.google_user_id as string
+        return {
+          id: gid,
+          name: s.name ?? 'Student',
+          teacher: teacherByStudent.get(gid) ?? null,
+          classIds: classIdsByStudent.get(gid) ?? [],
+        }
+      })
 
-    // teachers: union of teacher emails on students and courses
+    // teachers: from the courses (the only place teacher_email lives)
     const teacherSet = new Set<string>()
-    for (const s of studentRows) if (s.teacher_email) teacherSet.add(s.teacher_email)
     for (const c of courseRows) if (c.teacher_email) teacherSet.add(c.teacher_email)
     const teachers = [...teacherSet].sort()
 
