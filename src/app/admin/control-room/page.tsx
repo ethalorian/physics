@@ -19,6 +19,8 @@ interface WorkItem { lessonTitle: string; blockType: string | null; blockId: str
 interface RecordItem { target_id: string; level: number; observed_at: string }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
+interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
+
 const EVIDENCE = ['observation', 'exit ticket', 'lab', 'conversation', 'quiz']
 
 // value (1..3 float) -> band 1/2/3 (0 = not rated)
@@ -113,6 +115,8 @@ export default function ControlRoomPage() {
   const [saving, setSaving] = useState(false)
   const [suggestion, setSuggestion] = useState<{ level: number; rationale: string } | null>(null)
   const [suggesting, setSuggesting] = useState(false)
+  const [queue, setQueue] = useState<QueueItem[]>([])
+  const [nameFilter, setNameFilter] = useState('')
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -127,6 +131,14 @@ export default function ControlRoomPage() {
   }, [])
 
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
+
+  const loadQueue = useCallback((unit: string) => {
+    fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}`)
+      .then((r) => r.json())
+      .then((d: { queue?: QueueItem[] }) => setQueue(d.queue ?? []))
+      .catch(() => {})
+  }, [])
+  useEffect(() => { loadQueue(unitId) }, [unitId, loadQueue])
 
   const openCell = useCallback((studentId: string, targetId: string) => {
     setSel({ studentId, targetId })
@@ -173,8 +185,9 @@ export default function ControlRoomPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: sel.studentId, user_email: student?.email ?? null, target_id: sel.targetId, level, evidence_source: evidence }),
       })
-      // Refresh the grid so the cell reflects the new rolled value.
+      // Refresh the grid + queue so the cell and queue reflect the new rating.
       loadGrid(unitId)
+      loadQueue(unitId)
       // Column-first: advance to the next student on the SAME target.
       const idx = grid.students.findIndex((s) => s.id === sel.studentId)
       const next = grid.students[idx + 1]
@@ -201,17 +214,51 @@ export default function ControlRoomPage() {
             Tap any cell to open that student&apos;s work and rate it. These scores drive each student&apos;s Retry lane.
           </p>
         </div>
-        <select
-          value={unitId}
-          onChange={(e) => setUnitId(e.target.value)}
-          className="rounded-lg text-sm px-3 py-2"
-          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
-        >
-          {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
-            <option key={u.id} value={u.id}>{u.name}</option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2">
+          <input
+            value={nameFilter}
+            onChange={(e) => setNameFilter(e.target.value)}
+            placeholder="Filter students…"
+            className="rounded-lg text-sm px-3 py-2"
+            style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 160 }}
+          />
+          <select
+            value={unitId}
+            onChange={(e) => setUnitId(e.target.value)}
+            className="rounded-lg text-sm px-3 py-2"
+            style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+          >
+            {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
+              <option key={u.id} value={u.id}>{u.name}</option>
+            ))}
+          </select>
+        </div>
       </div>
+
+      {/* grading queue — most urgent first */}
+      {queue.length > 0 && (
+        <div className="rounded-xl border mt-4 p-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
+          <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Needs grading · {queue.length}</div>
+          <div className="flex flex-col gap-1.5">
+            {queue.map((q) => (
+              <div key={q.studentId} className="flex items-center gap-3 flex-wrap rounded-lg px-3 py-2" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+                <span className="text-sm font-semibold flex-1" style={{ minWidth: '8rem' }}>{q.name}</span>
+                {q.aged && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--destructive) 16%, transparent)', color: 'var(--destructive)' }}>48h+ waiting</span>}
+                {q.needsHelp && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 26%, transparent)', color: 'var(--reward-foreground)' }}>self: Not yet</span>}
+                <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{q.count} item{q.count === 1 ? '' : 's'} · waiting {q.oldestAgeHours}h</span>
+                <button
+                  onClick={() => { if (grid && grid.targets[0]) openCell(q.studentId, grid.targets[0].id) }}
+                  disabled={!grid || grid.targets.length === 0}
+                  className="text-xs font-bold rounded-lg px-3 py-1.5 disabled:opacity-50"
+                  style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+                >
+                  Grade →
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {error && <div className="text-sm rounded-md px-3 py-2 my-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{error}</div>}
       {loading && <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>Loading the grid…</p>}
@@ -234,7 +281,7 @@ export default function ControlRoomPage() {
               </tr>
             </thead>
             <tbody>
-              {grid.students.map((s) => (
+              {grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
                 <tr key={s.id}>
                   <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}</td>
                   {grid.targets.map((t) => {
