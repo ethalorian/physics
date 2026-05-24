@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import {
   LayoutGrid, Gift, TrendingUp, Database, Microscope, Gamepad2,
-  Settings, Eye, Users, Activity, BookOpen, Award, Sparkles, GraduationCap, BarChart3,
+  Settings, Eye, Users, Activity, BookOpen, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -24,6 +24,8 @@ const TOOLS: { href: string; label: string; desc: string; icon: Icon; accent: st
   { href: '/admin/control-room', label: 'Control Room', desc: 'Class mastery grid — rate from student work', icon: LayoutGrid, accent: 'var(--primary)' },
   { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters & see performance', icon: GraduationCap, accent: 'var(--primary)' },
   { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance & ask Claude', icon: BarChart3, accent: 'var(--success)' },
+  { href: '/admin/pacing', label: 'Pacing tracker', desc: 'Map sections to the calendar & track pace', icon: CalendarClock, accent: 'var(--reward)' },
+  { href: '/admin/pacing/overview', label: 'Pacing overview', desc: 'Every section vs the master pace, live', icon: CalendarClock, accent: 'var(--primary)' },
   { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement & feature usage', icon: Activity, accent: 'var(--success)' },
   { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions & manage the points store', icon: Gift, accent: 'var(--reward)' },
   { href: '/admin/mastery', label: 'Mastery entry', desc: 'Log 1-2-3 ratings per student', icon: TrendingUp, accent: 'var(--success)' },
