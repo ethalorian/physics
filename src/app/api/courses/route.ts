@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 
 /**
  * GET /api/courses - Fetch courses for the current teacher/admin
@@ -25,9 +25,14 @@ export async function GET() {
       return NextResponse.json({ error: 'Invalid user role' }, { status: 403 })
     }
 
-    // Try to fetch from database first
+    // Try to fetch from database first.
+    // Staff read with the service-role client: this route already enforces role
+    // server-side, and the courses table has RLS keyed to Supabase auth (which
+    // we don't use — auth is NextAuth), so the anon client returns nothing and
+    // would silently fall back to mock data.
+    const dbClient = userRole === 'student' ? supabase : supabaseAdmin
     try {
-      let query = supabase
+      let query = dbClient
         .from('courses')
         .select('*')
         .order('name', { ascending: true })
