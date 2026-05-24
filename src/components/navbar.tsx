@@ -6,8 +6,8 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 
 // External package imports
-import { useSession, signIn, signOut } from "next-auth/react"
-import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Microscope, LogOut, Gift, TrendingUp, LayoutGrid } from "lucide-react"
+import { useSession, signIn } from "next-auth/react"
+import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Microscope, Gift, TrendingUp, LayoutGrid } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,7 @@ import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 import { usePermissions } from "@/hooks/usePermissions"
 import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
-import UserContextSheet from "@/components/UserContextSheet"
+import AccountMenu from "@/components/AccountMenu"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -178,39 +178,8 @@ export default function Navbar() {
                   <ThemeToggle />
                 </div>
                 
-                {/* Sign Out - Subtle ghost style */}
-                <Button
-                  onClick={() => signOut({ callbackUrl: '/' })}
-                  variant="ghost"
-                  size="sm"
-                  className="h-9 px-3 rounded-full text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span className="hidden sm:inline ml-2">Sign Out</span>
-                </Button>
-                
-                {/* User Avatar - Apple-style with ring on hover */}
-                <UserContextSheet>
-                  <Button 
-                    variant="ghost" 
-                    className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background"
-                  >
-                    {session.user?.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img 
-                        src={session.user.image} 
-                        alt={session.user.name || 'User'}
-                        className="w-full h-full rounded-full object-cover"
-                        referrerPolicy="no-referrer"
-                        crossOrigin="anonymous"
-                      />
-                    ) : (
-                      <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-primary/80 text-primary-foreground font-semibold flex items-center justify-center text-sm">
-                        {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </div>
-                    )}
-                  </Button>
-                </UserContextSheet>
+                {/* Account menu — avatar opens identity + My progress + Sign Out */}
+                <AccountMenu />
               </>
             ) : (
               <>
