@@ -2,14 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
-import { computePacing, PlanItem, Schedule } from '@/lib/pacing'
-import { loadPlanItems, getCourseStudentGids, autoSuggestItem } from '@/lib/pacing-server'
+import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
+import { loadPlanItems, getCourseStudentGids, autoSuggestItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
+import { Block, blockMeetingsElapsed, upcomingMeetings } from '@/lib/rotation'
 
 // GET  /api/pacing/section?course_id=... — planned-vs-actual for one section
 // POST /api/pacing/section { course_id, current_lesson_id?, current_unit_order? } — teacher confirms/adjusts position
 
 type CourseRow = { id: string; teacher_email: string | null }
-type ScheduleRow = { start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null }
+type ScheduleRow = { start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null; block: string | null }
 type PacingRow = { current_lesson_id: string | null; current_unit_order: number | null; source: 'auto' | 'confirmed' }
 
 async function canAccessCourse(courseId: string, email: string, role: string): Promise<boolean> {
@@ -45,25 +46,53 @@ export async function GET(request: NextRequest) {
     if (!(await canAccessCourse(courseId, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const items = await loadPlanItems()
-    const [{ data: schedRow }, { data: pacingRow }, gids] = await Promise.all([
-      supabaseAdmin.from('section_schedules').select('start_date, meeting_days, no_school_dates').eq('course_id', courseId).maybeSingle(),
+    const [{ data: schedRow }, { data: pacingRow }, gids, cal] = await Promise.all([
+      supabaseAdmin.from('section_schedules').select('start_date, meeting_days, no_school_dates, block').eq('course_id', courseId).maybeSingle(),
       supabaseAdmin.from('section_pacing').select('current_lesson_id, current_unit_order, source').eq('course_id', courseId).maybeSingle(),
       getCourseStudentGids(courseId),
+      loadRotationCalendar(),
     ])
     const auto = await autoSuggestItem(items, gids)
+    const sr = schedRow as ScheduleRow | null
 
-    const schedule: Schedule | null = schedRow
-      ? { start_date: (schedRow as ScheduleRow).start_date, meeting_days: (schedRow as ScheduleRow).meeting_days ?? [1, 2, 3, 4, 5], no_school_dates: (schedRow as ScheduleRow).no_school_dates ?? [] }
+    const schedule: Schedule | null = sr
+      ? { start_date: sr.start_date, meeting_days: sr.meeting_days ?? [1, 2, 3, 4, 5], no_school_dates: sr.no_school_dates ?? [] }
       : null
 
     const actual = resolveActual(items, (pacingRow as PacingRow | null) ?? null, auto)
-    const result = computePacing(items, schedule, new Date(), actual)
+    const today = new Date()
+    const block = (sr?.block as Block | null) ?? null
+    const rotationOn = Boolean(block) && isRotationConfigured(cal)
+
+    // Rotation path: "elapsed" = number of this block's meetings since start.
+    let result
+    let lineup: { date: string; long: boolean; title: string; index: number }[] = []
+    if (rotationOn && block && sr?.start_date && today >= new Date(sr.start_date + 'T00:00:00Z')) {
+      const elapsed = blockMeetingsElapsed(cal, block, sr.start_date, today)
+      result = computeFromElapsed(items, elapsed, true, actual)
+    } else {
+      result = computePacing(items, schedule, today, actual)
+    }
+
+    // Lessons lined up against the next class meetings (rotation only).
+    if (rotationOn && block) {
+      const meetings = upcomingMeetings(cal, block, today, 12)
+      const startDay = actual.item?.cumStart ?? 0
+      lineup = meetings.map((m, k) => {
+        const dayPos = startDay + k
+        const it = items.find((i) => dayPos < i.cumStart + i.plannedDays) ?? items[items.length - 1]
+        return { date: m.date, long: m.long, title: it?.title ?? '—', index: it?.index ?? -1 }
+      })
+    }
 
     return NextResponse.json({
       result,
       items: items.map((i) => ({ index: i.index, title: i.title, lessonId: i.lessonId, unitOrder: i.unitOrder, kind: i.kind, plannedDays: i.plannedDays })),
       autoIndex: auto?.index ?? null,
       confirmed: pacingRow?.source === 'confirmed',
+      block,
+      rotationConfigured: isRotationConfigured(cal),
+      lineup,
       schedule: schedule ?? { start_date: null, meeting_days: [1, 2, 3, 4, 5], no_school_dates: [] },
     })
   } catch (error) {

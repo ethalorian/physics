@@ -28,12 +28,12 @@ export async function GET(request: NextRequest) {
 
     const { data } = await supabaseAdmin
       .from('section_schedules')
-      .select('course_id, start_date, meeting_days, no_school_dates')
+      .select('course_id, start_date, meeting_days, no_school_dates, block')
       .eq('course_id', courseId)
       .maybeSingle()
 
     return NextResponse.json({
-      schedule: data ?? { course_id: courseId, start_date: null, meeting_days: [1, 2, 3, 4, 5], no_school_dates: [] },
+      schedule: data ?? { course_id: courseId, start_date: null, meeting_days: [1, 2, 3, 4, 5], no_school_dates: [], block: null },
     })
   } catch (error) {
     console.error('Error in GET /api/pacing/schedule:', error)
@@ -53,15 +53,22 @@ export async function PUT(request: NextRequest) {
       start_date?: string | null
       meeting_days?: number[]
       no_school_dates?: string[]
+      block?: string | null
     }
     if (!body.course_id) return NextResponse.json({ error: 'course_id required' }, { status: 400 })
     if (!(await canAccessCourse(body.course_id, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+    const block = body.block ? body.block.toUpperCase() : null
+    if (block && !['A', 'B', 'C', 'D', 'E', 'F', 'G'].includes(block)) {
+      return NextResponse.json({ error: 'Block must be A–G' }, { status: 400 })
+    }
 
     const row = {
       course_id: body.course_id,
       start_date: body.start_date ?? null,
       meeting_days: Array.isArray(body.meeting_days) && body.meeting_days.length > 0 ? body.meeting_days : [1, 2, 3, 4, 5],
       no_school_dates: Array.isArray(body.no_school_dates) ? body.no_school_dates : [],
+      block,
       updated_at: new Date().toISOString(),
     }
     const { error } = await supabaseAdmin.from('section_schedules').upsert(row, { onConflict: 'course_id' })

@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
-import { computePacing, PlanItem, Schedule } from '@/lib/pacing'
-import { loadPlanItems, furthestActiveItem } from '@/lib/pacing-server'
+import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
+import { loadPlanItems, furthestActiveItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
+import { Block, blockMeetingsElapsed } from '@/lib/rotation'
 
 // GET /api/pacing/overview (ADMIN) — every section vs the master pace, in one pass.
 
@@ -11,7 +12,7 @@ type CourseRow = { id: string; name: string | null; section: string | null; teac
 type CsRow = { course_id: string; student_id: string }
 type StudentRow = { id: string; google_user_id: string | null }
 type BrRow = { user_id: string; lesson_id: string }
-type SchedRow = { course_id: string; start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null }
+type SchedRow = { course_id: string; start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null; block: string | null }
 type PacingRow = { course_id: string; current_lesson_id: string | null; current_unit_order: number | null; source: 'auto' | 'confirmed' }
 
 export async function GET() {
@@ -26,9 +27,11 @@ export async function GET() {
       supabaseAdmin.from('courses').select('id, name, section, teacher_email').order('teacher_email', { ascending: true }),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
       supabaseAdmin.from('students').select('id, google_user_id'),
-      supabaseAdmin.from('section_schedules').select('course_id, start_date, meeting_days, no_school_dates'),
+      supabaseAdmin.from('section_schedules').select('course_id, start_date, meeting_days, no_school_dates, block'),
       supabaseAdmin.from('section_pacing').select('course_id, current_lesson_id, current_unit_order, source'),
     ])
+    const cal = await loadRotationCalendar()
+    const rotationOn = isRotationConfigured(cal)
 
     const courses = (coursesRes.data ?? []) as CourseRow[]
     const courseStudents = (csRes.data ?? []) as CsRow[]
@@ -85,13 +88,18 @@ export async function GET() {
       const schedule: Schedule | null = sr
         ? { start_date: sr.start_date, meeting_days: sr.meeting_days ?? [1, 2, 3, 4, 5], no_school_dates: sr.no_school_dates ?? [] }
         : null
+      const block = (sr?.block as Block | null) ?? null
 
-      const result = computePacing(items, schedule, today, { item: actualItem, source })
+      const result = (rotationOn && block && sr?.start_date && today >= new Date(sr.start_date + 'T00:00:00Z'))
+        ? computeFromElapsed(items, blockMeetingsElapsed(cal, block, sr.start_date, today), true, { item: actualItem, source })
+        : computePacing(items, schedule, today, { item: actualItem, source })
+
       return {
         courseId: c.id,
         name: c.name ?? 'Class',
         section: c.section,
         teacher: c.teacher_email,
+        block,
         hasSchedule: Boolean(sr?.start_date),
         students: (gidsByCourse.get(c.id) ?? new Set()).size,
         ...result,

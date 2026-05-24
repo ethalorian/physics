@@ -107,23 +107,23 @@ export function plannedItem(items: PlanItem[], elapsed: number): PlanItem | null
   return items[items.length - 1]
 }
 
-export function computePacing(
+// Core: given how many instruction/meeting days have elapsed, place the section
+// against the plan. `started=false` means the section hasn't begun (no start date
+// or today is before it). Both the weekday and rotating-block paths feed this.
+export function computeFromElapsed(
   items: PlanItem[],
-  sch: Schedule | null,
-  today: Date,
+  elapsed: number,
+  started: boolean,
   actual: { item: PlanItem | null; source: 'auto' | 'confirmed' | 'none' },
 ): PacingResult {
   const total = totalPlanDays(items)
   const base: PacingResult = {
-    notStarted: true, elapsed: 0, totalDays: total,
+    notStarted: !started, elapsed: started ? elapsed : 0, totalDays: total,
     plannedIndex: null, plannedTitle: null,
     actualIndex: actual.item?.index ?? null, actualTitle: actual.item?.title ?? null,
     actualSource: actual.source, deltaDays: 0, status: 'unknown',
   }
-  if (!sch?.start_date) return base
-  if (today < utc(sch.start_date)) return { ...base, notStarted: true }
-
-  const elapsed = elapsedInstructionalDays(sch, today)
+  if (!started) return base
   const planned = plannedItem(items, elapsed)
   let deltaDays = 0
   let status: PacingStatus = 'unknown'
@@ -137,4 +137,15 @@ export function computePacing(
     actualIndex: actual.item?.index ?? null, actualTitle: actual.item?.title ?? null,
     actualSource: actual.source, deltaDays, status,
   }
+}
+
+// Weekday path (fallback when no rotation block is tagged).
+export function computePacing(
+  items: PlanItem[],
+  sch: Schedule | null,
+  today: Date,
+  actual: { item: PlanItem | null; source: 'auto' | 'confirmed' | 'none' },
+): PacingResult {
+  if (!sch?.start_date || today < utc(sch.start_date)) return computeFromElapsed(items, 0, false, actual)
+  return computeFromElapsed(items, elapsedInstructionalDays(sch, today), true, actual)
 }

@@ -1,5 +1,24 @@
 import { supabaseAdmin } from '@/lib/supabase'
 import { buildPlan, PlanItem, UnitRow, LessonRow } from '@/lib/pacing'
+import { RotationCalendar } from '@/lib/rotation'
+
+export async function loadRotationCalendar(): Promise<RotationCalendar> {
+  const { data } = await supabaseAdmin
+    .from('rotation_calendar')
+    .select('anchor_date, anchor_p1_block, no_school_dates')
+    .eq('id', 'default')
+    .maybeSingle()
+  const row = data as { anchor_date: string | null; anchor_p1_block: string | null; no_school_dates: string[] | null } | null
+  return {
+    anchor_date: row?.anchor_date ?? null,
+    anchor_p1_block: row?.anchor_p1_block ?? null,
+    no_school_dates: row?.no_school_dates ?? [],
+  }
+}
+
+export function isRotationConfigured(cal: RotationCalendar): boolean {
+  return Boolean(cal.anchor_date && cal.anchor_p1_block)
+}
 
 // Server-side data loaders for pacing. Kept out of pacing.ts so that module stays
 // pure/testable.

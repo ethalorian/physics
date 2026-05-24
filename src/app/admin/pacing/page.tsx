@@ -16,7 +16,9 @@ interface PacingResult {
   actualSource: 'auto' | 'confirmed' | 'none'; deltaDays: number
   status: 'on' | 'ahead' | 'behind' | 'unknown'
 }
-interface SectionData { result: PacingResult; items: PlanItem[]; autoIndex: number | null; confirmed: boolean; schedule: Schedule }
+interface LineupEntry { date: string; long: boolean; title: string; index: number }
+interface SectionData { result: PacingResult; items: PlanItem[]; autoIndex: number | null; confirmed: boolean; schedule: Schedule; block: string | null; rotationConfigured: boolean; lineup: LineupEntry[] }
+const BLOCKS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
 const STATUS: Record<PacingResult['status'], { label: string; color: string }> = {
   behind: { label: 'Behind', color: '#C08B8B' },
@@ -24,7 +26,6 @@ const STATUS: Record<PacingResult['status'], { label: string; color: string }> =
   ahead: { label: 'Ahead', color: 'var(--primary)' },
   unknown: { label: 'No data', color: 'var(--muted-foreground)' },
 }
-const WEEKDAYS = [{ d: 1, l: 'Mon' }, { d: 2, l: 'Tue' }, { d: 3, l: 'Wed' }, { d: 4, l: 'Thu' }, { d: 5, l: 'Fri' }, { d: 6, l: 'Sat' }, { d: 0, l: 'Sun' }]
 
 function deltaLabel(d: number, status: PacingResult['status']): string {
   if (status === 'unknown') return '—'
@@ -71,6 +72,7 @@ export default function PacingPage() {
         </p>
       </div>
 
+      {isAdmin && <RotationEditor />}
       {isAdmin && <GuideEditor />}
 
       {courses === null ? (
@@ -82,6 +84,93 @@ export default function PacingPage() {
       ) : (
         <div className="space-y-4">
           {courses.map((c) => <SectionCard key={c.id} course={c} />)}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Admin: school-wide rotation calendar
+// ---------------------------------------------------------------------------
+function RotationEditor() {
+  const [open, setOpen] = useState(false)
+  const [anchorDate, setAnchorDate] = useState('')
+  const [p1, setP1] = useState('A')
+  const [noSchool, setNoSchool] = useState<string[]>([])
+  const [newOff, setNewOff] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!open || loaded) return
+    fetch('/api/pacing/rotation').then((r) => r.json()).then((d) => {
+      const c = d.calendar ?? {}
+      setAnchorDate(c.anchor_date ?? '')
+      setP1(c.anchor_p1_block ?? 'A')
+      setNoSchool(c.no_school_dates ?? [])
+      setLoaded(true)
+    }).catch(() => setLoaded(true))
+  }, [open, loaded])
+
+  const save = async () => {
+    setSaving(true); setSaved(false)
+    try {
+      const res = await fetch('/api/pacing/rotation', {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anchor_date: anchorDate || null, anchor_p1_block: p1, no_school_dates: noSchool }),
+      })
+      if (res.ok) setSaved(true)
+    } finally { setSaving(false) }
+  }
+
+  return (
+    <div className="rounded-2xl border mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <button onClick={() => setOpen((v) => !v)} className="w-full flex items-center justify-between p-4">
+        <span className="flex items-center gap-2 font-medium"><CalendarClock size={16} style={{ color: 'var(--primary)' }} /> Rotation calendar (school-wide)</span>
+        {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+      </button>
+      {open && (
+        <div className="px-4 pb-4">
+          <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
+            6-day rotation: A G B C D E F, G fixed at period 2, period-1 block drops the next day, period 5 is the long block. Set one known reference day; the cycle advances every school weekday and pauses on no-school days.
+          </p>
+          <div className="grid gap-3 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
+            <label className="text-sm">
+              <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Reference date</div>
+              <input type="date" value={anchorDate} onChange={(e) => setAnchorDate(e.target.value)}
+                className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
+            </label>
+            <label className="text-sm">
+              <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Period-1 block on that day</div>
+              <select value={p1} onChange={(e) => setP1(e.target.value)}
+                className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+                {['A', 'B', 'C', 'D', 'E', 'F'].map((b) => <option key={b} value={b}>{b}</option>)}
+              </select>
+            </label>
+          </div>
+          <div className="text-sm">
+            <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>No-school dates (rotation pauses)</div>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {noSchool.map((d) => (
+                <span key={d} className="text-xs rounded-md border px-2 py-1 flex items-center gap-1" style={{ borderColor: 'var(--border)' }}>
+                  {d}<button onClick={() => setNoSchool((p) => p.filter((x) => x !== d))} style={{ color: 'var(--muted-foreground)' }}>×</button>
+                </span>
+              ))}
+              <input type="date" value={newOff} onChange={(e) => setNewOff(e.target.value)}
+                className="rounded-md border px-2 py-1 text-xs" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
+              <button onClick={() => { if (newOff && !noSchool.includes(newOff)) { setNoSchool((p) => [...p, newOff].sort()); setNewOff('') } }}
+                className="text-xs rounded-md border px-2 py-1" style={{ borderColor: 'var(--border)' }}>Add</button>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-3">
+            <button onClick={save} disabled={saving || !anchorDate}
+              className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving || !anchorDate ? 0.6 : 1 }}>
+              {saving ? 'Saving…' : 'Save rotation'}
+            </button>
+            {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
+          </div>
         </div>
       )}
     </div>
@@ -171,9 +260,7 @@ function GuideEditor() {
 function SectionCard({ course }: { course: Course }) {
   const [data, setData] = useState<SectionData | null>(null)
   const [startDate, setStartDate] = useState('')
-  const [meetingDays, setMeetingDays] = useState<number[]>([1, 2, 3, 4, 5])
-  const [noSchool, setNoSchool] = useState<string[]>([])
-  const [newOff, setNewOff] = useState('')
+  const [block, setBlock] = useState('')
   const [posIndex, setPosIndex] = useState<number | ''>('')
   const [savingSched, setSavingSched] = useState(false)
   const [savingPos, setSavingPos] = useState(false)
@@ -182,10 +269,8 @@ function SectionCard({ course }: { course: Course }) {
     fetch(`/api/pacing/section?course_id=${course.id}`).then((r) => r.json()).then((d: SectionData) => {
       setData(d)
       setStartDate(d.schedule.start_date ?? '')
-      setMeetingDays(d.schedule.meeting_days ?? [1, 2, 3, 4, 5])
-      setNoSchool(d.schedule.no_school_dates ?? [])
-      const cur = d.result.actualIndex
-      setPosIndex(cur ?? '')
+      setBlock(d.block ?? '')
+      setPosIndex(d.result.actualIndex ?? '')
     }).catch(() => {})
   }, [course.id])
 
@@ -196,7 +281,7 @@ function SectionCard({ course }: { course: Course }) {
     try {
       await fetch('/api/pacing/schedule', {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_id: course.id, start_date: startDate || null, meeting_days: meetingDays, no_school_dates: noSchool }),
+        body: JSON.stringify({ course_id: course.id, start_date: startDate || null, block: block || null }),
       })
       load()
     } finally { setSavingSched(false) }
@@ -216,14 +301,16 @@ function SectionCard({ course }: { course: Course }) {
     } finally { setSavingPos(false) }
   }
 
-  const toggleDay = (d: number) => setMeetingDays((p) => p.includes(d) ? p.filter((x) => x !== d) : [...p, d].sort())
   const st = data ? STATUS[data.result.status] : STATUS.unknown
 
   return (
     <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div>
-          <div className="font-bold" style={{ fontSize: 16 }}>{course.name}{course.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {course.section}</span> : null}</div>
+          <div className="font-bold" style={{ fontSize: 16 }}>
+            {course.name}{course.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {course.section}</span> : null}
+            {data?.block && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>{data.block} block</span>}
+          </div>
           {data && (
             <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
               {data.result.notStarted ? 'Not started yet' : <>Should be on <b style={{ color: 'var(--foreground)' }}>{data.result.plannedTitle ?? '—'}</b> · on <b style={{ color: 'var(--foreground)' }}>{data.result.actualTitle ?? '—'}</b>{data.result.actualSource === 'auto' ? ' (auto)' : ''}</>}
@@ -238,47 +325,47 @@ function SectionCard({ course }: { course: Course }) {
         )}
       </div>
 
-      {/* schedule */}
-      <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+      {/* schedule: block + start date */}
+      <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+        <label className="text-sm">
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Block</div>
+          <select value={block} onChange={(e) => setBlock(e.target.value)}
+            className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+            <option value="">— tag a block —</option>
+            {BLOCKS.map((b) => <option key={b} value={b}>{b} block</option>)}
+          </select>
+        </label>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Start date</div>
           <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
             className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
         </label>
-        <div className="text-sm">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Meeting days</div>
-          <div className="flex flex-wrap gap-1">
-            {WEEKDAYS.map((w) => (
-              <button key={w.d} onClick={() => toggleDay(w.d)}
-                className="text-xs rounded-md border px-2 py-1" style={{ borderColor: 'var(--border)', background: meetingDays.includes(w.d) ? 'var(--primary)' : 'var(--card)', color: meetingDays.includes(w.d) ? 'var(--primary-foreground, white)' : 'var(--foreground)' }}>
-                {w.l}
-              </button>
+        <div className="flex items-end">
+          <button onClick={saveSchedule} disabled={savingSched}
+            className="text-sm rounded-lg border px-3 py-1.5 w-full" style={{ borderColor: 'var(--border)' }}>{savingSched ? 'Saving…' : 'Save'}</button>
+        </div>
+      </div>
+
+      {data && !data.rotationConfigured && (
+        <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
+          Set the school rotation calendar above to place this block against real dates.
+        </p>
+      )}
+
+      {/* lessons lined up against upcoming meetings */}
+      {data && data.lineup.length > 0 && (
+        <div className="mt-4">
+          <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Next meetings</div>
+          <div className="flex flex-wrap gap-1.5">
+            {data.lineup.map((m, i) => (
+              <div key={i} className="rounded-lg border px-2.5 py-1.5 text-xs" style={{ borderColor: m.long ? 'color-mix(in oklch, var(--reward) 55%, var(--border))' : 'var(--border)', background: m.long ? 'color-mix(in oklch, var(--reward) 10%, transparent)' : 'transparent' }}>
+                <div style={{ color: 'var(--muted-foreground)' }}>{m.date.slice(5)}{m.long ? ' · long' : ''}</div>
+                <div className="font-medium" style={{ maxWidth: 150 }}>{m.title}</div>
+              </div>
             ))}
           </div>
         </div>
-      </div>
-
-      {/* no-school dates */}
-      <div className="mt-3 text-sm">
-        <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>No-school dates</div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          {noSchool.map((d) => (
-            <span key={d} className="text-xs rounded-md border px-2 py-1 flex items-center gap-1" style={{ borderColor: 'var(--border)' }}>
-              {d}
-              <button onClick={() => setNoSchool((p) => p.filter((x) => x !== d))} style={{ color: 'var(--muted-foreground)' }}>×</button>
-            </span>
-          ))}
-          <input type="date" value={newOff} onChange={(e) => setNewOff(e.target.value)}
-            className="rounded-md border px-2 py-1 text-xs" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
-          <button onClick={() => { if (newOff && !noSchool.includes(newOff)) { setNoSchool((p) => [...p, newOff].sort()); setNewOff('') } }}
-            className="text-xs rounded-md border px-2 py-1" style={{ borderColor: 'var(--border)' }}>Add</button>
-        </div>
-      </div>
-
-      <div className="mt-3 flex items-center gap-2">
-        <button onClick={saveSchedule} disabled={savingSched}
-          className="text-sm rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)' }}>{savingSched ? 'Saving…' : 'Save calendar'}</button>
-      </div>
+      )}
 
       {/* confirm position */}
       {data && (
