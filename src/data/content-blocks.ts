@@ -108,6 +108,14 @@ export interface GewaBlock extends BaseBlock {
   equationOptions?: string[]; // optional equation bank (recognition-by-sight); falls back to a kinematics set
 }
 
+export interface EquationSandboxBlock extends BaseBlock {
+  type: 'equation_sandbox';
+  capture: true;
+  prompt: string;
+  /** Optional seed variables for the palette (symbol + value + unit chips). */
+  variables?: { symbol: string; value?: string; unit?: string }[];
+}
+
 export interface ExitTicketBlock extends BaseBlock {
   type: 'exit_ticket';
   capture: true;
@@ -165,7 +173,7 @@ export interface TransferPromptBlock extends BaseBlock {
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
-  | GewaBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
+  | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock;
 
 export type BlockType = ContentBlock['type'];
@@ -178,7 +186,7 @@ export interface BlockDocument {
 
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
 export const CAPTURE_BLOCK_TYPES: BlockType[] = [
-  'gewa', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment',
+  'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment',
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {

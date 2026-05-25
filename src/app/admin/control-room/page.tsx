@@ -1,6 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { InlineMath } from '@/components/MathMarkdown'
+import { toLatex } from '@/components/blocks/EquationSandbox'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -42,14 +44,17 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 function workToText(r: unknown): string {
   if (r && typeof r === 'object') {
     const o = r as Record<string, unknown>
-    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o) {
+    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o || 'sandbox' in o) {
       const parts = ['given', 'equation', 'work', 'answer'].filter((k) => o[k]).map((k) => `${k}: ${o[k]}`)
+      const sb = o.sandbox && typeof o.sandbox === 'object' ? (o.sandbox as { lines?: unknown[] }) : null
+      if (sb && Array.isArray(sb.lines) && sb.lines.length > 0) parts.push(`work & answer: ${sb.lines.map(String).join(' | ')}`)
       if (Array.isArray(o.workStrokes) && o.workStrokes.length > 0) parts.push('work & answer: [handwritten — see drawing]')
       return parts.join('; ')
     }
     if ('pattern' in o || 'interpret' in o) {
       return [o.pattern ? `pattern: ${o.pattern}` : '', o.interpret ? `interpret: ${o.interpret}` : ''].filter(Boolean).join('; ')
     }
+    if ('lines' in o && Array.isArray(o.lines)) return `sandbox: ${(o.lines as unknown[]).map(String).join(' | ')}`
     if ('strokes' in o) return '[drawing]'
     return JSON.stringify(o)
   }
@@ -74,7 +79,7 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
 function ResponseView({ response }: { response: unknown }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
-    const isGewa = 'given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o
+    const isGewa = 'given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o || 'sandbox' in o
     if (isGewa) {
       const field = (k: string, label: string) =>
         o[k] != null && String(o[k]).trim() !== '' ? (
@@ -83,18 +88,45 @@ function ResponseView({ response }: { response: unknown }) {
           </div>
         ) : null
       const ws = Array.isArray(o.workStrokes) ? (o.workStrokes as StrokeShape[]) : null
+      const sandbox = o.sandbox && typeof o.sandbox === 'object' ? (o.sandbox as { lines?: unknown[]; answerIndex?: number }) : null
+      const sandboxLines = sandbox && Array.isArray(sandbox.lines) ? sandbox.lines.map(String).filter((l) => l.trim()) : []
+      const ansI = sandbox && typeof sandbox.answerIndex === 'number' ? sandbox.answerIndex : -1
       return (
         <div>
           {field('given', 'Given')}
           {field('equation', 'Equation')}
           {field('work', 'Work')}
           {field('answer', 'Answer')}
-          {ws && (
+          {sandboxLines.length > 0 && (
             <div className="mt-1.5">
               <div className="text-sm" style={{ marginBottom: 4 }}><b style={{ color: 'var(--secondary-foreground)' }}>Work &amp; Answer:</b></div>
+              <div className="rounded-lg p-2" style={{ background: 'var(--card)', border: '0.5px solid var(--border)' }}>
+                {sandboxLines.map((l, i) => (
+                  <div key={i} className="flex items-baseline gap-2" style={{ marginBottom: 2 }}>
+                    <span className="text-xs" style={{ color: i === ansI ? 'var(--reward)' : 'var(--muted-foreground)' }}>{i === ansI ? '★' : `${i + 1}.`}</span>
+                    <span style={{ fontSize: 16 }}><InlineMath math={i === ansI ? `\\boxed{${toLatex(l)}}` : toLatex(l)} /></span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {ws && ws.length > 0 && (
+            <div className="mt-1.5">
+              <div className="text-sm" style={{ marginBottom: 4 }}><b style={{ color: 'var(--secondary-foreground)' }}>Handwritten work:</b></div>
               <StrokesSvg strokes={ws} label="Student handwritten work" />
             </div>
           )}
+        </div>
+      )
+    }
+    if ('lines' in o && Array.isArray(o.lines)) {
+      const lines = (o.lines as unknown[]).map(String)
+      if (lines.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty sandbox]</p>
+      return (
+        <div className="text-sm" style={{ fontFamily: 'Georgia, serif' }}>
+          {lines.map((l, i) => (
+            <div key={i} style={{ marginBottom: 2 }}><span style={{ color: 'var(--muted-foreground)', marginRight: 6 }}>{i + 1}.</span>{l}</div>
+          ))}
         </div>
       )
     }

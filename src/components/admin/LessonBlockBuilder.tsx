@@ -57,6 +57,9 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'equationHint', label: 'Equation hint', kind: 'text' },
     { key: 'equationOptions', label: 'Equation bank', kind: 'stringlist' },
   ] },
+  { type: 'equation_sandbox', label: 'Equation sandbox', group: 'Practice', capture: true, fields: [
+    { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
+  ] },
   { type: 'data_table', label: 'Data table + graph', group: 'Practice', capture: true, fields: [
     { key: 'columns', label: 'Column headers', kind: 'stringlist' },
     { key: 'rows', label: 'Blank rows', kind: 'number' },

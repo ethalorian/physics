@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import InkPad from './InkPad'
+import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import type { Stroke } from './DoodleCanvas'
 
 // Given + Equation stay structured (chips / equation bank). Work & Answer are now
@@ -15,6 +16,7 @@ export interface GewaValue {
   work?: string
   answer?: string
   workStrokes?: Stroke[]
+  sandbox?: SandboxValue
 }
 
 interface Chip { sym: string; val: string; unit: string }
@@ -49,9 +51,14 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
   const equations = equationOptions && equationOptions.length > 0 ? equationOptions : DEFAULT_EQUATIONS
   const [chips, setChips] = useState<Chip[]>(parseGiven(value?.given))
   const [equation, setEquation] = useState(value?.equation ?? '')
+  const [sandbox, setSandbox] = useState<SandboxValue>(value?.sandbox ?? { lines: [] })
   const [workStrokes, setWorkStrokes] = useState<Stroke[]>(value?.workStrokes ?? [])
+  const [workMode, setWorkMode] = useState<'type' | 'write'>(value?.workStrokes?.length ? 'write' : 'type')
   const [nudges, setNudges] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
+
+  // The Given chips double as the sandbox's variable palette.
+  const sandboxVars = chips.filter((c) => c.sym).map((c) => ({ symbol: c.sym, value: c.val || undefined, unit: c.unit || undefined }))
 
   const setChip = (i: number, patch: Partial<Chip>) => {
     setChips((prev) => prev.map((c, idx) => (idx === i ? { ...c, ...patch } : c)))
@@ -66,14 +73,15 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
       .map((c) => `${c.sym}${c.sym ? ' = ' : ''}${c.val}${c.unit ? ' ' + c.unit : ''}`.trim())
       .join('; ')
 
-  const buildValue = (): GewaValue => ({ given: givenString(), equation, workStrokes })
+  const buildValue = (): GewaValue => ({ given: givenString(), equation, sandbox, workStrokes })
 
+  const workShown = sandbox.lines.some((l) => l.trim()) || workStrokes.length > 0
   const runCheck = () => {
     const filled = chips.filter((c) => c.sym || c.val).length
     const n: { ok: boolean; msg: string }[] = [
       filled >= 2 ? { ok: true, msg: `You listed ${filled} knowns.` } : { ok: false, msg: 'Add at least the two knowns the problem gives you.' },
       equation ? { ok: true, msg: `Equation chosen: ${equation}.` } : { ok: false, msg: 'Choose an equation before you solve.' },
-      workStrokes.length > 0 ? { ok: true, msg: 'You showed your worked solution on the pad.' } : { ok: false, msg: 'Show your work on the pad — substitute your values and box the final answer.' },
+      workShown ? { ok: true, msg: 'You showed your worked solution.' } : { ok: false, msg: 'Show your work — build it in the sandbox or write it on the pad, and finish with the answer.' },
     ]
     setNudges(n)
   }
@@ -152,8 +160,29 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
             Working from: <b style={{ fontFamily: 'Georgia, serif' }}>{equation}</b>
           </div>
         )}
-        <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Write your solution by hand: substitute your knowns, solve step by step, and circle your final answer with its unit.</p>
-        <InkPad value={workStrokes} onChange={(s) => { setWorkStrokes(s); setSaved(false) }} />
+        {/* mode toggle: type in the equation sandbox, or handwrite */}
+        <div className="inline-flex rounded-lg overflow-hidden mb-2" style={{ border: '0.5px solid var(--border)' }}>
+          {(['type', 'write'] as const).map((m) => (
+            <button key={m} onClick={() => { setWorkMode(m); setSaved(false) }} className="px-3 py-1.5 text-xs font-semibold"
+              style={{ background: workMode === m ? 'var(--primary)' : 'var(--card)', color: workMode === m ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>
+              {m === 'type' ? 'Type it' : 'Write it'}
+            </button>
+          ))}
+        </div>
+        {workMode === 'type' ? (
+          <EquationSandbox
+            embedded
+            variables={sandboxVars}
+            equationToken={equation || undefined}
+            value={sandbox}
+            onChange={(v) => { setSandbox(v); setSaved(false) }}
+          />
+        ) : (
+          <>
+            <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Write your solution by hand: substitute your knowns, solve step by step, and circle your final answer with its unit.</p>
+            <InkPad value={workStrokes} onChange={(s) => { setWorkStrokes(s); setSaved(false) }} />
+          </>
+        )}
       </div>
 
       {/* check + save */}

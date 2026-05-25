@@ -6,6 +6,7 @@ import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock, BlockType } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
+import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import { useBlockResponses, type BlockResponseMap } from './useBlockResponses'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
@@ -69,6 +70,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   marzano: { label: 'Self-check', domain: 'meta', Icon: Gauge },
   exit_ticket: { label: 'Exit ticket', domain: 'P', Icon: Ticket },
   gewa: { label: 'Solve it', domain: 'S', Icon: PencilRuler },
+  equation_sandbox: { label: 'Equation sandbox', domain: 'S', Icon: Sigma },
   data_table: { label: 'Collect data', domain: 'R', Icon: Table },
   observation: { label: 'Observe & interpret', domain: 'R', Icon: Eye },
   question: { label: 'Question', domain: 'R', Icon: HelpCircle },
@@ -287,6 +289,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <TextCapture prompt={b.prompt} frame={b.frame} value={saved as string | undefined} onSave={(t) => save(b.id, 'exit_ticket', t)} />
     case 'gewa':
       return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} />
+    case 'equation_sandbox':
+      return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
       return <DataBlockInteractive columns={b.columns} rows={b.rows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onSave={(v) => save(b.id, 'data_table', v)} />
     case 'observation':
