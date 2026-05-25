@@ -3,7 +3,7 @@
 import { useState, useEffect, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ContentBlock, BlockType, type DiagramForce, type DiagramVector, type GraphSeries } from '@/data/content-blocks'
+import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
@@ -373,7 +373,7 @@ function RenderedBlock({ b, saved, save, lessonId }: { b: ContentBlock; saved: u
   if (body === null) return null
   const meta = BLOCK_META[b.type]
   if (!meta || BARE.has(b.type)) return <>{body}</>
-  const done = saved !== undefined && saved !== null
+  const done = isBlockComplete(b, saved)
   return <BlockShell meta={meta} done={done}>{body}</BlockShell>
 }
 

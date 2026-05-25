@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
-import { BlockDocument, isCaptureBlock } from '@/data/content-blocks'
+import { BlockDocument, isCaptureBlock, isBlockComplete } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Star, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
@@ -39,7 +39,7 @@ export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProp
   const { responses, save } = useBlockResponses(lesson.id)
   const interactive = blocks.filter(isCaptureBlock)
   const total = interactive.length
-  const done = interactive.filter((b) => responses[b.id]?.response !== undefined && responses[b.id]?.response !== null).length
+  const done = interactive.filter((b) => isBlockComplete(b, responses[b.id]?.response)).length
   const pct = total ? Math.round((done / total) * 100) : 0
   const complete = total > 0 && done === total
 

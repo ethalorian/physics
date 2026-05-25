@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
-import { CAPTURE_BLOCK_TYPES, ContentBlock } from '@/data/content-blocks'
+import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
 // Body: { lesson_id, block_id, block_type, response }
@@ -49,18 +49,26 @@ export async function POST(request: NextRequest) {
         .eq('id', body.lesson_id)
         .single()
       const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
-      const captureIds = blocks
-        .filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type))
-        .map((b) => b.id)
+      const captureBlocks = blocks.filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type))
+      const captureIds = captureBlocks.map((b) => b.id)
+      const typeById = new Map(captureBlocks.map((b) => [b.id, b.type]))
 
       if (captureIds.length > 0) {
+        // Latest response per block, then count only those DELIBERATELY completed
+        // (submitted/saved with real content) — a draft autosave must not count.
         const { data: resp } = await supabaseAdmin
           .from('block_responses')
-          .select('block_id')
+          .select('block_id, response, created_at')
           .eq('user_id', session.user.id)
           .eq('lesson_id', body.lesson_id)
           .in('block_id', captureIds)
-        const done = new Set((resp ?? []).map((r) => r.block_id))
+          .order('created_at', { ascending: true })
+        const latest = new Map<string, unknown>()
+        for (const r of resp ?? []) latest.set(r.block_id, r.response)
+        const done = new Set<string>()
+        for (const [blockId, response] of latest) {
+          if (isResponseComplete(typeById.get(blockId) ?? '', response)) done.add(blockId)
+        }
         const pct = Math.round((done.size / captureIds.length) * 100)
         const completed = pct >= 100
         await supabaseAdmin.from('lesson_progress').upsert(
