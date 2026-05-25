@@ -27,19 +27,20 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
     const { data: set } = await supabaseAdmin
       .from('vocabulary_sets')
-      .select('id')
+      .select('id, published')
       .eq('lesson_id', lessonId)
       .maybeSingle()
-    if (!set) return NextResponse.json({ setId: null, terms: [] })
+    if (!set) return NextResponse.json({ setId: null, published: false, terms: [] })
+    const s = set as { id: string; published: boolean | null }
 
     const { data: terms } = await supabaseAdmin
       .from('vocabulary_terms')
       .select('id, term, definition, tier, cognate, part_of_speech, example, image_url, order_index')
-      .eq('vocabulary_set_id', (set as { id: string }).id)
+      .eq('vocabulary_set_id', s.id)
       .order('tier', { ascending: true })
       .order('order_index', { ascending: true })
 
-    return NextResponse.json({ setId: (set as { id: string }).id, terms: terms ?? [] })
+    return NextResponse.json({ setId: s.id, published: s.published ?? false, terms: terms ?? [] })
   } catch (error) {
     console.error('Error in GET /api/lessons/[id]/vocab:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
@@ -54,7 +55,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const { id: lessonId } = await params
-    const body = (await req.json()) as { terms?: TermInput[] }
+    const body = (await req.json()) as { terms?: TermInput[]; published?: boolean }
     const terms = (body.terms ?? []).filter((t) => t.term?.trim())
 
     // lesson → unit_id (vocabulary_sets.unit_id references units.id; lessons.unit is the name)
@@ -67,19 +68,24 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       unitId = (u as { id: string } | null)?.id ?? null
     }
 
-    // find or create the lesson's set
+    // find or create the lesson's set. New sets default to DRAFT (published:false)
+    // so half-built vocab never surfaces in the arcade; the teacher publishes
+    // explicitly when the list is game-ready. `published` only gates the arcade
+    // play-picker — the in-lesson vocab block shows terms regardless.
     const { data: existing } = await supabaseAdmin.from('vocabulary_sets').select('id').eq('lesson_id', lessonId).maybeSingle()
     let setId = (existing as { id: string } | null)?.id ?? null
     if (!setId) {
       const { data: created, error: createErr } = await supabaseAdmin
         .from('vocabulary_sets')
-        .insert({ name: `${lesson.title ?? 'Lesson'} vocab`, lesson_id: lessonId, unit_id: unitId, created_by: session.user.email, published: true })
+        .insert({ name: `${lesson.title ?? 'Lesson'} vocab`, lesson_id: lessonId, unit_id: unitId, created_by: session.user.email, published: body.published ?? false })
         .select('id')
         .single()
       if (createErr || !created) return NextResponse.json({ error: createErr?.message ?? 'Could not create set' }, { status: 500 })
       setId = (created as { id: string }).id
     } else {
-      await supabaseAdmin.from('vocabulary_sets').update({ unit_id: unitId, updated_at: new Date().toISOString() }).eq('id', setId)
+      const patch: { unit_id: string | null; updated_at: string; published?: boolean } = { unit_id: unitId, updated_at: new Date().toISOString() }
+      if (typeof body.published === 'boolean') patch.published = body.published
+      await supabaseAdmin.from('vocabulary_sets').update(patch).eq('id', setId)
     }
 
     // replace terms
@@ -100,7 +106,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 })
     }
 
-    return NextResponse.json({ ok: true, setId, count: terms.length })
+    return NextResponse.json({ ok: true, setId, count: terms.length, published: body.published ?? undefined })
   } catch (error) {
     console.error('Error in PUT /api/lessons/[id]/vocab:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

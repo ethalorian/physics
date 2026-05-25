@@ -1,7 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from 'react'
-import { Plus, Trash2, ClipboardPaste, BookA, ChevronDown, ChevronUp } from 'lucide-react'
+import { Plus, Trash2, ClipboardPaste, BookA, ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react'
 
 interface VRow {
   id?: string
@@ -26,6 +26,7 @@ const blank = (tier = 3): VRow => ({ term: '', definition: '', tier, cognate: ''
 
 export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
   const [rows, setRows] = useState<VRow[]>([])
+  const [published, setPublished] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -34,7 +35,8 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
 
   useEffect(() => {
     fetch(`/api/lessons/${lessonId}/vocab`).then((r) => r.json())
-      .then((d: { terms?: Partial<VRow>[] }) => {
+      .then((d: { terms?: Partial<VRow>[]; published?: boolean }) => {
+        setPublished(Boolean(d.published))
         setRows((d.terms ?? []).map((t) => ({
           id: t.id, term: t.term ?? '', definition: t.definition ?? '', tier: t.tier ?? 3,
           cognate: t.cognate ?? '', part_of_speech: t.part_of_speech ?? '', example: t.example ?? '', image_url: t.image_url ?? '',
@@ -59,16 +61,25 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
     setPaste(''); setShowPaste(false); setSaved(false)
   }, [paste])
 
-  const save = async () => {
+  const save = async (pub: boolean = published) => {
     setSaving(true); setSaved(false)
     try {
       const res = await fetch(`/api/lessons/${lessonId}/vocab`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ terms: rows.filter((r) => r.term.trim()) }),
+        body: JSON.stringify({ terms: rows.filter((r) => r.term.trim()), published: pub }),
       })
       if (res.ok) setSaved(true)
     } finally { setSaving(false) }
   }
+
+  // Flip publish state and persist it in the same write (also saves current terms).
+  const togglePublished = async () => {
+    const next = !published
+    setPublished(next)
+    await save(next)
+  }
+
+  const hasTerms = rows.some((r) => r.term.trim())
 
   const byTier = (t: number) => rows.map((r, i) => ({ r, i })).filter((x) => x.r.tier === t)
 
@@ -80,16 +91,25 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           <span className="font-bold" style={{ fontSize: 15 }}>Lesson vocabulary (SEI tiers)</span>
         </div>
         <div className="flex items-center gap-2">
+          <button onClick={togglePublished} disabled={saving || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before publishing' : ''}
+            className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-2.5 py-1.5 font-medium"
+            style={{ borderColor: published ? 'var(--success)' : 'var(--border)', color: published ? 'var(--success)' : 'var(--muted-foreground)', opacity: (saving || (!hasTerms && !published)) ? 0.5 : 1 }}>
+            {published ? <Eye size={14} /> : <EyeOff size={14} />} {published ? 'Published' : 'Draft'}
+          </button>
           <button onClick={() => setShowPaste((v) => !v)} className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
             <ClipboardPaste size={14} /> Bulk paste {showPaste ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
-          <button onClick={save} disabled={saving} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
+          <button onClick={() => save()} disabled={saving} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving…' : 'Save vocab'}
           </button>
           {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
         </div>
       </div>
-      <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>This list feeds both the lesson&apos;s vocab block and the arcade games.</p>
+      <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
+        This list always shows in the lesson&apos;s vocab block. {published
+          ? 'It’s published — students can also play it in the arcade.'
+          : 'It’s a draft — hidden from the arcade until you publish.'}
+      </p>
 
       {showPaste && (
         <div className="rounded-xl border p-3 mb-4" style={{ borderColor: 'var(--border)' }}>

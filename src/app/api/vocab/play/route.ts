@@ -28,14 +28,16 @@ export async function GET(req: NextRequest) {
     let scoreSetId: string | null = null
     let label = 'Vocabulary'
 
+    // Only PUBLISHED sets are playable — defense in depth behind the picker,
+    // so a direct/stale call to a draft lesson's set returns nothing.
     if (lessonId) {
-      const { data: set } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id').eq('lesson_id', lessonId).maybeSingle()
+      const { data: set } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id').eq('lesson_id', lessonId).eq('published', true).maybeSingle()
       const s = set as SetRow | null
       if (s) { setIds = [s.id]; scoreSetId = s.id }
       const { data: l } = await supabaseAdmin.from('lessons').select('title').eq('id', lessonId).maybeSingle()
       label = (l as { title: string } | null)?.title ?? 'Lesson'
     } else if (unitId) {
-      const { data: sets } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id').eq('unit_id', unitId)
+      const { data: sets } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id').eq('unit_id', unitId).eq('published', true)
       const rows = (sets ?? []) as SetRow[]
       setIds = rows.map((r) => r.id)
       scoreSetId = setIds[0] ?? null
