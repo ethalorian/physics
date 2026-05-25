@@ -13,14 +13,18 @@ interface VocabularyWordShootGameProps {
   gameLength?: number
 }
 
-interface Bubble { id: string; term: VocabularyTerm; isCorrect: boolean; x: number; y: number }
+interface Bubble { id: string; term: VocabularyTerm; isCorrect: boolean; x: number; y: number; vx: number; vy: number }
 type Phase = 'waiting' | 'playing' | 'feedback' | 'complete'
 
+// `speed` = how fast the target bubbles drift around the arena (px/sec).
 const CONFIG = {
-  easy: { distractors: 3, time: 9000, lives: 5, base: 10 },
-  medium: { distractors: 4, time: 7000, lives: 3, base: 20 },
-  hard: { distractors: 5, time: 5000, lives: 2, base: 30 },
+  easy: { distractors: 3, time: 9000, lives: 5, base: 10, speed: 42 },
+  medium: { distractors: 4, time: 7000, lives: 3, base: 20, speed: 64 },
+  hard: { distractors: 5, time: 5000, lives: 2, base: 30, speed: 92 },
 }
+
+const BUBBLE = 130   // bubble diameter (px)
+const ARENA_H = 540  // arena height (px) — matches the arena style below
 
 export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplete, difficulty = 'medium', gameLength = 20 }: VocabularyWordShootGameProps) {
   const cfg = CONFIG[difficulty]
@@ -40,6 +44,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
   const [best, setBest] = useState(0)
 
   const gameAreaRef = useRef<HTMLDivElement>(null)
+  const bubblesRef = useRef<Bubble[]>([])
   const deadlineRef = useRef(0)
   const answeredRef = useRef(false)
   const startRef = useRef(0)
@@ -72,27 +77,32 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     const distractors = terms.filter((t) => t.id !== correct.id).sort(() => Math.random() - 0.5).slice(0, cfg.distractors)
     const pool = [correct, ...distractors].sort(() => Math.random() - 0.5)
     const w = gameAreaRef.current?.clientWidth ?? 900
-    const cols = Math.min(pool.length, 3)
+    const maxX = Math.max(0, w - BUBBLE)
+    const maxY = Math.max(0, ARENA_H - BUBBLE)
     const placed: Bubble[] = pool.map((term, i) => {
-      const col = i % cols
-      const row = Math.floor(i / cols)
-      const cellW = (w - 40) / cols
+      // spread starting points across the arena, then send each off in a random
+      // direction at the difficulty's speed — moving targets to shoot.
+      const ang = Math.random() * Math.PI * 2
+      const sp = cfg.speed * (0.8 + Math.random() * 0.4)
       return {
         id: `${term.id}-${index}-${i}`,
         term,
         isCorrect: term.id === correct.id,
-        x: 20 + col * cellW + Math.random() * Math.max(0, cellW - 150),
-        y: 150 + row * 150 + Math.random() * 30,
+        x: 10 + Math.random() * maxX,
+        y: 10 + Math.random() * Math.max(0, maxY - 20),
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp,
       }
     })
     answeredRef.current = false
+    bubblesRef.current = placed
     setBubbles(placed)
     setDefinition(correct.definition || '')
     setTimeLeft(cfg.time)
     deadlineRef.current = Date.now() + cfg.time
     setFlash(null)
     setPhase('playing')
-  }, [terms, cfg.distractors, cfg.time])
+  }, [terms, cfg.distractors, cfg.time, cfg.speed])
 
   const advance = useCallback((answered: number, nextScore: number, nextLives: number) => {
     if (answered >= total || nextLives <= 0) { endGame(nextScore, answered); return }
@@ -149,6 +159,32 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     }, 100)
     return () => clearInterval(iv)
   }, [phase, bubbles, miss])
+
+  // moving targets: drift each bubble and bounce off the arena walls
+  useEffect(() => {
+    if (phase !== 'playing') return
+    let raf = 0
+    let last = performance.now()
+    const tick = (ts: number) => {
+      const dt = Math.min((ts - last) / 1000, 0.05)
+      last = ts
+      const w = gameAreaRef.current?.clientWidth ?? 900
+      const maxX = Math.max(0, w - BUBBLE)
+      const maxY = Math.max(0, ARENA_H - BUBBLE)
+      const next = bubblesRef.current.map((b) => {
+        let { x, y, vx, vy } = b
+        x += vx * dt; y += vy * dt
+        if (x <= 0) { x = 0; vx = Math.abs(vx) } else if (x >= maxX) { x = maxX; vx = -Math.abs(vx) }
+        if (y <= 0) { y = 0; vy = Math.abs(vy) } else if (y >= maxY) { y = maxY; vy = -Math.abs(vy) }
+        return { ...b, x, y, vx, vy }
+      })
+      bubblesRef.current = next
+      setBubbles(next)
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [phase])
 
   if (terms.length === 0) {
     return <div className="rounded-2xl border p-8 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary terms available.</div>
@@ -225,14 +261,13 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
             </div>
           )}
 
-          {bubbles.map((b, i) => {
+          {bubbles.map((b) => {
             const popped = Boolean(flash) && b.isCorrect
             return (
               <button key={b.id} onClick={() => hit(b)} disabled={phase !== 'playing'}
-                className="absolute grid place-items-center rounded-full text-center px-2 font-bold transition-transform hover:scale-110"
+                className="absolute grid place-items-center rounded-full text-center px-2 font-bold hover:brightness-105"
                 style={{
-                  left: b.x, top: b.y, width: 130, height: 130,
-                  animation: `bob ${2 + (i % 3) * 0.4}s ease-in-out infinite`,
+                  left: b.x, top: b.y, width: BUBBLE, height: BUBBLE,
                   border: '3px solid',
                   borderColor: popped ? 'var(--success)' : 'color-mix(in oklch, var(--primary) 40%, var(--border))',
                   background: popped ? 'color-mix(in oklch, var(--success) 25%, var(--card))' : 'var(--card)',
