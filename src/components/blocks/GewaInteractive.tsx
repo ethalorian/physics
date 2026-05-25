@@ -1,14 +1,20 @@
 "use client"
 
 import { useState } from 'react'
+import InkPad from './InkPad'
+import type { Stroke } from './DoodleCanvas'
 
-// Saved shape stays string-based so the teacher control-room rate-from-work
-// drawer (which reads given/equation/work/answer) keeps rendering it.
+// Given + Equation stay structured (chips / equation bank). Work & Answer are now
+// HANDWRITTEN on a drawing pad (workStrokes) — students show their solution by
+// hand and box the answer; the teacher control-room drawer renders the strokes.
+// `work`/`answer` strings remain optional for backward compatibility with older
+// saved responses.
 export interface GewaValue {
   given?: string
   equation?: string
   work?: string
   answer?: string
+  workStrokes?: Stroke[]
 }
 
 interface Chip { sym: string; val: string; unit: string }
@@ -43,8 +49,7 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
   const equations = equationOptions && equationOptions.length > 0 ? equationOptions : DEFAULT_EQUATIONS
   const [chips, setChips] = useState<Chip[]>(parseGiven(value?.given))
   const [equation, setEquation] = useState(value?.equation ?? '')
-  const [work, setWork] = useState(value?.work ?? '')
-  const [answer, setAnswer] = useState(value?.answer ?? '')
+  const [workStrokes, setWorkStrokes] = useState<Stroke[]>(value?.workStrokes ?? [])
   const [nudges, setNudges] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
 
@@ -61,15 +66,14 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
       .map((c) => `${c.sym}${c.sym ? ' = ' : ''}${c.val}${c.unit ? ' ' + c.unit : ''}`.trim())
       .join('; ')
 
-  const buildValue = (): GewaValue => ({ given: givenString(), equation, work, answer })
+  const buildValue = (): GewaValue => ({ given: givenString(), equation, workStrokes })
 
   const runCheck = () => {
     const filled = chips.filter((c) => c.sym || c.val).length
     const n: { ok: boolean; msg: string }[] = [
       filled >= 2 ? { ok: true, msg: `You listed ${filled} knowns.` } : { ok: false, msg: 'Add at least the two knowns the problem gives you.' },
       equation ? { ok: true, msg: `Equation chosen: ${equation}.` } : { ok: false, msg: 'Choose an equation before you solve.' },
-      work.trim().length > 8 ? { ok: true, msg: 'You showed your substitution and steps.' } : { ok: false, msg: 'Show your work — substitute the values into your equation.' },
-      /[a-z/]/i.test(answer) && /\d/.test(answer) ? { ok: true, msg: 'Your answer has a number and a unit.' } : { ok: false, msg: 'Your answer needs both a number and a unit.' },
+      workStrokes.length > 0 ? { ok: true, msg: 'You showed your worked solution on the pad.' } : { ok: false, msg: 'Show your work on the pad — substitute your values and box the final answer.' },
     ]
     setNudges(n)
   }
@@ -137,34 +141,19 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
         </div>
       </div>
 
-      {/* WORK */}
+      {/* WORK & ANSWER — handwritten on the pad */}
       <div>
-        <div className="flex items-center gap-2 mb-2">{badge('W', 'var(--success)')}<span className="text-sm font-semibold">Work — substitute and solve</span></div>
+        <div className="flex items-center gap-2 mb-2">
+          {badge('W', 'var(--success)')}{badge('A', 'var(--success)')}
+          <span className="text-sm font-semibold">Work &amp; Answer — show your steps and box the answer</span>
+        </div>
         {equation && (
           <div className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--foreground)' }}>
             Working from: <b style={{ fontFamily: 'Georgia, serif' }}>{equation}</b>
           </div>
         )}
-        <textarea
-          value={work}
-          onChange={(e) => { setWork(e.target.value); setSaved(false) }}
-          rows={4}
-          placeholder="Substitute your knowns and show every step — units included."
-          className="w-full rounded-lg border p-3 text-sm"
-          style={{ ...fieldBg, fontFamily: 'Georgia, serif', lineHeight: 1.7 }}
-        />
-      </div>
-
-      {/* ANSWER */}
-      <div>
-        <div className="flex items-center gap-2 mb-2">{badge('A', 'var(--success)')}<span className="text-sm font-semibold">Answer — a number with meaning</span></div>
-        <input
-          value={answer}
-          onChange={(e) => { setAnswer(e.target.value); setSaved(false) }}
-          placeholder="e.g.  36,000 km/h — the asteroid covers 36,000 km every hour"
-          className="w-full rounded-lg border p-3 text-sm"
-          style={fieldBg}
-        />
+        <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Write your solution by hand: substitute your knowns, solve step by step, and circle your final answer with its unit.</p>
+        <InkPad value={workStrokes} onChange={(s) => { setWorkStrokes(s); setSaved(false) }} />
       </div>
 
       {/* check + save */}

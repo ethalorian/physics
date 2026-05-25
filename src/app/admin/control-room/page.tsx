@@ -15,7 +15,7 @@ interface GridData {
   students: Student[]
   cells: Record<string, Record<string, Cell>>
 }
-interface WorkItem { lessonTitle: string; blockType: string | null; blockId: string; response: unknown; createdAt: string }
+interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }
 interface RecordItem { target_id: string; level: number; observed_at: string }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
@@ -42,8 +42,10 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 function workToText(r: unknown): string {
   if (r && typeof r === 'object') {
     const o = r as Record<string, unknown>
-    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o) {
-      return ['given', 'equation', 'work', 'answer'].filter((k) => o[k]).map((k) => `${k}: ${o[k]}`).join('; ')
+    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o) {
+      const parts = ['given', 'equation', 'work', 'answer'].filter((k) => o[k]).map((k) => `${k}: ${o[k]}`)
+      if (Array.isArray(o.workStrokes) && o.workStrokes.length > 0) parts.push('work & answer: [handwritten — see drawing]')
+      return parts.join('; ')
     }
     if ('pattern' in o || 'interpret' in o) {
       return [o.pattern ? `pattern: ${o.pattern}` : '', o.interpret ? `interpret: ${o.interpret}` : ''].filter(Boolean).join('; ')
@@ -55,10 +57,24 @@ function workToText(r: unknown): string {
 }
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
+type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
+function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string }) {
+  if (!strokes || strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
+  return (
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 420, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label={label}>
+      {strokes.map((s, i) => {
+        const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
+        if (!pts) return null
+        return <polyline key={i} points={pts} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+      })}
+    </svg>
+  )
+}
+
 function ResponseView({ response }: { response: unknown }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
-    const isGewa = 'given' in o || 'equation' in o || 'work' in o || 'answer' in o
+    const isGewa = 'given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o
     if (isGewa) {
       const field = (k: string, label: string) =>
         o[k] != null && String(o[k]).trim() !== '' ? (
@@ -66,27 +82,25 @@ function ResponseView({ response }: { response: unknown }) {
             <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(o[k])}
           </div>
         ) : null
+      const ws = Array.isArray(o.workStrokes) ? (o.workStrokes as StrokeShape[]) : null
       return (
         <div>
           {field('given', 'Given')}
           {field('equation', 'Equation')}
           {field('work', 'Work')}
           {field('answer', 'Answer')}
+          {ws && (
+            <div className="mt-1.5">
+              <div className="text-sm" style={{ marginBottom: 4 }}><b style={{ color: 'var(--secondary-foreground)' }}>Work &amp; Answer:</b></div>
+              <StrokesSvg strokes={ws} label="Student handwritten work" />
+            </div>
+          )}
         </div>
       )
     }
     if ('strokes' in o) {
-      const strokes = Array.isArray(o.strokes) ? (o.strokes as { color?: string; points?: { x: number; y: number }[] }[]) : []
-      if (strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
-      return (
-        <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 360, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="Student drawing">
-          {strokes.map((s, i) => {
-            const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
-            if (!pts) return null
-            return <polyline key={i} points={pts} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-          })}
-        </svg>
-      )
+      const strokes = Array.isArray(o.strokes) ? (o.strokes as StrokeShape[]) : []
+      return <StrokesSvg strokes={strokes} label="Student drawing" />
     }
     if ('pattern' in o || 'interpret' in o) {
       return (
@@ -145,7 +159,7 @@ export default function ControlRoomPage() {
     setWork(null)
     setSuggestion(null)
     setWorkLoading(true)
-    fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}`)
+    fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
       .then((r) => r.json())
       .then((d: WorkData) => { setWork(d); setWorkLoading(false) })
       .catch(() => setWorkLoading(false))
@@ -352,10 +366,10 @@ export default function ControlRoomPage() {
               )}
 
               {/* submitted work */}
-              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Submitted work (this unit)</div>
+              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
               {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
               {!workLoading && work && work.work.length === 0 && (
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No submitted work captured yet for this unit.</p>
+                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
               )}
               {!workLoading && work && work.work.map((w) => (
                 <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>

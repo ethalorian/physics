@@ -25,6 +25,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const unitId = searchParams.get('unit_id')
     const requestedUserId = searchParams.get('user_id')
+    // When a specific target cell is opened, scope the returned work to just that
+    // target's lesson — so the teacher sees only the evidence for what they clicked.
+    const targetId = searchParams.get('target_id')
     if (!unitId) {
       return NextResponse.json({ error: 'Missing unit_id' }, { status: 400 })
     }
@@ -48,14 +51,22 @@ export async function GET(request: NextRequest) {
     const titleByLesson = new Map<string, string>(lessons.map((l): [string, string] => [l.id, l.title]))
     const lessonIds = lessons.map((l) => l.id)
 
+    // If a target was clicked, narrow the lessons to just that target's lesson.
+    let scopeLessonIds = lessonIds
+    if (targetId) {
+      const { data: tRow } = await supabaseAdmin.from('learning_targets').select('lesson_id').eq('id', targetId).maybeSingle()
+      const lid = (tRow as { lesson_id: string | null } | null)?.lesson_id ?? null
+      scopeLessonIds = lid && lessonIds.includes(lid) ? [lid] : []
+    }
+
     // The student's block work for those lessons — latest per (lesson, block)
-    const work: { lessonTitle: string; blockType: string | null; blockId: string; response: unknown; createdAt: string }[] = []
-    if (lessonIds.length > 0) {
+    const work: { lessonTitle: string; lessonId: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }[] = []
+    if (scopeLessonIds.length > 0) {
       const { data: blockRows } = await supabaseAdmin
         .from('block_responses')
         .select('lesson_id, block_id, block_type, response, created_at')
         .eq('user_id', userId)
-        .in('lesson_id', lessonIds)
+        .in('lesson_id', scopeLessonIds)
         .order('created_at', { ascending: false })
       const seen = new Set<string>()
       for (const b of (blockRows ?? []) as BlockRow[]) {
@@ -64,6 +75,7 @@ export async function GET(request: NextRequest) {
         seen.add(key)
         work.push({
           lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Lesson',
+          lessonId: b.lesson_id,
           blockType: b.block_type,
           blockId: b.block_id,
           response: b.response,
