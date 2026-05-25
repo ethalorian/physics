@@ -45,6 +45,8 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'sim_embed', label: 'Simulation embed', group: 'Teach', fields: [
     { key: 'simulationSlug', label: 'Simulation', kind: 'simref' },
   ] },
+  { type: 'equation_visualizer', label: 'Equation visualizer', group: 'Teach', fields: [] },
+  { type: 'lesson_vocab', label: 'Lesson vocabulary', group: 'Teach', fields: [] },
   { type: 'doodle', label: 'Doodle / sketch', group: 'Practice', capture: true, fields: [
     { key: 'instruction', label: 'Instruction', kind: 'text' },
     { key: 'prompts', label: 'Numbered prompts', kind: 'stringlist' },

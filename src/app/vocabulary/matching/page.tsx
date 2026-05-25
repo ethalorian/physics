@@ -1,20 +1,19 @@
 "use client"
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
-import { useVocabulary } from '@/contexts/VocabularyContext'
+import VocabPlaySource, { type ResolvedPlay } from '@/components/vocabulary/arcade/VocabPlaySource'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Users, Trophy, BookOpen, RotateCcw, Target } from 'lucide-react'
+import { ArrowLeft, Users, Trophy, BookOpen, Target } from 'lucide-react'
 import Link from 'next/link'
 import VocabularyMatchingGameWrapper from '@/components/vocabulary/games/VocabularyMatchingGameWrapper'
 import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
 
 export default function StudentVocabularyMatchingPage() {
   const { data: session, status } = useSession()
-  const { vocabularySets, loading } = useVocabulary()
-  const [selectedSetId, setSelectedSetId] = useState<string>('')
+  const [play, setPlay] = useState<ResolvedPlay>({ terms: [], scoreSetId: null, label: '' })
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
   const [maxMatches, setMaxMatches] = useState<number>(8)
   const [gameStarted, setGameStarted] = useState(false)
@@ -24,7 +23,7 @@ export default function StudentVocabularyMatchingPage() {
     timeSpent: number
   } | null>(null)
   
-  if (status === 'loading' || loading) {
+  if (status === 'loading') {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center min-h-[400px]">
@@ -47,14 +46,7 @@ export default function StudentVocabularyMatchingPage() {
     )
   }
 
-  const selectedSet = vocabularySets.find(set => set.id === selectedSetId)
-  
-  // Apply proper difficulty filtering
-  const availableTerms = selectedSet?.terms.filter(term => {
-    if (difficulty === 'easy') return term.term.length <= 8
-    if (difficulty === 'medium') return term.term.length > 8 && term.term.length <= 12
-    return term.term.length > 12
-  }) || []
+  const availableTerms = play.terms
 
   // Score saving is centralized in ArcadeEndScreen (the one uniform save path).
   const handleGameComplete = (score: number, totalMatches: number, timeSpent: number) => {
@@ -73,7 +65,7 @@ export default function StudentVocabularyMatchingPage() {
         <ArcadeEndScreen
           gameType="matching"
           gameTitle="Matching"
-          vocabularySetId={selectedSetId}
+          vocabularySetId={play.scoreSetId}
           score={gameResults.score}
           maxScore={gameResults.totalMatches * 10}
           detail={`${gameResults.totalMatches} matches · ${Math.round(gameResults.timeSpent / 1000)}s`}
@@ -83,7 +75,7 @@ export default function StudentVocabularyMatchingPage() {
     )
   }
 
-  if (gameStarted && selectedSet && availableTerms.length >= maxMatches) {
+  if (gameStarted && availableTerms.length >= maxMatches) {
     return (
       <div className="container mx-auto px-4 py-6">
         <div className="max-w-6xl mx-auto">
@@ -150,20 +142,9 @@ export default function StudentVocabularyMatchingPage() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
-                Vocabulary Set
+                What to play
               </label>
-              <Select value={selectedSetId} onValueChange={setSelectedSetId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choose a vocabulary set" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vocabularySets.map((set) => (
-                    <SelectItem key={set.id} value={set.id}>
-                      {set.name} ({set.terms.length} terms)
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <VocabPlaySource onResolved={setPlay} />
             </div>
 
             <div className="space-y-2">
@@ -175,9 +156,9 @@ export default function StudentVocabularyMatchingPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="easy">Easy (≤8 letters)</SelectItem>
-                  <SelectItem value="medium">Medium (9-12 letters)</SelectItem>
-                  <SelectItem value="hard">Hard (&gt;12 letters)</SelectItem>
+                  <SelectItem value="easy">Easy (more time)</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="hard">Hard (faster)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -199,22 +180,17 @@ export default function StudentVocabularyMatchingPage() {
               </Select>
             </div>
 
-            {selectedSet && (
+            {availableTerms.length > 0 && availableTerms.length < maxMatches && (
               <div className="p-3 bg-muted rounded-lg">
-                <div className="text-sm text-muted-foreground">
-                  Available terms: <span className="font-medium text-foreground">{availableTerms.length}</span>
+                <div className="text-sm text-orange-600 dark:text-orange-400">
+                  Not enough terms for {maxMatches} matches (need {maxMatches}, have {availableTerms.length})
                 </div>
-                {availableTerms.length < maxMatches && (
-                  <div className="text-sm text-orange-600 dark:text-orange-400 mt-1">
-                    Not enough terms for {maxMatches} matches (need {maxMatches}, have {availableTerms.length})
-                  </div>
-                )}
               </div>
             )}
 
             <Button
               onClick={() => setGameStarted(true)}
-              disabled={!selectedSetId || availableTerms.length < maxMatches}
+              disabled={availableTerms.length < maxMatches}
               className="w-full"
               size="lg"
             >
@@ -298,24 +274,6 @@ export default function StudentVocabularyMatchingPage() {
         </Card>
       </div>
 
-      {vocabularySets.length === 0 && (
-        <Card className="border-dashed">
-          <CardContent className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              No Vocabulary Sets Available
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Your teacher hasn&apos;t uploaded any vocabulary sets yet. Check back later or contact your teacher.
-            </p>
-            <Button variant="outline" asChild>
-              <Link href="/vocabulary">
-                Back to Games
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }

@@ -87,6 +87,14 @@ export interface SimEmbedBlock extends BaseBlock {
   simulationSlug: string;     // links to simulations.slug
 }
 
+export interface EquationVisualizerBlock extends BaseBlock {
+  type: 'equation_visualizer'; // native interactive equation explorer (no iframe)
+}
+
+export interface LessonVocabBlock extends BaseBlock {
+  type: 'lesson_vocab';        // renders the lesson's tiered SEI vocab (authored in the builder)
+}
+
 // ---------------------------------------------------------------------------
 // INTERACTIVE / DATA-CAPTURING BLOCKS  (`capture: true`)
 // ---------------------------------------------------------------------------
@@ -156,7 +164,7 @@ export interface TransferPromptBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock
+  | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
   | GewaBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock;
 

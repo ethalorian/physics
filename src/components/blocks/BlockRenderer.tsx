@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, Component, type ReactNode } from 'react'
+import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
@@ -8,6 +9,11 @@ import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import { useBlockResponses } from './useBlockResponses'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
+
+// Heavy, self-contained interactive component — rendered natively (no iframe),
+// lazy-loaded so it doesn't bloat lessons that don't use it.
+const EquationVisualizer = dynamic(() => import('@/components/vocabulary/EquationVisualizer'), { ssr: false, loading: () => null })
+const LessonVocabView = dynamic(() => import('./LessonVocabView'), { ssr: false, loading: () => null })
 
 const C = {
   indigo: 'var(--foreground)',
@@ -115,7 +121,7 @@ function Card({ children }: { children: React.ReactNode }) {
   return <div className="rounded-lg border p-4" style={{ borderColor: C.hairline, background: 'var(--card)' }}>{children}</div>
 }
 
-function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
+function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string) {
   switch (b.type) {
     case 'target':
       return (
@@ -182,6 +188,10 @@ function renderBlock(b: ContentBlock, saved: unknown, save: SaveFn) {
       )
     case 'sim_embed':
       return <SimEmbed slug={b.simulationSlug} />
+    case 'equation_visualizer':
+      return <EquationVisualizer />
+    case 'lesson_vocab':
+      return <LessonVocabView lessonId={lessonId} />
     case 'doodle':
       return (
         <DoodleCanvas
@@ -238,7 +248,7 @@ export default function BlockRenderer({ blocks, lessonId }: { blocks: ContentBlo
     <div className="space-y-5">
       {blocks.map((b) => (
         <div key={b.id}>
-          <BlockBoundary label={b.type}>{renderBlock(b, responses[b.id]?.response, save)}</BlockBoundary>
+          <BlockBoundary label={b.type}>{renderBlock(b, responses[b.id]?.response, save, lessonId)}</BlockBoundary>
         </div>
       ))}
     </div>
