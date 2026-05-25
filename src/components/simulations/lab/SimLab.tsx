@@ -26,6 +26,10 @@ const LEVEL_TINT: Record<string, string> = {
   Intro: 'var(--success)', Core: 'var(--primary)', Challenge: 'var(--reward)',
 }
 
+// Fixed-substep integration constants (module scope = stable across renders).
+const FIXED_DT = 1 / 120
+const MAX_SUBSTEPS = 10
+
 export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId?: string }) {
   const router = useRouter()
   const { data: session } = useSession()
@@ -38,6 +42,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const engineRef = useRef<SimEngine | null>(null)
   const rafRef = useRef<number | null>(null)
   const lastTsRef = useRef<number | null>(null)
+  const accumRef = useRef(0)
   const runningRef = useRef(false)
   const activityIdRef = useRef<string | null>(null)
 
@@ -125,13 +130,25 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   }, [markComplete])
 
   // ---- animation loop -----------------------------------------------------
+  // Fixed-substep integration: regardless of frame rate, physics advances in
+  // small constant steps. A slow frame or a backgrounded tab can't make an
+  // object tunnel through a wall or blow up — every engine integrates stably.
   const loop = useCallback((ts: number) => {
     const eng = engineRef.current
     if (!eng) return
     const last = lastTsRef.current ?? ts
-    const dt = Math.min((ts - last) / 1000, 0.05)
+    const frame = Math.min((ts - last) / 1000, 0.1) // clamp huge gaps (tab switch)
     lastTsRef.current = ts
-    eng.step?.(dt)
+    if (eng.step) {
+      accumRef.current += frame
+      let n = 0
+      while (accumRef.current >= FIXED_DT && n < MAX_SUBSTEPS) {
+        eng.step(FIXED_DT)
+        accumRef.current -= FIXED_DT
+        n++
+      }
+      if (accumRef.current > FIXED_DT * MAX_SUBSTEPS) accumRef.current = 0 // shed backlog
+    }
     eng.render()
     pullState()
     if (runningRef.current) rafRef.current = requestAnimationFrame(loop)
@@ -142,6 +159,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     runningRef.current = true
     setRunning(true)
     lastTsRef.current = null
+    accumRef.current = 0
     rafRef.current = requestAnimationFrame(loop)
   }, [loop])
 
@@ -284,7 +302,9 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
         {/* controls + completion + about */}
         <div className="space-y-4">
           <div className="rounded-2xl p-4 space-y-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
-            {def.params.map((p) => (
+            {def.params.map((p) => {
+              const locked = running && !p.live
+              return (
               <div key={p.key} className="space-y-1.5">
                 {p.type === 'slider' && (
                   <>
@@ -292,7 +312,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                       <label className="font-medium">{p.label}</label>
                       <span style={{ color: 'var(--muted-foreground)' }}>{values[p.key] as number}{p.unit ? ` ${p.unit}` : ''}</span>
                     </div>
-                    <input type="range" min={p.min} max={p.max} step={p.step ?? 1} value={values[p.key] as number} disabled={running}
+                    <input type="range" min={p.min} max={p.max} step={p.step ?? 1} value={values[p.key] as number} disabled={locked}
                       onChange={(e) => handleParam(p.key, Number(e.target.value))}
                       className="w-full" style={{ accentColor: 'var(--primary)' }} />
                   </>
@@ -300,7 +320,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                 {p.type === 'select' && (
                   <>
                     <label className="text-sm font-medium">{p.label}</label>
-                    <select value={values[p.key] as string} disabled={running} onChange={(e) => handleParam(p.key, e.target.value)}
+                    <select value={values[p.key] as string} disabled={locked} onChange={(e) => handleParam(p.key, e.target.value)}
                       className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
                       {p.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </select>
@@ -309,11 +329,12 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                 {p.type === 'toggle' && (
                   <label className="flex items-center justify-between text-sm font-medium cursor-pointer">
                     {p.label}
-                    <input type="checkbox" checked={values[p.key] as boolean} onChange={(e) => handleParam(p.key, e.target.checked)} style={{ accentColor: 'var(--primary)' }} />
+                    <input type="checkbox" checked={values[p.key] as boolean} disabled={locked} onChange={(e) => handleParam(p.key, e.target.checked)} style={{ accentColor: 'var(--primary)' }} />
                   </label>
                 )}
               </div>
-            ))}
+              )
+            })}
 
             <div className="flex flex-col gap-2 pt-1">
               {showPlay && (

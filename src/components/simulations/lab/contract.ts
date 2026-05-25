@@ -14,6 +14,8 @@
 export type SimLevel = 'Intro' | 'Core' | 'Challenge'
 
 /** A user-facing control. The shell renders it; values flow to engine.setParams. */
+// `live` controls stay editable while the sim is running (e.g. steering a walker
+// mid-run). Without it, the shell disables a control during a run.
 export type SimParam =
   | {
       key: string
@@ -24,6 +26,7 @@ export type SimParam =
       step?: number
       unit?: string
       default: number
+      live?: boolean
     }
   | {
       key: string
@@ -31,12 +34,14 @@ export type SimParam =
       type: 'select'
       options: { value: string; label: string }[]
       default: string
+      live?: boolean
     }
   | {
       key: string
       label: string
       type: 'toggle'
       default: boolean
+      live?: boolean
     }
 
 export type ParamValue = number | string | boolean

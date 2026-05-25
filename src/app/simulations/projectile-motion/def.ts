@@ -11,6 +11,7 @@ export const projectileDef: SimDefinition = {
     { key: 'speed', label: 'Launch speed', type: 'slider', min: 5, max: 50, step: 1, unit: 'm/s', default: 20 },
     { key: 'angle', label: 'Launch angle', type: 'slider', min: 0, max: 90, step: 1, unit: '°', default: 45 },
     { key: 'height', label: 'Launch height', type: 'slider', min: 0, max: 20, step: 0.5, unit: 'm', default: 0 },
+    { key: 'drag', label: 'Air drag', type: 'slider', min: 0, max: 0.3, step: 0.02, default: 0, live: true },
   ],
   readouts: [
     { key: 'time', label: 'Time', unit: 's' },
@@ -30,6 +31,7 @@ export const projectileDef: SimDefinition = {
       'Find the angle that gives the longest range',
       'Compare a 30° and a 60° launch at the same speed',
       'Raise the launch height and watch the range change',
+      'Turn up air drag and compare the path to the faint no-drag arc',
     ],
   },
 }
