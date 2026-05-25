@@ -51,11 +51,16 @@ export default function PacingPage() {
   const isAdmin = role === 'admin'
   const [courses, setCourses] = useState<Course[] | null>(null)
   const [cal, setCal] = useState<CalData | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   const loadCal = useCallback(() => {
     fetch('/api/pacing/calendar').then((r) => r.json())
       .then((d: CalData) => setCal(d)).catch(() => setCal(null))
   }, [])
+
+  // Any change that affects the calendar (rotation, master pace, a section's
+  // block/start/position) refreshes the unified calendar AND every section card.
+  const refresh = useCallback(() => { loadCal(); setRefreshKey((k) => k + 1) }, [loadCal])
 
   useEffect(() => {
     fetch('/api/courses').then((r) => r.json())
@@ -91,8 +96,8 @@ export default function PacingPage() {
         </p>
       </div>
 
-      {isAdmin && <RotationEditor />}
-      {isAdmin && <GuideEditor />}
+      {isAdmin && <RotationEditor onSaved={refresh} />}
+      {isAdmin && <GuideEditor onSaved={refresh} />}
 
       {/* unified month calendar — all your sections at a glance */}
       {cal && cal.sections.some((s) => s.block && s.startDate) && (
@@ -116,7 +121,7 @@ export default function PacingPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {courses.map((c) => <SectionCard key={c.id} course={c} cal={cal} onChanged={loadCal} />)}
+          {courses.map((c) => <SectionCard key={c.id} course={c} cal={cal} onChanged={refresh} refreshKey={refreshKey} />)}
         </div>
       )}
     </div>
@@ -126,7 +131,7 @@ export default function PacingPage() {
 // ---------------------------------------------------------------------------
 // Admin: school-wide rotation calendar
 // ---------------------------------------------------------------------------
-function RotationEditor() {
+function RotationEditor({ onSaved }: { onSaved?: () => void }) {
   const [open, setOpen] = useState(false)
   const [anchorDate, setAnchorDate] = useState('')
   const [p1, setP1] = useState('A')
@@ -156,7 +161,7 @@ function RotationEditor() {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ anchor_date: anchorDate || null, anchor_p1_block: p1, no_school_dates: noSchool, cycle_offset: over.offset ?? offset }),
       })
-      if (res.ok) setSaved(true)
+      if (res.ok) { setSaved(true); onSaved?.() }
     } finally { setSaving(false) }
   }
   const save = () => persist()
@@ -252,7 +257,7 @@ function RotationEditor() {
 // ---------------------------------------------------------------------------
 // Admin: edit the master pace
 // ---------------------------------------------------------------------------
-function GuideEditor() {
+function GuideEditor({ onSaved }: { onSaved?: () => void }) {
   const [open, setOpen] = useState(false)
   const [items, setItems] = useState<PlanItem[] | null>(null)
   const [units, setUnits] = useState<{ order_index: number; name: string; allotted_days: number | null }[]>([])
@@ -272,7 +277,7 @@ function GuideEditor() {
       const lessons = Object.entries(edits).map(([id, planned_days]) => ({ id, planned_days }))
       const unitsBody = Object.entries(unitEdits).map(([order_index, allotted_days]) => ({ order_index: Number(order_index), allotted_days }))
       const res = await fetch('/api/pacing/plan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessons, units: unitsBody }) })
-      if (res.ok) { const d = await res.json(); setItems(d.items); setEdits({}); setUnitEdits({}); setSaved(true) }
+      if (res.ok) { const d = await res.json(); setItems(d.items); setEdits({}); setUnitEdits({}); setSaved(true); onSaved?.() }
     } finally { setSaving(false) }
   }
 
@@ -329,7 +334,7 @@ function GuideEditor() {
 // ---------------------------------------------------------------------------
 // Per-section tracker
 // ---------------------------------------------------------------------------
-function SectionCard({ course, cal, onChanged }: { course: Course; cal: CalData | null; onChanged: () => void }) {
+function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; cal: CalData | null; onChanged: () => void; refreshKey: number }) {
   const [data, setData] = useState<SectionData | null>(null)
   const [startDate, setStartDate] = useState('')
   const [block, setBlock] = useState('')
@@ -347,7 +352,7 @@ function SectionCard({ course, cal, onChanged }: { course: Course; cal: CalData 
     }).catch(() => {})
   }, [course.id])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [load, refreshKey])
 
   const saveSchedule = async () => {
     setSavingSched(true)

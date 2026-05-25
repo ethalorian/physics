@@ -140,7 +140,7 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                     <button
                       key={j}
                       disabled={!clickable}
-                      onClick={() => clickable && router.push(`/lessons/${m.lessonId}/build`)}
+                      onClick={() => clickable && router.push(`/admin/lessons/${m.lessonId}/build`)}
                       title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''}`}
                       className="text-left rounded-md px-1.5 py-1 transition-transform"
                       style={{
