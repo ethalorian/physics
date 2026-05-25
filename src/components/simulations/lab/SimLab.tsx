@@ -46,6 +46,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const accumRef = useRef(0)
   const runningRef = useRef(false)
   const activityIdRef = useRef<string | null>(null)
+  const pullRef = useRef<() => void>(() => {})
 
   const initialValues = useMemo(() => defaultParamValues(def.params), [def.params])
   const [values, setValues] = useState<ParamValues>(initialValues)
@@ -93,7 +94,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
       engineRef.current?.render()
     }
 
-    const engine = def.createEngine(canvas, ctx, initialValues)
+    const engine = def.createEngine(canvas, ctx, initialValues, { invalidate: () => pullRef.current() })
     engineRef.current = engine
     sizeCanvas()
     setReadouts(engine.getReadouts())
@@ -137,6 +138,10 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     if (eng.getSensorTrace) setSensorTrace(eng.getSensorTrace(sensorKey))
     if (eng.isComplete?.()) markComplete()
   }, [markComplete, sensorKey])
+
+  // Keep a stable ref to pullState so an input-driven engine (created once in the
+  // lifecycle effect) can request a re-read via the invalidate() callback.
+  pullRef.current = pullState
 
   // Switching channels re-reads the engine immediately (works even when paused).
   useEffect(() => { pullState() }, [sensorKey, pullState])

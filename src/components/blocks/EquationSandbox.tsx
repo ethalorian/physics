@@ -91,6 +91,22 @@ function evaluate(raw: string): number | null {
 
 const round = (n: number) => (Number.isInteger(n) ? n.toLocaleString() : parseFloat(n.toFixed(4)).toLocaleString(undefined, { maximumFractionDigits: 4 }))
 
+// Recognized units (kinematics/forces + common); compounds split on / · *.
+const BASE_UNITS = new Set(['m', 'km', 'cm', 'mm', 'nm', 's', 'ms', 'min', 'h', 'hr', 'kg', 'g', 'mg', 'n', 'j', 'kj', 'w', 'kw', 'pa', 'kpa', 'atm', 'v', 'a', 'c', 'k', 'hz', 'khz', 'rad', 'deg', 'mol', 'l', 'ml'])
+const isKnownUnit = (u: string) => {
+  const cleaned = u.replace(/[()]/g, '').trim()
+  return cleaned.length > 0 && cleaned.split(/[\s/·*]+/).filter(Boolean).every((p) => BASE_UNITS.has(p.replace(/[²³⁴]/g, '').replace(/\^\d+/g, '').toLowerCase()))
+}
+// True when a line ends in a number but no recognized unit — used only for a
+// gentle reminder on the final answer (never blocks, never judges the value).
+const lacksUnit = (line: string) => {
+  const rhs = (line.includes('=') ? line.split('=').pop()! : line).trim()
+  const m = rhs.match(/(-?\d*\.?\d+)\s*([^\d=]*)$/)
+  if (!m || !m[1]) return false
+  const unit = (m[2] || '').trim()
+  return !unit || !isKnownUnit(unit)
+}
+
 export default function EquationSandbox({ prompt, variables, equationToken, value, onChange, onSave, embedded }: EquationSandboxProps) {
   const [lines, setLines] = useState<string[]>(value?.lines?.length ? value.lines : [''])
   const [focus, setFocus] = useState(0)
@@ -123,9 +139,17 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
     setTimeout(() => { if (root && !root.contains(document.activeElement)) setFocus(-1) }, 0)
   }
 
+  const lastNonEmpty = [...lines].reverse().find((l) => l.trim()) || ''
+  const showUnitHint = /\d/.test(lastNonEmpty) && lacksUnit(lastNonEmpty)
+
   return (
-    <div className="flex flex-col gap-3" data-sandbox>
+    <div className="flex flex-col gap-2" data-sandbox>
       {prompt && <p className="text-sm" style={{ color: 'var(--foreground)' }}>{prompt}</p>}
+
+      {/* how to use it */}
+      <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+        Write your solution one step per line — press <b style={{ color: 'var(--foreground)' }}>Enter</b> for a new line, and tap a finished line to edit it. End with your answer <b style={{ color: 'var(--foreground)' }}>and its unit</b> (like 10 m/s). Number-only lines show their result automatically.
+      </p>
 
       {/* slim insert strip — tap or drag a known value/variable in */}
       {((variables && variables.length > 0) || equationToken) && (
@@ -172,6 +196,10 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
           )
         })}
       </div>
+
+      {showUnitHint && (
+        <p className="text-xs" style={{ color: 'var(--muted-foreground)', fontStyle: 'italic' }}>Don&apos;t forget the unit on your answer (like m/s).</p>
+      )}
 
       {!embedded && onSave && (
         <div className="flex items-center gap-2">

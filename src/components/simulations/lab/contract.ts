@@ -126,7 +126,10 @@ export interface SimEngine {
 }
 
 export interface SimEngineFactory {
-  (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine
+  // `opts.invalidate` lets a non-animated, input-driven engine (e.g. a click-to-
+  // build sim) tell the shell to re-read its readouts/data/sensor after the engine
+  // mutates outside the animation loop. Animated sims can ignore it.
+  (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues, opts?: { invalidate: () => void }): SimEngine
 }
 
 /** Everything the shell needs to present a simulation. */
