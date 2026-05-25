@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, Component, type ReactNode } from 'react'
+import { useState, useEffect, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock, BlockType } from '@/data/content-blocks'
@@ -167,8 +167,22 @@ function TextCapture({
 
 // Render the simulation inside an IFRAME pointing at a chrome-free embed route.
 // The iframe is a hard layout boundary (the sim's elements can't escape into the
-// lesson) and a separate document (a sim crash can't take down the lesson).
+// lesson) and a separate document (a sim crash can't take down the lesson). The
+// embedded SimLab posts its real height back so the frame sizes to fit — no more
+// fixed 640px clipping. (Sims not yet migrated keep the fallback height.)
 function SimEmbed({ slug }: { slug: string }) {
+  const [height, setHeight] = useState(560)
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      const d = e.data
+      if (d && d.type === 'sim-embed-height' && d.slug === slug && typeof d.height === 'number') {
+        setHeight(Math.max(240, Math.ceil(d.height)))
+      }
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [slug])
+
   if (!SIM_COMPONENTS[slug]) {
     return (
       <div className="text-sm" style={{ color: C.muted }}>
@@ -182,7 +196,7 @@ function SimEmbed({ slug }: { slug: string }) {
         src={`/embed/sim/${slug}`}
         title={`Simulation: ${slug}`}
         loading="lazy"
-        style={{ width: '100%', height: 640, border: 'none', display: 'block', background: 'var(--card)' }}
+        style={{ width: '100%', height, border: 'none', display: 'block', background: 'var(--card)' }}
       />
     </div>
   )
