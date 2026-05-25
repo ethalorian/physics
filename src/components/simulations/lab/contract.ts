@@ -58,6 +58,32 @@ export interface SimReadout {
   color?: string
 }
 
+// ---------------------------------------------------------------------------
+// Mock sensor — a live readout styled like Vernier Graphical Analysis, so a sim
+// mirrors the probe students use at the bench (same trace, same units). An
+// engine declares a SensorSpec and feeds getSensorTrace(); the shell renders it.
+// ---------------------------------------------------------------------------
+
+export type SensorKind =
+  | 'motion' | 'force' | 'pressure' | 'temperature' | 'microphone'
+  | 'voltage' | 'current' | 'magnetic-field' | 'light' | 'generic'
+
+export interface SensorSpec {
+  kind: SensorKind
+  /** Probe name, e.g. "Motion Detector", "Dual-Range Force Sensor". */
+  label: string
+  /** Measured quantity, e.g. "Vertical velocity". */
+  quantity: string
+  /** Unit of the y value, e.g. "m/s". */
+  unit: string
+  /** x-axis label (default "Time (s)"). */
+  xLabel?: string
+  /** Override trace color; otherwise a per-kind default is used. */
+  color?: string
+}
+
+export interface SensorSample { x: number; y: number }
+
 /** Tabular data for the table / chart / CSV export. */
 export interface SimData {
   columns: string[]
@@ -87,6 +113,8 @@ export interface SimEngine {
   getReadouts(): Record<string, number | string>
   /** Collected data for table/chart/export, if the sim produces any. */
   getData?(): SimData
+  /** Live trace for the mock sensor readout (matches the definition's SensorSpec). */
+  getSensorTrace?(): SensorSample[]
   /** True once this run has met the sim's "did something meaningful" bar. */
   isComplete?(): boolean
   /** Detach listeners / cancel rAF. The shell calls this on unmount. */
@@ -108,6 +136,8 @@ export interface SimDefinition {
   createEngine: SimEngineFactory
   /** Default canvas height in px (shell still makes it responsive). Default 420. */
   canvasHeight?: number
+  /** Optional mock sensor — renders a Vernier-style live trace from getSensorTrace(). */
+  sensor?: SensorSpec
   /** Show the play/pause control (auto-true when the engine defines `step`). */
   showPlay?: boolean
   /** Offer CSV export (auto-true when the engine defines `getData`). */

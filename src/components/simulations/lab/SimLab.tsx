@@ -12,8 +12,9 @@ import {
   ArrowLeft, Play, Pause, RotateCcw, Download, Info, CheckCircle2, Sparkles,
 } from 'lucide-react'
 import {
-  SimDefinition, SimEngine, ParamValues, defaultParamValues, SimData,
+  SimDefinition, SimEngine, ParamValues, defaultParamValues, SimData, SensorSample,
 } from './contract'
+import MockSensor from './MockSensor'
 
 // ---------------------------------------------------------------------------
 // SimLab — the one shell every simulation renders inside. The sim contributes
@@ -50,6 +51,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const [values, setValues] = useState<ParamValues>(initialValues)
   const [readouts, setReadouts] = useState<Record<string, number | string>>({})
   const [data, setData] = useState<SimData | null>(null)
+  const [sensorTrace, setSensorTrace] = useState<SensorSample[]>([])
   const [running, setRunning] = useState(false)
 
   const completionConfig = useMemo(() => getSimulationCriteria(def.slug), [def.slug])
@@ -126,6 +128,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     if (!eng) return
     setReadouts(eng.getReadouts())
     if (eng.getData) setData(eng.getData())
+    if (eng.getSensorTrace) setSensorTrace(eng.getSensorTrace())
     if (eng.isComplete?.()) markComplete()
   }, [markComplete])
 
@@ -276,6 +279,11 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                 )
               })}
             </div>
+          )}
+
+          {/* mock sensor — Vernier-style live trace */}
+          {def.sensor && (
+            <MockSensor spec={def.sensor} samples={sensorTrace} live={running} />
           )}
 
           {/* data table */}

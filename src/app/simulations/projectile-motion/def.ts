@@ -21,6 +21,7 @@ export const projectileDef: SimDefinition = {
     { key: 'vy', label: 'Vy', unit: 'm/s', precision: 1, color: 'var(--success)' },
   ],
   createEngine: createProjectileEngine,
+  sensor: { kind: 'motion', label: 'Motion Detector', quantity: 'Vertical velocity', unit: 'm/s' },
   learning: {
     objectives: [
       'Analyze 2D projectile motion',

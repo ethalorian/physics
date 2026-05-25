@@ -329,6 +329,11 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
         xCol: 1, yCol: 2,
       }
     },
+    getSensorTrace() {
+      // Motion Detector: vertical velocity vs time. A straight line of slope −g
+      // with no drag; it bends once drag is added — exactly the bench trace.
+      return dataPoints.map((d) => ({ x: d.time, y: d.vy }))
+    },
     isComplete() { return landed },
     destroy() {
       canvas.removeEventListener('mousedown', onDown)
