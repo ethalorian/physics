@@ -220,6 +220,51 @@ export interface GraphBlock extends BaseBlock {
 }
 
 // ---------------------------------------------------------------------------
+// CONCEPT EXERCISE (textbook reader + auto-graded digital exercise, side-by-side)
+// The heavy content (section text, items, and the answer key) lives server-side
+// in the `concept_exercises` table keyed by chapter — NOT inline in the lesson —
+// so lessons stay light, answer keys never ship to the client, and the
+// (copyrighted) workbook text isn't bundled into git/JS. The block only
+// references a chapter; the component fetches the chapter and renders the split
+// view (PDF reader left, questions right, scroll-synced by section page anchors).
+// ---------------------------------------------------------------------------
+
+export type ExItemType = 'fill_in' | 'multiple_choice' | 'true_false' | 'short_answer';
+
+export interface ExItem {
+  n: number;                                  // item number within its section
+  type: ExItemType;
+  prompt: string;                             // question text
+  blanks?: number;                            // fill_in: how many blanks (default 1)
+  options?: { letter: string; text: string }[]; // multiple_choice choices (also used for matching rows w/ a shared word bank)
+  multi?: boolean;                            // multiple_choice: "circle EACH" — more than one correct letter
+}
+
+export interface ExSection {
+  id: string;                                 // e.g. "3.1"
+  label: string;                              // e.g. "Aristotle on Motion"
+  pageStart: number;                          // book page — scroll-sync anchor
+  pageEnd: number;
+  items: ExItem[];
+}
+
+/** A chapter's reader+exercise payload as served to the client (NO answer key). */
+export interface ConceptChapter {
+  chapter: number;
+  title: string;
+  textPdfUrl: string;                         // hosted chapter PDF
+  pageOffset: number;                         // bookPage - pdfPageIndex (for sync)
+  sections: ExSection[];
+}
+
+export interface ConceptExerciseBlock extends BaseBlock {
+  type: 'concept_exercise';
+  capture: true;
+  chapter: number;                            // references the concept_exercises table
+  title?: string;
+}
+
+// ---------------------------------------------------------------------------
 // UNION + DOCUMENT
 // ---------------------------------------------------------------------------
 
@@ -228,7 +273,7 @@ export type ContentBlock =
   | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
-  | FigureBlock | DiagramBlock | GraphBlock;
+  | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
 
 export type BlockType = ContentBlock['type'];
 
@@ -240,7 +285,7 @@ export interface BlockDocument {
 
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
 export const CAPTURE_BLOCK_TYPES: BlockType[] = [
-  'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment',
+  'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {
