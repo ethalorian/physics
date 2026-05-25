@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { getUserRole } from '@/lib/permissions'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -24,9 +24,22 @@ interface Simulation {
   slug: string
   difficulty: 'beginner' | 'intermediate' | 'advanced'
   unit: string
+  topic: string
+  sortOrder: number
   published: boolean
   totalPlays?: number
 }
+
+const UNIT_NAMES: Record<string, string> = {
+  'unit-1': 'Unit 1 · Motion & Forces',
+  'unit-2': 'Unit 2 · Gravitation & Fields',
+  'unit-3': 'Unit 3 · Momentum & Collisions',
+  'unit-4': 'Unit 4 · Energy & Work',
+  'unit-5': 'Unit 5 · Thermal Physics',
+  'unit-6': 'Unit 6 · Waves, Sound & Light',
+  'unit-7': 'Unit 7 · Electricity & Magnetism',
+}
+const UNIT_ORDER = ['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7']
 
 export default function AdminSimulationsPage() {
   const { data: session, status } = useSession()
@@ -50,7 +63,9 @@ export default function AdminSimulationsPage() {
           description: sim.description || '',
           slug: sim.slug,
           difficulty: sim.difficulty || 'intermediate',
-          unit: sim.unit,
+          unit: sim.unit || 'unit-1',
+          topic: sim.topic || 'Other',
+          sortOrder: typeof sim.sort_order === 'number' ? sim.sort_order : 999,
           published: sim.published,
           totalPlays: sim.view_count || 0
         }))
@@ -115,6 +130,29 @@ export default function AdminSimulationsPage() {
       router.push('/dashboard')
     }
   }, [session, status, userRole, router])
+
+  // unit → ordered [{ topic, sims }] for the grouped management view
+  const grouped = useMemo(() => {
+    const byUnit = new Map<string, Simulation[]>()
+    for (const s of simulations) {
+      if (!byUnit.has(s.unit)) byUnit.set(s.unit, [])
+      byUnit.get(s.unit)!.push(s)
+    }
+    const units = [...byUnit.keys()].sort((a, b) => {
+      const ia = UNIT_ORDER.indexOf(a), ib = UNIT_ORDER.indexOf(b)
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
+    })
+    return units.map((unit) => {
+      const sims = byUnit.get(unit)!.sort((a, b) => a.sortOrder - b.sortOrder)
+      const topics: { topic: string; sims: Simulation[] }[] = []
+      for (const s of sims) {
+        const last = topics[topics.length - 1]
+        if (last && last.topic === s.topic) last.sims.push(s)
+        else topics.push({ topic: s.topic, sims: [s] })
+      }
+      return { unit, topics }
+    })
+  }, [simulations])
 
   // Show loading while checking auth or loading simulations
   if (status === 'loading' || (loading && simulations.length === 0)) {
@@ -235,115 +273,71 @@ export default function AdminSimulationsPage() {
         </Card>
       </div>
 
-      {/* Simulations List */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">All Simulations</h2>
-        
-        {simulations.length === 0 ? (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Play className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-semibold mb-2">No simulations available</h3>
-              <p className="text-muted-foreground">
-                Physics simulations will appear here once they are added to the system
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {simulations.map((simulation) => (
-              <Card key={simulation.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex gap-2">
-                      <Badge 
-                        variant={simulation.published ? "default" : "secondary"}
-                      >
-                        {simulation.published ? 'Published' : 'Draft'}
-                      </Badge>
-                      <Badge 
-                        variant="outline" 
-                        className={getDifficultyColor(simulation.difficulty)}
-                      >
-                        {simulation.difficulty}
-                      </Badge>
+      {/* Simulations grouped by unit → topic, in teaching order */}
+      {simulations.length === 0 ? (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <Play className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+            <h3 className="text-lg font-semibold mb-2">No simulations available</h3>
+            <p className="text-muted-foreground">Physics simulations will appear here once they are added to the system</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="space-y-10">
+          {grouped.map(({ unit, topics }) => (
+            <section key={unit}>
+              <div className="flex items-center gap-2 mb-4 pb-2" style={{ borderBottom: '2px solid color-mix(in oklch, var(--primary) 30%, var(--border))' }}>
+                <h2 className="text-xl font-semibold">{UNIT_NAMES[unit] ?? unit}</h2>
+                <Badge variant="outline">{topics.reduce((n, t) => n + t.sims.length, 0)} labs</Badge>
+              </div>
+              <div className="space-y-6">
+                {topics.map(({ topic, sims }) => (
+                  <div key={topic}>
+                    <h3 className="text-sm font-semibold uppercase tracking-wide mb-3 text-muted-foreground">{topic}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {sims.map((simulation) => (
+                        <Card key={simulation.id} className="hover:shadow-md transition-shadow">
+                          <CardHeader className="pb-2">
+                            <div className="flex items-start justify-between mb-1">
+                              <Badge variant={simulation.published ? 'default' : 'secondary'}>
+                                {simulation.published ? 'Published' : 'Draft'}
+                              </Badge>
+                              <Badge variant="outline" className={getDifficultyColor(simulation.difficulty)}>
+                                {simulation.difficulty}
+                              </Badge>
+                            </div>
+                            <CardTitle className="text-base">{simulation.title}</CardTitle>
+                            <CardDescription className="line-clamp-2 text-xs">{simulation.description}</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-3">
+                            {simulation.totalPlays !== undefined && (
+                              <div className="flex items-center text-xs text-muted-foreground">
+                                <Play className="h-3.5 w-3.5 mr-1" />{simulation.totalPlays} views
+                              </div>
+                            )}
+                            <div className="flex items-center justify-between py-2 px-3 rounded-lg" style={{ background: 'var(--muted)' }}>
+                              <Label htmlFor={`published-${simulation.id}`} className="text-sm font-medium cursor-pointer">Published</Label>
+                              <Switch id={`published-${simulation.id}`} checked={simulation.published} onCheckedChange={() => togglePublished(simulation.id, simulation.published)} />
+                            </div>
+                            <div className="flex gap-2">
+                              <Button variant="outline" size="sm" className="flex-1" onClick={() => router.push(`/simulations/${simulation.slug}`)}>
+                                <Eye className="h-4 w-4 mr-2" />Preview
+                              </Button>
+                              <Button variant="outline" size="sm" onClick={() => router.push(`/admin/simulations/analytics`)}>
+                                <BarChart3 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
                     </div>
                   </div>
-                  <CardTitle className="text-lg">{simulation.title}</CardTitle>
-                  <CardDescription className="line-clamp-2">
-                    {simulation.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="text-sm text-muted-foreground">
-                      {simulation.unit}
-                    </div>
-
-                    {simulation.totalPlays !== undefined && (
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Play className="h-4 w-4 mr-1" />
-                        <span>{simulation.totalPlays} views</span>
-                      </div>
-                    )}
-
-                    {/* Published Toggle */}
-                    <div className="flex items-center justify-between py-2 px-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                      <Label htmlFor={`published-${simulation.id}`} className="text-sm font-medium cursor-pointer">
-                        Published
-                      </Label>
-                      <Switch
-                        id={`published-${simulation.id}`}
-                        checked={simulation.published}
-                        onCheckedChange={() => togglePublished(simulation.id, simulation.published)}
-                      />
-                    </div>
-
-                    <div className="flex gap-2 pt-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => router.push(`/simulations/${simulation.slug}`)}
-                      >
-                        <Eye className="h-4 w-4 mr-2" />
-                        Preview
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => router.push(`/admin/simulations/analytics`)}
-                      >
-                        <BarChart3 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Coming Soon Notice */}
-      <Card className="mt-8 bg-blue-500/5 border-blue-500/20">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Play className="h-5 w-5 text-blue-500" />
-            More Simulations Coming Soon
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li>• Accelerated Motion Lab - Explore changing velocity</li>
-            <li>• Free Fall Simulator - Study gravitational acceleration</li>
-            <li>• Projectile Motion - Analyze 2D motion trajectories</li>
-            <li>• Force and Motion - Newton&apos;s Laws interactive</li>
-            <li>• Energy Conservation - Track energy transformations</li>
-            <li>• Collision Lab - Momentum and energy in collisions</li>
-          </ul>
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
