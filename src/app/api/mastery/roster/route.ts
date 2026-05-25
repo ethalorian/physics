@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/roster
@@ -20,7 +20,8 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const role = getUserRole(session.user.email)
+    const ctx = await getEffectiveContext(session.user.email)
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can view a roster' }, { status: 403 })
     }
@@ -33,7 +34,7 @@ export async function GET() {
     // Admins see all students; teachers see students enrolled in courses they own
     // (students has no teacher_email column — scope flows through courses).
     if (role === 'teacher') {
-      query = query.in('google_user_id', await getTeacherStudentGids(session.user.email))
+      query = query.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
     }
 
     const { data, error } = await query

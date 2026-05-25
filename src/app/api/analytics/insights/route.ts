@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 
 // POST /api/analytics/insights
 // Given a pre-aggregated, filtered slice of mastery data, ask Claude to help the
@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (getUserRole(session.user.email) !== 'admin') {
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin') {
       return NextResponse.json({ error: 'Admin only' }, { status: 403 })
     }
     if (!process.env.ANTHROPIC_API_KEY) {

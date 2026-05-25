@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
-import { usePermissions } from "@/hooks/usePermissions"
+import { useViewAs } from "@/lib/use-view-as"
+import { clearViewAs } from "@/lib/view-as-shared"
 import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 import AccountMenu from "@/components/AccountMenu"
@@ -29,6 +30,9 @@ export default function Navbar() {
     isAuthenticated,
     canAccessAdmin
   } = useViewAwarePermissions(viewMode)
+
+  // "View as teacher" (admin previewing the colleague experience)
+  const { viewingAs, teacherEmail } = useViewAs()
 
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
@@ -49,12 +53,14 @@ export default function Navbar() {
     // students get their own journey. "View as student" flips canAccessAdmin off,
     // so staff can still preview the student nav.
     if (canAccessAdmin) {
-      return [
+      const staff = [
         { href: "/admin/home", label: "Home", icon: Home },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
       ]
+      // Hide the global Admin tab while previewing the teacher experience.
+      return viewingAs ? staff.filter((i) => i.href !== "/admin/dashboard") : staff
     }
 
     return [
@@ -71,6 +77,13 @@ export default function Navbar() {
   const navigationItems = getNavigationItems()
 
   return (
+    <>
+    {viewingAs && (
+      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
+        <span>Viewing as teacher{teacherEmail ? ` · ${teacherEmail}` : ''} — admin tools hidden.</span>
+        <button onClick={() => { clearViewAs(); window.location.reload() }} className="underline font-medium">Exit</button>
+      </div>
+    )}
     <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
@@ -202,5 +215,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
+    </>
   )
 }

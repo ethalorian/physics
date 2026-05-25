@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/teacher/summary
@@ -21,13 +21,13 @@ export async function GET() {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     // students in scope (keyed by google_user_id — see teacher-scope.ts)
     let studentIds: string[] = []
-    if (role === 'teacher') {
-      studentIds = await getTeacherStudentGids(session.user.email)
+    if (ctx.role === 'teacher') {
+      studentIds = await getTeacherStudentGids(ctx.scopeEmail)
     } else {
       const { data } = await supabaseAdmin.from('students').select('google_user_id')
       studentIds = [...new Set(((data ?? []) as GidRow[]).map((s) => s.google_user_id).filter((g): g is string => Boolean(g)))]
@@ -35,7 +35,7 @@ export async function GET() {
 
     // classes (teacher: owned; admin: all)
     let cQuery = supabaseAdmin.from('courses').select('*', { count: 'exact', head: true })
-    if (role === 'teacher') cQuery = cQuery.eq('teacher_email', session.user.email)
+    if (ctx.role === 'teacher') cQuery = cQuery.eq('teacher_email', ctx.scopeEmail)
     const { count: classCount } = await cQuery
 
     let ratingsThisWeek = 0

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 
 // Per-section calendar: start date, which weekdays it meets, no-school dates.
 // GET /api/pacing/schedule?course_id=...
@@ -19,12 +19,13 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
+    const ctx = await getEffectiveContext(session.user.email)
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const courseId = new URL(request.url).searchParams.get('course_id')
     if (!courseId) return NextResponse.json({ error: 'course_id required' }, { status: 400 })
-    if (!(await canAccessCourse(courseId, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!(await canAccessCourse(courseId, ctx.scopeEmail, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const { data } = await supabaseAdmin
       .from('section_schedules')
@@ -45,7 +46,8 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
+    const ctx = await getEffectiveContext(session.user.email)
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = (await request.json()) as {
@@ -56,7 +58,7 @@ export async function PUT(request: NextRequest) {
       block?: string | null
     }
     if (!body.course_id) return NextResponse.json({ error: 'course_id required' }, { status: 400 })
-    if (!(await canAccessCourse(body.course_id, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!(await canAccessCourse(body.course_id, ctx.scopeEmail, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const block = body.block ? body.block.toUpperCase() : null
     if (block && !['A', 'B', 'C', 'D', 'E', 'F', 'G'].includes(block)) {

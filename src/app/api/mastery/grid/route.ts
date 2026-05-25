@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
@@ -21,7 +21,8 @@ export async function GET(request: NextRequest) {
     if (!session?.user?.email || !session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const role = getUserRole(session.user.email)
+    const ctx = await getEffectiveContext(session.user.email)
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
     }
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
       .from('students')
       .select('google_user_id, name, email')
       .order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(session.user.email))
+    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
     const { data: studentRowsRaw } = await sQuery
     const students = ((studentRowsRaw ?? []) as StudentRow[])
       .filter((s) => s.google_user_id)

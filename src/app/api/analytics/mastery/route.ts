@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 
 // GET /api/analytics/mastery
@@ -27,7 +27,8 @@ export async function GET() {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (getUserRole(session.user.email) !== 'admin') {
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin') {
       return NextResponse.json({ error: 'App-wide analytics is admin only' }, { status: 403 })
     }
 

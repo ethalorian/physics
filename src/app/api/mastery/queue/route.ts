@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
@@ -23,7 +23,8 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
+    const ctx = await getEffectiveContext(session.user.email)
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
@@ -43,7 +44,7 @@ export async function GET(request: NextRequest) {
 
     // roster (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin.from('students').select('google_user_id, name').order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(session.user.email))
+    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
     const { data: sr } = await sQuery
     const students = ((sr ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name ?? 'Student' }))
     const studentIds = students.map((s) => s.id)

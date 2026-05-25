@@ -2,9 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
 import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
-import { getUserRole } from '@/lib/permissions'
+import { useViewAs } from '@/lib/use-view-as'
 import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
 
 interface Course { id: string; name: string; section: string | null; google_course_id: string | null }
@@ -36,8 +35,8 @@ function deltaLabel(d: number, status: PacingResult['status']): string {
 }
 
 export default function PacingPage() {
-  const { data: session } = useSession()
-  const isAdmin = getUserRole(session?.user?.email) === 'admin'
+  const { role } = useViewAs()
+  const isAdmin = role === 'admin'
   const [courses, setCourses] = useState<Course[] | null>(null)
 
   useEffect(() => {

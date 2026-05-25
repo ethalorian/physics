@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { loadRotationCalendar } from '@/lib/pacing-server'
 import { ROTATING_BLOCKS } from '@/lib/rotation'
 
@@ -27,7 +28,8 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (getUserRole(session.user.email) !== 'admin') return NextResponse.json({ error: 'Only the admin can set the rotation calendar' }, { status: 403 })
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Only the admin can set the rotation calendar' }, { status: 403 })
 
     const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[]; cycle_offset?: number }
     const p1 = body.anchor_p1_block ? body.anchor_p1_block.toUpperCase() : null

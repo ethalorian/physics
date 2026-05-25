@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
 
 /**
@@ -17,8 +18,10 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userRole = getUserRole(session.user.email)
-    
+    const ctx = await getEffectiveContext(session.user.email)
+    const userRole = ctx.role
+    const scopeEmail = ctx.scopeEmail
+
     // Students can only see their enrolled courses
     // Teachers/Admins can see all their courses
     if (!userRole) {
@@ -53,8 +56,8 @@ export async function GET() {
           return NextResponse.json({ courses: [] })
         }
       } else if (userRole === 'teacher') {
-        // Get courses where teacher is the instructor
-        query = query.eq('teacher_email', session.user.email)
+        // Get courses where teacher is the instructor (effective scope email)
+        query = query.eq('teacher_email', scopeEmail)
       }
       // Admins see all courses (no additional filter)
 

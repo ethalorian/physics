@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
 import { loadPlanItems, furthestActiveItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
 import { Block, blockMeetingsElapsed } from '@/lib/rotation'
@@ -19,7 +19,8 @@ export async function GET() {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (getUserRole(session.user.email) !== 'admin') return NextResponse.json({ error: 'Admin only' }, { status: 403 })
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Admin only' }, { status: 403 })
 
     const items = await loadPlanItems()
 

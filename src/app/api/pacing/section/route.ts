@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
 import { loadPlanItems, getCourseStudentGids, autoSuggestItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
 import { Block, blockMeetingsElapsed, upcomingMeetings } from '@/lib/rotation'
@@ -38,12 +38,12 @@ export async function GET(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const courseId = new URL(request.url).searchParams.get('course_id')
     if (!courseId) return NextResponse.json({ error: 'course_id required' }, { status: 400 })
-    if (!(await canAccessCourse(courseId, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!(await canAccessCourse(courseId, ctx.scopeEmail, ctx.role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const items = await loadPlanItems()
     const [{ data: schedRow }, { data: pacingRow }, gids, cal] = await Promise.all([
@@ -105,12 +105,12 @@ export async function POST(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = (await request.json()) as { course_id: string; current_lesson_id?: string | null; current_unit_order?: number | null }
     if (!body.course_id) return NextResponse.json({ error: 'course_id required' }, { status: 400 })
-    if (!(await canAccessCourse(body.course_id, session.user.email, role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!(await canAccessCourse(body.course_id, ctx.scopeEmail, ctx.role))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const row = {
       course_id: body.course_id,
