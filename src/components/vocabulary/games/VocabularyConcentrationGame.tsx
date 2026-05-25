@@ -1,18 +1,21 @@
 "use client"
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { VocabularyTerm } from '@/types/assignment'
-import { 
-  Trophy, 
-  RotateCcw, 
+import {
+  Trophy,
+  RotateCcw,
   Brain,
   CheckCircle,
   Clock,
-  Eye
+  Flame,
+  Crown
 } from 'lucide-react'
+import { sfx } from '@/lib/arcade-sound'
+import SoundToggle from '@/components/vocabulary/arcade/SoundToggle'
 
 interface VocabularyConcentrationGameProps {
   vocabularyTerms: VocabularyTerm[]
@@ -61,6 +64,26 @@ export default function VocabularyConcentrationGame({
   
   const [gameCards, setGameCards] = useState<GameCard[]>([])
   const [gameTerms, setGameTerms] = useState<VocabularyTerm[]>([])
+  const [streak, setStreak] = useState(0)
+  const [shake, setShake] = useState(false)
+  const [best, setBest] = useState(0)
+  const [elapsed, setElapsed] = useState(0)
+  const streakRef = useRef(0)
+
+  const multiplier = Math.min(1 + Math.floor(streak / 3), 5)
+
+  useEffect(() => {
+    fetch('/api/student-progress/game-scores?game_type=concentration')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows: { score?: number }[]) => setBest(Array.isArray(rows) ? rows.reduce((m, x) => Math.max(m, x.score ?? 0), 0) : 0))
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (gameState.gameStatus !== 'playing') return
+    const iv = setInterval(() => setElapsed(Math.floor((Date.now() - gameState.startTime) / 1000)), 500)
+    return () => clearInterval(iv)
+  }, [gameState.gameStatus, gameState.startTime])
 
   // Initialize game terms
   useEffect(() => {
@@ -135,7 +158,9 @@ export default function VocabularyConcentrationGame({
 
   const startGame = useCallback(() => {
     if (gameTerms.length === 0) return
-    
+    sfx.start()
+    streakRef.current = 0
+    setStreak(0); setElapsed(0)
     setGameState(prev => ({
       ...prev,
       gameStatus: 'playing',
@@ -165,8 +190,9 @@ export default function VocabularyConcentrationGame({
     }
 
     // Flip the clicked card
-    setGameCards(prev => prev.map(card => 
-      card.id === clickedCard.id 
+    sfx.tick()
+    setGameCards(prev => prev.map(card =>
+      card.id === clickedCard.id
         ? { ...card, isFlipped: true }
         : card
     ))
@@ -201,32 +227,46 @@ export default function VocabularyConcentrationGame({
     }))
 
     if (isMatch) {
+      // juice: match chime + escalating combo
+      streakRef.current += 1
+      sfx.correct()
+      if (streakRef.current >= 3) sfx.streak(streakRef.current)
+      setStreak(streakRef.current)
       // Mark cards as matched
-      setGameCards(prev => prev.map(card => 
+      setGameCards(prev => prev.map(card =>
         (card.id === card1.id || card.id === card2.id)
           ? { ...card, isMatched: true }
           : card
       ))
-      
+
       // Check if game is complete
       const newMatches = gameState.matches + 1
       if (newMatches === gameState.totalPairs) {
         const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000)
         const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
+        // Reward fewest moves AND speed.
         const efficiencyBonus = Math.max(0, (gameState.totalPairs * 2 - gameState.moves - 1) * 5)
-        const totalScore = (newMatches * basePoints) + efficiencyBonus
-        
+        const targetSecs = gameState.totalPairs * 8
+        const speedBonus = Math.max(0, Math.round((targetSecs - timeSpent) * 2))
+        const totalScore = (newMatches * basePoints) + efficiencyBonus + speedBonus
+
+        sfx.gameover()
         setGameState(prev => ({
           ...prev,
           gameStatus: 'complete',
           score: totalScore
         }))
-        
+
         setTimeout(() => {
           onGameComplete?.(totalScore, newMatches, timeSpent)
-        }, 1500)
+        }, 900)
       }
     } else {
+      // juice: mismatch buzz + reset combo + shake
+      streakRef.current = 0
+      setStreak(0)
+      sfx.wrong()
+      setShake(true); setTimeout(() => setShake(false), 450)
       // Flip cards back over
       setTimeout(() => {
         setGameCards(prev => prev.map(card => 
@@ -299,7 +339,7 @@ export default function VocabularyConcentrationGame({
           </div>
           
           <div className="text-center">
-            <Button onClick={startGame} size="lg" className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={startGame} size="lg">
               <Brain className="h-4 w-4 mr-2" />
               Start Concentration
             </Button>
@@ -351,31 +391,38 @@ export default function VocabularyConcentrationGame({
     )
   }
 
+  const mm = String(Math.floor(elapsed / 60)).padStart(2, '0')
+  const ss = String(elapsed % 60).padStart(2, '0')
+
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
+      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
       {/* Game Header */}
       <Card>
         <CardContent className="p-3 sm:p-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
-              <Badge variant="outline" className="text-xs sm:text-sm">
-                {gameState.matches}/{gameState.totalPairs} pairs
-              </Badge>
-              <Badge variant="outline" className="capitalize text-xs sm:text-sm">
-                {difficulty} • {gameState.moves} moves
-              </Badge>
-              <Badge variant="outline" className="text-xs sm:text-sm">
-                {gameState.score} pts
-              </Badge>
+          <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <Badge variant="outline" className="text-xs sm:text-sm">{gameState.matches}/{gameState.totalPairs} pairs</Badge>
+              <Badge variant="outline" className="text-xs sm:text-sm">{gameState.moves} moves</Badge>
+              {streak > 0 && (
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + streak * 0.04, 1.3)})` }}>
+                  <Flame className="h-3.5 w-3.5" /> ×{multiplier}
+                </span>
+              )}
+              {best > 0 && (
+                <span className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                  <Crown className="h-3.5 w-3.5" /> best {best.toLocaleString()}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2">
-              <Eye className={`h-4 w-4 ${gameState.selectedCards.length > 0 ? 'text-blue-600' : 'text-muted-foreground'}`} />
-              <span className="text-xs sm:text-sm font-medium">
-                {gameState.selectedCards.length}/2 selected
+              <span className="inline-flex items-center gap-1 font-mono text-sm font-bold" style={{ color: 'var(--foreground)' }}>
+                <Clock className="h-4 w-4" /> {mm}:{ss}
               </span>
+              <SoundToggle />
             </div>
           </div>
-          
+
           <Progress value={getProgressPercentage()} className="h-2" />
         </CardContent>
       </Card>

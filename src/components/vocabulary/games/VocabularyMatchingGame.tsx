@@ -13,6 +13,8 @@ interface VocabularyMatchingGameProps {
   showResults?: boolean
   initialAnswer?: { matches: Record<string, string> }
   disabled?: boolean
+  // Optional: fired on each match attempt (arcade juice). Absent in assignments.
+  onMatchAttempt?: (correct: boolean) => void
 }
 
 interface SelectedCard {
@@ -26,12 +28,13 @@ interface CardState {
   status: 'unselected' | 'selected' | 'correct' | 'incorrect' | 'flashing' | 'flashing-success'
 }
 
-export default function VocabularyMatchingGame({ 
-  question, 
-  onAnswer, 
-  showResults = false, 
+export default function VocabularyMatchingGame({
+  question,
+  onAnswer,
+  showResults = false,
   initialAnswer,
-  disabled = false 
+  disabled = false,
+  onMatchAttempt
 }: VocabularyMatchingGameProps) {
   const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([])
   const [matches, setMatches] = useState<Record<string, string>>(initialAnswer?.matches || {})
@@ -115,6 +118,7 @@ export default function VocabularyMatchingGame({
     
     // A correct match is when the term ID matches the definition ID (same vocabulary item)
     const isCorrectMatch = termId === definitionId
+    onMatchAttempt?.(isCorrectMatch)
 
     if (isCorrectMatch) {
       // Correct match - flash green first, then stay in correct state

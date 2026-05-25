@@ -14,8 +14,12 @@ import {
   XCircle,
   Zap,
   Target,
-  Timer
+  Timer,
+  Flame,
+  Crown
 } from 'lucide-react'
+import { sfx } from '@/lib/arcade-sound'
+import SoundToggle from '@/components/vocabulary/arcade/SoundToggle'
 
 interface VocabularyQuizBowlGameProps {
   vocabularyTerms: VocabularyTerm[]
@@ -69,9 +73,20 @@ export default function VocabularyQuizBowlGame({
   const [questionResults, setQuestionResults] = useState<QuestionResult[]>([])
   const [showResult, setShowResult] = useState<boolean>(false)
   const [lastResult, setLastResult] = useState<QuestionResult | null>(null)
-  
+  const [shake, setShake] = useState(false)
+  const [best, setBest] = useState(0)
+
   const timerRef = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const multiplier = Math.min(1 + Math.floor(quizState.streak / 3), 5)
+
+  useEffect(() => {
+    fetch('/api/student-progress/game-scores?game_type=quiz-bowl')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows: { score?: number }[]) => setBest(Array.isArray(rows) ? rows.reduce((m, x) => Math.max(m, x.score ?? 0), 0) : 0))
+      .catch(() => {})
+  }, [])
 
   // Initialize game terms
   useEffect(() => {
@@ -137,7 +152,7 @@ export default function VocabularyQuizBowlGame({
 
   const startGame = useCallback(() => {
     if (gameTerms.length === 0) return
-    
+    sfx.start()
     setQuizState({
       currentTerm: gameTerms[0],
       currentAnswer: '',
@@ -167,11 +182,19 @@ export default function VocabularyQuizBowlGame({
       correct = userAnswer.toLowerCase() === quizState.currentTerm.term.toLowerCase()
     }
 
-    // Calculate points
+    // Calculate points: (base + speed bonus) × combo multiplier
     const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
     const timeBonus = Math.max(0, Math.floor((timeLimit - timeUsed) / 2)) // Bonus for speed
-    const streakBonus = quizState.streak >= 3 ? 5 : 0
-    const points = correct ? basePoints + timeBonus + streakBonus : 0
+    const points = correct ? Math.round((basePoints + timeBonus) * multiplier) : 0
+
+    // juice
+    if (correct) {
+      sfx.correct()
+      if (quizState.streak + 1 >= 3) sfx.streak(quizState.streak + 1)
+    } else {
+      sfx.wrong()
+      setShake(true); setTimeout(() => setShake(false), 450)
+    }
 
     // Create result record
     const result: QuestionResult = {
@@ -220,7 +243,7 @@ export default function VocabularyQuizBowlGame({
         const totalTime = Math.floor((Date.now() - quizState.startTime) / 1000)
         onGameComplete?.(quizState.score + points, Math.min(totalQuestions, gameTerms.length), totalTime)
       }
-    }, 1500)
+    }, 750)
   }, [quizState, difficulty, timeLimit, totalQuestions, gameTerms, onGameComplete])
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
@@ -348,30 +371,37 @@ export default function VocabularyQuizBowlGame({
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
+      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
       {/* Game Header */}
       <Card>
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 flex-wrap">
               <Badge variant="outline">
-                Question {quizState.questionsAnswered + 1} of {Math.min(totalQuestions, gameTerms.length)}
+                {quizState.questionsAnswered + 1} of {Math.min(totalQuestions, gameTerms.length)}
               </Badge>
-              <Badge variant="outline" className="capitalize">
-                {difficulty} • {quizState.score} points
-              </Badge>
+              <span className="font-bold" style={{ fontSize: 18 }}>{quizState.score.toLocaleString()}</span>
               {quizState.streak > 0 && (
-                <Badge className="bg-yellow-100 text-yellow-800">
-                  🔥 {quizState.streak} streak
-                </Badge>
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + quizState.streak * 0.04, 1.3)})` }}>
+                  <Flame className="h-3.5 w-3.5" /> ×{multiplier}
+                </span>
+              )}
+              {best > 0 && (
+                <span className="inline-flex items-center gap-1 text-xs" style={{ color: quizState.score >= Math.round(best * (quizState.questionsAnswered / Math.min(totalQuestions, gameTerms.length))) ? 'var(--success)' : 'var(--muted-foreground)' }}>
+                  <Crown className="h-3.5 w-3.5" /> best {best.toLocaleString()}
+                </span>
               )}
             </div>
-            <div className={`flex items-center gap-2 font-mono text-lg font-bold ${getTimeColor()}`}>
-              <Timer className="h-4 w-4" />
-              {quizState.timeRemaining}s
+            <div className="flex items-center gap-2">
+              <div className={`flex items-center gap-2 font-mono text-lg font-bold ${getTimeColor()}`}>
+                <Timer className="h-4 w-4" />
+                {quizState.timeRemaining}s
+              </div>
+              <SoundToggle />
             </div>
           </div>
-          
+
           <Progress value={getProgressPercentage()} className="h-2" />
         </CardContent>
       </Card>

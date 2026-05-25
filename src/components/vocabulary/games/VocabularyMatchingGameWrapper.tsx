@@ -1,18 +1,22 @@
 "use client"
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { VocabularyTerm } from '@/types/assignment'
-import { 
-  Trophy, 
-  RotateCcw, 
+import {
+  Trophy,
+  RotateCcw,
   Users,
   CheckCircle,
-  Clock
+  Clock,
+  Flame,
+  Crown
 } from 'lucide-react'
 import VocabularyMatchingGame from './VocabularyMatchingGame'
+import { sfx } from '@/lib/arcade-sound'
+import SoundToggle from '@/components/vocabulary/arcade/SoundToggle'
 
 interface VocabularyMatchingGameWrapperProps {
   vocabularyTerms: VocabularyTerm[]
@@ -45,6 +49,43 @@ export default function VocabularyMatchingGameWrapper({
   
   const [gameTerms, setGameTerms] = useState<VocabularyTerm[]>([])
   const [currentMatches, setCurrentMatches] = useState<Record<string, string>>({})
+  const [elapsed, setElapsed] = useState(0)
+  const [streak, setStreak] = useState(0)
+  const [mistakes, setMistakes] = useState(0)
+  const [shake, setShake] = useState(false)
+  const [best, setBest] = useState(0)
+
+  const multiplier = Math.min(1 + Math.floor(streak / 3), 5)
+  const streakRef = useRef(0)
+
+  useEffect(() => {
+    fetch('/api/student-progress/game-scores?game_type=matching')
+      .then((r) => (r.ok ? r.json() : []))
+      .then((rows: { score?: number }[]) => setBest(Array.isArray(rows) ? rows.reduce((m, x) => Math.max(m, x.score ?? 0), 0) : 0))
+      .catch(() => {})
+  }, [])
+
+  // live count-up timer
+  useEffect(() => {
+    if (gameState.gameStatus !== 'playing') return
+    const iv = setInterval(() => setElapsed(Math.floor((Date.now() - gameState.startTime) / 1000)), 500)
+    return () => clearInterval(iv)
+  }, [gameState.gameStatus, gameState.startTime])
+
+  const onMatchAttempt = useCallback((correct: boolean) => {
+    if (correct) {
+      streakRef.current += 1
+      sfx.correct()
+      if (streakRef.current >= 3) sfx.streak(streakRef.current)
+      setStreak(streakRef.current)
+    } else {
+      streakRef.current = 0
+      sfx.wrong()
+      setStreak(0)
+      setMistakes((m) => m + 1)
+      setShake(true); setTimeout(() => setShake(false), 450)
+    }
+  }, [])
 
   // Initialize game terms
   useEffect(() => {
@@ -86,7 +127,9 @@ export default function VocabularyMatchingGameWrapper({
 
   const startGame = useCallback(() => {
     if (gameTerms.length === 0) return
-    
+    sfx.start()
+    streakRef.current = 0
+    setStreak(0); setMistakes(0); setElapsed(0)
     setGameState({
       gameStatus: 'playing',
       score: 0,
@@ -111,20 +154,21 @@ export default function VocabularyMatchingGameWrapper({
     if (completedMatches === gameTerms.length) {
       const timeSpent = Math.floor((Date.now() - gameState.startTime) / 1000)
       const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
-      const totalScore = completedMatches * basePoints
-      
-      setGameState(prev => ({
-        ...prev,
-        gameStatus: 'complete',
-        score: totalScore
-      }))
-      
-      // Delay to show completion state
+      // Race the clock + accuracy: base per match, speed bonus vs a target pace,
+      // minus a penalty per wrong attempt (never below 40% of base).
+      const targetSecs = completedMatches * 6
+      const speedBonus = Math.max(0, Math.round((targetSecs - timeSpent) * 3))
+      const floor = Math.round(completedMatches * basePoints * 0.4)
+      const totalScore = Math.max(floor, completedMatches * basePoints + speedBonus - mistakes * 5)
+
+      sfx.gameover()
+      setGameState(prev => ({ ...prev, gameStatus: 'complete', score: totalScore }))
+
       setTimeout(() => {
         onGameComplete?.(totalScore, completedMatches, timeSpent)
-      }, 1500)
+      }, 900)
     }
-  }, [gameTerms.length, gameState.startTime, difficulty, onGameComplete])
+  }, [gameTerms.length, gameState.startTime, difficulty, mistakes, onGameComplete])
 
   const resetGame = useCallback(() => {
     setGameState(prev => ({
@@ -182,7 +226,7 @@ export default function VocabularyMatchingGameWrapper({
           </div>
           
           <div className="text-center">
-            <Button onClick={startGame} size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={startGame} size="lg">
               <Users className="h-4 w-4 mr-2" />
               Start Matching Game
             </Button>
@@ -228,28 +272,37 @@ export default function VocabularyMatchingGameWrapper({
     )
   }
 
+  const mm = String(Math.floor(elapsed / 60)).padStart(2, '0')
+  const ss = String(elapsed % 60).padStart(2, '0')
+
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${shake ? 'arcade-shake' : ''}`}>
+      <style>{`@keyframes arcadeShake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}.arcade-shake{animation:arcadeShake .45s}`}</style>
       {/* Game Header */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">
-                {gameState.completedMatches} of {gameState.totalMatches} matches
-              </Badge>
-              <Badge variant="outline" className="capitalize">
-                {difficulty} • {gameState.score} points
-              </Badge>
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge variant="outline">{gameState.completedMatches} / {gameState.totalMatches}</Badge>
+              {streak > 0 && (
+                <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-bold" style={{ background: 'color-mix(in oklch, var(--reward) 20%, transparent)', color: 'var(--reward)', transform: `scale(${Math.min(1 + streak * 0.04, 1.3)})` }}>
+                  <Flame className="h-3.5 w-3.5" /> ×{multiplier}
+                </span>
+              )}
+              {best > 0 && (
+                <span className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                  <Crown className="h-3.5 w-3.5" /> best {best.toLocaleString()}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className={`h-4 w-4 ${gameState.completedMatches === gameState.totalMatches ? 'text-green-600' : 'text-muted-foreground'}`} />
-              <span className="text-sm font-medium">
-                {gameState.completedMatches === gameState.totalMatches ? 'Complete!' : 'In Progress'}
+              <span className="inline-flex items-center gap-1 font-mono text-sm font-bold" style={{ color: 'var(--foreground)' }}>
+                <Clock className="h-4 w-4" /> {mm}:{ss}
               </span>
+              <SoundToggle />
             </div>
           </div>
-          
+
           <Progress value={getProgressPercentage()} className="h-2" />
         </CardContent>
       </Card>
@@ -264,6 +317,7 @@ export default function VocabularyMatchingGameWrapper({
           vocabularyTerms: gameTerms
         }}
         onAnswer={handleMatchingAnswer}
+        onMatchAttempt={onMatchAttempt}
         showResults={false}
         disabled={false}
         initialAnswer={{ matches: currentMatches }}

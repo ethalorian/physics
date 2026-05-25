@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { VocabularyTerm } from '@/types/assignment'
 import { Target, Heart, Flame, Crown, Zap } from 'lucide-react'
 import { sfx } from '@/lib/arcade-sound'
+import SoundToggle from '@/components/vocabulary/arcade/SoundToggle'
 
 interface VocabularyWordShootGameProps {
   vocabularyTerms: VocabularyTerm[]
@@ -198,6 +199,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
             <div className="flex items-center gap-1">
               {Array.from({ length: lives }).map((_, i) => <Heart key={i} className="h-4 w-4" style={{ color: 'var(--reward)', fill: 'currentColor' }} />)}
             </div>
+            <SoundToggle />
           </div>
         </div>
         {/* countdown */}

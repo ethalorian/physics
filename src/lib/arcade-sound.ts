@@ -2,8 +2,16 @@
 // Shared by every game so feedback is consistent. Safe on the server (no-ops).
 
 let ctx: AudioContext | null = null
+let muted = typeof window !== 'undefined' && window.localStorage?.getItem('arcade_muted') === '1'
+
+export function isMuted(): boolean { return muted }
+export function setMuted(v: boolean): void {
+  muted = v
+  if (typeof window !== 'undefined') window.localStorage?.setItem('arcade_muted', v ? '1' : '0')
+}
 
 function audio(): AudioContext | null {
+  if (muted) return null
   if (typeof window === 'undefined') return null
   if (!ctx) {
     const W = window as unknown as { AudioContext?: typeof AudioContext; webkitAudioContext?: typeof AudioContext }
