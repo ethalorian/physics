@@ -82,11 +82,14 @@ const nextConfig: NextConfig = {
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com https://accounts.google.com https://www.youtube.com https://s.ytimg.com",
+              // pdf.js (react-pdf) spawns a web worker, often from a blob URL.
+              "worker-src 'self' blob:",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://lh4.googleusercontent.com https://lh5.googleusercontent.com https://lh6.googleusercontent.com https://*.googleusercontent.com https://i.ytimg.com https://img.youtube.com",
               `connect-src 'self' https://api.supabase.com ${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ymszffulqmkqgvhioege.supabase.co'} https://classroom.googleapis.com https://www.googleapis.com`,
-              "frame-src 'self' https://accounts.google.com https://content.googleapis.com https://www.youtube.com https://www.youtube-nocookie.com",
+              // include the Supabase storage origin so the chapter PDF can render in a native-viewer iframe fallback.
+              `frame-src 'self' ${process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://ymszffulqmkqgvhioege.supabase.co'} https://accounts.google.com https://content.googleapis.com https://www.youtube.com https://www.youtube-nocookie.com`,
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

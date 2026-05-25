@@ -39,11 +39,22 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
   const [summary, setSummary] = useState<ConceptValue['summary']>(value?.summary)
   const [submitted, setSubmitted] = useState(!!value?.submitted)
   const [grading, setGrading] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+  const [forceIframe, setForceIframe] = useState(false)
 
   const leftRef = useRef<HTMLDivElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
   const pageEls = useRef<Map<number, HTMLDivElement>>(new Map())
   const sectionEls = useRef<Map<string, HTMLDivElement>>(new Map())
+  const onSaveRef = useRef(onSave); onSaveRef.current = onSave
+  const touched = useRef(false)
+
+  // ---- save-and-resume: debounce-save draft answers so work isn't lost ----
+  useEffect(() => {
+    if (!touched.current || submitted) return
+    const t = setTimeout(() => onSaveRef.current({ answers, submitted: false }), 800)
+    return () => clearTimeout(t)
+  }, [answers, submitted])
 
   // ---- load chapter ------------------------------------------------------
   useEffect(() => {
@@ -85,7 +96,7 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
     }
   }, [data, activeSection])
 
-  const setAnswer = (n: number, v: AnswerVal) => setAnswers((prev) => ({ ...prev, [String(n)]: v }))
+  const setAnswer = (n: number, v: AnswerVal) => { touched.current = true; setAnswers((prev) => ({ ...prev, [String(n)]: v })) }
 
   const submit = async () => {
     setGrading(true)
@@ -104,35 +115,52 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
   if (loadErr) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Couldn&apos;t load this chapter ({loadErr}).</p>
   if (!data) return <p className="text-sm" style={{ color: C.mute }}>Loading the reader…</p>
 
+  const useIframe = pdfFailed || forceIframe
+  const paneH = expanded ? 'calc(100vh - 70px)' : '76vh'
+  const wrapStyle = expanded
+    ? { position: 'fixed' as const, inset: 0, zIndex: 1000, background: 'var(--background)', padding: '12px 16px', overflow: 'auto' }
+    : undefined
+
   return (
-    <div>
-      <div className="text-sm font-semibold mb-2" style={{ color: C.ink }}>Chapter {data.chapter}: {data.title}</div>
+    <div style={wrapStyle}>
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="text-sm font-semibold min-w-0 truncate" style={{ color: C.ink }}>Chapter {data.chapter}: {data.title}</div>
+        <div className="flex items-center gap-2 shrink-0">
+          {data.textPdfUrl && (
+            <button onClick={() => setForceIframe((v) => !v)} className="text-xs font-medium rounded-lg border px-2.5 py-1" style={{ borderColor: C.hair, color: C.mute }}>
+              {useIframe ? 'Rich reader' : 'Simple reader'}
+            </button>
+          )}
+          <button onClick={() => setExpanded((v) => !v)} className="text-xs font-semibold rounded-lg border px-2.5 py-1" style={{ borderColor: C.hair, color: C.primary }}>
+            {expanded ? '✕ Close full screen' : '⤢ Full screen'}
+          </button>
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* LEFT — textbook reader */}
-        <div ref={leftRef} onScroll={onLeftScroll}
-          className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: '76vh', position: 'relative' }}>
-          {data.textPdfUrl ? (
-            pdfFailed ? (
-              <div className="p-4 text-sm" style={{ color: C.mute }}>
-                The inline reader couldn&apos;t load. <a href={data.textPdfUrl} target="_blank" rel="noopener noreferrer" style={{ color: C.primary, textDecoration: 'underline' }}>Open the chapter PDF ↗</a>
-              </div>
-            ) : (
-              <Document file={data.textPdfUrl} onLoadSuccess={({ numPages: n }) => setNumPages(n)} onLoadError={() => setPdfFailed(true)}
-                loading={<div className="p-4 text-sm" style={{ color: C.mute }}>Loading the reading…</div>}>
-                {Array.from({ length: numPages }, (_, i) => (
-                  <div key={i} ref={(el) => { if (el) pageEls.current.set(i + 1, el) }} style={{ display: 'flex', justifyContent: 'center', padding: '6px 0', borderBottom: `0.5px solid ${C.hair}` }}>
-                    <Page pageNumber={i + 1} width={pageWidth} renderTextLayer={false} renderAnnotationLayer={false} />
-                  </div>
-                ))}
-              </Document>
-            )
-          ) : (
-            <div className="p-4 text-sm" style={{ color: C.mute }}>No chapter PDF is attached yet.</div>
-          )}
-        </div>
+        {!data.textPdfUrl ? (
+          <div className="rounded-xl border p-4 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.mute }}>No chapter PDF is attached yet.</div>
+        ) : useIframe ? (
+          // Native-viewer fallback: always renders the PDF (no scroll-sync). Use the
+          // section chips on the right to jump the reading.
+          <iframe key="iframe" src={data.textPdfUrl} title={`Chapter ${data.chapter} reading`}
+            style={{ width: '100%', height: paneH, border: `0.5px solid ${C.hair}`, borderRadius: 12, background: C.card }} />
+        ) : (
+          <div ref={leftRef} onScroll={onLeftScroll}
+            className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
+            <Document file={data.textPdfUrl} onLoadSuccess={({ numPages: n }) => setNumPages(n)} onLoadError={() => setPdfFailed(true)} onSourceError={() => setPdfFailed(true)}
+              loading={<div className="p-4 text-sm" style={{ color: C.mute }}>Loading the reading…</div>}>
+              {Array.from({ length: numPages }, (_, i) => (
+                <div key={i} ref={(el) => { if (el) pageEls.current.set(i + 1, el) }} style={{ display: 'flex', justifyContent: 'center', padding: '6px 0', borderBottom: `0.5px solid ${C.hair}` }}>
+                  <Page pageNumber={i + 1} width={pageWidth} renderTextLayer={false} renderAnnotationLayer={false} />
+                </div>
+              ))}
+            </Document>
+          </div>
+        )}
 
         {/* RIGHT — digital exercise, scrolls to follow the reader */}
-        <div ref={rightRef} className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: '76vh', position: 'relative' }}>
+        <div ref={rightRef} className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
           <div className="p-3">
             {data.sections.map((s) => (
               <SectionView key={s.id} section={s} active={activeSection === s.id}
