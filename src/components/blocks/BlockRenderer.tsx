@@ -8,7 +8,6 @@ import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import { useBlockResponses } from './useBlockResponses'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
-import { SimEmbedContext } from '@/components/simulations/embed-context'
 
 const C = {
   indigo: 'var(--foreground)',
@@ -85,11 +84,11 @@ function TextCapture({
 
 // GEWA is now the staged interactive component in ./GewaInteractive.
 
-// Render the actual simulation component INLINE (no iframe). The SimEmbedContext
-// tells the sim's shared chrome (assignment editor, etc.) to hide itself.
+// Render the simulation inside an IFRAME pointing at a chrome-free embed route.
+// The iframe is a hard layout boundary (the sim's elements can't escape into the
+// lesson) and a separate document (a sim crash can't take down the lesson).
 function SimEmbed({ slug }: { slug: string }) {
-  const Sim = SIM_COMPONENTS[slug]
-  if (!Sim) {
+  if (!SIM_COMPONENTS[slug]) {
     return (
       <div className="rounded-lg border p-4 text-sm" style={{ borderColor: C.hairline, color: C.muted }}>
         Simulation &ldquo;{slug}&rdquo; isn&apos;t available.
@@ -97,13 +96,13 @@ function SimEmbed({ slug }: { slug: string }) {
     )
   }
   return (
-    <div className="rounded-lg border overflow-hidden sim-embed-clean" style={{ borderColor: C.hairline }}>
-      {/* The sim's own "back to simulations" button is its only ArrowLeft icon —
-          hide it inside a lesson so students don't navigate away. */}
-      <style>{`.sim-embed-clean button:has(svg.lucide-arrow-left),.sim-embed-clean a:has(svg.lucide-arrow-left){display:none !important}`}</style>
-      <SimEmbedContext.Provider value={true}>
-        <Sim />
-      </SimEmbedContext.Provider>
+    <div className="rounded-lg border overflow-hidden" style={{ borderColor: C.hairline }}>
+      <iframe
+        src={`/embed/sim/${slug}`}
+        title={`Simulation: ${slug}`}
+        loading="lazy"
+        style={{ width: '100%', height: 640, border: 'none', display: 'block', background: 'var(--card)' }}
+      />
     </div>
   )
 }

@@ -136,21 +136,33 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                 {meetings.map((m, j) => {
                   const color = BLOCK_COLOR[m.block] ?? 'var(--muted-foreground)'
                   const clickable = Boolean(m.lessonId)
+                  const label = `${m.block}${filterCourseId ? '' : (m.section ? `·${m.section}` : '')}`
+                  if (!clickable) {
+                    // Unit placeholder — no authored lesson to open yet. Make that legible.
+                    return (
+                      <div key={j} title={`${m.block} block · ${m.title} · not built yet`}
+                        className="text-left rounded-md px-1.5 py-1"
+                        style={{ border: '1px dashed var(--border)', background: 'transparent' }}>
+                        <div className="text-[10px] font-bold" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
+                        <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--muted-foreground)' }}>{m.title}</div>
+                        <div className="text-[9px]" style={{ color: 'var(--muted-foreground)' }}>not built yet</div>
+                      </div>
+                    )
+                  }
                   return (
                     <button
                       key={j}
-                      disabled={!clickable}
-                      onClick={() => clickable && router.push(`/admin/lessons/${m.lessonId}/build`)}
-                      title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''}`}
-                      className="text-left rounded-md px-1.5 py-1 transition-transform"
+                      onClick={() => router.push(`/admin/lessons/${m.lessonId}/build`)}
+                      title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''} — open builder`}
+                      className="text-left rounded-md px-1.5 py-1 transition-transform hover:translate-x-0.5"
                       style={{
                         background: `color-mix(in oklch, ${color} 14%, transparent)`,
                         borderLeft: `3px solid ${color}`,
-                        cursor: clickable ? 'pointer' : 'default',
+                        cursor: 'pointer',
                       }}
                     >
                       <div className="flex items-center gap-1">
-                        <span className="text-[10px] font-bold" style={{ color }}>{m.block}{filterCourseId ? '' : (m.section ? `·${m.section}` : '')}</span>
+                        <span className="text-[10px] font-bold" style={{ color }}>{label}</span>
                         {m.long && <span className="text-[9px] font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground, #4a3b00)' }}>LONG</span>}
                       </div>
                       <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--foreground)' }}>{m.title}</div>

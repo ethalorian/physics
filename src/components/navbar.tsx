@@ -76,6 +76,9 @@ export default function Navbar() {
 
   const navigationItems = getNavigationItems()
 
+  // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
+  if (pathname?.startsWith('/embed')) return null
+
   return (
     <>
     {viewingAs && (

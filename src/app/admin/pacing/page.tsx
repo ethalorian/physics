@@ -55,7 +55,13 @@ export default function PacingPage() {
 
   const loadCal = useCallback(() => {
     fetch('/api/pacing/calendar').then((r) => r.json())
-      .then((d: CalData) => setCal(d)).catch(() => setCal(null))
+      .then((d: Partial<CalData>) => {
+        // Only accept a well-formed payload; a transient error/empty response
+        // must not crash the page.
+        if (Array.isArray(d?.sections) && Array.isArray(d?.items) && d?.calendar) setCal(d as CalData)
+        else setCal(null)
+      })
+      .catch(() => setCal(null))
   }, [])
 
   // Any change that affects the calendar (rotation, master pace, a section's
@@ -345,6 +351,8 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
 
   const load = useCallback(() => {
     fetch(`/api/pacing/section?course_id=${course.id}`).then((r) => r.json()).then((d: SectionData) => {
+      // Guard against an error/empty payload so a hiccup doesn't crash the card.
+      if (!d || !d.result || !d.schedule || !Array.isArray(d.items)) return
       setData(d)
       setStartDate(d.schedule.start_date ?? '')
       setBlock(d.block ?? '')
