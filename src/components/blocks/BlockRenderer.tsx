@@ -3,8 +3,9 @@
 import { useState, useEffect, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ContentBlock, BlockType } from '@/data/content-blocks'
+import { ContentBlock, BlockType, type DiagramForce, type DiagramVector, type GraphSeries } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
+import PhysicsDiagram from './PhysicsDiagram'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
@@ -13,13 +14,15 @@ import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
-  Rocket, Check, type LucideIcon,
+  Rocket, Check, Shapes, LineChart as LineChartIcon, type LucideIcon,
 } from 'lucide-react'
 
 // Heavy, self-contained interactive component — rendered natively (no iframe),
 // lazy-loaded so it doesn't bloat lessons that don't use it.
 const EquationVisualizer = dynamic(() => import('@/components/vocabulary/EquationVisualizer'), { ssr: false, loading: () => null })
 const LessonVocabView = dynamic(() => import('./LessonVocabView'), { ssr: false, loading: () => null })
+// recharts is heavy — lazy-load the read-the-graph block so text-only lessons stay light.
+const FigureGraph = dynamic(() => import('./FigureGraph'), { ssr: false, loading: () => null })
 
 const C = {
   indigo: 'var(--foreground)',
@@ -76,9 +79,11 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   question: { label: 'Question', domain: 'R', Icon: HelpCircle },
   self_assessment: { label: 'Self-assessment', domain: 'meta', Icon: ClipboardCheck },
   transfer_prompt: { label: 'Transfer task', domain: 'P', Icon: Rocket },
+  diagram: { label: 'Diagram', domain: 'R', Icon: Shapes },
+  graph: { label: 'Read the graph', domain: 'R', Icon: LineChartIcon },
 }
-// Blocks that read best as clean editorial prose — no colored shell.
-const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab'])
+// Blocks that read best as clean editorial content — no colored shell.
+const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure'])
 
 function BlockShell({ meta, done, children }: { meta: Meta; done?: boolean; children: ReactNode }) {
   const accent = ACCENT[meta.domain]
@@ -204,6 +209,16 @@ function SimEmbed({ slug }: { slug: string }) {
   )
 }
 
+// Authors may hand-author a diagram/graph via a JSON `spec` string (the builder
+// textarea) instead of structured fields. These helpers prefer structured
+// fields, else parse the spec, and NEVER throw — a bad spec just yields empty
+// data and the BlockBoundary keeps the lesson alive.
+function parseSpec(spec?: string): Record<string, unknown> {
+  if (!spec) return {}
+  try { const v = JSON.parse(spec); return v && typeof v === 'object' ? (v as Record<string, unknown>) : {} }
+  catch { return {} }
+}
+
 // ---------------------------------------------------------------------------
 // Renderer
 // ---------------------------------------------------------------------------
@@ -301,6 +316,47 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
           <TextCapture prompt={b.interpretPrompt} value={(saved as { interpret?: string })?.interpret} onSave={(t) => save(b.id, 'observation', { ...(saved as object), interpret: t })} />
         </>
       )
+    case 'figure': {
+      if (!b.src) return null
+      const full = b.align === 'full'
+      return (
+        <figure style={{ margin: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={b.src}
+            alt={b.alt}
+            loading="lazy"
+            style={{ display: 'block', width: full ? '100%' : 'auto', maxWidth: '100%', margin: full ? 0 : '0 auto', borderRadius: 12, border: `0.5px solid ${C.hairline}` }}
+          />
+          {b.caption && <figcaption className="text-sm mt-1.5" style={{ color: C.muted }}>{b.caption}</figcaption>}
+          {b.credit && <figcaption className="text-xs mt-0.5" style={{ color: C.muted, opacity: 0.8 }}>{b.credit}</figcaption>}
+        </figure>
+      )
+    }
+    case 'diagram': {
+      const s = parseSpec(b.spec)
+      const forces = (b.forces ?? (s.forces as DiagramForce[] | undefined)) ?? []
+      const vectors = (b.vectors ?? (s.vectors as DiagramVector[] | undefined)) ?? []
+      const dots = (b.dots ?? (s.dots as number[] | undefined)) ?? []
+      const showResultant = b.showResultant ?? (s.showResultant as boolean | undefined)
+      return (
+        <PhysicsDiagram
+          kind={b.kind}
+          title={b.title}
+          caption={b.caption}
+          forces={forces}
+          vectors={vectors}
+          dots={dots}
+          showResultant={showResultant}
+        />
+      )
+    }
+    case 'graph': {
+      const s = parseSpec(b.spec)
+      const series = (b.series ?? (s.series as GraphSeries[] | undefined)) ?? []
+      if (series.length === 0) return null
+      return <FigureGraph title={b.title} xLabel={b.xLabel} yLabel={b.yLabel} series={series} />
+    }
     default:
       return null
   }

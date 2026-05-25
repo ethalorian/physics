@@ -167,6 +167,59 @@ export interface TransferPromptBlock extends BaseBlock {
 }
 
 // ---------------------------------------------------------------------------
+// MEDIA / VISUAL BLOCKS (no data capture) — make lessons visually rich.
+// Physics-first: a figure to read, a code-drawn diagram, or an interactive
+// graph students interrogate. Decorative use is fine too.
+// ---------------------------------------------------------------------------
+
+/** A figure: an image students look at. Source is a URL (pasted, or an uploaded
+ *  file's public URL once the storage pipeline lands). Caption carries the
+ *  "what am I looking at" so the image does cognitive work, not just decoration. */
+export interface FigureBlock extends BaseBlock {
+  type: 'figure';
+  src: string;                 // image URL
+  alt: string;                 // required — accessibility + EL support
+  caption?: string;            // shown under the image (supports plain text)
+  credit?: string;             // small attribution line
+  align?: 'center' | 'full';   // center = capped width; full = fill the column (default center)
+}
+
+export type DiagramKind = 'free_body' | 'vectors' | 'motion_map';
+/** A direction is a compass word or an angle in degrees (CCW from +x). */
+export type DiagramDir = 'up' | 'down' | 'left' | 'right' | number;
+export interface DiagramForce { label: string; dir: DiagramDir; mag: number; color?: string }
+export interface DiagramVector { label: string; angle: number; mag: number; color?: string }
+
+/** A code-drawn SVG physics figure (no image file). The renderer draws it on-brand.
+ *  Authors may provide structured fields (when seeded) OR a JSON `spec` string
+ *  (the builder textarea); the renderer accepts either. */
+export interface DiagramBlock extends BaseBlock {
+  type: 'diagram';
+  kind: DiagramKind;
+  title?: string;
+  caption?: string;
+  genPrompt?: string;          // the plain-English description used to generate this (for re-editing)
+  spec?: string;               // JSON authoring escape hatch (mirrors the fields below)
+  forces?: DiagramForce[];     // kind === 'free_body'
+  vectors?: DiagramVector[];   // kind === 'vectors'
+  showResultant?: boolean;     // kind === 'vectors'
+  dots?: number[];             // kind === 'motion_map' — relative gaps between strobe dots
+}
+
+export interface GraphSeries { label: string; color?: string; points: [number, number][] }
+/** An interactive graph students read (recharts). Author supplies one or more
+ *  series. Distinct from data_table (which graphs student-entered lab data). */
+export interface GraphBlock extends BaseBlock {
+  type: 'graph';
+  title?: string;
+  xLabel?: string;
+  yLabel?: string;
+  genPrompt?: string;          // the plain-English description used to generate this (for re-editing)
+  spec?: string;               // JSON authoring escape hatch (mirrors `series`)
+  series?: GraphSeries[];
+}
+
+// ---------------------------------------------------------------------------
 // UNION + DOCUMENT
 // ---------------------------------------------------------------------------
 
@@ -174,7 +227,8 @@ export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
-  | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock;
+  | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
+  | FigureBlock | DiagramBlock | GraphBlock;
 
 export type BlockType = ContentBlock['type'];
 

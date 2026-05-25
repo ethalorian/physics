@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BlockDocument } from '@/data/content-blocks'
+import PhysicsDiagram from '@/components/blocks/PhysicsDiagram'
+import FigureGraph from '@/components/blocks/FigureGraph'
 
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
 // ---------------------------------------------------------------------------
-type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref'
+type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen'
 interface FieldDef { key: string; label: string; kind: FieldKind; options?: string[]; placeholder?: string }
 interface BlockDef { type: string; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
@@ -47,6 +49,25 @@ const BLOCK_DEFS: BlockDef[] = [
   ] },
   { type: 'equation_visualizer', label: 'Equation visualizer', group: 'Teach', fields: [] },
   { type: 'lesson_vocab', label: 'Lesson vocabulary', group: 'Teach', fields: [] },
+  { type: 'figure', label: 'Figure / image', group: 'Teach', fields: [
+    { key: 'src', label: 'Image URL', kind: 'text', placeholder: 'https://…' },
+    { key: 'alt', label: 'Alt text (what the image shows)', kind: 'text' },
+    { key: 'caption', label: 'Caption (optional)', kind: 'text' },
+    { key: 'credit', label: 'Credit / source (optional)', kind: 'text' },
+    { key: 'align', label: 'Size', kind: 'select', options: ['center', 'full'] },
+  ] },
+  { type: 'diagram', label: 'Physics diagram', group: 'Teach', fields: [
+    { key: 'kind', label: 'Diagram type', kind: 'select', options: ['free_body', 'vectors', 'motion_map'] },
+    { key: 'genPrompt', label: 'Describe it in plain English', kind: 'visualgen', placeholder: 'e.g. A box sitting still on a table: gravity pulling down and the table pushing up, equal size.' },
+    { key: 'title', label: 'Title (optional override)', kind: 'text' },
+    { key: 'caption', label: 'Caption (optional override)', kind: 'text' },
+  ] },
+  { type: 'graph', label: 'Read-the-graph', group: 'Teach', fields: [
+    { key: 'genPrompt', label: 'Describe it in plain English', kind: 'visualgen', placeholder: 'e.g. Velocity vs. time for two carts: one steady at 6 m/s, one speeding up from 0 at 2 m/s^2, over 4 seconds.' },
+    { key: 'title', label: 'Title (optional override)', kind: 'text' },
+    { key: 'xLabel', label: 'X-axis label (optional override)', kind: 'text' },
+    { key: 'yLabel', label: 'Y-axis label (optional override)', kind: 'text' },
+  ] },
   { type: 'doodle', label: 'Doodle / sketch', group: 'Practice', capture: true, fields: [
     { key: 'instruction', label: 'Instruction', kind: 'text' },
     { key: 'prompts', label: 'Numbered prompts', kind: 'stringlist' },
@@ -183,7 +204,16 @@ export default function LessonBlockBuilder({
                 </div>
                 <div className="flex flex-col gap-3">
                   {(def?.fields ?? []).map((f) => (
-                    <FieldEditor key={f.key} field={f} value={b.data[f.key]} sims={sims} onChange={(v) => setField(b.id, f.key, v)} />
+                    <FieldEditor
+                      key={f.key}
+                      field={f}
+                      value={b.data[f.key]}
+                      sims={sims}
+                      blockType={b.type}
+                      blockData={b.data}
+                      onChange={(v) => setField(b.id, f.key, v)}
+                      onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))}
+                    />
                   ))}
                 </div>
               </div>
@@ -215,8 +245,28 @@ export default function LessonBlockBuilder({
 // ---------------------------------------------------------------------------
 // Field editors
 // ---------------------------------------------------------------------------
-function FieldEditor({ field, value, onChange, sims }: { field: FieldDef; value: unknown; onChange: (v: unknown) => void; sims?: { slug: string; title: string }[] }) {
+function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPatch }: {
+  field: FieldDef; value: unknown; onChange: (v: unknown) => void;
+  sims?: { slug: string; title: string }[];
+  blockType?: string; blockData?: Record<string, unknown>; onPatch?: (patch: Record<string, unknown>) => void;
+}) {
   const label = <div className="text-xs font-semibold mb-1" style={{ color: 'var(--secondary-foreground)' }}>{field.label}</div>
+
+  if (field.kind === 'visualgen') {
+    return (
+      <div>{label}
+        <VisualGenField
+          prompt={String(value ?? '')}
+          placeholder={field.placeholder}
+          target={blockType === 'graph' ? 'graph' : 'diagram'}
+          diagramKind={String(blockData?.kind ?? 'free_body')}
+          data={blockData ?? {}}
+          onPromptChange={(p) => onChange(p)}
+          onPatch={(patch) => onPatch?.(patch)}
+        />
+      </div>
+    )
+  }
 
   if (field.kind === 'simref') {
     const cur = String(value ?? '')
@@ -280,4 +330,94 @@ function FieldEditor({ field, value, onChange, sims }: { field: FieldDef; value:
   }
   // text
   return <div>{label}<input value={String(value ?? '')} onChange={(e) => onChange(e.target.value)} placeholder={field.placeholder} className="w-full rounded-lg border p-2 text-sm" style={inputStyle} /></div>
+}
+
+// ---------------------------------------------------------------------------
+// Visual generator — describe a diagram/graph in plain English, Claude builds
+// the structured data, and a live preview renders right here. No JSON.
+// ---------------------------------------------------------------------------
+function VisualGenField({
+  prompt, placeholder, target, diagramKind, data, onPromptChange, onPatch,
+}: {
+  prompt: string
+  placeholder?: string
+  target: 'diagram' | 'graph'
+  diagramKind: string
+  data: Record<string, unknown>
+  onPromptChange: (p: string) => void
+  onPatch: (patch: Record<string, unknown>) => void
+}) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  const generate = async () => {
+    if (!prompt.trim()) { setErr('Describe the visual first.'); return }
+    setBusy(true); setErr(null)
+    try {
+      const res = await fetch('/api/blocks/generate-visual', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target, diagramKind, prompt }),
+      })
+      const j = await res.json()
+      if (!res.ok) { setErr(j.error || 'Could not generate'); return }
+      onPatch((j.block ?? {}) as Record<string, unknown>)
+    } catch { setErr('Could not generate') } finally { setBusy(false) }
+  }
+
+  // live preview from whatever structured data is on the block now
+  const forces = Array.isArray(data.forces) ? (data.forces as Parameters<typeof PhysicsDiagram>[0]['forces']) : undefined
+  const vectors = Array.isArray(data.vectors) ? (data.vectors as Parameters<typeof PhysicsDiagram>[0]['vectors']) : undefined
+  const dots = Array.isArray(data.dots) ? (data.dots as number[]) : undefined
+  const series = Array.isArray(data.series) ? (data.series as Parameters<typeof FigureGraph>[0]['series']) : undefined
+  const hasDiagram = !!(forces?.length || vectors?.length || dots?.length)
+  const hasGraph = !!series?.length
+
+  return (
+    <div>
+      <textarea
+        value={prompt}
+        onChange={(e) => onPromptChange(e.target.value)}
+        placeholder={placeholder}
+        rows={3}
+        className="w-full rounded-lg border p-2 text-sm"
+        style={inputStyle}
+      />
+      <div className="flex items-center gap-2 mt-1.5">
+        <button
+          onClick={generate}
+          disabled={busy}
+          className="text-xs font-bold rounded-lg px-3 py-1.5"
+          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: busy ? 0.6 : 1 }}
+        >
+          {busy ? 'Building…' : (hasDiagram || hasGraph ? 'Regenerate' : 'Generate')}
+        </button>
+        {err && <span className="text-xs" style={{ color: 'var(--destructive)' }}>{err}</span>}
+        {!err && (hasDiagram || hasGraph) && <span className="text-xs" style={{ color: 'var(--success)' }}>Built ✓ — edit the prompt and regenerate, or tweak the title below.</span>}
+      </div>
+      {(hasDiagram || hasGraph) && (
+        <div className="mt-2 rounded-lg border p-2" style={{ borderColor: 'var(--border)' }}>
+          <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Preview</div>
+          {target === 'diagram' && hasDiagram && (
+            <PhysicsDiagram
+              kind={(data.kind as 'free_body' | 'vectors' | 'motion_map') ?? 'free_body'}
+              title={typeof data.title === 'string' ? data.title : undefined}
+              caption={typeof data.caption === 'string' ? data.caption : undefined}
+              forces={forces}
+              vectors={vectors}
+              dots={dots}
+              showResultant={data.showResultant === true}
+            />
+          )}
+          {target === 'graph' && hasGraph && (
+            <FigureGraph
+              title={typeof data.title === 'string' ? data.title : undefined}
+              xLabel={typeof data.xLabel === 'string' ? data.xLabel : undefined}
+              yLabel={typeof data.yLabel === 'string' ? data.yLabel : undefined}
+              series={series!}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
