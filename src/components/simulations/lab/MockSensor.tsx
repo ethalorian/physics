@@ -27,7 +27,16 @@ const W = 560
 const H = 200
 const PAD = { l: 46, r: 14, t: 14, b: 28 }
 
-export default function MockSensor({ spec, samples, live }: { spec: SensorSpec; samples: SensorSample[]; live: boolean }) {
+export default function MockSensor({
+  channels, selectedKey, onSelect, samples, live,
+}: {
+  channels: SensorSpec[]
+  selectedKey: string
+  onSelect: (key: string) => void
+  samples: SensorSample[]
+  live: boolean
+}) {
+  const spec = channels.find((c) => (c.key ?? c.quantity) === selectedKey) ?? channels[0]
   const meta = KIND[spec.kind] ?? KIND.generic
   const color = spec.color ?? meta.color
   const { Icon } = meta
@@ -63,7 +72,20 @@ export default function MockSensor({ spec, samples, live }: { spec: SensorSpec; 
         </span>
         <div className="leading-tight">
           <div style={{ fontSize: 12.5, fontWeight: 600, color: `color-mix(in oklch, ${color} 55%, var(--foreground))` }}>{spec.label}</div>
-          <div style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>{spec.quantity} · {spec.unit}</div>
+          {channels.length > 1 ? (
+            <select
+              value={selectedKey}
+              onChange={(e) => onSelect(e.target.value)}
+              aria-label="Choose what to plot"
+              style={{ fontSize: 11, color: 'var(--muted-foreground)', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}
+            >
+              {channels.map((c) => (
+                <option key={c.key ?? c.quantity} value={c.key ?? c.quantity}>{c.quantity} · {c.unit}</option>
+              ))}
+            </select>
+          ) : (
+            <div style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>{spec.quantity} · {spec.unit}</div>
+          )}
         </div>
         <div className="ml-auto flex items-center gap-2">
           {live && (

@@ -329,10 +329,13 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
         xCol: 1, yCol: 2,
       }
     },
-    getSensorTrace() {
-      // Motion Detector: vertical velocity vs time. A straight line of slope −g
-      // with no drag; it bends once drag is added — exactly the bench trace.
-      return dataPoints.map((d) => ({ x: d.time, y: d.vy }))
+    getSensorTrace(key?: string) {
+      // Switchable Motion Detector channels. Vertical velocity is the headline
+      // (straight slope −g, bends with drag); also offer vx, speed, and height.
+      return dataPoints.map((d) => ({
+        x: d.time,
+        y: key === 'vx' ? d.vx : key === 'speed' ? d.speed : key === 'height' ? d.y : d.vy,
+      }))
     },
     isComplete() { return landed },
     destroy() {

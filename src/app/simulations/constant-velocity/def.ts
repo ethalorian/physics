@@ -6,7 +6,7 @@ export const constantVelocityDef: SimDefinition = {
   title: 'Constant velocity motion',
   level: 'Intro',
   summary: 'Control a walker along a track and collect position data over time. Watch how steady speed makes a straight position-time line.',
-  canvasHeight: 380,
+  canvasHeight: 230,
   params: [
     { key: 'speed', label: 'Walking speed', type: 'slider', min: 0.5, max: 3, step: 0.1, unit: 'm/s', default: 1 },
     {
@@ -24,6 +24,10 @@ export const constantVelocityDef: SimDefinition = {
     { key: 'velocity', label: 'Velocity', unit: 'm/s', precision: 1, color: 'var(--primary)' },
   ],
   createEngine: createConstantVelocityEngine,
+  sensors: [
+    { key: 'position', kind: 'motion', label: 'Motion Detector', quantity: 'Position', unit: 'm' },
+    { key: 'velocity', kind: 'motion', label: 'Motion Detector', quantity: 'Velocity', unit: 'm/s' },
+  ],
   learning: {
     objectives: [
       'Understand constant-velocity motion',

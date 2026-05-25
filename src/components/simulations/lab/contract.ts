@@ -69,6 +69,9 @@ export type SensorKind =
   | 'voltage' | 'current' | 'magnetic-field' | 'light' | 'generic'
 
 export interface SensorSpec {
+  /** Channel id — required when a sim offers multiple channels. Passed to
+   *  getSensorTrace(key) so the engine returns the matching series. */
+  key?: string
   kind: SensorKind
   /** Probe name, e.g. "Motion Detector", "Dual-Range Force Sensor". */
   label: string
@@ -113,8 +116,9 @@ export interface SimEngine {
   getReadouts(): Record<string, number | string>
   /** Collected data for table/chart/export, if the sim produces any. */
   getData?(): SimData
-  /** Live trace for the mock sensor readout (matches the definition's SensorSpec). */
-  getSensorTrace?(): SensorSample[]
+  /** Live trace for the mock sensor readout. When the sim offers multiple
+   *  channels, `channelKey` selects which series to return. */
+  getSensorTrace?(channelKey?: string): SensorSample[]
   /** True once this run has met the sim's "did something meaningful" bar. */
   isComplete?(): boolean
   /** Detach listeners / cancel rAF. The shell calls this on unmount. */
@@ -136,8 +140,11 @@ export interface SimDefinition {
   createEngine: SimEngineFactory
   /** Default canvas height in px (shell still makes it responsive). Default 420. */
   canvasHeight?: number
-  /** Optional mock sensor — renders a Vernier-style live trace from getSensorTrace(). */
+  /** Optional mock sensor — renders a Vernier-style live trace from getSensorTrace().
+   *  Use `sensors` for multiple switchable channels (a picker appears in the panel);
+   *  `sensor` is the single-channel shorthand. */
   sensor?: SensorSpec
+  sensors?: SensorSpec[]
   /** Show the play/pause control (auto-true when the engine defines `step`). */
   showPlay?: boolean
   /** Offer CSV export (auto-true when the engine defines `getData`). */

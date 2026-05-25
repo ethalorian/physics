@@ -16,7 +16,10 @@ export const freefallDef: SimDefinition = {
     { key: 'velocity', label: 'Speed', unit: 'm/s', precision: 1, color: 'var(--primary)' },
   ],
   createEngine: createFreefallEngine,
-  sensor: { kind: 'motion', label: 'Motion Detector', quantity: 'Downward speed', unit: 'm/s' },
+  sensors: [
+    { key: 'speed', kind: 'motion', label: 'Motion Detector', quantity: 'Downward speed', unit: 'm/s' },
+    { key: 'distance', kind: 'motion', label: 'Motion Detector', quantity: 'Distance fallen', unit: 'm' },
+  ],
   learning: {
     objectives: [
       'See free fall as constant downward acceleration g',

@@ -17,7 +17,10 @@ export const uamDef: SimDefinition = {
     { key: 'velocity', label: 'Velocity', unit: 'm/s', precision: 1, color: 'var(--success)' },
   ],
   createEngine: createUAMEngine,
-  sensor: { kind: 'motion', label: 'Motion Detector', quantity: 'Velocity', unit: 'm/s' },
+  sensors: [
+    { key: 'velocity', kind: 'motion', label: 'Motion Detector', quantity: 'Velocity', unit: 'm/s' },
+    { key: 'position', kind: 'motion', label: 'Motion Detector', quantity: 'Position', unit: 'm' },
+  ],
   learning: {
     objectives: [
       'See constant acceleration as evenly-changing spot spacing',

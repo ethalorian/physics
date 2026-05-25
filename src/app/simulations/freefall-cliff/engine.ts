@@ -1,4 +1,4 @@
-import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components/simulations/lab/contract'
+import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
 
 // Freefall cliff — drop a stone from a cliff of known height; it falls under g
 // from rest (h = ½gt², exact). Position traces stamp every 0.25 s and spread
@@ -9,13 +9,15 @@ import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components
 const G = 9.8
 
 const COL = {
-  skyTop: '#E7E4FB', skyBot: '#F6F4FF',
-  cliff: '#6B6478', cliffDark: '#4A4458', cliffEdge: '#3C3849',
-  waterTop: '#3E8FD0', waterBot: '#1F5F9E', foam: '#BfE3FF',
-  stone: '#26215C', stoneGlow: 'rgba(127,119,221,0.4)', trailC: 'rgba(127,119,221,',
+  skyTop: '#EAE7FB', skyBot: '#F8F6FF',
+  rock: '#867E9C', rockDark: '#5C5670', rockLight: '#9F98B4', strata: 'rgba(255,255,255,0.12)',
+  grass: '#5DCAA5', grassDark: '#1D9E75',
+  waterTop: '#69B0DD', waterBot: '#2C6FA8', foam: '#E1F0FF', wave: 'rgba(255,255,255,0.22)',
+  stone: '#2A2540', stoneHi: 'rgba(255,255,255,0.55)', trailC: 'rgba(127,119,221,',
   trace: '#D85A30', traceLabel: '#993C1D',
-  head: '#BA7517', body: '#534AB7',
-  splash: 'rgba(191,227,255,', text: '#26215C', mute: '#6F6A86',
+  head: '#E8B964', body: '#534AB7',
+  ruler: '#6F6A86', rulerLine: 'rgba(60,52,137,0.16)',
+  drop: 'rgba(83,74,183,0.30)', splash: 'rgba(225,240,255,', text: '#26215C', mute: '#6F6A86',
 }
 
 export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine {
@@ -27,7 +29,7 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
   let lastSample = -1
   let splash = -1 // seconds since landing
   let traces: { t: number; h: number }[] = []
-  let trace: SensorSample[] = []
+  let samp: { t: number; v: number; h: number }[] = []
 
   const tLand = () => Math.sqrt((2 * cliffH) / G)
   const dims = () => {
@@ -38,70 +40,103 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
   function render() {
     const { w, h } = dims()
     ctx.clearRect(0, 0, w, h)
-    // sky
-    const sky = ctx.createLinearGradient(0, 0, 0, h)
+
+    // ---- layout ----
+    const waterTop = Math.round(h * 0.82)
+    const lipY = Math.round(h * 0.16)        // cliff top edge / launch height
+    const cliffR = Math.round(w * 0.40)      // cliff right face
+    const dropX = cliffR + 18                // stone falls just off the lip
+    const rulerX = w - 30
+    const toY = (m: number) => lipY + (Math.max(0, Math.min(cliffH, m)) / cliffH) * (waterTop - lipY)
+
+    // ---- sky ----
+    const sky = ctx.createLinearGradient(0, 0, 0, waterTop)
     sky.addColorStop(0, COL.skyTop); sky.addColorStop(1, COL.skyBot)
-    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h)
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, waterTop)
 
-    const waterTop = h * 0.86
-    const dropTop = h * 0.13
-    const colX = w * 0.42 // stone fall column
-    const toY = (m: number) => dropTop + (Math.max(0, Math.min(cliffH, m)) / cliffH) * (waterTop - dropTop)
-
-    // cliff (left)
-    const cliffR = w * 0.30
-    ctx.fillStyle = COL.cliff; ctx.fillRect(0, 0, cliffR, waterTop)
-    ctx.fillStyle = COL.cliffDark; ctx.fillRect(cliffR - 8, 0, 8, waterTop)
-    ctx.strokeStyle = 'rgba(0,0,0,0.10)'; ctx.lineWidth = 1
-    for (let i = 1; i < 9; i++) { const yy = (waterTop / 9) * i; ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(cliffR - 8, yy + 6); ctx.stroke() }
-
-    // traveler on the cliff top
-    const tx = cliffR - 26
-    ctx.fillStyle = COL.head; ctx.beginPath(); ctx.arc(tx, dropTop - 20, 6, 0, Math.PI * 2); ctx.fill()
-    ctx.fillStyle = COL.body; ctx.beginPath(); ctx.roundRect(tx - 4, dropTop - 14, 8, 13, 2); ctx.fill()
-
-    // height scale (right of column)
-    ctx.fillStyle = COL.mute; ctx.font = '10px sans-serif'; ctx.textAlign = 'left'
-    for (let m = 0; m <= cliffH; m += 10) {
-      const yy = toY(m)
-      ctx.strokeStyle = 'rgba(60,52,137,0.12)'; ctx.beginPath(); ctx.moveTo(colX + 30, yy); ctx.lineTo(w, yy); ctx.stroke()
-      ctx.fillText(`${m} m`, w - 34, yy - 2)
-    }
-
-    // position traces (spread apart as it accelerates)
-    traces.forEach((tr) => {
-      const yy = toY(tr.h)
-      ctx.fillStyle = COL.trace; ctx.beginPath(); ctx.arc(colX, yy, 4, 0, Math.PI * 2); ctx.fill()
-      ctx.fillStyle = COL.traceLabel; ctx.font = '10px sans-serif'; ctx.textAlign = 'right'
-      ctx.fillText(`${tr.t.toFixed(2)}s`, colX - 8, yy + 3)
-    })
-
-    // water
+    // ---- water ----
     const water = ctx.createLinearGradient(0, waterTop, 0, h)
     water.addColorStop(0, COL.waterTop); water.addColorStop(1, COL.waterBot)
     ctx.fillStyle = water; ctx.fillRect(0, waterTop, w, h - waterTop)
-    ctx.fillStyle = COL.foam; ctx.fillRect(0, waterTop, w, 2)
-
-    // falling stone (glow + trail)
-    if (falling || (!done && fallen > 0)) {
-      const sy = toY(fallen)
-      for (let k = 1; k <= 6; k++) {
-        const a = 0.28 * (1 - k / 7)
-        ctx.fillStyle = `${COL.trailC}${a})`
-        ctx.beginPath(); ctx.arc(colX, sy - k * 6, 5, 0, Math.PI * 2); ctx.fill()
+    // gentle wave lines
+    ctx.strokeStyle = COL.wave; ctx.lineWidth = 1.5
+    for (let r = 0; r < 3; r++) {
+      const yy = waterTop + 10 + r * 12
+      ctx.beginPath()
+      for (let xx = 0; xx <= w; xx += 8) {
+        const yo = Math.sin((xx / 26) + r) * 2
+        if (xx === 0) ctx.moveTo(xx, yy + yo); else ctx.lineTo(xx, yy + yo)
       }
-      const glow = ctx.createRadialGradient(colX, sy, 2, colX, sy, 14)
-      glow.addColorStop(0, COL.stoneGlow); glow.addColorStop(1, 'rgba(127,119,221,0)')
-      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(colX, sy, 14, 0, Math.PI * 2); ctx.fill()
-      ctx.fillStyle = COL.stone; ctx.beginPath(); ctx.arc(colX, sy, 7, 0, Math.PI * 2); ctx.fill()
+      ctx.stroke()
+    }
+    ctx.fillStyle = COL.foam; ctx.fillRect(0, waterTop - 1, w, 3)
+
+    // ---- cliff ----
+    const rock = ctx.createLinearGradient(0, 0, cliffR, 0)
+    rock.addColorStop(0, COL.rockDark); rock.addColorStop(1, COL.rock)
+    ctx.fillStyle = rock; ctx.fillRect(0, lipY, cliffR, h - lipY)
+    // strata (clean horizontals)
+    ctx.strokeStyle = COL.strata; ctx.lineWidth = 2
+    for (let i = 1; i <= 4; i++) {
+      const yy = lipY + ((waterTop - lipY) / 5) * i
+      ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(cliffR - 4, yy); ctx.stroke()
+    }
+    // lit edge
+    ctx.fillStyle = COL.rockLight; ctx.fillRect(cliffR - 4, lipY, 4, h - lipY)
+    // grassy cap
+    ctx.fillStyle = COL.grass; ctx.beginPath(); ctx.roundRect(0, lipY - 8, cliffR, 12, 4); ctx.fill()
+    ctx.fillStyle = COL.grassDark; ctx.fillRect(0, lipY + 2, cliffR, 2)
+
+    // ---- traveler at the lip ----
+    const tx = cliffR - 24
+    ctx.fillStyle = COL.head; ctx.beginPath(); ctx.arc(tx, lipY - 24, 5.5, 0, Math.PI * 2); ctx.fill()
+    ctx.fillStyle = COL.body; ctx.beginPath(); ctx.roundRect(tx - 4, lipY - 18, 8, 13, 3); ctx.fill()
+    ctx.strokeStyle = COL.body; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.moveTo(tx - 3, lipY - 5); ctx.lineTo(tx - 5, lipY - 1); ctx.moveTo(tx + 3, lipY - 5); ctx.lineTo(tx + 5, lipY - 1); ctx.stroke()
+
+    // ---- depth ruler ----
+    ctx.strokeStyle = COL.ruler; ctx.lineWidth = 1.5
+    ctx.beginPath(); ctx.moveTo(rulerX, lipY); ctx.lineTo(rulerX, waterTop); ctx.stroke()
+    ctx.font = '10px sans-serif'; ctx.textAlign = 'right'
+    for (let m = 0; m <= cliffH; m += 10) {
+      const yy = toY(m)
+      ctx.strokeStyle = COL.ruler; ctx.lineWidth = 1.5
+      ctx.beginPath(); ctx.moveTo(rulerX, yy); ctx.lineTo(rulerX + 5, yy); ctx.stroke()
+      ctx.fillStyle = COL.mute; ctx.fillText(`${m}`, rulerX - 4, yy + 3)
     }
 
-    // splash rings on landing
+    // ---- drop guideline ----
+    ctx.strokeStyle = COL.drop; ctx.lineWidth = 1.5; ctx.setLineDash([3, 5])
+    ctx.beginPath(); ctx.moveTo(dropX, lipY); ctx.lineTo(dropX, waterTop); ctx.stroke(); ctx.setLineDash([])
+
+    // ---- position traces (spread as it accelerates) ----
+    traces.forEach((tr, i) => {
+      const yy = toY(tr.h)
+      ctx.fillStyle = COL.trace; ctx.beginPath(); ctx.arc(dropX, yy, 3.5, 0, Math.PI * 2); ctx.fill()
+      if (i > 0) {
+        ctx.fillStyle = COL.traceLabel; ctx.font = '10px sans-serif'; ctx.textAlign = 'left'
+        ctx.fillText(`${tr.t.toFixed(2)} s`, dropX + 8, yy + 3)
+      }
+    })
+
+    // ---- falling stone (trail + highlight) ----
+    if (falling || (!done && fallen > 0) || (done && splash < 0)) {
+      const sy = toY(fallen)
+      for (let k = 1; k <= 6; k++) {
+        const a = 0.30 * (1 - k / 7)
+        ctx.fillStyle = `${COL.trailC}${a})`
+        ctx.beginPath(); ctx.arc(dropX, sy - k * 7, 5 - k * 0.4, 0, Math.PI * 2); ctx.fill()
+      }
+      ctx.fillStyle = COL.stone; ctx.beginPath(); ctx.arc(dropX, sy, 8, 0, Math.PI * 2); ctx.fill()
+      ctx.fillStyle = COL.stoneHi; ctx.beginPath(); ctx.arc(dropX - 2.5, sy - 2.5, 2.5, 0, Math.PI * 2); ctx.fill()
+    }
+
+    // ---- splash on landing ----
     if (splash >= 0 && splash < 0.7) {
       const p = splash / 0.7
-      ctx.strokeStyle = `${COL.splash}${1 - p})`; ctx.lineWidth = 2
-      ctx.beginPath(); ctx.arc(colX, waterTop, 6 + p * 34, 0, Math.PI); ctx.stroke()
-      ctx.beginPath(); ctx.arc(colX, waterTop, 3 + p * 18, 0, Math.PI); ctx.stroke()
+      ctx.strokeStyle = `${COL.splash}${1 - p})`; ctx.lineWidth = 2.5
+      ctx.beginPath(); ctx.arc(dropX, waterTop, 6 + p * 32, Math.PI, 2 * Math.PI); ctx.stroke()
+      ctx.beginPath(); ctx.arc(dropX, waterTop, 3 + p * 16, Math.PI, 2 * Math.PI); ctx.stroke()
     }
   }
 
@@ -113,14 +148,14 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
       const land = tLand()
       if (t + dt >= land) {
         t = land; fallen = cliffH; v = G * land; falling = false; done = true; splash = 0
-        traces.push({ t, h: cliffH }); trace.push({ x: t, y: v })
+        traces.push({ t, h: cliffH }); samp.push({ t, v, h: cliffH })
         return
       }
       t += dt
       fallen = 0.5 * G * t * t
       v = G * t
       if (t - lastTrace >= 0.25) { traces.push({ t, h: fallen }); lastTrace = Math.floor(t / 0.25) * 0.25 }
-      if (t - lastSample >= 0.05) { trace.push({ x: t, y: v }); lastSample = t }
+      if (t - lastSample >= 0.05) { samp.push({ t, v, h: fallen }); lastSample = t }
     },
     setParams(values: ParamValues) {
       cliffH = Number(values.cliffHeight ?? cliffH)
@@ -129,11 +164,11 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
       this.setParams(values)
       t = 0; fallen = 0; v = 0; falling = true; done = false
       lastTrace = -1; lastSample = -1; splash = -1
-      traces = [{ t: 0, h: 0 }]; trace = [{ x: 0, y: 0 }]
+      traces = [{ t: 0, h: 0 }]; samp = [{ t: 0, v: 0, h: 0 }]
     },
     reset() {
       t = 0; fallen = 0; v = 0; falling = false; done = false
-      lastTrace = -1; lastSample = -1; splash = -1; traces = []; trace = []
+      lastTrace = -1; lastSample = -1; splash = -1; traces = []; samp = []
     },
     getReadouts() {
       return { time: t, distance: fallen, velocity: v }
@@ -145,7 +180,9 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
         xCol: 0, yCol: 1,
       }
     },
-    getSensorTrace() { return trace },
+    getSensorTrace(key?: string) {
+      return samp.map((s) => ({ x: s.t, y: key === 'distance' ? s.h : s.v }))
+    },
     isComplete() { return done },
     destroy() {},
   }

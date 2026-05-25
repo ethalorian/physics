@@ -54,6 +54,12 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const [sensorTrace, setSensorTrace] = useState<SensorSample[]>([])
   const [running, setRunning] = useState(false)
 
+  // Mock-sensor channels: a sim may offer several switchable series (a picker
+  // appears in the sensor panel). `sensor` is the single-channel shorthand.
+  const channels = useMemo(() => def.sensors ?? (def.sensor ? [def.sensor] : []), [def.sensors, def.sensor])
+  const channelKey = (c: { key?: string; quantity: string }) => c.key ?? c.quantity
+  const [sensorKey, setSensorKey] = useState(() => (channels[0] ? channelKey(channels[0]) : ''))
+
   const completionConfig = useMemo(() => getSimulationCriteria(def.slug), [def.slug])
 
   // Persist completion to the activity API (single tracking path for the platform).
@@ -128,9 +134,12 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     if (!eng) return
     setReadouts(eng.getReadouts())
     if (eng.getData) setData(eng.getData())
-    if (eng.getSensorTrace) setSensorTrace(eng.getSensorTrace())
+    if (eng.getSensorTrace) setSensorTrace(eng.getSensorTrace(sensorKey))
     if (eng.isComplete?.()) markComplete()
-  }, [markComplete])
+  }, [markComplete, sensorKey])
+
+  // Switching channels re-reads the engine immediately (works even when paused).
+  useEffect(() => { pullState() }, [sensorKey, pullState])
 
   // ---- animation loop -----------------------------------------------------
   // Fixed-substep integration: regardless of frame rate, physics advances in
@@ -281,9 +290,9 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
             </div>
           )}
 
-          {/* mock sensor — Vernier-style live trace */}
-          {def.sensor && (
-            <MockSensor spec={def.sensor} samples={sensorTrace} live={running} />
+          {/* mock sensor — Vernier-style live trace with a channel picker */}
+          {channels.length > 0 && (
+            <MockSensor channels={channels} selectedKey={sensorKey} onSelect={setSensorKey} samples={sensorTrace} live={running} />
           )}
 
           {/* data table */}

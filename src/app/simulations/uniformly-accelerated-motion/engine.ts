@@ -1,4 +1,4 @@
-import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components/simulations/lab/contract'
+import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
 
 // Uniformly accelerated motion — the "oil-drop ticker": a car drops a spot every
 // second, and the growing/shrinking spacing reveals constant acceleration. The
@@ -22,7 +22,7 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
   let lastSecond = -1
   let lastTrace = -1
   let spots: Spot[] = []
-  let trace: SensorSample[] = []
+  let samp: { t: number; v: number; x: number }[] = []
 
   const dims = () => {
     const dpr = window.devicePixelRatio || 1
@@ -99,7 +99,7 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
           t = tStop; v = 0; x = v0 * t + 0.5 * a * t * t
           const sec = Math.floor(t)
           if (sec > lastSecond) { spots.push({ t: sec, x, v }); lastSecond = sec }
-          trace.push({ x: t, y: 0 })
+          samp.push({ t, v: 0, x })
           done = true
           return
         }
@@ -109,7 +109,7 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
       x = v0 * t + 0.5 * a * t * t
       const sec = Math.floor(t)
       if (sec > lastSecond) { spots.push({ t: sec, x, v }); lastSecond = sec }
-      if (t - lastTrace >= 0.05) { trace.push({ x: t, y: v }); lastTrace = t }
+      if (t - lastTrace >= 0.05) { samp.push({ t, v, x }); lastTrace = t }
       if (x > DOMAIN || t > 15) done = true
     },
     setParams(values: ParamValues) {
@@ -121,10 +121,10 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
       this.setParams(values)
       t = 0; x = 0; v = v0; done = false; lastSecond = -1; lastTrace = -1
       spots = [{ t: 0, x: 0, v: v0 }]
-      trace = [{ x: 0, y: v0 }]
+      samp = [{ t: 0, v: v0, x: 0 }]
     },
     reset() {
-      t = 0; x = 0; v = v0; done = false; lastSecond = -1; lastTrace = -1; spots = []; trace = []
+      t = 0; x = 0; v = v0; done = false; lastSecond = -1; lastTrace = -1; spots = []; samp = []
     },
     getReadouts() {
       return { time: t, position: x, velocity: v }
@@ -136,7 +136,9 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
         xCol: 0, yCol: 2,
       }
     },
-    getSensorTrace() { return trace },
+    getSensorTrace(key?: string) {
+      return samp.map((s) => ({ x: s.t, y: key === 'position' ? s.x : s.v }))
+    },
     isComplete() { return done },
     destroy() {},
   }
