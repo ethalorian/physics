@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Trophy, BookOpen, RotateCcw, Zap, Clock } from 'lucide-react'
 import Link from 'next/link'
 import VocabularyQuizBowlGame from '@/components/vocabulary/games/VocabularyQuizBowlGame'
+import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
 
 export default function StudentVocabularyQuizBowlPage() {
   const { data: session, status } = useSession()
@@ -56,38 +57,31 @@ export default function StudentVocabularyQuizBowlPage() {
     return term.term.length > 12
   }) || []
 
-  const handleGameComplete = async (score: number, totalQuestions: number, timeSpent: number) => {
-    const results = { score, totalQuestions, timeSpent }
-    setGameResults(results)
+  // Score saving is centralized in ArcadeEndScreen (the one uniform save path).
+  const handleGameComplete = (score: number, totalQuestions: number, timeSpent: number) => {
+    setGameResults({ score, totalQuestions, timeSpent })
     setGameStarted(false)
-
-    // Save to database
-    if (selectedSetId && session?.user?.id) {
-      try {
-        await fetch('/api/student-progress/game-scores', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            vocabulary_set_id: selectedSetId,
-            game_type: 'quiz-bowl',
-            score: score,
-            max_score: totalQuestions * 10,
-            accuracy: (score / (totalQuestions * 10)) * 100,
-            time_spent: timeSpent,
-            difficulty: difficulty,
-            terms_completed: totalQuestions,
-            terms_total: totalQuestions
-          })
-        })
-      } catch (error) {
-        console.error('Error saving game score:', error)
-      }
-    }
   }
 
   const resetGame = () => {
     setGameStarted(false)
     setGameResults(null)
+  }
+
+  if (gameResults) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <ArcadeEndScreen
+          gameType="quiz-bowl"
+          gameTitle="Quiz bowl"
+          vocabularySetId={selectedSetId}
+          score={gameResults.score}
+          maxScore={gameResults.totalQuestions * 10}
+          detail={`${gameResults.totalQuestions} questions · ${Math.round(gameResults.timeSpent / 1000)}s`}
+          onPlayAgain={() => { setGameResults(null); setGameStarted(true) }}
+        />
+      </div>
+    )
   }
 
   if (gameStarted && selectedSet && availableTerms.length >= totalQuestions) {
@@ -143,38 +137,6 @@ export default function StudentVocabularyQuizBowlPage() {
       </div>
 
       {/* Game Results */}
-      {gameResults && (
-        <Card className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 border-orange-200 dark:border-orange-800">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-orange-700 dark:text-orange-300">
-              <Trophy className="h-5 w-5" />
-              <span>Quiz Complete!</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-foreground">{gameResults.score}</div>
-                <div className="text-sm text-muted-foreground">Score</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">{gameResults.totalQuestions}</div>
-                <div className="text-sm text-muted-foreground">Questions</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">{Math.round(gameResults.timeSpent / 1000)}s</div>
-                <div className="text-sm text-muted-foreground">Time</div>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <div className="text-lg font-medium text-foreground">
-                Accuracy: {Math.round((gameResults.score / gameResults.totalQuestions) * 100)}%
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Game Setup */}
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
@@ -279,16 +241,6 @@ export default function StudentVocabularyQuizBowlPage() {
               Start Quiz Bowl
             </Button>
 
-            {gameResults && (
-              <Button
-                onClick={resetGame}
-                variant="outline"
-                className="w-full"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Play Again
-              </Button>
-            )}
           </CardContent>
         </Card>
 

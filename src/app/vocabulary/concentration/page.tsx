@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, BookOpen, Trophy, RotateCcw, Brain, Eye } from 'lucide-react'
 import Link from 'next/link'
 import VocabularyConcentrationGame from '@/components/vocabulary/games/VocabularyConcentrationGame'
+import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
 
 export default function StudentVocabularyConcentrationPage() {
   const { data: session, status } = useSession()
@@ -59,39 +60,31 @@ export default function StudentVocabularyConcentrationPage() {
   // Calculate required pairs for grid size
   const requiredPairs = gridSize === '4x4' ? 8 : gridSize === '6x6' ? 18 : 32
 
-  const handleGameComplete = async (score: number, totalPairs: number, timeSpent: number) => {
-    const results = { score, totalPairs, timeSpent, moves: 0 }
-    setGameResults(results)
+  // Score saving is centralized in ArcadeEndScreen (the one uniform save path).
+  const handleGameComplete = (score: number, totalPairs: number, timeSpent: number) => {
+    setGameResults({ score, totalPairs, timeSpent, moves: 0 })
     setGameStarted(false)
-
-    // Save to database
-    if (selectedSetId && session?.user?.id) {
-      try {
-        await fetch('/api/student-progress/game-scores', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            vocabulary_set_id: selectedSetId,
-            game_type: 'concentration',
-            score: score,
-            max_score: totalPairs * 10, // Assuming 10 points per match
-            accuracy: (score / (totalPairs * 10)) * 100,
-            time_spent: timeSpent,
-            difficulty: difficulty,
-            terms_completed: totalPairs,
-            terms_total: totalPairs,
-            perfect_game: score === totalPairs * 10
-          })
-        })
-      } catch (error) {
-        console.error('Error saving game score:', error)
-      }
-    }
   }
 
   const resetGame = () => {
     setGameStarted(false)
     setGameResults(null)
+  }
+
+  if (gameResults) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <ArcadeEndScreen
+          gameType="concentration"
+          gameTitle="Concentration"
+          vocabularySetId={selectedSetId}
+          score={gameResults.score}
+          maxScore={gameResults.totalPairs * 10}
+          detail={`${gameResults.totalPairs} pairs · ${Math.round(gameResults.timeSpent / 1000)}s`}
+          onPlayAgain={() => { setGameResults(null); setGameStarted(true) }}
+        />
+      </div>
+    )
   }
 
   if (gameStarted && selectedSet && availableTerms.length >= requiredPairs) {
@@ -146,42 +139,6 @@ export default function StudentVocabularyConcentrationPage() {
       </div>
 
       {/* Game Results */}
-      {gameResults && (
-        <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border-teal-200 dark:border-teal-800">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2 text-teal-700 dark:text-teal-300">
-              <Trophy className="h-5 w-5" />
-              <span>Memory Master!</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-foreground">{gameResults.score}</div>
-                <div className="text-sm text-muted-foreground">Score</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">{gameResults.totalPairs}</div>
-                <div className="text-sm text-muted-foreground">Pairs</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">{gameResults.moves}</div>
-                <div className="text-sm text-muted-foreground">Moves</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-foreground">{Math.round(gameResults.timeSpent / 1000)}s</div>
-                <div className="text-sm text-muted-foreground">Time</div>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <div className="text-lg font-medium text-foreground">
-                Efficiency: {Math.round((gameResults.totalPairs * 2 / gameResults.moves) * 100)}%
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Game Setup */}
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
@@ -271,16 +228,6 @@ export default function StudentVocabularyConcentrationPage() {
               Start Concentration
             </Button>
 
-            {gameResults && (
-              <Button
-                onClick={resetGame}
-                variant="outline"
-                className="w-full"
-              >
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Play Again
-              </Button>
-            )}
           </CardContent>
         </Card>
 
