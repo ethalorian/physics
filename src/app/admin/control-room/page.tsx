@@ -119,6 +119,41 @@ function ResponseView({ response }: { response: unknown }) {
         </div>
       )
     }
+    // concept_exercise (textbook reader + auto-graded exercise)
+    if ('answers' in o && o.answers && typeof o.answers === 'object' && ('results' in o || 'summary' in o || 'submitted' in o)) {
+      const answers = o.answers as Record<string, unknown>
+      const results = (o.results && typeof o.results === 'object' ? o.results : {}) as Record<string, { correct?: boolean; needsReview?: boolean; answered?: boolean }>
+      const summary = (o.summary && typeof o.summary === 'object' ? o.summary : null) as { autoCorrect?: number; autoTotal?: number; reviewCount?: number } | null
+      const fmt = (v: unknown): string => Array.isArray(v) ? v.map(String).join(' / ') : String(v ?? '')
+      const nums = Object.keys(answers).map(Number).filter((n) => !Number.isNaN(n)).sort((a, b) => a - b)
+      return (
+        <div className="text-sm">
+          {summary && (
+            <div className="mb-2" style={{ color: 'var(--secondary-foreground)' }}>
+              <b style={{ color: 'var(--success)' }}>{summary.autoCorrect ?? 0}/{summary.autoTotal ?? 0}</b> auto-checked correct
+              {summary.reviewCount ? <span style={{ color: 'var(--muted-foreground)' }}> · {summary.reviewCount} written answer{summary.reviewCount === 1 ? '' : 's'} to review</span> : null}
+            </div>
+          )}
+          <div className="flex flex-col gap-1">
+            {nums.map((n) => {
+              const r = results[String(n)]
+              const badge = !r ? null
+                : r.needsReview ? <span style={{ color: 'var(--muted-foreground)' }}>✎ review</span>
+                : r.correct ? <span style={{ color: 'var(--success)' }}>✓</span>
+                : <span style={{ color: 'var(--destructive)' }}>✗</span>
+              const val = fmt(answers[String(n)])
+              return (
+                <div key={n} className="flex items-baseline gap-2" style={{ borderBottom: '0.5px solid var(--border)', paddingBottom: 2 }}>
+                  <span className="shrink-0" style={{ color: 'var(--muted-foreground)', minWidth: 22 }}>{n}.</span>
+                  <span className="flex-1" style={{ color: val.trim() ? 'var(--foreground)' : 'var(--muted-foreground)' }}>{val.trim() || '—'}</span>
+                  <span className="shrink-0 text-xs">{badge}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )
+    }
     if ('lines' in o && Array.isArray(o.lines)) {
       const lines = (o.lines as unknown[]).map(String)
       if (lines.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty sandbox]</p>
