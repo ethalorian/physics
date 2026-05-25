@@ -5,6 +5,16 @@ import Link from 'next/link'
 import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
 import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
+import MonthCalendar, { type CalSection, type CalItem } from '@/components/pacing/MonthCalendar'
+
+function LongLegend() {
+  return (
+    <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+      <span className="inline-flex items-center gap-1"><span className="rounded px-1 font-bold text-[9px]" style={{ background: 'var(--reward)', color: 'var(--reward-foreground, #4a3b00)' }}>LONG</span> long block</span>
+      <span className="inline-flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 3, border: '2px solid var(--primary)', display: 'inline-block' }} /> today</span>
+    </div>
+  )
+}
 
 interface Course { id: string; name: string; section: string | null; google_course_id: string | null }
 interface PlanItem { index: number; title: string; lessonId: string | null; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number }
@@ -34,16 +44,25 @@ function deltaLabel(d: number, status: PacingResult['status']): string {
   return d > 0 ? `${n} days ahead` : `${n} days behind`
 }
 
+interface CalData { sections: CalSection[]; items: CalItem[]; calendar: RotationCalendar }
+
 export default function PacingPage() {
   const { role } = useViewAs()
   const isAdmin = role === 'admin'
   const [courses, setCourses] = useState<Course[] | null>(null)
+  const [cal, setCal] = useState<CalData | null>(null)
+
+  const loadCal = useCallback(() => {
+    fetch('/api/pacing/calendar').then((r) => r.json())
+      .then((d: CalData) => setCal(d)).catch(() => setCal(null))
+  }, [])
 
   useEffect(() => {
     fetch('/api/courses').then((r) => r.json())
       .then((d: { courses?: Course[] }) => setCourses((d.courses ?? []).filter((c) => c.google_course_id)))
       .catch(() => setCourses([]))
   }, [])
+  useEffect(() => { loadCal() }, [loadCal])
 
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -75,6 +94,20 @@ export default function PacingPage() {
       {isAdmin && <RotationEditor />}
       {isAdmin && <GuideEditor />}
 
+      {/* unified month calendar — all your sections at a glance */}
+      {cal && cal.sections.some((s) => s.block && s.startDate) && (
+        <div className="rounded-2xl border p-5 mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+            <div>
+              <div className="font-bold" style={{ fontSize: 15 }}>This month, across your classes</div>
+              <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Each day shows the blocks that meet and the lesson they land on. Click a lesson to open its builder.</div>
+            </div>
+            <LongLegend />
+          </div>
+          <MonthCalendar sections={cal.sections} items={cal.items} calendar={cal.calendar} />
+        </div>
+      )}
+
       {courses === null ? (
         <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading sections…</div>
       ) : courses.length === 0 ? (
@@ -83,7 +116,7 @@ export default function PacingPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {courses.map((c) => <SectionCard key={c.id} course={c} />)}
+          {courses.map((c) => <SectionCard key={c.id} course={c} cal={cal} onChanged={loadCal} />)}
         </div>
       )}
     </div>
@@ -296,13 +329,14 @@ function GuideEditor() {
 // ---------------------------------------------------------------------------
 // Per-section tracker
 // ---------------------------------------------------------------------------
-function SectionCard({ course }: { course: Course }) {
+function SectionCard({ course, cal, onChanged }: { course: Course; cal: CalData | null; onChanged: () => void }) {
   const [data, setData] = useState<SectionData | null>(null)
   const [startDate, setStartDate] = useState('')
   const [block, setBlock] = useState('')
   const [posIndex, setPosIndex] = useState<number | ''>('')
   const [savingSched, setSavingSched] = useState(false)
   const [savingPos, setSavingPos] = useState(false)
+  const [showCal, setShowCal] = useState(false)
 
   const load = useCallback(() => {
     fetch(`/api/pacing/section?course_id=${course.id}`).then((r) => r.json()).then((d: SectionData) => {
@@ -322,7 +356,7 @@ function SectionCard({ course }: { course: Course }) {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ course_id: course.id, start_date: startDate || null, block: block || null }),
       })
-      load()
+      load(); onChanged()
     } finally { setSavingSched(false) }
   }
 
@@ -336,7 +370,7 @@ function SectionCard({ course }: { course: Course }) {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ course_id: course.id, current_lesson_id: item.lessonId, current_unit_order: item.lessonId ? null : item.unitOrder }),
       })
-      load()
+      load(); onChanged()
     } finally { setSavingPos(false) }
   }
 
@@ -391,18 +425,17 @@ function SectionCard({ course }: { course: Course }) {
         </p>
       )}
 
-      {/* lessons lined up against upcoming meetings */}
-      {data && data.lineup.length > 0 && (
+      {/* this section's calendar (collapsible) */}
+      {cal && block && (
         <div className="mt-4">
-          <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Next meetings</div>
-          <div className="flex flex-wrap gap-1.5">
-            {data.lineup.map((m, i) => (
-              <div key={i} className="rounded-lg border px-2.5 py-1.5 text-xs" style={{ borderColor: m.long ? 'color-mix(in oklch, var(--reward) 55%, var(--border))' : 'var(--border)', background: m.long ? 'color-mix(in oklch, var(--reward) 10%, transparent)' : 'transparent' }}>
-                <div style={{ color: 'var(--muted-foreground)' }}>{m.date.slice(5)}{m.long ? ' · long' : ''}</div>
-                <div className="font-medium" style={{ maxWidth: 150 }}>{m.title}</div>
-              </div>
-            ))}
-          </div>
+          <button onClick={() => setShowCal((v) => !v)} className="inline-flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--primary)' }}>
+            {showCal ? <ChevronUp size={15} /> : <ChevronDown size={15} />} {showCal ? 'Hide' : 'Show'} this section&apos;s calendar
+          </button>
+          {showCal && (
+            <div className="mt-3">
+              <MonthCalendar sections={cal.sections} items={cal.items} calendar={cal.calendar} filterCourseId={course.id} compact />
+            </div>
+          )}
         </div>
       )}
 
