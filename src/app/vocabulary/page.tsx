@@ -1,229 +1,167 @@
 "use client"
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useVocabulary } from '@/contexts/VocabularyContext'
 import { getUserRole } from '@/lib/permissions'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { 
-  Target, 
-  Grid3x3, 
-  Users, 
-  Zap, 
-  BookOpen, 
-  Trophy,
-  Play,
-  ArrowRight,
-  Gamepad2,
-  Calculator
-} from 'lucide-react'
-import Link from 'next/link'
+import { Gamepad2, Flame, Star, Trophy, Zap, Shuffle, Brain, ArrowRight, Target, Crown } from 'lucide-react'
 
-const vocabularyGames = [
-  {
-    id: 'hangman',
-    title: 'Hangman',
-    description: 'Guess the physics term letter by letter before running out of chances',
-    icon: Target,
-    color: 'bg-red-500',
-    difficulty: 'Easy',
-    href: '/vocabulary/hangman'
-  },
-  {
-    id: 'matching',
-    title: 'Matching Game',
-    description: 'Match physics terms with their correct definitions',
-    icon: Users,
-    color: 'bg-blue-500',
-    difficulty: 'Medium',
-    href: '/vocabulary/matching'
-  },
-  {
-    id: 'crossword',
-    title: 'Crossword Puzzle',
-    description: 'Fill in the crossword with physics vocabulary terms',
-    icon: Grid3x3,
-    color: 'bg-green-500',
-    difficulty: 'Hard',
-    href: '/vocabulary/crossword'
-  },
-  {
-    id: 'word-shoot',
-    title: 'Word Shoot',
-    description: 'Fast-paced shooting game with physics vocabulary',
-    icon: Zap,
-    color: 'bg-purple-500',
-    difficulty: 'Medium',
-    href: '/vocabulary/word-shoot'
-  },
-  {
-    id: 'quiz-bowl',
-    title: 'Quiz Bowl',
-    description: 'Rapid-fire questions about physics terms and concepts',
-    icon: Trophy,
-    color: 'bg-orange-500',
-    difficulty: 'Hard',
-    href: '/vocabulary/quiz-bowl'
-  },
-  {
-    id: 'concentration',
-    title: 'Concentration',
-    description: 'Memory game matching physics terms and definitions',
-    icon: BookOpen,
-    color: 'bg-teal-500',
-    difficulty: 'Easy',
-    href: '/vocabulary/concentration'
-  },
-  {
-    id: 'equation-visualizer',
-    title: 'Equation Visualizer',
-    description: 'Interactive tool to explore how physics terms relate in equations',
-    icon: Calculator,
-    color: 'bg-purple-500',
-    difficulty: 'Educational',
-    href: '/vocabulary/equation-visualizer'
-  }
+interface HubData {
+  level: number
+  xp: { into: number; forNext: number; total: number }
+  streakDays: number
+  daily: { gamesPlayed: number; gamesGoal: number; pointsToday: number; pointsGoal: number; complete: boolean }
+  games: { id: string; best: number; plays: number }[]
+  leaderboard: { rank: number; name: string; points: number; isMe: boolean }[]
+  myRank: number | null
+}
+
+const GAMES = [
+  { id: 'word-shoot', title: 'Word shoot', desc: 'Blast the right term before it escapes', icon: Zap, difficulty: 'Medium', href: '/vocabulary/word-shoot' },
+  { id: 'quiz-bowl', title: 'Quiz bowl', desc: 'Rapid-fire physics questions', icon: Trophy, difficulty: 'Hard', href: '/vocabulary/quiz-bowl' },
+  { id: 'matching', title: 'Matching', desc: 'Pair terms with definitions, fast', icon: Shuffle, difficulty: 'Medium', href: '/vocabulary/matching' },
+  { id: 'concentration', title: 'Concentration', desc: 'Flip and remember the pairs', icon: Brain, difficulty: 'Easy', href: '/vocabulary/concentration' },
 ]
+const DIFF_COLOR: Record<string, string> = { Easy: 'var(--success)', Medium: 'var(--reward)', Hard: '#C08B8B' }
 
-export default function VocabularyGamesHub() {
+function StatTile({ icon, label, value, accent, children }: { icon: React.ReactNode; label: string; value: string; accent: string; children?: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+        <span style={{ color: accent }}>{icon}</span> {label}
+      </div>
+      <div className="text-2xl font-bold mt-1" style={{ color: accent }}>{value}</div>
+      {children}
+    </div>
+  )
+}
+
+export default function VocabularyArcade() {
   const { data: session, status } = useSession()
   const { vocabularySets, publishedVocabularySets, loading } = useVocabulary()
-  const userRole = getUserRole(session?.user?.email)
-  const isAdmin = userRole === 'admin' || userRole === 'teacher'
-  
+  const isStaff = getUserRole(session?.user?.email) !== 'student'
+  const [hub, setHub] = useState<HubData | null>(null)
+
+  useEffect(() => {
+    if (status !== 'authenticated') return
+    fetch('/api/arcade/hub').then((r) => r.json()).then((d: HubData) => { if (d && typeof d.level === 'number') setHub(d) }).catch(() => {})
+  }, [status])
+
   if (status === 'loading' || loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-        </div>
-      </div>
-    )
+    return <div className="flex items-center justify-center min-h-[400px]"><div className="animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: 'var(--primary)' }} /></div>
   }
-
   if (!session) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle>Authentication Required</CardTitle>
-            <CardDescription>Please sign in to access vocabulary games.</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    )
+    return <div className="max-w-md mx-auto rounded-2xl border p-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>Please sign in to play.</div>
   }
 
-  // Students only see published sets, admin/teachers see all sets
-  const visibleSets = isAdmin ? vocabularySets : publishedVocabularySets
-  const availableSets = visibleSets.filter(set => set.terms.length > 0)
+  const visibleSets = isStaff ? vocabularySets : publishedVocabularySets
+  const availableSets = visibleSets.filter((s) => s.terms.length > 0)
+  const noSets = availableSets.length === 0
+  const bestById = new Map((hub?.games ?? []).map((g) => [g.id, g]))
+  const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
-      {/* Header - consistent with other pages */}
+    <div className="max-w-5xl mx-auto p-5 space-y-6" style={{ color: 'var(--foreground)' }}>
+      {/* header */}
       <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-primary/10 rounded-xl">
-          <Gamepad2 className="h-6 w-6 text-primary" />
+        <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+          <Gamepad2 size={24} />
         </div>
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Games</h1>
-          <p className="text-sm text-muted-foreground">
-            Practice physics vocabulary through interactive games • {availableSets.length} sets available
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">Physics arcade</h1>
+          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Play to climb the board and keep your streak alive.</p>
         </div>
       </div>
 
-      {/* Games Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {vocabularyGames.map((game) => {
-          const IconComponent = game.icon
-          return (
-            <Card key={game.id} className="group hover:shadow-lg transition-all duration-300 border-2 hover:border-primary/20">
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <div className={`p-3 rounded-lg ${game.color} bg-opacity-10`}>
-                    <IconComponent className={`h-6 w-6 ${game.color.replace('bg-', 'text-')}`} />
-                  </div>
-                  <Badge variant="secondary" className="text-xs">
-                    {game.difficulty}
-                  </Badge>
-                </div>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {game.title}
-                </CardTitle>
-                <CardDescription className="text-sm leading-relaxed">
-                  {game.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Link href={game.href}>
-                  <Button 
-                    className="w-full group-hover:scale-105 transition-transform"
-                    disabled={availableSets.length === 0}
-                  >
-                    <Play className="h-4 w-4 mr-2" />
-                    Play Game
-                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          )
-        })}
+      {/* motivation strip */}
+      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
+        <StatTile icon={<Star size={15} />} label="Level" value={hub ? String(hub.level) : '—'} accent="var(--primary)">
+          {hub && (
+            <>
+              <div className="h-1.5 rounded-full mt-2 overflow-hidden" style={{ background: 'var(--border)' }}>
+                <div className="h-full" style={{ width: `${Math.round((hub.xp.into / hub.xp.forNext) * 100)}%`, background: 'var(--primary)' }} />
+              </div>
+              <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>{hub.xp.into} / {hub.xp.forNext} XP</div>
+            </>
+          )}
+        </StatTile>
+        <StatTile icon={<Flame size={15} />} label="Streak" value={hub ? `${hub.streakDays}d` : '—'} accent="var(--reward)" />
+        <StatTile icon={<Crown size={15} />} label="This week" value={hub?.myRank ? `#${hub.myRank}` : '—'} accent="var(--success)" />
+        <StatTile icon={<Trophy size={15} />} label="Total XP" value={hub ? hub.xp.total.toLocaleString() : '—'} accent="var(--primary)" />
       </div>
 
-      {/* No Vocabulary Sets Message */}
-      {availableSets.length === 0 && (
-        <Card className="max-w-2xl mx-auto border-dashed">
-          <CardContent className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              No Vocabulary Sets Available
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              {isAdmin 
-                ? "Create your first vocabulary set to get started with vocabulary games."
-                : "Your teacher hasn't published any vocabulary sets yet. Games will be available once vocabulary sets are published."}
-            </p>
-            <Button variant="outline" asChild>
-              <Link href="/dashboard">
-                Return to Dashboard
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Tips Section */}
-      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Trophy className="h-5 w-5 text-primary" />
-            <span>Game Tips</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4 text-sm">
-            <div>
-              <h4 className="font-medium text-foreground mb-2">Getting Started:</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Start with easier games like Hangman</li>
-                <li>• Review vocabulary sets before playing</li>
-                <li>• Take your time to understand each term</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium text-foreground mb-2">Improve Your Score:</h4>
-              <ul className="space-y-1 text-muted-foreground">
-                <li>• Play regularly to reinforce learning</li>
-                <li>• Try different difficulty levels</li>
-                <li>• Focus on terms you find challenging</li>
-              </ul>
-            </div>
+      {/* daily challenge */}
+      <div className="rounded-2xl border p-4 flex items-center gap-4 flex-wrap" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <div className="grid place-items-center" style={{ width: 38, height: 38, borderRadius: '50%', background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward)' }}>
+          <Target size={20} />
+        </div>
+        <div className="flex-1 min-w-[200px]">
+          <div className="font-medium">Daily challenge {hub?.daily.complete && <span className="text-xs ml-1" style={{ color: 'var(--success)' }}>done ✓</span>}</div>
+          <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+            Play {hub?.daily.gamesGoal ?? 3} games and earn {hub?.daily.pointsGoal ?? 150} points today
+            {hub && <span> · {hub.daily.gamesPlayed}/{hub.daily.gamesGoal} games · {hub.daily.pointsToday}/{hub.daily.pointsGoal} pts</span>}
           </div>
-        </CardContent>
-      </Card>
+          <div className="h-1.5 rounded-full mt-2 overflow-hidden" style={{ background: 'var(--border)' }}>
+            <div className="h-full" style={{ width: `${dailyPct}%`, background: 'var(--reward)' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* games */}
+      <div>
+        <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Games</div>
+        {noSets && (
+          <div className="rounded-xl border p-3 mb-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>
+            {isStaff ? 'Publish a vocabulary set to enable the games.' : 'No vocabulary sets published yet — check back soon.'}
+          </div>
+        )}
+        <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+          {GAMES.map((g) => {
+            const Icon = g.icon
+            const best = bestById.get(g.id)?.best ?? 0
+            const dc = DIFF_COLOR[g.difficulty]
+            const tile = (
+              <div className="rounded-2xl border p-5 h-full transition-transform" style={{ borderColor: 'var(--border)', background: 'var(--card)', opacity: noSets ? 0.6 : 1 }}
+                onMouseEnter={(e) => { if (!noSets) { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = 'var(--primary)' } }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}>
+                <div className="flex items-center justify-between">
+                  <div className="grid place-items-center" style={{ width: 42, height: 42, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}><Icon size={22} /></div>
+                  <span className="text-xs rounded-md px-2 py-0.5" style={{ background: `color-mix(in oklch, ${dc} 16%, transparent)`, color: dc }}>{g.difficulty}</span>
+                </div>
+                <div className="font-bold mt-3" style={{ fontSize: 16 }}>{g.title}</div>
+                <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{g.desc}</div>
+                <div className="flex items-center gap-1.5 text-xs mt-3" style={{ color: 'var(--muted-foreground)' }}>
+                  <Trophy size={13} /> {best > 0 ? `Best ${best.toLocaleString()}` : 'No score yet'}
+                  <span className="ml-auto inline-flex items-center gap-1 font-medium" style={{ color: 'var(--primary)' }}>Play <ArrowRight size={13} /></span>
+                </div>
+              </div>
+            )
+            return noSets ? <div key={g.id}>{tile}</div> : <Link key={g.id} href={g.href}>{tile}</Link>
+          })}
+        </div>
+      </div>
+
+      {/* leaderboard */}
+      <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <div className="flex items-center justify-between mb-3">
+          <div className="font-bold" style={{ fontSize: 15 }}>This week&apos;s leaders</div>
+          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>by points earned</span>
+        </div>
+        {hub && hub.leaderboard.length > 0 ? (
+          <div className="space-y-1.5 text-sm">
+            {hub.leaderboard.map((e) => (
+              <div key={e.rank} className="flex items-center gap-3 rounded-lg px-2 py-1.5" style={{ background: e.isMe ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : 'transparent' }}>
+                <span className="w-5 font-medium" style={{ color: e.rank === 1 ? 'var(--reward)' : 'var(--muted-foreground)' }}>{e.rank}</span>
+                <span className="flex-1 font-medium" style={{ color: e.isMe ? 'var(--primary)' : 'var(--foreground)' }}>{e.name}</span>
+                <span style={{ color: 'var(--muted-foreground)' }}>{e.points.toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No games played this week yet — be the first on the board.</div>
+        )}
+      </div>
     </div>
   )
 }
