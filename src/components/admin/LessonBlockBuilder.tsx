@@ -98,6 +98,10 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'marzano', label: 'Marzano self-check', group: 'Practice', capture: true, fields: [
     { key: 'targetId', label: 'Target ID', kind: 'text' },
   ] },
+  { type: 'concept_exercise', label: 'Read & practice (textbook + exercise)', group: 'Practice', capture: true, fields: [
+    { key: 'chapter', label: 'Chapter number (must be loaded in concept_exercises)', kind: 'number' },
+    { key: 'title', label: 'Title (optional override)', kind: 'text' },
+  ] },
 ]
 const DEF_BY_TYPE = new Map<string, BlockDef>(BLOCK_DEFS.map((d): [string, BlockDef] => [d.type, d]))
 const DAY_TYPES = ['ANCHOR', 'STANDARD', 'LAB', 'WORKSHOP', 'SYNTHESIS', 'TRANSFER']

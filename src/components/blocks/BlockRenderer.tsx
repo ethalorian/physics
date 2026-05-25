@@ -6,6 +6,7 @@ import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, type DiagramForce, type DiagramVector, type GraphSeries } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PhysicsDiagram from './PhysicsDiagram'
+import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
@@ -14,7 +15,7 @@ import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
-  Rocket, Check, Shapes, LineChart as LineChartIcon, type LucideIcon,
+  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, type LucideIcon,
 } from 'lucide-react'
 
 // Heavy, self-contained interactive component — rendered natively (no iframe),
@@ -23,6 +24,8 @@ const EquationVisualizer = dynamic(() => import('@/components/vocabulary/Equatio
 const LessonVocabView = dynamic(() => import('./LessonVocabView'), { ssr: false, loading: () => null })
 // recharts is heavy — lazy-load the read-the-graph block so text-only lessons stay light.
 const FigureGraph = dynamic(() => import('./FigureGraph'), { ssr: false, loading: () => null })
+// react-pdf is client-only + heavy — lazy-load the reader/exercise block.
+const ConceptExercise = dynamic(() => import('./ConceptExercise'), { ssr: false, loading: () => null })
 
 const C = {
   indigo: 'var(--foreground)',
@@ -81,6 +84,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   transfer_prompt: { label: 'Transfer task', domain: 'P', Icon: Rocket },
   diagram: { label: 'Diagram', domain: 'R', Icon: Shapes },
   graph: { label: 'Read the graph', domain: 'R', Icon: LineChartIcon },
+  concept_exercise: { label: 'Read & practice', domain: 'R', Icon: BookOpen },
 }
 // Blocks that read best as clean editorial content — no colored shell.
 const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure'])
@@ -357,6 +361,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       if (series.length === 0) return null
       return <FigureGraph title={b.title} xLabel={b.xLabel} yLabel={b.yLabel} series={series} />
     }
+    case 'concept_exercise':
+      return <ConceptExercise chapter={b.chapter} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
     default:
       return null
   }
