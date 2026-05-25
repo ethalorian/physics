@@ -6,7 +6,7 @@ export const constantVelocityDef: SimDefinition = {
   title: 'Constant velocity motion',
   level: 'Intro',
   summary: 'Control a walker along a track and collect position data over time. Watch how steady speed makes a straight position-time line.',
-  canvasHeight: 240,
+  canvasHeight: 380,
   params: [
     { key: 'speed', label: 'Walking speed', type: 'slider', min: 0.5, max: 3, step: 0.1, unit: 'm/s', default: 1 },
     {
