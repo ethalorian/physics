@@ -41,6 +41,7 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
   const [grading, setGrading] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [forceIframe, setForceIframe] = useState(false)
+  const [mobileTab, setMobileTab] = useState<'read' | 'work'>('read') // phone: show one pane at a time
 
   const leftRef = useRef<HTMLDivElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
@@ -136,8 +137,19 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
           </button>
         </div>
       </div>
+      {/* phone: one pane at a time via a tab toggle (both show side-by-side on lg+) */}
+      <div className="flex gap-1.5 mb-2 lg:hidden">
+        {(['read', 'work'] as const).map((t) => (
+          <button key={t} onClick={() => setMobileTab(t)}
+            className="flex-1 rounded-lg border px-3 py-1.5 text-sm font-semibold"
+            style={{ borderColor: C.hair, background: mobileTab === t ? 'var(--primary)' : C.card, color: mobileTab === t ? 'var(--primary-foreground)' : C.ink }}>
+            {t === 'read' ? 'Reading' : 'Questions'}
+          </button>
+        ))}
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* LEFT — textbook reader */}
+        <div className={`${mobileTab === 'read' ? 'block' : 'hidden'} lg:block`}>
         {!data.textPdfUrl ? (
           <div className="rounded-xl border p-4 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.mute }}>No chapter PDF is attached yet.</div>
         ) : useIframe ? (
@@ -158,9 +170,10 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
             </Document>
           </div>
         )}
+        </div>
 
         {/* RIGHT — digital exercise, scrolls to follow the reader */}
-        <div ref={rightRef} className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
+        <div ref={rightRef} className={`${mobileTab === 'work' ? 'block' : 'hidden'} lg:block rounded-xl border overflow-y-auto`} style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
           <div className="p-3">
             {data.sections.map((s) => (
               <SectionView key={s.id} section={s} active={activeSection === s.id}

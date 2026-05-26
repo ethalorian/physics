@@ -190,7 +190,7 @@ export default function LessonBlockBuilder({
       </div>
       <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>Add blocks, fill them in, reorder, and save. Saving writes the lesson — no deploy needed.</p>
 
-      <div className="grid gap-5" style={{ gridTemplateColumns: 'minmax(0,1fr) 220px' }}>
+      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_220px]">
         {/* block list */}
         <div className="flex flex-col gap-3 order-2 md:order-1">
           {blocks.length === 0 && <p className="text-sm rounded-xl border p-6 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No blocks yet — add one from the palette.</p>}
