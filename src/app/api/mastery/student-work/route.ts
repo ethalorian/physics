@@ -11,7 +11,7 @@ type UnitRow = { id: string; name: string }
 type LessonRow = { id: string; title: string; lesson_number: number }
 type BlockRow = { lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
-type RecordRow = { target_id: string; level: number; observed_at: string }
+type RecordRow = { target_id: string; level: number; observed_at: string; evidence_source: string | null }
 
 export async function GET(request: NextRequest) {
   try {
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
     if (targetIds.length > 0) {
       const { data: recRaw } = await supabaseAdmin
         .from('mastery_records')
-        .select('target_id, level, observed_at')
+        .select('target_id, level, observed_at, evidence_source')
         .eq('user_id', userId)
         .in('target_id', targetIds)
         .order('observed_at', { ascending: true })

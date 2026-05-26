@@ -18,7 +18,7 @@ interface GridData {
   cells: Record<string, Record<string, Cell>>
 }
 interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }
-interface RecordItem { target_id: string; level: number; observed_at: string }
+interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
@@ -198,6 +198,7 @@ export default function ControlRoomPage() {
   const [suggesting, setSuggesting] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
+  const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -225,14 +226,19 @@ export default function ControlRoomPage() {
     setSel({ studentId, targetId })
     setWork(null)
     setSuggestion(null)
+    setComparison(null)
     setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
       .then((r) => r.json())
       .then((d: WorkData) => { setWork(d); setWorkLoading(false) })
       .catch(() => setWorkLoading(false))
+    fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
+      .then((r) => r.json())
+      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
+      .catch(() => {})
   }, [unitId])
 
-  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null) }
+  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null) }
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
@@ -417,14 +423,48 @@ export default function ControlRoomPage() {
             </div>
 
             <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1 }}>
+              {/* this student vs. the class on this lesson (same decaying-avg rollup as the grid) */}
+              {comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (() => {
+                const s = comparison.studentAvg, g = comparison.globalAvg
+                const bar = (v: number | null) => `${v === null ? 0 : Math.max(4, (v / 3) * 100)}%`
+                const delta = s !== null && g !== null ? s - g : null
+                const deltaColor = delta === null ? 'var(--muted-foreground)' : delta >= 0.05 ? 'var(--success)' : delta <= -0.05 ? 'oklch(0.62 0.16 25)' : 'var(--muted-foreground)'
+                const deltaText = delta === null ? '' : Math.abs(delta) < 0.05 ? 'at class average' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} vs class`
+                return (
+                  <div className="rounded-lg px-3 py-2.5 mb-5" style={{ background: 'var(--secondary)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>This lesson · mastery vs. class</span>
+                      {delta !== null && <span className="text-xs font-bold" style={{ color: deltaColor }}>{deltaText}</span>}
+                    </div>
+                    {[{ label: 'This student', v: s, c: 'var(--primary)' }, { label: `Class avg${comparison.nStudents ? ` (${comparison.nStudents})` : ''}`, v: g, c: 'var(--muted-foreground)' }].map((row) => (
+                      <div key={row.label} className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs shrink-0" style={{ width: 96, color: 'var(--foreground)' }}>{row.label}</span>
+                        <span className="flex-1 rounded-full" style={{ height: 8, background: 'var(--card)', overflow: 'hidden' }}>
+                          <span style={{ display: 'block', height: '100%', width: bar(row.v), background: row.c, borderRadius: 9999 }} />
+                        </span>
+                        <span className="text-sm font-bold shrink-0" style={{ width: 34, textAlign: 'right', color: 'var(--foreground)' }}>{row.v === null ? '—' : row.v.toFixed(1)}</span>
+                      </div>
+                    ))}
+                    <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Decaying-average rollup on a 1–3 scale, across this lesson&apos;s targets.</p>
+                  </div>
+                )
+              })()}
+
               {/* rating history */}
               <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Rating history</div>
               {selHistory.length > 0 ? (
                 <div className="flex flex-col gap-1.5 mb-5">
                   {selHistory.map((r, i) => (
-                    <div key={i} className="flex items-center justify-between text-sm rounded-md px-3 py-1.5" style={{ background: 'var(--secondary)' }}>
-                      <span>{fmtDate(r.observed_at)}</span>
-                      <span style={{ fontWeight: 700 }}>{levelWord(r.level)} ({r.level})</span>
+                    <div key={i} className="flex items-center justify-between gap-2 text-sm rounded-md px-3 py-1.5" style={{ background: 'var(--secondary)' }}>
+                      <span className="flex items-center gap-2 min-w-0">
+                        <span className="shrink-0">{fmtDate(r.observed_at)}</span>
+                        {r.evidence_source && (
+                          <span className="truncate text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
+                            {r.evidence_source}
+                          </span>
+                        )}
+                      </span>
+                      <span className="shrink-0" style={{ fontWeight: 700 }}>{levelWord(r.level)} ({r.level})</span>
                     </div>
                   ))}
                 </div>
@@ -450,12 +490,7 @@ export default function ControlRoomPage() {
 
             {/* rater */}
             <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
-              <div className="flex items-center justify-between mb-2">
-                <div className="text-sm font-semibold">Your mastery rating</div>
-                <select value={evidence} onChange={(e) => setEvidence(e.target.value)} className="text-xs rounded-md px-2 py-1" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-                  {EVIDENCE.map((ev) => <option key={ev} value={ev}>{ev}</option>)}
-                </select>
-              </div>
+              <div className="text-sm font-semibold mb-2">Your mastery rating</div>
               <button
                 onClick={suggestRating}
                 disabled={suggesting || !work || work.work.length === 0}
@@ -476,6 +511,17 @@ export default function ControlRoomPage() {
                   )}
                 </div>
               )}
+              <div className="rounded-lg px-3 py-2 mb-2" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)', border: '0.5px dashed var(--border)' }}>
+                <label htmlFor="evidence-src" className="block text-xs font-semibold mb-1" style={{ color: 'var(--secondary-foreground)' }}>
+                  Evidence for this rating
+                </label>
+                <div className="flex items-center gap-2">
+                  <select id="evidence-src" value={evidence} onChange={(e) => setEvidence(e.target.value)} className="flex-1 text-sm rounded-md px-2 py-1.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+                    {EVIDENCE.map((ev) => <option key={ev} value={ev}>{ev}</option>)}
+                  </select>
+                </div>
+                <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Tags the rating you save below — it&apos;s not a filter.</p>
+              </div>
               <div className="flex gap-2">
                 {[1, 2, 3].map((lvl) => (
                   <button
