@@ -42,6 +42,14 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
   const [expanded, setExpanded] = useState(false)
   const [forceIframe, setForceIframe] = useState(false)
   const [mobileTab, setMobileTab] = useState<'read' | 'work'>('read') // phone: show one pane at a time
+  const [isNarrow, setIsNarrow] = useState(false) // phone/tablet portrait → native PDF viewer (pinch-zoom + reliable scroll)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 1023px)')
+    const on = () => setIsNarrow(mq.matches)
+    on(); mq.addEventListener('change', on)
+    return () => mq.removeEventListener('change', on)
+  }, [])
 
   const leftRef = useRef<HTMLDivElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
@@ -116,7 +124,9 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
   if (loadErr) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Couldn&apos;t load this chapter ({loadErr}).</p>
   if (!data) return <p className="text-sm" style={{ color: C.mute }}>Loading the reader…</p>
 
-  const useIframe = pdfFailed || forceIframe
+  // On phones/tablets use the native PDF viewer — it gives pinch-zoom and proper
+  // touch scrolling. The rich react-pdf reader (with scroll-sync) stays on desktop.
+  const useIframe = pdfFailed || forceIframe || isNarrow
   const paneH = expanded ? 'calc(100vh - 70px)' : '76vh'
   const wrapStyle = expanded
     ? { position: 'fixed' as const, inset: 0, zIndex: 1000, background: 'var(--background)', padding: '12px 16px', overflow: 'auto' }
@@ -156,10 +166,10 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
           // Native-viewer fallback: always renders the PDF (no scroll-sync). Use the
           // section chips on the right to jump the reading.
           <iframe key="iframe" src={data.textPdfUrl} title={`Chapter ${data.chapter} reading`}
-            style={{ width: '100%', height: paneH, border: `0.5px solid ${C.hair}`, borderRadius: 12, background: C.card }} />
+            style={{ width: '100%', height: isNarrow ? '82vh' : paneH, border: `0.5px solid ${C.hair}`, borderRadius: 12, background: C.card }} />
         ) : (
           <div ref={leftRef} onScroll={onLeftScroll}
-            className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
+            className="rounded-xl border overflow-y-auto" style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative', overscrollBehavior: 'contain' }}>
             <Document file={data.textPdfUrl} onLoadSuccess={({ numPages: n }) => setNumPages(n)} onLoadError={() => setPdfFailed(true)} onSourceError={() => setPdfFailed(true)}
               loading={<div className="p-4 text-sm" style={{ color: C.mute }}>Loading the reading…</div>}>
               {Array.from({ length: numPages }, (_, i) => (
@@ -173,7 +183,7 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
         </div>
 
         {/* RIGHT — digital exercise, scrolls to follow the reader */}
-        <div ref={rightRef} className={`${mobileTab === 'work' ? 'block' : 'hidden'} lg:block rounded-xl border overflow-y-auto`} style={{ borderColor: C.hair, background: C.card, maxHeight: paneH, position: 'relative' }}>
+        <div ref={rightRef} className={`${mobileTab === 'work' ? 'block' : 'hidden'} lg:block rounded-xl border`} style={{ borderColor: C.hair, background: C.card, maxHeight: isNarrow ? undefined : paneH, overflowY: isNarrow ? 'visible' : 'auto', overscrollBehavior: 'contain', position: 'relative' }}>
           <div className="p-3">
             {data.sections.map((s) => (
               <SectionView key={s.id} section={s} active={activeSection === s.id}
