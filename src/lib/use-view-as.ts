@@ -9,7 +9,9 @@ import { readViewAsCookie } from '@/lib/view-as-shared'
 // teacher (admin chrome hidden). Mirrors the server's effective-context.
 export function useViewAs(): { role: UserRole; realRole: UserRole; viewingAs: boolean; teacherEmail: string | null } {
   const { data: session } = useSession()
-  const realRole = getUserRole(session?.user?.email)
+  // Prefer the session-baked role (reflects DB teacher grants); fall back to the
+  // hardcoded allowlist if the session predates the role field.
+  const realRole = (session?.user?.role as UserRole | undefined) ?? getUserRole(session?.user?.email)
   const [teacherEmail, setTeacherEmail] = useState<string | null>(null)
 
   useEffect(() => { setTeacherEmail(readViewAsCookie()) }, [])

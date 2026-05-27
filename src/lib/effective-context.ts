@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { getUserRole, type UserRole } from '@/lib/permissions'
+import { getGrantedRole } from '@/lib/roles'
 import { VIEW_AS_COOKIE } from '@/lib/view-as-shared'
 
 // "View as teacher" support. An ADMIN may preview the app as a teacher (optionally
@@ -18,7 +19,14 @@ export interface EffectiveContext {
 }
 
 export async function getEffectiveContext(realEmail: string): Promise<EffectiveContext> {
-  const realRole = getUserRole(realEmail)
+  // Hardcoded admin/teacher allowlist first (owner can never be locked out),
+  // then a DB grant can raise a student → teacher (earned via Classroom or an
+  // admin approval). Purely additive — a grant never lowers a role.
+  let realRole = getUserRole(realEmail)
+  if (realRole === 'student') {
+    const granted = await getGrantedRole(realEmail)
+    if (granted) realRole = granted
+  }
   let role = realRole
   let scopeEmail = realEmail
   let viewingAsTeacher = false

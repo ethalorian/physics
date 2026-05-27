@@ -92,6 +92,7 @@ export default function AdminHomePage() {
     .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
     .filter((g) => g.tools.length > 0)
   const [ov, setOv] = useState<Overview | null>(null)
+  const [reqs, setReqs] = useState<{ email: string; name: string | null; note: string | null }[]>([])
 
   useEffect(() => {
     // App-wide numbers are admin-only; teachers don't fetch them.
@@ -101,6 +102,22 @@ export default function AdminHomePage() {
       .then((d: { overview?: Overview }) => setOv(d.overview ?? null))
       .catch(() => {})
   }, [isAdmin])
+
+  const loadReqs = () => {
+    fetch('/api/admin/teacher-requests')
+      .then((r) => r.json())
+      .then((d: { pending?: { email: string; name: string | null; note: string | null }[] }) => setReqs(d.pending ?? []))
+      .catch(() => {})
+  }
+  useEffect(() => { if (isAdmin) loadReqs() }, [isAdmin])
+
+  const decideRequest = async (email: string, decision: 'approve' | 'deny') => {
+    await fetch('/api/admin/teacher-requests', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, decision }),
+    }).catch(() => {})
+    loadReqs()
+  }
 
   const firstName = (session?.user?.name ?? 'there').split(' ')[0]
 
@@ -124,6 +141,30 @@ export default function AdminHomePage() {
           Everything across the application, in one place — your classes, your colleagues, and the whole student body.
         </p>
       </div>
+
+      {/* teacher-access requests — alert + approve/deny (admin only) */}
+      {isAdmin && reqs.length > 0 && (
+        <div className="rounded-2xl border p-5 mb-7" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 10%, var(--card))' }}>
+          <div className="flex items-center gap-2 mb-3">
+            <Award size={16} style={{ color: 'var(--reward-foreground)' }} />
+            <span className="text-sm font-bold">Teacher access {reqs.length === 1 ? 'request' : 'requests'} ({reqs.length})</span>
+          </div>
+          <div className="flex flex-col gap-2">
+            {reqs.map((r) => (
+              <div key={r.email} className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-3 py-2.5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate">{r.name || r.email}</div>
+                  <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{r.email}{r.note ? ` — “${r.note}”` : ''}</div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button onClick={() => decideRequest(r.email, 'approve')} className="text-xs font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--success)', color: 'var(--card)', border: 'none', cursor: 'pointer' }}>Approve</button>
+                  <button onClick={() => decideRequest(r.email, 'deny')} className="text-xs font-medium rounded-lg px-3 py-1.5" style={{ background: 'transparent', color: 'var(--muted-foreground)', border: '1px solid var(--border)', cursor: 'pointer' }}>Deny</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* stats — app-wide numbers, admin only */}
       {isAdmin && (

@@ -12,6 +12,8 @@ import {
   validateOAuthConfig
 } from './oauth-security'
 import { ensureStudentRecord } from './student-management'
+import { getUserRole } from './permissions'
+import { getGrantedRole } from './roles'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -21,11 +23,24 @@ declare module "next-auth" {
       name?: string | null
       email?: string | null
       image?: string | null
+      role?: 'admin' | 'teacher' | 'student'
     }
     accessToken?: string
     tokenError?: string
     requiresReauth?: boolean
   }
+}
+
+// Resolve a user's role for the session: the hardcoded allowlist first (owner
+// stays admin), then a DB grant can raise a student → teacher (earned via an
+// admin approval or Classroom). Mirrors getEffectiveContext on the server so the
+// client UI and routing agree with what the APIs enforce.
+async function resolveUserRole(email?: string | null): Promise<'admin' | 'teacher' | 'student'> {
+  if (!email) return 'student'
+  const base = getUserRole(email)
+  if (base !== 'student') return base
+  const granted = await getGrantedRole(email)
+  return granted ?? 'student'
 }
 
 // Test user accounts (only available in development)
@@ -156,6 +171,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: async ({ session, token }) => {
       if (session?.user && token.sub) {
         session.user.id = token.sub;
+        session.user.role = (token.role as 'admin' | 'teacher' | 'student') ?? 'student';
         // Include the avatar image from the token
         if (token.picture) {
           session.user.image = token.picture as string;
@@ -187,12 +203,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       
       if (user) {
         token.sub = user.id;
+        token.role = await resolveUserRole(user.email);
         // Store the avatar image in the token
         if (user.image) {
           token.picture = user.image;
         }
       }
-      
+
+      // Populate role for pre-existing sessions (post-deploy) that predate this
+      // field, so they don't have to fully re-login to get a resolved role.
+      if (token.role === undefined) {
+        token.role = await resolveUserRole(token.email as string | undefined)
+      }
+
       // Store Google access token from the account (first sign-in)
       if (account?.access_token) {
         // Best practice: Encrypt tokens before storage

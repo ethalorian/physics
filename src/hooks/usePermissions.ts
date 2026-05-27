@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react"
-import { getUserRole, getUserPermissions, hasPermission, type UserRole, type UserPermissions } from "@/lib/permissions"
+import { getUserRole, getUserPermissions, type UserRole, type UserPermissions } from "@/lib/permissions"
 
 // ============================================================================
 // BASE PERMISSIONS HOOK
@@ -13,23 +13,23 @@ export function usePermissions(viewModeOverride?: 'admin' | 'student') {
   const { data: session, status } = useSession()
   
   const userEmail = session?.user?.email
-  const actualUserRole: UserRole = getUserRole(userEmail)
-  
+  // Prefer the session-baked role (reflects DB teacher grants); fall back to the
+  // hardcoded allowlist if the session predates the role field.
+  const actualUserRole: UserRole = (session?.user?.role as UserRole | undefined) ?? getUserRole(userEmail)
+
   // Determine effective role based on view mode override
   const isElevatedUser = actualUserRole === 'admin' || actualUserRole === 'teacher'
   const isViewModeActive = viewModeOverride === 'student' && isElevatedUser
   const effectiveRole: UserRole = isViewModeActive ? 'student' : actualUserRole
-  
+
   const permissions: UserPermissions = getUserPermissions(effectiveRole)
-  
+
   /**
-   * Check if the current user has a specific permission (considering view mode)
+   * Check if the current user has a specific permission (considering view mode).
+   * Keyed off the effective ROLE (which honors DB grants), not the email allowlist.
    */
   const checkPermission = (permission: keyof UserPermissions): boolean => {
-    if (isViewModeActive) {
-      return getUserPermissions('student')[permission]
-    }
-    return hasPermission(userEmail, permission)
+    return getUserPermissions(effectiveRole)[permission]
   }
   
   return {
