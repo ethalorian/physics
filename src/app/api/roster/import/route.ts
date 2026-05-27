@@ -90,6 +90,16 @@ export async function POST(request: NextRequest) {
         // Use Google User ID as the unique identifier (no email needed)
         const googleUserId = student.userId
         const fullName = student.profile?.name?.fullName || 'Unknown Student'
+        // Google gives us authoritative name parts — capture them so the
+        // gradebook can sort by last name exactly like Aspen X2 (no guessing
+        // from the full-name string). Fall back to splitting fullName only if
+        // a part is missing.
+        // Fallback split (only if Google omits a part): first token = first
+        // name, EVERYTHING after = surname — matches how Aspen files compound
+        // Hispanic surnames (e.g. "Mendez Hernandez" under M).
+        const nameParts = fullName.trim().split(/\s+/)
+        const firstName = student.profile?.name?.givenName || nameParts[0] || fullName
+        const lastName = student.profile?.name?.familyName || (nameParts.length > 1 ? nameParts.slice(1).join(' ') : '')
         // Generate a unique identifier based on Google User ID for internal use
         const internalEmail = `${googleUserId}@classroom.local`
 
@@ -137,6 +147,14 @@ export async function POST(request: NextRequest) {
             sectionsCreated = 1 // At least one section was created/used
           }
         }
+
+        // Persist the authoritative name parts (the sync RPCs only take the
+        // full name). Keyed on the Google user id, which is unique per student.
+        const { error: nameError } = await supabaseAdmin
+          .from('students')
+          .update({ first_name: firstName, last_name: lastName })
+          .eq('google_user_id', googleUserId)
+        if (nameError) console.error(`  ⚠️ Could not store name parts for ${fullName}:`, nameError.message)
       } catch (studentErr) {
         console.error(`  ❌ Exception processing student:`, studentErr)
         errors.push(`Failed to process student: ${student.profile?.name?.fullName || student.userId}`)

@@ -12,7 +12,7 @@ import { getTeacherStudentGids } from '@/lib/teacher-scope'
 // Each lesson also carries its targetId so a cell-click can open the same
 // rate-from-work drawer the mastery grid uses.
 
-type StudentRow = { google_user_id: string | null; name: string; email: string }
+type StudentRow = { google_user_id: string | null; name: string; email: string; first_name: string | null; last_name: string | null }
 type UnitRow = { id: string; name: string; order_index: number }
 type LessonRow = { id: string; slug: string; title: string; lesson_number: number }
 type TargetRow = { id: string; lesson_id: string | null; order_index: number }
@@ -60,10 +60,10 @@ export async function GET(request: NextRequest) {
     }
 
     // roster (same scoping as the mastery grid)
-    let sQuery = supabaseAdmin.from('students').select('google_user_id, name, email').order('name', { ascending: true })
+    let sQuery = supabaseAdmin.from('students').select('google_user_id, name, email, first_name, last_name').order('name', { ascending: true })
     if (ctx.role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
     const { data: srRaw } = await sQuery
-    const students = ((srRaw ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name, email: s.email }))
+    const students = ((srRaw ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name, email: s.email, firstName: s.first_name, lastName: s.last_name }))
     const studentIds = students.map((s) => s.id)
 
     const noData = lessonIds.length === 0 || studentIds.length === 0

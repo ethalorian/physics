@@ -64,9 +64,60 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Students API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
+    return NextResponse.json({
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 })
+  }
+}
+
+// PATCH - Update a student's name parts (first_name / last_name).
+// Teachers/admins correct how a name splits so the Aspen X2 grade copy sorts
+// the student to the right row. Does NOT touch the Google-synced `name`.
+export async function PATCH(request: NextRequest) {
+  try {
+    const session = await auth()
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const userRole = getUserRole(session.user.email)
+    if (userRole !== 'admin' && userRole !== 'teacher') {
+      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
+    }
+
+    const body = await request.json()
+    const id: string | undefined = body.id
+    if (!id) {
+      return NextResponse.json({ error: 'Student id is required' }, { status: 400 })
+    }
+
+    const update: { first_name?: string; last_name?: string } = {}
+    if (typeof body.first_name === 'string') update.first_name = body.first_name.trim()
+    if (typeof body.last_name === 'string') update.last_name = body.last_name.trim()
+    if (Object.keys(update).length === 0) {
+      return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('students')
+      .update(update)
+      .eq('id', id)
+      .select('id, name, first_name, last_name')
+      .single()
+
+    if (error) {
+      console.error('Error updating student name:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json(data)
+
+  } catch (error) {
+    console.error('Students PATCH error:', error)
+    return NextResponse.json({
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 })
   }
 }

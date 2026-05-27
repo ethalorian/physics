@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
 
@@ -8,7 +8,7 @@ import { toLatex } from '@/components/blocks/EquationSandbox'
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
 // ---------------------------------------------------------------------------
 interface Target { id: string; statement: string; domain: string }
-interface Student { id: string; name: string; email: string }
+interface Student { id: string; name: string; email: string; firstName?: string | null; lastName?: string | null }
 interface Cell { value: number | null; count: number }
 interface GridData {
   unitId: string
@@ -207,6 +207,9 @@ export default function ControlRoomPage() {
   const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
   const [view, setView] = useState<'mastery' | 'lessons'>('mastery')
   const [lessonGrid, setLessonGrid] = useState<LessonGridData | null>(null)
+  const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
+  const [copyLessonId, setCopyLessonId] = useState('')
+  const [copied, setCopied] = useState<string | null>(null)
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -350,6 +353,41 @@ export default function ControlRoomPage() {
   const selTarget = grid && sel ? grid.targets.find((t) => t.id === sel.targetId) : null
   const selHistory = work && sel ? work.records.filter((r) => r.target_id === sel.targetId) : []
 
+  // --- Aspen X2 ordering: Aspen lists students by LAST name, so the grid + copy
+  // must match that order for column paste to line up row-for-row. Prefer the
+  // stored last_name/first_name (set authoritatively on each Classroom import);
+  // fall back to splitting the full name only when those are missing.
+  const sortKey = (s: Student) => {
+    const parts = s.name.trim().split(/\s+/)
+    // Fallback: first token = first name, the rest = surname (Aspen files
+    // compound surnames under the first surname). Prefer stored values.
+    const last = (s.lastName || parts.slice(1).join(' ') || s.name).toLowerCase()
+    const first = (s.firstName || parts[0] || s.name).toLowerCase()
+    return sortMode === 'last' ? `${last} ${first}` : `${first} ${last}`
+  }
+  const sortedStudents = useMemo(() => {
+    if (!lessonGrid) return []
+    const visible = lessonGrid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase()))
+    return [...visible].sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lessonGrid, nameFilter, sortMode])
+
+  const copyToClipboard = (text: string, what: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(what)
+      setTimeout(() => setCopied(null), 1800)
+    }).catch(() => setError('Could not copy to clipboard'))
+  }
+  const copyColumn = (kind: 'grades' | 'names') => {
+    if (!lessonGrid) return
+    const lines = sortedStudents.map((s) => {
+      if (kind === 'names') return s.name
+      const pct = lessonGrid.cells[s.id]?.[copyLessonId]?.gradePct
+      return pct != null ? String(pct) : ''
+    })
+    copyToClipboard(lines.join('\n'), kind)
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       {/* header */}
@@ -491,6 +529,52 @@ export default function ControlRoomPage() {
       {/* LESSONS (completion) tab */}
       {view === 'lessons' && lessonGrid && lessonGrid.students.length > 0 && (
         <>
+          {/* Copy to Aspen X2 — paste a whole column of grades into the gradebook */}
+          <div className="rounded-xl border mt-4 p-3 flex items-center gap-3 flex-wrap" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <span className="text-sm font-semibold">Copy to Aspen X2</span>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Sort</span>
+            <div className="inline-flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)' }}>
+              {(['last', 'first'] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setSortMode(m)}
+                  className="text-xs px-2.5 py-1.5 font-medium"
+                  style={{ background: sortMode === m ? 'var(--primary)' : 'transparent', color: sortMode === m ? 'var(--primary-foreground)' : 'var(--foreground)', border: 'none', cursor: 'pointer' }}
+                >
+                  {m === 'last' ? 'Last name' : 'First name'}
+                </button>
+              ))}
+            </div>
+            <select
+              value={copyLessonId}
+              onChange={(e) => setCopyLessonId(e.target.value)}
+              className="rounded-lg text-sm px-3 py-2"
+              style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+            >
+              <option value="">Choose a day…</option>
+              {lessonGrid.lessons.map((l) => (
+                <option key={l.id} value={l.id}>{`D${l.lessonNumber} — ${l.title}`}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => copyColumn('grades')}
+              disabled={!copyLessonId}
+              className="text-sm font-semibold px-3 py-2 rounded-lg"
+              style={{ background: copyLessonId ? 'var(--primary)' : 'var(--secondary)', color: copyLessonId ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: 'none', cursor: copyLessonId ? 'pointer' : 'default' }}
+            >
+              {copied === 'grades' ? 'Copied ✓' : 'Copy grades'}
+            </button>
+            <button
+              onClick={() => copyColumn('names')}
+              className="text-sm font-medium px-3 py-2 rounded-lg"
+              style={{ background: 'transparent', color: 'var(--foreground)', border: '1px solid var(--border)', cursor: 'pointer' }}
+            >
+              {copied === 'names' ? 'Copied ✓' : 'Copy names'}
+            </button>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)', flexBasis: '100%' }}>
+              Rows are in <strong>{sortMode === 'last' ? 'last-name' : 'first-name'}</strong> order to match your Aspen roster — paste straight down the column. Ungraded days come through as a blank cell. Use <em>Copy names</em> first to confirm the rows line up.
+            </span>
+          </div>
           <div className="rounded-xl border mt-4 overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
             <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
               <thead>
@@ -504,7 +588,7 @@ export default function ControlRoomPage() {
                 </tr>
               </thead>
               <tbody>
-                {lessonGrid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
+                {sortedStudents.map((s) => (
                   <tr key={s.id}>
                     <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}</td>
                     {lessonGrid.lessons.map((l) => {

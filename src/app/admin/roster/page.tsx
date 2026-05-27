@@ -25,6 +25,7 @@ interface ImportedCourse {
   student_count: number
 }
 interface GridStudent { id: string; name: string; email: string }
+interface RosterStudent { id: string; name: string; first_name: string | null; last_name: string | null }
 interface GridTarget { id: string; statement: string; domain: string }
 interface Cell { value: number | null; count: number }
 interface GridData {
@@ -59,6 +60,11 @@ export default function RosterPage() {
   const [unitId, setUnitId] = useState('unit-1')
   const [importing, setImporting] = useState<string | null>(null)
   const [status, setStatus] = useState<string | null>(null)
+  // Name editor (fixes how a student's name splits for the Aspen sort)
+  const [roster, setRoster] = useState<RosterStudent[]>([])
+  const [edits, setEdits] = useState<Record<string, { first: string; last: string }>>({})
+  const [savingId, setSavingId] = useState<string | null>(null)
+  const [savedId, setSavedId] = useState<string | null>(null)
 
   const loadImported = useCallback(() => {
     fetch('/api/courses')
@@ -89,9 +95,46 @@ export default function RosterPage() {
       .catch((e: Error) => setCoursesError(e.message))
   }, [session?.accessToken])
 
+  const loadRoster = useCallback(() => {
+    fetch('/api/roster/students')
+      .then((r) => r.json())
+      .then((d: { students?: RosterStudent[] }) => {
+        const list = d.students ?? []
+        setRoster(list)
+        const seed: Record<string, { first: string; last: string }> = {}
+        for (const s of list) seed[s.id] = { first: s.first_name ?? '', last: s.last_name ?? '' }
+        setEdits(seed)
+      })
+      .catch(() => {})
+  }, [])
+
   useEffect(() => { loadImported() }, [loadImported])
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
   useEffect(() => { if (hasClassroom) loadCourses() }, [hasClassroom, loadCourses])
+  useEffect(() => { loadRoster() }, [loadRoster])
+
+  const saveName = async (id: string) => {
+    const edit = edits[id]
+    if (!edit) return
+    setSavingId(id)
+    setSavedId(null)
+    try {
+      const res = await fetch('/api/roster/students', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, first_name: edit.first, last_name: edit.last }),
+      })
+      if (res.ok) {
+        setRoster((prev) => prev.map((s) => (s.id === id ? { ...s, first_name: edit.first, last_name: edit.last } : s)))
+        setSavedId(id)
+        setTimeout(() => setSavedId((cur) => (cur === id ? null : cur)), 1800)
+      }
+    } catch {
+      /* leave the inputs as-is so the teacher can retry */
+    } finally {
+      setSavingId(null)
+    }
+  }
 
   const connect = () => {
     // Re-run the Google flow asking for rosters scopes on top of what's already
@@ -328,6 +371,77 @@ export default function RosterPage() {
           </div>
         )}
       </div>
+
+      {/* name editor — fix how a name splits so the Aspen grade-copy sorts it right */}
+      {roster.length > 0 && (
+        <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="mb-1 font-bold" style={{ fontSize: 15 }}>Student names — Aspen sort order</div>
+          <div className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
+            Rows are ordered by last name, the way Aspen X2 lists them — so the Control Room&apos;s grade-copy lines up. If a name split the wrong way, fix the first/last split here. (This doesn&apos;t change the student&apos;s Google name.)
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr>
+                  <th className="text-left font-medium py-2 pr-3" style={{ color: 'var(--muted-foreground)' }}>Classroom name</th>
+                  <th className="text-left font-medium py-2 px-2" style={{ color: 'var(--muted-foreground)' }}>First name</th>
+                  <th className="text-left font-medium py-2 px-2" style={{ color: 'var(--muted-foreground)' }}>Last name (sorts on this)</th>
+                  <th className="font-medium py-2 px-2" />
+                </tr>
+              </thead>
+              <tbody>
+                {[...roster]
+                  .sort((a, b) => {
+                    // Order by the SAVED last name (updated on save), so a row
+                    // only jumps to its new spot once you save — not while typing.
+                    const la = (a.last_name || a.name).toLowerCase()
+                    const lb = (b.last_name || b.name).toLowerCase()
+                    return la.localeCompare(lb)
+                  })
+                  .map((s) => {
+                    const e = edits[s.id] ?? { first: s.first_name ?? '', last: s.last_name ?? '' }
+                    const changed = e.first !== (s.first_name ?? '') || e.last !== (s.last_name ?? '')
+                    return (
+                      <tr key={s.id} className="border-t" style={{ borderColor: 'var(--border)' }}>
+                        <td className="py-2 pr-3" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{s.name}</td>
+                        <td className="py-2 px-2">
+                          <input
+                            value={e.first}
+                            onChange={(ev) => setEdits((p) => ({ ...p, [s.id]: { first: ev.target.value, last: e.last } }))}
+                            className="rounded-md border px-2 py-1 w-full"
+                            style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)', minWidth: 120 }}
+                          />
+                        </td>
+                        <td className="py-2 px-2">
+                          <input
+                            value={e.last}
+                            onChange={(ev) => setEdits((p) => ({ ...p, [s.id]: { first: e.first, last: ev.target.value } }))}
+                            className="rounded-md border px-2 py-1 w-full"
+                            style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)', minWidth: 140 }}
+                          />
+                        </td>
+                        <td className="py-2 px-2 text-right" style={{ whiteSpace: 'nowrap' }}>
+                          <button
+                            onClick={() => saveName(s.id)}
+                            disabled={!changed || savingId === s.id}
+                            className="text-sm font-medium px-3 py-1.5 rounded-lg"
+                            style={{
+                              background: savedId === s.id ? 'var(--success)' : changed ? 'var(--primary)' : 'var(--secondary)',
+                              color: savedId === s.id ? 'var(--background)' : changed ? 'var(--primary-foreground)' : 'var(--muted-foreground)',
+                              border: 'none', cursor: changed && savingId !== s.id ? 'pointer' : 'default',
+                            }}
+                          >
+                            {savedId === s.id ? 'Saved ✓' : savingId === s.id ? 'Saving…' : 'Save'}
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
