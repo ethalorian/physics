@@ -48,12 +48,12 @@ export default function FigureGraph({
   return (
     <figure style={{ margin: 0 }}>
       {title && <figcaption style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>{title}</figcaption>}
-      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: 280 }}>
+      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: 320 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 6, right: 16, bottom: 22, left: 6 }}>
+          <LineChart data={data} margin={{ top: 6, right: 16, bottom: 26, left: 6 }}>
             <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-            <XAxis dataKey="x" type="number" stroke="var(--muted-foreground)" fontSize={12} tickLine={false}>
-              {xLabel && <Label value={xLabel} position="insideBottom" offset={-12} fill="var(--muted-foreground)" fontSize={12} />}
+            <XAxis dataKey="x" type="number" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} height={40}>
+              {xLabel && <Label value={xLabel} position="insideBottom" offset={0} fill="var(--muted-foreground)" fontSize={12} />}
             </XAxis>
             <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} width={44}>
               {yLabel && <Label value={yLabel} angle={-90} position="insideLeft" fill="var(--muted-foreground)" fontSize={12} style={{ textAnchor: 'middle' }} />}
@@ -63,8 +63,10 @@ export default function FigureGraph({
               labelStyle={{ color: 'var(--muted-foreground)' }}
             />
             <Legend
+              verticalAlign="top"
+              align="center"
               onClick={(e) => toggle(String((e as { value?: string }).value ?? ''))}
-              wrapperStyle={{ fontSize: 12, cursor: 'pointer' }}
+              wrapperStyle={{ fontSize: 12, cursor: 'pointer', paddingBottom: 10 }}
             />
             {series.map((s, i) => (
               <Line
