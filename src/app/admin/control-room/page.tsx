@@ -210,15 +210,30 @@ export default function ControlRoomPage() {
   const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
   const [copyLessonId, setCopyLessonId] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
-  // Optional single-class scope (from the per-class page deep-link: ?class=&label=).
+  // Class/section scope. Aspen's gradebook is partitioned by section, so the
+  // grade copy must be filterable to one class. Seeded from the per-class
+  // deep-link (?class=&label=) and switchable here via the picker.
   const [classId, setClassId] = useState<string | null>(null)
   const [classLabel, setClassLabel] = useState<string | null>(null)
+  const [classes, setClasses] = useState<{ id: string; label: string }[]>([])
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
     setClassId(sp.get('class'))
     setClassLabel(sp.get('label'))
   }, [])
+  useEffect(() => {
+    fetch('/api/courses')
+      .then((r) => r.json())
+      .then((d: { courses?: { id: string; name: string; section: string | null }[] }) => {
+        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name })))
+      })
+      .catch(() => {})
+  }, [])
   const classQuery = classId ? `&class=${encodeURIComponent(classId)}` : ''
+  const pickClass = (id: string) => {
+    setClassId(id || null)
+    setClassLabel(id ? (classes.find((c) => c.id === id)?.label ?? null) : null)
+  }
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -404,9 +419,9 @@ export default function ControlRoomPage() {
         <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-4 py-2.5 mb-3"
           style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 10%, var(--card))' }}>
           <span className="text-sm font-medium">
-            Scoped to <strong>{classLabel || 'one class'}</strong> — only this class&apos;s students show below.
+            Scoped to <strong>{classLabel || 'one class'}</strong> — grades you copy match this Aspen section.
           </span>
-          <a href="/admin/control-room" className="text-sm font-semibold" style={{ color: 'var(--primary)' }}>View all my students</a>
+          <button onClick={() => pickClass('')} className="text-sm font-semibold" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}>View all my students</button>
         </div>
       )}
       {/* header */}
@@ -425,6 +440,20 @@ export default function ControlRoomPage() {
             className="rounded-lg text-sm px-3 py-2"
             style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 160 }}
           />
+          {classes.length > 0 && (
+            <select
+              value={classId ?? ''}
+              onChange={(e) => pickClass(e.target.value)}
+              title="Scope to one class/section — Aspen partitions the gradebook by section"
+              className="rounded-lg text-sm px-3 py-2"
+              style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+            >
+              <option value="">All my students</option>
+              {classes.map((c) => (
+                <option key={c.id} value={c.id}>{c.label}</option>
+              ))}
+            </select>
+          )}
           <select
             value={unitId}
             onChange={(e) => setUnitId(e.target.value)}
