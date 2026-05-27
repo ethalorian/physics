@@ -37,10 +37,10 @@ export async function GET() {
 
     const { data: rowRaw } = await supabaseAdmin
       .from('teacher_onboarding')
-      .select('classroom_done, curriculum_done, pacing_done, tour_done')
+      .select('classroom_done, curriculum_done, pacing_done, tour_done, curriculum_track')
       .eq('teacher_email', ctx.scopeEmail)
       .maybeSingle()
-    const row = (rowRaw ?? {}) as Partial<Row>
+    const row = (rowRaw ?? {}) as Partial<Row> & { curriculum_track?: string | null }
 
     const steps: Record<StepKey, boolean> = {
       classroom: classroomDone || Boolean(row.classroom_done),
@@ -56,6 +56,7 @@ export async function GET() {
       total: STEP_KEYS.length,
       complete: doneCount === STEP_KEYS.length,
       classCount: classCount ?? 0,
+      track: row.curriculum_track ?? null,
     })
   } catch (error) {
     console.error('Error in GET /api/teacher/onboarding:', error)
@@ -75,6 +76,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const step = body.step as StepKey
     const done = body.done !== false
+    // Optional: the chosen curriculum track (only 'cpa' is live; others are
+    // reserved for Honors/AP/Project-Based classes Craig will add later).
+    const track: string | null = step === 'curriculum' && typeof body.track === 'string' ? body.track : null
     if (!STEP_KEYS.includes(step)) return NextResponse.json({ error: 'Unknown step' }, { status: 400 })
 
     const { data: existing } = await supabaseAdmin
@@ -97,6 +101,7 @@ export async function POST(request: NextRequest) {
         {
           teacher_email: ctx.scopeEmail,
           ...merged,
+          ...(track ? { curriculum_track: track } : {}),
           completed_at: allDone ? new Date().toISOString() : null,
           updated_at: new Date().toISOString(),
         },

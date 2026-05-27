@@ -9,20 +9,42 @@ import {
 } from 'lucide-react'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
-interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number }
+interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number; track?: string | null }
 
-// The four onboarding steps. `href` is where the teacher does the work; `mark`
-// means the dashboard offers a "mark done" button (steps without a data signal).
-const STEPS: { key: StepKey; label: string; desc: string; href: string; cta: string; mark: boolean; Icon: LucideIcon }[] = [
-  { key: 'classroom', label: 'Connect Google Classroom', desc: 'Sync a class roster so your students flow into the app.', href: '/admin/roster', cta: 'Connect & import', mark: false, Icon: GraduationCap },
-  { key: 'curriculum', label: 'Confirm your units', desc: 'Pick the units you’re teaching this term.', href: '/admin/dashboard', cta: 'Review units', mark: true, Icon: BookOpen },
-  { key: 'pacing', label: 'Set up pacing & calendar', desc: 'Map your sections to the school calendar.', href: '/admin/pacing', cta: 'Open pacing', mark: true, Icon: CalendarClock },
-  { key: 'tour', label: 'Take the quick tour', desc: 'A 2-minute orientation to grading and the Control Room.', href: '/admin/control-room', cta: 'Show me around', mark: true, Icon: Compass },
+// The four onboarding steps. `action` says how the CTA behaves:
+//  - 'link'   → go to `href` (optionally with a "Mark done" for no-signal steps)
+//  - 'tracks' → open the curriculum-track picker (real action)
+//  - 'tour'   → open the guided walkthrough (real action)
+type StepAction = 'link' | 'tracks' | 'tour'
+const STEPS: { key: StepKey; label: string; desc: string; href?: string; cta: string; mark: boolean; action: StepAction; Icon: LucideIcon }[] = [
+  { key: 'classroom', label: 'Connect Google Classroom', desc: 'Sync a class roster so your students flow into the app.', href: '/admin/roster', cta: 'Connect & import', mark: false, action: 'link', Icon: GraduationCap },
+  { key: 'curriculum', label: 'Choose your class type', desc: 'Pick the course you’re teaching. More types are coming.', cta: 'Choose class type', mark: false, action: 'tracks', Icon: BookOpen },
+  { key: 'pacing', label: 'Set up pacing & calendar', desc: 'Map your sections to the school calendar.', href: '/admin/pacing', cta: 'Open pacing', mark: true, action: 'link', Icon: CalendarClock },
+  { key: 'tour', label: 'Take the quick tour', desc: 'A 2-minute orientation to grading and the Control Room.', cta: 'Show me around', mark: false, action: 'tour', Icon: Compass },
+]
+
+// Curriculum tracks. Only CPA is live; the others are reserved for the Honors,
+// AP, and Project-Based classes coming later (shown but disabled).
+const TRACKS: { id: string; label: string; desc: string; enabled: boolean }[] = [
+  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the current curriculum.', enabled: true },
+  { id: 'honors', label: 'Honors Physics', desc: 'Coming soon.', enabled: false },
+  { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false },
+  { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false },
+]
+const TRACK_LABEL: Record<string, string> = Object.fromEntries(TRACKS.map((t) => [t.id, t.label]))
+
+// Short guided-tour slides.
+const TOUR: { title: string; body: string }[] = [
+  { title: 'Welcome to your dashboard', body: 'This is home base. The tiles below are your tools; the setup checklist clears as you finish each step.' },
+  { title: 'The Control Room', body: 'Mission control for grading. Tap any cell to open a student’s work and rate it, or grade lesson completion as a percentage.' },
+  { title: 'Grades → Aspen', body: 'On the Control Room’s Lessons tab, pick a class/section and “Copy grades” gives you a column to paste straight into your Aspen gradebook.' },
+  { title: 'Roster, classes & pacing', body: 'Roster syncs your Google Classroom. Open a class to see its students and set lesson open/close dates. Pacing keeps your sections on the calendar.' },
 ]
 
 // Teacher tools. `needs` ties a tile to an onboarding step — while that step is
 // incomplete the tile wears a "Set up" badge.
 const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; accent: string; needs?: StepKey }[] = [
+  { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Your day-by-day teacher plans for each unit', Icon: BookOpen, accent: 'var(--primary)', needs: 'curriculum' },
   { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/roster', label: 'Roster & classes', desc: 'Your synced classes and student performance', Icon: GraduationCap, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/pacing', label: 'Pacing', desc: 'Where each of your sections is on the calendar', Icon: CalendarClock, accent: 'var(--reward)', needs: 'pacing' },
@@ -33,6 +55,9 @@ const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; acce
 export default function TeacherDashboard() {
   const { data: session } = useSession()
   const [status, setStatus] = useState<Status | null>(null)
+  const [showTracks, setShowTracks] = useState(false)
+  const [showTour, setShowTour] = useState(false)
+  const [tourIdx, setTourIdx] = useState(0)
   const firstName = (session?.user?.name ?? 'there').split(' ')[0]
 
   const load = useCallback(() => {
@@ -48,6 +73,25 @@ export default function TeacherDashboard() {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ step, done: true }),
     }).catch(() => {})
+    load()
+  }
+
+  const chooseTrack = async (track: string) => {
+    await fetch('/api/teacher/onboarding', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step: 'curriculum', done: true, track }),
+    }).catch(() => {})
+    setShowTracks(false)
+    load()
+  }
+
+  const finishTour = async () => {
+    await fetch('/api/teacher/onboarding', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ step: 'tour', done: true }),
+    }).catch(() => {})
+    setShowTour(false)
+    setTourIdx(0)
     load()
   }
 
@@ -102,12 +146,24 @@ export default function TeacherDashboard() {
                   </div>
                   <p className="text-xs mb-3 flex-1" style={{ color: 'var(--muted-foreground)' }}>{s.desc}</p>
                   {done ? (
-                    <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>Done</span>
+                    <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>
+                      {s.key === 'curriculum' && status?.track ? `${TRACK_LABEL[status.track] ?? 'Selected'} ✓` : 'Done'}
+                    </span>
                   ) : (
                     <div className="flex items-center gap-2">
-                      <Link href={s.href} className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-                        {s.cta} <ArrowRight size={13} />
-                      </Link>
+                      {s.action === 'link' && s.href ? (
+                        <Link href={s.href} className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                          {s.cta} <ArrowRight size={13} />
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={() => { if (s.action === 'tracks') setShowTracks(true); else if (s.action === 'tour') { setTourIdx(0); setShowTour(true) } }}
+                          className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5"
+                          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
+                        >
+                          {s.cta} <ArrowRight size={13} />
+                        </button>
+                      )}
                       {s.mark && (
                         <button onClick={() => markDone(s.key)} className="text-xs font-medium rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
                           Mark done
@@ -151,6 +207,74 @@ export default function TeacherDashboard() {
           )
         })}
       </div>
+
+      {/* track picker overlay */}
+      {showTracks && (
+        <div onClick={() => setShowTracks(false)} style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
+          <div onClick={(e) => e.stopPropagation()} className="rounded-2xl border p-6 w-full" style={{ maxWidth: 460, background: 'var(--card)', borderColor: 'var(--border)' }}>
+            <div className="text-lg font-semibold tracking-tight mb-1">Choose your class type</div>
+            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Pick the course you’re teaching. More types are coming soon.</p>
+            <div className="flex flex-col gap-2">
+              {TRACKS.map((tr) => (
+                <button
+                  key={tr.id}
+                  onClick={() => tr.enabled && chooseTrack(tr.id)}
+                  disabled={!tr.enabled}
+                  className="text-left rounded-xl border p-3"
+                  style={{
+                    borderColor: tr.enabled ? 'color-mix(in oklch, var(--primary) 40%, var(--border))' : 'var(--border)',
+                    background: tr.enabled ? 'var(--card)' : 'color-mix(in oklch, var(--secondary) 50%, transparent)',
+                    opacity: tr.enabled ? 1 : 0.55, cursor: tr.enabled ? 'pointer' : 'not-allowed',
+                  }}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-sm">{tr.label}</span>
+                    {!tr.enabled && <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Soon</span>}
+                  </div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{tr.desc}</div>
+                </button>
+              ))}
+            </div>
+            <button onClick={() => setShowTracks(false)} className="mt-4 text-xs font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Cancel</button>
+          </div>
+        </div>
+      )}
+
+      {/* guided tour overlay */}
+      {showTour && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
+          <div className="rounded-2xl border p-6 w-full" style={{ maxWidth: 460, background: 'var(--card)', borderColor: 'var(--border)' }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Compass size={16} style={{ color: 'var(--primary)' }} />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Quick tour · {tourIdx + 1} of {TOUR.length}</span>
+            </div>
+            <div className="text-lg font-semibold tracking-tight mb-1">{TOUR[tourIdx].title}</div>
+            <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>{TOUR[tourIdx].body}</p>
+            <div className="flex items-center justify-between">
+              <button
+                onClick={() => setTourIdx((i) => Math.max(0, i - 1))}
+                disabled={tourIdx === 0}
+                className="text-sm font-medium rounded-lg px-3 py-1.5 disabled:opacity-40"
+                style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--foreground)', cursor: tourIdx === 0 ? 'default' : 'pointer' }}
+              >
+                Back
+              </button>
+              <div className="flex items-center gap-2">
+                <button onClick={finishTour} className="text-sm font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Skip</button>
+                {tourIdx < TOUR.length - 1 ? (
+                  <button onClick={() => setTourIdx((i) => Math.min(TOUR.length - 1, i + 1))} className="inline-flex items-center gap-1 text-sm font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                    Next <ArrowRight size={14} />
+                  </button>
+                ) : (
+                  <button onClick={finishTour} className="inline-flex items-center gap-1 text-sm font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--success)', color: 'var(--card)', border: 'none', cursor: 'pointer' }}>
+                    Done <Check size={14} />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
