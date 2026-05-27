@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
-  LayoutGrid, Gift, TrendingUp, Database, Microscope, Gamepad2,
-  Settings, Eye, Users, Activity, BookOpen, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
+  LayoutGrid, Gift, TrendingUp, Microscope, Gamepad2,
+  Eye, Users, Activity, BookOpen, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -21,20 +21,46 @@ interface Overview {
 
 type Icon = LucideIcon
 
-const TOOLS: { href: string; label: string; desc: string; icon: Icon; accent: string; adminOnly?: boolean }[] = [
-  { href: '/admin/control-room', label: 'Control Room', desc: 'Class mastery grid — rate from student work', icon: LayoutGrid, accent: 'var(--primary)' },
-  { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters & see performance', icon: GraduationCap, accent: 'var(--primary)' },
-  { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance & ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
-  { href: '/admin/pacing', label: 'Pacing tracker', desc: 'Map sections to the calendar & track pace', icon: CalendarClock, accent: 'var(--reward)' },
-  { href: '/admin/pacing/overview', label: 'Pacing overview', desc: 'Every section vs the master pace, live', icon: CalendarClock, accent: 'var(--primary)', adminOnly: true },
-  { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement & feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
-  { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions & manage the points store', icon: Gift, accent: 'var(--reward)' },
-  { href: '/admin/mastery', label: 'Mastery entry', desc: 'Log 1-2-3 ratings per student', icon: TrendingUp, accent: 'var(--success)' },
-  { href: '/admin/question-bank', label: 'Question bank', desc: 'Author and organize items', icon: Database, accent: 'var(--primary)' },
-  { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the 15 interactive labs', icon: Microscope, accent: 'var(--primary)' },
-  { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the 7 review games', icon: Gamepad2, accent: 'var(--reward)' },
-  { href: '/admin/dashboard', label: 'Admin tools', desc: 'Roster, sections, media & more', icon: Settings, accent: 'var(--muted-foreground)', adminOnly: true },
-  { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
+type Tool = { href: string; label: string; desc: string; icon: Icon; accent: string; adminOnly?: boolean }
+
+// Grouped so the command center reads as a hierarchy, not a wall of cards.
+// Daily teaching tools first; admin-only insight/build surfaces gated by role.
+const GROUPS: { title: string; tools: Tool[] }[] = [
+  {
+    title: 'Teach & grade',
+    tools: [
+      { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters and see performance', icon: GraduationCap, accent: 'var(--primary)' },
+      { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', icon: Gift, accent: 'var(--reward)' },
+    ],
+  },
+  {
+    title: 'Plan & build',
+    tools: [
+      { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
+    ],
+  },
+  {
+    title: 'Insights',
+    tools: [
+      { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
+      { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
+    ],
+  },
+  {
+    title: 'Content library',
+    tools: [
+      { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
+      { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
+    ],
+  },
+  {
+    title: 'Preview',
+    tools: [
+      { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
+    ],
+  },
 ]
 
 function StatTile({ icon: Ico, value, label, accent }: { icon: Icon; value: number | string; label: string; accent: string }) {
@@ -54,7 +80,10 @@ export default function AdminHomePage() {
   const { data: session } = useSession()
   const { role } = useViewAs()
   const isAdmin = role === 'admin'
-  const tools = isAdmin ? TOOLS : TOOLS.filter((t) => !t.adminOnly)
+  // Drop admin-only tools for teachers, then drop any group left empty.
+  const groups = GROUPS
+    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
+    .filter((g) => g.tools.length > 0)
   const [ov, setOv] = useState<Overview | null>(null)
 
   useEffect(() => {
@@ -101,32 +130,36 @@ export default function AdminHomePage() {
         </div>
       )}
 
-      {/* tool cards */}
-      <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Jump to</div>
-      <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-        {tools.map((t) => {
-          const Ico = t.icon
-          return (
-            <Link key={t.href} href={t.href}>
-              <div
-                className="rounded-2xl border p-5 h-full transition-transform"
-                style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = t.accent }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}
-              >
-                <div
-                  className="grid place-items-center mb-3"
-                  style={{ width: 44, height: 44, borderRadius: 12, background: `color-mix(in oklch, ${t.accent} 16%, transparent)`, color: t.accent }}
-                >
-                  <Ico size={22} />
-                </div>
-                <div className="font-bold" style={{ fontSize: 16 }}>{t.label}</div>
-                <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>{t.desc}</div>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
+      {/* tool cards, grouped */}
+      {groups.map((g) => (
+        <section key={g.title} className="mb-7">
+          <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>{g.title}</div>
+          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+            {g.tools.map((t) => {
+              const Ico = t.icon
+              return (
+                <Link key={t.href} href={t.href}>
+                  <div
+                    className="rounded-2xl border p-5 h-full transition-transform"
+                    style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = t.accent }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}
+                  >
+                    <div
+                      className="grid place-items-center mb-3"
+                      style={{ width: 44, height: 44, borderRadius: 12, background: `color-mix(in oklch, ${t.accent} 16%, transparent)`, color: t.accent }}
+                    >
+                      <Ico size={22} />
+                    </div>
+                    <div className="font-bold" style={{ fontSize: 16 }}>{t.label}</div>
+                    <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>{t.desc}</div>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }
