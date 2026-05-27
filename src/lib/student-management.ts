@@ -46,17 +46,31 @@ export async function ensureStudentRecord(
       return { success: false, error: fetchError.message }
     }
 
-    // Student exists - return existing record
+    // Student exists - return existing record.
     if (existingStudent) {
-      // Update last access time
+      // SELF-HEAL the identity link. Every mastery/gradebook surface keys a
+      // student by students.google_user_id, while block work is stamped with
+      // session.user.id (the Google `sub`). If the row's google_user_id has
+      // drifted from the current auth id (stale seed, a re-created OAuth client,
+      // or an env repoint), the student's submitted work becomes invisible to
+      // grading. When we match a row by email but its id differs from the
+      // current auth userId, realign it so the roster identity tracks the auth
+      // identity. (Matching is by email, so this only fires for the same person.)
+      const patch: { updated_at: string; google_user_id?: string } = {
+        updated_at: new Date().toISOString(),
+      }
+      if (userId && existingStudent.google_user_id !== userId) {
+        patch.google_user_id = userId
+        console.log(`🔗 Realigning student ${email}: google_user_id ${existingStudent.google_user_id} → ${userId}`)
+      }
       await supabaseAdmin
         .from('students')
-        .update({ updated_at: new Date().toISOString() })
+        .update(patch)
         .eq('id', existingStudent.id)
 
       return {
         success: true,
-        student: existingStudent,
+        student: { ...existingStudent, ...(patch.google_user_id ? { google_user_id: userId } : {}) },
         isNew: false
       }
     }

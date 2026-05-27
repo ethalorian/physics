@@ -156,20 +156,34 @@ function TextCapture({
 }: { prompt: string; frame?: string; placeholder?: string; value?: string; onSave: (t: string) => void }) {
   const [text, setText] = useState(value ?? '')
   const [saved, setSaved] = useState(false)
+  const [touched, setTouched] = useState(false)
+  // Re-sync when the saved value loads/changes (responses fetch resolves after
+  // mount), but never clobber text the student has started typing.
+  useEffect(() => { if (!touched) setText(value ?? '') }, [value, touched])
+  const canSave = text.trim().length > 0
   return (
     <div>
       <p className="text-sm mb-1" style={{ color: C.indigo }}>{prompt}</p>
       {frame && <p className="text-sm italic mb-1" style={{ color: C.muted }}>{frame}</p>}
       <textarea
         value={text}
-        onChange={(e) => { setText(e.target.value); setSaved(false) }}
+        onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }}
         placeholder={placeholder}
         rows={4}
         className="w-full rounded-md border p-2 text-sm"
         style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}
       />
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { onSave(text); setSaved(true) }} className="text-xs rounded-md border px-3 py-1" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}>Save</button>
+        {/* Only persist real content — an empty save would create a blank
+            "completed" card and a hollow grading record. */}
+        <button
+          onClick={() => { if (!canSave) return; onSave(text.trim()); setSaved(true); setTouched(false) }}
+          disabled={!canSave}
+          className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
+          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}
+        >
+          Save
+        </button>
         {saved && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
       </div>
     </div>
