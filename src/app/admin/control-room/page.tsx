@@ -22,6 +22,9 @@ interface RecordItem { target_id: string; level: number; observed_at: string; ev
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
+interface LessonCol { id: string; slug: string; title: string; lessonNumber: number; targetId: string | null }
+interface LessonCell { status: string; pct: number; needsGrading: boolean }
+interface LessonGridData { unitId: string; lessons: LessonCol[]; students: Student[]; cells: Record<string, Record<string, LessonCell>> }
 
 const EVIDENCE = ['observation', 'exit ticket', 'lab', 'conversation', 'quiz']
 
@@ -199,6 +202,8 @@ export default function ControlRoomPage() {
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
   const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
+  const [view, setView] = useState<'mastery' | 'lessons'>('mastery')
+  const [lessonGrid, setLessonGrid] = useState<LessonGridData | null>(null)
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
@@ -221,6 +226,14 @@ export default function ControlRoomPage() {
       .catch(() => {})
   }, [])
   useEffect(() => { loadQueue(unitId) }, [unitId, loadQueue])
+
+  const loadLessonGrid = useCallback((unit: string) => {
+    fetch(`/api/mastery/lesson-grid?unit_id=${encodeURIComponent(unit)}`)
+      .then((r) => r.json())
+      .then((d: LessonGridData & { error?: string }) => { if (!d.error) setLessonGrid(d) })
+      .catch(() => {})
+  }, [])
+  useEffect(() => { loadLessonGrid(unitId) }, [unitId, loadLessonGrid])
 
   const openCell = useCallback((studentId: string, targetId: string) => {
     setSel({ studentId, targetId })
@@ -275,6 +288,7 @@ export default function ControlRoomPage() {
       // Refresh the grid + queue so the cell and queue reflect the new rating.
       loadGrid(unitId)
       loadQueue(unitId)
+      loadLessonGrid(unitId)
       // Column-first: advance to the next student on the SAME target.
       const idx = grid.students.findIndex((s) => s.id === sel.studentId)
       const next = grid.students[idx + 1]
@@ -322,8 +336,33 @@ export default function ControlRoomPage() {
         </div>
       </div>
 
+      {/* tabs: mastery (targets) vs lessons (completion) */}
+      <div className="flex gap-2 mt-4">
+        {([['mastery', 'Mastery (targets)'], ['lessons', 'Lessons (completion)']] as const).map(([v, label]) => {
+          const active = view === v
+          const toGrade = v === 'lessons' && lessonGrid
+            ? Object.values(lessonGrid.cells).reduce((sum, row) => sum + Object.values(row).filter((c) => c.needsGrading).length, 0)
+            : 0
+          return (
+            <button key={v} onClick={() => setView(v)}
+              className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold"
+              style={{ border: '1px solid var(--border)', background: active ? 'var(--primary)' : 'var(--card)', color: active ? 'var(--primary-foreground)' : 'var(--foreground)' }}>
+              {label}
+              {toGrade > 0 && (
+                <span className="inline-flex items-center justify-center"
+                  style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700,
+                    background: active ? 'var(--primary-foreground)' : 'var(--destructive)',
+                    color: active ? 'var(--primary)' : 'white' }}>
+                  {toGrade}
+                </span>
+              )}
+            </button>
+          )
+        })}
+      </div>
+
       {/* grading queue — most urgent first */}
-      {queue.length > 0 && (
+      {view === 'mastery' && queue.length > 0 && (
         <div className="rounded-xl border mt-4 p-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
           <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Needs grading · {queue.length}</div>
           <div className="flex flex-col gap-1.5">
@@ -350,11 +389,11 @@ export default function ControlRoomPage() {
       {error && <div className="text-sm rounded-md px-3 py-2 my-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{error}</div>}
       {loading && <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>Loading the grid…</p>}
 
-      {!loading && grid && grid.students.length === 0 && (
+      {view === 'mastery' && !loading && grid && grid.students.length === 0 && (
         <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No students on your roster yet.</p>
       )}
 
-      {!loading && grid && grid.students.length > 0 && (
+      {view === 'mastery' && !loading && grid && grid.students.length > 0 && (
         <div className="rounded-xl border mt-4 overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
           <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
             <thead>
@@ -394,7 +433,7 @@ export default function ControlRoomPage() {
         </div>
       )}
 
-      {!loading && grid && (
+      {view === 'mastery' && !loading && grid && (
         <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
           <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(3) }} /> Got it (3)</span>
           <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(2) }} /> Almost (2)</span>
@@ -402,6 +441,66 @@ export default function ControlRoomPage() {
           <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(0) }} /> Not rated</span>
           <span style={{ marginLeft: 'auto' }}>Columns are learning targets — hover a header for the full statement.</span>
         </div>
+      )}
+
+      {/* LESSONS (completion) tab */}
+      {view === 'lessons' && lessonGrid && lessonGrid.students.length > 0 && (
+        <>
+          <div className="rounded-xl border mt-4 overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
+              <thead>
+                <tr>
+                  <th style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', fontSize: 12, color: 'var(--muted-foreground)' }}>Student</th>
+                  {lessonGrid.lessons.map((l) => (
+                    <th key={l.id} title={l.title} style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 40 }}>
+                      D{l.lessonNumber}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {lessonGrid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
+                  <tr key={s.id}>
+                    <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}</td>
+                    {lessonGrid.lessons.map((l) => {
+                      const c = lessonGrid.cells[s.id]?.[l.id]
+                      const st = c?.status ?? 'not_started'
+                      const bg = st === 'completed' ? 'color-mix(in oklch, var(--success) 22%, var(--card))'
+                        : st === 'in_progress' ? 'color-mix(in oklch, var(--reward) 22%, var(--card))'
+                        : 'var(--secondary)'
+                      const mark = st === 'completed' ? '✓' : st === 'in_progress' ? '·' : ''
+                      const clickable = !!l.targetId
+                      return (
+                        <td key={l.id} style={{ padding: 0 }}>
+                          <button
+                            onClick={() => { if (l.targetId) openCell(s.id, l.targetId) }}
+                            disabled={!clickable}
+                            title={`${s.name} · D${l.lessonNumber} ${l.title}${c?.needsGrading ? ' · work to grade' : ''}`}
+                            className="grid place-items-center font-bold"
+                            style={{ position: 'relative', width: 38, height: 36, borderRadius: 9, fontSize: 14, color: 'var(--foreground)', background: bg, border: '0.5px solid var(--border)', cursor: clickable ? 'pointer' : 'default' }}
+                          >
+                            {mark}
+                            {c?.needsGrading && <span style={{ position: 'absolute', top: 3, right: 4, width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)' }} />}
+                          </button>
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'color-mix(in oklch, var(--success) 22%, var(--card))', border: '0.5px solid var(--border)' }} /> Done</span>
+            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'color-mix(in oklch, var(--reward) 22%, var(--card))', border: '0.5px solid var(--border)' }} /> In progress</span>
+            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'var(--secondary)', border: '0.5px solid var(--border)' }} /> Not started</span>
+            <span className="inline-flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--destructive)' }} /> Work to grade</span>
+            <span style={{ marginLeft: 'auto' }}>Columns are day-lessons — tap a cell to open that student&apos;s work and grade it.</span>
+          </div>
+        </>
+      )}
+      {view === 'lessons' && lessonGrid && lessonGrid.students.length === 0 && (
+        <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No students on your roster yet.</p>
       )}
 
       {/* scrim + drawer */}
