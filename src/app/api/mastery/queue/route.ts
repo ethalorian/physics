@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
-import { getTeacherStudentGids } from '@/lib/teacher-scope'
+import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
 // The grading queue: every roster student with UNGRADED work in the unit (block
@@ -27,7 +27,9 @@ export async function GET(request: NextRequest) {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
+    const qp = new URL(request.url).searchParams
+    const unitId = qp.get('unit_id') ?? 'unit-1'
+    const classId = qp.get('class')
 
     // unit name -> lessons -> lessonIds
     const { data: unitRows } = await supabaseAdmin.from('units').select('id, name').eq('id', unitId)
@@ -44,7 +46,8 @@ export async function GET(request: NextRequest) {
 
     // roster (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin.from('students').select('google_user_id, name').order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
+    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+    if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
     const { data: sr } = await sQuery
     const students = ((sr ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name ?? 'Student' }))
     const studentIds = students.map((s) => s.id)

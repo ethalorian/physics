@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
-import { getTeacherStudentGids } from '@/lib/teacher-scope'
+import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/lesson-grid?unit_id=unit-1
 // The COMPLETION lens for the control room: every roster student x every
@@ -29,7 +29,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
     }
 
-    const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
+    const lgParams = new URL(request.url).searchParams
+    const unitId = lgParams.get('unit_id') ?? 'unit-1'
+    const classId = lgParams.get('class')
 
     const { data: unitRowsRaw } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
     const units = ((unitRowsRaw ?? []) as UnitRow[]).map((u) => ({ id: u.id, name: u.name }))
@@ -61,7 +63,8 @@ export async function GET(request: NextRequest) {
 
     // roster (same scoping as the mastery grid)
     let sQuery = supabaseAdmin.from('students').select('google_user_id, name, email, first_name, last_name').order('name', { ascending: true })
-    if (ctx.role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
+    const scope = await resolveRosterScope({ classId, role: ctx.role, scopeEmail: ctx.scopeEmail })
+    if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
     const { data: srRaw } = await sQuery
     const students = ((srRaw ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name, email: s.email, firstName: s.first_name, lastName: s.last_name }))
     const studentIds = students.map((s) => s.id)

@@ -2,8 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
+import { resolveRosterScope } from '@/lib/teacher-scope'
 
-// GET - Get all imported students
+// GET - Get imported students, SCOPED to who's asking: a teacher sees only the
+// students enrolled in their own classes; an admin sees everyone. Pass
+// ?course_id= to narrow to a single class (used by the per-class page).
 export async function GET(request: NextRequest) {
   try {
     const session = await auth()
@@ -11,8 +15,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
+    const ctx = await getEffectiveContext(session.user.email)
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
     }
 
@@ -26,10 +30,10 @@ export async function GET(request: NextRequest) {
       .select('*')
       .order('name', { ascending: true })
 
-    // Apply filters
-    if (courseId) {
-      query = query.eq('course_id', courseId)
-    }
+    // Scope to the asker (teacher → own roster; admin → all) and optionally to
+    // one class. scope.gids === null means "no filter" (admin, no class).
+    const scope = await resolveRosterScope({ classId: courseId, role: ctx.role, scopeEmail: ctx.scopeEmail })
+    if (scope.gids) query = query.in('google_user_id', scope.gids)
     if (activeOnly) {
       query = query.eq('is_active', true)
       query = query.eq('enrollment_state', 'ACTIVE')

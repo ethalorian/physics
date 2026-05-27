@@ -210,10 +210,19 @@ export default function ControlRoomPage() {
   const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
   const [copyLessonId, setCopyLessonId] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
+  // Optional single-class scope (from the per-class page deep-link: ?class=&label=).
+  const [classId, setClassId] = useState<string | null>(null)
+  const [classLabel, setClassLabel] = useState<string | null>(null)
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search)
+    setClassId(sp.get('class'))
+    setClassLabel(sp.get('label'))
+  }, [])
+  const classQuery = classId ? `&class=${encodeURIComponent(classId)}` : ''
 
   const loadGrid = useCallback((unit: string) => {
     setLoading(true)
-    fetch(`/api/mastery/grid?unit_id=${encodeURIComponent(unit)}`)
+    fetch(`/api/mastery/grid?unit_id=${encodeURIComponent(unit)}${classQuery}`)
       .then((r) => r.json())
       .then((d: GridData & { error?: string }) => {
         if (d.error) setError(d.error)
@@ -221,24 +230,24 @@ export default function ControlRoomPage() {
         setLoading(false)
       })
       .catch(() => { setError('Could not load the grid'); setLoading(false) })
-  }, [])
+  }, [classQuery])
 
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
 
   const loadQueue = useCallback((unit: string) => {
-    fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}`)
+    fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}${classQuery}`)
       .then((r) => r.json())
       .then((d: { queue?: QueueItem[] }) => setQueue(d.queue ?? []))
       .catch(() => {})
-  }, [])
+  }, [classQuery])
   useEffect(() => { loadQueue(unitId) }, [unitId, loadQueue])
 
   const loadLessonGrid = useCallback((unit: string) => {
-    fetch(`/api/mastery/lesson-grid?unit_id=${encodeURIComponent(unit)}`)
+    fetch(`/api/mastery/lesson-grid?unit_id=${encodeURIComponent(unit)}${classQuery}`)
       .then((r) => r.json())
       .then((d: LessonGridData & { error?: string }) => { if (!d.error) setLessonGrid(d) })
       .catch(() => {})
-  }, [])
+  }, [classQuery])
   useEffect(() => { loadLessonGrid(unitId) }, [unitId, loadLessonGrid])
 
   const openCell = useCallback((studentId: string, targetId: string, lesson?: { id: string; title: string; number: number }) => {
@@ -390,6 +399,16 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      {/* class-scope banner (when opened from a specific class) */}
+      {classId && (
+        <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-4 py-2.5 mb-3"
+          style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 10%, var(--card))' }}>
+          <span className="text-sm font-medium">
+            Scoped to <strong>{classLabel || 'one class'}</strong> — only this class&apos;s students show below.
+          </span>
+          <a href="/admin/control-room" className="text-sm font-semibold" style={{ color: 'var(--primary)' }}>View all my students</a>
+        </div>
+      )}
       {/* header */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <div>

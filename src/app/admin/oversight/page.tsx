@@ -1,7 +1,9 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 
+interface ClassRow { id: string; name: string; section: string | null; teacher_email: string | null; student_count: number }
 interface Pulse { students: number; colleagues: number; activeStudents7d: number; masteryRatings: number; publishedLessons: number; pendingRewards: number; loginsTrend: number[] }
 interface TeacherRow { email: string; students: number; masteryRatings: number; assignments: number; lastActiveAt: string | null; status: 'active' | 'ramping' | 'dormant' }
 interface Engagement { active7d: number; idle: number; atRisk: number; total: number }
@@ -39,13 +41,25 @@ function Sparkline({ data }: { data: number[] }) {
 export default function OversightPage() {
   const [d, setD] = useState<Oversight | null>(null)
   const [loading, setLoading] = useState(true)
+  const [classes, setClasses] = useState<ClassRow[]>([])
 
   useEffect(() => {
     fetch('/api/admin/oversight')
       .then((r) => r.json())
       .then((data: Oversight) => { setD(data); setLoading(false) })
       .catch(() => setLoading(false))
+    fetch('/api/courses')
+      .then((r) => r.json())
+      .then((data: { courses?: ClassRow[] }) => setClasses(data.courses ?? []))
+      .catch(() => {})
   }, [])
+
+  // Group classes by the teacher who owns them, for the click-into-any-class directory.
+  const classesByTeacher = classes.reduce<Record<string, ClassRow[]>>((acc, c) => {
+    const key = c.teacher_email ?? 'Unassigned'
+    ;(acc[key] ??= []).push(c)
+    return acc
+  }, {})
 
   const featMax = d ? Math.max(1, ...d.features.map((f) => f.count)) : 1
   const eng = d?.engagement
@@ -106,6 +120,33 @@ export default function OversightPage() {
               </tbody>
             </table>
           </div>
+
+          {/* CLASS DIRECTORY — click into any class in the system */}
+          <h2 className="text-xs font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--muted-foreground)' }}>Classes — open any one</h2>
+          {classes.length === 0 ? (
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No classes imported yet.</p>
+          ) : (
+            Object.entries(classesByTeacher).map(([teacher, list]) => (
+              <div key={teacher} className="mb-4">
+                <div className="text-sm font-semibold mb-2">{teacher}</div>
+                <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
+                  {list.map((c) => (
+                    <Link key={c.id} href={`/admin/classes/${encodeURIComponent(c.id)}`}>
+                      <div className="rounded-xl border p-3 transition-transform"
+                        style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}>
+                        <div className="font-medium truncate" style={{ fontSize: 14 }}>{c.name}</div>
+                        <div className="text-xs mt-0.5 truncate" style={{ color: 'var(--muted-foreground)' }}>
+                          {c.section ? `${c.section} · ` : ''}{c.student_count} student{c.student_count === 1 ? '' : 's'}
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
 
           <div className="grid gap-4 mt-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
             {/* ENGAGEMENT */}

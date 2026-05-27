@@ -3,7 +3,7 @@ import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
-import { getTeacherStudentGids } from '@/lib/teacher-scope'
+import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/grid?unit_id=unit-1
 // Class mastery grid: every student (the teacher's roster) x every learning target
@@ -29,6 +29,7 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url)
     const unitId = searchParams.get('unit_id') ?? 'unit-1'
+    const classId = searchParams.get('class')
 
     // Units (for the switcher)
     const { data: unitRowsRaw } = await supabaseAdmin
@@ -51,7 +52,8 @@ export async function GET(request: NextRequest) {
       .from('students')
       .select('google_user_id, name, email')
       .order('name', { ascending: true })
-    if (role === 'teacher') sQuery = sQuery.in('google_user_id', await getTeacherStudentGids(ctx.scopeEmail))
+    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+    if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
     const { data: studentRowsRaw } = await sQuery
     const students = ((studentRowsRaw ?? []) as StudentRow[])
       .filter((s) => s.google_user_id)

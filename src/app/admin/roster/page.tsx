@@ -286,13 +286,18 @@ export default function RosterPage() {
           <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Synced classes</div>
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
             {imported.map((c) => (
-              <div key={c.id} className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-                <div className="font-bold" style={{ fontSize: 15 }}>{c.name}</div>
-                {c.section && <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
-                <div className="flex items-center gap-1.5 mt-3 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                  <Users size={15} /> {c.student_count} student{c.student_count === 1 ? '' : 's'}
+              <Link key={c.id} href={`/admin/classes/${encodeURIComponent(c.id)}`}>
+                <div className="rounded-2xl border p-4 h-full transition-transform"
+                  style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)' }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}>
+                  <div className="font-bold" style={{ fontSize: 15 }}>{c.name}</div>
+                  {c.section && <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
+                  <div className="flex items-center gap-1.5 mt-3 text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                    <Users size={15} /> {c.student_count} student{c.student_count === 1 ? '' : 's'}
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
