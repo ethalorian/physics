@@ -101,6 +101,7 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'concept_exercise', label: 'Read & practice (textbook + exercise)', group: 'Practice', capture: true, fields: [
     { key: 'chapter', label: 'Chapter number (must be loaded in concept_exercises)', kind: 'number' },
     { key: 'title', label: 'Title (optional override)', kind: 'text' },
+    { key: 'sectionIds', label: 'Assigned sections (e.g. 4.4) — blank = whole chapter', kind: 'stringlist' },
   ] },
 ]
 const DEF_BY_TYPE = new Map<string, BlockDef>(BLOCK_DEFS.map((d): [string, BlockDef] => [d.type, d]))

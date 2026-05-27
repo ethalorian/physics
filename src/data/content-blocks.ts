@@ -262,6 +262,10 @@ export interface ConceptExerciseBlock extends BaseBlock {
   capture: true;
   chapter: number;                            // references the concept_exercises table
   title?: string;
+  /** Optional: restrict the QUESTIONS shown + graded to just these section ids
+   *  (e.g. ["4.4"] or ["6.1","6.3"]) so a day only assigns its reading sections.
+   *  The full chapter PDF is still shown for context. Omit = whole chapter. */
+  sectionIds?: string[];
 }
 
 // ---------------------------------------------------------------------------

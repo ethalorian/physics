@@ -26,7 +26,7 @@ export interface ConceptValue {
 
 const C = { ink: 'var(--foreground)', mute: 'var(--muted-foreground)', hair: 'var(--border)', primary: 'var(--primary)', success: 'var(--success)', card: 'var(--card)' }
 
-export default function ConceptExercise({ chapter, value, onSave }: { chapter: number; value?: ConceptValue; onSave: (v: ConceptValue) => void }) {
+export default function ConceptExercise({ chapter, sectionIds, value, onSave }: { chapter: number; sectionIds?: string[]; value?: ConceptValue; onSave: (v: ConceptValue) => void }) {
   const [data, setData] = useState<ConceptChapter | null>(null)
   const [loadErr, setLoadErr] = useState<string | null>(null)
   const [numPages, setNumPages] = useState(0)
@@ -111,7 +111,7 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
     setGrading(true)
     try {
       const res = await fetch(`/api/concept-exercises/${chapter}/grade`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers, sectionIds }),
       })
       const j = await res.json()
       if (!res.ok) { setGrading(false); return }
@@ -126,6 +126,12 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
 
   // On phones/tablets use the native PDF viewer — it gives pinch-zoom and proper
   // touch scrolling. The rich react-pdf reader (with scroll-sync) stays on desktop.
+  // Only the assigned reading sections' questions are shown + graded (the full
+  // chapter PDF is still displayed for context). Omit sectionIds = whole chapter.
+  const shownSections = sectionIds && sectionIds.length
+    ? data.sections.filter((s) => sectionIds.includes(s.id))
+    : data.sections
+
   const useIframe = pdfFailed || forceIframe || isNarrow
   const paneH = expanded ? 'calc(100vh - 70px)' : '76vh'
   const wrapStyle = expanded
@@ -185,7 +191,7 @@ export default function ConceptExercise({ chapter, value, onSave }: { chapter: n
         {/* RIGHT — digital exercise, scrolls to follow the reader */}
         <div ref={rightRef} className={`${mobileTab === 'work' ? 'block' : 'hidden'} lg:block rounded-xl border`} style={{ borderColor: C.hair, background: C.card, maxHeight: isNarrow ? undefined : paneH, overflowY: isNarrow ? 'visible' : 'auto', overscrollBehavior: 'contain', position: 'relative' }}>
           <div className="p-3">
-            {data.sections.map((s) => (
+            {shownSections.map((s) => (
               <SectionView key={s.id} section={s} active={activeSection === s.id}
                 answers={answers} results={submitted ? results : undefined} disabled={submitted}
                 onAnswer={setAnswer}

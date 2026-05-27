@@ -362,7 +362,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <FigureGraph title={b.title} xLabel={b.xLabel} yLabel={b.yLabel} series={series} />
     }
     case 'concept_exercise':
-      return <ConceptExercise chapter={b.chapter} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
+      return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
     default:
       return null
   }

@@ -10,7 +10,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 type ItemType = 'fill_in' | 'multiple_choice' | 'true_false' | 'short_answer'
 interface ExItem { n: number; type: ItemType; multi?: boolean }
-interface ExSection { items: ExItem[] }
+interface ExSection { id: string; items: ExItem[] }
 type KeyVal = string | string[] | { model: string }
 
 const STOP = new Set(['the', 'a', 'an', 'of', 'to', 'is', 'are', 'and', 'or', 'in', 'on', 'it', 'its', 'that', 'this', 'as', 'by', 'be', 'for', 'with', 'at', 'will', 'was', 'were', 'they', 'their', 'an'])
@@ -79,8 +79,9 @@ export async function POST(req: Request, { params }: { params: Promise<{ chapter
     const ch = Number(chapter)
     if (!Number.isInteger(ch)) return NextResponse.json({ error: 'Bad chapter' }, { status: 400 })
 
-    const body = (await req.json()) as { answers?: Record<string, unknown> }
+    const body = (await req.json()) as { answers?: Record<string, unknown>; sectionIds?: string[] }
     const answers = body.answers ?? {}
+    const onlySections = Array.isArray(body.sectionIds) && body.sectionIds.length ? new Set(body.sectionIds) : null
 
     const { data, error } = await supabaseAdmin
       .from('concept_exercises')
@@ -92,7 +93,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ chapter
     const sections = (data.sections ?? []) as ExSection[]
     const key = (data.answer_key ?? {}) as Record<string, KeyVal>
     const typeByN = new Map<number, { type: ItemType; multi?: boolean }>()
-    for (const s of sections) for (const it of s.items ?? []) typeByN.set(it.n, { type: it.type, multi: it.multi })
+    for (const s of sections) {
+      if (onlySections && !onlySections.has(s.id)) continue   // grade only the assigned reading sections
+      for (const it of s.items ?? []) typeByN.set(it.n, { type: it.type, multi: it.multi })
+    }
 
     const results: Record<string, { correct: boolean; needsReview?: boolean; answered: boolean }> = {}
     let autoTotal = 0, autoCorrect = 0, reviewCount = 0, answeredCount = 0
