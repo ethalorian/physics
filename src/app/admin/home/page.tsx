@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
@@ -79,7 +80,13 @@ function StatTile({ icon: Ico, value, label, accent }: { icon: Icon; value: numb
 export default function AdminHomePage() {
   const { data: session } = useSession()
   const { role } = useViewAs()
+  const router = useRouter()
   const isAdmin = role === 'admin'
+  // The command center is the ADMIN home. Teacher-role users have their own
+  // dashboard — send them there (also covers the staff nav "Home" link).
+  useEffect(() => {
+    if (role === 'teacher') router.replace('/admin/teacher')
+  }, [role, router])
   // Drop admin-only tools for teachers, then drop any group left empty.
   const groups = GROUPS
     .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
