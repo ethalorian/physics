@@ -83,9 +83,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       lessonsGraded = count ?? 0
     }
 
+    // Published lessons (ordered) so the per-class scheduler can list them with
+    // their open/close windows.
+    const { data: unitOrderRaw } = await supabaseAdmin.from('units').select('name, order_index')
+    const unitOrder = new Map<string, number>(((unitOrderRaw ?? []) as { name: string; order_index: number }[]).map((u) => [u.name, u.order_index]))
+    const { data: lessonRaw } = await supabaseAdmin
+      .from('lessons')
+      .select('id, title, lesson_number, unit')
+      .eq('published', true)
+    const lessons = ((lessonRaw ?? []) as { id: string; title: string; lesson_number: number | null; unit: string }[])
+      .sort((a, b) => (unitOrder.get(a.unit) ?? 99) - (unitOrder.get(b.unit) ?? 99) || (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
+      .map((l) => ({ id: l.id, title: l.title, lessonNumber: l.lesson_number, unit: l.unit }))
+
     return NextResponse.json({
       course: { id: course.id, name: course.name, section: course.section, teacherEmail: course.teacher_email },
       students,
+      lessons,
       summary: {
         studentCount: students.length,
         classMasteryAvg,

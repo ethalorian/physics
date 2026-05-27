@@ -5,12 +5,15 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { LayoutGrid, CalendarClock, Users, TrendingUp, BookOpen, ArrowLeft, GraduationCap } from 'lucide-react'
 
+interface Lesson { id: string; title: string; lessonNumber: number | null; unit: string }
 interface ClassData {
   course: { id: string; name: string; section: string | null; teacherEmail: string | null }
   students: { id: string; name: string; firstName: string | null; lastName: string | null }[]
+  lessons: Lesson[]
   summary: { studentCount: number; classMasteryAvg: number | null; ratingsLogged: number; lessonsGraded: number }
   error?: string
 }
+type Win = { open_at: string | null; close_at: string | null }
 
 function Tile({ value, label }: { value: string | number; label: string }) {
   return (
@@ -21,12 +24,24 @@ function Tile({ value, label }: { value: string | number; label: string }) {
   )
 }
 
+// <input type="datetime-local"> uses local "YYYY-MM-DDTHH:mm"; the DB stores ISO.
+const toLocalInput = (iso: string | null): string => {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+const fromLocalInput = (v: string): string | null => (v ? new Date(v).toISOString() : null)
+
 export default function ClassPage() {
   const params = useParams<{ courseId: string }>()
   const courseId = params.courseId
   const [data, setData] = useState<ClassData | null>(null)
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState<string | null>(null)
+  const [windows, setWindows] = useState<Record<string, Win>>({})
+  const [edits, setEdits] = useState<Record<string, Win>>({})
+  const [savingId, setSavingId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!courseId) return
@@ -40,6 +55,29 @@ export default function ClassPage() {
       })
       .catch(() => { setErr('Could not load this class'); setLoading(false) })
   }, [courseId])
+
+  useEffect(() => {
+    if (!courseId) return
+    fetch(`/api/classes/${encodeURIComponent(courseId)}/windows`)
+      .then((r) => r.json())
+      .then((d: { windows?: Record<string, Win> }) => { setWindows(d.windows ?? {}); setEdits(d.windows ?? {}) })
+      .catch(() => {})
+  }, [courseId])
+
+  const saveWindow = async (lessonId: string) => {
+    const e = edits[lessonId] ?? { open_at: null, close_at: null }
+    setSavingId(lessonId)
+    await fetch(`/api/classes/${encodeURIComponent(courseId)}/windows`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lesson_id: lessonId, open_at: e.open_at, close_at: e.close_at }),
+    }).catch(() => {})
+    setWindows((prev) => {
+      const next = { ...prev }
+      if (!e.open_at && !e.close_at) delete next[lessonId]; else next[lessonId] = e
+      return next
+    })
+    setSavingId(null)
+  }
 
   const c = data?.course
   const s = data?.summary
@@ -103,6 +141,60 @@ export default function ClassPage() {
                   </span>
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Lesson schedule — per-class open/close windows */}
+          <div className="text-xs font-bold uppercase tracking-widest mt-8 mb-2 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
+            <CalendarClock size={14} /> Lesson schedule — open / close for this class
+          </div>
+          <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
+            Lessons are open by default. Set an <strong>open</strong> date to hold students back until then, or a <strong>close</strong> date to stop late work. Leave both blank to keep a lesson open.
+          </p>
+          {data.lessons.length === 0 ? (
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No published lessons yet.</p>
+          ) : (
+            <div className="rounded-2xl border overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <table className="w-full text-sm">
+                <thead>
+                  <tr style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
+                    <th className="text-left text-xs font-bold uppercase tracking-wide px-4 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Lesson</th>
+                    <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Opens</th>
+                    <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Closes</th>
+                    <th className="px-3 py-2.5" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.lessons.map((l, i) => {
+                    const e = edits[l.id] ?? { open_at: null, close_at: null }
+                    const saved = windows[l.id] ?? { open_at: null, close_at: null }
+                    const changed = (e.open_at ?? null) !== (saved.open_at ?? null) || (e.close_at ?? null) !== (saved.close_at ?? null)
+                    const setE = (patch: Partial<Win>) => setEdits((p) => ({ ...p, [l.id]: { ...e, ...patch } }))
+                    return (
+                      <tr key={l.id} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
+                        <td className="px-4 py-2.5" style={{ whiteSpace: 'nowrap' }}>
+                          <span className="font-medium">{l.lessonNumber ? `D${l.lessonNumber} · ` : ''}{l.title}</span>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <input type="datetime-local" value={toLocalInput(e.open_at)} onChange={(ev) => setE({ open_at: fromLocalInput(ev.target.value) })}
+                            className="rounded-md border px-2 py-1 text-xs" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <input type="datetime-local" value={toLocalInput(e.close_at)} onChange={(ev) => setE({ close_at: fromLocalInput(ev.target.value) })}
+                            className="rounded-md border px-2 py-1 text-xs" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
+                        </td>
+                        <td className="px-3 py-2.5 text-right" style={{ whiteSpace: 'nowrap' }}>
+                          <button onClick={() => saveWindow(l.id)} disabled={!changed || savingId === l.id}
+                            className="text-xs font-semibold rounded-lg px-3 py-1.5"
+                            style={{ background: changed ? 'var(--primary)' : 'var(--secondary)', color: changed ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: 'none', cursor: changed && savingId !== l.id ? 'pointer' : 'default' }}>
+                            {savingId === l.id ? 'Saving…' : 'Save'}
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             </div>
           )}
 

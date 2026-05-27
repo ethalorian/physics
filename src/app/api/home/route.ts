@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
+import { getStudentLessonGate } from '@/lib/lesson-windows'
 import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 
 // GET /api/home
@@ -43,7 +44,10 @@ export async function GET() {
       .from('lessons')
       .select('id, slug, title, unit, lesson_number')
       .eq('published', true)
-    const lessons = ((lessonRowsRaw ?? []) as LessonRow[]).slice()
+    // Per-class release gate: hide lessons the student's class hasn't opened yet
+    // (or has closed). Published-and-no-window = open by default.
+    const lessonGate = await getStudentLessonGate(userId)
+    const lessons = ((lessonRowsRaw ?? []) as LessonRow[]).filter((l) => lessonGate(l.id)).slice()
     lessons.sort(
       (a, b) =>
         (orderByName.get(a.unit) ?? 99) - (orderByName.get(b.unit) ?? 99) ||

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
+import { getStudentLessonGate } from '@/lib/lesson-windows'
 
 /**
  * GET /api/lessons/published
@@ -80,16 +81,24 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    // Per-class release gate: a student only sees lessons their class has opened
+    // (and not yet closed). Staff are ungated so they can preview/build.
+    let visibleLessons = lessons ?? []
+    if (!isAdmin && userId && visibleLessons.length > 0) {
+      const gate = await getStudentLessonGate(userId)
+      visibleLessons = visibleLessons.filter((l) => gate(l.id))
+    }
+
     // Fetch user progress if available
     let progress: Record<string, number> = {}
-    if (userId && lessons && lessons.length > 0) {
+    if (userId && visibleLessons.length > 0) {
       try {
         // Try to fetch from lesson_progress table (it exists in your schema)
         const { data: progressData } = await supabaseAdmin
           .from('lesson_progress')
           .select('lesson_id, progress_percentage, status')
           .eq('user_id', userId)
-          .in('lesson_id', lessons.map(l => l.id))
+          .in('lesson_id', visibleLessons.map(l => l.id))
 
         if (progressData) {
           progress = progressData.reduce((acc, item) => {
@@ -104,7 +113,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse JSONB fields and enhance lesson data
-    const enhancedLessons = lessons?.map(lesson => {
+    const enhancedLessons = visibleLessons.map(lesson => {
       // Parse videos if present
       let videos = []
       if (lesson.videos) {
