@@ -98,7 +98,8 @@ export default function TeacherPlansPage() {
         .plan-html li { margin: 3px 0; }
         .plan-html table { border-collapse: collapse; width: 100%; margin: 10px 0; }
         .plan-html td, .plan-html th { border: 1px solid var(--border); padding: 8px 10px; vertical-align: top; text-align: left; }
-        .plan-html tr:first-child td strong { color: var(--primary); }
+        .plan-html td p:first-child > strong { color: var(--primary); }
+        .plan-html tr:first-child td > strong { color: var(--primary); }
         .plan-html strong { font-weight: 700; }
         .plan-html em { color: var(--muted-foreground); }
       `}</style>

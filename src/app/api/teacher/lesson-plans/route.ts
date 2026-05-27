@@ -25,16 +25,26 @@ export async function GET(request: NextRequest) {
 
     const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
 
-    // The teacher's chosen class type (from onboarding); default to CPA.
-    const { data: row } = await supabaseAdmin
-      .from('teacher_onboarding')
-      .select('curriculum_track')
-      .eq('teacher_email', ctx.scopeEmail)
-      .maybeSingle()
-    const track = (row as { curriculum_track?: string | null } | null)?.curriculum_track || 'cpa'
+    // Class types the teacher actually teaches = the distinct tracks across
+    // their courses. Admins (no courses) see every available track.
+    let tracks: string[]
+    if (ctx.role === 'admin') {
+      tracks = Object.keys(PLANS)
+    } else {
+      const { data } = await supabaseAdmin.from('courses').select('track').eq('teacher_email', ctx.scopeEmail)
+      tracks = [...new Set(((data ?? []) as { track: string | null }[]).map((c) => c.track).filter((t): t is string => Boolean(t)))]
+    }
 
-    const days = PLANS[track]?.[unitId] ?? []
-    return NextResponse.json({ track, unitId, days })
+    // Union the plans across the teacher's tracks (only CPA exists today).
+    const seen = new Set<number>()
+    const days: DayPlan[] = []
+    for (const t of tracks) {
+      for (const d of PLANS[t]?.[unitId] ?? []) {
+        if (!seen.has(d.day)) { seen.add(d.day); days.push(d) }
+      }
+    }
+    days.sort((a, b) => a.day - b.day)
+    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days })
   } catch (error) {
     console.error('Error in GET /api/teacher/lesson-plans:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

@@ -28,23 +28,29 @@ export async function GET() {
     const ctx = await getEffectiveContext(session.user.email)
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    // classroom step is true if the teacher owns at least one course.
-    const { count: classCount } = await supabaseAdmin
+    // classroom step is true if the teacher owns at least one course; the
+    // curriculum step is DERIVED per-course: done only when they have courses
+    // and every course has a class type assigned (an untyped course re-opens it).
+    const { data: courseRows } = await supabaseAdmin
       .from('courses')
-      .select('id', { count: 'exact', head: true })
+      .select('track')
       .eq('teacher_email', ctx.scopeEmail)
-    const classroomDone = (classCount ?? 0) > 0
+    const courses = (courseRows ?? []) as { track: string | null }[]
+    const classCount = courses.length
+    const untracked = courses.filter((c) => !c.track).length
+    const classroomDone = classCount > 0
+    const curriculumDone = classCount > 0 && untracked === 0
 
     const { data: rowRaw } = await supabaseAdmin
       .from('teacher_onboarding')
-      .select('classroom_done, curriculum_done, pacing_done, tour_done, curriculum_track')
+      .select('classroom_done, pacing_done, tour_done')
       .eq('teacher_email', ctx.scopeEmail)
       .maybeSingle()
-    const row = (rowRaw ?? {}) as Partial<Row> & { curriculum_track?: string | null }
+    const row = (rowRaw ?? {}) as Partial<Row>
 
     const steps: Record<StepKey, boolean> = {
       classroom: classroomDone || Boolean(row.classroom_done),
-      curriculum: Boolean(row.curriculum_done),
+      curriculum: curriculumDone,
       pacing: Boolean(row.pacing_done),
       tour: Boolean(row.tour_done),
     }
@@ -55,8 +61,8 @@ export async function GET() {
       doneCount,
       total: STEP_KEYS.length,
       complete: doneCount === STEP_KEYS.length,
-      classCount: classCount ?? 0,
-      track: row.curriculum_track ?? null,
+      classCount,
+      untracked,
     })
   } catch (error) {
     console.error('Error in GET /api/teacher/onboarding:', error)

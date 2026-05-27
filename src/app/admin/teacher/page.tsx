@@ -9,7 +9,8 @@ import {
 } from 'lucide-react'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
-interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number; track?: string | null }
+interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number; untracked?: number }
+interface Course { id: string; name: string; section: string | null; track: string | null }
 
 // The four onboarding steps. `action` says how the CTA behaves:
 //  - 'link'   → go to `href` (optionally with a "Mark done" for no-signal steps)
@@ -31,7 +32,6 @@ const TRACKS: { id: string; label: string; desc: string; enabled: boolean }[] = 
   { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false },
   { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false },
 ]
-const TRACK_LABEL: Record<string, string> = Object.fromEntries(TRACKS.map((t) => [t.id, t.label]))
 
 // Short guided-tour slides.
 const TOUR: { title: string; body: string }[] = [
@@ -55,6 +55,7 @@ const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; acce
 export default function TeacherDashboard() {
   const { data: session } = useSession()
   const [status, setStatus] = useState<Status | null>(null)
+  const [courses, setCourses] = useState<Course[]>([])
   const [showTracks, setShowTracks] = useState(false)
   const [showTour, setShowTour] = useState(false)
   const [tourIdx, setTourIdx] = useState(0)
@@ -66,7 +67,13 @@ export default function TeacherDashboard() {
       .then((d: Status & { error?: string }) => { if (!d.error) setStatus(d) })
       .catch(() => {})
   }, [])
-  useEffect(() => { load() }, [load])
+  const loadCourses = useCallback(() => {
+    fetch('/api/teacher/courses')
+      .then((r) => r.json())
+      .then((d: { courses?: Course[] }) => setCourses(d.courses ?? []))
+      .catch(() => {})
+  }, [])
+  useEffect(() => { load(); loadCourses() }, [load, loadCourses])
 
   const markDone = async (step: StepKey) => {
     await fetch('/api/teacher/onboarding', {
@@ -76,14 +83,16 @@ export default function TeacherDashboard() {
     load()
   }
 
-  const chooseTrack = async (track: string) => {
-    await fetch('/api/teacher/onboarding', {
+  // Assign a class type to ONE course; re-derives the curriculum step.
+  const assignTrack = async (courseId: string, track: string) => {
+    await fetch('/api/teacher/courses', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ step: 'curriculum', done: true, track }),
+      body: JSON.stringify({ course_id: courseId, track }),
     }).catch(() => {})
-    setShowTracks(false)
+    loadCourses()
     load()
   }
+  const openTracks = () => { loadCourses(); setShowTracks(true) }
 
   const finishTour = async () => {
     await fetch('/api/teacher/onboarding', {
@@ -147,7 +156,7 @@ export default function TeacherDashboard() {
                   <p className="text-xs mb-3 flex-1" style={{ color: 'var(--muted-foreground)' }}>{s.desc}</p>
                   {done ? (
                     <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>
-                      {s.key === 'curriculum' && status?.track ? `${TRACK_LABEL[status.track] ?? 'Selected'} ✓` : 'Done'}
+                      {s.key === 'curriculum' ? 'Classes typed ✓' : 'Done'}
                     </span>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -157,7 +166,7 @@ export default function TeacherDashboard() {
                         </Link>
                       ) : (
                         <button
-                          onClick={() => { if (s.action === 'tracks') setShowTracks(true); else if (s.action === 'tour') { setTourIdx(0); setShowTour(true) } }}
+                          onClick={() => { if (s.action === 'tracks') openTracks(); else if (s.action === 'tour') { setTourIdx(0); setShowTour(true) } }}
                           className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5"
                           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
                         >
@@ -208,34 +217,48 @@ export default function TeacherDashboard() {
         })}
       </div>
 
-      {/* track picker overlay */}
+      {/* per-course class-type picker overlay */}
       {showTracks && (
         <div onClick={() => setShowTracks(false)} style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
-          <div onClick={(e) => e.stopPropagation()} className="rounded-2xl border p-6 w-full" style={{ maxWidth: 460, background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <div className="text-lg font-semibold tracking-tight mb-1">Choose your class type</div>
-            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Pick the course you’re teaching. More types are coming soon.</p>
-            <div className="flex flex-col gap-2">
-              {TRACKS.map((tr) => (
-                <button
-                  key={tr.id}
-                  onClick={() => tr.enabled && chooseTrack(tr.id)}
-                  disabled={!tr.enabled}
-                  className="text-left rounded-xl border p-3"
-                  style={{
-                    borderColor: tr.enabled ? 'color-mix(in oklch, var(--primary) 40%, var(--border))' : 'var(--border)',
-                    background: tr.enabled ? 'var(--card)' : 'color-mix(in oklch, var(--secondary) 50%, transparent)',
-                    opacity: tr.enabled ? 1 : 0.55, cursor: tr.enabled ? 'pointer' : 'not-allowed',
-                  }}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-sm">{tr.label}</span>
-                    {!tr.enabled && <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Soon</span>}
+          <div onClick={(e) => e.stopPropagation()} className="rounded-2xl border p-6 w-full" style={{ maxWidth: 520, maxHeight: '85vh', overflowY: 'auto', background: 'var(--card)', borderColor: 'var(--border)' }}>
+            <div className="text-lg font-semibold tracking-tight mb-1">Assign a class type to each course</div>
+            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Set the course type for each imported class. Only CPA Physics is available now — more types are coming.</p>
+            {courses.length === 0 ? (
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No imported courses yet. Connect Google Classroom first, then come back to type each class.</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {courses.map((c) => (
+                  <div key={c.id} className="rounded-xl border p-3" style={{ borderColor: c.track ? 'color-mix(in oklch, var(--success) 40%, var(--border))' : 'color-mix(in oklch, var(--reward) 40%, var(--border))', background: 'var(--card)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-semibold text-sm">{c.name}{c.section ? ` · ${c.section}` : ''}</span>
+                      {!c.track && <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--reward-foreground)' }}>Needs type</span>}
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      {TRACKS.map((tr) => {
+                        const selected = c.track === tr.id
+                        return (
+                          <button
+                            key={tr.id}
+                            onClick={() => tr.enabled && assignTrack(c.id, tr.id)}
+                            disabled={!tr.enabled}
+                            className="text-xs font-semibold rounded-lg border px-2.5 py-1.5"
+                            style={{
+                              borderColor: selected ? 'var(--success)' : 'var(--border)',
+                              background: selected ? 'color-mix(in oklch, var(--success) 16%, var(--card))' : tr.enabled ? 'var(--card)' : 'color-mix(in oklch, var(--secondary) 50%, transparent)',
+                              color: selected ? 'var(--success)' : tr.enabled ? 'var(--foreground)' : 'var(--muted-foreground)',
+                              opacity: tr.enabled ? 1 : 0.5, cursor: tr.enabled ? 'pointer' : 'not-allowed',
+                            }}
+                          >
+                            {tr.label}{selected ? ' ✓' : tr.enabled ? '' : ' · soon'}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                  <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{tr.desc}</div>
-                </button>
-              ))}
-            </div>
-            <button onClick={() => setShowTracks(false)} className="mt-4 text-xs font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Cancel</button>
+                ))}
+              </div>
+            )}
+            <button onClick={() => setShowTracks(false)} className="mt-4 text-xs font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
       )}
