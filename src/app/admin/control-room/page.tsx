@@ -196,6 +196,7 @@ export default function ControlRoomPage() {
   const [gbPercent, setGbPercent] = useState('')
   const [gbSuggestion, setGbSuggestion] = useState<{ percent: number; rationale: string } | null>(null)
   const [gbBusy, setGbBusy] = useState(false)
+  const [gbStats, setGbStats] = useState<{ studentLessonPct: number | null; studentUnitAvg: number | null; classDayAvg: number | null; classUnitAvg: number | null; completionPct: number | null; unitLessons: number; studentGraded: number } | null>(null)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
   const [evidence, setEvidence] = useState('observation')
@@ -271,19 +272,29 @@ export default function ControlRoomPage() {
     setSuggestion(null)
     setComparison(null)
     setGbSuggestion(null)
+    setGbStats(null)
     setGbPercent(lesson ? String(lessonGrid?.cells?.[studentId]?.[lesson.id]?.gradePct ?? '') : '')
     setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
       .then((r) => r.json())
       .then((d: WorkData) => { setWork(d); setWorkLoading(false) })
       .catch(() => setWorkLoading(false))
-    fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
-      .then((r) => r.json())
-      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
-      .catch(() => {})
-  }, [unitId, lessonGrid])
+    if (lesson) {
+      // Gradebook-mode analytics: this student's lesson %, unit avg, and the
+      // class averages (scoped to the active class/section).
+      fetch(`/api/gradebook/drawer-stats?user_id=${encodeURIComponent(studentId)}&lesson_id=${encodeURIComponent(lesson.id)}&unit_id=${encodeURIComponent(unitId)}${classQuery}`)
+        .then((r) => r.json())
+        .then((d) => { if (!d.error) setGbStats(d) })
+        .catch(() => {})
+    } else {
+      fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
+        .then((r) => r.json())
+        .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
+        .catch(() => {})
+    }
+  }, [unitId, lessonGrid, classQuery])
 
-  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setGbSuggestion(null); setGbPercent('') }
+  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setGbSuggestion(null); setGbStats(null); setGbPercent('') }
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
@@ -722,6 +733,47 @@ export default function ControlRoomPage() {
                       </div>
                     ))}
                     <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Decaying-average rollup on a 1–3 scale, across this lesson&apos;s targets.</p>
+                  </div>
+                )
+              })()}
+
+              {/* gradebook analytics (completion mode) */}
+              {sel.lesson && gbStats && (() => {
+                const pctStr = (v: number | null) => (v == null ? '—' : `${Math.round(v)}%`)
+                const bar = (v: number | null) => `${v == null ? 0 : Math.max(4, Math.min(100, v))}%`
+                const dayDelta = gbStats.studentLessonPct != null && gbStats.classDayAvg != null ? gbStats.studentLessonPct - gbStats.classDayAvg : null
+                const deltaColor = dayDelta == null ? 'var(--muted-foreground)' : dayDelta >= 1 ? 'var(--success)' : dayDelta <= -1 ? 'oklch(0.62 0.16 25)' : 'var(--muted-foreground)'
+                const deltaText = dayDelta == null ? '' : Math.abs(dayDelta) < 1 ? 'at class avg' : `${dayDelta > 0 ? '+' : ''}${Math.round(dayDelta)} vs class`
+                const rows: { label: string; v: number | null; c: string }[] = [
+                  { label: 'This day · student', v: gbStats.studentLessonPct, c: 'var(--primary)' },
+                  { label: 'This day · class', v: gbStats.classDayAvg, c: 'var(--muted-foreground)' },
+                  { label: 'Unit avg · student', v: gbStats.studentUnitAvg, c: 'var(--primary)' },
+                  { label: 'Unit avg · class', v: gbStats.classUnitAvg, c: 'var(--muted-foreground)' },
+                ]
+                return (
+                  <div className="rounded-lg px-3 py-2.5 mb-5" style={{ background: 'var(--secondary)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Gradebook · this day vs unit</span>
+                      {dayDelta != null && <span className="text-xs font-bold" style={{ color: deltaColor }}>{deltaText}</span>}
+                    </div>
+                    {rows.map((row) => (
+                      <div key={row.label} className="flex items-center gap-2 mb-1.5">
+                        <span className="text-xs shrink-0" style={{ width: 110, color: 'var(--foreground)' }}>{row.label}</span>
+                        <span className="flex-1 rounded-full" style={{ height: 8, background: 'var(--card)', overflow: 'hidden' }}>
+                          <span style={{ display: 'block', height: '100%', width: bar(row.v), background: row.c, borderRadius: 9999 }} />
+                        </span>
+                        <span className="text-sm font-bold shrink-0" style={{ width: 42, textAlign: 'right', color: 'var(--foreground)' }}>{pctStr(row.v)}</span>
+                      </div>
+                    ))}
+                    <div className="flex gap-2 flex-wrap mt-2">
+                      <span className="text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
+                        Lesson completion {pctStr(gbStats.completionPct)}
+                      </span>
+                      <span className="text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
+                        {gbStats.studentGraded}/{gbStats.unitLessons} days graded
+                      </span>
+                    </div>
+                    <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>Gradebook % toward the letter grade — class figures use the selected class/section.</p>
                   </div>
                 )
               })()}
