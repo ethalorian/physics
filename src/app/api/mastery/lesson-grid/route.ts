@@ -18,7 +18,7 @@ type LessonRow = { id: string; slug: string; title: string; lesson_number: numbe
 type TargetRow = { id: string; lesson_id: string | null; order_index: number }
 type ProgRow = { user_id: string; lesson_id: string; status: string | null; progress_percentage: number | null }
 type RespRow = { user_id: string; lesson_id: string; created_at: string }
-type RecRow = { user_id: string; target_id: string; observed_at: string }
+type GbRow = { user_id: string; item_id: string; percentage: number | null; graded_at: string | null }
 
 export async function GET(request: NextRequest) {
   try {
@@ -68,8 +68,8 @@ export async function GET(request: NextRequest) {
 
     const noData = lessonIds.length === 0 || studentIds.length === 0
     const progByKey = new Map<string, { status: string; pct: number }>()
-    const respLatest = new Map<string, string>()    // student|lesson -> latest response ts
-    const rateLatest = new Map<string, string>()     // student|target -> latest rating ts
+    const respLatest = new Map<string, string>()                       // student|lesson -> latest response ts
+    const gradeByKey = new Map<string, { pct: number | null; at: string | null }>() // student|lesson -> gradebook score
 
     if (!noData) {
       const { data: pr } = await supabaseAdmin.from('lesson_progress')
@@ -81,27 +81,24 @@ export async function GET(request: NextRequest) {
         .order('created_at', { ascending: true })
       for (const r of (rr ?? []) as RespRow[]) respLatest.set(`${r.user_id}|${r.lesson_id}`, r.created_at) // asc → last wins = latest
 
-      const targetIds = Array.from(new Set(Array.from(lessonTarget.values())))
-      if (targetIds.length > 0) {
-        const { data: mr } = await supabaseAdmin.from('mastery_records')
-          .select('user_id, target_id, observed_at').in('user_id', studentIds).in('target_id', targetIds)
-          .order('observed_at', { ascending: true })
-        for (const m of (mr ?? []) as RecRow[]) rateLatest.set(`${m.user_id}|${m.target_id}`, m.observed_at)
-      }
+      // gradebook scores for completion grading (item_type 'lesson', item_id = lesson uuid)
+      const { data: gb } = await supabaseAdmin.from('gradebook_entries')
+        .select('user_id, item_id, percentage, graded_at').eq('item_type', 'lesson').in('user_id', studentIds).in('item_id', lessonIds)
+      for (const g of (gb ?? []) as GbRow[]) gradeByKey.set(`${g.user_id}|${g.item_id}`, { pct: g.percentage, at: g.graded_at })
     }
 
-    const cells: Record<string, Record<string, { status: string; pct: number; needsGrading: boolean }>> = {}
+    const cells: Record<string, Record<string, { status: string; pct: number; needsGrading: boolean; gradePct: number | null }>> = {}
     for (const s of students) {
-      const row: Record<string, { status: string; pct: number; needsGrading: boolean }> = {}
+      const row: Record<string, { status: string; pct: number; needsGrading: boolean; gradePct: number | null }> = {}
       for (const l of lessons) {
         const prog = progByKey.get(`${s.id}|${l.id}`)
         const status = prog?.status ?? 'not_started'
         const pct = prog?.pct ?? 0
         const latestResp = respLatest.get(`${s.id}|${l.id}`)
-        const tId = lessonTarget.get(l.id)
-        const latestRate = tId ? rateLatest.get(`${s.id}|${tId}`) : undefined
-        const needsGrading = !!latestResp && (!latestRate || latestResp > latestRate)
-        row[l.id] = { status, pct, needsGrading }
+        const grade = gradeByKey.get(`${s.id}|${l.id}`)
+        // needs grading = work submitted, and not yet gradebook-scored (or work is newer than the score)
+        const needsGrading = !!latestResp && (!grade || !grade.at || latestResp > grade.at)
+        row[l.id] = { status, pct, needsGrading, gradePct: grade?.pct ?? null }
       }
       cells[s.id] = row
     }
