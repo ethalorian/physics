@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, Lock, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { TRAIT_LABELS, TRAIT_OPTIONS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
 import type { CatalogState } from '@/app/api/avatar/route'
@@ -35,14 +35,20 @@ export default function AvatarPage() {
   const load = useCallback(() => {
     fetch('/api/avatar')
       .then((r) => r.json())
-      .then((d: Bundle) => {
-        setBundle(d)
-        // Open Items tab by default once setup is done — Face is for first-timers.
-        setTab(d.setup_completed ? 'items' : 'face')
-      })
+      .then((d: Bundle) => setBundle(d))
       .catch(() => {})
   }, [])
   useEffect(() => { load() }, [load])
+
+  // Pick the starting tab ONCE per visit — re-fetches after equip/purchase
+  // must not yank the student off the tab they're working on.
+  const [initialTabSet, setInitialTabSet] = useState(false)
+  useEffect(() => {
+    if (bundle && !initialTabSet) {
+      setTab(bundle.setup_completed ? 'items' : 'face')
+      setInitialTabSet(true)
+    }
+  }, [bundle, initialTabSet])
 
   // Local traits buffer so the preview reacts instantly even before the server
   // round-trip. Falls back to whatever the server says.
@@ -51,11 +57,16 @@ export default function AvatarPage() {
 
   const saveTrait = async (key: keyof AvatarTraits, value: string) => {
     setLocalTraits((p) => ({ ...p, [key]: value as never }))
+    // Optimistically mark setup_completed in the bundle so the Items tab
+    // unlocks immediately after the first carousel change, without refetching
+    // the whole bundle (which would jitter the catalog list).
+    setBundle((b) => (b && !b.setup_completed ? { ...b, setup_completed: true } : b))
     await fetch('/api/avatar/traits', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ traits: { [key]: value } }),
     }).catch(() => {})
-    load()
+    // No load() here — traits don't change catalog state, and reloading was
+    // what caused the tab to snap away mid-edit.
   }
 
   const equip = async (slot: ItemSlot, slug: string | null) => {
@@ -141,31 +152,15 @@ export default function AvatarPage() {
           </div>
 
           {tab === 'face' && (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
               {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => (
-                <div key={key}>
-                  <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>{TRAIT_LABELS[key]}</div>
-                  <div className="flex flex-wrap gap-2">
-                    {TRAIT_OPTIONS[key].map((opt) => {
-                      const isOn = previewTraits[key] === opt
-                      return (
-                        <button
-                          key={opt}
-                          onClick={() => saveTrait(key, opt)}
-                          className="text-sm font-medium rounded-lg px-3 py-1.5 capitalize"
-                          style={{
-                            background: isOn ? 'var(--primary)' : 'var(--card)',
-                            color: isOn ? 'var(--primary-foreground)' : 'var(--foreground)',
-                            border: '1px solid ' + (isOn ? 'var(--primary)' : 'var(--border)'),
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {opt.replace('_', ' ')}
-                        </button>
-                      )
-                    })}
-                  </div>
-                </div>
+                <TraitCarousel
+                  key={key}
+                  label={TRAIT_LABELS[key]}
+                  options={TRAIT_OPTIONS[key]}
+                  value={(previewTraits[key] as string) ?? TRAIT_OPTIONS[key][0]}
+                  onChange={(v) => saveTrait(key, v)}
+                />
               ))}
             </div>
           )}
@@ -199,6 +194,46 @@ export default function AvatarPage() {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  )
+}
+
+function TraitCarousel({ label, options, value, onChange }: { label: string; options: string[]; value: string; onChange: (v: string) => void }) {
+  // Mii-channel single-value picker with prev/next chevrons. Wraps at the
+  // ends and shows position so the student knows how many variants exist.
+  const idx = Math.max(0, options.indexOf(value))
+  const prev = () => onChange(options[(idx - 1 + options.length) % options.length])
+  const next = () => onChange(options[(idx + 1) % options.length])
+  return (
+    <div
+      className="flex items-center gap-3 rounded-xl border px-3 py-2"
+      style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+    >
+      <div className="text-xs font-semibold uppercase tracking-widest" style={{ minWidth: 90, color: 'var(--muted-foreground)' }}>
+        {label}
+      </div>
+      <button
+        onClick={prev}
+        aria-label={`Previous ${label}`}
+        className="grid place-items-center rounded-lg transition-colors"
+        style={{ width: 32, height: 32, background: 'transparent', color: 'var(--primary)', border: '1px solid var(--border)', cursor: 'pointer' }}
+      >
+        <ChevronLeft size={16} />
+      </button>
+      <div className="flex-1 text-center text-sm font-medium capitalize" style={{ color: 'var(--foreground)' }}>
+        {value.replace('_', ' ')}
+      </div>
+      <button
+        onClick={next}
+        aria-label={`Next ${label}`}
+        className="grid place-items-center rounded-lg transition-colors"
+        style={{ width: 32, height: 32, background: 'transparent', color: 'var(--primary)', border: '1px solid var(--border)', cursor: 'pointer' }}
+      >
+        <ChevronRight size={16} />
+      </button>
+      <div className="text-[11px] tabular-nums" style={{ minWidth: 36, textAlign: 'right', color: 'var(--muted-foreground)' }}>
+        {idx + 1} / {options.length}
       </div>
     </div>
   )
