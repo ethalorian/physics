@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, Check, X, Sparkles } from 'lucide-react'
+import EnrollmentGate from '@/components/EnrollmentGate'
 import type { ContentBlock } from '@/data/content-blocks'
 
 // BlockRenderer pulls in recharts, react-pdf, sims, etc. — keep it lazy so the
@@ -41,6 +42,7 @@ export default function ReviewPage() {
   const done = total > 0 && answered === total
 
   return (
+    <EnrollmentGate>
     <div className="max-w-2xl mx-auto px-4 py-6" style={{ color: 'var(--foreground)' }}>
       <Link href="/home" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
         <ArrowLeft size={15} /> Home
@@ -121,5 +123,6 @@ export default function ReviewPage() {
         </>
       )}
     </div>
+    </EnrollmentGate>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react'
 import LessonBrowser from '@/components/lessons/LessonBrowser'
+import EnrollmentGate from '@/components/EnrollmentGate'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { BookOpen } from 'lucide-react'
@@ -33,22 +34,24 @@ export default function LessonsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
-      {/* Simple Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-2.5 bg-primary/10 rounded-xl">
-          <BookOpen className="h-6 w-6 text-primary" />
+    <EnrollmentGate>
+      <div className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
+        {/* Simple Header */}
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-primary/10 rounded-xl">
+            <BookOpen className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Physics Lessons</h1>
+            <p className="text-sm text-muted-foreground">
+              Explore concepts through videos, simulations, and interactive content
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Physics Lessons</h1>
-          <p className="text-sm text-muted-foreground">
-            Explore concepts through videos, simulations, and interactive content
-          </p>
-        </div>
-      </div>
 
-      {/* Main Content */}
-      <LessonBrowser />
-    </div>
+        {/* Main Content */}
+        <LessonBrowser />
+      </div>
+    </EnrollmentGate>
   )
 }

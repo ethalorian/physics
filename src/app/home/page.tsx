@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from 'react'
+import EnrollmentGate from '@/components/EnrollmentGate'
 import Link from 'next/link'
 import { decayingAverage } from '@/data/curriculum-types'
 
@@ -173,6 +174,7 @@ export default function HomePage() {
   )
 
   return (
+    <EnrollmentGate>
     <>
       <style>{STYLES}</style>
       <div className="hub-sky" />
@@ -419,5 +421,6 @@ export default function HomePage() {
         )}
       </div>
     </>
+    </EnrollmentGate>
   )
 }

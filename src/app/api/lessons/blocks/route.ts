@@ -3,6 +3,8 @@ import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
+import { getEffectiveContext } from '@/lib/effective-context'
+import { requireEnrolledStudent } from '@/lib/student-enrollment'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
 // Body: { lesson_id, block_id, block_type, response }
@@ -12,6 +14,11 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.email || !session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    // Enrollment gate: un-enrolled students can't write block responses
+    // (those would be orphan rows with no class to surface them in).
+    const ctx = await getEffectiveContext(session.user.email)
+    const gate = await requireEnrolledStudent(session.user.id, ctx.realRole)
+    if (gate) return gate
     const body = await request.json()
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
       return NextResponse.json({ error: 'Missing lesson_id, block_id, or response' }, { status: 400 })

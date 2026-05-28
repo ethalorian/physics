@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
+import { getEffectiveContext } from '@/lib/effective-context'
+import { requireEnrolledStudent } from '@/lib/student-enrollment'
 
 // POST /api/rewards/redeem  { reward_id }
 // Creates a 'pending' redemption (request → teacher approves). Reserves the points
@@ -12,6 +14,10 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.email || !session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    // Enrollment gate: no teacher = no one to approve the redemption.
+    const ctx = await getEffectiveContext(session.user.email)
+    const gate = await requireEnrolledStudent(session.user.id, ctx.realRole)
+    if (gate) return gate
     const body = await request.json()
     if (!body.reward_id) {
       return NextResponse.json({ error: 'Missing reward_id' }, { status: 400 })

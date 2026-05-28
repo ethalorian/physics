@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from 'react'
+import EnrollmentGate from '@/components/EnrollmentGate'
 
 interface Reward { id: string; name: string; description?: string; cost_points: number; category?: string }
 interface Redemption { id: string; reward_name: string; cost_points: number; status: string; created_at: string }
@@ -52,6 +53,7 @@ export default function StorePage() {
   const bal = balance?.balance ?? 0
 
   return (
+    <EnrollmentGate>
     <div className="max-w-3xl mx-auto p-4" style={{ color: C.indigo }}>
       <h1 className="text-xl font-medium mb-3">Points store</h1>
 
@@ -106,5 +108,6 @@ export default function StorePage() {
         </div>
       )}
     </div>
+    </EnrollmentGate>
   )
 }

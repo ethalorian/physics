@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getEffectiveContext } from '@/lib/effective-context'
+import { requireEnrolledStudent } from '@/lib/student-enrollment'
 
 // POST - Save vocabulary game score
 export async function POST(request: NextRequest) {
@@ -9,6 +11,11 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.email || !session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+    // Enrollment gate: un-enrolled students playing the arcade shouldn't
+    // accrue scores that the leaderboard or XP economy can use.
+    const ctx = await getEffectiveContext(session.user.email)
+    const gate = await requireEnrolledStudent(session.user.id, ctx.realRole)
+    if (gate) return gate
 
     const body = await request.json()
 

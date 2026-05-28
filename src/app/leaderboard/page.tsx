@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import EnrollmentGate from '@/components/EnrollmentGate'
 import { 
   Trophy, 
   Medal, 
@@ -152,6 +153,7 @@ export default function LeaderboardPage() {
   }
 
   return (
+    <EnrollmentGate>
     <div className="container mx-auto px-4 py-8 max-w-6xl space-y-8">
       {/* Header - consistent with other pages */}
       <div className="flex items-center gap-3 mb-6">
@@ -385,6 +387,7 @@ export default function LeaderboardPage() {
         </CardContent>
       </Card>
     </div>
+    </EnrollmentGate>
   )
 }
 

@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
+import { getEnrollment } from '@/lib/student-enrollment'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import LessonActivityTracker from '@/components/lessons/LessonActivityTracker'
+import EnrollmentGateScreen from '@/components/EnrollmentGateScreen'
 
 type SiblingRow = { id: string; slug: string; title: string; lesson_number: number }
 
@@ -99,6 +101,20 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
 
   if (!lesson) {
     notFound()
+  }
+
+  // Enrollment gate: an un-enrolled student must not see lesson content even
+  // in the initial HTML. Server-side check + early return so nothing leaks.
+  const sess = await auth()
+  if (sess?.user?.id && sess.user.email) {
+    const sctx = await getEffectiveContext(sess.user.email)
+    if (sctx.realRole === 'student') {
+      const enrollment = await getEnrollment(sess.user.id)
+      if (!enrollment.enrolled) {
+        const firstName = (sess.user.name ?? '').split(' ')[0]
+        return <EnrollmentGateScreen firstName={firstName} />
+      }
+    }
   }
 
   // Per-class release gate: block a student deep-linking a lesson their class

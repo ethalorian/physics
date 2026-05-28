@@ -95,6 +95,7 @@ export default function AdminHomePage() {
     .filter((g) => g.tools.length > 0)
   const [ov, setOv] = useState<Overview | null>(null)
   const [reqs, setReqs] = useState<{ email: string; name: string | null; note: string | null }[]>([])
+  const [orphanCount, setOrphanCount] = useState<number>(0)
 
   useEffect(() => {
     // App-wide numbers are admin-only; teachers don't fetch them.
@@ -102,6 +103,10 @@ export default function AdminHomePage() {
     fetch('/api/admin/overview')
       .then((r) => r.json())
       .then((d: { overview?: Overview }) => setOv(d.overview ?? null))
+      .catch(() => {})
+    fetch('/api/admin/orphans')
+      .then((r) => r.json())
+      .then((d: { count?: number }) => setOrphanCount(d.count ?? 0))
       .catch(() => {})
   }, [isAdmin])
 
@@ -166,6 +171,28 @@ export default function AdminHomePage() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* orphan students alert (signed in but not in any class) */}
+      {isAdmin && orphanCount > 0 && (
+        <Link
+          href="/admin/orphans"
+          className="block rounded-2xl border p-4 mb-7"
+          style={{ borderColor: 'color-mix(in oklch, var(--destructive) 35%, var(--border))', background: 'color-mix(in oklch, var(--destructive) 7%, var(--card))' }}
+        >
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="grid place-items-center" style={{ width: 36, height: 36, borderRadius: 10, background: 'color-mix(in oklch, var(--destructive) 18%, transparent)', color: 'var(--destructive)' }}>
+                <Users size={18} />
+              </div>
+              <div>
+                <div className="text-sm font-semibold">{orphanCount} {orphanCount === 1 ? 'student isn’t' : 'students aren’t'} in a class yet</div>
+                <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>They&rsquo;re signed in but no teacher has rostered them.</div>
+              </div>
+            </div>
+            <span className="text-xs font-semibold" style={{ color: 'var(--destructive)' }}>Review →</span>
+          </div>
+        </Link>
       )}
 
       {/* stats — app-wide numbers, admin only */}

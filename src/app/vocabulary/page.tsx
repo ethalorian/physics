@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import { useVocabulary } from '@/contexts/VocabularyContext'
 import { getUserRole } from '@/lib/permissions'
 import { Gamepad2, Flame, Star, Trophy, Zap, Shuffle, Brain, ArrowRight, Target, Crown } from 'lucide-react'
+import EnrollmentGate from '@/components/EnrollmentGate'
 
 interface HubData {
   level: number
@@ -62,6 +63,7 @@ export default function VocabularyArcade() {
   const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
 
   return (
+    <EnrollmentGate>
     <div className="max-w-5xl mx-auto p-5 space-y-6" style={{ color: 'var(--foreground)' }}>
       {/* header */}
       <div className="flex items-center gap-3">
@@ -163,5 +165,6 @@ export default function VocabularyArcade() {
         )}
       </div>
     </div>
+    </EnrollmentGate>
   )
 }
