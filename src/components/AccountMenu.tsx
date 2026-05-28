@@ -4,8 +4,10 @@
 // Nothing opens a dashboard directly from the avatar; "My progress" is the explicit
 // labeled trigger for the progress slide-over (see UserContextSheet).
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession, signOut } from 'next-auth/react'
+import Avatar from '@/components/avatar/Avatar'
+import type { MeBundle } from '@/app/api/avatar/me/route'
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger,
@@ -18,11 +20,35 @@ import { setViewAs, clearViewAs } from '@/lib/view-as-shared'
 import UserContextSheet from '@/components/UserContextSheet'
 import { useRouter } from 'next/navigation'
 
+// Module-level cache so a hard navigation between pages doesn't refetch the
+// avatar bundle every time the menu mounts. Wardrobe edits invalidate by
+// dispatching the 'avatar-updated' event below.
+let _meCache: MeBundle | null = null
+
 export default function AccountMenu() {
   const { data: session } = useSession()
   const [progressOpen, setProgressOpen] = useState(false)
   const { role, realRole, viewingAs } = useViewAs()
   const router = useRouter()
+  const [me, setMe] = useState<MeBundle | null>(_meCache)
+
+  useEffect(() => {
+    let cancelled = false
+    const load = () => {
+      fetch('/api/avatar/me')
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d: MeBundle | null) => {
+          if (cancelled || !d) return
+          _meCache = d
+          setMe(d)
+        })
+        .catch(() => {})
+    }
+    if (!_meCache) load()
+    const onUpdate = () => load()
+    window.addEventListener('avatar-updated', onUpdate)
+    return () => { cancelled = true; window.removeEventListener('avatar-updated', onUpdate) }
+  }, [])
 
   const handleSignOut = async () => {
     try {
@@ -40,7 +66,14 @@ export default function AccountMenu() {
             variant="ghost"
             className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background"
           >
-            {session?.user?.image ? (
+            {me?.use_custom_avatar && me?.setup_completed ? (
+              // Custom Mii — clipped to a circle to fit the chrome slot.
+              // The avatar SVG is taller than wide, so size by the smaller axis
+              // and center via the wrapping <div>'s flex layout.
+              <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center" style={{ background: 'var(--secondary)' }}>
+                <Avatar traits={me.traits} equipped={me.equipped} items={me.equipped_items} size={56} />
+              </div>
+            ) : session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={session.user.image}

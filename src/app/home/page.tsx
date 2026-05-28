@@ -140,6 +140,10 @@ export default function HomePage() {
   const [data, setData] = useState<HomeData | null>(null)
   const [loading, setLoading] = useState(true)
   const [domain, setDomain] = useState<Domain>('reasoning')
+  // Onboarding nudge: prompt the student to set up their face + leaderboard
+  // name the first time they sign in. Null = haven't checked yet, so we don't
+  // flash the banner on initial render.
+  const [needsProfileSetup, setNeedsProfileSetup] = useState<boolean | null>(null)
 
   useEffect(() => {
     fetch('/api/home')
@@ -151,6 +155,16 @@ export default function HomePage() {
         if (firstWithData) setDomain(firstWithData.key)
       })
       .catch(() => setLoading(false))
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/avatar/me')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { setup_completed?: boolean; alias?: string | null } | null) => {
+        if (!d) { setNeedsProfileSetup(false); return }
+        setNeedsProfileSetup(!d.setup_completed || !d.alias)
+      })
+      .catch(() => setNeedsProfileSetup(false))
   }, [])
 
   const climbForDomain = useMemo(
@@ -171,6 +185,19 @@ export default function HomePage() {
             <h1 className="font-semibold tracking-tight" style={{ fontSize: 26 }}>
               {loading ? 'Welcome back.' : `Welcome back, ${data?.student?.name ?? 'there'}.`}
             </h1>
+            {needsProfileSetup && (
+              <Link
+                href="/avatar"
+                className="inline-flex items-center gap-2 mt-3 rounded-xl px-3 py-2 text-sm font-medium"
+                style={{
+                  background: 'color-mix(in oklch, var(--primary) 14%, transparent)',
+                  color: 'var(--primary)',
+                  border: '1px solid color-mix(in oklch, var(--primary) 40%, var(--border))',
+                }}
+              >
+                Set up your profile &mdash; pick your Mii and a leaderboard name &rarr;
+              </Link>
+            )}
             <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
               Your mission for today is ready. Where do you want to go?
             </p>

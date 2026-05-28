@@ -18,6 +18,8 @@ interface Bundle {
   balance: number
   lifetimeEarned: number
   isStaff?: boolean
+  alias: string | null
+  use_custom_avatar: boolean
 }
 
 type Tab = 'face' | 'items'
@@ -35,7 +37,12 @@ export default function AvatarPage() {
   const load = useCallback(() => {
     fetch('/api/avatar')
       .then((r) => r.json())
-      .then((d: Bundle) => setBundle(d))
+      .then((d: Bundle) => {
+        setBundle(d)
+        // Tell the chrome AccountMenu (and any other listener) to refresh its
+        // cached MeBundle — alias, traits, or equipped items may have changed.
+        if (typeof window !== 'undefined') window.dispatchEvent(new Event('avatar-updated'))
+      })
       .catch(() => {})
   }, [])
   useEffect(() => { load() }, [load])
@@ -66,7 +73,9 @@ export default function AvatarPage() {
       body: JSON.stringify({ traits: { [key]: value } }),
     }).catch(() => {})
     // No load() here — traits don't change catalog state, and reloading was
-    // what caused the tab to snap away mid-edit.
+    // what caused the tab to snap away mid-edit. Still nudge the chrome to
+    // refresh its cached Mii so the dropdown avatar tracks the carousel.
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event('avatar-updated'))
   }
 
   const equip = async (slot: ItemSlot, slug: string | null) => {
@@ -153,6 +162,11 @@ export default function AvatarPage() {
 
           {tab === 'face' && (
             <div className="flex flex-col gap-3">
+              <AccountSection
+                alias={bundle.alias}
+                useCustomAvatar={bundle.use_custom_avatar}
+                onSaved={load}
+              />
               {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => (
                 <TraitCarousel
                   key={key}
@@ -195,6 +209,101 @@ export default function AvatarPage() {
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+function AccountSection({ alias, useCustomAvatar, onSaved }: { alias: string | null; useCustomAvatar: boolean; onSaved: () => void }) {
+  const [draft, setDraft] = useState<string>(alias ?? '')
+  const [err, setErr] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [savedFlash, setSavedFlash] = useState(false)
+  // Re-sync the input when the server gives us a fresh alias (e.g. after first load
+  // or after another tab updates it). Without this, the input stays empty even when
+  // the server already has a saved alias.
+  useEffect(() => { setDraft(alias ?? '') }, [alias])
+
+  const saveAlias = async () => {
+    const trimmed = draft.trim()
+    // No change? skip the round-trip.
+    if (trimmed === (alias ?? '')) return
+    setSaving(true); setErr(null)
+    const res = await fetch('/api/avatar/profile', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alias: trimmed === '' ? null : trimmed }),
+    }).catch(() => null)
+    setSaving(false)
+    if (!res?.ok) {
+      const body = await res?.json().catch(() => null) as { error?: string } | null
+      setErr(body?.error ?? 'Could not save')
+      return
+    }
+    setSavedFlash(true)
+    setTimeout(() => setSavedFlash(false), 1500)
+    onSaved()
+  }
+
+  const togglePref = async () => {
+    await fetch('/api/avatar/profile', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ use_custom_avatar: !useCustomAvatar }),
+    }).catch(() => {})
+    onSaved()
+  }
+
+  return (
+    <div
+      className="rounded-xl border p-3 mb-1"
+      style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
+    >
+      <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Account</div>
+
+      {/* Alias */}
+      <label className="block mb-2">
+        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Leaderboard name (shown to classmates only)</span>
+        <input
+          type="text"
+          value={draft}
+          maxLength={32}
+          placeholder="Pick a fun name"
+          onChange={(e) => setDraft(e.target.value)}
+          onBlur={saveAlias}
+          onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
+          className="mt-1 w-full text-sm rounded-md px-2 py-1.5"
+          style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}
+        />
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-[11px]" style={{ color: err ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
+            {err ?? `${draft.length}/32 — letters, digits, spaces, . _ -`}
+          </span>
+          {(saving || savedFlash) && (
+            <span className="text-[11px]" style={{ color: savedFlash ? 'var(--success)' : 'var(--muted-foreground)' }}>
+              {saving ? 'Saving…' : 'Saved'}
+            </span>
+          )}
+        </div>
+      </label>
+
+      {/* Avatar preference */}
+      <button
+        type="button"
+        onClick={togglePref}
+        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 mt-2"
+        style={{ background: 'transparent', border: '1px solid var(--border)', cursor: 'pointer' }}
+      >
+        <span className="text-xs text-left" style={{ color: 'var(--foreground)' }}>
+          Show my Mii instead of my Google photo
+        </span>
+        <span
+          className="text-[11px] font-semibold rounded-full px-2 py-0.5"
+          style={{
+            background: useCustomAvatar ? 'var(--success)' : 'var(--secondary)',
+            color: useCustomAvatar ? 'var(--card)' : 'var(--muted-foreground)',
+          }}
+        >
+          {useCustomAvatar ? 'ON' : 'OFF'}
+        </span>
+      </button>
     </div>
   )
 }

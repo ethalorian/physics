@@ -101,18 +101,21 @@ export async function GET(request: NextRequest) {
       userData.activities.assignments += 1
     })
 
-    // Get student names and images from roster
+    // Get student names + aliases + images from roster. Alias is the
+    // student's chosen leaderboard display name (privacy: peers see the
+    // alias, not their real Aspen name).
     const userIds = Array.from(userDataMap.keys())
     if (userIds.length > 0) {
       const { data: students } = await supabaseAdmin
         .from('students')
-        .select('id, name, email, profile_image')
+        .select('id, name, alias, email, profile_image')
         .in('id', userIds)
 
-      students?.forEach(student => {
+      students?.forEach((student: { id: string; name: string | null; alias: string | null; email: string; profile_image: string | null }) => {
         const userData = userDataMap.get(student.id)
         if (userData) {
-          userData.name = student.name
+          // Prefer alias for the peer-facing leaderboard; fall back to real name.
+          userData.name = student.alias || student.name || undefined
           userData.image = student.profile_image
         }
       })

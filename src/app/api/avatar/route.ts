@@ -30,16 +30,25 @@ export async function GET() {
     const ctx = await getEffectiveContext(session.user.email)
     const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
 
-    // 1) Avatar row (traits + equipped). Lazy-created on first read.
-    const { data: avatarRow } = await supabaseAdmin
-      .from('student_avatars')
-      .select('traits, equipped, setup_completed')
-      .eq('user_id', userId)
-      .maybeSingle()
+    // 1) Avatar row (traits + equipped) + alias (separate column on students).
+    const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
+      supabaseAdmin
+        .from('student_avatars')
+        .select('traits, equipped, setup_completed, use_custom_avatar')
+        .eq('user_id', userId)
+        .maybeSingle(),
+      supabaseAdmin
+        .from('students')
+        .select('alias')
+        .eq('google_user_id', userId)
+        .maybeSingle(),
+    ])
 
     const traits = avatarRow?.setup_completed ? (avatarRow.traits as Record<string, string>) : null
     const equipped = (avatarRow?.equipped ?? {}) as EquippedItems
     const setup_completed = !!avatarRow?.setup_completed
+    const use_custom_avatar = !!avatarRow?.use_custom_avatar
+    const alias = (studentRow as { alias?: string | null } | null)?.alias ?? null
 
     // 2) Catalog + ownership in parallel. Skip XP balance for staff — they
     //    don't have an economy and items are free for them.
@@ -102,6 +111,8 @@ export async function GET() {
       balance: balance.balance,
       lifetimeEarned: balance.lifetimeEarned,
       isStaff,
+      alias,
+      use_custom_avatar,
     })
   } catch (error) {
     console.error('Error in GET /api/avatar:', error)

@@ -78,14 +78,17 @@ export async function GET() {
     for (const r of week) ptsByUser.set(r.user_id, (ptsByUser.get(r.user_id) ?? 0) + (r.score ?? 0))
 
     const ranked = [...ptsByUser.entries()].map(([id, points]) => ({ id, points })).sort((a, b) => b.points - a.points)
+    // Peer-facing leaderboard: prefer the student's chosen alias, fall back
+    // to their real name. Teachers see real names elsewhere; this surface is
+    // student-to-student.
     const nameById = new Map<string, string>()
     if (ranked.length > 0) {
       const { data: studs } = await supabaseAdmin
         .from('students')
-        .select('google_user_id, name')
+        .select('google_user_id, name, alias')
         .in('google_user_id', ranked.map((r) => r.id))
-      for (const s of (studs ?? []) as { google_user_id: string | null; name: string | null }[]) {
-        if (s.google_user_id) nameById.set(s.google_user_id, s.name ?? 'Student')
+      for (const s of (studs ?? []) as { google_user_id: string | null; name: string | null; alias: string | null }[]) {
+        if (s.google_user_id) nameById.set(s.google_user_id, s.alias || s.name || 'Student')
       }
     }
     const myRank = ranked.findIndex((r) => r.id === uid) + 1 || null

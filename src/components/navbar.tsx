@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Microscope, Gift, TrendingUp, LayoutGrid } from "lucide-react"
+import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Gift, LayoutGrid } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -63,14 +63,15 @@ export default function Navbar() {
       return viewingAs ? staff.filter((i) => i.href !== "/admin/dashboard") : staff
     }
 
+    // Student nav: orient → work → play → compete → spend. Simulations are
+    // reached through lesson blocks; My Growth lives in the avatar dropdown
+    // ("My progress"), so neither needs a top-level link.
     return [
       { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
-      { href: "/simulations", label: "Simulations", icon: Microscope },
-      { href: "/vocabulary", label: "Games", icon: Gamepad2 },
-      { href: "/dashboard/growth", label: "My Growth", icon: TrendingUp },
-      { href: "/store", label: "Store", icon: Gift },
+      { href: "/vocabulary", label: "Arcade", icon: Gamepad2 },
       { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
+      { href: "/store", label: "Store", icon: Gift },
     ]
   }
 
