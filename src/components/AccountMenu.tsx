@@ -12,15 +12,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { BarChart3, LogOut, Eye, EyeOff } from 'lucide-react'
+import { BarChart3, LogOut, Eye, EyeOff, Smile } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
 import { setViewAs, clearViewAs } from '@/lib/view-as-shared'
 import UserContextSheet from '@/components/UserContextSheet'
+import { useRouter } from 'next/navigation'
 
 export default function AccountMenu() {
   const { data: session } = useSession()
   const [progressOpen, setProgressOpen] = useState(false)
   const { role, realRole, viewingAs } = useViewAs()
+  const router = useRouter()
 
   const handleSignOut = async () => {
     try {
@@ -66,6 +68,12 @@ export default function AccountMenu() {
             <BarChart3 className="h-4 w-4 mr-2" />
             My progress
           </DropdownMenuItem>
+          {role === 'student' && (
+            <DropdownMenuItem onSelect={() => router.push('/avatar')}>
+              <Smile className="h-4 w-4 mr-2" />
+              My avatar
+            </DropdownMenuItem>
+          )}
           {realRole === 'admin' && !viewingAs && (
             <DropdownMenuItem onSelect={() => { if (session?.user?.email) { setViewAs(session.user.email); window.location.reload() } }}>
               <Eye className="h-4 w-4 mr-2" />
