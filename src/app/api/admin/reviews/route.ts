@@ -8,7 +8,7 @@ import { getEffectiveContext } from '@/lib/effective-context'
 // student who generated them until the admin APPROVES one — approval puts it in
 // the shared library served to every student weak on that target.
 
-type Row = { id: string; target_id: string; reteach: string; questions: unknown; status: string; created_by: string | null; created_at: string }
+type Row = { id: string; target_id: string; reteach: string; blocks: unknown; questions: unknown; status: string; created_by: string | null; created_at: string }
 
 export async function GET() {
   try {
@@ -19,7 +19,7 @@ export async function GET() {
 
     const { data } = await supabaseAdmin
       .from('target_reviews')
-      .select('id, target_id, reteach, questions, status, created_by, created_at')
+      .select('id, target_id, reteach, blocks, questions, status, created_by, created_at')
       .order('created_at', { ascending: false })
     const all = (data ?? []) as Row[]
     const pending = all.filter((r) => r.status === 'pending')
@@ -44,7 +44,10 @@ export async function GET() {
   }
 }
 
-// POST { id, decision: 'approve' | 'reject' }
+// POST { id, decision: 'approve' | 'reject', blocks? }
+// When approving, the admin may pass an edited `blocks` array (e.g. they
+// removed a wrong diagram, reordered, or fixed a prose paragraph). We persist
+// what they send so the shared variant matches what they actually approved.
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
@@ -55,14 +58,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const id: string | undefined = body.id
     const decision: 'approve' | 'reject' = body.decision
+    const editedBlocks: unknown = body.blocks
     if (!id || (decision !== 'approve' && decision !== 'reject')) {
       return NextResponse.json({ error: 'id and decision (approve|reject) required' }, { status: 400 })
     }
 
-    const { error } = await supabaseAdmin
-      .from('target_reviews')
-      .update({ status: decision === 'approve' ? 'approved' : 'rejected', reviewed_by: ctx.realEmail, reviewed_at: new Date().toISOString() })
-      .eq('id', id)
+    const update: Record<string, unknown> = {
+      status: decision === 'approve' ? 'approved' : 'rejected',
+      reviewed_by: ctx.realEmail,
+      reviewed_at: new Date().toISOString(),
+    }
+    // Trust the admin's edited blocks on approve (the admin IS the gate).
+    if (decision === 'approve' && Array.isArray(editedBlocks)) update.blocks = editedBlocks
+
+    const { error } = await supabaseAdmin.from('target_reviews').update(update).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
   } catch (error) {

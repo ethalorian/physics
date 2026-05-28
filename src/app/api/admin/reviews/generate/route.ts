@@ -2,7 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
-import { generateTargetReview } from '@/lib/generate-review'
+import { generateTargetReview, type SimOption } from '@/lib/generate-review'
+
+async function loadSimCatalog(unitId: string | null | undefined): Promise<SimOption[]> {
+  if (!unitId) return []
+  const { data } = await supabaseAdmin
+    .from('simulations')
+    .select('slug, title, description, topic, sort_order')
+    .eq('unit', unitId)
+    .eq('published', true)
+    .order('sort_order', { ascending: true, nullsFirst: false })
+  return ((data ?? []) as { slug: string; title: string; description: string | null; topic: string | null }[])
+    .map((s) => ({ slug: s.slug, title: s.title, description: s.description ?? undefined, topic: s.topic ?? undefined }))
+}
 
 // POST { target_id } — ADMIN-ONLY: seeds the review library by generating a
 // review for a learning target. It lands as 'pending' (same approval gate), so
@@ -21,18 +33,20 @@ export async function POST(request: NextRequest) {
 
     const { data: tRow } = await supabaseAdmin
       .from('learning_targets')
-      .select('statement')
+      .select('statement, unit_id')
       .eq('id', targetId)
       .maybeSingle()
-    const statement = (tRow as { statement?: string } | null)?.statement
+    const tInfo = tRow as { statement?: string; unit_id?: string } | null
+    const statement = tInfo?.statement
     if (!statement) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
 
-    const gen = await generateTargetReview(statement)
+    const sims = await loadSimCatalog(tInfo?.unit_id)
+    const gen = await generateTargetReview(statement, sims)
     if (gen.error || !gen.review) return NextResponse.json({ error: gen.error ?? 'Generation failed' }, { status: 502 })
 
     const { error } = await supabaseAdmin
       .from('target_reviews')
-      .insert({ target_id: targetId, reteach: gen.review.reteach, questions: gen.review.questions, status: 'pending', created_by: ctx.realEmail })
+      .insert({ target_id: targetId, reteach: gen.review.reteach, blocks: gen.review.blocks, questions: gen.review.questions, status: 'pending', created_by: ctx.realEmail })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true })

@@ -1,12 +1,18 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, Check, X, Sparkles } from 'lucide-react'
+import type { ContentBlock } from '@/data/content-blocks'
+
+// BlockRenderer pulls in recharts, react-pdf, sims, etc. — keep it lazy so the
+// review page is light when blocks aren't present.
+const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'), { ssr: false, loading: () => null })
 
 interface Q { q: string; choices: string[]; answerIndex: number; explanation: string }
-interface Review { id: string; reteach: string; questions: Q[]; shared: boolean }
+interface Review { id: string; reteach: string; blocks: ContentBlock[] | null; questions: Q[]; shared: boolean }
 
 export default function ReviewPage() {
   const params = useParams<{ targetId: string }>()
@@ -50,10 +56,16 @@ export default function ReviewPage() {
             <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Skill review</span>
           </div>
 
-          {/* re-teach blurb */}
-          <div className="rounded-2xl border p-5 mb-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <p className="text-sm" style={{ lineHeight: 1.6 }}>{review.reteach}</p>
-          </div>
+          {/* Rich re-teach: blocks if present, else fallback summary text. */}
+          {review.blocks && review.blocks.length > 0 ? (
+            <div className="mb-5">
+              <BlockRenderer blocks={review.blocks} lessonId={`review-${review.id}`} />
+            </div>
+          ) : (
+            <div className="rounded-2xl border p-5 mb-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <p className="text-sm" style={{ lineHeight: 1.6 }}>{review.reteach}</p>
+            </div>
+          )}
 
           {!review.shared && (
             <p className="text-xs mb-4 rounded-lg px-3 py-2" style={{ color: 'var(--reward-foreground)', background: 'color-mix(in oklch, var(--reward) 16%, transparent)' }}>

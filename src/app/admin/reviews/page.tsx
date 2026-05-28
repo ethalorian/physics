@@ -1,13 +1,17 @@
 "use client"
 
 import { useEffect, useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useViewAs } from '@/lib/use-view-as'
-import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2 } from 'lucide-react'
+import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2, ArrowUp, ArrowDown, Trash2, Edit3 } from 'lucide-react'
+import type { ContentBlock } from '@/data/content-blocks'
+
+const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'), { ssr: false, loading: () => null })
 
 interface Q { q: string; choices: string[]; answerIndex: number; explanation: string }
-interface Review { id: string; target_id: string; targetStatement: string; reteach: string; questions: Q[]; created_by: string | null; created_at: string }
+interface Review { id: string; target_id: string; targetStatement: string; reteach: string; blocks: ContentBlock[] | null; questions: Q[]; created_by: string | null; created_at: string }
 interface UnitOpt { id: string; name: string }
 interface TargetOpt { id: string; statement: string; domain: string }
 
@@ -24,6 +28,12 @@ export default function ReviewQueuePage() {
   const [pending, setPending] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState<string | null>(null)
+  // Per-review edited block arrays. Populated lazily the first time the admin
+  // touches a block (move / remove / edit). On approve, the edited array is
+  // persisted in place of the original.
+  const [edits, setEdits] = useState<Record<string, ContentBlock[]>>({})
+  // Per-block markdown-edit toggles: key `${reviewId}|${blockId}`.
+  const [editing, setEditing] = useState<Set<string>>(new Set())
 
   // Seed panel state
   const [units, setUnits] = useState<UnitOpt[]>([])
@@ -111,13 +121,51 @@ export default function ReviewQueuePage() {
     load()
   }
 
-  const decide = async (id: string, decision: 'approve' | 'reject') => {
-    setBusy(id)
+  // Edit helpers — mutate the per-review edited array, seeding from the
+  // original on first touch so the admin's tweaks are local until they approve.
+  const blocksFor = (rv: Review): ContentBlock[] => edits[rv.id] ?? (rv.blocks ?? [])
+  const touch = (rv: Review, mutate: (blocks: ContentBlock[]) => ContentBlock[]) => {
+    setEdits((m) => ({ ...m, [rv.id]: mutate(blocksFor(rv)) }))
+  }
+  const moveBlock = (rv: Review, idx: number, dir: -1 | 1) => {
+    touch(rv, (bs) => {
+      const j = idx + dir
+      if (j < 0 || j >= bs.length) return bs
+      const next = [...bs]
+      ;[next[idx], next[j]] = [next[j], next[idx]]
+      return next
+    })
+  }
+  const removeBlock = (rv: Review, idx: number) => {
+    touch(rv, (bs) => bs.filter((_, i) => i !== idx))
+  }
+  const setBlockMarkdown = (rv: Review, idx: number, markdown: string) => {
+    touch(rv, (bs) => bs.map((b, i) => (i === idx ? ({ ...b, markdown } as ContentBlock) : b)))
+  }
+  const toggleEditing = (rvId: string, blockId: string) => {
+    const key = `${rvId}|${blockId}`
+    setEditing((s) => {
+      const next = new Set(s)
+      if (next.has(key)) next.delete(key); else next.add(key)
+      return next
+    })
+  }
+
+  const decide = async (rv: Review, decision: 'approve' | 'reject') => {
+    setBusy(rv.id)
+    const body: Record<string, unknown> = { id: rv.id, decision }
+    // Only send blocks when approving AND the admin touched them.
+    if (decision === 'approve' && edits[rv.id]) body.blocks = edits[rv.id]
     await fetch('/api/admin/reviews', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, decision }),
+      body: JSON.stringify(body),
     }).catch(() => {})
     setBusy(null)
+    setEdits((m) => {
+      const next = { ...m }
+      delete next[rv.id]
+      return next
+    })
     load()
   }
 
@@ -221,9 +269,63 @@ export default function ReviewQueuePage() {
             <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>SKILL</div>
             <div className="font-semibold text-sm mb-3">{rv.targetStatement}</div>
 
+            {/* Re-teach: a rich ordered block array (prose, callout, diagram,
+                graph, sim). Per-block toolbar (reorder / remove / edit text)
+                lets the admin curate before sharing; the underlying block is
+                rendered with the same BlockRenderer students will see. */}
             <div className="rounded-lg p-3 mb-3" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
-              <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>RE-TEACH</div>
-              <p className="text-sm" style={{ lineHeight: 1.55 }}>{rv.reteach}</p>
+              <div className="text-xs font-semibold mb-2" style={{ color: 'var(--muted-foreground)' }}>RE-TEACH (preview — edit before approving)</div>
+              {blocksFor(rv).length === 0 ? (
+                <p className="text-sm italic" style={{ color: 'var(--muted-foreground)' }}>
+                  {rv.reteach || 'No re-teach blocks. Reject and regenerate.'}
+                </p>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {blocksFor(rv).map((b, bi) => {
+                    const list = blocksFor(rv)
+                    const editable = b.type === 'prose' || b.type === 'callout'
+                    const editKey = `${rv.id}|${b.id}`
+                    const isEditing = editing.has(editKey)
+                    const labelMap: Record<string, string> = {
+                      prose: 'Prose', callout: 'Callout', diagram: 'Diagram', graph: 'Graph', sim_embed: 'Simulation',
+                    }
+                    return (
+                      <div key={b.id} className="rounded-lg border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+                        {/* Per-block toolbar */}
+                        <div className="flex items-center gap-1 px-2 py-1 border-b" style={{ borderColor: 'var(--border)' }}>
+                          <span className="text-[10px] uppercase tracking-widest font-semibold" style={{ color: 'var(--muted-foreground)' }}>{labelMap[b.type] ?? b.type}</span>
+                          <div className="ml-auto flex items-center gap-1">
+                            <button title="Move up" disabled={bi === 0} onClick={() => moveBlock(rv, bi, -1)} className="p-1 rounded disabled:opacity-30" style={{ background: 'transparent', border: 'none', color: 'var(--muted-foreground)', cursor: bi === 0 ? 'default' : 'pointer' }}><ArrowUp size={13} /></button>
+                            <button title="Move down" disabled={bi === list.length - 1} onClick={() => moveBlock(rv, bi, 1)} className="p-1 rounded disabled:opacity-30" style={{ background: 'transparent', border: 'none', color: 'var(--muted-foreground)', cursor: bi === list.length - 1 ? 'default' : 'pointer' }}><ArrowDown size={13} /></button>
+                            {editable && (
+                              <button title={isEditing ? 'Done' : 'Edit text'} onClick={() => toggleEditing(rv.id, b.id)} className="p-1 rounded" style={{ background: 'transparent', border: 'none', color: isEditing ? 'var(--primary)' : 'var(--muted-foreground)', cursor: 'pointer' }}>
+                                {isEditing ? <Check size={13} /> : <Edit3 size={13} />}
+                              </button>
+                            )}
+                            <button title="Remove this block" onClick={() => removeBlock(rv, bi)} className="p-1 rounded" style={{ background: 'transparent', border: 'none', color: 'var(--destructive)', cursor: 'pointer' }}><Trash2 size={13} /></button>
+                          </div>
+                        </div>
+                        {/* Block body — either inline-editing or rendered preview */}
+                        <div className="p-2">
+                          {editable && isEditing ? (
+                            <textarea
+                              value={(b as { markdown?: string }).markdown ?? ''}
+                              onChange={(e) => setBlockMarkdown(rv, bi, e.target.value)}
+                              className="w-full text-sm rounded-md p-2"
+                              style={{ minHeight: 80, background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)', fontFamily: 'inherit' }}
+                            />
+                          ) : (
+                            <BlockRenderer blocks={[b]} lessonId={`review-approval-${rv.id}`} />
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
+              {edits[rv.id] && (
+                <p className="text-[11px] mt-2" style={{ color: 'var(--primary)' }}>You&rsquo;ve edited these blocks &mdash; they&rsquo;ll save when you approve.</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-2.5 mb-4">
@@ -243,12 +345,12 @@ export default function ReviewQueuePage() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button onClick={() => decide(rv.id, 'approve')} disabled={busy === rv.id}
+              <button onClick={() => decide(rv, 'approve')} disabled={busy === rv.id}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-1.5 disabled:opacity-50"
                 style={{ background: 'var(--success)', color: 'var(--card)', border: 'none', cursor: 'pointer' }}>
                 <Check size={15} /> Approve & share
               </button>
-              <button onClick={() => decide(rv.id, 'reject')} disabled={busy === rv.id}
+              <button onClick={() => decide(rv, 'reject')} disabled={busy === rv.id}
                 className="inline-flex items-center gap-1.5 text-sm font-medium rounded-lg px-3 py-1.5 disabled:opacity-50"
                 style={{ background: 'transparent', color: 'var(--muted-foreground)', border: '1px solid var(--border)', cursor: 'pointer' }}>
                 <X size={15} /> Reject

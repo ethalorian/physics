@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { generateTargetReview, type ReviewQ } from '@/lib/generate-review'
+import { generateTargetReview, type ReviewQ, type ReteachBlock, type SimOption } from '@/lib/generate-review'
 
 // GET /api/reviews/serve?target_id=
 // Serve a targeted review for a learning target the student is weak on:
@@ -11,7 +11,21 @@ import { generateTargetReview, type ReviewQ } from '@/lib/generate-review'
 //  3. else Claude-generate a fresh review, store it as 'pending', and serve it.
 // Approved reviews are the shared library; pending ones await teacher approval.
 
-type Review = { id: string; reteach: string; questions: ReviewQ[]; status: string; shared: boolean }
+type Review = { id: string; reteach: string; blocks: ReteachBlock[] | null; questions: ReviewQ[]; status: string; shared: boolean }
+
+// Pull the unit's published simulations as a candidate catalog the generator
+// can pick from. Scoped by unit so the choice is at least topic-adjacent.
+async function loadSimCatalog(unitId: string | null | undefined): Promise<SimOption[]> {
+  if (!unitId) return []
+  const { data } = await supabaseAdmin
+    .from('simulations')
+    .select('slug, title, description, topic, sort_order')
+    .eq('unit', unitId)
+    .eq('published', true)
+    .order('sort_order', { ascending: true, nullsFirst: false })
+  return ((data ?? []) as { slug: string; title: string; description: string | null; topic: string | null }[])
+    .map((s) => ({ slug: s.slug, title: s.title, description: s.description ?? undefined, topic: s.topic ?? undefined }))
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -23,16 +37,17 @@ export async function GET(request: NextRequest) {
 
     const { data: tRow } = await supabaseAdmin
       .from('learning_targets')
-      .select('statement, domain')
+      .select('statement, domain, unit_id')
       .eq('id', targetId)
       .maybeSingle()
-    const statement = (tRow as { statement?: string } | null)?.statement
+    const tInfo = tRow as { statement?: string; unit_id?: string } | null
+    const statement = tInfo?.statement
     if (!statement) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
 
     // 1. Approved variant (shared) — rotate by picking a random one.
     const { data: approved } = await supabaseAdmin
       .from('target_reviews')
-      .select('id, reteach, questions, status')
+      .select('id, reteach, blocks, questions, status')
       .eq('target_id', targetId)
       .eq('status', 'approved')
     const approvedList = (approved ?? []) as Review[]
@@ -44,7 +59,7 @@ export async function GET(request: NextRequest) {
     // 2. This student's own pending generation.
     const { data: mine } = await supabaseAdmin
       .from('target_reviews')
-      .select('id, reteach, questions, status')
+      .select('id, reteach, blocks, questions, status')
       .eq('target_id', targetId)
       .eq('status', 'pending')
       .eq('created_by', email)
@@ -53,14 +68,15 @@ export async function GET(request: NextRequest) {
       .maybeSingle()
     if (mine) return NextResponse.json({ review: { ...(mine as Review), shared: false } })
 
-    // 3. Generate a fresh review with Claude, store pending.
-    const gen = await generateTargetReview(statement)
+    // 3. Generate a fresh review with Claude (with the unit's sim catalog), store pending.
+    const sims = await loadSimCatalog(tInfo?.unit_id)
+    const gen = await generateTargetReview(statement, sims)
     if (gen.error || !gen.review) return NextResponse.json({ error: gen.error ?? 'Could not generate a review.' }, { status: 502 })
 
     const { data: inserted, error } = await supabaseAdmin
       .from('target_reviews')
-      .insert({ target_id: targetId, reteach: gen.review.reteach, questions: gen.review.questions, status: 'pending', created_by: email })
-      .select('id, reteach, questions, status')
+      .insert({ target_id: targetId, reteach: gen.review.reteach, blocks: gen.review.blocks, questions: gen.review.questions, status: 'pending', created_by: email })
+      .select('id, reteach, blocks, questions, status')
       .single()
     if (error || !inserted) return NextResponse.json({ error: 'Could not save the review.' }, { status: 500 })
 
