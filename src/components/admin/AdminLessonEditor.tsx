@@ -45,8 +45,27 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
     lesson_number: lesson.lesson_number || 1,
     estimated_time: lesson.estimated_time || 30,
     objectives: lesson.objectives || [],
+    hero_image: (lesson as { hero_image?: string | null }).hero_image || '',
     published: lesson.published || false
   })
+  const [heroBusy, setHeroBusy] = useState(false)
+
+  const uploadHero = async (file: File) => {
+    setHeroBusy(true)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', 'heroes')
+      const res = await fetch('/api/media/upload', { method: 'POST', body: fd })
+      const d = await res.json()
+      if (res.ok) setFormData((p) => ({ ...p, hero_image: d.url }))
+      else setError(d.error || 'Hero image upload failed')
+    } catch {
+      setError('Could not upload the hero image')
+    } finally {
+      setHeroBusy(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,6 +85,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
           lesson_number: formData.lesson_number,
           estimated_time: formData.estimated_time,
           objectives: formData.objectives,
+          hero_image: formData.hero_image || null,
           published: formData.published
         })
       })
@@ -318,6 +338,32 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                   rows={3}
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#4A1A4A]">
+                  Hero image (optional — a banner shown at the top of the lesson)
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    value={formData.hero_image}
+                    onChange={(e) => setFormData({ ...formData, hero_image: e.target.value })}
+                    placeholder="Paste an image URL, or upload…"
+                    className="flex-1 rounded-md border px-3 py-2 text-sm"
+                  />
+                  <label className="text-xs font-semibold rounded-md border px-3 py-2 whitespace-nowrap cursor-pointer" style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}>
+                    {heroBusy ? 'Uploading…' : 'Upload'}
+                    <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif" disabled={heroBusy}
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadHero(f); e.target.value = '' }} style={{ display: 'none' }} />
+                  </label>
+                  {formData.hero_image && (
+                    <button type="button" onClick={() => setFormData({ ...formData, hero_image: '' })} className="text-xs text-gray-500 underline">Remove</button>
+                  )}
+                </div>
+                {formData.hero_image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={formData.hero_image} alt="" style={{ marginTop: 4, maxHeight: 120, borderRadius: 8, border: '1px solid var(--border)' }} />
+                )}
               </div>
 
               <div className="flex items-center gap-2">

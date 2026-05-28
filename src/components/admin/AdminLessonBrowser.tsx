@@ -34,7 +34,6 @@ import Link from 'next/link'
 import { Textarea } from '@/components/ui/textarea'
 import { supabase } from '@/lib/supabase'
 import { useSession } from 'next-auth/react'
-import MediaGenerator from '@/components/admin/MediaGenerator'
 
 interface Lesson {
   id: string
@@ -341,16 +340,6 @@ export default function AdminLessonBrowser() {
           <p className="text-muted-foreground">Create and manage physics lessons - All functionality in one place</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/admin/media-generator">
-            <Button 
-              variant="outline"
-              size="lg" 
-              className="gap-2 border-cyan-300 text-cyan-700 hover:bg-cyan-50"
-            >
-              <Sparkles className="h-5 w-5" />
-              AI Media Studio
-            </Button>
-          </Link>
           <Link href="/admin/reading-generator">
             <Button 
               variant="outline"

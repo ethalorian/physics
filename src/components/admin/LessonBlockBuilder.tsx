@@ -9,7 +9,7 @@ import FigureGraph from '@/components/blocks/FigureGraph'
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
 // ---------------------------------------------------------------------------
-type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen'
+type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload'
 interface FieldDef { key: string; label: string; kind: FieldKind; options?: string[]; placeholder?: string }
 interface BlockDef { type: string; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
@@ -50,7 +50,7 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'equation_visualizer', label: 'Equation visualizer', group: 'Teach', fields: [] },
   { type: 'lesson_vocab', label: 'Lesson vocabulary', group: 'Teach', fields: [] },
   { type: 'figure', label: 'Figure / image', group: 'Teach', fields: [
-    { key: 'src', label: 'Image URL', kind: 'text', placeholder: 'https://…' },
+    { key: 'src', label: 'Image — upload a file or paste a URL', kind: 'imageupload', placeholder: 'https://…' },
     { key: 'alt', label: 'Alt text (what the image shows)', kind: 'text' },
     { key: 'caption', label: 'Caption (optional)', kind: 'text' },
     { key: 'credit', label: 'Credit / source (optional)', kind: 'text' },
@@ -250,6 +250,48 @@ export default function LessonBlockBuilder({
 // ---------------------------------------------------------------------------
 // Field editors
 // ---------------------------------------------------------------------------
+// Image field: paste a URL OR upload a file to the lesson-media bucket. On a
+// successful upload we drop the returned public URL straight into the field.
+function ImageUploadField({ value, placeholder, onChange }: { value: string; placeholder?: string; onChange: (v: string) => void }) {
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  const upload = async (file: File) => {
+    setBusy(true); setErr(null)
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      fd.append('folder', 'figures')
+      const res = await fetch('/api/media/upload', { method: 'POST', body: fd })
+      const d = await res.json()
+      if (!res.ok) { setErr(d.error || 'Upload failed'); return }
+      onChange(d.url)
+    } catch {
+      setErr('Could not upload the file')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-2">
+        <input value={value} placeholder={placeholder} onChange={(e) => onChange(e.target.value)} className="flex-1 rounded-lg border p-2 text-sm" style={inputStyle} />
+        <label className="text-xs font-semibold rounded-lg border px-3 py-2 whitespace-nowrap" style={{ borderColor: 'var(--border)', color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 8%, transparent)', cursor: busy ? 'default' : 'pointer' }}>
+          {busy ? 'Uploading…' : 'Upload'}
+          <input type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml,image/gif" disabled={busy}
+            onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = '' }} style={{ display: 'none' }} />
+        </label>
+      </div>
+      {err && <div className="text-xs mt-1" style={{ color: 'var(--destructive)' }}>{err}</div>}
+      {value && !err && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={value} alt="" style={{ marginTop: 8, maxHeight: 120, borderRadius: 8, border: '1px solid var(--border)' }} />
+      )}
+    </div>
+  )
+}
+
 function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPatch }: {
   field: FieldDef; value: unknown; onChange: (v: unknown) => void;
   sims?: { slug: string; title: string }[];
@@ -271,6 +313,10 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
         />
       </div>
     )
+  }
+
+  if (field.kind === 'imageupload') {
+    return <div>{label}<ImageUploadField value={String(value ?? '')} placeholder={field.placeholder} onChange={(v) => onChange(v)} /></div>
   }
 
   if (field.kind === 'simref') {

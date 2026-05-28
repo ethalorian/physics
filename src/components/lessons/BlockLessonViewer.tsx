@@ -14,6 +14,7 @@ interface BlockLessonViewerProps {
     title: string
     unit?: string
     estimated_time?: number
+    hero_image?: string | null
     content_blocks?: BlockDocument
   }
   nav?: { prev?: NavLink | null; next?: NavLink | null }
@@ -45,9 +46,19 @@ export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProp
 
   return (
     <div className="max-w-3xl mx-auto px-4 pb-24" style={{ color: 'var(--foreground)' }}>
+      {/* decorative hero art (optional, per lesson) */}
+      {lesson.hero_image && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={lesson.hero_image}
+          alt=""
+          className="mt-4 w-full rounded-3xl"
+          style={{ height: 176, objectFit: 'cover', border: '1px solid var(--border)' }}
+        />
+      )}
       {/* playful hero */}
       <div
-        className="mt-4 rounded-3xl px-5 pt-4 pb-5"
+        className={`rounded-3xl px-5 pt-4 pb-5 ${lesson.hero_image ? 'mt-3' : 'mt-4'}`}
         style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
       >
         <Link href="/home" className="inline-flex items-center gap-1 text-xs" style={{ color: 'color-mix(in oklch, var(--primary-foreground) 78%, transparent)' }}>
