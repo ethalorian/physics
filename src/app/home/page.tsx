@@ -225,7 +225,10 @@ export default function HomePage() {
                 {/* journey map */}
                 {data.continue.sequence.length > 0 && (
                   <div className="mt-6 pt-5" style={{ borderTop: '1px solid color-mix(in oklch, var(--border) 70%, transparent)' }}>
-                    <div className="flex items-center overflow-x-auto pb-1">
+                    {/* py-4 gives the current-day hubPulse glow (up to ~12px outside the
+                        bubble) room to breathe inside the overflow-x scroll box, which
+                        otherwise clips it on top/bottom. */}
+                    <div className="flex items-center overflow-x-auto py-4">
                       {data.continue.sequence.map((s, i) => {
                         // The bubble already shows the day number (or ✓), so
                         // strip the "Day N — " prefix from the label to stop
