@@ -4,16 +4,16 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { generateTargetReview } from '@/lib/generate-review'
 
-// POST { target_id } — teacher/admin seeds the review library by generating a
+// POST { target_id } — ADMIN-ONLY: seeds the review library by generating a
 // review for a learning target. It lands as 'pending' (same approval gate), so
-// the teacher still eyeballs it in the queue before it's shared with students.
+// the admin still eyeballs it in the queue before it's shared with students.
 
 export async function POST(request: NextRequest) {
   try {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = await request.json()
     const targetId: string | undefined = body.target_id

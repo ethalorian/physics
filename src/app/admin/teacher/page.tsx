@@ -48,7 +48,6 @@ const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; acce
   { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/roster', label: 'Roster & classes', desc: 'Your synced classes and student performance', Icon: GraduationCap, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/pacing', label: 'Pacing', desc: 'Where each of your sections is on the calendar', Icon: CalendarClock, accent: 'var(--reward)', needs: 'pacing' },
-  { href: '/admin/reviews', label: 'Review library', desc: 'Approve AI-generated skill reviews to share with students', Icon: BookOpen, accent: 'var(--success)' },
   { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', Icon: Gift, accent: 'var(--reward)' },
   { href: '/home', label: 'View as student', desc: 'See what your students see', Icon: Eye, accent: 'var(--muted-foreground)' },
 ]

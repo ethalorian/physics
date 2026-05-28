@@ -3,10 +3,10 @@ import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getEffectiveContext } from '@/lib/effective-context'
 
-// Teacher/admin review queue for generated skill reviews. Pending reviews are
-// shown only to the student who generated them until a teacher APPROVES one —
-// approval puts it in the shared library served to every student weak on that
-// target.
+// ADMIN-ONLY review queue for generated skill reviews. The application admin is
+// the single quality gate app-wide: pending reviews are shown only to the
+// student who generated them until the admin APPROVES one — approval puts it in
+// the shared library served to every student weak on that target.
 
 type Row = { id: string; target_id: string; reteach: string; questions: unknown; status: string; created_by: string | null; created_at: string }
 
@@ -15,7 +15,7 @@ export async function GET() {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const { data } = await supabaseAdmin
       .from('target_reviews')
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     const session = await auth()
     if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = await request.json()
     const id: string | undefined = body.id

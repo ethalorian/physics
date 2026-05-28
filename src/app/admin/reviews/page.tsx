@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useViewAs } from '@/lib/use-view-as'
 import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2 } from 'lucide-react'
 
 interface Q { q: string; choices: string[]; answerIndex: number; explanation: string }
@@ -10,6 +12,15 @@ interface UnitOpt { id: string; name: string }
 interface TargetOpt { id: string; statement: string; domain: string }
 
 export default function ReviewQueuePage() {
+  const { role } = useViewAs()
+  const router = useRouter()
+  const isAdmin = role === 'admin'
+  // The review library is the ADMIN-only quality gate app-wide. Anyone else
+  // (teachers included) gets bounced to their dashboard.
+  useEffect(() => {
+    if (role && role !== 'admin') router.replace('/admin/teacher')
+  }, [role, router])
+
   const [pending, setPending] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState<string | null>(null)
@@ -29,7 +40,7 @@ export default function ReviewQueuePage() {
       .then((d: { pending?: Review[] }) => { setPending(d.pending ?? []); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
-  useEffect(() => { load() }, [load])
+  useEffect(() => { if (isAdmin) load() }, [load, isAdmin])
 
   // Pull the unit list + first unit's targets from the mastery grid (it already
   // exposes both, scoped to the teacher's roster).
@@ -44,6 +55,7 @@ export default function ReviewQueuePage() {
   }, [units.length])
 
   useEffect(() => {
+    if (!isAdmin) return
     // Initial load: grid defaults to unit-1, gives us both units + targets.
     fetch('/api/mastery/grid')
       .then((r) => r.json())
@@ -53,7 +65,7 @@ export default function ReviewQueuePage() {
         setTargets(d.targets ?? [])
       })
       .catch(() => {})
-  }, [])
+  }, [isAdmin])
 
   const pickUnit = (uid: string) => {
     setUnitId(uid)
@@ -109,10 +121,15 @@ export default function ReviewQueuePage() {
     load()
   }
 
+  // Non-admins are being redirected; render nothing meaningful in the meantime.
+  if (role && role !== 'admin') {
+    return <div className="max-w-3xl mx-auto p-5 text-sm" style={{ color: 'var(--muted-foreground)' }}>Redirecting…</div>
+  }
+
   return (
     <div className="max-w-3xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/teacher" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Dashboard
+      <Link href="/admin/home" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
+        <ArrowLeft size={15} /> Command center
       </Link>
       <div className="flex items-center gap-2 mb-1">
         <BookOpenCheck size={16} style={{ color: 'var(--primary)' }} />

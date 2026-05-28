@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
   LayoutGrid, Gift, TrendingUp, Microscope, Gamepad2,
-  Eye, Users, Activity, BookOpen, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -39,6 +39,7 @@ const GROUPS: { title: string; tools: Tool[] }[] = [
     title: 'Plan & build',
     tools: [
       { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
     ],
   },
