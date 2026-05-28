@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
   LayoutGrid, Gift, TrendingUp, Microscope, Gamepad2,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock, Smile,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -55,6 +55,7 @@ const GROUPS: { title: string; tools: Tool[] }[] = [
     tools: [
       { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
       { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
+      { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
     ],
   },
   {

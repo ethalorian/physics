@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
+import { getEffectiveContext } from '@/lib/effective-context'
 
 // POST /api/avatar/purchase  { slug: string }
 // Spends XP for a purchasable avatar item OR claims a mastery-unlocked item
@@ -37,6 +38,17 @@ export async function POST(request: NextRequest) {
       .eq('item_slug', slug)
       .maybeSingle()
     if (alreadyOwned) return NextResponse.json({ ok: true, already_owned: true })
+
+    // Staff (teacher + admin) grant — bypass XP balance + mastery gate.
+    const ctx = await getEffectiveContext(userEmail)
+    const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
+    if (isStaff) {
+      const { error: ownErr } = await supabaseAdmin.from('student_owned_items').insert({
+        user_id: userId, item_slug: slug, source: 'admin_grant',
+      })
+      if (ownErr) return NextResponse.json({ error: ownErr.message }, { status: 500 })
+      return NextResponse.json({ ok: true, source: 'staff_free' })
+    }
 
     // PURCHASE path (cost_xp set): validate balance, spend, grant.
     if (item.cost_xp != null) {

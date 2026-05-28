@@ -68,12 +68,10 @@ export default function AccountMenu() {
             <BarChart3 className="h-4 w-4 mr-2" />
             My progress
           </DropdownMenuItem>
-          {role === 'student' && (
-            <DropdownMenuItem onSelect={() => router.push('/avatar')}>
-              <Smile className="h-4 w-4 mr-2" />
-              My avatar
-            </DropdownMenuItem>
-          )}
+          <DropdownMenuItem onSelect={() => router.push('/avatar')}>
+            <Smile className="h-4 w-4 mr-2" />
+            My avatar
+          </DropdownMenuItem>
           {realRole === 'admin' && !viewingAs && (
             <DropdownMenuItem onSelect={() => { if (session?.user?.email) { setViewAs(session.user.email); window.location.reload() } }}>
               <Eye className="h-4 w-4 mr-2" />

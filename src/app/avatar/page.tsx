@@ -17,6 +17,7 @@ interface Bundle {
   catalog: CatalogEntry[]
   balance: number
   lifetimeEarned: number
+  isStaff?: boolean
 }
 
 type Tab = 'face' | 'items'
@@ -106,9 +107,18 @@ export default function AvatarPage() {
             <Avatar traits={previewTraits} equipped={bundle.equipped} items={bundle.catalog} size={220} />
           </div>
           <div className="mt-4 pt-4 text-center" style={{ borderTop: '1px solid var(--border)' }}>
-            <div className="text-xs uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your XP</div>
-            <div className="text-2xl font-bold tracking-tight" style={{ color: 'var(--reward-foreground)' }}>{bundle.balance.toLocaleString()}</div>
-            <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>spendable</div>
+            {bundle.isStaff ? (
+              <>
+                <div className="text-xs uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Staff account</div>
+                <div className="text-sm mt-1" style={{ color: 'var(--foreground)' }}>Every item is yours to wear</div>
+              </>
+            ) : (
+              <>
+                <div className="text-xs uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your XP</div>
+                <div className="text-2xl font-bold tracking-tight" style={{ color: 'var(--reward-foreground)' }}>{bundle.balance.toLocaleString()}</div>
+                <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>spendable</div>
+              </>
+            )}
           </div>
           {flash && (
             <div className="mt-3 rounded-lg px-3 py-2 text-xs" style={{ background: 'color-mix(in oklch, var(--success) 18%, transparent)', color: 'var(--success)' }}>
@@ -219,6 +229,7 @@ function ItemCard({ item, equipped, busy, onEquip, onBuy }: { item: CatalogEntry
     too_expensive: { label: `${item.cost_xp ?? 0} XP`, color: 'var(--muted-foreground)' },
     unlock_available: { label: 'Claim!', color: 'var(--success)' },
     locked_until_mastery: { label: 'Locked', color: 'var(--muted-foreground)' },
+    staff_free: { label: 'Free for staff', color: 'var(--primary)' },
   }
   const badge = stateBadge[item.state]
 
@@ -258,6 +269,12 @@ function ItemCard({ item, equipped, busy, onEquip, onBuy }: { item: CatalogEntry
           <div className="w-full text-xs text-center py-1.5 flex items-center justify-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
             <Lock size={10} /> Master a skill to unlock
           </div>
+        )}
+        {item.state === 'staff_free' && (
+          <button onClick={onBuy} disabled={busy} className="w-full text-xs font-semibold rounded-md py-1.5 disabled:opacity-50"
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+            Add
+          </button>
         )}
       </div>
     </div>

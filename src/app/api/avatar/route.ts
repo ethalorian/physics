@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
+import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, type MasteryRecord } from '@/data/curriculum-types'
 import type { AvatarItem, EquippedItems, ItemSlot } from '@/lib/avatar/types'
 
@@ -13,15 +14,21 @@ import type { AvatarItem, EquippedItems, ItemSlot } from '@/lib/avatar/types'
 //   - the whole catalog with computed state per item
 //   - current XP balance (so the wardrobe can show what's affordable)
 
-export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery'
+export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery' | 'staff_free'
 
 interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }
 
 export async function GET() {
   try {
     const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    if (!session?.user?.id || !session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     const userId = session.user.id
+
+    // Staff (teacher + admin) get every item for free — they're not the
+    // customer earning XP from lesson engagement. Use REAL role so view-as
+    // doesn't change the user's own avatar economics.
+    const ctx = await getEffectiveContext(session.user.email)
+    const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
 
     // 1) Avatar row (traits + equipped). Lazy-created on first read.
     const { data: avatarRow } = await supabaseAdmin
@@ -34,7 +41,8 @@ export async function GET() {
     const equipped = (avatarRow?.equipped ?? {}) as EquippedItems
     const setup_completed = !!avatarRow?.setup_completed
 
-    // 2) Catalog + ownership in parallel.
+    // 2) Catalog + ownership in parallel. Skip XP balance for staff — they
+    //    don't have an economy and items are free for them.
     const [{ data: itemsRaw }, { data: ownedRaw }, balance] = await Promise.all([
       supabaseAdmin
         .from('avatar_items')
@@ -42,13 +50,14 @@ export async function GET() {
         .eq('enabled', true)
         .order('sort_order', { ascending: true }),
       supabaseAdmin.from('student_owned_items').select('item_slug').eq('user_id', userId),
-      getBalance(userId),
+      isStaff ? Promise.resolve({ balance: 0, lifetimeEarned: 0, spent: 0 }) : getBalance(userId),
     ])
     const items = (itemsRaw ?? []) as AvatarItem[]
     const owned = new Set((ownedRaw ?? []).map((r) => (r as { item_slug: string }).item_slug))
 
-    // 3) Mastery rollup for any unlock-gated items.
-    const unlockTargetIds = [...new Set(items.map((i) => i.unlock_target_id).filter(Boolean) as string[])]
+    // 3) Mastery rollup for any unlock-gated items (students only — staff
+    //    bypass the gate).
+    const unlockTargetIds = isStaff ? [] : [...new Set(items.map((i) => i.unlock_target_id).filter(Boolean) as string[])]
     const targetLevel = new Map<string, number | null>()
     if (unlockTargetIds.length > 0) {
       const { data: recs } = await supabaseAdmin
@@ -69,9 +78,10 @@ export async function GET() {
       }
     }
 
-    // 4) Compute per-item state.
+    // 4) Compute per-item state. Staff path is uniform: owned or staff_free.
     const catalog: CatalogEntry[] = items.map((item) => {
       if (owned.has(item.slug)) return { ...item, state: 'owned' }
+      if (isStaff) return { ...item, state: 'staff_free' }
       if (item.unlock_target_id) {
         const level = targetLevel.get(item.unlock_target_id) ?? 0
         const need = item.unlock_min_level ?? 2.5
@@ -91,6 +101,7 @@ export async function GET() {
       catalog,
       balance: balance.balance,
       lifetimeEarned: balance.lifetimeEarned,
+      isStaff,
     })
   } catch (error) {
     console.error('Error in GET /api/avatar:', error)
