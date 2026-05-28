@@ -280,7 +280,7 @@ export default function HomePage() {
                           <span style={{ textTransform: 'uppercase', fontWeight: 700 }}>{r.level === 1 ? 'Not yet' : 'Almost'}</span> · {r.domain}
                         </div>
                       </div>
-                      <Link href="/dashboard/growth" className="rounded-lg text-sm" style={{ padding: '9px 16px', border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--card) 60%, transparent)', color: 'var(--foreground)' }}>
+                      <Link href={`/review/${r.targetId}`} className="rounded-lg text-sm" style={{ padding: '9px 16px', border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--card) 60%, transparent)', color: 'var(--foreground)' }}>
                         Practice
                       </Link>
                     </div>
