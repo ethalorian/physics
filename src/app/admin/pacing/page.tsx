@@ -402,6 +402,9 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
               {data.result.notStarted ? 'Not started yet' : <>Should be on <b style={{ color: 'var(--foreground)' }}>{data.result.plannedTitle ?? '—'}</b> · on <b style={{ color: 'var(--foreground)' }}>{data.result.actualTitle ?? '—'}</b>{data.result.actualSource === 'auto' ? ' (auto)' : ''}</>}
             </div>
           )}
+          <Link href={`/admin/classes/${course.id}`} className="inline-flex items-center gap-1 text-xs font-semibold mt-1.5" style={{ color: 'var(--primary)' }}>
+            Open this class — schedule &amp; publish lessons (open / close dates) →
+          </Link>
         </div>
         {data && (
           <div className="text-right">
