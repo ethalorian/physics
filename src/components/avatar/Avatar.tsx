@@ -6,25 +6,47 @@
 
 import type { AvatarTraits, AvatarItem, EquippedItems, SkinTone, FaceShape, HairStyle, HairColor, EyeShape, BrowStyle, MouthStyle, NoseStyle, Freckles, CheekBlush } from '@/lib/avatar/types'
 import { withDefaults } from '@/lib/avatar/types'
-import { SKIN, HAIR, DEFAULT_SHIRT } from '@/lib/avatar/palette'
+import { SKIN, HAIR, DEFAULT_SHIRT, FACE_GEO } from '@/lib/avatar/palette'
 
 interface Props {
   traits: Partial<AvatarTraits> | null | undefined
   equipped?: EquippedItems
   items?: AvatarItem[]      // catalog of items the renderer can look up SVG for
   size?: number             // pixel width (height auto from viewBox aspect)
+  /**
+   * 'full' (default) — entire character with shoulders; aspect ratio 144:200.
+   * 'head' — tight square crop focused on the head, for chrome bubbles
+   *   (AccountMenu trigger). Wing/helmet flares past x=±60 may clip; that's
+   *   the intended tradeoff for filling the bubble.
+   * 'medium' — head + shoulders for leaderboard rows and other mid-density
+   *   surfaces where students should see their suit/coat too. Aspect ~1.4.
+   */
+  crop?: 'full' | 'head' | 'medium'
   className?: string
 }
 
-export default function Avatar({ traits, equipped, items, size = 140, className }: Props) {
+// Crops sized against the canonical layout. 'head' clips Viking-wing flares
+// past x=±60; 'medium' is wide enough at x=±68 to keep them in frame and
+// tall enough at y=-64 to +104 to show the shirt collar and the pin row.
+const VIEWBOXES = {
+  full:   { vb: '-72 -82 144 200', aspect: 200 / 144 },
+  head:   { vb: '-60 -64 120 120', aspect: 1 },
+  medium: { vb: '-68 -64 136 168', aspect: 168 / 136 },
+} as const
+
+export default function Avatar({ traits, equipped, items, size = 140, crop = 'full', className }: Props) {
   const t = withDefaults(traits)
   const itemBySlot = mapEquipped(equipped, items)
-  const aspect = 200 / 144
+  const { vb, aspect } = VIEWBOXES[crop]
+  // Features ride a per-face vertical shift so the eye/brow/mouth cluster sits
+  // visually balanced on each silhouette instead of clinging to round-face
+  // coordinates. See FACE_GEO for the shape-by-shape values.
+  const featureShift = FACE_GEO[t.face].featureYShift
   return (
     <svg
       width={size}
       height={Math.round(size * aspect)}
-      viewBox="-72 -82 144 200"
+      viewBox={vb}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       role="img"
@@ -37,14 +59,22 @@ export default function Avatar({ traits, equipped, items, size = 140, className 
       <Ears skin={t.skin} face={t.face} />
       <Head skin={t.skin} face={t.face} />
       <HairFront style={t.hair_style} color={t.hair_color} />
-      <Brows style={t.brows} hairColor={t.hair_color} />
-      <CheekBlushLayer style={t.cheek_blush} />
-      <FrecklesLayer density={t.freckles} skin={t.skin} />
-      <Eyes shape={t.eyes} />
-      <Nose style={t.nose} skin={t.skin} />
-      {itemBySlot.facial_hair && <RawLayer svg={itemBySlot.facial_hair.svg_layer} />}
-      <Mouth style={t.mouth} />
-      {itemBySlot.eyewear && <RawLayer svg={itemBySlot.eyewear.svg_layer} />}
+      {/* Face features + face-anchored items — translated together by
+          featureShift so they track the chin/forehead of the chosen face
+          shape. Eyewear sits on the eyes and facial hair sits on the chin,
+          so both need to shift with the features. Head items (helmets,
+          hats) and pins (chest) are anchored to the silhouette, not the
+          features, so they live outside this group. */}
+      <g transform={featureShift !== 0 ? `translate(0, ${featureShift})` : undefined}>
+        <Brows style={t.brows} hairColor={t.hair_color} />
+        <CheekBlushLayer style={t.cheek_blush} />
+        <FrecklesLayer density={t.freckles} skin={t.skin} />
+        <Eyes shape={t.eyes} />
+        <Nose style={t.nose} skin={t.skin} />
+        {itemBySlot.facial_hair && <RawLayer svg={itemBySlot.facial_hair.svg_layer} />}
+        <Mouth style={t.mouth} />
+        {itemBySlot.eyewear && <RawLayer svg={itemBySlot.eyewear.svg_layer} />}
+      </g>
       {itemBySlot.head && <RawLayer svg={itemBySlot.head.svg_layer} />}
       {itemBySlot.pin && <RawLayer svg={itemBySlot.pin.svg_layer} />}
     </svg>

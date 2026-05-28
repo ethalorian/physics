@@ -1,4 +1,29 @@
-import type { SkinTone, HairColor } from './types'
+import type { SkinTone, HairColor, FaceShape } from './types'
+
+// Face geometry — extents of each face silhouette + a per-shape feature
+// y-offset so the feature group (brows / eyes / nose / mouth / blush /
+// freckles) sits visually centered on each shape rather than at fixed
+// y-coordinates that only feel right on a round face.
+//
+// `topY` / `bottomY` describe the silhouette's vertical extent. Items in the
+// HEAD slot (helmets, masks, hats) must cover the full vertical range across
+// ALL shapes — author them assuming `topY = -60` (heart's crown) and
+// `bottomY = 52` (egg's chin) so they don't expose the head on any face.
+export interface FaceGeometry {
+  rx: number
+  ry: number
+  cy: number
+  topY: number
+  bottomY: number
+  featureYShift: number   // applied to brows/eyes/nose/mouth/blush/freckles
+}
+
+export const FACE_GEO: Record<FaceShape, FaceGeometry> = {
+  round:  { rx: 46, ry: 48, cy:  0, topY: -48, bottomY: 48, featureYShift:  0 },
+  egg:    { rx: 42, ry: 50, cy:  2, topY: -48, bottomY: 52, featureYShift:  3 },
+  square: { rx: 48, ry: 46, cy:  0, topY: -46, bottomY: 46, featureYShift: -1 },
+  heart:  { rx: 42, ry: 52, cy: -6, topY: -58, bottomY: 46, featureYShift:  1 },
+}
 
 // Skin: `color` for face/neck/ears, `shadow` for the nose tint + freckles.
 // Ladder runs from pale (#FAE4D1) to dark (#3F2516); shadow is roughly the

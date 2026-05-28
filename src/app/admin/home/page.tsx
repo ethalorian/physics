@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
   LayoutGrid, Gift, TrendingUp, Microscope, Gamepad2,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock, Smile,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock, Smile, Trophy,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -48,6 +48,7 @@ const GROUPS: { title: string; tools: Tool[] }[] = [
     tools: [
       { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
+      { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)', adminOnly: true },
     ],
   },
   {

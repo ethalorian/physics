@@ -67,11 +67,20 @@ export default function AccountMenu() {
             className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background"
           >
             {me?.use_custom_avatar && me?.setup_completed ? (
-              // Custom Mii — clipped to a circle to fit the chrome slot.
-              // The avatar SVG is taller than wide, so size by the smaller axis
-              // and center via the wrapping <div>'s flex layout.
-              <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center" style={{ background: 'var(--secondary)' }}>
-                <Avatar traits={me.traits} equipped={me.equipped} items={me.equipped_items} size={56} />
+              // Custom Mii — head-only crop so the face fills the bubble.
+              // The square viewBox + size=40 matches the sm:h-10 sm:w-10
+              // trigger; the rounded-full button clips the corners into a
+              // circle. Background tint sits behind for the head's neck/ear
+              // space inside the square crop.
+              <div className="w-full h-full rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
+                <Avatar
+                  traits={me.traits}
+                  equipped={me.equipped}
+                  items={me.equipped_items}
+                  size={40}
+                  crop="head"
+                  className="w-full h-full"
+                />
               </div>
             ) : session?.user?.image ? (
               // eslint-disable-next-line @next/next/no-img-element

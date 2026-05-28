@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EnrollmentGate from '@/components/EnrollmentGate'
+import Avatar from '@/components/avatar/Avatar'
+import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 import { 
   Trophy, 
   Medal, 
@@ -39,6 +41,10 @@ interface LeaderboardEntry {
     assignments: number
   }
   is_current_user: boolean
+  use_custom_avatar?: boolean
+  avatar_traits?: AvatarTraits | null
+  avatar_equipped?: EquippedItems
+  avatar_items?: AvatarItem[]
 }
 
 export default function LeaderboardPage() {
@@ -174,19 +180,8 @@ export default function LeaderboardPage() {
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden">
-                  {currentUserEntry.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img 
-                      src={currentUserEntry.image} 
-                      alt="" 
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <User className="h-6 w-6 text-primary" />
-                  )}
-                </div>
+                <LeaderboardAvatar entry={currentUserEntry} size={48} />
+
                 <div className="text-left">
                   <p className="font-semibold">Your Rank</p>
                   <p className="text-2xl font-bold text-primary">#{currentUserRank}</p>
@@ -268,19 +263,8 @@ export default function LeaderboardPage() {
                       </div>
 
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {entry.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img 
-                            src={entry.image} 
-                            alt="" 
-                            className="w-full h-full object-cover"
-                            referrerPolicy="no-referrer"
-                          />
-                        ) : (
-                          <User className="h-5 w-5 text-muted-foreground" />
-                        )}
-                      </div>
+                      <LeaderboardAvatar entry={entry} size={40} />
+
 
                       {/* Name & Activities */}
                       <div className="flex-1 min-w-0">
@@ -388,6 +372,36 @@ export default function LeaderboardPage() {
       </Card>
     </div>
     </EnrollmentGate>
+  )
+}
+
+// Per-entry avatar with the priority order students expect:
+// (1) the Mii at medium crop if they opted in and finished setup,
+// (2) their Google profile photo,
+// (3) a User icon fallback.
+function LeaderboardAvatar({ entry, size }: { entry: LeaderboardEntry; size: number }) {
+  const showMii = entry.use_custom_avatar && entry.avatar_traits
+  return (
+    <div
+      className="rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0"
+      style={{ width: size, height: size }}
+    >
+      {showMii ? (
+        <Avatar
+          traits={entry.avatar_traits}
+          equipped={entry.avatar_equipped}
+          items={entry.avatar_items}
+          size={size}
+          crop="medium"
+          className="w-full h-full"
+        />
+      ) : entry.image ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={entry.image} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+      ) : (
+        <User className="text-muted-foreground" style={{ width: size * 0.5, height: size * 0.5 }} />
+      )}
+    </div>
   )
 }
 
