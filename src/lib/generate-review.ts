@@ -153,6 +153,22 @@ function simCatalogText(sims: SimOption[]): string {
   return sims.map((s) => `- slug "${s.slug}": ${s.title}${s.topic ? ` [${s.topic}]` : ''}${s.description ? ` — ${s.description}` : ''}`).join('\n')
 }
 
+// Extract a JSON object from Claude's reply, even if it's wrapped in markdown
+// code fences or has leading/trailing prose. Returns null if no `{...}` is
+// found.
+function extractJsonObject(text: string): string | null {
+  // Try a fenced block first (```json ... ``` or ``` ... ```).
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i)
+  if (fence) {
+    const inner = fence[1].trim()
+    const m = inner.match(/\{[\s\S]*\}/)
+    if (m) return m[0]
+  }
+  // Fall back to the first balanced-looking {...} run.
+  const m = text.match(/\{[\s\S]*\}/)
+  return m ? m[0] : null
+}
+
 // Returns { review } on success or { error } (incl. a friendly 'not configured').
 export async function generateTargetReview(statement: string, sims: SimOption[] = []): Promise<{ review?: GeneratedReview; error?: string }> {
   if (!process.env.ANTHROPIC_API_KEY) return { error: 'Review generation is not configured (missing ANTHROPIC_API_KEY).' }
@@ -182,16 +198,34 @@ Reply with ONLY the JSON object, no prose, no markdown fences.`
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-      body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 2400, system, messages: [{ role: 'user', content: userText }] }),
+      body: JSON.stringify({ model: ANTHROPIC_MODEL, max_tokens: 4000, system, messages: [{ role: 'user', content: userText }] }),
     })
-    if (!res.ok) return { error: 'Could not reach the review generator.' }
-    const data = (await res.json()) as { content?: { text?: string }[] }
+    if (!res.ok) {
+      const body = await res.text().catch(() => '')
+      console.error('[generate-review] anthropic non-OK', res.status, body.slice(0, 400))
+      return { error: `Generator returned ${res.status}.` }
+    }
+    const data = (await res.json()) as { content?: { text?: string }[]; stop_reason?: string }
     const text = data.content?.map((c) => c.text ?? '').join('') ?? ''
-    const match = text.match(/\{[\s\S]*\}/)
-    const parsed = match ? sanitizeReview(JSON.parse(match[0]), slugs) : null
-    if (!parsed) return { error: 'The generated review was malformed.' }
+    const jsonStr = extractJsonObject(text)
+    if (!jsonStr) {
+      console.error('[generate-review] no JSON object found. stop_reason=', data.stop_reason, 'preview=', text.slice(0, 300))
+      return { error: 'The generated review was malformed (no JSON).' }
+    }
+    let raw: unknown
+    try { raw = JSON.parse(jsonStr) }
+    catch (e) {
+      console.error('[generate-review] JSON.parse failed. stop_reason=', data.stop_reason, 'preview=', jsonStr.slice(0, 300), 'err=', (e as Error).message)
+      return { error: 'The generated review was malformed (JSON parse).' }
+    }
+    const parsed = sanitizeReview(raw, slugs)
+    if (!parsed) {
+      console.error('[generate-review] sanitize rejected. raw=', JSON.stringify(raw).slice(0, 400))
+      return { error: 'The generated review was malformed (sanitize).' }
+    }
     return { review: parsed }
-  } catch {
+  } catch (err) {
+    console.error('[generate-review] threw', err)
     return { error: 'Could not generate the review.' }
   }
 }

@@ -42,7 +42,10 @@ export async function POST(request: NextRequest) {
 
     const sims = await loadSimCatalog(tInfo?.unit_id)
     const gen = await generateTargetReview(statement, sims)
-    if (gen.error || !gen.review) return NextResponse.json({ error: gen.error ?? 'Generation failed' }, { status: 502 })
+    if (gen.error || !gen.review) {
+      console.error('[admin/reviews/generate] generator returned error:', gen.error, 'target=', targetId, 'unit=', tInfo?.unit_id, 'sims=', sims.length)
+      return NextResponse.json({ error: gen.error ?? 'Generation failed' }, { status: 502 })
+    }
 
     const { error } = await supabaseAdmin
       .from('target_reviews')

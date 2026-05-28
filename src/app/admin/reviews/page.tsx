@@ -42,7 +42,7 @@ export default function ReviewQueuePage() {
   const [seeding, setSeeding] = useState(false)
   const [progress, setProgress] = useState<{ done: number; total: number; failed: number } | null>(null)
   const [genOne, setGenOne] = useState<string | null>(null)
-  const [genResult, setGenResult] = useState<Record<string, 'ok' | 'fail'>>({})
+  const [genResult, setGenResult] = useState<Record<string, { ok: boolean; message?: string }>>({})
 
   const load = useCallback(() => {
     fetch('/api/admin/reviews')
@@ -88,14 +88,19 @@ export default function ReviewQueuePage() {
     if (genOne || seeding) return
     setGenOne(targetId)
     let ok = false
+    let message: string | undefined
     try {
       const res = await fetch('/api/admin/reviews/generate', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ target_id: targetId }),
       })
       ok = res.ok
-    } catch { ok = false }
-    setGenResult((m) => ({ ...m, [targetId]: ok ? 'ok' : 'fail' }))
+      if (!ok) {
+        const body = await res.json().catch(() => null) as { error?: string } | null
+        message = body?.error ?? `HTTP ${res.status}`
+      }
+    } catch (e) { ok = false; message = (e as Error)?.message ?? 'Network error' }
+    setGenResult((m) => ({ ...m, [targetId]: { ok, message } }))
     setGenOne(null)
     if (ok) load()
   }
@@ -239,8 +244,8 @@ export default function ReviewQueuePage() {
                 return (
                   <li key={t.id} className="flex items-center gap-2">
                     <span className="text-xs flex-1 min-w-0 truncate" title={t.statement}>{t.statement}</span>
-                    {r === 'ok' && <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--success)' }}><Check size={12} /> added</span>}
-                    {r === 'fail' && <span className="text-xs" style={{ color: 'var(--destructive)' }}>failed</span>}
+                    {r?.ok && <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--success)' }}><Check size={12} /> added</span>}
+                    {r && !r.ok && <span className="text-xs truncate max-w-[14rem]" style={{ color: 'var(--destructive)' }} title={r.message}>failed{r.message ? ` · ${r.message}` : ''}</span>}
                     <button
                       onClick={() => generateOne(t.id)}
                       disabled={genOne !== null || seeding}
