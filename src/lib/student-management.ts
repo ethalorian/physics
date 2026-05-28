@@ -35,15 +35,58 @@ export async function ensureStudentRecord(
 ): Promise<EnsureStudentResult> {
   try {
     // Check if student already exists by email
-    const { data: existingStudent, error: fetchError } = await supabaseAdmin
+    const lookup = await supabaseAdmin
       .from('students')
       .select('*')
       .eq('email', email)
       .maybeSingle()
+    const fetchError = lookup.error
+    // `existingStudent` is `let` because the stub-reclaim path below may
+    // reassign it to a Classroom-imported row found by name match.
+    let existingStudent = lookup.data
 
     if (fetchError && fetchError.code !== 'PGRST116') {
       console.error('Error checking for existing student:', fetchError)
       return { success: false, error: fetchError.message }
+    }
+
+    // RECLAIM CLASSROOM-IMPORTED STUB.
+    // The Google Classroom roster sync writes synthetic emails of the form
+    // `<google_sub>@classroom.local` when Classroom doesn't return a real
+    // address. Those rows are correctly enrolled in course_students but their
+    // email and google_user_id don't match what a real sign-in produces, so
+    // the email-lookup above misses them and we'd otherwise create a duplicate
+    // account. Before that, try a NAME-MATCH against any @classroom.local stub
+    // and reclaim it: take it over with the real email + this session's
+    // google_user_id. Only fires when exactly ONE stub matches the name (so
+    // name collisions in a big roster fall through to create-new safely).
+    if (!existingStudent && name) {
+      const cleanName = name.trim()
+      if (cleanName.length > 0) {
+        const { data: stubMatches } = await supabaseAdmin
+          .from('students')
+          .select('*')
+          .ilike('name', cleanName)
+          .like('email', '%@classroom.local')
+        if (stubMatches && stubMatches.length === 1) {
+          const stub = stubMatches[0]
+          console.log(`🔗 Reclaiming Classroom stub for ${cleanName}: ${stub.email} → ${email}`)
+          const { data: reclaimed, error: reclaimErr } = await supabaseAdmin
+            .from('students')
+            .update({
+              email,
+              google_user_id: userId,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', stub.id)
+            .select()
+            .single()
+          if (!reclaimErr && reclaimed) {
+            // Treat as a normal "found existing" path from here on.
+            existingStudent = reclaimed
+          }
+        }
+      }
     }
 
     // Student exists - return existing record.
