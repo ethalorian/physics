@@ -1,14 +1,16 @@
 // Avatar trait + item types. Traits live in code (identity is bounded and
 // stable); items live in avatar_items (extensible via the admin catalog).
 
-export type SkinTone = 'pale' | 'tan' | 'brown'
-export type FaceShape = 'round' | 'egg'
-export type HairStyle = 'short' | 'ponytail' | 'curls' | 'bald'
-export type HairColor = 'black' | 'brown'
-export type EyeShape = 'small' | 'big'
-export type BrowStyle = 'straight' | 'arched'
-export type MouthStyle = 'smile' | 'grin'
-export type NoseStyle = 'button' | 'broad'
+export type SkinTone = 'pale' | 'light' | 'tan' | 'olive' | 'brown' | 'deep' | 'dark'
+export type FaceShape = 'round' | 'egg' | 'square' | 'heart'
+export type HairStyle = 'short' | 'ponytail' | 'curls' | 'bald' | 'afro' | 'locs' | 'braids' | 'bun' | 'hijab' | 'long'
+export type HairColor = 'black' | 'brown' | 'blonde' | 'red' | 'gray' | 'white' | 'teal'
+export type EyeShape = 'small' | 'big' | 'narrow' | 'wide'
+export type BrowStyle = 'straight' | 'arched' | 'bushy' | 'thin'
+export type MouthStyle = 'smile' | 'grin' | 'neutral' | 'smirk'
+export type NoseStyle = 'button' | 'broad' | 'narrow' | 'hook'
+export type Freckles = 'none' | 'light' | 'heavy'
+export type CheekBlush = 'none' | 'pink' | 'warm'
 
 export interface AvatarTraits {
   skin: SkinTone
@@ -19,6 +21,8 @@ export interface AvatarTraits {
   brows: BrowStyle
   mouth: MouthStyle
   nose: NoseStyle
+  freckles: Freckles
+  cheek_blush: CheekBlush
 }
 
 // Slot enum mirrors the avatar_items.slot check constraint exactly.
@@ -48,6 +52,8 @@ export const DEFAULT_TRAITS: AvatarTraits = {
   brows: 'straight',
   mouth: 'smile',
   nose: 'button',
+  freckles: 'none',
+  cheek_blush: 'none',
 }
 
 export function withDefaults(partial: Partial<AvatarTraits> | null | undefined): AvatarTraits {
@@ -64,15 +70,19 @@ export const TRAIT_LABELS: Record<keyof AvatarTraits, string> = {
   brows: 'Brows',
   mouth: 'Mouth',
   nose: 'Nose',
+  freckles: 'Freckles',
+  cheek_blush: 'Cheek blush',
 }
 
 export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
-  skin: ['pale', 'tan', 'brown'],
-  face: ['round', 'egg'],
-  hair_style: ['short', 'ponytail', 'curls', 'bald'],
-  hair_color: ['black', 'brown'],
-  eyes: ['small', 'big'],
-  brows: ['straight', 'arched'],
-  mouth: ['smile', 'grin'],
-  nose: ['button', 'broad'],
+  skin: ['pale', 'light', 'tan', 'olive', 'brown', 'deep', 'dark'],
+  face: ['round', 'egg', 'square', 'heart'],
+  hair_style: ['short', 'ponytail', 'curls', 'bald', 'afro', 'locs', 'braids', 'bun', 'hijab', 'long'],
+  hair_color: ['black', 'brown', 'blonde', 'red', 'gray', 'white', 'teal'],
+  eyes: ['small', 'big', 'narrow', 'wide'],
+  brows: ['straight', 'arched', 'bushy', 'thin'],
+  mouth: ['smile', 'grin', 'neutral', 'smirk'],
+  nose: ['button', 'broad', 'narrow', 'hook'],
+  freckles: ['none', 'light', 'heavy'],
+  cheek_blush: ['none', 'pink', 'warm'],
 }
