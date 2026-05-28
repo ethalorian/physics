@@ -226,9 +226,15 @@ export default function HomePage() {
                 {data.continue.sequence.length > 0 && (
                   <div className="mt-6 pt-5" style={{ borderTop: '1px solid color-mix(in oklch, var(--border) 70%, transparent)' }}>
                     <div className="flex items-center overflow-x-auto pb-1">
-                      {data.continue.sequence.map((s, i) => (
+                      {data.continue.sequence.map((s, i) => {
+                        // The bubble already shows the day number (or ✓), so
+                        // strip the "Day N — " prefix from the label to stop
+                        // wasting characters on duplication. Allow up to two
+                        // lines of natural wrapping at a slightly wider cell.
+                        const cleanTitle = s.title.replace(/^\s*Day\s+\d+\s*[—–-]\s*/, '')
+                        return (
                         <div key={s.slug} className="flex items-center">
-                          <div className="flex flex-col items-center gap-1.5" style={{ minWidth: 64 }}>
+                          <div className="flex flex-col items-center gap-1.5" style={{ minWidth: 96 }}>
                             <div
                               className="grid place-items-center font-bold"
                               style={{
@@ -244,15 +250,30 @@ export default function HomePage() {
                             >
                               {s.status === 'done' ? '✓' : s.lessonNumber}
                             </div>
-                            <div style={{ fontSize: 10, color: s.status === 'current' ? 'var(--foreground)' : 'var(--muted-foreground)', textAlign: 'center', maxWidth: 70, lineHeight: 1.2 }}>
-                              {s.title.length > 16 ? s.title.slice(0, 15) + '…' : s.title}
+                            <div
+                              title={s.title}
+                              style={{
+                                fontSize: 10,
+                                color: s.status === 'current' ? 'var(--foreground)' : 'var(--muted-foreground)',
+                                textAlign: 'center',
+                                maxWidth: 100,
+                                lineHeight: 1.2,
+                                display: '-webkit-box',
+                                WebkitBoxOrient: 'vertical',
+                                WebkitLineClamp: 2,
+                                overflow: 'hidden',
+                                wordBreak: 'break-word',
+                              }}
+                            >
+                              {cleanTitle}
                             </div>
                           </div>
                           {i < data.continue!.sequence.length - 1 && (
                             <div style={{ height: 2.5, width: 24, borderRadius: 2, background: s.status === 'done' ? 'var(--primary)' : 'var(--border)' }} />
                           )}
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 )}
