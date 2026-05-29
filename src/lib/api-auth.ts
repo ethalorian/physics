@@ -57,10 +57,15 @@ type Handler<P> = (
   ctx: AuthContext<P>,
 ) => Promise<Response> | Response
 
-// Next 15 passes the dynamic segment params as a Promise in the route context.
-type RouteContext<P> = { params: Promise<P> }
+// Next 15 ALWAYS passes the route context as the second argument, with `params`
+// as a Promise. Next's route-type validator requires this argument to be a
+// required (non-undefined) type whose params value type accepts its SegmentParams
+// (`string | string[] | undefined`) for both static and dynamic segments — so we
+// type it broadly here. AuthContext re-exposes params as Promise<P> for ergonomic
+// typing inside handlers.
+type NextRouteContext = { params: Promise<Record<string, string | string[] | undefined>> }
 
-const EMPTY_PARAMS = Promise.resolve({} as Record<string, never>)
+const EMPTY_PARAMS = Promise.resolve({})
 
 function unauthorized() {
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -78,7 +83,7 @@ export function withAuth<P extends Record<string, string> = Record<string, strin
 ) {
   return async function (
     request: NextRequest,
-    routeCtx?: RouteContext<P>,
+    routeCtx: NextRouteContext,
   ): Promise<Response> {
     try {
       const session = await auth()
@@ -95,7 +100,7 @@ export function withAuth<P extends Record<string, string> = Record<string, strin
         realRole: ec.realRole,
         scopeEmail: ec.scopeEmail,
         viewingAsTeacher: ec.viewingAsTeacher,
-        params: (routeCtx?.params ?? (EMPTY_PARAMS as Promise<P>)),
+        params: ((routeCtx?.params ?? EMPTY_PARAMS) as unknown) as Promise<P>,
       }
 
       return await handler(request, ctx)
