@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "d8-b1",
+      "type": "target",
+      "statement": "I can finish, sign, and photograph my car (S7), then run timed PRACTICE RUNS and compute its real speed with v = d/t, average my trials, and compare the measured speed to my Day-6 prediction.",
+      "targetId": "s7"
+    },
+    {
+      "id": "d8-b2",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Today's flow: finish → sign → photo → run → compute → compare",
+      "markdown": "**Theme execution is done today.** First close out the finish (paint touch-ups, sealant if needed). Then **sign the underside of the chassis** with your team name + date and write your judging name card. Take the **group + hero photos**. Then the real physics: take your car to the **actual race corridor** for timed **practice runs** — record distance and time, compute speed, and tune. Tomorrow is the race."
+    },
+    {
+      "id": "d8-b3",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "trial",
+          "definition": "One single timed practice run. You repeat trials because no single run is perfectly reliable — repeating lets you average out random timing and release errors.",
+          "cognate": "ensayo / prueba"
+        },
+        {
+          "term": "average speed",
+          "definition": "The mean of your measured speeds across several trials: add the trial speeds and divide by the number of trials. It is a more trustworthy number than any one run.",
+          "cognate": "rapidez promedio"
+        },
+        {
+          "term": "percent difference",
+          "definition": "How far your measured value sits from your predicted value, as a percent: %diff = |measured − predicted| ÷ predicted × 100%. A small percent means your prediction matched the floor well.",
+          "cognate": "diferencia porcentual"
+        }
+      ]
+    },
+    {
+      "id": "d8-b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Run procedure — make every trial fair",
+      "markdown": "Mark a **fixed distance** on the corridor floor (e.g. 6.0 m) with tape — the SAME start and finish line for every trial. **Switch ON at the start line as the stopwatch starts**; stop the watch the instant the front of the car crosses the finish line. Run the car **straight down the same lane** each time. Do at least **four trials** back to back so you can average them."
+    },
+    {
+      "id": "d8-b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Measurement care — where error sneaks in",
+      "markdown": "Your speed is only as good as your distance and time. **Measure the distance once, carefully, and keep it fixed.** Most error lives in the **stopwatch**: human reaction time is about 0.2 s, so a single short run can be off by a lot. That is exactly why you **repeat and average** — and why you should toss any run where the car veered into the wall or you fumbled the start."
+    },
+    {
+      "id": "d8-b6",
+      "type": "worked_example",
+      "prompt": "MEASURED SPEED from one practice run. Your car covers a measured 6.0 m of corridor in a timed 2.4 s. What was its measured speed for that run, in m/s?",
+      "given": "Distance d = 6.0 m; time t = 2.4 s (one trial).",
+      "equation": "$v = \\dfrac{d}{t}$",
+      "work": "Substitute the measured numbers and keep the units: $\\;v = \\dfrac{6.0\\ \\text{m}}{2.4\\ \\text{s}} = 2.5\\ \\tfrac{\\text{m}}{\\text{s}}$. The meters stay on top and the seconds stay on the bottom, so the answer comes out in m/s — a speed.",
+      "answer": "The car's measured speed for that run was **2.5 m/s**. This is the REAL speed on the floor — distance you measured divided by the time you timed."
+    },
+    {
+      "id": "d8-b7",
+      "type": "worked_example",
+      "prompt": "AVERAGING three trial speeds. Over the same 6.0 m course you time three runs and compute their speeds: 2.5 m/s, 2.7 m/s, and 2.6 m/s. What is the car's average speed across the three trials?",
+      "given": "Three measured trial speeds: $v_1 = 2.5$ m/s, $v_2 = 2.7$ m/s, $v_3 = 2.6$ m/s; number of trials $n = 3$.",
+      "equation": "$\\bar{v} = \\dfrac{v_1 + v_2 + v_3}{n}$",
+      "work": "Add the three trial speeds: $\\;2.5 + 2.7 + 2.6 = 7.8\\ \\tfrac{\\text{m}}{\\text{s}}$. Divide by the number of trials: $\\;\\bar{v} = \\dfrac{7.8\\ \\text{m/s}}{3} = 2.6\\ \\tfrac{\\text{m}}{\\text{s}}$.",
+      "answer": "The average speed is **2.6 m/s**. Averaging smooths out the timing wobble of any single trial, so this is the number you trust to compare against your prediction."
+    },
+    {
+      "id": "d8-b8",
+      "type": "data_table",
+      "capture": true,
+      "columns": [
+        "Run",
+        "Distance (m)",
+        "Time (s)",
+        "Speed (m/s)"
+      ],
+      "rows": 4,
+      "plot": true,
+      "xCol": 2,
+      "yCol": 1,
+      "patternPrompt": "Plot Distance (m) on the y-axis against Time (s) on the x-axis for your four trials. Do the points cluster near a straight line through the origin? The slope of that line IS your speed — does it match the speeds you computed in the last column?"
+    },
+    {
+      "id": "d8-b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "MEASURED SPEED, your run. Pick your BEST clean trial from the table. Using your measured distance and your timed value, compute that run's speed with v = d/t. Show GIVEN, EQUATION, WORK, ANSWER and keep your units.",
+      "givenHint": "GIVEN: your measured distance d (m) and your timed t (s) for one good trial.",
+      "equationHint": "EQUATION: v = d / t. Substitute your numbers and keep m on top, s on the bottom → m/s.",
+      "equationOptions": [
+        "v = d / t",
+        "average speed = (v1 + v2 + ... + vn) / n",
+        "v = (rev/s) × C",
+        "%diff = |measured − predicted| / predicted × 100%"
+      ]
+    },
+    {
+      "id": "d8-b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "AVERAGE SPEED across your trials. Take the four Speed (m/s) values from your data table and compute your car's AVERAGE speed. Show how you added them and divided by the number of trials, and report the average with units.",
+      "givenHint": "GIVEN: your four trial speeds v1, v2, v3, v4 from the Speed column; number of trials n = 4 (drop any run you had to toss).",
+      "equationHint": "EQUATION: average speed = (v1 + v2 + v3 + v4) / 4. Add the speeds, then divide by how many trials you kept.",
+      "equationOptions": [
+        "average speed = (v1 + v2 + ... + vn) / n",
+        "v = d / t",
+        "%diff = |measured − predicted| / predicted × 100%",
+        "v = (rev/s) × C"
+      ]
+    },
+    {
+      "id": "d8-b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "MEASURED vs PREDICTED. Your Day-6 PREDICTED top speed came from wheel RPM × circumference. Compare your AVERAGE measured speed to that prediction: compute the percent difference, state which is faster, and give ONE physical reason for the gap (friction in the bearings, wheel alignment / veer, gear slip, battery charge, or timing error).",
+      "givenHint": "GIVEN: your average measured speed (from the previous GEWA) and your Day-6 predicted speed (m/s).",
+      "equationHint": "EQUATION: %diff = |measured − predicted| / predicted × 100%. Then decide faster vs slower and name a physical cause.",
+      "equationOptions": [
+        "%diff = |measured − predicted| / predicted × 100%",
+        "average speed = (v1 + v2 + ... + vn) / n",
+        "v = d / t",
+        "v = (rev/s) × C"
+      ]
+    },
+    {
+      "id": "d8-b12",
+      "type": "observation",
+      "patternPrompt": "Look across your four trials in the data table. What pattern do you see in the Speed (m/s) column — are the trials tightly clustered, or do they spread out? Are your Distance-vs-Time points close to one straight line?",
+      "interpretPrompt": "What does the SPREAD between your trials mean? If your speeds are tightly clustered, what does that say about your measurement and your car? If they spread out a lot, what is the likely cause (timing reaction, an off-lane run, a sticky start), and which trial would you throw out before averaging?",
+      "frame": "Across my trials the speeds were (tightly clustered / spread out), which tells me ___. The spread is mostly caused by ___, so before averaging I would ___."
+    },
+    {
+      "id": "d8-b13",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "PRACTICE-RUN LOG. Sketch the corridor course with your fixed start and finish lines and the measured distance labeled. Log each of your four timed trials (distance, time, computed v = d/t), then reflect on measured vs predicted and one tune you made between runs.",
+      "fields": [
+        "Course setup: measured distance (m) and how I kept the start/finish the same every trial",
+        "Trial log: the four times, and the speed v = d/t I computed for each run",
+        "Reasoning: my AVERAGE measured speed vs my Day-6 PREDICTED speed — which was faster and by how much (percent difference)",
+        "Reasoning: the most likely PHYSICAL reason for the gap (friction, alignment/veer, gear slip, battery, timing) and the ONE tune I made to improve the next run"
+      ],
+      "grid": true,
+      "palette": [
+        "#1f2937",
+        "#b45309",
+        "#2563eb",
+        "#dc2626",
+        "#16a34a"
+      ]
+    },
+    {
+      "id": "d8-b14",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why measured usually comes in under predicted",
+      "markdown": "Your Day-6 prediction assumed the wheel turns at a steady RPM and the car rolls in a perfectly straight line. On the real floor, **friction in the bearings** steals speed, a **slight misalignment** makes the car veer and travel a longer, slower path, and **gear slip or a half-charged battery** lowers the actual RPM. A small percent difference (measured a bit *under* predicted) is normal and *good* — it means your model was sound and your build is clean."
+    },
+    {
+      "id": "d8-b15",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In your own words: why did you run FOUR trials instead of trusting one, and was your average measured speed faster or slower than your Day-6 prediction? Name the one physical reason for the difference.",
+      "frame": "I ran four trials because a single run ___. My average measured speed was ___ than my predicted speed, mostly because ___."
+    },
+    {
+      "id": "d8-b16",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "1fb2b1c7-3372-4573-81f6-e413185c283c"
+    }
+  ]
+}

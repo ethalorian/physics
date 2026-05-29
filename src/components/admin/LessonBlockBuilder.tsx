@@ -72,6 +72,10 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'instruction', label: 'Instruction', kind: 'text' },
     { key: 'prompts', label: 'Numbered prompts', kind: 'stringlist' },
   ] },
+  { type: 'lab_notebook', label: 'Lab notebook (sketch + log)', group: 'Practice', capture: true, fields: [
+    { key: 'instruction', label: 'Instruction', kind: 'text' },
+    { key: 'fields', label: 'Reasoning prompts (boxes)', kind: 'stringlist' },
+  ] },
   { type: 'gewa', label: 'GEWA solve', group: 'Practice', capture: true, fields: [
     { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
     { key: 'givenHint', label: 'Given hint', kind: 'text' },

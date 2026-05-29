@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "d5-b1",
+      "type": "target",
+      "statement": "K4 — I can explain that a car veers because of friction asymmetry: when one side's wheels drag more than the other, that unequal friction makes a turning effect (torque) about a vertical axis through the car.",
+      "targetId": "u8-k4"
+    },
+    {
+      "id": "d5-b2",
+      "type": "target",
+      "statement": "S4 — I can install axles parallel and aligned so the car rolls straight ≥ 3 m unpowered.",
+      "targetId": "u8-s4"
+    },
+    {
+      "id": "d5-b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety beat (60 seconds)",
+      "markdown": "**Hot glue today.** The tip dries clear but it *burns* — never touch the metal tip, and lay the gun back on its stand, not the table. Glue the axle holders, then keep hands clear while it sets. One person glues at a time per team."
+    },
+    {
+      "id": "d5-b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "The big idea today: a straight car is a GEOMETRY problem, not a power problem",
+      "markdown": "Your car can have a perfect motor and still lose the race by veering into the wall. **Why does a car veer?** Because the wheels on one side drag (rub) more than the wheels on the other side. That unequal friction is like pushing harder on one side of a shopping cart — it makes the whole car *turn*. Today you install the axles **parallel** so both sides have equal friction and the car tracks straight."
+    },
+    {
+      "id": "d5-b5",
+      "type": "lesson_vocab"
+    },
+    {
+      "id": "d5-b6",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Axle",
+          "definition": "The rod that the wheels are pressed onto; it spins in the axle holders.",
+          "cognate": "eje"
+        },
+        {
+          "term": "Alignment",
+          "definition": "Whether the two axles are parallel and square to the chassis so the car rolls straight.",
+          "cognate": "alineación"
+        },
+        {
+          "term": "Friction",
+          "definition": "The rubbing force that resists a wheel's motion; more drag on one side slows that side.",
+          "cognate": "fricción"
+        },
+        {
+          "term": "Veer",
+          "definition": "To drift off a straight line to one side as the car rolls.",
+          "cognate": "desviarse"
+        },
+        {
+          "term": "Torque",
+          "definition": "A turning effect. Unequal side-to-side friction produces a torque about a vertical axis, swinging the nose toward the higher-friction side.",
+          "cognate": "torque / par"
+        }
+      ]
+    },
+    {
+      "id": "d5-b7",
+      "type": "diagram",
+      "kind": "friction_asymmetry",
+      "title": "Why a car veers — unequal wheel friction makes it turn",
+      "caption": "Top-down view. The right wheels drag MORE than the left (longer friction arrow on the right). The slow side acts like a pivot, so the nose swings toward the higher-friction side — the car veers RIGHT. Equal arrows on both sides = no turning effect = straight roll.",
+      "genPrompt": "Top-down sketch of a four-wheel car. Friction arrows at the left and right wheel pairs point backward (opposing motion). Right friction is larger than left, producing a vertical-axis torque that veers the car to the right.",
+      "leftMag": 3,
+      "rightMag": 7,
+      "veerDir": "right"
+    },
+    {
+      "id": "d5-b8",
+      "type": "prose",
+      "markdown": "### The veer rule\n\nFriction at each wheel points **backward** — it opposes the car's roll. If both sides have the *same* drag, the two backward forces are balanced and the car rolls **straight**.\n\nBut if one side drags more, that side is like a slower wheel on a shopping cart. The car **pivots toward the higher-friction side**:\n\n$$\\text{nose veers toward the side with } \\textbf{more}\\text{ friction}$$\n\nThis is a **torque about a vertical axis** through the middle of the car. The bigger the difference in friction, *and* the wider the car, the stronger the turning effect. Fix it by making the axles **parallel** and the wheels spin **equally freely** on both sides."
+    },
+    {
+      "id": "d5-b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Build steps 4–9 (do these in order)",
+      "markdown": "**4.** Hot-glue the pen-tube **axle holders** onto the chassis, centered on your Day-4 alignment line. **5.** Drill the **3/16\" holes** along that line — both holders must line up. **6.** Slide the **axles** through. **7.** Press-fit the **wheels** so they sit flush and spin freely. **8.** Mount the **20T axle gear**, offset slightly to leave room for the motor mesh tomorrow. **9.** **Roll test #1** — push the car gently down the corridor and watch which way it drifts."
+    },
+    {
+      "id": "d5-b10",
+      "type": "worked_example",
+      "prompt": "Estimate the veer. A team pushes their car down a 4.0 m corridor and it drifts 8 cm to the right. About how far would it drift over a full 12 m race run if nothing is fixed? Which side has more friction?",
+      "given": "Drift over test run = 8 cm to the right; test distance = 4.0 m; race distance = 12 m; veer is proportional to distance (drift ∝ distance).",
+      "equation": "$\\dfrac{\\text{drift}_{\\text{race}}}{\\text{distance}_{\\text{race}}} = \\dfrac{\\text{drift}_{\\text{test}}}{\\text{distance}_{\\text{test}}}$",
+      "work": "Rate of drift $= \\dfrac{8\\ \\text{cm}}{4.0\\ \\text{m}} = 2\\ \\text{cm per m}$.  Over 12 m: $\\;2\\ \\tfrac{\\text{cm}}{\\text{m}} \\times 12\\ \\text{m} = 24\\ \\text{cm}$. The nose swings toward the higher-friction side, and it veered RIGHT — so the **right** wheels are dragging more.",
+      "answer": "About **24 cm of drift** over a 12 m run — that's into the wall. The **right side has more friction** (the car veers toward the side that drags more). Fix: free up the right wheels / re-align that axle until both sides spin equally."
+    },
+    {
+      "id": "d5-b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "If the RIGHT wheels drag more than the left wheels, which way does the car veer — and why? Explain the cause using friction and the turning effect (torque), not just the answer.",
+      "givenHint": "State which side has more friction (drag) and that friction points backward, opposing the roll.",
+      "equationHint": "Nose veers toward the side with MORE friction (unequal friction → vertical-axis torque).",
+      "equationOptions": [
+        "nose veers toward the higher-friction side",
+        "friction opposes motion",
+        "torque about a vertical axis",
+        "balanced friction → straight roll"
+      ]
+    },
+    {
+      "id": "d5-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Your car drifted 8 cm to the right over a 4 m roll test. (a) Which side is dragging more? (b) Describe the alignment fix you would make to your axles/wheels so the next roll test tracks straight.",
+      "givenHint": "Drift = 8 cm right over 4 m; the car veers toward the side with more friction.",
+      "equationHint": "drift ∝ distance; nose veers toward higher-friction side → reduce that side's drag / re-square the axle.",
+      "equationOptions": [
+        "nose veers toward the higher-friction side",
+        "drift ∝ distance",
+        "make axles parallel",
+        "equal friction → straight"
+      ]
+    },
+    {
+      "id": "d5-b13",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Proportional reasoning: a car drifts 3 cm over a 2 m roll test. At that same rate, how many cm will it drift over a full 10 m run? Show the rate, then scale it.",
+      "givenHint": "Drift = 3 cm over 2 m; assume the drift rate stays constant (drift ∝ distance).",
+      "equationHint": "drift rate = drift ÷ distance; then drift = rate × new distance",
+      "equationOptions": [
+        "drift = rate × distance",
+        "rate = drift ÷ distance",
+        "drift ∝ distance"
+      ]
+    },
+    {
+      "id": "d5-b14",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "Run your roll test. On the top-down diagram, ANNOTATE the friction arrows at your left and right wheel pairs (make the side that dragged more a longer arrow) and draw your PREDICTED veer direction. Then log what actually happened and your fix.",
+      "fields": [
+        "Which way it veered (left / right / straight)",
+        "Likely cause — which side dragged more and why (loose wheel, bent axle, not parallel...)",
+        "My fix — exactly what I'll adjust before the next roll test",
+        "Roll test #2 result: distance before it veered, and what changed"
+      ],
+      "grid": false,
+      "backgroundDiagram": {
+        "kind": "friction_asymmetry",
+        "title": "Annotate your car's friction + veer",
+        "caption": "Draw your friction arrows (longer = more drag) and your predicted veer direction.",
+        "leftMag": 3,
+        "rightMag": 7,
+        "veerDir": "right"
+      }
+    },
+    {
+      "id": "d5-b15",
+      "type": "data_table",
+      "capture": true,
+      "columns": [
+        "Roll test #",
+        "Distance before veer (m)",
+        "Veer direction",
+        "What we changed"
+      ],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "As you fixed the alignment across roll tests, what happened to the distance before the car veered?"
+    },
+    {
+      "id": "d5-b16",
+      "type": "sentence_frame",
+      "frame": "Our car veered to the ____ because the ____ wheels had more ____. To fix it we will ____ so both sides have equal friction and the car rolls straight.",
+      "wordBank": [
+        "left",
+        "right",
+        "friction",
+        "drag",
+        "make the axles parallel",
+        "re-square the axle",
+        "free up the wheel",
+        "re-glue the holder"
+      ]
+    },
+    {
+      "id": "d5-b17",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In one or two sentences: a teammate says 'our car veers because the motor is weak.' Correct them — what is the real cause of a veer, and what fixes it?",
+      "frame": "A veer is not a power problem; it is caused by ____, which makes a ____ about a vertical axis. We fix it by ____."
+    },
+    {
+      "id": "d5-b18",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "1c6e1fcc-63e2-40fc-9093-20352f02f3d6"
+    },
+    {
+      "id": "d5-b19",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "1c6e1fcc-63e2-40fc-9093-20352f02f3d6",
+        "2728d6f0-199b-4751-8591-c285abed5e6a"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "d1-b1",
+      "type": "callout",
+      "variant": "note",
+      "title": "The Car Project — 9 days",
+      "markdown": "For the next **9 days you will build a car**, then race it down the corridor. On Day 9 you will not only race — you will write a **transfer task** defending **three physics choices** you made. Every build decision this unit is a physics decision in disguise. Today is the kickoff: we walk the race corridor, meet the four safety zones, and commit a team theme."
+    },
+    {
+      "id": "d1-b2",
+      "type": "target",
+      "statement": "I can name the four components of a DC circuit (battery, switch, motor, wires in series) — at least by sight.",
+      "targetId": "K1"
+    },
+    {
+      "id": "d1-b3",
+      "type": "target",
+      "statement": "I can preview the energy chain that drives the car: chemical → electrical → mechanical-rotational → mechanical-translational.",
+      "targetId": "K2"
+    },
+    {
+      "id": "d1-b4",
+      "type": "target",
+      "statement": "I can explain that a car veers because of friction asymmetry, not lack of power — a geometry problem, not a strength problem.",
+      "targetId": "K4"
+    },
+    {
+      "id": "d1-b5",
+      "type": "prose",
+      "markdown": "### Walk the corridor\n\nStand inside the actual race corridor. Notice how **narrow** it is. Notice the length — about **6 meters**. The corridor is not decoration; it **is the design constraint**.\n\nHere is the thing that should worry you: a car that starts pointed just **2 cm off-true** does not stay 2 cm off. The error grows over the whole 6 m run. A tiny misalignment on build day becomes a wall-scraping disaster on race day. That is why the days ahead obsess over straight axle lines and parallel wheels."
+    },
+    {
+      "id": "d1-b6",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Four safety zones — show, don't touch (yet)",
+      "markdown": "This room has **four hazard zones**. You will be trained on each before you use it, and every day opens with a 60-second safety beat on the relevant zone.\n\n1. **Soldering iron** — hot enough to burn instantly; never set down off its stand.\n2. **Hot glue** — the glue AND the nozzle stay dangerously hot for minutes.\n3. **Drill** — eye protection on, hands clear, work clamped.\n4. **Switch installation / first power-on** — live circuits; respect the loop.\n\nToday you only **observe** these stations. Do not power anything, heat anything, or cut anything without a teacher present."
+    },
+    {
+      "id": "d1-b7",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Battery",
+          "definition": "The source — stores chemical energy and pushes current around the loop.",
+          "cognate": "batería"
+        },
+        {
+          "term": "Switch",
+          "definition": "The gate — opens or closes the loop to start and stop the motor.",
+          "cognate": "interruptor"
+        },
+        {
+          "term": "Motor",
+          "definition": "The load — converts electrical energy into spinning (rotational) motion.",
+          "cognate": "motor"
+        },
+        {
+          "term": "Series",
+          "definition": "Components wired one after another in a single loop; break it anywhere and current stops everywhere.",
+          "cognate": "en serie"
+        },
+        {
+          "term": "Current",
+          "definition": "The flow of charge around the closed loop that makes the motor turn.",
+          "cognate": "corriente"
+        }
+      ]
+    },
+    {
+      "id": "d1-b8",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Team roles (3–4 per team)",
+      "markdown": "Pick roles now so every build day runs smoothly: **build lead** (drives construction), **safety officer** (owns the zone checklist), and **scribe** (records data and decisions in this packet). A fourth member shares the build-lead and scribe load."
+    },
+    {
+      "id": "d1-b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Quick estimate: the race corridor is about 6 m long. If your car can cover roughly 2 m every second, about how long does one clean run take? (This sets your expectations for the race — no precise data yet, just a back-of-the-envelope estimate.)",
+      "givenHint": "distance d ≈ 6 m; estimated speed v ≈ 2 m/s",
+      "equationHint": "t = d / v"
+    },
+    {
+      "id": "d1-b10",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "THEME COMMIT — sketch your team's car concept (silhouette, colors, signature feature), then log your reasoning in the boxes below. A stranger should be able to recognize your theme from the sketch alone.",
+      "fields": [
+        "My theme is…",
+        "It fits the project because…",
+        "My first build worry is…"
+      ],
+      "grid": true
+    },
+    {
+      "id": "d1-b11",
+      "type": "sentence_frame",
+      "frame": "Our team's theme is ___ . It fits a fast, straight-rolling race car because ___ . The part of the build I am most worried about is ___ because ___ .",
+      "wordBank": [
+        "theme",
+        "fast",
+        "straight",
+        "alignment",
+        "weight",
+        "decoration",
+        "wiring",
+        "wheels"
+      ]
+    },
+    {
+      "id": "d1-b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Exit ticket: In one or two sentences, name your team theme AND the single biggest physical challenge you expect to face building it.",
+      "frame": "Our theme is ___ ; the biggest challenge we expect is ___ ."
+    },
+    {
+      "id": "d1-b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "968fcf25-cde2-4e32-8dc6-6d3931aa2488"
+    }
+  ]
+}

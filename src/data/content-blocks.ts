@@ -75,11 +75,27 @@ export interface SentenceFrameBlock extends BaseBlock {
 
 export interface DoodleBlock extends BaseBlock {
   type: 'doodle';
+  capture?: true;             // sketches register as logged work (see CAPTURE_BLOCK_TYPES)
   instruction: string;        // one-line framing
   prompts?: string[];         // explicit, numbered directions for what to draw (scaffolding)
   scaffoldSvg?: string;       // pre-drawn scaffold the student completes (faint background)
   imageUrl?: string;          // alternative raster scaffold
   palette?: string[];         // colors offered to the student (defaults provided)
+  grid?: boolean;             // graph-paper background for a blank sketch
+  backgroundDiagram?: DiagramScene; // draw/annotate ON TOP of a physics diagram
+}
+
+/** A lab-notebook capture block: an annotatable sketch area + labeled
+ *  reasoning/step boxes, so students record their thinking AND their work
+ *  together in context. Response shape: { strokes, fields: Record<label,text> }. */
+export interface LabNotebookBlock extends BaseBlock {
+  type: 'lab_notebook';
+  capture: true;
+  instruction: string;
+  fields?: string[];          // labels for the written-reasoning boxes (defaults provided)
+  palette?: string[];
+  grid?: boolean;
+  backgroundDiagram?: DiagramScene; // optional physics scene to annotate on the sketch
 }
 
 export interface SimEmbedBlock extends BaseBlock {
@@ -195,6 +211,24 @@ export interface CircuitComponent { kind: 'battery' | 'switch' | 'motor' | 'resi
 /** A single link in a left-to-right energy chain (kind === 'energy_chain'). */
 export interface EnergyChainLink { label: string; sublabel?: string; color?: string }
 
+/** The data for a code-drawn physics diagram, decoupled from the block wrapper so
+ *  it can also be used as an annotatable background behind a sketch (doodle /
+ *  lab_notebook). Mirrors the renderable fields of DiagramBlock. */
+export interface DiagramScene {
+  kind: DiagramKind;
+  title?: string;
+  caption?: string;
+  forces?: DiagramForce[];
+  vectors?: DiagramVector[];
+  showResultant?: boolean;
+  dots?: number[];
+  components?: CircuitComponent[];
+  links?: EnergyChainLink[];
+  leftMag?: number;
+  rightMag?: number;
+  veerDir?: 'left' | 'right';
+}
+
 /** A code-drawn SVG physics figure (no image file). The renderer draws it on-brand.
  *  Authors may provide structured fields (when seeded) OR a JSON `spec` string
  *  (the builder textarea); the renderer accepts either. */
@@ -284,7 +318,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | DoodleBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
+  | CalloutBlock | SentenceFrameBlock | DoodleBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
@@ -300,6 +334,7 @@ export interface BlockDocument {
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
 export const CAPTURE_BLOCK_TYPES: BlockType[] = [
   'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
+  'doodle', 'lab_notebook',
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {

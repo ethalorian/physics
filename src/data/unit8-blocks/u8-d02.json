@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "d2-b1",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety beat — the soldering iron",
+      "markdown": "**60 seconds before anything else.** The soldering iron tip runs around **350-400 degrees C** — hot enough to burn you instantly, and it *looks* the same cold or hot.\n\n- The iron **lives in its stand**, always. Never set it on the bench.\n- **Eye protection on** before you melt solder — it can spit.\n- Solder fumes go **up and away** — don't lean over your joint; let the fan pull them.\n- Heat the **joint**, not the solder. Touch solder to the hot metal, not to the tip.\n- Hot iron, hot work, hot bench — assume everything near the station is hot until proven cool."
+    },
+    {
+      "id": "d2-b2",
+      "type": "target",
+      "statement": "I can name the four DC components and describe what each one does in the loop.",
+      "targetId": "K1"
+    },
+    {
+      "id": "d2-b3",
+      "type": "target",
+      "statement": "I can trace the energy chain from battery to motion: chemical to electrical to mechanical.",
+      "targetId": "K2"
+    },
+    {
+      "id": "d2-b4",
+      "type": "target",
+      "statement": "I can build a working series circuit in PhET (battery, switch, motor) and predict what happens when I change the loop.",
+      "targetId": "S1"
+    },
+    {
+      "id": "d2-b5",
+      "type": "target",
+      "statement": "I can produce a clean scrap solder joint that is shiny, tight, and compact.",
+      "targetId": "S2"
+    },
+    {
+      "id": "d2-b6",
+      "type": "prose",
+      "markdown": "### Today: simulate it, then practice the iron\n\nFirst we build the car's circuit **in PhET** where mistakes cost nothing. We open switches, double voltages, and break wires on purpose — then watch what current does. Once the model lives in your head, we move to the iron and practice the joint that will hold your real circuit together.\n\nThe move to make habitual today: **\"What did I predict? What actually happened?\"** Say it out loud every time you power the loop. It pays off on race day."
+    },
+    {
+      "id": "d2-b7",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "The car's series loop",
+      "caption": "One single loop: the battery pushes current, the switch gates it, the motor spins. Break the loop anywhere and the motor stops.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "top",
+          "label": "battery"
+        },
+        {
+          "kind": "switch",
+          "side": "right",
+          "label": "switch"
+        },
+        {
+          "kind": "motor",
+          "side": "bottom",
+          "label": "motor"
+        }
+      ]
+    },
+    {
+      "id": "d2-b8",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Circuit",
+          "definition": "A complete, closed loop that lets current flow from the battery and back.",
+          "cognate": "circuito"
+        },
+        {
+          "term": "Series",
+          "definition": "Components wired one after another in a single loop; break it anywhere and current stops everywhere.",
+          "cognate": "en serie"
+        },
+        {
+          "term": "Current",
+          "definition": "The flow of charge around the closed loop that makes the motor turn.",
+          "cognate": "corriente"
+        },
+        {
+          "term": "Switch",
+          "definition": "The gate that opens (stops current) or closes (allows current) the loop.",
+          "cognate": "interruptor"
+        },
+        {
+          "term": "Motor",
+          "definition": "The load — converts electrical energy into spinning, rotational motion.",
+          "cognate": "motor"
+        },
+        {
+          "term": "Solder",
+          "definition": "A metal alloy melted to bond two conductors into one electrical and mechanical joint.",
+          "cognate": "soldadura"
+        }
+      ]
+    },
+    {
+      "id": "d2-b9",
+      "type": "lesson_vocab"
+    },
+    {
+      "id": "d2-b10",
+      "type": "sim_embed",
+      "simulationSlug": "circuit-construction-kit-dc"
+    },
+    {
+      "id": "d2-b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "In PhET, build the loop: battery, switch, motor (use a bulb as the motor stand-in). Close the switch and power it. Now trace the current path with your finger and explain in words what the switch does when it is OPEN versus CLOSED.",
+      "givenHint": "Describe the single closed loop and where the switch sits in it.",
+      "equationHint": "No equation needed — explain in terms of a complete vs. broken loop and whether current can flow."
+    },
+    {
+      "id": "d2-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Probe the model. (a) Open the switch — what happens to the motor and why? (b) Double the battery voltage — what happens to the current and the motor's speed? Record what you PREDICTED and what actually HAPPENED for each.",
+      "givenHint": "Note your prediction first, then the observation, for each change.",
+      "equationHint": "Reason from: more push (voltage) in the same loop means more current means a faster motor; an open switch means a broken loop means no current."
+    },
+    {
+      "id": "d2-b13",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "The motor only spins when the circuit is COMPLETE. A solder joint on the real car cracks and goes open. What happens to the current, and why does this make the case for a clean, tight solder joint?",
+      "givenHint": "Treat the cracked joint as a break in the single series loop.",
+      "equationHint": "Connect: open loop means no current path means motor stops. A weak joint is an open waiting to happen."
+    },
+    {
+      "id": "d2-b14",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "Battery to motion: the energy chain",
+      "caption": "The battery's stored chemical energy becomes electrical energy in the loop, which the motor converts to mechanical (spinning) motion.",
+      "links": [
+        {
+          "label": "Chemical",
+          "sublabel": "stored in the battery",
+          "color": "var(--primary)"
+        },
+        {
+          "label": "Electrical",
+          "sublabel": "current in the loop",
+          "color": "var(--reward)"
+        },
+        {
+          "label": "Mechanical",
+          "sublabel": "the motor spins",
+          "color": "var(--success)"
+        }
+      ]
+    },
+    {
+      "id": "d2-b15",
+      "type": "worked_example",
+      "prompt": "A pod's circuit uses a 3 V battery and the motor draws current through a loop with about 6 ohms of total resistance. Estimate the current in the loop.",
+      "given": "V = 3 V (battery), R = 6 ohms (total loop resistance, motor + wires)",
+      "equation": "Ohm's law: $I = \\dfrac{V}{R}$",
+      "work": "$I = \\dfrac{3\\,\\text{V}}{6\\,\\Omega} = 0.5\\,\\text{A}$",
+      "answer": "$I = 0.5\\,\\text{A}$ — and because it is a series loop, that same 0.5 A flows through every component. Double the voltage to 6 V and the current doubles to 1 A."
+    },
+    {
+      "id": "d2-b16",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Key idea — one loop, one current",
+      "markdown": "In a **series** circuit there is exactly **one path**. The **same current** flows through the battery, the switch, and the motor. That is why a single broken joint — a cracked solder bead, an open switch — stops **everything**. Build every joint as if the whole car depends on it, because it does."
+    },
+    {
+      "id": "d2-b17",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "Sketch your circuit and log the build. Draw arrows ON TOP of the loop below to show the direction current flows when the switch is closed, then fill in the boxes.",
+      "fields": [
+        "What I built (components in order around the loop)",
+        "Current direction + what the switch does",
+        "What I observed when I opened the switch / changed the voltage"
+      ],
+      "backgroundDiagram": {
+        "kind": "circuit",
+        "components": [
+          {
+            "kind": "battery",
+            "side": "top",
+            "label": "battery"
+          },
+          {
+            "kind": "switch",
+            "side": "right",
+            "label": "switch"
+          },
+          {
+            "kind": "motor",
+            "side": "bottom",
+            "label": "motor"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d2-b18",
+      "type": "callout",
+      "variant": "note",
+      "title": "Scrap solder practice — turn in two joints",
+      "markdown": "Now the iron. On **scrap wire** (not your car), make **two practice joints**. Aim for the three S's:\n\n- **Shiny** — a good joint looks bright and smooth, not dull/grey/lumpy (that's a cold joint).\n- **Tight** — the wires don't wiggle; the solder wicked into the strands.\n- **Compact** — a small, clean bead, not a blob.\n\nHeat the joint, feed solder to the joint, remove solder, then remove iron — and hold still while it cools. Teacher inspects each one. **Finished early?** Solder a third joint with stranded wire (harder)."
+    },
+    {
+      "id": "d2-b19",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In your own words, sketch or describe the four-link energy chain that drives the car, from the battery to the wheels turning.",
+      "frame": "The battery stores ___ energy, which becomes ___ in the loop, which the motor turns into ___ motion."
+    },
+    {
+      "id": "d2-b20",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "108b06c3-58ce-43e7-aa42-93841e1e1dc2"
+    }
+  ]
+}

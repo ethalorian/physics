@@ -1,0 +1,160 @@
+{
+  "schemaVersion": 1,
+  "dayType": "WORKSHOP",
+  "blocks": [
+    {
+      "id": "d7-b1",
+      "type": "target",
+      "statement": "I can make clean, reliable solder joints on my car's wiring (S3) and begin executing my Day-1 theme with visible craftsmanship (S7).",
+      "targetId": "s3"
+    },
+    {
+      "id": "d7-b2",
+      "type": "callout",
+      "variant": "warning",
+      "title": "SAFETY — soldering iron, second take",
+      "markdown": "The iron tip runs **350–450 °C**. Park it in the stand every single time you set it down. **One hand behind your back** while you solder so you never brace a wire with bare fingers. Solder in the ventilated zone, and let joints cool 10 seconds before you touch them. Hot glue burns too — treat the nozzle like the iron."
+    },
+    {
+      "id": "d7-b3",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "solder joint",
+          "definition": "A wire splice fused with melted solder so the connection is permanent and low-resistance.",
+          "cognate": "junta de soldadura"
+        },
+        {
+          "term": "cold joint",
+          "definition": "A dull, grainy joint where the solder never fully flowed — it looks connected but breaks contact and stops the current.",
+          "cognate": "soldadura fría"
+        },
+        {
+          "term": "series circuit",
+          "definition": "One single loop: battery → switch → motor. Current must pass through every part in order; break it anywhere and it stops everywhere.",
+          "cognate": "circuito en serie"
+        },
+        {
+          "term": "finish craftsmanship",
+          "definition": "How carefully the surface, paint, and decoration are executed — one of the three things the Day-9 judge scores."
+        }
+      ]
+    },
+    {
+      "id": "d7-b4",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "One loop, four joints to commit",
+      "caption": "Battery (source) → switch (gate) → motor (load), back to battery. Every tape splice you replace with solder is one link in this single series loop. A cold joint on ANY edge opens the whole loop.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "Battery (source)"
+        },
+        {
+          "kind": "switch",
+          "side": "top",
+          "label": "Switch (gate)"
+        },
+        {
+          "kind": "motor",
+          "side": "right",
+          "label": "Motor (load)"
+        }
+      ]
+    },
+    {
+      "id": "d7-b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "What a good joint looks like",
+      "markdown": "**Heat the wire, not the solder.** Touch the iron to the joint for 2–3 seconds, then feed solder onto the *wire* — it should flow and wick in. A good joint is **shiny and smooth**, like a tiny silver volcano. A **dull, blobby, grainy** joint is a *cold joint*: reheat it until it flows. Then slide heat-shrink over it and hot-glue the wire so it cannot snag."
+    },
+    {
+      "id": "d7-b6",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "FINISH PLAN. Sketch your car's aesthetic (top + side view): where paint, decoration, and your Day-1 theme go. Then log which of the four solder joints are COMMITTED (soldered + inspected) vs. still on tape.",
+      "fields": [
+        "Theme (Day-1 commitment) + the aesthetic I'm sketching",
+        "Joints committed so far (which edges of the loop) and how I inspected each",
+        "Reasoning: which joint is most critical to solder first, and why",
+        "Reasoning: what I want the Day-9 judge to SEE in my finish"
+      ],
+      "grid": true,
+      "palette": [
+        "#1f2937",
+        "#b45309",
+        "#2563eb",
+        "#dc2626",
+        "#16a34a"
+      ]
+    },
+    {
+      "id": "d7-b7",
+      "type": "worked_example",
+      "prompt": "Reliability reasoning: the wheel circumference is fixed and the build is nearly final. One team's car ran fine on Day 6 but now refuses to power on after soldering. Re-derive what a single COLD joint does to the series loop, and confirm whether the predicted top speed even matters if the loop is open.",
+      "given": "Series loop: battery → switch → motor → battery. One splice cooled into a cold joint (no metal-to-metal flow). Day-3 predicted top speed v = 1.80 m/s came from wheel circumference C = 0.180 m and motor output ≈ 10.0 rev/s.",
+      "equation": "In one series loop the current I is the SAME everywhere; open the loop at any joint and I = 0 A throughout. Speed only exists if current reaches the motor: v = (rev/s) × C.",
+      "work": "A cold joint behaves like an open switch — resistance spikes toward infinity, so I ≈ 0 A at every component, not just the bad one. With I = 0 A the motor produces 0 rev/s. Then v = (0 rev/s) × 0.180 m = 0 m/s. The other three joints being perfect does not help: current must pass through ALL of them in order.",
+      "answer": "v = 0 m/s. A single cold joint kills the car. The predicted 1.80 m/s is irrelevant until every joint in the series loop carries current — reliability comes before speed."
+    },
+    {
+      "id": "d7-b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "RELIABILITY GEWA. Your teammate says 'three of our four joints are perfect, so the car is 75% reliable.' Use series-circuit reasoning to decide if that's true. State what current flows to the motor and what top speed results if the fourth joint is cold.",
+      "givenHint": "GIVEN: a single series loop (battery, switch, motor); 3 good joints + 1 cold joint; current I is shared by every component in a series loop.",
+      "equationHint": "EQUATION: series current is the same everywhere → open the loop anywhere → I = 0 A everywhere → v = (rev/s) × C = 0.",
+      "equationOptions": [
+        "I_series = same through every component",
+        "v = (rev/s) × C",
+        "rev/s = v / C",
+        "RPM = (rev/s) × 60"
+      ]
+    },
+    {
+      "id": "d7-b9",
+      "type": "prose",
+      "markdown": "### Final alignment roll test\n\nSoldering means heat and handling — that can nudge an axle out of true. Before you paint, **roll your car unpowered down at least 3 m** and watch it. If it veers, the wheels are no longer parallel and you fix it *now*, while the joints are exposed, not after the paint dries."
+    },
+    {
+      "id": "d7-b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "RE-PREDICT TOP SPEED (review). Your build is near-final and you re-measured the wheel circumference as C = 0.180 m. In a clean corridor run the axle turns about 10.0 rev/s once the loop is solid. Re-predict the car's top speed in m/s, and convert the axle rate to RPM.",
+      "givenHint": "GIVEN: C = 0.180 m, rev/s ≈ 10.0 rev/s, all joints soldered (current flows).",
+      "equationHint": "EQUATION: v = (rev/s) × C, then RPM = (rev/s) × 60.",
+      "equationOptions": [
+        "v = (rev/s) × C",
+        "RPM = (rev/s) × 60",
+        "rev/s = v / C",
+        "v = d / t"
+      ]
+    },
+    {
+      "id": "d7-b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Day-9 judging is three things",
+      "markdown": "The design judge scores **theme execution + finish craftsmanship + build craftsmanship**. Today's solder joints are the *build* score, and the paint/decoration you start now is the *finish* score. Don't rush the finish to chase a faster lap — a reliable, clean car wins on the table even before it wins in the corridor."
+    },
+    {
+      "id": "d7-b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Name the ONE joint you committed today that you're most confident in, and explain in series-circuit terms why a single bad joint would have stopped the whole car.",
+      "frame": "The joint I trust most is ___ because the solder ___. A single cold joint anywhere would ___ because in a series loop the current ___."
+    },
+    {
+      "id": "d7-b13",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "1d0721bd-1b72-4921-b1c8-7dadc157786d",
+        "1fb2b1c7-3372-4573-81f6-e413185c283c"
+      ]
+    }
+  ]
+}

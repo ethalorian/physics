@@ -1,9 +1,9 @@
 "use client"
 
-import { useState, useEffect, Component, type ReactNode } from 'react'
+import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink } from '@/data/content-blocks'
+import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
@@ -243,6 +243,110 @@ function parseSpec(spec?: string): Record<string, unknown> {
 
 // Returns the INNER body of a block (no card chrome). The shell — when the
 // block type warrants one — provides the rounded card + domain header.
+// Step-driven worked example, framed as GEWA so students see solved problems in
+// the EXACT structure they fill in (Given → Equation → Work → Answer). Each step
+// is a numbered, color-coded node on a connector rail; math renders via MathMarkdown.
+const GEWA_STEPS = [
+  { key: 'given', letter: 'G', label: 'Given', hint: 'pull out what you know', color: 'var(--primary)' },
+  { key: 'equation', letter: 'E', label: 'Equation', hint: 'the relationship', color: '#3A6FA5' },
+  { key: 'work', letter: 'W', label: 'Work', hint: 'substitute & solve', color: 'var(--reward)' },
+  { key: 'answer', letter: 'A', label: 'Answer', hint: 'with units, boxed', color: 'var(--success)' },
+] as const
+function GewaWorkedExample({ prompt, given, equation, work, answer }: { prompt: string; given?: string; equation?: string; work?: string; answer?: string }) {
+  const vals: Record<string, string | undefined> = { given, equation, work, answer }
+  const shown = GEWA_STEPS.filter((s) => vals[s.key])
+  return (
+    <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <div className="text-[11px] font-semibold uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>Worked example · GEWA</div>
+      <div className="text-sm font-medium mb-3" style={{ color: 'var(--foreground)' }}><MathMarkdown content={prompt} /></div>
+      <ol style={{ listStyle: 'none', margin: 0, padding: 0 }} className="space-y-3">
+        {shown.map((s, i) => {
+          const isAnswer = s.key === 'answer'
+          return (
+            <li key={s.key} className="relative" style={{ paddingLeft: 46 }}>
+              {i < shown.length - 1 && <span style={{ position: 'absolute', left: 16, top: 36, bottom: -14, width: 2, background: 'var(--border)' }} />}
+              <span className="grid place-items-center rounded-full text-sm font-bold" style={{ position: 'absolute', left: 0, top: 0, width: 34, height: 34, background: `color-mix(in oklch, ${s.color} 18%, var(--card))`, color: s.color, border: `2px solid ${s.color}` }}>{s.letter}</span>
+              <div className="flex items-baseline gap-2">
+                <span className="text-sm font-semibold" style={{ color: s.color }}>{s.label}</span>
+                <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{s.hint}</span>
+              </div>
+              <div className="text-sm mt-1 rounded-lg px-3 py-2" style={{ background: isAnswer ? 'color-mix(in oklch, var(--success) 12%, var(--card))' : 'var(--secondary)', color: 'var(--foreground)', fontWeight: isAnswer ? 600 : 400 }}>
+                <MathMarkdown content={vals[s.key] as string} />
+              </div>
+            </li>
+          )
+        })}
+      </ol>
+    </div>
+  )
+}
+
+// A physics diagram rendered as the annotation background behind a sketch.
+// Title/caption are dropped so only the figure sits under the student's ink.
+function DiagramBackground({ scene }: { scene: DiagramScene }) {
+  return (
+    <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center', background: '#FFFFFF' }}>
+      <PhysicsDiagram
+        kind={scene.kind}
+        forces={scene.forces}
+        vectors={scene.vectors}
+        showResultant={scene.showResultant}
+        dots={scene.dots}
+        components={scene.components}
+        links={scene.links}
+        leftMag={scene.leftMag}
+        rightMag={scene.rightMag}
+        veerDir={scene.veerDir}
+      />
+    </div>
+  )
+}
+
+// Lab-notebook capture: an annotatable sketch + labeled reasoning boxes. Either
+// the sketch's "Save drawing" or a reasoning box blur persists the WHOLE response
+// ({ strokes, fields }) so thinking and work are logged together.
+const LAB_DEFAULT_FIELDS = ['What I did', 'What I observed', 'What it means']
+function LabNotebook({ b, saved, save }: { b: LabNotebookBlock; saved: unknown; save: SaveFn }) {
+  const fields = b.fields && b.fields.length ? b.fields : LAB_DEFAULT_FIELDS
+  const prev = (saved as { strokes?: Stroke[]; fields?: Record<string, string> } | undefined) ?? {}
+  const strokesRef = useRef<Stroke[]>(prev.strokes ?? [])
+  const [text, setText] = useState<Record<string, string>>(prev.fields ?? {})
+  const [savedFlag, setSavedFlag] = useState(false)
+  const persist = (strokes: Stroke[], t: Record<string, string>) => {
+    save(b.id, 'lab_notebook', { strokes, fields: t })
+    setSavedFlag(true)
+  }
+  return (
+    <div className="rounded-xl border p-3 space-y-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <p className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>{b.instruction}</p>
+      <DoodleCanvas
+        instruction="Sketch / show your work"
+        palette={b.palette}
+        grid={b.grid}
+        backgroundNode={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined}
+        initialStrokes={prev.strokes ?? []}
+        onSave={(strokes) => { strokesRef.current = strokes; persist(strokes, text) }}
+      />
+      <div className="space-y-2">
+        {fields.map((label) => (
+          <label key={label} className="block">
+            <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>{label}</span>
+            <textarea
+              value={text[label] ?? ''}
+              onChange={(e) => { setText((p) => ({ ...p, [label]: e.target.value })); setSavedFlag(false) }}
+              onBlur={() => persist(strokesRef.current, text)}
+              rows={2}
+              className="mt-1 w-full rounded-lg border px-2.5 py-1.5 text-sm"
+              style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+            />
+          </label>
+        ))}
+      </div>
+      {savedFlag && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
+    </div>
+  )
+}
+
 function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string) {
   switch (b.type) {
     case 'target':
@@ -278,17 +382,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
         </dl>
       )
     case 'worked_example':
-      return (
-        <>
-          <p className="text-sm mb-1" style={{ color: C.indigo }}>{b.prompt}</p>
-          <div className="text-sm" style={{ color: C.muted }}>
-            {b.given && <div><b>Given:</b> {b.given}</div>}
-            {b.equation && <div><b>Equation:</b> {b.equation}</div>}
-            {b.work && <div><b>Work:</b> {b.work}</div>}
-            {b.answer && <div style={{ color: C.sage }}><b>Answer:</b> {b.answer}</div>}
-          </div>
-        </>
-      )
+      return <GewaWorkedExample prompt={b.prompt} given={b.given} equation={b.equation} work={b.work} answer={b.answer} />
     case 'sentence_frame':
       return (
         <>
@@ -312,10 +406,14 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
           scaffoldSvg={b.scaffoldSvg}
           imageUrl={b.imageUrl}
           palette={b.palette}
+          grid={b.grid}
+          backgroundNode={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined}
           initialStrokes={((saved as { strokes?: Stroke[] })?.strokes) ?? []}
           onSave={(strokes) => save(b.id, 'doodle', { strokes })}
         />
       )
+    case 'lab_notebook':
+      return <LabNotebook b={b} saved={saved} save={save} />
     case 'marzano':
       return <MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n)} />
     case 'exit_ticket':

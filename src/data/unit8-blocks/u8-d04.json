@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "d4-b1",
+      "type": "target",
+      "statement": "S4 — I can cut my balsa chassis to spec and mark a SINGLE straight pencil axle line, so my axles can sit parallel and the car rolls straight.",
+      "targetId": "u8-s4"
+    },
+    {
+      "id": "d4-b2",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety beat — read before you touch a knife (60 seconds)",
+      "markdown": "We are cutting balsa with **X-acto knives** on cutting mats today.\n\n- **Cut away from your hand**, never toward your fingers or your body.\n- Keep your **non-cutting hand behind the blade**, never in front of it.\n- One pass, light pressure — let the blade do the work. Forcing it makes it skip.\n- **Mask on** for the dust. Cap the knife the second you set it down.\n\nTomorrow we add **hot glue** — same calm hands, full briefing on Day 5."
+    },
+    {
+      "id": "d4-b3",
+      "type": "callout",
+      "variant": "tip",
+      "title": "The big idea today",
+      "markdown": "**Day 5 depends on Day 4.** If your two axle marks aren't on one straight line today, your axles can't be parallel tomorrow — and a car with non-parallel axles *cannot* roll straight on Day 6. Measure twice, mark once, in pencil, before you cut anything."
+    },
+    {
+      "id": "d4-b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Chassis",
+          "definition": "The flat balsa base that everything else mounts to — the frame of your car.",
+          "cognate": "chasis"
+        },
+        {
+          "term": "Wheelbase",
+          "definition": "The straight-line distance from the front axle to the rear axle.",
+          "cognate": "distancia entre ejes"
+        },
+        {
+          "term": "Axle line",
+          "definition": "A single straight pencil line drawn across the chassis where an axle will sit; both wheels of a pair share it.",
+          "cognate": "línea del eje"
+        },
+        {
+          "term": "Symmetry",
+          "definition": "Both sides matching — equal margins left/right and a centered wheelbase so the car tracks straight.",
+          "cognate": "simetría"
+        }
+      ]
+    },
+    {
+      "id": "d4-b5",
+      "type": "prose",
+      "markdown": "### Build step 1 — confirm before you cut\n\nBefore the knife comes out, lock in two decisions:\n\n1. **Theme confirmed** — what your car is going to *be*. Sketch the finish on the chassis underside if you're ahead.\n2. **Wheel set confirmed** — pull your wheels from the kit and measure them. The wheel diameter you chose on Day 3 sets how much chassis margin you need so the wheels don't rub.\n\nThen plan the chassis on paper: overall **length**, the **front axle line**, and the **rear axle line** — all in pencil first."
+    },
+    {
+      "id": "d4-b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "Where the axle line fits in the build",
+      "caption": "Today is the chassis + axle-line step. Everything downstream — parallel axles, straight rolling, the final run — rides on getting this one straight pencil line right.",
+      "links": [
+        {
+          "label": "Chassis cut",
+          "sublabel": "to length (Day 4)",
+          "color": "var(--primary)"
+        },
+        {
+          "label": "Axle line",
+          "sublabel": "one straight pencil mark",
+          "color": "var(--reward)"
+        },
+        {
+          "label": "Axles mounted",
+          "sublabel": "parallel (Day 5)"
+        },
+        {
+          "label": "Rolls straight",
+          "sublabel": "the run (Day 6)",
+          "color": "var(--success)"
+        }
+      ]
+    },
+    {
+      "id": "d4-b7",
+      "type": "prose",
+      "markdown": "### Build step 2 — center the wheelbase\n\nTo place two axle lines so the **wheelbase is centered** on the chassis:\n\n$$\\text{front margin} = \\frac{\\text{chassis length} - \\text{wheelbase}}{2}$$\n\nThat leftover length splits **evenly** between the front and the back. Equal margins front-and-back is symmetry along the car; equal margins left-and-right keeps each axle line crossing square. Mark from the **same ruler edge every time** so small errors don't pile up."
+    },
+    {
+      "id": "d4-b8",
+      "type": "worked_example",
+      "prompt": "Your chassis is 18 cm long and you want a 12 cm wheelbase, centered. Where do you draw the front and rear axle lines, measured from the front edge?",
+      "given": "Chassis length L = 18 cm; wheelbase W = 12 cm; centered (equal margins front and back).",
+      "equation": "$\\text{front margin} = \\dfrac{L - W}{2}$, then $\\text{rear axle} = \\text{front margin} + W$.",
+      "work": "$\\text{front margin} = \\dfrac{18 - 12}{2} = \\dfrac{6}{2} = 3\\ \\text{cm}$.  $\\;$ Front axle line at $3\\ \\text{cm}$. Rear axle line at $3 + 12 = 15\\ \\text{cm}$. Check: rear margin $= 18 - 15 = 3\\ \\text{cm}$ ✓ (matches the front).",
+      "answer": "Draw the **front axle line at 3 cm** and the **rear axle line at 15 cm** from the front edge. Equal 3 cm margins front and back = **centered wheelbase**. Each line goes straight across, square to the long edge."
+    },
+    {
+      "id": "d4-b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Square-across rule (write this down)",
+      "markdown": "An axle line must be **one straight line all the way across**, at a **right angle (90°)** to the long edge of the chassis. Mark the same distance from the front edge on **both sides**, then connect the two dots with a ruler. Two separate squiggles = two non-parallel axles = a car that pulls to one side."
+    },
+    {
+      "id": "d4-b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Measure your actual chassis length with a ruler. You want your wheelbase centered. Find the front margin and state where to draw the front axle line (distance from the front edge).",
+      "givenHint": "Measure chassis length L (cm) and decide your wheelbase W (cm).",
+      "equationHint": "front margin = (L − W) ÷ 2",
+      "equationOptions": [
+        "front margin = (L − W) ÷ 2",
+        "rear axle = front margin + W",
+        "C = π·d",
+        "symmetry: left margin = right margin"
+      ]
+    },
+    {
+      "id": "d4-b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Using your front margin from the last problem, find where the REAR axle line goes (distance from the front edge), then verify the rear margin equals the front margin so the wheelbase is truly centered.",
+      "givenHint": "Use your chassis length L, wheelbase W, and the front margin you just computed.",
+      "equationHint": "rear axle = front margin + W;  check: rear margin = L − rear axle",
+      "equationOptions": [
+        "rear axle = front margin + W",
+        "rear margin = L − rear axle",
+        "front margin = (L − W) ÷ 2",
+        "centered ⇔ front margin = rear margin"
+      ]
+    },
+    {
+      "id": "d4-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Symmetry check for ONE axle line: your chassis is 5.0 cm wide and the axle should sit centered across it. If you mark a dot 1.2 cm in from the LEFT edge, how far in from the RIGHT edge must the matching dot be so the line crosses square and centered? Is your 1.2 cm dot correct?",
+      "givenHint": "Chassis width = 5.0 cm; left dot at 1.2 cm from the left edge.",
+      "equationHint": "right distance = width − left distance;  centered ⇔ left distance = right distance",
+      "equationOptions": [
+        "right distance = width − left distance",
+        "centered ⇔ left distance = right distance",
+        "front margin = (L − W) ÷ 2"
+      ]
+    },
+    {
+      "id": "d4-b13",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "Build step 3 — make your chassis plan. On the graph paper, sketch your chassis from the top: draw the outline to your measured length and width, then draw BOTH axle lines as single straight lines across (label which is front/rear). Mark where the motor and battery will sit. Then log your measurements below.",
+      "fields": [
+        "Chassis length × width (cm) I measured / marked",
+        "Wheelbase (cm) and my front-axle and rear-axle distances from the front edge",
+        "Front margin and rear margin — do they match? (centered? show the numbers)",
+        "Planned motor position and battery position (and why there — balance/clearance)",
+        "Eye-level check: is each axle line ONE straight line, square to the edge? What I fixed."
+      ],
+      "grid": true
+    },
+    {
+      "id": "d4-b14",
+      "type": "sentence_frame",
+      "frame": "My chassis is ____ cm long. To center a ____ cm wheelbase I drew the front axle line at ____ cm and the rear axle line at ____ cm, leaving equal ____ cm margins, because ____.",
+      "wordBank": [
+        "front margin",
+        "rear margin",
+        "centered",
+        "wheelbase",
+        "symmetry",
+        "square across",
+        "one straight line",
+        "parallel axles"
+      ]
+    },
+    {
+      "id": "d4-b15",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Hold your chassis at eye level and look down the two axle lines. In one or two sentences: why does it matter that each axle line is ONE straight line, and what would go wrong tomorrow and on race day if they weren't?",
+      "frame": "Each axle line must be ____ because ____. If they weren't, then on Day 5 ____ and on Day 6 the car would ____."
+    },
+    {
+      "id": "d4-b16",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "2728d6f0-199b-4751-8591-c285abed5e6a"
+    }
+  ]
+}

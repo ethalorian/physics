@@ -1,0 +1,212 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "d9-b1",
+      "type": "target",
+      "statement": "I can run my car in a timed RACE and compute its official speed with v = d/t (R3), compare my measured race speed to my Day-6 prediction with a percent difference (R3), and defend three physics design choices in writing on the transfer task (R4).",
+      "targetId": "u8-r3"
+    },
+    {
+      "id": "d9-b2",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Today's flow: race -> judge design -> analyze with physics -> transfer task -> reflect",
+      "markdown": "**This is the capstone.** First we **race in heats** down the marked corridor while the teacher records each car's time and straightness. Then we **judge design** at the table (theme, finish, build craftsmanship). Then YOU do the physics: compute each official race **speed with v = d/t**, find the **percent difference** between your measured speed and your Day-6 prediction, and reason about **why one car beat another from the physics, not the team**. Finally the **transfer task** asks you to defend three design choices in writing."
+    },
+    {
+      "id": "d9-b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Race procedure -- make every heat fair",
+      "markdown": "Heats run down the **same marked corridor** over a **fixed race distance** (e.g. 6.0 m) with the SAME start and finish line for every car. **Switch the car ON at the start line as the stopwatch starts**; the teacher stops the watch the instant the front of the car crosses the finish line and records **time** plus a **straightness** rating (1-2-3). Signed-chassis check happens before any heat. Keep the lane clear -- a car that hits the wall gets a re-run, not a thrown-out result."
+    },
+    {
+      "id": "d9-b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Sportsmanship + celebration",
+      "markdown": "**Race the cars, not each other.** Cheer every heat -- the slowest car taught its team just as much physics as the fastest one. When a car wins that nobody expected, the question is never *\"whose team is best\"* -- it is *\"what design choice made that car faster?\"* Congratulate the builders, then put on your scientist hat: the race is a **thinking artifact**, evidence for the physics, not a popularity contest."
+    },
+    {
+      "id": "d9-b5",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "official run",
+          "definition": "The single timed race heat that counts -- the one whose distance and time you use to compute your car's official race speed.",
+          "cognate": "carrera oficial"
+        },
+        {
+          "term": "percent difference",
+          "definition": "How far your measured race speed sits from your predicted speed, as a percent: %diff = |measured - predicted| / predicted x 100%. Small percent = your Day-6 prediction matched the floor well.",
+          "cognate": "diferencia porcentual"
+        },
+        {
+          "term": "gear ratio",
+          "definition": "The ratio of motor turns to wheel turns. A ratio favoring speed lets the wheels spin faster per motor turn (more top speed, less pulling force); a ratio favoring torque does the opposite.",
+          "cognate": "relacion de engranajes"
+        },
+        {
+          "term": "alignment",
+          "definition": "How straight and parallel the wheels/axles run. Good alignment keeps the car going straight so it covers the race distance in less time; misalignment veers the car and wastes distance.",
+          "cognate": "alineacion"
+        }
+      ]
+    },
+    {
+      "id": "d9-b6",
+      "type": "data_table",
+      "capture": true,
+      "columns": [
+        "Car",
+        "Time (s)",
+        "Speed (m/s)",
+        "Notes"
+      ],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "Record each car's official heat: its time over the fixed race distance, the speed you compute with v = d/t, and a note on straightness or any design feature you observed. After the table is full, rank the cars by speed -- which was fastest, and what do you notice about that car's design?"
+    },
+    {
+      "id": "d9-b7",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "From battery to race speed: the full drivetrain",
+      "caption": "Every design choice lives somewhere on this chain. A weak link anywhere -- a draining battery, a stalling motor, a bad gear ratio, or misaligned wheels losing energy to friction -- shows up as a slower official time. Reason about a slow car by asking which link leaked energy.",
+      "links": [
+        {
+          "label": "Battery",
+          "sublabel": "chemical energy stored",
+          "color": "var(--primary)"
+        },
+        {
+          "label": "Motor",
+          "sublabel": "electrical -> rotation",
+          "color": "var(--reward)"
+        },
+        {
+          "label": "Gears",
+          "sublabel": "gear ratio sets wheel speed",
+          "color": "oklch(0.58 0.10 255)"
+        },
+        {
+          "label": "Wheels + axles",
+          "sublabel": "rotation -> ground (friction)",
+          "color": "var(--success)"
+        },
+        {
+          "label": "Car speed",
+          "sublabel": "v = d / t down the corridor",
+          "color": "var(--foreground)"
+        }
+      ]
+    },
+    {
+      "id": "d9-b8",
+      "type": "worked_example",
+      "prompt": "OFFICIAL RACE SPEED from distance and time. A car covers the official 6.0 m race corridor in a timed 2.0 s. What was its official race speed, in m/s?",
+      "given": "Race distance d = 6.0 m; official time t = 2.0 s.",
+      "equation": "$v = \\dfrac{d}{t}$",
+      "work": "Substitute the official numbers and keep the units: $\\;v = \\dfrac{6.0\\ \\text{m}}{2.0\\ \\text{s}} = 3.0\\ \\tfrac{\\text{m}}{\\text{s}}$. Meters stay on top, seconds on the bottom, so the answer is in m/s -- a speed.",
+      "answer": "The car's official race speed was **3.0 m/s**. This is the real speed on race day: the fixed race distance divided by the timed heat."
+    },
+    {
+      "id": "d9-b9",
+      "type": "worked_example",
+      "prompt": "PERCENT DIFFERENCE between predicted and measured. On Day 6 a team predicted their car would go 2.5 m/s. On race day it measured 3.0 m/s. What is the percent difference between the measured and predicted speeds?",
+      "given": "Predicted speed = 2.5 m/s; measured race speed = 3.0 m/s.",
+      "equation": "$\\%\\text{diff} = \\dfrac{\\lvert \\text{measured} - \\text{predicted}\\rvert}{\\text{predicted}} \\times 100\\%$",
+      "work": "Find the gap, then divide by the prediction: $\\;\\dfrac{\\lvert 3.0 - 2.5\\rvert}{2.5}\\times 100\\% = \\dfrac{0.5}{2.5}\\times 100\\% = 0.20 \\times 100\\% = 20\\%$.",
+      "answer": "The measured speed was about **20% higher** than predicted. A gap this size tells the team their Day-6 model missed something -- maybe a better gear ratio or smoother floor than they assumed. The sign (measured faster) is part of the story, not just the size."
+    },
+    {
+      "id": "d9-b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "OFFICIAL SPEED, your car. Using your car's official race DISTANCE and its timed value from today's heat, compute your official race speed with v = d/t. Show GIVEN, EQUATION, WORK, ANSWER and keep your units (m on top, s on the bottom -> m/s).",
+      "givenHint": "GIVEN: the official race distance d (m) and your timed heat t (s).",
+      "equationHint": "EQUATION: v = d / t. Substitute your numbers, keep meters on top and seconds on the bottom.",
+      "equationOptions": [
+        "v = d / t",
+        "%diff = |measured - predicted| / predicted x 100%",
+        "average speed = (v1 + v2 + ... + vn) / n",
+        "v = (rev/s) x C"
+      ]
+    },
+    {
+      "id": "d9-b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PERCENT DIFFERENCE, your car. Compare your official race speed (just computed) to your Day-6 PREDICTED speed. Compute the percent difference. Show GIVEN, EQUATION, WORK, ANSWER, and say in your ANSWER whether you were faster or slower than predicted.",
+      "givenHint": "GIVEN: your predicted speed (m/s) from Day 6 and your measured official race speed (m/s) from today.",
+      "equationHint": "EQUATION: %diff = |measured - predicted| / predicted x 100%. Subtract, take the absolute value, divide by your prediction, x 100%.",
+      "equationOptions": [
+        "%diff = |measured - predicted| / predicted x 100%",
+        "v = d / t",
+        "average speed = (v1 + v2 + ... + vn) / n",
+        "v = (rev/s) x C"
+      ]
+    },
+    {
+      "id": "d9-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "WHOSE CAR WAS FASTER -- AND WHY (reason from the physics). Pick TWO cars from your results table: the faster one and a slower one. State which had the higher official speed (back it with the v = d/t numbers), then explain ONE design choice -- wheel size, gear ratio, or alignment -- that best explains the difference. Reason from the drivetrain, not from the team.",
+      "givenHint": "GIVEN: the two cars' official speeds from your data table, plus what you observed about their wheels, gearing, or how straight each ran.",
+      "equationHint": "EQUATION: compare with v = d/t (same race distance, so the car with the shorter time has the higher speed). Then argue the design cause: e.g. larger wheels cover more distance per turn; a speed gear ratio spins wheels faster; better alignment wastes less distance to veering and friction.",
+      "equationOptions": [
+        "v = d / t",
+        "%diff = |measured - predicted| / predicted x 100%",
+        "v = (rev/s) x C",
+        "average speed = (v1 + v2 + ... + vn) / n"
+      ]
+    },
+    {
+      "id": "d9-b13",
+      "type": "callout",
+      "variant": "note",
+      "title": "Transfer task -- defend your design with physics",
+      "markdown": "The transfer task is scored on a **4-dimension rubric (Identify / Calculate / Construct / Transfer)** where the **lowest dimension wins** -- so do all four well. You will defend **three physics choices**: (1) **wheels** -- use your computed speed to argue your wheel choice; (2) **alignment** -- explain how straightness affected your time; (3) **circuit + a counterfactual** -- what would have happened to your speed if one circuit or drivetrain choice had been different. Use real numbers and units from your own car. **Sentence frames are available** if you want them: *\"My measured speed of ___ m/s shows ___ because ___.\"*"
+    },
+    {
+      "id": "d9-b14",
+      "type": "transfer_prompt",
+      "masteryTaskSlug": "u8-car-project-transfer"
+    },
+    {
+      "id": "d9-b15",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "DESIGN-JUDGING REFLECTION. Sketch your car (or the winning car) and label the one design feature you are most proud of. Then reason through what worked, what you would change, and why -- tying each idea back to the physics of speed and straightness.",
+      "fields": [
+        "What worked best on my car (and the physics reason it helped)",
+        "What I would change next time (and how it would change my speed or straightness)",
+        "What the race results taught me that my prediction missed"
+      ],
+      "grid": true
+    },
+    {
+      "id": "d9-b16",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "3eda5c97-f3a6-45a3-b911-0ab5680ac7fc",
+        "1c6e1fcc-63e2-40fc-9093-20352f02f3d6",
+        "6964687c-fb59-44b0-a39a-d870f0d4843a",
+        "a0da8983-b50b-4222-9f1d-11352c1f2cf4",
+        "bfd76c34-7786-4ad0-80e8-7bea9136e2db",
+        "2728d6f0-199b-4751-8591-c285abed5e6a",
+        "fae0b910-e74a-4ad9-99f1-8905a02b0619",
+        "c767b249-82ba-4742-8af3-199c26f233bb"
+      ]
+    },
+    {
+      "id": "d9-b17",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "567971c3-1f85-4da8-bfac-233381593285"
+    }
+  ]
+}

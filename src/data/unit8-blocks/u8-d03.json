@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "d3-b1",
+      "type": "target",
+      "statement": "K3 — I can explain how a gear pair trades RPM for torque, and predict whether the axle spins faster/slower and pushes harder/weaker than the motor.",
+      "targetId": "u8-k3"
+    },
+    {
+      "id": "d3-b2",
+      "type": "target",
+      "statement": "R1 — I can use ratio reasoning to predict how changing wheel diameter changes top speed and starting effort.",
+      "targetId": "u8-r1"
+    },
+    {
+      "id": "d3-b3",
+      "type": "target",
+      "statement": "R2 — I can justify our team's wheel choice with numbers (gear ratio + circumference), not just a guess.",
+      "targetId": "u8-r2"
+    },
+    {
+      "id": "d3-b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "The big idea today",
+      "markdown": "**The motor only spins. Gears change _how_.** A motor gives you one thing: rotations per minute. Gears decide whether those rotations come out *fast and weak* or *slow and strong*. Today you pick the wheel that turns your gear ratio into the speed you want."
+    },
+    {
+      "id": "d3-b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety beat (30 seconds)",
+      "markdown": "Tomorrow we cut chassis and use the **hot glue guns**. Tip dries clear but burns — never touch the metal tip, and lay the gun on its stand, not the table. Listen for the full briefing at the start of Day 4."
+    },
+    {
+      "id": "d3-b6",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "RPM",
+          "definition": "Rotations per minute — how fast a shaft spins.",
+          "cognate": "RPM (revoluciones por minuto)"
+        },
+        {
+          "term": "Gear ratio",
+          "definition": "Driven teeth ÷ driving teeth. Tells you how RPM and torque are traded.",
+          "cognate": "relación de engranajes"
+        },
+        {
+          "term": "Torque",
+          "definition": "Twisting/pushing force a turning shaft delivers.",
+          "cognate": "torque / par"
+        },
+        {
+          "term": "Circumference",
+          "definition": "Distance around the wheel; how far the car rolls in one turn. C = π·d.",
+          "cognate": "circunferencia"
+        },
+        {
+          "term": "Mechanical advantage",
+          "definition": "Trading speed for force (or force for speed) with gears or wheels.",
+          "cognate": "ventaja mecánica"
+        }
+      ]
+    },
+    {
+      "id": "d3-b7",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "Where the spin comes from — and where the gears sit",
+      "caption": "The battery's chemical energy becomes electrical, the motor turns it into a fast spin, the gear pair trades that spin for torque at the axle, and the wheel turns it into distance on the floor.",
+      "links": [
+        {
+          "label": "Battery",
+          "sublabel": "chemical",
+          "color": "var(--primary)"
+        },
+        {
+          "label": "Wires",
+          "sublabel": "electrical"
+        },
+        {
+          "label": "Motor",
+          "sublabel": "fast spin (high RPM)"
+        },
+        {
+          "label": "Gear pair",
+          "sublabel": "10T → 20T: trades RPM for torque",
+          "color": "var(--reward)"
+        },
+        {
+          "label": "Wheel",
+          "sublabel": "C = π·d → distance",
+          "color": "var(--success)"
+        }
+      ]
+    },
+    {
+      "id": "d3-b8",
+      "type": "prose",
+      "markdown": "### The gear-pair rule\n\nThe small gear on the **motor** is the **driving** gear. The big gear on the **axle** is the **driven** gear.\n\n$$\\text{gear ratio} = \\frac{\\text{driven teeth}}{\\text{driving teeth}}$$\n\nWhen the driven gear has **more** teeth than the driving gear:\n\n- The axle spins **slower** (RPM goes _down_ by the ratio).\n- The axle pushes **harder** (torque goes _up_ by the ratio).\n\nA $2{:}1$ ratio means: half the RPM, double the torque."
+    },
+    {
+      "id": "d3-b9",
+      "type": "worked_example",
+      "prompt": "A 10-tooth gear on the motor drives a 20-tooth gear on the axle. The motor spins at 6000 RPM. Find the gear ratio, the axle RPM, and what happens to torque.",
+      "given": "Driving (motor) gear = 10 teeth; Driven (axle) gear = 20 teeth; Motor speed = 6000 RPM.",
+      "equation": "$\\text{gear ratio} = \\dfrac{\\text{driven teeth}}{\\text{driving teeth}}$, and $\\text{axle RPM} = \\dfrac{\\text{motor RPM}}{\\text{ratio}}$.",
+      "work": "$\\text{ratio} = \\dfrac{20}{10} = 2 \\;(2{:}1)$.  $\\;$ $\\text{axle RPM} = \\dfrac{6000}{2} = 3000\\ \\text{RPM}$.  $\\;$ Torque is traded the opposite way, so torque is multiplied by 2.",
+      "answer": "Gear ratio = **2:1**. Axle spins at **3000 RPM** (half the motor). Torque at the axle is **doubled** — slower but stronger. **The motor only spins; the gears chose slow-and-strong.**"
+    },
+    {
+      "id": "d3-b10",
+      "type": "worked_example",
+      "prompt": "Your team is looking at a wheel that measures 60 mm across (diameter). How far does the car roll in one full turn of that wheel?",
+      "given": "Wheel diameter d = 60 mm; one full rotation; π ≈ 3.14.",
+      "equation": "$C = \\pi \\cdot d$",
+      "work": "$C = 3.14 \\times 60\\ \\text{mm} = 188.4\\ \\text{mm}$.",
+      "answer": "Circumference ≈ **188 mm per turn** (about 0.19 m). Each axle rotation rolls the car ~188 mm forward — that's the link from RPM to real distance."
+    },
+    {
+      "id": "d3-b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Ratio reasoning rule (write this down)",
+      "markdown": "At the **same axle RPM**, **doubling the wheel diameter doubles top speed** — *and* **doubles the starting effort** the motor needs to get rolling. Big wheels = faster top end, harder launch. Small wheels = snappier start, lower top speed. There is no free lunch; you are choosing a trade-off."
+    },
+    {
+      "id": "d3-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Your motor gear has 10 teeth and your axle gear has 20 teeth. Find the gear ratio, then state in words what happens to the axle's RPM and torque compared to the motor.",
+      "givenHint": "List the driving (motor) teeth and the driven (axle) teeth.",
+      "equationHint": "gear ratio = driven teeth ÷ driving teeth",
+      "equationOptions": [
+        "ratio = driven ÷ driving",
+        "C = π·d",
+        "axle RPM = motor RPM ÷ ratio",
+        "torque ∝ ratio"
+      ]
+    },
+    {
+      "id": "d3-b13",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Pick one of the candidate wheels at the front and measure its diameter in mm. Compute its circumference — the distance the car rolls in one axle turn.",
+      "givenHint": "Measure the wheel diameter d with a ruler (in mm).",
+      "equationHint": "C = π·d",
+      "equationOptions": [
+        "C = π·d",
+        "C = 2·π·r",
+        "ratio = driven ÷ driving"
+      ]
+    },
+    {
+      "id": "d3-b14",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Your team chose a wheel. A rival team chose a wheel with HALF your diameter, and both cars use the same gear ratio and motor. Predict how your top speed compares to theirs, and how your starting effort compares — and explain why using the ratio reasoning rule.",
+      "givenHint": "Your wheel diameter vs. the rival's (half of yours); same axle RPM for both.",
+      "equationHint": "C = π·d  (and: top speed scales with diameter)",
+      "equationOptions": [
+        "C = π·d",
+        "top speed ∝ diameter",
+        "starting effort ∝ diameter",
+        "ratio = driven ÷ driving"
+      ]
+    },
+    {
+      "id": "d3-b15",
+      "type": "data_table",
+      "capture": true,
+      "columns": [
+        "Wheel",
+        "Diameter (mm)",
+        "Circumference (mm)",
+        "Predicted speed (vs smallest)"
+      ],
+      "rows": 4,
+      "plot": true,
+      "xCol": 1,
+      "yCol": 2,
+      "patternPrompt": "As diameter goes up, what happens to circumference — and what does that tell you about top speed?"
+    },
+    {
+      "id": "d3-b16",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "Sketch your gear pair (motor gear → axle gear) and your chosen wheel. Label the teeth, the ratio, and the wheel diameter. Then log WHY you committed to this wheel.",
+      "fields": [
+        "Our gear ratio (driven ÷ driving) and what it does to RPM/torque",
+        "We chose ___-mm wheels because ___",
+        "We predict our top speed will be ___ relative to a team that chose ___ because ___"
+      ],
+      "grid": true,
+      "backgroundDiagram": {
+        "kind": "energy_chain",
+        "links": [
+          {
+            "label": "Motor",
+            "sublabel": "10T driving"
+          },
+          {
+            "label": "Axle",
+            "sublabel": "20T driven"
+          },
+          {
+            "label": "Wheel",
+            "sublabel": "C = π·d"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d3-b17",
+      "type": "sentence_frame",
+      "frame": "We chose ____-mm wheels because ____. We predict our top speed will be ____ relative to a team that chose ____-mm wheels, because ____.",
+      "wordBank": [
+        "faster",
+        "slower",
+        "larger diameter",
+        "smaller diameter",
+        "more torque",
+        "harder to start",
+        "snappier launch",
+        "circumference"
+      ]
+    },
+    {
+      "id": "d3-b18",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In one or two sentences: what is the trade-off between choosing a big wheel and a small wheel, and which side of that trade-off did your team pick?",
+      "frame": "A bigger wheel gives more ____ but costs more ____, so we picked ____ because ____."
+    },
+    {
+      "id": "d3-b19",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "3eda5c97-f3a6-45a3-b911-0ab5680ac7fc"
+    },
+    {
+      "id": "d3-b20",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "3eda5c97-f3a6-45a3-b911-0ab5680ac7fc",
+        "6964687c-fb59-44b0-a39a-d870f0d4843a",
+        "a0da8983-b50b-4222-9f1d-11352c1f2cf4"
+      ]
+    }
+  ]
+}

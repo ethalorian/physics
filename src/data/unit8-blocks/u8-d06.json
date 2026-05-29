@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "d6-b1",
+      "type": "target",
+      "statement": "S5 — I can install the gears, motor, switch, and battery in a series loop and power the car on safely without breaking the chassis.",
+      "targetId": "u8-s5"
+    },
+    {
+      "id": "d6-b2",
+      "type": "target",
+      "statement": "S6 — I can measure my car's wheel/axle RPM from a timed run, then use the gear ratio and wheel circumference to PREDICT and CHECK the car's speed.",
+      "targetId": "u8-s6"
+    },
+    {
+      "id": "d6-b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety beat (60 seconds) — drill + first power-on",
+      "markdown": "**Two hazards today.** (1) **The drill** for the switch hole: put a **wood block UNDER the chassis** so the bit exits into wood, not your hand or the table — *chassis-break watch*. Keep fingers clear of the bit; clamp or hold the chassis firmly. (2) **First power-on:** keep fingers, hair, and loose sleeves away from the **spinning gears and wheels**. Power on for a *short tap* first to check direction — never run it on the bench with the wheels jammed. Disconnect the battery when you stop building."
+    },
+    {
+      "id": "d6-b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "The big idea today: from spin to speed",
+      "markdown": "Your motor spins fast but weak; the **gear reduction** trades that fast spin for a slower, stronger axle spin. Today you finally **measure** how fast the axle turns (its **RPM**) and turn that number into a real **speed** in meters per second. The chain is simple: **how fast the wheel turns** × **how far it rolls per turn (the circumference)** = **how fast the car moves**. Then you compare that to your Day-3 *prediction* — does the math match the floor?"
+    },
+    {
+      "id": "d6-b5",
+      "type": "lesson_vocab"
+    },
+    {
+      "id": "d6-b6",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "RPM (revolutions per minute)",
+          "definition": "How many full turns something makes in one minute. Motor RPM is fast; the reduced wheel/axle RPM is slower but stronger.",
+          "cognate": "RPM / revoluciones por minuto"
+        },
+        {
+          "term": "rev/s (revolutions per second)",
+          "definition": "Turns per second. Convert from RPM by dividing by 60: rev/s = RPM ÷ 60.",
+          "cognate": "rev/s / revoluciones por segundo"
+        },
+        {
+          "term": "Gear ratio",
+          "definition": "How much the gears reduce the spin, e.g. a 3:1 reduction means the wheel turns once for every 3 motor turns, so wheel RPM = motor RPM ÷ 3.",
+          "cognate": "relación de engranajes"
+        },
+        {
+          "term": "Circumference",
+          "definition": "The distance the wheel rolls in ONE full turn. For a wheel of diameter d, C = π·d (meters per revolution).",
+          "cognate": "circunferencia"
+        },
+        {
+          "term": "Speed",
+          "definition": "How fast the car moves, in meters per second. Speed = (revolutions per second) × (circumference): v = (rev/s) × C.",
+          "cognate": "rapidez / velocidad"
+        }
+      ]
+    },
+    {
+      "id": "d6-b7",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "The full drivetrain — energy chain from battery to road",
+      "caption": "Power-on traces this chain left to right: the battery's stored chemistry becomes electrical energy in the wires, the motor turns that into a fast ROTATIONAL spin, the gear reduction passes that spin to the axle, and the wheels convert axle rotation into the car's forward (translational) motion down the floor.",
+      "genPrompt": "Left-to-right energy chain for an electric car drivetrain: Chemical (battery) -> Electrical (wires through switch) -> Mechanical rotational (motor + gears spinning the axle) -> Translational (car moving forward).",
+      "links": [
+        {
+          "label": "Chemical",
+          "sublabel": "battery (stored)"
+        },
+        {
+          "label": "Electrical",
+          "sublabel": "wires + switch"
+        },
+        {
+          "label": "Mechanical — rotational",
+          "sublabel": "motor + gears spin the axle"
+        },
+        {
+          "label": "Translational",
+          "sublabel": "car rolls forward"
+        }
+      ]
+    },
+    {
+      "id": "d6-b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "Build steps 10–15 (do these in order)",
+      "markdown": "**10.** Press the **pinion gear** onto the motor shaft. **11.** Mount the **motor** and slide it in until the pinion **meshes** with the 20T axle gear (snug, not jammed — it should spin by hand). **12.** **Drill the switch hole** — *wood block under the chassis!* — and mount the switch. **13.** Mount the **battery clip**. **14.** Wire the loop in **series**: battery → switch → motor → back to battery (tape the splices for now). **15.** **Direction test:** short tap of the switch — does the car go the way you want? If it runs backward, swap the two motor wires."
+    },
+    {
+      "id": "d6-b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Name the wires you just connected",
+      "markdown": "Three jobs in one loop: the **battery is the source** (it pushes the current), the **switch is the gate** (it opens and closes the path), and the **motor is the load** (it uses the energy to spin). It's a **series** circuit, so: **break the loop anywhere, current stops everywhere.** A dead car is usually a broken loop — check every splice."
+    },
+    {
+      "id": "d6-b10",
+      "type": "worked_example",
+      "prompt": "WHEEL RPM from MOTOR RPM. A motor spins at 6000 RPM. The drivetrain is a 3:1 reduction (the gears turn the wheel once for every 3 motor turns). What is the wheel/axle RPM?",
+      "given": "Motor RPM = 6000 RPM; gear reduction = 3:1 (wheel turns once per 3 motor turns).",
+      "equation": "$\\text{wheel RPM} = \\dfrac{\\text{motor RPM}}{\\text{gear ratio}}$",
+      "work": "$\\text{wheel RPM} = \\dfrac{6000\\ \\text{RPM}}{3} = 2000\\ \\text{RPM}$.  The reduction slows the spin by a factor of 3 (and trades it for more turning strength).",
+      "answer": "The wheel/axle spins at **2000 RPM** — three times slower than the motor."
+    },
+    {
+      "id": "d6-b11",
+      "type": "worked_example",
+      "prompt": "SPEED from WHEEL RPM. The wheel spins at 2000 RPM and its circumference is C = 0.19 m (the distance it rolls per turn). How fast does the car move, in m/s?",
+      "given": "Wheel RPM = 2000 RPM; wheel circumference C = 0.19 m per revolution.",
+      "equation": "$\\text{rev/s} = \\dfrac{\\text{RPM}}{60}\\quad\\text{then}\\quad v = (\\text{rev/s}) \\times C$",
+      "work": "Convert RPM to rev/s: $\\;\\text{rev/s} = \\dfrac{2000\\ \\text{rev/min}}{60\\ \\text{s/min}} = 33.3\\ \\text{rev/s}$.  Then multiply by the distance per turn: $\\;v = 33.3\\ \\tfrac{\\text{rev}}{\\text{s}} \\times 0.19\\ \\tfrac{\\text{m}}{\\text{rev}} = 6.33\\ \\tfrac{\\text{m}}{\\text{s}}$ (the 'rev' units cancel, leaving m/s).",
+      "answer": "The car moves at about **6.3 m/s**. Notice the unit cancellation: revolutions cancel, so rev/s × m/rev = m/s."
+    },
+    {
+      "id": "d6-b12",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "WHEEL RPM. Your motor spins at 9000 RPM and your drivetrain is a 3:1 reduction. What is the wheel/axle RPM? Show the relationship, then compute.",
+      "givenHint": "Motor RPM = 9000 RPM; gear reduction = 3:1 (wheel turns once per 3 motor turns).",
+      "equationHint": "wheel RPM = motor RPM ÷ gear ratio",
+      "equationOptions": [
+        "wheel RPM = motor RPM ÷ gear ratio",
+        "rev/s = RPM ÷ 60",
+        "v = (rev/s) × C",
+        "gear ratio = motor RPM ÷ wheel RPM"
+      ]
+    },
+    {
+      "id": "d6-b13",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "RPM → rev/s → SPEED. Your wheel spins at 1800 RPM and your wheel circumference is C = 0.20 m. First convert RPM to rev/s, then find the car's speed in m/s. Show BOTH steps and keep your units.",
+      "givenHint": "Wheel RPM = 1800 RPM; circumference C = 0.20 m per revolution.",
+      "equationHint": "rev/s = RPM ÷ 60; then v = (rev/s) × C",
+      "equationOptions": [
+        "rev/s = RPM ÷ 60",
+        "v = (rev/s) × C",
+        "wheel RPM = motor RPM ÷ gear ratio",
+        "C = π × d"
+      ]
+    },
+    {
+      "id": "d6-b14",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PREDICTED vs MEASURED. From your run you measured the car covering 2.00 m in 0.40 s. (a) Find the MEASURED speed v = d/t. (b) Your Day-3 PREDICTED speed was 6.3 m/s. Is your measured speed faster, slower, or about the same — and give one physical reason for any difference.",
+      "givenHint": "Distance d = 2.00 m; time t = 0.40 s; predicted speed = 6.3 m/s.",
+      "equationHint": "v = d ÷ t; then compare measured vs predicted",
+      "equationOptions": [
+        "v = d ÷ t",
+        "v = (rev/s) × C",
+        "rev/s = RPM ÷ 60",
+        "wheel RPM = motor RPM ÷ gear ratio"
+      ]
+    },
+    {
+      "id": "d6-b15",
+      "type": "data_table",
+      "capture": true,
+      "columns": [
+        "Trial",
+        "Motor RPM",
+        "Wheel RPM",
+        "Predicted speed (m/s)"
+      ],
+      "rows": 4,
+      "plot": true,
+      "xCol": 2,
+      "yCol": 3,
+      "patternPrompt": "As wheel RPM goes up across your trials, what happens to the predicted speed? Is the relationship a straight line — and why would it be?"
+    },
+    {
+      "id": "d6-b16",
+      "type": "lab_notebook",
+      "capture": true,
+      "instruction": "RUN THE CAR. Mark 2.00 m on the floor. Switch ON at the start as the stopwatch starts; STOP the watch at the finish. Compute v = d/t, then rev/s = v/C and RPM = (rev/s)×60. Do THREE runs. On the sketch, trace the energy chain from battery to road, then log your first-power result and your measured-vs-predicted comparison.",
+      "fields": [
+        "First power-on: which direction did the car go, and was it what you predicted?",
+        "Run data: distance (2.00 m), the three times, and your computed v = d/t for each",
+        "Measured wheel RPM I worked back to (rev/s = v/C, then ×60)",
+        "Measured speed vs my Day-3 PREDICTED speed — faster, slower, or same, and ONE physical reason for the difference"
+      ],
+      "grid": false,
+      "backgroundDiagram": {
+        "kind": "energy_chain",
+        "title": "Trace your car's energy chain",
+        "caption": "Annotate where each energy change happens on your car.",
+        "links": [
+          {
+            "label": "Chemical",
+            "sublabel": "battery"
+          },
+          {
+            "label": "Electrical",
+            "sublabel": "switch + wires"
+          },
+          {
+            "label": "Rotational",
+            "sublabel": "motor + gears"
+          },
+          {
+            "label": "Translational",
+            "sublabel": "car rolls"
+          }
+        ]
+      }
+    },
+    {
+      "id": "d6-b17",
+      "type": "sentence_frame",
+      "frame": "My measured speed was ____ m/s and my predicted speed was ____ m/s, so my prediction was ____. The most likely reason for the difference is ____.",
+      "wordBank": [
+        "faster",
+        "slower",
+        "about the same",
+        "too high",
+        "too low",
+        "friction in the bearings",
+        "gear slip / poor mesh",
+        "battery wasn't fully charged",
+        "the wheel circumference I used was off",
+        "timing error on the stopwatch"
+      ]
+    },
+    {
+      "id": "d6-b18",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In one or two sentences: explain HOW you turn a measured wheel RPM into a car speed in m/s. Name the two steps and why the units work out.",
+      "frame": "First I convert RPM to rev/s by ____. Then I multiply by the ____ because each turn rolls the car C meters, so the units become ____."
+    },
+    {
+      "id": "d6-b19",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "c767b249-82ba-4742-8af3-199c26f233bb"
+    },
+    {
+      "id": "d6-b20",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "fae0b910-e74a-4ad9-99f1-8905a02b0619",
+        "c767b249-82ba-4742-8af3-199c26f233bb"
+      ]
+    }
+  ]
+}
