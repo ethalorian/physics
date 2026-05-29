@@ -1,37 +1,14 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 /**
  * GET /api/admin/stats
  * Fetch admin dashboard statistics
  * Requires admin/teacher authentication
  */
-export async function GET() {
-  try {
-    // Check authentication
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please sign in' },
-        { status: 401 }
-      )
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user.email)
-    const isAdmin = userRole === 'admin' || userRole === 'teacher'
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin/Teacher access required' },
-        { status: 403 }
-      )
-    }
-
-    console.log('Fetching admin stats for:', session.user.email)
+export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
+    console.log('Fetching admin stats for:', ctx.email)
 
     // Initialize stats
     const stats = {
@@ -100,12 +77,4 @@ export async function GET() {
     console.log('Admin stats:', stats)
 
     return NextResponse.json({ stats })
-
-  } catch (error) {
-    console.error('Error in admin stats API:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})

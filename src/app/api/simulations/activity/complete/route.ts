@@ -1,17 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 /**
  * POST - Mark simulation activity as complete
  */
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const { activity_id, result } = body
 
@@ -32,7 +26,7 @@ export async function POST(request: NextRequest) {
         passed: result.completed || false
       })
       .eq('id', activity_id)
-      .eq('student_id', session.user.id)
+      .eq('student_id', ctx.userId)
       .select()
       .single()
 
@@ -42,12 +36,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ activity: data })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to complete activity',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

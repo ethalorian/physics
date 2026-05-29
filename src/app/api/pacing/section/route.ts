@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
 import { loadPlanItems, getCourseStudentGids, autoSuggestItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
 import { Block, blockMeetingsElapsed, upcomingMeetings } from '@/lib/rotation'
@@ -34,11 +33,7 @@ function resolveActual(items: PlanItem[], pacing: PacingRow | null, auto: PlanIt
   return { item: null, source: 'none' }
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const courseId = new URL(request.url).searchParams.get('course_id')
@@ -95,17 +90,9 @@ export async function GET(request: NextRequest) {
       lineup,
       schedule: schedule ?? { start_date: null, meeting_days: [1, 2, 3, 4, 5], no_school_dates: [] },
     })
-  } catch (error) {
-    console.error('Error in GET /api/pacing/section:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = (await request.json()) as { course_id: string; current_lesson_id?: string | null; current_unit_order?: number | null }
@@ -117,15 +104,11 @@ export async function POST(request: NextRequest) {
       current_lesson_id: body.current_lesson_id ?? null,
       current_unit_order: body.current_unit_order ?? null,
       source: 'confirmed' as const,
-      confirmed_by: session.user.email,
+      confirmed_by: ctx.email,
       updated_at: new Date().toISOString(),
     }
     const { error } = await supabaseAdmin.from('section_pacing').upsert(row, { onConflict: 'course_id' })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/pacing/section:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

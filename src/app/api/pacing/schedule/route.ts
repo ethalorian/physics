@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // Per-section calendar: start date, which weekdays it meets, no-school dates.
 // GET /api/pacing/schedule?course_id=...
@@ -15,11 +14,7 @@ async function canAccessCourse(courseId: string, email: string, role: string): P
   return Boolean((data as CourseRow | null)?.teacher_email && (data as CourseRow).teacher_email === email)
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
@@ -36,17 +31,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       schedule: data ?? { course_id: courseId, start_date: null, meeting_days: [1, 2, 3, 4, 5], no_school_dates: [], block: null },
     })
-  } catch (error) {
-    console.error('Error in GET /api/pacing/schedule:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const PUT = withAuth(async (request, ctx) => {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
@@ -77,8 +64,4 @@ export async function PUT(request: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true, schedule: row })
-  } catch (error) {
-    console.error('Error in PUT /api/pacing/schedule:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // POST /api/admin/orphans/enroll  { student_id, course_id }
 // Manual enrollment by an admin: inserts a row into course_students linking
@@ -9,13 +8,7 @@ import { getEffectiveContext } from '@/lib/effective-context'
 // roster re-sync from Google Classroom doesn't overwrite this assignment by
 // accident (downstream code can choose to respect this marker).
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const POST = withRole('admin', async (request) => {
     const body = await request.json()
     const studentId = (body?.student_id ?? '') as string
     const courseId = (body?.course_id ?? '') as string
@@ -50,8 +43,4 @@ export async function POST(request: NextRequest) {
     })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/admin/orphans/enroll:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

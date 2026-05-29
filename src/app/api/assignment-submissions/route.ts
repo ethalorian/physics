@@ -1,21 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Retrieve assignment submissions (admin/teacher only)
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const assignmentId = searchParams.get('assignment_id')
     const studentEmail = searchParams.get('student_email')
@@ -45,21 +33,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ submissions })
-
-  } catch (error) {
-    console.error('Assignment submissions API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST - Record assignment submission
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const {
       assignment_id,
@@ -80,9 +57,9 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .rpc('record_assignment_submission', {
         p_assignment_id: assignment_id,
-        p_user_id: session.user.id || session.user.email,
-        p_user_email: session.user.email,
-        p_user_name: session.user.name || 'Unknown User',
+        p_user_id: ctx.userId || ctx.email,
+        p_user_email: ctx.email,
+        p_user_name: ctx.session.user.name || 'Unknown User',
         p_submission_data: submission_data,
         p_score: score || null,
         p_max_score: max_score || null,
@@ -108,26 +85,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, submission_id: data })
-
-  } catch (error) {
-    console.error('Assignment submission recording error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // PUT - Update assignment submission (for grading)
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const {
       submission_id,
@@ -158,7 +119,7 @@ export async function PUT(request: NextRequest) {
     // Mark as manually graded
     if (score !== undefined || feedback !== undefined) {
       updates.manually_graded = true
-      updates.graded_by = session.user.id || session.user.email
+      updates.graded_by = ctx.userId || ctx.email
       updates.graded_at = new Date().toISOString()
     }
 
@@ -175,9 +136,4 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, submission: data })
-
-  } catch (error) {
-    console.error('Assignment submission update error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

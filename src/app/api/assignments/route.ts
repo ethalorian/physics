@@ -1,22 +1,13 @@
-// Next.js imports
-import { NextRequest, NextResponse } from 'next/server'
-
 // Internal imports
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Fetch assignments
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const { searchParams } = new URL(request.url)
-    
+
     // Filter parameters
     const published = searchParams.get('published')
     const lessonId = searchParams.get('lesson_id')
@@ -76,30 +67,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(assignments || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/assignments:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST - Create new assignment
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check permissions
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden: Only teachers/admins can create assignments' },
-        { status: 403 }
-      )
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -126,7 +97,7 @@ export async function POST(request: NextRequest) {
       lesson_id: (body.lesson_id && body.lesson_id !== '') ? body.lesson_id : null,
       due_date: body.due_date || null,
       published: body.published || false,
-      created_by: session.user.email
+      created_by: ctx.email
     }
 
     // Insert into database
@@ -145,30 +116,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/assignments:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // PUT - Update assignment
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check permissions
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden: Only teachers/admins can update assignments' },
-        { status: 403 }
-      )
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -205,30 +156,10 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json(data)
-
-  } catch (error) {
-    console.error('Error in PUT /api/assignments:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // DELETE - Delete assignment
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check permissions
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden: Only teachers/admins can delete assignments' },
-        { status: 403 }
-      )
-    }
-
+export const DELETE = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -248,10 +179,4 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'Assignment deleted' })
-
-  } catch (error) {
-    console.error('Error in DELETE /api/assignments:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
+})

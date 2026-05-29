@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 // POST /api/concept-exercises/[chapter]/grade   body: { answers: { [n]: value } }
 // Server-side auto-grade against the teacher answer key (which never ships to the
@@ -71,11 +71,8 @@ function gradeItem(type: ItemType, multi: boolean | undefined, key: KeyVal, ans:
   return { correct: answered && overlap >= 0.34, needsReview: true, answered }
 }
 
-export async function POST(req: Request, { params }: { params: Promise<{ chapter: string }> }) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const { chapter } = await params
+export const POST = withAuth<{ chapter: string }>(async (req, ctx) => {
+    const { chapter } = await ctx.params
     const ch = Number(chapter)
     if (!Number.isInteger(ch)) return NextResponse.json({ error: 'Bad chapter' }, { status: 400 })
 
@@ -114,8 +111,4 @@ export async function POST(req: Request, { params }: { params: Promise<{ chapter
       autoCorrect, autoTotal, reviewCount, answeredCount,
       itemCount: typeByN.size,
     })
-  } catch (err) {
-    console.error('Error in POST /api/concept-exercises/[chapter]/grade:', err)
-    return NextResponse.json({ error: 'Could not grade' }, { status: 500 })
-  }
-}
+})

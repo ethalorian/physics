@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // POST /api/media/upload  (multipart/form-data, field "file")
 // Teacher/admin uploads a PDF or image to the public `lesson-media` bucket and
@@ -25,15 +24,7 @@ function slugify(name: string): string {
   return base.replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60) || 'file'
 }
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user?.email)
-    if (role !== 'admin' && role !== 'teacher') {
-      return NextResponse.json({ error: 'Only teachers can upload media' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request) => {
     const form = await request.formData()
     const file = form.get('file')
     if (!(file instanceof File)) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
@@ -57,8 +48,4 @@ export async function POST(request: Request) {
 
     const { data } = supabaseAdmin.storage.from(BUCKET).getPublicUrl(path)
     return NextResponse.json({ url: data.publicUrl, path, contentType: file.type, size: file.size })
-  } catch (err) {
-    console.error('Error in POST /api/media/upload:', err)
-    return NextResponse.json({ error: 'Could not upload the file' }, { status: 500 })
-  }
-}
+})

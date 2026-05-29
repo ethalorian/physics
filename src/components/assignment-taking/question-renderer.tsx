@@ -9,7 +9,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { CheckCircle2, XCircle, Award, Sparkles, Info, Image as ImageIcon, Wand2, RefreshCw } from 'lucide-react'
+import { CheckCircle2, XCircle, Award, Sparkles, Info } from 'lucide-react'
 import VocabularyMatchingGame from '@/components/vocabulary/games/VocabularyMatchingGame'
 import VocabularyCrosswordGame from '@/components/vocabulary/games/VocabularyCrosswordGame'
 import VocabularyFillBlankGame from '@/components/vocabulary/games/VocabularyFillBlankGame'
@@ -35,72 +35,6 @@ export default function QuestionRenderer({
   isCorrect,
   disabled = false
 }: QuestionRendererProps) {
-  const [generatedImage, setGeneratedImage] = useState<string | null>(null)
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
-  const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false)
-
-  const handleGenerateImage = async () => {
-    setIsGeneratingImage(true)
-    try {
-      const response = await fetch('/api/generate-scenario-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          questionType: question.type
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate image')
-      }
-
-      const data = await response.json()
-      if (data.imageUrl) {
-        setGeneratedImage(data.imageUrl)
-      }
-    } catch (error) {
-      console.error('Error generating image:', error)
-      alert('Failed to generate image. Please try again.')
-    } finally {
-      setIsGeneratingImage(false)
-    }
-  }
-
-  const handleGenerateAnswer = async () => {
-    setIsGeneratingAnswer(true)
-    try {
-      // Get correct concepts if it's an open response question
-      const correctConcepts = question.type === 'open-response' 
-        ? (question as OpenResponseQuestion).correctConcepts 
-        : []
-
-      const response = await fetch('/api/generate-answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          questionType: question.type,
-          correctConcepts: correctConcepts
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate answer')
-      }
-
-      const data = await response.json()
-      if (data.sampleAnswer) {
-        onAnswerChange(data.sampleAnswer)
-      }
-    } catch (error) {
-      console.error('Error generating answer:', error)
-      alert('Failed to generate answer. Please try again.')
-    } finally {
-      setIsGeneratingAnswer(false)
-    }
-  }
-
   const renderInput = () => {
     switch (question.type) {
       case 'multiple-choice':
@@ -252,26 +186,6 @@ export default function QuestionRenderer({
                     </ul>
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {/* AI Answer Helper Button */}
-            {!disabled && (
-              <div className="flex justify-end mb-2">
-                <Button
-                  onClick={handleGenerateAnswer}
-                  disabled={isGeneratingAnswer}
-                  variant="outline"
-                  size="sm"
-                  className="bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200"
-                >
-                  {isGeneratingAnswer ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin text-indigo-600" />
-                  ) : (
-                    <Wand2 className="h-4 w-4 mr-2 text-indigo-600" />
-                  )}
-                  {isGeneratingAnswer ? 'Generating...' : 'AI Answer Helper'}
-                </Button>
               </div>
             )}
             
@@ -466,69 +380,8 @@ export default function QuestionRenderer({
           </div>
         )}
         
-        {/* AI Generation Buttons - Mobile responsive */}
-        {!disabled && !question.scenarioImage && !generatedImage && (
-          <div className="px-3 sm:px-4 md:px-6 pt-3 sm:pt-4">
-            <Button
-              onClick={handleGenerateImage}
-              disabled={isGeneratingImage}
-              variant="outline"
-              size="sm"
-              className="w-full sm:w-auto bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200 text-sm"
-            >
-              {isGeneratingImage ? (
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin text-purple-600" />
-              ) : (
-                <ImageIcon className="h-4 w-4 mr-2 text-purple-600" />
-              )}
-              {isGeneratingImage ? 'Generating Image...' : 'Generate Visual Aid'}
-            </Button>
-          </div>
-        )}
-
-        {/* Display generated image */}
-        {generatedImage && (
-          <div className="relative h-96 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
-            <img
-              src={generatedImage}
-              alt="AI generated physics scenario"
-              className="w-full h-full object-cover opacity-95 hover:opacity-100 hover:scale-105 transition-all duration-700"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            
-            {/* Overlay badges on image */}
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <Badge className="bg-purple-500/30 backdrop-blur-md text-white border-purple-400/50 font-semibold">
-                <Sparkles className="w-3 h-3 mr-1" />
-                AI Generated
-              </Badge>
-              <Badge className="bg-white/20 backdrop-blur-md text-white border-white/30 font-semibold">
-                <Award className="w-3 h-3 mr-1" />
-                {question.points} points
-              </Badge>
-            </div>
-
-            {/* Question text overlay on image bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
-              <div className="text-2xl md:text-3xl font-bold text-white leading-tight drop-shadow-lg [&_.markdown-content]:text-white [&_.katex]:text-white">
-                <MathMarkdown content={question.question} />
-              </div>
-            </div>
-            
-            {/* Remove image button */}
-            <Button
-              onClick={() => setGeneratedImage(null)}
-              className="absolute top-4 left-4 bg-red-500/30 backdrop-blur-md text-white border-red-400/50 hover:bg-red-500/50"
-              size="sm"
-            >
-              <XCircle className="h-4 w-4 mr-1" />
-              Remove
-            </Button>
-          </div>
-        )}
-        
         {/* If no image, show question in header with modern styling - Mobile responsive */}
-        {!question.scenarioImage && !generatedImage && (
+        {!question.scenarioImage && (
           <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-6 md:p-8">
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-start justify-between">

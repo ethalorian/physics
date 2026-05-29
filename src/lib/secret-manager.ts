@@ -221,7 +221,6 @@ class VercelSecretManager implements SecretManager {
       'GOOGLE_CLIENT_SECRET',
       'NEXTAUTH_SECRET',
       'TOKEN_ENCRYPTION_KEY',
-      'OPENAI_API_KEY',
       'SUPABASE_URL',
       'SUPABASE_ANON_KEY'
     ]
@@ -235,7 +234,6 @@ class VercelSecretManager implements SecretManager {
       'google-client-secret': 'GOOGLE_CLIENT_SECRET',
       'nextauth-secret': 'NEXTAUTH_SECRET',
       'token-encryption-key': 'TOKEN_ENCRYPTION_KEY',
-      'openai-api-key': 'OPENAI_API_KEY',
       'supabase-url': 'NEXT_PUBLIC_SUPABASE_URL',
       'supabase-anon-key': 'NEXT_PUBLIC_SUPABASE_ANON_KEY'
     }

@@ -1,21 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // POST /api/mastery/records
 // Records a single Marzano observation (1-3) for a student on a target.
 // Teacher/admin only — mastery is teacher-assessed, never student self-reported.
 // APPEND-ONLY: always inserts a new row so the longitudinal history is preserved
 // and the decaying-average rollup has a full trail.
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = getUserRole(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
+    const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can record mastery' }, { status: 403 })
     }
@@ -51,8 +44,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-  } catch (error) {
-    console.error('Error in POST /api/mastery/records:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

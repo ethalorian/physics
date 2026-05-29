@@ -1,23 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
  * GET /api/unified-assignments/student
  * Get all assignments and progress for the currently logged-in student
  */
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const studentId = searchParams.get('student_id')
-    
+
     // Use provided student_id or fallback to session email
-    const studentEmail = studentId || session.user.email
+    const studentEmail = studentId || ctx.email
 
     // Query student's assignment progress with assignment details
     const { data: progressRecords, error: progressError } = await supabase
@@ -88,7 +82,7 @@ export async function GET(request: NextRequest) {
       .map(assignment => ({
         id: `temp-${assignment.id}`,
         unified_assignment_id: assignment.id,
-        student_id: session.user?.id || studentEmail,
+        student_id: ctx.userId || studentEmail,
         student_email: studentEmail,
         status: 'assigned' as const,
         progress_percentage: 0,
@@ -106,14 +100,5 @@ export async function GET(request: NextRequest) {
     const allProgress = [...publishedProgressRecords, ...additionalAssignments]
 
     return NextResponse.json({ assignments: allProgress })
-
-  } catch (error: unknown) {
-    console.error('API error:', error)
-    const message = error instanceof Error ? error.message : 'Internal server error'
-    return NextResponse.json(
-      { error: 'Failed to fetch student assignments', message },
-      { status: 500 }
-    )
-  }
-}
+})
 

@@ -1,21 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
 import { getBalance } from '@/lib/points'
 
 // GET /api/rewards/store — the student store: spendable balance, active rewards, own redemptions.
 // Staff may pass ?user_id= to view a specific student.
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    const role = getUserRole(session.user.email)
-    const isStaff = role === 'admin' || role === 'teacher'
+export const GET = withAuth(async (request, ctx) => {
+    const role = ctx.role
     const requested = request.nextUrl.searchParams.get('user_id')
-    const userId = isStaff && requested ? requested : session.user.id
+    // Admins may view any student; a teacher only their own roster.
+    const resolved = await resolveTargetStudent({
+      role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId: requested,
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const userId = resolved.userId
 
     const [{ data: rewards }, { data: redemptions }, balance] = await Promise.all([
       supabaseAdmin.from('rewards').select('*').eq('active', true).order('cost_points', { ascending: true }),
@@ -24,8 +28,4 @@ export async function GET(request: NextRequest) {
     ])
 
     return NextResponse.json({ balance, rewards: rewards ?? [], redemptions: redemptions ?? [] })
-  } catch (error) {
-    console.error('Error in GET /api/rewards/store:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

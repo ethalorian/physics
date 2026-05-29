@@ -1,31 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
-
-async function requireStaff() {
-  const session = await auth()
-  if (!session?.user?.email) return { error: 'Unauthorized', status: 401 as const, session: null }
-  const role = getUserRole(session.user.email)
-  if (role !== 'admin' && role !== 'teacher') return { error: 'Teachers only', status: 403 as const, session: null }
-  return { error: null, status: 200 as const, session }
-}
 
 // GET — teacher view: full catalog + redemption queue.
-export async function GET() {
-  const gate = await requireStaff()
-  if (gate.error) return NextResponse.json({ error: gate.error }, { status: gate.status })
+export const GET = withRole(['teacher', 'admin'], async () => {
   const [{ data: rewards }, { data: redemptions }] = await Promise.all([
     supabaseAdmin.from('rewards').select('*').order('cost_points', { ascending: true }),
     supabaseAdmin.from('reward_redemptions').select('*').order('created_at', { ascending: false }).limit(200),
   ])
   return NextResponse.json({ rewards: rewards ?? [], redemptions: redemptions ?? [] })
-}
+})
 
 // POST — create or update a reward.
-export async function POST(request: NextRequest) {
-  const gate = await requireStaff()
-  if (gate.error) return NextResponse.json({ error: gate.error }, { status: gate.status })
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const body = await request.json()
   if (!body.name || body.cost_points === undefined) {
     return NextResponse.json({ error: 'name and cost_points are required' }, { status: 400 })
@@ -37,7 +24,7 @@ export async function POST(request: NextRequest) {
     category: body.category ?? null,
     stock: body.stock ?? null,
     active: body.active ?? true,
-    created_by: gate.session!.user!.email,
+    created_by: ctx.email,
     updated_at: new Date().toISOString(),
   }
   const query = body.id
@@ -46,12 +33,10 @@ export async function POST(request: NextRequest) {
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data, { status: body.id ? 200 : 201 })
-}
+})
 
 // PATCH — update a redemption's status (approve / fulfill / deny).
-export async function PATCH(request: NextRequest) {
-  const gate = await requireStaff()
-  if (gate.error) return NextResponse.json({ error: gate.error }, { status: gate.status })
+export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
   const body = await request.json()
   const allowed = ['pending', 'approved', 'fulfilled', 'denied']
   if (!body.redemption_id || !allowed.includes(body.status)) {
@@ -60,7 +45,7 @@ export async function PATCH(request: NextRequest) {
   const patch: Record<string, unknown> = { status: body.status }
   if (body.status === 'fulfilled') {
     patch.fulfilled_at = new Date().toISOString()
-    patch.fulfilled_by = gate.session!.user!.email
+    patch.fulfilled_by = ctx.email
   }
   const { data, error } = await supabaseAdmin
     .from('reward_redemptions')
@@ -70,4 +55,4 @@ export async function PATCH(request: NextRequest) {
     .single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
-}
+})

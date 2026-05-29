@@ -1,26 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // POST - Generate or update join code for a course
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
+      return NextResponse.json({
+        error: 'Forbidden - Admin/Teacher access required'
       }, { status: 403 })
     }
 
     const body = await request.json()
-    const { 
-      courseId, 
+    const {
+      courseId,
       enabled = true, 
       expiresInDays, 
       maxEnrollments 
@@ -54,9 +47,9 @@ export async function POST(request: NextRequest) {
     }
 
     // For teachers (non-admin), verify they own this course
-    if (userRole === 'teacher' && course.teacher_email !== session.user.email) {
-      return NextResponse.json({ 
-        error: 'You can only manage join codes for your own courses' 
+    if (userRole === 'teacher' && course.teacher_email !== ctx.email) {
+      return NextResponse.json({
+        error: 'You can only manage join codes for your own courses'
       }, { status: 403 })
     }
 
@@ -105,28 +98,14 @@ export async function POST(request: NextRequest) {
       expiresAt,
       message: 'Join code generated successfully'
     })
-
-  } catch (error) {
-    console.error('Join code generation error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // PUT - Update join code settings (enable/disable, change expiration)
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const PUT = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
+      return NextResponse.json({
+        error: 'Forbidden - Admin/Teacher access required'
       }, { status: 403 })
     }
 
@@ -159,9 +138,9 @@ export async function PUT(request: NextRequest) {
     }
 
     // For teachers, verify ownership
-    if (userRole === 'teacher' && course.teacher_email !== session.user.email) {
-      return NextResponse.json({ 
-        error: 'You can only manage your own courses' 
+    if (userRole === 'teacher' && course.teacher_email !== ctx.email) {
+      return NextResponse.json({
+        error: 'You can only manage your own courses'
       }, { status: 403 })
     }
 
@@ -197,28 +176,14 @@ export async function PUT(request: NextRequest) {
       course: updatedCourse,
       message: 'Join code settings updated successfully'
     })
-
-  } catch (error) {
-    console.error('Join code update error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // DELETE - Disable/remove join code
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const DELETE = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
+      return NextResponse.json({
+        error: 'Forbidden - Admin/Teacher access required'
       }, { status: 403 })
     }
 
@@ -251,9 +216,9 @@ export async function DELETE(request: NextRequest) {
     }
 
     // For teachers, verify ownership
-    if (userRole === 'teacher' && course.teacher_email !== session.user.email) {
-      return NextResponse.json({ 
-        error: 'You can only manage your own courses' 
+    if (userRole === 'teacher' && course.teacher_email !== ctx.email) {
+      return NextResponse.json({
+        error: 'You can only manage your own courses'
       }, { status: 403 })
     }
 
@@ -276,13 +241,5 @@ export async function DELETE(request: NextRequest) {
       success: true,
       message: 'Join code disabled successfully'
     })
-
-  } catch (error) {
-    console.error('Join code deletion error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 

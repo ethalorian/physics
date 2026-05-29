@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 // GET /api/vocab/sources — units and lessons that have any vocab terms,
 // for the arcade's "pick a unit or lesson" play selector.
 
 type SetRow = { id: string; lesson_id: string | null; unit_id: string | null }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
+export const GET = withAuth(async () => {
     // sets that actually have terms
     const { data: termRows } = await supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id')
     const setIdsWithTerms = [...new Set(((termRows ?? []) as { vocabulary_set_id: string }[]).map((r) => r.vocabulary_set_id))]
@@ -37,8 +33,4 @@ export async function GET() {
       .map((u) => ({ id: u.id, name: u.name }))
 
     return NextResponse.json({ units, lessons })
-  } catch (error) {
-    console.error('Error in GET /api/vocab/sources:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

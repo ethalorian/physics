@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getEffectiveContext } from '@/lib/effective-context'
+import { withRole } from '@/lib/api-auth'
 
 // POST /api/blocks/generate-visual
 // Turn a teacher's PLAIN-ENGLISH description into the structured data for a
@@ -44,14 +43,7 @@ function clampNum(v: unknown, lo: number, hi: number, dflt: number): number {
   return Math.max(lo, Math.min(hi, n))
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
-      return NextResponse.json({ error: 'Teachers only' }, { status: 403 })
-    }
+export const POST = withRole(['teacher', 'admin'], async (request) => {
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'Generation is not configured (missing ANTHROPIC_API_KEY).' }, { status: 503 })
     }
@@ -148,8 +140,4 @@ export async function POST(request: NextRequest) {
     })
     if (forces.length === 0) return NextResponse.json({ error: 'Could not build a free-body diagram. Try naming each force and its direction.' }, { status: 422 })
     return NextResponse.json({ block: { kind: 'free_body', title, caption, forces, vectors: undefined, dots: undefined, showResultant: undefined, spec: undefined } })
-  } catch (error) {
-    console.error('Error in POST /api/blocks/generate-visual:', error)
-    return NextResponse.json({ error: 'Could not generate the visual' }, { status: 500 })
-  }
-}
+})

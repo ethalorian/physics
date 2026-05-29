@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // GET /api/admin/orphans
 // Admin-only: students who have signed in (a row exists in students) but have
@@ -28,13 +27,7 @@ export interface CourseChoice {
   teacher_email: string | null
 }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const GET = withRole('admin', async () => {
     // Three queries instead of a NOT EXISTS join — supabase-js doesn't expose
     // that pattern cleanly. The dataset is small (low hundreds of students),
     // so the round-trips are fine.
@@ -61,8 +54,4 @@ export async function GET() {
       count: orphans.length,
       totalStudents: allStudents?.length ?? 0,
     })
-  } catch (error) {
-    console.error('Error in GET /api/admin/orphans:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

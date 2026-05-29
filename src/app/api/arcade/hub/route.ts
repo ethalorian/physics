@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // GET /api/arcade/hub — the student's arcade reward loop, derived entirely from
@@ -15,13 +15,8 @@ type ScoreRow = { user_id: string; user_email: string | null; score: number | nu
 
 function dayKey(iso: string): string { return new Date(iso).toISOString().slice(0, 10) }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    const uid = session.user.id
+export const GET = withAuth(async (request, ctx) => {
+    const uid = ctx.userId
 
     // this student's scores (all-time)
     const { data: mineRaw } = await supabaseAdmin
@@ -108,8 +103,4 @@ export async function GET() {
       leaderboard,
       myRank,
     })
-  } catch (error) {
-    console.error('Error in GET /api/arcade/hub:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

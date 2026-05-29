@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // A teacher's imported courses + the class type (curriculum track) assigned to
 // each. The track is attached PER COURSE (a teacher may run CPA in one section
@@ -12,11 +11,7 @@ const VALID_TRACKS = ['cpa'] // only CPA is live; honors/ap/pbl come later
 
 type CourseRow = { id: string; name: string; section: string | null; track: string | null }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     let q = supabaseAdmin.from('courses').select('id, name, section, track').order('name', { ascending: true })
@@ -26,18 +21,10 @@ export async function GET() {
     const untracked = courses.filter((c) => !c.track).length
 
     return NextResponse.json({ courses, untracked })
-  } catch (error) {
-    console.error('Error in GET /api/teacher/courses:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST { course_id, track } — assign a class type to one of the teacher's courses.
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = await request.json()
@@ -57,8 +44,4 @@ export async function POST(request: NextRequest) {
     const { error } = await supabaseAdmin.from('courses').update({ track }).eq('id', courseId)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/teacher/courses:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

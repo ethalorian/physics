@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, type AuthContext } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { getCourseOwnerEmail } from '@/lib/teacher-scope'
 import { getCourseWindows } from '@/lib/lesson-windows'
 
@@ -9,34 +8,28 @@ import { getCourseWindows } from '@/lib/lesson-windows'
 // via admin) manages a class's windows — admins don't reach into per-class
 // release (they own the global published flag instead).
 
-async function assertOwner(courseId: string): Promise<{ ok: true; email: string } | { ok: false; status: number }> {
-  const session = await auth()
-  if (!session?.user?.email) return { ok: false, status: 401 }
-  const ctx = await getEffectiveContext(session.user.email)
+async function assertOwner(
+  ctx: AuthContext<{ courseId: string }>,
+  courseId: string,
+): Promise<{ ok: true; email: string } | { ok: false; status: number }> {
   if (ctx.role !== 'admin' && ctx.role !== 'teacher') return { ok: false, status: 403 }
   const owner = await getCourseOwnerEmail(courseId)
   if (ctx.role === 'teacher' && owner !== ctx.scopeEmail) return { ok: false, status: 403 }
   return { ok: true, email: ctx.scopeEmail }
 }
 
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ courseId: string }> }) {
-  try {
-    const { courseId } = await params
-    const auth = await assertOwner(courseId)
+export const GET = withAuth<{ courseId: string }>(async (_request, ctx) => {
+    const { courseId } = await ctx.params
+    const auth = await assertOwner(ctx, courseId)
     if (!auth.ok) return NextResponse.json({ error: 'Forbidden' }, { status: auth.status })
     return NextResponse.json({ windows: await getCourseWindows(courseId) })
-  } catch (error) {
-    console.error('Error in GET /api/classes/[courseId]/windows:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST { lesson_id, open_at, close_at } — set/clear a window. Null dates clear
 // that bound; clearing both removes the row (lesson reverts to open-by-default).
-export async function POST(request: NextRequest, { params }: { params: Promise<{ courseId: string }> }) {
-  try {
-    const { courseId } = await params
-    const auth = await assertOwner(courseId)
+export const POST = withAuth<{ courseId: string }>(async (request, ctx) => {
+    const { courseId } = await ctx.params
+    const auth = await assertOwner(ctx, courseId)
     if (!auth.ok) return NextResponse.json({ error: 'Forbidden' }, { status: auth.status })
 
     const body = await request.json()
@@ -58,8 +51,4 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       )
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/classes/[courseId]/windows:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

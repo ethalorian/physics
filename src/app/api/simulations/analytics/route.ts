@@ -1,24 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { withRole } from '@/lib/api-auth'
 
 /**
  * GET /api/simulations/analytics - Fetch aggregated simulation analytics
  * Teacher/Admin only
  */
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async () => {
     // Fetch all simulations
     const { data: simulations, error: simsError } = await supabase
       .from('simulations')
@@ -72,12 +60,4 @@ export async function GET(request: NextRequest) {
     )
 
     return NextResponse.json({ stats })
-
-  } catch (error: any) {
-    console.error('Analytics error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch analytics',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

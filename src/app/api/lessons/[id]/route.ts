@@ -1,23 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth, withRole } from '@/lib/api-auth'
 
 /**
  * GET /api/lessons/[id]
  * Get a single lesson by ID
  */
-export async function GET(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const params = await context.params
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth<{ id: string }>(async (request, ctx) => {
+  const params = await ctx.params
     const { data, error } = await supabaseAdmin
       .from('lessons')
       .select('*')
@@ -34,39 +24,14 @@ export async function GET(
     }
 
     return NextResponse.json({ lesson: data })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * PUT /api/lessons/[id]
  * Update a lesson (admin/teacher only)
  */
-export async function PUT(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const params = await context.params
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin or teacher access required' },
-        { status: 403 }
-      )
-    }
-
+export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+  const params = await ctx.params
     const body = await request.json()
 
     // Remove fields that shouldn't be updated directly
@@ -92,39 +57,14 @@ export async function PUT(
     }
 
     return NextResponse.json({ lesson: data })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * DELETE /api/lessons/[id]
  * Delete a lesson (admin/teacher only)
  */
-export async function DELETE(
-  request: NextRequest,
-  context: { params: Promise<{ id: string }> }
-) {
-  const params = await context.params
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin or teacher access required' },
-        { status: 403 }
-      )
-    }
-
+export const DELETE = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+  const params = await ctx.params
     console.log(`Attempting to delete lesson with ID: ${params.id}`)
 
     // First check if the lesson exists - use maybeSingle() to avoid error on no rows
@@ -187,19 +127,11 @@ export async function DELETE(
       return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
-    console.log(`Lesson "${existingLesson.title}" deleted successfully by ${session.user.email}`)
+    console.log(`Lesson "${existingLesson.title}" deleted successfully by ${ctx.email}`)
 
     return NextResponse.json({
       success: true,
       message: 'Lesson deleted successfully'
     })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 

@@ -1,26 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
+import { withAuth, withRole } from '@/lib/api-auth'
 
 /**
  * GET /api/simulations/assignments - Fetch simulation assignments
  * POST /api/simulations/assignments - Create new simulation assignment
  */
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const simulationSlug = searchParams.get('simulation_slug')
     const simulationId = searchParams.get('simulation_id')
     const published = searchParams.get('published')
-    
-    const userRole = getUserRole(session.user.email)
+
+    const userRole = ctx.role
     const isAdminOrTeacher = userRole === 'admin' || userRole === 'teacher'
     
     // Use admin client for admin/teacher to bypass RLS, otherwise use regular client
@@ -60,7 +53,7 @@ export async function GET(request: NextRequest) {
         .from('simulation_assignment_submissions')
         .select('*')
         .in('assignment_id', assignmentIds)
-        .eq('student_email', session.user.email)
+        .eq('student_email', ctx.email)
         .eq('is_latest_attempt', true)
 
       // Merge submission status with assignments
@@ -77,30 +70,9 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ assignments: data || [] })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch simulation assignments',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validation
@@ -143,7 +115,7 @@ export async function POST(request: NextRequest) {
       max_attempts: body.max_attempts || 1,
       allow_late_submission: body.allow_late_submission !== false,
       published: body.published !== false,
-      created_by: session.user.email
+      created_by: ctx.email
     }
 
     const { data: assignment, error } = await supabaseAdmin
@@ -166,30 +138,9 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ assignment }, { status: 201 })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to create simulation assignment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function PUT(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request) => {
     const body = await request.json()
 
     if (!body.id) {
@@ -219,30 +170,9 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ assignment })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to update simulation assignment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function DELETE(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const DELETE = withRole('admin', async (request) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -263,12 +193,4 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to delete simulation assignment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

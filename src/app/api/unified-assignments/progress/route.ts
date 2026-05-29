@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 import { UpdateStudentProgressRequest } from '@/types/unified-assignment'
 
@@ -8,14 +7,8 @@ import { UpdateStudentProgressRequest } from '@/types/unified-assignment'
  * GET /api/unified-assignments/progress
  * Get student progress records with filtering
  */
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const { searchParams } = new URL(request.url)
 
     const assignmentId = searchParams.get('assignment_id')
@@ -64,7 +57,7 @@ export async function GET(request: NextRequest) {
       }
     } else {
       // Students see only their own progress
-      query = query.eq('student_email', session.user.email)
+      query = query.eq('student_email', ctx.email)
       if (assignmentId) {
         query = query.eq('unified_assignment_id', assignmentId)
       }
@@ -95,28 +88,14 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data || [])
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * PUT /api/unified-assignments/progress
  * Update student progress (for students and teachers)
  */
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const PUT = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const body = await request.json()
     const { progress_id, ...updates }: { progress_id: string } & UpdateStudentProgressRequest = body
 
@@ -144,7 +123,7 @@ export async function PUT(request: NextRequest) {
     // Authorization check
     if (userRole === 'student') {
       // Students can only update their own progress
-      if (existing.student_email !== session.user.email) {
+      if (existing.student_email !== ctx.email) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
 
@@ -192,7 +171,7 @@ export async function PUT(request: NextRequest) {
       if (updates.score !== undefined || updates.percentage !== undefined || updates.rubric_scores) {
         teacherUpdates.status = 'graded'
         teacherUpdates.graded_at = new Date().toISOString()
-        teacherUpdates.graded_by = session.user.email
+        teacherUpdates.graded_by = ctx.email
       }
 
       const { data, error } = await supabase
@@ -224,32 +203,13 @@ export async function PUT(request: NextRequest) {
 
       return NextResponse.json(data)
     }
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * POST /api/unified-assignments/progress
  * Create a new progress record (usually done automatically, but can be manual)
  */
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { unified_assignment_id, student_id, student_email } = body
 
@@ -303,13 +263,5 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 

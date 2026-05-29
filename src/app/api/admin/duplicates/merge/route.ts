@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // POST /api/admin/duplicates/merge  { canonical_id, dup_id }
 // Admin-only. Merges the duplicate row INTO the canonical row:
@@ -25,13 +24,7 @@ const REKEY_TABLES = [
   'student_owned_items',
 ] as const
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const POST = withRole('admin', async (request) => {
     const body = await request.json()
     const canonicalId = (body?.canonical_id ?? '') as string
     const dupId = (body?.dup_id ?? '') as string
@@ -86,8 +79,4 @@ export async function POST(request: NextRequest) {
     if (delErr) return NextResponse.json({ error: delErr.message, rekey: rekeyResults }, { status: 500 })
 
     return NextResponse.json({ ok: true, moved_enrollments: enrollMoves.length, dropped_dup_enrollments: enrollDeletes.length, rekey: rekeyResults })
-  } catch (error) {
-    console.error('Error in POST /api/admin/duplicates/merge:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

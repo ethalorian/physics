@@ -1,24 +1,12 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
  * Add missing simulations to database
  */
-export async function POST() {
+export const POST = withRole('admin', async () => {
   try {
-    // Check auth
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: 'Admin only' }, { status: 403 })
-    }
-
     // Define all simulations that should exist
     const expectedSimulations = [
       {
@@ -120,8 +108,8 @@ export async function POST() {
     })
 
   } catch (error: any) {
-    return NextResponse.json({ 
-      error: error.message 
+    return NextResponse.json({
+      error: error.message
     }, { status: 500 })
   }
-}
+})

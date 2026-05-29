@@ -1,18 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 /**
  * POST /api/simulations/assignments/submit - Submit or update a simulation assignment
  */
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
 
     // Validation
@@ -46,7 +40,7 @@ export async function POST(request: NextRequest) {
       .from('simulation_assignment_submissions')
       .select('*')
       .eq('assignment_id', body.assignment_id)
-      .eq('student_email', session.user.email)
+      .eq('student_email', ctx.email)
       .eq('is_latest_attempt', true)
       .single()
 
@@ -104,11 +98,6 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: updateError.message }, { status: 500 })
       }
 
-      // If submitted, trigger AI grading for open response questions
-      if (body.submit) {
-        await triggerAIGrading(updated.id, assignment, body.answers)
-      }
-
       return NextResponse.json({ submission: updated })
 
     } else if (!existingSubmission || existingSubmission.status !== 'in_progress') {
@@ -117,7 +106,7 @@ export async function POST(request: NextRequest) {
         .from('simulation_assignment_submissions')
         .select('attempt_number')
         .eq('assignment_id', body.assignment_id)
-        .eq('student_email', session.user.email)
+        .eq('student_email', ctx.email)
         .order('attempt_number', { ascending: false })
         .limit(1)
 
@@ -135,14 +124,14 @@ export async function POST(request: NextRequest) {
           .from('simulation_assignment_submissions')
           .update({ is_latest_attempt: false })
           .eq('assignment_id', body.assignment_id)
-          .eq('student_email', session.user.email)
+          .eq('student_email', ctx.email)
       }
 
       // Create new submission
       submissionData = {
         assignment_id: body.assignment_id,
-        student_id: session.user.id || session.user.email,
-        student_email: session.user.email,
+        student_id: ctx.userId || ctx.email,
+        student_email: ctx.email,
         answers: body.answers,
         attempt_number: nextAttempt,
         is_latest_attempt: true,
@@ -169,91 +158,10 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: createError.message }, { status: 500 })
       }
 
-      // If submitted, trigger AI grading for open response questions
-      if (body.submit) {
-        await triggerAIGrading(created.id, assignment, body.answers)
-      }
-
       return NextResponse.json({ submission: created }, { status: 201 })
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: 'Cannot update submitted assignment'
     }, { status: 403 })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to submit assignment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-// Helper function to trigger AI grading for open response questions
-async function triggerAIGrading(submissionId: string, assignment: any, answers: any) {
-  try {
-    const questions = assignment.questions as any[]
-    let additionalScore = 0
-    const feedback: any = {}
-
-    for (let i = 0; i < questions.length; i++) {
-      const question = questions[i]
-      const answer = answers[`question_${i}`]
-
-      if (question.type === 'open-response' && question.autoGrade && answer) {
-        
-        // Call AI grading endpoint
-        const response = await fetch(`${process.env.NEXTAUTH_URL}/api/grade-open-response`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            question: question.question,
-            studentAnswer: answer,
-            rubric: question.rubric,
-            correctConcepts: question.correctConcepts,
-            commonMisconceptions: question.commonMisconceptions,
-            maxPoints: question.points,
-            gradePrompt: question.gradePrompt
-          })
-        })
-
-        if (response.ok) {
-          const result = await response.json()
-          additionalScore += result.score || 0
-          feedback[`question_${i}`] = {
-            score: result.score,
-            maxScore: question.points,
-            feedback: result.feedback,
-            suggestions: result.suggestions
-          }
-        }
-      }
-    }
-
-    // Update submission with AI grading results
-    if (Object.keys(feedback).length > 0) {
-      const { data: currentSubmission } = await supabase
-        .from('simulation_assignment_submissions')
-        .select('score')
-        .eq('id', submissionId)
-        .single()
-
-      const newScore = (currentSubmission?.score || 0) + additionalScore
-      const percentage = (newScore / assignment.total_points) * 100
-
-      await supabase
-        .from('simulation_assignment_submissions')
-        .update({
-          score: newScore,
-          percentage: percentage,
-          feedback: feedback,
-          status: 'graded'
-        })
-        .eq('id', submissionId)
-    }
-  } catch (error) {
-    console.error('Error in AI grading:', error)
-    // Don't throw - let submission succeed even if grading fails
-  }
-}
+})

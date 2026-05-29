@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
  * List all simulations in database with details
  */
-export async function GET() {
+export const GET = withRole('admin', async () => {
   try {
     const { data, error } = await supabase
       .from('simulations')
@@ -24,8 +25,8 @@ export async function GET() {
     })
 
   } catch (error: any) {
-    return NextResponse.json({ 
-      error: error.message 
+    return NextResponse.json({
+      error: error.message
     }, { status: 500 })
   }
-}
+})

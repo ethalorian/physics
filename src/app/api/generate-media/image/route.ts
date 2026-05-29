@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- retired endpoint: returns 410 Gone, no handler to wrap */
 import { NextResponse } from 'next/server'
 
 // AI media generation (Google Imagen) was retired at the team's request — the

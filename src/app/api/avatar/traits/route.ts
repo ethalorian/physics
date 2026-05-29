@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { TRAIT_OPTIONS, type AvatarTraits } from '@/lib/avatar/types'
 
@@ -8,11 +8,8 @@ import { TRAIT_OPTIONS, type AvatarTraits } from '@/lib/avatar/types'
 // trait-builder onboarding step complete. Validates each value against the
 // allowed options registry so a tampered client can't inject arbitrary slugs.
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
+export const POST = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
 
     const body = await request.json()
     const incoming = (body?.traits ?? {}) as Partial<AvatarTraits>
@@ -40,8 +37,4 @@ export async function POST(request: NextRequest) {
       .upsert({ user_id: userId, traits: merged, setup_completed: true, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true, traits: merged })
-  } catch (error) {
-    console.error('Error in POST /api/avatar/traits:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

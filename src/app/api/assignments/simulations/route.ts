@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
@@ -8,19 +7,13 @@ import { supabase } from '@/lib/supabase'
  * POST /api/assignments/simulations - Create new simulation assignment
  */
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const courseId = searchParams.get('course_id')
     const studentId = searchParams.get('student_id')
     const published = searchParams.get('published')
 
-    const userRole = getUserRole(session.user.email)
+    const userRole = ctx.role
 
     // Build query
     let query = supabase
@@ -43,7 +36,7 @@ export async function GET(request: NextRequest) {
 
     // Students can only see assignments assigned to them
     if (userRole === 'student') {
-      query = query.or(`course_id.eq.${courseId},assigned_students.cs.{${session.user.id}}`)
+      query = query.or(`course_id.eq.${courseId},assigned_students.cs.{${ctx.userId}}`)
     }
 
     const { data, error } = await query
@@ -54,30 +47,9 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ assignments: data || [] })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch simulation assignments',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validation
@@ -125,7 +97,7 @@ export async function POST(request: NextRequest) {
       simulation_id: body.simulation_id,
       course_id: body.course_id || null,
       assigned_students: body.assigned_students || null,
-      assigned_by: session.user.email,
+      assigned_by: ctx.email,
       assigned_at: new Date().toISOString(),
       due_date: body.due_date || null,
       title: body.title || simulation.title,
@@ -214,13 +186,5 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ assignment }, { status: 201 })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to create simulation assignment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})
 

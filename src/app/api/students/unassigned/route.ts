@@ -1,23 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Get all unassigned students
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
-      }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     // Use the database function to get unassigned students
     const { data, error } = await supabaseAdmin
       .rpc('get_unassigned_students')
@@ -35,28 +21,14 @@ export async function GET(request: NextRequest) {
       students: data || [],
       count: data?.length || 0
     })
-
-  } catch (error) {
-    console.error('Unassigned students API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // POST - Manually assign student to course
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
+      return NextResponse.json({
+        error: 'Forbidden - Admin/Teacher access required'
       }, { status: 403 })
     }
 
@@ -99,9 +71,9 @@ export async function POST(request: NextRequest) {
 
     // For teachers (non-admin), verify they own this course
     if (userRole === 'teacher' && courseCheck.teacher_email) {
-      if (courseCheck.teacher_email !== session.user.email) {
-        return NextResponse.json({ 
-          error: 'You can only assign students to your own courses' 
+      if (courseCheck.teacher_email !== ctx.email) {
+        return NextResponse.json({
+          error: 'You can only assign students to your own courses'
         }, { status: 403 })
       }
     }
@@ -150,28 +122,14 @@ export async function POST(request: NextRequest) {
       message: result.message,
       student: studentData
     })
-
-  } catch (error) {
-    console.error('Student assignment API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // DELETE - Remove student from course (useful for misassignments)
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const DELETE = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ 
-        error: 'Forbidden - Admin/Teacher access required' 
+      return NextResponse.json({
+        error: 'Forbidden - Admin/Teacher access required'
       }, { status: 403 })
     }
 
@@ -193,9 +151,9 @@ export async function DELETE(request: NextRequest) {
         .eq('id', courseId)
         .single()
 
-      if (!course || course.teacher_email !== session.user.email) {
-        return NextResponse.json({ 
-          error: 'You can only remove students from your own courses' 
+      if (!course || course.teacher_email !== ctx.email) {
+        return NextResponse.json({
+          error: 'You can only remove students from your own courses'
         }, { status: 403 })
       }
     }
@@ -219,13 +177,5 @@ export async function DELETE(request: NextRequest) {
       success: true,
       message: 'Student removed from course successfully'
     })
-
-  } catch (error) {
-    console.error('Student removal API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 

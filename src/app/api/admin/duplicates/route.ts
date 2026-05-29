@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // GET /api/admin/duplicates
 // Admin-only: groups of student rows that look like the SAME PERSON spread
@@ -27,13 +26,7 @@ export interface DuplicateGroup {
   rows: DuplicateRow[]
 }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const GET = withRole('admin', async () => {
     // 1) Find names that appear in students more than once.
     const { data: allStudents } = await supabaseAdmin
       .from('students')
@@ -91,8 +84,4 @@ export async function GET() {
     }))
 
     return NextResponse.json({ groups, totalStudents: rows.length })
-  } catch (error) {
-    console.error('Error in GET /api/admin/duplicates:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

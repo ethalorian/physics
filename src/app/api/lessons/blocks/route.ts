@@ -1,24 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
-import { getEffectiveContext } from '@/lib/effective-context'
-import { requireEnrolledStudent } from '@/lib/student-enrollment'
+import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
 // Body: { lesson_id, block_id, block_type, response }
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    // Enrollment gate: un-enrolled students can't write block responses
-    // (those would be orphan rows with no class to surface them in).
-    const ctx = await getEffectiveContext(session.user.email)
-    const gate = await requireEnrolledStudent(session.user.id, ctx.realRole)
-    if (gate) return gate
+export const POST = withEnrolledStudent(async (request, ctx) => {
     const body = await request.json()
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
       return NextResponse.json({ error: 'Missing lesson_id, block_id, or response' }, { status: 400 })
@@ -26,8 +14,8 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('block_responses')
       .insert({
-        user_id: session.user.id,
-        user_email: session.user.email,
+        user_id: ctx.userId,
+        user_email: ctx.email,
         lesson_id: body.lesson_id,
         block_id: body.block_id,
         block_type: body.block_type ?? null,
@@ -44,8 +32,8 @@ export async function POST(request: NextRequest) {
     // work feeds the activity feed, streaks, leaderboard points, and the dashboard.
     try {
       await supabaseAdmin.from('student_activity').insert({
-        user_id: session.user.id,
-        user_email: session.user.email,
+        user_id: ctx.userId,
+        user_email: ctx.email,
         activity_type: 'lesson_block',
         lesson_id: body.lesson_id,
       })
@@ -66,7 +54,7 @@ export async function POST(request: NextRequest) {
         const { data: resp } = await supabaseAdmin
           .from('block_responses')
           .select('block_id, response, created_at')
-          .eq('user_id', session.user.id)
+          .eq('user_id', ctx.userId)
           .eq('lesson_id', body.lesson_id)
           .in('block_id', captureIds)
           .order('created_at', { ascending: true })
@@ -80,8 +68,8 @@ export async function POST(request: NextRequest) {
         const completed = pct >= 100
         await supabaseAdmin.from('lesson_progress').upsert(
           {
-            user_id: session.user.id,
-            user_email: session.user.email,
+            user_id: ctx.userId,
+            user_email: ctx.email,
             lesson_id: body.lesson_id,
             lesson_slug: lessonRow?.slug ?? null,
             status: completed ? 'completed' : 'in_progress',
@@ -97,29 +85,29 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-  } catch (error) {
-    console.error('Error in POST /api/lessons/blocks:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // GET /api/lessons/blocks?lesson_id=...  — latest response per block for the current student.
 // Staff may pass &user_id= to view a specific student.
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const lessonId = searchParams.get('lesson_id')
     if (!lessonId) {
       return NextResponse.json({ error: 'Missing lesson_id' }, { status: 400 })
     }
-    const role = getUserRole(session.user.email)
-    const isStaff = role === 'admin' || role === 'teacher'
+    const role = ctx.role
     const requested = searchParams.get('user_id')
-    const targetUserId = isStaff && requested ? requested : session.user.id
+    // Admins may view any student; a teacher only their own roster.
+    const resolved = await resolveTargetStudent({
+      role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId: requested,
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const targetUserId = resolved.userId
 
     const { data, error } = await supabaseAdmin
       .from('block_responses')
@@ -136,8 +124,4 @@ export async function GET(request: NextRequest) {
       responses[row.block_id] = { response: row.response, block_type: row.block_type, created_at: row.created_at }
     }
     return NextResponse.json({ responses })
-  } catch (error) {
-    console.error('Error in GET /api/lessons/blocks:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

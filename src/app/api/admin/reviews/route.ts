@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // ADMIN-ONLY review queue for generated skill reviews. The application admin is
 // the single quality gate app-wide: pending reviews are shown only to the
@@ -10,13 +9,7 @@ import { getEffectiveContext } from '@/lib/effective-context'
 
 type Row = { id: string; target_id: string; reteach: string; blocks: unknown; questions: unknown; status: string; created_by: string | null; created_at: string }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const GET = withRole('admin', async () => {
     const { data } = await supabaseAdmin
       .from('target_reviews')
       .select('id, target_id, reteach, blocks, questions, status, created_by, created_at')
@@ -38,23 +31,13 @@ export async function GET() {
       pendingCount: pending.length,
       recent: all.slice(0, 40).map(decorate),
     })
-  } catch (error) {
-    console.error('Error in GET /api/admin/reviews:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST { id, decision: 'approve' | 'reject', blocks? }
 // When approving, the admin may pass an edited `blocks` array (e.g. they
 // removed a wrong diagram, reordered, or fixed a prose paragraph). We persist
 // what they send so the shared variant matches what they actually approved.
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const POST = withRole('admin', async (request, ctx) => {
     const body = await request.json()
     const id: string | undefined = body.id
     const decision: 'approve' | 'reject' = body.decision
@@ -65,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     const update: Record<string, unknown> = {
       status: decision === 'approve' ? 'approved' : 'rejected',
-      reviewed_by: ctx.realEmail,
+      reviewed_by: ctx.email,
       reviewed_at: new Date().toISOString(),
     }
     // Trust the admin's edited blocks on approve (the admin IS the gate).
@@ -74,8 +57,4 @@ export async function POST(request: NextRequest) {
     const { error } = await supabaseAdmin.from('target_reviews').update(update).eq('id', id)
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/admin/reviews:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

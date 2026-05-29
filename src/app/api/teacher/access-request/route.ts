@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 import { getGrantedRole } from '@/lib/roles'
@@ -8,11 +8,8 @@ import { getGrantedRole } from '@/lib/roles'
 // Classroom can't auto-verify them, this files a request that surfaces as an
 // alert on the admin's command center for approval. One row per email.
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const email = session.user.email
+export const GET = withAuth(async (_request, ctx) => {
+    const email = ctx.email
 
     const isStaff = getUserRole(email) !== 'student' || (await getGrantedRole(email)) !== null
     const { data } = await supabaseAdmin
@@ -22,17 +19,10 @@ export async function GET() {
       .maybeSingle()
 
     return NextResponse.json({ isTeacher: isStaff, request: data ?? null })
-  } catch (error) {
-    console.error('Error in GET /api/teacher/access-request:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const email = session.user.email
+export const POST = withAuth(async (request, ctx) => {
+    const email = ctx.email
 
     // Already a teacher/admin (allowlist or grant)? Nothing to request.
     if (getUserRole(email) !== 'student' || (await getGrantedRole(email)) !== null) {
@@ -45,14 +35,10 @@ export async function POST(request: NextRequest) {
     const { error } = await supabaseAdmin
       .from('teacher_access_requests')
       .upsert(
-        { email, name: session.user.name ?? null, note, status: 'pending', created_at: new Date().toISOString(), decided_at: null, decided_by: null },
+        { email, name: ctx.session.user.name ?? null, note, status: 'pending', created_at: new Date().toISOString(), decided_at: null, decided_by: null },
         { onConflict: 'email' },
       )
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true, status: 'pending' })
-  } catch (error) {
-    console.error('Error in POST /api/teacher/access-request:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

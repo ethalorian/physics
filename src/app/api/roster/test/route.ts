@@ -1,21 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Test database connection and table existence
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     console.log('🧪 Testing database connection and tables...')
     
     const tests = {
@@ -113,15 +101,7 @@ export async function GET(request: NextRequest) {
         'Verify database functions were created successfully'
       ]
     })
-
-  } catch (error) {
-    console.error('Test endpoint error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to run database tests',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 
 

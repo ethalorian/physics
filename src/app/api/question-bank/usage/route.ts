@@ -1,15 +1,8 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const { questionId, assignmentId } = body
 
@@ -23,7 +16,7 @@ export async function POST(request: Request) {
       .insert([{
         question_id: questionId,
         assignment_id: assignmentId,
-        user_id: session.user.id
+        user_id: ctx.userId
       }])
 
     if (logError) {
@@ -39,8 +32,4 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Error in POST /api/question-bank/usage:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

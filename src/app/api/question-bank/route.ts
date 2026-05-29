@@ -2,17 +2,10 @@
 import { NextResponse } from 'next/server'
 
 // Internal imports
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
-export async function GET(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request) => {
     const { searchParams } = new URL(request.url)
     
     // Get filter parameters
@@ -58,25 +51,9 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json(data || [])
-  } catch (error) {
-    console.error('Error in GET /api/question-bank:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can add questions' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     const questionData = {
@@ -91,7 +68,7 @@ export async function POST(request: Request) {
       tags: body.tags || [],
       cognitive_level: body.cognitive_level,
       estimated_time: body.estimated_time,
-      created_by: session.user.id,
+      created_by: ctx.userId,
       usage_count: 0
     }
 
@@ -107,25 +84,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(data)
-  } catch (error) {
-    console.error('Error in POST /api/question-bank:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function PUT(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can update questions' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request) => {
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -153,25 +114,9 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json(data)
-  } catch (error) {
-    console.error('Error in PUT /api/question-bank:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function DELETE(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can delete questions' }, { status: 403 })
-    }
-
+export const DELETE = withRole(['teacher', 'admin'], async (request) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -190,8 +135,4 @@ export async function DELETE(request: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Error in DELETE /api/question-bank:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

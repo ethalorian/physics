@@ -1,24 +1,13 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // GET /api/admin/overview
 // Headline numbers for the superadmin command center: roster size, colleague
 // adoption, content published, mastery ratings logged, pending rewards, and how
 // many students were active in the last 7 days.
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin only' }, { status: 403 })
-    }
-
+export const GET = withRole('admin', async () => {
     const overview = {
       students: 0,
       colleagues: 0,
@@ -74,8 +63,4 @@ export async function GET() {
     ).size
 
     return NextResponse.json({ overview })
-  } catch (error) {
-    console.error('Error in GET /api/admin/overview:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

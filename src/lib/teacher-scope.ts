@@ -68,6 +68,34 @@ export async function getCourseOwnerEmail(courseId: string): Promise<string | nu
   return (data as { teacher_email: string | null } | null)?.teacher_email ?? null
 }
 
+// True if a teacher is allowed to act on a given student (by google_user_id).
+export async function teacherCanAccessStudent(teacherEmail: string, studentGid: string): Promise<boolean> {
+  const gids = await getTeacherStudentGids(teacherEmail)
+  return gids.includes(studentGid)
+}
+
+// Resolve which single student a "view one student" endpoint should target.
+//  - student           → always themselves (client user_id ignored)
+//  - no user_id given   → the caller themselves
+//  - admin + user_id    → that user (admins are unrestricted)
+//  - teacher + user_id  → that user ONLY if on the teacher's roster, else { ok: false }
+// Returning { ok: false } lets the route reply 403 instead of leaking another
+// student's data.
+export async function resolveTargetStudent(opts: {
+  role: string
+  selfId: string
+  scopeEmail: string
+  requestedUserId: string | null
+}): Promise<{ ok: true; userId: string } | { ok: false }> {
+  const { role, selfId, scopeEmail, requestedUserId } = opts
+  if (role === 'student') return { ok: true, userId: selfId }
+  if (!requestedUserId) return { ok: true, userId: selfId }
+  if (role === 'admin') return { ok: true, userId: requestedUserId }
+  // teacher requesting a specific student → must be on their roster
+  const allowed = await teacherCanAccessStudent(scopeEmail, requestedUserId)
+  return allowed ? { ok: true, userId: requestedUserId } : { ok: false }
+}
+
 // Resolve which student google_user_ids a mastery surface should show.
 //  - class given  → that class's students (teachers only for classes they own;
 //                   a teacher asking for someone else's class gets [] = no rows)

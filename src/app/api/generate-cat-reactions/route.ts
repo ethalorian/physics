@@ -1,14 +1,10 @@
 import { NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { withRole } from '@/lib/api-auth'
 import {
   vertexAIConfig,
   type GeminiGenerateRequest,
   type GeminiGenerateResponse
 } from '@/lib/vertex-ai'
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
 
 // Helper to get Google access token
 async function getGoogleAccessToken(): Promise<string | null> {
@@ -259,7 +255,7 @@ interface TAReaction {
   generatedAt: string
 }
 
-export async function POST(request: Request) {
+export const POST = withRole(['teacher', 'admin'], async (request) => {
   try {
     const body: TAReactionRequest = await request.json()
     const { 
@@ -267,7 +263,6 @@ export async function POST(request: Request) {
       lessonTitle, 
       ta,
       cat, // Legacy support
-      aiModel = 'openai',
       reactionType = 'review'
     } = body
 
@@ -383,75 +378,44 @@ Give your ${reactionType} as ${taCharacter.name}, the student TA.`
     try {
       let responseContent: string | null = null
 
-      if (aiModel === 'vertex') {
-        // Use Google Vertex AI Gemini
-        const accessToken = await getGoogleAccessToken()
-        if (!accessToken) {
-          throw new Error('Failed to authenticate with Google Cloud')
-        }
-
-        const geminiRequest: GeminiGenerateRequest = {
-          contents: [{
-            role: 'user',
-            parts: [{ text: userPrompt }]
-          }],
-          systemInstruction: {
-            parts: [{ text: systemPrompt }]
-          },
-          generationConfig: {
-            temperature: 0.9, // Higher temperature for more creative/playful responses
-            topP: 0.95,
-            maxOutputTokens: 2048
-          }
-        }
-
-        const geminiResponse = await fetch(vertexAIConfig.getGeminiEndpoint('default'), {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(geminiRequest)
-        })
-
-        if (!geminiResponse.ok) {
-          const errorText = await geminiResponse.text()
-          console.error('Vertex AI error:', errorText)
-          throw new Error(`Vertex AI error: ${geminiResponse.status}`)
-        }
-
-        const geminiData: GeminiGenerateResponse = await geminiResponse.json()
-        responseContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || null
-
-      } else {
-        // Use OpenAI
-        let completion
-        try {
-          completion = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt }
-            ],
-            temperature: 0.9,
-            max_tokens: 1500
-          })
-        } catch (gpt4Error: unknown) {
-          const errorMessage = gpt4Error instanceof Error ? gpt4Error.message : 'Unknown error'
-          console.log('GPT-4o failed, trying GPT-3.5-turbo:', errorMessage)
-          completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt }
-            ],
-            temperature: 0.9,
-            max_tokens: 1500
-          })
-        }
-
-        responseContent = completion.choices[0]?.message?.content
+      // Use Google Vertex AI Gemini
+      const accessToken = await getGoogleAccessToken()
+      if (!accessToken) {
+        throw new Error('Failed to authenticate with Google Cloud')
       }
+
+      const geminiRequest: GeminiGenerateRequest = {
+        contents: [{
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }],
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        generationConfig: {
+          temperature: 0.9, // Higher temperature for more creative/playful responses
+          topP: 0.95,
+          maxOutputTokens: 2048
+        }
+      }
+
+      const geminiResponse = await fetch(vertexAIConfig.getGeminiEndpoint('default'), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(geminiRequest)
+      })
+
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        console.error('Vertex AI error:', errorText)
+        throw new Error(`Vertex AI error: ${geminiResponse.status}`)
+      }
+
+      const geminiData: GeminiGenerateResponse = await geminiResponse.json()
+      responseContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || null
 
       if (!responseContent) {
         throw new Error('No response from AI')
@@ -505,9 +469,10 @@ Give your ${reactionType} as ${taCharacter.name}, the student TA.`
       { status: 500 }
     )
   }
-}
+})
 
 // GET endpoint to get TA character information
+// eslint-disable-next-line no-restricted-syntax -- returns static TA character metadata, no auth required
 export async function GET() {
   return NextResponse.json({
     tas: Object.entries(TA_CHARACTERS).map(([id, ta]) => ({

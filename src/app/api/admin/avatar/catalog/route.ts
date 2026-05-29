@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import type { AvatarItem } from '@/lib/avatar/types'
 
 // GET /api/admin/avatar/catalog
@@ -14,13 +13,7 @@ export interface CatalogRow extends AvatarItem {
   target_statement: string | null
 }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const GET = withRole('admin', async () => {
     const { data: itemsRaw } = await supabaseAdmin
       .from('avatar_items')
       .select('slug, slot, name, cost_xp, unlock_target_id, unlock_min_level, svg_layer, z_order, enabled, sort_order')
@@ -55,8 +48,4 @@ export async function GET() {
     }))
 
     return NextResponse.json({ catalog })
-  } catch (error) {
-    console.error('Error in GET /api/admin/avatar/catalog:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

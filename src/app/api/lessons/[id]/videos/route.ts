@@ -1,25 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { withRole } from '@/lib/api-auth'
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user has permission to edit lessons
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
-    }
-
-    const { id } = await params
+export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+    const { id } = await ctx.params
     const body = await request.json()
     const { videos, objectives, estimated_time } = body
 
@@ -62,21 +46,14 @@ export async function PUT(
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ 
-      success: true, 
+    return NextResponse.json({
+      success: true,
       lesson: data,
       message: 'Lesson updated successfully'
     })
+})
 
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' }, 
-      { status: 500 }
-    )
-  }
-}
-
+// eslint-disable-next-line no-restricted-syntax -- public read, pending auth review (audit follow-up)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

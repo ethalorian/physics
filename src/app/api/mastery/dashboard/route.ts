@@ -1,21 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
 import { LearningTarget, MasteryRecord, Domain, RubricDimension } from '@/data/curriculum-types'
 
 // GET /api/mastery/dashboard?unit_id=unit-1[&user_id=...]
 // Returns everything a student view needs: the unit's targets, this student's
 // mastery records, and the latest transfer-task result. Students always get their
 // own data; teachers/admins may pass ?user_id= to view a specific student.
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const role = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const role = ctx.role
     const isStaff = role === 'admin' || role === 'teacher'
 
     const { searchParams } = new URL(request.url)
@@ -24,9 +18,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required query param: unit_id' }, { status: 400 })
     }
 
-    // Students are locked to their own records; only staff may inspect another student.
+    // Students are locked to their own records; admins may inspect anyone; a
+    // teacher may only inspect students on their own roster.
     const requestedUserId = searchParams.get('user_id')
-    const targetUserId = isStaff && requestedUserId ? requestedUserId : session.user.id
+    const resolved = await resolveTargetStudent({
+      role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId,
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const targetUserId = resolved.userId
 
     // 1) Unit targets (source-of-truth content, projected from learning_targets).
     const { data: targetRows, error: targetErr } = await supabaseAdmin
@@ -94,8 +98,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ unitId, userId: targetUserId, targets, records, taskResult })
-  } catch (error) {
-    console.error('Error in GET /api/mastery/dashboard:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

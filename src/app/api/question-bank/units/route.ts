@@ -1,15 +1,9 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
-export async function GET(request: Request) {
+export const GET = withAuth(async () => {
   try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
     // Try to fetch from database first
     // Note: units and lessons are not directly related via foreign key
     // We fetch them separately and combine client-side
@@ -56,21 +50,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Failed to load units data' }, { status: 500 })
     }
   }
-}
+})
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can add units' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request) => {
     const body = await request.json()
 
     const { data, error } = await supabaseAdmin
@@ -85,8 +67,4 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(data)
-  } catch (error) {
-    console.error('Error in POST /api/question-bank/units:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

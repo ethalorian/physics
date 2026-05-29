@@ -1,30 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
+import { withAuth } from '@/lib/api-auth'
 
 /**
  * GET /api/lessons/published
  * Fetch published lessons with filtering and progress tracking
  * This bypasses RLS by using server-side auth check
  */
-export async function GET(request: NextRequest) {
-  try {
-    // Check authentication using NextAuth
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please sign in' },
-        { status: 401 }
-      )
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     // Determine user role based on email
-    const userRole = getUserRole(session.user.email)
+    const userRole = ctx.role
     const isAdmin = userRole === 'admin' || userRole === 'teacher'
-    const userId = session.user.id
+    const userId = ctx.userId
 
     // Get query parameters for filtering
     const { searchParams } = new URL(request.url)
@@ -33,7 +21,7 @@ export async function GET(request: NextRequest) {
     const difficulty = searchParams.get('difficulty')
     const search = searchParams.get('search')
 
-    console.log('Fetching lessons for:', session.user.email, 'Role:', userRole, 'Filters:', { unit, lessonType, difficulty, search })
+    console.log('Fetching lessons for:', ctx.email, 'Role:', userRole, 'Filters:', { unit, lessonType, difficulty, search })
 
     // Build query with filters
     // Note: Simulation join is optional for backward compatibility
@@ -212,7 +200,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    console.log(`Fetched ${enhancedLessons?.length || 0} lessons for ${session.user.email}`)
+    console.log(`Fetched ${enhancedLessons?.length || 0} lessons for ${ctx.email}`)
 
     return NextResponse.json({
       lessons: enhancedLessons || [],
@@ -220,13 +208,4 @@ export async function GET(request: NextRequest) {
       userRole,
       isAdmin
     })
-
-  } catch (error) {
-    console.error('Error in lessons API:', error)
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
-    return NextResponse.json(
-      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
-      { status: 500 }
-    )
-  }
-}
+})

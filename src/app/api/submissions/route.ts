@@ -1,23 +1,17 @@
 // Next.js imports
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 // Internal imports
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth, withRole } from '@/lib/api-auth'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 import { Submission } from '@/types/assignment'
 
 // GET - Fetch submissions
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const { searchParams } = new URL(request.url)
-    
+
     // Filter parameters
     const assignmentId = searchParams.get('assignment_id')
     const userId = searchParams.get('user_id')
@@ -29,11 +23,23 @@ export async function GET(request: NextRequest) {
       .select('*')
       .order('created_at', { ascending: false })
 
-    // Students can only see their own submissions
+    // Students can only see their own submissions.
     if (userRole === 'student') {
-      query = query.eq('user_id', session.user.id)
+      query = query.eq('user_id', ctx.userId)
+    } else if (userRole === 'teacher') {
+      // Teachers are constrained to their own roster — they may narrow to a
+      // single student only if that student is on their roster.
+      const rosterGids = await getTeacherStudentGids(ctx.email)
+      if (userId) {
+        if (!rosterGids.includes(userId)) {
+          return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        }
+        query = query.eq('user_id', userId)
+      } else {
+        query = query.in('user_id', rosterGids)
+      }
     } else if (userId) {
-      // Teachers/admins can filter by student
+      // Admins are unrestricted; may filter by any student.
       query = query.eq('user_id', userId)
     }
 
@@ -55,21 +61,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(submissions || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/submissions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST - Create new submission (or update existing)
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -83,7 +78,7 @@ export async function POST(request: NextRequest) {
     // Prepare submission data
     const submissionData: any = {
       assignment_id: body.assignment_id,
-      user_id: session.user.id,
+      user_id: ctx.userId,
       answers: body.answers,
       score: body.score || null,
       max_score: body.max_score || null,
@@ -113,21 +108,10 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/submissions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // PUT - Update submission (for grading)
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const PUT = withAuth(async (request, ctx) => {
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -136,8 +120,8 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check permissions - only teachers/admins or submission owner can update
-    const userRole = getUserRole(session.user.email)
-    
+    const userRole = ctx.role
+
     if (userRole === 'student') {
       // Students can only update their own submissions and only if not yet submitted
       const { data: existingSubmission } = await supabaseAdmin
@@ -146,7 +130,7 @@ export async function PUT(request: NextRequest) {
         .eq('id', id)
         .single()
 
-      if (!existingSubmission || existingSubmission.user_id !== session.user.id) {
+      if (!existingSubmission || existingSubmission.user_id !== ctx.userId) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
 
@@ -181,30 +165,10 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json(data)
+})
 
-  } catch (error) {
-    console.error('Error in PUT /api/submissions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
-// DELETE - Delete submission
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Only teachers/admins can delete submissions
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden: Only teachers/admins can delete submissions' },
-        { status: 403 }
-      )
-    }
-
+// DELETE - Delete submission (teachers/admins only)
+export const DELETE = withRole(['teacher', 'admin'], async (request) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -224,10 +188,5 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'Submission deleted' })
-
-  } catch (error) {
-    console.error('Error in DELETE /api/submissions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 

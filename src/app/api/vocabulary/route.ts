@@ -1,21 +1,14 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth, withRole } from '@/lib/api-auth'
 
-export async function GET(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const setId = searchParams.get('setId')
 
     if (setId) {
       // Check user role
-      const userRole = getUserRole(session.user?.email)
+      const userRole = ctx.role
       const isStudent = userRole === 'student'
 
       // Get specific vocabulary set with terms
@@ -47,7 +40,7 @@ export async function GET(request: Request) {
       return NextResponse.json(vocabularySet)
     } else {
       // Check user role to determine what vocabulary sets to show
-      const userRole = getUserRole(session.user?.email)
+      const userRole = ctx.role
       const isStudent = userRole === 'student'
 
       // Build query - students only see published sets
@@ -95,25 +88,9 @@ export async function GET(request: Request) {
 
       return NextResponse.json(transformedSets)
     }
-  } catch (error) {
-    console.error('Error in GET /api/vocabulary:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can create vocabulary sets' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { name, description, unit, lesson, terms } = body
 
@@ -126,7 +103,7 @@ export async function POST(request: Request) {
         unit_id: unit,
         lesson_id: lesson,
         published: false,
-        created_by: session.user.id
+        created_by: ctx.userId
       }])
       .select()
       .single()
@@ -141,7 +118,7 @@ export async function POST(request: Request) {
         description,
         unit_id: unit,
         lesson_id: lesson,
-        created_by: session.user.id,
+        created_by: ctx.userId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
@@ -173,19 +150,9 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(vocabularySet)
-  } catch (error) {
-    console.error('Error in POST /api/vocabulary:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function PUT(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const PUT = withAuth(async (request) => {
     const body = await request.json()
     const { id, name, description, unit, lesson, terms, published } = body
 
@@ -248,19 +215,9 @@ export async function PUT(request: Request) {
     }
 
     return NextResponse.json(vocabularySet)
-  } catch (error) {
-    console.error('Error in PUT /api/vocabulary:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function DELETE(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const DELETE = withAuth(async (request) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
@@ -280,8 +237,4 @@ export async function DELETE(request: Request) {
     }
 
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Error in DELETE /api/vocabulary:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

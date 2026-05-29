@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 /**
  * Simulation Activity Tracking
@@ -8,13 +8,7 @@ import { supabase } from '@/lib/supabase'
  * GET - Fetch student activity history
  */
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const { simulation_id, lesson_id, step_id } = body
 
@@ -24,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     // Create new activity record
     const activityData = {
-      student_id: session.user.id,
+      student_id: ctx.userId,
       simulation_id,
       lesson_id: lesson_id || null,
       step_id: step_id || null,
@@ -47,25 +41,11 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ activity: data }, { status: 201 })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to start activity',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const student_id = searchParams.get('student_id') || session.user.id
+    const student_id = searchParams.get('student_id') || ctx.userId
     const simulation_id = searchParams.get('simulation_id')
     const lesson_id = searchParams.get('lesson_id')
 
@@ -91,12 +71,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ activities: data || [] })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch activity',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

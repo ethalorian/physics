@@ -1,21 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET - Get imported students, SCOPED to who's asking: a teacher sees only the
 // students enrolled in their own classes; an admin sees everyone. Pass
 // ?course_id= to narrow to a single class (used by the per-class page).
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
     }
@@ -65,31 +56,12 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(response)
-
-  } catch (error) {
-    console.error('Students API error:', error)
-    return NextResponse.json({
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // PATCH - Update a student's name parts (first_name / last_name).
 // Teachers/admins correct how a name splits so the Aspen X2 grade copy sorts
 // the student to the right row. Does NOT touch the Google-synced `name`.
-export async function PATCH(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const id: string | undefined = body.id
     if (!id) {
@@ -116,12 +88,4 @@ export async function PATCH(request: NextRequest) {
     }
 
     return NextResponse.json(data)
-
-  } catch (error) {
-    console.error('Students PATCH error:', error)
-    return NextResponse.json({
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})

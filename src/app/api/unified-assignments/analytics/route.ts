@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 import { AssignmentAnalytics, TeacherDashboardSummary, StudentDashboardSummary } from '@/types/unified-assignment'
 
@@ -12,16 +11,10 @@ import { AssignmentAnalytics, TeacherDashboardSummary, StudentDashboardSummary }
  *   - assignment_id: (for type=assignment)
  *   - course_id: (optional filter for dashboards)
  */
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const { searchParams } = new URL(request.url)
-    
+
     const type = searchParams.get('type') || 'assignment'
     const assignmentId = searchParams.get('assignment_id')
     const courseId = searchParams.get('course_id')
@@ -43,25 +36,17 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
       }
 
-      const dashboard = await getTeacherDashboard(session.user.email, courseId)
+      const dashboard = await getTeacherDashboard(ctx.email, courseId)
       return NextResponse.json(dashboard)
     }
 
     if (type === 'student_dashboard') {
-      const dashboard = await getStudentDashboard(session.user.email)
+      const dashboard = await getStudentDashboard(ctx.email)
       return NextResponse.json(dashboard)
     }
 
     return NextResponse.json({ error: 'Invalid analytics type' }, { status: 400 })
-
-  } catch (error) {
-    console.error('API Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * Get detailed analytics for a specific assignment

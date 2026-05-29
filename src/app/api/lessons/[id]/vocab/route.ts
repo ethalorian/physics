@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
+import { withAuth, withRole } from '@/lib/api-auth'
 
 // A lesson's tiered SEI vocab lives in ONE vocabulary_set bound to the lesson.
 // GET  /api/lessons/[id]/vocab  — the lesson's tiered terms
@@ -19,11 +18,8 @@ interface TermInput {
 
 type LessonRow = { id: string; title: string | null; unit: string | null }
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const { id: lessonId } = await params
+export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
+    const { id: lessonId } = await ctx.params
 
     const { data: set } = await supabaseAdmin
       .from('vocabulary_sets')
@@ -41,20 +37,10 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
       .order('order_index', { ascending: true })
 
     return NextResponse.json({ setId: s.id, published: s.published ?? false, terms: terms ?? [] })
-  } catch (error) {
-    console.error('Error in GET /api/lessons/[id]/vocab:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-    const { id: lessonId } = await params
+export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (req, ctx) => {
+    const { id: lessonId } = await ctx.params
     const body = (await req.json()) as { terms?: TermInput[]; published?: boolean }
     const terms = (body.terms ?? []).filter((t) => t.term?.trim())
 
@@ -77,7 +63,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     if (!setId) {
       const { data: created, error: createErr } = await supabaseAdmin
         .from('vocabulary_sets')
-        .insert({ name: `${lesson.title ?? 'Lesson'} vocab`, lesson_id: lessonId, unit_id: unitId, created_by: session.user.email, published: body.published ?? false })
+        .insert({ name: `${lesson.title ?? 'Lesson'} vocab`, lesson_id: lessonId, unit_id: unitId, created_by: ctx.email, published: body.published ?? false })
         .select('id')
         .single()
       if (createErr || !created) return NextResponse.json({ error: createErr?.message ?? 'Could not create set' }, { status: 500 })
@@ -107,8 +93,4 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     return NextResponse.json({ ok: true, setId, count: terms.length, published: body.published ?? undefined })
-  } catch (error) {
-    console.error('Error in PUT /api/lessons/[id]/vocab:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

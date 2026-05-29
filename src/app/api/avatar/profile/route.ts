@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // POST /api/avatar/profile { alias?, use_custom_avatar? }
@@ -13,11 +13,8 @@ const ALIAS_MAX = 32
 // no leading/trailing whitespace (we trim before validating).
 const ALIAS_REGEX = /^[A-Za-z0-9 ._-]{1,32}$/
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id || !session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
+export const POST = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
 
     const body = await request.json()
     const aliasIncoming: unknown = body?.alias
@@ -67,8 +64,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/avatar/profile:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

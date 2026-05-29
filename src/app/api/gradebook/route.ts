@@ -1,19 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth, withRole } from '@/lib/api-auth'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET - Fetch gradebook entries
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     const { searchParams } = new URL(request.url)
-    
+
     const userId = searchParams.get('user_id')
     const courseId = searchParams.get('course_id')
     const itemType = searchParams.get('item_type')
@@ -24,11 +18,22 @@ export async function GET(request: NextRequest) {
       .select('*')
       .order('created_at', { ascending: false })
 
-    // Students can only see their own grades
+    // Students can only see their own grades.
     if (userRole === 'student') {
-      query = query.eq('user_id', session.user.id)
+      query = query.eq('user_id', ctx.userId)
+    } else if (userRole === 'teacher') {
+      // Teachers are constrained to their own roster.
+      const rosterGids = await getTeacherStudentGids(ctx.email)
+      if (userId) {
+        if (!rosterGids.includes(userId)) {
+          return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        }
+        query = query.eq('user_id', userId)
+      } else {
+        query = query.in('user_id', rosterGids)
+      }
     } else if (userId) {
-      // Teachers/admins can filter by student
+      // Admins are unrestricted; may filter by any student.
       query = query.eq('user_id', userId)
     }
 
@@ -52,25 +57,11 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/gradebook:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST - Create/update gradebook entry
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Teacher access required' }, { status: 403 })
-    }
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
+    const userRole = ctx.role
 
     const body = await request.json()
 
@@ -80,6 +71,15 @@ export async function POST(request: NextRequest) {
         { error: 'Missing required fields' },
         { status: 400 }
       )
+    }
+
+    // A teacher may only write grades for students on their own roster.
+    // (Admins are unrestricted.)
+    if (userRole === 'teacher') {
+      const rosterGids = await getTeacherStudentGids(ctx.email)
+      if (!rosterGids.includes(body.user_id)) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
     }
 
     const gradebookData = {
@@ -114,9 +114,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/gradebook:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

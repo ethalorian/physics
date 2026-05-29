@@ -1,17 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // POST - Sync grades to Google Classroom
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
+    const userRole = ctx.role
     if (userRole !== 'admin' && userRole !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden - Teacher access required' }, { status: 403 })
     }
@@ -49,7 +42,7 @@ export async function POST(request: NextRequest) {
           {
             method: 'PATCH',
             headers: {
-              'Authorization': `Bearer ${session.accessToken}`,
+              'Authorization': `Bearer ${ctx.session.accessToken}`,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -101,9 +94,4 @@ export async function POST(request: NextRequest) {
       results: syncResults,
       errors: errors
     })
-
-  } catch (error) {
-    console.error('Error in POST /api/gradebook/sync-to-classroom:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

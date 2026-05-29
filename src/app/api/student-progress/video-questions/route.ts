@@ -1,15 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // POST - Save video question response
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -21,8 +15,8 @@ export async function POST(request: NextRequest) {
     }
 
     const responseData = {
-      user_id: session.user.id,
-      user_email: session.user.email,
+      user_id: ctx.userId,
+      user_email: ctx.email,
       lesson_id: body.lesson_id,
       video_id: body.video_id,
       question_id: body.question_id,
@@ -47,23 +41,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/student-progress/video-questions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // GET - Fetch video question responses
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('user_id') || session.user.id
+    const userId = searchParams.get('user_id') || ctx.userId
     const lessonId = searchParams.get('lesson_id')
     const videoId = searchParams.get('video_id')
 
@@ -89,9 +72,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/student-progress/video-questions:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import type { EquippedItems, ItemSlot } from '@/lib/avatar/types'
 
@@ -9,11 +9,8 @@ const VALID_SLOTS: ItemSlot[] = ['eyewear', 'head', 'body', 'pin', 'background',
 // Equips an owned item in a slot, or unequips when slug is null. Validates the
 // student owns the slug and that the item belongs to the requested slot.
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
+export const POST = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
 
     const body = await request.json()
     const slot = body?.slot as ItemSlot
@@ -46,8 +43,4 @@ export async function POST(request: NextRequest) {
       .upsert({ user_id: userId, equipped, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true, equipped })
-  } catch (error) {
-    console.error('Error in POST /api/avatar/equip:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

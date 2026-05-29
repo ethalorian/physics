@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withAuth } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
 
 // GET /api/mastery/student-work?user_id=<google_user_id>&unit_id=unit-1
 // Feeds the rate-from-work drawer: the student's submitted block work across the
@@ -13,13 +13,8 @@ type BlockRow = { lesson_id: string | null; block_id: string; block_type: string
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string; evidence_source: string | null }
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    const role = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const role = ctx.role
     const isStaff = role === 'admin' || role === 'teacher'
 
     const { searchParams } = new URL(request.url)
@@ -31,8 +26,18 @@ export async function GET(request: NextRequest) {
     if (!unitId) {
       return NextResponse.json({ error: 'Missing unit_id' }, { status: 400 })
     }
-    // Students may only inspect their own work; staff may pass any user_id.
-    const userId = isStaff && requestedUserId ? requestedUserId : session.user.id
+    // Students may only inspect their own work; admins may inspect anyone; a
+    // teacher may only inspect students on their own roster.
+    const resolved = await resolveTargetStudent({
+      role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId,
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const userId = resolved.userId
 
     // Unit name bridges to lessons.unit (display string == units.name).
     const { data: unitRows } = await supabaseAdmin.from('units').select('id, name').eq('id', unitId)
@@ -105,8 +110,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ userId, unitId, targets, records, work })
-  } catch (error) {
-    console.error('Error in GET /api/mastery/student-work:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { Trash2, Plus, Wand2, RefreshCw, Image as ImageIcon, Calculator, BookPlus, Sparkles } from 'lucide-react'
+import { Trash2, Plus, RefreshCw, Image as ImageIcon, Calculator, BookPlus, Sparkles } from 'lucide-react'
 import { Label } from '@/components/ui/label'
 import RubricBuilder from './rubric-builder'
 import { calculatePhysicsSolution, generateIncorrectUnits } from '@/utils/physics-calculator'
@@ -30,17 +30,11 @@ interface QuestionEditorProps {
 }
 
 export default function QuestionEditor({ question, onUpdate, onDelete }: QuestionEditorProps) {
-  const [isGeneratingOptions, setIsGeneratingOptions] = useState(false)
-  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
   const [unitOptions, setUnitOptions] = useState<string[]>([])
   const [showAddToBank, setShowAddToBank] = useState(false)
   const [optionExplanations, setOptionExplanations] = useState<string[]>([])
   const [showMisconceptions, setShowMisconceptions] = useState(false)
-  const [isGeneratingRubric, setIsGeneratingRubric] = useState(false)
-  const [isGeneratingSampleAnswer, setIsGeneratingSampleAnswer] = useState(false)
-  const [isGeneratingWordProblem, setIsGeneratingWordProblem] = useState(false)
-  const [isSolvingProblem, setIsSolvingProblem] = useState(false)
   const [showSolution, setShowSolution] = useState(false)
 
   // Handle vocabulary questions with specialized editor
@@ -56,64 +50,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
   
   const updateQuestion = (updates: Partial<Question>) => {
     onUpdate({ ...question, ...updates } as Question)
-  }
-
-  const handleGenerateOptions = async () => {
-    if (!question.question) {
-      alert('Please enter a question first')
-      return
-    }
-
-    setIsGeneratingOptions(true)
-    try {
-      const response = await fetch('/api/generate-mc-options', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          topic: (question as any).topic
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        if (response.status === 408 || errorData.timeout) {
-          throw new Error('Request timed out')
-        }
-        throw new Error(errorData.details || errorData.error || 'Failed to generate options')
-      }
-
-      const data = await response.json()
-      
-      if (data.options && data.correctIndex !== undefined) {
-        updateQuestion({
-          options: data.options,
-          correctAnswer: data.correctIndex,
-          explanation: data.detailedExplanation || data.concept
-        } as Partial<MultipleChoiceQuestion>)
-        
-        // Store the explanations/misconceptions for display
-        if (data.explanations) {
-          setOptionExplanations(data.explanations)
-          setShowMisconceptions(true)
-        }
-      }
-    } catch (error) {
-      console.error('Error generating options:', error)
-      
-      // Try to get more specific error information
-      if (error instanceof Error) {
-        if (error.message.includes('timeout') || error.message.includes('timed out')) {
-          alert('The AI service timed out. Please try again with a simpler question or wait a moment and try again.')
-        } else {
-          alert(`Failed to generate options: ${error.message}. Please try again.`)
-        }
-      } else {
-        alert('Failed to generate options. Please try again.')
-      }
-    } finally {
-      setIsGeneratingOptions(false)
-    }
   }
 
   const handleAutoCalculate = () => {
@@ -152,236 +88,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
     }
   }
 
-  const handleGenerateImage = async () => {
-    if (!question.question) {
-      alert('Please enter a question first')
-      return
-    }
-
-    setIsGeneratingImage(true)
-    try {
-      const response = await fetch('/api/generate-scenario-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          questionType: question.type
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate image')
-      }
-
-      const data = await response.json()
-      if (data.imageUrl) {
-        updateQuestion({ scenarioImage: data.imageUrl })
-      }
-    } catch (error) {
-      console.error('Error generating image:', error)
-      alert('Failed to generate image. Please try again.')
-    } finally {
-      setIsGeneratingImage(false)
-    }
-  }
-
-  const handleGenerateRubric = async () => {
-    if (!question.question) {
-      alert('Please enter a question first')
-      return
-    }
-
-    setIsGeneratingRubric(true)
-    try {
-      const response = await fetch('/api/generate-rubric', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          maxPoints: question.points,
-          difficulty: 'medium',
-          numberOfCriteria: 3
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.details || errorData.error || 'Failed to generate rubric')
-      }
-
-      const data = await response.json()
-      
-      if (data.success) {
-        // Update the question with all generated content
-        updateQuestion({
-          rubric: data.rubric,
-          sampleAnswer: data.sampleAnswer,
-          correctConcepts: data.correctConcepts,
-          commonMisconceptions: data.commonMisconceptions,
-          rubricGeneratedByAI: true,
-          sampleAnswerGeneratedByAI: true,
-          autoGrade: true
-        } as Partial<OpenResponseQuestion>)
-        
-        alert('Rubric, sample answer, and key concepts generated successfully!')
-      }
-    } catch (error) {
-      console.error('Error generating rubric:', error)
-      if (error instanceof Error) {
-        alert(`Failed to generate rubric: ${error.message}`)
-      } else {
-        alert('Failed to generate rubric. Please try again.')
-      }
-    } finally {
-      setIsGeneratingRubric(false)
-    }
-  }
-
-  const handleGenerateSampleAnswer = async () => {
-    if (!question.question) {
-      alert('Please enter a question first')
-      return
-    }
-
-    setIsGeneratingSampleAnswer(true)
-    try {
-      const openResponseQ = question as OpenResponseQuestion
-      const response = await fetch('/api/generate-answer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          questionType: question.type,
-          correctConcepts: openResponseQ.correctConcepts || []
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate sample answer')
-      }
-
-      const data = await response.json()
-      if (data.sampleAnswer) {
-        updateQuestion({
-          sampleAnswer: data.sampleAnswer,
-          sampleAnswerGeneratedByAI: true
-        } as Partial<OpenResponseQuestion>)
-      }
-    } catch (error) {
-      console.error('Error generating sample answer:', error)
-      alert('Failed to generate sample answer. Please try again.')
-    } finally {
-      setIsGeneratingSampleAnswer(false)
-    }
-  }
-
-  const handleGenerateWordProblem = async (topic: string) => {
-    setIsGeneratingWordProblem(true)
-    try {
-      const numQ = question as NumericalQuestion
-      const response = await fetch('/api/generate-numerical-question', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          topic: topic,
-          difficulty: numQ.difficulty || 'medium',
-          context: 'everyday life'
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.details || errorData.error || 'Failed to generate word problem')
-      }
-
-      const data = await response.json()
-      
-      if (data.success) {
-        updateQuestion({
-          question: data.question,
-          correctValue: data.correctValue,
-          unit: data.unit,
-          tolerance: data.tolerance || 0.5,
-          unitOptions: data.unitOptions,
-          topic: data.topic,
-          difficulty: data.difficulty,
-          givenValues: data.givenValues,
-          formula: data.formula,
-          formulaLatex: data.formulaLatex,
-          solutionSteps: data.solutionSteps,
-          explanation: data.explanation,
-          commonMistakes: data.commonMistakes,
-          generatedByAI: true,
-          solutionGeneratedByAI: true
-        } as Partial<NumericalQuestion>)
-        setShowSolution(true)
-      }
-    } catch (error) {
-      console.error('Error generating word problem:', error)
-      if (error instanceof Error) {
-        alert(`Failed to generate word problem: ${error.message}`)
-      } else {
-        alert('Failed to generate word problem. Please try again.')
-      }
-    } finally {
-      setIsGeneratingWordProblem(false)
-    }
-  }
-
-  const handleSolveProblem = async () => {
-    if (!question.question) {
-      alert('Please enter a question first')
-      return
-    }
-
-    setIsSolvingProblem(true)
-    try {
-      const numQ = question as NumericalQuestion
-      const response = await fetch('/api/solve-numerical-question', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          questionText: question.question,
-          topic: numQ.topic
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.details || errorData.error || 'Failed to solve problem')
-      }
-
-      const data = await response.json()
-      
-      if (data.success) {
-        updateQuestion({
-          correctValue: data.correctValue,
-          unit: data.unit,
-          tolerance: data.tolerance || 0.5,
-          unitOptions: data.unitOptions,
-          topic: data.topic,
-          givenValues: data.givenValues,
-          formula: data.formula,
-          formulaLatex: data.formulaLatex,
-          solutionSteps: data.solutionSteps,
-          explanation: data.explanation,
-          commonMistakes: data.commonMistakes,
-          solutionGeneratedByAI: true
-        } as Partial<NumericalQuestion>)
-        setShowSolution(true)
-      }
-    } catch (error) {
-      console.error('Error solving problem:', error)
-      if (error instanceof Error) {
-        alert(`Failed to solve problem: ${error.message}`)
-      } else {
-        alert('Failed to solve problem. Please try again.')
-      }
-    } finally {
-      setIsSolvingProblem(false)
-    }
-  }
-
   const renderQuestionTypeEditor = () => {
     switch (question.type) {
       case 'multiple-choice':
@@ -391,23 +97,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium">Options</label>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleGenerateOptions}
-                    disabled={isGeneratingOptions || !question.question}
-                    className="bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 border-purple-200"
-                  >
-                    {isGeneratingOptions ? (
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin text-purple-600" />
-                    ) : (
-                      <Wand2 className="h-4 w-4 mr-2 text-purple-600" />
-                    )}
-                    {isGeneratingOptions ? 'Generating...' : 'AI Generate Options'}
-                  </Button>
-                </div>
               </div>
               {mcQuestion.options?.map((option: string, index: number) => (
                 <div key={index} className="space-y-2 mb-3 p-3 border rounded-lg bg-gray-50">
@@ -522,71 +211,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
         const numQuestion = question as NumericalQuestion
         return (
           <div className="space-y-6">
-            {/* AI-Powered Generation Section */}
-            <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-blue-600" />
-                  <h3 className="text-sm font-semibold text-blue-800">AI-Powered Problem Creation</h3>
-                </div>
-              </div>
-              
-              {/* Topic Selection for Generation */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
-                {['kinematics', 'forces', 'energy', 'momentum', 'waves', 'electricity'].map((topic) => (
-                  <Button
-                    key={topic}
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleGenerateWordProblem(topic)}
-                    disabled={isGeneratingWordProblem}
-                    className="bg-white hover:bg-blue-100 border-blue-300 text-xs capitalize"
-                  >
-                    {isGeneratingWordProblem ? (
-                      <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
-                    ) : (
-                      <Wand2 className="h-3 w-3 mr-1" />
-                    )}
-                    {topic}
-                  </Button>
-                ))}
-              </div>
-              
-              <p className="text-xs text-blue-700">
-                Click a topic to generate a complete word problem with solution steps.
-              </p>
-              
-              {numQuestion.generatedByAI && (
-                <Badge className="mt-2 bg-blue-100 text-blue-700 border-blue-300">
-                  <Sparkles className="w-3 h-3 mr-1" /> AI-Generated Problem
-                </Badge>
-              )}
-            </div>
-
-            {/* AI Solve Existing Question */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div>
-                <span className="text-sm font-medium">Have a question? Let AI solve it</span>
-                <p className="text-xs text-muted-foreground">Enter your question above, then click solve</p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleSolveProblem}
-                disabled={isSolvingProblem || !question.question}
-                className="bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 border-purple-200"
-              >
-                {isSolvingProblem ? (
-                  <RefreshCw className="h-4 w-4 mr-2 animate-spin text-purple-600" />
-                ) : (
-                  <Calculator className="h-4 w-4 mr-2 text-purple-600" />
-                )}
-                {isSolvingProblem ? 'Solving...' : 'AI Solve'}
-              </Button>
-            </div>
-
             {/* Answer Configuration */}
           <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -766,41 +390,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
         const openResponseQuestion = question as OpenResponseQuestion
         return (
           <div className="space-y-6">
-            {/* AI Generation Section */}
-            <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-purple-600" />
-                  <h3 className="text-sm font-semibold text-purple-800">AI-Powered Setup</h3>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleGenerateRubric}
-                    disabled={isGeneratingRubric || !question.question}
-                    className="bg-white hover:bg-purple-100 border-purple-300"
-                  >
-                    {isGeneratingRubric ? (
-                      <RefreshCw className="h-4 w-4 mr-2 animate-spin text-purple-600" />
-                    ) : (
-                      <Wand2 className="h-4 w-4 mr-2 text-purple-600" />
-                    )}
-                    {isGeneratingRubric ? 'Generating...' : 'Generate Rubric & Answer'}
-                  </Button>
-                </div>
-              </div>
-              <p className="text-xs text-purple-700">
-                Automatically generate a grading rubric, sample answer, key concepts, and common misconceptions from your question.
-              </p>
-              {openResponseQuestion.rubricGeneratedByAI && (
-                <Badge className="mt-2 bg-purple-100 text-purple-700 border-purple-300">
-                  <Sparkles className="w-3 h-3 mr-1" /> AI-Generated Content
-                </Badge>
-              )}
-            </div>
-
             {/* Auto-Grade Toggle */}
             <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center space-x-2">
@@ -822,21 +411,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium">Sample Answer</label>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleGenerateSampleAnswer}
-                  disabled={isGeneratingSampleAnswer || !question.question}
-                  className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
-                >
-                  {isGeneratingSampleAnswer ? (
-                    <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
-                  ) : (
-                    <Wand2 className="h-4 w-4 mr-1" />
-                  )}
-                  {isGeneratingSampleAnswer ? 'Generating...' : 'Generate'}
-                </Button>
             </div>
                   <Textarea
                 value={openResponseQuestion.sampleAnswer || ''}
@@ -986,21 +560,6 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                   }}
                   className="h-8 text-xs bg-gradient-to-r from-violet-50 to-fuchsia-50 hover:from-violet-100 hover:to-fuchsia-100 border-violet-200"
                 />
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleGenerateImage}
-                  disabled={isGeneratingImage || !question.question}
-                  className="h-8 text-xs bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200"
-                >
-                  {isGeneratingImage ? (
-                    <RefreshCw className="h-3 w-3 mr-1 animate-spin text-indigo-600" />
-                  ) : (
-                    <ImageIcon className="h-3 w-3 mr-1 text-indigo-600" />
-                  )}
-                  {isGeneratingImage ? 'Generating...' : 'Quick Generate'}
-                </Button>
               </div>
             )}
           </div>

@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 // GET /api/concept-exercises/[chapter]
 // Serves a chapter's reader + exercise payload to the client — WITHOUT the
 // answer key (which never leaves the server; grading happens in the grade route).
 
-export async function GET(_req: Request, { params }: { params: Promise<{ chapter: string }> }) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
-    const { chapter } = await params
+export const GET = withAuth<{ chapter: string }>(async (_req, ctx) => {
+    const { chapter } = await ctx.params
     const ch = Number(chapter)
     if (!Number.isInteger(ch)) return NextResponse.json({ error: 'Bad chapter' }, { status: 400 })
 
@@ -31,8 +27,4 @@ export async function GET(_req: Request, { params }: { params: Promise<{ chapter
       pageOffset: data.page_offset ?? 0,
       sections: data.sections ?? [],
     })
-  } catch (err) {
-    console.error('Error in GET /api/concept-exercises/[chapter]:', err)
-    return NextResponse.json({ error: 'Could not load chapter' }, { status: 500 })
-  }
-}
+})

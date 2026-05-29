@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 
 // POST /api/gradebook/suggest
 // Teacher's-aide: given a lesson and the student's captured work (+ how much of
@@ -11,12 +10,7 @@ import { getUserRole } from '@/lib/permissions'
 
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6'
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+export const POST = withRole(['admin', 'teacher'], async (request) => {
     if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ error: 'AI assist is not configured (missing ANTHROPIC_API_KEY).' }, { status: 503 })
     }
@@ -50,8 +44,4 @@ export async function POST(request: NextRequest) {
     let percent = Math.round(Number(parsed.percent))
     if (!(percent >= 0 && percent <= 100)) percent = 0
     return NextResponse.json({ percent, rationale: parsed.rationale ?? '' })
-  } catch (error) {
-    console.error('Error in POST /api/gradebook/suggest:', error)
-    return NextResponse.json({ error: 'Could not suggest a score' }, { status: 500 })
-  }
-}
+})

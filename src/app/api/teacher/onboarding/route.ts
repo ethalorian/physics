@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // Teacher onboarding status. Four setup steps gate a new teacher's dashboard:
 //  - classroom  : connect Google Classroom + import a class (AUTO-derived from
@@ -21,11 +20,7 @@ type Row = {
 const STEP_KEYS = ['classroom', 'curriculum', 'pacing', 'tour'] as const
 type StepKey = (typeof STEP_KEYS)[number]
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     // classroom step is true if the teacher owns at least one course; the
@@ -64,19 +59,11 @@ export async function GET() {
       classCount,
       untracked,
     })
-  } catch (error) {
-    console.error('Error in GET /api/teacher/onboarding:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST { step, done? } — mark a setup step done (or undone). Used by setup
 // actions / the "mark complete" controls on the dashboard.
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const body = await request.json()
@@ -116,8 +103,4 @@ export async function POST(request: NextRequest) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/teacher/onboarding:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

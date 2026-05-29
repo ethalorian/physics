@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
 
 // GET /api/vocab/play?lesson_id=...        — one lesson's vocab
 //     /api/vocab/play?unit_id=...          — all vocab across a unit's lessons
@@ -12,11 +12,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 type SetRow = { id: string; lesson_id: string | null }
 type TermRow = { id: string; term: string; definition: string; tier: number | null }
 
-export async function GET(req: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-
+export const GET = withAuth(async (req) => {
     const sp = new URL(req.url).searchParams
     const lessonId = sp.get('lesson_id')
     const unitId = sp.get('unit_id')
@@ -58,8 +54,4 @@ export async function GET(req: NextRequest) {
     const terms = ((termsRaw ?? []) as TermRow[]).map((t) => ({ id: t.id, term: t.term, definition: t.definition, tier: t.tier }))
 
     return NextResponse.json({ terms, scoreSetId, label })
-  } catch (error) {
-    console.error('Error in GET /api/vocab/play:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

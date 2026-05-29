@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/lesson-grid?unit_id=unit-1
@@ -20,11 +19,7 @@ type ProgRow = { user_id: string; lesson_id: string; status: string | null; prog
 type RespRow = { user_id: string; lesson_id: string; created_at: string }
 type GbRow = { user_id: string; item_id: string; percentage: number | null; graded_at: string | null }
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
     }
@@ -112,8 +107,4 @@ export async function GET(request: NextRequest) {
       students,
       cells,
     })
-  } catch (error) {
-    console.error('Error in GET /api/mastery/lesson-grid:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,21 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Get sections for a course or all sections
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const courseId = searchParams.get('course_id')
 
@@ -55,28 +43,10 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ sections: data || [] })
     }
-  } catch (error) {
-    console.error('Sections fetch error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
-  }
-}
+})
 
 // POST - Create a new section or assign student to section
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { action } = body
 
@@ -94,7 +64,7 @@ export async function POST(request: NextRequest) {
           course_id: courseId,
           name,
           description: description || null,
-          teacher_email: session.user.email,
+          teacher_email: ctx.email,
           max_capacity: maxCapacity || null,
           is_active: true
         })
@@ -123,7 +93,7 @@ export async function POST(request: NextRequest) {
         .rpc('assign_student_to_section', {
           p_student_id: studentId,
           p_section_id: sectionId,
-          p_assigned_by: session.user.email
+          p_assigned_by: ctx.email
         })
 
       if (error) {
@@ -152,7 +122,7 @@ export async function POST(request: NextRequest) {
           .rpc('assign_student_to_section', {
             p_student_id: studentId,
             p_section_id: sectionId,
-            p_assigned_by: session.user.email
+            p_assigned_by: ctx.email
           })
 
         if (error) {
@@ -173,29 +143,10 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json({ error: 'Invalid action. Use create_section, assign_student, or bulk_assign' }, { status: 400 })
     }
-
-  } catch (error) {
-    console.error('Sections POST error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
-  }
-}
+})
 
 // PUT - Update a section
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { sectionId, name, description, maxCapacity, isActive } = body
 
@@ -226,29 +177,10 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, section: data })
-
-  } catch (error) {
-    console.error('Sections PUT error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
-  }
-}
+})
 
 // DELETE - Remove student from section or delete section
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const DELETE = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action')
     const sectionId = searchParams.get('section_id')
@@ -294,13 +226,5 @@ export async function DELETE(request: NextRequest) {
     } else {
       return NextResponse.json({ error: 'Invalid action. Use remove_student or delete_section' }, { status: 400 })
     }
-
-  } catch (error) {
-    console.error('Sections DELETE error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
-  }
-}
+})
 

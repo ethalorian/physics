@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { generateTargetReview, type ReviewQ, type ReteachBlock, type SimOption } from '@/lib/generate-review'
+import { withAuth } from '@/lib/api-auth'
 
 // GET /api/reviews/serve?target_id=
 // Serve a targeted review for a learning target the student is weak on:
@@ -27,11 +27,8 @@ async function loadSimCatalog(unitId: string | null | undefined): Promise<SimOpt
     .map((s) => ({ slug: s.slug, title: s.title, description: s.description ?? undefined, topic: s.topic ?? undefined }))
 }
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const email = session.user.email
+export const GET = withAuth(async (request, ctx) => {
+    const email = ctx.email
     const targetId = new URL(request.url).searchParams.get('target_id')
     if (!targetId) return NextResponse.json({ error: 'target_id required' }, { status: 400 })
 
@@ -81,8 +78,4 @@ export async function GET(request: NextRequest) {
     if (error || !inserted) return NextResponse.json({ error: 'Could not save the review.' }, { status: 500 })
 
     return NextResponse.json({ review: { ...(inserted as Review), shared: false } })
-  } catch (error) {
-    console.error('Error in GET /api/reviews/serve:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

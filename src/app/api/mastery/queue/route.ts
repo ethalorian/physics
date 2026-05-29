@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
@@ -19,11 +18,7 @@ type RecRow = { user_id: string; observed_at: string }
 
 const HOUR = 60 * 60 * 1000
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
@@ -103,8 +98,4 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({ unitId, firstTargetId: targetIds[0] ?? null, queue })
-  } catch (error) {
-    console.error('Error in GET /api/mastery/queue:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

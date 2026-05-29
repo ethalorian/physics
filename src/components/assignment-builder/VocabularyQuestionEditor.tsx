@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Plus, Trash2, BookOpen, Shuffle, Wand2, Target } from 'lucide-react'
+import { Plus, Trash2, BookOpen, Shuffle, Target } from 'lucide-react'
 import VocabularySetManager from '@/components/vocabulary/VocabularySetManager'
 
 type VocabularyQuestion = VocabularyMatchingQuestion | VocabularyCrosswordQuestion | VocabularyFillBlankQuestion | VocabularyHangmanQuestion
@@ -65,62 +65,6 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
   const shuffleTerms = () => {
     const shuffled = [...(question.vocabularyTerms || [])].sort(() => Math.random() - 0.5)
     updateQuestion({ vocabularyTerms: shuffled })
-  }
-
-  const [isGeneratingSentences, setIsGeneratingSentences] = useState(false)
-
-  const generateSentences = async () => {
-    if (question.type !== 'vocabulary-fill-blank' || (question.vocabularyTerms || []).length === 0) return
-
-    setIsGeneratingSentences(true)
-    try {
-      const response = await fetch('/api/generate-vocab-sentences', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          vocabularyTerms: question.vocabularyTerms,
-          context: selectedVocabularySet?.description || 'Physics vocabulary practice',
-          unit: selectedVocabularySet?.unit || '',
-          lesson: selectedVocabularySet?.lesson || '',
-          gameType: 'fill-in-the-blank'
-        })
-      })
-
-      if (!response.ok) {
-        throw new Error('Failed to generate sentences')
-      }
-
-      const data = await response.json()
-      
-      if (data.success && data.sentences) {
-        updateQuestion({ 
-          sentences: data.sentences 
-        } as Partial<VocabularyFillBlankQuestion>)
-        
-        if (data.note) {
-          console.log('Sentence generation note:', data.note)
-        }
-      } else {
-        throw new Error('Invalid response format')
-      }
-    } catch (error) {
-      console.error('Error generating sentences:', error)
-      
-      // Fallback to simple sentences
-      const fallbackSentences = (question.vocabularyTerms || []).map((term) => ({
-        id: `sentence-${term.id}`,
-        text: `The concept of {term} is important in physics.`,
-        termId: term.id
-      }))
-
-      updateQuestion({ 
-        sentences: fallbackSentences 
-      } as Partial<VocabularyFillBlankQuestion>)
-      
-      alert('AI sentence generation failed. Using simple fallback sentences. You can edit them manually.')
-    } finally {
-      setIsGeneratingSentences(false)
-    }
   }
 
   const addCustomSentence = () => {
@@ -395,17 +339,6 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-semibold">Sentences</h4>
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={generateSentences}
-                  disabled={(question.vocabularyTerms || []).length === 0 || isGeneratingSentences}
-                >
-                  <Wand2 className="w-4 h-4 mr-2" />
-                  {isGeneratingSentences ? 'Generating...' : 'Auto-Generate'}
-                </Button>
-              </div>
             </div>
 
             <div className="flex gap-2">
@@ -421,7 +354,6 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
 
             <div className="text-xs text-muted-foreground space-y-1">
               <p>Use {'{term}'} in your sentence where the vocabulary word should go</p>
-              <p>💡 <strong>Auto-Generate</strong> uses AI to create contextual physics sentences for each term</p>
             </div>
 
             <div className="space-y-3">
@@ -480,7 +412,7 @@ export default function VocabularyQuestionEditor({ question, onUpdate, onDelete 
             {!(question as VocabularyFillBlankQuestion).sentences?.length && (
               <div className="text-center py-6 text-muted-foreground border-2 border-dashed border-muted rounded-lg">
                 <p>No sentences created yet</p>
-                <p className="text-sm">Add sentences manually or use auto-generate</p>
+                <p className="text-sm">Add sentences manually</p>
               </div>
             )}
           </div>

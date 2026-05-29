@@ -1,17 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getUserRole } from '@/lib/permissions'
 
 // GET - Retrieve student activity data (admin/teacher only)
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
+    const userRole = getUserRole(ctx.email)
     if (userRole !== 'admin' && userRole !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
     }
@@ -56,21 +50,10 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ activities })
-
-  } catch (error) {
-    console.error('Student activity API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // POST - Record student activity
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const {
       activity_type,
@@ -97,9 +80,9 @@ export async function POST(request: NextRequest) {
     const ip = forwarded ? forwarded.split(',')[0] : request.headers.get('x-real-ip')
 
     const activityData = {
-      user_id: session.user.id || session.user.email,
-      user_email: session.user.email,
-      user_name: session.user.name || 'Unknown User',
+      user_id: ctx.session.user.id || ctx.session.user.email,
+      user_email: ctx.email,
+      user_name: ctx.session.user.name || 'Unknown User',
       activity_type,
       lesson_id: lesson_id || null,
       assignment_id: assignment_id || null,
@@ -142,9 +125,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, activity: data })
-
-  } catch (error) {
-    console.error('Student activity recording error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

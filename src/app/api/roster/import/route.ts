@@ -1,25 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 import { googleClassroomAPI } from '@/lib/google-classroom'
 
 // POST - Import roster from Google Classroom
-export async function POST(request: NextRequest) {
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   try {
     console.log('🚀 Starting roster import...')
-    
-    const session = await auth()
-    if (!session?.user?.email) {
-      console.log('❌ No session found')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      console.log('❌ Insufficient permissions:', userRole)
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
 
     const body = await request.json()
     const { courseId, accessToken } = body
@@ -52,7 +39,7 @@ export async function POST(request: NextRequest) {
         p_section: course.section || null,
         p_description: course.description || null,
         p_room: course.room || null,
-        p_teacher_email: session.user.email
+        p_teacher_email: ctx.email
       })
 
     if (courseError) {
@@ -114,7 +101,7 @@ export async function POST(request: NextRequest) {
             p_photo_url: null,
             p_course_id: courseData,
             p_section_name: sectionName,
-            p_teacher_email: session.user.email
+            p_teacher_email: ctx.email
           })
 
         if (studentError) {
@@ -220,21 +207,10 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     }, { status: 500 })
   }
-}
+})
 
 // GET - Get imported roster data
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const courseId = searchParams.get('course_id')
 
@@ -270,12 +246,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(response)
-
-  } catch (error) {
-    console.error('Roster fetch error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 })
-  }
-}
+})

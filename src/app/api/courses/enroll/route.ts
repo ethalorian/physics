@@ -1,15 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // POST - Enroll student using join code
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
     const { joinCode } = body
 
@@ -52,7 +46,7 @@ export async function POST(request: NextRequest) {
     const { data: studentRecord } = await supabaseAdmin
       .from('students')
       .select('id, email, name')
-      .eq('email', session.user.email)
+      .eq('email', ctx.email)
       .maybeSingle()
 
     let studentId: string
@@ -62,9 +56,9 @@ export async function POST(request: NextRequest) {
       const { data: newStudent, error: createError } = await supabaseAdmin
         .from('students')
         .insert({
-          email: session.user.email,
-          name: session.user.name || session.user.email.split('@')[0],
-          google_user_id: session.user.id || `user_${Date.now()}`
+          email: ctx.email,
+          name: ctx.session.user.name || ctx.email.split('@')[0],
+          google_user_id: ctx.userId || `user_${Date.now()}`
         })
         .select()
         .single()
@@ -126,17 +120,10 @@ export async function POST(request: NextRequest) {
         section: course.section
       }
     })
-
-  } catch (error) {
-    console.error('Enrollment API error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
-  }
-}
+})
 
 // GET - Check if join code is valid (without enrolling)
+// eslint-disable-next-line no-restricted-syntax -- public join-code validation (intentionally unauthenticated)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

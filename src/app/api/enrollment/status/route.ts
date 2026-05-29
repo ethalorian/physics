@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- intentionally public: returns 200 {hasAccount:false} for signed-out users (not 401) */
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getStudentEnrollmentStatus } from '@/lib/student-management'

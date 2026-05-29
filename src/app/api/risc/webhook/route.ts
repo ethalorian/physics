@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- external Google RISC webhook: authenticated by signed JWT, has no user session to wrap */
 /**
  * RISC (Cross-Account Protection) Webhook Endpoint
  * Receives security event tokens from Google

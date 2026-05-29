@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import type { AvatarItem, AvatarTraits, EquippedItems } from '@/lib/avatar/types'
 
@@ -18,11 +18,8 @@ export interface MeBundle {
   equipped_items: AvatarItem[]
 }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
+export const GET = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
 
     const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
       supabaseAdmin
@@ -59,8 +56,4 @@ export async function GET() {
       equipped_items,
     }
     return NextResponse.json(bundle)
-  } catch (error) {
-    console.error('Error in GET /api/avatar/me:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

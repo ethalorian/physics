@@ -1,15 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 // GET - Fetch platform leaderboard
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '50')
     const period = searchParams.get('period') || 'all-time' // all-time, week, month
@@ -23,83 +17,31 @@ export async function GET(request: NextRequest) {
     }
 
     // Aggregate points from all sources
-    const leaderboardData = []
-
-    // Get all unique users from different tables
-    const usersSet = new Set<string>()
+    // Aggregate points server-side and return only the top-N rows. The point
+    // formula lives in the get_leaderboard RPC (see
+    // supabase/migrations/optimize_leaderboard_aggregation.sql) and mirrors
+    // src/lib/points.ts. This replaces the previous approach of loading the
+    // entire game/lesson/submission tables into JS on every request.
     const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: any; image?: string | null }>()
 
-    // Fetch game scores
-    let gameQuery = supabaseAdmin
-      .from('vocabulary_game_scores')
-      .select('user_id, user_email, score')
-    if (dateFilter) {
-      gameQuery = gameQuery.gte('completed_at', dateFilter)
-    }
-    const { data: gameScores } = await gameQuery
-
-    // Fetch lesson progress
-    let lessonQuery = supabaseAdmin
-      .from('lesson_progress')
-      .select('user_id, user_email, progress_percentage, video_questions_correct')
-    if (dateFilter) {
-      lessonQuery = lessonQuery.gte('completed_at', dateFilter)
-    }
-    const { data: lessonProgress } = await lessonQuery
-
-    // Fetch assignment submissions
-    let submissionQuery = supabaseAdmin
-      .from('submissions')
-      .select('user_id, score')
-      .eq('status', 'graded')
-    if (dateFilter) {
-      submissionQuery = submissionQuery.gte('graded_at', dateFilter)
-    }
-    const { data: submissions } = await submissionQuery
-
-    // Aggregate points per user
-    gameScores?.forEach(game => {
-      if (!userDataMap.has(game.user_id)) {
-        userDataMap.set(game.user_id, {
-          email: game.user_email,
-          totalPoints: 0,
-          activities: { games: 0, lessons: 0, assignments: 0 },
-          image: null
-        })
-      }
-      const userData = userDataMap.get(game.user_id)!
-      userData.totalPoints += game.score || 0
-      userData.activities.games += 1
+    const { data: aggregated, error: aggError } = await supabaseAdmin.rpc('get_leaderboard', {
+      p_since: dateFilter,
+      p_limit: limit,
     })
 
-    lessonProgress?.forEach(lesson => {
-      if (!userDataMap.has(lesson.user_id)) {
-        userDataMap.set(lesson.user_id, {
-          email: lesson.user_email,
-          totalPoints: 0,
-          activities: { games: 0, lessons: 0, assignments: 0 },
-          image: null
-        })
-      }
-      const userData = userDataMap.get(lesson.user_id)!
-      // Award points for completion: 1 point per % complete + bonus for video questions
-      userData.totalPoints += lesson.progress_percentage + (lesson.video_questions_correct * 5)
-      userData.activities.lessons += 1
-    })
+    if (aggError) {
+      console.error('Error aggregating leaderboard:', aggError)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
 
-    submissions?.forEach(submission => {
-      if (!userDataMap.has(submission.user_id)) {
-        userDataMap.set(submission.user_id, {
-          email: '',
-          totalPoints: 0,
-          activities: { games: 0, lessons: 0, assignments: 0 },
-          image: null
-        })
-      }
-      const userData = userDataMap.get(submission.user_id)!
-      userData.totalPoints += submission.score || 0
-      userData.activities.assignments += 1
-    })
+    for (const row of (aggregated ?? []) as { user_id: string; user_email: string; total_points: number; games: number; lessons: number; assignments: number }[]) {
+      userDataMap.set(row.user_id, {
+        email: row.user_email || '',
+        totalPoints: row.total_points || 0,
+        activities: { games: row.games || 0, lessons: row.lessons || 0, assignments: row.assignments || 0 },
+        image: null,
+      })
+    }
 
     // Get student names + aliases + images + avatar bundles from the roster.
     // Lookup is by `google_user_id` because the work tables (game_scores,
@@ -174,7 +116,7 @@ export async function GET(request: NextRequest) {
           image: data.image || null,
           total_points: Math.round(data.totalPoints),
           activities: data.activities,
-          is_current_user: userId === session.user.id,
+          is_current_user: userId === ctx.userId,
           use_custom_avatar: av?.use_custom_avatar ?? false,
           avatar_traits: av?.traits ?? null,
           avatar_equipped: av?.equipped ?? {},
@@ -189,9 +131,4 @@ export async function GET(request: NextRequest) {
       }))
 
     return NextResponse.json(leaderboard)
-
-  } catch (error) {
-    console.error('Error in GET /api/leaderboard:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

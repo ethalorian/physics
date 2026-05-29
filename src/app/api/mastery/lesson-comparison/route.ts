@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 import { decayingAverage } from '@/data/curriculum-types'
 
 // GET /api/mastery/lesson-comparison?target_id=...&user_id=...
@@ -10,11 +9,8 @@ import { decayingAverage } from '@/data/curriculum-types'
 // uses (one metric, one meaning). A student's lesson value = mean of their
 // per-target decaying averages across that lesson's targets.
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    if (!['admin', 'teacher'].includes(getUserRole(session.user.email))) {
+export const GET = withAuth(async (request, ctx) => {
+    if (!['admin', 'teacher'].includes(ctx.role)) {
       return NextResponse.json({ error: 'Teachers only' }, { status: 403 })
     }
 
@@ -78,8 +74,4 @@ export async function GET(request: NextRequest) {
       globalAvg: globalAvg === null ? null : Math.round(globalAvg * 100) / 100,
       nStudents: allValues.length,
     })
-  } catch (err) {
-    console.error('Error in GET /api/mastery/lesson-comparison:', err)
-    return NextResponse.json({ error: 'Could not compute comparison' }, { status: 500 })
-  }
-}
+})

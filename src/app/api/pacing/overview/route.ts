@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { computePacing, computeFromElapsed, PlanItem, Schedule } from '@/lib/pacing'
 import { loadPlanItems, furthestActiveItem, loadRotationCalendar, isRotationConfigured } from '@/lib/pacing-server'
 import { Block, blockMeetingsElapsed } from '@/lib/rotation'
@@ -15,11 +14,7 @@ type BrRow = { user_id: string; lesson_id: string }
 type SchedRow = { course_id: string; start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null; block: string | null }
 type PacingRow = { course_id: string; current_lesson_id: string | null; current_unit_order: number | null; source: 'auto' | 'confirmed' }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin') return NextResponse.json({ error: 'Admin only' }, { status: 403 })
 
     const items = await loadPlanItems()
@@ -115,8 +110,4 @@ export async function GET() {
     })
 
     return NextResponse.json({ rows, totalDays: items.length > 0 ? items[items.length - 1].cumStart + items[items.length - 1].plannedDays : 0 })
-  } catch (error) {
-    console.error('Error in GET /api/pacing/overview:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

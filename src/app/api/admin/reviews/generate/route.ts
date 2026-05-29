@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { generateTargetReview, type SimOption } from '@/lib/generate-review'
 
 async function loadSimCatalog(unitId: string | null | undefined): Promise<SimOption[]> {
@@ -20,13 +19,7 @@ async function loadSimCatalog(unitId: string | null | undefined): Promise<SimOpt
 // review for a learning target. It lands as 'pending' (same approval gate), so
 // the admin still eyeballs it in the queue before it's shared with students.
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
+export const POST = withRole('admin', async (request, ctx) => {
     const body = await request.json()
     const targetId: string | undefined = body.target_id
     if (!targetId) return NextResponse.json({ error: 'target_id required' }, { status: 400 })
@@ -49,12 +42,8 @@ export async function POST(request: NextRequest) {
 
     const { error } = await supabaseAdmin
       .from('target_reviews')
-      .insert({ target_id: targetId, reteach: gen.review.reteach, blocks: gen.review.blocks, questions: gen.review.questions, status: 'pending', created_by: ctx.realEmail })
+      .insert({ target_id: targetId, reteach: gen.review.reteach, blocks: gen.review.blocks, questions: gen.review.questions, status: 'pending', created_by: ctx.email })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     return NextResponse.json({ ok: true })
-  } catch (error) {
-    console.error('Error in POST /api/admin/reviews/generate:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

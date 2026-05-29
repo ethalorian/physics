@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax -- public endpoint, pending auth review (audit follow-up) */
 import { NextRequest, NextResponse } from 'next/server'
 import { googleClassroomAPI } from '@/lib/google-classroom'
 

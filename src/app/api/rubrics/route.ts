@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
@@ -8,6 +7,7 @@ import { supabase } from '@/lib/supabase'
  * POST /api/rubrics - Create new rubric (admin/teacher only)
  */
 
+// eslint-disable-next-line no-restricted-syntax -- public read, pending auth review (audit follow-up)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -46,20 +46,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validation
@@ -82,7 +69,7 @@ export async function POST(request: NextRequest) {
       grade_descriptions: body.grade_descriptions,
       is_default: body.is_default || false,
       published: body.published !== false,
-      created_by: session.user.email
+      created_by: ctx.email
     }
 
     const { data, error } = await supabase
@@ -97,12 +84,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ rubric: data }, { status: 201 })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to create rubric',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

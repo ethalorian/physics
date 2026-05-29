@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // GET /api/admin/oversight
 // Owner's-eye view: pulse, colleague adoption, student engagement, feature
@@ -22,13 +21,7 @@ function dayKey(ms: number): string {
   return new Date(ms).toISOString().slice(0, 10)
 }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
-    if (ctx.role !== 'admin') return NextResponse.json({ error: 'Admin only' }, { status: 403 })
-
+export const GET = withRole('admin', async (request, ctx) => {
     const now = Date.now()
 
     // --- students (roster, with teacher attribution) -----------------------
@@ -177,10 +170,6 @@ export async function GET() {
       teachers: teacherList,
       engagement: { active7d, idle, atRisk, total: studentIds.length },
       features,
-      you: session.user.email,
+      you: ctx.email,
     })
-  } catch (error) {
-    console.error('Error in GET /api/admin/oversight:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

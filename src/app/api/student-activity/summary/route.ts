@@ -1,21 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Get student activity summary (admin/teacher only)
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async (request) => {
     const { searchParams } = new URL(request.url)
     const studentEmail = searchParams.get('student_email')
 
@@ -74,9 +62,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(response)
-
-  } catch (error) {
-    console.error('Student activity summary API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

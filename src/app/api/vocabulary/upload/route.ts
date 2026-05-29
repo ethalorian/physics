@@ -1,21 +1,8 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withRole } from '@/lib/api-auth'
 
-export async function POST(request: Request) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Check if user is admin or teacher
-    const userRole = getUserRole(session.user?.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can upload vocabulary' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const { vocabularySets } = body
 
@@ -42,7 +29,7 @@ export async function POST(request: Request) {
             description: setData.description || '',
             unit_id: setData.unit || null,
             lesson_id: setData.lesson || null,
-            created_by: session.user.id
+            created_by: ctx.userId
           }])
           .select()
           .single()
@@ -100,9 +87,4 @@ export async function POST(request: Request) {
       results,
       errors: errors.length > 0 ? errors : undefined
     })
-
-  } catch (error) {
-    console.error('Error in POST /api/vocabulary/upload:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,22 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
-import { requireEnrolledStudent } from '@/lib/student-enrollment'
 
 // POST - Save vocabulary game score
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    // Enrollment gate: un-enrolled students playing the arcade shouldn't
-    // accrue scores that the leaderboard or XP economy can use.
-    const ctx = await getEffectiveContext(session.user.email)
-    const gate = await requireEnrolledStudent(session.user.id, ctx.realRole)
-    if (gate) return gate
-
+export const POST = withEnrolledStudent(async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -28,8 +15,8 @@ export async function POST(request: NextRequest) {
     }
 
     const gameScoreData = {
-      user_id: session.user.id,
-      user_email: session.user.email,
+      user_id: ctx.userId,
+      user_email: ctx.email,
       vocabulary_set_id: body.vocabulary_set_id,
       game_type: body.game_type,
       score: body.score,
@@ -57,23 +44,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/student-progress/game-scores:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // GET - Fetch game scores
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('user_id') || session.user.id
+    const userId = searchParams.get('user_id') || ctx.userId
     const gameType = searchParams.get('game_type')
     const vocabularySetId = searchParams.get('vocabulary_set_id')
     const limit = parseInt(searchParams.get('limit') || '50')
@@ -101,9 +77,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/student-progress/game-scores:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

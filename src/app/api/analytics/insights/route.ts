@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getEffectiveContext } from '@/lib/effective-context'
+import { withAuth } from '@/lib/api-auth'
 
 // POST /api/analytics/insights
 // Given a pre-aggregated, filtered slice of mastery data, ask Claude to help the
@@ -31,11 +30,7 @@ interface InsightPayload {
   trend: TrendPoint[]
 }
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const POST = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin') {
       return NextResponse.json({ error: 'Admin only' }, { status: 403 })
     }
@@ -95,8 +90,4 @@ Keep each array to 2-5 items. If only one class is in view, return an empty "com
       interventions: Array.isArray(parsed.interventions) ? parsed.interventions : [],
       comparison: Array.isArray(parsed.comparison) ? parsed.comparison : [],
     })
-  } catch (error) {
-    console.error('Error in POST /api/analytics/insights:', error)
-    return NextResponse.json({ error: 'Could not generate insights' }, { status: 500 })
-  }
-}
+})

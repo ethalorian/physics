@@ -1,24 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
-import { getEffectiveContext } from '@/lib/effective-context'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
 
 /**
  * GET /api/courses - Fetch courses for the current teacher/admin
- * 
+ *
  * Returns Google Classroom courses that have been imported
  * or mock data for development/testing
  */
-export async function GET() {
-  try {
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     const userRole = ctx.role
     const scopeEmail = ctx.scopeEmail
 
@@ -46,7 +36,7 @@ export async function GET() {
         const { data: enrollments } = await supabase
           .from('student_courses')
           .select('course_id')
-          .eq('student_email', session.user.email)
+          .eq('student_email', ctx.email)
 
         if (enrollments && enrollments.length > 0) {
           const courseIds = enrollments.map(e => e.course_id)
@@ -104,36 +94,15 @@ export async function GET() {
     // Fallback to mock data for development/demo
     const mockCourses = getMockCourses(userRole)
     return NextResponse.json({ courses: mockCourses })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch courses' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * POST /api/courses - Create a new course
- * 
+ *
  * For teachers/admins to manually create courses
  * or import from Google Classroom
  */
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Only teachers can create courses' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -147,7 +116,7 @@ export async function POST(request: NextRequest) {
       section: body.section || null,
       description: body.description || null,
       google_course_id: body.google_course_id || null,
-      teacher_email: session.user.email,
+      teacher_email: ctx.email,
       student_count: 0,
       is_active: true
     }
@@ -177,15 +146,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ course }, { status: 201 })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create course' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * Mock data for development/testing
@@ -256,20 +217,7 @@ function getMockCourses(role: string | null) {
 /**
  * PUT /api/courses/:id - Update a course
  */
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Only teachers can update courses' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
     const courseId = body.id
 
@@ -301,33 +249,12 @@ export async function PUT(request: NextRequest) {
     }
 
     return NextResponse.json({ course })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update course' },
-      { status: 500 }
-    )
-  }
-}
+})
 
 /**
  * DELETE /api/courses/:id - Delete a course (admin only)
  */
-export async function DELETE(request: NextRequest) {
-  try {
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: 'Only admins can delete courses' }, { status: 403 })
-    }
-
+export const DELETE = withRole('admin', async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const courseId = searchParams.get('id')
 
@@ -346,12 +273,4 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-
-  } catch (error) {
-    console.error('API error:', error)
-    return NextResponse.json(
-      { error: 'Failed to delete course' },
-      { status: 500 }
-    )
-  }
-}
+})

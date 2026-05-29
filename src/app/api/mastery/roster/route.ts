@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/roster
@@ -13,14 +12,7 @@ import { getTeacherStudentGids } from '@/lib/teacher-scope'
 // google_user_id = session.user.id.) Returning students.id (the table UUID) here
 // would silently break the loop: records would save but never match the student's
 // own dashboard query.
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     const role = ctx.role
     if (role !== 'admin' && role !== 'teacher') {
       return NextResponse.json({ error: 'Only teachers can view a roster' }, { status: 403 })
@@ -48,8 +40,4 @@ export async function GET() {
       .map((s) => ({ id: s.google_user_id, name: s.name, email: s.email }))
 
     return NextResponse.json({ students })
-  } catch (error) {
-    console.error('Error in GET /api/mastery/roster:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { getCourseStudentGids, getCourseOwnerEmail } from '@/lib/teacher-scope'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 
@@ -13,12 +12,8 @@ type CourseRow = { id: string; name: string; section: string | null; teacher_ema
 type StudentRow = { google_user_id: string | null; name: string; first_name: string | null; last_name: string | null }
 type RecRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ courseId: string }> }) {
-  try {
-    const { courseId } = await params
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
+    const { courseId } = await ctx.params
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
@@ -106,8 +101,4 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         lessonsGraded,
       },
     })
-  } catch (error) {
-    console.error('Error in GET /api/classes/[courseId]:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

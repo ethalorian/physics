@@ -1,24 +1,12 @@
-// Next.js imports
-import { NextRequest, NextResponse } from 'next/server'
-
 // Internal imports
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
 // GET - Fetch single assignment by ID
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { id } = await params
-    const userRole = getUserRole(session.user.email)
+export const GET = withAuth<{ id: string }>(async (request, ctx) => {
+    const { id } = await ctx.params
+    const userRole = ctx.role
 
     // Fetch assignment
     const { data: assignment, error } = await supabaseAdmin
@@ -44,10 +32,4 @@ export async function GET(
     }
 
     return NextResponse.json(assignment)
-
-  } catch (error) {
-    console.error('Error in GET /api/assignments/[id]:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
+})

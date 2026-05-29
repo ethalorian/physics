@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
+import { withAuth } from '@/lib/api-auth'
 
 // GET /api/analytics/mastery
 // App-wide mastery analytics dataset (ADMIN ONLY). Returns the structural maps
@@ -23,11 +22,7 @@ type CourseRow = { id: string; name: string | null; section: string | null; teac
 type CourseStudentRow = { course_id: string; student_id: string }
 type RecordRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin') {
       return NextResponse.json({ error: 'App-wide analytics is admin only' }, { status: 403 })
     }
@@ -141,8 +136,4 @@ export async function GET() {
     const records = recordRows.map((r) => ({ u: r.user_id, t: r.target_id, l: r.level, d: r.observed_at }))
 
     return NextResponse.json({ units, targets, teachers, classes, students, cells, records })
-  } catch (error) {
-    console.error('Error in GET /api/analytics/mastery:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

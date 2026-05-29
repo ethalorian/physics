@@ -1,31 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { withRole } from '@/lib/api-auth'
 
 /**
  * POST /api/lessons
  * Create a new lesson (admin/teacher only)
  */
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please sign in' },
-        { status: 401 }
-      )
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json(
-        { error: 'Forbidden - Admin or teacher access required' },
-        { status: 403 }
-      )
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -47,7 +28,7 @@ export async function POST(request: NextRequest) {
       estimated_time: body.estimated_time || 30,
       objectives: body.objectives || [],
       published: body.published || false,
-      created_by: session.user.email
+      created_by: ctx.email
     }
 
     // Add type-specific fields
@@ -108,15 +89,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log(`Created lesson: ${data.title} by ${session.user.email}`)
+    console.log(`Created lesson: ${data.title} by ${ctx.email}`)
 
     return NextResponse.json({ data }, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in lesson creation API:', error)
-    return NextResponse.json(
-      { error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown error'}` },
-      { status: 500 }
-    )
-  }
-}
+})

@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
  * Check if simulation migration ran successfully
  */
-export async function GET() {
+export const GET = withRole('admin', async () => {
   const results = {
     tables: {} as Record<string, any>,
     simulations: [] as any[],
@@ -51,9 +52,9 @@ export async function GET() {
     return NextResponse.json(results)
 
   } catch (error: any) {
-    return NextResponse.json({ 
+    return NextResponse.json({
       overall: 'error',
-      error: error.message 
+      error: error.message
     }, { status: 500 })
   }
-}
+})

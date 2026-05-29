@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabase } from '@/lib/supabase'
 
 /**
@@ -8,19 +7,13 @@ import { supabase } from '@/lib/supabase'
  * POST /api/rubrics/assessments - Create/save assessment (teacher only)
  */
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const studentId = searchParams.get('student_id')
     const assignmentId = searchParams.get('assignment_id')
     const rubricId = searchParams.get('rubric_id')
 
-    const userRole = getUserRole(session.user.email)
+    const userRole = ctx.role
 
     let query = supabase
       .from('rubric_assessments')
@@ -29,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     // Students can only see their own assessments
     if (userRole === 'student') {
-      query = query.eq('student_id', session.user.id || session.user.email)
+      query = query.eq('student_id', ctx.userId || ctx.email)
     } else if (studentId) {
       query = query.eq('student_id', studentId)
     }
@@ -50,30 +43,9 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ assessments: data || [] })
+})
 
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to fetch assessments',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     const body = await request.json()
 
     // Validation
@@ -101,7 +73,7 @@ export async function POST(request: NextRequest) {
       feedback: body.feedback,
       strengths: body.strengths || [],
       improvements: body.improvements || [],
-      graded_by: session.user.email,
+      graded_by: ctx.email,
       graded_at: new Date().toISOString(),
       auto_graded: body.auto_graded || false,
       manual_override: body.manual_override || false
@@ -141,12 +113,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ assessment: result }, { status: existing ? 200 : 201 })
-
-  } catch (error: any) {
-    console.error('API error:', error)
-    return NextResponse.json({ 
-      error: 'Failed to save assessment',
-      message: error.message 
-    }, { status: 500 })
-  }
-}
+})

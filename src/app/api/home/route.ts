@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
@@ -21,14 +21,9 @@ type TargetRow = { id: string; statement: string; domain: string; order_index: n
 type RecordRow = { target_id: string; level: number; observed_at: string }
 type SimRow = { slug: string; title: string; unit: string | null }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-    const userId = session.user.id
-    const name = session.user.name ?? 'there'
+export const GET = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
+    const name = ctx.session.user.name ?? 'there'
 
     // --- Units (ordered) -----------------------------------------------------
     const { data: unitRowsRaw } = await supabaseAdmin
@@ -200,8 +195,4 @@ export async function GET() {
       climb,
       sideQuest,
     })
-  } catch (error) {
-    console.error('Error in GET /api/home:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

@@ -1,8 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { loadRotationCalendar } from '@/lib/pacing-server'
 import { ROTATING_BLOCKS } from '@/lib/rotation'
 
@@ -11,24 +9,11 @@ import { ROTATING_BLOCKS } from '@/lib/rotation'
 // GET /api/pacing/rotation
 // PUT /api/pacing/rotation  { anchor_date, anchor_p1_block, no_school_dates }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const role = getUserRole(session.user.email)
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+export const GET = withRole(['admin', 'teacher'], async () => {
     return NextResponse.json({ calendar: await loadRotationCalendar() })
-  } catch (error) {
-    console.error('Error in GET /api/pacing/rotation:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
-export async function PUT(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const PUT = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin') return NextResponse.json({ error: 'Only the admin can set the rotation calendar' }, { status: 403 })
 
     const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[]; cycle_offset?: number }
@@ -48,8 +33,4 @@ export async function PUT(request: NextRequest) {
     const { error } = await supabaseAdmin.from('rotation_calendar').upsert(row, { onConflict: 'id' })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true, calendar: row })
-  } catch (error) {
-    console.error('Error in PUT /api/pacing/rotation:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

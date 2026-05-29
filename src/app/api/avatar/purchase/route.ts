@@ -1,8 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
-import { getEffectiveContext } from '@/lib/effective-context'
 
 // POST /api/avatar/purchase  { slug: string }
 // Spends XP for a purchasable avatar item OR claims a mastery-unlocked item
@@ -10,12 +9,9 @@ import { getEffectiveContext } from '@/lib/effective-context'
 // purchases also writes an approved reward_redemption so the XP balance ledger
 // reflects the spend automatically (no duplicate balance source).
 
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id || !session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
-    const userEmail = session.user.email
+export const POST = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
+    const userEmail = ctx.email
 
     const body = await request.json()
     const slug = (body?.slug ?? '') as string
@@ -40,7 +36,6 @@ export async function POST(request: NextRequest) {
     if (alreadyOwned) return NextResponse.json({ ok: true, already_owned: true })
 
     // Staff (teacher + admin) grant — bypass XP balance + mastery gate.
-    const ctx = await getEffectiveContext(userEmail)
     const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
     if (isStaff) {
       const { error: ownErr } = await supabaseAdmin.from('student_owned_items').insert({
@@ -102,8 +97,4 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Item is not purchasable' }, { status: 400 })
-  } catch (error) {
-    console.error('Error in POST /api/avatar/purchase:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

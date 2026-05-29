@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/gradebook/drawer-stats?user_id=&lesson_id=&unit_id=&class=
@@ -17,11 +16,7 @@ type ProgRow = { progress_percentage: number | null }
 
 const mean = (xs: number[]) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null)
 
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const sp = new URL(request.url).searchParams
@@ -82,8 +77,4 @@ export async function GET(request: NextRequest) {
       studentGraded: studentVals.length,
       classDayGraded: classDayVals.length,
     })
-  } catch (error) {
-    console.error('Error in GET /api/gradebook/drawer-stats:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

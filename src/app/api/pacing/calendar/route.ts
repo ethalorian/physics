@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { loadPlanItems, loadRotationCalendar } from '@/lib/pacing-server'
 
 // GET /api/pacing/calendar
@@ -12,11 +11,7 @@ import { loadPlanItems, loadRotationCalendar } from '@/lib/pacing-server'
 type CourseRow = { id: string; name: string | null; section: string | null }
 type SchedRow = { course_id: string; block: string | null; start_date: string | null }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     // the viewer's own courses
@@ -57,8 +52,4 @@ export async function GET() {
     const calendar = await loadRotationCalendar()
 
     return NextResponse.json({ sections, items, calendar })
-  } catch (error) {
-    console.error('Error in GET /api/pacing/calendar:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

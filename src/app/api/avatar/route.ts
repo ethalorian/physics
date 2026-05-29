@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { targetValue, type MasteryRecord } from '@/data/curriculum-types'
 import type { AvatarItem, EquippedItems, ItemSlot } from '@/lib/avatar/types'
 
@@ -18,16 +17,12 @@ export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_av
 
 interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.id || !session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const userId = session.user.id
+export const GET = withAuth(async (request, ctx) => {
+    const userId = ctx.userId
 
     // Staff (teacher + admin) get every item for free — they're not the
     // customer earning XP from lesson engagement. Use REAL role so view-as
     // doesn't change the user's own avatar economics.
-    const ctx = await getEffectiveContext(session.user.email)
     const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
 
     // 1) Avatar row (traits + equipped) + alias (separate column on students).
@@ -114,11 +109,7 @@ export async function GET() {
       alias,
       use_custom_avatar,
     })
-  } catch (error) {
-    console.error('Error in GET /api/avatar:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // Re-export slot type so other routes can reuse it.
 export type { ItemSlot }

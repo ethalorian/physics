@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
+import { withRole } from '@/lib/api-auth'
 
 /**
  * GET /api/simulations - Fetch simulations with optional filters
  * PUT /api/simulations - Update existing simulation (admin only)
  */
 
+// eslint-disable-next-line no-restricted-syntax -- public (open to unauthenticated), pending auth review (audit follow-up)
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -78,22 +80,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function PUT(request: NextRequest) {
-  try {
-    // Authentication
-    const session = await auth()
-    if (!session?.user?.email) {
-      console.error('PUT /api/simulations - No session')
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    // Admin/Teacher only
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      console.error('PUT /api/simulations - Insufficient permissions:', userRole)
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
+export const PUT = withRole(['teacher', 'admin'], async (request) => {
     const body = await request.json()
     const { id, ...updates } = body
 
@@ -139,13 +126,4 @@ export async function PUT(request: NextRequest) {
 
     console.log('✓ Simulation updated successfully:', data.slug)
     return NextResponse.json({ simulation: data })
-
-  } catch (error: any) {
-    console.error('API error in PUT /api/simulations:', error)
-    return NextResponse.json({ 
-      error: 'Failed to update simulation',
-      message: error.message,
-      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { status: 500 })
-  }
-}
+})

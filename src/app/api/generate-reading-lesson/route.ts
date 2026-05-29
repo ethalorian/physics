@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import OpenAI from 'openai'
-import { 
-  masteryLevels, 
+import { withRole } from '@/lib/api-auth'
+import {
+  masteryLevels,
   physicsTopics, 
   realWorldEnvironments,
   lessonStructures,
@@ -22,10 +22,6 @@ import {
   type GeminiGenerateRequest,
   type GeminiGenerateResponse
 } from '@/lib/vertex-ai'
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
 
 // Helper to get Google access token (supports multiple auth methods)
 async function getGoogleAccessToken(): Promise<string | null> {
@@ -285,7 +281,7 @@ interface GeneratedLesson {
   }
 }
 
-export async function POST(request: Request) {
+export const POST = withRole(['teacher', 'admin'], async (request) => {
   try {
     const body: GenerateReadingLessonRequest = await request.json()
     const { 
@@ -304,19 +300,11 @@ export async function POST(request: Request) {
       questionFrequency = 'after-each-section',
       questionTypes = ['multiple-choice', 'quick-check'],
       selectedStandardSets = [],
-      selectedStandards = [],
-      aiModel = 'openai'
+      selectedStandards = []
     } = body
 
-    // Check for appropriate API credentials based on model
-    if (aiModel === 'openai' && !process.env.OPENAI_API_KEY) {
-      return NextResponse.json(
-        { error: 'OpenAI API key not configured. Please add OPENAI_API_KEY to your environment variables.' },
-        { status: 500 }
-      )
-    }
-    
-    if (aiModel === 'vertex' && !vertexAIConfig.projectId) {
+    // Vertex AI is the only supported provider.
+    if (!vertexAIConfig.projectId) {
       return NextResponse.json(
         { error: 'Vertex AI not configured. Please add GOOGLE_CLOUD_PROJECT_ID to your environment variables.' },
         { status: 500 }
@@ -594,88 +582,50 @@ CRITICAL RULES:
     try {
       let responseContent: string | null = null
 
-      if (aiModel === 'vertex') {
-        // Use Google Vertex AI Gemini
-        console.log('Generating lesson with Vertex AI Gemini...')
-        
-        const accessToken = await getGoogleAccessToken()
-        if (!accessToken) {
-          throw new Error('Failed to authenticate with Google Cloud')
-        }
+      // Use Google Vertex AI Gemini
+      console.log('Generating lesson with Vertex AI Gemini...')
 
-        const geminiRequest: GeminiGenerateRequest = {
-          contents: [{
-            role: 'user',
-            parts: [{ text: userPrompt }]
-          }],
-          systemInstruction: {
-            parts: [{ text: systemPrompt }]
-          },
-          generationConfig: {
-            temperature: 0.7,
-            topP: 0.95,
-            maxOutputTokens: includeEmbeddedQuestions ? 8192 : 4096,
-            responseMimeType: 'application/json'
-          }
-        }
+      const accessToken = await getGoogleAccessToken()
+      if (!accessToken) {
+        throw new Error('Failed to authenticate with Google Cloud')
+      }
 
-        const geminiResponse = await fetch(vertexAIConfig.getGeminiEndpoint('default'), {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(geminiRequest)
-        })
-
-        if (!geminiResponse.ok) {
-          const errorText = await geminiResponse.text()
-          console.error('Vertex AI error:', errorText)
-          throw new Error(`Vertex AI error: ${geminiResponse.status}`)
+      const geminiRequest: GeminiGenerateRequest = {
+        contents: [{
+          role: 'user',
+          parts: [{ text: userPrompt }]
+        }],
+        systemInstruction: {
+          parts: [{ text: systemPrompt }]
+        },
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          maxOutputTokens: includeEmbeddedQuestions ? 8192 : 4096,
+          responseMimeType: 'application/json'
         }
+      }
 
-        const geminiData: GeminiGenerateResponse = await geminiResponse.json()
-        responseContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || null
+      const geminiResponse = await fetch(vertexAIConfig.getGeminiEndpoint('default'), {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(geminiRequest)
+      })
 
-        if (!responseContent) {
-          throw new Error('No response from Vertex AI')
-        }
-      } else {
-        // Use OpenAI
-        let completion
-        try {
-          // Use GPT-5 as primary model
-          completion = await openai.chat.completions.create({
-            model: "gpt-5",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt }
-            ],
-            temperature: 0.7,
-            max_tokens: includeEmbeddedQuestions ? 4096 : 3000,
-            response_format: { type: "json_object" }
-          })
-        } catch (gpt5Error: unknown) {
-          const errorMessage = gpt5Error instanceof Error ? gpt5Error.message : 'Unknown error'
-          console.log('GPT-5 failed, trying GPT-4o:', errorMessage)
-          // Fallback to gpt-4o
-          completion = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: userPrompt }
-            ],
-            temperature: 0.7,
-            max_tokens: includeEmbeddedQuestions ? 4096 : 3000,
-            response_format: { type: "json_object" }
-          })
-        }
+      if (!geminiResponse.ok) {
+        const errorText = await geminiResponse.text()
+        console.error('Vertex AI error:', errorText)
+        throw new Error(`Vertex AI error: ${geminiResponse.status}`)
+      }
 
-        responseContent = completion.choices[0]?.message?.content
-        
-        if (!responseContent) {
-          throw new Error('No response from OpenAI')
-        }
+      const geminiData: GeminiGenerateResponse = await geminiResponse.json()
+      responseContent = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || null
+
+      if (!responseContent) {
+        throw new Error('No response from Vertex AI')
       }
 
       let generated: GeneratedLesson
@@ -737,12 +687,12 @@ CRITICAL RULES:
             alignedStandards: standardDetails.length > 0 
               ? standardDetails.map(s => ({ code: s.code, title: s.title }))
               : undefined,
-            aiModel: aiModel === 'vertex' ? 'Gemini 2.0 Flash' : 'GPT-4o/GPT-5'
+            aiModel: 'Gemini 2.0 Flash'
           }
         }
       } catch (parseError) {
         console.error('Failed to parse AI response:', responseContent)
-        throw new Error(`Invalid response format from ${aiModel === 'vertex' ? 'Vertex AI' : 'OpenAI'}`)
+        throw new Error('Invalid response format from Vertex AI')
       }
 
       // Validate required fields
@@ -755,14 +705,14 @@ CRITICAL RULES:
         lesson: generated
       })
 
-    } catch (openAIError: unknown) {
-      console.error('OpenAI API error:', openAIError)
-      
-      const error = openAIError as { status?: number; message?: string }
-      
+    } catch (aiError: unknown) {
+      console.error('Vertex AI error:', aiError)
+
+      const error = aiError as { status?: number; message?: string }
+
       if (error.status === 401) {
         return NextResponse.json(
-          { error: 'Invalid API key. Please check your OpenAI API key configuration.' },
+          { error: 'AI authentication failed. Please check the Vertex AI / Google Cloud configuration.' },
           { status: 401 }
         )
       } else if (error.status === 429) {
@@ -788,9 +738,10 @@ CRITICAL RULES:
       { status: 500 }
     )
   }
-}
+})
 
 // GET endpoint to retrieve configuration options
+// eslint-disable-next-line no-restricted-syntax -- returns static lesson-config options, no auth required
 export async function GET() {
   return NextResponse.json({
     masteryLevels: masteryLevels.map(l => ({

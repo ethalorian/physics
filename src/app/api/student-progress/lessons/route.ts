@@ -1,15 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
 
 // POST - Update lesson progress
-export async function POST(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const POST = withAuth(async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields
@@ -21,8 +16,8 @@ export async function POST(request: NextRequest) {
     }
 
     const progressData = {
-      user_id: session.user.id,
-      user_email: session.user.email,
+      user_id: ctx.userId,
+      user_email: ctx.email,
       lesson_id: body.lesson_id,
       lesson_slug: body.lesson_slug || null,
       status: body.status || 'in_progress',
@@ -55,23 +50,24 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json(data, { status: 201 })
-
-  } catch (error) {
-    console.error('Error in POST /api/student-progress/lessons:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
 
 // GET - Fetch lesson progress
-export async function GET(request: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.email || !session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
+export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('user_id') || session.user.id
+    // A student may only read their own progress; admins anyone; a teacher only
+    // students on their own roster. (Previously this trusted ?user_id= from any caller.)
+    const role = ctx.role
+    const resolved = await resolveTargetStudent({
+      role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId: searchParams.get('user_id'),
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const userId = resolved.userId
     const lessonId = searchParams.get('lesson_id')
     const status = searchParams.get('status')
 
@@ -97,9 +93,4 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json(data || [])
-
-  } catch (error) {
-    console.error('Error in GET /api/student-progress/lessons:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})

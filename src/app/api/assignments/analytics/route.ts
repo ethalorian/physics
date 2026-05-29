@@ -1,23 +1,9 @@
-// Next.js imports
-import { NextRequest, NextResponse } from 'next/server'
-
 // Internal imports
-import { auth } from '@/lib/auth'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const userRole = getUserRole(session.user.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
-      return NextResponse.json({ error: 'Forbidden: Only admin/teacher can view analytics' }, { status: 403 })
-    }
-
+export const GET = withRole(['teacher', 'admin'], async () => {
     // Fetch lesson assignments analytics
     const { data: lessonAssignments, error: lessonError } = await supabaseAdmin
       .from('lesson_assignments')
@@ -131,10 +117,4 @@ export async function GET() {
       byCourse,
       recentActivity
     })
-  } catch (error) {
-    console.error('Error in GET /api/assignments/analytics:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
-
-
+})

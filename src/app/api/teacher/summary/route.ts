@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getEffectiveContext } from '@/lib/effective-context'
 import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/teacher/summary
@@ -17,11 +16,7 @@ type GidRow = { google_user_id: string | null }
 type BrRow = { user_id: string; created_at: string }
 type MrRow = { user_id: string; observed_at: string }
 
-export async function GET() {
-  try {
-    const session = await auth()
-    if (!session?.user?.email) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    const ctx = await getEffectiveContext(session.user.email)
+export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     // students in scope (keyed by google_user_id — see teacher-scope.ts)
@@ -86,8 +81,4 @@ export async function GET() {
       aged,
       ratingsThisWeek,
     })
-  } catch (error) {
-    console.error('Error in GET /api/teacher/summary:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
-  }
-}
+})
