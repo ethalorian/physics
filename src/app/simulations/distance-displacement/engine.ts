@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, grid as drawGrid, axes as drawAxes, arrow, chip } from '@/components/simulations/lab/draw'
 
 // Distance vs. displacement — a click-driven walk. The student clicks to send the
 // bug to each new spot; the green polyline is the PATH it actually walked
@@ -9,13 +10,15 @@ import type { SimEngine, ParamValues, SimData } from '@/components/simulations/l
 
 const PPM = 42 // pixels per metre at the reference size
 const MIN_DISTANCE = 15 // metres of path travelled before the sim counts as complete
+// Structural/semantic tones come from the shared PAL so the sim matches every
+// other lab. The bug's own scene colors stay distinct.
 const COL = {
-  bg: '#F6F4FF', grid: '#E7E2FB', axis: '#C9C1EF',
-  start: '#FAC775', startRing: '#E0A93C',
-  path: '#1D9E75', node: '#3FB98C',
-  disp: '#7F77DD',
+  bg: PAL.bg, grid: PAL.grid, axis: PAL.axis,
+  start: PAL.accent, startRing: PAL.accent,
+  path: PAL.velocity, node: '#3FB98C',
+  disp: PAL.primary,
   bug: '#D85A30', bugLeg: '#26215C', bugBack: '#B8471F',
-  text: '#26215C', mute: '#6F6A86',
+  text: PAL.ink, mute: PAL.mute,
 }
 
 interface Pt { x: number; y: number } // metres, relative to START (0,0)
@@ -72,29 +75,18 @@ export function createDistanceDisplacementEngine(
     ctx.restore()
   }
 
-  function arrowhead(x0: number, y0: number, x1: number, y1: number, color: string) {
-    const a = Math.atan2(y1 - y0, x1 - x0)
-    ctx.fillStyle = color
-    ctx.beginPath(); ctx.moveTo(x1, y1)
-    ctx.lineTo(x1 - 12 * Math.cos(a - Math.PI / 6), y1 - 12 * Math.sin(a - Math.PI / 6))
-    ctx.lineTo(x1 - 12 * Math.cos(a + Math.PI / 6), y1 - 12 * Math.sin(a + Math.PI / 6))
-    ctx.closePath(); ctx.fill()
-  }
-
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
-    ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     const { cx, cy } = center()
-    // metre grid
-    ctx.strokeStyle = COL.grid; ctx.lineWidth = 1
-    for (let gx = cx % PPM; gx < w; gx += PPM) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke() }
-    for (let gy = cy % PPM; gy < h; gy += PPM) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke() }
+    // metre grid (shared visual language), origin on START
+    drawGrid(ctx, w, h, PPM, { originX: cx, originY: cy, color: COL.grid })
     // axes through START
+    drawAxes(ctx, cx, 0, w, cy, COL.axis) // vertical axis (down) + bottom segment
     ctx.strokeStyle = COL.axis; ctx.lineWidth = 1.5
-    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke()
-    ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke()
+    ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(cx, cy); ctx.stroke() // left half of x-axis
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx, h); ctx.stroke() // bottom half of y-axis
 
     // PATH (distance) — green polyline through every waypoint
     if (path.length > 1) {
@@ -110,9 +102,7 @@ export function createDistanceDisplacementEngine(
     // DISPLACEMENT (lavender arrow) — straight from START to the bug
     if (path.length > 1 && displacement() > 0.01) {
       const s0 = toScreen(path[0]), s1 = toScreen(last())
-      ctx.strokeStyle = COL.disp; ctx.lineWidth = 3.5
-      ctx.beginPath(); ctx.moveTo(s0.x, s0.y); ctx.lineTo(s1.x, s1.y); ctx.stroke()
-      arrowhead(s0.x, s0.y, s1.x, s1.y, COL.disp)
+      arrow(ctx, s0.x, s0.y, s1.x, s1.y, { color: PAL.primary, width: 3.5, head: 12 })
     }
 
     // START marker (gold)
@@ -121,8 +111,7 @@ export function createDistanceDisplacementEngine(
     ctx.beginPath(); ctx.arc(s0.x, s0.y, 9, 0, Math.PI * 2); ctx.stroke()
     ctx.fillStyle = COL.start
     ctx.beginPath(); ctx.arc(s0.x, s0.y, 6, 0, Math.PI * 2); ctx.fill()
-    ctx.fillStyle = COL.text; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center'
-    ctx.fillText('START', s0.x, s0.y - 14)
+    chip(ctx, 'START', s0.x, s0.y - 16, { bg: COL.start, color: PAL.onAccent, size: 10 })
 
     // BUG at the current position, facing the last leg of travel
     const s1 = toScreen(last())
@@ -134,7 +123,7 @@ export function createDistanceDisplacementEngine(
     drawBug(s1.x, s1.y, heading)
 
     // hint / legend
-    ctx.textAlign = 'left'; ctx.font = '11px sans-serif'
+    ctx.textAlign = 'left'; ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
     if (path.length === 1) {
       ctx.fillStyle = COL.mute
       ctx.fillText('Click anywhere to walk the bug — build a path.', 12, h - 12)

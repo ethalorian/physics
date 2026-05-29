@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, groundShadow, chip } from '@/components/simulations/lab/draw'
 
 // Freefall cliff — drop a stone from a cliff of known height; it falls under g
 // from rest (h = ½gt², exact). Position traces stamp every 0.25 s and spread
@@ -8,16 +9,20 @@ import type { SimEngine, ParamValues, SimData } from '@/components/simulations/l
 
 const G = 9.8
 
+// Scene tokens stay scene-specific (sky/rock/water/grass keep their look), but
+// structural/semantic tones map to the shared PAL so this sim matches the lab:
+// the falling object + traces read as "position" (primary), depth ruler uses
+// the shared grid/axis tones, text uses the shared ink/mute ramp.
 const COL = {
   skyTop: '#EAE7FB', skyBot: '#F8F6FF',
   rock: '#867E9C', rockDark: '#5C5670', rockLight: '#9F98B4', strata: 'rgba(255,255,255,0.12)',
   grass: '#5DCAA5', grassDark: '#1D9E75',
   waterTop: '#69B0DD', waterBot: '#2C6FA8', foam: '#E1F0FF', wave: 'rgba(255,255,255,0.22)',
-  stone: '#2A2540', stoneHi: 'rgba(255,255,255,0.55)', trailC: 'rgba(127,119,221,',
-  trace: '#D85A30', traceLabel: '#993C1D',
-  head: '#E8B964', body: '#534AB7',
-  ruler: '#6F6A86', rulerLine: 'rgba(60,52,137,0.16)',
-  drop: 'rgba(83,74,183,0.30)', splash: 'rgba(225,240,255,', text: '#26215C', mute: '#6F6A86',
+  stone: PAL.ink, stoneHi: 'rgba(255,255,255,0.55)', trailC: 'rgba(127,119,221,',
+  trace: PAL.primary, traceLabel: PAL.ink,
+  head: PAL.accent, body: PAL.primary,
+  ruler: PAL.axis, rulerLine: 'rgba(60,52,137,0.16)',
+  drop: 'rgba(83,74,183,0.30)', splash: 'rgba(225,240,255,', text: PAL.ink, mute: PAL.mute,
 }
 
 export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine {
@@ -39,7 +44,7 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
 
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     // ---- layout ----
     const waterTop = Math.round(h * 0.82)
@@ -97,7 +102,7 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
     // ---- depth ruler ----
     ctx.strokeStyle = COL.ruler; ctx.lineWidth = 1.5
     ctx.beginPath(); ctx.moveTo(rulerX, lipY); ctx.lineTo(rulerX, waterTop); ctx.stroke()
-    ctx.font = '10px sans-serif'; ctx.textAlign = 'right'
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'right'
     for (let m = 0; m <= cliffH; m += 10) {
       const yy = toY(m)
       ctx.strokeStyle = COL.ruler; ctx.lineWidth = 1.5
@@ -114,14 +119,19 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
       const yy = toY(tr.h)
       ctx.fillStyle = COL.trace; ctx.beginPath(); ctx.arc(dropX, yy, 3.5, 0, Math.PI * 2); ctx.fill()
       if (i > 0) {
-        ctx.fillStyle = COL.traceLabel; ctx.font = '10px sans-serif'; ctx.textAlign = 'left'
-        ctx.fillText(`${tr.t.toFixed(2)} s`, dropX + 8, yy + 3)
+        chip(ctx, `${tr.t.toFixed(2)} s`, dropX + 34, yy, { color: COL.traceLabel, size: 10 })
       }
     })
 
     // ---- falling stone (trail + highlight) ----
     if (falling || (!done && fallen > 0) || (done && splash < 0)) {
       const sy = toY(fallen)
+      // soft contact shadow on the water as the stone nears the surface
+      const nearGround = (waterTop - sy) / (waterTop - lipY)
+      if (nearGround < 0.18) {
+        const t01 = Math.max(0, Math.min(1, 1 - nearGround / 0.18))
+        groundShadow(ctx, dropX, waterTop - 1, 6 + t01 * 10, (6 + t01 * 10) * 0.32)
+      }
       for (let k = 1; k <= 6; k++) {
         const a = 0.30 * (1 - k / 7)
         ctx.fillStyle = `${COL.trailC}${a})`

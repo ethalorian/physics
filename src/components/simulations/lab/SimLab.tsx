@@ -82,19 +82,24 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    // WebGL engines (Three.js) take the raw canvas and own their own sizing/DPR;
+    // 2D engines get a CanvasRenderingContext2D and the shell-managed DPR transform.
+    const webgl = def.renderMode === 'webgl' && !!def.createEngineGL
+    const ctx = webgl ? null : canvas.getContext('2d')
+    if (!webgl && !ctx) return
 
     const dpr = () => window.devicePixelRatio || 1
     const sizeCanvas = () => {
       const rect = canvas.getBoundingClientRect()
       canvas.width = Math.max(1, Math.floor(rect.width * dpr()))
       canvas.height = Math.max(1, Math.floor(rect.height * dpr()))
-      ctx.setTransform(dpr(), 0, 0, dpr(), 0, 0)
+      if (ctx) ctx.setTransform(dpr(), 0, 0, dpr(), 0, 0)
       engineRef.current?.render()
     }
 
-    const engine = def.createEngine(canvas, ctx, initialValues, { invalidate: () => pullRef.current() })
+    const engine = webgl
+      ? def.createEngineGL!(canvas, initialValues, { invalidate: () => pullRef.current() })
+      : def.createEngine!(canvas, ctx!, initialValues, { invalidate: () => pullRef.current() })
     engineRef.current = engine
     sizeCanvas()
     setReadouts(engine.getReadouts())

@@ -132,6 +132,12 @@ export interface SimEngineFactory {
   (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues, opts?: { invalidate: () => void }): SimEngine
 }
 
+// WebGL / Three.js engines get the RAW canvas (no 2D context) and own their own
+// sizing + DPR. The shell skips getContext('2d') and the DPR transform for these.
+export interface SimEngineGLFactory {
+  (canvas: HTMLCanvasElement, initial: ParamValues, opts?: { invalidate: () => void }): SimEngine
+}
+
 /** Everything the shell needs to present a simulation. */
 export interface SimDefinition {
   slug: string
@@ -140,7 +146,12 @@ export interface SimDefinition {
   summary: string
   params: SimParam[]
   readouts: SimReadout[]
-  createEngine: SimEngineFactory
+  /** 2D engine factory. Required unless renderMode==='webgl' (then use createEngineGL). */
+  createEngine?: SimEngineFactory
+  /** Render backend. '2d' (default) draws via a CanvasRenderingContext2D; 'webgl'
+   *  hands the raw canvas to createEngineGL (Three.js) and skips the 2D context. */
+  renderMode?: '2d' | 'webgl'
+  createEngineGL?: SimEngineGLFactory
   /** Default canvas height in px (shell still makes it responsive). Default 420. */
   canvasHeight?: number
   /** Optional mock sensor — renders a Vernier-style live trace from getSensorTrace().

@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, grid as drawGrid, groundShadow, arrow as drawArrow, chip } from '@/components/simulations/lab/draw'
 
 // Projectile-motion engine. Owns the canvas (drawing + target dragging). The
 // SimLab shell drives a FIXED-SUBSTEP loop (calls step/render) and sizing, so
@@ -8,22 +9,25 @@ import type { SimEngine, ParamValues, SimData } from '@/components/simulations/l
 // Physics: idealized (constant g, no air resistance) — conceptual-first for CPA.
 // Graphics: game-like — predicted aim arc, landing marker, motion trail, glowing
 // ball + shadow, decomposed velocity-component vectors, apex flag, target bursts,
-// muzzle flash. On-brand lavender/sage/gold.
+// muzzle flash. Styled to the shared SimLab visual language (PAL + draw helpers);
+// scene sky/grass colors are scene-specific.
 
 const GRAVITY = 9.8
 
+// Scene tokens; structural/semantic tones come from the shared PAL so the sim
+// matches every other lab. sky/grass are scene-specific.
 const COL = {
-  skyTop: '#E7E4FB', skyBot: '#F6F4FF',
-  grass: '#5DCAA5', grassDark: '#1D9E75',
-  grid: 'rgba(60,52,137,0.07)',
-  cannon: '#3C3489', cannonBarrel: '#534AB7',
-  ball: '#26215C', ballGlow: 'rgba(127,119,221,0.45)',
-  trail: '#7F77DD',
+  skyTop: '#E7E4FB', skyBot: PAL.bg,
+  grass: '#5DCAA5', grassDark: PAL.velocity,
+  grid: PAL.grid,
+  cannon: '#3C3489', cannonBarrel: PAL.primary,
+  ball: PAL.primary, ballGlow: 'rgba(127,119,221,0.45)',
+  trail: PAL.primary,
   predict: 'rgba(83,74,183,0.45)',
-  vx: '#1D9E75', vy: '#534AB7', vres: '#BA7517',
-  targetUp: '#D85A30', targetHit: '#1D9E75', targetWhite: '#fff',
-  apex: '#BA7517', text: '#26215C', textMute: '#6F6A86',
-  flash: '#FAC775', landing: '#534AB7',
+  vx: PAL.force, vy: PAL.cool, vres: PAL.velocity,
+  targetUp: PAL.accent, targetHit: PAL.velocity, targetWhite: '#fff',
+  apex: PAL.accent, text: PAL.ink, textMute: PAL.mute,
+  flash: '#FAC775', landing: PAL.accent,
 }
 
 interface Target { x: number; y: number; width: number; height: number; hit: boolean; anim: number }
@@ -115,17 +119,6 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
   canvas.addEventListener('mouseup', onUp)
   canvas.addEventListener('mouseleave', onUp)
 
-  const arrow = (x0: number, y0: number, x1: number, y1: number, color: string, wdt = 3) => {
-    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = wdt
-    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke()
-    const ang = Math.atan2(y1 - y0, x1 - x0)
-    ctx.beginPath()
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x1 - 8 * Math.cos(ang - Math.PI / 6), y1 - 8 * Math.sin(ang - Math.PI / 6))
-    ctx.lineTo(x1 - 8 * Math.cos(ang + Math.PI / 6), y1 - 8 * Math.sin(ang + Math.PI / 6))
-    ctx.closePath(); ctx.fill()
-  }
-
   function render() {
     const showPred = !flying && !landed
     const pred = showPred ? predict(drag) : []
@@ -133,21 +126,16 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     const s = scale(pred.length ? pred : predIdeal)
     const { w, h } = s
 
-    // sky
+    // field backdrop + scene sky (gradient is scene-specific)
+    clearField(ctx, w, h)
     const sky = ctx.createLinearGradient(0, 0, 0, h)
     sky.addColorStop(0, COL.skyTop); sky.addColorStop(1, COL.skyBot)
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h)
 
-    // grid
-    ctx.strokeStyle = COL.grid; ctx.lineWidth = 1
-    for (let i = 0; i <= 10; i++) {
-      const gx = s.ox + (w * 0.9 * i) / 10
-      ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h - s.oy); ctx.stroke()
-    }
-    for (let i = 0; i <= 6; i++) {
-      const gy = s.oy + ((h - s.oy * 2) * i) / 6
-      ctx.beginPath(); ctx.moveTo(s.ox, gy); ctx.lineTo(w, gy); ctx.stroke()
-    }
+    // grid (shared visual language), spanning the play field above the ground
+    drawGrid(ctx, w, h - s.oy, (w * 0.9) / 10, {
+      x0: s.ox, y0: s.oy, x1: w, y1: h - s.oy, originX: s.ox, originY: s.oy, color: COL.grid,
+    })
 
     // ground
     ctx.fillStyle = COL.grass; ctx.fillRect(0, h - s.oy, w, s.oy)
@@ -161,8 +149,7 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       ctx.stroke(); ctx.setLineDash([])
       const li = predIdeal[predIdeal.length - 1]
       const lqi = toScreen(s, li.x, 0)
-      ctx.fillStyle = 'rgba(83,74,183,0.4)'; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
-      ctx.fillText('no drag', lqi.X, lqi.Y - 6)
+      chip(ctx, 'no drag', lqi.X, lqi.Y - 10, { size: 10, color: COL.textMute })
     }
     // predicted aim arc + landing marker (before launch)
     if (pred.length > 1) {
@@ -194,7 +181,7 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
         ctx.beginPath(); ctx.arc(cx, top.Y + th / 2, 8 + p * 28, 0, Math.PI * 2); ctx.stroke()
       }
       if (!flying && !tg.hit) {
-        ctx.fillStyle = COL.textMute; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
+        ctx.fillStyle = COL.textMute; ctx.font = '10px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'
         ctx.fillText('drag', cx, h - s.oy + 13)
       }
     })
@@ -226,6 +213,9 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
 
     // cannon
     const cq = toScreen(s, 0, height)
+    // contact shadow under the launcher base on the ground
+    const cbase = toScreen(s, 0, 0)
+    groundShadow(ctx, cbase.X, cbase.Y - 1, 16, 5)
     ctx.save(); ctx.translate(cq.X, cq.Y); ctx.rotate(-(angle * Math.PI) / 180)
     ctx.fillStyle = COL.cannonBarrel; ctx.fillRect(0, -7, 30, 14)
     if (flash > 0) {
@@ -239,11 +229,10 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     // projectile + shadow + glow + velocity components
     if (flying || t > 0) {
       const q = toScreen(s, x, y)
-      // ground shadow
+      // ground shadow (shared contact-shadow ellipse), sized by altitude
       const gq = toScreen(s, x, 0)
       const shadow = Math.max(0.05, 1 - y / Math.max(s.maxY, 1))
-      ctx.fillStyle = `rgba(38,33,92,${0.18 * shadow})`
-      ctx.beginPath(); ctx.ellipse(gq.X, gq.Y - 1, 9 * shadow + 3, 3 * shadow + 1.5, 0, 0, Math.PI * 2); ctx.fill()
+      groundShadow(ctx, gq.X, gq.Y - 1, 9 * shadow + 3, 3 * shadow + 1.5, `rgba(38,33,92,${0.18 * shadow})`)
       // glow
       const glow = ctx.createRadialGradient(q.X, q.Y, 2, q.X, q.Y, 16)
       glow.addColorStop(0, COL.ballGlow); glow.addColorStop(1, 'rgba(127,119,221,0)')
@@ -253,17 +242,14 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       // velocity component vectors during flight
       if (flying) {
         const k = 4
-        arrow(q.X, q.Y, q.X + vx * k, q.Y, COL.vx, 3)              // horizontal (constant)
-        arrow(q.X, q.Y, q.X, q.Y - vy * k, COL.vy, 3)             // vertical (changes)
-        arrow(q.X, q.Y, q.X + vx * k, q.Y - vy * k, COL.vres, 2)  // resultant
+        drawArrow(ctx, q.X, q.Y, q.X + vx * k, q.Y, { color: COL.vx, width: 3, head: 8 })              // horizontal (constant)
+        drawArrow(ctx, q.X, q.Y, q.X, q.Y - vy * k, { color: COL.vy, width: 3, head: 8 })             // vertical (changes)
+        drawArrow(ctx, q.X, q.Y, q.X + vx * k, q.Y - vy * k, { color: COL.vres, width: 2, head: 8 })  // resultant
       }
     }
 
-    // score badge
-    ctx.fillStyle = 'rgba(255,255,255,0.82)'
-    ctx.fillRect(8, 8, 132, 26)
-    ctx.fillStyle = COL.text; ctx.font = 'bold 13px sans-serif'; ctx.textAlign = 'left'
-    ctx.fillText(`Hits ${hits}   Misses ${misses}`, 16, 25)
+    // score badge (shared chip)
+    chip(ctx, `Hits ${hits}   Misses ${misses}`, 8, 21, { align: 'left', size: 12, color: COL.text })
   }
 
   const engine: SimEngine = {

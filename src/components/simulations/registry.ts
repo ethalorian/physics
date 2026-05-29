@@ -25,6 +25,7 @@ export const SIM_COMPONENTS: Record<string, ComponentType> = {
   'projectile-motion': load(() => import('@/app/simulations/projectile-motion/page')),
   'race-track': load(() => import('@/app/simulations/race-track/page')),
   'riverboat-crossing': load(() => import('@/app/simulations/riverboat-crossing/page')),
+  'riverboat-crossing-3d': load(() => import('@/app/simulations/riverboat-crossing-3d/page')),
   'slope-calculator': load(() => import('@/app/simulations/slope-calculator/page')),
   'sumo-forces': load(() => import('@/app/simulations/sumo-forces/page')),
   'uniformly-accelerated-motion': load(() => import('@/app/simulations/uniformly-accelerated-motion/page')),

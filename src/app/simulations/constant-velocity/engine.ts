@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, groundShadow, arrow } from '@/components/simulations/lab/draw'
 
 // Constant-velocity walker. The canvas shows the overhead track (the scene); the
 // shared mock sensor carries the position/velocity graph — same as every other
@@ -8,12 +9,15 @@ import type { SimEngine, ParamValues, SimData } from '@/components/simulations/l
 type Dir = 'forward' | 'backward' | 'stopped'
 interface Pt { time: number; position: number; velocity: number }
 
+// Structural/semantic tones come from the shared PAL so the sim matches every
+// other lab. track = position, origin = secondary highlight, walker = primary
+// ink, fwd = motion/velocity, back = secondary direction, stop = muted.
 const COL = {
-  laneTop: '#EEEDFE', laneBot: '#F6F4FF',
-  track: '#7F77DD', origin: '#534AB7',
-  walker: '#26215C',
-  fwd: '#1D9E75', back: '#185FA5', stop: '#6F6A86',
-  mute: '#6F6A86',
+  track: PAL.primary, origin: PAL.cool,
+  walker: PAL.ink,
+  fwd: PAL.velocity, back: PAL.cool, stop: PAL.mute,
+  grid: PAL.grid,
+  mute: PAL.mute,
 }
 
 export function createConstantVelocityEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine {
@@ -36,10 +40,7 @@ export function createConstantVelocityEngine(canvas: HTMLCanvasElement, ctx: Can
 
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
-    const lane = ctx.createLinearGradient(0, 0, 0, h)
-    lane.addColorStop(0, COL.laneTop); lane.addColorStop(1, COL.laneBot)
-    ctx.fillStyle = lane; ctx.fillRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     const left = w * 0.08, right = w * 0.92, span = right - left
     const midY = h * 0.55
@@ -47,10 +48,10 @@ export function createConstantVelocityEngine(canvas: HTMLCanvasElement, ctx: Can
 
     ctx.strokeStyle = COL.track; ctx.lineWidth = 3
     ctx.beginPath(); ctx.moveTo(left, midY); ctx.lineTo(right, midY); ctx.stroke()
-    ctx.font = '11px sans-serif'; ctx.textAlign = 'center'
+    ctx.font = '11px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'
     for (const m of [-10, -5, 0, 5, 10]) {
       const x = toX(m)
-      ctx.strokeStyle = m === 0 ? COL.origin : 'rgba(0,0,0,0.10)'; ctx.lineWidth = m === 0 ? 2 : 1
+      ctx.strokeStyle = m === 0 ? COL.origin : COL.grid; ctx.lineWidth = m === 0 ? 2 : 1
       ctx.beginPath(); ctx.moveTo(x, midY - 16); ctx.lineTo(x, midY + 16); ctx.stroke()
       ctx.fillStyle = m === 0 ? COL.origin : COL.mute
       ctx.fillText(m === 0 ? '0 m' : `${m}`, x, midY + 34)
@@ -63,6 +64,7 @@ export function createConstantVelocityEngine(canvas: HTMLCanvasElement, ctx: Can
     })
 
     const wx = toX(Math.max(-10, Math.min(10, position)))
+    groundShadow(ctx, wx, midY + 8, 12, 4)
     ctx.fillStyle = COL.walker
     ctx.beginPath(); ctx.arc(wx, midY - 26, 7, 0, Math.PI * 2); ctx.fill()
     ctx.strokeStyle = COL.walker; ctx.lineWidth = 4
@@ -72,10 +74,8 @@ export function createConstantVelocityEngine(canvas: HTMLCanvasElement, ctx: Can
     ctx.beginPath(); ctx.moveTo(wx, midY - 4); ctx.lineTo(wx - 6, midY + 5); ctx.moveTo(wx, midY - 4); ctx.lineTo(wx + 6, midY + 5); ctx.stroke()
     if (dir !== 'stopped') {
       const ax = dir === 'forward' ? wx + 20 : wx - 20
-      ctx.strokeStyle = dirColor(); ctx.lineWidth = 3
-      ctx.beginPath(); ctx.moveTo(dir === 'forward' ? wx + 12 : wx - 12, midY - 32); ctx.lineTo(ax, midY - 32)
-      ctx.lineTo(ax + (dir === 'forward' ? -5 : 5), midY - 36); ctx.moveTo(ax, midY - 32)
-      ctx.lineTo(ax + (dir === 'forward' ? -5 : 5), midY - 28); ctx.stroke()
+      const shaftX = dir === 'forward' ? wx + 12 : wx - 12
+      arrow(ctx, shaftX, midY - 32, ax, midY - 32, { color: dirColor(), width: 3, head: 7 })
     }
   }
 

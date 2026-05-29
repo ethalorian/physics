@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components/simulations/lab/contract'
+import { PAL, clearField, grid as drawGrid, axes as drawAxes, panel, groundShadow, chip } from '@/components/simulations/lab/draw'
 
 // Car race — two cars move at CONSTANT velocity with independent start delays
 // down a straight track. The split canvas shows the race up top and a LIVE
@@ -10,10 +11,12 @@ import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components
 
 const RACE = 1000 // race length (m)
 
+// Scene tokens; structural/semantic tones come from the shared PAL so the sim
+// matches every other lab. grass/road/lane/edge are scene-specific.
 const COL = {
-  bg: '#F6F4FF', grass: '#5DCAA5', road: '#3A3550', lane: '#FAC775', edge: '#FFFFFF',
-  a: '#7F77DD', aWin: '#CFCBF4', b: '#D85A30', bWin: '#FBD9CC', wheel: '#26215C',
-  text: '#26215C', mute: '#6F6A86', grid: '#E2DEF5', cross: '#E0A93B', card: '#FFFFFF',
+  bg: PAL.bg, grass: '#5DCAA5', road: '#3A3550', lane: '#FAC775', edge: '#FFFFFF',
+  a: PAL.primary, aWin: '#CFCBF4', b: PAL.force, bWin: '#FBD9CC', wheel: PAL.ink,
+  text: PAL.ink, mute: PAL.mute, grid: PAL.grid, cross: PAL.accent, card: PAL.surface,
 }
 
 interface Samp { t: number; a: number; b: number }
@@ -58,22 +61,22 @@ export function createCarRaceEngine(canvas: HTMLCanvasElement, ctx: CanvasRender
     return { w: canvas.width / dpr, h: canvas.height / dpr }
   }
 
-  function drawCar(x: number, y: number, fill: string, win: string, label: string) {
+  function drawCar(x: number, y: number, fill: string, win: string, tag: string) {
+    groundShadow(ctx, x, y + 15, 24, 5)
     ctx.fillStyle = fill
-    ctx.beginPath(); ctx.roundRect(x - 22, y - 11, 44, 22, 4); ctx.fill()
-    ctx.fillStyle = win; ctx.beginPath(); ctx.roundRect(x + 3, y - 8, 14, 16, 2); ctx.fill()
+    ctx.beginPath(); ctx.roundRect(x - 22, y - 11, 44, 22, 6); ctx.fill()
+    ctx.fillStyle = win; ctx.beginPath(); ctx.roundRect(x + 3, y - 8, 14, 16, 3); ctx.fill()
     ctx.fillStyle = COL.wheel
     ctx.beginPath(); ctx.arc(x - 12, y + 12, 4.5, 0, Math.PI * 2); ctx.fill()
     ctx.beginPath(); ctx.arc(x + 12, y + 12, 4.5, 0, Math.PI * 2); ctx.fill()
-    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-    ctx.fillText(label, x - 5, y)
+    ctx.fillStyle = '#FFFFFF'; ctx.font = 'bold 12px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    ctx.fillText(tag, x - 5, y)
     ctx.textBaseline = 'alphabetic'
   }
 
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
-    ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     const sceneH = Math.round(h * 0.46)
     const pad = 30
@@ -109,16 +112,14 @@ export function createCarRaceEngine(canvas: HTMLCanvasElement, ctx: CanvasRender
     const aY = roadY + laneH / 2, bY = roadY + laneH + laneH / 2
     if (effA() > 0) {
       drawCar(trackX(Math.min(posA, RACE)), aY, COL.a, COL.aWin, 'A')
-      ctx.fillStyle = COL.text; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'
-      ctx.fillText(`${posA.toFixed(0)} m`, trackX(Math.min(posA, RACE)), aY - 18)
+      chip(ctx, `${posA.toFixed(0)} m`, trackX(Math.min(posA, RACE)), aY - 20, { bg: COL.aWin, color: COL.text })
     } else {
       ctx.fillStyle = COL.a; ctx.font = '11px sans-serif'; ctx.textAlign = 'left'
       ctx.fillText(`A starts in ${(startA - t).toFixed(1)} s`, pad, aY)
     }
     if (effB() > 0) {
       drawCar(trackX(Math.min(posB, RACE)), bY, COL.b, COL.bWin, 'B')
-      ctx.fillStyle = COL.text; ctx.font = '11px sans-serif'; ctx.textAlign = 'center'
-      ctx.fillText(`${posB.toFixed(0)} m`, trackX(Math.min(posB, RACE)), bY - 18)
+      chip(ctx, `${posB.toFixed(0)} m`, trackX(Math.min(posB, RACE)), bY - 20, { bg: COL.bWin, color: COL.text })
     } else {
       ctx.fillStyle = COL.b; ctx.font = '11px sans-serif'; ctx.textAlign = 'left'
       ctx.fillText(`B starts in ${(startB - t).toFixed(1)} s`, pad, bY)
@@ -126,20 +127,15 @@ export function createCarRaceEngine(canvas: HTMLCanvasElement, ctx: CanvasRender
 
     // ---- bottom: live position-time graph --------------------------------
     const gx0 = pad + 28, gy0 = sceneH + 18, gx1 = w - 12, gy1 = h - 26
-    ctx.fillStyle = COL.card; ctx.beginPath(); ctx.roundRect(gx0 - 22, gy0 - 12, gx1 - gx0 + 30, gy1 - gy0 + 34, 10); ctx.fill()
+    panel(ctx, gx0 - 22, gy0 - 12, gx1 - gx0 + 30, gy1 - gy0 + 34, 10)
 
     const tMax = Math.max(8, Math.ceil(t))
     const px = (tt: number) => gx0 + (tt / tMax) * (gx1 - gx0)
     const py = (pos: number) => gy1 - (pos / RACE) * (gy1 - gy0)
 
-    // grid + axes
-    ctx.strokeStyle = COL.grid; ctx.lineWidth = 1
-    for (let f = 0; f <= 4; f++) {
-      const yy = gy0 + (f / 4) * (gy1 - gy0)
-      ctx.beginPath(); ctx.moveTo(gx0, yy); ctx.lineTo(gx1, yy); ctx.stroke()
-    }
-    ctx.strokeStyle = COL.mute; ctx.lineWidth = 1.5
-    ctx.beginPath(); ctx.moveTo(gx0, gy0); ctx.lineTo(gx0, gy1); ctx.lineTo(gx1, gy1); ctx.stroke()
+    // grid + axes (shared visual language)
+    drawGrid(ctx, gx1, gy1, (gy1 - gy0) / 4, { x0: gx0, y0: gy0, x1: gx1, y1: gy1, originX: gx0, originY: gy0, color: COL.grid })
+    drawAxes(ctx, gx0, gy0, gx1, gy1)
     ctx.fillStyle = COL.mute; ctx.font = '10px sans-serif'; ctx.textAlign = 'right'
     ctx.fillText(`${RACE}`, gx0 - 5, gy0 + 4)
     ctx.fillText('0', gx0 - 5, gy1)

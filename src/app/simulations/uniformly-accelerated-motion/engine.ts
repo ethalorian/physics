@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, groundShadow, arrow, label, chip } from '@/components/simulations/lab/draw'
 
 // Uniformly accelerated motion — the "oil-drop ticker": a car drops a spot every
 // second, and the growing/shrinking spacing reveals constant acceleration. The
@@ -7,10 +8,12 @@ import type { SimEngine, ParamValues, SimData } from '@/components/simulations/l
 
 interface Spot { t: number; x: number; v: number }
 
+// Scene tokens; structural/semantic tones come from the shared PAL so the sim
+// matches every other lab. road/lane are scene-specific.
 const COL = {
-  sky: '#EEEDFE', road: '#3A3550', lane: '#FAC775',
-  car: '#534AB7', carDark: '#3C3489', window: '#BFE3FF', wheel: '#26215C',
-  oil: '#1A1726', vel: '#1D9E75', label: '#EEEDFE', marker: '#9A93B8', text: '#fff',
+  sky: PAL.bg, road: '#3A3550', lane: '#FAC775',
+  car: PAL.primary, carDark: '#3C3489', window: '#BFE3FF', wheel: PAL.ink,
+  oil: PAL.ink, vel: PAL.velocity, label: PAL.bg, marker: PAL.mute, text: PAL.onAccent,
 }
 const DOMAIN = 400 // metres of road shown
 
@@ -31,8 +34,7 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
 
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
-    ctx.fillStyle = COL.sky; ctx.fillRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     const roadTop = h * 0.34
     const roadH = h * 0.42
@@ -46,33 +48,32 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
     ctx.strokeStyle = COL.lane; ctx.lineWidth = 3; ctx.setLineDash([14, 12])
     ctx.beginPath(); ctx.moveTo(left, roadMid); ctx.lineTo(right, roadMid); ctx.stroke(); ctx.setLineDash([])
     // distance markers
-    ctx.fillStyle = COL.marker; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
+    ctx.fillStyle = COL.marker; ctx.font = '10px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'
     for (let m = 0; m <= DOMAIN; m += 50) {
       const mx = toX(m)
       ctx.fillRect(mx, roadTop + roadH, 1, 5)
       ctx.fillText(`${m}`, mx, roadTop + roadH + 16)
     }
+    ctx.textAlign = 'left'
 
     // oil spots + time labels
     spots.forEach((s) => {
       const sx = toX(s.x)
       ctx.fillStyle = COL.oil
       ctx.beginPath(); ctx.ellipse(sx, roadMid + 14, 6, 3.5, 0, 0, Math.PI * 2); ctx.fill()
-      ctx.fillStyle = COL.lane; ctx.font = '10px sans-serif'; ctx.textAlign = 'center'
-      ctx.fillText(`${s.t}s`, sx, roadMid - 16)
+      chip(ctx, `${s.t}s`, sx, roadMid - 16, { bg: PAL.surface, color: PAL.mute, size: 10 })
     })
 
     // car
     const cx = toX(x)
     const cy = roadMid
+    // ground shadow under the moving car
+    groundShadow(ctx, cx, cy + 10, 18, 4)
     // velocity arrow (ahead, length ∝ v; reversed if v<0)
     if (Math.abs(v) > 0.1) {
       const len = Math.max(-60, Math.min(60, v * 3))
-      const ax = cx + 18 * Math.sign(len) + len
-      ctx.strokeStyle = COL.vel; ctx.fillStyle = COL.vel; ctx.lineWidth = 3
-      ctx.beginPath(); ctx.moveTo(cx + 18 * Math.sign(len), cy); ctx.lineTo(ax, cy); ctx.stroke()
-      ctx.beginPath(); ctx.moveTo(ax, cy)
-      ctx.lineTo(ax - 6 * Math.sign(len), cy - 4); ctx.lineTo(ax - 6 * Math.sign(len), cy + 4); ctx.closePath(); ctx.fill()
+      const x0 = cx + 18 * Math.sign(len)
+      arrow(ctx, x0, cy, x0 + len, cy, { color: COL.vel, width: 3, head: 8 })
     }
     // body
     ctx.fillStyle = COL.car
@@ -83,8 +84,7 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
 
     // motion hint
     const hint = a > 0.01 ? 'speeding up — spots spread out' : a < -0.01 ? 'slowing down — spots bunch up' : 'constant velocity — even spacing'
-    ctx.fillStyle = COL.car; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left'
-    ctx.fillText(hint, left, roadTop - 10)
+    label(ctx, hint, left, roadTop - 10, { color: PAL.primary, size: 12, weight: 'bold' })
   }
 
   const engine: SimEngine = {

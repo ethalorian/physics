@@ -1,4 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
+import { PAL, clearField, groundShadow, arrow, chip } from '@/components/simulations/lab/draw'
 
 // Race track — a car circles a track at constant speed. DISTANCE (the path) rises
 // forever; DISPLACEMENT (straight line from start) rises to the diameter then
@@ -11,10 +12,12 @@ const R = 100 // track radius (m)
 const TRACK_W = 10
 const START = -Math.PI / 2 // 12 o'clock
 
+// Scene tokens; structural/semantic tones come from the shared PAL so the sim
+// matches every other lab. grass/track/center are scene-specific.
 const COL = {
-  bg: '#F6F4FF', grass: '#5DCAA5', track: '#3A3550', center: '#FAC775',
-  start: '#FFFFFF', origin: '#9A93B8', disp: '#7F77DD', arc: '#1D9E75',
-  car: '#D85A30', carWin: '#BFE3FF', wheel: '#26215C', text: '#26215C', mute: '#6F6A86',
+  bg: PAL.bg, grass: '#5DCAA5', track: '#3A3550', center: '#FAC775',
+  start: '#FFFFFF', origin: PAL.axis, disp: PAL.primary, arc: PAL.velocity,
+  car: PAL.force, carWin: '#BFE3FF', wheel: PAL.ink, text: PAL.ink, mute: PAL.mute,
 }
 
 export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues): SimEngine {
@@ -50,8 +53,7 @@ export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRend
 
   function render() {
     const { w, h } = dims()
-    ctx.clearRect(0, 0, w, h)
-    ctx.fillStyle = COL.bg; ctx.fillRect(0, 0, w, h)
+    clearField(ctx, w, h)
 
     const cx = w / 2, cy = h / 2
     const ppm = (Math.min(w, h) * 0.40) / (R + TRACK_W)
@@ -76,10 +78,9 @@ export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRend
 
     // start/finish tick + label
     const st = startPos()
-    ctx.strokeStyle = COL.start; ctx.lineWidth = 4
+    ctx.strokeStyle = PAL.accent; ctx.lineWidth = 4
     ctx.beginPath(); ctx.moveTo(sx(st.x) - 14, sy(st.y)); ctx.lineTo(sx(st.x) + 14, sy(st.y)); ctx.stroke()
-    ctx.fillStyle = COL.text; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center'
-    ctx.fillText('START', sx(st.x), sy(st.y) - 10)
+    chip(ctx, 'START', sx(st.x), sy(st.y) - 14, { bg: PAL.accent, color: PAL.onAccent })
 
     // origin marker
     ctx.fillStyle = COL.origin; ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2); ctx.fill()
@@ -87,17 +88,11 @@ export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRend
     // displacement chord (arrow from START to car)
     const c = carPos()
     if (ang > 0.001) {
-      const x0 = sx(st.x), y0 = sy(st.y), x1 = sx(c.x), y1 = sy(c.y)
-      ctx.strokeStyle = COL.disp; ctx.fillStyle = COL.disp; ctx.lineWidth = 3
-      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke()
-      const a = Math.atan2(y1 - y0, x1 - x0)
-      ctx.beginPath(); ctx.moveTo(x1, y1)
-      ctx.lineTo(x1 - 10 * Math.cos(a - Math.PI / 6), y1 - 10 * Math.sin(a - Math.PI / 6))
-      ctx.lineTo(x1 - 10 * Math.cos(a + Math.PI / 6), y1 - 10 * Math.sin(a + Math.PI / 6))
-      ctx.closePath(); ctx.fill()
+      arrow(ctx, sx(st.x), sy(st.y), sx(c.x), sy(c.y), { color: COL.disp, width: 3, head: 10 })
     }
 
     // car (tangent to track)
+    groundShadow(ctx, sx(c.x), sy(c.y) + 12, 12, 4)
     ctx.save(); ctx.translate(sx(c.x), sy(c.y)); ctx.rotate(carAngle() + Math.PI)
     ctx.fillStyle = COL.car; ctx.beginPath(); ctx.roundRect(-7, -11, 14, 22, 3); ctx.fill()
     ctx.fillStyle = COL.carWin; ctx.fillRect(-5, -7, 10, 6)
@@ -106,7 +101,7 @@ export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRend
     ctx.restore()
 
     // legend
-    ctx.textAlign = 'left'; ctx.font = '11px sans-serif'
+    ctx.textAlign = 'left'; ctx.font = '11px ui-sans-serif, system-ui, sans-serif'
     ctx.fillStyle = COL.arc; ctx.fillText('● arc = distance (path)', 10, h - 24)
     ctx.fillStyle = COL.disp; ctx.fillText('→ arrow = displacement (from start)', 10, h - 10)
   }
