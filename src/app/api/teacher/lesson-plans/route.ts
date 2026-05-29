@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import unit1Cpa from '@/data/unit1-cpa-lesson-plans.json'
+import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the teacher's selected
 // class type (curriculum track). Plans are versioned curriculum data in the
@@ -12,7 +13,10 @@ interface DayPlan { day: number; title: string; bodyHtml: string }
 
 // track → unit_id → day plans
 const PLANS: Record<string, Record<string, DayPlan[]>> = {
-  cpa: { 'unit-1': unit1Cpa as DayPlan[] },
+  cpa: {
+    'unit-1': unit1Cpa as DayPlan[],
+    'unit-8': unit8Cpa as DayPlan[],
+  },
 }
 
 export const GET = withAuth(async (request, ctx) => {
@@ -39,5 +43,17 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
     days.sort((a, b) => a.day - b.day)
-    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days })
+
+    // Union the unit IDs that have authored plans across the teacher's tracks,
+    // so the UI can render a unit picker without a second round trip.
+    const unitSet = new Set<string>()
+    for (const t of tracks) {
+      for (const u of Object.keys(PLANS[t] ?? {})) unitSet.add(u)
+    }
+    const availableUnits = [...unitSet].sort((a, b) => {
+      const na = Number(a.replace(/^unit-/, '')); const nb = Number(b.replace(/^unit-/, ''))
+      return (Number.isFinite(na) && Number.isFinite(nb)) ? na - nb : a.localeCompare(b)
+    })
+
+    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days, availableUnits })
 })

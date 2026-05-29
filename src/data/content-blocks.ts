@@ -184,11 +184,16 @@ export interface FigureBlock extends BaseBlock {
   align?: 'center' | 'full';   // center = capped width; full = fill the column (default center)
 }
 
-export type DiagramKind = 'free_body' | 'vectors' | 'motion_map';
+export type DiagramKind = 'free_body' | 'vectors' | 'motion_map' | 'circuit' | 'energy_chain' | 'friction_asymmetry';
 /** A direction is a compass word or an angle in degrees (CCW from +x). */
 export type DiagramDir = 'up' | 'down' | 'left' | 'right' | number;
 export interface DiagramForce { label: string; dir: DiagramDir; mag: number; color?: string }
 export interface DiagramVector { label: string; angle: number; mag: number; color?: string }
+/** A single component placed around the rectangular series loop (kind === 'circuit').
+ *  side picks which edge of the loop the component sits on; label appears next to it. */
+export interface CircuitComponent { kind: 'battery' | 'switch' | 'motor' | 'resistor' | 'bulb'; side: 'top' | 'right' | 'bottom' | 'left'; label?: string }
+/** A single link in a left-to-right energy chain (kind === 'energy_chain'). */
+export interface EnergyChainLink { label: string; sublabel?: string; color?: string }
 
 /** A code-drawn SVG physics figure (no image file). The renderer draws it on-brand.
  *  Authors may provide structured fields (when seeded) OR a JSON `spec` string
@@ -204,6 +209,11 @@ export interface DiagramBlock extends BaseBlock {
   vectors?: DiagramVector[];   // kind === 'vectors'
   showResultant?: boolean;     // kind === 'vectors'
   dots?: number[];             // kind === 'motion_map' — relative gaps between strobe dots
+  components?: CircuitComponent[]; // kind === 'circuit' — components on the rectangular loop
+  links?: EnergyChainLink[];   // kind === 'energy_chain' — left-to-right labeled stages
+  leftMag?: number;            // kind === 'friction_asymmetry' — friction magnitude at left wheel pair
+  rightMag?: number;           // kind === 'friction_asymmetry' — friction magnitude at right wheel pair
+  veerDir?: 'left' | 'right';  // kind === 'friction_asymmetry' — direction of resulting veer
 }
 
 export interface GraphSeries { label: string; color?: string; points: [number, number][] }

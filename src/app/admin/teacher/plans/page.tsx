@@ -6,26 +6,41 @@ import { ArrowLeft, CalendarRange, BookOpen } from 'lucide-react'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
+const UNIT_LABEL: Record<string, string> = {
+  'unit-1': 'Unit 1 · Motion & Forces',
+  'unit-2': 'Unit 2 · Momentum',
+  'unit-3': 'Unit 3 · Energy',
+  'unit-4': 'Unit 4 · Heat',
+  'unit-5': 'Unit 5 · Electricity',
+  'unit-6': 'Unit 6 · Waves & Sound',
+  'unit-7': 'Unit 7 · Light',
+  'unit-8': 'Unit 8 · Car Project',
+}
 
 export default function TeacherPlansPage() {
   const [days, setDays] = useState<DayPlan[]>([])
   const [track, setTrack] = useState<string>('cpa')
+  const [unit, setUnit] = useState<string>('unit-1')
+  const [availableUnits, setAvailableUnits] = useState<string[]>(['unit-1'])
   const [sel, setSel] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch('/api/teacher/lesson-plans?unit_id=unit-1')
+    setLoading(true)
+    fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}`)
       .then((r) => r.json())
-      .then((d: { days?: DayPlan[]; track?: string }) => {
+      .then((d: { days?: DayPlan[]; track?: string; availableUnits?: string[] }) => {
         setDays(d.days ?? [])
         if (d.track) setTrack(d.track)
-        if ((d.days ?? []).length) setSel(d.days![0].day)
+        if (d.availableUnits?.length) setAvailableUnits(d.availableUnits)
+        setSel((d.days ?? []).length ? d.days![0].day : null)
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [])
+  }, [unit])
 
   const current = days.find((d) => d.day === sel) ?? null
+  const unitTitle = (UNIT_LABEL[unit] ?? unit).replace(/^Unit \d+ · /, '')
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -37,10 +52,32 @@ export default function TeacherPlansPage() {
         <CalendarRange size={16} style={{ color: 'var(--primary)' }} />
         <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Lesson plans · {TRACK_LABEL[track] ?? track}</span>
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight">Unit 1 — day by day</h1>
-      <p className="text-sm mt-1 mb-5" style={{ color: 'var(--muted-foreground)' }}>
-        Your teacher lesson plans for each day of Unit 1. Reference only — pick a day to see its full plan.
+      <h1 className="text-2xl font-semibold tracking-tight">{unit.replace('unit-', 'Unit ')} — day by day</h1>
+      <p className="text-sm mt-1 mb-4" style={{ color: 'var(--muted-foreground)' }}>
+        Your teacher lesson plans for each day of {unitTitle}. Reference only — pick a day to see its full plan.
       </p>
+
+      {availableUnits.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 mb-5">
+          {availableUnits.map((u) => {
+            const active = u === unit
+            return (
+              <button
+                key={u}
+                onClick={() => setUnit(u)}
+                className="rounded-full px-3 py-1 text-xs font-semibold"
+                style={{
+                  border: '1px solid ' + (active ? 'color-mix(in oklch, var(--primary) 50%, var(--border))' : 'var(--border)'),
+                  background: active ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)',
+                  color: active ? 'var(--primary)' : 'var(--foreground)', cursor: 'pointer',
+                }}
+              >
+                {UNIT_LABEL[u] ?? u}
+              </button>
+            )
+          })}
+        </div>
+      )}
 
       {loading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading plans…</p>}
       {!loading && days.length === 0 && (

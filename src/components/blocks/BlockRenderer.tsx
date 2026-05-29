@@ -3,7 +3,7 @@
 import { useState, useEffect, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries } from '@/data/content-blocks'
+import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
@@ -357,6 +357,11 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       const vectors = (b.vectors ?? (s.vectors as DiagramVector[] | undefined)) ?? []
       const dots = (b.dots ?? (s.dots as number[] | undefined)) ?? []
       const showResultant = b.showResultant ?? (s.showResultant as boolean | undefined)
+      const components = (b.components ?? (s.components as CircuitComponent[] | undefined)) ?? []
+      const links = (b.links ?? (s.links as EnergyChainLink[] | undefined)) ?? []
+      const leftMag = b.leftMag ?? (s.leftMag as number | undefined)
+      const rightMag = b.rightMag ?? (s.rightMag as number | undefined)
+      const veerDir = b.veerDir ?? (s.veerDir as 'left' | 'right' | undefined)
       return (
         <PhysicsDiagram
           kind={b.kind}
@@ -366,6 +371,11 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
           vectors={vectors}
           dots={dots}
           showResultant={showResultant}
+          components={components}
+          links={links}
+          leftMag={leftMag}
+          rightMag={rightMag}
+          veerDir={veerDir}
         />
       )
     }

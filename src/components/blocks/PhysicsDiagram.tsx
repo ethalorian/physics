@@ -1,13 +1,17 @@
 "use client"
 
-import type { DiagramForce, DiagramVector, DiagramKind } from '@/data/content-blocks'
+import type { DiagramForce, DiagramVector, DiagramKind, CircuitComponent, EnergyChainLink } from '@/data/content-blocks'
 
 // ---------------------------------------------------------------------------
 // PhysicsDiagram — code-drawn SVG physics figures (no image files). On-brand
 // (lavender / sage / gold), crisp at any size, grayscale-safe for print.
-// Three kinds: free-body (box + labeled force arrows), vectors (arrows from an
-// origin with an optional resultant), motion map (a strobe row of dots whose
-// spacing shows speeding up / slowing down).
+// Kinds:
+//   free_body          — box + labeled force arrows
+//   vectors            — arrows from an origin with an optional resultant
+//   motion_map         — strobe row of dots whose spacing shows speeding up
+//   circuit            — rectangular series loop with battery/switch/motor/etc.
+//   energy_chain       — left-to-right labeled energy stages with arrows
+//   friction_asymmetry — top-down car with unequal wheel-friction arrows + veer
 // ---------------------------------------------------------------------------
 
 const PALETTE = ['var(--primary)', 'var(--success)', 'oklch(0.62 0.16 25)', 'oklch(0.58 0.10 255)', 'var(--reward)']
@@ -115,8 +119,166 @@ function MotionMap({ dots }: { dots: number[] }) {
   )
 }
 
+// --- Circuit (kind === 'circuit') -----------------------------------------
+// A rectangular series loop. Components placed by edge (top/right/bottom/left).
+// Drawn as outlined symbols with labels; current-direction arrows hint the loop.
+function CircuitGlyph({ kind: ck, x, y }: { kind: CircuitComponent['kind']; x: number; y: number }) {
+  const stroke = INK, sw = 2
+  if (ck === 'battery') {
+    // long-short plates
+    return (
+      <g>
+        <line x1={x - 12} y1={y - 14} x2={x - 12} y2={y + 14} stroke={stroke} strokeWidth={sw + 1} />
+        <line x1={x - 4} y1={y - 8} x2={x - 4} y2={y + 8} stroke={stroke} strokeWidth={sw + 1} />
+        <line x1={x + 4} y1={y - 14} x2={x + 4} y2={y + 14} stroke={stroke} strokeWidth={sw + 1} />
+        <line x1={x + 12} y1={y - 8} x2={x + 12} y2={y + 8} stroke={stroke} strokeWidth={sw + 1} />
+      </g>
+    )
+  }
+  if (ck === 'switch') {
+    return (
+      <g>
+        <circle cx={x - 12} cy={y} r={3.5} fill="var(--card)" stroke={stroke} strokeWidth={sw} />
+        <circle cx={x + 12} cy={y} r={3.5} fill="var(--card)" stroke={stroke} strokeWidth={sw} />
+        <line x1={x - 9} y1={y} x2={x + 10} y2={y - 12} stroke={stroke} strokeWidth={sw} strokeLinecap="round" />
+      </g>
+    )
+  }
+  if (ck === 'motor') {
+    return (
+      <g>
+        <circle cx={x} cy={y} r={14} fill="color-mix(in oklch, var(--primary) 14%, var(--card))" stroke="var(--primary)" strokeWidth={sw} />
+        <text x={x} y={y + 4} fill="var(--primary)" fontSize={13} fontWeight={700} textAnchor="middle">M</text>
+      </g>
+    )
+  }
+  if (ck === 'bulb') {
+    return (
+      <g>
+        <circle cx={x} cy={y} r={12} fill="color-mix(in oklch, var(--reward) 18%, var(--card))" stroke="var(--reward)" strokeWidth={sw} />
+        <line x1={x - 7} y1={y - 7} x2={x + 7} y2={y + 7} stroke="var(--reward)" strokeWidth={sw} />
+        <line x1={x - 7} y1={y + 7} x2={x + 7} y2={y - 7} stroke="var(--reward)" strokeWidth={sw} />
+      </g>
+    )
+  }
+  // resistor — zigzag
+  const z = [-18, -12, -6, 0, 6, 12, 18].map((dx, i) => [x + dx, y + (i % 2 === 0 ? -7 : 7)] as [number, number])
+  return <polyline points={z.map(([px, py]) => `${px},${py}`).join(' ')} fill="none" stroke={stroke} strokeWidth={sw + 0.5} />
+}
+
+function Circuit({ components }: { components: CircuitComponent[] }) {
+  // loop coords
+  const x1 = 60, y1 = 60, x2 = 340, y2 = 220
+  // for each side, evenly distribute components and place a glyph + label
+  const bySide: Record<CircuitComponent['side'], CircuitComponent[]> = { top: [], right: [], bottom: [], left: [] }
+  components.forEach((c) => bySide[c.side].push(c))
+  const positions: { x: number; y: number; c: CircuitComponent }[] = []
+  const ph = (xs: number, xe: number, y: number, list: CircuitComponent[]) =>
+    list.forEach((c, i) => { const t = (i + 1) / (list.length + 1); positions.push({ x: xs + t * (xe - xs), y, c }) })
+  const pv = (ys: number, ye: number, x: number, list: CircuitComponent[]) =>
+    list.forEach((c, i) => { const t = (i + 1) / (list.length + 1); positions.push({ x, y: ys + t * (ye - ys), c }) })
+  ph(x1, x2, y1, bySide.top); pv(y1, y2, x2, bySide.right); ph(x1, x2, y2, bySide.bottom); pv(y1, y2, x1, bySide.left)
+  return (
+    <>
+      {/* the loop */}
+      <rect x={x1} y={y1} width={x2 - x1} height={y2 - y1} fill="none" stroke={INK} strokeWidth={2.5} />
+      {/* current direction hints — small arrowheads, clockwise */}
+      <Arrow x0={x1 + 100} y0={y1} x1={x1 + 110} y1={y1} color={MUTE} width={1.5} />
+      <Arrow x0={x2} y0={y1 + 70} x1={x2} y1={y1 + 80} color={MUTE} width={1.5} />
+      <Arrow x0={x2 - 100} y0={y2} x1={x2 - 110} y1={y2} color={MUTE} width={1.5} />
+      <Arrow x0={x1} y0={y2 - 70} x1={x1} y1={y2 - 80} color={MUTE} width={1.5} />
+      {/* component glyphs */}
+      {positions.map(({ x, y, c }, i) => (
+        <g key={i}>
+          {/* erase the wire under the glyph for cleanness */}
+          <rect x={x - 22} y={y - 18} width={44} height={36} fill="var(--card)" />
+          <CircuitGlyph kind={c.kind} x={x} y={y} />
+          {c.label && (
+            <text x={x} y={c.side === 'top' ? y - 26 : c.side === 'bottom' ? y + 32 : y + 30}
+              fill={INK} fontSize={11.5} fontWeight={600} textAnchor="middle">{c.label}</text>
+          )}
+        </g>
+      ))}
+    </>
+  )
+}
+
+// --- Energy chain (kind === 'energy_chain') -------------------------------
+// Left-to-right labeled boxes joined by arrows.
+function EnergyChain({ links }: { links: EnergyChainLink[] }) {
+  if (links.length === 0) return null
+  const x0 = 30, y = 120, total = 340
+  const gap = 18
+  const boxW = Math.max(54, (total - gap * (links.length - 1)) / links.length)
+  const boxH = 84
+  return (
+    <>
+      {links.map((l, i) => {
+        const x = x0 + i * (boxW + gap)
+        const fill = l.color ?? PALETTE[i % PALETTE.length]
+        return (
+          <g key={i}>
+            <rect x={x} y={y - boxH / 2} width={boxW} height={boxH} rx={10}
+              fill={`color-mix(in oklch, ${fill} 14%, var(--card))`} stroke={fill} strokeWidth={2} />
+            <text x={x + boxW / 2} y={y - 4} fill={INK} fontSize={12} fontWeight={700} textAnchor="middle">{l.label}</text>
+            {l.sublabel && (
+              <text x={x + boxW / 2} y={y + 14} fill={MUTE} fontSize={10.5} textAnchor="middle">{l.sublabel}</text>
+            )}
+            {i < links.length - 1 && (
+              <Arrow x0={x + boxW + 2} y0={y} x1={x + boxW + gap - 2} y1={y} color={INK} width={2} />
+            )}
+          </g>
+        )
+      })}
+    </>
+  )
+}
+
+// --- Friction asymmetry (kind === 'friction_asymmetry') -------------------
+// Top-down car silhouette with two backward-pointing friction arrows of
+// unequal length at left and right wheel pairs, plus a curved torque hint.
+function FrictionAsymmetry({ leftMag = 1, rightMag = 1, veerDir = 'right' }: { leftMag?: number; rightMag?: number; veerDir?: 'left' | 'right' }) {
+  const cx = 200, cy = 125
+  // car body (top-down silhouette)
+  const bw = 86, bh = 150
+  const maxMag = Math.max(1, Math.abs(leftMag), Math.abs(rightMag))
+  const maxLen = 55
+  const lLen = 24 + (Math.abs(leftMag) / maxMag) * maxLen
+  const rLen = 24 + (Math.abs(rightMag) / maxMag) * maxLen
+  const lx = cx - bw / 2 - 2, rx = cx + bw / 2 + 2
+  const aStart = cy + bh / 2 - 20
+  return (
+    <>
+      {/* car body (rounded rect, nose at top) */}
+      <rect x={cx - bw / 2} y={cy - bh / 2} width={bw} height={bh} rx={14}
+        fill="color-mix(in oklch, var(--primary) 10%, var(--card))" stroke="var(--primary)" strokeWidth={2} />
+      {/* nose hint */}
+      <polygon points={`${cx - 12},${cy - bh / 2 + 4} ${cx + 12},${cy - bh / 2 + 4} ${cx},${cy - bh / 2 - 8}`}
+        fill="var(--primary)" opacity={0.6} />
+      {/* wheels */}
+      <rect x={lx - 10} y={cy - bh / 2 + 12} width={10} height={24} rx={3} fill={INK} />
+      <rect x={lx - 10} y={cy + bh / 2 - 36} width={10} height={24} rx={3} fill={INK} />
+      <rect x={rx} y={cy - bh / 2 + 12} width={10} height={24} rx={3} fill={INK} />
+      <rect x={rx} y={cy + bh / 2 - 36} width={10} height={24} rx={3} fill={INK} />
+      {/* friction arrows — backward (downward) from each rear wheel; labels placed BESIDE the arrow to avoid vertical overflow */}
+      <Arrow x0={lx - 5} y0={aStart} x1={lx - 5} y1={aStart + lLen} color="oklch(0.62 0.16 25)" width={3} />
+      <text x={lx - 22} y={aStart + lLen / 2 + 4} fill="oklch(0.62 0.16 25)" fontSize={11.5} fontWeight={700} textAnchor="middle">f_L</text>
+      <Arrow x0={rx + 5} y0={aStart} x1={rx + 5} y1={aStart + rLen} color="oklch(0.62 0.16 25)" width={3} />
+      <text x={rx + 22} y={aStart + rLen / 2 + 4} fill="oklch(0.62 0.16 25)" fontSize={11.5} fontWeight={700} textAnchor="middle">f_R</text>
+      {/* curved arrow hinting torque about vertical axis */}
+      <g>
+        <path d={veerDir === 'right'
+          ? `M ${cx - 22} ${cy} A 22 22 0 0 1 ${cx + 22} ${cy}`
+          : `M ${cx + 22} ${cy} A 22 22 0 0 0 ${cx - 22} ${cy}`}
+          fill="none" stroke="var(--reward)" strokeWidth={2.5} strokeDasharray="5 4" />
+        <text x={cx} y={cy + 4} fill="var(--reward)" fontSize={11} fontWeight={700} textAnchor="middle">τ</text>
+      </g>
+    </>
+  )
+}
+
 export default function PhysicsDiagram({
-  kind, title, caption, forces, vectors, showResultant, dots,
+  kind, title, caption, forces, vectors, showResultant, dots, components, links, leftMag, rightMag, veerDir,
 }: {
   kind: DiagramKind
   title?: string
@@ -125,6 +287,11 @@ export default function PhysicsDiagram({
   vectors?: DiagramVector[]
   showResultant?: boolean
   dots?: number[]
+  components?: CircuitComponent[]
+  links?: EnergyChainLink[]
+  leftMag?: number
+  rightMag?: number
+  veerDir?: 'left' | 'right'
 }) {
   return (
     <figure style={{ margin: 0 }}>
@@ -135,6 +302,9 @@ export default function PhysicsDiagram({
           {kind === 'free_body' && <FreeBody forces={forces ?? []} />}
           {kind === 'vectors' && <Vectors vectors={vectors ?? []} showResultant={showResultant} />}
           {kind === 'motion_map' && <MotionMap dots={dots ?? []} />}
+          {kind === 'circuit' && <Circuit components={components ?? []} />}
+          {kind === 'energy_chain' && <EnergyChain links={links ?? []} />}
+          {kind === 'friction_asymmetry' && <FrictionAsymmetry leftMag={leftMag} rightMag={rightMag} veerDir={veerDir} />}
         </svg>
       </div>
       {caption && <figcaption style={{ fontSize: 12.5, color: MUTE, marginTop: 6 }}>{caption}</figcaption>}

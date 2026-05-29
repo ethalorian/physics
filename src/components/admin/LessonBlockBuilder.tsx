@@ -57,7 +57,7 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'align', label: 'Size', kind: 'select', options: ['center', 'full'] },
   ] },
   { type: 'diagram', label: 'Physics diagram', group: 'Teach', fields: [
-    { key: 'kind', label: 'Diagram type', kind: 'select', options: ['free_body', 'vectors', 'motion_map'] },
+    { key: 'kind', label: 'Diagram type', kind: 'select', options: ['free_body', 'vectors', 'motion_map', 'circuit', 'energy_chain', 'friction_asymmetry'] },
     { key: 'genPrompt', label: 'Describe it in plain English', kind: 'visualgen', placeholder: 'e.g. A box sitting still on a table: gravity pulling down and the table pushing up, equal size.' },
     { key: 'title', label: 'Title (optional override)', kind: 'text' },
     { key: 'caption', label: 'Caption (optional override)', kind: 'text' },
@@ -419,8 +419,11 @@ function VisualGenField({
   const forces = Array.isArray(data.forces) ? (data.forces as Parameters<typeof PhysicsDiagram>[0]['forces']) : undefined
   const vectors = Array.isArray(data.vectors) ? (data.vectors as Parameters<typeof PhysicsDiagram>[0]['vectors']) : undefined
   const dots = Array.isArray(data.dots) ? (data.dots as number[]) : undefined
+  const components = Array.isArray(data.components) ? (data.components as Parameters<typeof PhysicsDiagram>[0]['components']) : undefined
+  const links = Array.isArray(data.links) ? (data.links as Parameters<typeof PhysicsDiagram>[0]['links']) : undefined
+  const hasFrictionMags = typeof data.leftMag === 'number' && typeof data.rightMag === 'number'
   const series = Array.isArray(data.series) ? (data.series as Parameters<typeof FigureGraph>[0]['series']) : undefined
-  const hasDiagram = !!(forces?.length || vectors?.length || dots?.length)
+  const hasDiagram = !!(forces?.length || vectors?.length || dots?.length || components?.length || links?.length || hasFrictionMags)
   const hasGraph = !!series?.length
 
   return (
@@ -450,13 +453,18 @@ function VisualGenField({
           <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Preview</div>
           {target === 'diagram' && hasDiagram && (
             <PhysicsDiagram
-              kind={(data.kind as 'free_body' | 'vectors' | 'motion_map') ?? 'free_body'}
+              kind={(data.kind as 'free_body' | 'vectors' | 'motion_map' | 'circuit' | 'energy_chain' | 'friction_asymmetry') ?? 'free_body'}
               title={typeof data.title === 'string' ? data.title : undefined}
               caption={typeof data.caption === 'string' ? data.caption : undefined}
               forces={forces}
               vectors={vectors}
               dots={dots}
               showResultant={data.showResultant === true}
+              components={Array.isArray(data.components) ? (data.components as Parameters<typeof PhysicsDiagram>[0]['components']) : undefined}
+              links={Array.isArray(data.links) ? (data.links as Parameters<typeof PhysicsDiagram>[0]['links']) : undefined}
+              leftMag={typeof data.leftMag === 'number' ? data.leftMag : undefined}
+              rightMag={typeof data.rightMag === 'number' ? data.rightMag : undefined}
+              veerDir={data.veerDir === 'left' || data.veerDir === 'right' ? data.veerDir : undefined}
             />
           )}
           {target === 'graph' && hasGraph && (

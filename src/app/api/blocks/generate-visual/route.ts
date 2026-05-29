@@ -4,7 +4,8 @@ import { withRole } from '@/lib/api-auth'
 // POST /api/blocks/generate-visual
 // Turn a teacher's PLAIN-ENGLISH description into the structured data for a
 // visual lesson block — so authors never hand-write JSON. Two targets:
-//   - diagram: free-body / vectors / motion-map  (drawn as on-brand SVG)
+//   - diagram: free-body / vectors / motion-map / circuit / energy-chain /
+//              friction-asymmetry  (all drawn as on-brand SVG)
 //   - graph:   one or more line series the student reads (recharts)
 // Uses Claude (Anthropic Messages API) via fetch — no SDK. Requires ANTHROPIC_API_KEY.
 
@@ -28,6 +29,23 @@ vectors — arrows drawn from a common origin, with an optional resultant:
 motion_map — a strobe row of dots whose spacing shows speeding up / slowing down:
 { "title": "...", "caption": "...", "dots": [1, 1.4, 1.9, 2.5] }
 - "dots" are RELATIVE gaps between successive strobe flashes. Increasing = speeding up, decreasing = slowing down, equal = constant speed. Use 4-6 values.
+
+circuit — a rectangular series loop with components placed on its edges:
+{ "title": "...", "caption": "...", "components": [ { "kind": "battery", "side": "top", "label": "9V battery" }, { "kind": "switch", "side": "right", "label": "switch" }, { "kind": "motor", "side": "bottom", "label": "DC motor" } ] }
+- Each component's "kind" is one of: "battery" | "switch" | "motor" | "resistor" | "bulb".
+- "side" places it on one edge of the loop: "top" | "right" | "bottom" | "left". Distribute components around the loop; multiple on the same side are spaced evenly.
+- "label" is the short tag the student reads (1–3 words). Include 2–5 components total.
+
+energy_chain — a left-to-right sequence of labeled energy stages joined by arrows:
+{ "title": "...", "caption": "...", "links": [ { "label": "Chemical", "sublabel": "9V battery" }, { "label": "Electrical", "sublabel": "wires + switch" }, { "label": "Mechanical (rotational)", "sublabel": "motor + gears" }, { "label": "Mechanical (translational)", "sublabel": "car motion" } ] }
+- Each link's "label" is the energy form (1–4 words). "sublabel" is the device or process that converts to it (optional, short).
+- Use 3–5 links. Order them in the actual flow direction (input → output).
+
+friction_asymmetry — a top-down car silhouette with unequal backward friction arrows at the rear wheel pairs and a curved torque indicator:
+{ "title": "...", "caption": "...", "leftMag": 1.0, "rightMag": 1.6, "veerDir": "right" }
+- "leftMag" and "rightMag" are RELATIVE positive numbers for friction at the left/right wheel pairs.
+- "veerDir" is "left" or "right" — which side the car rotates toward (it veers toward the side with MORE friction).
+- If the description doesn't make one side obviously bigger, default leftMag 1.0 / rightMag 1.5.
 
 Keep titles under ~6 words and captions one sentence. Ground everything in the description; do not invent unrelated forces or motion.`
 
@@ -53,7 +71,7 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
     const prompt = (body.prompt ?? '').trim()
     if (!prompt) return NextResponse.json({ error: 'Describe the visual first.' }, { status: 400 })
 
-    const diagramKind = ['free_body', 'vectors', 'motion_map'].includes(body.diagramKind ?? '')
+    const diagramKind = ['free_body', 'vectors', 'motion_map', 'circuit', 'energy_chain', 'friction_asymmetry'].includes(body.diagramKind ?? '')
       ? (body.diagramKind as string) : 'free_body'
 
     const system = target === 'graph' ? GRAPH_SYSTEM : DIAGRAM_SYSTEM
@@ -120,7 +138,7 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
       const dots = (Array.isArray(parsed.dots) ? parsed.dots : [])
         .map((d) => clampNum(d, 0.1, 20, 1)).slice(0, 8)
       if (dots.length < 2) return NextResponse.json({ error: 'Could not build a motion map. Describe whether it speeds up, slows down, or stays steady.' }, { status: 422 })
-      return NextResponse.json({ block: { kind: 'motion_map', title, caption, dots, forces: undefined, vectors: undefined, showResultant: undefined, spec: undefined } })
+      return NextResponse.json({ block: { kind: 'motion_map', title, caption, dots, forces: undefined, vectors: undefined, showResultant: undefined, components: undefined, links: undefined, leftMag: undefined, rightMag: undefined, veerDir: undefined, spec: undefined } })
     }
     if (diagramKind === 'vectors') {
       const vectors = (Array.isArray(parsed.vectors) ? parsed.vectors : []).slice(0, 6).map((v) => {
@@ -128,7 +146,39 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
         return { label: typeof o.label === 'string' ? o.label.slice(0, 24) : 'v', angle: clampNum(o.angle, -360, 360, 0), mag: clampNum(o.mag, 1, 1000, 50) }
       })
       if (vectors.length === 0) return NextResponse.json({ error: 'Could not build vectors from that. Try naming each vector, its direction, and size.' }, { status: 422 })
-      return NextResponse.json({ block: { kind: 'vectors', title, caption, vectors, showResultant: parsed.showResultant === true, forces: undefined, dots: undefined, spec: undefined } })
+      return NextResponse.json({ block: { kind: 'vectors', title, caption, vectors, showResultant: parsed.showResultant === true, forces: undefined, dots: undefined, components: undefined, links: undefined, leftMag: undefined, rightMag: undefined, veerDir: undefined, spec: undefined } })
+    }
+    if (diagramKind === 'circuit') {
+      const validComponentKinds = new Set(['battery', 'switch', 'motor', 'resistor', 'bulb'])
+      const validSides = new Set(['top', 'right', 'bottom', 'left'])
+      const components = (Array.isArray(parsed.components) ? parsed.components : []).slice(0, 8).map((c) => {
+        const o = (c ?? {}) as Record<string, unknown>
+        const ck = typeof o.kind === 'string' && validComponentKinds.has(o.kind) ? (o.kind as string) : null
+        const side = typeof o.side === 'string' && validSides.has(o.side) ? (o.side as string) : 'top'
+        if (!ck) return null
+        return { kind: ck, side, label: typeof o.label === 'string' ? o.label.slice(0, 24) : undefined }
+      }).filter((c): c is NonNullable<typeof c> => c !== null)
+      if (components.length === 0) return NextResponse.json({ error: 'Could not build a circuit. Name the components (battery, switch, motor, resistor, bulb) and which edge each sits on.' }, { status: 422 })
+      return NextResponse.json({ block: { kind: 'circuit', title, caption, components, forces: undefined, vectors: undefined, dots: undefined, showResultant: undefined, links: undefined, leftMag: undefined, rightMag: undefined, veerDir: undefined, spec: undefined } })
+    }
+    if (diagramKind === 'energy_chain') {
+      const links = (Array.isArray(parsed.links) ? parsed.links : []).slice(0, 6).map((l) => {
+        const o = (l ?? {}) as Record<string, unknown>
+        const label = typeof o.label === 'string' ? o.label.slice(0, 32) : ''
+        if (!label) return null
+        return { label, sublabel: typeof o.sublabel === 'string' ? o.sublabel.slice(0, 32) : undefined }
+      }).filter((l): l is NonNullable<typeof l> => l !== null)
+      if (links.length < 2) return NextResponse.json({ error: 'Could not build an energy chain. Describe the energy stages in order (e.g. chemical → electrical → mechanical).' }, { status: 422 })
+      return NextResponse.json({ block: { kind: 'energy_chain', title, caption, links, forces: undefined, vectors: undefined, dots: undefined, showResultant: undefined, components: undefined, leftMag: undefined, rightMag: undefined, veerDir: undefined, spec: undefined } })
+    }
+    if (diagramKind === 'friction_asymmetry') {
+      const leftMag = clampNum(parsed.leftMag, 0.1, 10, 1.0)
+      const rightMag = clampNum(parsed.rightMag, 0.1, 10, 1.5)
+      const veerRaw = typeof parsed.veerDir === 'string' ? parsed.veerDir : ''
+      const veerDir: 'left' | 'right' = veerRaw === 'left' || veerRaw === 'right'
+        ? veerRaw
+        : (rightMag > leftMag ? 'right' : 'left')
+      return NextResponse.json({ block: { kind: 'friction_asymmetry', title, caption, leftMag, rightMag, veerDir, forces: undefined, vectors: undefined, dots: undefined, showResultant: undefined, components: undefined, links: undefined, spec: undefined } })
     }
     // free_body (default)
     const forces = (Array.isArray(parsed.forces) ? parsed.forces : []).slice(0, 8).map((f) => {
@@ -139,5 +189,5 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
       return { label: typeof o.label === 'string' ? o.label.slice(0, 24) : 'Force', dir, mag: clampNum(o.mag, 1, 1000, 50) }
     })
     if (forces.length === 0) return NextResponse.json({ error: 'Could not build a free-body diagram. Try naming each force and its direction.' }, { status: 422 })
-    return NextResponse.json({ block: { kind: 'free_body', title, caption, forces, vectors: undefined, dots: undefined, showResultant: undefined, spec: undefined } })
+    return NextResponse.json({ block: { kind: 'free_body', title, caption, forces, vectors: undefined, dots: undefined, showResultant: undefined, components: undefined, links: undefined, leftMag: undefined, rightMag: undefined, veerDir: undefined, spec: undefined } })
 })
