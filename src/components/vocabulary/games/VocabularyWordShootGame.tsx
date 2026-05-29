@@ -79,17 +79,38 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     const w = gameAreaRef.current?.clientWidth ?? 900
     const maxX = Math.max(0, w - BUBBLE)
     const maxY = Math.max(0, ARENA_H - BUBBLE)
+    // Place bubbles so they don't start overlapping: try random spots and keep
+    // the first that clears every already-placed bubble; if the arena is too
+    // tight, fall back to the most-separated candidate (the collision pass below
+    // nudges any residual overlap apart on the first frames).
+    const minSep = BUBBLE * 0.96 // desired center-to-center spacing at spawn
+    const placedPts: { x: number; y: number }[] = []
+    const randPos = () => ({ x: 10 + Math.random() * maxX, y: 10 + Math.random() * Math.max(0, maxY - 20) })
+    const pickPos = () => {
+      let best = randPos()
+      let bestMin = -1
+      for (let attempt = 0; attempt < 40; attempt++) {
+        const cand = randPos()
+        if (placedPts.length === 0) { best = cand; break }
+        const minD = Math.min(...placedPts.map((p) => Math.hypot(cand.x - p.x, cand.y - p.y)))
+        if (minD >= minSep) { best = cand; break }
+        if (minD > bestMin) { bestMin = minD; best = cand }
+      }
+      placedPts.push(best)
+      return best
+    }
     const placed: Bubble[] = pool.map((term, i) => {
-      // spread starting points across the arena, then send each off in a random
-      // direction at the difficulty's speed — moving targets to shoot.
+      // spread starting points across the arena (non-overlapping), then send each
+      // off in a random direction at the difficulty's speed — moving targets.
       const ang = Math.random() * Math.PI * 2
       const sp = cfg.speed * (0.8 + Math.random() * 0.4)
+      const pos = pickPos()
       return {
         id: `${term.id}-${index}-${i}`,
         term,
         isCorrect: term.id === correct.id,
-        x: 10 + Math.random() * maxX,
-        y: 10 + Math.random() * Math.max(0, maxY - 20),
+        x: pos.x,
+        y: pos.y,
         vx: Math.cos(ang) * sp,
         vy: Math.sin(ang) * sp,
       }
@@ -178,6 +199,40 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
         if (y <= 0) { y = 0; vy = Math.abs(vy) } else if (y >= maxY) { y = maxY; vy = -Math.abs(vy) }
         return { ...b, x, y, vx, vy }
       })
+
+      // bubble–bubble collisions: bubbles are equal-size circles (diameter BUBBLE),
+      // so two overlap when their centers are closer than BUBBLE. Centers differ from
+      // the top-left x/y by the same +R on both axes, so the top-left delta IS the
+      // center delta. On overlap, split the penetration to separate them, then swap
+      // the velocity component along the collision normal (equal-mass elastic bounce).
+      const minDist = BUBBLE
+      for (let i = 0; i < next.length; i++) {
+        for (let j = i + 1; j < next.length; j++) {
+          const a = next[i], c = next[j]
+          let dx = c.x - a.x, dy = c.y - a.y
+          let dist = Math.hypot(dx, dy)
+          if (dist === 0) { dx = 1; dy = 0; dist = 0.0001 } // perfectly stacked → pick an axis
+          if (dist < minDist) {
+            const nx = dx / dist, ny = dy / dist
+            const half = (minDist - dist) / 2
+            a.x -= nx * half; a.y -= ny * half
+            c.x += nx * half; c.y += ny * half
+            const v1n = a.vx * nx + a.vy * ny
+            const v2n = c.vx * nx + c.vy * ny
+            if (v1n - v2n > 0) { // only resolve if they're closing, not already parting
+              const diff = v1n - v2n
+              a.vx -= diff * nx; a.vy -= diff * ny
+              c.vx += diff * nx; c.vy += diff * ny
+            }
+          }
+        }
+      }
+      // re-clamp inside the arena after separation pushes
+      for (const b of next) {
+        if (b.x < 0) { b.x = 0; b.vx = Math.abs(b.vx) } else if (b.x > maxX) { b.x = maxX; b.vx = -Math.abs(b.vx) }
+        if (b.y < 0) { b.y = 0; b.vy = Math.abs(b.vy) } else if (b.y > maxY) { b.y = maxY; b.vy = -Math.abs(b.vy) }
+      }
+
       bubblesRef.current = next
       setBubbles(next)
       raf = requestAnimationFrame(tick)
