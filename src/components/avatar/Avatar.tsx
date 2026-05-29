@@ -119,7 +119,11 @@ function Head({ skin, face }: { skin: SkinTone; face: FaceShape }) {
   const c = SKIN[skin].color
   if (face === 'round') return <ellipse cx="0" cy="0" rx="46" ry="48" fill={c} />
   if (face === 'egg') return <ellipse cx="0" cy="2" rx="42" ry="50" fill={c} />
-  if (face === 'square') return <ellipse cx="0" cy="0" rx="48" ry="46" fill={c} />
+  // square — flatter cheeks + a defined jaw so it reads distinctly from 'round'.
+  // Rounded-rectangle silhouette within the ±48 / ±46 extents (ears anchor at ±48).
+  // square — flatter cheeks + a defined jaw so it reads distinctly from 'round'.
+  // Rounded-rectangle silhouette within the ±48 / ±46 extents (ears anchor at ±48).
+  if (face === 'square') return <path d="M -48,-28 Q -48,-46 -28,-46 L 28,-46 Q 48,-46 48,-28 L 48,28 Q 48,46 26,46 L -26,46 Q -48,46 -48,28 Z" fill={c} />
   // heart — broader forehead, narrower chin via a path
   return <path d="M -42,-8 Q -48,-58 0,-58 Q 48,-58 42,-8 Q 36,38 0,46 Q -36,38 -42,-8 Z" fill={c} />
 }
@@ -307,6 +311,9 @@ function Eyes({ shape }: { shape: EyeShape }) {
       <g>
         <ellipse cx="-15" cy="-4" rx="3" ry="3.6" fill="#1F1812" />
         <ellipse cx="15" cy="-4" rx="3" ry="3.6" fill="#1F1812" />
+        {/* catch-lights — keep the plain dots consistent with big/wide eyes */}
+        <circle cx="-13.7" cy="-5.4" r="0.9" fill="#FFFFFF" />
+        <circle cx="16.3" cy="-5.4" r="0.9" fill="#FFFFFF" />
       </g>
     )
   }

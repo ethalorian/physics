@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
-import { TRAIT_LABELS, TRAIT_OPTIONS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
+import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
+import { SKIN, HAIR } from '@/lib/avatar/palette'
 import type { CatalogState } from '@/app/api/avatar/route'
 
 type CatalogEntry = AvatarItem & { state: CatalogState; unlock_progress?: number }
@@ -167,15 +168,32 @@ export default function AvatarPage() {
                 useCustomAvatar={bundle.use_custom_avatar}
                 onSaved={load}
               />
-              {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => (
-                <TraitCarousel
-                  key={key}
-                  label={TRAIT_LABELS[key]}
-                  options={TRAIT_OPTIONS[key]}
-                  value={(previewTraits[key] as string) ?? TRAIT_OPTIONS[key][0]}
-                  onChange={(v) => saveTrait(key, v)}
-                />
-              ))}
+              {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => {
+                const value = (previewTraits[key] as string) ?? TRAIT_OPTIONS[key][0]
+                // Colour traits get a visible swatch row — picking "olive" vs
+                // "teal" by reading the word is a poor experience.
+                if (key === 'skin' || key === 'hair_color') {
+                  return (
+                    <SwatchRow
+                      key={key}
+                      label={TRAIT_LABELS[key]}
+                      options={TRAIT_OPTIONS[key]}
+                      value={value}
+                      colorFor={(opt) => (key === 'skin' ? SKIN[opt as keyof typeof SKIN].color : HAIR[opt as keyof typeof HAIR].main)}
+                      onChange={(v) => saveTrait(key, v)}
+                    />
+                  )
+                }
+                return (
+                  <TraitCarousel
+                    key={key}
+                    label={TRAIT_LABELS[key]}
+                    options={TRAIT_OPTIONS[key]}
+                    value={value}
+                    onChange={(v) => saveTrait(key, v)}
+                  />
+                )
+              })}
             </div>
           )}
 
@@ -348,6 +366,44 @@ function TraitCarousel({ label, options, value, onChange }: { label: string; opt
   )
 }
 
+function SwatchRow({ label, options, value, colorFor, onChange }: { label: string; options: string[]; value: string; colorFor: (opt: string) => string; onChange: (v: string) => void }) {
+  // Colour picker: a row of tappable swatches. The selected swatch gets a ring
+  // and a check; the name of the current colour is shown for accessibility.
+  return (
+    <div className="rounded-xl border px-3 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
+        <div className="text-[11px] capitalize" style={{ color: 'var(--muted-foreground)' }}>{value}</div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {options.map((opt) => {
+          const selected = opt === value
+          return (
+            <button
+              key={opt}
+              onClick={() => onChange(opt)}
+              aria-label={`${label}: ${opt}`}
+              aria-pressed={selected}
+              title={opt}
+              className="grid place-items-center rounded-full transition-transform"
+              style={{
+                width: 28,
+                height: 28,
+                background: colorFor(opt),
+                cursor: 'pointer',
+                border: '2px solid ' + (selected ? 'var(--primary)' : 'var(--border)'),
+                boxShadow: selected ? '0 0 0 2px var(--card), 0 0 0 4px var(--primary)' : 'none',
+              }}
+            >
+              {selected && <Check size={13} style={{ color: '#FFFFFF', filter: 'drop-shadow(0 0 1px rgba(0,0,0,0.6))' }} />}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function TabButton({ active, onClick, disabled, children }: { active: boolean; onClick: () => void; disabled?: boolean; children: React.ReactNode }) {
   return (
     <button
@@ -377,13 +433,20 @@ function ItemCard({ item, equipped, busy, onEquip, onBuy }: { item: CatalogEntry
   }
   const badge = stateBadge[item.state]
 
-  // Render the item as a tiny preview by stuffing it through a placeholder Avatar
-  // would be overkill — just show the SVG layer alone inside a small viewBox.
+  // Preview the item the way the student will actually see it: on a default Mii
+  // wearing just this item. Items are authored in face/body coordinates (pins at
+  // y≈92, coats at y=78–112, backgrounds full-canvas), so rendering the raw
+  // svg_layer alone in a small centered box hid most of them. 'medium' crop keeps
+  // both the head (hats/glasses/facial hair) and the shoulders (coats/pins) in frame.
   return (
     <div className="rounded-xl border p-2 flex flex-col items-center" style={{ borderColor: equipped ? 'var(--primary)' : 'var(--border)', background: 'var(--card)' }}>
-      <svg width="84" height="84" viewBox="-50 -50 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <g dangerouslySetInnerHTML={{ __html: item.svg_layer }} />
-      </svg>
+      <Avatar
+        traits={DEFAULT_TRAITS}
+        equipped={{ [item.slot]: item.slug }}
+        items={[item]}
+        size={84}
+        crop="medium"
+      />
       <div className="text-xs font-semibold mt-1 text-center">{item.name}</div>
       <div className="text-[10px] mt-0.5" style={{ color: badge.color }}>{badge.label}</div>
       <div className="mt-2 w-full">
