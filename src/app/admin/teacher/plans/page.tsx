@@ -2,18 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarRange, BookOpen } from 'lucide-react'
+import { ArrowLeft, CalendarRange, BookOpen, Download } from 'lucide-react'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
 const UNIT_LABEL: Record<string, string> = {
   'unit-1': 'Unit 1 · Motion & Forces',
-  'unit-2': 'Unit 2 · Momentum',
-  'unit-3': 'Unit 3 · Energy',
-  'unit-4': 'Unit 4 · Heat',
-  'unit-5': 'Unit 5 · Electricity',
-  'unit-6': 'Unit 6 · Waves & Sound',
-  'unit-7': 'Unit 7 · Light',
+  'unit-2': 'Unit 2 · Gravitation & Fields',
+  'unit-3': 'Unit 3 · Momentum & Collisions',
+  'unit-4': 'Unit 4 · Energy & Work',
+  'unit-5': 'Unit 5 · Thermal Physics & Second Law',
+  'unit-6': 'Unit 6 · Waves, Sound & Light',
+  'unit-7': 'Unit 7 · Electricity & Magnetism',
   'unit-8': 'Unit 8 · Car Project',
 }
 
@@ -112,9 +112,22 @@ export default function TeacherPlansPage() {
           <div className="rounded-2xl border p-5 min-w-0" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
             {current ? (
               <>
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen size={16} style={{ color: 'var(--primary)' }} />
-                  <h2 className="text-lg font-semibold tracking-tight">{current.title}</h2>
+                <div className="flex items-start gap-2 mb-3">
+                  <BookOpen size={16} style={{ color: 'var(--primary)', marginTop: 3 }} />
+                  <h2 className="text-lg font-semibold tracking-tight flex-1 min-w-0">{current.title}</h2>
+                  <a
+                    href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx`}
+                    download
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
+                    style={{
+                      border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
+                      background: 'color-mix(in oklch, var(--primary) 10%, var(--card))',
+                      color: 'var(--primary)',
+                    }}
+                    title="Download this day as a Word document"
+                  >
+                    <Download size={13} /> Word
+                  </a>
                 </div>
                 <div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
               </>
