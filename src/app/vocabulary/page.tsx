@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { useVocabulary } from '@/contexts/VocabularyContext'
 import { getUserRole } from '@/lib/permissions'
-import { Gamepad2, Flame, Star, Trophy, Zap, Shuffle, Brain, ArrowRight, Target, Crown } from 'lucide-react'
+import { Gamepad2, Flame, Star, Trophy, Zap, Shuffle, Brain, ArrowRight, Target, Crown, ShoppingBasket } from 'lucide-react'
 import EnrollmentGate from '@/components/EnrollmentGate'
 
 interface HubData {
@@ -23,6 +23,7 @@ const GAMES = [
   { id: 'quiz-bowl', title: 'Quiz bowl', desc: 'Rapid-fire physics questions', icon: Trophy, difficulty: 'Hard', href: '/vocabulary/quiz-bowl' },
   { id: 'matching', title: 'Matching', desc: 'Pair terms with definitions, fast', icon: Shuffle, difficulty: 'Medium', href: '/vocabulary/matching' },
   { id: 'concentration', title: 'Concentration', desc: 'Flip and remember the pairs', icon: Brain, difficulty: 'Easy', href: '/vocabulary/concentration' },
+  { id: 'letter-catch', title: 'Letter Catch', desc: 'Catch falling letters to spell the term', icon: ShoppingBasket, difficulty: 'Medium', href: '/vocabulary/letter-catch' },
 ]
 const DIFF_COLOR: Record<string, string> = { Easy: 'var(--success)', Medium: 'var(--reward)', Hard: '#C08B8B' }
 

@@ -58,13 +58,19 @@ export default function AccountMenu() {
     }
   }
 
+  // Nudge students to build their Mii — a soft glow on the bubble until done.
+  const needsSetup = !!me && !me.setup_completed && realRole === 'student'
+
   return (
     <>
+      {needsSetup && (
+        <style>{`@keyframes avatarNudge{0%,100%{box-shadow:0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent)}50%{box-shadow:0 0 0 4px color-mix(in oklch, var(--primary) 22%, transparent),0 0 14px 2px color-mix(in oklch, var(--primary) 45%, transparent)}}.avatar-nudge-glow{animation:avatarNudge 2.2s ease-in-out infinite;border-radius:9999px}@media (prefers-reduced-motion:reduce){.avatar-nudge-glow{animation:none}}`}</style>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background"
+            className={`relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background${needsSetup ? ' avatar-nudge-glow' : ''}`}
           >
             {me?.use_custom_avatar && me?.setup_completed ? (
               // Custom Mii — head-only crop so the face fills the bubble.

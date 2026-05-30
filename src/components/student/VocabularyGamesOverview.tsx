@@ -15,7 +15,8 @@ export default function VocabularyGamesOverview() {
     { id: 'crossword', name: 'Crossword', icon: '📝', difficulty: 'Hard', description: 'Fill physics crossword puzzles' },
     { id: 'word-shoot', name: 'Word Shoot', icon: '🎮', difficulty: 'Medium', description: 'Fast-paced vocabulary shooting' },
     { id: 'quiz-bowl', name: 'Quiz Bowl', icon: '🏆', difficulty: 'Hard', description: 'Rapid-fire physics questions' },
-    { id: 'concentration', name: 'Concentration', icon: '🧠', difficulty: 'Easy', description: 'Memory matching game' }
+    { id: 'concentration', name: 'Concentration', icon: '🧠', difficulty: 'Easy', description: 'Memory matching game' },
+    { id: 'letter-catch', name: 'Letter Catch', icon: '🧺', difficulty: 'Medium', description: 'Catch falling letters to spell terms' }
   ]
 
   if (loading) {

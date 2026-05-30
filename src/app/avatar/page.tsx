@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles } from 'lucide-react'
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles, Heart, Star } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
 import { SKIN, HAIR } from '@/lib/avatar/palette'
@@ -23,15 +23,24 @@ interface Bundle {
   use_custom_avatar: boolean
 }
 
-type Tab = 'face' | 'items'
+type Tab = 'face' | 'items' | 'gallery'
 
 const SLOT_LABEL: Record<ItemSlot, string> = {
   eyewear: 'Eyewear', head: 'Head & helmets', body: 'Body & coats', pin: 'Pins', background: 'Backgrounds', facial_hair: 'Facial hair',
 }
 
+// The guided builder walks these traits one at a time, in this order.
+const WIZARD_ORDER = Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]
+
+interface GalleryAvatar {
+  user_id: string; name: string; traits: Record<string, string>; equipped: Record<string, string>
+  likes: number; liked_by_me: boolean; is_me: boolean
+}
+
 export default function AvatarPage() {
   const [bundle, setBundle] = useState<Bundle | null>(null)
   const [tab, setTab] = useState<Tab>('face')
+  const [mode, setMode] = useState<'wizard' | 'quick'>('quick')
   const [busy, setBusy] = useState<string | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
 
@@ -54,6 +63,7 @@ export default function AvatarPage() {
   useEffect(() => {
     if (bundle && !initialTabSet) {
       setTab(bundle.setup_completed ? 'items' : 'face')
+      setMode(bundle.setup_completed ? 'quick' : 'wizard')
       setInitialTabSet(true)
     }
   }, [bundle, initialTabSet])
@@ -150,28 +160,38 @@ export default function AvatarPage() {
 
         {/* Right: tabs */}
         <div>
-          {!bundle.setup_completed && (
+          {!bundle.setup_completed && mode === 'wizard' && (
             <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>
-              <strong>Build your face first.</strong> Pick any option below — your preview updates as you go.
+              <strong>Let&apos;s build your Mii.</strong> Pick one feature at a time — tap a face to try it on, then hit Next.
             </div>
           )}
 
           <div className="flex items-center gap-2 mb-4">
-            <TabButton active={tab === 'face'} onClick={() => setTab('face')}>Edit my face</TabButton>
+            <TabButton active={tab === 'face'} onClick={() => setTab('face')}>{bundle.setup_completed ? 'Edit my face' : 'Build my Mii'}</TabButton>
             <TabButton active={tab === 'items'} onClick={() => setTab('items')} disabled={!bundle.setup_completed}>Items</TabButton>
+            <TabButton active={tab === 'gallery'} onClick={() => setTab('gallery')}>Gallery</TabButton>
           </div>
 
-          {tab === 'face' && (
+          {tab === 'face' && mode === 'wizard' && (
+            <WizardPanel
+              previewTraits={previewTraits}
+              equipped={bundle.equipped}
+              catalog={bundle.catalog}
+              onChoose={saveTrait}
+              onFinish={() => { setMode('quick'); setTab('items'); setFlash('Your Mii is ready — nice work!'); setTimeout(() => setFlash(null), 2600) }}
+            />
+          )}
+
+          {tab === 'face' && mode === 'quick' && (
             <div className="flex flex-col gap-3">
-              <AccountSection
-                alias={bundle.alias}
-                useCustomAvatar={bundle.use_custom_avatar}
-                onSaved={load}
-              />
+              <div className="flex justify-end">
+                <button onClick={() => setMode('wizard')} className="inline-flex items-center gap-1.5 text-xs rounded-lg px-3 py-1.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--primary)', cursor: 'pointer' }}>
+                  <Sparkles size={13} /> Guided builder
+                </button>
+              </div>
+              <AccountSection alias={bundle.alias} useCustomAvatar={bundle.use_custom_avatar} onSaved={load} />
               {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => {
                 const value = (previewTraits[key] as string) ?? TRAIT_OPTIONS[key][0]
-                // Colour traits get a visible swatch row — picking "olive" vs
-                // "teal" by reading the word is a poor experience.
                 if (key === 'skin' || key === 'hair_color') {
                   return (
                     <SwatchRow
@@ -196,6 +216,8 @@ export default function AvatarPage() {
               })}
             </div>
           )}
+
+          {tab === 'gallery' && <GalleryPanel />}
 
           {tab === 'items' && (
             <div className="flex flex-col gap-5">
@@ -227,6 +249,128 @@ export default function AvatarPage() {
           )}
         </div>
       </div>
+    </div>
+  )
+}
+
+// Guided one-trait-at-a-time builder. Each option is a LIVE mini-Mii showing
+// the change, so students "try it on" before committing, then advance.
+function WizardPanel({ previewTraits, equipped, catalog, onChoose, onFinish }: {
+  previewTraits: Partial<AvatarTraits>
+  equipped: EquippedItems
+  catalog: CatalogEntry[]
+  onChoose: (key: keyof AvatarTraits, value: string) => void
+  onFinish: () => void
+}) {
+  const [step, setStep] = useState(0)
+  const key = WIZARD_ORDER[step]
+  const options = TRAIT_OPTIONS[key]
+  const current = (previewTraits[key] as string) ?? options[0]
+  const isLast = step === WIZARD_ORDER.length - 1
+  return (
+    <div>
+      {/* progress rail */}
+      <div className="flex items-center gap-1 mb-3">
+        {WIZARD_ORDER.map((k, i) => (
+          <span key={k} style={{ height: 6, flex: 1, borderRadius: 3, background: i <= step ? 'var(--primary)' : 'var(--secondary)', transition: 'background 0.2s' }} />
+        ))}
+      </div>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Step {step + 1} of {WIZARD_ORDER.length}</span>
+        <span className="text-sm font-semibold">{TRAIT_LABELS[key]}</span>
+      </div>
+      <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>Tap a face to try it on.</p>
+
+      <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(84px, 1fr))' }}>
+        {options.map((o) => {
+          const selected = current === o
+          const tileTraits = { ...previewTraits, [key]: o }
+          return (
+            <button key={o} onClick={() => onChoose(key, o)} aria-pressed={selected}
+              className="rounded-xl border p-1.5 flex flex-col items-center transition-transform hover:-translate-y-0.5"
+              style={{ borderColor: selected ? 'var(--primary)' : 'var(--border)', background: selected ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', cursor: 'pointer' }}>
+              <div className="relative">
+                <Avatar traits={tileTraits} equipped={equipped} items={catalog} size={70} crop="head" />
+                {selected && <span className="absolute -top-1 -right-1 grid place-items-center rounded-full" style={{ width: 18, height: 18, background: 'var(--primary)', color: 'var(--primary-foreground)' }}><Check size={11} /></span>}
+              </div>
+              <span className="text-[11px] mt-1 capitalize" style={{ color: selected ? 'var(--primary)' : 'var(--foreground)' }}>{o.replace('_', ' ')}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="flex items-center justify-between mt-4">
+        <button onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}
+          className="inline-flex items-center gap-1 text-sm rounded-lg px-3 py-2 disabled:opacity-40"
+          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: step === 0 ? 'not-allowed' : 'pointer' }}>
+          <ChevronLeft size={15} /> Back
+        </button>
+        {isLast ? (
+          <button onClick={onFinish} className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-4 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', cursor: 'pointer' }}>
+            <Sparkles size={15} /> Finish my Mii
+          </button>
+        ) : (
+          <button onClick={() => setStep((s) => s + 1)} className="inline-flex items-center gap-1 text-sm font-semibold rounded-lg px-4 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', cursor: 'pointer' }}>
+            Next <ChevronRight size={15} />
+          </button>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Whole-school avatar wall: featured (most-liked) row + everyone, with likes.
+function GalleryPanel() {
+  const [data, setData] = useState<{ items: AvatarItem[]; avatars: GalleryAvatar[]; featured: GalleryAvatar[] } | null>(null)
+  const [busy, setBusy] = useState<string | null>(null)
+  useEffect(() => {
+    fetch('/api/avatar/gallery').then((r) => r.json()).then(setData).catch(() => setData({ items: [], avatars: [], featured: [] }))
+  }, [])
+  const like = async (a: GalleryAvatar) => {
+    setBusy(a.user_id)
+    const res = await fetch('/api/avatar/like', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target_user_id: a.user_id }) }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    setBusy(null)
+    if (res) {
+      const patch = (x: GalleryAvatar) => (x.user_id === a.user_id ? { ...x, likes: res.count, liked_by_me: res.liked } : x)
+      setData((d) => (d ? { ...d, avatars: d.avatars.map(patch), featured: d.featured.map(patch) } : d))
+    }
+  }
+  if (!data) return <div className="text-sm py-6 text-center" style={{ color: 'var(--muted-foreground)' }}>Loading the gallery…</div>
+  if (data.avatars.length === 0) return (
+    <div className="rounded-2xl border p-8 text-center text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>
+      No avatars yet — turn on “Show my Mii” and be the first on the wall.
+    </div>
+  )
+  return (
+    <div className="flex flex-col gap-5">
+      {data.featured.length > 0 && (
+        <div>
+          <div className="text-xs font-semibold uppercase tracking-widest mb-2 inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Star size={13} /> Featured</div>
+          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
+            {data.featured.map((a) => <AvatarCard key={a.user_id} a={a} items={data.items} onLike={() => like(a)} busy={busy === a.user_id} />)}
+          </div>
+        </div>
+      )}
+      <div>
+        <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Everyone</div>
+        <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))' }}>
+          {data.avatars.map((a) => <AvatarCard key={a.user_id} a={a} items={data.items} onLike={() => like(a)} busy={busy === a.user_id} />)}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function AvatarCard({ a, items, onLike, busy }: { a: GalleryAvatar; items: AvatarItem[]; onLike: () => void; busy: boolean }) {
+  return (
+    <div className="rounded-xl border p-2 flex flex-col items-center" style={{ borderColor: a.is_me ? 'var(--primary)' : 'var(--border)', background: 'var(--card)' }}>
+      <Avatar traits={a.traits} equipped={a.equipped} items={items} size={104} crop="medium" />
+      <div className="text-xs font-semibold mt-1 text-center w-full truncate">{a.name}{a.is_me ? ' (you)' : ''}</div>
+      <button onClick={onLike} disabled={a.is_me || busy}
+        className="mt-1 inline-flex items-center gap-1 text-xs rounded-full px-2.5 py-1"
+        style={{ border: '1px solid var(--border)', background: a.liked_by_me ? 'color-mix(in oklch, var(--destructive) 14%, var(--card))' : 'var(--card)', color: a.liked_by_me ? 'var(--destructive)' : 'var(--muted-foreground)', cursor: a.is_me ? 'default' : 'pointer', opacity: a.is_me ? 0.55 : 1 }}>
+        <Heart size={12} style={{ fill: a.liked_by_me ? 'currentColor' : 'none' }} /> {a.likes}
+      </button>
     </div>
   )
 }

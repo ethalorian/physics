@@ -59,6 +59,13 @@ const STYLES = `
   @keyframes hubSpin { to { transform: rotate(360deg) } }
   @keyframes hubPulse { 0%,100% { box-shadow: 0 0 0 5px color-mix(in oklch, var(--reward) 28%, transparent), 0 0 16px var(--reward) }
     50% { box-shadow: 0 0 0 9px color-mix(in oklch, var(--reward) 16%, transparent), 0 0 28px var(--reward) } }
+  @keyframes onbGlow {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent); transform: scale(1); }
+    50% { box-shadow: 0 0 18px 2px color-mix(in oklch, var(--primary) 50%, transparent); transform: scale(1.015); }
+  }
+  .onb-glow { animation: onbGlow 2.4s ease-in-out infinite; will-change: box-shadow, transform; }
+  .onb-glow:hover { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .onb-glow { animation: none; } }
 `
 
 function Glass({ children, style, className }: { children: ReactNode; style?: CSSProperties; className?: string }) {
@@ -163,7 +170,9 @@ export default function HomePage() {
       .then((r) => (r.ok ? r.json() : null))
       .then((d: { setup_completed?: boolean; alias?: string | null } | null) => {
         if (!d) { setNeedsProfileSetup(false); return }
-        setNeedsProfileSetup(!d.setup_completed || !d.alias)
+        // Disappears once the avatar is built (the alias is a soft nudge in the
+        // builder itself, not a blocker for hiding this onboarding glow).
+        setNeedsProfileSetup(!d.setup_completed)
       })
       .catch(() => setNeedsProfileSetup(false))
   }, [])
@@ -190,14 +199,16 @@ export default function HomePage() {
             {needsProfileSetup && (
               <Link
                 href="/avatar"
-                className="inline-flex items-center gap-2 mt-3 rounded-xl px-3 py-2 text-sm font-medium"
+                className="onb-glow inline-flex items-center gap-2 mt-3 rounded-full px-4 py-2 text-sm font-semibold"
                 style={{
-                  background: 'color-mix(in oklch, var(--primary) 14%, transparent)',
+                  background: 'color-mix(in oklch, var(--primary) 16%, var(--card))',
                   color: 'var(--primary)',
-                  border: '1px solid color-mix(in oklch, var(--primary) 40%, var(--border))',
+                  border: '1px solid color-mix(in oklch, var(--primary) 45%, var(--border))',
                 }}
               >
-                Set up your profile &mdash; pick your Mii and a leaderboard name &rarr;
+                <span aria-hidden style={{ fontSize: 15, lineHeight: 1 }}>&#10024;</span>
+                Build your Mii &mdash; make it yours
+                <span aria-hidden style={{ opacity: 0.65 }}>&rarr;</span>
               </Link>
             )}
             <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>

@@ -25,12 +25,15 @@ interface Props {
   className?: string
 }
 
-// Crops sized against the canonical layout. 'head' clips Viking-wing flares
-// past x=±60; 'medium' is wide enough at x=±68 to keep them in frame and
+// Crops sized against the canonical layout. 'head' is a tight square framed on
+// the head's visual center (x=0, y≈-6) so the face fills the chrome bubble and
+// stays centered, with a touch of headroom (top at y=-61) so hats/helmets clear.
+// It still clips wide wing flares past x=±55 — the intended tradeoff for a
+// filled, centered bubble. 'medium' is wide enough at x=±68 to keep wing flares in frame and
 // tall enough at y=-64 to +104 to show the shirt collar and the pin row.
 const VIEWBOXES = {
   full:   { vb: '-72 -82 144 200', aspect: 200 / 144 },
-  head:   { vb: '-60 -64 120 120', aspect: 1 },
+  head:   { vb: '-55 -61 110 110', aspect: 1 },
   medium: { vb: '-68 -64 136 168', aspect: 168 / 136 },
 } as const
 

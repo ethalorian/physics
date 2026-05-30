@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import unit1Cpa from '@/data/unit1-cpa-lesson-plans.json'
+import unit2Cpa from '@/data/unit2-cpa-lesson-plans.json'
+import unit3Cpa from '@/data/unit3-cpa-lesson-plans.json'
 import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the teacher's selected
@@ -15,6 +17,8 @@ interface DayPlan { day: number; title: string; bodyHtml: string }
 const PLANS: Record<string, Record<string, DayPlan[]>> = {
   cpa: {
     'unit-1': unit1Cpa as DayPlan[],
+    'unit-2': unit2Cpa as DayPlan[],
+    'unit-3': unit3Cpa as DayPlan[],
     'unit-8': unit8Cpa as DayPlan[],
   },
 }

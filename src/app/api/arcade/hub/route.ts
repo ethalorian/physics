@@ -9,7 +9,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 const XP_PER_LEVEL = 500
 const DAILY_GAMES_GOAL = 3
 const DAILY_POINTS_GOAL = 150
-const ARCADE_GAMES = ['word-shoot', 'quiz-bowl', 'matching', 'concentration']
+const ARCADE_GAMES = ['word-shoot', 'quiz-bowl', 'matching', 'concentration', 'letter-catch']
 
 type ScoreRow = { user_id: string; user_email: string | null; score: number | null; game_type: string | null; completed_at: string }
 
