@@ -8,6 +8,7 @@ import type { NextRequest } from 'next/server'
 
 export const runtime = 'nodejs'
 
+// eslint-disable-next-line no-restricted-syntax -- legacy public redirect to /print, which enforces auth itself; no session data is read here.
 export async function GET(
   request: NextRequest,
   ctx: { params: Promise<{ unit_id: string; day: string }> },
