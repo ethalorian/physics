@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { generateLobbyCode } from '@/lib/lobby/passphrase'
 
 const VALID_MODES = ['random', 'near_peer', 'matched', 'manual']
-const VALID_TASKS = ['short_response', 'drawing', 'question', 'proof']
+const VALID_TASKS = ['short_response', 'drawing', 'question', 'proof', 'jigsaw']
 
 // GET /api/lobby/sessions — sessions created by the signed-in teacher.
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
@@ -28,6 +28,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     group_size = 4,
     target_id = null,
     prompt = null,
+    jigsaw_pieces = null,
   } = body as Record<string, unknown>
 
   if (!course_id || typeof course_id !== 'string') {
@@ -42,6 +43,15 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const size = Number(group_size)
   if (!Number.isInteger(size) || size < 2 || size > 6) {
     return NextResponse.json({ error: 'group_size must be 2–6' }, { status: 400 })
+  }
+
+  // Jigsaw: clean the authored pieces; require at least two.
+  let pieces: string[] | null = null
+  if (Array.isArray(jigsaw_pieces)) {
+    pieces = (jigsaw_pieces as unknown[]).map((p) => String(p).trim()).filter(Boolean)
+  }
+  if (task_type === 'jigsaw' && (!pieces || pieces.length < 2)) {
+    return NextResponse.json({ error: 'Jigsaw needs at least 2 content pieces' }, { status: 400 })
   }
 
   // Mint a code, retrying on the (rare) unique collision.
@@ -59,6 +69,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         group_size: size,
         target_id: target_id || null,
         task_prompt: prompt || null,
+        jigsaw_pieces: task_type === 'jigsaw' ? pieces : null,
         status: 'lobby',
       })
       .select('id, code')

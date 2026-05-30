@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Users, Plus, ArrowRight, KeyRound } from 'lucide-react'
+import { Users, Plus, ArrowRight, KeyRound, Trash2 } from 'lucide-react'
 
 interface Course { id: string; name: string; section?: string | null }
 interface Target { id: string; statement: string; domain: string; unit_id: string }
@@ -22,6 +22,7 @@ const TASKS = [
   { v: 'drawing', label: 'Drawing' },
   { v: 'question', label: 'Question' },
   { v: 'proof', label: 'Proof they talked' },
+  { v: 'jigsaw', label: 'Jigsaw (each student holds a piece)' },
 ]
 
 export default function LobbyAdminPage() {
@@ -35,6 +36,7 @@ export default function LobbyAdminPage() {
   const [mode, setMode] = useState('random')
   const [size, setSize] = useState(4)
   const [prompt, setPrompt] = useState('')
+  const [pieces, setPieces] = useState('')
   const [busy, setBusy] = useState(false)
 
   const loadSessions = () =>
@@ -56,11 +58,22 @@ export default function LobbyAdminPage() {
     setBusy(true)
     const r = await fetch('/api/lobby/sessions', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course_id: courseId, task_type: task, grouping_mode: mode, group_size: size, prompt, target_id: targetId || null }),
+      body: JSON.stringify({
+        course_id: courseId, task_type: task, grouping_mode: mode, group_size: size, prompt,
+        target_id: targetId || null,
+        jigsaw_pieces: task === 'jigsaw' ? pieces.split('\n').map((s) => s.trim()).filter(Boolean) : undefined,
+      }),
     })
     setBusy(false)
     const d = await r.json().catch(() => ({}))
     if (d.session?.id) router.push(`/admin/lobby/${d.session.id}`)
+  }
+
+  const del = async (e: React.MouseEvent, sid: string) => {
+    e.preventDefault(); e.stopPropagation()
+    if (!window.confirm('Delete this lobby session? This permanently removes its groups and any student submissions.')) return
+    await fetch(`/api/lobby/sessions/${sid}`, { method: 'DELETE' }).catch(() => {})
+    loadSessions()
   }
 
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }
@@ -114,13 +127,20 @@ export default function LobbyAdminPage() {
               </select>
             </label>
           )}
+          {task === 'jigsaw' && (
+            <label className="text-sm sm:col-span-2">Jigsaw pieces <span style={{ color: 'var(--muted-foreground)' }}>(one per line — each student is dealt one; the group can&apos;t answer without all of them)</span>
+              <textarea value={pieces} onChange={(e) => setPieces(e.target.value)} rows={5}
+                placeholder={'mass of elevator + rider = 80 kg\nupward acceleration = 2 m/s²\nonly forces are tension (up) and gravity (down)\ng = 9.8 m/s²; solve for the cable tension'}
+                className="w-full rounded-lg border p-2 text-sm mt-1 font-mono" style={field} />
+            </label>
+          )}
           <label className="text-sm sm:col-span-2">Prompt (what students do)
             <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={2}
               placeholder="e.g. Sketch the free-body diagram for the block on the ramp."
               className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
           </label>
         </div>
-        <button onClick={create} disabled={busy || !courseId}
+        <button onClick={create} disabled={busy || !courseId || (task === 'jigsaw' && pieces.split('\n').map((s) => s.trim()).filter(Boolean).length < 2)}
           className="mt-4 text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-50"
           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
           {busy ? 'Creating…' : 'Create lobby'}
@@ -146,7 +166,13 @@ export default function LobbyAdminPage() {
                 {s.grouping_mode} · size {s.group_size} · {s.task_type}
               </span>
             </div>
-            <ArrowRight size={16} style={{ color: 'var(--muted-foreground)' }} />
+            <div className="flex items-center gap-2">
+              <button onClick={(e) => del(e, s.id)} title="Delete session" aria-label="Delete session"
+                className="rounded-md p-1.5" style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--destructive)', cursor: 'pointer' }}>
+                <Trash2 size={15} />
+              </button>
+              <ArrowRight size={16} style={{ color: 'var(--muted-foreground)' }} />
+            </div>
           </Link>
         ))}
       </div>

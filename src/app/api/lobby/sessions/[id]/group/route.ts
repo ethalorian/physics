@@ -12,13 +12,14 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   const { data: session } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, created_by, grouping_mode, group_size, target_id')
+    .select('id, created_by, grouping_mode, group_size, target_id, jigsaw_pieces')
     .eq('id', id)
     .maybeSingle()
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const s = session as {
-    id: string; created_by: string; grouping_mode: string; group_size: number; target_id: string | null
+    id: string; created_by: string; grouping_mode: string; group_size: number; target_id: string | null; jigsaw_pieces: string[] | null
   }
+  const pieceCount = Array.isArray(s.jigsaw_pieces) ? s.jigsaw_pieces.length : 0
   if (ctx.role !== 'admin' && s.created_by !== ctx.userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
@@ -81,10 +82,11 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       .single()
     if (gErr || !gRow) return NextResponse.json({ error: 'Failed to save groups' }, { status: 500 })
     const groupId = (gRow as { id: string }).id
-    for (const m of g.members) {
+    for (let mi = 0; mi < g.members.length; mi++) {
+      const m = g.members[mi]
       await supabaseAdmin
         .from('lobby_members')
-        .update({ group_id: groupId, word: m.word })
+        .update({ group_id: groupId, word: m.word, word_index: pieceCount > 0 ? mi % pieceCount : null })
         .eq('session_id', id)
         .eq('user_id', m.userId)
     }

@@ -2,11 +2,13 @@ import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getAvatarData } from '@/lib/lobby/avatars'
+import { roleForIndex } from '@/lib/lobby/discourse'
 
 type Member = {
   user_id: string
   group_id: string | null
   word: string | null
+  word_index: number | null
   joined_at: string
   phrase_completed_at: string | null
   word_entries: { word: string; at: string }[]
@@ -30,7 +32,7 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
     supabaseAdmin.from('lobby_groups').select('id, label, passphrase').eq('session_id', id).order('label'),
     supabaseAdmin
       .from('lobby_members')
-      .select('user_id, group_id, word, joined_at, phrase_completed_at, word_entries')
+      .select('user_id, group_id, word, word_index, joined_at, phrase_completed_at, word_entries')
       .eq('session_id', id)
       .order('joined_at'),
     supabaseAdmin
@@ -67,10 +69,46 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
     })
   }
 
+  // Role + within-group index per member, derived from join order (no schema).
+  const idxInGroup = new Map<string, number>()
+  const roleByUser = new Map<string, string>()
+  const groupIdxToUser = new Map<string, string>()
+  for (const m of memberRows) {
+    if (!m.group_id) continue
+    const i = idxInGroup.get(m.group_id) ?? 0
+    roleByUser.set(m.user_id, roleForIndex(i).label)
+    groupIdxToUser.set(`${m.group_id}:${i}`, m.user_id)
+    idxInGroup.set(m.group_id, i + 1)
+  }
+
+  // Peer attribution: parse each student's "built on" and tally who got credited.
+  const builtOnByUser = new Map<string, { who_alias: string; note: string }>()
+  const creditCount = new Map<string, number>()
+  for (const m of memberRows) {
+    const resp = artifactByUid.get(m.user_id)?.response as
+      | { built_on?: { who_idx?: number; who_alias?: string; note?: string } }
+      | undefined
+    const bo = resp?.built_on
+    if (!bo) continue
+    builtOnByUser.set(m.user_id, { who_alias: bo.who_alias ?? '', note: bo.note ?? '' })
+    if (m.group_id && typeof bo.who_idx === 'number') {
+      const credited = groupIdxToUser.get(`${m.group_id}:${bo.who_idx}`)
+      if (credited) creditCount.set(credited, (creditCount.get(credited) ?? 0) + 1)
+    }
+  }
+
+  const pieces = Array.isArray((session as { jigsaw_pieces?: unknown }).jigsaw_pieces)
+    ? ((session as { jigsaw_pieces: string[] }).jigsaw_pieces)
+    : null
+
   const enriched = memberRows.map((m) => ({
     ...m,
     name: nameByGid.get(m.user_id) ?? 'Student',
     email: emailByGid.get(m.user_id) ?? null,
+    role: roleByUser.get(m.user_id) ?? null,
+    builtOn: builtOnByUser.get(m.user_id) ?? null,
+    creditedBy: creditCount.get(m.user_id) ?? 0,
+    piece: pieces && typeof m.word_index === 'number' ? (pieces[m.word_index] ?? null) : null,
     traits: avatars.byUser[m.user_id]?.traits ?? {},
     equipped: avatars.byUser[m.user_id]?.equipped ?? {},
     artifact: artifactByUid.get(m.user_id) ?? null,
@@ -111,4 +149,19 @@ export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
     .eq('id', id)
   if (error) return NextResponse.json({ error: 'Failed to update' }, { status: 500 })
   return NextResponse.json({ ok: true, status })
+})
+
+// DELETE /api/lobby/sessions/[id] — remove a session entirely. The FK cascades
+// take its groups, members, and any submitted artifacts (block_responses) with it.
+export const DELETE = withRole(['teacher', 'admin'], async (_request, ctx) => {
+  const { id } = await ctx.params
+  const { data: session } = await supabaseAdmin
+    .from('lobby_sessions').select('created_by').eq('id', id).maybeSingle()
+  if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
+  if (ctx.role !== 'admin' && (session as { created_by: string }).created_by !== ctx.userId) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+  const { error } = await supabaseAdmin.from('lobby_sessions').delete().eq('id', id)
+  if (error) return NextResponse.json({ error: 'Failed to delete' }, { status: 500 })
+  return NextResponse.json({ ok: true })
 })

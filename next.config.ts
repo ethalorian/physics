@@ -4,13 +4,6 @@ const nextConfig: NextConfig = {
   // Environment variables prefixed with NEXT_PUBLIC_ are automatically exposed to the browser
   // No additional configuration needed for NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
-  // Server-only packages that Webpack should NOT try to bundle.
-  // - @sparticuz/chromium ships a Brotli-compressed Chromium binary on disk
-  //   and uses native fs/path access; bundling breaks the executablePath()
-  //   lookup at runtime on Vercel.
-  // - puppeteer-core is its driver and has the same constraints.
-  serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
-
   // ESLint configuration for production builds
   eslint: {
     // Only fail build on ESLint errors, not warnings

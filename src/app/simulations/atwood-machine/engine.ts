@@ -40,11 +40,18 @@ export function createAtwoodMachineEngine(
   let time = 0
   let running = false
 
-  // Geometry (matches bespoke)
+  // Geometry
   const pulleyY = 80
   const pulleyRadius = 30
-  const maxRopeLength = 3 // meters each side
-  const pixelsPerMeter = 80
+  // Each mass rests START_DEPTH metres below the pulley. This MUST exceed the
+  // largest target distance (the targetDistance slider maxes at 2.5 m) so a rising
+  // mass reaches its target before it would reach the pulley. The old layout
+  // started each mass at 1.5 m (half of a 3 m rope) — shorter than the 2.5 m target
+  // — so a rising mass was drawn climbing past the pulley and off the top while the
+  // falling mass ran off the bottom. pixelsPerMeter is now derived per-frame from
+  // the canvas height (see render) so the whole apparatus always fits.
+  const START_DEPTH = 4.0 // metres, pulley → each mass at rest
+  const TARGET_MAX = 2.5 // metres; keep in sync with the targetDistance slider max
 
   // Data logging (every 0.1 s while running)
   let rows: Row[] = []
@@ -105,32 +112,46 @@ export function createAtwoodMachineEngine(
   }
 
   function drawForceVectors(x1: number, y1: number, x2: number, y2: number) {
-    const vectorScale = 8 // pixels per Newton
-
-    // Mass 1 forces
     const weight1 = mass1 * GRAVITY
+    const weight2 = mass2 * GRAVITY
     const tension = mass1 * (GRAVITY - acceleration)
 
-    // Weight (down) → force/coral
+    // Scale every vector off the LARGEST force so the longest arrow is a fixed,
+    // on-canvas length. The old fixed 8 px/N sent a 5 kg weight (~49 N) ~390 px
+    // long, running its arrow and label clean off the canvas.
+    const maxF = Math.max(weight1, weight2, Math.abs(tension), 1)
+    const TARGET = 56 // px for the longest arrow
+    const vectorScale = TARGET / maxF
+    const blockHalf = 25 // drawMass width is 50
+    // Each chip's vertical offset, floored so weight (below) and tension (above)
+    // can never touch even when an arrow is tiny.
+    const off = (f: number) => Math.max((f * vectorScale) / 2, 15)
+
+    // Mass 1 (left block): arrows from its centre; chips placed OUTWARD to the
+    // LEFT so they never pile up at the centre when the masses are level
+    // (position ≈ 0 and the equal-mass equilibrium put both blocks at one height).
     arrow(ctx, x1, y1, x1, y1 + weight1 * vectorScale, { color: PAL.force, width: 3 })
-    chip(ctx, `W₁=${weight1.toFixed(1)}N`, x1 + 44, y1 + weight1 * vectorScale / 2, { color: PAL.force })
-
-    // Tension (up) → velocity/green
     arrow(ctx, x1, y1, x1, y1 - tension * vectorScale, { color: PAL.velocity, width: 3 })
-    chip(ctx, `T=${tension.toFixed(1)}N`, x1 + 40, y1 - tension * vectorScale / 2, { color: PAL.velocity })
+    chip(ctx, `W₁=${weight1.toFixed(1)}N`, x1 - blockHalf - 8, y1 + off(weight1), { color: PAL.force, align: 'right' })
+    chip(ctx, `T=${tension.toFixed(1)}N`, x1 - blockHalf - 8, y1 - off(tension), { color: PAL.velocity, align: 'right' })
 
-    // Mass 2 forces
-    const weight2 = mass2 * GRAVITY
+    // Mass 2 (right block): chips placed OUTWARD to the RIGHT.
     arrow(ctx, x2, y2, x2, y2 + weight2 * vectorScale, { color: PAL.force, width: 3 })
-    chip(ctx, `W₂=${weight2.toFixed(1)}N`, x2 - 44, y2 + weight2 * vectorScale / 2, { color: PAL.force })
-
     arrow(ctx, x2, y2, x2, y2 - tension * vectorScale, { color: PAL.velocity, width: 3 })
-    chip(ctx, `T=${tension.toFixed(1)}N`, x2 - 40, y2 - tension * vectorScale / 2, { color: PAL.velocity })
+    chip(ctx, `W₂=${weight2.toFixed(1)}N`, x2 + blockHalf + 8, y2 + off(weight2), { color: PAL.force, align: 'left' })
+    chip(ctx, `T=${tension.toFixed(1)}N`, x2 + blockHalf + 8, y2 - off(tension), { color: PAL.velocity, align: 'left' })
   }
 
   function render() {
     const { w, h } = dims()
     const pulleyX = pulleyXOf(w)
+
+    // Derive the metre scale so the deepest descent (rest depth + max travel) fits
+    // between the pulley and the on-canvas readouts at the bottom, at any height.
+    const pulleyBottom = pulleyY + pulleyRadius
+    const maxBlockHalf = (50 + 5 * 8) / 2 // tallest block (5 kg) half-height
+    const usable = h - 80 - pulleyBottom - maxBlockHalf // 80 px reserved for bottom labels
+    const pixelsPerMeter = Math.max(24, Math.min(80, usable / (START_DEPTH + TARGET_MAX)))
 
     // Field backdrop (shared lavender-tinted background)
     clearField(ctx, w, h)
@@ -166,8 +187,8 @@ export function createAtwoodMachineEngine(
     ctx.beginPath(); ctx.arc(pulleyX, pulleyY, 6, 0, 2 * Math.PI); ctx.fill()
 
     // Mass positions
-    const mass1Y = pulleyY + pulleyRadius + (maxRopeLength / 2 + position) * pixelsPerMeter
-    const mass2Y = pulleyY + pulleyRadius + (maxRopeLength / 2 - position) * pixelsPerMeter
+    const mass1Y = pulleyBottom + (START_DEPTH + position) * pixelsPerMeter
+    const mass2Y = pulleyBottom + (START_DEPTH - position) * pixelsPerMeter
     const mass1X = pulleyX - pulleyRadius - 10
     const mass2X = pulleyX + pulleyRadius + 10
 
@@ -191,12 +212,15 @@ export function createAtwoodMachineEngine(
 
     // Target distance reference line (accent/gold, dashed) with chip label
     if (targetDistance > 0) {
-      const targetLineY = pulleyY + pulleyRadius + (maxRopeLength / 2 + targetDistance) * pixelsPerMeter
+      const targetLineY = pulleyBottom + (START_DEPTH + targetDistance) * pixelsPerMeter
       ctx.strokeStyle = PAL.accent; ctx.lineWidth = 2
       ctx.setLineDash([10, 5])
       ctx.beginPath(); ctx.moveTo(mass1X - 40, targetLineY); ctx.lineTo(mass1X + 40, targetLineY); ctx.stroke()
       ctx.setLineDash([])
-      chip(ctx, `Target: ${targetDistance}m`, mass1X - 80, targetLineY, { color: PAL.accent })
+      // Anchored to the RIGHT end of the target line so it never collides with the
+      // descending mass's W/T chips (which sit to the LEFT of mass 1) as the mass
+      // approaches the line.
+      chip(ctx, `Target: ${targetDistance}m`, mass1X + 44, targetLineY, { color: PAL.accent, align: 'left' })
     }
 
     // Displacement label (chip behind floating value)
@@ -225,9 +249,11 @@ export function createAtwoodMachineEngine(
       velocity += acceleration * dt
       position += velocity * dt
 
-      // Stop if a mass hits the rope limit
-      if (Math.abs(position) >= maxRopeLength) {
-        position = Math.sign(position) * maxRopeLength
+      // Stop when the rising mass reaches the pulley (it can travel at most its
+      // rest depth upward). This is the real physical limit; the old code clamped
+      // at the FULL rope length, letting the rising mass climb past the pulley.
+      if (Math.abs(position) >= START_DEPTH) {
+        position = Math.sign(position) * START_DEPTH
         velocity = 0
         running = false
       }

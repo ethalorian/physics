@@ -115,11 +115,17 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
     ctx.beginPath(); ctx.moveTo(dropX, lipY); ctx.lineTo(dropX, waterTop); ctx.stroke(); ctx.setLineDash([])
 
     // ---- position traces (spread as it accelerates) ----
+    // Every trace gets a dot, but a time LABEL is drawn only when it clears the
+    // previous label vertically — early traces bunch near the top (h = ½gt² grows
+    // slowly at first), so labelling all of them stacked the chips into an
+    // unreadable, clipped pile.
+    let lastLabelY = -Infinity
     traces.forEach((tr, i) => {
       const yy = toY(tr.h)
       ctx.fillStyle = COL.trace; ctx.beginPath(); ctx.arc(dropX, yy, 3.5, 0, Math.PI * 2); ctx.fill()
-      if (i > 0) {
+      if (i > 0 && yy - lastLabelY >= 18) {
         chip(ctx, `${tr.t.toFixed(2)} s`, dropX + 34, yy, { color: COL.traceLabel, size: 10 })
+        lastLabelY = yy
       }
     })
 

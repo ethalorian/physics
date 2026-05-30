@@ -130,15 +130,16 @@ export default function TeacherPlansPage() {
                       <Download size={13} /> Word
                     </a>
                     <a
-                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/pdf`}
-                      download
+                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/print`}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
                       style={{
                         border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
                         background: 'color-mix(in oklch, var(--primary) 10%, var(--card))',
                         color: 'var(--primary)',
                       }}
-                      title="Download this day as a PDF (may take a few seconds)"
+                      title="Open a print view, then choose 'Save as PDF' in the print dialog"
                     >
                       <FileText size={13} /> PDF
                     </a>

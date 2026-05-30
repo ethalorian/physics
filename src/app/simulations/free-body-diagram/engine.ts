@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawFieldGrid, groundShadow, arrow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, grid as drawFieldGrid, groundShadow, arrow, chip, panel, label } from '@/components/simulations/lab/draw'
 
 // Free body diagram — an input-driven sim. A box sits at the centre; the student
 // builds a free-body diagram on it by adding force arrows (each with a magnitude
@@ -141,16 +141,10 @@ export function createFreeBodyDiagramEngine(
     const start = box
     const end = forceEndpoint(f)
     arrow(ctx, start.x, start.y, end.x, end.y, { color: f.color, width: 3 })
-    if (showLabels) {
-      const midX = (start.x + end.x) / 2
-      const midY = (start.y + end.y) / 2
-      const labelOffset = 20
-      const rad = (f.angle * Math.PI) / 180
-      const labelX = midX + labelOffset * Math.sin(rad)
-      const labelY = midY + labelOffset * Math.cos(rad)
-      // Force-magnitude label wrapped in a chip so it stays legible over arrows.
-      chip(ctx, `${f.name} · ${f.magnitude.toFixed(1)} N`, labelX, labelY, { color: f.color })
-    }
+    // Magnitudes are NOT labelled on the arrows: the student can place two forces
+    // at the same angle, which would stack their inline labels on top of each
+    // other (and Applied/Gravity even share a colour). Every force's name,
+    // magnitude, and angle live in the fixed legend instead — see drawLegend().
     if (f.isDragging || selectedForce === f.id) {
       ctx.fillStyle = f.color
       ctx.beginPath()
@@ -168,10 +162,8 @@ export function createFreeBodyDiagramEngine(
     const start = box
     const end = { x: start.x + nf.x * SCALE, y: start.y - nf.y * SCALE }
     arrow(ctx, start.x, start.y, end.x, end.y, { color: PAL.accent, width: 4, dash: [5, 5] })
-    if (showLabels) {
-      const mag = Math.hypot(nf.x, nf.y)
-      chip(ctx, `Net Force: ${mag.toFixed(1)} N`, end.x + 10, end.y, { color: PAL.accent, align: 'left' })
-    }
+    // Net-force magnitude is reported in the legend (drawLegend) to avoid colliding
+    // with force labels near the resultant tip.
   }
 
   function drawAcceleration() {
@@ -181,9 +173,42 @@ export function createFreeBodyDiagramEngine(
     const start = box
     const end = { x: start.x + a.x * accScale, y: start.y - a.y * accScale }
     arrow(ctx, start.x, start.y, end.x, end.y, { color: PAL.cool, width: 3, dash: [2, 3] })
-    if (showLabels) {
-      const mag = Math.hypot(a.x, a.y)
-      chip(ctx, `a: ${mag.toFixed(2)} m/s²`, end.x + 10, end.y + 20, { color: PAL.cool, align: 'left' })
+    // Acceleration magnitude is reported in the legend (drawLegend).
+  }
+
+  // Fixed legend: every force's name, magnitude, and angle, plus net force and
+  // acceleration. This is the single source of on-canvas numbers, so no two labels
+  // can ever overlap no matter how the student stacks the force arrows. Colour +
+  // angle disambiguate arrows that share a hue (e.g. Applied and Gravity).
+  function drawLegend(w: number) {
+    if (!showLabels) return
+    const shown = forces.filter((f) => f.magnitude > 0)
+    const nf = netForce()
+    const netMag = Math.hypot(nf.x, nf.y)
+    const aMag = netMag / mass
+    const rows = shown.length + 1 + (showAcceleration ? 1 : 0)
+    const lw = 234
+    const lh = 30 + rows * 18 + 6
+    const lx = w - lw - 10
+    const ly = 10
+    panel(ctx, lx, ly, lw, lh, 10, PAL.surface)
+    label(ctx, 'Forces (N)', lx + 12, ly + 19, { color: PAL.ink, weight: 'bold', size: 12 })
+    let ry = ly + 36
+    for (const f of shown) {
+      ctx.fillStyle = f.color
+      ctx.fillRect(lx + 12, ry - 8, 10, 10)
+      label(ctx, `${f.name}  ${f.magnitude.toFixed(1)} N @ ${Math.round(f.angle)}°`, lx + 28, ry + 1, { color: PAL.ink, size: 12 })
+      ry += 18
+    }
+    // Net force + acceleration, set off below the individual forces.
+    ctx.fillStyle = PAL.accent
+    ctx.fillRect(lx + 12, ry - 8, 10, 10)
+    label(ctx, `Net Force  ${netMag.toFixed(1)} N`, lx + 28, ry + 1, { color: PAL.ink, size: 12, weight: 'bold' })
+    ry += 18
+    if (showAcceleration) {
+      ctx.fillStyle = PAL.cool
+      ctx.fillRect(lx + 12, ry - 8, 10, 10)
+      label(ctx, `a = ${aMag.toFixed(2)} m/s²`, lx + 28, ry + 1, { color: PAL.ink, size: 12 })
     }
   }
 
@@ -211,6 +236,7 @@ export function createFreeBodyDiagramEngine(
     if (forces.length > 1) drawNetForce()
     if (showAcceleration) drawAcceleration()
     drawScale(h)
+    drawLegend(w) // opaque, drawn last → always legible over any arrow
   }
 
   // ---- pointer input: drag the object, or drag a force arrowhead --------

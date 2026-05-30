@@ -65,7 +65,10 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     let pvy = speed * Math.sin(a)
     const pts: { x: number; y: number }[] = []
     let px = 0, py = height, pt = 0
-    const dt = 0.02
+    // Match the shell's fixed substep (1/120) so the dashed prediction lands
+    // exactly where the live flight does — with drag on, a coarser dt here made
+    // the predicted arc and the real flight diverge.
+    const dt = 1 / 120
     while (py >= 0 && pt < 30) {
       pts.push({ x: px, y: py })
       pvx += -k * pvx * dt

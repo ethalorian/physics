@@ -205,9 +205,15 @@ export function createSlopeCalculatorEngine(
       ctx.strokeStyle = COL.rise
       ctx.beginPath(); ctx.moveTo(p2s.x, p1s.y); ctx.lineTo(p2s.x, p2s.y); ctx.stroke()
       ctx.setLineDash([])
-      // run (Δx) chip — coral, run (Δy) chip — green, legible over the grid
-      chip(ctx, `Δx = ${deltaX.toFixed(2)}`, (p1s.x + p2s.x) / 2, p1s.y - 12, { color: COL.run })
-      chip(ctx, `Δy = ${deltaY.toFixed(2)}`, p2s.x + 45, (p1s.y + p2s.y) / 2, { color: COL.rise })
+      // Only label each leg when it's long enough to hold a chip — when the points
+      // are dragged close, a tiny triangle can't fit Δx/Δy without them colliding
+      // with each other and with the P1/P2 chips. The dashed legs still show.
+      if (Math.abs(p2s.x - p1s.x) > 48) {
+        chip(ctx, `Δx = ${deltaX.toFixed(2)}`, (p1s.x + p2s.x) / 2, p1s.y - 12, { color: COL.run })
+      }
+      if (Math.abs(p2s.y - p1s.y) > 30) {
+        chip(ctx, `Δy = ${deltaY.toFixed(2)}`, p2s.x + 45, (p1s.y + p2s.y) / 2, { color: COL.rise })
+      }
     }
 
     // line or curve between points
@@ -240,18 +246,22 @@ export function createSlopeCalculatorEngine(
       ctx.beginPath(); ctx.moveTo(p1s.x, p1s.y); ctx.lineTo(p2s.x, p2s.y); ctx.stroke()
     }
 
-    // points + coordinate chips (legible over the grid)
+    // points + coordinate chips (legible over the grid). The two chips are biased
+    // OUTWARD by screen position — the left point's chip extends left, the right
+    // point's extends right — so they never overlap even when the points are
+    // dragged on top of each other.
+    const p1IsLeft = p1s.x <= p2s.x
+    const biasedChip = (text: string, px: number, py: number, toLeft: boolean, color: string) =>
+      chip(ctx, text, px + (toLeft ? -10 : 10), py, { color, align: toLeft ? 'right' : 'left' })
     drawDot(p1s.x, p1s.y, COL.p1)
-    chip(
-      ctx,
+    biasedChip(
       isEquationCurve() ? `t=0s, x=${point1.y.toFixed(1)}m` : `P1 (${point1.x.toFixed(1)}, ${point1.y.toFixed(1)})`,
-      p1s.x, p1s.y - 20, { color: COL.p1 },
+      p1s.x, p1s.y - 20, p1IsLeft, COL.p1,
     )
     drawDot(p2s.x, p2s.y, COL.p2)
-    chip(
-      ctx,
+    biasedChip(
       isEquationCurve() ? `t=${point2.x.toFixed(1)}s, x=${point2.y.toFixed(1)}m` : `P2 (${point2.x.toFixed(1)}, ${point2.y.toFixed(1)})`,
-      p2s.x, p2s.y - 20, { color: COL.p2 },
+      p2s.x, p2s.y - 20, !p1IsLeft, COL.p2,
     )
 
     if (showRiseRun()) {
@@ -284,8 +294,10 @@ export function createSlopeCalculatorEngine(
       ctx.moveTo(toScreenX(p1.x), toScreenY(v))
       ctx.lineTo(toScreenX(p2.x), toScreenY(vEnd))
       ctx.stroke()
-      chip(ctx, `v₀ = ${v.toFixed(3)} m/s`, toScreenX(p1.x) + 50, toScreenY(v) - 12, { color: COL.vel })
-      chip(ctx, `v = ${vEnd.toFixed(3)} m/s`, toScreenX(p2.x) - 50, toScreenY(vEnd) - 12, { color: COL.acc })
+      // Biased OUTWARD (p1 is the left point from ordered()): v₀ extends left, v
+      // extends right, so the two never collide when the points are dragged close.
+      chip(ctx, `v₀ = ${v.toFixed(3)} m/s`, toScreenX(p1.x) - 10, toScreenY(v) - 12, { color: COL.vel, align: 'right' })
+      chip(ctx, `v = ${vEnd.toFixed(3)} m/s`, toScreenX(p2.x) + 10, toScreenY(vEnd) - 12, { color: COL.acc, align: 'left' })
       drawDot(toScreenX(p1.x), toScreenY(v), COL.vel, 6)
       drawDot(toScreenX(p2.x), toScreenY(vEnd), COL.vel, 6)
     }

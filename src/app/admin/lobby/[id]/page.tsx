@@ -2,13 +2,17 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
-import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock } from 'lucide-react'
+import { useParams, useRouter } from 'next/navigation'
+import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface Member {
   user_id: string; name: string; email: string | null; group_id: string | null; word: string | null
+  role: string | null
+  builtOn: { who_alias: string; note: string } | null
+  creditedBy: number
+  piece: string | null
   joined_at: string; phrase_completed_at: string | null
   word_entries: { word: string; at: string }[]
   traits: AvatarTraits; equipped: EquippedItems
@@ -22,6 +26,7 @@ interface SessionRow {
 
 function artifactText(r: unknown): string {
   if (r && typeof r === 'object' && 'text' in r) return String((r as { text: unknown }).text ?? '')
+  if (r && typeof r === 'object' && ('strokes' in r || 'built_on' in r)) return ''
   return r ? JSON.stringify(r) : ''
 }
 
@@ -98,11 +103,19 @@ function GroupTimeline({ group, members, card }: { group: Group; members: Member
 
 export default function LobbyDetailPage() {
   const { id } = useParams<{ id: string }>()
+  const router = useRouter()
   const [session, setSession] = useState<SessionRow | null>(null)
   const [groups, setGroups] = useState<Group[]>([])
   const [members, setMembers] = useState<Member[]>([])
   const [avatarItems, setAvatarItems] = useState<AvatarItem[]>([])
+  const [spotlight, setSpotlight] = useState<Record<string, string>>({})
   const [busy, setBusy] = useState(false)
+
+  const pickReporter = (gid: string, gm: Member[]) => {
+    if (!gm.length) return
+    const pick = gm[Math.floor(Math.random() * gm.length)]
+    setSpotlight((s) => ({ ...s, [gid]: pick.user_id }))
+  }
 
   const load = useCallback(() => {
     fetch(`/api/lobby/sessions/${id}`).then((r) => r.json()).then((d) => {
@@ -122,6 +135,11 @@ export default function LobbyDetailPage() {
   const act = async (fn: () => Promise<unknown>) => { setBusy(true); await fn().catch(() => {}); setBusy(false); load() }
   const formGroups = () => act(() => fetch(`/api/lobby/sessions/${id}/group`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }))
   const setStatus = (status: string) => act(() => fetch(`/api/lobby/sessions/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) }))
+  const del = async () => {
+    if (!window.confirm('Delete this lobby session? This permanently removes its groups and any student submissions.')) return
+    await fetch(`/api/lobby/sessions/${id}`, { method: 'DELETE' }).catch(() => {})
+    router.push('/admin/lobby')
+  }
   const reassign = (user_id: string, to_group_id: string) => {
     if (!to_group_id) return
     return act(() => fetch(`/api/lobby/sessions/${id}/reassign`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id, to_group_id }) }))
@@ -164,6 +182,10 @@ export default function LobbyDetailPage() {
               <button onClick={() => setStatus('closed')} disabled={busy} className="text-sm rounded-lg px-3 py-2 inline-flex items-center gap-1.5" style={btn(session.status === 'closed')}>
                 <Square size={15} /> Close
               </button>
+              <button onClick={del} disabled={busy} className="text-sm rounded-lg px-3 py-2 inline-flex items-center gap-1.5"
+                style={{ background: 'transparent', color: 'var(--destructive)', border: '1px solid var(--border)', cursor: 'pointer' }}>
+                <Trash2 size={15} /> Delete
+              </button>
             </div>
           </div>
 
@@ -205,27 +227,49 @@ export default function LobbyDetailPage() {
                       {g.passphrase.join(' · ')}
                     </span>
                   </div>
+                  <button onClick={() => pickReporter(g.id, gm)} disabled={gm.length === 0}
+                    className="text-[11px] mb-2 rounded px-2 py-0.5 inline-flex items-center gap-1 disabled:opacity-40"
+                    style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer' }}>
+                    <Megaphone size={12} /> Spotlight a reporter
+                  </button>
                   <div className="grid gap-1.5">
                     {gm.map((m) => (
-                      <div key={m.user_id} className="flex items-start justify-between gap-2 text-sm border-t pt-1.5" style={{ borderColor: 'var(--border)' }}>
+                      <div key={m.user_id} className="flex items-start justify-between gap-2 text-sm border-t pt-1.5"
+                        style={{ borderColor: 'var(--border)', background: spotlight[g.id] === m.user_id ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : undefined, borderRadius: spotlight[g.id] === m.user_id ? 6 : undefined }}>
                         <div className="flex items-start gap-2 min-w-0">
                           <div className="shrink-0 rounded-full overflow-hidden mt-0.5" style={{ width: 30, height: 30, background: 'var(--muted)' }}>
                             <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={30} crop="head" />
                           </div>
                           <div className="min-w-0">
-                            <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-1.5 flex-wrap">
                               {m.phrase_completed_at
                                 ? <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />
                                 : <Clock size={14} style={{ color: 'var(--muted-foreground)' }} />}
                               <span>{m.name}</span>
                               <span className="font-mono text-xs px-1.5 rounded" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>{m.word}</span>
+                              {m.role && <span className="text-[10px] px-1.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward)' }}>{m.role}</span>}
+                              {m.group_id && (
+                                <span className="text-[10px] px-1.5 rounded-full" title="How many groupmates built on this student's idea"
+                                  style={{ background: m.creditedBy > 0 ? 'color-mix(in oklch, var(--success) 16%, transparent)' : 'color-mix(in oklch, var(--destructive) 14%, transparent)', color: m.creditedBy > 0 ? 'var(--success)' : 'var(--destructive)' }}>
+                                  credited ×{m.creditedBy}
+                                </span>
+                              )}
+                              {spotlight[g.id] === m.user_id && (
+                                <span className="text-[10px] px-1.5 rounded-full inline-flex items-center gap-0.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                                  <Megaphone size={10} /> on deck
+                                </span>
+                              )}
                             </div>
                             {m.email && <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{m.email}</div>}
+                            {m.piece && <div className="text-[11px] mt-0.5" style={{ color: 'var(--primary)' }}>piece: {m.piece}</div>}
                             {m.artifact && (hasStrokes(m.artifact.response) ? (
                               <div className="mt-1"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
-                            ) : (
+                            ) : artifactText(m.artifact.response) ? (
                               <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>
-                            ))}
+                            ) : null)}
+                            {m.builtOn && (m.builtOn.who_alias || m.builtOn.note) && (
+                              <div className="text-[11px] mt-0.5" style={{ color: 'var(--reward)' }}>↳ built on {m.builtOn.who_alias}: {m.builtOn.note.slice(0, 120)}</div>
+                            )}
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">

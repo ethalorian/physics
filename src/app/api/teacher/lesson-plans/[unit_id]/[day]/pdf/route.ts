@@ -1,78 +1,21 @@
 import { NextResponse } from 'next/server'
-import chromium from '@sparticuz/chromium'
-import puppeteer from 'puppeteer-core'
-import type { Browser } from 'puppeteer-core'
-import { withRole } from '@/lib/api-auth'
-import { buildLessonPlanHtml, findDay, resolveTracks } from '@/lib/lesson-plan-export'
+import type { NextRequest } from 'next/server'
 
-// GET /api/teacher/lesson-plans/[unit_id]/[day]/pdf
-// Server-side PDF generation via headless Chromium. Same authored bodyHtml as
-// the docx + reader; we just render it with print CSS and capture page.pdf().
-// @sparticuz/chromium ships a Vercel-compatible Chromium binary; puppeteer-core
-// drives it. Both are Node-only (not edge).
+// LEGACY ENDPOINT. PDF export no longer runs headless Chromium server-side.
+// This route now permanently redirects to the print view, which the teacher's
+// browser turns into a PDF via its native "Save as PDF" dialog. Kept only so
+// any old links/bookmarks to /pdf still resolve. Auth is enforced by /print.
 
 export const runtime = 'nodejs'
-// Cold starts of headless Chromium can take 5–10s. Give the route headroom.
-export const maxDuration = 60
 
-export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher'], async (request, ctx) => {
-    const { unit_id: unitId, day: dayStr } = await ctx.params
-    const day = Number(dayStr)
-    if (!unitId || !Number.isFinite(day)) {
-      return NextResponse.json({ error: 'Bad request' }, { status: 400 })
-    }
-
-    const tracks = await resolveTracks({ role: ctx.role, scopeEmail: ctx.scopeEmail })
-    const plan = findDay(unitId, day, tracks)
-    if (!plan) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
-
-    const html = buildLessonPlanHtml(unitId, plan, { forPdf: true })
-
-    let browser: Browser | null = null
-    try {
-      browser = await puppeteer.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-        defaultViewport: chromium.defaultViewport,
-      })
-      const page = await browser.newPage()
-      // Set the HTML directly — no network resources, so we don't wait for
-      // load/networkidle (it'd just time out). `domcontentloaded` is enough.
-      await page.setContent(html, { waitUntil: 'domcontentloaded' })
-      const pdfBytes = await page.pdf({
-        format: 'Letter',
-        printBackground: true,
-        margin: { top: '1in', right: '1in', bottom: '1in', left: '1in' },
-      })
-
-      const safeDay = String(day).padStart(2, '0')
-      const filename = `${unitId}-day-${safeDay}.pdf`
-      // puppeteer.pdf returns Uint8Array; cast to BodyInit for the Response.
-      return new Response(pdfBytes as unknown as BodyInit, {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/pdf',
-          'Content-Disposition': `attachment; filename="${filename}"`,
-          'Cache-Control': 'private, no-cache',
-        },
-      })
-    } catch (err) {
-      // TEMPORARY DIAGNOSTIC: surface the real launch/render failure instead of
-      // letting it bubble up as a bare 500. Remove (or trim to a generic message)
-      // once the root cause is fixed.
-      const e = err as Error
-      console.error('[pdf-route] generation failed:', e?.name, e?.message, e?.stack)
-      return NextResponse.json(
-        {
-          error: 'PDF generation failed',
-          name: e?.name ?? 'UnknownError',
-          message: e?.message ?? String(err),
-          stack: (e?.stack ?? '').split('\n').slice(0, 8).join('\n'),
-        },
-        { status: 500 },
-      )
-    } finally {
-      if (browser) await browser.close().catch(() => undefined)
-    }
-})
+export async function GET(
+  request: NextRequest,
+  ctx: { params: Promise<{ unit_id: string; day: string }> },
+) {
+  const { unit_id, day } = await ctx.params
+  const target = new URL(
+    `/api/teacher/lesson-plans/${encodeURIComponent(unit_id)}/${encodeURIComponent(day)}/print`,
+    request.url,
+  )
+  return NextResponse.redirect(target, 308)
+}

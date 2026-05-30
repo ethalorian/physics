@@ -216,12 +216,16 @@ export function createAreaUnderCurveEngine(
     ctx.beginPath(); ctx.moveTo(cx(p1.x), zeroLine + s(20)); ctx.lineTo(cx(p2.x), zeroLine + s(20)); ctx.stroke()
     chip(ctx, `Width = ${(p2.x - p1.x).toFixed(2)}`, (cx(p1.x) + cx(p2.x)) / 2, zeroLine + s(36), { color: PAL.force, size: s(13) })
 
-    // height indicators (velocity / green)
+    // height indicators (velocity / green). Clamp the left labels so they never
+    // back into the rotated "Velocity (m/s)" axis title (at design x≈25) when a
+    // point sits near the left edge, and the right label off the right edge.
+    const hLeftX = Math.max(cx(p1.x) - s(60), cx0(64))
+    const hRightX = Math.min(cx(p2.x) + s(60), cx0(DESIGN_W - 64))
     if (Math.abs(p1.y - p2.y) < 0.1) {
-      chip(ctx, `h = ${Math.abs(p1.y).toFixed(2)}`, cx(p1.x) - s(60), (cy(p1.y) + zeroLine) / 2, { color: PAL.velocity, size: s(13), align: 'center' })
+      chip(ctx, `h = ${Math.abs(p1.y).toFixed(2)}`, hLeftX, (cy(p1.y) + zeroLine) / 2, { color: PAL.velocity, size: s(13), align: 'center' })
     } else {
-      chip(ctx, `h₁ = ${Math.abs(p1.y).toFixed(2)}`, cx(p1.x) - s(60), (cy(p1.y) + zeroLine) / 2, { color: PAL.velocity, size: s(11), align: 'center' })
-      chip(ctx, `h₂ = ${Math.abs(p2.y).toFixed(2)}`, cx(p2.x) + s(60), (cy(p2.y) + zeroLine) / 2, { color: PAL.velocity, size: s(11), align: 'center' })
+      chip(ctx, `h₁ = ${Math.abs(p1.y).toFixed(2)}`, hLeftX, (cy(p1.y) + zeroLine) / 2, { color: PAL.velocity, size: s(11), align: 'center' })
+      chip(ctx, `h₂ = ${Math.abs(p2.y).toFixed(2)}`, hRightX, (cy(p2.y) + zeroLine) / 2, { color: PAL.velocity, size: s(11), align: 'center' })
     }
 
     // axes (shared axis tone; geometry preserved — origin may sit mid-field)

@@ -67,6 +67,10 @@ export function createMonkeyHunterEngine(
   let firing = false   // dart in flight
   let hasHit = false
   let hitTime = 0
+  // Set when a shot ends with the dart hitting the floor BEFORE reaching the
+  // monkey's column — i.e. it fell short. Drives the on-canvas explanation that
+  // turns the "always hits" precondition (both must stay airborne) into a lesson.
+  let fellShort = false
   let trajectory: Vector2D[] = []
   let dataPoints: DataPoint[] = []
   let lastTrajT = 0
@@ -110,12 +114,13 @@ export function createMonkeyHunterEngine(
     arrow(ctx, originX, originY, w - 20, originY, { color: PAL.axis, width: 1.5, head: 9 })
     arrow(ctx, originX, originY, originX, 20, { color: PAL.axis, width: 1.5, head: 9 })
 
-    // Axis labels.
+    // Axis labels. The x-title sits on its OWN line below the tick numbers (which
+    // are at originY+18) and right-aligned to the axis end, so it never overlaps
+    // the rightmost tick label.
     ctx.fillStyle = PAL.ink
     ctx.font = 'bold 14px ui-sans-serif, system-ui, sans-serif'
-    ctx.textAlign = 'center'
-    ctx.fillText('x (meters)', w - 50, originY + 25)
     ctx.textAlign = 'right'
+    ctx.fillText('x (meters)', w - 20, originY + 38)
     ctx.fillText('y (meters)', originX - 10, 15)
 
     // Ticks + labels.
@@ -229,10 +234,15 @@ export function createMonkeyHunterEngine(
       ctx.restore()
     }
 
-    // Floating position labels (wrapped in legible chips).
-    if (firing || time > 0) {
-      chip(ctx, `Dart: (${dartX.toFixed(1)}, ${dartY.toFixed(1)})`, dartScreenX + 20, dartScreenY - 10, { color: PAL.primary, align: 'left' })
-      chip(ctx, `Monkey: (${monkeyX.toFixed(1)}, ${monkeyY.toFixed(1)})`, monkeyScreenX + 20, monkeyScreenY + 5, { color: PAL.cool, align: 'left' })
+    // Floating position labels (wrapped in legible chips). Shown ONLY while the
+    // dart is in flight — the dart and monkey converge to the same point at
+    // impact, so two same-side chips would land on top of each other. After the
+    // shot the Hit chip / fell-short banner take over. During flight the dart
+    // label is biased up-and-left and the monkey label down-and-right, so even as
+    // the two objects close in, their labels stay cleanly separated.
+    if (firing && !hasHit) {
+      chip(ctx, `Dart (${dartX.toFixed(1)}, ${dartY.toFixed(1)})`, dartScreenX - 16, dartScreenY - 24, { color: PAL.primary, align: 'right' })
+      chip(ctx, `Monkey (${monkeyX.toFixed(1)}, ${monkeyY.toFixed(1)})`, monkeyScreenX + 16, monkeyScreenY + 28, { color: PAL.cool, align: 'left' })
     }
 
     // Hit indicator + burst (the event → accent gold).
@@ -253,12 +263,54 @@ export function createMonkeyHunterEngine(
       }
       chip(ctx, `Hit: (${dartX.toFixed(1)}m, ${dartY.toFixed(1)}m)`, monkeyScreenX, monkeyScreenY - 35, { bg: PAL.accent, color: PAL.onAccent })
     }
+
+    // Fell-short explanation. A dead-on shot that still misses looks like the
+    // "always hits" principle just failed — so say WHY: the dart hit the floor
+    // before reaching the monkey, and the principle only holds while both are
+    // still in free fall. Turns a confusing miss into the deeper lesson.
+    if (fellShort && !hasHit) {
+      // Mark where the dart landed on the ground.
+      const landX = originX + dartX * ppm
+      ctx.strokeStyle = COL.dartHead; ctx.lineWidth = 3
+      ctx.beginPath()
+      ctx.moveTo(landX - 7, originY - 7); ctx.lineTo(landX + 7, originY + 7)
+      ctx.moveTo(landX + 7, originY - 7); ctx.lineTo(landX - 7, originY + 7)
+      ctx.stroke()
+
+      // Explanatory banner across the top, on a translucent panel for legibility.
+      const lines = [
+        'The dart hit the floor before reaching the monkey.',
+        '“Aim straight = always hits” only holds while BOTH are still falling.',
+        'Speed up the dart (or move the monkey closer) so it arrives mid-air.',
+      ]
+      ctx.textAlign = 'center'
+      const bannerW = Math.min(w - 24, 460)
+      const bx = w / 2 - bannerW / 2
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.86)'
+      ctx.beginPath(); ctx.roundRect(bx, 30, bannerW, 78, 10); ctx.fill()
+      ctx.strokeStyle = PAL.force; ctx.lineWidth = 2
+      ctx.beginPath(); ctx.roundRect(bx, 30, bannerW, 78, 10); ctx.stroke()
+
+      ctx.fillStyle = PAL.force; ctx.font = 'bold 16px ui-sans-serif, system-ui, sans-serif'
+      ctx.fillText('Dart fell short', w / 2, 50)
+      ctx.fillStyle = PAL.ink; ctx.font = '12px ui-sans-serif, system-ui, sans-serif'
+      ctx.fillText(lines[0], w / 2, 70)
+      ctx.fillText(lines[1], w / 2, 86)
+      ctx.fillStyle = PAL.mute
+      ctx.fillText(lines[2], w / 2, 102)
+      ctx.textAlign = 'left'
+    }
   }
 
   const engine: SimEngine = {
     render,
     step(dt: number) {
       if (!firing || hasHit) return
+
+      // Positions at the START of this substep — needed for continuous (swept)
+      // collision detection below.
+      const pDartX = dartX, pDartY = dartY
+      const pMonkeyX = monkeyX, pMonkeyY = monkeyY
 
       // Dart: projectile motion (vy decreases under gravity, y up positive).
       dartVy -= GRAVITY * dt
@@ -279,16 +331,32 @@ export function createMonkeyHunterEngine(
 
       dataPoints.push({ time, dartX, dartY, monkeyX, monkeyY, dartVx, dartVy, monkeyVy })
 
-      // Collision detection.
-      const distance = Math.sqrt((dartX - monkeyX) ** 2 + (dartY - monkeyY) ** 2)
-      if (distance < 0.3) {
+      // Continuous (swept) collision detection. A point-sample check
+      // (|dart − monkey| < r at the frame boundary) can step right over the
+      // contact instant for a fast dart and report a false MISS — fatal for a
+      // demo whose whole point is "it always hits." Instead, treat the dart and
+      // monkey as moving along straight segments across the substep and find the
+      // minimum separation over the interval. The relative position is linear in
+      // s∈[0,1], so this is an exact point-to-segment distance.
+      const HIT_RADIUS = 0.3
+      const r0x = pDartX - pMonkeyX, r0y = pDartY - pMonkeyY
+      const r1x = dartX - monkeyX, r1y = dartY - monkeyY
+      const ddx = r1x - r0x, ddy = r1y - r0y
+      const denom = ddx * ddx + ddy * ddy
+      const s = denom > 0 ? Math.max(0, Math.min(1, -(r0x * ddx + r0y * ddy) / denom)) : 0
+      const minSep = Math.hypot(r0x + s * ddx, r0y + s * ddy)
+      if (minSep < HIT_RADIUS) {
         hasHit = true
-        hitTime = time
+        hitTime = time - dt + s * dt // interpolate the true contact instant
         firing = false
       }
 
-      // Dart hits the ground → stop.
-      if (dartY < 0) firing = false
+      // Dart hits the ground → stop. If it landed without a hit and short of the
+      // monkey's column, it fell short — flag it for the on-canvas explanation.
+      if (dartY < 0) {
+        firing = false
+        if (!hasHit && dartX < monkeyX0) fellShort = true
+      }
 
       // Monkey hits the ground → rest there.
       if (monkeyY < 0) { monkeyY = 0; monkeyVy = 0 }
@@ -333,6 +401,7 @@ export function createMonkeyHunterEngine(
       lastTrajT = 0
       hasHit = false
       hitTime = 0
+      fellShort = false
       time = 0
       firing = true
     },
@@ -350,12 +419,13 @@ export function createMonkeyHunterEngine(
       firing = false
       hasHit = false
       hitTime = 0
+      fellShort = false
       trajectory = []
       dataPoints = []
       lastTrajT = 0
     },
     getReadouts() {
-      const status = hasHit ? 'Hit' : firing ? 'Flying' : 'Ready'
+      const status = hasHit ? 'Hit' : fellShort ? 'Fell short' : firing ? 'Flying' : 'Ready'
       return {
         time,
         dartY,

@@ -20,11 +20,13 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   }
 
   const { data: session } = await supabaseAdmin
-    .from('lobby_sessions').select('created_by').eq('id', id).maybeSingle()
+    .from('lobby_sessions').select('created_by, jigsaw_pieces').eq('id', id).maybeSingle()
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (ctx.role !== 'admin' && (session as { created_by: string }).created_by !== ctx.userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
+  const jp = (session as { jigsaw_pieces: string[] | null }).jigsaw_pieces
+  const pieceCount = Array.isArray(jp) ? jp.length : 0
 
   // Destination must be a group in this session.
   const { data: destGroup } = await supabaseAdmin
@@ -59,7 +61,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     for (let i = 0; i < uids.length; i++) {
       await supabaseAdmin
         .from('lobby_members')
-        .update({ word: words[i], word_entries: [], phrase_completed_at: null })
+        .update({ word: words[i], word_entries: [], phrase_completed_at: null, word_index: pieceCount > 0 ? i % pieceCount : null })
         .eq('session_id', id)
         .eq('user_id', uids[i])
     }

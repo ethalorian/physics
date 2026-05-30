@@ -13,7 +13,10 @@
     "db:migrate": "tsx scripts/run-migration.ts",
     "db:seed": "tsx scripts/create-simulation-lessons.sql",
     "setup:risc": "tsx scripts/setup-risc.ts",
-    "test:secret-manager": "tsx scripts/test-secret-manager.ts"
+    "test:secret-manager": "tsx scripts/test-secret-manager.ts",
+    "sim:render": "node scripts/sim-render/render.mjs",
+    "sim:render:update": "node scripts/sim-render/render.mjs update",
+    "sim:check": "node scripts/sim-render/render.mjs check"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
@@ -31,7 +34,6 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@sparticuz/chromium": "^131.0.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.0",
     "@types/three": "^0.160.0",
@@ -48,7 +50,6 @@
     "next": "^15.5.9",
     "next-auth": "^5.0.0-beta.29",
     "pdfjs-dist": "^4.8.69",
-    "puppeteer-core": "^23.0.0",
     "react": "19.1.0",
     "react-day-picker": "^9.4.4",
     "react-dom": "19.1.0",
@@ -64,13 +65,17 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@napi-rs/canvas": "^1.0.0",
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "pixelmatch": "^7.2.0",
+    "pngjs": "^7.0.0",
     "tailwindcss": "^4",
     "tsx": "^4.7.0",
     "typescript": "^5"

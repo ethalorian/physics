@@ -56,12 +56,19 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
     }
     ctx.textAlign = 'left'
 
-    // oil spots + time labels
+    // oil spots + time labels. Every spot gets its ellipse, but a time LABEL is
+    // drawn only when it clears the previous label horizontally — at low speed the
+    // first spots sit almost on top of each other, so labelling all of them
+    // collided "0s" and "1s" into one smear near the start.
+    let lastLabelX = -Infinity
     spots.forEach((s) => {
       const sx = toX(s.x)
       ctx.fillStyle = COL.oil
       ctx.beginPath(); ctx.ellipse(sx, roadMid + 14, 6, 3.5, 0, 0, Math.PI * 2); ctx.fill()
-      chip(ctx, `${s.t}s`, sx, roadMid - 16, { bg: PAL.surface, color: PAL.mute, size: 10 })
+      if (sx - lastLabelX >= 22) {
+        chip(ctx, `${s.t}s`, sx, roadMid - 16, { bg: PAL.surface, color: PAL.mute, size: 10 })
+        lastLabelX = sx
+      }
     })
 
     // car

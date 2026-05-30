@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, arrow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, arrow, chip, panel, label } from '@/components/simulations/lab/draw'
 
 // Scene tokens; semantic vector/text tones come from the shared PAL so this sim
 // matches every other lab. Water/shore/dock/flag stay scene-specific.
@@ -21,9 +21,10 @@ const COL = {
 //
 // Coordinate system (matches the bespoke sim):
 //   x = distance ACROSS the river (0 → riverWidth), boatAngle measured so 90° is
-//       straight across; cos(angle) drives the across (x) component.
-//   y = distance DOWNSTREAM; the current only acts in +y. sin(angle) drives the
-//       boat's own y component, and the current adds to it.
+//       straight across; sin(angle) drives the across (x) component (sin 90° = 1).
+//   y = distance DOWNSTREAM; the current only acts in +y. The boat's own y
+//       component is −cos(angle): 0 at 90° (straight across), upstream below 90°
+//       (compensating for the current), downstream above 90°. The current adds to it.
 
 interface Vec2 { x: number; y: number }
 
@@ -174,9 +175,9 @@ export function createRiverboatCrossingEngine(
     // Rotate boat to face direction of travel (resultant velocity)
     if (running || time > 0) {
       const angleRad = boatAngle * Math.PI / 180
-      const boatVy = boatSpeed * Math.sin(angleRad)
+      const boatVy = -boatSpeed * Math.cos(angleRad)
       const resultantVy = boatVy + currentSpeed
-      const boatVx = boatSpeed * Math.cos(angleRad)
+      const boatVx = boatSpeed * Math.sin(angleRad)
       const resultantAngle = Math.atan2(resultantVy, boatVx)
       ctx.rotate(resultantAngle)
     } else {
@@ -201,28 +202,26 @@ export function createRiverboatCrossingEngine(
     // Draw velocity vectors (from boat position)
     const vectorScale = 15 // pixels per m/s
 
-    // Boat velocity vector (green) - velocity relative to water
+    // Three velocity vectors all radiate from the boat, so their numeric labels
+    // used to pile on top of each other whenever the current (or the speeds) were
+    // small and the arrows were short. The arrows stay on the boat (colour-coded);
+    // the NUMBERS move to a fixed legend below, where they can never collide.
     const angleRad = boatAngle * Math.PI / 180
-    const boatVx = boatSpeed * Math.cos(angleRad)
-    const boatVy = boatSpeed * Math.sin(angleRad)
+    const boatVx = boatSpeed * Math.sin(angleRad)
+    const boatVy = -boatSpeed * Math.cos(angleRad)
 
+    // Boat velocity (green) — relative to the water
     arrow(ctx, boatScreenX, boatScreenY, boatScreenX + boatVx * vectorScale, boatScreenY + boatVy * vectorScale, { color: COL.boatVec, width: 3 })
 
-    chip(ctx, `v_boat = ${boatSpeed.toFixed(1)} m/s`, boatScreenX + boatVx * vectorScale / 2 + 10, boatScreenY + boatVy * vectorScale / 2, { color: COL.boatVec, align: 'left' })
-
-    // Current velocity vector (cyan) - always downstream
+    // Current velocity (cyan) — always downstream
     arrow(ctx, boatScreenX, boatScreenY, boatScreenX, boatScreenY + currentSpeed * vectorScale, { color: COL.currentVec, width: 3 })
 
-    chip(ctx, `v_current = ${currentSpeed.toFixed(1)} m/s`, boatScreenX - 10, boatScreenY + currentSpeed * vectorScale / 2, { color: COL.currentVec, align: 'right' })
-
-    // Resultant velocity vector (purple) - actual path
+    // Resultant velocity (purple) — actual path over the ground
     const resultantVx = boatVx
     const resultantVy = boatVy + currentSpeed
-
     arrow(ctx, boatScreenX, boatScreenY, boatScreenX + resultantVx * vectorScale, boatScreenY + resultantVy * vectorScale, { color: COL.resultantVec, width: 4 })
 
     const resultantSpeed = Math.sqrt(resultantVx * resultantVx + resultantVy * resultantVy)
-    chip(ctx, `v_resultant = ${resultantSpeed.toFixed(1)} m/s`, boatScreenX + resultantVx * vectorScale / 2, boatScreenY + resultantVy * vectorScale / 2 - 10, { color: COL.resultantVec, align: 'center' })
 
     // Draw drift indicator if completed
     if (hasReachedOtherSide) {
@@ -247,15 +246,29 @@ export function createRiverboatCrossingEngine(
     chip(ctx, 'START', 15, startScreenY, { color: COL.ink, size: 12 })
     chip(ctx, 'TARGET', w - 15, targetScreenY + 50, { color: COL.driftVec, align: 'right', size: 12 })
 
-    // Current indicator
-    chip(ctx, `← Current: ${currentSpeed} m/s`, 50, 30, { color: COL.mute, align: 'left' })
+    // Velocity legend (top-left corner — clear of the docks at mid-height and of
+    // the boat's path, drawn on an opaque panel so it stays legible regardless).
+    const lx = 10, ly = 12, lw = 196, lh = 86
+    panel(ctx, lx, ly, lw, lh, 10, PAL.surface)
+    label(ctx, 'Velocities (m/s)', lx + 12, ly + 19, { color: COL.ink, weight: 'bold', size: 12 })
+    const legend: [string, string, string][] = [
+      [COL.boatVec, 'v_boat', boatSpeed.toFixed(1)],
+      [COL.currentVec, 'v_current', currentSpeed.toFixed(1)],
+      [COL.resultantVec, 'v_resultant', resultantSpeed.toFixed(1)],
+    ]
+    legend.forEach(([color, name, val], i) => {
+      const ry = ly + 36 + i * 18
+      ctx.fillStyle = color
+      ctx.fillRect(lx + 12, ry - 8, 10, 10)
+      label(ctx, `${name} = ${val}`, lx + 28, ry + 1, { color: COL.ink, size: 12 })
+    })
   }
 
   // Velocity components for readouts (independent of running state).
   const components = () => {
     const angleRad = boatAngle * Math.PI / 180
-    const boatVx = boatSpeed * Math.cos(angleRad)
-    const boatVy = boatSpeed * Math.sin(angleRad)
+    const boatVx = boatSpeed * Math.sin(angleRad)
+    const boatVy = -boatSpeed * Math.cos(angleRad)
     const resultantVx = boatVx
     const resultantVy = boatVy + currentSpeed
     return { boatVx, boatVy, resultantVx, resultantVy }

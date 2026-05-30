@@ -10,6 +10,10 @@ export const monkeyHunterDef: SimDefinition = {
   params: [
     { key: 'monkeyHeight', label: 'Monkey Height', type: 'slider', min: 5, max: 14, step: 0.5, unit: 'm', default: 12 },
     { key: 'monkeyDistance', label: 'Horizontal Distance', type: 'slider', min: 8, max: 18, step: 0.5, unit: 'm', default: 13 },
+    // Full range kept on purpose: below ~18.5 m/s a dead-on shot can hit the floor
+    // before reaching the monkey (far/low geometry). Rather than hide that, the
+    // engine detects the short fall and shows an on-canvas explanation, turning the
+    // "always hits" precondition (both must stay airborne) into a teachable beat.
     { key: 'dartSpeed', label: 'Dart Launch Speed', type: 'slider', min: 10, max: 30, step: 1, unit: 'm/s', default: 20 },
     {
       key: 'aimMode', label: 'Aiming Mode', type: 'select', default: 'direct',

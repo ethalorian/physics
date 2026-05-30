@@ -140,13 +140,13 @@ export function createCartsThirdLawEngine(
       const forceScale = 0.8
       const arrowY = cartAY + cartAHeight / 2
 
-      // Action force on Cart A (pushing right, positive)
-      const aTip = positionA + interactionForce * forceScale
+      // Action force on Cart A (pushing LEFT, away from B)
+      const aTip = positionA - interactionForce * forceScale
       arrow(ctx, positionA, arrowY, aTip, arrowY, { color: COL.forceA, width: 4, head: 12 })
       chip(ctx, `F = ${interactionForce.toFixed(0)}N`, (positionA + aTip) / 2, arrowY - 15, { color: COL.forceA })
 
-      // Reaction force on Cart B (pushing left, negative)
-      const bTip = positionB - interactionForce * forceScale
+      // Reaction force on Cart B (pushing RIGHT, away from A)
+      const bTip = positionB + interactionForce * forceScale
       arrow(ctx, positionB, arrowY, bTip, arrowY, { color: COL.forceB, width: 4, head: 12 })
       chip(ctx, `F = ${interactionForce.toFixed(0)}N`, (positionB + bTip) / 2, arrowY - 15, { color: COL.forceB })
 
@@ -154,29 +154,31 @@ export function createCartsThirdLawEngine(
       chip(ctx, 'ACTION ⟷ REACTION', w / 2, arrowY - 40, { color: COL.actionLabel })
     }
 
-    // Velocity vectors
+    // Velocity vectors. A and B ride on SEPARATE vertical lanes (and their chips
+    // above each lane) so that when the carts pass through each other on the
+    // bounce-back, the two arrows and their numbers never overlap.
+    const velYA = cartAY - 22
+    const velYB = cartAY - 50
     if (Math.abs(velocityA) > 0.1) {
       const velScale = 40
-      const velY = cartAY - 20
-      arrow(ctx, positionA, velY, positionA + velocityA * velScale, velY, { color: COL.vel, width: 3 })
-      chip(ctx, `v = ${velocityA.toFixed(1)} m/s`, positionA, velY - 12, { color: COL.vel })
+      arrow(ctx, positionA, velYA, positionA + velocityA * velScale, velYA, { color: COL.vel, width: 3 })
+      chip(ctx, `v_A = ${velocityA.toFixed(1)} m/s`, positionA, velYA - 12, { color: COL.vel })
     }
-
     if (Math.abs(velocityB) > 0.1) {
       const velScale = 40
-      const velY = cartBY - 20
-      arrow(ctx, positionB, velY, positionB + velocityB * velScale, velY, { color: COL.vel, width: 3 })
-      chip(ctx, `v = ${velocityB.toFixed(1)} m/s`, positionB, velY - 12, { color: COL.vel })
+      arrow(ctx, positionB, velYB, positionB + velocityB * velScale, velYB, { color: COL.vel, width: 3 })
+      chip(ctx, `v_B = ${velocityB.toFixed(1)} m/s`, positionB, velYB - 12, { color: COL.vel })
     }
 
-    // Cart labels
+    // Cart name labels — also on separate lanes below the track, so a crossing
+    // never stacks "Cart A" on "Cart B".
     ctx.font = `bold 14px ${FONT}`
     ctx.textAlign = 'center'
     ctx.textBaseline = 'alphabetic'
     ctx.fillStyle = COL.inkA
-    ctx.fillText('Cart A', positionA, cartAY + cartAHeight + 25)
+    ctx.fillText('Cart A', positionA, cartAY + cartAHeight + 22)
     ctx.fillStyle = COL.inkB
-    ctx.fillText('Cart B', positionB, cartBY + cartBHeight + 25)
+    ctx.fillText('Cart B', positionB, cartBY + cartBHeight + 44)
   }
 
   function recordSample() {
@@ -207,11 +209,15 @@ export function createCartsThirdLawEngine(
       const { w } = dims()
 
       // Newton's Third Law: equal and opposite forces during interaction window.
+      // The compressed spring pushes the carts APART — Cart A (left) is driven
+      // left (−x), Cart B (right) is driven right (+x). The previous signs pushed
+      // them toward each other, so they passed through one another (and their
+      // labels collided) instead of springing apart and bouncing off the walls.
       let forceOnA = 0
       let forceOnB = 0
       if (elapsedInteractionTime < INTERACTION_TIME) {
-        forceOnA = interactionForce
-        forceOnB = -interactionForce
+        forceOnA = -interactionForce
+        forceOnB = interactionForce
         elapsedInteractionTime += dt
       }
 
@@ -232,6 +238,24 @@ export function createCartsThirdLawEngine(
       if (positionA > w - 50) { positionA = w - 50; velocityA = -velocityA * 0.7 }
       if (positionB < 50) { positionB = 50; velocityB = -velocityB * 0.7 }
       if (positionB > w - 50) { positionB = w - 50; velocityB = -velocityB * 0.7 }
+
+      // Cart–cart collision. Two solid carts must not pass through each other —
+      // previously they overlapped (bodies and their "kg" tags) when they met on
+      // the bounce-back. This is a 1-D ELASTIC collision (conserves both momentum
+      // and kinetic energy), applied only when the carts touch AND are closing.
+      const halfA = (60 + massA * 15) / 2 // matches cartWidth in render()
+      const halfB = (60 + massB * 15) / 2
+      const minGap = halfA + halfB
+      const gap = positionB - positionA // Cart A is left, Cart B is right
+      if (gap < minGap && velocityA - velocityB > 0) {
+        const u1 = velocityA, u2 = velocityB
+        velocityA = ((massA - massB) * u1 + 2 * massB * u2) / (massA + massB)
+        velocityB = ((massB - massA) * u2 + 2 * massA * u1) / (massA + massB)
+        // Push apart to exactly touching so they never visually overlap or jitter.
+        const overlap = minGap - gap
+        positionA -= overlap / 2
+        positionB += overlap / 2
+      }
 
       time += dt
 

@@ -155,22 +155,28 @@ export function createAstronautThrustEngine(
       position.x += velocity.x * PIXELS_PER_METER * dt
       position.y += velocity.y * PIXELS_PER_METER * dt
 
-      // Bounce off edges (80% speed retention), matching bespoke.
+      // Elastic edge bounce (speed fully retained). The bespoke version drained
+      // 20% of the speed at each wall, which silently contradicted this sim's
+      // core lesson: with zero thrust the astronaut should coast at CONSTANT
+      // speed (Newton's 1st law). A wall is an external force, so reversing
+      // direction is legitimate — but losing speed with no force shown taught the
+      // exact misconception the sim exists to dispel. Speed is now conserved
+      // across bounces, so a thrust-free astronaut keeps its speed forever.
       if (position.x < 30) {
         position.x = 30
-        velocity.x = Math.abs(velocity.x) * 0.8
+        velocity.x = Math.abs(velocity.x)
       }
       if (position.x > w - 30) {
         position.x = w - 30
-        velocity.x = -Math.abs(velocity.x) * 0.8
+        velocity.x = -Math.abs(velocity.x)
       }
       if (position.y < 30) {
         position.y = 30
-        velocity.y = Math.abs(velocity.y) * 0.8
+        velocity.y = Math.abs(velocity.y)
       }
       if (position.y > h - 30) {
         position.y = h - 30
-        velocity.y = -Math.abs(velocity.y) * 0.8
+        velocity.y = -Math.abs(velocity.y)
       }
 
       time += dt

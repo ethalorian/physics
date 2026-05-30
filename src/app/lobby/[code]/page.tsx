@@ -9,13 +9,16 @@ import Avatar from '@/components/avatar/Avatar'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface AvatarBundle { alias: string; traits: AvatarTraits; equipped: EquippedItems }
-interface GroupMate extends AvatarBundle { completed: boolean; isMe: boolean }
+interface GroupMate extends AvatarBundle { completed: boolean; isMe: boolean; role?: string; idx?: number }
+interface Role { label: string; blurb: string; stem: string }
 
 interface State {
   session_id: string; status: string; task_type: string; prompt: string | null
   joined: boolean; grouped: boolean; word: string | null
   phraseLength: number; enteredWords: string[]; completed: boolean; submitted: boolean
   self?: AvatarBundle; group?: GroupMate[]; avatarItems?: AvatarItem[]
+  myRole?: Role | null; talkMoves?: string[]
+  myPiece?: string | null; jigsawCount?: number
 }
 
 export default function LobbyActivityPage() {
@@ -25,6 +28,8 @@ export default function LobbyActivityPage() {
   const [wordInput, setWordInput] = useState('')
   const [response, setResponse] = useState('')
   const [strokes, setStrokes] = useState<Stroke[]>([])
+  const [buildWho, setBuildWho] = useState('')
+  const [buildNote, setBuildNote] = useState('')
   const [missing, setMissing] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const sessionId = useRef<string | null>(null)
@@ -60,7 +65,9 @@ export default function LobbyActivityPage() {
   const submit = async () => {
     if (!sessionId.current) return
     setBusy(true)
-    const payload = isDrawing ? { strokes } : response
+    const mate = st?.group?.find((g) => String(g.idx) === buildWho)
+    const built_on = mate ? { who_idx: mate.idx, who_alias: mate.alias, note: buildNote.trim() } : undefined
+    const payload = isDrawing ? { strokes, built_on } : { text: response, built_on }
     await fetch('/api/lobby/submit', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ session_id: sessionId.current, response: payload }),
@@ -113,6 +120,23 @@ export default function LobbyActivityPage() {
     <div>
       {st.prompt && <p className="text-sm mb-4 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}>{st.prompt}</p>}
 
+      {st.myRole && (
+        <div className="mb-4 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--reward) 14%, transparent)', borderLeft: '3px solid var(--reward)' }}>
+          <span className="font-semibold">Your role: {st.myRole.label}</span>
+          <span style={{ color: 'var(--muted-foreground)' }}> — {st.myRole.blurb}</span>
+        </div>
+      )}
+
+      {st.myPiece && (
+        <div className="mb-4 rounded-lg p-3" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', border: '1px solid color-mix(in oklch, var(--primary) 35%, transparent)' }}>
+          <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--primary)' }}>Your piece — only you have this</div>
+          <div className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>{st.myPiece}</div>
+          <div className="text-xs mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
+            Your group holds {st.jigsawCount || 'several'} pieces in all. Share yours out loud and collect the rest — you can&apos;t answer without every piece.
+          </div>
+        </div>
+      )}
+
       <div className="text-center mb-4">
         <div className="text-xs uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Your word</div>
         <div className="font-mono font-bold text-3xl" style={{ color: 'var(--primary)' }}>{st.word}</div>
@@ -136,10 +160,21 @@ export default function LobbyActivityPage() {
                 <span className="text-xs truncate w-full text-center" title={mate.alias}>
                   {mate.alias}{mate.isMe ? ' (you)' : ''}
                 </span>
+                {mate.role && <span className="text-[10px] truncate w-full text-center" style={{ color: 'var(--muted-foreground)' }}>{mate.role}</span>}
               </div>
             ))}
           </div>
         </div>
+      )}
+
+      {st.talkMoves && st.talkMoves.length > 0 && (
+        <details className="mb-4 rounded-lg border" style={{ borderColor: 'var(--border)' }}>
+          <summary className="text-xs px-3 py-2 cursor-pointer" style={{ color: 'var(--muted-foreground)' }}>Stuck? Try a sentence starter</summary>
+          <div className="px-3 pb-3 flex flex-col gap-1">
+            {st.myRole && <span className="text-sm" style={{ color: 'var(--reward)' }}>{st.myRole.stem}</span>}
+            {st.talkMoves.map((s, i) => <span key={i} className="text-sm" style={{ color: 'var(--foreground)' }}>{s}</span>)}
+          </div>
+        </details>
       )}
 
       {!st.completed ? (
@@ -173,7 +208,20 @@ export default function LobbyActivityPage() {
               placeholder="Type your response…"
               className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
           )}
-          <button onClick={submit} disabled={busy || (isDrawing ? strokes.length === 0 : !response.trim())}
+
+          <div className="mt-3 rounded-lg p-2.5" style={{ background: 'color-mix(in oklch, var(--reward) 8%, transparent)', border: '1px solid color-mix(in oklch, var(--reward) 30%, transparent)' }}>
+            <label className="block text-xs mb-1 font-medium">Build on a groupmate&apos;s idea (required):</label>
+            <select value={buildWho} onChange={(e) => setBuildWho(e.target.value)}
+              className="w-full rounded-lg border p-2 text-sm mb-2" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}>
+              <option value="">Choose a groupmate…</option>
+              {st.group?.filter((g) => !g.isMe).map((g) => <option key={g.idx} value={String(g.idx)}>{g.alias}</option>)}
+            </select>
+            <textarea value={buildNote} onChange={(e) => setBuildNote(e.target.value)} rows={2}
+              placeholder="How did their thinking shape your answer?"
+              className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
+          </div>
+
+          <button onClick={submit} disabled={busy || !buildWho || !buildNote.trim() || (isDrawing ? strokes.length === 0 : !response.trim())}
             className="mt-3 w-full text-sm font-semibold rounded-lg px-4 py-2.5 inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
             <Send size={15} /> {busy ? 'Submitting…' : 'Submit'}

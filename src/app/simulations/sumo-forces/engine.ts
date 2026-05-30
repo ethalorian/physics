@@ -150,30 +150,45 @@ export function createSumoForcesEngine(
   }
 
   function drawForceVectors(cx: number, cy: number) {
-    const redX = cx + position - 30
-    const blueX = cx + position + 30
-    const y = cy - 80
+    // Offset each wrestler by its OWN body radius so the two just touch at the
+    // contact point instead of interpenetrating — at high mass a fixed ±30 px let
+    // the bodies overlap so far they buried the "kg" labels. (radius = 30 + mass/10,
+    // matching drawSumoWrestler's size.)
+    const redX = cx + position - (30 + redMass / 10)
+    const blueX = cx + position + (30 + blueMass / 10)
+    const centerX = cx + position
     const scale = 0.1 // pixels per Newton
 
+    // LEGIBILITY: the two push forces point toward each other, so drawing them on
+    // one line made the arrows AND their numbers collide in the middle. Each force
+    // now gets its own stacked lane above the wrestlers, and every label is
+    // anchored over the wrestler that produces it (not at the arrow midpoint), so
+    // no arrow and no number can ever overlap another — at any force/mass/position.
+    // Lanes are measured off the LARGEST wrestler so a heavy sumo never reaches them.
+    const maxR = 30 + Math.max(redMass, blueMass) / 10
+    const redLaneY = cy - maxR - 28
+    const blueLaneY = redLaneY - 38
+
     if (redForce > 0) {
-      arrow(ctx, redX, y, redX + redForce * scale, y, { color: COL.red, width: 3 })
-      chip(ctx, `${redForce}N`, redX + (redForce * scale) / 2, y - 14, { color: COL.red })
+      arrow(ctx, redX, redLaneY, redX + redForce * scale, redLaneY, { color: COL.red, width: 3 })
     }
+    // Label always over the red wrestler, whatever the arrow length.
+    chip(ctx, `Red: ${redForce} N`, redX, redLaneY - 13, { color: COL.red })
 
     if (blueForce > 0) {
-      arrow(ctx, blueX, y, blueX - blueForce * scale, y, { color: COL.blue, width: 3 })
-      chip(ctx, `${blueForce}N`, blueX - (blueForce * scale) / 2, y - 14, { color: COL.blue })
+      arrow(ctx, blueX, blueLaneY, blueX - blueForce * scale, blueLaneY, { color: COL.blue, width: 3 })
     }
+    chip(ctx, `Blue: ${blueForce} N`, blueX, blueLaneY - 13, { color: COL.blue })
 
+    // Net force on its own lane BELOW the wrestlers — never near the push arrows.
     if (Math.abs(netForce) > 10) {
-      const netY = cy + 80
-      const centerX = cx + position
+      const netY = cy + maxR + 34
       if (netForce > 0) {
         arrow(ctx, centerX, netY, centerX + Math.abs(netForce) * scale, netY, { color: COL.net, width: 4 })
       } else {
         arrow(ctx, centerX, netY, centerX - Math.abs(netForce) * scale, netY, { color: COL.net, width: 4 })
       }
-      chip(ctx, `Net: ${Math.abs(netForce)}N`, centerX, netY + 18, { color: COL.net })
+      chip(ctx, `Net: ${Math.abs(netForce)} N`, centerX, netY + 20, { color: COL.net })
     }
   }
 
@@ -200,8 +215,12 @@ export function createSumoForcesEngine(
     drawRing(cx, cy)
 
     // Wrestlers sit at the shared contact point, offset ±30 px.
-    const redX = cx + position - 30
-    const blueX = cx + position + 30
+    // Offset each wrestler by its OWN body radius so the two just touch at the
+    // contact point instead of interpenetrating — at high mass a fixed ±30 px let
+    // the bodies overlap so far they buried the "kg" labels. (radius = 30 + mass/10,
+    // matching drawSumoWrestler's size.)
+    const redX = cx + position - (30 + redMass / 10)
+    const blueX = cx + position + (30 + blueMass / 10)
     drawSumoWrestler(redX, cy, 'red', redMass)
     drawSumoWrestler(blueX, cy, 'blue', blueMass)
 

@@ -2,15 +2,16 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getAvatarData } from '@/lib/lobby/avatars'
+import { roleForIndex, TALK_MOVES } from '@/lib/lobby/discourse'
 
 async function findOpenSession(code: string) {
   const { data } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, code, status, task_type, prompt:task_prompt, group_size')
+    .select('id, code, status, task_type, prompt:task_prompt, group_size, jigsaw_pieces')
     .eq('code', code.toUpperCase())
     .maybeSingle()
   return data as
-    | { id: string; code: string; status: string; task_type: string; prompt: string | null; group_size: number }
+    | { id: string; code: string; status: string; task_type: string; prompt: string | null; group_size: number; jigsaw_pieces: string[] | null }
     | null
 }
 
@@ -42,15 +43,16 @@ export const GET = withAuth(async (request, ctx) => {
 
   const { data: member } = await supabaseAdmin
     .from('lobby_members')
-    .select('group_id, word, phrase_completed_at, word_entries')
+    .select('group_id, word, word_index, phrase_completed_at, word_entries')
     .eq('session_id', session.id)
     .eq('user_id', ctx.userId)
     .maybeSingle()
 
   const m = member as
-    | { group_id: string | null; word: string | null; phrase_completed_at: string | null; word_entries: { word: string; at: string }[] }
+    | { group_id: string | null; word: string | null; word_index: number | null; phrase_completed_at: string | null; word_entries: { word: string; at: string }[] }
     | null
   const groupId = m?.group_id ?? null
+  const pieces = Array.isArray(session.jigsaw_pieces) ? session.jigsaw_pieces : null
 
   // Group roster (alias + avatar) so students can find their partners. We pull
   // the whole group's members; aliases only — emails never leave the server here.
@@ -81,11 +83,15 @@ export const GET = withAuth(async (request, ctx) => {
     equipped: avatars.byUser[gid]?.equipped ?? {},
   })
 
-  const group = groupMates.map((x) => ({
+  const group = groupMates.map((x, i) => ({
     ...bundle(x.user_id),
+    idx: i,
     completed: !!x.phrase_completed_at,
     isMe: x.user_id === ctx.userId,
+    role: roleForIndex(i).label,
   }))
+  const myIndex = groupMates.findIndex((x) => x.user_id === ctx.userId)
+  const myRole = myIndex >= 0 ? roleForIndex(myIndex) : null
 
   // Has this student already submitted an artifact?
   const { data: existing } = await supabaseAdmin
@@ -109,6 +115,10 @@ export const GET = withAuth(async (request, ctx) => {
     submitted: !!existing,
     self: bundle(ctx.userId),
     group,
+    myRole,
+    talkMoves: TALK_MOVES,
     avatarItems: avatars.items,
+    myPiece: pieces && m && typeof m.word_index === 'number' ? (pieces[m.word_index] ?? null) : null,
+    jigsawCount: pieces ? Math.min(group.length || 0, pieces.length) : 0,
   })
 })
