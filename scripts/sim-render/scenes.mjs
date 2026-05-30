@@ -15,15 +15,18 @@ export const SCENES = {
   'monkey-hunter': { frames: 110 },
   'atwood-machine': { frames: 200 },
   'carts-third-law': { frames: 150 },
+  'cart-collisions': { frames: 260 }, // approach → collision → ~2 s after
   'astronaut-thrust': { params: { thrustMagnitude: 60, thrustAngle: 30, initialVelocity: 5, velocityAngle: 0 }, frames: 300 },
   'vacuum-chamber': { frames: 150 },
   'dart-deflection': { frames: 820 }, // ~6.5 s animation → arrival/outcome
 
   // projectile / kinematics
+  'impulse-momentum': { frames: 380 }, // approach + full contact pulse
   'projectile-motion': { frames: 120 },
   'freefall-cliff': { frames: 170 },
   'uniformly-accelerated-motion': { frames: 170 },
   'constant-velocity': { frames: 100 },
+  'picket-fence-g': { frames: 460 }, // full strip falls through the gate
   'car-race': { frames: 150 },
   'race-track': { frames: 150 },
 
