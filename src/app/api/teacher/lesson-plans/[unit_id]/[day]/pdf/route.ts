@@ -57,6 +57,21 @@ export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher
           'Cache-Control': 'private, no-cache',
         },
       })
+    } catch (err) {
+      // TEMPORARY DIAGNOSTIC: surface the real launch/render failure instead of
+      // letting it bubble up as a bare 500. Remove (or trim to a generic message)
+      // once the root cause is fixed.
+      const e = err as Error
+      console.error('[pdf-route] generation failed:', e?.name, e?.message, e?.stack)
+      return NextResponse.json(
+        {
+          error: 'PDF generation failed',
+          name: e?.name ?? 'UnknownError',
+          message: e?.message ?? String(err),
+          stack: (e?.stack ?? '').split('\n').slice(0, 8).join('\n'),
+        },
+        { status: 500 },
+      )
     } finally {
       if (browser) await browser.close().catch(() => undefined)
     }
