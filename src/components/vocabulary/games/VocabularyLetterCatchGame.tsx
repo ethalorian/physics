@@ -24,16 +24,20 @@ type Phase = 'waiting' | 'playing' | 'feedback' | 'complete'
 // highlightTarget = glow the falling tiles that match the next needed letter.
 // On in Easy mode only: it turns the game from spelling-recall into "spot the
 // glowing letter," a scaffold for the lowest-readiness students.
+// goodChance = how often a fresh drop is the letter you currently need (the rest
+// are wrong: a mix of pure distractors and in-word-but-not-next letters). Higher
+// = more catchable letters on screen, fewer near-misses.
 const CONFIG = {
-  easy:   { fallMin: 55,  fallMax: 110, spawnMs: 720, distractorRatio: 0.35, lives: 5, msPerLetter: 2600, base: 10, maxOnScreen: 11, highlightTarget: true },
-  medium: { fallMin: 75,  fallMax: 150, spawnMs: 560, distractorRatio: 0.5,  lives: 3, msPerLetter: 2000, base: 20, maxOnScreen: 13, highlightTarget: false },
-  hard:   { fallMin: 100, fallMax: 205, spawnMs: 430, distractorRatio: 0.62, lives: 2, msPerLetter: 1500, base: 30, maxOnScreen: 15, highlightTarget: false },
+  easy:   { fallMin: 55,  fallMax: 110, spawnMs: 720, distractorRatio: 0.4,  goodChance: 0.66, lives: 5, msPerLetter: 2600, base: 10, maxOnScreen: 11, highlightTarget: true },
+  medium: { fallMin: 75,  fallMax: 150, spawnMs: 560, distractorRatio: 0.45, goodChance: 0.56, lives: 3, msPerLetter: 2000, base: 20, maxOnScreen: 13, highlightTarget: false },
+  hard:   { fallMin: 100, fallMax: 205, spawnMs: 430, distractorRatio: 0.5,  goodChance: 0.48, lives: 2, msPerLetter: 1500, base: 30, maxOnScreen: 15, highlightTarget: false },
 }
 
 const TILE = 46          // letter tile size (px)
-const ARENA_H = 540      // arena height (px) — matches the arena style below
+const ARENA_H = 600      // arena height (px) — matches the arena style below
 const BASKET_W = 116     // basket sprite width (px)
-const BASKET_H = 46      // basket catch-zone height (px)
+const BASKET_H = 54      // basket sprite height (px)
+const BASKET_GAP = 18    // gap between basket bottom and arena floor (px)
 const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 // letters of the term, uppercase, ignoring spaces/punctuation for the spelling.
@@ -233,7 +237,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
       const neededOnScreen = active.some((l) => l.ch === needed)
       let ch: string
       let inWord: boolean
-      if (!neededOnScreen || Math.random() < 0.32) {
+      if (!neededOnScreen || Math.random() < cfg.goodChance) {
         ch = needed; inWord = true
       } else if (Math.random() < cfg.distractorRatio) {
         // a letter NOT in the word at all (pure distractor)
@@ -274,7 +278,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
       while (spawnAccRef.current >= cfg.spawnMs) { spawnAccRef.current -= cfg.spawnMs; spawn() }
 
       const basketCx = basketRef.current
-      const catchTop = ARENA_H - BASKET_H - 8
+      const catchTop = ARENA_H - BASKET_H - BASKET_GAP
       const needed = targetRef.current[filledRef.current]
       const survivors: FallingLetter[] = []
       let caughtCorrect = false
@@ -303,7 +307,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     }
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [phase, cfg.maxOnScreen, cfg.spawnMs, cfg.fallMin, cfg.fallMax, cfg.distractorRatio, correctCatch, wrongCatch])
+  }, [phase, cfg.maxOnScreen, cfg.spawnMs, cfg.fallMin, cfg.fallMax, cfg.distractorRatio, cfg.goodChance, correctCatch, wrongCatch])
 
   const moveBasketToClientX = useCallback((clientX: number) => {
     const rect = arenaRef.current?.getBoundingClientRect()
@@ -434,10 +438,12 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
             )
           })}
 
-          {/* basket sprite */}
-          <div className="absolute pointer-events-none" style={{ left: basketLeft, top: ARENA_H - BASKET_H - 8, width: BASKET_W, height: BASKET_H, zIndex: 10 }}>
-            <div className="w-full h-full grid place-items-center rounded-b-2xl rounded-t-md"
-              style={{ background: 'color-mix(in oklch, var(--primary) 22%, var(--card))', border: '3px solid var(--primary)', borderTopWidth: 0 }}>
+          {/* basket sprite — open top, sits clear of the arena floor */}
+          <div className="absolute pointer-events-none flex flex-col items-center" style={{ left: basketLeft, top: ARENA_H - BASKET_H - BASKET_GAP, width: BASKET_W, height: BASKET_H, zIndex: 10 }}>
+            {/* rim line marks the catch opening */}
+            <div style={{ width: '100%', height: 5, borderRadius: 999, background: 'var(--primary)' }} />
+            <div className="flex-1 w-full grid place-items-center rounded-b-2xl"
+              style={{ marginTop: 2, background: 'color-mix(in oklch, var(--primary) 22%, var(--card))', border: '3px solid var(--primary)', borderTopWidth: 0 }}>
               <ShoppingBasket size={26} style={{ color: 'var(--primary)' }} />
             </div>
           </div>

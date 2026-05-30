@@ -85,7 +85,7 @@ export default function AccountMenu() {
                   items={me.equipped_items}
                   size={40}
                   crop="head"
-                  className="w-full h-full"
+                  className="size-full"
                 />
               </div>
             ) : session?.user?.image ? (
