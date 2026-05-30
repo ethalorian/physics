@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarRange, BookOpen, Download } from 'lucide-react'
+import { ArrowLeft, CalendarRange, BookOpen, Download, FileText } from 'lucide-react'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
@@ -115,19 +115,34 @@ export default function TeacherPlansPage() {
                 <div className="flex items-start gap-2 mb-3">
                   <BookOpen size={16} style={{ color: 'var(--primary)', marginTop: 3 }} />
                   <h2 className="text-lg font-semibold tracking-tight flex-1 min-w-0">{current.title}</h2>
-                  <a
-                    href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx`}
-                    download
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
-                    style={{
-                      border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
-                      background: 'color-mix(in oklch, var(--primary) 10%, var(--card))',
-                      color: 'var(--primary)',
-                    }}
-                    title="Download this day as a Word document"
-                  >
-                    <Download size={13} /> Word
-                  </a>
+                  <div className="flex items-center gap-1.5">
+                    <a
+                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx`}
+                      download
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
+                      style={{
+                        border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
+                        background: 'color-mix(in oklch, var(--primary) 10%, var(--card))',
+                        color: 'var(--primary)',
+                      }}
+                      title="Download this day as a Word document"
+                    >
+                      <Download size={13} /> Word
+                    </a>
+                    <a
+                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/pdf`}
+                      download
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
+                      style={{
+                        border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
+                        background: 'color-mix(in oklch, var(--primary) 10%, var(--card))',
+                        color: 'var(--primary)',
+                      }}
+                      title="Download this day as a PDF (may take a few seconds)"
+                    >
+                      <FileText size={13} /> PDF
+                    </a>
+                  </div>
                 </div>
                 <div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
               </>

@@ -10,7 +10,7 @@ const VALID_TASKS = ['short_response', 'drawing', 'question', 'proof']
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   const { data, error } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, course_id, code, task_type, grouping_mode, group_size, status, prompt, created_at')
+    .select('id, course_id, code, task_type, grouping_mode, group_size, status, prompt:task_prompt, created_at')
     .eq('created_by', ctx.userId)
     .order('created_at', { ascending: false })
 
@@ -58,7 +58,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         grouping_mode,
         group_size: size,
         target_id: target_id || null,
-        prompt: prompt || null,
+        task_prompt: prompt || null,
         status: 'lobby',
       })
       .select('id, code')

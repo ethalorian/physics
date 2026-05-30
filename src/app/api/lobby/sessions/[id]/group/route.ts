@@ -92,7 +92,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   await supabaseAdmin
     .from('lobby_sessions')
-    .update({ status: 'grouped', updated_at: new Date().toISOString() })
+    .update({ status: 'grouped', grouped_at: new Date().toISOString() })
     .eq('id', id)
 
   return NextResponse.json({

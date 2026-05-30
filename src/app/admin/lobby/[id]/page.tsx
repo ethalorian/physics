@@ -4,11 +4,14 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock } from 'lucide-react'
+import Avatar from '@/components/avatar/Avatar'
+import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface Member {
-  user_id: string; name: string; group_id: string | null; word: string | null
+  user_id: string; name: string; email: string | null; group_id: string | null; word: string | null
   joined_at: string; phrase_completed_at: string | null
   word_entries: { word: string; at: string }[]
+  traits: AvatarTraits; equipped: EquippedItems
   artifact: { response: unknown; created_at: string } | null
 }
 interface Group { id: string; label: string; passphrase: string[] }
@@ -98,6 +101,7 @@ export default function LobbyDetailPage() {
   const [session, setSession] = useState<SessionRow | null>(null)
   const [groups, setGroups] = useState<Group[]>([])
   const [members, setMembers] = useState<Member[]>([])
+  const [avatarItems, setAvatarItems] = useState<AvatarItem[]>([])
   const [busy, setBusy] = useState(false)
 
   const load = useCallback(() => {
@@ -105,6 +109,7 @@ export default function LobbyDetailPage() {
       if (d.session) setSession(d.session)
       setGroups(d.groups ?? [])
       setMembers(d.members ?? [])
+      setAvatarItems(d.avatarItems ?? [])
     }).catch(() => {})
   }, [id])
 
@@ -203,19 +208,25 @@ export default function LobbyDetailPage() {
                   <div className="grid gap-1.5">
                     {gm.map((m) => (
                       <div key={m.user_id} className="flex items-start justify-between gap-2 text-sm border-t pt-1.5" style={{ borderColor: 'var(--border)' }}>
-                        <div>
-                          <div className="flex items-center gap-1.5">
-                            {m.phrase_completed_at
-                              ? <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />
-                              : <Clock size={14} style={{ color: 'var(--muted-foreground)' }} />}
-                            <span>{m.name}</span>
-                            <span className="font-mono text-xs px-1.5 rounded" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>{m.word}</span>
+                        <div className="flex items-start gap-2 min-w-0">
+                          <div className="shrink-0 rounded-full overflow-hidden mt-0.5" style={{ width: 30, height: 30, background: 'var(--muted)' }}>
+                            <Avatar traits={m.traits} equipped={m.equipped} items={avatarItems} size={30} crop="head" />
                           </div>
-                          {m.artifact && (hasStrokes(m.artifact.response) ? (
-                            <div className="mt-1 pl-5"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
-                          ) : (
-                            <div className="text-xs mt-0.5 pl-5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>
-                          ))}
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              {m.phrase_completed_at
+                                ? <CheckCircle2 size={14} style={{ color: 'var(--success)' }} />
+                                : <Clock size={14} style={{ color: 'var(--muted-foreground)' }} />}
+                              <span>{m.name}</span>
+                              <span className="font-mono text-xs px-1.5 rounded" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>{m.word}</span>
+                            </div>
+                            {m.email && <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{m.email}</div>}
+                            {m.artifact && (hasStrokes(m.artifact.response) ? (
+                              <div className="mt-1"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
+                            ) : (
+                              <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>
+                            ))}
+                          </div>
                         </div>
                         <div className="flex flex-col items-end gap-1">
                           <span className="text-[11px] whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>

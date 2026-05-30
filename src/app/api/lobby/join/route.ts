@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getAvatarData } from '@/lib/lobby/avatars'
 
 async function findOpenSession(code: string) {
   const { data } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, code, status, task_type, prompt, group_size')
+    .select('id, code, status, task_type, prompt:task_prompt, group_size')
     .eq('code', code.toUpperCase())
     .maybeSingle()
   return data as
@@ -46,15 +47,45 @@ export const GET = withAuth(async (request, ctx) => {
     .eq('user_id', ctx.userId)
     .maybeSingle()
 
+  const m = member as
+    | { group_id: string | null; word: string | null; phrase_completed_at: string | null; word_entries: { word: string; at: string }[] }
+    | null
+  const groupId = m?.group_id ?? null
+
+  // Group roster (alias + avatar) so students can find their partners. We pull
+  // the whole group's members; aliases only — emails never leave the server here.
   let phraseLength = 0
-  if (member && (member as { group_id: string | null }).group_id) {
-    const { data: grp } = await supabaseAdmin
-      .from('lobby_groups')
-      .select('passphrase')
-      .eq('id', (member as { group_id: string }).group_id)
-      .maybeSingle()
+  let groupMates: { user_id: string; phrase_completed_at: string | null }[] = []
+  if (groupId) {
+    const [{ data: grp }, { data: gm }] = await Promise.all([
+      supabaseAdmin.from('lobby_groups').select('passphrase').eq('id', groupId).maybeSingle(),
+      supabaseAdmin.from('lobby_members').select('user_id, phrase_completed_at').eq('session_id', session.id).eq('group_id', groupId).order('joined_at'),
+    ])
     phraseLength = ((grp as { passphrase: string[] } | null)?.passphrase ?? []).length
+    groupMates = (gm ?? []) as { user_id: string; phrase_completed_at: string | null }[]
   }
+
+  // alias + avatar for self and every groupmate
+  const gids = Array.from(new Set([ctx.userId, ...groupMates.map((x) => x.user_id)]))
+  const [{ data: studs }, avatars] = await Promise.all([
+    supabaseAdmin.from('students').select('google_user_id, alias, name').in('google_user_id', gids),
+    getAvatarData(gids),
+  ])
+  const aliasByGid = new Map<string, string>()
+  for (const s of (studs ?? []) as { google_user_id: string | null; alias: string | null; name: string | null }[]) {
+    if (s.google_user_id) aliasByGid.set(s.google_user_id, s.alias || s.name || 'Student')
+  }
+  const bundle = (gid: string) => ({
+    alias: aliasByGid.get(gid) ?? 'Student',
+    traits: avatars.byUser[gid]?.traits ?? {},
+    equipped: avatars.byUser[gid]?.equipped ?? {},
+  })
+
+  const group = groupMates.map((x) => ({
+    ...bundle(x.user_id),
+    completed: !!x.phrase_completed_at,
+    isMe: x.user_id === ctx.userId,
+  }))
 
   // Has this student already submitted an artifact?
   const { data: existing } = await supabaseAdmin
@@ -64,21 +95,20 @@ export const GET = withAuth(async (request, ctx) => {
     .eq('user_id', ctx.userId)
     .maybeSingle()
 
-  const m = member as
-    | { group_id: string | null; word: string | null; phrase_completed_at: string | null; word_entries: { word: string; at: string }[] }
-    | null
-
   return NextResponse.json({
     session_id: session.id,
     status: session.status,
     task_type: session.task_type,
     prompt: session.prompt,
     joined: !!m,
-    grouped: !!(m && m.group_id),
+    grouped: !!groupId,
     word: m?.word ?? null,
     phraseLength,
     enteredWords: (m?.word_entries ?? []).map((e) => e.word),
     completed: !!m?.phrase_completed_at,
     submitted: !!existing,
+    self: bundle(ctx.userId),
+    group,
+    avatarItems: avatars.items,
   })
 })

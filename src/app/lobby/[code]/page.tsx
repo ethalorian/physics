@@ -5,11 +5,17 @@ import { useParams } from 'next/navigation'
 import { Hourglass, Lock, Unlock, CheckCircle2, Send } from 'lucide-react'
 import InkPad from '@/components/blocks/InkPad'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
+import Avatar from '@/components/avatar/Avatar'
+import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
+
+interface AvatarBundle { alias: string; traits: AvatarTraits; equipped: EquippedItems }
+interface GroupMate extends AvatarBundle { completed: boolean; isMe: boolean }
 
 interface State {
   session_id: string; status: string; task_type: string; prompt: string | null
   joined: boolean; grouped: boolean; word: string | null
   phraseLength: number; enteredWords: string[]; completed: boolean; submitted: boolean
+  self?: AvatarBundle; group?: GroupMate[]; avatarItems?: AvatarItem[]
 }
 
 export default function LobbyActivityPage() {
@@ -68,6 +74,16 @@ export default function LobbyActivityPage() {
       <div className="rounded-2xl border p-6" style={card}>{inner}</div>
     </div>
   )
+  const renderAv = (b: { traits: AvatarTraits; equipped: EquippedItems }, size = 44) => (
+    <Avatar traits={b.traits} equipped={b.equipped} items={st?.avatarItems} size={size} crop="head" />
+  )
+  const selfHeader = st?.self && (
+    <div className="flex items-center justify-center gap-2 mb-3">
+      {renderAv(st.self, 36)}
+      <span className="text-sm font-semibold">{st.self.alias}</span>
+      <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>you</span>
+    </div>
+  )
 
   if (!st) return wrap(<p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>)
   if (st.status === 'closed' && !st.submitted) return wrap(<p className="text-sm">This lobby is closed.</p>)
@@ -82,6 +98,7 @@ export default function LobbyActivityPage() {
 
   if (!st.grouped) return wrap(
     <div className="text-center">
+      {selfHeader}
       <Hourglass size={36} style={{ color: 'var(--primary)' }} className="mx-auto mb-2" />
       <h1 className="text-lg font-semibold">You&apos;re in the lobby</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Waiting for your teacher to make groups…</p>
@@ -103,6 +120,27 @@ export default function LobbyActivityPage() {
           Collect {blanks} more {blanks === 1 ? 'word' : 'words'} from your group to unlock the task.
         </p>
       </div>
+
+      {st.group && st.group.length > 0 && (
+        <div className="mb-4">
+          <div className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Find your group and trade words:</div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {st.group.map((mate, i) => (
+              <div key={i} className="flex flex-col items-center gap-1" style={{ width: 64, opacity: mate.isMe ? 1 : 0.95 }}>
+                <div className="relative">
+                  {renderAv(mate, 48)}
+                  {mate.completed && (
+                    <CheckCircle2 size={16} style={{ color: 'var(--success)', position: 'absolute', right: -2, bottom: -2, background: 'var(--card)', borderRadius: 999 }} />
+                  )}
+                </div>
+                <span className="text-xs truncate w-full text-center" title={mate.alias}>
+                  {mate.alias}{mate.isMe ? ' (you)' : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {!st.completed ? (
         <>

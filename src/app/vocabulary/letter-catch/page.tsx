@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, ShoppingBasket, BookOpen, Heart, Flame } from 'lucide-react'
+import { ArrowLeft, ShoppingBasket, BookOpen, Clock, Flame } from 'lucide-react'
 import Link from 'next/link'
 import VocabularyLetterCatchGame from '@/components/vocabulary/games/VocabularyLetterCatchGame'
 import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
@@ -15,7 +15,7 @@ export default function StudentVocabularyLetterCatchPage() {
   const { data: session, status } = useSession()
   const [play, setPlay] = useState<ResolvedPlay>({ terms: [], scoreSetId: null, label: '' })
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
-  const [gameLength, setGameLength] = useState<number>(15)
+  const [gameLength, setGameLength] = useState<number>(10)
   const [gameStarted, setGameStarted] = useState(false)
   const [gameResults, setGameResults] = useState<{
     score: number
@@ -155,9 +155,9 @@ export default function StudentVocabularyLetterCatchPage() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="easy">Easy (slower drops, more lives, next letter glows)</SelectItem>
+                  <SelectItem value="easy">Easy (slow drops, more time, next letter glows)</SelectItem>
                   <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard (fast drops, more distractors)</SelectItem>
+                  <SelectItem value="hard">Hard (fast drops, less time, more distractors)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -172,9 +172,9 @@ export default function StudentVocabularyLetterCatchPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="5">5 words (Quick)</SelectItem>
+                  <SelectItem value="8">8 words (Short)</SelectItem>
                   <SelectItem value="10">10 words (Medium)</SelectItem>
                   <SelectItem value="15">15 words (Long)</SelectItem>
-                  <SelectItem value="20">20 words (Marathon)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -239,9 +239,9 @@ export default function StudentVocabularyLetterCatchPage() {
               <div className="flex items-start space-x-3">
                 <Badge variant="secondary" className="mt-0.5">4</Badge>
                 <div>
-                  <div className="font-medium text-foreground">Beat the Clock</div>
+                  <div className="font-medium text-foreground">Spell as Many as You Can</div>
                   <div className="text-sm text-muted-foreground">
-                    Spell the whole word before time runs out. Faster spelling and combos score more.
+                    One relaxed clock runs the whole game. Faster spelling and combos score more. Stuck on a word? Hit Skip.
                   </div>
                 </div>
               </div>
@@ -262,10 +262,10 @@ export default function StudentVocabularyLetterCatchPage() {
                 <div className="font-medium text-green-800 dark:text-green-300">Combo</div>
                 <div className="text-green-600 dark:text-green-400">up to ×5</div>
               </div>
-              <div className="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
-                <Heart className="h-4 w-4 mx-auto mb-1 text-red-600" />
-                <div className="font-medium text-red-800 dark:text-red-300">Lives</div>
-                <div className="text-red-600 dark:text-red-400">lose one per missed word</div>
+              <div className="text-center p-2 bg-blue-50 dark:bg-blue-900/20 rounded">
+                <Clock className="h-4 w-4 mx-auto mb-1 text-blue-600" />
+                <div className="font-medium text-blue-800 dark:text-blue-300">One Clock</div>
+                <div className="text-blue-600 dark:text-blue-400">for the whole game</div>
               </div>
             </div>
 
@@ -274,7 +274,7 @@ export default function StudentVocabularyLetterCatchPage() {
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Move the mouse to slide the basket</li>
                 <li>• Or use the ← → arrow keys</li>
-                <li>• Catch the highlighted next letter</li>
+                <li>• Catch the next letter in order (it&apos;s highlighted)</li>
                 <li>• Missed letters that hit the floor don&apos;t hurt you</li>
               </ul>
             </div>
