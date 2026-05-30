@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Hourglass, Lock, Unlock, CheckCircle2, Send } from 'lucide-react'
+import InkPad from '@/components/blocks/InkPad'
+import type { Stroke } from '@/components/blocks/DoodleCanvas'
 
 interface State {
   session_id: string; status: string; task_type: string; prompt: string | null
@@ -16,6 +18,7 @@ export default function LobbyActivityPage() {
   const [collected, setCollected] = useState<string[]>([])
   const [wordInput, setWordInput] = useState('')
   const [response, setResponse] = useState('')
+  const [strokes, setStrokes] = useState<Stroke[]>([])
   const [missing, setMissing] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const sessionId = useRef<string | null>(null)
@@ -46,12 +49,15 @@ export default function LobbyActivityPage() {
     if (d.completed) poll()
   }
 
+  const isDrawing = st?.task_type === 'drawing'
+
   const submit = async () => {
     if (!sessionId.current) return
     setBusy(true)
+    const payload = isDrawing ? { strokes } : response
     await fetch('/api/lobby/submit', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId.current, response }),
+      body: JSON.stringify({ session_id: sessionId.current, response: payload }),
     }).catch(() => {})
     setBusy(false); poll()
   }
@@ -122,10 +128,14 @@ export default function LobbyActivityPage() {
           <div className="flex items-center gap-2 mb-3 text-sm font-medium" style={{ color: 'var(--success)' }}>
             <Unlock size={15} /> Passphrase complete — submit your work.
           </div>
-          <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
-            placeholder="Type your response…"
-            className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
-          <button onClick={submit} disabled={busy || !response.trim()}
+          {isDrawing ? (
+            <InkPad value={strokes} onChange={setStrokes} />
+          ) : (
+            <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
+              placeholder="Type your response…"
+              className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
+          )}
+          <button onClick={submit} disabled={busy || (isDrawing ? strokes.length === 0 : !response.trim())}
             className="mt-3 w-full text-sm font-semibold rounded-lg px-4 py-2.5 inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
             <Send size={15} /> {busy ? 'Submitting…' : 'Submit'}

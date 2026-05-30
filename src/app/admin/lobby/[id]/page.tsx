@@ -22,6 +22,77 @@ function artifactText(r: unknown): string {
   return r ? JSON.stringify(r) : ''
 }
 
+type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
+function hasStrokes(r: unknown): r is { strokes: StrokeShape[] } {
+  return !!r && typeof r === 'object' && Array.isArray((r as { strokes?: unknown }).strokes)
+}
+function StrokesSvg({ strokes }: { strokes: StrokeShape[] }) {
+  if (!strokes.length) return <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</span>
+  return (
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 260, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="Student drawing">
+      {strokes.map((s, i) => (
+        <polyline key={i} points={(s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+      ))}
+    </svg>
+  )
+}
+
+function GroupTimeline({ group, members, card }: { group: Group; members: Member[]; card: React.CSSProperties }) {
+  const parse = (s: string) => Date.parse(s)
+  const times: number[] = []
+  members.forEach((m) => {
+    times.push(parse(m.joined_at))
+    m.word_entries.forEach((e) => times.push(parse(e.at)))
+    if (m.phrase_completed_at) times.push(parse(m.phrase_completed_at))
+  })
+  const valid = times.filter((t) => !Number.isNaN(t))
+  if (!valid.length) return null
+  const t0 = Math.min(...valid)
+  const t1 = Math.max(...valid)
+  const span = Math.max(1, t1 - t0)
+  const norm = (t: number) => `${((t - t0) / span) * 100}%`
+  const elapsed = Math.round((t1 - t0) / 1000)
+
+  return (
+    <div className="rounded-xl border p-3" style={card}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="font-semibold text-sm">{group.label}</span>
+        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{elapsed}s window</span>
+      </div>
+      <div className="grid gap-2">
+        {members.map((m) => {
+          const done = m.phrase_completed_at ? parse(m.phrase_completed_at) : null
+          return (
+            <div key={m.user_id} className="flex items-center gap-2">
+              <span className="text-xs w-24 truncate" title={m.name}>{m.name}</span>
+              <div className="relative flex-1 h-5 rounded" style={{ background: 'var(--muted)' }}>
+                {m.word_entries.map((e, i) => {
+                  const t = parse(e.at)
+                  if (Number.isNaN(t)) return null
+                  return (
+                    <span key={i} title={`${e.word} · ${new Date(t).toLocaleTimeString()}`}
+                      className="absolute top-1/2 rounded-full"
+                      style={{ left: norm(t), width: 7, height: 7, marginLeft: -3, marginTop: -3, background: 'var(--primary)' }} />
+                  )
+                })}
+                {done != null && (
+                  <span title={`completed ${new Date(done).toLocaleTimeString()}`} className="absolute top-1/2"
+                    style={{ left: norm(done), marginLeft: -7, marginTop: -7, color: 'var(--success)' }}>
+                    <CheckCircle2 size={14} />
+                  </span>
+                )}
+              </div>
+              <span className="text-[11px] w-9 text-right" style={{ color: done ? 'var(--success)' : 'var(--muted-foreground)' }}>
+                {done ? `${Math.round((done - t0) / 1000)}s` : '—'}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function LobbyDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [session, setSession] = useState<SessionRow | null>(null)
@@ -140,9 +211,11 @@ export default function LobbyDetailPage() {
                             <span>{m.name}</span>
                             <span className="font-mono text-xs px-1.5 rounded" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>{m.word}</span>
                           </div>
-                          {m.artifact && (
+                          {m.artifact && (hasStrokes(m.artifact.response) ? (
+                            <div className="mt-1 pl-5"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
+                          ) : (
                             <div className="text-xs mt-0.5 pl-5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>
-                          )}
+                          ))}
                         </div>
                         <div className="flex flex-col items-end gap-1">
                           <span className="text-[11px] whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>
@@ -164,6 +237,20 @@ export default function LobbyDetailPage() {
               )
             })}
           </div>
+
+          {groups.length > 0 && members.some((m) => m.word_entries.length > 0) && (
+            <div className="mt-6">
+              <h2 className="text-sm font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Collaboration timeline</h2>
+              <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
+                Each dot is a word entered; the check marks when the full passphrase was assembled. Far-right or missing checks = who lagged.
+              </p>
+              <div className="grid gap-3">
+                {groups.map((g) => (
+                  <GroupTimeline key={g.id} group={g} members={members.filter((m) => m.group_id === g.id)} card={card} />
+                ))}
+              </div>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -5,6 +5,9 @@ import unit1Cpa from '@/data/unit1-cpa-lesson-plans.json'
 import unit2Cpa from '@/data/unit2-cpa-lesson-plans.json'
 import unit3Cpa from '@/data/unit3-cpa-lesson-plans.json'
 import unit4Cpa from '@/data/unit4-cpa-lesson-plans.json'
+import unit5Cpa from '@/data/unit5-cpa-lesson-plans.json'
+import unit6Cpa from '@/data/unit6-cpa-lesson-plans.json'
+import unit7Cpa from '@/data/unit7-cpa-lesson-plans.json'
 import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the teacher's selected
@@ -21,6 +24,9 @@ const PLANS: Record<string, Record<string, DayPlan[]>> = {
     'unit-2': unit2Cpa as DayPlan[],
     'unit-3': unit3Cpa as DayPlan[],
     'unit-4': unit4Cpa as DayPlan[],
+    'unit-5': unit5Cpa as DayPlan[],
+    'unit-6': unit6Cpa as DayPlan[],
+    'unit-7': unit7Cpa as DayPlan[],
     'unit-8': unit8Cpa as DayPlan[],
   },
 }
