@@ -3,6 +3,7 @@
 import { use } from 'react'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import { SimEmbedContext } from '@/components/simulations/embed-context'
+import SimErrorBoundary from '@/components/simulations/SimErrorBoundary'
 
 // Chrome-free host for a simulation, loaded inside a lesson via <iframe>. Running
 // the sim in its own document isolates its layout (no overflow into the lesson)
@@ -21,7 +22,9 @@ export default function SimEmbedPage({ params }: { params: Promise<{ slug: strin
     <div className="sim-embed-clean">
       <style>{`.sim-embed-clean button:has(svg.lucide-arrow-left),.sim-embed-clean a:has(svg.lucide-arrow-left){display:none !important}`}</style>
       <SimEmbedContext.Provider value={true}>
-        <Sim />
+        <SimErrorBoundary slug={slug}>
+          <Sim />
+        </SimErrorBoundary>
       </SimEmbedContext.Provider>
     </div>
   )

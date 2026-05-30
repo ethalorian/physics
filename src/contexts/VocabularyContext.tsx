@@ -1,5 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { VocabularyTerm } from '@/types/assignment'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
@@ -57,6 +58,7 @@ const VocabularyContext = createContext<VocabularyContextType | undefined>(undef
 
 export function VocabularyProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
+  const pathname = usePathname()
   const [vocabularySets, setVocabularySets] = useState<VocabularySet[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -157,16 +159,17 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     }
   }, [session?.user?.id, canAccessVocabulary, saveToStorage, loadFromStorage])
 
-  // Lazy load on vocabulary pages
+  // Lazy load on vocabulary pages. Keyed off usePathname (not window.location)
+  // so it re-runs on App Router client-side navigation — otherwise soft-navigating
+  // onto a vocab page never fetches and the games stay disabled until a refresh.
   useEffect(() => {
-    const isVocabPage = typeof window !== 'undefined' && 
-      (window.location.pathname.includes('/vocabulary') || 
-       window.location.pathname.includes('/admin/vocabulary'))
-    
+    const isVocabPage = !!pathname &&
+      (pathname.includes('/vocabulary') || pathname.includes('/admin/vocabulary'))
+
     if (isVocabPage && session?.user?.id) {
       refreshVocabularySets()
     }
-  }, [session?.user?.id, refreshVocabularySets])
+  }, [pathname, session?.user?.id, refreshVocabularySets])
 
   // ========================================
   // CRUD OPERATIONS
