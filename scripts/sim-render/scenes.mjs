@@ -17,6 +17,7 @@ export const SCENES = {
   'carts-third-law': { frames: 150 },
   'astronaut-thrust': { params: { thrustMagnitude: 60, thrustAngle: 30, initialVelocity: 5, velocityAngle: 0 }, frames: 300 },
   'vacuum-chamber': { frames: 150 },
+  'dart-deflection': { frames: 820 }, // ~6.5 s animation → arrival/outcome
 
   // projectile / kinematics
   'projectile-motion': { frames: 120 },

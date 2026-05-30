@@ -16,6 +16,7 @@ export const SIM_COMPONENTS: Record<string, ComponentType> = {
   'car-race': load(() => import('@/app/simulations/car-race/page')),
   'carts-third-law': load(() => import('@/app/simulations/carts-third-law/page')),
   'constant-velocity': load(() => import('@/app/simulations/constant-velocity/page')),
+  'dart-deflection': load(() => import('@/app/simulations/dart-deflection/page')),
   'distance-displacement': load(() => import('@/app/simulations/distance-displacement/page')),
   'free-body-diagram': load(() => import('@/app/simulations/free-body-diagram/page')),
   'freefall-cliff': load(() => import('@/app/simulations/freefall-cliff/page')),
