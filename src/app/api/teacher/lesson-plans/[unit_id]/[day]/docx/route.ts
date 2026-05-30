@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import HTMLtoDOCX from 'html-to-docx'
 import { withRole } from '@/lib/api-auth'
 import unit1Cpa from '@/data/unit1-cpa-lesson-plans.json'
 import unit2Cpa from '@/data/unit2-cpa-lesson-plans.json'
@@ -107,13 +108,6 @@ export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher
 
     const plan = findDay(unitId, day, tracks)
     if (!plan) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
-
-    // html-to-docx is CommonJS — dynamic import returns the namespace; the
-    // converter function is the default export.
-    const mod = (await import('html-to-docx')) as unknown as {
-      default: (html: string, header: string | null, options: Record<string, unknown>) => Promise<Buffer>
-    }
-    const HTMLtoDOCX = mod.default
 
     const html = buildHtmlDoc(unitId, plan)
     const docxBuffer = await HTMLtoDOCX(html, null, {
