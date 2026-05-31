@@ -51,13 +51,13 @@ export default function SimulationProgress({
   
   return (
     <Card className={`${state.isCompleted 
-      ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300' 
-      : 'bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200'} ${className}`}>
+      ? 'bg-gradient-to-r from-success/15 to-success/5 border-success/30' 
+      : 'bg-gradient-to-r from-primary/15 to-primary/5 border-primary/30'} ${className}`}>
       <CardContent className="py-4">
         <div className="space-y-3">
           {/* Header */}
           <div className="flex items-center justify-between">
-            <h3 className={`font-semibold ${state.isCompleted ? 'text-green-900' : 'text-purple-900'}`}>
+            <h3 className={`font-semibold ${state.isCompleted ? 'text-success' : 'text-primary'}`}>
               {title}
             </h3>
             <Badge variant={state.isCompleted ? "default" : "secondary"}>
@@ -69,7 +69,7 @@ export default function SimulationProgress({
           <div className="space-y-1">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Overall Progress</span>
-              <span className={`font-medium ${state.progress >= 100 ? 'text-green-600' : ''}`}>
+              <span className={`font-medium ${state.progress >= 100 ? 'text-success' : ''}`}>
                 {state.progress}%
               </span>
             </div>
@@ -88,13 +88,13 @@ export default function SimulationProgress({
                   <div className="flex items-center gap-2">
                     <Target className="h-3 w-3 text-muted-foreground" />
                     <span className="text-muted-foreground">Actions:</span>
-                    <span className={`font-medium ${actionsComplete ? 'text-green-600' : ''}`}>
+                    <span className={`font-medium ${actionsComplete ? 'text-success' : ''}`}>
                       {state.criteria.actions.completed}/{state.criteria.actions.required}
                     </span>
                   </div>
                   <div className="text-xs space-y-1">
                     {Array.from(state.completedActions).map(action => (
-                      <div key={action} className="text-green-600">
+                      <div key={action} className="text-success">
                         <CheckCircle className="inline h-3 w-3 mr-1" />
                         {actionLabels[action] || action}
                       </div>
@@ -109,7 +109,7 @@ export default function SimulationProgress({
                   <div className="flex items-center gap-2">
                     <Activity className="h-3 w-3 text-muted-foreground" />
                     <span className="text-muted-foreground">Interactions:</span>
-                    <span className={`font-medium ${interactionsComplete ? 'text-green-600' : ''}`}>
+                    <span className={`font-medium ${interactionsComplete ? 'text-success' : ''}`}>
                       {state.criteria.interactions.current}/{state.criteria.interactions.required}
                     </span>
                   </div>
@@ -126,7 +126,7 @@ export default function SimulationProgress({
                   <div className="flex items-center gap-2">
                     <Clock className="h-3 w-3 text-muted-foreground" />
                     <span className="text-muted-foreground">Time:</span>
-                    <span className={`font-medium ${timeComplete ? 'text-green-600' : ''}`}>
+                    <span className={`font-medium ${timeComplete ? 'text-success' : ''}`}>
                       {formatTime(state.criteria.time.current)}/{formatTime(state.criteria.time.required)}
                     </span>
                   </div>
@@ -141,7 +141,7 @@ export default function SimulationProgress({
           
           {/* Completion Message */}
           {state.isCompleted && (
-            <div className="bg-green-100 text-green-800 p-3 rounded-lg text-center font-medium animate-in fade-in duration-500">
+            <div className="bg-success/10 text-success p-3 rounded-lg text-center font-medium animate-in fade-in duration-500">
               🎉 Great job! You&apos;ve completed all requirements!
             </div>
           )}

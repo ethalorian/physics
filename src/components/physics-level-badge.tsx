@@ -10,7 +10,7 @@ interface PhysicsLevelBadgeProps {
 export function PhysicsLevelBadge({ variant = 'default', className = '' }: PhysicsLevelBadgeProps) {
   if (variant === 'compact') {
     return (
-      <Badge className={`bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 ${className}`}>
+      <Badge className={`bg-primary/10 text-primary dark:bg-primary/30 dark:text-primary ${className}`}>
         <BookOpen className="h-3 w-3 mr-1" />
         HS Conceptual Physics
       </Badge>
@@ -19,26 +19,26 @@ export function PhysicsLevelBadge({ variant = 'default', className = '' }: Physi
 
   if (variant === 'detailed') {
     return (
-      <div className={`bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-700 ${className}`}>
+      <div className={`bg-gradient-to-r from-primary/15 to-primary/5 dark:from-primary/15/20 dark:to-primary/5/20 rounded-lg p-4 border border-primary/30 dark:border-primary/30 ${className}`}>
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-800/30 rounded-lg">
-            <BookOpen className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+          <div className="p-2 bg-primary/10 dark:bg-primary/30 rounded-lg">
+            <BookOpen className="h-5 w-5 text-primary dark:text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+            <h3 className="font-semibold text-primary dark:text-primary mb-2">
               High School Conceptual Physics
             </h3>
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <span className="text-blue-700 dark:text-blue-300">Ages 14-18</span>
+                <Users className="h-4 w-4 text-primary dark:text-primary" />
+                <span className="text-primary dark:text-primary">Ages 14-18</span>
               </div>
               <div className="flex items-center gap-2">
-                <Calculator className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                <span className="text-blue-700 dark:text-blue-300">Algebra 1 Level</span>
+                <Calculator className="h-4 w-4 text-primary dark:text-primary" />
+                <span className="text-primary dark:text-primary">Algebra 1 Level</span>
               </div>
             </div>
-            <div className="mt-3 text-xs text-blue-600 dark:text-blue-400">
+            <div className="mt-3 text-xs text-primary dark:text-primary">
               <p className="mb-1">• Uses g = 10 m/s² for simplicity</p>
               <p className="mb-1">• Focuses on conceptual understanding</p>
               <p className="mb-1">• No calculus or advanced trig required</p>
@@ -52,13 +52,13 @@ export function PhysicsLevelBadge({ variant = 'default', className = '' }: Physi
 
   // Default variant
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-md ${className}`}>
-      <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+    <div className={`inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 dark:bg-primary/30 rounded-md ${className}`}>
+      <BookOpen className="h-4 w-4 text-primary dark:text-primary" />
       <div className="text-sm">
-        <span className="font-medium text-blue-800 dark:text-blue-200">
+        <span className="font-medium text-primary dark:text-primary">
           High School Conceptual Physics
         </span>
-        <span className="text-blue-600 dark:text-blue-400 ml-2">
+        <span className="text-primary dark:text-primary ml-2">
           • Algebra 1 • Ages 14-18
         </span>
       </div>
@@ -71,14 +71,14 @@ export function PhysicsLevelBadge({ variant = 'default', className = '' }: Physi
  */
 export function PhysicsLevelInfo() {
   return (
-    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+    <div className="bg-primary/5 dark:bg-primary/20 rounded-lg p-4 mb-6">
       <div className="flex items-start gap-3">
-        <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+        <Info className="h-5 w-5 text-primary dark:text-primary mt-0.5" />
         <div>
-          <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          <h4 className="font-semibold text-primary dark:text-primary mb-2">
             Course Level Information
           </h4>
-          <div className="text-sm text-blue-700 dark:text-blue-300 space-y-2">
+          <div className="text-sm text-primary dark:text-primary space-y-2">
             <p>
               This system is designed for <strong>High School Conceptual Physics</strong> courses
               with students who have completed <strong>Algebra 1</strong>.
@@ -103,7 +103,7 @@ export function PhysicsLevelInfo() {
                 </ul>
               </div>
             </div>
-            <p className="text-xs mt-3 text-blue-600 dark:text-blue-400">
+            <p className="text-xs mt-3 text-primary dark:text-primary">
               💡 Tip: Questions auto-generate with appropriate difficulty and use g=10 m/s² for simplicity
             </p>
           </div>
@@ -120,20 +120,20 @@ export function FormulasQuickReference() {
   const { formulas } = PHYSICS_LEVEL
   
   return (
-    <div className="bg-gray-50 dark:bg-gray-800/50 rounded-lg p-4">
-      <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+    <div className="bg-muted dark:bg-gray-800/50 rounded-lg p-4">
+      <h4 className="font-semibold text-foreground dark:text-muted-foreground mb-3 flex items-center gap-2">
         <Calculator className="h-4 w-4" />
         Quick Formula Reference
       </h4>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
         {Object.entries(formulas).slice(0, 12).map(([name, formula]) => (
-          <div key={name} className="bg-white dark:bg-gray-800 rounded px-2 py-1 border border-gray-200 dark:border-gray-700">
-            <span className="text-gray-500 dark:text-gray-400">{name.replace(/([A-Z])/g, ' $1').toLowerCase()}:</span>
-            <span className="ml-1 font-mono font-medium text-gray-700 dark:text-gray-300">{formula}</span>
+          <div key={name} className="bg-white dark:bg-gray-800 rounded px-2 py-1 border border-border dark:border-border">
+            <span className="text-muted-foreground dark:text-muted-foreground">{name.replace(/([A-Z])/g, ' $1').toLowerCase()}:</span>
+            <span className="ml-1 font-mono font-medium text-foreground dark:text-muted-foreground">{formula}</span>
           </div>
         ))}
       </div>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+      <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-2">
         Using g = 10 m/s² for all calculations
       </p>
     </div>

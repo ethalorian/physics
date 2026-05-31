@@ -186,7 +186,7 @@ export default function IncrementalAuth({
                   <ul className="space-y-1">
                     {featureInfo.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-start space-x-2">
-                        <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                        <CheckCircle className="h-4 w-4 text-success mt-0.5" />
                         <span className="text-sm text-muted-foreground">{benefit}</span>
                       </li>
                     ))}
@@ -195,8 +195,8 @@ export default function IncrementalAuth({
               )}
               
               {authError && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                  <p className="text-sm text-red-800">{authError}</p>
+                <div className="bg-destructive/5 border border-destructive/30 rounded-lg p-3">
+                  <p className="text-sm text-destructive">{authError}</p>
                 </div>
               )}
               
@@ -224,14 +224,14 @@ export default function IncrementalAuth({
 
   // Standalone authorization button
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+    <div className="bg-primary/5 border border-primary/30 rounded-lg p-4">
       <div className="flex items-start space-x-3">
-        <Lock className="h-5 w-5 text-blue-600 mt-0.5" />
+        <Lock className="h-5 w-5 text-primary mt-0.5" />
         <div className="flex-1">
-          <h3 className="text-sm font-medium text-blue-900">
+          <h3 className="text-sm font-medium text-primary">
             {featureInfo.title}
           </h3>
-          <p className="text-sm text-blue-700 mt-1">
+          <p className="text-sm text-primary mt-1">
             {featureInfo.description}
           </p>
           
@@ -239,15 +239,15 @@ export default function IncrementalAuth({
             <ul className="mt-2 space-y-1">
               {featureInfo.benefits.map((benefit, index) => (
                 <li key={index} className="flex items-center space-x-2">
-                  <CheckCircle className="h-3 w-3 text-blue-500" />
-                  <span className="text-xs text-blue-700">{benefit}</span>
+                  <CheckCircle className="h-3 w-3 text-primary" />
+                  <span className="text-xs text-primary">{benefit}</span>
                 </li>
               ))}
             </ul>
           )}
           
           {authError && (
-            <p className="text-sm text-red-600 mt-2">{authError}</p>
+            <p className="text-sm text-destructive mt-2">{authError}</p>
           )}
           
           <Button

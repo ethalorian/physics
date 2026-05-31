@@ -105,7 +105,7 @@ export default function ProgressScoreboard({
         onClick={() => setIsDrawerOpen(!isDrawerOpen)}
         className={cn(
           "fixed top-1/2 -translate-y-1/2 z-50 h-16 w-12 rounded-r-xl rounded-l-none shadow-2xl",
-          "bg-gradient-to-b from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+          "bg-gradient-to-b from-primary/15 to-primary/5 hover:from-primary/15 hover:to-primary/5",
           "border-0 text-white transition-all duration-300",
           isDrawerOpen ? "right-full sm:right-80 md:right-96" : "right-0",
           className
@@ -134,7 +134,7 @@ export default function ProgressScoreboard({
       {/* Drawer Panel */}
       <div className={cn(
         "fixed top-0 right-0 h-full z-50 transform transition-all duration-300 ease-in-out",
-        "bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white shadow-2xl",
+        "bg-gradient-to-br from-primary/15 via-primary/10 to-pink-600 text-white shadow-2xl",
         "w-full sm:w-80 md:w-96 border-l border-white/20",
         isDrawerOpen ? "translate-x-0" : "translate-x-full"
       )}>
@@ -197,7 +197,7 @@ export default function ProgressScoreboard({
               {/* Questions Completed */}
               <div className="bg-white/15 rounded-xl p-4 backdrop-blur border border-white/20">
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-300" />
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                   <span className="text-sm text-white/90 font-medium">Completed</span>
                 </div>
                 <div className="text-2xl font-bold">
@@ -258,13 +258,13 @@ export default function ProgressScoreboard({
             <div className="bg-white/10 rounded-xl p-4 backdrop-blur border border-white/20 text-center">
               <div className="text-lg mb-2">
                 {progressPercentage === 100 ? (
-                  <span className="text-green-300">🎉</span>
+                  <span className="text-success">🎉</span>
                 ) : progressPercentage >= 75 ? (
-                  <span className="text-blue-300">🚀</span>
+                  <span className="text-primary">🚀</span>
                 ) : progressPercentage >= 50 ? (
-                  <span className="text-purple-300">💪</span>
+                  <span className="text-primary">💪</span>
                 ) : progressPercentage >= 25 ? (
-                  <span className="text-indigo-300">⭐</span>
+                  <span className="text-primary">⭐</span>
                 ) : (
                   <span className="text-white/80">🎯</span>
                 )}

@@ -29,8 +29,8 @@ const TEST_ACCOUNTS = [
     role: 'student',
     name: 'Test Student',
     icon: GraduationCap,
-    color: 'bg-blue-500',
-    hoverColor: 'hover:bg-blue-600',
+    color: 'bg-primary',
+    hoverColor: 'hover:bg-primary',
     description: 'Student account',
     shortcut: '1'
   },
@@ -40,8 +40,8 @@ const TEST_ACCOUNTS = [
     role: 'teacher',
     name: 'Test Teacher',
     icon: Users,
-    color: 'bg-green-500',
-    hoverColor: 'hover:bg-green-600',
+    color: 'bg-success',
+    hoverColor: 'hover:bg-success',
     description: 'Teacher account',
     shortcut: '2'
   },
@@ -51,8 +51,8 @@ const TEST_ACCOUNTS = [
     role: 'admin',
     name: 'Test Admin',
     icon: Shield,
-    color: 'bg-purple-500',
-    hoverColor: 'hover:bg-purple-600',
+    color: 'bg-primary',
+    hoverColor: 'hover:bg-primary',
     description: 'Admin account',
     shortcut: '3'
   }
@@ -180,7 +180,7 @@ export function QuickTestAccountSwitcher() {
         <Button
           onClick={() => setIsExpanded(true)}
           size="sm"
-          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg animate-pulse"
+          className="bg-gradient-to-r from-primary/15 to-primary/5 hover:from-primary/15 hover:to-primary/5 text-white shadow-lg animate-pulse"
         >
           <Settings2 className="h-4 w-4 mr-1" />
           Dev
@@ -192,7 +192,7 @@ export function QuickTestAccountSwitcher() {
   // Expanded state - full account switcher
   return (
     <div className="fixed bottom-4 left-4 z-[100] animate-in slide-in-from-left">
-      <Card className="w-80 shadow-2xl border-2 border-purple-500/20 bg-background/95 backdrop-blur">
+      <Card className="w-80 shadow-2xl border-2 border-primary/30/20 bg-background/95 backdrop-blur">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-semibold flex items-center gap-2">
@@ -242,7 +242,7 @@ export function QuickTestAccountSwitcher() {
                   size="sm"
                   className={cn(
                     "w-full justify-start relative group",
-                    !isCurrentAccount && "hover:border-purple-500/50"
+                    !isCurrentAccount && "hover:border-primary/30/50"
                   )}
                   onClick={() => handleQuickSwitch(account)}
                   disabled={isLoading !== null || isCurrentAccount}

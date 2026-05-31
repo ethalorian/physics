@@ -209,8 +209,8 @@ export function SimulationWrapper({
       {trackProgress && isTracking && (
         <Card className={`border-2 transition-all duration-500 ${
           isCompleted 
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-300 shadow-lg' 
-            : 'bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200'
+            ? 'bg-gradient-to-r from-success/15 to-success/5 border-success/30 shadow-lg' 
+            : 'bg-gradient-to-r from-primary/15 to-primary/5 border-primary/30'
         }`}>
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
@@ -219,14 +219,14 @@ export function SimulationWrapper({
                   <>
                     <div className="flex items-center gap-2">
                       <div className="relative">
-                        <CheckCircle className="h-8 w-8 text-green-600 animate-in zoom-in duration-300" />
+                        <CheckCircle className="h-8 w-8 text-success animate-in zoom-in duration-300" />
                         <div className="absolute inset-0 animate-ping">
-                          <CheckCircle className="h-8 w-8 text-green-400 opacity-75" />
+                          <CheckCircle className="h-8 w-8 text-success opacity-75" />
                         </div>
                       </div>
                       <div>
-                        <h3 className="font-bold text-green-800 text-lg">Simulation Complete!</h3>
-                        <p className="text-xs text-green-600">Great job exploring the physics concepts</p>
+                        <h3 className="font-bold text-success text-lg">Simulation Complete!</h3>
+                        <p className="text-xs text-success">Great job exploring the physics concepts</p>
                       </div>
                     </div>
                   </>
@@ -235,15 +235,15 @@ export function SimulationWrapper({
                     <div className="relative flex items-center gap-3">
                       <div className="flex items-center gap-2">
                         <div className="relative">
-                          <div className="h-8 w-8 rounded-full border-3 border-blue-300 border-t-blue-600 animate-spin" />
+                          <div className="h-8 w-8 rounded-full border-3 border-primary/30 border-t-blue-600 animate-spin" />
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="h-4 w-4 rounded-full bg-blue-600 animate-pulse" />
+                            <div className="h-4 w-4 rounded-full bg-primary animate-pulse" />
                           </div>
                         </div>
                       </div>
                       <div>
-                        <h3 className="font-semibold text-blue-800">Simulation Active</h3>
-                        <p className="text-xs text-blue-600">Explore and interact with the simulation</p>
+                        <h3 className="font-semibold text-primary">Simulation Active</h3>
+                        <p className="text-xs text-primary">Explore and interact with the simulation</p>
                       </div>
                     </div>
                   </>
@@ -252,12 +252,12 @@ export function SimulationWrapper({
               
               <div className="flex items-center gap-2">
                 {isCompleted ? (
-                  <Badge className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 text-sm font-semibold">
+                  <Badge className="bg-success hover:bg-success text-white px-4 py-1 text-sm font-semibold">
                     <CheckCircle className="h-4 w-4 mr-1.5" />
                     COMPLETED
                   </Badge>
                 ) : (
-                  <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 text-sm font-semibold animate-pulse">
+                  <Badge className="bg-gradient-to-r from-primary/15 to-primary/5 text-white px-4 py-1 text-sm font-semibold animate-pulse">
                     <div className="flex items-center gap-1.5">
                       <div className="h-2 w-2 bg-white rounded-full animate-bounce" />
                       IN PROGRESS
@@ -270,8 +270,8 @@ export function SimulationWrapper({
             {/* Progress indicator bar */}
             {!isCompleted && (
               <div className="mt-3">
-                <div className="h-1 bg-blue-200 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse-slow" 
+                <div className="h-1 bg-primary/15 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-primary/15 to-primary/5 rounded-full animate-pulse-slow" 
                        style={{ width: '60%' }} />
                 </div>
               </div>
@@ -340,11 +340,11 @@ export function AIHintButton({ onRequestHint, question, onHintReceived }: AIHint
       </Button>
 
       {hint && (
-        <Card className="bg-purple-50 border-purple-200">
+        <Card className="bg-primary/5 border-primary/30">
           <CardContent className="py-3">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-5 w-5 text-purple-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-purple-900">{hint}</div>
+              <AlertCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-primary">{hint}</div>
             </div>
           </CardContent>
         </Card>

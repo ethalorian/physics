@@ -99,7 +99,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 <label className="text-sm font-medium">Options</label>
               </div>
               {mcQuestion.options?.map((option: string, index: number) => (
-                <div key={index} className="space-y-2 mb-3 p-3 border rounded-lg bg-gray-50">
+                <div key={index} className="space-y-2 mb-3 p-3 border rounded-lg bg-muted">
                   <div className="flex items-center gap-2">
                     <Input
                       value={option}
@@ -116,7 +116,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                       variant="outline"
                       size="sm"
                       onClick={() => updateQuestion({ correctAnswer: index })}
-                      className={mcQuestion.correctAnswer === index ? 'bg-green-100 border-green-300' : ''}
+                      className={mcQuestion.correctAnswer === index ? 'bg-success/10 border-success/30' : ''}
                     >
                       {mcQuestion.correctAnswer === index ? '✓ Correct' : 'Set Correct'}
                     </Button>
@@ -139,7 +139,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                   </div>
                   {showMisconceptions && (
                     <div className="space-y-1">
-                      <label className="text-xs font-medium text-gray-600">
+                      <label className="text-xs font-medium text-muted-foreground">
                         {mcQuestion.correctAnswer === index ? 'Explanation:' : 'Misconception/Logic Flaw:'}
                       </label>
                       <Textarea
@@ -154,7 +154,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                           : "Describe the misconception or logic error..."}
                         className={`text-xs min-h-[60px] ${
                           mcQuestion.correctAnswer === index 
-                            ? 'bg-green-50 border-green-200' 
+                            ? 'bg-success/5 border-success/30' 
                             : 'bg-orange-50 border-orange-200'
                         }`}
                         rows={2}
@@ -186,7 +186,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     variant="outline"
                     size="sm"
                     onClick={() => setShowMisconceptions(!showMisconceptions)}
-                    className={showMisconceptions ? 'bg-purple-50 border-purple-200' : ''}
+                    className={showMisconceptions ? 'bg-primary/5 border-primary/30' : ''}
                   >
                     {showMisconceptions ? 'Hide' : 'Show'} Misconceptions
                   </Button>
@@ -221,12 +221,12 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 size="sm"
                 onClick={handleAutoCalculate}
                 disabled={isCalculating || !question.question}
-                  className="bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 border-green-200"
+                  className="bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5 border-success/30"
               >
                 {isCalculating ? (
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin text-green-600" />
+                    <RefreshCw className="h-4 w-4 mr-2 animate-spin text-success" />
                 ) : (
-                    <Calculator className="h-4 w-4 mr-2 text-green-600" />
+                    <Calculator className="h-4 w-4 mr-2 text-success" />
                 )}
                   {isCalculating ? 'Calculating...' : 'Quick Calculate'}
               </Button>
@@ -273,7 +273,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     <Badge 
                       key={idx}
                       variant={unitOption === numQuestion.unit ? "default" : "outline"}
-                      className={unitOption === numQuestion.unit ? "bg-green-100 text-green-800 border-green-300" : ""}
+                      className={unitOption === numQuestion.unit ? "bg-success/10 text-success border-success/30" : ""}
                     >
                       {unitOption}
                       {unitOption === numQuestion.unit && " ✓"}
@@ -307,9 +307,9 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                   <div className="p-4 space-y-4 bg-white">
                     {/* Formula */}
                     {numQuestion.formula && (
-                      <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <span className="text-xs font-medium text-blue-600 block mb-2">Formula Used:</span>
-                        <div className="text-lg text-blue-800 text-center py-2">
+                      <div className="p-3 bg-primary/5 rounded-lg border border-primary/30">
+                        <span className="text-xs font-medium text-primary block mb-2">Formula Used:</span>
+                        <div className="text-lg text-primary text-center py-2">
                           <InlineMath math={numQuestion.formula} displayMode />
                         </div>
                       </div>
@@ -317,8 +317,8 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     
                     {/* Given Values */}
                     {numQuestion.givenValues && numQuestion.givenValues.length > 0 && (
-                      <div className="p-3 bg-gray-50 rounded-lg">
-                        <span className="text-xs font-medium text-gray-600 block mb-2">Given Values:</span>
+                      <div className="p-3 bg-muted rounded-lg">
+                        <span className="text-xs font-medium text-muted-foreground block mb-2">Given Values:</span>
                         <div className="flex flex-wrap gap-3">
                           {numQuestion.givenValues.map((gv, idx) => (
                             <div key={idx} className="px-3 py-1 bg-white rounded border text-sm">
@@ -332,19 +332,19 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     {/* Steps */}
                     <div className="space-y-3">
                       {numQuestion.solutionSteps.map((step) => (
-                        <div key={step.step} className="flex gap-3 p-3 bg-gray-50 rounded-lg">
-                          <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold text-sm">
+                        <div key={step.step} className="flex gap-3 p-3 bg-muted rounded-lg">
+                          <div className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-primary font-bold text-sm">
                             {step.step}
                           </div>
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-gray-700 mb-2">{step.description}</p>
+                            <p className="text-sm font-medium text-foreground mb-2">{step.description}</p>
                             {step.equation && (
                               <div className="bg-white px-3 py-2 rounded border inline-block">
                                 <InlineMath math={step.equation.replace(/\\\\/g, '\\')} />
                               </div>
                             )}
                             {step.result && (
-                              <div className="mt-2 text-sm font-semibold text-green-700">
+                              <div className="mt-2 text-sm font-semibold text-success">
                                 Answer: <InlineMath math={step.result} />
                               </div>
                             )}
@@ -355,24 +355,24 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     
                     {/* Explanation */}
                     {numQuestion.explanation && (
-                      <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                        <span className="text-xs font-medium text-green-600 block mb-1">Explanation:</span>
-                        <p className="text-sm text-green-800">{numQuestion.explanation}</p>
+                      <div className="p-3 bg-success/5 rounded-lg border border-success/30">
+                        <span className="text-xs font-medium text-success block mb-1">Explanation:</span>
+                        <p className="text-sm text-success">{numQuestion.explanation}</p>
                       </div>
                     )}
                     
                     {/* Common Mistakes */}
                     {numQuestion.commonMistakes && numQuestion.commonMistakes.length > 0 && (
-                      <div className="p-3 bg-red-50 rounded-lg border border-red-200">
-                        <span className="text-xs font-medium text-red-600 block mb-2">Common Mistakes to Watch:</span>
+                      <div className="p-3 bg-destructive/5 rounded-lg border border-destructive/30">
+                        <span className="text-xs font-medium text-destructive block mb-2">Common Mistakes to Watch:</span>
                         <div className="space-y-2">
                           {numQuestion.commonMistakes.map((mistake, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-sm">
-                              <span className="text-red-500">✗</span>
-                              <span className="text-red-700">
+                              <span className="text-destructive">✗</span>
+                              <span className="text-destructive">
                                 <InlineMath math={`${mistake.incorrectValue} \\text{ ${mistake.incorrectUnit || numQuestion.unit}}`} />
                               </span>
-                              <span className="text-red-600">— {mistake.misconception}</span>
+                              <span className="text-destructive">— {mistake.misconception}</span>
                             </div>
                           ))}
                         </div>
@@ -391,7 +391,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
         return (
           <div className="space-y-6">
             {/* Auto-Grade Toggle */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
               <div className="flex items-center space-x-2">
                 <input
                   type="checkbox"
@@ -519,7 +519,7 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                 variant="outline" 
                 size="sm" 
                 onClick={() => setShowAddToBank(true)}
-                className="bg-gradient-to-r from-indigo-50 to-purple-50 hover:from-indigo-100 hover:to-purple-100 border-indigo-200 text-xs sm:text-sm px-2 sm:px-3"
+                className="bg-gradient-to-r from-primary/15 to-primary/5 hover:from-primary/15 hover:to-primary/5 border-primary/30 text-xs sm:text-sm px-2 sm:px-3"
                 title="Save to Question Bank"
                 disabled={!question.question || question.question.trim() === ''}
               >
@@ -558,21 +558,21 @@ export default function QuestionEditor({ question, onUpdate, onDelete }: Questio
                     const dataUrl = `data:${imageData.mimeType};base64,${imageData.base64}`
                     updateQuestion({ scenarioImage: dataUrl })
                   }}
-                  className="h-8 text-xs bg-gradient-to-r from-violet-50 to-fuchsia-50 hover:from-violet-100 hover:to-fuchsia-100 border-violet-200"
+                  className="h-8 text-xs bg-gradient-to-r from-primary/15 to-fuchsia-50 hover:from-primary/15 hover:to-fuchsia-100 border-primary/30"
                 />
               </div>
             )}
           </div>
           
           {question.scenarioImage && (
-            <div className="relative rounded-lg overflow-hidden border-2 border-gray-200">
+            <div className="relative rounded-lg overflow-hidden border-2 border-border">
               <img
                 src={question.scenarioImage}
                 alt="Question visual"
                 className="w-full h-48 object-cover"
               />
               <div className="absolute top-2 left-2">
-                <Badge className="bg-purple-500/90 text-white">
+                <Badge className="bg-primary/90 text-white">
                   <ImageIcon className="h-3 w-3 mr-1" />
                   AI Generated
                 </Badge>

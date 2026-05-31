@@ -147,8 +147,8 @@ export default function JoinCourseWithCode({ onSuccess }: JoinCourseWithCodeProp
               disabled={loading}
             />
             {validationResult?.valid && (
-              <div className="flex items-center justify-center px-3 bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-                <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="flex items-center justify-center px-3 bg-success/10 dark:bg-success/20 border border-success/30 dark:border-success/30 rounded-md">
+                <Check className="h-5 w-5 text-success dark:text-success" />
               </div>
             )}
           </div>
@@ -161,11 +161,11 @@ export default function JoinCourseWithCode({ onSuccess }: JoinCourseWithCodeProp
           )}
 
           {validationResult?.valid && validationResult.course && (
-            <div className="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
-              <p className="text-sm font-medium text-green-800 dark:text-green-200">
+            <div className="p-3 bg-success/5 dark:bg-success/20 border border-success/30 dark:border-success/30 rounded-md">
+              <p className="text-sm font-medium text-success dark:text-success">
                 Course found!
               </p>
-              <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+              <p className="text-sm text-success dark:text-success mt-1">
                 {validationResult.course.name}
                 {validationResult.course.section && ` - ${validationResult.course.section}`}
               </p>

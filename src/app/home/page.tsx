@@ -5,6 +5,7 @@ import EnrollmentGate from '@/components/EnrollmentGate'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import Link from 'next/link'
 import { decayingAverage } from '@/data/curriculum-types'
+import { SectionLabel, StatPill } from '@/components/ds'
 
 // ---------------------------------------------------------------------------
 // Types (mirror the /api/home response)
@@ -86,14 +87,7 @@ function Glass({ children, style, className }: { children: ReactNode; style?: CS
   )
 }
 
-function LaneLabel({ color, children }: { color: string; children: ReactNode }) {
-  return (
-    <div className="flex items-center gap-2 mt-8 mb-3" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
-      <span style={{ width: 22, height: 3, borderRadius: 2, background: color }} />
-      {children}
-    </div>
-  )
-}
+// LaneLabel now lives in the design-system kit as <SectionLabel> (prop: accent).
 
 // ---------------------------------------------------------------------------
 // Mastery climb chart
@@ -216,13 +210,11 @@ export default function HomePage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
-              ★ {loading ? '—' : data?.points?.xp ?? 0} XP
-            </span>
+            <StatPill tone="reward">★ {loading ? '—' : data?.points?.xp ?? 0} XP</StatPill>
             {!loading && (data?.streak?.current ?? 0) > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold" style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}>
+              <StatPill tone="muted">
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 8px var(--success)' }} /> {data!.streak.current}-day streak
-              </span>
+              </StatPill>
             )}
           </div>
         </div>
@@ -232,13 +224,13 @@ export default function HomePage() {
         {!loading && data && (
           <>
             {/* MATH WARM-UP — the spine's daily to-do, where students land */}
-            <LaneLabel color="var(--secondary)">Today&apos;s math warm-up</LaneLabel>
+            <SectionLabel accent="var(--secondary)">Today&apos;s math warm-up</SectionLabel>
             <div className="mb-6">
               <DailyMathTask />
             </div>
 
             {/* CONTINUE */}
-            <LaneLabel color="var(--primary)">Continue your journey</LaneLabel>
+            <SectionLabel accent="var(--primary)">Continue your journey</SectionLabel>
             {data.continue && data.continue.lesson ? (
               <Glass
                 style={{
@@ -334,7 +326,7 @@ export default function HomePage() {
             )}
 
             {/* RETRY */}
-            <LaneLabel color="var(--destructive)">Skills to strengthen</LaneLabel>
+            <SectionLabel accent="var(--destructive)">Skills to strengthen</SectionLabel>
             {data.retry.length > 0 ? (
               <div className="flex flex-col gap-3">
                 {data.retry.map((r) => (
@@ -366,7 +358,7 @@ export default function HomePage() {
             )}
 
             {/* MASTERY CLIMB */}
-            <LaneLabel color="var(--reward)">Your mastery climb</LaneLabel>
+            <SectionLabel accent="var(--reward)">Your mastery climb</SectionLabel>
             <Glass style={{ padding: 22 }}>
               <div className="flex justify-between items-start gap-4 flex-wrap mb-2">
                 <p className="text-sm" style={{ color: 'var(--muted-foreground)', maxWidth: 440 }}>
@@ -394,7 +386,7 @@ export default function HomePage() {
             </Glass>
 
             {/* SIDE QUEST */}
-            <LaneLabel color="var(--success)">Side quest — optional, still earns XP</LaneLabel>
+            <SectionLabel accent="var(--success)">Side quest — optional, still earns XP</SectionLabel>
             <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
               {data.sideQuest.sim && (
                 <Link href={`/simulations/${data.sideQuest.sim.slug}`}>

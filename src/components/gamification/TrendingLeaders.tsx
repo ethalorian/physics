@@ -19,11 +19,11 @@ interface TrendingLeadersProps {
 export default function TrendingLeaders({ leaders }: TrendingLeadersProps) {
   const getTrendIcon = (trend: string, rankChange?: number) => {
     if (trend === 'new') {
-      return <span className="text-green-600 dark:text-green-400 text-xs font-medium">NEW</span>
+      return <span className="text-success text-xs font-medium">NEW</span>
     }
     if (trend === 'up' && rankChange) {
       return (
-        <div className="flex items-center gap-1 text-green-600 dark:text-green-400">
+        <div className="flex items-center gap-1 text-success">
           <TrendingUp className="h-3 w-3" />
           <span className="text-[10px] font-bold">+{rankChange}</span>
         </div>
@@ -31,7 +31,7 @@ export default function TrendingLeaders({ leaders }: TrendingLeadersProps) {
     }
     if (trend === 'down' && rankChange) {
       return (
-        <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
+        <div className="flex items-center gap-1 text-destructive">
           <TrendingDown className="h-3 w-3" />
           <span className="text-[10px] font-bold">-{rankChange}</span>
         </div>
@@ -44,7 +44,7 @@ export default function TrendingLeaders({ leaders }: TrendingLeadersProps) {
     <Card className="shadow-lg overflow-hidden animate-in fade-in-0 slide-in-from-right-4 duration-500 delay-[450ms] flex flex-col min-h-[300px]">
       <CardHeader className="bg-secondary text-secondary-foreground p-4 border-b">
         <CardTitle className="flex items-center gap-2 text-sm">
-          <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
+          <TrendingUp className="h-4 w-4 text-success" />
           <span className="font-semibold">Trending This Week</span>
         </CardTitle>
       </CardHeader>
@@ -76,7 +76,7 @@ export default function TrendingLeaders({ leaders }: TrendingLeadersProps) {
                   </div>
 
                   <div className="text-right">
-                    <div className="text-green-600 dark:text-green-400 font-bold text-sm">
+                    <div className="text-success font-bold text-sm">
                       +{leader.points_gained}
                     </div>
                     <div className="text-muted-foreground text-[10px]">this week</div>

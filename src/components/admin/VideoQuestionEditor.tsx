@@ -321,16 +321,16 @@ function VideoPlayerWithScrubber({
       </div>
 
       {/* Controls */}
-      <div className="space-y-4 bg-gray-50 p-4 rounded-lg border">
+      <div className="space-y-4 bg-muted p-4 rounded-lg border">
         {/* Playback Controls */}
         {!isPlayerReady && (
-          <div className="text-center py-4 text-gray-600">
+          <div className="text-center py-4 text-muted-foreground">
             <p className="text-sm font-medium">⏳ Initializing video controls...</p>
             <p className="text-xs mt-1">Controls will be available in a moment</p>
           </div>
         )}
         {actualDuration && actualDuration !== duration && (
-          <div className="text-center py-2 px-4 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+          <div className="text-center py-2 px-4 bg-primary/5 border border-primary/30 rounded text-sm text-primary">
             ✓ Detected actual video length: <strong>{secondsToMMSS(actualDuration)}</strong>
           </div>
         )}
@@ -369,14 +369,14 @@ function VideoPlayerWithScrubber({
             <SkipForward className="h-4 w-4" />
           </Button>
 
-          <div className="mx-4 px-4 py-2 bg-white rounded-md border border-gray-200 font-mono text-sm font-semibold">
+          <div className="mx-4 px-4 py-2 bg-white rounded-md border border-border font-mono text-sm font-semibold">
             {secondsToMMSS(currentTime)} / {secondsToMMSS(displayDuration)}
           </div>
 
           <Button
             onClick={handleAddQuestion}
             disabled={!isPlayerReady}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            className="bg-gradient-to-r from-primary/15 to-pink-600 hover:from-primary/15 hover:to-pink-700"
             title={!isPlayerReady ? "Loading..." : `Add question at ${secondsToMMSS(currentTime)}`}
           >
             <Plus className="h-4 w-4 mr-2" />
@@ -395,9 +395,9 @@ function VideoPlayerWithScrubber({
             disabled={!isPlayerReady}
             className="cursor-pointer"
           />
-          <div className="flex items-center justify-between text-xs text-gray-600">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>0:00</span>
-            <span className="text-purple-600 font-medium">Scrub to find the perfect moment</span>
+            <span className="text-primary font-medium">Scrub to find the perfect moment</span>
             <span>{secondsToMMSS(displayDuration)}</span>
           </div>
         </div>
@@ -420,23 +420,23 @@ function VideoTimeline({
 }) {
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between text-sm text-gray-600">
+      <div className="flex items-center justify-between text-sm text-muted-foreground">
         <span>0:00</span>
         <span className="text-xs font-medium">Questions on Timeline</span>
         <span>{secondsToMMSS(duration)}</span>
       </div>
       
-      <div className="relative h-16 bg-gradient-to-r from-blue-100 via-purple-100 to-pink-100 rounded-lg border-2 border-gray-300">
+      <div className="relative h-16 bg-gradient-to-r from-primary/15 via-primary/10 to-pink-100 rounded-lg border-2 border-border">
         {/* Time markers */}
         <div className="absolute inset-0 flex items-center justify-between px-1">
           {[0, 0.25, 0.5, 0.75, 1].map((percent) => (
-            <div key={percent} className="h-8 w-px bg-gray-300" />
+            <div key={percent} className="h-8 w-px bg-muted" />
           ))}
         </div>
 
         {/* Current playhead position */}
         <div 
-          className="absolute top-0 bottom-0 w-0.5 bg-red-500 z-10"
+          className="absolute top-0 bottom-0 w-0.5 bg-destructive z-10"
           style={{ left: `${(currentTime / duration) * 100}%` }}
         >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-red-500" />
@@ -454,7 +454,7 @@ function VideoTimeline({
               style={{ left: `${position}%` }}
             >
               <div className="relative">
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform border-2 border-white">
+                <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg group-hover:scale-110 transition-transform border-2 border-white">
                   {q.question.points}
                 </div>
                 <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs rounded px-2 py-1 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
@@ -467,13 +467,13 @@ function VideoTimeline({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 text-xs text-gray-600">
+      <div className="flex items-center gap-4 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-red-500 rounded-sm" />
+          <div className="w-4 h-4 bg-destructive rounded-sm" />
           <span>Current position</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-6 h-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">
+          <div className="w-6 h-6 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">
             3
           </div>
           <span>Question (points shown)</span>
@@ -634,8 +634,8 @@ export default function VideoQuestionEditor({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-xl font-bold text-gray-900">Interactive Questions</h3>
-          <p className="text-sm text-gray-600">
+          <h3 className="text-xl font-bold text-foreground">Interactive Questions</h3>
+          <p className="text-sm text-muted-foreground">
             Add questions that pause the video: <strong>{videoTitle}</strong>
           </p>
         </div>
@@ -647,7 +647,7 @@ export default function VideoQuestionEditor({
           <Button 
             onClick={handleSaveAll}
             disabled={isSaving}
-            className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+            className="bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5"
           >
             {isSaving ? (
               <>Saving...</>
@@ -666,12 +666,12 @@ export default function VideoQuestionEditor({
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <div className="text-2xl font-bold">{questions.length}</div>
-                <div className="text-xs text-gray-600">Total Questions</div>
+                <div className="text-xs text-muted-foreground">Total Questions</div>
               </div>
             </div>
           </CardContent>
@@ -680,12 +680,12 @@ export default function VideoQuestionEditor({
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Clock className="h-5 w-5 text-purple-600" />
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Clock className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <div className="text-2xl font-bold">{secondsToMMSS(duration)}</div>
-                <div className="text-xs text-gray-600">
+                <div className="text-xs text-muted-foreground">
                   Video Length {detectedDuration && '(auto-detected)'}
                 </div>
               </div>
@@ -696,14 +696,14 @@ export default function VideoQuestionEditor({
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-success/10 rounded-lg">
+                <CheckCircle className="h-5 w-5 text-success" />
               </div>
               <div>
                 <div className="text-2xl font-bold">
                   {questions.reduce((sum, q) => sum + q.question.points, 0)}
                 </div>
-                <div className="text-xs text-gray-600">Total Points</div>
+                <div className="text-xs text-muted-foreground">Total Points</div>
               </div>
             </div>
           </CardContent>
@@ -753,8 +753,8 @@ export default function VideoQuestionEditor({
 
       {/* Question Editor */}
       {isCreating && selectedTimestamp !== null && (
-        <Card className="border-2 border-purple-200 bg-purple-50/30">
-          <CardHeader className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+        <Card className="border-2 border-primary/30 bg-primary/5/30">
+          <CardHeader className="bg-gradient-to-r from-primary/15 to-pink-600 text-white">
             <CardTitle className="text-sm flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-5 w-5" />
@@ -779,8 +779,8 @@ export default function VideoQuestionEditor({
           </CardHeader>
           <CardContent className="p-6">
             {/* Timestamp Input */}
-            <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <Label htmlFor="timestamp" className="text-sm font-medium text-blue-900 mb-2 block">
+            <div className="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/30">
+              <Label htmlFor="timestamp" className="text-sm font-medium text-primary mb-2 block">
                 Pause Video At
               </Label>
               <div className="flex items-center gap-3">
@@ -796,11 +796,11 @@ export default function VideoQuestionEditor({
                   }}
                   className="w-32"
                 />
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   seconds ({secondsToMMSS(selectedTimestamp || 0)})
                 </span>
                 {selectedTimestamp !== null && selectedTimestamp > duration && (
-                  <span className="text-xs text-red-600">
+                  <span className="text-xs text-destructive">
                     ⚠️ Exceeds video length!
                   </span>
                 )}
@@ -809,7 +809,7 @@ export default function VideoQuestionEditor({
                   href={`https://www.youtube.com/watch?v=${youtubeId}&t=${selectedTimestamp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  className="text-sm text-primary hover:text-primary flex items-center gap-1"
                 >
                   <Play className="h-3 w-3" />
                   Preview timestamp
@@ -834,7 +834,7 @@ export default function VideoQuestionEditor({
                 <div className="flex gap-3 mt-6 pt-6 border-t">
                   <Button
                     onClick={handleQuestionSave}
-                    className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    className="flex-1 bg-gradient-to-r from-success/15 to-success/5 hover:from-success/15 hover:to-success/5"
                   >
                     <SaveIcon className="h-4 w-4 mr-2" />
                     Save Question
@@ -864,10 +864,10 @@ export default function VideoQuestionEditor({
             {questions.map((q, index) => (
               <div
                 key={q.id}
-                className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-purple-300 transition-colors"
+                className="flex items-center gap-4 p-4 bg-muted rounded-lg border border-border hover:border-primary/30 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                  <div className="w-8 h-8 bg-gradient-to-br from-primary/15 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                     {index + 1}
                   </div>
                   <div className="flex flex-col">
@@ -881,10 +881,10 @@ export default function VideoQuestionEditor({
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-gray-900 truncate">
+                  <div className="font-medium text-foreground truncate">
                     <MathMarkdown content={q.question.question} />
                   </div>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-muted-foreground">
                     {q.question.points} point{q.question.points !== 1 ? 's' : ''}
                   </p>
                 </div>
@@ -901,7 +901,7 @@ export default function VideoQuestionEditor({
                     size="sm"
                     variant="outline"
                     onClick={() => handleQuestionDeleteFromList(q.id)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/5"
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
@@ -916,14 +916,14 @@ export default function VideoQuestionEditor({
       {questions.length === 0 && !isCreating && (
         <Card className="border-dashed border-2">
           <CardContent className="p-12 text-center">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <AlertCircle className="h-8 w-8 text-purple-600" />
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+              <AlertCircle className="h-8 w-8 text-primary" />
             </div>
-            <h3 className="font-semibold text-gray-900 mb-2">No Questions Yet</h3>
-            <p className="text-sm text-gray-600 mb-4">
+            <h3 className="font-semibold text-foreground mb-2">No Questions Yet</h3>
+            <p className="text-sm text-muted-foreground mb-4">
               Click anywhere on the timeline above to add your first interactive question!
             </p>
-            <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+            <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
               <Play className="h-4 w-4" />
               Questions will pause the video and test student understanding
             </div>

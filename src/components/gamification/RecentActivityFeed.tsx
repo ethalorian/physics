@@ -22,7 +22,7 @@ export default function RecentActivityFeed({ activities }: RecentActivityFeedPro
   const getActivityIcon = (type: string) => {
     switch (type) {
       case 'game':
-        return <Trophy className="h-4 w-4 text-yellow-500" />
+        return <Trophy className="h-4 w-4 text-reward" />
       case 'lesson':
         return <BookOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
       case 'achievement':

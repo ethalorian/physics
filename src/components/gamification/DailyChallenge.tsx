@@ -43,14 +43,14 @@ export default function DailyChallenge({ challenge, onStart }: DailyChallengePro
       <CardContent className="p-4 flex-1 flex flex-col justify-center">
         {isComplete ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3 animate-bounce">
+            <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-3 animate-bounce">
               <CheckCircle className="h-8 w-8 text-white" />
             </div>
             <div className="text-foreground font-bold text-lg mb-2">Challenge Complete!</div>
             <div className="text-muted-foreground text-sm mb-4">
-              You earned <span className="text-green-600 dark:text-green-400 font-bold">+{challenge.points_reward} points</span>
+              You earned <span className="text-success font-bold">+{challenge.points_reward} points</span>
             </div>
-            <Badge variant="outline" className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
+            <Badge variant="outline" className="bg-success/10 text-success border-success/20">
               ✓ Completed
             </Badge>
           </div>
@@ -75,7 +75,7 @@ export default function DailyChallenge({ challenge, onStart }: DailyChallengePro
 
             <div className="flex items-center justify-between p-3 bg-muted rounded-lg border">
               <div className="flex items-center gap-2">
-                <Trophy className="h-4 w-4 text-yellow-500" />
+                <Trophy className="h-4 w-4 text-reward" />
                 <span className="text-muted-foreground text-xs">Reward:</span>
               </div>
               <span className="text-foreground font-bold text-base">

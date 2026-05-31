@@ -59,9 +59,9 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
   const getDeviceClasses = () => {
     switch (devicePreview) {
       case 'mobile':
-        return 'max-w-sm mx-auto border-8 border-gray-800 rounded-3xl overflow-hidden shadow-2xl'
+        return 'max-w-sm mx-auto border-8 border-border rounded-3xl overflow-hidden shadow-2xl'
       case 'tablet':
-        return 'max-w-2xl mx-auto border-4 border-gray-600 rounded-2xl overflow-hidden shadow-xl'
+        return 'max-w-2xl mx-auto border-4 border-border rounded-2xl overflow-hidden shadow-xl'
       default:
         return 'w-full'
     }
@@ -79,9 +79,9 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-muted">
       {/* Admin Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="bg-white border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -91,16 +91,16 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                   Back to Admin
                 </a>
               </Button>
-              <div className="h-6 w-px bg-gray-300" />
+              <div className="h-6 w-px bg-muted" />
               <div>
-                <h1 className="text-xl font-semibold text-gray-900">
+                <h1 className="text-xl font-semibold text-foreground">
                   Preview: {lesson.title}
                 </h1>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="outline">{lesson.unit}</Badge>
                   <Badge variant="secondary">Lesson {lesson.lesson_number}</Badge>
                   {lesson.estimated_time && (
-                    <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
                       <Clock className="h-3 w-3" />
                       {lesson.estimated_time}min
                     </div>
@@ -111,7 +111,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
 
             <div className="flex items-center gap-3">
               {/* View Mode Toggle */}
-              <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                 <Button
                   size="sm"
                   variant={viewMode === 'student' ? 'default' : 'ghost'}
@@ -134,7 +134,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
 
               {/* Device Preview Toggle */}
               {viewMode === 'student' && (
-                <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
                   <Button
                     size="sm"
                     variant={devicePreview === 'mobile' ? 'default' : 'ghost'}
@@ -198,32 +198,32 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-blue-700 mb-1">
+                  <div className="bg-primary/5 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 text-primary mb-1">
                       <Play className="h-4 w-4" />
                       <span className="font-medium">Videos</span>
                     </div>
-                    <div className="text-2xl font-bold text-blue-900">
+                    <div className="text-2xl font-bold text-primary">
                       {lesson.videos?.length || 0}
                     </div>
                   </div>
                   
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-green-700 mb-1">
+                  <div className="bg-success/5 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 text-success mb-1">
                       <Target className="h-4 w-4" />
                       <span className="font-medium">Objectives</span>
                     </div>
-                    <div className="text-2xl font-bold text-green-900">
+                    <div className="text-2xl font-bold text-success">
                       {lesson.objectives?.length || 0}
                     </div>
                   </div>
                   
-                  <div className="bg-purple-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-purple-700 mb-1">
+                  <div className="bg-primary/5 p-4 rounded-lg">
+                    <div className="flex items-center gap-2 text-primary mb-1">
                       <Clock className="h-4 w-4" />
                       <span className="font-medium">Est. Time</span>
                     </div>
-                    <div className="text-2xl font-bold text-purple-900">
+                    <div className="text-2xl font-bold text-primary">
                       {lesson.estimated_time || 0}min
                     </div>
                   </div>
@@ -288,7 +288,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                         <MathMarkdown content={lesson.content} />
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-muted-foreground">
                         <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
                         <p>No content added yet</p>
                       </div>
@@ -310,11 +310,11 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
                                 <h3 className="font-semibold">{video.title}</h3>
-                                <p className="text-sm text-gray-600 mt-1">
+                                <p className="text-sm text-muted-foreground mt-1">
                                   YouTube ID: {video.youtubeId}
                                 </p>
                                 {video.description && (
-                                  <p className="text-sm text-gray-700 mt-2">
+                                  <p className="text-sm text-foreground mt-2">
                                     {video.description}
                                   </p>
                                 )}
@@ -347,7 +347,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-muted-foreground">
                         <Play className="h-12 w-12 mx-auto mb-2 opacity-50" />
                         <p>No videos added yet</p>
                         <Button 
@@ -371,8 +371,8 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                     {lesson.objectives && lesson.objectives.length > 0 ? (
                       <div className="space-y-2">
                         {lesson.objectives.map((objective, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                            <div className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
+                          <div key={index} className="flex items-start gap-3 p-3 bg-muted rounded-lg">
+                            <div className="w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
                               {index + 1}
                             </div>
                             <p className="text-sm leading-relaxed">{objective}</p>
@@ -380,7 +380,7 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
+                      <div className="text-center py-8 text-muted-foreground">
                         <Target className="h-12 w-12 mx-auto mb-2 opacity-50" />
                         <p>No learning objectives defined yet</p>
                       </div>
@@ -397,38 +397,38 @@ export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) 
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-gray-700">ID</label>
-                        <p className="text-sm text-gray-900 font-mono bg-gray-100 p-2 rounded">
+                        <label className="text-sm font-medium text-foreground">ID</label>
+                        <p className="text-sm text-foreground font-mono bg-muted p-2 rounded">
                           {lesson.id}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Slug</label>
-                        <p className="text-sm text-gray-900 font-mono bg-gray-100 p-2 rounded">
+                        <label className="text-sm font-medium text-foreground">Slug</label>
+                        <p className="text-sm text-foreground font-mono bg-muted p-2 rounded">
                           {lesson.slug}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Created</label>
-                        <p className="text-sm text-gray-900 bg-gray-100 p-2 rounded">
+                        <label className="text-sm font-medium text-foreground">Created</label>
+                        <p className="text-sm text-foreground bg-muted p-2 rounded">
                           {new Date(lesson.created_at).toLocaleString()}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Updated</label>
-                        <p className="text-sm text-gray-900 bg-gray-100 p-2 rounded">
+                        <label className="text-sm font-medium text-foreground">Updated</label>
+                        <p className="text-sm text-foreground bg-muted p-2 rounded">
                           {new Date(lesson.updated_at).toLocaleString()}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Published</label>
-                        <p className="text-sm text-gray-900 bg-gray-100 p-2 rounded">
+                        <label className="text-sm font-medium text-foreground">Published</label>
+                        <p className="text-sm text-foreground bg-muted p-2 rounded">
                           {lesson.published ? '✅ Yes' : '❌ No'}
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Student URL</label>
-                        <p className="text-sm text-blue-600 bg-gray-100 p-2 rounded break-all">
+                        <label className="text-sm font-medium text-foreground">Student URL</label>
+                        <p className="text-sm text-primary bg-muted p-2 rounded break-all">
                           /lessons/{lesson.slug}
                         </p>
                       </div>

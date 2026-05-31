@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { BookOpen, Search, Clock, CheckCircle, Eye } from 'lucide-react'
 import Link from 'next/link'
+import { ProgressTrack } from '@/components/ds'
 
 interface Lesson {
   id: number
@@ -151,9 +152,13 @@ export default function StudentLessons() {
               <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-bold text-foreground mb-2">
                 {lessons.length > 0 ? Math.round((progress.filter(p => p.completed).length / lessons.length) * 100) : 0}%
               </div>
+              <ProgressTrack
+                value={lessons.length > 0 ? Math.round((progress.filter(p => p.completed).length / lessons.length) * 100) : 0}
+                aria-label="Lessons completed"
+              />
             </CardContent>
           </Card>
         </div>

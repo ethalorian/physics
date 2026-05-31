@@ -103,7 +103,7 @@ function VideoEditor({
   }
 
   return (
-    <Card className="border-2 border-blue-200">
+    <Card className="border-2 border-primary/30">
       <CardHeader className="pb-3">
         <CardTitle className="text-sm flex items-center justify-between">
           {video.id ? 'Edit Video' : 'Add New Video'}
@@ -127,9 +127,9 @@ function VideoEditor({
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
             placeholder="e.g., Introduction to Velocity"
-            className={errors.title ? 'border-red-500' : ''}
+            className={errors.title ? 'border-destructive/30' : ''}
           />
-          {errors.title && <p className="text-xs text-red-600 mt-1">{errors.title}</p>}
+          {errors.title && <p className="text-xs text-destructive mt-1">{errors.title}</p>}
         </div>
 
         <div>
@@ -139,11 +139,11 @@ function VideoEditor({
             value={formData.youtubeUrl}
             onChange={(e) => setFormData(prev => ({ ...prev, youtubeUrl: e.target.value }))}
             placeholder="https://youtube.com/watch?v=... or just the video ID"
-            className={errors.youtubeUrl ? 'border-red-500' : ''}
+            className={errors.youtubeUrl ? 'border-destructive/30' : ''}
           />
-          {errors.youtubeUrl && <p className="text-xs text-red-600 mt-1">{errors.youtubeUrl}</p>}
+          {errors.youtubeUrl && <p className="text-xs text-destructive mt-1">{errors.youtubeUrl}</p>}
           {formData.youtubeUrl && !errors.youtubeUrl && extractYouTubeId(formData.youtubeUrl) && (
-            <p className="text-xs text-green-600 mt-1">
+            <p className="text-xs text-success mt-1">
               ✓ Valid YouTube ID: {extractYouTubeId(formData.youtubeUrl)}
             </p>
           )}
@@ -167,9 +167,9 @@ function VideoEditor({
               min="0"
               value={formData.timestamp}
               onChange={(e) => setFormData(prev => ({ ...prev, timestamp: e.target.value }))}
-              className={errors.timestamp ? 'border-red-500' : ''}
+              className={errors.timestamp ? 'border-destructive/30' : ''}
             />
-            {errors.timestamp && <p className="text-xs text-red-600 mt-1">{errors.timestamp}</p>}
+            {errors.timestamp && <p className="text-xs text-destructive mt-1">{errors.timestamp}</p>}
           </div>
         </div>
 
@@ -252,7 +252,7 @@ export default function LessonVideoManager({
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-semibold">Manage Videos</h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             Add YouTube videos to: <strong>{lessonTitle}</strong>
           </p>
         </div>
@@ -268,7 +268,7 @@ export default function LessonVideoManager({
             onClick={handleSaveAll}
             disabled={isSaving}
             variant="default"
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-success hover:bg-success"
           >
             {isSaving ? 'Saving...' : 'Save All Changes'}
           </Button>
@@ -277,7 +277,7 @@ export default function LessonVideoManager({
 
       {/* Question Editor */}
       {editingQuestionsVideo && (
-        <Card className="border-2 border-purple-300 shadow-xl">
+        <Card className="border-2 border-primary/30 shadow-xl">
           <CardContent className="p-6">
             <VideoQuestionEditor
               videoId={editingQuestionsVideo.id}
@@ -315,14 +315,14 @@ export default function LessonVideoManager({
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">
-                    <div className="cursor-move text-gray-400 mt-2">
+                    <div className="cursor-move text-muted-foreground mt-2">
                       <GripVertical className="h-4 w-4" />
                     </div>
                     
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h3 className="font-semibold text-gray-900">{video.title}</h3>
+                          <h3 className="font-semibold text-foreground">{video.title}</h3>
                           <div className="flex items-center gap-3 mt-1">
                             <Badge variant="outline" className="text-xs">
                               Video {index + 1}
@@ -333,11 +333,11 @@ export default function LessonVideoManager({
                               </Badge>
                             )}
                             {video.questions && video.questions.length > 0 && (
-                              <Badge className="text-xs bg-purple-100 text-purple-700 border-purple-300">
+                              <Badge className="text-xs bg-primary/10 text-primary border-primary/30">
                                 ⚡ {video.questions.length} question{video.questions.length !== 1 ? 's' : ''}
                               </Badge>
                             )}
-                            <span className="text-xs text-gray-500">
+                            <span className="text-xs text-muted-foreground">
                               ID: {video.youtubeId}
                             </span>
                           </div>
@@ -349,7 +349,7 @@ export default function LessonVideoManager({
                             variant="ghost"
                             onClick={() => setEditingQuestionsId(video.id)}
                             disabled={editingId !== null || isAddingNew}
-                            className="text-purple-600 hover:text-purple-700 hover:bg-purple-50"
+                            className="text-primary hover:text-primary hover:bg-primary/5"
                             title="Add Interactive Questions"
                           >
                             <AlertCircle className="h-3 w-3" />
@@ -380,7 +380,7 @@ export default function LessonVideoManager({
                             variant="ghost"
                             onClick={() => handleDeleteVideo(video.id)}
                             disabled={editingId !== null || isAddingNew}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-destructive hover:text-destructive"
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
@@ -388,11 +388,11 @@ export default function LessonVideoManager({
                       </div>
                       
                       {video.description && (
-                        <p className="text-sm text-gray-600 mb-2">{video.description}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{video.description}</p>
                       )}
                       
                       {video.timestamp && video.timestamp > 0 && (
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted-foreground">
                           Starts at: {Math.floor(video.timestamp / 60)}:{(video.timestamp % 60).toString().padStart(2, '0')}
                         </p>
                       )}
@@ -406,9 +406,9 @@ export default function LessonVideoManager({
       </div>
 
       {videos.length === 0 && !isAddingNew && (
-        <Card className="border-dashed border-2 border-gray-300">
+        <Card className="border-dashed border-2 border-border">
           <CardContent className="p-8 text-center">
-            <div className="text-gray-500 mb-4">
+            <div className="text-muted-foreground mb-4">
               <Play className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <h3 className="font-medium">No videos added yet</h3>
               <p className="text-sm">Add YouTube videos to enhance this lesson</p>

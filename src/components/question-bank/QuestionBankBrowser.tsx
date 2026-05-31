@@ -132,18 +132,18 @@ export default function QuestionBankBrowser({
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+      case 'easy': return 'bg-success/10 text-success dark:bg-success/30 dark:text-success'
       case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
-      case 'hard': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+      case 'hard': return 'bg-destructive/10 text-destructive dark:bg-destructive/30 dark:text-destructive'
       default: return 'bg-secondary text-secondary-foreground'
     }
   }
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'multiple-choice': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-      case 'open-response': return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-      case 'numerical': return 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300'
+      case 'multiple-choice': return 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-primary'
+      case 'open-response': return 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-primary'
+      case 'numerical': return 'bg-primary/10 text-primary dark:bg-primary/30 dark:text-primary'
       // Essay type removed - consolidated into open-response
       default: return 'bg-secondary text-secondary-foreground'
     }
@@ -170,7 +170,7 @@ export default function QuestionBankBrowser({
       {/* Search and Filter Bar - Mobile optimized */}
       <div className="flex flex-col sm:flex-row gap-2">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search questions..."
             value={filters.searchText || ''}
@@ -457,19 +457,19 @@ export default function QuestionBankBrowser({
                               key={idx} 
                               className={`text-sm p-2 rounded ${
                                 idx === mcQuestion.correctAnswer 
-                                  ? 'bg-green-50 border border-green-200' 
-                                  : 'bg-gray-50'
+                                  ? 'bg-success/5 border border-success/30' 
+                                  : 'bg-muted'
                               }`}
                             >
                               <span className="font-medium">{idx + 1}.</span> <MathMarkdown content={option} />
                               {idx === mcQuestion.correctAnswer && (
-                                <Badge className="ml-2 bg-green-100 text-green-800">Correct</Badge>
+                                <Badge className="ml-2 bg-success/10 text-success">Correct</Badge>
                               )}
                             </div>
                           )
                         })}
                         {'explanation' in item.question && item.question.explanation && (
-                          <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
+                          <div className="mt-2 p-2 bg-primary/5 rounded text-sm">
                             <strong>Explanation:</strong> <MathMarkdown content={item.question.explanation as string} />
                           </div>
                         )}
@@ -483,7 +483,7 @@ export default function QuestionBankBrowser({
                             <ul className="text-sm space-y-1">
                               {item.question.correctConcepts.map((concept, idx) => (
                                 <li key={idx} className="flex items-start gap-1">
-                                  <span className="text-green-600">✓</span>
+                                  <span className="text-success">✓</span>
                                   <MathMarkdown content={concept} />
                                 </li>
                               ))}
@@ -491,7 +491,7 @@ export default function QuestionBankBrowser({
                           </div>
                         )}
                         {item.question.sampleAnswer && (
-                          <div className="mt-2 p-2 bg-blue-50 rounded text-sm">
+                          <div className="mt-2 p-2 bg-primary/5 rounded text-sm">
                             <strong>Sample Answer:</strong> <MathMarkdown content={item.question.sampleAnswer as string} />
                           </div>
                         )}

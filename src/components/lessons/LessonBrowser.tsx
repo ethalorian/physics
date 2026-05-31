@@ -151,7 +151,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
                 <div className="text-2xl font-bold">{totalLessons}</div>
                 <div className="text-xs text-muted-foreground">Total Lessons</div>
               </div>
-              <BookOpen className="h-8 w-8 text-blue-500 opacity-50" />
+              <BookOpen className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
@@ -160,10 +160,10 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-green-600">{completedCount}</div>
+                <div className="text-2xl font-bold text-success">{completedCount}</div>
                 <div className="text-xs text-muted-foreground">Completed</div>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-500 opacity-50" />
+              <CheckCircle className="h-8 w-8 text-success opacity-50" />
             </div>
           </CardContent>
         </Card>
@@ -172,10 +172,10 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-blue-600">{inProgressCount}</div>
+                <div className="text-2xl font-bold text-primary">{inProgressCount}</div>
                 <div className="text-xs text-muted-foreground">In Progress</div>
               </div>
-              <TrendingUp className="h-8 w-8 text-blue-500 opacity-50" />
+              <TrendingUp className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
@@ -184,10 +184,10 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-purple-600">{simulationCount}</div>
+                <div className="text-2xl font-bold text-primary">{simulationCount}</div>
                 <div className="text-xs text-muted-foreground">Simulations</div>
               </div>
-              <Microscope className="h-8 w-8 text-purple-500 opacity-50" />
+              <Microscope className="h-8 w-8 text-primary opacity-50" />
             </div>
           </CardContent>
         </Card>
@@ -329,7 +329,7 @@ function LessonCard({
   return (
     <Card 
       className={`hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden ${
-        isCompleted ? 'border-green-200 bg-green-50/30' : ''
+        isCompleted ? 'border-success/30 bg-success/5' : ''
       }`}
       onClick={() => router.push(`/lessons/${lesson.slug}`)}
     >
@@ -337,7 +337,7 @@ function LessonCard({
       {progress > 0 && (
         <div className="absolute top-0 left-0 right-0 h-1 bg-muted">
           <div 
-            className={`h-full transition-all ${isCompleted ? 'bg-green-500' : 'bg-primary'}`}
+            className={`h-full transition-all ${isCompleted ? 'bg-success' : 'bg-primary'}`}
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -346,7 +346,7 @@ function LessonCard({
       {/* New Badge */}
       {lesson.isNew && (
         <div className="absolute top-3 right-3 z-10">
-          <Badge className="bg-yellow-500 text-white flex items-center gap-1">
+          <Badge className="bg-reward text-reward-foreground flex items-center gap-1">
             <Sparkles className="h-3 w-3" />
             New
           </Badge>
@@ -365,7 +365,7 @@ function LessonCard({
               </Badge>
             )}
             {isCompleted && (
-              <Badge variant="default" className="text-xs bg-green-600">
+              <Badge variant="default" className="text-xs bg-success text-white">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Done
               </Badge>

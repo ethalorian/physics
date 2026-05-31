@@ -302,15 +302,15 @@ export default function AdminLessonBrowser() {
   if (error) {
     return (
       <div className="space-y-6">
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-destructive/30 bg-destructive/5">
           <CardContent className="py-12">
             <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto">
-                <AlertCircle className="h-8 w-8 text-red-600" />
+              <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto">
+                <AlertCircle className="h-8 w-8 text-destructive" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-red-900 mb-2">Failed to Load Lessons</h3>
-                <p className="text-sm text-red-700 mb-4">{error}</p>
+                <h3 className="text-lg font-semibold text-destructive mb-2">Failed to Load Lessons</h3>
+                <p className="text-sm text-destructive mb-4">{error}</p>
                 <div className="flex gap-2 justify-center">
                   <Button onClick={fetchLessons} variant="outline">
                     Try Again
@@ -344,7 +344,7 @@ export default function AdminLessonBrowser() {
             <Button 
               variant="outline"
               size="lg" 
-              className="gap-2 border-violet-300 text-violet-700 hover:bg-violet-50"
+              className="gap-2 border-primary/30 text-primary hover:bg-primary/5"
             >
               <Wand2 className="h-5 w-5" />
               AI Reading
@@ -478,13 +478,13 @@ export default function AdminLessonBrowser() {
 
               {formData.lesson_type === 'video' && (
                 <div className="space-y-4">
-                  <Card className="bg-red-50 border-red-200">
+                  <Card className="bg-destructive/5 border-destructive/30">
                     <CardContent className="py-4">
                       <div className="flex items-start gap-3">
-                        <Video className="h-5 w-5 text-red-600 mt-0.5" />
+                        <Video className="h-5 w-5 text-destructive mt-0.5" />
                         <div>
-                          <h4 className="font-semibold text-red-900 mb-1">Video Lesson Setup</h4>
-                          <p className="text-sm text-red-700">
+                          <h4 className="font-semibold text-destructive mb-1">Video Lesson Setup</h4>
+                          <p className="text-sm text-destructive">
                             Create the lesson first, then manage videos and questions from the edit page.
                           </p>
                         </div>
@@ -507,13 +507,13 @@ export default function AdminLessonBrowser() {
 
               {formData.lesson_type === 'simulation' && (
                 <div className="space-y-4">
-                  <Card className="bg-purple-50 border-purple-200">
+                  <Card className="bg-primary/5 border-primary/30">
                     <CardContent className="py-4">
                       <div className="flex items-start gap-3">
-                        <Microscope className="h-5 w-5 text-purple-600 mt-0.5" />
+                        <Microscope className="h-5 w-5 text-primary mt-0.5" />
                         <div>
-                          <h4 className="font-semibold text-purple-900 mb-1">Simulation Lesson</h4>
-                          <p className="text-sm text-purple-700">
+                          <h4 className="font-semibold text-primary mb-1">Simulation Lesson</h4>
+                          <p className="text-sm text-primary">
                             Select an interactive simulation to embed as a lesson. You can add questions later.
                           </p>
                         </div>
@@ -593,10 +593,10 @@ export default function AdminLessonBrowser() {
           </CardContent>
         </Card>
 
-        <Card className="border-green-200 bg-green-50/30">
+        <Card className="border-success/30 bg-success/5/30">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">{publishedCount}</div>
+              <div className="text-3xl font-bold text-success">{publishedCount}</div>
               <div className="text-xs text-muted-foreground mt-1">Published</div>
             </div>
           </CardContent>
@@ -611,28 +611,28 @@ export default function AdminLessonBrowser() {
           </CardContent>
         </Card>
 
-        <Card className="border-red-200 bg-red-50/30">
+        <Card className="border-destructive/30 bg-destructive/5/30">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-red-600">{videoCount}</div>
+              <div className="text-3xl font-bold text-destructive">{videoCount}</div>
               <div className="text-xs text-muted-foreground mt-1">Videos</div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-purple-200 bg-purple-50/30">
+        <Card className="border-primary/30 bg-primary/5/30">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">{simulationCount}</div>
+              <div className="text-3xl font-bold text-primary">{simulationCount}</div>
               <div className="text-xs text-muted-foreground mt-1">Simulations</div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-blue-200 bg-blue-50/30">
+        <Card className="border-primary/30 bg-primary/5/30">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">{markdownCount}</div>
+              <div className="text-3xl font-bold text-primary">{markdownCount}</div>
               <div className="text-xs text-muted-foreground mt-1">Reading</div>
             </div>
           </CardContent>
@@ -817,11 +817,11 @@ function AdminLessonCard({
   const getTypeInfo = () => {
     switch (lesson.lesson_type) {
       case 'video':
-        return { icon: Video, color: 'text-red-600', bg: 'bg-red-50', border: 'border-red-200' }
+        return { icon: Video, color: 'text-destructive', bg: 'bg-destructive/5', border: 'border-destructive/30' }
       case 'simulation':
-        return { icon: Microscope, color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-200' }
+        return { icon: Microscope, color: 'text-primary', bg: 'bg-primary/5', border: 'border-primary/30' }
       default:
-        return { icon: BookOpen, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' }
+        return { icon: BookOpen, color: 'text-primary', bg: 'bg-primary/5', border: 'border-primary/30' }
     }
   }
 
@@ -924,7 +924,7 @@ function AdminLessonCard({
             size="sm"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="gap-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="gap-1 text-destructive hover:text-destructive hover:bg-destructive/5"
           >
             {isDeleting ? (
               <Loader2 className="h-3 w-3 animate-spin" />

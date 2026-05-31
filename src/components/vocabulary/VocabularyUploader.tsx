@@ -288,20 +288,20 @@ Force,"A push or pull that can cause an object to accelerate",Forces,easy`
 
           {/* Upload Results */}
           {uploadResult && (
-            <Alert className={uploadResult.success ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
+            <Alert className={uploadResult.success ? 'border-success/30 bg-success/5' : 'border-destructive/30 bg-destructive/5'}>
               <div className="flex items-center gap-2">
                 {uploadResult.success ? (
-                  <CheckCircle className="w-4 h-4 text-green-600" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                 ) : (
-                  <AlertCircle className="w-4 h-4 text-red-600" />
+                  <AlertCircle className="w-4 h-4 text-destructive" />
                 )}
                 <AlertDescription>
                   {uploadResult.success ? (
                     <div>
-                      <p className="font-semibold text-green-800">
+                      <p className="font-semibold text-success">
                         Upload Successful!
                       </p>
-                      <p className="text-green-700">
+                      <p className="text-success">
                         Imported {uploadResult.imported} of {uploadResult.total} vocabulary sets
                       </p>
                       {uploadResult.results && (
@@ -319,9 +319,9 @@ Force,"A push or pull that can cause an object to accelerate",Forces,easy`
                     </div>
                   ) : (
                     <div>
-                      <p className="font-semibold text-red-800">Upload Failed</p>
+                      <p className="font-semibold text-destructive">Upload Failed</p>
                       {uploadResult.errors && (
-                        <ul className="mt-1 text-sm text-red-700">
+                        <ul className="mt-1 text-sm text-destructive">
                           {uploadResult.errors.map((error, index) => (
                             <li key={index}>• {error}</li>
                           ))}

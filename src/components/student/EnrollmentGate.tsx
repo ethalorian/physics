@@ -131,7 +131,7 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
     return (
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Welcome Message */}
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 border-2">
+        <Card className="bg-primary/5 border-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-2xl">
               <UserCheck className="h-6 w-6" />
@@ -143,7 +143,7 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-start gap-3 p-4 bg-white/50 dark:bg-black/20 rounded-lg">
-              <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium">Next Steps:</p>
                 <ul className="text-sm text-muted-foreground mt-2 space-y-1 list-disc list-inside">
@@ -195,11 +195,11 @@ export default function EnrollmentGate({ children, forceCheck = false }: Enrollm
     <>
       {status?.courses && status.courses.length > 0 && (
         <div className="mb-4">
-          <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-green-200 dark:border-green-800">
+          <Card className="bg-success/5 border-success/30">
             <CardContent className="py-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <UserCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  <UserCheck className="h-5 w-5 text-success" />
                   <p className="text-sm font-medium">
                     Enrolled in {status.courses.length} course{status.courses.length !== 1 ? 's' : ''}
                   </p>

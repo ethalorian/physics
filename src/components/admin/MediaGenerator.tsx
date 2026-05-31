@@ -387,7 +387,7 @@ export default function MediaGenerator({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-violet-500" />
+            <Sparkles className="h-5 w-5 text-primary" />
             AI Media Generator
           </DialogTitle>
           <DialogDescription>
@@ -484,30 +484,30 @@ export default function MediaGenerator({
               {/* Standards Alignment */}
               <Collapsible open={showStandards} onOpenChange={setShowStandards}>
                 <CollapsibleTrigger asChild>
-                  <button className="flex items-center justify-between w-full p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                  <button className="flex items-center justify-between w-full p-3 rounded-lg border border-border hover:bg-muted transition-colors">
                     <div className="flex items-center gap-2">
-                      <BookMarked className="h-4 w-4 text-blue-600" />
+                      <BookMarked className="h-4 w-4 text-primary" />
                       <span className="text-sm font-medium">Standards Alignment</span>
-                      <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600">
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
                         {availableStandards.length} {imageTopic && imageTopic !== 'none' ? 'matching' : 'total'}
                       </Badge>
                       {selectedStandards.length > 0 && (
-                        <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                        <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
                           {selectedStandards.length} selected
                         </Badge>
                       )}
                     </div>
                     <ChevronDown className={cn(
-                      "h-4 w-4 text-slate-500 transition-transform",
+                      "h-4 w-4 text-muted-foreground transition-transform",
                       showStandards && "rotate-180"
                     )} />
                   </button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-3">
-                  <div className="space-y-3 p-3 rounded-lg border border-slate-200 bg-slate-50">
+                  <div className="space-y-3 p-3 rounded-lg border border-border bg-muted">
                     {/* Topic filter info */}
                     {imageTopic && imageTopic !== 'none' && (
-                      <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded flex items-center gap-2">
+                      <div className="text-xs text-primary bg-primary/5 p-2 rounded flex items-center gap-2">
                         <span>Filtered by: <strong>{physicsTopicOptions.find(t => t.id === imageTopic)?.name}</strong></span>
                       </div>
                     )}
@@ -550,26 +550,26 @@ export default function MediaGenerator({
                                 className={cn(
                                   "flex items-center gap-2 p-2 rounded cursor-pointer transition-colors text-sm",
                                   selectedStandards.includes(standard.id)
-                                    ? "bg-blue-100"
-                                    : "hover:bg-slate-100"
+                                    ? "bg-primary/10"
+                                    : "hover:bg-muted"
                                 )}
                               >
                                 <Checkbox checked={selectedStandards.includes(standard.id)} />
-                                <span className="font-medium text-blue-700">{standard.code}</span>
+                                <span className="font-medium text-primary">{standard.code}</span>
                                 <Badge variant="outline" className="text-[10px] px-1 py-0">{set?.shortName}</Badge>
-                                <span className="text-slate-600 truncate flex-1">{standard.title}</span>
+                                <span className="text-muted-foreground truncate flex-1">{standard.title}</span>
                               </div>
                             )
                           })}
                           {availableStandards.length > 20 && (
-                            <p className="text-xs text-slate-500 text-center py-2">
+                            <p className="text-xs text-muted-foreground text-center py-2">
                               Showing 20 of {availableStandards.length} - select a topic or framework to narrow results
                             </p>
                           )}
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm text-slate-500 italic">No standards found for this combination</p>
+                      <p className="text-sm text-muted-foreground italic">No standards found for this combination</p>
                     )}
                   </div>
                 </CollapsibleContent>
@@ -579,7 +579,7 @@ export default function MediaGenerator({
               <Button
                 onClick={handleGenerateImage}
                 disabled={!imagePrompt.trim() || generatingImage}
-                className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700"
+                className="w-full bg-gradient-to-r from-primary/15 to-fuchsia-600 hover:from-primary/15 hover:to-fuchsia-700"
               >
                 {generatingImage ? (
                   <>
@@ -596,7 +596,7 @@ export default function MediaGenerator({
 
               {/* Error Display */}
               {imageError && (
-                <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+                <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/30 text-destructive text-sm flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   {imageError}
                 </div>
@@ -609,7 +609,7 @@ export default function MediaGenerator({
                   <div className="grid sm:grid-cols-2 gap-4">
                     {generatedImages.map((image) => (
                       <Card key={image.id} className="overflow-hidden">
-                        <div className="relative aspect-video bg-slate-100">
+                        <div className="relative aspect-video bg-muted">
                           <img
                             src={`data:${image.mimeType};base64,${image.base64}`}
                             alt="Generated physics image"
@@ -735,30 +735,30 @@ export default function MediaGenerator({
               {/* Standards Alignment for Video */}
               <Collapsible open={showStandards} onOpenChange={setShowStandards}>
                 <CollapsibleTrigger asChild>
-                  <button className="flex items-center justify-between w-full p-3 rounded-lg border border-slate-200 hover:bg-slate-50 transition-colors">
+                  <button className="flex items-center justify-between w-full p-3 rounded-lg border border-border hover:bg-muted transition-colors">
                     <div className="flex items-center gap-2">
-                      <BookMarked className="h-4 w-4 text-blue-600" />
+                      <BookMarked className="h-4 w-4 text-primary" />
                       <span className="text-sm font-medium">Standards Alignment</span>
-                      <Badge variant="secondary" className="text-xs bg-slate-100 text-slate-600">
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
                         {availableStandards.length} {videoTopic && videoTopic !== 'none' ? 'matching' : 'total'}
                       </Badge>
                       {selectedStandards.length > 0 && (
-                        <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700">
+                        <Badge variant="secondary" className="text-xs bg-primary/10 text-primary">
                           {selectedStandards.length} selected
                         </Badge>
                       )}
                     </div>
                     <ChevronDown className={cn(
-                      "h-4 w-4 text-slate-500 transition-transform",
+                      "h-4 w-4 text-muted-foreground transition-transform",
                       showStandards && "rotate-180"
                     )} />
                   </button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="pt-3">
-                  <div className="space-y-3 p-3 rounded-lg border border-slate-200 bg-slate-50">
+                  <div className="space-y-3 p-3 rounded-lg border border-border bg-muted">
                     {/* Topic filter info */}
                     {videoTopic && videoTopic !== 'none' && (
-                      <div className="text-xs text-blue-600 bg-blue-50 p-2 rounded flex items-center gap-2">
+                      <div className="text-xs text-primary bg-primary/5 p-2 rounded flex items-center gap-2">
                         <span>Filtered by: <strong>{physicsTopicOptions.find(t => t.id === videoTopic)?.name}</strong></span>
                       </div>
                     )}
@@ -801,26 +801,26 @@ export default function MediaGenerator({
                                 className={cn(
                                   "flex items-center gap-2 p-2 rounded cursor-pointer transition-colors text-sm",
                                   selectedStandards.includes(standard.id)
-                                    ? "bg-blue-100"
-                                    : "hover:bg-slate-100"
+                                    ? "bg-primary/10"
+                                    : "hover:bg-muted"
                                 )}
                               >
                                 <Checkbox checked={selectedStandards.includes(standard.id)} />
-                                <span className="font-medium text-blue-700">{standard.code}</span>
+                                <span className="font-medium text-primary">{standard.code}</span>
                                 <Badge variant="outline" className="text-[10px] px-1 py-0">{set?.shortName}</Badge>
-                                <span className="text-slate-600 truncate flex-1">{standard.title}</span>
+                                <span className="text-muted-foreground truncate flex-1">{standard.title}</span>
                               </div>
                             )
                           })}
                           {availableStandards.length > 20 && (
-                            <p className="text-xs text-slate-500 text-center py-2">
+                            <p className="text-xs text-muted-foreground text-center py-2">
                               Showing 20 of {availableStandards.length} - select a topic or framework to narrow results
                             </p>
                           )}
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm text-slate-500 italic">No standards found for this combination</p>
+                      <p className="text-sm text-muted-foreground italic">No standards found for this combination</p>
                     )}
                   </div>
                 </CollapsibleContent>
@@ -830,7 +830,7 @@ export default function MediaGenerator({
               <Button
                 onClick={handleGenerateVideo}
                 disabled={!videoPrompt.trim() || generatingVideo}
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+                className="w-full bg-gradient-to-r from-primary/15 to-cyan-600 hover:from-primary/15 hover:to-cyan-700"
               >
                 {generatingVideo ? (
                   <>
@@ -848,20 +848,20 @@ export default function MediaGenerator({
               {/* Progress Bar */}
               {generatingVideo && (
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm text-slate-600">
+                  <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span className="flex items-center gap-2">
                       <Clock className="h-4 w-4" />
                       Video generation in progress...
                     </span>
                     <span>{Math.round(videoProgress)}%</span>
                   </div>
-                  <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-500"
+                      className="h-full bg-gradient-to-r from-primary/15 to-cyan-500 transition-all duration-500"
                       style={{ width: `${videoProgress}%` }}
                     />
                   </div>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted-foreground">
                     Video generation typically takes 30-120 seconds. Please wait...
                   </p>
                 </div>
@@ -869,7 +869,7 @@ export default function MediaGenerator({
 
               {/* Error Display */}
               {videoError && (
-                <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-2">
+                <div className="p-3 rounded-lg bg-destructive/5 border border-destructive/30 text-destructive text-sm flex items-start gap-2">
                   <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   {videoError}
                 </div>
@@ -885,12 +885,12 @@ export default function MediaGenerator({
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-3">
-                              <div className="p-2 rounded-lg bg-blue-100">
-                                <Video className="h-5 w-5 text-blue-600" />
+                              <div className="p-2 rounded-lg bg-primary/10">
+                                <Video className="h-5 w-5 text-primary" />
                               </div>
                               <div>
                                 <p className="font-medium">Generated Video</p>
-                                <p className="text-sm text-slate-500">
+                                <p className="text-sm text-muted-foreground">
                                   {new Date(video.generatedAt).toLocaleString()}
                                 </p>
                               </div>

@@ -52,11 +52,11 @@ export default function QuestionRenderer({
                   key={index} 
                   className={`relative flex items-center p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 hover:shadow-md ${
                     answer?.toString() === index.toString()
-                      ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                      : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                      ? 'border-primary/30 bg-primary/5 dark:bg-primary/20'
+                      : 'border-border hover:border-border dark:border-border'
                   } ${
                     showFeedback && mcQuestion.correctAnswer === index
-                      ? 'ring-2 ring-green-400 ring-offset-2'
+                      ? 'ring-2 ring-success ring-offset-2'
                       : ''
                   }`}
                 >
@@ -65,18 +65,18 @@ export default function QuestionRenderer({
                     <MathMarkdown content={option} />
                   </Label>
                   {showFeedback && mcQuestion.correctAnswer === index && (
-                    <CheckCircle2 className="w-5 h-5 text-green-500 absolute right-4" />
+                    <CheckCircle2 className="w-5 h-5 text-success absolute right-4" />
                   )}
                 </div>
               ))}
             </RadioGroup>
             {showFeedback && mcQuestion.explanation && (
-              <div className="mt-4 p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-700">
+              <div className="mt-4 p-5 bg-gradient-to-r from-primary/15 to-primary/5 dark:from-primary/15/20 dark:to-primary/5/20 rounded-xl border border-primary/30 dark:border-primary/30">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+                  <Sparkles className="w-5 h-5 text-primary dark:text-primary mt-0.5" />
                   <div>
-                    <p className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-1">Explanation</p>
-                    <div className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                    <p className="text-sm font-semibold text-primary dark:text-primary mb-1">Explanation</p>
+                    <div className="text-sm text-primary dark:text-primary leading-relaxed">
                       <MathMarkdown content={mcQuestion.explanation} />
                     </div>
                   </div>
@@ -118,7 +118,7 @@ export default function QuestionRenderer({
                   }}
                   placeholder="Enter your answer"
                   disabled={disabled}
-                  className="text-base sm:text-lg p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors font-mono"
+                  className="text-base sm:text-lg p-3 sm:p-4 rounded-lg border-2 border-border focus:border-primary/30 transition-colors font-mono"
                 />
               </div>
               
@@ -128,7 +128,7 @@ export default function QuestionRenderer({
                   onValueChange={(value) => onAnswerChange(`${numValue}|${value}`)}
                   disabled={disabled}
                 >
-                  <SelectTrigger className="w-full sm:w-40 h-full text-sm sm:text-base font-semibold border-2 border-indigo-200 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30">
+                  <SelectTrigger className="w-full sm:w-40 h-full text-sm sm:text-base font-semibold border-2 border-primary/30 bg-gradient-to-r from-primary/15 to-primary/5 dark:from-primary/15/30 dark:to-primary/5/30">
                     <SelectValue placeholder="Select unit" />
                   </SelectTrigger>
                   <SelectContent>
@@ -140,21 +140,21 @@ export default function QuestionRenderer({
                   </SelectContent>
                 </Select>
               ) : numQuestion.unit ? (
-                <div className="flex items-center px-5 bg-gradient-to-r from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30 rounded-lg border-2 border-indigo-200 dark:border-indigo-700">
-                  <span className="text-base font-semibold text-indigo-700 dark:text-indigo-300">{numQuestion.unit}</span>
+                <div className="flex items-center px-5 bg-gradient-to-r from-primary/15 to-primary/5 dark:from-primary/15/30 dark:to-primary/5/30 rounded-lg border-2 border-primary/30 dark:border-primary/30">
+                  <span className="text-base font-semibold text-primary dark:text-primary">{numQuestion.unit}</span>
                 </div>
               ) : null}
             </div>
             
             {numQuestion.unitOptions && (
-              <div className="flex items-center gap-2 text-xs text-gray-500">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Info className="w-3 h-3" />
                 <span>Select the correct unit from the dropdown</span>
               </div>
             )}
             
             {numQuestion.tolerance && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
                 <Info className="w-4 h-4" />
                 <span>Tolerance: <span className="font-semibold">± {numQuestion.tolerance}</span></span>
               </div>
@@ -169,17 +169,17 @@ export default function QuestionRenderer({
           <div className="space-y-4">
             {/* Concept Hints for Students */}
             {openResponseQuestion.correctConcepts && openResponseQuestion.correctConcepts.length > 0 && (
-              <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+              <div className="mb-4 p-4 bg-primary/5 dark:bg-primary/20 rounded-lg border border-primary/30 dark:border-primary/30">
                 <div className="flex items-start gap-2">
-                  <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                  <Info className="w-5 h-5 text-primary dark:text-primary mt-0.5 flex-shrink-0" />
                   <div className="text-sm">
-                    <p className="font-medium text-blue-800 dark:text-blue-200 mb-2">
+                    <p className="font-medium text-primary dark:text-primary mb-2">
                       Key Concepts to Address:
                     </p>
-                    <ul className="space-y-1 text-blue-700 dark:text-blue-300">
+                    <ul className="space-y-1 text-primary dark:text-primary">
                       {openResponseQuestion.correctConcepts.map((concept, index) => (
                         <li key={index} className="flex items-start gap-1">
-                          <span className="text-blue-500">•</span>
+                          <span className="text-primary">•</span>
                           <span>{concept}</span>
                         </li>
                       ))}
@@ -195,14 +195,14 @@ export default function QuestionRenderer({
               placeholder="Explain your answer using physics concepts. Be sure to address all key concepts listed above..."
               rows={6}
               disabled={disabled}
-              className="min-h-[150px] sm:min-h-[200px] text-sm sm:text-base p-3 sm:p-4 rounded-lg border-2 border-gray-200 focus:border-indigo-500 transition-colors"
+              className="min-h-[150px] sm:min-h-[200px] text-sm sm:text-base p-3 sm:p-4 rounded-lg border-2 border-border focus:border-primary/30 transition-colors"
             />
             
-            <div className="flex items-center justify-between mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="flex items-center justify-between mt-3 p-3 bg-muted dark:bg-gray-800 rounded-lg">
               <div className="flex items-center gap-2">
-                <Info className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Word count: <span className="font-semibold text-gray-800 dark:text-gray-200">{wordCount}</span>
+                <Info className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground dark:text-muted-foreground">
+                  Word count: <span className="font-semibold text-foreground dark:text-muted-foreground">{wordCount}</span>
                   {openResponseQuestion.minLength && (
                     <span className="ml-2 text-xs">Min: {openResponseQuestion.minLength}</span>
                   )}
@@ -212,7 +212,7 @@ export default function QuestionRenderer({
                 </span>
               </div>
               {openResponseQuestion.autoGrade && (
-                <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 dark:from-purple-900/30 dark:to-indigo-900/30 dark:text-purple-300 font-semibold">
+                <Badge className="bg-gradient-to-r from-primary/15 to-primary/5 text-primary dark:from-primary/15/30 dark:to-primary/5/30 dark:text-primary font-semibold">
                   <Sparkles className="w-3 h-3 mr-1" />
                   AI Concept Grading
                 </Badge>
@@ -221,28 +221,28 @@ export default function QuestionRenderer({
 
             {/* Show rubric criteria to students */}
             {openResponseQuestion.rubric && openResponseQuestion.rubric.length > 0 && (
-              <div className="mt-6 p-6 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 rounded-xl border border-indigo-200 dark:border-indigo-700">
+              <div className="mt-6 p-6 bg-gradient-to-br from-primary/15 via-primary/10 to-pink-50 dark:from-primary/15/20 dark:via-primary/10/20 dark:to-pink-900/20 rounded-xl border border-primary/30 dark:border-primary/30">
                 <div className="flex items-center gap-2 mb-4">
-                  <Award className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
-                  <h4 className="text-base font-semibold text-indigo-900 dark:text-indigo-100">Grading Criteria</h4>
+                  <Award className="w-5 h-5 text-primary dark:text-primary" />
+                  <h4 className="text-base font-semibold text-primary dark:text-primary">Grading Criteria</h4>
                 </div>
                 <div className="space-y-3">
                   {openResponseQuestion.rubric.map((criterion, index) => (
                     <div key={criterion.id} className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 backdrop-blur">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
-                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900 text-xs font-bold text-indigo-700 dark:text-indigo-300">
+                          <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 dark:bg-primary text-xs font-bold text-primary dark:text-primary">
                             {index + 1}
                           </span>
-                          <span className="font-medium text-indigo-800 dark:text-indigo-200">
+                          <span className="font-medium text-primary dark:text-primary">
                             {criterion.name}
                           </span>
                         </div>
-                        <Badge className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 font-semibold">
+                        <Badge className="bg-primary/10 text-primary dark:bg-primary dark:text-primary font-semibold">
                           {criterion.maxPoints} pts
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 pl-8">
+                      <p className="text-sm text-foreground dark:text-muted-foreground pl-8">
                         {criterion.description}
                       </p>
                     </div>
@@ -253,12 +253,12 @@ export default function QuestionRenderer({
 
             {/* Show sample answer if provided and not disabled (i.e., after submission) */}
             {showFeedback && openResponseQuestion.sampleAnswer && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl border border-green-200 dark:border-green-700">
+              <div className="mt-6 p-6 bg-gradient-to-r from-success/15 to-success/5 dark:from-success/15/20 dark:to-success/5/20 rounded-xl border border-success/30 dark:border-success/30">
                 <div className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-success dark:text-success mt-0.5" />
                   <div className="flex-1">
-                    <h4 className="text-base font-semibold text-green-900 dark:text-green-100 mb-2">Sample Answer</h4>
-                    <div className="text-sm text-green-800 dark:text-green-200 whitespace-pre-wrap leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 backdrop-blur">
+                    <h4 className="text-base font-semibold text-success dark:text-success mb-2">Sample Answer</h4>
+                    <div className="text-sm text-success dark:text-success whitespace-pre-wrap leading-relaxed bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 backdrop-blur">
                       <MathMarkdown content={openResponseQuestion.sampleAnswer} />
                     </div>
                   </div>
@@ -333,15 +333,15 @@ export default function QuestionRenderer({
     <div className={`relative mb-4 sm:mb-6 md:mb-8 transition-all duration-300 ${
       showFeedback 
         ? isCorrect 
-          ? 'ring-1 sm:ring-2 ring-green-400 ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl' 
-          : 'ring-1 sm:ring-2 ring-red-400 ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl'
+          ? 'ring-1 sm:ring-2 ring-success ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl' 
+          : 'ring-1 sm:ring-2 ring-destructive ring-offset-2 sm:ring-offset-4 rounded-lg sm:rounded-2xl'
         : ''
     }`}>
       {/* Modern card with gradient border on hover - Mobile optimized */}
-      <Card className="overflow-hidden border-0 shadow-lg sm:shadow-xl hover:shadow-xl sm:hover:shadow-2xl transition-shadow duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+      <Card className="overflow-hidden border-0 shadow-lg sm:shadow-xl hover:shadow-xl sm:hover:shadow-2xl transition-shadow duration-300 bg-gradient-to-br from-white to-gray-50 dark:from-muted dark:to-gray-950">
         {/* Cinematic image section - Mobile responsive */}
         {question.scenarioImage && (
-          <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800">
+          <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 overflow-hidden bg-gradient-to-b from-muted to-gray-800">
             <img
               src={question.scenarioImage}
               alt="Physics scenario visualization"
@@ -359,8 +359,8 @@ export default function QuestionRenderer({
               {showFeedback && (
                 <Badge className={`backdrop-blur-md font-semibold ${
                   isCorrect 
-                    ? 'bg-green-500/30 text-green-100 border-green-400/50' 
-                    : 'bg-red-500/30 text-red-100 border-red-400/50'
+                    ? 'bg-success/30 text-success border-success/30/50' 
+                    : 'bg-destructive/30 text-destructive border-destructive/30/50'
                 }`}>
                   {isCorrect ? (
                     <><CheckCircle2 className="w-3 h-3 mr-1" /> Correct</>
@@ -382,7 +382,7 @@ export default function QuestionRenderer({
         
         {/* If no image, show question in header with modern styling - Mobile responsive */}
         {!question.scenarioImage && (
-          <CardHeader className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 sm:p-6 md:p-8">
+          <CardHeader className="bg-gradient-to-r from-primary/15 to-primary/5 text-white p-4 sm:p-6 md:p-8">
             <div className="space-y-3 sm:space-y-4">
               <div className="flex items-start justify-between">
                 <CardTitle className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold leading-tight pr-2 [&_.markdown-content]:text-white [&_.katex]:text-white">
@@ -397,8 +397,8 @@ export default function QuestionRenderer({
                 {showFeedback && (
                   <Badge className={`font-semibold ${
                     isCorrect 
-                      ? 'bg-green-100 text-green-800 border-green-300' 
-                      : 'bg-red-100 text-red-800 border-red-300'
+                      ? 'bg-success/10 text-success border-success/30' 
+                      : 'bg-destructive/10 text-destructive border-destructive/30'
                   }`}>
                     {isCorrect ? (
                       <><CheckCircle2 className="w-4 h-4 mr-1" /> Correct</>
@@ -416,7 +416,7 @@ export default function QuestionRenderer({
         <CardContent className="p-4 sm:p-6 md:p-8">
           <div className="space-y-4 sm:space-y-6">
             {/* Answer input section with modern styling - Mobile responsive */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6 shadow-sm border border-border dark:border-border">
               {renderInput()}
             </div>
             
@@ -424,27 +424,27 @@ export default function QuestionRenderer({
             {showFeedback && feedback && (
               <div className={`relative overflow-hidden rounded-lg sm:rounded-xl p-4 sm:p-6 ${
                 isCorrect 
-                  ? 'bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 dark:from-green-900/20 dark:to-emerald-900/20' 
-                  : 'bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 dark:from-red-900/20 dark:to-pink-900/20'
+                  ? 'bg-gradient-to-br from-success/15 to-success/5 border border-success/30 dark:from-success/15/20 dark:to-success/5/20' 
+                  : 'bg-gradient-to-br from-destructive/15 to-pink-50 border border-destructive/30 dark:from-destructive/15/20 dark:to-pink-900/20'
               }`}>
                 <div className="flex items-start gap-3">
                   <div className={`p-2 rounded-full ${
-                    isCorrect ? 'bg-green-100 dark:bg-green-800' : 'bg-red-100 dark:bg-red-800'
+                    isCorrect ? 'bg-success/10 dark:bg-success' : 'bg-destructive/10 dark:bg-destructive'
                   }`}>
                     {isCorrect ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-300" />
+                      <CheckCircle2 className="w-5 h-5 text-success dark:text-success" />
                     ) : (
-                      <Info className="w-5 h-5 text-red-600 dark:text-red-300" />
+                      <Info className="w-5 h-5 text-destructive dark:text-destructive" />
                     )}
                   </div>
                   <div className="flex-1">
                     <p className={`font-semibold mb-1 ${
-                      isCorrect ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
+                      isCorrect ? 'text-success dark:text-success' : 'text-destructive dark:text-destructive'
                     }`}>
                       Feedback
                     </p>
                     <div className={`text-sm leading-relaxed ${
-                      isCorrect ? 'text-green-700 dark:text-green-300' : 'text-red-700 dark:text-red-300'
+                      isCorrect ? 'text-success dark:text-success' : 'text-destructive dark:text-destructive'
                     }`}>
                       <MathMarkdown content={feedback} />
                     </div>

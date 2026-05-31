@@ -17,19 +17,19 @@ export default function RubricFeedback({ grade, rubric, showDetails = true }: Ru
 
   const getScoreColor = (score: number, maxScore: number) => {
     const percentage = maxScore > 0 ? (score / maxScore) * 100 : 0
-    if (percentage >= 90) return 'text-green-600 bg-green-50 border-green-200 dark:text-green-300 dark:bg-green-900/30 dark:border-green-700'
-    if (percentage >= 80) return 'text-blue-600 bg-blue-50 border-blue-200 dark:text-blue-300 dark:bg-blue-900/30 dark:border-blue-700'
+    if (percentage >= 90) return 'text-success bg-success/5 border-success/30 dark:text-success dark:bg-success/30 dark:border-success/30'
+    if (percentage >= 80) return 'text-primary bg-primary/5 border-primary/30 dark:text-primary dark:bg-primary/30 dark:border-primary/30'
     if (percentage >= 70) return 'text-yellow-600 bg-yellow-50 border-yellow-200 dark:text-yellow-300 dark:bg-yellow-900/30 dark:border-yellow-700'
     if (percentage >= 60) return 'text-orange-600 bg-orange-50 border-orange-200 dark:text-orange-300 dark:bg-orange-900/30 dark:border-orange-700'
-    return 'text-red-600 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-900/30 dark:border-red-700'
+    return 'text-destructive bg-destructive/5 border-destructive/30 dark:text-destructive dark:bg-destructive/30 dark:border-destructive/30'
   }
 
   const getOverallScoreColor = () => {
-    if (scorePercentage >= 90) return 'text-green-600 dark:text-green-300'
-    if (scorePercentage >= 80) return 'text-blue-600 dark:text-blue-300'
+    if (scorePercentage >= 90) return 'text-success dark:text-success'
+    if (scorePercentage >= 80) return 'text-primary dark:text-primary'
     if (scorePercentage >= 70) return 'text-yellow-600 dark:text-yellow-300'
     if (scorePercentage >= 60) return 'text-orange-600 dark:text-orange-300'
-    return 'text-red-600 dark:text-red-300'
+    return 'text-destructive dark:text-destructive'
   }
 
   return (
@@ -60,16 +60,16 @@ export default function RubricFeedback({ grade, rubric, showDetails = true }: Ru
       <CardContent className="space-y-4">
         {/* Overall Feedback */}
         {grade.overallFeedback && (
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">Overall Feedback</h4>
-            <p className="text-sm text-gray-700 whitespace-pre-wrap">{grade.overallFeedback}</p>
+          <div className="p-4 bg-muted rounded-lg">
+            <h4 className="text-sm font-medium text-foreground mb-2">Overall Feedback</h4>
+            <p className="text-sm text-foreground whitespace-pre-wrap">{grade.overallFeedback}</p>
           </div>
         )}
 
         {/* Detailed Criterion Scores */}
         {showDetails && (
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-gray-900">Detailed Breakdown</h4>
+            <h4 className="text-sm font-medium text-foreground">Detailed Breakdown</h4>
             {grade.rubricScores.map((score) => {
               const criterion = rubric.find(c => c.id === score.criterionId)
               if (!criterion) return null
@@ -95,7 +95,7 @@ export default function RubricFeedback({ grade, rubric, showDetails = true }: Ru
                     <Progress value={percentage} className="h-1" />
                   </div>
 
-                  <div className="text-xs text-gray-600 mb-2">
+                  <div className="text-xs text-muted-foreground mb-2">
                     <strong>Criterion:</strong> {criterion.description}
                   </div>
 
@@ -112,19 +112,19 @@ export default function RubricFeedback({ grade, rubric, showDetails = true }: Ru
 
         {/* Scoring Levels Reference */}
         {showDetails && (
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <h4 className="text-sm font-medium text-blue-900 mb-3">Scoring Reference</h4>
+          <div className="mt-6 p-4 bg-primary/5 rounded-lg border border-primary/30">
+            <h4 className="text-sm font-medium text-primary mb-3">Scoring Reference</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {rubric.map((criterion) => (
                 <div key={criterion.id} className="text-xs">
-                  <div className="font-medium text-blue-800 mb-1">
+                  <div className="font-medium text-primary mb-1">
                     {criterion.name} ({criterion.maxPoints} pts)
                   </div>
                   <div className="space-y-1">
                     {criterion.levels
                       .sort((a, b) => b.score - a.score)
                       .map((level, index) => (
-                      <div key={index} className="flex justify-between text-blue-700">
+                      <div key={index} className="flex justify-between text-primary">
                         <span>{level.description}</span>
                         <span className="font-medium">{level.score} pts</span>
                       </div>
