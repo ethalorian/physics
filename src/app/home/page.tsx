@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from 'react'
 import EnrollmentGate from '@/components/EnrollmentGate'
+import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import Link from 'next/link'
 import { decayingAverage } from '@/data/curriculum-types'
 
@@ -231,6 +232,12 @@ export default function HomePage() {
 
         {!loading && data && (
           <>
+            {/* MATH WARM-UP — the spine's daily to-do, where students land */}
+            <LaneLabel color="var(--secondary)">Today&apos;s math warm-up</LaneLabel>
+            <div className="mb-6">
+              <DailyMathTask />
+            </div>
+
             {/* CONTINUE */}
             <LaneLabel color="var(--primary)">Continue your journey</LaneLabel>
             {data.continue && data.continue.lesson ? (
