@@ -15,7 +15,7 @@ interface GewaLike {
   work?: string
   answer?: string
   workStrokes?: unknown[]
-  sandbox?: { lines?: unknown[]; answerIndex?: number }
+  workTexts?: { text?: unknown }[]
 }
 
 function summarize(rj: GewaLike | null, text: string | null): string {
@@ -24,10 +24,10 @@ function summarize(rj: GewaLike | null, text: string | null): string {
   const parts: string[] = []
   if (rj.given) parts.push(`Given: ${rj.given}`)
   if (rj.equation) parts.push(`Equation: ${rj.equation}`)
-  const lines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
-  if (lines.length) parts.push(`Work: ${lines.join(' | ')}`)
+  const typed = Array.isArray(rj.workTexts) ? rj.workTexts.map((t) => String(t?.text ?? '')).filter((s) => s.trim()) : []
+  if (typed.length) parts.push(`Typed: ${typed.join(' | ')}`)
   if (rj.answer) parts.push(`Answer: ${rj.answer}`)
-  if (Array.isArray(rj.workStrokes) && rj.workStrokes.length) parts.push('[handwritten work]')
+  if (Array.isArray(rj.workStrokes) && rj.workStrokes.length) parts.push('[handwritten/drawn work]')
   return parts.join(' · ') || '[submitted]'
 }
 

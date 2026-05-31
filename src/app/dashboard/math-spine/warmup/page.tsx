@@ -67,7 +67,7 @@ export default function WarmupPage() {
     ans &&
     ((ans.answer && ans.answer.trim()) ||
       (ans.workStrokes && ans.workStrokes.length > 0) ||
-      (ans.sandbox?.lines && ans.sandbox.lines.some((l) => l.trim())))
+      (ans.workTexts && ans.workTexts.length > 0))
   )
 
   async function submit() {

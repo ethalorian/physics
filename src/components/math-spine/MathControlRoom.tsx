@@ -29,6 +29,7 @@ interface GewaResponse {
   work?: string
   answer?: string
   workStrokes?: Stroke[]
+  workTexts?: { x: number; y: number; text: string; size?: number }[]
   sandbox?: { lines?: string[]; answerIndex?: number }
 }
 interface Submission {
@@ -43,14 +44,22 @@ interface Submission {
   rated_competency_ids: string[]
 }
 
-function StrokesSvg({ strokes }: { strokes: Stroke[] }) {
-  if (!strokes || strokes.length === 0) return null
+type BoardText = { x: number; y: number; text: string; size?: number }
+
+function BoardSvg({ strokes, texts }: { strokes?: Stroke[]; texts?: BoardText[] }) {
+  const hasStrokes = strokes && strokes.length > 0
+  const hasTexts = texts && texts.length > 0
+  if (!hasStrokes && !hasTexts) return null
   return (
-    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 380, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="handwritten work">
-      {strokes.map((s, i) => {
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 400, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="student work">
+      {/* typed text under the strokes, matching the student's board */}
+      {(texts ?? []).map((t, i) => (
+        <text key={`t${i}`} x={t.x} y={t.y} fontSize={t.size ?? 26} fill="#1A1730" fontFamily="ui-sans-serif, system-ui, sans-serif">{t.text}</text>
+      ))}
+      {(strokes ?? []).map((s, i) => {
         const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
         if (!pts) return null
-        return <polyline key={i} points={pts} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={s.width ?? 3} strokeLinecap="round" strokeLinejoin="round" />
+        return <polyline key={`s${i}`} points={pts} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={s.width ?? 3} strokeLinecap="round" strokeLinejoin="round" />
       })}
     </svg>
   )
@@ -61,31 +70,25 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
   if (!rj) {
     return <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{sub.response}</p>
   }
-  const lines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
   const field = (label: string, val?: string) =>
     val && String(val).trim() ? (
       <div className="text-sm" style={{ marginBottom: 3 }}>
         <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(val)}
       </div>
     ) : null
+  const hasBoard = (rj.workStrokes && rj.workStrokes.length > 0) || (rj.workTexts && rj.workTexts.length > 0)
   return (
     <div>
       {field('Given', rj.given)}
       {field('Equation', rj.equation)}
-      {lines.length > 0 && (
-        <div className="text-sm" style={{ marginBottom: 3 }}>
-          <b style={{ color: 'var(--secondary-foreground)' }}>Work:</b> {lines.join('  |  ')}
-        </div>
-      )}
       {field('Answer', rj.answer)}
-      {field('Work (typed)', rj.work)}
-      {Array.isArray(rj.workStrokes) && rj.workStrokes.length > 0 && (
+      {hasBoard && (
         <div className="mt-2">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Handwritten work</div>
-          <StrokesSvg strokes={rj.workStrokes} />
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Work board (typed + drawn)</div>
+          <BoardSvg strokes={rj.workStrokes} texts={rj.workTexts} />
         </div>
       )}
-      {!rj.given && !rj.equation && !rj.answer && lines.length === 0 && (!rj.workStrokes || rj.workStrokes.length === 0) && (
+      {!rj.given && !rj.equation && !rj.answer && !hasBoard && (
         <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{sub.response || '[submitted]'}</p>
       )}
     </div>
@@ -185,7 +188,6 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextGate, openStudent])
 
   const compById = (id: string) => grid?.competencies.find((c) => c.id === id)
