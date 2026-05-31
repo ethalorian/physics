@@ -65,6 +65,7 @@ export const GET = withAuth(async (request, ctx) => {
     .select('id, prompt, answer_key, difficulty')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
+  const tiersFromDb = (target.mini_lesson as { tiers?: unknown } | null)?.tiers ?? null
   let item: {
     spiralItemId: string
     competencyId: string
@@ -73,7 +74,8 @@ export const GET = withAuth(async (request, ctx) => {
     prompt: string
     answerKey?: string
     difficulty?: string
-    miniLesson?: unknown
+    competencyValue: number | null
+    miniLessonTiers?: unknown
   } | null = null
   if (itemRows && itemRows.length > 0) {
     const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
@@ -86,7 +88,8 @@ export const GET = withAuth(async (request, ctx) => {
       prompt: chosen.prompt,
       answerKey: chosen.answer_key ?? undefined,
       difficulty: chosen.difficulty ?? undefined,
-      miniLesson: target.mini_lesson ?? null,
+      competencyValue: valueOf(target.id),
+      miniLessonTiers: tiersFromDb,
     }
   }
 

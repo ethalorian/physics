@@ -12,10 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, Trash2, ArrowLeft, Lightbulb } from 'lucide-react'
-import { miniLessonForCode } from '@/lib/math-spine-lessons'
+import { tieredLessonsForCode, TIER_LABELS } from '@/lib/math-spine-lessons'
 
 interface MiniLesson { title: string; steps: string[]; tip?: string }
-interface Comp { id: string; code: string; statement: string; strand: string; mini_lesson: MiniLesson | null }
+interface Comp { id: string; code: string; statement: string; strand: string; mini_lesson: { tiers: MiniLesson[] } | null }
 interface Item {
   id: string
   competencyId: string
@@ -247,15 +247,24 @@ export default function WarmupBankPage() {
   )
 }
 
+interface TierDraft { title: string; stepsText: string; tip: string }
+
 function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
-  const effective: MiniLesson | null = comp.mini_lesson ?? (miniLessonForCode(comp.code) as MiniLesson | null)
+  const defaults: MiniLesson[] = comp.mini_lesson?.tiers ?? (tieredLessonsForCode(comp.code) ?? [])
   const usingDefault = !comp.mini_lesson
   const [open, setOpen] = useState(false)
-  const [title, setTitle] = useState(effective?.title ?? '')
-  const [stepsText, setStepsText] = useState((effective?.steps ?? []).join('\n'))
-  const [tip, setTip] = useState(effective?.tip ?? '')
+  const [tiers, setTiers] = useState<TierDraft[]>(
+    [0, 1, 2].map((i) => ({
+      title: defaults[i]?.title ?? '',
+      stepsText: (defaults[i]?.steps ?? []).join('\n'),
+      tip: defaults[i]?.tip ?? '',
+    })),
+  )
   const [busy, setBusy] = useState(false)
   const [saved, setSaved] = useState(false)
+
+  const setTier = (i: number, patch: Partial<TierDraft>) =>
+    setTiers((prev) => prev.map((t, idx) => (idx === i ? { ...t, ...patch } : t)))
 
   async function save() {
     setBusy(true)
@@ -265,7 +274,7 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           competency_id: comp.id,
-          mini_lesson: { title, steps: stepsText.split('\n').map((s) => s.trim()).filter(Boolean), tip },
+          tiers: tiers.map((t) => ({ title: t.title, steps: t.stepsText.split('\n').map((s) => s.trim()).filter(Boolean), tip: t.tip })),
         }),
       })
       if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 1500); onSaved() }
@@ -278,19 +287,24 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
         <div className="flex items-center gap-2">
           <Lightbulb className="h-4 w-4 text-amber-500" />
           <Badge variant="outline" className="text-[10px]">{comp.code}</Badge>
-          <span className="text-sm text-foreground flex-1">{effective?.title ?? '(no lesson)'}</span>
+          <span className="text-sm text-foreground flex-1">{defaults[0]?.title ?? '(no lesson)'}</span>
           {usingDefault && <span className="text-[10px] text-muted-foreground">default</span>}
           <Button size="sm" variant="ghost" className="rounded-full" onClick={() => setOpen((o) => !o)}>{open ? 'Close' : 'Edit'}</Button>
         </div>
         {open && (
-          <div className="space-y-2 mt-3">
-            <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Lesson title" />
-            <textarea rows={4} className={inputCls} value={stepsText} onChange={(e) => setStepsText(e.target.value)} placeholder="One step per line" />
-            <input className={inputCls} value={tip} onChange={(e) => setTip(e.target.value)} placeholder="Optional tip" />
+          <div className="space-y-4 mt-3">
+            <p className="text-[11px] text-muted-foreground">Three tiers: students see the one matching their mastery (Start here for new/struggling, Fluent once they’re strong).</p>
+            {tiers.map((t, i) => (
+              <div key={i} className="space-y-2 rounded-lg border border-border p-3">
+                <div className="text-xs font-semibold text-foreground">{TIER_LABELS[i]} · tier {i + 1}</div>
+                <input className={inputCls} value={t.title} onChange={(e) => setTier(i, { title: e.target.value })} placeholder="Tier title" />
+                <textarea rows={3} className={inputCls} value={t.stepsText} onChange={(e) => setTier(i, { stepsText: e.target.value })} placeholder="One step per line" />
+                <input className={inputCls} value={t.tip} onChange={(e) => setTier(i, { tip: e.target.value })} placeholder="Optional tip" />
+              </div>
+            ))}
             <div className="flex items-center gap-2">
-              <Button size="sm" className="rounded-full" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save lesson'}</Button>
+              <Button size="sm" className="rounded-full" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save all tiers'}</Button>
               {saved && <span className="text-xs text-emerald-600">Saved ✓</span>}
-              <span className="text-[11px] text-muted-foreground">Steps: one per line.</span>
             </div>
           </div>
         )}

@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle2, Lightbulb } from 'lucide-react'
 import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/WarmupAnswer'
 import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
-import { miniLessonForCode, type MiniLesson } from '@/lib/math-spine-lessons'
+import { tieredLessonsForCode, pickTier, TIER_LABELS, type MiniLesson } from '@/lib/math-spine-lessons'
 
 interface DailyItem {
   spiralItemId: string
@@ -26,7 +26,8 @@ interface DailyItem {
   prompt: string
   answerKey?: string
   difficulty?: string
-  miniLesson?: MiniLesson | null
+  competencyValue?: number | null
+  miniLessonTiers?: MiniLesson[] | null
 }
 
 function strandForCode(code: string | undefined): string {
@@ -90,7 +91,9 @@ export default function WarmupPage() {
     }
   }
 
-  const lesson: MiniLesson | null = item ? (item.miniLesson ?? miniLessonForCode(item.competencyCode)) : null
+  const tiers: MiniLesson[] | null = item ? (item.miniLessonTiers ?? tieredLessonsForCode(item.competencyCode)) : null
+  const tierIdx = pickTier(item?.competencyValue)
+  const lesson: MiniLesson | null = tiers ? (tiers[tierIdx] ?? tiers[0]) : null
   const done = submitted || alreadySubmitted
 
   return (
@@ -121,9 +124,12 @@ export default function WarmupPage() {
           {lesson && (
             <Card className="apple-card">
               <CardHeader>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <Lightbulb className="h-4 w-4 text-amber-500" />
                   <CardTitle className="text-foreground text-base">How to do it: {lesson.title}</CardTitle>
+                  <span className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground">
+                    {TIER_LABELS[tierIdx]} · {tierIdx + 1} of 3
+                  </span>
                 </div>
               </CardHeader>
               <CardContent>
