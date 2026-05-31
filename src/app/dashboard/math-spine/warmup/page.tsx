@@ -3,18 +3,19 @@
 /**
  * Daily math warm-up — its own screen.
  *
- * Linked from the warm-up card. Three parts: (1) the prompt, (2) a short
- * mini-lesson reminding the student HOW to do this kind of problem, and (3) the
- * GEWA solve block — which itself folds in the InkPad so a student can hand-write
- * their work and box the answer. Submitting sends the structured answer to the
- * teacher's control-room review queue.
+ * Three parts: (1) the prompt, (2) a mini-lesson with an explicit diagram showing
+ * HOW to do this kind of problem, and (3) the work surface — an InkPad (always,
+ * so students can show any kind of work by hand) plus a final answer, with an
+ * optional Given/Equation set-up for solve problems. Submitting sends the answer
+ * to the teacher's control-room review queue.
  */
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, CheckCircle2, Lightbulb } from 'lucide-react'
-import GewaInteractive, { type GewaValue } from '@/components/blocks/GewaInteractive'
+import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/WarmupAnswer'
+import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
 import { miniLessonForCode, type MiniLesson } from '@/lib/math-spine-lessons'
 
 interface DailyItem {
@@ -28,11 +29,20 @@ interface DailyItem {
   miniLesson?: MiniLesson | null
 }
 
+function strandForCode(code: string | undefined): string {
+  const p = (code ?? '').slice(0, 2)
+  if (p === 'PR') return 'proportional-reasoning'
+  if (p === 'QE') return 'quantities-estimation'
+  if (p === 'SM') return 'symbolic-manipulation'
+  if (p === 'GV') return 'graphs-vectors'
+  return ''
+}
+
 export default function WarmupPage() {
   const [item, setItem] = useState<DailyItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
-  const [gewa, setGewa] = useState<GewaValue | null>(null)
+  const [ans, setAns] = useState<WarmupAnswerValue | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -51,8 +61,10 @@ export default function WarmupPage() {
     return () => { active = false }
   }, [])
 
+  const hasWork = !!(ans && ((ans.answer && ans.answer.trim()) || (ans.workStrokes && ans.workStrokes.length > 0)))
+
   async function submit() {
-    if (!item || !gewa) return
+    if (!item || !hasWork) return
     setSubmitting(true)
     setError(null)
     try {
@@ -63,7 +75,7 @@ export default function WarmupPage() {
           competency_id: item.competencyId,
           spiral_item_id: item.spiralItemId,
           prompt: item.prompt,
-          response_json: gewa,
+          response_json: ans,
         }),
       })
       if (!res.ok) {
@@ -88,19 +100,14 @@ export default function WarmupPage() {
       </Link>
 
       {loading && <p className="text-sm text-muted-foreground">Loading your warm-up…</p>}
-
-      {!loading && !item && (
-        <p className="text-sm text-muted-foreground">No warm-up available right now — check back soon.</p>
-      )}
+      {!loading && !item && <p className="text-sm text-muted-foreground">No warm-up available right now — check back soon.</p>}
 
       {!loading && item && (
         <>
           <Card className="apple-card">
             <CardHeader>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">
-                  {item.competencyCode}
-                </span>
+                <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">{item.competencyCode}</span>
                 <CardTitle className="text-foreground text-base">Today&apos;s Math Warm-Up</CardTitle>
               </div>
               <p className="text-xs text-muted-foreground mt-1">{item.competencyStatement}</p>
@@ -110,7 +117,7 @@ export default function WarmupPage() {
             </CardContent>
           </Card>
 
-          {/* Mini-lesson */}
+          {/* Mini-lesson with an explicit diagram */}
           {lesson && (
             <Card className="apple-card">
               <CardHeader>
@@ -120,19 +127,16 @@ export default function WarmupPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <ol className="list-decimal pl-5 space-y-1.5 text-sm text-foreground">
-                  {lesson.steps.map((s, i) => (
-                    <li key={i}>{s}</li>
-                  ))}
+                <MathSpineDiagram code={item.competencyCode} />
+                <ol className="list-decimal pl-5 space-y-1.5 text-sm text-foreground mt-2">
+                  {lesson.steps.map((s, i) => <li key={i}>{s}</li>)}
                 </ol>
-                {lesson.tip && (
-                  <p className="text-xs text-muted-foreground mt-3 rounded-md bg-muted/60 px-3 py-2">💡 {lesson.tip}</p>
-                )}
+                {lesson.tip && <p className="text-xs text-muted-foreground mt-3 rounded-md bg-muted/60 px-3 py-2">💡 {lesson.tip}</p>}
               </CardContent>
             </Card>
           )}
 
-          {/* Answer: GEWA + InkPad */}
+          {/* Work surface */}
           {done ? (
             <Card className="apple-card">
               <CardContent className="py-6">
@@ -141,27 +145,22 @@ export default function WarmupPage() {
                   Submitted — your teacher will review your work and rate your fluency.
                 </div>
                 <Link href="/dashboard/math-spine">
-                  <Button variant="ghost" size="sm" className="rounded-full mt-3 -ml-2 text-muted-foreground">
-                    See your math literacy →
-                  </Button>
+                  <Button variant="ghost" size="sm" className="rounded-full mt-3 -ml-2 text-muted-foreground">See your math literacy →</Button>
                 </Link>
               </CardContent>
             </Card>
           ) : (
             <Card className="apple-card">
               <CardHeader>
-                <CardTitle className="text-foreground text-base">Show your work</CardTitle>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Fill in what you can, write your steps on the pad (tap “Write it”), then Save — and Submit for review.
-                </p>
+                <CardTitle className="text-foreground text-base">Your work</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <GewaInteractive prompt={item.prompt} value={gewa ?? undefined} onSave={setGewa} />
+                <WarmupAnswer strand={strandForCode(item.competencyCode)} onChange={setAns} />
                 <div className="flex items-center gap-2 pt-2 border-t border-border">
-                  <Button disabled={submitting || !gewa} onClick={submit} className="rounded-full">
+                  <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">
                     {submitting ? 'Submitting…' : 'Submit for review'}
                   </Button>
-                  {!gewa && <span className="text-xs text-muted-foreground">Tap “Save work” above first.</span>}
+                  {!hasWork && <span className="text-xs text-muted-foreground">Show your work or enter an answer first.</span>}
                   {error && <span className="text-xs text-red-600">{error}</span>}
                 </div>
               </CardContent>
