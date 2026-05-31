@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Gift, LayoutGrid, Users, Palette } from "lucide-react"
+import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Gift, LayoutGrid, Users } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -57,7 +57,6 @@ export default function Navbar() {
         { href: "/admin/home", label: "Home", icon: Home },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
         { href: "/admin/store", label: "Rewards", icon: Gift },
-        { href: "/admin/design-system", label: "Design", icon: Palette },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
       ]
       // Hide the global Admin tab while previewing the teacher experience.

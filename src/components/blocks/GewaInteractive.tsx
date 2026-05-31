@@ -92,8 +92,11 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
     runCheck()
   }
 
-  const badge = (l: string, color: string) => (
-    <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: 'var(--primary-foreground)' }}>{l}</span>
+  // Color-coded GEWA steps (matches the design-system solve-box):
+  // G = sage (what you know) · E = indigo (the relationship) ·
+  // W = neutral (show your steps) · A = gold (the answer / the prize).
+  const badge = (l: string, color: string, fg: string = 'var(--primary-foreground)') => (
+    <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: fg }}>{l}</span>
   )
 
   return (
@@ -102,7 +105,7 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
 
       {/* GIVEN */}
       <div>
-        <div className="flex items-center gap-2 mb-2">{badge('G', 'var(--primary)')}<span className="text-sm font-semibold">Given — pull out what you know</span></div>
+        <div className="flex items-center gap-2 mb-2">{badge('G', 'var(--viz-up)')}<span className="text-sm font-semibold">Given — pull out what you know</span></div>
         {givenHint && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{givenHint}</p>}
         <div className="flex flex-col gap-2">
           {chips.map((c, i) => (
@@ -152,7 +155,7 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
       {/* WORK & ANSWER — handwritten on the pad */}
       <div>
         <div className="flex items-center gap-2 mb-2">
-          {badge('W', 'var(--success)')}{badge('A', 'var(--success)')}
+          {badge('W', 'var(--muted-foreground)')}{badge('A', 'var(--reward)', 'var(--reward-foreground)')}
           <span className="text-sm font-semibold">Work &amp; Answer — show your steps and box the answer</span>
         </div>
         {equation && (
