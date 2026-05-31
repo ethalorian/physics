@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
+import MathControlRoom from '@/components/math-spine/MathControlRoom'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -206,7 +207,7 @@ export default function ControlRoomPage() {
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
   const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
-  const [view, setView] = useState<'mastery' | 'lessons'>('mastery')
+  const [view, setView] = useState<'mastery' | 'lessons' | 'math'>('mastery')
   const [lessonGrid, setLessonGrid] = useState<LessonGridData | null>(null)
   const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
   const [copyLessonId, setCopyLessonId] = useState('')
@@ -480,7 +481,7 @@ export default function ControlRoomPage() {
 
       {/* tabs: mastery (targets) vs lessons (completion) */}
       <div className="flex gap-2 mt-4">
-        {([['mastery', 'Mastery (targets)'], ['lessons', 'Lessons (completion)']] as const).map(([v, label]) => {
+        {([['mastery', 'Mastery (targets)'], ['lessons', 'Lessons (completion)'], ['math', 'Math (spine)']] as const).map(([v, label]) => {
           const active = view === v
           const toGrade = v === 'lessons' && lessonGrid
             ? Object.values(lessonGrid.cells).reduce((sum, row) => sum + Object.values(row).filter((c) => c.needsGrading).length, 0)
@@ -502,6 +503,13 @@ export default function ControlRoomPage() {
           )
         })}
       </div>
+
+      {/* math spine — cross-cutting competencies + warm-up review */}
+      {view === 'math' && (
+        <div className="mt-4">
+          <MathControlRoom classId={classId} />
+        </div>
+      )}
 
       {/* grading queue — most urgent first */}
       {view === 'mastery' && queue.length > 0 && (

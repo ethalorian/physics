@@ -66,6 +66,7 @@ export const GET = withAuth(async (request, ctx) => {
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
   let item: {
+    spiralItemId: string
     competencyId: string
     competencyCode: string
     competencyStatement: string
@@ -77,6 +78,7 @@ export const GET = withAuth(async (request, ctx) => {
     const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
     const chosen = itemRows[dayNum % itemRows.length]
     item = {
+      spiralItemId: chosen.id,
       competencyId: target.id,
       competencyCode: target.code,
       competencyStatement: target.statement,
@@ -84,6 +86,21 @@ export const GET = withAuth(async (request, ctx) => {
       answerKey: chosen.answer_key ?? undefined,
       difficulty: chosen.difficulty ?? undefined,
     }
+  }
+
+  // Has this student already submitted today's warm-up for this competency?
+  let alreadySubmitted = false
+  if (item) {
+    const dayStart = new Date()
+    dayStart.setHours(0, 0, 0, 0)
+    const { data: pend } = await supabaseAdmin
+      .from('math_warmup_submissions')
+      .select('id')
+      .eq('user_id', targetUserId)
+      .eq('competency_id', item.competencyId)
+      .gte('submitted_at', dayStart.toISOString())
+      .limit(1)
+    alreadySubmitted = (pend ?? []).length > 0
   }
 
   // Snapshot for the card framing.
@@ -96,6 +113,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   return NextResponse.json({
     item,
+    alreadySubmitted,
     snapshot: { mathPointsEarned, fluentCount, total: competencies.length },
   })
 })
