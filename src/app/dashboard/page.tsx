@@ -16,6 +16,7 @@ import {
   ArrowRight
 } from 'lucide-react'
 import EnrollmentGate from '@/components/student/EnrollmentGate'
+import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 
@@ -152,9 +153,12 @@ function StudentOverview() {
         />
       </div>
 
+      {/* Today's math warm-up — the spine's home on the daily dashboard */}
+      <DailyMathTask />
+
       {/* Next Steps - Priority Actions */}
       <NextSteps />
-      
+
       {/* Recent Activity */}
       <RecentActivity />
       

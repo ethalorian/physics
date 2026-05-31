@@ -11,11 +11,13 @@ const load = (importer: () => Promise<{ default: ComponentType }>): ComponentTyp
 
 export const SIM_COMPONENTS: Record<string, ComponentType> = {
   'area-under-curve': load(() => import('@/app/simulations/area-under-curve/page')),
+  'asteroid-trajectory': load(() => import('@/app/simulations/asteroid-trajectory/page')),
   'astronaut-thrust': load(() => import('@/app/simulations/astronaut-thrust/page')),
   'atwood-machine': load(() => import('@/app/simulations/atwood-machine/page')),
   'car-race': load(() => import('@/app/simulations/car-race/page')),
   'cart-collisions': load(() => import('@/app/simulations/cart-collisions/page')),
   'carts-third-law': load(() => import('@/app/simulations/carts-third-law/page')),
+  'closing-speed': load(() => import('@/app/simulations/closing-speed/page')),
   'constant-velocity': load(() => import('@/app/simulations/constant-velocity/page')),
   'dart-deflection': load(() => import('@/app/simulations/dart-deflection/page')),
   'distance-displacement': load(() => import('@/app/simulations/distance-displacement/page')),
@@ -26,6 +28,7 @@ export const SIM_COMPONENTS: Record<string, ComponentType> = {
   'measurement-precision': load(() => import('@/app/simulations/measurement-precision/page')),
   'monkey-hunter': load(() => import('@/app/simulations/monkey-hunter/page')),
   'picket-fence-g': load(() => import('@/app/simulations/picket-fence-g/page')),
+  'predicting-2026-xj': load(() => import('@/app/simulations/predicting-2026-xj/page')),
   'projectile-motion': load(() => import('@/app/simulations/projectile-motion/page')),
   'race-track': load(() => import('@/app/simulations/race-track/page')),
   'riverboat-crossing': load(() => import('@/app/simulations/riverboat-crossing/page')),

@@ -30,6 +30,11 @@ export const SCENES = {
   'car-race': { frames: 150 },
   'race-track': { frames: 150 },
 
+  // asteroid-native (Unit 1)
+  'asteroid-trajectory': { frames: 560 }, // all observations in + fit + prediction
+  'predicting-2026-xj': { frames: 560 }, // capstone reuses the trajectory engine
+  'closing-speed': {}, // reactive vector diagram (no animation)
+
   // vectors
   'riverboat-crossing': { frames: 1500 },
 

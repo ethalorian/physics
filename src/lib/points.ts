@@ -8,6 +8,7 @@ import { supabaseAdmin } from '@/lib/supabase'
  *   lifetimeEarned = Σ game scores
  *                  + Σ (lesson_progress.progress_percentage + 5·video_questions_correct)
  *                  + Σ graded submission scores
+ *                  + Σ math-literacy milestone grants
  *   balance        = lifetimeEarned − Σ committed redemptions (status <> 'denied')
  */
 
@@ -32,6 +33,13 @@ export async function getLifetimeEarned(userId: string): Promise<number> {
     .eq('user_id', userId)
     .eq('status', 'graded')
   for (const s of subs ?? []) total += s.score || 0
+
+  // Math-literacy spine: milestone grants earn into the same economy.
+  const { data: mathGrants } = await supabaseAdmin
+    .from('math_spine_point_grants')
+    .select('points')
+    .eq('user_id', userId)
+  for (const m of mathGrants ?? []) total += m.points || 0
 
   return Math.round(total)
 }

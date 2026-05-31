@@ -1,0 +1,101 @@
+import { NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
+import { withAuth } from '@/lib/api-auth'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { decayingAverage } from '@/data/curriculum-types'
+import { FLUENT_THRESHOLD } from '@/lib/math-spine'
+
+// GET /api/math-spine/daily[?user_id=...]
+// The daily-dashboard "to-do": one warm-up problem, chosen for the competency the
+// student most needs (lowest whole-year value), drawn from the spiral bank. Also
+// returns a small snapshot (points earned, # Fluent) so the card can frame it.
+// Deterministic per day, so it doesn't reshuffle on every reload.
+export const GET = withAuth(async (request, ctx) => {
+  const { searchParams } = new URL(request.url)
+  const resolved = await resolveTargetStudent({
+    role: ctx.role,
+    selfId: ctx.userId,
+    scopeEmail: ctx.email,
+    requestedUserId: searchParams.get('user_id'),
+  })
+  if (!resolved.ok) {
+    return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+  }
+  const targetUserId = resolved.userId
+
+  // Active competencies.
+  const { data: compRows } = await supabaseAdmin
+    .from('math_competencies')
+    .select('id, code, statement, strand, order_index')
+    .eq('is_active', true)
+    .order('order_index', { ascending: true })
+  const competencies = compRows ?? []
+  if (competencies.length === 0) {
+    return NextResponse.json({ item: null, snapshot: { mathPointsEarned: 0, fluentCount: 0, total: 0 } })
+  }
+  const competencyIds = competencies.map((c) => c.id)
+
+  // This student's records → per-competency decaying value.
+  const { data: recRows } = await supabaseAdmin
+    .from('math_competency_records')
+    .select('competency_id, level, observed_at')
+    .eq('user_id', targetUserId)
+    .in('competency_id', competencyIds)
+    .order('observed_at', { ascending: true })
+  const levelsByComp = new Map<string, number[]>()
+  for (const r of recRows ?? []) {
+    const arr = levelsByComp.get(r.competency_id) ?? []
+    arr.push(r.level)
+    levelsByComp.set(r.competency_id, arr)
+  }
+  const valueOf = (id: string): number | null => decayingAverage(levelsByComp.get(id) ?? [])
+
+  // Pick the weakest competency (null = never assessed = weakest), tie-break by order.
+  const ranked = [...competencies].sort((a, b) => {
+    const va = valueOf(a.id) ?? -1
+    const vb = valueOf(b.id) ?? -1
+    if (va !== vb) return va - vb
+    return a.order_index - b.order_index
+  })
+  const target = ranked[0]
+
+  // Spiral items for that competency; rotate by day so it varies.
+  const { data: itemRows } = await supabaseAdmin
+    .from('math_spiral_items')
+    .select('id, prompt, answer_key, difficulty')
+    .eq('competency_id', target.id)
+    .order('created_at', { ascending: true })
+  let item: {
+    competencyId: string
+    competencyCode: string
+    competencyStatement: string
+    prompt: string
+    answerKey?: string
+    difficulty?: string
+  } | null = null
+  if (itemRows && itemRows.length > 0) {
+    const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
+    const chosen = itemRows[dayNum % itemRows.length]
+    item = {
+      competencyId: target.id,
+      competencyCode: target.code,
+      competencyStatement: target.statement,
+      prompt: chosen.prompt,
+      answerKey: chosen.answer_key ?? undefined,
+      difficulty: chosen.difficulty ?? undefined,
+    }
+  }
+
+  // Snapshot for the card framing.
+  const fluentCount = competencies.filter((c) => (valueOf(c.id) ?? 0) >= FLUENT_THRESHOLD).length
+  const { data: grantRows } = await supabaseAdmin
+    .from('math_spine_point_grants')
+    .select('points')
+    .eq('user_id', targetUserId)
+  const mathPointsEarned = (grantRows ?? []).reduce((sum, g) => sum + (g.points || 0), 0)
+
+  return NextResponse.json({
+    item,
+    snapshot: { mathPointsEarned, fluentCount, total: competencies.length },
+  })
+})

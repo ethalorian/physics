@@ -78,6 +78,56 @@ export interface MasteryTaskResult {
 }
 
 // ---------------------------------------------------------------------------
+// MATH-LITERACY SPINE (cross-cutting, permanent — see Math Spine/ spec)
+// ---------------------------------------------------------------------------
+// A parallel axis to LearningTarget. A LearningTarget carries ONE unit and rolls
+// up per unit; a MathCompetency carries NO unit and rolls up across the WHOLE
+// year — the spine is taught just-in-time but never resets. Same MarzanoLevel
+// grain, same decayingAverage(w=0.60) rollup. DB tables:
+// create_math_spine_system.sql.
+
+/** The spine's rollup axis — a "kind of math," parallel to Domain. */
+export type MathStrand =
+  | "proportional-reasoning"
+  | "quantities-estimation"
+  | "symbolic-manipulation"
+  | "graphs-vectors";
+
+/** A cross-cutting, permanent math competency. Carries ONE strand, NO unit. */
+export interface MathCompetency {
+  id: string;            // stable slug, e.g. "m.qe.sci-notation"
+  code: string;          // short student/teacher handle, e.g. "QE1"
+  statement: string;     // verbatim student-facing "I can…"
+  strand: MathStrand;
+  rationale?: string;
+  isActive: boolean;     // spine items never expire; toggle to retire
+  orderIndex: number;
+}
+
+/** The just-in-time spiral schedule: where a competency debuts and is revisited. */
+export interface MathCompetencyFocus {
+  competencyId: string;
+  unitId: string;                    // matches Unit.id, e.g. "unit-1"
+  role: "introduce" | "revisit";
+  physicsHook?: string;              // the asteroid/physics moment it rides in on
+}
+
+/**
+ * The spine growth-line grain. Append-only, longitudinal — same shape as
+ * MasteryRecord, but keyed to a competency and NOT scoped to a unit, so its
+ * decaying value spans the entire year. targetValue()/decayingAverage() below
+ * work on this unchanged (they only read .observedAt and .level).
+ */
+export interface MathCompetencyRecord {
+  studentId: string;
+  competencyId: string;
+  observedAt: string;          // ISO date — never overwritten
+  level: MarzanoLevel;         // 1 Emerging / 2 Independent / 3 Fluent-Transfer
+  unitId?: string;             // analytics only — where the evidence came from
+  evidenceSource?: string;     // warmup, retrieval, embedded, transfer-task…
+}
+
+// ---------------------------------------------------------------------------
 // ROLLUP — decaying weighted average (DECIDED: w = 0.60, decay by sequence)
 // ---------------------------------------------------------------------------
 

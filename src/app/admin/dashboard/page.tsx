@@ -3,6 +3,7 @@ import { getUserRole } from '@/lib/permissions'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
+import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 
 // Manage hub — the real application: author lessons as content blocks, per unit.
 // (The launcher lives at /admin/home; this is where content gets built.)
@@ -84,6 +85,10 @@ export default async function AdminManagePage() {
         {tile(authored, 'Authored as blocks', 'var(--success)')}
         {tile(lessons.length - authored, 'Still need blocks', 'var(--destructive)')}
         {tile(studentCount ?? 0, 'Enrolled students', 'var(--reward-foreground)')}
+      </div>
+
+      <div className="mb-5">
+        <TeacherDailyMathTask />
       </div>
 
       {units.map((u) => {
