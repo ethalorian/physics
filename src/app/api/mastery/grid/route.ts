@@ -84,11 +84,57 @@ export const GET = withAuth(async (request, ctx) => {
       cells[s.id] = row
     }
 
+    // Per-target "needs grading": the student has submitted work on the target's
+    // lesson that's newer than the teacher's latest rating on that target. Mirrors
+    // the lessons grid's needsGrading so the control room can grade student-first.
+    const targetLesson = new Map<string, string>()
+    {
+      const { data: tl } = await supabaseAdmin
+        .from('learning_targets')
+        .select('id, lesson_id')
+        .eq('unit_id', unitId)
+      for (const t of (tl ?? []) as { id: string; lesson_id: string | null }[]) {
+        if (t.lesson_id) targetLesson.set(t.id, t.lesson_id)
+      }
+    }
+    const lessonIdsForPending = [...new Set(targetLesson.values())]
+    const latestRespByKey = new Map<string, number>() // student|lesson -> ts
+    if (lessonIdsForPending.length > 0 && studentIds.length > 0) {
+      const { data: rr } = await supabaseAdmin
+        .from('block_responses')
+        .select('user_id, lesson_id, created_at')
+        .in('user_id', studentIds)
+        .in('lesson_id', lessonIdsForPending)
+      for (const r of (rr ?? []) as { user_id: string; lesson_id: string; created_at: string }[]) {
+        const t = new Date(r.created_at).getTime()
+        const k = `${r.user_id}|${r.lesson_id}`
+        if (t > (latestRespByKey.get(k) ?? 0)) latestRespByKey.set(k, t)
+      }
+    }
+    const lastRatedByKey = new Map<string, number>() // student|target -> ts
+    for (const r of records) {
+      const k = `${r.user_id}|${r.target_id}`
+      const t = new Date(r.observed_at).getTime()
+      if (t > (lastRatedByKey.get(k) ?? 0)) lastRatedByKey.set(k, t)
+    }
+    const pending: Record<string, Record<string, boolean>> = {}
+    for (const s of students) {
+      for (const t of targets) {
+        const lid = targetLesson.get(t.id)
+        if (!lid) continue
+        const submittedAt = latestRespByKey.get(`${s.id}|${lid}`)
+        if (!submittedAt) continue
+        const ratedAt = lastRatedByKey.get(`${s.id}|${t.id}`) ?? 0
+        if (submittedAt > ratedAt) (pending[s.id] ??= {})[t.id] = true
+      }
+    }
+
     return NextResponse.json({
       unitId,
       units,
       targets: targets.map((t) => ({ id: t.id, statement: t.statement, domain: t.domain })),
       students,
       cells,
+      pending,
     })
 })

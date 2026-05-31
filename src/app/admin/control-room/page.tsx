@@ -17,6 +17,7 @@ interface GridData {
   targets: Target[]
   students: Student[]
   cells: Record<string, Record<string, Cell>>
+  pending?: Record<string, Record<string, boolean>>
 }
 interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }
 interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
@@ -208,6 +209,11 @@ export default function ControlRoomPage() {
   const [nameFilter, setNameFilter] = useState('')
   const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
   const [view, setView] = useState<'mastery' | 'lessons' | 'math'>('mastery')
+  // Student-first grading: keys we've graded this session (so the queue and
+  // roster shrink immediately, before the server refresh lands).
+  const [gradedKeys, setGradedKeys] = useState<Set<string>>(new Set())
+  // Between students we pause on a gate so your eyes land before the next swap.
+  const [nextStudentGate, setNextStudentGate] = useState<{ id: string; name: string } | null>(null)
   const [lessonGrid, setLessonGrid] = useState<LessonGridData | null>(null)
   const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
   const [copyLessonId, setCopyLessonId] = useState('')
@@ -295,7 +301,7 @@ export default function ControlRoomPage() {
     }
   }, [unitId, lessonGrid, classQuery])
 
-  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setGbSuggestion(null); setGbStats(null); setGbPercent('') }
+  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setGbSuggestion(null); setGbStats(null); setGbPercent(''); setNextStudentGate(null) }
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
@@ -333,11 +339,10 @@ export default function ControlRoomPage() {
       loadGrid(unitId)
       loadQueue(unitId)
       loadLessonGrid(unitId)
-      // Column-first: advance to the next student on the SAME target.
-      const idx = grid.students.findIndex((s) => s.id === sel.studentId)
-      const next = grid.students[idx + 1]
-      if (next) openCell(next.id, sel.targetId)
-      else closeDrawer()
+      // Student-first: clear this student's pending work before the next student.
+      const gradedKey = `m:${sel.studentId}:${sel.targetId}`
+      setGradedKeys((prev) => new Set(prev).add(gradedKey))
+      advanceStudentFirst(sel.studentId, gradedKey)
     } catch {
       setError('Could not save the rating')
     } finally {
@@ -376,11 +381,10 @@ export default function ControlRoomPage() {
           item_type: 'lesson', item_id: sel.lesson.id, item_title: sel.lesson.title, score: pct, max_score: 100, status: 'graded', graded_at: new Date().toISOString() }),
       })
       loadLessonGrid(unitId)
-      // advance to the next student on the SAME lesson
-      const idx = lessonGrid.students.findIndex((s) => s.id === sel.studentId)
-      const next = lessonGrid.students[idx + 1]
-      if (next) openCell(next.id, sel.targetId, sel.lesson)
-      else closeDrawer()
+      // Student-first: clear this student's pending lessons before the next student.
+      const gradedKey = `l:${sel.studentId}:${sel.lesson.id}`
+      setGradedKeys((prev) => new Set(prev).add(gradedKey))
+      advanceStudentFirst(sel.studentId, gradedKey)
     } catch { setError('Could not save the score') }
     finally { setGbBusy(false) }
   }
@@ -407,6 +411,112 @@ export default function ControlRoomPage() {
     return [...visible].sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonGrid, nameFilter, sortMode])
+
+  // ---- student-first grading flow ------------------------------------------
+  // Visible students in the active view's display order (mastery uses roster
+  // order + name filter; lessons uses the last/first-name sort).
+  const masteryStudents = useMemo(
+    () => (grid ? grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())) : []),
+    [grid, nameFilter]
+  )
+  const rosterForView = view === 'lessons' ? sortedStudents : masteryStudents
+
+  type PendingCell = { targetId: string; lesson?: { id: string; title: string; number: number } }
+  // A student's still-pending cells in the active view, newest grades excluded.
+  const pendingCellsFor = useCallback((sid: string, exclude?: string): PendingCell[] => {
+    if (view === 'lessons') {
+      if (!lessonGrid) return []
+      return lessonGrid.lessons
+        .filter((l) => l.targetId && lessonGrid.cells?.[sid]?.[l.id]?.needsGrading
+          && `l:${sid}:${l.id}` !== exclude && !gradedKeys.has(`l:${sid}:${l.id}`))
+        .map((l) => ({ targetId: l.targetId as string, lesson: { id: l.id, title: l.title, number: l.lessonNumber } }))
+    }
+    if (!grid) return []
+    return grid.targets
+      .filter((t) => grid.pending?.[sid]?.[t.id]
+        && `m:${sid}:${t.id}` !== exclude && !gradedKeys.has(`m:${sid}:${t.id}`))
+      .map((t) => ({ targetId: t.id }))
+  }, [view, grid, lessonGrid, gradedKeys])
+
+  const studentPendingCount = useCallback((sid: string) => pendingCellsFor(sid).length, [pendingCellsFor])
+
+  const pendingStudents = useMemo(
+    () => rosterForView.filter((s) => studentPendingCount(s.id) > 0),
+    [rosterForView, studentPendingCount]
+  )
+  const totalPendingInView = useMemo(
+    () => pendingStudents.reduce((n, s) => n + studentPendingCount(s.id), 0),
+    [pendingStudents, studentPendingCount]
+  )
+
+  const openPendingCell = useCallback((sid: string, exclude?: string) => {
+    const cells = pendingCellsFor(sid, exclude)
+    if (cells.length === 0) return false
+    openCell(sid, cells[0].targetId, cells[0].lesson)
+    return true
+  }, [pendingCellsFor, openCell])
+
+  // After a save: stay on this student until their pending work is cleared,
+  // then jump to the next student (display order, wrapping) who still has
+  // pending. Students with nothing pending are skipped.
+  const advanceStudentFirst = useCallback((sid: string, gradedKey: string) => {
+    if (openPendingCell(sid, gradedKey)) return // same student still has pending work
+    const idx = rosterForView.findIndex((s) => s.id === sid)
+    const order = [...rosterForView.slice(idx + 1), ...rosterForView.slice(0, Math.max(0, idx))]
+    const next = order.find((s) => pendingCellsFor(s.id, gradedKey).length > 0)
+    // Pause on the gate before swapping students; null closes when none are left.
+    if (next) setNextStudentGate({ id: next.id, name: next.name })
+    else closeDrawer()
+  }, [openPendingCell, rosterForView, pendingCellsFor])
+
+  // "Grade pending" launcher: open the first pending student's first pending cell.
+  const startGradingPending = useCallback(() => {
+    setGradedKeys(new Set())
+    const first = pendingStudents[0]
+    if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId, pendingCellsFor(first.id)[0]?.lesson)
+  }, [pendingStudents, pendingCellsFor, openCell])
+
+  // Keyboard-first grading: 1/2/3 rate (mastery); 1–6 set presets + Enter saves
+  // (lessons); Esc closes. Number keys are ignored while typing in a field.
+  useEffect(() => {
+    if (!sel) return
+    const onKey = (e: KeyboardEvent) => {
+      if (nextStudentGate) return // gate owns the keyboard while it's up
+      const el = document.activeElement
+      const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
+      if (e.key === 'Escape') { closeDrawer(); return }
+      if (!sel.lesson) {
+        if (typing) return
+        if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
+        return
+      }
+      if (e.key === 'Enter') { if (gbPercent !== '') { e.preventDefault(); saveGradebook() } return }
+      if (!typing) {
+        const presets = ['100', '90', '80', '70', '50', '0']
+        const i = Number(e.key) - 1
+        if (i >= 0 && i < presets.length) { e.preventDefault(); setGbPercent(presets[i]) }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sel, gbPercent, nextStudentGate])
+
+  // Inter-student gate: any key (or Continue) advances to the next student;
+  // Esc closes instead. One keystroke per student, giving your eyes a beat.
+  useEffect(() => {
+    if (!nextStudentGate) return
+    const onKey = (e: KeyboardEvent) => {
+      e.preventDefault()
+      if (e.key === 'Escape') { setNextStudentGate(null); closeDrawer(); return }
+      const g = nextStudentGate
+      setNextStudentGate(null)
+      openPendingCell(g.id)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nextStudentGate, openPendingCell])
 
   const copyToClipboard = (text: string, what: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -504,6 +614,25 @@ export default function ControlRoomPage() {
         })}
       </div>
 
+      {/* student-first grading launcher */}
+      {view !== 'math' && (
+        <div className="flex items-center gap-3 mt-3 flex-wrap">
+          <button
+            onClick={startGradingPending}
+            disabled={totalPendingInView === 0}
+            className="inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-bold disabled:opacity-50"
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: totalPendingInView ? 'pointer' : 'default' }}
+          >
+            Grade pending{totalPendingInView ? ` · ${totalPendingInView}` : ''}
+          </button>
+          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            {totalPendingInView
+              ? `${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with work to grade — all of one student, then the next.`
+              : 'Nothing pending to grade in this view.'}
+          </span>
+        </div>
+      )}
+
       {/* math spine — cross-cutting competencies + warm-up review */}
       {view === 'math' && (
         <div className="mt-4">
@@ -523,7 +652,7 @@ export default function ControlRoomPage() {
                 {q.needsHelp && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 26%, transparent)', color: 'var(--reward-foreground)' }}>self: Not yet</span>}
                 <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{q.count} item{q.count === 1 ? '' : 's'} · waiting {q.oldestAgeHours}h</span>
                 <button
-                  onClick={() => { if (grid && grid.targets[0]) openCell(q.studentId, grid.targets[0].id) }}
+                  onClick={() => { if (!openPendingCell(q.studentId) && grid && grid.targets[0]) openCell(q.studentId, grid.targets[0].id) }}
                   disabled={!grid || grid.targets.length === 0}
                   className="text-xs font-bold rounded-lg px-3 py-1.5 disabled:opacity-50"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
@@ -705,16 +834,60 @@ export default function ControlRoomPage() {
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
           <aside
             style={{
-              position: 'fixed', top: 0, right: 0, bottom: 0, width: 440, maxWidth: '92vw', zIndex: 50,
-              background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'column',
+              position: 'fixed', top: 0, right: 0, bottom: 0, width: 600, maxWidth: '96vw', zIndex: 50,
+              background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row',
               boxShadow: '-20px 0 50px -20px color-mix(in oklch, var(--foreground) 40%, transparent)',
             }}
           >
+            {/* roster rail — pending students; greyed when done, click to jump */}
+            <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+              <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
+                {pendingStudents.length > 0 ? `${pendingStudents.length} to grade` : 'All graded'}
+              </div>
+              <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
+                {rosterForView.map((s) => {
+                  const count = studentPendingCount(s.id)
+                  const done = count === 0
+                  const active = sel?.studentId === s.id
+                  return (
+                    <button
+                      key={s.id}
+                      onClick={() => { if (!done) openPendingCell(s.id) }}
+                      disabled={done}
+                      title={s.name}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left',
+                        padding: '7px 12px', border: 'none', borderLeft: `2px solid ${active ? 'var(--primary)' : 'transparent'}`,
+                        background: active ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : 'transparent',
+                        color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer',
+                      }}
+                    >
+                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</span>
+                      {done ? (
+                        <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
+                      ) : (
+                        <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: active ? 'var(--primary)' : 'var(--secondary)', color: active ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{count}</span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* content column */}
+            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, position: 'relative' }}>
             <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)' }}>
               <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
               <div className="font-bold" style={{ fontSize: 18 }}>{selStudent?.name ?? lessonGrid?.students.find((s) => s.id === sel?.studentId)?.name}</div>
               <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{sel?.lesson ? `Day ${sel.lesson.number} — ${sel.lesson.title}` : selTarget?.statement}</div>
               <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: sel?.lesson ? 'none' : 'capitalize' }}>{sel?.lesson ? 'Gradebook score · completion' : selTarget?.domain}</div>
+              {sel && (
+                <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 8, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <span><b style={{ color: 'var(--foreground)' }}>{studentPendingCount(sel.studentId)}</b> left for this student</span>
+                  <span>·</span>
+                  <span><b style={{ color: 'var(--foreground)' }}>{pendingStudents.length}</b> student{pendingStudents.length === 1 ? '' : 's'} with work left</span>
+                </div>
+              )}
             </div>
 
             <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1 }}>
@@ -878,7 +1051,7 @@ export default function ControlRoomPage() {
                 ))}
               </div>
               <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                Saving advances to the next student on this target.
+                Keys <b>1 · 2 · 3</b> rate and advance. Finishes this student&apos;s pending work, then moves to the next student.
               </p>
               </>)}
 
@@ -914,9 +1087,26 @@ export default function ControlRoomPage() {
                   </button>
                 </div>
                 <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                  Records a gradebook % toward the letter grade — separate from the mastery rating. Saving advances to the next student on this lesson.
+                  Keys <b>1–6</b> set 100/90/80/70/50/0; <b>Enter</b> saves. Finishes this student&apos;s pending work, then moves to the next student.
                 </p>
               </>)}
+            </div>
+            {nextStudentGate && (
+              <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--card) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {selStudent?.name ?? lessonGrid?.students.find((s) => s.id === sel?.studentId)?.name ?? 'Student'} — all done</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextStudentGate.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
+                  {studentPendingCount(nextStudentGate.id)} to grade · {pendingStudents.length} student{pendingStudents.length === 1 ? '' : 's'} left
+                </div>
+                <button
+                  onClick={() => { const g = nextStudentGate; setNextStudentGate(null); openPendingCell(g.id) }}
+                  style={{ marginTop: 4, background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Continue →
+                </button>
+                <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>or press any key · Esc to close</div>
+              </div>
+            )}
             </div>
           </aside>
         </>

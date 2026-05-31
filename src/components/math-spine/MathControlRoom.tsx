@@ -117,6 +117,8 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
   const [drawerLoading, setDrawerLoading] = useState(false)
   const [savingKey, setSavingKey] = useState<string | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
+  // Between students we pause on a gate so your eyes land before the next swap.
+  const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
 
   const refresh = useCallback(() => {
     Promise.all([
@@ -151,7 +153,40 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
     loadStudent(studentId)
   }, [loadStudent])
 
-  const closeDrawer = () => { setSel(null); setSubs([]) }
+  const closeDrawer = () => { setSel(null); setSubs([]); setNextGate(null) }
+
+  // Keyboard-first review: 1/2/3 rate the first unrated tested competency.
+  useEffect(() => {
+    if (!sel) return
+    const onKey = (e: KeyboardEvent) => {
+      if (nextGate) return // gate owns the keyboard while it's up
+      if (e.key === 'Escape') { closeDrawer(); return }
+      if (savingKey) return
+      const active = subs.find((s) => s.status === 'pending')
+      if (!active) return
+      const cid = active.tested_competency_ids.find((c) => !active.rated_competency_ids.includes(c))
+      if (!cid) return
+      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); rate(active, cid, Number(e.key) as 1 | 2 | 3) }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sel, subs, savingKey, nextGate])
+
+  // Inter-student gate: any key (or Continue) advances; Esc closes instead.
+  useEffect(() => {
+    if (!nextGate) return
+    const onKey = (e: KeyboardEvent) => {
+      e.preventDefault()
+      if (e.key === 'Escape') { setNextGate(null); closeDrawer(); return }
+      const g = nextGate
+      setNextGate(null)
+      openStudent(g.id, g.name)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nextGate, openStudent])
 
   const compById = (id: string) => grid?.competencies.find((c) => c.id === id)
   const currentValue = (studentId: string, competencyId: string) =>
@@ -177,7 +212,20 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
       }
       refresh()
       const fresh = await loadStudent(sel.studentId)
-      if (!fresh.some((s) => s.status === 'pending')) closeDrawer()
+      if (!fresh.some((s) => s.status === 'pending')) {
+        // Student done — advance to the next student with warm-ups to review,
+        // skipping those with nothing pending. Close if everyone's caught up.
+        const q = await fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json()).catch(() => ({ queue: [] }))
+        const pendingIds = ((q.queue ?? []) as QueueItem[]).map((x) => x.studentId)
+        const order = grid?.students.map((s) => s.id) ?? []
+        const idx = order.indexOf(sel.studentId)
+        const rotated = [...order.slice(idx + 1), ...order.slice(0, Math.max(0, idx))]
+        const nextId = rotated.find((id) => id !== sel.studentId && pendingIds.includes(id))
+        const next = grid?.students.find((s) => s.id === nextId)
+        // Pause on the gate before swapping students; close when none are left.
+        if (next) setNextGate({ id: next.id, name: next.name })
+        else closeDrawer()
+      }
     } catch {
       // keep drawer open on error
     } finally {
@@ -201,8 +249,13 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
 
       {/* Review-first: the warm-ups waiting to be rated. */}
       <div className="rounded-xl border p-4 mb-5" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
-        <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>
-          Warm-ups to review · {queue.length}
+        <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
+          <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+            Warm-ups to review · {queue.length}
+          </div>
+          {queue.length > 0 && (
+            <button onClick={() => openStudent(queue[0].studentId, queue[0].name)} className="text-xs font-bold rounded-lg px-3 py-1.5" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', cursor: 'pointer' }}>Review all →</button>
+          )}
         </div>
         {queue.length === 0 ? (
           <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>All caught up — no warm-ups waiting.</p>
@@ -269,10 +322,38 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
       {sel && (
         <>
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(480px, 94vw)', zIndex: 41, background: 'var(--background)', borderLeft: '1px solid var(--border)', padding: 20, overflowY: 'auto' }}>
+          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(640px, 96vw)', zIndex: 41, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+            {/* roster rail — students with warm-ups to review; greyed when done */}
+            <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+              <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
+                {queue.length > 0 ? `${queue.length} to review` : 'All caught up'}
+              </div>
+              <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
+                {grid.students.map((st) => {
+                  const qc = queue.find((q) => q.studentId === st.id)?.count ?? 0
+                  const done = qc === 0
+                  const active = sel.studentId === st.id
+                  return (
+                    <button
+                      key={st.id}
+                      onClick={() => { if (!done) openStudent(st.id, st.name) }}
+                      disabled={done}
+                      title={st.name}
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '7px 12px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
+                    >
+                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}</span>
+                      {done ? <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
+                        : <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+            {/* content column */}
+            <div style={{ flex: 1, minWidth: 0, padding: 20, overflowY: 'auto', position: 'relative' }}>
             <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
             <h3 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
-            <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests.</p>
+            <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests. Keys <b>1·2·3</b> rate; finishing a student jumps to the next.</p>
 
             {drawerLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>}
 
@@ -329,6 +410,23 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
                 })}
               </div>
             )}
+            {nextGate && (
+              <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {sel.name} — all rated</div>
+                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextGate.name}</div>
+                <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
+                  {queue.find((q) => q.studentId === nextGate.id)?.count ?? 0} to review · {queue.length} student{queue.length === 1 ? '' : 's'} left
+                </div>
+                <button
+                  onClick={() => { const g = nextGate; setNextGate(null); openStudent(g.id, g.name) }}
+                  style={{ marginTop: 4, background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
+                >
+                  Continue →
+                </button>
+                <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>or press any key · Esc to close</div>
+              </div>
+            )}
+            </div>
           </div>
         </>
       )}
