@@ -88,7 +88,7 @@ function Glass({ children, style, className }: { children: ReactNode; style?: CS
 
 function LaneLabel({ color, children }: { color: string; children: ReactNode }) {
   return (
-    <div className="flex items-center gap-2 mt-8 mb-3" style={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
+    <div className="flex items-center gap-2 mt-8 mb-3" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
       <span style={{ width: 22, height: 3, borderRadius: 2, background: color }} />
       {children}
     </div>
@@ -207,7 +207,6 @@ export default function HomePage() {
                   border: '1px solid color-mix(in oklch, var(--primary) 45%, var(--border))',
                 }}
               >
-                <span aria-hidden style={{ fontSize: 15, lineHeight: 1 }}>&#10024;</span>
                 Build your Mii &mdash; make it yours
                 <span aria-hidden style={{ opacity: 0.65 }}>&rarr;</span>
               </Link>
@@ -217,11 +216,11 @@ export default function HomePage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)', boxShadow: '0 0 16px color-mix(in oklch, var(--reward) 45%, transparent)' }}>
+            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
               ★ {loading ? '—' : data?.points?.xp ?? 0} XP
             </span>
             {!loading && (data?.streak?.current ?? 0) > 0 && (
-              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold" style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}>
+              <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold" style={{ background: 'var(--secondary)', color: 'var(--secondary-foreground)' }}>
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 8px var(--success)' }} /> {data!.streak.current}-day streak
               </span>
             )}
@@ -255,7 +254,7 @@ export default function HomePage() {
                 <div style={{ fontSize: 13, color: 'var(--muted-foreground)', fontWeight: 600 }}>
                   {data.continue.unitName ?? 'Your unit'}
                 </div>
-                <div className="font-bold tracking-tight" style={{ fontSize: 22, margin: '5px 0 6px' }}>
+                <div className="font-semibold tracking-tight" style={{ fontSize: 22, margin: '5px 0 6px' }}>
                   Lesson {data.continue.lesson.lessonNumber} — {data.continue.lesson.title}
                 </div>
                 <div className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
@@ -303,7 +302,7 @@ export default function HomePage() {
                             <div
                               title={s.title}
                               style={{
-                                fontSize: 10,
+                                fontSize: 11,
                                 color: s.status === 'current' ? 'var(--foreground)' : 'var(--muted-foreground)',
                                 textAlign: 'center',
                                 maxWidth: 100,
@@ -342,7 +341,7 @@ export default function HomePage() {
                   <Glass key={r.targetId} style={{ padding: '16px 18px', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 5, background: r.level === 1 ? 'var(--destructive)' : 'var(--reward)' }} />
                     <div className="flex items-center gap-4 pl-2">
-                      <div className="grid place-items-center font-extrabold flex-shrink-0" style={{ width: 46, height: 46, borderRadius: '50%', fontSize: 15, background: r.level === 1 ? 'color-mix(in oklch, var(--destructive) 18%, transparent)' : 'color-mix(in oklch, var(--reward) 32%, transparent)', color: r.level === 1 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>
+                      <div className="grid place-items-center font-bold flex-shrink-0" style={{ width: 46, height: 46, borderRadius: '50%', fontSize: 15, background: r.level === 1 ? 'color-mix(in oklch, var(--destructive) 18%, transparent)' : 'color-mix(in oklch, var(--reward) 32%, transparent)', color: r.level === 1 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>
                         {r.level}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -361,7 +360,7 @@ export default function HomePage() {
             ) : (
               <Glass style={{ padding: 30, textAlign: 'center', border: '1px solid color-mix(in oklch, var(--success) 40%, var(--border))', background: 'radial-gradient(80% 120% at 50% -20%, color-mix(in oklch, var(--success) 20%, transparent), transparent 60%), color-mix(in oklch, var(--card) 80%, transparent)' }}>
                 <div className="grid place-items-center mx-auto mb-3" style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--success)', color: '#fff', fontSize: 28, boxShadow: '0 0 26px color-mix(in oklch, var(--success) 55%, transparent)' }}>✓</div>
-                <h3 className="font-bold" style={{ fontSize: 19 }}>All current skills at &ldquo;Got it&rdquo;</h3>
+                <h3 className="font-semibold" style={{ fontSize: 18 }}>All current skills at &ldquo;Got it&rdquo;</h3>
                 <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Nothing to retry right now — you&apos;re on top of every target your teacher has checked. Keep climbing.</p>
               </Glass>
             )}
@@ -400,8 +399,8 @@ export default function HomePage() {
               {data.sideQuest.sim && (
                 <Link href={`/simulations/${data.sideQuest.sim.slug}`}>
                   <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Simulation</div>
-                    <div className="font-bold mt-1" style={{ fontSize: 16 }}>{data.sideQuest.sim.title}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Simulation</div>
+                    <div className="font-semibold mt-1" style={{ fontSize: 16 }}>{data.sideQuest.sim.title}</div>
                     <div className="flex items-center justify-between mt-3">
                       <span className="rounded-full text-xs font-bold" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}>★ +15 XP</span>
                       <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Launch →</span>
@@ -411,7 +410,7 @@ export default function HomePage() {
               )}
               <Link href="/vocabulary">
                 <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                  <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Game</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Game</div>
                   <div className="font-bold mt-1" style={{ fontSize: 16 }}>Vocabulary games</div>
                   <div className="flex items-center justify-between mt-3">
                     <span className="rounded-full text-xs font-bold" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}>★ +10 XP</span>

@@ -94,7 +94,7 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
   }
 
   const badge = (l: string, color: string) => (
-    <span className="grid place-items-center font-extrabold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: 'var(--primary-foreground)' }}>{l}</span>
+    <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: 'var(--primary-foreground)' }}>{l}</span>
   )
 
   return (
@@ -174,7 +174,7 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
         <div className="flex flex-col gap-2">
           {nudges.map((nd, i) => (
             <div key={i} className="flex items-start gap-2 rounded-lg px-3 py-2 text-sm" style={{ background: nd.ok ? 'color-mix(in oklch, var(--success) 13%, transparent)' : 'color-mix(in oklch, var(--reward) 18%, transparent)', color: nd.ok ? 'var(--success)' : 'var(--reward-foreground)' }}>
-              <span style={{ fontWeight: 800 }}>{nd.ok ? '✓' : '⚠'}</span>
+              <span style={{ fontWeight: 700 }}>{nd.ok ? '✓' : '⚠'}</span>
               <span>{nd.msg}</span>
             </div>
           ))}

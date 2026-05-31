@@ -297,7 +297,7 @@ function UpcomingDeadlines() {
                     <p className="text-sm font-medium text-foreground">
                       {dueDate.toLocaleDateString()}
                     </p>
-                    <p className={`text-xs ${daysUntilDue <= 3 ? 'text-red-600 dark:text-red-400' : daysUntilDue <= 7 ? 'text-orange-600 dark:text-orange-400' : 'text-muted-foreground'}`}>
+                    <p className={`text-xs ${daysUntilDue <= 3 ? 'text-destructive' : daysUntilDue <= 7 ? 'text-amber-600 dark:text-amber-400' : 'text-muted-foreground'}`}>
                       {daysUntilDue === 1 ? 'Due tomorrow' : `${daysUntilDue} days left`}
                     </p>
                   </div>
@@ -341,10 +341,10 @@ function NextSteps() {
   if (!hasUrgentActions) {
     // Show encouraging message when all caught up
     return (
-      <Card className="border-2 border-dashed border-emerald-500/30 bg-gradient-to-br from-emerald-50/50 to-emerald-100/30 dark:from-emerald-950/20 dark:to-emerald-900/10">
+      <Card className="border-2 border-dashed border-success/40 bg-success/5">
         <CardContent className="flex items-center gap-4 py-6">
-          <div className="p-3 bg-emerald-500/20 rounded-xl">
-            <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+          <div className="p-3 bg-success/15 rounded-xl">
+            <CheckCircle className="h-8 w-8 text-success" />
           </div>
           <div className="flex-1">
             <h3 className="font-semibold text-foreground">All Caught Up!</h3>
@@ -403,16 +403,16 @@ function NextSteps() {
         {inProgress.map((assignment) => (
           <Card 
             key={assignment.id} 
-            className="border-l-4 border-l-blue-500 hover:shadow-md transition-shadow cursor-pointer"
+            className="border-l-4 border-l-primary hover:shadow-md transition-shadow cursor-pointer"
             onClick={() => router.push(`/assignments/${assignment.id}`)}
           >
             <CardContent className="flex items-center gap-4 py-4">
-              <div className="p-2.5 bg-blue-500/10 rounded-xl">
-                <FileText className="h-5 w-5 text-blue-600" />
+              <div className="p-2.5 bg-primary/10 rounded-xl">
+                <FileText className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold text-foreground truncate">{assignment.title}</h3>
-                <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">In progress - continue where you left off</p>
+                <p className="text-sm text-primary font-medium">In progress - continue where you left off</p>
               </div>
               <Button size="sm" variant="outline">
                 Continue

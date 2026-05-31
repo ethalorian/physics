@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { Target, Clock, Trophy, CheckCircle } from 'lucide-react'
+import { Target, Clock, Trophy, CheckCircle, Gamepad2 } from 'lucide-react'
 
 interface DailyChallengeProps {
   challenge: {
@@ -87,7 +87,7 @@ export default function DailyChallenge({ challenge, onStart }: DailyChallengePro
               onClick={onStart}
               className="w-full mt-4 shadow-md hover:shadow-lg transition-all"
             >
-              🎮 Start Playing Now
+              <Gamepad2 /> Start Playing Now
             </Button>
           </>
         )}

@@ -285,7 +285,7 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
     <Card className="apple-card">
       <CardContent className="py-3">
         <div className="flex items-center gap-2">
-          <Lightbulb className="h-4 w-4 text-amber-500" />
+          <Lightbulb className="h-4 w-4 text-reward" />
           <Badge variant="outline" className="text-[10px]">{comp.code}</Badge>
           <span className="text-sm text-foreground flex-1">{defaults[0]?.title ?? '(no lesson)'}</span>
           {usingDefault && <span className="text-[10px] text-muted-foreground">default</span>}
@@ -304,7 +304,7 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
             ))}
             <div className="flex items-center gap-2">
               <Button size="sm" className="rounded-full" disabled={busy} onClick={save}>{busy ? 'Saving…' : 'Save all tiers'}</Button>
-              {saved && <span className="text-xs text-emerald-600">Saved ✓</span>}
+              {saved && <span className="text-xs text-success">Saved ✓</span>}
             </div>
           </div>
         )}

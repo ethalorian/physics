@@ -530,9 +530,9 @@
 /* Hover lift effect */
 .apple-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.08),
-    0 16px 48px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 8px 24px color-mix(in oklch, var(--primary) 9%, transparent),
+    0 16px 48px color-mix(in oklch, var(--primary) 6%, transparent);
 }
 
 .dark .apple-lift:hover {
@@ -1035,7 +1035,7 @@
 }
 
 .lesson-card-hover:hover {
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  box-shadow: 0 12px 32px color-mix(in oklch, var(--primary) 9%, transparent), 0 4px 10px color-mix(in oklch, var(--primary) 6%, transparent);
   transform: scale(1.02) translateY(-4px);
 }
 
@@ -1065,8 +1065,11 @@
   }
 }
 
+/* Static "interactive" cue — a calm reward-tinted ring, no idle pulse.
+   (Audit 1.2: cut shine-only looping motion. Also tokenized off the hardcoded
+   amber the old pulse used.) */
 .interactive-badge {
-  animation: pulse-glow 2s infinite;
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--reward) 22%, transparent);
 }
 
 /* Section Complete Animation */
@@ -1606,5 +1609,33 @@
 }
 .dark .card-elevation:hover {
   box-shadow: 0 4px 12px rgba(0,0,0,0.30), 0 16px 40px rgba(0,0,0,0.22);
+}
+
+/* ============================================= */
+/* Refined surface — staff (/admin) on Mac        */
+/* ============================================= */
+/* Scoped to the admin/teacher route subtree (via src/app/admin/layout.tsx).
+   These users are on good Mac displays, so we can afford a more delicate
+   hairline border and a softer, airier shadow than the Chromebook-hardened
+   student defaults. Everything else — palette, type, components — is inherited
+   unchanged, so this is one refined sub-surface, not a second design system. */
+.surface-refined {
+  --border: oklch(0.88 0.012 282);
+}
+.dark .surface-refined {
+  --border: oklch(0.36 0.028 282);
+}
+.surface-refined .card-elevation {
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--primary) 5%, transparent),
+    0 8px 28px color-mix(in oklch, var(--primary) 4%, transparent);
+}
+.surface-refined .card-elevation:hover {
+  box-shadow:
+    0 3px 8px color-mix(in oklch, var(--primary) 7%, transparent),
+    0 16px 40px color-mix(in oklch, var(--primary) 5%, transparent);
+}
+.dark .surface-refined .card-elevation {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.22), 0 10px 34px rgba(0,0,0,0.15);
 }
 

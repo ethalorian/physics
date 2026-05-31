@@ -76,7 +76,7 @@ export default function DailyMathTask() {
               <p className="text-[11px] font-medium text-muted-foreground">pts earned</p>
             </div>
             <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 text-amber-500" />
+              <Star className="h-4 w-4 text-reward" />
               <span className="text-sm font-semibold text-foreground tabular-nums">
                 {snapshot.fluentCount}/{snapshot.total}
               </span>
@@ -96,7 +96,7 @@ export default function DailyMathTask() {
             <p className="text-sm font-medium text-foreground leading-relaxed line-clamp-2">{item.prompt}</p>
 
             {alreadySubmitted ? (
-              <div className="flex items-center gap-2 text-sm rounded-md px-3 py-2 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300">
+              <div className="flex items-center gap-2 text-sm rounded-md px-3 py-2 bg-success/10 text-success">
                 <CheckCircle2 className="h-4 w-4" />
                 Submitted — waiting for your teacher to review.
               </div>
