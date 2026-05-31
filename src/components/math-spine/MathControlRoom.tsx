@@ -21,15 +21,75 @@ interface Cell { value: number | null; count: number; pending: number }
 interface GridData { competencies: Competency[]; students: Student[]; cells: Record<string, Record<string, Cell>> }
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean }
 
+interface StrokePoint { x: number; y: number }
+interface Stroke { color?: string; width?: number; points: StrokePoint[] }
+interface GewaResponse {
+  given?: string
+  equation?: string
+  work?: string
+  answer?: string
+  workStrokes?: Stroke[]
+  sandbox?: { lines?: string[]; answerIndex?: number }
+}
 interface Submission {
   id: string
   competency_id: string
   prompt: string | null
   response: string
+  response_json?: GewaResponse | null
   status: string
   submitted_at: string
   tested_competency_ids: string[]
   rated_competency_ids: string[]
+}
+
+function StrokesSvg({ strokes }: { strokes: Stroke[] }) {
+  if (!strokes || strokes.length === 0) return null
+  return (
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 380, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="handwritten work">
+      {strokes.map((s, i) => {
+        const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
+        if (!pts) return null
+        return <polyline key={i} points={pts} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={s.width ?? 3} strokeLinecap="round" strokeLinejoin="round" />
+      })}
+    </svg>
+  )
+}
+
+function WarmupAnswer({ sub }: { sub: Submission }) {
+  const rj = sub.response_json
+  if (!rj) {
+    return <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{sub.response}</p>
+  }
+  const lines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
+  const field = (label: string, val?: string) =>
+    val && String(val).trim() ? (
+      <div className="text-sm" style={{ marginBottom: 3 }}>
+        <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(val)}
+      </div>
+    ) : null
+  return (
+    <div>
+      {field('Given', rj.given)}
+      {field('Equation', rj.equation)}
+      {lines.length > 0 && (
+        <div className="text-sm" style={{ marginBottom: 3 }}>
+          <b style={{ color: 'var(--secondary-foreground)' }}>Work:</b> {lines.join('  |  ')}
+        </div>
+      )}
+      {field('Answer', rj.answer)}
+      {field('Work (typed)', rj.work)}
+      {Array.isArray(rj.workStrokes) && rj.workStrokes.length > 0 && (
+        <div className="mt-2">
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Handwritten work</div>
+          <StrokesSvg strokes={rj.workStrokes} />
+        </div>
+      )}
+      {!rj.given && !rj.equation && !rj.answer && lines.length === 0 && (!rj.workStrokes || rj.workStrokes.length === 0) && (
+        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{sub.response || '[submitted]'}</p>
+      )}
+    </div>
+  )
 }
 
 function band(v: number | null): 0 | 1 | 2 | 3 {
@@ -226,7 +286,7 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
                 {activeSub.prompt && (
                   <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}><b>Prompt:</b> {activeSub.prompt}</p>
                 )}
-                <p className="text-sm mb-3" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{activeSub.response}</p>
+                <div className="mb-3"><WarmupAnswer sub={activeSub} /></div>
 
                 <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>
                   Rate the tested competenc{activeSub.tested_competency_ids.length === 1 ? 'y' : 'ies'}

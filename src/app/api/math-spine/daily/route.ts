@@ -26,7 +26,7 @@ export const GET = withAuth(async (request, ctx) => {
   // Active competencies.
   const { data: compRows } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, code, statement, strand, order_index')
+    .select('id, code, statement, strand, order_index, mini_lesson')
     .eq('is_active', true)
     .order('order_index', { ascending: true })
   const competencies = compRows ?? []
@@ -73,6 +73,7 @@ export const GET = withAuth(async (request, ctx) => {
     prompt: string
     answerKey?: string
     difficulty?: string
+    miniLesson?: unknown
   } | null = null
   if (itemRows && itemRows.length > 0) {
     const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
@@ -85,6 +86,7 @@ export const GET = withAuth(async (request, ctx) => {
       prompt: chosen.prompt,
       answerKey: chosen.answer_key ?? undefined,
       difficulty: chosen.difficulty ?? undefined,
+      miniLesson: target.mini_lesson ?? null,
     }
   }
 

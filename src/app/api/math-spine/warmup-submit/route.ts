@@ -5,13 +5,45 @@ import { supabaseAdmin } from '@/lib/supabase'
 // POST /api/math-spine/warmup-submit
 // A student submits their daily warm-up answer as EVIDENCE. It lands in the
 // control-room review queue (status='pending') for the teacher to read and rate.
-// The student always submits for THEMSELVES (user_id is taken from the session,
-// never the body), so a student cannot submit as someone else.
+// The student always submits for THEMSELVES (user_id is from the session, never
+// the body). The answer may be structured (response_json: GEWA + InkPad strokes)
+// and/or plain text; we keep a flat text summary for listing/fallback.
+
+interface GewaLike {
+  given?: string
+  equation?: string
+  work?: string
+  answer?: string
+  workStrokes?: unknown[]
+  sandbox?: { lines?: unknown[]; answerIndex?: number }
+}
+
+function summarize(rj: GewaLike | null, text: string | null): string {
+  if (text && text.trim()) return text.trim()
+  if (!rj) return ''
+  const parts: string[] = []
+  if (rj.given) parts.push(`Given: ${rj.given}`)
+  if (rj.equation) parts.push(`Equation: ${rj.equation}`)
+  const lines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
+  if (lines.length) parts.push(`Work: ${lines.join(' | ')}`)
+  if (rj.answer) parts.push(`Answer: ${rj.answer}`)
+  if (Array.isArray(rj.workStrokes) && rj.workStrokes.length) parts.push('[handwritten work]')
+  return parts.join(' · ') || '[submitted]'
+}
+
 export const POST = withAuth(async (request, ctx) => {
   const body = await request.json()
-  const { competency_id, response } = body
-  if (!competency_id || !response || String(response).trim() === '') {
-    return NextResponse.json({ error: 'Missing required fields: competency_id, response' }, { status: 400 })
+  const { competency_id } = body
+  const responseJson: GewaLike | null = body.response_json ?? null
+  const responseText: string | null = typeof body.response === 'string' ? body.response : null
+
+  if (!competency_id) {
+    return NextResponse.json({ error: 'Missing required field: competency_id' }, { status: 400 })
+  }
+  // Require *some* evidence: structured answer or text.
+  const hasStructured = responseJson && Object.keys(responseJson).length > 0
+  if (!hasStructured && !(responseText && responseText.trim())) {
+    return NextResponse.json({ error: 'Nothing to submit — show some work first.' }, { status: 400 })
   }
 
   // Resolve the FULL set of competencies this warm-up tests (authoritative,
@@ -33,7 +65,8 @@ export const POST = withAuth(async (request, ctx) => {
       competency_id,
       spiral_item_id: body.spiral_item_id ?? null,
       prompt: body.prompt ?? null,
-      response: String(response),
+      response: summarize(responseJson, responseText),
+      response_json: responseJson,
       status: 'pending',
       tested_competency_ids: [...tested],
       rated_competency_ids: [],
