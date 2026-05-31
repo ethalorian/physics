@@ -16,7 +16,7 @@ type UnitRow = { id: string; name: string; order_index: number }
 type LessonRow = { id: string; slug: string; title: string; lesson_number: number }
 type TargetRow = { id: string; lesson_id: string | null; order_index: number }
 type ProgRow = { user_id: string; lesson_id: string; status: string | null; progress_percentage: number | null }
-type RespRow = { user_id: string; lesson_id: string; created_at: string }
+type RespRow = { user_id: string; lesson_id: string; submitted_at: string }
 type GbRow = { user_id: string; item_id: string; percentage: number | null; graded_at: string | null }
 
 export const GET = withAuth(async (request, ctx) => {
@@ -74,10 +74,11 @@ export const GET = withAuth(async (request, ctx) => {
         .select('user_id, lesson_id, status, progress_percentage').in('user_id', studentIds).in('lesson_id', lessonIds)
       for (const p of (pr ?? []) as ProgRow[]) progByKey.set(`${p.user_id}|${p.lesson_id}`, { status: p.status ?? 'in_progress', pct: Number(p.progress_percentage ?? 0) })
 
-      const { data: rr } = await supabaseAdmin.from('block_responses')
-        .select('user_id, lesson_id, created_at').in('user_id', studentIds).in('lesson_id', lessonIds)
-        .order('created_at', { ascending: true })
-      for (const r of (rr ?? []) as RespRow[]) respLatest.set(`${r.user_id}|${r.lesson_id}`, r.created_at) // asc → last wins = latest
+      // SUBMITTED lessons (not raw saves) drive "needs grading"
+      const { data: rr } = await supabaseAdmin.from('lesson_submissions')
+        .select('user_id, lesson_id, submitted_at').in('user_id', studentIds).in('lesson_id', lessonIds)
+        .order('submitted_at', { ascending: true })
+      for (const r of (rr ?? []) as RespRow[]) respLatest.set(`${r.user_id}|${r.lesson_id}`, r.submitted_at) // asc → last wins = latest
 
       // gradebook scores for completion grading (item_type 'lesson', item_id = lesson uuid)
       const { data: gb } = await supabaseAdmin.from('gradebook_entries')

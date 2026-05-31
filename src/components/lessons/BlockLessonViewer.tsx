@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
+import SubmitLessonButton from '@/components/lessons/SubmitLessonButton'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
 import { BlockDocument, isCaptureBlock, isBlockComplete } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Star, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, type LucideIcon } from 'lucide-react'
@@ -113,8 +114,25 @@ export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProp
         )}
       </div>
 
+      {/* submit — turn the work in for grading (drafts stay drafts until this) */}
+      {blocks.length > 0 && (
+        <div
+          className="mt-8 p-5 rounded-2xl flex items-center justify-between gap-4 flex-wrap"
+          style={{
+            border: complete ? '2px solid color-mix(in oklch, var(--success) 55%, var(--border))' : '1px solid var(--border)',
+            background: complete ? 'color-mix(in oklch, var(--success) 8%, var(--card))' : 'var(--card)',
+          }}
+        >
+          <div className="text-sm max-w-sm" style={{ color: 'var(--muted-foreground)' }}>
+            <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Saving keeps a draft.</span>{' '}
+            When you&apos;re done, submit so your teacher can review and rate your work.
+          </div>
+          <SubmitLessonButton lessonId={lesson.id} complete={complete} />
+        </div>
+      )}
+
       {/* footer nav */}
-      <div className="mt-10 pt-6 flex items-center justify-between gap-3 flex-wrap" style={{ borderTop: '1px solid var(--border)' }}>
+      <div className="mt-6 pt-6 flex items-center justify-between gap-3 flex-wrap" style={{ borderTop: '1px solid var(--border)' }}>
         <Link href="/home" className="inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold" style={{ border: '1px solid var(--border)', color: 'var(--foreground)', background: 'var(--card)' }}>
           <Home size={16} /> Back to home
         </Link>

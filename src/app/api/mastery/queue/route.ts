@@ -4,15 +4,17 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
-// The grading queue: every roster student with UNGRADED work in the unit (block
-// responses submitted since the teacher last rated them). Aging matters —
-// anything waiting 48h+ is flagged top priority; a student self-rating "Not yet"
-// (marzano = 1) is flagged for help. Sorted so the most urgent surfaces first.
+// The grading queue: every roster student who has SUBMITTED a lesson in the unit
+// since the teacher last rated them. Saving block work is a draft and does NOT
+// appear here — only an explicit lesson submission (lesson_submissions) does.
+// Aging matters — 48h+ is flagged top priority; a student self-rating "Not yet"
+// (marzano = 1) is flagged for help. Most urgent surfaces first.
 
 type StudentRow = { google_user_id: string | null; name: string | null }
 type UnitRow = { id: string; name: string }
 type LessonRow = { id: string }
 type TargetRow = { id: string }
+type SubRow = { user_id: string; submitted_at: string }
 type BlockRow = { user_id: string; created_at: string; block_type: string | null; response: unknown }
 type RecRow = { user_id: string; observed_at: string }
 
@@ -51,14 +53,6 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ unitId, firstTargetId: targetIds[0] ?? null, queue: [] })
     }
 
-    // block submissions in the unit
-    const { data: br } = await supabaseAdmin
-      .from('block_responses')
-      .select('user_id, created_at, block_type, response')
-      .in('user_id', studentIds)
-      .in('lesson_id', lessonIds)
-    const blocks = (br ?? []) as BlockRow[]
-
     // last rating per student on this unit's targets
     const lastRatedByUser = new Map<string, number>()
     if (targetIds.length > 0) {
@@ -69,27 +63,47 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
+    // SUBMITTED lessons in the unit — the ONLY thing that puts a student in the queue.
+    const { data: subs } = await supabaseAdmin
+      .from('lesson_submissions')
+      .select('user_id, submitted_at')
+      .in('user_id', studentIds)
+      .in('lesson_id', lessonIds)
+
     const now = Date.now()
-    const nameById = new Map<string, string>(students.map((s): [string, string] => [s.id, s.name]))
-    interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
     const byUser = new Map<string, { count: number; oldest: number; needsHelp: boolean }>()
-    for (const b of blocks) {
-      const submittedAt = new Date(b.created_at).getTime()
-      const lastRated = lastRatedByUser.get(b.user_id) ?? 0
-      if (submittedAt <= lastRated) continue // already graded after this submission
-      const cur = byUser.get(b.user_id) ?? { count: 0, oldest: submittedAt, needsHelp: false }
+    for (const s of (subs ?? []) as SubRow[]) {
+      const submittedAt = new Date(s.submitted_at).getTime()
+      const lastRated = lastRatedByUser.get(s.user_id) ?? 0
+      if (submittedAt <= lastRated) continue // already rated since this submission
+      const cur = byUser.get(s.user_id) ?? { count: 0, oldest: submittedAt, needsHelp: false }
       cur.count++
       if (submittedAt < cur.oldest) cur.oldest = submittedAt
-      if (b.block_type === 'marzano' && Number(b.response) === 1) cur.needsHelp = true
-      byUser.set(b.user_id, cur)
+      byUser.set(s.user_id, cur)
     }
 
+    // needs-help flag: a student self-rated "Not yet" (marzano=1) since last rating
+    if (byUser.size > 0) {
+      const { data: br } = await supabaseAdmin
+        .from('block_responses')
+        .select('user_id, created_at, block_type, response')
+        .in('user_id', [...byUser.keys()])
+        .in('lesson_id', lessonIds)
+        .eq('block_type', 'marzano')
+      for (const b of (br ?? []) as BlockRow[]) {
+        const cur = byUser.get(b.user_id)
+        if (!cur) continue
+        if (new Date(b.created_at).getTime() > (lastRatedByUser.get(b.user_id) ?? 0) && Number(b.response) === 1) cur.needsHelp = true
+      }
+    }
+
+    const nameById = new Map<string, string>(students.map((s): [string, string] => [s.id, s.name]))
+    interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
     const queue: QueueItem[] = []
     for (const [uid, v] of byUser) {
       const ageHours = Math.round((now - v.oldest) / HOUR)
       queue.push({ studentId: uid, name: nameById.get(uid) ?? 'Student', count: v.count, oldestAgeHours: ageHours, aged: ageHours >= 48, needsHelp: v.needsHelp })
     }
-    // most urgent first: aged or needs-help, then by age
     queue.sort((a, b) => {
       const ap = (a.aged || a.needsHelp) ? 1 : 0
       const bp = (b.aged || b.needsHelp) ? 1 : 0
