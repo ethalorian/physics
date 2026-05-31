@@ -26,9 +26,9 @@ export const GET = withAuth(async (request, ctx) => {
   // Active competencies.
   const { data: compRows } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, code, statement, strand, order_index, mini_lesson')
+    .select('id, code, statement, strand, order_index, sequence_order, mini_lesson')
     .eq('is_active', true)
-    .order('order_index', { ascending: true })
+    .order('sequence_order', { ascending: true, nullsFirst: false })
   const competencies = compRows ?? []
   if (competencies.length === 0) {
     return NextResponse.json({ item: null, snapshot: { mathPointsEarned: 0, fluentCount: 0, total: 0 } })
@@ -50,14 +50,13 @@ export const GET = withAuth(async (request, ctx) => {
   }
   const valueOf = (id: string): number | null => decayingAverage(levelsByComp.get(id) ?? [])
 
-  // Pick the weakest competency (null = never assessed = weakest), tie-break by order.
-  const ranked = [...competencies].sort((a, b) => {
-    const va = valueOf(a.id) ?? -1
-    const vb = valueOf(b.id) ?? -1
-    if (va !== vb) return va - vb
-    return a.order_index - b.order_index
-  })
-  const target = ranked[0]
+  // Walk the prerequisite ladder: everyone starts at the first rung (number sense)
+  // and only advances to the next skill once they're Fluent on the current one.
+  // So a zero-fluency student always gets rung 1 — never a skill they can't access.
+  const ladder = [...competencies].sort(
+    (a, b) => (a.sequence_order ?? 999) - (b.sequence_order ?? 999) || a.order_index - b.order_index,
+  )
+  const target = ladder.find((c) => (valueOf(c.id) ?? 0) < FLUENT_THRESHOLD) ?? ladder[ladder.length - 1]
 
   // Spiral items for that competency; rotate by day so it varies.
   const { data: itemRows } = await supabaseAdmin

@@ -32,6 +32,7 @@ interface DailyItem {
 
 function strandForCode(code: string | undefined): string {
   const p = (code ?? '').slice(0, 2)
+  if (p === 'NS') return 'number-sense'
   if (p === 'PR') return 'proportional-reasoning'
   if (p === 'QE') return 'quantities-estimation'
   if (p === 'SM') return 'symbolic-manipulation'

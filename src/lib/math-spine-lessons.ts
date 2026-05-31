@@ -31,6 +31,60 @@ export function pickTier(value: number | null | undefined): number {
 }
 
 export const MINI_LESSONS: Record<string, MiniLesson[]> = {
+  NS1: [
+    {
+      title: 'What place value means',
+      steps: [
+        'Every digit is worth something based on WHERE it sits. The 5 in 50 means five tens; in 500 it means five hundreds.',
+        'Move a digit one spot left and it’s 10 times bigger; one spot right, 10 times smaller.',
+        'So 8,500 means 8 thousands and 5 hundreds — it sits between 8,000 and 9,000.',
+      ],
+      tip: 'Each step left ×10, each step right ÷10.',
+    },
+    {
+      title: 'Comparing how big numbers are',
+      steps: [
+        'Line two numbers up by their places; the one with more (or bigger) high places is larger.',
+        'For decimals, compare place by place after the dot: 0.5 is bigger than 0.45.',
+        'Count the digits before the decimal to feel how big a number is.',
+      ],
+    },
+    {
+      title: 'Powers of ten',
+      steps: [
+        '10, 100, 1000 are 10¹, 10², 10³ — the little number counts the zeros.',
+        'Multiplying by 10ⁿ shifts every digit n places to the left.',
+        'This is the bridge into scientific notation.',
+      ],
+    },
+  ],
+  NS2: [
+    {
+      title: 'What a fraction is',
+      steps: [
+        'A fraction is part of a whole: 3/4 means 3 out of 4 equal pieces.',
+        'A decimal is another way to write that same part: 3/4 = 0.75.',
+        'A percent just means “out of 100”: 0.75 = 75%.',
+      ],
+      tip: 'Fraction, decimal, and percent are three names for the same amount.',
+    },
+    {
+      title: 'Converting between them',
+      steps: [
+        'Fraction → decimal: divide top by bottom (3 ÷ 4 = 0.75).',
+        'Decimal → percent: multiply by 100 (0.75 → 75%).',
+        'Percent → decimal: divide by 100 (75% → 0.75).',
+      ],
+    },
+    {
+      title: 'Using them to reason',
+      steps: [
+        'A ratio is just a fraction comparing two amounts.',
+        'Pick whichever form makes the problem easiest.',
+        'Estimate with friendly ones: 0.48 ≈ ½, so about half.',
+      ],
+    },
+  ],
   PR1: [
     {
       title: 'What a proportion is',

@@ -88,6 +88,7 @@ export interface MasteryTaskResult {
 
 /** The spine's rollup axis — a "kind of math," parallel to Domain. */
 export type MathStrand =
+  | "number-sense"
   | "proportional-reasoning"
   | "quantities-estimation"
   | "symbolic-manipulation"

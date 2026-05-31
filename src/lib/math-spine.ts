@@ -20,6 +20,7 @@ export const ALMOST_THRESHOLD = 1.5
 export const FLUENT_THRESHOLD = 2.5
 
 export const STRAND_ORDER: MathStrand[] = [
+  'number-sense',
   'proportional-reasoning',
   'quantities-estimation',
   'symbolic-manipulation',
@@ -27,6 +28,7 @@ export const STRAND_ORDER: MathStrand[] = [
 ]
 
 export const STRAND_LABEL: Record<MathStrand, string> = {
+  'number-sense': 'Number Sense',
   'proportional-reasoning': 'Proportional Reasoning',
   'quantities-estimation': 'Quantities & Estimation',
   'symbolic-manipulation': 'Symbolic Manipulation',

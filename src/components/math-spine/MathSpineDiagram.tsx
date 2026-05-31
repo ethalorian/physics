@@ -20,6 +20,31 @@ function Frame({ children, label }: { children: ReactNode; label?: string }) {
 }
 
 const DIAGRAMS: Record<string, ReactElement> = {
+  // Number sense — place value chart
+  NS1: (
+    <Frame label="place value">
+      {['thousands', 'hundreds', 'tens', 'ones'].map((lbl, i) => (
+        <g key={lbl}>
+          <rect x={30 + i * 70} y="30" width="60" height="44" fill="none" stroke={FG} strokeWidth="1.5" rx="4" />
+          <text x={60 + i * 70} y="60" fontSize="22" fill={FG} textAnchor="middle" fontFamily="Georgia, serif">{['8', '5', '0', '0'][i]}</text>
+          <text x={60 + i * 70} y="90" fontSize="10" fill={MUTED} textAnchor="middle">{lbl}</text>
+        </g>
+      ))}
+      <text x="30" y="20" fontSize="13" fill={ACCENT}>8,500 — each spot is 10× the one to its right</text>
+    </Frame>
+  ),
+  // Number sense — fraction = decimal = percent
+  NS2: (
+    <Frame label="fraction decimal percent">
+      <rect x="30" y="40" width="240" height="34" fill="none" stroke={FG} strokeWidth="1.5" />
+      <rect x="30" y="40" width="180" height="34" fill={ACCENT} opacity="0.25" />
+      <line x1="90" y1="40" x2="90" y2="74" stroke={FG} strokeWidth="1" />
+      <line x1="150" y1="40" x2="150" y2="74" stroke={FG} strokeWidth="1" />
+      <line x1="210" y1="40" x2="210" y2="74" stroke={FG} strokeWidth="1" />
+      <text x="30" y="30" fontSize="14" fill={FG}>3 of 4 parts shaded</text>
+      <text x="30" y="98" fontSize="15" fill={ACCENT} fontFamily="Georgia, serif">3/4  =  0.75  =  75%</text>
+    </Frame>
+  ),
   // Proportional reasoning — two equal ratios, cross-scaled
   PR1: (
     <Frame label="ratio scaling">
