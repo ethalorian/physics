@@ -368,9 +368,10 @@ export default function ControlRoomPage() {
     finally { setGbBusy(false) }
   }
 
-  const saveGradebook = async () => {
+  const saveGradebook = async (override?: number) => {
     if (!sel?.lesson || !lessonGrid) return
-    const pct = Math.max(0, Math.min(100, Math.round(Number(gbPercent))))
+    const raw = override ?? Number(gbPercent)
+    const pct = Math.max(0, Math.min(100, Math.round(raw)))
     if (!Number.isFinite(pct)) return
     const student = lessonGrid.students.find((s) => s.id === sel.studentId)
     setGbBusy(true)
@@ -490,17 +491,21 @@ export default function ControlRoomPage() {
         if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
         return
       }
-      if (e.key === 'Enter') { if (gbPercent !== '') { e.preventDefault(); saveGradebook() } return }
-      if (!typing) {
-        const presets = ['100', '90', '80', '70', '50', '0']
-        const i = Number(e.key) - 1
-        if (i >= 0 && i < presets.length) { e.preventDefault(); setGbPercent(presets[i]) }
+      // Enter saves whatever's typed in the box (for odd values like 85).
+      if (e.key === 'Enter') { if (gbPercent !== '' && !gbBusy) { e.preventDefault(); saveGradebook() } return }
+      // One numpad press grades and advances: tens digit, 0 → 100 (full credit).
+      if (!typing && !gbBusy && /^[0-9]$/.test(e.key)) {
+        e.preventDefault()
+        const n = Number(e.key)
+        const pct = n === 0 ? 100 : n * 10
+        setGbPercent(String(pct))
+        saveGradebook(pct)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, gbPercent, nextStudentGate])
+  }, [sel, gbPercent, nextStudentGate, gbBusy])
 
   // Inter-student gate: any key (or Continue) advances to the next student;
   // Esc closes instead. One keystroke per student, giving your eyes a beat.
@@ -1071,23 +1076,27 @@ export default function ControlRoomPage() {
                   </div>
                 )}
                 <div className="flex gap-1.5 mb-2 flex-wrap">
-                  {[100, 90, 80, 70, 50, 0].map((p) => (
-                    <button key={p} onClick={() => setGbPercent(String(p))}
-                      className="rounded-lg border px-2.5 py-1 text-xs font-semibold"
-                      style={{ borderColor: 'var(--border)', background: gbPercent === String(p) ? 'var(--primary)' : 'var(--card)', color: gbPercent === String(p) ? 'var(--primary-foreground)' : 'var(--foreground)' }}>{p}</button>
-                  ))}
+                  {[100, 90, 80, 70, 60, 50, 40, 30, 20, 10].map((p) => {
+                    const key = p === 100 ? '0' : String(p / 10)
+                    return (
+                      <button key={p} onClick={() => { setGbPercent(String(p)); if (!gbBusy) saveGradebook(p) }}
+                        title={`Key ${key} → ${p}%`}
+                        className="rounded-lg border px-2.5 py-1 text-xs font-semibold"
+                        style={{ borderColor: 'var(--border)', background: gbPercent === String(p) ? 'var(--primary)' : 'var(--card)', color: gbPercent === String(p) ? 'var(--primary-foreground)' : 'var(--foreground)' }}>{p}</button>
+                    )
+                  })}
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="number" min={0} max={100} value={gbPercent} onChange={(e) => setGbPercent(e.target.value)}
                     placeholder="0–100" className="rounded-lg border px-3 py-2 text-sm" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 90 }} />
                   <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>%</span>
-                  <button onClick={saveGradebook} disabled={gbBusy || gbPercent === ''}
+                  <button onClick={() => saveGradebook()} disabled={gbBusy || gbPercent === ''}
                     className="flex-1 rounded-xl font-bold disabled:opacity-50" style={{ padding: '10px 0', fontSize: 13, background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
                     Save score
                   </button>
                 </div>
                 <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                  Keys <b>1–6</b> set 100/90/80/70/50/0; <b>Enter</b> saves. Finishes this student&apos;s pending work, then moves to the next student.
+                  Numpad grades and advances — the key is the tens digit (<b>9</b>=90, <b>8</b>=80 … <b>1</b>=10), <b>0</b>=100. Type an odd value (e.g. 85) in the box + <b>Enter</b>. Finishes this student&apos;s pending work, then moves to the next student.
                 </p>
               </>)}
             </div>
