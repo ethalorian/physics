@@ -10,7 +10,7 @@ import MonthCalendar, { type CalSection, type CalItem } from '@/components/pacin
 function LongLegend() {
   return (
     <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-      <span className="inline-flex items-center gap-1"><span className="rounded px-1 font-bold text-[9px]" style={{ background: 'var(--reward)', color: 'var(--reward-foreground, #4a3b00)' }}>LONG</span> long block</span>
+      <span className="inline-flex items-center gap-1"><span className="rounded px-1 font-bold text-[9px]" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span> long block</span>
       <span className="inline-flex items-center gap-1"><span style={{ width: 10, height: 10, borderRadius: 3, border: '2px solid var(--primary)', display: 'inline-block' }} /> today</span>
     </div>
   )
@@ -31,7 +31,7 @@ interface SectionData { result: PacingResult; items: PlanItem[]; autoIndex: numb
 const BLOCKS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
 const STATUS: Record<PacingResult['status'], { label: string; color: string }> = {
-  behind: { label: 'Behind', color: '#C08B8B' },
+  behind: { label: 'Behind', color: 'var(--viz-down)' },
   on: { label: 'On pace', color: 'var(--success)' },
   ahead: { label: 'Ahead', color: 'var(--primary)' },
   unknown: { label: 'No data', color: 'var(--muted-foreground)' },

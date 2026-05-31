@@ -109,7 +109,7 @@ export default function AdminStorePage() {
             {done.slice(0, 30).map((r, i) => (
               <div key={r.id} className="flex items-center gap-3 py-2" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
                 <span className="flex-1 text-sm" style={{ color: C.muted }}>{r.reward_name} · {r.user_email}</span>
-                <span className="text-xs" style={{ color: r.status === 'fulfilled' ? C.sage : '#C08B8B' }}>{r.status}</span>
+                <span className="text-xs" style={{ color: r.status === 'fulfilled' ? C.sage : 'var(--viz-down)' }}>{r.status}</span>
               </div>
             ))}
           </div>

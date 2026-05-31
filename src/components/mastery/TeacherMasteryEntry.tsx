@@ -114,7 +114,7 @@ export default function TeacherMasteryEntry({
   }
 
   return (
-    <div style={{ background: "#FAF9FC", color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
+    <div style={{ background: "var(--card)", color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
         <h2 className="text-xl font-medium" style={{ color: PALETTE.indigo }}>
           Record mastery
@@ -164,7 +164,7 @@ export default function TeacherMasteryEntry({
       </div>
 
       {error && (
-        <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: "#FBEFEF", color: "#8A4A4A" }}>
+        <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: "var(--viz-down-surface)", color: "var(--viz-down)" }}>
           {error}
         </div>
       )}
@@ -178,11 +178,11 @@ export default function TeacherMasteryEntry({
             <div
               key={t.id}
               className="flex flex-wrap items-center gap-3 py-3"
-              style={{ borderTop: i === 0 ? "none" : "0.5px solid #EEEBF5" }}
+              style={{ borderTop: i === 0 ? "none" : "0.5px solid var(--secondary)" }}
             >
               <span
                 className="text-[11px] font-medium rounded px-2 py-0.5"
-                style={{ background: "#EEEBF6", color: "#4A4470" }}
+                style={{ background: "var(--secondary)", color: "var(--foreground)" }}
                 title={DOMAIN_LABEL[t.domain]}
               >
                 {tag}

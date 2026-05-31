@@ -71,9 +71,9 @@ export default function MathClimb({ competencies, records }: { competencies: Cli
     <div>
       <div className="flex items-center gap-2 mt-6 mb-2">
         <span aria-hidden style={{ width: 16, height: 3, borderRadius: 2, background: PALETTE.lavender }} />
-        <span className="text-xs font-bold uppercase" style={{ color: '#4A4470', letterSpacing: '0.12em' }}>Your math climb</span>
+        <span className="text-xs font-bold uppercase" style={{ color: 'var(--foreground)', letterSpacing: '0.12em' }}>Your math climb</span>
       </div>
-      <div className="rounded-lg border bg-white p-4" style={{ borderColor: PALETTE.hairline }}>
+      <div className="rounded-lg border bg-card p-4" style={{ borderColor: PALETTE.hairline }}>
         <p className="text-sm mb-3" style={{ color: PALETTE.indigoMuted }}>
           Each dot is a rating from your teacher. The line is your weighted mastery — recent work counts more, but earlier work still counts.
         </p>
@@ -87,8 +87,8 @@ export default function MathClimb({ competencies, records }: { competencies: Cli
                 className="rounded-full px-3 py-1 text-sm font-medium border"
                 style={{
                   borderColor: active ? PALETTE.lavender : PALETTE.hairline,
-                  background: active ? PALETTE.lavender : '#fff',
-                  color: active ? '#fff' : '#4A4470',
+                  background: active ? PALETTE.lavender : 'var(--card)',
+                  color: active ? 'var(--primary-foreground)' : 'var(--foreground)',
                 }}
               >
                 {STRAND_LABEL[s]}

@@ -1,6 +1,21 @@
 import type { Config } from "tailwindcss";
-import tailwindcssAnimate from "tailwindcss-animate";
 
+/**
+ * Tailwind v4 note
+ * ----------------
+ * This project runs Tailwind CSS v4 with the CSS-first config in
+ * `src/app/globals.css` (`@import "tailwindcss"`, `@theme inline`,
+ * `@custom-variant dark`, `@plugin "tailwindcss-animate"`).
+ *
+ * In v4, this file is NOT auto-loaded — it only applies if a `@config`
+ * directive points at it. It intentionally does NOT redefine colors:
+ * the design tokens (oklch) are the single source of truth in globals.css.
+ * The previous version wrapped those oklch tokens in `hsl(var(--token))`,
+ * which is invalid CSS — that color map has been removed to avoid confusion.
+ *
+ * Keep design tokens in globals.css. Use this file only for content globs
+ * or JS-side theme additions if/when you wire it up via `@config`.
+ */
 const config: Config = {
   darkMode: "class",
   content: [
@@ -8,7 +23,6 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -21,70 +35,8 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
-    extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
-        },
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
-        },
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      keyframes: {
-        "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
-        },
-        "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      fontFamily: {
-        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
-      },
-      backdropBlur: {
-        xs: "2px",
-      },
-    },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [],
 };
 
 export default config;

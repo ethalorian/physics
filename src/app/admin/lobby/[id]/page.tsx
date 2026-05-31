@@ -39,7 +39,7 @@ function StrokesSvg({ strokes }: { strokes: StrokeShape[] }) {
   return (
     <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 260, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="Student drawing">
       {strokes.map((s, i) => (
-        <polyline key={i} points={(s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        <polyline key={i} points={(s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
       ))}
     </svg>
   )

@@ -153,7 +153,7 @@ export default function TeacherMathSpineEntry({
   }
 
   return (
-    <div style={{ background: '#FAF9FC', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
+    <div style={{ background: 'var(--card)', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
         <h2 className="text-xl font-medium" style={{ color: PALETTE.indigo }}>
           Record math literacy
@@ -204,7 +204,7 @@ export default function TeacherMathSpineEntry({
       {celebration && (
         <div
           className="text-sm rounded-md px-3 py-2 mb-3"
-          style={{ background: '#EEF4EF', color: '#3F6B4F', border: `1px solid ${PALETTE.sage}` }}
+          style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)', border: `1px solid ${PALETTE.sage}` }}
         >
           🎉 {celebration.name}{' '}
           {celebration.grants
@@ -215,7 +215,7 @@ export default function TeacherMathSpineEntry({
       )}
 
       {error && (
-        <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: '#FBEFEF', color: '#8A4A4A' }}>
+        <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: 'var(--viz-down-surface)', color: 'var(--viz-down)' }}>
           {error}
         </div>
       )}
@@ -225,7 +225,7 @@ export default function TeacherMathSpineEntry({
         if (comps.length === 0) return null
         return (
           <div key={strand} className="mb-3">
-            <p className="text-sm font-medium mt-3 mb-1" style={{ color: '#4A4470' }}>
+            <p className="text-sm font-medium mt-3 mb-1" style={{ color: 'var(--foreground)' }}>
               {STRAND_LABEL[strand]}
             </p>
             <div className="rounded-lg border bg-white px-4" style={{ borderColor: PALETTE.hairline }}>
@@ -236,11 +236,11 @@ export default function TeacherMathSpineEntry({
                   <div
                     key={c.id}
                     className="flex flex-wrap items-center gap-3 py-3"
-                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}
+                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
                   >
                     <span
                       className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums"
-                      style={{ background: '#EEEBF6', color: '#4A4470' }}
+                      style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}
                     >
                       {c.code}
                     </span>
@@ -278,8 +278,8 @@ export default function TeacherMathSpineEntry({
       })}
 
       {/* Spotlight — teacher-awarded recognition */}
-      <div className="rounded-lg border p-4 mt-2" style={{ background: '#F4F2FA', borderColor: PALETTE.hairline }}>
-        <div className="text-sm font-medium mb-2" style={{ color: '#4A4470' }}>
+      <div className="rounded-lg border p-4 mt-2" style={{ background: 'var(--muted)', borderColor: PALETTE.hairline }}>
+        <div className="text-sm font-medium mb-2" style={{ color: 'var(--foreground)' }}>
           Spotlight a contribution
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -294,7 +294,7 @@ export default function TeacherMathSpineEntry({
             onClick={spotlight}
             disabled={!studentId}
             className="text-sm rounded-md border px-3 py-1 transition-colors disabled:opacity-50"
-            style={{ borderColor: PALETTE.sage, color: '#3F6B4F', background: '#EEF4EF' }}
+            style={{ borderColor: PALETTE.sage, color: 'var(--viz-up)', background: 'var(--viz-up-surface)' }}
           >
             ★ Spotlight
           </button>

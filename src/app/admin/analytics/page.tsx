@@ -43,7 +43,7 @@ function bandColor(v: number | null): string {
   if (v == null) return 'var(--muted-foreground)'
   if (v >= 2.45) return 'var(--success)'
   if (v >= 1.7) return 'var(--reward)'
-  return '#C08B8B'
+  return 'var(--viz-down)'
 }
 function mean(xs: number[]): number | null {
   if (xs.length === 0) return null
@@ -331,7 +331,7 @@ export default function AnalyticsPage() {
         <Tile icon={<Users size={18} />} value={slice ? String(slice.studentsInView) : '—'} label="Students in view" accent="var(--primary)" />
         <Tile icon={<BookOpen size={18} />} value={slice ? String(slice.classesInView) : '—'} label="Classes in view" accent="var(--reward)" />
         <Tile icon={<BarChart3 size={18} />} value={fmt(slice?.overall ?? null)} label="Avg mastery (1–3)" accent={bandColor(slice?.overall ?? null)} />
-        <Tile icon={<AlertTriangle size={18} />} value={slice ? String(slice.interventions.length) : '—'} label="Students to watch" accent="#C08B8B" />
+        <Tile icon={<AlertTriangle size={18} />} value={slice ? String(slice.interventions.length) : '—'} label="Students to watch" accent="var(--viz-down)" />
       </div>
 
       {/* domain breakdown */}
@@ -414,7 +414,7 @@ export default function AnalyticsPage() {
                     <td className="py-2 px-2 text-center text-xs" style={{ color: 'var(--muted-foreground)' }}>{DOMAIN_LABEL[t.domain] ?? t.domain}</td>
                     <td className="py-2 px-2 text-center font-bold" style={{ color: bandColor(t.avg) }}>{fmt(t.avg)}</td>
                     <td className="py-2 px-2 text-center" style={{ color: 'var(--muted-foreground)' }}>{t.rated}</td>
-                    <td className="py-2 px-2 text-center" style={{ color: t.notYet > 0 ? '#C08B8B' : 'var(--muted-foreground)' }}>{t.notYet}</td>
+                    <td className="py-2 px-2 text-center" style={{ color: t.notYet > 0 ? 'var(--viz-down)' : 'var(--muted-foreground)' }}>{t.notYet}</td>
                   </tr>
                 ))}
               </tbody>
@@ -466,13 +466,13 @@ export default function AnalyticsPage() {
           </button>
         </div>
 
-        {insightErr && <div className="mt-4 text-sm" style={{ color: '#C08B8B' }}>{insightErr}</div>}
+        {insightErr && <div className="mt-4 text-sm" style={{ color: 'var(--viz-down)' }}>{insightErr}</div>}
 
         {insights && (
           <div className="mt-5 grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
             <InsightCard icon={<Lightbulb size={15} />} title="Patterns & insights" items={insights.patterns} accent="var(--primary)" />
             <InsightCard icon={<ClipboardList size={15} />} title="Reteach recommendations" items={insights.reteach} accent="var(--success)" />
-            <InsightCard icon={<AlertTriangle size={15} />} title="Intervention list" items={insights.interventions} accent="#C08B8B" />
+            <InsightCard icon={<AlertTriangle size={15} />} title="Intervention list" items={insights.interventions} accent="var(--viz-down)" />
             <InsightCard icon={<GitCompare size={15} />} title="Cross-class comparison" items={insights.comparison} accent="var(--reward)" />
           </div>
         )}

@@ -60,7 +60,7 @@ const MILESTONE_LABEL: Record<string, string> = {
 
 function TrendIcon({ trend }: { trend: Trend }) {
   if (trend === 'none') return null
-  const color = trend === 'up' ? PALETTE.sage : trend === 'down' ? '#C08B8B' : PALETTE.indigoMuted
+  const color = trend === 'up' ? PALETTE.sage : trend === 'down' ? 'var(--viz-down)' : PALETTE.indigoMuted
   const d = trend === 'up' ? 'M3 13l5-5 4 4 6-7' : trend === 'down' ? 'M3 6l5 5 4-4 6 7' : 'M3 10h15'
   return (
     <svg width={18} height={18} viewBox="0 0 21 21" aria-label={`trend ${trend}`} role="img">
@@ -105,7 +105,7 @@ export default function MathSpineGrowth({
   const strandsComplete = grants.filter((g) => g.milestone === 'strand-complete').length
 
   return (
-    <div style={{ background: '#FAF9FC', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
+    <div style={{ background: 'var(--card)', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
       <div className="flex items-baseline justify-between gap-3">
         <h2 className="text-xl font-medium" style={{ color: PALETTE.indigo }}>
           Your math literacy
@@ -121,9 +121,9 @@ export default function MathSpineGrowth({
       {/* Points earned banner */}
       <div
         className="flex items-center justify-between rounded-lg border px-4 py-3 mb-4"
-        style={{ background: '#F4F2FA', borderColor: PALETTE.hairline }}
+        style={{ background: 'var(--muted)', borderColor: PALETTE.hairline }}
       >
-        <span className="text-sm font-medium" style={{ color: '#4A4470' }}>
+        <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
           Math-literacy points earned
         </span>
         <span className="text-lg font-semibold tabular-nums" style={{ color: PALETTE.sage }}>
@@ -144,12 +144,12 @@ export default function MathSpineGrowth({
           return (
             <div
               key={strand}
-              className="rounded-lg border bg-white p-3.5"
+              className="rounded-lg border bg-card p-3.5"
               style={{ borderColor: PALETTE.hairline, borderStyle: empty ? 'dashed' : 'solid' }}
             >
               <div
                 className="flex items-center gap-2 text-sm font-medium"
-                style={{ color: empty ? '#9A97B5' : '#4A4470' }}
+                style={{ color: empty ? 'var(--muted-foreground)' : 'var(--foreground)' }}
               >
                 <span
                   aria-hidden
@@ -158,7 +158,7 @@ export default function MathSpineGrowth({
                 {STRAND_LABEL[strand]}
               </div>
               {empty ? (
-                <p className="text-sm mt-2.5 leading-snug" style={{ color: '#9A97B5' }}>
+                <p className="text-sm mt-2.5 leading-snug" style={{ color: 'var(--muted-foreground)' }}>
                   No evidence recorded yet.
                 </p>
               ) : (
@@ -169,7 +169,7 @@ export default function MathSpineGrowth({
                       {levelWord(value)}
                     </span>
                   </div>
-                  <div className="h-1.5 rounded my-1.5" style={{ background: '#EEEBF5' }}>
+                  <div className="h-1.5 rounded my-1.5" style={{ background: 'var(--secondary)' }}>
                     <div
                       className="h-full rounded"
                       style={{ width: `${Math.round((value! / 3) * 100)}%`, background: levelColor(value) }}
@@ -189,10 +189,10 @@ export default function MathSpineGrowth({
         if (comps.length === 0) return null
         return (
           <div key={strand}>
-            <p className="text-sm font-medium mt-5 mb-1" style={{ color: '#4A4470' }}>
+            <p className="text-sm font-medium mt-5 mb-1" style={{ color: 'var(--foreground)' }}>
               {STRAND_LABEL[strand]}
             </p>
-            <div className="rounded-lg border bg-white px-4" style={{ borderColor: PALETTE.hairline }}>
+            <div className="rounded-lg border bg-card px-4" style={{ borderColor: PALETTE.hairline }}>
               {comps.map((c, i) => {
                 const recs = byCompetency.get(c.id)
                 const value = competencyValue(recs, recencyWeight)
@@ -202,11 +202,11 @@ export default function MathSpineGrowth({
                   <div
                     key={c.id}
                     className="flex items-center gap-3 py-2.5"
-                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}
+                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
                   >
                     <span
                       className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums"
-                      style={{ background: '#EEEBF6', color: '#4A4470' }}
+                      style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}
                     >
                       {c.code}
                     </span>
@@ -230,35 +230,35 @@ export default function MathSpineGrowth({
 
       {/* Celebration trail */}
       <div className="flex items-center gap-2 mt-6 mb-2">
-        <div className="flex-1" style={{ height: '0.5px', background: '#D8D2E6' }} />
-        <span className="text-[11px]" style={{ color: '#9A97B5', letterSpacing: '0.3px' }}>
+        <div className="flex-1" style={{ height: '0.5px', background: 'var(--border)' }} />
+        <span className="text-[11px]" style={{ color: 'var(--muted-foreground)', letterSpacing: '0.3px' }}>
           what you&apos;ve earned
         </span>
-        <div className="flex-1" style={{ height: '0.5px', background: '#D8D2E6' }} />
+        <div className="flex-1" style={{ height: '0.5px', background: 'var(--border)' }} />
       </div>
       <div className="flex flex-wrap gap-2 mb-1">
         <span
           className="text-xs rounded-full px-3 py-1"
-          style={{ background: '#EEF4EF', color: '#3F6B4F' }}
+          style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}
         >
           ★ {fluentCount} of {competencies.length} skills Fluent
         </span>
         <span
           className="text-xs rounded-full px-3 py-1"
-          style={{ background: '#EEF4EF', color: '#3F6B4F' }}
+          style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}
         >
           {strandsComplete} strand{strandsComplete === 1 ? '' : 's'} complete
         </span>
       </div>
       {grants.length > 0 && (
-        <div className="rounded-lg border bg-white mt-2 px-4" style={{ borderColor: PALETTE.hairline }}>
+        <div className="rounded-lg border bg-card mt-2 px-4" style={{ borderColor: PALETTE.hairline }}>
           {grants.slice(0, 6).map((g, i) => (
             <div
               key={`${g.milestone}-${i}`}
               className="flex items-center gap-3 py-2 text-[13px]"
-              style={{ borderTop: i === 0 ? 'none' : '0.5px solid #EEEBF5' }}
+              style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
             >
-              <span className="flex-1" style={{ color: '#4A4470' }}>
+              <span className="flex-1" style={{ color: 'var(--foreground)' }}>
                 {MILESTONE_LABEL[g.milestone] ?? g.milestone}
                 {g.note ? ` — ${g.note}` : ''}
               </span>

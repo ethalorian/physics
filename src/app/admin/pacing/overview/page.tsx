@@ -22,7 +22,7 @@ interface Row {
 }
 
 const STATUS: Record<Row['status'], { label: string; color: string }> = {
-  behind: { label: 'Behind', color: '#C08B8B' },
+  behind: { label: 'Behind', color: 'var(--viz-down)' },
   on: { label: 'On pace', color: 'var(--success)' },
   ahead: { label: 'Ahead', color: 'var(--primary)' },
   unknown: { label: 'No data', color: 'var(--muted-foreground)' },
@@ -72,8 +72,8 @@ export default function PacingOverviewPage() {
       {err && <div className="rounded-2xl border p-4 text-sm mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>{err}</div>}
 
       {behind > 0 && (
-        <div className="flex items-center gap-2 text-sm rounded-xl p-3 mb-4" style={{ background: 'color-mix(in oklch, #C08B8B 14%, transparent)' }}>
-          <AlertTriangle size={16} style={{ color: '#C08B8B' }} />
+        <div className="flex items-center gap-2 text-sm rounded-xl p-3 mb-4" style={{ background: 'color-mix(in oklch, var(--viz-down) 14%, transparent)' }}>
+          <AlertTriangle size={16} style={{ color: 'var(--viz-down)' }} />
           <span>{behind} section{behind === 1 ? '' : 's'} behind pace.</span>
           {unscheduled > 0 && <span style={{ color: 'var(--muted-foreground)' }}>· {unscheduled} without a calendar set yet.</span>}
         </div>

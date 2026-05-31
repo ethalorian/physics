@@ -67,9 +67,8 @@ export function PageHeader({
         <div className="space-y-2 flex-1 min-w-0">
           {/* Title with Badge */}
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-3xl sm:text-4xl font-bold text-foreground relative">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
               {title}
-              <div className="absolute -bottom-2 left-0 w-16 sm:w-24 h-1 bg-gradient-to-r from-primary to-primary/60 rounded-full" />
             </h1>
             {badge && <div className="mt-1">{badge}</div>}
           </div>

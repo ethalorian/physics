@@ -18,7 +18,7 @@ interface Props {
 // Calm, distinct color per block.
 const BLOCK_COLOR: Record<string, string> = {
   A: 'var(--primary)', B: 'var(--success)', C: 'var(--reward)',
-  D: '#C08B8B', E: '#6E93A8', F: '#9B8BC0', G: 'var(--muted-foreground)',
+  D: 'var(--viz-down)', E: 'var(--chart-4)', F: 'var(--primary)', G: 'var(--muted-foreground)',
 }
 const WD = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -163,7 +163,7 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                     >
                       <div className="flex items-center gap-1">
                         <span className="text-[10px] font-bold" style={{ color }}>{label}</span>
-                        {m.long && <span className="text-[9px] font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground, #4a3b00)' }}>LONG</span>}
+                        {m.long && <span className="text-[9px] font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span>}
                       </div>
                       <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--foreground)' }}>{m.title}</div>
                     </button>

@@ -1,6 +1,12 @@
 @import "tailwindcss";
 @import "katex/dist/katex.min.css";
 
+/* Re-enable enter/exit animation utilities (animate-in, fade-in-0, zoom-in-95,
+   slide-*). These ship via tailwindcss-animate, which was previously only wired
+   through the unloaded tailwind.config.ts, so dialog/popover/select transitions
+   were silently dead. @plugin loads it the Tailwind v4 (CSS-first) way. */
+@plugin "tailwindcss-animate";
+
 @custom-variant dark (&:is(.dark *));
 
 /* Sheet Slide Animations for Mobile */
@@ -111,81 +117,123 @@
 :root {
   --radius: 1rem;
   
-  /* Terrestrial & Galactical — Light Mode */
-  /* Lavender + sage brand DNA with a gold "reward" accent for engagement */
-  --background: oklch(0.985 0.006 300);
-  --foreground: oklch(0.27 0.04 290);
+  /* Terrestrial & Galactical — Light Mode (Refined, Chromebook-hardened) */
+  /* Truer indigo (hue ~282, not ~300) so it doesn't read sweet; deeper primary
+     for authority; cooler surfaces; borders strengthened so card edges survive
+     cheap TN/LCD panels at an angle. Contrast verified to WCAG AA. */
+  --background: oklch(0.985 0.004 280);
+  --foreground: oklch(0.25 0.035 282);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.27 0.04 290);
+  --card-foreground: oklch(0.25 0.035 282);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.27 0.04 290);
-  --primary: oklch(0.55 0.14 295);
-  --primary-foreground: oklch(0.99 0.005 300);
-  --secondary: oklch(0.95 0.02 300);
-  --secondary-foreground: oklch(0.35 0.05 290);
-  --muted: oklch(0.96 0.012 300);
-  --muted-foreground: oklch(0.50 0.03 290);
-  --accent: oklch(0.93 0.03 300);
-  --accent-foreground: oklch(0.35 0.05 290);
+  --popover-foreground: oklch(0.25 0.035 282);
+  --primary: oklch(0.47 0.13 282);
+  --primary-foreground: oklch(0.99 0.004 280);
+  --secondary: oklch(0.93 0.014 282);
+  --secondary-foreground: oklch(0.33 0.04 282);
+  --muted: oklch(0.955 0.01 282);
+  --muted-foreground: oklch(0.46 0.025 282);
+  --accent: oklch(0.91 0.022 282);
+  --accent-foreground: oklch(0.33 0.04 282);
   --reward: oklch(0.80 0.13 80);
   --reward-foreground: oklch(0.28 0.04 285);
   --success: oklch(0.62 0.08 155);
   --destructive: oklch(0.55 0.18 25);
-  --border: oklch(0.91 0.015 300);
-  --input: oklch(0.95 0.012 300);
-  --ring: oklch(0.55 0.14 295);
-  --chart-1: oklch(0.60 0.12 295);
+
+  /* Data-viz palette (growth dashboards). Calm by design; defined for BOTH
+     modes so charts adapt instead of flashing white in dark mode. */
+  --viz-up: oklch(0.60 0.05 155);          /* sage — positive trend */
+  --viz-down: oklch(0.64 0.07 25);         /* dusty rose — negative trend (calm, not alarm-red) */
+  --viz-faint: oklch(0.78 0.03 265);       /* periwinkle — lowest level */
+  --viz-up-surface: color-mix(in oklch, var(--viz-up) 14%, var(--card));
+  --viz-down-surface: color-mix(in oklch, var(--viz-down) 14%, var(--card));
+  --border: oklch(0.78 0.014 282);
+  --input: oklch(0.955 0.01 282);
+  --ring: oklch(0.47 0.13 282);
+  --chart-1: oklch(0.52 0.13 282);
   --chart-2: oklch(0.68 0.07 155);
   --chart-3: oklch(0.80 0.13 80);
   --chart-4: oklch(0.72 0.05 265);
   --chart-5: oklch(0.62 0.15 30);
-  --sidebar: oklch(0.97 0.01 300);
-  --sidebar-foreground: oklch(0.27 0.04 290);
-  --sidebar-primary: oklch(0.55 0.14 295);
-  --sidebar-primary-foreground: oklch(0.99 0.005 300);
-  --sidebar-accent: oklch(0.95 0.02 300);
-  --sidebar-accent-foreground: oklch(0.35 0.05 290);
-  --sidebar-border: oklch(0.91 0.015 300);
-  --sidebar-ring: oklch(0.55 0.14 295);
+  --sidebar: oklch(0.965 0.008 282);
+  --sidebar-foreground: oklch(0.25 0.035 282);
+  --sidebar-primary: oklch(0.47 0.13 282);
+  --sidebar-primary-foreground: oklch(0.99 0.004 280);
+  --sidebar-accent: oklch(0.93 0.014 282);
+  --sidebar-accent-foreground: oklch(0.33 0.04 282);
+  --sidebar-border: oklch(0.78 0.014 282);
+  --sidebar-ring: oklch(0.47 0.13 282);
+
+  /* ---------------------------------------------------------------
+     Legacy named palette — now thin ALIASES to the semantic tokens.
+     Previously these were referenced ~40x in .markdown-content and the
+     .gold-* utilities but defined NOWHERE, so the lesson reading surface
+     half-rendered. Aliasing to semantic tokens fixes the bug AND makes
+     them dark-mode-aware automatically (they resolve to whatever the
+     semantic token is at the element). Do not add new usages — prefer
+     the semantic tokens directly.
+     --------------------------------------------------------------- */
+  --royal-purple: var(--primary);
+  --lavender: var(--primary);
+  --deep-plum: var(--foreground);
+  --mauve: var(--muted-foreground);
+  --periwinkle: var(--accent);
+  --cream: var(--card);
+
+  /* Gold / reward accent — mapped onto the single --reward token. */
+  --gold: var(--reward);
+  --gold-light: oklch(0.88 0.10 85);
+  --gold-glow: color-mix(in oklch, var(--reward) 40%, transparent);
+  --gold-subtle: color-mix(in oklch, var(--reward) 15%, transparent);
 }
 
 .dark {
-  /* Terrestrial & Galactical — Dark Mode */
-  /* Immersive deep-space cosmic indigo with lavender + gold that glow */
-  --background: oklch(0.20 0.03 290);
-  --foreground: oklch(0.93 0.02 300);
-  --card: oklch(0.25 0.035 290);
-  --card-foreground: oklch(0.93 0.02 300);
-  --popover: oklch(0.25 0.035 290);
-  --popover-foreground: oklch(0.93 0.02 300);
-  --primary: oklch(0.72 0.12 295);
-  --primary-foreground: oklch(0.20 0.03 290);
-  --secondary: oklch(0.30 0.035 290);
-  --secondary-foreground: oklch(0.90 0.02 300);
-  --muted: oklch(0.28 0.03 290);
-  --muted-foreground: oklch(0.70 0.025 295);
-  --accent: oklch(0.32 0.04 290);
-  --accent-foreground: oklch(0.90 0.02 300);
+  /* Terrestrial & Galactical — Dark Mode (Refined, Chromebook-hardened) */
+  /* Deep observatory indigo (hue ~282, less magenta). Card edges carry a
+     visible border because on cheap panels the card/background tonal gap
+     alone (~1.2:1) disappears at an angle. */
+  --background: oklch(0.17 0.025 280);
+  --foreground: oklch(0.93 0.018 285);
+  --card: oklch(0.255 0.03 282);
+  --card-foreground: oklch(0.93 0.018 285);
+  --popover: oklch(0.255 0.03 282);
+  --popover-foreground: oklch(0.93 0.018 285);
+  --primary: oklch(0.72 0.13 282);
+  --primary-foreground: oklch(0.17 0.025 280);
+  --secondary: oklch(0.31 0.03 282);
+  --secondary-foreground: oklch(0.90 0.02 285);
+  --muted: oklch(0.28 0.025 282);
+  --muted-foreground: oklch(0.72 0.022 285);
+  --accent: oklch(0.33 0.035 282);
+  --accent-foreground: oklch(0.90 0.02 285);
   --reward: oklch(0.82 0.13 80);
   --reward-foreground: oklch(0.22 0.04 285);
   --success: oklch(0.70 0.09 155);
   --destructive: oklch(0.62 0.17 25);
-  --border: oklch(0.34 0.03 290);
-  --input: oklch(0.28 0.03 290);
-  --ring: oklch(0.72 0.12 295);
-  --chart-1: oklch(0.72 0.12 295);
+
+  /* Data-viz palette — dark counterparts (lifted L + slightly higher C so the
+     calm hues stay legible on the deep-indigo dark background). */
+  --viz-up: oklch(0.74 0.08 155);
+  --viz-down: oklch(0.74 0.08 25);
+  --viz-faint: oklch(0.62 0.04 265);
+  --viz-up-surface: color-mix(in oklch, var(--viz-up) 22%, var(--card));
+  --viz-down-surface: color-mix(in oklch, var(--viz-down) 22%, var(--card));
+  --border: oklch(0.42 0.03 282);
+  --input: oklch(0.28 0.025 282);
+  --ring: oklch(0.72 0.13 282);
+  --chart-1: oklch(0.72 0.13 282);
   --chart-2: oklch(0.70 0.08 155);
   --chart-3: oklch(0.82 0.13 80);
   --chart-4: oklch(0.74 0.06 265);
   --chart-5: oklch(0.66 0.15 30);
-  --sidebar: oklch(0.23 0.032 290);
-  --sidebar-foreground: oklch(0.93 0.02 300);
-  --sidebar-primary: oklch(0.72 0.12 295);
-  --sidebar-primary-foreground: oklch(0.20 0.03 290);
-  --sidebar-accent: oklch(0.30 0.035 290);
-  --sidebar-accent-foreground: oklch(0.90 0.02 300);
-  --sidebar-border: oklch(0.34 0.03 290);
-  --sidebar-ring: oklch(0.72 0.12 295);
+  --sidebar: oklch(0.21 0.028 282);
+  --sidebar-foreground: oklch(0.93 0.018 285);
+  --sidebar-primary: oklch(0.72 0.13 282);
+  --sidebar-primary-foreground: oklch(0.17 0.025 280);
+  --sidebar-accent: oklch(0.31 0.03 282);
+  --sidebar-accent-foreground: oklch(0.90 0.02 285);
+  --sidebar-border: oklch(0.42 0.03 282);
+  --sidebar-ring: oklch(0.72 0.13 282);
 }
 
 @layer base {
@@ -211,7 +259,7 @@
     
     .apple-card {
       margin: 0.5rem;
-      border-radius: 0.75rem;
+      border-radius: var(--radius-md);
     }
   }
 }
@@ -231,32 +279,34 @@
   -webkit-backdrop-filter: saturate(150%) blur(12px);
 }
 
-/* Refined Shadow System */
+/* Refined Shadow System.
+   Light-mode shadows are tinted toward the lavender --primary instead of pure
+   black, which reads "soft/expensive" on a tinted surface rather than muddy. */
 .apple-shadow-sm {
-  box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.04),
-    0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--primary) 8%, transparent),
+    0 2px 4px color-mix(in oklch, var(--primary) 5%, transparent);
 }
 
 .apple-shadow {
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    0 4px 16px rgba(0, 0, 0, 0.04),
-    0 8px 32px rgba(0, 0, 0, 0.02);
+  box-shadow:
+    0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent),
+    0 4px 16px color-mix(in oklch, var(--primary) 6%, transparent),
+    0 8px 32px color-mix(in oklch, var(--primary) 4%, transparent);
 }
 
 .apple-shadow-lg {
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 8px 24px rgba(0, 0, 0, 0.05),
-    0 16px 48px rgba(0, 0, 0, 0.03);
+  box-shadow:
+    0 4px 12px color-mix(in oklch, var(--primary) 9%, transparent),
+    0 8px 24px color-mix(in oklch, var(--primary) 7%, transparent),
+    0 16px 48px color-mix(in oklch, var(--primary) 5%, transparent);
 }
 
 .apple-shadow-xl {
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.06),
-    0 16px 48px rgba(0, 0, 0, 0.06),
-    0 32px 64px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 8px 24px color-mix(in oklch, var(--primary) 10%, transparent),
+    0 16px 48px color-mix(in oklch, var(--primary) 8%, transparent),
+    0 32px 64px color-mix(in oklch, var(--primary) 6%, transparent);
 }
 
 /* Dark mode shadow adjustments */
@@ -282,17 +332,18 @@
 
 /* Primary Card - Apple-style glassmorphism */
 .apple-card {
-  background: hsl(var(--card) / 0.8);
+  background: color-mix(in oklch, var(--card) 80%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid hsl(var(--border) / 0.5);
-  border-radius: 1.25rem;
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    0 4px 16px rgba(0, 0, 0, 0.04),
-    0 8px 32px rgba(0, 0, 0, 0.02),
-    inset 0 1px 0 hsl(var(--card) / 0.8);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 2px 8px color-mix(in oklch, var(--primary) 8%, transparent),
+    0 8px 32px color-mix(in oklch, var(--primary) 5%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--card) 80%, transparent);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -304,56 +355,57 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, hsl(var(--foreground) / 0.08), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--foreground) 8%, transparent), transparent);
 }
 
 .apple-card:hover {
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.06),
-    0 8px 24px rgba(0, 0, 0, 0.06),
-    0 16px 48px rgba(0, 0, 0, 0.03),
-    inset 0 1px 0 hsl(var(--card) / 0.9);
+  box-shadow:
+    0 4px 12px color-mix(in oklch, var(--primary) 10%, transparent),
+    0 16px 48px color-mix(in oklch, var(--primary) 6%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--card) 90%, transparent);
   transform: translateY(-2px);
-  border-color: hsl(var(--border) / 0.7);
+  border-color: color-mix(in oklch, var(--border) 70%, transparent);
 }
 
 .dark .apple-card {
-  background: hsl(var(--card) / 0.6);
-  border-color: hsl(var(--border) / 0.3);
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 4px 16px rgba(0, 0, 0, 0.12),
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 hsl(var(--card) / 0.3);
+  background: color-mix(in oklch, var(--card) 60%, transparent);
+  border-color: color-mix(in oklch, var(--border) 30%, transparent);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    0 8px 32px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 color-mix(in oklch, var(--card) 30%, transparent);
 }
 
 .dark .apple-card:hover {
-  background: hsl(var(--card) / 0.7);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.2),
-    0 8px 24px rgba(0, 0, 0, 0.15),
-    0 16px 48px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 hsl(var(--card) / 0.4);
+  background: color-mix(in oklch, var(--card) 70%, transparent);
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.3),
+    0 16px 48px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 color-mix(in oklch, var(--card) 40%, transparent);
 }
 
 /* Apple-style Gradient */
 .apple-gradient {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: linear-gradient(135deg, var(--primary), var(--accent));
 }
 
-/* Apple-style Buttons */
+/* Apple-style Buttons.
+   NOTE: prefer the shadcn <Button> component (the canonical button). These
+   classes are kept only so any stray markup still renders correctly; they now
+   use valid oklch values + color-mix instead of the invalid hsl(var(--oklch)). */
 .apple-button {
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
+  background: var(--primary);
+  color: var(--primary-foreground);
   font-weight: 500;
   font-size: 0.9375rem;
   letter-spacing: -0.01em;
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 
-    0 2px 8px hsl(var(--primary) / 0.3),
-    inset 0 1px 0 hsl(var(--primary-foreground) / 0.1);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 2px 8px color-mix(in oklch, var(--primary) 30%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--primary-foreground) 10%, transparent);
   border: none;
   cursor: pointer;
   position: relative;
@@ -364,39 +416,40 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, hsl(var(--primary-foreground) / 0.1) 0%, transparent 50%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--primary-foreground) 10%, transparent) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .apple-button:hover {
   transform: scale(1.02);
-  box-shadow: 
-    0 4px 16px hsl(var(--primary) / 0.4),
-    inset 0 1px 0 hsl(var(--primary-foreground) / 0.15);
+  box-shadow:
+    0 4px 16px color-mix(in oklch, var(--primary) 40%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--primary-foreground) 15%, transparent);
 }
 
 .apple-button:active {
   transform: scale(0.98);
-  box-shadow: 
-    0 1px 4px hsl(var(--primary) / 0.3),
+  box-shadow:
+    0 1px 4px color-mix(in oklch, var(--primary) 30%, transparent),
     inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .apple-button-secondary {
-  background: hsl(var(--secondary));
-  color: hsl(var(--secondary-foreground));
+  background: var(--secondary);
+  color: var(--secondary-foreground);
   font-weight: 500;
   font-size: 0.9375rem;
   letter-spacing: -0.01em;
   border-radius: 9999px;
   padding: 0.75rem 1.5rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid hsl(var(--border));
+  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border);
   cursor: pointer;
 }
 
 .apple-button-secondary:hover {
-  background: hsl(var(--muted));
+  background: var(--muted);
   transform: scale(1.02);
 }
 
@@ -406,61 +459,65 @@
 
 /* Apple-style Navigation */
 .apple-nav {
-  background: hsl(var(--background) / 0.8);
+  background: color-mix(in oklch, var(--background) 80%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border-bottom: 1px solid hsl(var(--border) / 0.5);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .dark .apple-nav {
-  background: hsl(var(--background) / 0.7);
-  border-bottom-color: hsl(var(--border) / 0.3);
+  background: color-mix(in oklch, var(--background) 70%, transparent);
+  border-bottom-color: color-mix(in oklch, var(--border) 30%, transparent);
 }
 
 /* Apple-style Inputs */
 .apple-input {
-  background: hsl(var(--input));
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.75rem;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  color: hsl(var(--foreground));
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--foreground);
 }
 
 .apple-input:focus {
   outline: none;
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.15);
-  background: hsl(var(--background));
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
+  background: var(--background);
 }
 
 .apple-input::placeholder {
-  color: hsl(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 
 .apple-textarea {
-  background: hsl(var(--input));
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.75rem;
+  background: var(--input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   resize: none;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 
 .apple-textarea:focus {
   outline: none;
-  border-color: hsl(var(--primary));
-  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.15);
-  background: hsl(var(--background));
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
+  background: var(--background);
 }
 
 /* Vibrancy effect for sidebars/panels */
 .apple-vibrancy {
-  background: hsl(var(--background) / 0.6);
+  background: color-mix(in oklch, var(--background) 60%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
@@ -487,113 +544,61 @@
 /* Docusaurus-style markdown rendering */
 .markdown-content {
   line-height: 1.7;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 
+/* Hierarchy is carried by weight, size, and space — not decorative glyphs.
+   (Removed the 📋 ▶ ● ◦ ::before emoji and the h2 background pill.) */
 .markdown-content h1 {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  color: hsl(var(--foreground));
-  margin: 2.5rem 0 1.5rem 0;
-  line-height: 1.2;
-  border-bottom: 3px solid hsl(var(--primary));
-  padding-bottom: 0.75rem;
-  position: relative;
-}
-
-.markdown-content h1::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 60px;
-  height: 3px;
-  background: hsl(var(--primary));
-  border-radius: 1.5px;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+  margin: 2.5rem 0 1.25rem 0;
+  line-height: 1.15;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .markdown-content h2 {
-  font-size: 1.875rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: hsl(var(--foreground));
-  margin: 2.5rem 0 1rem 0;
-  line-height: 1.3;
-  position: relative;
-  padding: 0.75rem 0 0.75rem 2rem;
-  background: hsl(var(--secondary) / 0.3);
-  border-radius: 0.5rem;
-  border-left: 4px solid hsl(var(--primary));
-}
-
-.markdown-content h2::before {
-  content: '📋';
-  position: absolute;
-  left: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1rem;
+  letter-spacing: -0.015em;
+  color: var(--foreground);
+  margin: 2.5rem 0 0.85rem 0;
+  line-height: 1.25;
 }
 
 .markdown-content h3 {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  color: hsl(var(--primary));
-  margin: 2rem 0 0.75rem 0;
-  line-height: 1.4;
-  position: relative;
-  padding-left: 1.5rem;
-}
-
-.markdown-content h3::before {
-  content: '▶';
-  position: absolute;
-  left: 0;
-  top: 0.1rem;
-  color: var(--lavender);
-  font-size: 1rem;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+  margin: 1.85rem 0 0.6rem 0;
+  line-height: 1.35;
 }
 
 .markdown-content h4 {
-  font-size: 1.25rem;
+  font-size: 1.0625rem;
   font-weight: 600;
-  color: hsl(var(--primary));
-  margin: 1.5rem 0 0.5rem 0;
-  position: relative;
-  padding-left: 1.25rem;
-}
-
-.markdown-content h4::before {
-  content: '●';
-  position: absolute;
-  left: 0;
-  top: 0.2rem;
-  color: var(--mauve);
-  font-size: 0.8rem;
+  color: var(--foreground);
+  margin: 1.4rem 0 0.4rem 0;
 }
 
 .markdown-content h5 {
-  font-size: 1.1rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: hsl(var(--primary));
-  margin: 1.25rem 0 0.5rem 0;
-  position: relative;
-  padding-left: 1rem;
-}
-
-.markdown-content h5::before {
-  content: '◦';
-  position: absolute;
-  left: 0;
-  top: 0.2rem;
-  color: var(--mauve);
-  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 1.2rem 0 0.4rem 0;
 }
 
 .markdown-content p {
   margin: 1rem 0;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
   line-height: 1.7;
-  font-size: 1.1rem;
+  font-size: 1.0625rem;
 }
 
 .markdown-content ul, .markdown-content ol {
@@ -977,6 +982,8 @@
   overflow: hidden;
 }
 
+/* Sweep runs once on hover/focus — a deliberate reward gesture, not an idle
+   ambient shimmer. (Was: animation: shine 3s infinite.) */
 .gold-shine::before {
   content: '';
   position: absolute;
@@ -985,10 +992,17 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(90deg, transparent, var(--gold-glow), transparent);
-  animation: shine 3s infinite;
+}
+
+.gold-shine:hover::before,
+.gold-shine:focus-visible::before {
+  animation: shine 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes shine {
+  from {
+    left: -100%;
+  }
   to {
     left: 100%;
   }
@@ -1352,10 +1366,10 @@
 /* Glow pulse for active states */
 @keyframes apple-glow-pulse {
   0%, 100% {
-    box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4);
+    box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 40%, transparent);
   }
   50% {
-    box-shadow: 0 0 0 8px hsl(var(--primary) / 0);
+    box-shadow: 0 0 0 8px color-mix(in oklch, var(--primary) 0%, transparent);
   }
 }
 
@@ -1376,9 +1390,9 @@
 .apple-shimmer {
   background: linear-gradient(
     90deg,
-    hsl(var(--muted)) 0%,
-    hsl(var(--muted-foreground) / 0.1) 50%,
-    hsl(var(--muted)) 100%
+    var(--muted) 0%,
+    color-mix(in oklch, var(--muted-foreground) 10%, transparent) 50%,
+    var(--muted) 100%
   );
   background-size: 200% 100%;
   animation: apple-shimmer 1.5s ease-in-out infinite;
@@ -1392,7 +1406,7 @@
 /* Focus ring - Apple style */
 .apple-focus-ring:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 4px hsl(var(--primary) / 0.15);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--primary) 15%, transparent);
 }
 
 /* Subtle gradient overlay on hover */
@@ -1400,7 +1414,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, transparent 50%);
+  background: linear-gradient(135deg, color-mix(in oklch, var(--primary) 5%, transparent) 0%, transparent 50%);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -1413,17 +1427,17 @@
 
 /* Glass morphism card variants */
 .glass-card {
-  background: hsl(var(--card) / 0.7);
+  background: color-mix(in oklch, var(--card) 70%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid hsl(var(--border) / 0.5);
+  border: 1px solid color-mix(in oklch, var(--border) 50%, transparent);
 }
 
 .glass-card-dark {
-  background: hsl(var(--card) / 0.4);
+  background: color-mix(in oklch, var(--card) 40%, transparent);
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
-  border: 1px solid hsl(var(--border) / 0.3);
+  border: 1px solid color-mix(in oklch, var(--border) 30%, transparent);
 }
 
 /* Typography enhancements */
@@ -1459,7 +1473,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    hsl(var(--border)),
+    var(--border),
     transparent
   );
 }
@@ -1486,11 +1500,111 @@
 }
 
 .apple-scrollbar::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: color-mix(in oklch, var(--muted-foreground) 30%, transparent);
   border-radius: 4px;
 }
 
 .apple-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: color-mix(in oklch, var(--muted-foreground) 50%, transparent);
+}
+
+/* ============================================= */
+/* Type scale — one modular ramp                 */
+/* ============================================= */
+/* Size + weight + tracking + leading bundled together so headings are
+   consistent everywhere. Tracking tightens as size grows (the Apple feel).
+   Roll these out across screens to replace ad-hoc text-* sizing over time. */
+.text-display {
+  font-size: clamp(2.25rem, 1.6rem + 2.2vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+.text-title-1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.text-title-2 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.text-title-3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.text-body {
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.55;
+}
+.text-callout {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.45;
+}
+.text-caption {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.35;
+  color: var(--muted-foreground);
+}
+.text-overline {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+/* ============================================= */
+/* Reduced-motion guard (accessibility + calm)   */
+/* ============================================= */
+/* Students who set "reduce motion" (or who get anxious from looping glow/
+   shimmer/float effects) get a near-static UI: transitions collapse to a
+   single frame and looping animations stop. This is the one global override
+   that covers every animation in the file, including the game effects. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================= */
+/* Card elevation — the one shared card shadow    */
+/* ============================================= */
+/* Tinted toward the indigo primary (not pure black) so it reads soft, not
+   muddy, on the lavender surface. Used by the shadcn <Card> so every card in
+   the app shares one elevation language. Hover lift is gentle and single-step. */
+.card-elevation {
+  box-shadow:
+    0 1px 2px color-mix(in oklch, var(--primary) 7%, transparent),
+    0 6px 20px color-mix(in oklch, var(--primary) 5%, transparent);
+  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-elevation:hover {
+  box-shadow:
+    0 4px 10px color-mix(in oklch, var(--primary) 9%, transparent),
+    0 12px 32px color-mix(in oklch, var(--primary) 6%, transparent);
+}
+.dark .card-elevation {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 8px 28px rgba(0,0,0,0.18);
+}
+.dark .card-elevation:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.30), 0 16px 40px rgba(0,0,0,0.22);
 }
 

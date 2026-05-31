@@ -53,7 +53,7 @@ export interface MasteryGrowthProps {
 
 function TrendIcon({ trend }: { trend: Trend }) {
   if (trend === "none") return null;
-  const color = trend === "up" ? PALETTE.sage : trend === "down" ? "#C08B8B" : PALETTE.indigoMuted;
+  const color = trend === "up" ? PALETTE.sage : trend === "down" ? "var(--viz-down)" : PALETTE.indigoMuted;
   const d =
     trend === "up"
       ? "M3 13l5-5 4 4 6-7"
@@ -97,7 +97,7 @@ export default function MasteryGrowth({
 
   return (
     <div
-      style={{ background: "#FAF9FC", color: PALETTE.indigo }}
+      style={{ background: "var(--card)", color: PALETTE.indigo }}
       className="rounded-xl border p-5 sm:p-6"
     >
       <div className="flex items-baseline justify-between gap-3">
@@ -121,10 +121,10 @@ export default function MasteryGrowth({
           return (
             <div
               key={domain}
-              className="rounded-lg border bg-white p-3.5"
+              className="rounded-lg border bg-card p-3.5"
               style={{ borderColor: PALETTE.hairline, borderStyle: empty ? "dashed" : "solid" }}
             >
-              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: empty ? "#9A97B5" : "#4A4470" }}>
+              <div className="flex items-center gap-2 text-sm font-medium" style={{ color: empty ? "var(--muted-foreground)" : "var(--foreground)" }}>
                 <span
                   aria-hidden
                   style={{ width: 8, height: 8, borderRadius: 2, background: empty ? PALETTE.periwinkle : PALETTE.lavender }}
@@ -132,7 +132,7 @@ export default function MasteryGrowth({
                 {DOMAIN_LABEL[domain]}
               </div>
               {empty ? (
-                <p className="text-sm mt-2.5 leading-snug" style={{ color: "#9A97B5" }}>
+                <p className="text-sm mt-2.5 leading-snug" style={{ color: "var(--muted-foreground)" }}>
                   {domain === "product"
                     ? "Shows up in your transfer task — no growth-line data yet."
                     : "No evidence recorded yet."}
@@ -145,7 +145,7 @@ export default function MasteryGrowth({
                       {levelWord(value)}
                     </span>
                   </div>
-                  <div className="h-1.5 rounded my-1.5" style={{ background: "#EEEBF5" }}>
+                  <div className="h-1.5 rounded my-1.5" style={{ background: "var(--secondary)" }}>
                     <div
                       className="h-full rounded"
                       style={{ width: `${Math.round((value! / 3) * 100)}%`, background: levelColor(value) }}
@@ -160,10 +160,10 @@ export default function MasteryGrowth({
       </div>
 
       {/* This unit's targets */}
-      <p className="text-sm font-medium mt-5 mb-1" style={{ color: "#4A4470" }}>
+      <p className="text-sm font-medium mt-5 mb-1" style={{ color: "var(--foreground)" }}>
         This unit&apos;s targets
       </p>
-      <div className="rounded-lg border bg-white px-4" style={{ borderColor: PALETTE.hairline }}>
+      <div className="rounded-lg border bg-card px-4" style={{ borderColor: PALETTE.hairline }}>
         {targets
           .filter((t) => !t.excludeFromGrowth)
           .map((t, i) => {
@@ -175,11 +175,11 @@ export default function MasteryGrowth({
               <div
                 key={t.id}
                 className="flex items-center gap-3 py-2.5"
-                style={{ borderTop: i === 0 ? "none" : `0.5px solid #EEEBF5` }}
+                style={{ borderTop: i === 0 ? "none" : `0.5px solid var(--secondary)` }}
               >
                 <span
                   className="text-[11px] font-medium rounded px-2 py-0.5"
-                  style={{ background: "#EEEBF6", color: "#4A4470" }}
+                  style={{ background: "var(--secondary)", color: "var(--foreground)" }}
                   title={DOMAIN_LABEL[t.domain]}
                 >
                   {tag}
@@ -198,14 +198,14 @@ export default function MasteryGrowth({
       {taskResult && (
         <>
           <div className="flex items-center gap-2 mt-6 mb-1">
-            <div className="flex-1" style={{ height: "0.5px", background: "#D8D2E6" }} />
-            <span className="text-[11px]" style={{ color: "#9A97B5", letterSpacing: "0.3px" }}>
+            <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
+            <span className="text-[11px]" style={{ color: "var(--muted-foreground)", letterSpacing: "0.3px" }}>
               scored separately · not part of your growth lines
             </span>
-            <div className="flex-1" style={{ height: "0.5px", background: "#D8D2E6" }} />
+            <div className="flex-1" style={{ height: "0.5px", background: "var(--border)" }} />
           </div>
-          <div className="rounded-lg border p-4" style={{ background: "#F4F2FA", borderColor: PALETTE.hairline }}>
-            <div className="text-sm font-medium mb-2.5" style={{ color: "#4A4470" }}>
+          <div className="rounded-lg border p-4" style={{ background: "var(--muted)", borderColor: PALETTE.hairline }}>
+            <div className="text-sm font-medium mb-2.5" style={{ color: "var(--foreground)" }}>
               Transfer task — readiness
             </div>
             <div className="grid gap-2.5" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))" }}>
@@ -216,7 +216,7 @@ export default function MasteryGrowth({
                     <div className="text-xs mb-1" style={{ color: PALETTE.indigoMuted }}>
                       {RUBRIC_LABEL[dim]}
                     </div>
-                    <div className="h-1.5 rounded" style={{ background: "#E4DFEF" }}>
+                    <div className="h-1.5 rounded" style={{ background: "var(--border)" }}>
                       <div
                         className="h-full rounded"
                         style={{ width: `${Math.round((score / 4) * 100)}%`, background: score >= 3 ? PALETTE.sage : PALETTE.lavender }}
@@ -230,7 +230,7 @@ export default function MasteryGrowth({
               })}
             </div>
             {taskResult.overall !== undefined && (
-              <div className="text-xs mt-3 pt-2.5" style={{ color: PALETTE.indigoMuted, borderTop: "0.5px solid #E4DFEF" }}>
+              <div className="text-xs mt-3 pt-2.5" style={{ color: PALETTE.indigoMuted, borderTop: "0.5px solid var(--border)" }}>
                 Lowest dimension sets the overall:{" "}
                 <span className="font-medium" style={{ color: PALETTE.indigo }}>
                   {taskResult.overall} of 4

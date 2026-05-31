@@ -89,14 +89,14 @@ export default function Navbar() {
         <button onClick={() => { clearViewAs(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
     )}
-    <nav className="sticky top-0 z-50 border-b border-border/40 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Brand Logo - Apple-style clean typography with earth tones */}
           <div className="flex items-center gap-3 sm:gap-4">
             <Link href="/" className="group flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors duration-200">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 flex items-center justify-center shadow-lg shadow-emerald-600/25">
-                <span className="text-white text-sm font-bold">φ</span>
+              <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
+                <span className="text-primary-foreground text-sm font-bold">φ</span>
               </div>
               <span className="text-base sm:text-lg tracking-tight">
                 <span className="block sm:hidden">Physics</span>

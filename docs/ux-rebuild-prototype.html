@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-palette="current">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Antocci Physics — UX Rebuild Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     Real tokens, copied from the app's globals.css (oklch).
+     Both modes defined so the prototype adapts exactly like the app.
+     ============================================================ */
+  :root, [data-theme="light"] {
+    --background: oklch(0.985 0.006 300);
+    --foreground: oklch(0.27 0.04 290);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.55 0.14 295);
+    --primary-foreground: oklch(0.99 0.005 300);
+    --secondary: oklch(0.95 0.02 300);
+    --muted: oklch(0.96 0.012 300);
+    --muted-foreground: oklch(0.50 0.03 290);
+    --accent: oklch(0.93 0.03 300);
+    --reward: oklch(0.80 0.13 80);
+    --reward-foreground: oklch(0.28 0.04 285);
+    --success: oklch(0.62 0.08 155);
+    --border: oklch(0.91 0.015 300);
+    --viz-up: oklch(0.60 0.05 155);
+    --viz-down: oklch(0.64 0.07 25);
+    --radius: 1rem;
+    --shadow-color: 290 40% 40%;
+  }
+  [data-theme="dark"] {
+    --background: oklch(0.20 0.03 290);
+    --foreground: oklch(0.93 0.02 300);
+    --card: oklch(0.25 0.035 290);
+    --primary: oklch(0.72 0.12 295);
+    --primary-foreground: oklch(0.20 0.03 290);
+    --secondary: oklch(0.30 0.035 290);
+    --muted: oklch(0.28 0.03 290);
+    --muted-foreground: oklch(0.70 0.025 295);
+    --accent: oklch(0.32 0.04 290);
+    --reward: oklch(0.82 0.13 80);
+    --reward-foreground: oklch(0.22 0.04 285);
+    --success: oklch(0.70 0.09 155);
+    --border: oklch(0.34 0.03 290);
+    --viz-up: oklch(0.74 0.08 155);
+    --viz-down: oklch(0.74 0.08 25);
+  }
+
+  /* ============================================================
+     REFINED palette — deeper, truer indigo (hue ~280 not ~300),
+     primary darkened in light mode for authority, pink pulled out
+     of the light surfaces so they read cool-neutral, not sweet.
+     ============================================================ */
+  [data-palette="refined"][data-theme="light"] {
+    --background: oklch(0.985 0.004 280);
+    --foreground: oklch(0.25 0.035 282);
+    --card: oklch(1 0 0);
+    --primary: oklch(0.47 0.13 282);
+    --primary-foreground: oklch(0.99 0.004 280);
+    --secondary: oklch(0.93 0.014 282);
+    --muted: oklch(0.955 0.01 282);
+    --muted-foreground: oklch(0.46 0.025 282);
+    --accent: oklch(0.91 0.022 282);
+    --border: oklch(0.78 0.014 282);
+  }
+  [data-palette="refined"][data-theme="dark"] {
+    --background: oklch(0.17 0.025 280);
+    --foreground: oklch(0.93 0.018 285);
+    --card: oklch(0.255 0.03 282);
+    --primary: oklch(0.72 0.13 282);
+    --primary-foreground: oklch(0.17 0.025 280);
+    --secondary: oklch(0.31 0.03 282);
+    --muted: oklch(0.28 0.025 282);
+    --muted-foreground: oklch(0.72 0.022 285);
+    --accent: oklch(0.33 0.035 282);
+    --border: oklch(0.42 0.03 282);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    letter-spacing: -0.011em;
+    min-height: 100vh;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* The cosmic hub backdrop (subtle, calm version) */
+  .sky {
+    position: fixed; inset: 0; z-index: -2;
+    background:
+      radial-gradient(60% 50% at 82% -6%, color-mix(in oklch, var(--secondary) 75%, transparent), transparent 70%),
+      radial-gradient(52% 42% at 8% 2%, color-mix(in oklch, var(--primary) 18%, transparent), transparent 62%),
+      var(--background);
+  }
+  .stars { position: fixed; inset: 0; z-index: -1; opacity: 0.5;
+    background-image:
+      radial-gradient(1.3px 1.3px at 14% 16%, var(--foreground), transparent),
+      radial-gradient(1.1px 1.1px at 32% 44%, var(--foreground), transparent),
+      radial-gradient(1.4px 1.4px at 52% 10%, var(--foreground), transparent),
+      radial-gradient(1.1px 1.1px at 68% 30%, var(--foreground), transparent),
+      radial-gradient(1.3px 1.3px at 82% 22%, var(--foreground), transparent),
+      radial-gradient(1.1px 1.1px at 90% 52%, var(--foreground), transparent),
+      radial-gradient(1.2px 1.2px at 38% 70%, var(--foreground), transparent),
+      radial-gradient(1.1px 1.1px at 73% 78%, var(--foreground), transparent);
+  }
+  [data-theme="light"] .stars { opacity: 0.22; }
+
+  /* ---- Type scale ---- */
+  .t-display { font-size: 2rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.08; }
+  .t-title   { font-size: 1.35rem; font-weight: 650; letter-spacing: -0.02em; line-height: 1.15; }
+  .t-section { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em; }
+  .t-body    { font-size: 1.0625rem; font-weight: 400; line-height: 1.65; color: var(--foreground); }
+  .t-meta    { font-size: 0.8125rem; font-weight: 500; color: var(--muted-foreground); }
+  .overline  { font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-foreground); }
+
+  /* ---- Card ---- */
+  .card {
+    background: color-mix(in oklch, var(--card) 82%, transparent);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow:
+      0 2px 8px color-mix(in oklch, var(--primary) 7%, transparent),
+      0 12px 40px color-mix(in oklch, var(--primary) 5%, transparent);
+  }
+  [data-theme="dark"] .card { box-shadow: 0 2px 8px rgba(0,0,0,0.25), 0 16px 48px rgba(0,0,0,0.18); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; font-weight: 600; border-radius: 999px; padding: 5px 12px;
+  }
+
+  /* ---- Shell ---- */
+  .shell { max-width: 760px; margin: 0 auto; padding: 22px 22px 64px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 26px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -0.02em; }
+  .logo { width: 30px; height: 30px; border-radius: 9px; background: var(--primary); color: var(--primary-foreground);
+    display: grid; place-items: center; font-weight: 800; font-size: 15px; }
+
+  /* segmented control */
+  .seg { display: inline-flex; background: var(--muted); border-radius: 999px; padding: 3px; gap: 2px; }
+  .seg button { font: inherit; font-size: 0.8125rem; font-weight: 600; border: 0; cursor: pointer;
+    padding: 7px 16px; border-radius: 999px; background: transparent; color: var(--muted-foreground); transition: all 0.22s ease; }
+  .seg button[aria-selected="true"] { background: var(--card); color: var(--foreground);
+    box-shadow: 0 1px 3px color-mix(in oklch, var(--primary) 18%, transparent); }
+
+  .iconbtn { width: 38px; height: 38px; border-radius: 999px; border: 1px solid var(--border);
+    background: color-mix(in oklch, var(--card) 70%, transparent); cursor: pointer; font-size: 16px;
+    display: grid; place-items: center; color: var(--foreground); transition: all 0.2s ease; }
+  .iconbtn:hover { transform: scale(1.05); }
+
+  /* greeting */
+  .greet { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 26px; flex-wrap: wrap; }
+  .avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(150deg, var(--primary), var(--accent));
+    color: var(--primary-foreground); display: grid; place-items: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+  .stat-row { display: flex; gap: 10px; align-items: center; }
+
+  .lane { margin-bottom: 22px; }
+  .lane-head { display: flex; align-items: center; gap: 8px; margin: 0 2px 11px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* progress */
+  .track { height: 7px; border-radius: 999px; background: var(--secondary); overflow: hidden; }
+  .fill { height: 100%; border-radius: 999px; background: var(--primary); width: 0; transition: width 1.1s cubic-bezier(0.16,1,0.3,1); }
+
+  /* lesson sequence chips */
+  .seq { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 14px; }
+  .node { display: flex; align-items: center; gap: 7px; font-size: 0.8125rem; font-weight: 500; padding: 6px 12px 6px 8px;
+    border-radius: 999px; border: 1px solid var(--border); color: var(--muted-foreground); }
+  .node b { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; }
+  .node.done b { background: var(--success); color: #fff; }
+  .node.current { border-color: var(--primary); color: var(--foreground); background: color-mix(in oklch, var(--primary) 8%, transparent); }
+  .node.current b { background: var(--primary); color: var(--primary-foreground); }
+  .node.todo b { background: var(--secondary); color: var(--muted-foreground); }
+
+  .btn-primary { font: inherit; font-size: 0.9375rem; font-weight: 600; border: 0; cursor: pointer;
+    background: var(--primary); color: var(--primary-foreground); border-radius: 999px; padding: 11px 22px;
+    box-shadow: 0 2px 10px color-mix(in oklch, var(--primary) 28%, transparent); transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .btn-primary:hover { transform: scale(1.02); box-shadow: 0 4px 16px color-mix(in oklch, var(--primary) 38%, transparent); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost { font: inherit; font-size: 0.9375rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border);
+    background: transparent; color: var(--foreground); border-radius: 999px; padding: 10px 20px; transition: background 0.2s ease; }
+  .btn-ghost:hover { background: var(--muted); }
+
+  /* lesson reading surface */
+  .reading h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; margin: 2rem 0 0.85rem; }
+  .reading p { font-size: 1.0625rem; line-height: 1.72; margin: 0 0 1rem; color: color-mix(in oklch, var(--foreground) 92%, var(--muted-foreground)); }
+  .eq-display { background: var(--muted); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px;
+    text-align: center; font-size: 1.3rem; margin: 1.25rem 0; font-family: 'Inter'; }
+  .eq-display i { font-style: normal; }
+  .frac { display: inline-flex; flex-direction: column; vertical-align: middle; text-align: center; margin: 0 4px; }
+  .frac span:first-child { border-bottom: 1.5px solid currentColor; padding: 0 6px; }
+  sub { font-size: 0.7em; }
+
+  /* GIVEN/EQUATION/WORK/ANSWER solve box */
+  .solve { display: grid; gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin: 1.5rem 0; }
+  .solve-row { display: grid; grid-template-columns: 132px 1fr; align-items: start; }
+  .solve-row + .solve-row { border-top: 1px solid var(--border); }
+  .solve-key { display: flex; align-items: center; gap: 9px; padding: 14px 16px; background: var(--muted); }
+  .solve-key b { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-size: 13px; font-weight: 700; color: #fff; }
+  .solve-key span { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-foreground); }
+  .solve-val { padding: 14px 16px; font-size: 1rem; }
+
+  /* embedded sim */
+  .sim { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 14px;
+    border: 1px solid var(--border); background: color-mix(in oklch, var(--primary) 5%, var(--card)); margin: 1.5rem 0; }
+  .sim-thumb { width: 72px; height: 56px; border-radius: 10px; flex-shrink: 0;
+    background: radial-gradient(circle at 30% 30%, var(--primary), color-mix(in oklch, var(--primary) 40%, var(--card)));
+    position: relative; overflow: hidden; }
+  .sim-thumb::after { content: ''; position: absolute; width: 14px; height: 14px; border-radius: 50%; background: var(--reward);
+    top: 16px; left: 14px; box-shadow: 18px 14px 0 -2px color-mix(in oklch, var(--card) 80%, transparent); }
+
+  .footnav { display: flex; justify-content: space-between; gap: 12px; margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+  .footnav a { text-decoration: none; color: var(--foreground); display: flex; flex-direction: column; gap: 2px; padding: 10px 16px;
+    border-radius: 12px; border: 1px solid var(--border); transition: all 0.2s ease; max-width: 47%; }
+  .footnav a:hover { border-color: var(--primary); background: color-mix(in oklch, var(--primary) 6%, transparent); }
+  .footnav .nl { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-foreground); }
+  .footnav .nt { font-size: 0.9375rem; font-weight: 600; }
+  .footnav .next { text-align: right; align-items: flex-end; margin-left: auto; }
+
+  /* entrance motion */
+  .stagger > * { opacity: 0; transform: translateY(10px); animation: rise 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .stagger > *:nth-child(1){animation-delay:.04s}.stagger > *:nth-child(2){animation-delay:.09s}
+  .stagger > *:nth-child(3){animation-delay:.14s}.stagger > *:nth-child(4){animation-delay:.19s}
+  .stagger > *:nth-child(5){animation-delay:.24s}.stagger > *:nth-child(6){animation-delay:.29s}
+  @keyframes rise { to { opacity: 1; transform: none; } }
+  .hidden { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    .stagger > * { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sky"></div>
+<div class="stars"></div>
+
+<div class="shell">
+  <div class="topbar">
+    <div class="brand"><span class="logo">A</span> Antocci Physics</div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:flex-end;">
+      <div class="seg" role="tablist" aria-label="Screen">
+        <button id="tab-home" role="tab" aria-selected="true" onclick="show('home')">Home</button>
+        <button id="tab-lesson" role="tab" aria-selected="false" onclick="show('lesson')">Lesson</button>
+      </div>
+      <div class="seg" aria-label="Palette">
+        <button id="pal-current" aria-selected="true" onclick="setPal('current')">Current</button>
+        <button id="pal-refined" aria-selected="false" onclick="setPal('refined')">Refined</button>
+      </div>
+      <button class="iconbtn" id="themebtn" aria-label="Toggle dark mode" onclick="toggleTheme()">◐</button>
+    </div>
+  </div>
+
+  <!-- ===================== HOME ===================== -->
+  <main id="screen-home" class="stagger">
+    <div class="greet">
+      <div style="display:flex; align-items:center; gap:13px;">
+        <div class="avatar">M</div>
+        <div>
+          <div class="t-title">Good afternoon, Maya</div>
+          <div class="t-meta">Unit 3 · Kinematics</div>
+        </div>
+      </div>
+      <div class="stat-row">
+        <span class="pill" style="background:color-mix(in oklch, var(--reward) 22%, transparent); color:var(--reward-foreground);">★ 1,240 XP</span>
+        <span class="pill" style="background:color-mix(in oklch, var(--success) 18%, transparent); color:var(--success);">
+          <span class="dot" style="background:var(--success); box-shadow:0 0 8px var(--success);"></span> 6-day streak</span>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-head"><span class="dot" style="background:var(--secondary);"></span><span class="overline">Today's math warm-up</span></div>
+      <div class="card" style="padding:18px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px;">
+        <div>
+          <div class="t-section">2 quick proportions</div>
+          <div class="t-meta" style="margin-top:3px;">Keeps your number sense sharp · ~3 min</div>
+        </div>
+        <button class="btn-primary">Start</button>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-head"><span class="dot" style="background:var(--primary);"></span><span class="overline">Continue your journey</span></div>
+      <div class="card" style="padding:22px 22px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:14px;">
+          <div>
+            <div class="overline" style="color:var(--primary);">Lesson 4</div>
+            <div class="t-title" style="margin:3px 0 2px;">Acceleration &amp; the kinematic equations</div>
+            <div class="t-meta">62% complete · about 8 min left</div>
+          </div>
+          <button class="btn-primary">Resume</button>
+        </div>
+        <div class="track" style="margin-top:16px;"><div class="fill" data-w="62"></div></div>
+        <div class="seq">
+          <span class="node done"><b>✓</b> Velocity</span>
+          <span class="node done"><b>✓</b> Avg vs inst.</span>
+          <span class="node current"><b>4</b> Acceleration</span>
+          <span class="node todo"><b>5</b> Free fall</span>
+          <span class="node todo"><b>6</b> Graphs</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-head"><span class="dot" style="background:var(--reward);"></span><span class="overline">Your mastery climb</span></div>
+      <div class="card" style="padding:20px 22px;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <div class="t-section">Reasoning</div>
+          <div class="t-meta">trending up</div>
+        </div>
+        <svg viewBox="0 0 320 90" width="100%" height="90" style="margin-top:8px; overflow:visible;" role="img" aria-label="Mastery climbing over time">
+          <polyline points="6,72 58,64 110,66 162,48 214,40 266,26 314,18" fill="none" stroke="var(--primary)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="72" r="4" fill="var(--primary)"/><circle cx="58" cy="64" r="4" fill="var(--primary)"/>
+          <circle cx="110" cy="66" r="4" fill="var(--primary)"/><circle cx="162" cy="48" r="4" fill="var(--primary)"/>
+          <circle cx="214" cy="40" r="4" fill="var(--primary)"/><circle cx="266" cy="26" r="4" fill="var(--primary)"/>
+          <circle cx="314" cy="18" r="5" fill="var(--reward)"/>
+        </svg>
+        <div style="display:flex; gap:8px; margin-top:6px;">
+          <span class="pill" style="background:var(--viz-up-surface, color-mix(in oklch, var(--viz-up) 14%, var(--card))); color:var(--viz-up);">★ 7 of 11 skills fluent</span>
+          <span class="pill" style="background:var(--muted); color:var(--muted-foreground);">2 strands complete</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane">
+      <div class="lane-head"><span class="dot" style="background:var(--success);"></span><span class="overline">Side quest — optional, still earns XP</span></div>
+      <div class="card" style="padding:18px 20px; display:flex; align-items:center; gap:16px;">
+        <div class="sim-thumb" style="width:84px; height:60px;"></div>
+        <div style="flex:1;">
+          <div class="overline" style="color:var(--primary);">Picked for you · Simulation</div>
+          <div class="t-section" style="margin:3px 0 6px;">Projectile motion: hit the target</div>
+          <span class="pill" style="background:var(--reward); color:var(--reward-foreground);">★ +15 XP</span>
+        </div>
+        <button class="btn-ghost">Play</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===================== LESSON ===================== -->
+  <main id="screen-lesson" class="stagger hidden">
+    <div class="t-meta" style="margin-bottom:6px;">Unit 3 · Kinematics · Lesson 4</div>
+    <h1 class="t-display">Acceleration &amp; the kinematic equations</h1>
+    <div style="display:flex; align-items:center; gap:14px; margin:14px 0 4px;">
+      <span class="t-meta"><i style="font-style:normal;">◷</i> ~18 min</span>
+      <span class="t-meta">62% complete</span>
+      <div class="track" style="flex:1; max-width:220px;"><div class="fill" data-w="62"></div></div>
+    </div>
+
+    <div class="reading">
+      <h2>What acceleration really measures</h2>
+      <p>Acceleration is the rate at which velocity changes. If a cart speeds up by the same amount every second, its acceleration is constant — and that single fact is what makes the kinematic equations work.</p>
+      <p>Whenever velocity changes by a steady amount, we can predict position and speed at any moment with three equations. The first connects velocity, time, and acceleration:</p>
+
+      <div class="eq-display">v = v<sub>0</sub> + a<i>t</i></div>
+
+      <p>Here <i>v</i>₀ is the starting velocity, <i>a</i> is the acceleration, and <i>t</i> is the time elapsed. Notice it's just the definition of acceleration, rearranged.</p>
+
+      <h2>Worked example</h2>
+      <p>A cart starts at 2 m/s and accelerates at 3 m/s² for 4 seconds. How fast is it moving at the end?</p>
+
+      <div class="solve">
+        <div class="solve-row">
+          <div class="solve-key"><b style="background:var(--viz-up);">G</b><span>Given</span></div>
+          <div class="solve-val">v₀ = 2 m/s &nbsp;·&nbsp; a = 3 m/s² &nbsp;·&nbsp; t = 4 s</div>
+        </div>
+        <div class="solve-row">
+          <div class="solve-key"><b style="background:var(--primary);">E</b><span>Equation</span></div>
+          <div class="solve-val">v = v₀ + a<i>t</i></div>
+        </div>
+        <div class="solve-row">
+          <div class="solve-key"><b style="background:var(--muted-foreground);">W</b><span>Work</span></div>
+          <div class="solve-val">v = 2 + (3)(4) = 2 + 12</div>
+        </div>
+        <div class="solve-row">
+          <div class="solve-key"><b style="background:var(--reward); color:var(--reward-foreground);">A</b><span>Answer</span></div>
+          <div class="solve-val" style="font-weight:600;">v = 14 m/s</div>
+        </div>
+      </div>
+
+      <h2>See it move</h2>
+      <p>Run the simulation below. Change the acceleration and watch how the velocity graph's slope changes — the slope <em>is</em> the acceleration.</p>
+
+      <div class="sim">
+        <div class="sim-thumb"></div>
+        <div style="flex:1;">
+          <div class="overline" style="color:var(--primary);">Interactive · Simulation</div>
+          <div class="t-section" style="margin-top:3px;">Uniformly accelerated motion</div>
+          <div class="t-meta" style="margin-top:2px;">Drag the slider · earns ★ +10 XP</div>
+        </div>
+        <button class="btn-primary">Open</button>
+      </div>
+    </div>
+
+    <div class="footnav">
+      <a href="#"><span class="nl">← Previous</span><span class="nt">Average vs. instantaneous</span></a>
+      <a href="#" class="next"><span class="nl">Next →</span><span class="nt">Free fall</span></a>
+    </div>
+  </main>
+</div>
+
+<script>
+  function show(which){
+    document.getElementById('screen-home').classList.toggle('hidden', which!=='home');
+    document.getElementById('screen-lesson').classList.toggle('hidden', which!=='lesson');
+    document.getElementById('tab-home').setAttribute('aria-selected', which==='home');
+    document.getElementById('tab-lesson').setAttribute('aria-selected', which==='lesson');
+    animateBars();
+  }
+  function toggleTheme(){
+    const r = document.documentElement;
+    r.setAttribute('data-theme', r.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+  }
+  function setPal(p){
+    document.documentElement.setAttribute('data-palette', p);
+    document.getElementById('pal-current').setAttribute('aria-selected', p==='current');
+    document.getElementById('pal-refined').setAttribute('aria-selected', p==='refined');
+  }
+  function animateBars(){
+    requestAnimationFrame(()=>{
+      document.querySelectorAll('.fill').forEach(f=>{ f.style.width = '0'; });
+      requestAnimationFrame(()=>{
+        document.querySelectorAll('main:not(.hidden) .fill').forEach(f=>{ f.style.width = f.dataset.w + '%'; });
+      });
+    });
+  }
+  animateBars();
+</script>
+</body>
+</html>

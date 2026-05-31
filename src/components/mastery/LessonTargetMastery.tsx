@@ -30,7 +30,7 @@ export interface LessonTargetMasteryProps {
 
 function TrendIcon({ trend }: { trend: Trend }) {
   if (trend === "none") return null;
-  const color = trend === "up" ? PALETTE.sage : trend === "down" ? "#C08B8B" : PALETTE.indigoMuted;
+  const color = trend === "up" ? PALETTE.sage : trend === "down" ? "var(--viz-down)" : PALETTE.indigoMuted;
   const d = trend === "up" ? "M3 13l5-5 4 4 6-7" : trend === "down" ? "M3 6l5 5 4-4 6 7" : "M3 10h15";
   return (
     <svg width={18} height={18} viewBox="0 0 21 21" aria-label={`trend ${trend}`} role="img">
@@ -73,11 +73,11 @@ export default function LessonTargetMastery({
           <div
             key={t.id}
             className="flex items-center gap-3 py-2.5"
-            style={{ borderTop: i === 0 ? "none" : "0.5px solid #EEEBF5" }}
+            style={{ borderTop: i === 0 ? "none" : "0.5px solid var(--secondary)" }}
           >
             <span
               className="text-[11px] font-medium rounded px-2 py-0.5"
-              style={{ background: "#EEEBF6", color: "#4A4470" }}
+              style={{ background: "var(--secondary)", color: "var(--foreground)" }}
               title={DOMAIN_LABEL[t.domain]}
             >
               {tag}

@@ -361,7 +361,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'prose':
       return <div className="markdown-content"><MathMarkdown content={b.markdown} /></div>
     case 'callout': {
-      const tone = b.variant === 'warning' || b.variant === 'misconception' ? '#C08B8B' : C.lavender
+      const tone = b.variant === 'warning' || b.variant === 'misconception' ? 'var(--viz-down)' : C.lavender
       return (
         <div className="rounded-lg p-3" style={{ background: C.tint, borderLeft: `4px solid ${tone}` }}>
           {b.title && <div className="text-sm font-medium" style={{ color: C.indigo }}>{b.title}</div>}

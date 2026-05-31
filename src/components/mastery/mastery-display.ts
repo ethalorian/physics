@@ -24,13 +24,17 @@ export const DOMAIN_LABEL: Record<Domain, string> = {
 };
 
 // Curriculum palette (terrestrial + galactical). Calm, muted, grayscale-safe.
+// Token-backed so growth visuals adapt to light/dark. These are CSS custom
+// properties (defined in globals.css), valid anywhere a CSS color string is —
+// inline style values and SVG stroke/fill included.
 export const PALETTE = {
-  indigo: "#2D2A4A",
-  indigoMuted: "#6B6890",
-  lavender: "#9B8EC4",
-  sage: "#7FA68B",
-  periwinkle: "#B8C4DB",
-  hairline: "#E7E4F0",
+  indigo: "var(--foreground)",
+  indigoMuted: "var(--muted-foreground)",
+  lavender: "var(--primary)",
+  sage: "var(--viz-up)",
+  periwinkle: "var(--viz-faint)",
+  hairline: "var(--border)",
+  rose: "var(--viz-down)",
 };
 
 export type Trend = "up" | "flat" | "down" | "none";

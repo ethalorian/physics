@@ -39,7 +39,7 @@ function band(v: number | null): { label: string; color: string } {
   if (v == null) return { label: '—', color: 'var(--muted-foreground)' }
   if (v >= 2.45) return { label: v.toFixed(1), color: 'var(--success)' }
   if (v >= 1.7) return { label: v.toFixed(1), color: 'var(--reward)' }
-  return { label: v.toFixed(1), color: '#C08B8B' }
+  return { label: v.toFixed(1), color: 'var(--viz-down)' }
 }
 
 function avgOf(row: Record<string, Cell> | undefined): number | null {
@@ -234,8 +234,8 @@ export default function RosterPage() {
         </div>
 
         {coursesError && (
-          <div className="mt-4 flex items-start gap-2 text-sm rounded-lg p-3" style={{ background: 'color-mix(in oklch, #C08B8B 14%, transparent)', color: 'var(--foreground)' }}>
-            <AlertCircle size={16} style={{ color: '#C08B8B', marginTop: 1 }} />
+          <div className="mt-4 flex items-start gap-2 text-sm rounded-lg p-3" style={{ background: 'color-mix(in oklch, var(--viz-down) 14%, transparent)', color: 'var(--foreground)' }}>
+            <AlertCircle size={16} style={{ color: 'var(--viz-down)', marginTop: 1 }} />
             <span>{coursesError} If you just connected, try Refresh. If it persists, the Classroom scopes may not be enabled on the Google sign-in screen.</span>
           </div>
         )}

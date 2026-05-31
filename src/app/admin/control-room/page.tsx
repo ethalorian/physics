@@ -74,7 +74,7 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
       {strokes.map((s, i) => {
         const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
         if (!pts) return null
-        return <polyline key={i} points={pts} fill="none" stroke={s.color || '#2D2A4A'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+        return <polyline key={i} points={pts} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
       })}
     </svg>
   )

@@ -152,7 +152,7 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
                         <input value={r.image_url} onChange={(e) => update(i, { image_url: e.target.value })} placeholder="Image URL (optional)" className="rounded-md border px-2 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
                       </div>
                       <div className="flex justify-end mt-2">
-                        <button onClick={() => remove(i)} className="inline-flex items-center gap-1 text-xs" style={{ color: '#C08B8B' }}><Trash2 size={13} /> remove</button>
+                        <button onClick={() => remove(i)} className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--viz-down)' }}><Trash2 size={13} /> remove</button>
                       </div>
                     </div>
                   ))}

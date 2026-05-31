@@ -30,9 +30,12 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+  // Mobile browser status-bar tint. Kept as static sRGB approximations of the
+  // --background tokens (oklch) in globals.css, since metadata can't read CSS
+  // vars. Update both together if --background changes.
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f8f6f3' },
-    { media: '(prefers-color-scheme: dark)', color: '#1f1d1a' },
+    { media: '(prefers-color-scheme: light)', color: '#faf9fb' },
+    { media: '(prefers-color-scheme: dark)', color: '#17141f' },
   ],
 }
 

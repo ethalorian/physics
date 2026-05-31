@@ -25,7 +25,7 @@ const GAMES = [
   { id: 'concentration', title: 'Concentration', desc: 'Flip and remember the pairs', icon: Brain, difficulty: 'Easy', href: '/vocabulary/concentration' },
   { id: 'letter-catch', title: 'Letter Catch', desc: 'Catch falling letters to spell the term', icon: ShoppingBasket, difficulty: 'Medium', href: '/vocabulary/letter-catch' },
 ]
-const DIFF_COLOR: Record<string, string> = { Easy: 'var(--success)', Medium: 'var(--reward)', Hard: '#C08B8B' }
+const DIFF_COLOR: Record<string, string> = { Easy: 'var(--success)', Medium: 'var(--reward)', Hard: 'var(--viz-down)' }
 
 function StatTile({ icon, label, value, accent, children }: { icon: React.ReactNode; label: string; value: string; accent: string; children?: React.ReactNode }) {
   return (

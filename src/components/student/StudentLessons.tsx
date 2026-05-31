@@ -68,9 +68,9 @@ export default function StudentLessons() {
   const getProgressBadge = (lessonId: number) => {
     const lessonProgress = getLessonProgress(lessonId)
     if (lessonProgress?.completed) {
-      return <Badge className="bg-green-500 hover:bg-green-600">Completed</Badge>
+      return <Badge className="bg-success text-white hover:bg-success/90">Completed</Badge>
     }
-    return <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">Not Started</Badge>
+    return <Badge variant="outline" className="text-primary border-primary">Not Started</Badge>
   }
 
   const filteredLessons = lessons.filter(lesson =>
@@ -82,7 +82,7 @@ export default function StudentLessons() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#6A4C93]"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     )
   }
@@ -92,11 +92,11 @@ export default function StudentLessons() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-[#4A1A4A]">My Lessons</h2>
-          <p className="text-[#6A4C93]">Track your progress through physics concepts</p>
+          <h2 className="text-2xl font-bold text-foreground">My Lessons</h2>
+          <p className="text-muted-foreground">Track your progress through physics concepts</p>
         </div>
         <Link href="/lessons">
-          <Button className="bg-gradient-to-r from-[#4A1A4A] to-[#6A4C93] hover:from-[#5A2A5A] hover:to-[#7A5CA3]">
+          <Button>
             <BookOpen className="h-4 w-4 mr-2" />
             Browse All Lessons
           </Button>
@@ -105,7 +105,7 @@ export default function StudentLessons() {
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#9A8AC0]" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
           placeholder="Search lessons..."
           value={searchTerm}
@@ -119,25 +119,25 @@ export default function StudentLessons() {
         <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Total Lessons
               </CardTitle>
-              <BookOpen className="h-4 w-4 text-[#9A8AC0]" />
+              <BookOpen className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">{lessons.length}</div>
+              <div className="text-2xl font-bold text-foreground">{lessons.length}</div>
             </CardContent>
           </Card>
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Completed
               </CardTitle>
-              <CheckCircle className="h-4 w-4 text-[#9A8AC0]" />
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">
+              <div className="text-2xl font-bold text-foreground">
                 {progress.filter(p => p.completed).length}
               </div>
             </CardContent>
@@ -145,13 +145,13 @@ export default function StudentLessons() {
 
           <Card className="apple-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-[#6A4C93]">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 Progress
               </CardTitle>
-              <Clock className="h-4 w-4 text-[#9A8AC0]" />
+              <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-[#4A1A4A]">
+              <div className="text-2xl font-bold text-foreground">
                 {lessons.length > 0 ? Math.round((progress.filter(p => p.completed).length / lessons.length) * 100) : 0}%
               </div>
             </CardContent>
@@ -164,11 +164,11 @@ export default function StudentLessons() {
         {filteredLessons.length === 0 ? (
           <Card className="apple-card">
             <CardContent className="flex flex-col items-center justify-center py-12">
-              <BookOpen className="h-12 w-12 text-[#9A8AC0] mb-4" />
-              <h3 className="text-lg font-medium text-[#4A1A4A] mb-2">
+              <BookOpen className="h-12 w-12 text-muted-foreground mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2">
                 {lessons.length === 0 ? 'No lessons available' : 'No lessons match your search'}
               </h3>
-              <p className="text-[#6A4C93] text-center">
+              <p className="text-muted-foreground text-center">
                 {lessons.length === 0 
                   ? 'Your teacher hasn\'t published any lessons yet. Check back later!'
                   : 'Try adjusting your search terms to find the lessons you\'re looking for.'
@@ -182,26 +182,26 @@ export default function StudentLessons() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
+                    <Badge variant="outline" className="text-primary border-primary">
                       Lesson {lesson.lesson_number}
                     </Badge>
-                    <Badge variant="outline" className="text-[#9A8AC0] border-[#9A8AC0]">
+                    <Badge variant="outline" className="text-muted-foreground border-border">
                       {lesson.unit}
                     </Badge>
                     {getProgressBadge(lesson.id)}
                   </div>
                   <Link href={`/lessons/${lesson.slug}`}>
-                    <Button size="sm" className="bg-gradient-to-r from-[#4A1A4A] to-[#6A4C93] hover:from-[#5A2A5A] hover:to-[#7A5CA3]">
+                    <Button size="sm">
                       <Eye className="h-4 w-4 mr-2" />
                       View Lesson
                     </Button>
                   </Link>
                 </div>
-                <CardTitle className="text-[#4A1A4A]">{lesson.title}</CardTitle>
-                <CardDescription className="text-[#6A4C93]">{lesson.description}</CardDescription>
+                <CardTitle className="text-foreground">{lesson.title}</CardTitle>
+                <CardDescription className="text-muted-foreground">{lesson.description}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-between text-sm text-[#9A8AC0]">
+                <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <span>Published: {new Date(lesson.created_at).toLocaleDateString()}</span>
                   {getLessonProgress(lesson.id)?.completed_at && (
                     <span>

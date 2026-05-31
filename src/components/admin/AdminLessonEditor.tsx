@@ -194,10 +194,10 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Preview
               </Button>
-              <Badge variant="outline" className="text-[#6A4C93] border-[#6A4C93]">
+              <Badge variant="outline" className="text-primary border-primary">
                 Lesson {formData.lesson_number}
               </Badge>
-              <Badge variant="outline" className="text-[#9A8AC0] border-[#9A8AC0]">
+              <Badge variant="outline" className="text-muted-foreground border-border">
                 {formData.unit}
               </Badge>
             </div>
@@ -240,8 +240,8 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
             </div>
           </div>
           
-          <h1 className="text-3xl font-bold text-[#4A1A4A]">Edit Lesson</h1>
-          <p className="text-[#6A4C93] mt-1">Update lesson content and settings</p>
+          <h1 className="text-3xl font-bold text-foreground">Edit Lesson</h1>
+          <p className="text-muted-foreground mt-1">Update lesson content and settings</p>
         </div>
 
         {/* Error Alert */}
@@ -266,7 +266,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
             <CardContent className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#4A1A4A]">
+                  <label className="text-sm font-medium text-foreground">
                     Title *
                   </label>
                   <Input
@@ -277,7 +277,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#4A1A4A]">
+                  <label className="text-sm font-medium text-foreground">
                     Slug *
                   </label>
                   <Input
@@ -291,7 +291,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
 
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#4A1A4A]">
+                  <label className="text-sm font-medium text-foreground">
                     Unit *
                   </label>
                   <Input
@@ -302,7 +302,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#4A1A4A]">
+                  <label className="text-sm font-medium text-foreground">
                     Lesson Number *
                   </label>
                   <Input
@@ -314,7 +314,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-[#4A1A4A] flex items-center gap-1">
+                  <label className="text-sm font-medium text-foreground flex items-center gap-1">
                     <Clock className="h-4 w-4" />
                     Duration (min)
                   </label>
@@ -328,7 +328,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1A4A]">
+                <label className="text-sm font-medium text-foreground">
                   Description *
                 </label>
                 <Textarea
@@ -341,7 +341,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-[#4A1A4A]">
+                <label className="text-sm font-medium text-foreground">
                   Hero image (optional — a banner shown at the top of the lesson)
                 </label>
                 <div className="flex items-center gap-2">
@@ -505,7 +505,6 @@ Example: \\[ F = ma \\]"
             <Button
               type="submit"
               disabled={saving}
-              className="bg-gradient-to-r from-[#4A1A4A] to-[#6A4C93] hover:from-[#5A2A5A] hover:to-[#7A5CA3]"
             >
               {saving ? (
                 <>

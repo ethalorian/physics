@@ -7,19 +7,11 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card"
       className={cn(
-        // Apple-style card with glassmorphism
-        "bg-card/80 text-card-foreground flex flex-col gap-5 rounded-2xl border border-border/50 py-6",
-        "shadow-[0_2px_8px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.04)]",
+        // Apple-style card: glass surface + one shared tinted elevation
+        // (.card-elevation). Solid border so edges survive cheap TN/LCD panels.
+        "card-elevation bg-card/80 text-card-foreground flex flex-col gap-5 rounded-2xl border border-border py-6",
         "backdrop-blur-xl backdrop-saturate-150",
-        "transition-all duration-300 ease-out",
-        // Hover state
-        "hover:shadow-[0_4px_12px_rgba(0,0,0,0.06),0_8px_24px_rgba(0,0,0,0.06)]",
-        "hover:border-border/70",
-        // Dark mode adjustments
-        "dark:bg-card/60 dark:border-border/30",
-        "dark:shadow-[0_2px_8px_rgba(0,0,0,0.15),0_4px_16px_rgba(0,0,0,0.12)]",
-        "dark:hover:shadow-[0_4px_12px_rgba(0,0,0,0.2),0_8px_24px_rgba(0,0,0,0.15)]",
-        "dark:hover:bg-card/70",
+        "dark:bg-card/70",
         className
       )}
       {...props}
