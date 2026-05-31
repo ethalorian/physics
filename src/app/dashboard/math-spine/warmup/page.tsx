@@ -63,7 +63,12 @@ export default function WarmupPage() {
     return () => { active = false }
   }, [])
 
-  const hasWork = !!(ans && ((ans.answer && ans.answer.trim()) || (ans.workStrokes && ans.workStrokes.length > 0)))
+  const hasWork = !!(
+    ans &&
+    ((ans.answer && ans.answer.trim()) ||
+      (ans.workStrokes && ans.workStrokes.length > 0) ||
+      (ans.sandbox?.lines && ans.sandbox.lines.some((l) => l.trim())))
+  )
 
   async function submit() {
     if (!item || !hasWork) return
