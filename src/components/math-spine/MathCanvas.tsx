@@ -189,21 +189,43 @@ export default function MathCanvas({ value, onChange }: { value?: MathCanvasValu
         />
         {editor && (
           <div
-            style={{ position: 'absolute', left: `${(editor.x / W) * 100}%`, top: `${((editor.y - TEXT_SIZE) / H) * 100}%`, display: 'flex', gap: 4, alignItems: 'center', zIndex: 5 }}
+            style={{
+              position: 'absolute',
+              left: `${Math.min(Math.max((editor.x / W) * 100, 1), 60)}%`,
+              top: `${Math.min(Math.max(((editor.y - TEXT_SIZE) / H) * 100, 1), 82)}%`,
+              display: 'flex',
+              gap: 4,
+              alignItems: 'center',
+              zIndex: 10,
+              background: '#fff',
+              border: '1px solid var(--primary)',
+              borderRadius: 8,
+              padding: 4,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+            }}
           >
             <input
               autoFocus
               value={editor.value}
               onChange={(e) => setEditor({ ...editor, value: e.target.value })}
               onKeyDown={(e) => { if (e.key === 'Enter') commitEditor(); if (e.key === 'Escape') setEditor(null) }}
-              onBlur={commitEditor}
-              placeholder="type math…"
-              className="rounded border px-1.5 py-0.5 text-sm"
-              style={{ borderColor: 'var(--primary)', background: '#fff', color: '#1A1730', minWidth: 90 }}
+              placeholder="type a number or equation…"
+              className="rounded border px-1.5 py-1 text-sm"
+              style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 150 }}
             />
-            {editor.index !== null && (
-              <button onMouseDown={(e) => { e.preventDefault(); deleteEditing() }} aria-label="delete text" className="rounded border bg-white" style={{ width: 22, height: 22, color: 'var(--destructive)' }}>×</button>
-            )}
+            <button
+              onMouseDown={(e) => { e.preventDefault(); commitEditor() }}
+              onTouchStart={(e) => { e.preventDefault(); commitEditor() }}
+              aria-label="add to board"
+              className="rounded-md grid place-items-center"
+              style={{ width: 30, height: 30, background: 'var(--primary)', color: 'var(--primary-foreground)', flexShrink: 0 }}
+            >✓</button>
+            <button
+              onMouseDown={(e) => { e.preventDefault(); if (editor.index !== null) { deleteEditing() } else { setEditor(null) } }}
+              aria-label="cancel"
+              className="rounded-md border grid place-items-center"
+              style={{ width: 30, height: 30, background: '#fff', color: 'var(--destructive)', flexShrink: 0 }}
+            >×</button>
           </div>
         )}
       </div>
