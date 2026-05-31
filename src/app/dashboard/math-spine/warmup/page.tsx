@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, Lightbulb } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Lightbulb, Target } from 'lucide-react'
 import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/WarmupAnswer'
 import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
 import { tieredLessonsForCode, pickTier, TIER_LABELS, type MiniLesson } from '@/lib/math-spine-lessons'
@@ -108,18 +108,20 @@ export default function WarmupPage() {
 
       {!loading && item && (
         <>
-          <Card className="apple-card">
-            <CardHeader>
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">{item.competencyCode}</span>
-                <CardTitle className="text-foreground text-base">Today&apos;s Math Warm-Up</CardTitle>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">{item.competencyStatement}</p>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm font-medium text-foreground leading-relaxed">{item.prompt}</p>
-            </CardContent>
-          </Card>
+          {/* Today's problem — the can't-miss callout */}
+          <div
+            className="rounded-xl border-l-4 p-4 shadow-sm"
+            style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 9%, var(--card))' }}
+          >
+            <div className="flex items-center gap-2 mb-1.5">
+              <Target className="h-4 w-4" style={{ color: 'var(--primary)' }} />
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Today&apos;s problem</span>
+              <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums ml-auto">{item.competencyCode}</span>
+            </div>
+            <p className="text-base font-semibold text-foreground leading-snug">{item.prompt}</p>
+            <p className="text-xs text-muted-foreground mt-2">{item.competencyStatement}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">This is your one math warm-up for today — a new one unlocks tomorrow.</p>
+          </div>
 
           {/* Mini-lesson with an explicit diagram */}
           {lesson && (
@@ -162,6 +164,10 @@ export default function WarmupPage() {
                 <CardTitle className="text-foreground text-base">Your work</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="rounded-lg border-l-4 px-3 py-2" style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 6%, transparent)' }}>
+                  <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>Solve this</span>
+                  <p className="text-sm font-medium text-foreground">{item.prompt}</p>
+                </div>
                 <WarmupAnswer strand={strandForCode(item.competencyCode)} onChange={setAns} />
                 <div className="flex items-center gap-2 pt-2 border-t border-border">
                   <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">

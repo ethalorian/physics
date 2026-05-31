@@ -13,6 +13,7 @@
  */
 import { MathCompetencyRecord, MathStrand, DEFAULT_RECENCY_WEIGHT } from '@/data/curriculum-types'
 import { STRAND_ORDER, STRAND_LABEL } from '@/lib/math-spine'
+import MathClimb from './MathClimb'
 import {
   PALETTE,
   levelWord,
@@ -130,8 +131,11 @@ export default function MathSpineGrowth({
         </span>
       </div>
 
+      {/* Your math climb — ratings over time */}
+      <MathClimb competencies={competencies} records={records} />
+
       {/* Strand cards */}
-      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
+      <div className="grid gap-3 mt-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
         {STRAND_ORDER.map((strand) => {
           const ids = idsByStrand(strand)
           const value = strandValue(ids, byCompetency, recencyWeight)
