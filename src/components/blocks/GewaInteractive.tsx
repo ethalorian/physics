@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import PaintPad from './PaintPad'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
+import EquationField from './EquationField'
 import type { Stroke } from './DoodleCanvas'
 
 // Given + Equation stay structured (chips / equation bank). Work & Answer are now
@@ -129,27 +130,13 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
 
       {/* EQUATION */}
       <div>
-        <div className="flex items-center gap-2 mb-2">{badge('E', 'var(--primary)')}<span className="text-sm font-semibold">Equation — recognize the one that fits</span></div>
+        <div className="flex items-center gap-2 mb-2">{badge('E', 'var(--primary)')}<span className="text-sm font-semibold">Equation — type it or pick the one that fits</span></div>
         {equationHint && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{equationHint}</p>}
-        <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))' }}>
-          {equations.map((eq) => {
-            const sel = equation === eq
-            return (
-              <button
-                key={eq}
-                onClick={() => { setEquation(eq); setSaved(false) }}
-                className="rounded-lg border px-3 py-2.5 text-center"
-                style={{
-                  borderColor: sel ? 'var(--primary)' : 'var(--border)',
-                  background: sel ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : 'var(--card)',
-                  fontFamily: 'Georgia, serif', fontWeight: 700, fontSize: 15, color: 'var(--foreground)',
-                }}
-              >
-                {eq}
-              </button>
-            )
-          })}
-        </div>
+        <EquationField
+          value={equation}
+          onChange={(v) => { setEquation(v); setSaved(false) }}
+          presets={equations}
+        />
       </div>
 
       {/* WORK & ANSWER — handwritten on the pad */}
