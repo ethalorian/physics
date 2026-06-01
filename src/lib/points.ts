@@ -41,6 +41,13 @@ export async function getLifetimeEarned(userId: string): Promise<number> {
     .eq('user_id', userId)
   for (const m of mathGrants ?? []) total += m.points || 0
 
+  // General-purpose grants (Escape Room, future arcade rewards) earn here too.
+  const { data: economyGrants } = await supabaseAdmin
+    .from('economy_point_grants')
+    .select('points')
+    .eq('user_id', userId)
+  for (const e of economyGrants ?? []) total += e.points || 0
+
   return Math.round(total)
 }
 

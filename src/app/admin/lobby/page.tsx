@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Users, Plus, ArrowRight, KeyRound, Trash2 } from 'lucide-react'
+import { ESCAPE_ROOMS, type EscapePrizeTier } from '@/lib/lobby/escape'
 
 interface Course { id: string; name: string; section?: string | null }
 interface Target { id: string; statement: string; domain: string; unit_id: string }
@@ -23,6 +24,12 @@ const TASKS = [
   { v: 'question', label: 'Question' },
   { v: 'proof', label: 'Proof they talked' },
   { v: 'jigsaw', label: 'Jigsaw (each student holds a piece)' },
+  { v: 'escape', label: 'Escape room (multi-lock co-op)' },
+]
+const PRIZE_TIERS: { v: EscapePrizeTier; label: string }[] = [
+  { v: 'xp', label: 'XP only (automatic)' },
+  { v: 'cosmetic', label: 'XP + cosmetic unlock' },
+  { v: 'surprise', label: 'Surprise — real-world reveal' },
 ]
 
 export default function LobbyAdminPage() {
@@ -37,7 +44,17 @@ export default function LobbyAdminPage() {
   const [size, setSize] = useState(4)
   const [prompt, setPrompt] = useState('')
   const [pieces, setPieces] = useState('')
+  const [roomId, setRoomId] = useState(ESCAPE_ROOMS[0]?.id ?? '')
+  const [prizeTier, setPrizeTier] = useState<EscapePrizeTier>('xp')
+  const [prizeXp, setPrizeXp] = useState(250)
+  const [prizeReveal, setPrizeReveal] = useState('')
   const [busy, setBusy] = useState(false)
+
+  // Escape rooms run best as trios — default group size to 3 when selected.
+  const pickTask = (next: string) => {
+    setTask(next)
+    if (next === 'escape') setSize(3)
+  }
 
   const loadSessions = () =>
     fetch('/api/lobby/sessions').then((r) => r.json()).then((d) => setSessions(d.sessions ?? [])).catch(() => {})
@@ -62,6 +79,10 @@ export default function LobbyAdminPage() {
         course_id: courseId, task_type: task, grouping_mode: mode, group_size: size, prompt,
         target_id: targetId || null,
         jigsaw_pieces: task === 'jigsaw' ? pieces.split('\n').map((s) => s.trim()).filter(Boolean) : undefined,
+        room_id: task === 'escape' ? roomId : undefined,
+        prize: task === 'escape'
+          ? { tier: prizeTier, xp: prizeTier === 'surprise' ? undefined : prizeXp, reveal: prizeReveal.trim() || undefined }
+          : undefined,
       }),
     })
     setBusy(false)
@@ -100,7 +121,7 @@ export default function LobbyAdminPage() {
             </select>
           </label>
           <label className="text-sm">Task
-            <select value={task} onChange={(e) => setTask(e.target.value)}
+            <select value={task} onChange={(e) => pickTask(e.target.value)}
               className="w-full rounded-lg border p-2 text-sm mt-1" style={field}>
               {TASKS.map((t) => <option key={t.v} value={t.v}>{t.label}</option>)}
             </select>
@@ -134,11 +155,42 @@ export default function LobbyAdminPage() {
                 className="w-full rounded-lg border p-2 text-sm mt-1 font-mono" style={field} />
             </label>
           )}
-          <label className="text-sm sm:col-span-2">Prompt (what students do)
-            <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={2}
-              placeholder="e.g. Sketch the free-body diagram for the block on the ramp."
-              className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
-          </label>
+          {task === 'escape' && (
+            <div className="sm:col-span-2 grid gap-3 rounded-lg p-3" style={{ background: 'color-mix(in oklch, var(--primary) 6%, transparent)', border: '1px solid var(--border)' }}>
+              <label className="text-sm">Room
+                <select value={roomId} onChange={(e) => setRoomId(e.target.value)}
+                  className="w-full rounded-lg border p-2 text-sm mt-1" style={field}>
+                  {ESCAPE_ROOMS.map((r) => <option key={r.id} value={r.id}>{r.title} — {r.tagline}</option>)}
+                </select>
+              </label>
+              <label className="text-sm">Prize
+                <select value={prizeTier} onChange={(e) => setPrizeTier(e.target.value as EscapePrizeTier)}
+                  className="w-full rounded-lg border p-2 text-sm mt-1" style={field}>
+                  {PRIZE_TIERS.map((t) => <option key={t.v} value={t.v}>{t.label}</option>)}
+                </select>
+              </label>
+              {prizeTier !== 'surprise' && (
+                <label className="text-sm">XP awarded
+                  <input type="number" min={0} max={5000} value={prizeXp}
+                    onChange={(e) => setPrizeXp(Math.max(0, Number(e.target.value) || 0))}
+                    className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
+                </label>
+              )}
+              <label className="text-sm">Prize reveal <span style={{ color: 'var(--muted-foreground)' }}>(what the vault shows on escape — blank uses the room default)</span>
+                <textarea value={prizeReveal} onChange={(e) => setPrizeReveal(e.target.value)} rows={2}
+                  placeholder={prizeTier === 'surprise' ? 'e.g. Bring this screen to Mr. Antocci for your prize.' : 'Optional — overrides the default reveal.'}
+                  className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
+              </label>
+              <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Escape rooms run best as trios — group size is set to 3. Pair it with near-peer grouping to mix stronger and weaker students.</p>
+            </div>
+          )}
+          {task !== 'escape' && (
+            <label className="text-sm sm:col-span-2">Prompt (what students do)
+              <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={2}
+                placeholder="e.g. Sketch the free-body diagram for the block on the ramp."
+                className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
+            </label>
+          )}
         </div>
         <button onClick={create} disabled={busy || !courseId || (task === 'jigsaw' && pieces.split('\n').map((s) => s.trim()).filter(Boolean).length < 2)}
           className="mt-4 text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-50"

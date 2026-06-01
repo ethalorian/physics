@@ -2,9 +2,10 @@ import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { generateLobbyCode } from '@/lib/lobby/passphrase'
+import { getRoom, encodeEscapeConfig, type EscapePrize, type EscapePrizeTier } from '@/lib/lobby/escape'
 
 const VALID_MODES = ['random', 'near_peer', 'matched', 'manual']
-const VALID_TASKS = ['short_response', 'drawing', 'question', 'proof', 'jigsaw']
+const VALID_TASKS = ['short_response', 'drawing', 'question', 'proof', 'jigsaw', 'escape']
 
 // GET /api/lobby/sessions — sessions created by the signed-in teacher.
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
@@ -29,6 +30,8 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     target_id = null,
     prompt = null,
     jigsaw_pieces = null,
+    room_id = null,
+    prize = null,
   } = body as Record<string, unknown>
 
   if (!course_id || typeof course_id !== 'string') {
@@ -54,6 +57,23 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     return NextResponse.json({ error: 'Jigsaw needs at least 2 content pieces' }, { status: 400 })
   }
 
+  // Escape: validate the room and fold the room id + prize into task_prompt as
+  // JSON (decoded by the escape API). Keeps the run self-contained — no new column.
+  let taskPrompt: string | null = typeof prompt === 'string' ? prompt : null
+  if (task_type === 'escape') {
+    const room = getRoom(typeof room_id === 'string' ? room_id : null)
+    if (!room) return NextResponse.json({ error: 'Unknown escape room' }, { status: 400 })
+    // Merge any teacher overrides over the room's default prize so blank fields fall back.
+    const base = room.defaultPrize
+    const p = (prize && typeof prize === 'object' ? (prize as Partial<EscapePrize>) : {})
+    const chosenPrize: EscapePrize = {
+      tier: (p.tier as EscapePrizeTier) ?? base.tier,
+      xp: typeof p.xp === 'number' ? p.xp : base.xp,
+      reveal: typeof p.reveal === 'string' && p.reveal.trim() ? p.reveal : base.reveal,
+    }
+    taskPrompt = encodeEscapeConfig({ roomId: room.id, prize: chosenPrize })
+  }
+
   // Mint a code, retrying on the (rare) unique collision.
   let created: { id: string; code: string } | null = null
   for (let attempt = 0; attempt < 6 && !created; attempt++) {
@@ -68,7 +88,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         grouping_mode,
         group_size: size,
         target_id: target_id || null,
-        task_prompt: prompt || null,
+        task_prompt: taskPrompt,
         jigsaw_pieces: task_type === 'jigsaw' ? pieces : null,
         status: 'lobby',
       })

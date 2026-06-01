@@ -6,6 +6,7 @@ import { Hourglass, Lock, Unlock, CheckCircle2, Send } from 'lucide-react'
 import InkPad from '@/components/blocks/InkPad'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import Avatar from '@/components/avatar/Avatar'
+import EscapeRoom from '@/components/lobby/EscapeRoom'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface AvatarBundle { alias: string; traits: AvatarTraits; equipped: EquippedItems }
@@ -111,6 +112,11 @@ export default function LobbyActivityPage() {
       <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Waiting for your teacher to make groups…</p>
     </div>
   )
+
+  // Escape rooms run their own multi-lock flow once grouped.
+  if (st.task_type === 'escape') {
+    return <EscapeRoom sessionId={st.session_id} group={st.group} avatarItems={st.avatarItems} myRole={st.myRole} />
+  }
 
   // Grouped. Show the word + the gate, or the artifact form once completed.
   const need = st.phraseLength

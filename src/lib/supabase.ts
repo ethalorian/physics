@@ -16,11 +16,23 @@ export const supabase = createClient(
   supabaseAnonKey || ''
 )
 
-// Server-side client for API routes (bypasses RLS with service role key)
+// Server-side client for API routes (bypasses RLS with the service role key).
+// No anon-key fallback: with RLS now enforced across the schema, a missing
+// service-role key must fail loudly rather than silently degrade to an
+// RLS-restricted anon client (which would break server reads/writes in subtle
+// ways). The guard is server-only — SUPABASE_SERVICE_ROLE_KEY is never present
+// in the browser, so a top-level throw there would crash the client bundle.
+if (typeof window === 'undefined' && !supabaseServiceRoleKey) {
+  throw new Error(
+    'SUPABASE_SERVICE_ROLE_KEY is required for server-side Supabase access. ' +
+    'Set it in the environment — supabaseAdmin no longer falls back to the anon key.'
+  )
+}
+
 // Use this in API routes to bypass RLS policies
 export const supabaseAdmin = createClient(
   supabaseUrl || '',
-  supabaseServiceRoleKey || supabaseAnonKey || '', // Fallback to anon key if service role not set
+  supabaseServiceRoleKey || '',
   {
     auth: {
       autoRefreshToken: false,
