@@ -4,8 +4,8 @@
  * Daily math warm-up — its own screen.
  *
  * Three parts: (1) the prompt, (2) a mini-lesson with an explicit diagram showing
- * HOW to do this kind of problem, and (3) the work surface — an InkPad (always,
- * so students can show any kind of work by hand) plus a final answer, with an
+ * HOW to do this kind of problem, and (3) the work surface — a work canvas (type
+ * or draw any kind of work by hand) plus a final answer, with an
  * optional Given/Equation set-up for solve problems. Submitting sends the answer
  * to the teacher's control-room review queue.
  */

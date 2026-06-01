@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // A student submits their daily warm-up answer as EVIDENCE. It lands in the
 // control-room review queue (status='pending') for the teacher to read and rate.
 // The student always submits for THEMSELVES (user_id is from the session, never
-// the body). The answer may be structured (response_json: GEWA + InkPad strokes)
+// the body). The answer may be structured (response_json: GEWA + canvas strokes)
 // and/or plain text; we keep a flat text summary for listing/fallback.
 
 interface GewaLike {

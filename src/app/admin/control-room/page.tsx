@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'r
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
 import MathControlRoom from '@/components/math-spine/MathControlRoom'
+import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -72,11 +73,7 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
   if (!strokes || strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
   return (
     <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 420, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label={label}>
-      {strokes.map((s, i) => {
-        const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
-        if (!pts) return null
-        return <polyline key={i} points={pts} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-      })}
+      <StrokeShapes strokes={strokes as Stroke[]} />
     </svg>
   )
 }

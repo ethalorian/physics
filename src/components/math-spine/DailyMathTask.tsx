@@ -4,7 +4,7 @@
  * DailyMathTask — the math-literacy spine's home on the daily dashboard/hub.
  *
  * A teaser card: today's warm-up (the skill the student most needs) plus a button
- * to its own screen, where the mini-lesson + GEWA/InkPad solve block live. Shows
+ * to its own screen, where the mini-lesson + GEWA solve block live. Shows
  * what the student has earned and whether today's warm-up is already submitted.
  */
 import { useEffect, useState } from 'react'

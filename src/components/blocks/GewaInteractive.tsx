@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react'
-import InkPad from './InkPad'
+import PaintPad from './PaintPad'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import type { Stroke } from './DoodleCanvas'
 
@@ -183,7 +183,7 @@ export default function GewaInteractive({ prompt, givenHint, equationHint, equat
         ) : (
           <>
             <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Write your solution by hand: substitute your knowns, solve step by step, and circle your final answer with its unit.</p>
-            <InkPad value={workStrokes} onChange={(s) => { setWorkStrokes(s); setSaved(false) }} />
+            <PaintPad value={workStrokes} onChange={(s) => { setWorkStrokes(s); setSaved(false) }} />
           </>
         )}
       </div>

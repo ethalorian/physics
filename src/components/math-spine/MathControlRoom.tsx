@@ -14,6 +14,7 @@
  * to the control room's active class via `classId`.
  */
 import { useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
 interface Student { id: string; name: string; email: string }
@@ -56,11 +57,7 @@ function BoardSvg({ strokes, texts }: { strokes?: Stroke[]; texts?: BoardText[] 
       {(texts ?? []).map((t, i) => (
         <text key={`t${i}`} x={t.x} y={t.y} fontSize={t.size ?? 26} fill="#1A1730" fontFamily="ui-sans-serif, system-ui, sans-serif">{t.text}</text>
       ))}
-      {(strokes ?? []).map((s, i) => {
-        const pts = (s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')
-        if (!pts) return null
-        return <polyline key={`s${i}`} points={pts} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={s.width ?? 3} strokeLinecap="round" strokeLinejoin="round" />
-      })}
+      <StrokeShapes strokes={(strokes ?? []) as DrawStroke[]} />
     </svg>
   )
 }

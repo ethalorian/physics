@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Hourglass, Lock, Unlock, CheckCircle2, Send } from 'lucide-react'
-import InkPad from '@/components/blocks/InkPad'
+import PaintPad from '@/components/blocks/PaintPad'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import Avatar from '@/components/avatar/Avatar'
 import EscapeRoom from '@/components/lobby/EscapeRoom'
@@ -208,7 +208,7 @@ export default function LobbyActivityPage() {
             <Unlock size={15} /> Passphrase complete — submit your work.
           </div>
           {isDrawing ? (
-            <InkPad value={strokes} onChange={setStrokes} />
+            <PaintPad value={strokes} onChange={setStrokes} />
           ) : (
             <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
               placeholder="Type your response…"

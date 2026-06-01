@@ -6,6 +6,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import EscapeDashboard from '@/components/lobby/EscapeDashboard'
+import { StrokesSvg, type Stroke } from '@/lib/draw/strokes'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface Member {
@@ -31,19 +32,8 @@ function artifactText(r: unknown): string {
   return r ? JSON.stringify(r) : ''
 }
 
-type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
-function hasStrokes(r: unknown): r is { strokes: StrokeShape[] } {
+function hasStrokes(r: unknown): r is { strokes: Stroke[] } {
   return !!r && typeof r === 'object' && Array.isArray((r as { strokes?: unknown }).strokes)
-}
-function StrokesSvg({ strokes }: { strokes: StrokeShape[] }) {
-  if (!strokes.length) return <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</span>
-  return (
-    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 260, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="Student drawing">
-      {strokes.map((s, i) => (
-        <polyline key={i} points={(s.points ?? []).map((p) => `${p.x},${p.y}`).join(' ')} fill="none" stroke={s.color || 'var(--foreground)'} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-      ))}
-    </svg>
-  )
 }
 
 function GroupTimeline({ group, members, card }: { group: Group; members: Member[]; card: React.CSSProperties }) {
