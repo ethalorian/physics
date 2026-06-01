@@ -220,12 +220,16 @@ export interface EscapeState {
   fragments: string[]
   unlocks: EscapeUnlockEntry[]
   finishedAt: string | null
+  /** Total wrong codes entered across the whole run (teacher signal). */
+  wrongAttempts: number
+  /** ISO timestamp of the last action (right or wrong) — drives "last activity". */
+  lastAt?: string
   /** Epoch ms; while now < cooldownUntil the keypad is resting after a wrong code. */
   cooldownUntil?: number
 }
 
 export function freshState(): EscapeState {
-  return { stage: 0, fragments: [], unlocks: [], finishedAt: null }
+  return { stage: 0, fragments: [], unlocks: [], finishedAt: null, wrongAttempts: 0 }
 }
 
 /** Soft cooldown after a wrong code (Decision 3): nudge back to reasoning, never hard-block. */

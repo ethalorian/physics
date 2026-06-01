@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
+import EscapeDashboard from '@/components/lobby/EscapeDashboard'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 
 interface Member {
@@ -194,7 +195,8 @@ export default function LobbyDetailPage() {
           )}
 
           <div className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
-            {members.length} in lobby · {members.filter((m) => m.phrase_completed_at).length} assembled phrase · {members.filter((m) => m.artifact).length} submitted
+            {members.length} in lobby
+            {session.task_type !== 'escape' && <> · {members.filter((m) => m.phrase_completed_at).length} assembled phrase · {members.filter((m) => m.artifact).length} submitted</>}
           </div>
 
           {ungrouped.length > 0 && (
@@ -216,6 +218,11 @@ export default function LobbyDetailPage() {
             </div>
           )}
 
+          {session.task_type === 'escape' && (
+            <EscapeDashboard sessionId={id} members={members} avatarItems={avatarItems} card={card} />
+          )}
+
+          {session.task_type !== 'escape' && (
           <div className="grid gap-3 sm:grid-cols-2">
             {groups.map((g) => {
               const gm = members.filter((m) => m.group_id === g.id)
@@ -292,8 +299,9 @@ export default function LobbyDetailPage() {
               )
             })}
           </div>
+          )}
 
-          {groups.length > 0 && members.some((m) => m.word_entries.length > 0) && (
+          {session.task_type !== 'escape' && groups.length > 0 && members.some((m) => m.word_entries.length > 0) && (
             <div className="mt-6">
               <h2 className="text-sm font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Collaboration timeline</h2>
               <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>

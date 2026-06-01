@@ -185,14 +185,19 @@ export const POST = withAuth(async (request, ctx) => {
 
   const lock = c.room.locks[state.stage]
   const correct = checkAnswer(lock, code ?? '')
+  const nowIso = new Date().toISOString()
 
   if (!correct) {
-    const next: EscapeState = { ...state, cooldownUntil: now + WRONG_CODE_COOLDOWN_MS }
+    const next: EscapeState = {
+      ...state,
+      wrongAttempts: state.wrongAttempts + 1,
+      lastAt: nowIso,
+      cooldownUntil: now + WRONG_CODE_COOLDOWN_MS,
+    }
     await writeState({ rowId, sessionId: session_id, groupId: c.groupId, state: next, email: ctx.email })
     return NextResponse.json({ correct: false, retryAfterMs: WRONG_CODE_COOLDOWN_MS })
   }
 
-  const nowIso = new Date().toISOString()
   const stage = state.stage + 1
   const finished = stage >= c.room.locks.length
   const next: EscapeState = {
@@ -200,6 +205,8 @@ export const POST = withAuth(async (request, ctx) => {
     fragments: [...state.fragments, lock.reveal],
     unlocks: [...state.unlocks, { stage: state.stage, by: ctx.userId, at: nowIso }],
     finishedAt: finished ? nowIso : null,
+    wrongAttempts: state.wrongAttempts,
+    lastAt: nowIso,
     cooldownUntil: undefined,
   }
   await writeState({ rowId, sessionId: session_id, groupId: c.groupId, state: next, email: ctx.email })
