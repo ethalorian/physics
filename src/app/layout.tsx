@@ -7,6 +7,7 @@ import './globals.css'
 
 // Internal components and providers
 import AuthProvider from '@/components/auth-provider'
+import AccessGate from '@/components/AccessGate'
 import Navbar from '@/components/navbar'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
 import { ConsolidatedAssignmentProvider } from '@/contexts/ConsolidatedAssignmentContext'
@@ -65,10 +66,12 @@ export default function RootLayout({
                   <SimulationProvider>
                     <StudentActivityProvider>
                       <ConsolidatedAssignmentProvider>
-                        <Navbar />
-                        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-                          {children}
-                        </main>
+                        <AccessGate>
+                          <Navbar />
+                          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
+                            {children}
+                          </main>
+                        </AccessGate>
                         <QuickTestAccountSwitcher />
                       </ConsolidatedAssignmentProvider>
                     </StudentActivityProvider>

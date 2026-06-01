@@ -14,6 +14,7 @@ import {
 import { ensureStudentRecord } from './student-management'
 import { getUserRole } from './permissions'
 import { getGrantedRole } from './roles'
+import { isSchoolStudentEmail } from './access'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -317,6 +318,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return baseUrl
     },
     signIn: async ({ user, account }) => {
+      // SERVER-SIDE ACCESS GATE — runs before any session, token, or student
+      // record is created. Only staff (by role/allowlist, incl. DB-granted
+      // teachers) and students on the district student domain may sign in;
+      // every other account is rejected here and never receives a session.
+      //
+      // Domain-only by design: a first-time imported student's enrollment is
+      // reclaimed from the Classroom stub *below* (in ensureStudentRecord), so
+      // gating on enrollment here would wrongly block legitimately-rostered
+      // students on their first login. Enrollment stays a post-login gate.
+      //
+      // Bypass in development and for the credentials test provider so local
+      // testing keeps working.
+      if (process.env.NODE_ENV !== 'development' && account?.provider !== 'credentials') {
+        const email = user?.email ?? null
+        const isStaff = (await resolveUserRole(email)) !== 'student'
+        if (!isStaff && !isSchoolStudentEmail(email)) {
+          console.warn(`⛔ Sign-in blocked for non-school account: ${email ?? '(no email)'}`)
+          return false // → /auth/error?error=AccessDenied
+        }
+      }
+
       // Ensure student record exists in database
       if (user?.email && user?.id) {
         try {

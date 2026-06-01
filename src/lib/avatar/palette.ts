@@ -15,14 +15,26 @@ export interface FaceGeometry {
   cy: number
   topY: number
   bottomY: number
-  featureYShift: number   // applied to brows/eyes/nose/mouth/blush/freckles
+  featureYShift: number   // vertical offset for the feature group per shape
+  // Horizontal scale for the feature cluster (brows / eyes / nose / mouth /
+  // blush + eyewear + facial-hair items) so the eye/brow/cheek SPREAD tracks
+  // each silhouette's width instead of clinging to round-face coordinates.
+  // 1.0 = round (46-wide). Roughly the width ratio vs round, softened so the
+  // shapes don't visibly squish; tune per shape if a face reads off.
+  featureXScale: number
+  // Horizontal scale for the HAIR trait (front + back) so the cap/silhouette
+  // frames each head's width. Tracks the head outline more closely than the
+  // inner feature cluster (hair IS the silhouette frame). Heart stays near 1
+  // because its forehead/crown — where hair sits — is broad even though its
+  // chin is narrow.
+  hairXScale: number
 }
 
 export const FACE_GEO: Record<FaceShape, FaceGeometry> = {
-  round:  { rx: 46, ry: 48, cy:  0, topY: -48, bottomY: 48, featureYShift:  0 },
-  egg:    { rx: 42, ry: 50, cy:  2, topY: -48, bottomY: 52, featureYShift:  3 },
-  square: { rx: 48, ry: 46, cy:  0, topY: -46, bottomY: 46, featureYShift: -1 },
-  heart:  { rx: 42, ry: 52, cy: -6, topY: -58, bottomY: 46, featureYShift:  1 },
+  round:  { rx: 46, ry: 48, cy:  0, topY: -48, bottomY: 48, featureYShift:  0, featureXScale: 1.00, hairXScale: 1.00 },
+  egg:    { rx: 42, ry: 50, cy:  2, topY: -48, bottomY: 52, featureYShift:  3, featureXScale: 0.94, hairXScale: 0.93 },
+  square: { rx: 48, ry: 46, cy:  0, topY: -46, bottomY: 46, featureYShift: -1, featureXScale: 1.04, hairXScale: 1.05 },
+  heart:  { rx: 42, ry: 52, cy: -6, topY: -58, bottomY: 46, featureYShift:  1, featureXScale: 0.95, hairXScale: 0.97 },
 }
 
 // Skin: `color` for face/neck/ears, `shadow` for the nose tint + freckles.

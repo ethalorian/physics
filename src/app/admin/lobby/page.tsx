@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Users, Plus, ArrowRight, KeyRound, Trash2 } from 'lucide-react'
-import { ESCAPE_ROOMS, type EscapePrizeTier } from '@/lib/lobby/escape'
+import { Users, Plus, ArrowRight, KeyRound, Trash2, Search, ArrowDownUp } from 'lucide-react'
+import { ESCAPE_ROOMS, getRoom, decodeEscapeConfig, type EscapePrizeTier } from '@/lib/lobby/escape'
 
 interface Course { id: string; name: string; section?: string | null }
 interface Target { id: string; statement: string; domain: string; unit_id: string }
@@ -49,11 +49,20 @@ export default function LobbyAdminPage() {
   const [prizeXp, setPrizeXp] = useState(250)
   const [prizeReveal, setPrizeReveal] = useState('')
   const [busy, setBusy] = useState(false)
+  // Session-list controls
+  const [query, setQuery] = useState('')
+  const [sortBy, setSortBy] = useState('new')
+  const [statusFilter, setStatusFilter] = useState('all')
 
-  // Escape rooms run best as trios — default group size to 3 when selected.
+  // When escape is selected, default the group size to whatever the chosen room
+  // is authored for (trios for Reactor Lockdown, pairs for Green Light Garage).
   const pickTask = (next: string) => {
     setTask(next)
-    if (next === 'escape') setSize(3)
+    if (next === 'escape') setSize(getRoom(roomId)?.recommendedGroupSize ?? 3)
+  }
+  const pickRoom = (id: string) => {
+    setRoomId(id)
+    setSize(getRoom(id)?.recommendedGroupSize ?? 3)
   }
 
   const loadSessions = () =>
@@ -101,6 +110,33 @@ export default function LobbyAdminPage() {
   const field: React.CSSProperties = {
     borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)',
   }
+
+  // For escape sessions, surface the room title (config is stored in the prompt).
+  const roomTitleFor = (s: Session): string | null => {
+    if (s.task_type !== 'escape') return null
+    const cfg = decodeEscapeConfig(s.prompt)
+    return cfg ? getRoom(cfg.roomId)?.title ?? null : null
+  }
+
+  // Search + filter + sort the session list.
+  const STATUS_ORDER: Record<string, number> = { open: 0, grouped: 1, lobby: 2, closed: 3 }
+  const q = query.trim().toLowerCase()
+  const shownSessions = sessions
+    .filter((s) => statusFilter === 'all' || s.status === statusFilter)
+    .filter((s) => {
+      if (!q) return true
+      const hay = `${s.code} ${s.task_type} ${s.grouping_mode} ${roomTitleFor(s) ?? ''}`.toLowerCase()
+      return hay.includes(q)
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'old': return Date.parse(a.created_at) - Date.parse(b.created_at)
+        case 'code': return a.code.localeCompare(b.code)
+        case 'task': return a.task_type.localeCompare(b.task_type) || Date.parse(b.created_at) - Date.parse(a.created_at)
+        case 'status': return (STATUS_ORDER[a.status] ?? 9) - (STATUS_ORDER[b.status] ?? 9) || Date.parse(b.created_at) - Date.parse(a.created_at)
+        default: return Date.parse(b.created_at) - Date.parse(a.created_at) // 'new'
+      }
+    })
 
   return (
     <div className="max-w-3xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -158,7 +194,7 @@ export default function LobbyAdminPage() {
           {task === 'escape' && (
             <div className="sm:col-span-2 grid gap-3 rounded-lg p-3" style={{ background: 'color-mix(in oklch, var(--primary) 6%, transparent)', border: '1px solid var(--border)' }}>
               <label className="text-sm">Room
-                <select value={roomId} onChange={(e) => setRoomId(e.target.value)}
+                <select value={roomId} onChange={(e) => pickRoom(e.target.value)}
                   className="w-full rounded-lg border p-2 text-sm mt-1" style={field}>
                   {ESCAPE_ROOMS.map((r) => <option key={r.id} value={r.id}>{r.title} — {r.tagline}</option>)}
                 </select>
@@ -199,26 +235,69 @@ export default function LobbyAdminPage() {
         </button>
       </div>
 
-      <h2 className="text-sm font-semibold mb-2" style={{ color: 'var(--muted-foreground)' }}>Your sessions</h2>
+      <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
+        <h2 className="text-sm font-semibold" style={{ color: 'var(--muted-foreground)' }}>
+          Your sessions {sessions.length > 0 && <span style={{ fontWeight: 400 }}>({shownSessions.length}{shownSessions.length !== sessions.length ? ` of ${sessions.length}` : ''})</span>}
+        </h2>
+      </div>
+
+      {sessions.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <div className="relative flex-1 min-w-[180px]">
+            <Search size={14} style={{ position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted-foreground)' }} />
+            <input
+              value={query} onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search code, task, room…"
+              className="w-full rounded-lg border py-1.5 pl-8 pr-3 text-sm" style={field}
+            />
+          </div>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}
+            className="rounded-lg border py-1.5 px-2 text-sm" style={field} title="Filter by status" aria-label="Filter by status">
+            <option value="all">All statuses</option>
+            <option value="lobby">Lobby</option>
+            <option value="grouped">Grouped</option>
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+          <span className="inline-flex items-center gap-1.5 rounded-lg border py-1.5 px-2" style={field}>
+            <ArrowDownUp size={13} style={{ color: 'var(--muted-foreground)' }} />
+            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}
+              className="text-sm bg-transparent" style={{ border: 'none', color: 'var(--foreground)', outline: 'none' }} title="Sort" aria-label="Sort sessions">
+              <option value="new">Newest</option>
+              <option value="old">Oldest</option>
+              <option value="status">Status</option>
+              <option value="task">Task type</option>
+              <option value="code">Code A–Z</option>
+            </select>
+          </span>
+        </div>
+      )}
+
       <div className="grid gap-2">
         {sessions.length === 0 && (
           <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No sessions yet.</p>
         )}
-        {sessions.map((s) => (
+        {sessions.length > 0 && shownSessions.length === 0 && (
+          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No sessions match your search.</p>
+        )}
+        {shownSessions.map((s) => {
+          const room = roomTitleFor(s)
+          return (
           <Link key={s.id} href={`/admin/lobby/${s.id}`}
             className="rounded-xl border p-3 flex items-center justify-between hover:opacity-90" style={card}>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 min-w-0">
               <span className="inline-flex items-center gap-1 font-mono font-bold text-lg tracking-widest"
                 style={{ color: 'var(--primary)' }}><KeyRound size={16} />{s.code}</span>
               <span className="text-xs px-2 py-0.5 rounded-full"
                 style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>
                 {s.status}
               </span>
-              <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                {s.grouping_mode} · size {s.group_size} · {s.task_type}
+              <span className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>
+                {s.grouping_mode} · size {s.group_size} · {room ?? s.task_type}
+                <span className="hidden sm:inline"> · {new Date(s.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
               </span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <button onClick={(e) => del(e, s.id)} title="Delete session" aria-label="Delete session"
                 className="rounded-md p-1.5" style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--destructive)', cursor: 'pointer' }}>
                 <Trash2 size={15} />
@@ -226,7 +305,8 @@ export default function LobbyAdminPage() {
               <ArrowRight size={16} style={{ color: 'var(--muted-foreground)' }} />
             </div>
           </Link>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

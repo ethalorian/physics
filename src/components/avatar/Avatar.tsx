@@ -41,10 +41,18 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
   const t = withDefaults(traits)
   const itemBySlot = mapEquipped(equipped, items)
   const { vb, aspect } = VIEWBOXES[crop]
-  // Features ride a per-face vertical shift so the eye/brow/mouth cluster sits
-  // visually balanced on each silhouette instead of clinging to round-face
+  // Features ride a per-face vertical shift AND horizontal scale so the
+  // eye/brow/mouth/cheek cluster sits balanced on each silhouette and its
+  // spread tracks the face width — instead of clinging to round-face
   // coordinates. See FACE_GEO for the shape-by-shape values.
-  const featureShift = FACE_GEO[t.face].featureYShift
+  const { featureYShift: featureShift, featureXScale: featureScale, hairXScale: hairScale } = FACE_GEO[t.face]
+  const featureParts: string[] = []
+  if (featureShift !== 0) featureParts.push(`translate(0, ${featureShift})`)
+  if (featureScale !== 1) featureParts.push(`scale(${featureScale}, 1)`)
+  const featureTransform = featureParts.length ? featureParts.join(' ') : undefined
+  // Hair (front + back) scales to the head width so the cap frames each
+  // silhouette, the same way the feature cluster now tracks the face.
+  const hairTransform = hairScale !== 1 ? `scale(${hairScale}, 1)` : undefined
   return (
     <svg
       width={size}
@@ -57,18 +65,18 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
     >
       {itemBySlot.background && <RawLayer svg={itemBySlot.background.svg_layer} />}
       {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body />}
-      <Neck skin={t.skin} />
-      <HairBack style={t.hair_style} color={t.hair_color} />
+      <Neck skin={t.skin} face={t.face} />
+      <g transform={hairTransform}><HairBack style={t.hair_style} color={t.hair_color} /></g>
       <Ears skin={t.skin} face={t.face} />
       <Head skin={t.skin} face={t.face} />
-      <HairFront style={t.hair_style} color={t.hair_color} />
+      <g transform={hairTransform}><HairFront style={t.hair_style} color={t.hair_color} /></g>
       {/* Face features + face-anchored items — translated together by
           featureShift so they track the chin/forehead of the chosen face
           shape. Eyewear sits on the eyes and facial hair sits on the chin,
           so both need to shift with the features. Head items (helmets,
           hats) and pins (chest) are anchored to the silhouette, not the
           features, so they live outside this group. */}
-      <g transform={featureShift !== 0 ? `translate(0, ${featureShift})` : undefined}>
+      <g transform={featureTransform}>
         <Brows style={t.brows} hairColor={t.hair_color} />
         <CheekBlushLayer style={t.cheek_blush} />
         <FrecklesLayer density={t.freckles} skin={t.skin} />
@@ -114,19 +122,23 @@ function Body() {
   )
 }
 
-function Neck({ skin }: { skin: SkinTone }) {
-  return <rect x="-8" y="46" width="16" height="22" fill={SKIN[skin].color} />
+function Neck({ skin, face }: { skin: SkinTone; face: FaceShape }) {
+  // Anchor the neck to THIS face's chin so the head always overlaps the top of
+  // the neck — no seam/gap. We start 6px above the silhouette's bottom (the
+  // head, drawn on top, covers that overlap) and run down to the collar (y=68).
+  const top = FACE_GEO[face].bottomY - 6
+  return <rect x="-8" y={top} width="16" height={68 - top} fill={SKIN[skin].color} />
 }
 
 function Head({ skin, face }: { skin: SkinTone; face: FaceShape }) {
   const c = SKIN[skin].color
   if (face === 'round') return <ellipse cx="0" cy="0" rx="46" ry="48" fill={c} />
   if (face === 'egg') return <ellipse cx="0" cy="2" rx="42" ry="50" fill={c} />
-  // square — flatter cheeks + a defined jaw so it reads distinctly from 'round'.
-  // Rounded-rectangle silhouette within the ±48 / ±46 extents (ears anchor at ±48).
-  // square — flatter cheeks + a defined jaw so it reads distinctly from 'round'.
-  // Rounded-rectangle silhouette within the ±48 / ±46 extents (ears anchor at ±48).
-  if (face === 'square') return <path d="M -48,-28 Q -48,-46 -28,-46 L 28,-46 Q 48,-46 48,-28 L 48,28 Q 48,46 26,46 L -26,46 Q -48,46 -48,28 Z" fill={c} />
+  // square — wide cheeks + a defined jaw (its identity), but the CROWN is
+  // narrowed/rounded (top corners pulled to ±40 then bulged out to the ±48
+  // cheek at y=10) so it tucks under the hairline instead of poking its top
+  // corners through. Ears still anchor to the widest point (±48 at y=2).
+  if (face === 'square') return <path d="M -40,-26 Q -42,-46 -24,-46 L 24,-46 Q 42,-46 40,-26 Q 48,-8 48,10 L 48,28 Q 48,46 26,46 L -26,46 Q -48,46 -48,28 L -48,10 Q -48,-8 -40,-26 Z" fill={c} />
   // heart — broader forehead, narrower chin via a path
   return <path d="M -42,-8 Q -48,-58 0,-58 Q 48,-58 42,-8 Q 36,38 0,46 Q -36,38 -42,-8 Z" fill={c} />
 }
@@ -160,6 +172,25 @@ function HairBack({ style, color }: { style: HairStyle; color: HairColor }) {
       <g>
         <path d="M -44,-10 Q -50,12 -46,40 L -32,46 Q -34,18 -32,-4 Z" fill={c} />
         <path d="M 44,-10 Q 50,12 46,40 L 32,46 Q 34,18 32,-4 Z" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'afro') {
+    // The afro's bulk is a big rounded mass BEHIND the head. The head (drawn on
+    // top) covers the centre, so this shows as an even halo that hugs the head
+    // outline with no gaps — on any face shape. Perimeter circles texture the
+    // edge. The front hairline is the cap in HairFront.
+    return (
+      <g>
+        <circle cx="0" cy="-14" r="55" fill={c} />
+        <circle cx="-46" cy="-46" r="13" fill={c} />
+        <circle cx="46" cy="-46" r="13" fill={c} />
+        <circle cx="-56" cy="-14" r="13" fill={c} />
+        <circle cx="56" cy="-14" r="13" fill={c} />
+        <circle cx="-48" cy="18" r="12" fill={c} />
+        <circle cx="48" cy="18" r="12" fill={c} />
+        <circle cx="-22" cy="-62" r="12" fill={c} />
+        <circle cx="22" cy="-62" r="12" fill={c} />
       </g>
     )
   }
@@ -198,15 +229,18 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
     )
   }
   if (style === 'afro') {
-    // Big textured halo surrounding the head.
+    // Front hairline cap over the forehead/crown (hairline at ~-34 so the
+    // forehead shows). The afro's volume is the rounded halo in HairBack, which
+    // hugs the head outline; this cap just sets the front hairline + a little
+    // top texture so the two read as one mass.
     return (
       <g>
-        <ellipse cx="0" cy="-30" rx="56" ry="32" fill={c} />
-        <circle cx="-50" cy="-12" r="14" fill={c} />
-        <circle cx="50" cy="-12" r="14" fill={c} />
-        <circle cx="-30" cy="-56" r="13" fill={c} />
-        <circle cx="30" cy="-56" r="13" fill={c} />
-        <circle cx="0" cy="-62" r="12" fill={c} />
+        <path d="M -44,-14 Q -50,-58 0,-60 Q 50,-58 44,-14 Q 34,-32 0,-34 Q -34,-32 -44,-14 Z" fill={c} />
+        <circle cx="-36" cy="-48" r="11" fill={c} />
+        <circle cx="36" cy="-48" r="11" fill={c} />
+        <circle cx="-16" cy="-58" r="11" fill={c} />
+        <circle cx="16" cy="-58" r="11" fill={c} />
+        <circle cx="0" cy="-60" r="10" fill={c} />
       </g>
     )
   }
