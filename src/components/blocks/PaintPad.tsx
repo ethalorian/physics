@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import type { Stroke } from '@/lib/draw/strokes'
 import { paintStrokes } from '@/lib/draw/strokes'
 import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
@@ -14,7 +14,7 @@ const W = 640
 const H = 360
 
 export default function PaintPad({
-  value = [], onChange, palette, transparent = false,
+  value = [], onChange, palette, transparent = false, background,
 }: {
   value?: Stroke[]
   onChange: (strokes: Stroke[]) => void
@@ -22,6 +22,9 @@ export default function PaintPad({
   /** When true, the canvas stays transparent so a background (grid/diagram)
    *  layered behind it shows through. Used by the sketch block's grid mode. */
   transparent?: boolean
+  /** A node drawn BEHIND the canvas only (never behind the toolbar), so a grid
+   *  or diagram template can't bleed up into the tool row. */
+  background?: ReactNode
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const strokesRef = useRef<Stroke[]>(value.map((s) => ({ ...s, points: s.points.slice() })))
@@ -66,16 +69,25 @@ export default function PaintPad({
         canUndo={strokesRef.current.length > 0} canRedo={redoRef.current.length > 0}
         palette={palette}
       />
-      <canvas
-        ref={canvasRef}
-        width={W}
-        height={H}
-        onPointerDown={handlers.onDown}
-        onPointerMove={handlers.onMove}
-        onPointerUp={handlers.onUp}
-        onPointerLeave={handlers.onUp}
-        style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: transparent ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
-      />
+      {/* Buffer between the tool row and the canvas, so a template behind the
+          canvas always sits clearly below the tools. */}
+      <div style={{ position: 'relative', marginTop: 10 }}>
+        {background && (
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
+            {background}
+          </div>
+        )}
+        <canvas
+          ref={canvasRef}
+          width={W}
+          height={H}
+          onPointerDown={handlers.onDown}
+          onPointerMove={handlers.onMove}
+          onPointerUp={handlers.onUp}
+          onPointerLeave={handlers.onUp}
+          style={{ position: 'relative', display: 'block', width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: (transparent || background) ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
+        />
+      </div>
     </div>
   )
 }

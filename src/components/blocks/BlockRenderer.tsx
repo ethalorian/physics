@@ -405,7 +405,16 @@ function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketc
   const initial = ((saved as { strokes?: Stroke[] })?.strokes) ?? []
   const [strokes, setStrokes] = useState<Stroke[]>(initial)
   const [savedFlag, setSavedFlag] = useState(false)
-  const hasBg = !!b.grid || !!b.backgroundDiagram || !!b.scaffoldSvg
+  // The template (grid / diagram / scaffold) is handed to PaintPad as a
+  // background that sits BEHIND THE CANVAS ONLY — never behind the toolbar — so
+  // the tools always stay on top with a clear buffer above the template.
+  const background = b.backgroundDiagram
+    ? <DiagramBackground scene={b.backgroundDiagram} />
+    : b.scaffoldSvg
+      ? <div style={{ width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: b.scaffoldSvg }} />
+      : b.grid
+        ? <CoordinateGrid xLabel={b.xLabel} yLabel={b.yLabel} quadrants={b.quadrants} />
+        : undefined
   return (
     <div>
       <p className="text-sm mb-2" style={{ color: C.indigo }}>{b.instruction}</p>
@@ -414,20 +423,7 @@ function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketc
           {b.prompts.map((p, i) => <li key={i}>{p}</li>)}
         </ul>
       )}
-      <div style={{ position: 'relative' }}>
-        {hasBg && (
-          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
-            {b.backgroundDiagram
-              ? <DiagramBackground scene={b.backgroundDiagram} />
-              : b.scaffoldSvg
-                ? <div style={{ width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: b.scaffoldSvg }} />
-                : <CoordinateGrid xLabel={b.xLabel} yLabel={b.yLabel} quadrants={b.quadrants} />}
-          </div>
-        )}
-        <div style={{ position: 'relative' }}>
-          <PaintPad value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} transparent={hasBg} />
-        </div>
-      </div>
+      <PaintPad value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} background={background} />
       <div className="flex items-center gap-2 mt-1">
         <button
           onClick={() => { if (strokes.length === 0) return; save(b.id, 'sketch', { strokes }); setSavedFlag(true) }}

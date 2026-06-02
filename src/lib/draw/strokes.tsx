@@ -8,7 +8,7 @@ import React from 'react'
 export type Point = { x: number; y: number }
 
 /** Tool that produced a stroke. Absent = freehand pen (back-compat with old data). */
-export type StrokeTool = 'pen' | 'line' | 'rect' | 'ellipse' | 'spray'
+export type StrokeTool = 'pen' | 'line' | 'arrow' | 'rect' | 'ellipse' | 'spray'
 
 export interface Stroke {
   color: string
@@ -63,6 +63,18 @@ export function paintStroke(ctx: CanvasRenderingContext2D, s: Stroke) {
   } else if (tool === 'line') {
     const a = pts[0]; const b = pts[pts.length - 1]
     ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
+  } else if (tool === 'arrow') {
+    const a = pts[0]; const b = pts[pts.length - 1]
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke()
+    // arrowhead at b, scaled to line width
+    const ang = Math.atan2(b.y - a.y, b.x - a.x)
+    const head = Math.max(10, (s.width ?? 4) * 3)
+    const spread = Math.PI / 7
+    ctx.beginPath()
+    ctx.moveTo(b.x, b.y)
+    ctx.lineTo(b.x - head * Math.cos(ang - spread), b.y - head * Math.sin(ang - spread))
+    ctx.lineTo(b.x - head * Math.cos(ang + spread), b.y - head * Math.sin(ang + spread))
+    ctx.closePath(); ctx.fill()
   } else if (tool === 'rect') {
     const { x, y, w, h } = bbox(pts)
     if (s.fill) ctx.fillRect(x, y, w, h); else ctx.strokeRect(x, y, w, h)
@@ -93,6 +105,20 @@ export function StrokeShapeEl({ s }: { s: Stroke }) {
   if (tool === 'line') {
     const a = pts[0]; const b = pts[pts.length - 1]
     return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={stroke} strokeWidth={w} strokeLinecap="round" />
+  }
+  if (tool === 'arrow') {
+    const a = pts[0]; const b = pts[pts.length - 1]
+    const ang = Math.atan2(b.y - a.y, b.x - a.x)
+    const head = Math.max(10, w * 3)
+    const spread = Math.PI / 7
+    const h1x = b.x - head * Math.cos(ang - spread), h1y = b.y - head * Math.sin(ang - spread)
+    const h2x = b.x - head * Math.cos(ang + spread), h2y = b.y - head * Math.sin(ang + spread)
+    return (
+      <g stroke={stroke} fill={stroke}>
+        <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} strokeWidth={w} strokeLinecap="round" />
+        <polygon points={`${b.x},${b.y} ${h1x},${h1y} ${h2x},${h2y}`} strokeWidth={0} />
+      </g>
+    )
   }
   if (tool === 'rect') {
     const { x, y, w: bw, h } = bbox(pts)

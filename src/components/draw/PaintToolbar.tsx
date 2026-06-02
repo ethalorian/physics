@@ -1,6 +1,6 @@
 "use client"
 
-import { Pen, Slash, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2 } from 'lucide-react'
+import { Pen, Slash, MoveUpRight, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2 } from 'lucide-react'
 import type { EditorTool } from '@/lib/draw/input'
 
 // Shared drawing toolbar: tools, color palette + custom picker, thickness slider,
@@ -15,6 +15,7 @@ export const PAINT_PALETTE = [
 const TOOLS: { id: EditorTool; label: string; Icon: typeof Pen }[] = [
   { id: 'pen', label: 'Pen', Icon: Pen },
   { id: 'line', label: 'Line', Icon: Slash },
+  { id: 'arrow', label: 'Arrow (for vectors & forces)', Icon: MoveUpRight },
   { id: 'rect', label: 'Rectangle', Icon: Square },
   { id: 'ellipse', label: 'Ellipse', Icon: Circle },
   { id: 'spray', label: 'Spray paint', Icon: SprayCan },
