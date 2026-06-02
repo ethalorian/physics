@@ -40,6 +40,12 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'title', label: 'Title (optional)', kind: 'text' },
     { key: 'markdown', label: 'Body (markdown)', kind: 'textarea' },
   ] },
+  { type: 'procedure', label: 'Build steps / procedure', group: 'Teach', fields: [
+    { key: 'title', label: 'Title (e.g. "Build steps 10–15")', kind: 'text' },
+    { key: 'intro', label: 'Intro line (optional, markdown)', kind: 'textarea' },
+    { key: 'steps', label: 'Steps (one per line)', kind: 'stringlist' },
+    { key: 'startNumber', label: 'First step number (default 1)', kind: 'number' },
+  ] },
   { type: 'sentence_frame', label: 'Sentence frame', group: 'Teach', fields: [
     { key: 'frame', label: 'Frame (use ___ for blanks)', kind: 'text' },
     { key: 'wordBank', label: 'Word bank', kind: 'stringlist' },

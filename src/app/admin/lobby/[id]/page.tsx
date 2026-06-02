@@ -180,7 +180,7 @@ export default function LobbyDetailPage() {
             </div>
           </div>
 
-          {session.prompt && (
+          {session.prompt && session.task_type !== 'escape' && (
             <p className="text-sm mb-4 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}>{session.prompt}</p>
           )}
 

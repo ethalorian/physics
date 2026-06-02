@@ -110,7 +110,7 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
         <button onClick={next} className="grid place-items-center rounded-lg border" style={{ width: 30, height: 30, borderColor: 'var(--border)' }} aria-label="Next month"><ChevronRight size={16} /></button>
       </div>
 
-      <div className="grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: 6 }}>
+      <div className="grid" style={{ gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 6 }}>
         {WD.map((w) => (
           <div key={w} className="text-xs font-medium text-center pb-1" style={{ color: 'var(--muted-foreground)' }}>{w}</div>
         ))}
@@ -120,8 +120,9 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
           const off = noSchool.has(iso)
           const meetings = meetingsByIso.get(iso) ?? []
           return (
-            <div key={i} className="rounded-lg border p-1.5 flex flex-col"
+            <div key={i} className="rounded-lg border p-1.5 flex flex-col overflow-hidden"
               style={{
+                minWidth: 0,
                 minHeight: compact ? 64 : 104,
                 borderColor: isToday ? 'var(--primary)' : 'var(--border)',
                 boxShadow: isToday ? '0 0 0 1px var(--primary)' : 'none',
@@ -132,7 +133,7 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                 <span className="text-xs font-medium" style={{ color: isToday ? 'var(--primary)' : 'var(--muted-foreground)' }}>{cell.d}</span>
                 {off && cell.inMonth && <span className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>no school</span>}
               </div>
-              <div className="flex flex-col gap-1 mt-1">
+              <div className="flex flex-col gap-1 mt-1 min-w-0">
                 {meetings.map((m, j) => {
                   const color = BLOCK_COLOR[m.block] ?? 'var(--muted-foreground)'
                   const clickable = Boolean(m.lessonId)
@@ -141,8 +142,8 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                     // Unit placeholder — no authored lesson to open yet. Make that legible.
                     return (
                       <div key={j} title={`${m.block} block · ${m.title} · not built yet`}
-                        className="text-left rounded-md px-1.5 py-1"
-                        style={{ border: '1px dashed var(--border)', background: 'transparent' }}>
+                        className="text-left rounded-md px-1.5 py-1 w-full"
+                        style={{ minWidth: 0, border: '1px dashed var(--border)', background: 'transparent' }}>
                         <div className="text-[10px] font-bold" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
                         <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--muted-foreground)' }}>{m.title}</div>
                         <div className="text-[9px]" style={{ color: 'var(--muted-foreground)' }}>not built yet</div>
@@ -154,8 +155,9 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
                       key={j}
                       onClick={() => router.push(`/admin/lessons/${m.lessonId}/build`)}
                       title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''} — open builder`}
-                      className="text-left rounded-md px-1.5 py-1 transition-transform hover:translate-x-0.5"
+                      className="text-left rounded-md px-1.5 py-1 w-full transition-transform hover:translate-x-0.5"
                       style={{
+                        minWidth: 0,
                         background: `color-mix(in oklch, ${color} 14%, transparent)`,
                         borderLeft: `3px solid ${color}`,
                         cursor: 'pointer',

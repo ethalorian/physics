@@ -221,14 +221,14 @@ export default function LobbyAdminPage() {
             </div>
           )}
           {task !== 'escape' && (
-            <label className="text-sm sm:col-span-2">Prompt (what students do)
+            <label className="text-sm sm:col-span-2">Task — what students must do <span style={{ color: 'var(--destructive)' }}>*</span> <span style={{ color: 'var(--muted-foreground)' }}>(shown large at the top of every student screen)</span>
               <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={2}
-                placeholder="e.g. Sketch the free-body diagram for the block on the ramp."
+                placeholder="e.g. Sketch the free-body diagram for the block on the ramp and label every force."
                 className="w-full rounded-lg border p-2 text-sm mt-1" style={field} />
             </label>
           )}
         </div>
-        <button onClick={create} disabled={busy || !courseId || (task === 'jigsaw' && pieces.split('\n').map((s) => s.trim()).filter(Boolean).length < 2)}
+        <button onClick={create} disabled={busy || !courseId || (task !== 'escape' && !prompt.trim()) || (task === 'jigsaw' && pieces.split('\n').map((s) => s.trim()).filter(Boolean).length < 2)}
           className="mt-4 text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-50"
           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
           {busy ? 'Creating…' : 'Create lobby'}

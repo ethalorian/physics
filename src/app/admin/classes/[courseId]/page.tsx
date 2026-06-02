@@ -64,20 +64,23 @@ export default function ClassPage() {
       .catch(() => {})
   }, [courseId])
 
-  const saveWindow = async (lessonId: string) => {
-    const e = edits[lessonId] ?? { open_at: null, close_at: null }
+  const postWindow = async (lessonId: string, win: Win) => {
     setSavingId(lessonId)
     await fetch(`/api/classes/${encodeURIComponent(courseId)}/windows`, {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lesson_id: lessonId, open_at: e.open_at, close_at: e.close_at }),
+      body: JSON.stringify({ lesson_id: lessonId, open_at: win.open_at, close_at: win.close_at }),
     }).catch(() => {})
     setWindows((prev) => {
       const next = { ...prev }
-      if (!e.open_at && !e.close_at) delete next[lessonId]; else next[lessonId] = e
+      if (!win.open_at && !win.close_at) delete next[lessonId]; else next[lessonId] = win
       return next
     })
+    setEdits((prev) => ({ ...prev, [lessonId]: win }))
     setSavingId(null)
   }
+  const saveWindow = (lessonId: string) => postWindow(lessonId, edits[lessonId] ?? { open_at: null, close_at: null })
+  const openNow = (lessonId: string) => postWindow(lessonId, { open_at: new Date().toISOString(), close_at: null })
+  const closeLesson = (lessonId: string) => postWindow(lessonId, { open_at: null, close_at: null })
 
   const c = data?.course
   const s = data?.summary
@@ -146,10 +149,10 @@ export default function ClassPage() {
 
           {/* Lesson schedule — per-class open/close windows */}
           <div className="text-xs font-bold uppercase tracking-widest mt-8 mb-2 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
-            <CalendarClock size={14} /> Lesson schedule — open / close for this class
+            <CalendarClock size={14} /> Lesson access — open / close for this class
           </div>
           <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
-            Lessons are open by default. Set an <strong>open</strong> date to hold students back until then, or a <strong>close</strong> date to stop late work. Leave both blank to keep a lesson open.
+            Lessons are <strong>closed</strong> until you open them for this class. Hit <strong>Open now</strong> to release one immediately, or schedule an <strong>open</strong> date (and an optional <strong>close</strong> date to stop late work). <strong>Close</strong> hides it again.
           </p>
           {data.lessons.length === 0 ? (
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No published lessons yet.</p>
@@ -159,6 +162,7 @@ export default function ClassPage() {
                 <thead>
                   <tr style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
                     <th className="text-left text-xs font-bold uppercase tracking-wide px-4 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Lesson</th>
+                    <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Status</th>
                     <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Opens</th>
                     <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)' }}>Closes</th>
                     <th className="px-3 py-2.5" />
@@ -170,10 +174,19 @@ export default function ClassPage() {
                     const saved = windows[l.id] ?? { open_at: null, close_at: null }
                     const changed = (e.open_at ?? null) !== (saved.open_at ?? null) || (e.close_at ?? null) !== (saved.close_at ?? null)
                     const setE = (patch: Partial<Win>) => setEdits((p) => ({ ...p, [l.id]: { ...e, ...patch } }))
+                    const nowMs = Date.now()
+                    const openOk = !saved.open_at || nowMs >= Date.parse(saved.open_at)
+                    const closeOk = !saved.close_at || nowMs <= Date.parse(saved.close_at)
+                    const hasWin = !!(saved.open_at || saved.close_at)
+                    const status = !hasWin ? 'Closed' : (openOk && closeOk) ? 'Open' : (!openOk ? 'Scheduled' : 'Ended')
+                    const statusColor = status === 'Open' ? 'var(--success)' : status === 'Scheduled' ? 'var(--reward)' : 'var(--muted-foreground)'
                     return (
                       <tr key={l.id} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
                         <td className="px-4 py-2.5" style={{ whiteSpace: 'nowrap' }}>
                           <span className="font-medium">{l.lessonNumber ? `D${l.lessonNumber} · ` : ''}{l.title}</span>
+                        </td>
+                        <td className="px-3 py-2.5">
+                          <span className="text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: `color-mix(in oklch, ${statusColor} 16%, transparent)`, color: statusColor }}>{status}</span>
                         </td>
                         <td className="px-3 py-2.5">
                           <input type="datetime-local" value={toLocalInput(e.open_at)} onChange={(ev) => setE({ open_at: fromLocalInput(ev.target.value) })}
@@ -184,11 +197,29 @@ export default function ClassPage() {
                             className="rounded-md border px-2 py-1 text-xs" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
                         </td>
                         <td className="px-3 py-2.5 text-right" style={{ whiteSpace: 'nowrap' }}>
-                          <button onClick={() => saveWindow(l.id)} disabled={!changed || savingId === l.id}
-                            className="text-xs font-semibold rounded-lg px-3 py-1.5"
-                            style={{ background: changed ? 'var(--primary)' : 'var(--secondary)', color: changed ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: 'none', cursor: changed && savingId !== l.id ? 'pointer' : 'default' }}>
-                            {savingId === l.id ? 'Saving…' : 'Save'}
-                          </button>
+                          <div className="inline-flex items-center gap-1.5">
+                            {status !== 'Open' && (
+                              <button onClick={() => openNow(l.id)} disabled={savingId === l.id}
+                                className="text-xs font-semibold rounded-lg px-2.5 py-1.5"
+                                style={{ background: 'var(--success)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                                Open now
+                              </button>
+                            )}
+                            {hasWin && (
+                              <button onClick={() => closeLesson(l.id)} disabled={savingId === l.id}
+                                className="text-xs font-semibold rounded-lg px-2.5 py-1.5"
+                                style={{ background: 'transparent', color: 'var(--destructive)', border: '1px solid var(--border)', cursor: 'pointer' }}>
+                                Close
+                              </button>
+                            )}
+                            {changed && (
+                              <button onClick={() => saveWindow(l.id)} disabled={savingId === l.id}
+                                className="text-xs font-semibold rounded-lg px-2.5 py-1.5"
+                                style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                                {savingId === l.id ? 'Saving…' : 'Save schedule'}
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     )

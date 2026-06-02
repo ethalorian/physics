@@ -111,6 +111,20 @@ export interface LessonVocabBlock extends BaseBlock {
   type: 'lesson_vocab';        // renders the lesson's tiered SEI vocab (authored in the builder)
 }
 
+/**
+ * PROCEDURE — an ordered list of hands-on build / lab steps (the proper home for
+ * physical "do this, then this" instructions that used to be jammed into callouts).
+ * Display-only (no capture): students FOLLOW the steps; their thinking/work about
+ * the build is logged separately in lab_notebook / gewa / observation blocks.
+ */
+export interface ProcedureBlock extends BaseBlock {
+  type: 'procedure';
+  title?: string;             // e.g. "Build steps 10–15" (shown above the list)
+  intro?: string;             // optional one-line framing (markdown)
+  steps: string[];            // ordered actions (each supports markdown + KaTeX)
+  startNumber?: number;       // first step's displayed number (default 1) — lets a day continue the unit's running build count
+}
+
 // ---------------------------------------------------------------------------
 // INTERACTIVE / DATA-CAPTURING BLOCKS  (`capture: true`)
 // ---------------------------------------------------------------------------
@@ -337,7 +351,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | DoodleBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
+  | CalloutBlock | SentenceFrameBlock | DoodleBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;

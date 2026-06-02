@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { Hourglass, Lock, Unlock, CheckCircle2, Send } from 'lucide-react'
+import { Hourglass, Lock, Unlock, CheckCircle2, Send, Target } from 'lucide-react'
 import PaintPad from '@/components/blocks/PaintPad'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import Avatar from '@/components/avatar/Avatar'
@@ -92,6 +92,15 @@ export default function LobbyActivityPage() {
       <span className="text-xs px-1.5 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>you</span>
     </div>
   )
+  // Escape sessions store their room config (JSON) in `prompt`; never show it as a task.
+  const taskCallout = st?.prompt && st.task_type !== 'escape' ? (
+    <div className="mb-4 rounded-xl p-4 text-left" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+      <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ opacity: 0.85 }}>
+        <Target size={13} /> Your task
+      </div>
+      <div className="text-base font-semibold" style={{ lineHeight: 1.35 }}>{st.prompt}</div>
+    </div>
+  ) : null
 
   if (!st) return wrap(<p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>)
   if (st.status === 'closed' && !st.submitted) return wrap(<p className="text-sm">This lobby is closed.</p>)
@@ -107,6 +116,7 @@ export default function LobbyActivityPage() {
   if (!st.grouped) return wrap(
     <div className="text-center">
       {selfHeader}
+      {taskCallout}
       <Hourglass size={36} style={{ color: 'var(--primary)' }} className="mx-auto mb-2" />
       <h1 className="text-lg font-semibold">You&apos;re in the lobby</h1>
       <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Waiting for your teacher to make groups…</p>
@@ -124,7 +134,7 @@ export default function LobbyActivityPage() {
 
   return wrap(
     <div>
-      {st.prompt && <p className="text-sm mb-4 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}>{st.prompt}</p>}
+      {taskCallout}
 
       {st.myRole && (
         <div className="mb-4 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--reward) 14%, transparent)', borderLeft: '3px solid var(--reward)' }}>

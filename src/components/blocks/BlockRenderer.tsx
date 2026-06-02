@@ -17,7 +17,7 @@ import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
-  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, Zap, type LucideIcon,
+  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, Zap, Wrench, type LucideIcon,
 } from 'lucide-react'
 
 // Heavy, self-contained interactive component — rendered natively (no iframe),
@@ -71,6 +71,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   asteroid_thread: { label: 'Asteroid 2026-XJ', domain: 'K', Icon: Orbit },
   vocab: { label: 'Key terms', domain: 'K', Icon: BookA },
   worked_example: { label: 'Worked example', domain: 'S', Icon: Calculator },
+  procedure: { label: 'Build steps', domain: 'S', Icon: Wrench },
   sentence_frame: { label: 'Sentence frame', domain: 'R', Icon: MessageSquareQuote },
   sim_embed: { label: 'Simulation', domain: 'S', Icon: FlaskConical },
   equation_visualizer: { label: 'Equation explorer', domain: 'S', Icon: Sigma },
@@ -485,6 +486,23 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     case 'worked_example':
       return <GewaWorkedExample prompt={b.prompt} given={b.given} equation={b.equation} work={b.work} answer={b.answer} />
+    case 'procedure': {
+      const start = b.startNumber ?? 1
+      return (
+        <div>
+          {b.title && <div className="text-sm font-semibold mb-1" style={{ color: 'var(--foreground)' }}>{b.title}</div>}
+          {b.intro && <div className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}><MathMarkdown content={b.intro} /></div>}
+          <ol style={{ listStyle: 'none', margin: 0, padding: 0 }} className="space-y-2.5">
+            {(b.steps ?? []).map((s, i) => (
+              <li key={i} className="flex gap-3 items-start">
+                <span className="grid place-items-center rounded-full text-xs font-bold shrink-0" style={{ width: 26, height: 26, background: 'color-mix(in oklch, var(--success) 16%, var(--card))', color: 'var(--success)', border: '1.5px solid color-mix(in oklch, var(--success) 50%, var(--border))' }}>{start + i}</span>
+                <div className="text-sm pt-0.5" style={{ color: 'var(--foreground)' }}><MathMarkdown content={s} /></div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )
+    }
     case 'sentence_frame':
       return (
         <>

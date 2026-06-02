@@ -1,9 +1,10 @@
 import { supabaseAdmin } from '@/lib/supabase'
 
-// Per-class lesson release windows. A globally-published lesson is OPEN to every
-// class by default; a window row only RESTRICTS it for one class — delaying its
-// open (open_at in the future) or closing late work (close_at in the past).
-// Teachers own windows for their classes; admins own only the global published flag.
+// Per-class lesson release windows. A published lesson is CLOSED to a class until
+// the teacher OPENS it: a window row GRANTS access for one class (open now, or
+// open_at in the past) and can also schedule a future open or a close. No window
+// row → the lesson is closed for that class. Teachers own windows for their
+// classes; admins own only the global published flag.
 
 export interface LessonWindow { course_id: string; lesson_id: string; open_at: string | null; close_at: string | null }
 
@@ -23,14 +24,15 @@ async function getStudentCourseIds(googleUserId: string): Promise<string[]> {
 }
 
 // Build a predicate `isOpen(lessonId)` for one student, evaluated at `now`.
-// Open unless EVERY class the student is in has a window currently restricting it.
-// (No class / no window → open by default.)
+// A lesson is CLOSED until the teacher opens it: visible only if at least one
+// class the student is in has an open window currently in effect.
+// (No enrollment / no window → closed.)
 export async function getStudentLessonGate(
   googleUserId: string,
   now: number = Date.now(),
 ): Promise<(lessonId: string) => boolean> {
   const courseIds = await getStudentCourseIds(googleUserId)
-  if (courseIds.length === 0) return () => true
+  if (courseIds.length === 0) return () => false
 
   const { data } = await supabaseAdmin
     .from('lesson_class_windows')
@@ -42,10 +44,9 @@ export async function getStudentLessonGate(
   return (lessonId: string) => {
     for (const c of courseIds) {
       const w = byKey.get(`${c}|${lessonId}`)
-      if (!w) return true            // open by default in this class
-      if (within(w, now)) return true
+      if (w && within(w, now)) return true   // this class has opened it
     }
-    return false
+    return false                              // closed until a teacher opens it
   }
 }
 

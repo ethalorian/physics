@@ -25,8 +25,9 @@ export const GET = withAuth<{ courseId: string }>(async (_request, ctx) => {
     return NextResponse.json({ windows: await getCourseWindows(courseId) })
 })
 
-// POST { lesson_id, open_at, close_at } — set/clear a window. Null dates clear
-// that bound; clearing both removes the row (lesson reverts to open-by-default).
+// POST { lesson_id, open_at, close_at } — set/clear a window. To OPEN a lesson
+// now, send open_at = now (close_at null). Clearing both removes the row, which
+// now means the lesson is CLOSED for this class (closed-by-default).
 export const POST = withAuth<{ courseId: string }>(async (request, ctx) => {
     const { courseId } = await ctx.params
     const auth = await assertOwner(ctx, courseId)
