@@ -113,9 +113,12 @@ export default async function AdminManagePage() {
         )}
       </section>
 
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-1">
         <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your units</h2>
       </div>
+      <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
+        Flip <strong>Publish</strong> when a lesson is ready. It still stays closed to students until you open it for each class — set the open/close <strong>dates</strong> on each <Link href="/admin/oversight" className="underline" style={{ color: 'var(--primary)' }}>class page</Link> under “Lesson access.”
+      </p>
 
       {lessons.length === 0
         ? <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No lessons yet.</p>
