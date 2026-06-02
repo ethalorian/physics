@@ -16,6 +16,7 @@ interface GewaLike {
   answer?: string
   workStrokes?: unknown[]
   workTexts?: { text?: unknown }[]
+  sandbox?: { lines?: unknown[] }
 }
 
 function summarize(rj: GewaLike | null, text: string | null): string {
@@ -24,6 +25,8 @@ function summarize(rj: GewaLike | null, text: string | null): string {
   const parts: string[] = []
   if (rj.given) parts.push(`Given: ${rj.given}`)
   if (rj.equation) parts.push(`Equation: ${rj.equation}`)
+  const eqn = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((s) => s.trim()) : []
+  if (eqn.length) parts.push(`Equation work: ${eqn.join(' | ')}`)
   const typed = Array.isArray(rj.workTexts) ? rj.workTexts.map((t) => String(t?.text ?? '')).filter((s) => s.trim()) : []
   if (typed.length) parts.push(`Typed: ${typed.join(' | ')}`)
   if (rj.answer) parts.push(`Answer: ${rj.answer}`)

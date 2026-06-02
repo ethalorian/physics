@@ -61,7 +61,7 @@ export const GET = withAuth(async (request, ctx) => {
   // Spiral items for that competency; rotate by day so it varies.
   const { data: itemRows } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, difficulty')
+    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
   const tiersFromDb = (target.mini_lesson as { tiers?: unknown } | null)?.tiers ?? null
@@ -73,6 +73,8 @@ export const GET = withAuth(async (request, ctx) => {
     prompt: string
     answerKey?: string
     difficulty?: string
+    needsGraph?: boolean
+    needsEquationBuilder?: boolean
     competencyValue: number | null
     miniLessonTiers?: unknown
   } | null = null
@@ -87,6 +89,8 @@ export const GET = withAuth(async (request, ctx) => {
       prompt: chosen.prompt,
       answerKey: chosen.answer_key ?? undefined,
       difficulty: chosen.difficulty ?? undefined,
+      needsGraph: chosen.needs_graph ?? false,
+      needsEquationBuilder: chosen.needs_equation_builder ?? false,
       competencyValue: valueOf(target.id),
       miniLessonTiers: tiersFromDb,
     }

@@ -6,7 +6,14 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { ArrowLeft, Check, X, Sparkles } from 'lucide-react'
 import EnrollmentGate from '@/components/EnrollmentGate'
+import MathMarkdown from '@/components/MathMarkdown'
 import type { ContentBlock } from '@/data/content-blocks'
+
+// Questions can contain LaTeX (e.g. $v = \frac{\Delta x}{\Delta t}$). Render the
+// stem, every choice, and the explanation through MathMarkdown so the math is
+// typeset rather than shown as raw source. `mathInline` strips the block margins
+// so it sits naturally inside a button / sentence.
+const mathInline = 'math-inline-flow'
 
 // BlockRenderer pulls in recharts, react-pdf, sims, etc. — keep it lazy so the
 // review page is light when blocks aren't present.
@@ -82,7 +89,9 @@ export default function ReviewPage() {
               const locked = chosen !== undefined
               return (
                 <div key={qi} className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-                  <div className="font-semibold text-sm mb-3">{qi + 1}. {q.q}</div>
+                  <div className={`font-semibold text-sm mb-3 ${mathInline}`}>
+                    <span style={{ marginRight: 4 }}>{qi + 1}.</span><MathMarkdown content={q.q} />
+                  </div>
                   <div className="flex flex-col gap-2">
                     {q.choices.map((c, ci) => {
                       const isAnswer = ci === q.answerIndex
@@ -98,7 +107,7 @@ export default function ReviewPage() {
                           className="text-left rounded-lg border px-3 py-2 text-sm flex items-center justify-between gap-2"
                           style={{ borderColor: border, background: bg, color: fg, cursor: locked ? 'default' : 'pointer' }}
                         >
-                          <span>{c}</span>
+                          <span className={mathInline}><MathMarkdown content={c} /></span>
                           {locked && isAnswer && <Check size={15} />}
                           {locked && isChosen && !isAnswer && <X size={15} />}
                         </button>
@@ -106,7 +115,9 @@ export default function ReviewPage() {
                     })}
                   </div>
                   {locked && (
-                    <p className="text-xs mt-2.5" style={{ color: 'var(--muted-foreground)' }}>{q.explanation}</p>
+                    <div className={`text-xs mt-2.5 ${mathInline}`} style={{ color: 'var(--muted-foreground)' }}>
+                      <MathMarkdown content={q.explanation} />
+                    </div>
                   )}
                 </div>
               )

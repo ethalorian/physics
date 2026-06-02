@@ -601,6 +601,20 @@
   font-size: 1.0625rem;
 }
 
+/* math-inline-flow: collapse a MathMarkdown wrapper so a single short paragraph
+   (a quiz stem, an answer choice, an explanation) flows inline with surrounding
+   text and KaTeX, with no block margins or inflated font size. Used by the
+   skill-review questions. */
+.math-inline-flow { display: inline; }
+.math-inline-flow .markdown-content { display: inline; }
+.math-inline-flow .markdown-content p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+  display: inline;
+}
+.math-inline-flow .katex { font-size: 1.05em; }
+
 .markdown-content ul, .markdown-content ol {
   margin: 1rem 0;
   padding-left: 1.5rem;

@@ -26,6 +26,8 @@ interface DailyItem {
   prompt: string
   answerKey?: string
   difficulty?: string
+  needsGraph?: boolean
+  needsEquationBuilder?: boolean
   competencyValue?: number | null
   miniLessonTiers?: MiniLesson[] | null
 }
@@ -67,7 +69,8 @@ export default function WarmupPage() {
     ans &&
     ((ans.answer && ans.answer.trim()) ||
       (ans.workStrokes && ans.workStrokes.length > 0) ||
-      (ans.workTexts && ans.workTexts.length > 0))
+      (ans.workTexts && ans.workTexts.length > 0) ||
+      (ans.sandbox?.lines && ans.sandbox.lines.some((l) => l.trim())))
   )
 
   async function submit() {
@@ -173,7 +176,12 @@ export default function WarmupPage() {
                   <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>Solve this</span>
                   <p className="text-sm font-medium text-foreground">{item.prompt}</p>
                 </div>
-                <WarmupAnswer strand={strandForCode(item.competencyCode)} onChange={setAns} />
+                <WarmupAnswer
+                  strand={strandForCode(item.competencyCode)}
+                  needsGraph={item.needsGraph}
+                  needsEquationBuilder={item.needsEquationBuilder}
+                  onChange={setAns}
+                />
                 <div className="flex items-center gap-2 pt-2 border-t border-border">
                   <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">
                     {submitting ? 'Submitting…' : 'Submit for review'}

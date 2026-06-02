@@ -25,7 +25,7 @@ export const GET = withAuth(async (_request, ctx) => {
 
   const { data: items } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, competency_id, prompt, answer_key, first_unit_id, difficulty, created_at')
+    .select('id, competency_id, prompt, answer_key, first_unit_id, difficulty, needs_graph, needs_equation_builder, created_at')
     .order('created_at', { ascending: true })
 
   const { data: tags } = await supabaseAdmin
@@ -45,6 +45,8 @@ export const GET = withAuth(async (_request, ctx) => {
     answerKey: i.answer_key,
     firstUnitId: i.first_unit_id,
     difficulty: i.difficulty,
+    needsGraph: i.needs_graph ?? false,
+    needsEquationBuilder: i.needs_equation_builder ?? false,
     testedCompetencyIds: testedByItem.get(i.id) ?? [i.competency_id],
   }))
 
@@ -67,6 +69,8 @@ export const POST = withAuth(async (request, ctx) => {
       answer_key: body.answer_key ?? null,
       first_unit_id: body.first_unit_id ?? null,
       difficulty: body.difficulty ?? null,
+      needs_graph: Boolean(body.needs_graph),
+      needs_equation_builder: Boolean(body.needs_equation_builder),
       created_by: ctx.email,
     })
     .select('id')
@@ -93,6 +97,8 @@ export const PATCH = withAuth(async (request, ctx) => {
   if (body.first_unit_id !== undefined) patch.first_unit_id = body.first_unit_id
   if (body.difficulty !== undefined) patch.difficulty = body.difficulty
   if (body.competency_id !== undefined) patch.competency_id = body.competency_id
+  if (body.needs_graph !== undefined) patch.needs_graph = Boolean(body.needs_graph)
+  if (body.needs_equation_builder !== undefined) patch.needs_equation_builder = Boolean(body.needs_equation_builder)
 
   const { error } = await supabaseAdmin.from('math_spiral_items').update(patch).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

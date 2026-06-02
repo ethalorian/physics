@@ -28,7 +28,7 @@ const TEXT_SIZE = 26
 // The drawing tools plus a 'text' tool unique to this surface.
 type Tool = EditorTool | 'text'
 
-export default function MathCanvas({ value, onChange }: { value?: MathCanvasValue; onChange: (v: MathCanvasValue) => void }) {
+export default function MathCanvas({ value, onChange, gridded = false }: { value?: MathCanvasValue; onChange: (v: MathCanvasValue) => void; gridded?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const strokesRef = useRef<Stroke[]>((value?.strokes ?? []).map((s) => ({ ...s, points: s.points.slice() })))
   const redoRef = useRef<Stroke[]>([])
@@ -55,6 +55,17 @@ export default function MathCanvas({ value, onChange }: { value?: MathCanvasValu
     if (!ctx) return
     ctx.clearRect(0, 0, W, H)
     ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H)
+    // optional graph paper (light grid + center axes) for graphing items
+    if (gridded) {
+      const step = 32
+      ctx.lineWidth = 1
+      ctx.strokeStyle = '#E3E8F0'
+      for (let x = step; x < W; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
+      for (let y = step; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
+      ctx.strokeStyle = '#AEB7C7'; ctx.lineWidth = 1.5
+      ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke()
+      ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke()
+    }
     // typed text first…
     ctx.textBaseline = 'alphabetic'
     for (const t of textsRef.current) {

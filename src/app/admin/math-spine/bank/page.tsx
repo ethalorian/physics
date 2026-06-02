@@ -23,6 +23,8 @@ interface Item {
   answerKey: string | null
   firstUnitId: string | null
   difficulty: string | null
+  needsGraph?: boolean
+  needsEquationBuilder?: boolean
   testedCompetencyIds: string[]
 }
 
@@ -37,9 +39,12 @@ interface ItemForm {
   firstUnitId: string
   competencyId: string
   tested: string[]
+  needsGraph: boolean
+  needsEquationBuilder: boolean
 }
 const emptyForm = (competencyId = ''): ItemForm => ({
   prompt: '', answerKey: '', difficulty: 'easy', firstUnitId: 'unit-1', competencyId, tested: [],
+  needsGraph: false, needsEquationBuilder: false,
 })
 
 export default function WarmupBankPage() {
@@ -81,6 +86,8 @@ export default function WarmupBankPage() {
       firstUnitId: it.firstUnitId ?? 'unit-1',
       competencyId: it.competencyId,
       tested: it.testedCompetencyIds.filter((c) => c !== it.competencyId),
+      needsGraph: Boolean(it.needsGraph),
+      needsEquationBuilder: Boolean(it.needsEquationBuilder),
     })
     setEditingId(it.id)
   }
@@ -102,6 +109,8 @@ export default function WarmupBankPage() {
         first_unit_id: form.firstUnitId,
         competency_id: form.competencyId,
         tested_competency_ids: form.tested,
+        needs_graph: form.needsGraph,
+        needs_equation_builder: form.needsEquationBuilder,
       }
       const res = await fetch('/api/math-spine/bank', {
         method: editingId === 'new' ? 'POST' : 'PATCH',
@@ -169,6 +178,20 @@ export default function WarmupBankPage() {
                   <label className="text-xs font-medium text-muted-foreground">Answer key (teacher / self-check)</label>
                   <input className={inputCls} value={form.answerKey} onChange={(e) => setForm({ ...form, answerKey: e.target.value })} />
                 </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground">Answer tools (shown to the student when needed)</label>
+                  <div className="flex flex-wrap gap-4 mt-1">
+                    <label className="inline-flex items-center gap-2 text-sm text-foreground cursor-pointer">
+                      <input type="checkbox" checked={form.needsGraph} onChange={(e) => setForm({ ...form, needsGraph: e.target.checked })} />
+                      Graph paper (graphing / plotting)
+                    </label>
+                    <label className="inline-flex items-center gap-2 text-sm text-foreground cursor-pointer">
+                      <input type="checkbox" checked={form.needsEquationBuilder} onChange={(e) => setForm({ ...form, needsEquationBuilder: e.target.checked })} />
+                      Equation builder
+                    </label>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1">The paintpad (type + draw) is always available.</p>
+                </div>
                 <div className="flex flex-wrap gap-3">
                   <div>
                     <label className="text-xs font-medium text-muted-foreground">Difficulty</label>
@@ -221,6 +244,8 @@ export default function WarmupBankPage() {
                         ))}
                         {it.difficulty && <span className="text-[11px] text-muted-foreground">· {it.difficulty}</span>}
                         {it.firstUnitId && <span className="text-[11px] text-muted-foreground">· {it.firstUnitId}</span>}
+                        {it.needsGraph && <Badge variant="outline" className="text-[10px]">graph</Badge>}
+                        {it.needsEquationBuilder && <Badge variant="outline" className="text-[10px]">equation</Badge>}
                       </div>
                       <p className="text-sm text-foreground">{it.prompt}</p>
                     </div>

@@ -74,10 +74,16 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
       </div>
     ) : null
   const hasBoard = (rj.workStrokes && rj.workStrokes.length > 0) || (rj.workTexts && rj.workTexts.length > 0)
+  const eqnLines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
   return (
     <div>
       {field('Given', rj.given)}
       {field('Equation', rj.equation)}
+      {eqnLines.length > 0 && (
+        <div className="text-sm" style={{ marginBottom: 3 }}>
+          <b style={{ color: 'var(--secondary-foreground)' }}>Equation work:</b> {eqnLines.join('  |  ')}
+        </div>
+      )}
       {field('Answer', rj.answer)}
       {hasBoard && (
         <div className="mt-2">
@@ -85,7 +91,7 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
           <BoardSvg strokes={rj.workStrokes} texts={rj.workTexts} />
         </div>
       )}
-      {!rj.given && !rj.equation && !rj.answer && !hasBoard && (
+      {!rj.given && !rj.equation && !rj.answer && !hasBoard && eqnLines.length === 0 && (
         <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{sub.response || '[submitted]'}</p>
       )}
     </div>

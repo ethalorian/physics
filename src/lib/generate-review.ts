@@ -175,12 +175,14 @@ export async function generateTargetReview(statement: string, sims: SimOption[] 
   const slugs = new Set(sims.map((s) => s.slug))
   const system = `You are a high-school physics teacher's aide building a short, visually rich SKILL REVIEW for a CPA (college-prep, conceptual-first) student who is struggling with one learning target. Idealized physics only (round g to 10 m/s^2, no air resistance, no heavy math). Keep language accessible for English learners.
 
+MATH FORMATTING (important): Write every equation, variable, unit, and symbol as KaTeX math wrapped in dollar delimiters — inline math in single dollars like $v = \\frac{\\Delta x}{\\Delta t}$, standalone display math in double dollars like $$a = \\frac{\\Delta v}{\\Delta t}$$. This applies in EVERY text field: prose markdown, callout markdown, AND the question stems, choices, and explanations. Do NOT use \\( \\) or \\[ \\] delimiters, and never leave a raw LaTeX command (like \\frac or \\vec) outside dollar delimiters. A bare count in a sentence ("after 3 seconds") needs no math, but any quantity with a unit or symbol should be math — e.g. $5\\ \\text{m/s}$, not 5 m/s. (Remember this is JSON, so each backslash must be escaped: write \\\\frac, \\\\Delta, etc.)
+
 Produce a JSON object with THREE keys:
 
 1. "reteach": a 1-2 sentence plain-English summary of the skill (fallback text; keep it short).
 
 2. "blocks": an ORDERED array (3-6 items) that re-teaches the skill, building from idea to picture to interaction. Allowed block types ONLY:
-   - {"type":"prose","markdown":"..."}  — short explanatory paragraph (markdown + KaTeX OK).
+   - {"type":"prose","markdown":"..."}  — short explanatory paragraph (markdown; math in $...$ / $$...$$).
    - {"type":"callout","variant":"note|tip|warning|misconception","title":"...","markdown":"..."} — a key idea or a common misconception to avoid.
    - {"type":"diagram","kind":"free_body","forces":[{"label":"weight","dir":"down","mag":10},{"label":"normal","dir":"up","mag":10}]} — code-drawn free-body diagram. dir is up/down/left/right or an angle in degrees.
    - {"type":"diagram","kind":"vectors","vectors":[{"label":"v","angle":30,"mag":12}],"showResultant":true} — vector addition. angle in degrees CCW from +x.
@@ -190,7 +192,7 @@ Produce a JSON object with THREE keys:
 ${simCatalogText(sims)}
    Use a diagram or graph only when it is physically correct and actually clarifies THIS skill. Omit visuals you are unsure about rather than risk a wrong picture.
 
-3. "questions": 3-4 multiple-choice questions that build from recognition to application (THIS is the graded part). Each: {"q":"...","choices":["...","..."],"answerIndex":0,"explanation":"one sentence"}. 3-4 choices each.
+3. "questions": 3-4 multiple-choice questions that build from recognition to application (THIS is the graded part). Each: {"q":"...","choices":["...","..."],"answerIndex":0,"explanation":"one sentence"}. 3-4 choices each. Any math in the stem, choices, or explanation must use $...$ / $$...$$ delimiters too.
 
 Reply with ONLY the JSON object, no prose, no markdown fences.`
   const userText = `LEARNING TARGET: ${statement}\n\nWrite the review as JSON.`
