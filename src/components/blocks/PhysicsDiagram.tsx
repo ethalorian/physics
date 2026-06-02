@@ -205,27 +205,66 @@ function Circuit({ components }: { components: CircuitComponent[] }) {
 
 // --- Energy chain (kind === 'energy_chain') -------------------------------
 // Left-to-right labeled boxes joined by arrows.
+// Greedy word-wrap to a max character count (a single over-long word is kept on
+// its own line rather than dropped).
+function wrapText(text: string, maxChars: number): string[] {
+  const words = text.split(/\s+/).filter(Boolean)
+  const lines: string[] = []
+  let cur = ''
+  for (const w of words) {
+    const next = cur ? `${cur} ${w}` : w
+    if (next.length <= maxChars || !cur) cur = next
+    else { lines.push(cur); cur = w }
+  }
+  if (cur) lines.push(cur)
+  return lines.length ? lines : ['']
+}
+
+// Energy chain renders into its own wide nested canvas (see the kind switch) so
+// labels and sublabels wrap inside their boxes instead of overflowing.
 function EnergyChain({ links }: { links: EnergyChainLink[] }) {
   if (links.length === 0) return null
-  const x0 = 30, y = 120, total = 340
-  const gap = 18
-  const boxW = Math.max(54, (total - gap * (links.length - 1)) / links.length)
-  const boxH = 84
+  const W = 720, H = 300, x0 = 20, gap = 22
+  const n = links.length
+  const boxW = (W - 2 * x0 - gap * (n - 1)) / n
+  const labelF = 15, subF = 12.5
+  const labelLH = labelF * 1.18, subLH = subF * 1.18
+  const maxLabelChars = Math.max(6, Math.floor((boxW - 14) / (labelF * 0.56)))
+  const maxSubChars = Math.max(8, Math.floor((boxW - 14) / (subF * 0.52)))
+
+  const prepared = links.map((l) => ({
+    color: l.color,
+    labelLines: wrapText(l.label, maxLabelChars),
+    subLines: l.sublabel ? wrapText(l.sublabel, maxSubChars) : [],
+  }))
+  const maxLabelLines = Math.max(...prepared.map((p) => p.labelLines.length))
+  const maxSubLines = Math.max(0, ...prepared.map((p) => p.subLines.length))
+  const pad = 14
+  const subGap = maxSubLines > 0 ? 8 : 0
+  const boxH = maxLabelLines * labelLH + subGap + maxSubLines * subLH + pad * 2
+  const cy = H / 2
+
   return (
     <>
-      {links.map((l, i) => {
+      {prepared.map((p, i) => {
         const x = x0 + i * (boxW + gap)
-        const fill = l.color ?? PALETTE[i % PALETTE.length]
+        const fill = p.color ?? PALETTE[i % PALETTE.length]
+        const cx = x + boxW / 2
+        const thisH = p.labelLines.length * labelLH + (p.subLines.length ? subGap + p.subLines.length * subLH : 0)
+        const top = cy - thisH / 2 + labelF * 0.82 // first label baseline
+        const subTop = top + p.labelLines.length * labelLH + subGap
         return (
           <g key={i}>
-            <rect x={x} y={y - boxH / 2} width={boxW} height={boxH} rx={10}
+            <rect x={x} y={cy - boxH / 2} width={boxW} height={boxH} rx={12}
               fill={`color-mix(in oklch, ${fill} 14%, var(--card))`} stroke={fill} strokeWidth={2} />
-            <text x={x + boxW / 2} y={y - 4} fill={INK} fontSize={12} fontWeight={700} textAnchor="middle">{l.label}</text>
-            {l.sublabel && (
-              <text x={x + boxW / 2} y={y + 14} fill={MUTE} fontSize={10.5} textAnchor="middle">{l.sublabel}</text>
-            )}
-            {i < links.length - 1 && (
-              <Arrow x0={x + boxW + 2} y0={y} x1={x + boxW + gap - 2} y1={y} color={INK} width={2} />
+            {p.labelLines.map((ln, k) => (
+              <text key={`l${k}`} x={cx} y={top + k * labelLH} fill={INK} fontSize={labelF} fontWeight={700} textAnchor="middle">{ln}</text>
+            ))}
+            {p.subLines.map((ln, m) => (
+              <text key={`s${m}`} x={cx} y={subTop + m * subLH} fill={MUTE} fontSize={subF} textAnchor="middle">{ln}</text>
+            ))}
+            {i < n - 1 && (
+              <Arrow x0={x + boxW + 3} y0={cy} x1={x + boxW + gap - 3} y1={cy} color={INK} width={2.5} />
             )}
           </g>
         )
@@ -303,7 +342,11 @@ export default function PhysicsDiagram({
           {kind === 'vectors' && <Vectors vectors={vectors ?? []} showResultant={showResultant} />}
           {kind === 'motion_map' && <MotionMap dots={dots ?? []} />}
           {kind === 'circuit' && <Circuit components={components ?? []} />}
-          {kind === 'energy_chain' && <EnergyChain links={links ?? []} />}
+          {kind === 'energy_chain' && (
+            <svg viewBox="0 0 720 300" width={400} height={280} preserveAspectRatio="xMidYMid meet">
+              <EnergyChain links={links ?? []} />
+            </svg>
+          )}
           {kind === 'friction_asymmetry' && <FrictionAsymmetry leftMag={leftMag} rightMag={rightMag} veerDir={veerDir} />}
         </svg>
       </div>

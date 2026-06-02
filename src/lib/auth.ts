@@ -44,6 +44,12 @@ async function resolveUserRole(email?: string | null): Promise<'admin' | 'teache
   return granted ?? 'student'
 }
 
+// Cutoff for forcing student (non-staff) re-authentication. Any non-staff token
+// without a fresh `authAt >= this value` is invalidated on its next request.
+// Set 2026-06-02 to log every student out after the roster wipe. Bump it again
+// any time you need to force all students to sign in again.
+const STUDENT_REAUTH_CUTOFF = Date.UTC(2026, 5, 2, 0, 0, 0)
+
 // Test user accounts (only available in development)
 const TEST_USERS = [
   {
@@ -205,6 +211,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.sub = user.id;
         token.role = await resolveUserRole(user.email);
+        // Stamp the moment of (re)authentication so the cutoff below can tell a
+        // fresh sign-in from a pre-cutoff token.
+        token.authAt = Date.now();
         // Store the avatar image in the token
         if (user.image) {
           token.picture = user.image;
@@ -215,6 +224,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // field, so they don't have to fully re-login to get a resolved role.
       if (token.role === undefined) {
         token.role = await resolveUserRole(token.email as string | undefined)
+      }
+
+      // Force-logout cutoff: invalidate any NON-staff (student) session that was
+      // issued before STUDENT_REAUTH_CUTOFF. Existing student tokens lack
+      // `authAt`, so they are cleared on their next request; admins/teachers are
+      // never affected; a fresh student sign-in stamps `authAt = now` and passes.
+      // Returning null clears the session (Auth.js v5), logging the user out.
+      const isStaff = token.role === 'admin' || token.role === 'teacher'
+      if (!isStaff && (typeof token.authAt !== 'number' || token.authAt < STUDENT_REAUTH_CUTOFF)) {
+        return null
       }
 
       // Store Google access token from the account (first sign-in)
