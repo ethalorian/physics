@@ -394,7 +394,7 @@ export default function HomePage() {
                     <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Simulation</div>
                     <div className="font-semibold mt-1" style={{ fontSize: 16 }}>{data.sideQuest.sim.title}</div>
                     <div className="flex items-center justify-between mt-3">
-                      <span className="rounded-full text-xs font-bold" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}>★ +15 XP</span>
+                      <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>Optional · just for fun</span>
                       <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Launch →</span>
                     </div>
                   </Glass>

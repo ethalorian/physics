@@ -145,6 +145,25 @@ export interface MarzanoBlock extends BaseBlock {
   targetId: string;           // 1-2-3 self-rating → informs the mastery view
 }
 
+/**
+ * SKETCH — a student DRAWING product (graphs, free-body diagrams, sketches).
+ * Uses the lobby PaintPad. When `grid` is set it draws on a labeled coordinate
+ * plane so a position–time graph or FBD has axes to build on (matches the
+ * packet's "real coordinate grid" convention). Saved as { strokes }.
+ */
+export interface SketchBlock extends BaseBlock {
+  type: 'sketch';
+  capture: true;
+  instruction: string;        // what to draw + how (at-home guidance lives here)
+  prompts?: string[];         // optional bullet checklist shown under the canvas
+  grid?: boolean;             // draw a labeled coordinate plane behind the canvas
+  xLabel?: string;            // x-axis label when grid is on (e.g. "Time (s)")
+  yLabel?: string;            // y-axis label when grid is on (e.g. "Position (m)")
+  quadrants?: 1 | 4;          // 1 = first-quadrant axes (default), 4 = full x/y cross
+  backgroundDiagram?: DiagramScene; // optional physics figure to annotate on top of
+  scaffoldSvg?: string;       // optional raw SVG scaffold to draw on top of
+}
+
 export interface QuestionBlock extends BaseBlock {
   type: 'question';
   capture: true;
@@ -319,7 +338,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | DoodleBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock
-  | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock
+  | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
 
@@ -334,7 +353,7 @@ export interface BlockDocument {
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
 export const CAPTURE_BLOCK_TYPES: BlockType[] = [
   'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
-  'doodle', 'lab_notebook',
+  'doodle', 'lab_notebook', 'sketch',
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {
@@ -400,7 +419,7 @@ export interface LessonPage {
  */
 export const VISUAL_BLOCK_TYPES: BlockType[] = [
   'figure', 'diagram', 'graph', 'sim_embed', 'equation_visualizer',
-  'doodle', 'lab_notebook', 'data_table', 'asteroid_thread',
+  'doodle', 'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
 ];
 export function isVisualBlock(b: ContentBlock): boolean {
   return (VISUAL_BLOCK_TYPES as string[]).includes(b.type)

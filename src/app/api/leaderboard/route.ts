@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getStreaksForUsers, getStreakDetail } from '@/lib/streak'
 
 // GET - Fetch platform leaderboard
 export const GET = withAuth(async (request, ctx) => {
@@ -101,6 +102,11 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
+    // Real consecutive-day streaks for everyone on the board, plus the current
+    // user's full detail (longest + total) for the sidebar streak widget.
+    const streaks = await getStreaksForUsers(userIds)
+    const meStreak = await getStreakDetail(ctx.userId)
+
     // Convert to array and sort by points
     const leaderboard = Array.from(userDataMap.entries())
       .map(([userId, data]) => {
@@ -115,6 +121,9 @@ export const GET = withAuth(async (request, ctx) => {
           email: data.email,
           image: data.image || null,
           total_points: Math.round(data.totalPoints),
+          streak: streaks.get(userId) ?? 0,
+          streak_longest: userId === ctx.userId ? meStreak.longest : 0,
+          streak_total: userId === ctx.userId ? meStreak.total : 0,
           activities: data.activities,
           is_current_user: userId === ctx.userId,
           use_custom_avatar: av?.use_custom_avatar ?? false,

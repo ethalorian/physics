@@ -33,16 +33,22 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   const room = config ? getRoom(config.roomId) : null
   if (!room) return NextResponse.json({ error: 'Escape room is not configured' }, { status: 500 })
 
-  const [{ data: groupsRaw }, { data: statesRaw }] = await Promise.all([
+  const [{ data: groupsRaw }, { data: statesRaw }, { data: membersRaw }] = await Promise.all([
     supabaseAdmin.from('lobby_groups').select('id, label').eq('session_id', id),
     supabaseAdmin
       .from('block_responses')
       .select('block_id, response')
       .eq('session_id', id)
       .eq('block_type', 'escape_state'),
+    supabaseAdmin.from('lobby_members').select('group_id').eq('session_id', id),
   ])
   const groups = (groupsRaw ?? []) as GroupRow[]
   const states = (statesRaw ?? []) as StateRow[]
+  const members = (membersRaw ?? []) as { group_id: string | null }[]
+
+  // group_id → member count, for the "X of N solved this lock" gate.
+  const sizeByGroup = new Map<string, number>()
+  for (const m of members) if (m.group_id) sizeByGroup.set(m.group_id, (sizeByGroup.get(m.group_id) ?? 0) + 1)
 
   // block_id is `escape:<group_id>` — index state by group.
   const stateByGroup = new Map<string, EscapeState>()
@@ -57,6 +63,7 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
       const st = stateByGroup.get(g.id) ?? freshState()
       const finished = st.stage >= lockCount || !!st.finishedAt
       const currentLock = finished ? null : room.locks[st.stage]
+      const groupSize = sizeByGroup.get(g.id) ?? 0
       return {
         group_id: g.id,
         label: g.label,
@@ -68,12 +75,22 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
         wrongAttempts: st.wrongAttempts ?? 0,
         finishedAt: st.finishedAt ?? null,
         lastAt: st.lastAt ?? null,
+        // per-member gate: how many of the group have entered the CURRENT code
+        solvedCount: (st.solvedBy ?? []).length,
+        groupSize,
       }
     })
     .sort((a, b) => a.label.localeCompare(b.label))
 
   return NextResponse.json({
-    room: { title: room.title, lockTitles: room.locks.map((l) => l.title), lockCount },
+    // Teacher-only: each lock's title AND its answer code, so the teacher can
+    // read out / verify codes. Never sent to the student API.
+    room: {
+      title: room.title,
+      lockCount,
+      locks: room.locks.map((l) => ({ title: l.title, code: l.answers[0] ?? '' })),
+      lockTitles: room.locks.map((l) => l.title),
+    },
     groups: groupViews,
     summary: {
       total: groupViews.length,

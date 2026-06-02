@@ -52,8 +52,9 @@ async function loadContext(sessionId: string, userId: string) {
     .order('joined_at')
   const mates = (matesRaw ?? []) as { user_id: string; joined_at: string }[]
   const ordinal = Math.max(0, mates.findIndex((x) => x.user_id === userId))
+  const memberIds = mates.map((m) => m.user_id)
 
-  return { session, config, room, groupId: me.group_id, ordinal, groupSize: mates.length }
+  return { session, config, room, groupId: me.group_id, ordinal, groupSize: mates.length, memberIds }
 }
 
 const stateKey = (groupId: string) => `escape:${groupId}`
@@ -145,6 +146,7 @@ export const GET = withAuth(async (request, ctx) => {
   const { state } = await readState(sessionId, c.groupId)
   const finished = state.stage >= c.room.locks.length || !!state.finishedAt
   const lock = finished ? null : c.room.locks[state.stage]
+  const solvedBy = state.solvedBy ?? []
 
   return NextResponse.json({
     room: publicRoom(c.room),
@@ -155,8 +157,11 @@ export const GET = withAuth(async (request, ctx) => {
     groupSize: c.groupSize,
     currentLock: lock ? { title: lock.title, narrative: lock.narrative } : null,
     myClue: lock ? clueForMember(lock, c.ordinal) : null,
-    cooldownUntil: state.cooldownUntil ?? 0,
+    cooldownUntil: state.cooldownUntil?.[ctx.userId] ?? 0,
     prize: finished ? c.config.prize : null,
+    // per-member gate: have I solved the current lock, and how many teammates have?
+    iSolved: solvedBy.includes(ctx.userId),
+    solvedCount: solvedBy.filter((id) => c.memberIds.includes(id)).length,
   })
 })
 
@@ -173,14 +178,17 @@ export const POST = withAuth(async (request, ctx) => {
   if (c.session.status === 'closed') return NextResponse.json({ error: 'This lobby is closed' }, { status: 410 })
 
   const { id: rowId, state } = await readState(session_id, c.groupId)
+  const solvedBy = state.solvedBy ?? []
+  const cooldowns = state.cooldownUntil ?? {}
 
   if (state.stage >= c.room.locks.length || state.finishedAt) {
     return NextResponse.json({ correct: true, finished: true, stage: state.stage, fragments: state.fragments, prize: c.config.prize })
   }
 
   const now = Date.now()
-  if (state.cooldownUntil && now < state.cooldownUntil) {
-    return NextResponse.json({ correct: false, cooling: true, retryAfterMs: state.cooldownUntil - now }, { status: 429 })
+  const myCooldown = cooldowns[ctx.userId] ?? 0
+  if (now < myCooldown) {
+    return NextResponse.json({ correct: false, cooling: true, retryAfterMs: myCooldown - now }, { status: 429 })
   }
 
   const lock = c.room.locks[state.stage]
@@ -190,14 +198,33 @@ export const POST = withAuth(async (request, ctx) => {
   if (!correct) {
     const next: EscapeState = {
       ...state,
+      solvedBy,
       wrongAttempts: state.wrongAttempts + 1,
       lastAt: nowIso,
-      cooldownUntil: now + WRONG_CODE_COOLDOWN_MS,
+      cooldownUntil: { ...cooldowns, [ctx.userId]: now + WRONG_CODE_COOLDOWN_MS },
     }
     await writeState({ rowId, sessionId: session_id, groupId: c.groupId, state: next, email: ctx.email })
     return NextResponse.json({ correct: false, retryAfterMs: WRONG_CODE_COOLDOWN_MS })
   }
 
+  // Correct code from this member. Record them; the lock only opens once EVERY
+  // member of the group has entered it — until then, no next clue.
+  const nextSolved = solvedBy.includes(ctx.userId) ? solvedBy : [...solvedBy, ctx.userId]
+  const allSolved = c.memberIds.length > 0 && c.memberIds.every((id) => nextSolved.includes(id))
+
+  if (!allSolved) {
+    const next: EscapeState = { ...state, solvedBy: nextSolved, lastAt: nowIso }
+    await writeState({ rowId, sessionId: session_id, groupId: c.groupId, state: next, email: ctx.email })
+    return NextResponse.json({
+      correct: true,
+      advanced: false,
+      waiting: true,
+      solvedCount: nextSolved.filter((id) => c.memberIds.includes(id)).length,
+      groupSize: c.memberIds.length,
+    })
+  }
+
+  // Everyone in. Open the lock, reveal the clue, reset solves for the next one.
   const stage = state.stage + 1
   const finished = stage >= c.room.locks.length
   const next: EscapeState = {
@@ -207,7 +234,8 @@ export const POST = withAuth(async (request, ctx) => {
     finishedAt: finished ? nowIso : null,
     wrongAttempts: state.wrongAttempts,
     lastAt: nowIso,
-    cooldownUntil: undefined,
+    solvedBy: [],
+    cooldownUntil: {},
   }
   await writeState({ rowId, sessionId: session_id, groupId: c.groupId, state: next, email: ctx.email })
 
@@ -223,6 +251,7 @@ export const POST = withAuth(async (request, ctx) => {
 
   return NextResponse.json({
     correct: true,
+    advanced: true,
     stage,
     finished,
     reveal: lock.reveal,

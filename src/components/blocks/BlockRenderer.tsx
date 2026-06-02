@@ -6,6 +6,7 @@ import Link from 'next/link'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, isBlockComplete, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
+import PaintPad from './PaintPad'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
@@ -77,6 +78,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   marzano: { label: 'Self-check', domain: 'meta', Icon: Gauge },
   exit_ticket: { label: 'Exit ticket', domain: 'P', Icon: Ticket },
   gewa: { label: 'Solve it', domain: 'S', Icon: PencilRuler },
+  sketch: { label: 'Draw it', domain: 'S', Icon: Pencil },
   equation_sandbox: { label: 'Equation sandbox', domain: 'S', Icon: Sigma },
   data_table: { label: 'Collect data', domain: 'R', Icon: Table },
   observation: { label: 'Observe & interpret', domain: 'R', Icon: Eye },
@@ -371,6 +373,76 @@ function LabNotebook({ b, saved, save }: { b: LabNotebookBlock; saved: unknown; 
   )
 }
 
+// A labeled coordinate plane drawn behind the sketch canvas, so a position–time
+// graph or FBD has real axes to build on. quadrants=1 → first-quadrant L-axes;
+// quadrants=4 → full cross through the centre. Matches PaintPad's 640×360 canvas.
+function CoordinateGrid({ xLabel, yLabel, quadrants = 1 }: { xLabel?: string; yLabel?: string; quadrants?: 1 | 4 }) {
+  const W = 640, H = 360, pad = 34
+  const ox = quadrants === 4 ? W / 2 : pad
+  const oy = quadrants === 4 ? H / 2 : H - pad
+  const lines: ReactNode[] = []
+  for (let gx = (ox % 32); gx <= W; gx += 32) lines.push(<line key={`v${gx}`} x1={gx} y1={0} x2={gx} y2={H} stroke="rgba(123,107,203,0.12)" strokeWidth={1} />)
+  for (let gy = (oy % 32); gy <= H; gy += 32) lines.push(<line key={`h${gy}`} x1={0} y1={gy} x2={W} y2={gy} stroke="rgba(123,107,203,0.12)" strokeWidth={1} />)
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ display: 'block' }} aria-hidden>
+      <rect x={0} y={0} width={W} height={H} fill="#FFFFFF" />
+      {lines}
+      {/* axes */}
+      <line x1={ox} y1={0} x2={ox} y2={H} stroke="var(--muted-foreground)" strokeWidth={1.5} />
+      <line x1={0} y1={oy} x2={W} y2={oy} stroke="var(--muted-foreground)" strokeWidth={1.5} />
+      {/* arrowheads */}
+      <polygon points={`${ox - 4},10 ${ox + 4},10 ${ox},2`} fill="var(--muted-foreground)" />
+      <polygon points={`${W - 10},${oy - 4} ${W - 10},${oy + 4} ${W - 2},${oy}`} fill="var(--muted-foreground)" />
+      {yLabel && <text x={ox + 6} y={16} fontSize={12} fill="var(--muted-foreground)">{yLabel}</text>}
+      {xLabel && <text x={W - 12} y={oy - 8} fontSize={12} textAnchor="end" fill="var(--muted-foreground)">{xLabel}</text>}
+    </svg>
+  )
+}
+
+// Sketch capture: the lobby PaintPad over an optional labeled grid / diagram.
+// Persists { strokes } and shows an explicit Saved state.
+function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketch' }>; saved: unknown; save: SaveFn }) {
+  const initial = ((saved as { strokes?: Stroke[] })?.strokes) ?? []
+  const [strokes, setStrokes] = useState<Stroke[]>(initial)
+  const [savedFlag, setSavedFlag] = useState(false)
+  const hasBg = !!b.grid || !!b.backgroundDiagram || !!b.scaffoldSvg
+  return (
+    <div>
+      <p className="text-sm mb-2" style={{ color: C.indigo }}>{b.instruction}</p>
+      {b.prompts && b.prompts.length > 0 && (
+        <ul className="text-sm mb-2" style={{ color: C.muted, paddingLeft: 18, listStyle: 'disc' }}>
+          {b.prompts.map((p, i) => <li key={i}>{p}</li>)}
+        </ul>
+      )}
+      <div style={{ position: 'relative' }}>
+        {hasBg && (
+          <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
+            {b.backgroundDiagram
+              ? <DiagramBackground scene={b.backgroundDiagram} />
+              : b.scaffoldSvg
+                ? <div style={{ width: '100%', height: '100%' }} dangerouslySetInnerHTML={{ __html: b.scaffoldSvg }} />
+                : <CoordinateGrid xLabel={b.xLabel} yLabel={b.yLabel} quadrants={b.quadrants} />}
+          </div>
+        )}
+        <div style={{ position: 'relative' }}>
+          <PaintPad value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} transparent={hasBg} />
+        </div>
+      </div>
+      <div className="flex items-center gap-2 mt-1">
+        <button
+          onClick={() => { if (strokes.length === 0) return; save(b.id, 'sketch', { strokes }); setSavedFlag(true) }}
+          disabled={strokes.length === 0}
+          className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
+          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: strokes.length ? 'pointer' : 'not-allowed' }}
+        >
+          Save drawing
+        </button>
+        {savedFlag && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
+      </div>
+    </div>
+  )
+}
+
 function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string) {
   switch (b.type) {
     case 'target':
@@ -448,6 +520,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     case 'lab_notebook':
       return <LabNotebook b={b} saved={saved} save={save} />
+    case 'sketch':
+      return <SketchPad b={b} saved={saved} save={save} />
     case 'marzano':
       return <MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n)} />
     case 'exit_ticket':

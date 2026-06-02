@@ -453,12 +453,18 @@ export interface EscapeState {
   wrongAttempts: number
   /** ISO timestamp of the last action (right or wrong) — drives "last activity". */
   lastAt?: string
-  /** Epoch ms; while now < cooldownUntil the keypad is resting after a wrong code. */
-  cooldownUntil?: number
+  /**
+   * user_ids who have correctly entered the CURRENT lock's code. A lock only
+   * opens (and the next clue is revealed) once EVERY group member is in this set;
+   * it is cleared each time the group advances to the next lock.
+   */
+  solvedBy: string[]
+  /** Per-member keypad cooldown after a wrong code (user_id → epoch ms). */
+  cooldownUntil?: Record<string, number>
 }
 
 export function freshState(): EscapeState {
-  return { stage: 0, fragments: [], unlocks: [], finishedAt: null, wrongAttempts: 0 }
+  return { stage: 0, fragments: [], unlocks: [], finishedAt: null, wrongAttempts: 0, solvedBy: [] }
 }
 
 /** Soft cooldown after a wrong code (Decision 3): nudge back to reasoning, never hard-block. */

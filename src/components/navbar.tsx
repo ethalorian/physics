@@ -19,6 +19,7 @@ import { clearViewAs } from "@/lib/view-as-shared"
 import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 import AccountMenu from "@/components/AccountMenu"
+import NotificationBell from "@/components/NotificationBell"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
@@ -195,7 +196,10 @@ export default function Navbar() {
                 <div className="hidden md:block">
                   <ThemeToggle />
                 </div>
-                
+
+                {/* Notifications — new ratings, grades, math, duels, due work */}
+                <NotificationBell />
+
                 {/* Account menu — avatar opens identity + My progress + Sign Out */}
                 <AccountMenu />
               </>

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "dayType": "WORKSHOP",
+  "blocks": [
+    { "id": "b1", "type": "target", "statement": "I can identify my own weak areas from Unit 1 and make a concrete plan to fix them before the transfer task." },
+    { "id": "b2", "type": "asteroid_thread", "connection": "Before the transfer task, every analyst checks their tools. Today you take stock of your Unit 1 toolkit — vectors, F = ma, free-body diagrams, friction, equilibrium — and shore up the weak spots." },
+    { "id": "b3", "type": "prose", "markdown": "## Workshop day — you run it\n\nNo new content today. This is your chance to **close gaps** before the transfer task. Work through it honestly and at your own pace.\n\n1. Rate yourself on each Unit 1 target below.\n2. Pick the **one or two** you feel weakest on.\n3. Re-do practice on those targets (re-open earlier days, or the reader).\n4. Write down a concrete plan." },
+    { "id": "b4", "type": "callout", "variant": "tip", "title": "How to use today", "markdown": "For each target, ask yourself: *could I do this on a test, with no help, right now?* If not, that target is where your time should go. Re-open the day it came from and re-try the Solve-it and Draw-it tasks — they save again, so your teacher sees the fresh attempt." },
+    { "id": "b5", "type": "marzano", "capture": true, "targetId": "u1.d19-vectors" },
+    { "id": "b6", "type": "marzano", "capture": true, "targetId": "u1.d19-fma" },
+    { "id": "b7", "type": "marzano", "capture": true, "targetId": "u1.d19-fbd" },
+    { "id": "b8", "type": "gewa", "capture": true, "prompt": "Pick the target you rated lowest and prove to yourself you have it now: write a short problem on that skill (a vector resultant, an F = ma calculation, or a net-force-from-an-FBD problem) and solve it fully.", "givenHint": "List what your self-made problem gives you.", "equationHint": "Use the equation for the skill you chose: R = sqrt(x² + y²), F = ma, or F_net = sum of forces.", "equationOptions": ["R = √(x² + y²)", "F = ma", "F_net = ΣF", "v = Δx / Δt"] },
+    { "id": "b9", "type": "exit_ticket", "capture": true, "frame": "My weakest target is ___. My plan to fix it before the transfer task is ___.", "prompt": "What target do you still feel weakest on, and what is your concrete plan to fix it before the transfer task?" },
+    { "id": "b10", "type": "marzano", "capture": true, "targetId": "u1.d19" }
+  ]
+}

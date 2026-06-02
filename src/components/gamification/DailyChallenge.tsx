@@ -43,7 +43,7 @@ export default function DailyChallenge({ challenge, onStart }: DailyChallengePro
       <CardContent className="p-4 flex-1 flex flex-col justify-center">
         {isComplete ? (
           <div className="text-center py-6">
-            <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-3 animate-bounce">
+            <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-3">
               <CheckCircle className="h-8 w-8 text-white" />
             </div>
             <div className="text-foreground font-bold text-lg mb-2">Challenge Complete!</div>

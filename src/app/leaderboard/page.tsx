@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EnrollmentGate from '@/components/EnrollmentGate'
 import Avatar from '@/components/avatar/Avatar'
 import AvatarGallery from '@/components/avatar/AvatarGallery'
+import ChallengePanel from '@/components/gamification/ChallengePanel'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 import { 
   Trophy, 
@@ -23,12 +24,11 @@ import {
   BookOpen,
   FileText,
   User,
-  Heart
+  Heart,
+  Swords
 } from 'lucide-react'
 import Link from 'next/link'
-import TrendingLeaders from '@/components/gamification/TrendingLeaders'
 import StreakTracker from '@/components/gamification/StreakTracker'
-import DailyChallenge from '@/components/gamification/DailyChallenge'
 
 interface LeaderboardEntry {
   rank: number
@@ -43,6 +43,9 @@ interface LeaderboardEntry {
     assignments: number
   }
   is_current_user: boolean
+  streak?: number
+  streak_longest?: number
+  streak_total?: number
   use_custom_avatar?: boolean
   avatar_traits?: AvatarTraits | null
   avatar_equipped?: EquippedItems
@@ -55,7 +58,7 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState<'all-time' | 'week' | 'month'>('all-time')
   const [error, setError] = useState<string | null>(null)
-  const [view, setView] = useState<'rankings' | 'gallery'>('rankings')
+  const [view, setView] = useState<'rankings' | 'gallery' | 'duels'>('rankings')
 
   useEffect(() => {
     async function fetchLeaderboard() {
@@ -84,35 +87,6 @@ export default function LeaderboardPage() {
   // Find current user's rank
   const currentUserEntry = leaderboard.find(entry => entry.is_current_user)
   const currentUserRank = currentUserEntry?.rank
-
-  // Mock trending data (in real app, this would come from API)
-  const trendingLeaders = leaderboard.slice(0, 5).map((entry, idx) => ({
-    rank: idx + 1,
-    name: entry.name,
-    points_gained: Math.floor(Math.random() * 200) + 50,
-    trend: 'up' as const,
-    current_rank: entry.rank,
-    previous_rank: entry.rank + Math.floor(Math.random() * 3)
-  }))
-
-  // Mock streak data (in real app, this would come from API)
-  const streakData = {
-    currentStreak: 5,
-    longestStreak: 12,
-    totalDays: 23
-  }
-
-  // Mock daily challenge
-  const dailyChallenge = {
-    id: '1',
-    title: 'Play 3 Vocabulary Games',
-    description: 'Complete any 3 vocabulary games to earn bonus points',
-    type: 'games' as const,
-    target: 3,
-    current: 1,
-    points_reward: 50,
-    expires_at: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString()
-  }
 
   const getRankIcon = (rank: number) => {
     if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />
@@ -181,6 +155,7 @@ export default function LeaderboardPage() {
       <div className="inline-flex rounded-full bg-muted p-1 gap-1">
         <button onClick={() => setView('rankings')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${view === 'rankings' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>Rankings</button>
         <button onClick={() => setView('gallery')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${view === 'gallery' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>Avatar wall</button>
+        <button onClick={() => setView('duels')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${view === 'duels' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>Duels</button>
       </div>
 
       {view === 'gallery' ? (
@@ -190,6 +165,14 @@ export default function LeaderboardPage() {
             <CardDescription>Everyone&apos;s Mii. Tap a heart to show some love — there&apos;s no ranking here, just appreciation.</CardDescription>
           </CardHeader>
           <CardContent><AvatarGallery /></CardContent>
+        </Card>
+      ) : view === 'duels' ? (
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Swords className="h-5 w-5 text-primary" /> Duels</CardTitle>
+            <CardDescription>Friendly head-to-head — challenge a classmate to earn the most XP over 3 days.</CardDescription>
+          </CardHeader>
+          <CardContent><ChallengePanel /></CardContent>
         </Card>
       ) : (
       <>
@@ -309,6 +292,12 @@ export default function LeaderboardPage() {
                             <FileText className="h-3 w-3" />
                             {entry.activities.assignments} assignments
                           </span>
+                          {(entry.streak ?? 0) > 0 && (
+                            <span className="flex items-center gap-1 text-reward font-medium">
+                              <Flame className="h-3 w-3" />
+                              {entry.streak}-day streak
+                            </span>
+                          )}
                         </div>
                       </div>
 
@@ -327,17 +316,12 @@ export default function LeaderboardPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          {/* Streak Tracker */}
-          <StreakTracker {...streakData} />
-
-          {/* Daily Challenge */}
-          <DailyChallenge 
-            challenge={dailyChallenge}
-            onStart={() => window.location.href = '/vocabulary'}
+          {/* Streak Tracker — real data for the current student */}
+          <StreakTracker
+            currentStreak={currentUserEntry?.streak ?? 0}
+            longestStreak={currentUserEntry?.streak_longest ?? 0}
+            totalDays={currentUserEntry?.streak_total ?? 0}
           />
-
-          {/* Trending Leaders */}
-          <TrendingLeaders leaders={trendingLeaders} />
         </div>
       </div>
 
@@ -357,7 +341,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h4 className="font-semibold text-sm">Vocabulary Games</h4>
-                <p className="text-xs text-muted-foreground">Earn points for every game completed</p>
+                <p className="text-xs text-muted-foreground">Games earn a small capped bonus — learning pays the most</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
@@ -375,7 +359,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h4 className="font-semibold text-sm">Submit Assignments</h4>
-                <p className="text-xs text-muted-foreground">Earn your assignment score as points</p>
+                <p className="text-xs text-muted-foreground">Graded work earns points (up to 40 each)</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">

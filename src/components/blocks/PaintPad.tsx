@@ -14,11 +14,14 @@ const W = 640
 const H = 360
 
 export default function PaintPad({
-  value = [], onChange, palette,
+  value = [], onChange, palette, transparent = false,
 }: {
   value?: Stroke[]
   onChange: (strokes: Stroke[]) => void
   palette?: string[]
+  /** When true, the canvas stays transparent so a background (grid/diagram)
+   *  layered behind it shows through. Used by the sketch block's grid mode. */
+  transparent?: boolean
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const strokesRef = useRef<Stroke[]>(value.map((s) => ({ ...s, points: s.points.slice() })))
@@ -35,7 +38,7 @@ export default function PaintPad({
     const ctx = canvasRef.current?.getContext('2d')
     if (!ctx) return
     ctx.clearRect(0, 0, W, H)
-    ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H)
+    if (!transparent) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H) }
     paintStrokes(ctx, strokesRef.current)
   }
   useEffect(() => { repaint() }, [])
@@ -71,7 +74,7 @@ export default function PaintPad({
         onPointerMove={handlers.onMove}
         onPointerUp={handlers.onUp}
         onPointerLeave={handlers.onUp}
-        style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
+        style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: transparent ? 'transparent' : '#fff', cursor: tool === 'eraser' ? 'cell' : tool === 'fill' ? 'copy' : 'crosshair' }}
       />
     </div>
   )

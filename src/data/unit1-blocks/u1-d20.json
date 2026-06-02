@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "dayType": "SYNTHESIS",
+  "blocks": [
+    { "id": "b1", "type": "target", "statement": "I can apply all of Unit 1's tools — vectors, F = ma, free-body diagrams, friction, equilibrium — to the asteroid scenario in one integrated analysis." },
+    { "id": "b2", "type": "asteroid_thread", "connection": "Today the whole toolkit comes together on 2026-XJ. This is the dress rehearsal for the transfer task: one coherent picture of the asteroid through every Unit 1 lens." },
+    { "id": "b3", "type": "prose", "markdown": "## The whole unit, one object\n\nWalk through 2026-XJ using everything you have learned:\n\n- **Free-body diagram** in deep space: solar gravity dominates; Earth and planetary gravity are weaker; there is **no friction**.\n- **Net force** is essentially solar gravity, pointing toward the Sun.\n- **F = ma** → the asteroid accelerates toward the Sun, which bends its path.\n- **Velocity** is 8,500 m/s at 15° toward Earth — decompose it into a toward-Earth part and a sideways part.\n- **Predict** its position months out using the constant-velocity approximation, and state the **uncertainty**." },
+    { "id": "b4", "type": "diagram", "kind": "vectors", "title": "2026-XJ velocity, decomposed", "caption": "The single velocity arrow (8,500 m/s, 15° toward Earth) splits into a toward-Earth component and a perpendicular component.", "vectors": [{ "mag": 82, "angle": 15, "label": "v = 8,500 m/s" }], "showResultant": false },
+    { "id": "b5", "type": "sketch", "capture": true, "grid": true, "quadrants": 4, "instruction": "Draw the free-body diagram for 2026-XJ in deep space. Put the asteroid at the center dot and draw one arrow per force. Remember: out there, there is no friction and no normal force — gravity is the whole story.", "prompts": ["Solar gravity: a long arrow toward the Sun (the dominant force).", "Earth's gravity: a short arrow toward Earth.", "No friction, no normal force in deep space.", "Label each arrow and circle the one that sets the net force."] },
+    { "id": "b6", "type": "gewa", "capture": true, "prompt": "2026-XJ travels at 8,500 m/s aimed 15° toward Earth. Find its toward-Earth (horizontal) velocity component. Then state how you would predict its position 30 days later, and why that prediction has a window of uncertainty.", "givenHint": "v = 8,500 m/s at 15°. Component = v·cos(angle).", "equationHint": "Toward-Earth component = v · cos(15°); then displacement = v · t.", "equationOptions": ["vₓ = v·cos θ", "v = d / t", "R = √(x² + y²)", "F = ma"] },
+    { "id": "b7", "type": "exit_ticket", "capture": true, "frame": "The one tool I most need ready for the transfer task is ___ because ___.", "prompt": "What is the one tool from this unit you most need to have ready for the transfer task, and why?" },
+    { "id": "b8", "type": "marzano", "capture": true, "targetId": "u1.d20" }
+  ]
+}

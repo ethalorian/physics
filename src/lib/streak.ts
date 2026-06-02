@@ -38,3 +38,28 @@ export async function getStreaksForUsers(userIds: string[]): Promise<Map<string,
   }
   return out
 }
+
+/** Full streak detail for one student: current run, longest-ever run, total active days. */
+export async function getStreakDetail(userId: string): Promise<{ current: number; longest: number; total: number }> {
+  const { data } = await supabaseAdmin
+    .from('student_activity')
+    .select('created_at')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(3000)
+  const iso = (dt: Date) => dt.toISOString().slice(0, 10)
+  const days = new Set<string>(((data ?? []) as { created_at: string }[]).map((a) => iso(new Date(a.created_at))))
+  const total = days.size
+
+  let current = 0
+  const cur = new Date()
+  if (!days.has(iso(cur))) cur.setDate(cur.getDate() - 1)
+  while (days.has(iso(cur))) { current++; cur.setDate(cur.getDate() - 1) }
+
+  // longest consecutive run (day-number diff avoids DST issues)
+  const nums = [...days].map((d) => Math.floor(Date.parse(d + 'T00:00:00Z') / 86400000)).sort((a, b) => a - b)
+  let longest = 0, run = 0, prev: number | null = null
+  for (const n of nums) { run = prev !== null && n - prev === 1 ? run + 1 : 1; longest = Math.max(longest, run); prev = n }
+
+  return { current, longest, total }
+}
