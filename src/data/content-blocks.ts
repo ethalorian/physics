@@ -373,3 +373,68 @@ export function isBlockComplete(b: ContentBlock, response: unknown): boolean {
   if (!isCaptureBlock(b)) return false;
   return isResponseComplete(b.type, response);
 }
+
+/**
+ * Paginate a lesson's blocks for the student viewer.
+ *
+ * Rule (chosen with the teacher): a save-required (capture) block anchors a
+ * page, and any reference blocks that immediately precede it (target, prose,
+ * figure, worked example, vocab, sim, diagram…) ride along on the SAME page so
+ * the context and the task it sets up stay together. Reference blocks with no
+ * following task (e.g. a closing summary) form a final reference-only page.
+ *
+ * Pure + deterministic so it can be unit-tested and reused by print/preview.
+ */
+export interface LessonPage {
+  blocks: ContentBlock[];
+  /** capture blocks on this page (the save-required work) */
+  captureBlocks: ContentBlock[];
+  /** does this page contain any save-required block? */
+  hasCapture: boolean;
+}
+
+/**
+ * Block types that ARE a visual (carry their own non-text element), so a page
+ * containing one is never a text wall. Interactive sketch/data blocks count —
+ * they render a canvas, plot, or figure.
+ */
+export const VISUAL_BLOCK_TYPES: BlockType[] = [
+  'figure', 'diagram', 'graph', 'sim_embed', 'equation_visualizer',
+  'doodle', 'lab_notebook', 'data_table', 'asteroid_thread',
+];
+export function isVisualBlock(b: ContentBlock): boolean {
+  return (VISUAL_BLOCK_TYPES as string[]).includes(b.type)
+    // a vocab term carrying an image, or a figure-bearing block, also counts
+    || (b.type === 'figure');
+}
+/** Does a page already contain an inherent visual element? */
+export function pageHasVisual(page: LessonPage): boolean {
+  return page.blocks.some(isVisualBlock);
+}
+
+export function paginateBlocks(blocks: ContentBlock[]): LessonPage[] {
+  const pages: LessonPage[] = [];
+  let buffer: ContentBlock[] = [];
+  for (const b of blocks) {
+    buffer.push(b);
+    // A capture block closes the current page — it and the reference blocks that
+    // led up to it travel together.
+    if (isCaptureBlock(b)) {
+      const captureBlocks = buffer.filter(isCaptureBlock);
+      pages.push({ blocks: buffer, captureBlocks, hasCapture: true });
+      buffer = [];
+    }
+  }
+  // Trailing reference-only blocks (no closing task): keep reference IN CONTEXT
+  // by folding them onto the previous task page rather than stranding them on a
+  // contextless page. Only when there's no prior page do they stand alone.
+  if (buffer.length > 0) {
+    if (pages.length > 0) {
+      const last = pages[pages.length - 1];
+      last.blocks = [...last.blocks, ...buffer];
+    } else {
+      pages.push({ blocks: buffer, captureBlocks: [], hasCapture: false });
+    }
+  }
+  return pages;
+}

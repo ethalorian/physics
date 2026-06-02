@@ -1,6 +1,8 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Zap } from 'lucide-react'
 
 // Renders the lesson's tiered SEI vocab (the single source authored in the
 // builder), grouped Tier 1/2/3, with cognate, part of speech, example, image.
@@ -38,7 +40,17 @@ export default function LessonVocabView({ lessonId }: { lessonId: string }) {
 
   return (
     <div className="rounded-lg border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-      <div className="text-xs font-medium mb-3" style={{ color: 'var(--secondary-foreground, var(--muted-foreground))' }}>Key terms</div>
+      <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+        <div className="text-xs font-medium" style={{ color: 'var(--secondary-foreground, var(--muted-foreground))' }}>Key terms</div>
+        {/* Practice these exact words in Word Shoot — this lesson's vocab preselected. */}
+        <Link
+          href={`/vocabulary/word-shoot?lesson_id=${lessonId}`}
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
+          style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}
+        >
+          <Zap size={13} /> Play Word Shoot with these words
+        </Link>
+      </div>
       <div className="space-y-4">
         {tiers.map((t) => {
           const meta = TIER_META[t]

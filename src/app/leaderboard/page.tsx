@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import EnrollmentGate from '@/components/EnrollmentGate'
 import Avatar from '@/components/avatar/Avatar'
+import AvatarGallery from '@/components/avatar/AvatarGallery'
 import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types'
 import { 
   Trophy, 
@@ -21,7 +22,8 @@ import {
   Gamepad2,
   BookOpen,
   FileText,
-  User
+  User,
+  Heart
 } from 'lucide-react'
 import Link from 'next/link'
 import TrendingLeaders from '@/components/gamification/TrendingLeaders'
@@ -53,6 +55,7 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState<'all-time' | 'week' | 'month'>('all-time')
   const [error, setError] = useState<string | null>(null)
+  const [view, setView] = useState<'rankings' | 'gallery'>('rankings')
 
   useEffect(() => {
     async function fetchLeaderboard() {
@@ -173,6 +176,23 @@ export default function LeaderboardPage() {
           </p>
         </div>
       </div>
+
+      {/* View toggle — the rankings vs the avatar wall */}
+      <div className="inline-flex rounded-full bg-muted p-1 gap-1">
+        <button onClick={() => setView('rankings')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${view === 'rankings' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>Rankings</button>
+        <button onClick={() => setView('gallery')} className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${view === 'gallery' ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground'}`}>Avatar wall</button>
+      </div>
+
+      {view === 'gallery' ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Heart className="h-5 w-5 text-destructive" /> Avatar wall</CardTitle>
+            <CardDescription>Everyone&apos;s Mii. Tap a heart to show some love — there&apos;s no ranking here, just appreciation.</CardDescription>
+          </CardHeader>
+          <CardContent><AvatarGallery /></CardContent>
+        </Card>
+      ) : (
+      <>
 
       {/* Current User Stats Banner */}
       {currentUserEntry && (
@@ -370,6 +390,8 @@ export default function LeaderboardPage() {
           </div>
         </CardContent>
       </Card>
+      </>
+      )}
     </div>
     </EnrollmentGate>
   )

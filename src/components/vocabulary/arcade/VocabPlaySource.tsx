@@ -11,11 +11,11 @@ interface SourceUnit { id: string; name: string }
 interface SourceLesson { id: string; title: string; unit: string }
 export interface ResolvedPlay { terms: VocabularyTerm[]; scoreSetId: string | null; label: string }
 
-export default function VocabPlaySource({ onResolved }: { onResolved: (r: ResolvedPlay) => void }) {
+export default function VocabPlaySource({ onResolved, initialLessonId }: { onResolved: (r: ResolvedPlay) => void; initialLessonId?: string }) {
   const [units, setUnits] = useState<SourceUnit[]>([])
   const [lessons, setLessons] = useState<SourceLesson[]>([])
   const [scope, setScope] = useState<'lesson' | 'unit'>('lesson')
-  const [lessonId, setLessonId] = useState('')
+  const [lessonId, setLessonId] = useState(initialLessonId ?? '')
   const [unitId, setUnitId] = useState('')
   const [tier, setTier] = useState('all')
   const [count, setCount] = useState<number | null>(null)
@@ -27,6 +27,18 @@ export default function VocabPlaySource({ onResolved }: { onResolved: (r: Resolv
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
+
+  // Deep-linked from a lesson (e.g. the vocab block's "Play Word Shoot" button):
+  // preselect that lesson's vocab and resolve its terms immediately.
+  useEffect(() => {
+    if (!initialLessonId) return
+    setScope('lesson')
+    setLessonId(initialLessonId)
+    fetch(`/api/vocab/play?lesson_id=${initialLessonId}&tier=all`).then((r) => r.json())
+      .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
+      .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLessonId])
 
   const resolve = useCallback((nextScope: 'lesson' | 'unit', id: string, t: string) => {
     if (!id) { setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }); return }

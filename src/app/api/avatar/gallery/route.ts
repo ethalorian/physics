@@ -68,9 +68,10 @@ export const GET = withAuth(async (_request, ctx) => {
     liked_by_me: likedByMe.has(r.user_id),
     is_me: r.user_id === ctx.userId,
   }))
-  // most-liked first, then alphabetical for stable ordering
-  avatars.sort((a, b) => b.likes - a.likes || a.name.localeCompare(b.name))
-  const featured = avatars.filter((a) => a.likes > 0).slice(0, 6)
+  // Hearts are appreciation, not a ranking. Order neutrally (alphabetical) so the
+  // wall never becomes a most-liked popularity board — kinder for a peer/minor
+  // audience. `featured` stays empty for backward compatibility with callers.
+  avatars.sort((a, b) => a.name.localeCompare(b.name))
 
-  return NextResponse.json({ items, avatars, featured })
+  return NextResponse.json({ items, avatars, featured: [] })
 })

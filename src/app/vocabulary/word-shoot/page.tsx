@@ -1,5 +1,6 @@
 "use client"
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import VocabPlaySource, { type ResolvedPlay } from '@/components/vocabulary/arcade/VocabPlaySource'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -12,7 +13,17 @@ import VocabularyWordShootGame from '@/components/vocabulary/games/VocabularyWor
 import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
 
 export default function StudentVocabularyWordShootPage() {
+  return (
+    <Suspense fallback={null}>
+      <WordShootInner />
+    </Suspense>
+  )
+}
+
+function WordShootInner() {
   const { data: session, status } = useSession()
+  // Deep link from a lesson preselects that lesson's vocab in the picker.
+  const lessonIdParam = useSearchParams().get('lesson_id') ?? undefined
   const [play, setPlay] = useState<ResolvedPlay>({ terms: [], scoreSetId: null, label: '' })
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
   const [gameLength, setGameLength] = useState<number>(20)
@@ -144,7 +155,7 @@ export default function StudentVocabularyWordShootPage() {
               <label className="text-sm font-medium text-foreground">
                 What to play
               </label>
-              <VocabPlaySource onResolved={setPlay} />
+              <VocabPlaySource onResolved={setPlay} initialLessonId={lessonIdParam} />
             </div>
 
             <div className="space-y-2">

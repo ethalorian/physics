@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import MathMarkdown from '@/components/MathMarkdown'
-import { ContentBlock, BlockType, isBlockComplete, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
+import { ContentBlock, BlockType, isBlockComplete, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { ConceptValue } from './ConceptExercise'
@@ -15,7 +16,7 @@ import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
-  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, type LucideIcon,
+  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, Zap, type LucideIcon,
 } from 'lucide-react'
 
 // Heavy, self-contained interactive component — rendered natively (no iframe),
@@ -89,20 +90,43 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
 // Blocks that read best as clean editorial content — no colored shell.
 const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure'])
 
-function BlockShell({ meta, done, children }: { meta: Meta; done?: boolean; children: ReactNode }) {
+function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: boolean; capture?: boolean; children: ReactNode }) {
   const accent = ACCENT[meta.domain]
   const { Icon } = meta
+  // Save-required blocks signal their state explicitly; reference blocks say so
+  // quietly so a student knows there's nothing to turn in.
+  const needsSaving = capture && !done
   return (
-    <div style={{ borderRadius: 16, border: `0.5px solid color-mix(in oklch, ${accent} 28%, var(--border))`, overflow: 'hidden', background: 'var(--card)' }}>
+    <div
+      style={{
+        borderRadius: 16,
+        // An unsaved save-block gets a warm amber edge so it reads as "do something here".
+        border: needsSaving
+          ? '1.5px solid color-mix(in oklch, var(--reward) 55%, var(--border))'
+          : `0.5px solid color-mix(in oklch, ${accent} 28%, var(--border))`,
+        overflow: 'hidden',
+        background: 'var(--card)',
+      }}
+    >
       <div className="flex items-center gap-2" style={{ padding: '8px 14px', background: `color-mix(in oklch, ${accent} 12%, var(--card))` }}>
         <span className="flex items-center justify-center shrink-0" style={{ width: 26, height: 26, borderRadius: '50%', background: accent, color: CHIP_FG[meta.domain] }}>
           <Icon size={15} />
         </span>
         <span style={{ fontSize: 12.5, fontWeight: 600, color: `color-mix(in oklch, ${accent} 55%, var(--foreground))` }}>{meta.label}</span>
         <span className="ml-auto flex items-center gap-2">
-          {done && (
-            <span className="inline-flex items-center gap-1" style={{ fontSize: 11, color: 'var(--success)' }}>
-              <Check size={13} /> done
+          {capture ? (
+            done ? (
+              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ fontSize: 11, fontWeight: 600, color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 12%, transparent)' }}>
+                <Check size={13} /> Saved
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ fontSize: 11, fontWeight: 700, color: 'var(--reward-foreground)', background: 'var(--reward)' }}>
+                <Pencil size={12} /> Save to log
+              </span>
+            )
+          ) : (
+            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '.06em', textTransform: 'uppercase', color: 'var(--muted-foreground)' }}>
+              Reference
             </span>
           )}
           <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '.08em', textTransform: 'uppercase', color: `color-mix(in oklch, ${accent} 50%, var(--muted-foreground))` }}>
@@ -371,15 +395,25 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     }
     case 'vocab':
       return (
-        <dl className="space-y-1.5">
-          {(b.terms ?? []).map((t, i) => (
-            <div key={i} className="text-sm">
-              <span style={{ color: C.indigo, fontWeight: 500 }}>{t.term}</span>
-              {t.cognate && <span style={{ color: C.muted }}> · {t.cognate}</span>}
-              <span style={{ color: C.muted }}> — {t.definition}</span>
-            </div>
-          ))}
-        </dl>
+        <div>
+          <dl className="space-y-1.5">
+            {(b.terms ?? []).map((t, i) => (
+              <div key={i} className="text-sm">
+                <span style={{ color: C.indigo, fontWeight: 500 }}>{t.term}</span>
+                {t.cognate && <span style={{ color: C.muted }}> · {t.cognate}</span>}
+                <span style={{ color: C.muted }}> — {t.definition}</span>
+              </div>
+            ))}
+          </dl>
+          {/* Practice these words in Word Shoot — lesson vocab preselected. */}
+          <Link
+            href={`/vocabulary/word-shoot?lesson_id=${lessonId}`}
+            className="inline-flex items-center gap-1.5 mt-3 rounded-full px-3 py-1.5 text-xs font-bold"
+            style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}
+          >
+            <Zap size={13} /> Play Word Shoot with these words
+          </Link>
+        </div>
       )
     case 'worked_example':
       return <GewaWorkedExample prompt={b.prompt} given={b.given} equation={b.equation} work={b.work} answer={b.answer} />
@@ -495,8 +529,9 @@ function RenderedBlock({ b, saved, save, lessonId }: { b: ContentBlock; saved: u
   if (body === null) return null
   const meta = BLOCK_META[b.type]
   if (!meta || BARE.has(b.type)) return <>{body}</>
+  const capture = isCaptureBlock(b)
   const done = isBlockComplete(b, saved)
-  return <BlockShell meta={meta} done={done}>{body}</BlockShell>
+  return <BlockShell meta={meta} done={done} capture={capture}>{body}</BlockShell>
 }
 
 // One block crashing must never take down the whole lesson — contain it.
