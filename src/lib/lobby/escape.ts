@@ -61,6 +61,8 @@ export interface EscapeRoom {
   defaultPrize: EscapePrize
   /** Group size this room is authored for (drives the launch form default). */
   recommendedGroupSize?: number
+  /** Decorative accent colour (hex) used to theme the student + teacher UI. */
+  accent?: string
 }
 
 // ---------------------------------------------------------------------------
@@ -133,6 +135,7 @@ export const REACTOR_LOCKDOWN: EscapeRoom = {
     reveal: 'Reactor stabilized. +250 XP credited to your profile — spend it in the rewards store. 🎉',
   },
   recommendedGroupSize: 3,
+  accent: '#E0843D',
 }
 
 /**
@@ -202,6 +205,7 @@ export const GREEN_LIGHT_GARAGE: EscapeRoom = {
     reveal: 'Garage unlocked — you’re cleared to build. +150 XP. 🏁 Welcome to the Car Project!',
   },
   recommendedGroupSize: 2,
+  accent: '#37B24D',
 }
 
 /**
@@ -281,6 +285,7 @@ export const TREASURE_VAULT: EscapeRoom = {
     reveal: "Chest open! You found Captain Marrow's treasure. +200 XP. 🏴‍☠️",
   },
   recommendedGroupSize: 3,
+  accent: '#C99A2E',
 }
 
 /**
@@ -359,6 +364,7 @@ export const AGENT_ACADEMY: EscapeRoom = {
     reveal: 'You passed the final test. Welcome to the Academy, Agent. +200 XP. 🕵️',
   },
   recommendedGroupSize: 3,
+  accent: '#3A6FA5',
 }
 
 export const ESCAPE_ROOMS: EscapeRoom[] = [REACTOR_LOCKDOWN, GREEN_LIGHT_GARAGE, TREASURE_VAULT, AGENT_ACADEMY]

@@ -75,6 +75,16 @@ export function totalPlanDays(items: PlanItem[]): number {
   return items.reduce((s, i) => s + i.plannedDays, 0)
 }
 
+// Re-scope the plan to a single unit: keep only that unit's items and rebase
+// their cumStart/index so the unit's first item starts at day 0. The same pacing
+// math then compares against the UNIT's length instead of the whole course.
+export function unitItems(items: PlanItem[], unitOrder: number): PlanItem[] {
+  const inUnit = items.filter((i) => i.unitOrder === unitOrder)
+  if (inUnit.length === 0) return []
+  const base = inUnit[0].cumStart
+  return inUnit.map((i, k) => ({ ...i, cumStart: i.cumStart - base, index: k }))
+}
+
 // UTC throughout to stay deterministic on the server.
 function utc(dateStr: string): Date { return new Date(dateStr + 'T00:00:00Z') }
 

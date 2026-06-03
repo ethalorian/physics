@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getRoom, decodeEscapeConfig, freshState, type EscapeState } from '@/lib/lobby/escape'
+import { getRoom, decodeEscapeConfig, freshState, clueForMember, type EscapeState } from '@/lib/lobby/escape'
 
 // GET /api/lobby/sessions/[id]/escape — live, per-group escape progress for the
 // teacher dashboard. Reads the same block_responses run-state the student API
@@ -40,15 +40,22 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
       .select('block_id, response')
       .eq('session_id', id)
       .eq('block_type', 'escape_state'),
-    supabaseAdmin.from('lobby_members').select('group_id').eq('session_id', id),
+    supabaseAdmin.from('lobby_members').select('user_id, group_id, joined_at').eq('session_id', id).order('joined_at'),
   ])
   const groups = (groupsRaw ?? []) as GroupRow[]
   const states = (statesRaw ?? []) as StateRow[]
-  const members = (membersRaw ?? []) as { group_id: string | null }[]
+  const members = (membersRaw ?? []) as { user_id: string; group_id: string | null; joined_at: string }[]
 
-  // group_id → member count, for the "X of N solved this lock" gate.
+  // group_id → ordered member ids (by joined_at) — drives the count + clue ordinals.
+  const membersByGroup = new Map<string, string[]>()
+  for (const m of members) {
+    if (!m.group_id) continue
+    const arr = membersByGroup.get(m.group_id) ?? []
+    arr.push(m.user_id)
+    membersByGroup.set(m.group_id, arr)
+  }
   const sizeByGroup = new Map<string, number>()
-  for (const m of members) if (m.group_id) sizeByGroup.set(m.group_id, (sizeByGroup.get(m.group_id) ?? 0) + 1)
+  for (const [gid, arr] of membersByGroup) sizeByGroup.set(gid, arr.length)
 
   // block_id is `escape:<group_id>` — index state by group.
   const stateByGroup = new Map<string, EscapeState>()
@@ -63,7 +70,15 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
       const st = stateByGroup.get(g.id) ?? freshState()
       const finished = st.stage >= lockCount || !!st.finishedAt
       const currentLock = finished ? null : room.locks[st.stage]
-      const groupSize = sizeByGroup.get(g.id) ?? 0
+      const ids = membersByGroup.get(g.id) ?? []
+      const solvedBy = st.solvedBy ?? []
+      // who holds which clue on the CURRENT lock, in join order (ordinal)
+      const memberClues = ids.map((uid, ordinal) => ({
+        user_id: uid,
+        ordinal,
+        clue: currentLock ? clueForMember(currentLock, ordinal) : null,
+        solved: solvedBy.includes(uid),
+      }))
       return {
         group_id: g.id,
         label: g.label,
@@ -76,8 +91,9 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
         finishedAt: st.finishedAt ?? null,
         lastAt: st.lastAt ?? null,
         // per-member gate: how many of the group have entered the CURRENT code
-        solvedCount: (st.solvedBy ?? []).length,
-        groupSize,
+        solvedCount: solvedBy.filter((u) => ids.includes(u)).length,
+        groupSize: ids.length,
+        members: memberClues,
       }
     })
     .sort((a, b) => a.label.localeCompare(b.label))
@@ -86,8 +102,10 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
     // Teacher-only: each lock's title AND its answer code, so the teacher can
     // read out / verify codes. Never sent to the student API.
     room: {
+      id: room.id,
       title: room.title,
       lockCount,
+      accent: room.accent ?? null,
       locks: room.locks.map((l) => ({ title: l.title, code: l.answers[0] ?? '' })),
       lockTitles: room.locks.map((l) => l.title),
     },

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone } from 'lucide-react'
+import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone, Presentation } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import EscapeDashboard from '@/components/lobby/EscapeDashboard'
 import { StrokesSvg, type Stroke } from '@/lib/draw/strokes'
@@ -135,6 +135,9 @@ export default function LobbyDetailPage() {
     if (!to_group_id) return
     return act(() => fetch(`/api/lobby/sessions/${id}/reassign`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id, to_group_id }) }))
   }
+  // Remove a student from their group (back to the waiting pool) — no target group.
+  const removeFromGroup = (user_id: string) =>
+    act(() => fetch(`/api/lobby/sessions/${id}/reassign`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user_id }) }))
   const moveSelect: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--muted-foreground)', fontSize: 11, borderRadius: 6, padding: '1px 4px' }
 
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }
@@ -164,6 +167,9 @@ export default function LobbyDetailPage() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Link href={`/admin/lobby/${id}/present`} target="_blank" className="text-sm font-semibold rounded-lg px-3 py-2 inline-flex items-center gap-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none' }}>
+                <Presentation size={15} /> Present code
+              </Link>
               <button onClick={formGroups} disabled={busy} className="text-sm font-semibold rounded-lg px-3 py-2 inline-flex items-center gap-1.5" style={btn(true)}>
                 <Shuffle size={15} /> {groups.length ? 'Re-shuffle' : 'Form groups'}
               </button>
@@ -209,7 +215,9 @@ export default function LobbyDetailPage() {
           )}
 
           {session.task_type === 'escape' && (
-            <EscapeDashboard sessionId={id} members={members} avatarItems={avatarItems} card={card} />
+            <EscapeDashboard sessionId={id} members={members} avatarItems={avatarItems} card={card}
+              groups={groups.map((g) => ({ id: g.id, label: g.label }))} onMove={reassign} onRemove={removeFromGroup}
+              ungrouped={ungrouped.map((m) => ({ user_id: m.user_id, name: m.name, group_id: m.group_id, traits: m.traits, equipped: m.equipped }))} />
           )}
 
           {session.task_type !== 'escape' && (

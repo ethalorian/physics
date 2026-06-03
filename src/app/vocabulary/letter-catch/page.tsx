@@ -219,9 +219,9 @@ export default function StudentVocabularyLetterCatchPage() {
               <div className="flex items-start space-x-3">
                 <Badge variant="secondary" className="mt-0.5">2</Badge>
                 <div>
-                  <div className="font-medium text-foreground">Catch in Order</div>
+                  <div className="font-medium text-foreground">The Basket Is Selective</div>
                   <div className="text-sm text-muted-foreground">
-                    Move the basket to catch the word&apos;s letters left-to-right. The next slot is highlighted.
+                    It only grabs the letter you currently need (highlighted slot). Wrong letters just bounce off — no penalty. A magnet helps pull the right letter in.
                   </div>
                 </div>
               </div>
@@ -229,9 +229,9 @@ export default function StudentVocabularyLetterCatchPage() {
               <div className="flex items-start space-x-3">
                 <Badge variant="secondary" className="mt-0.5">3</Badge>
                 <div>
-                  <div className="font-medium text-foreground">Avoid Wrong Letters</div>
+                  <div className="font-medium text-foreground">Power-ups &amp; Hazards</div>
                   <div className="text-sm text-muted-foreground">
-                    Distractor letters fall too. Catching the wrong one costs points and breaks your combo.
+                    Grab power-ups: bonus points, slow-mo, a wild that fills any slot, and a broom that clears the clutter. Dodge the skull hazards — those cost points.
                   </div>
                 </div>
               </div>
@@ -241,7 +241,7 @@ export default function StudentVocabularyLetterCatchPage() {
                 <div>
                   <div className="font-medium text-foreground">Spell as Many as You Can</div>
                   <div className="text-sm text-muted-foreground">
-                    One relaxed clock runs the whole game. Faster spelling and combos score more. Stuck on a word? Hit Skip.
+                    One relaxed clock runs the whole game; letters fall faster as you near the end of each word. Faster spelling and combos score more. Stuck? Hit Skip.
                   </div>
                 </div>
               </div>
@@ -274,8 +274,8 @@ export default function StudentVocabularyLetterCatchPage() {
               <ul className="text-sm text-muted-foreground space-y-1">
                 <li>• Move the mouse to slide the basket</li>
                 <li>• Or use the ← → arrow keys</li>
-                <li>• Catch the next letter in order (it&apos;s highlighted)</li>
-                <li>• Missed letters that hit the floor don&apos;t hurt you</li>
+                <li>• Only the needed letter sticks — wrong letters bounce off</li>
+                <li>• Grab power-ups, dodge skull hazards</li>
               </ul>
             </div>
           </CardContent>

@@ -132,6 +132,7 @@ function publicRoom(room: NonNullable<ReturnType<typeof getRoom>>) {
     finale: room.finale,
     lockTitles: room.locks.map((l) => l.title),
     lockCount: room.locks.length,
+    accent: room.accent ?? null,
   }
 }
 

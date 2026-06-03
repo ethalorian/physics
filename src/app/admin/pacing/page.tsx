@@ -17,7 +17,7 @@ function LongLegend() {
 }
 
 interface Course { id: string; name: string; section: string | null; google_course_id: string | null }
-interface PlanItem { index: number; title: string; lessonId: string | null; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number }
+interface PlanItem { index: number; title: string; lessonId: string | null; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; lessonNumber: number | null }
 interface Schedule { start_date: string | null; meeting_days: number[]; no_school_dates: string[] }
 interface PacingResult {
   notStarted: boolean; elapsed: number; totalDays: number
@@ -26,8 +26,14 @@ interface PacingResult {
   actualSource: 'auto' | 'confirmed' | 'none'; deltaDays: number
   status: 'on' | 'ahead' | 'behind' | 'unknown'
 }
+interface UnitOpt { order: number; name: string }
 interface LineupEntry { date: string; long: boolean; title: string; index: number }
-interface SectionData { result: PacingResult; items: PlanItem[]; autoIndex: number | null; confirmed: boolean; schedule: Schedule; block: string | null; rotationConfigured: boolean; lineup: LineupEntry[] }
+interface SectionData {
+  result: PacingResult; items: PlanItem[]; autoIndex: number | null; confirmed: boolean; schedule: Schedule
+  block: string | null; rotationConfigured: boolean; lineup: LineupEntry[]
+  units: UnitOpt[]; unitResult: PacingResult | null; unitName: string | null; unitTotalDays: number
+  currentUnitOrder: number | null; unitStartDate: string | null; currentLessonId: string | null
+}
 const BLOCKS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
 const STATUS: Record<PacingResult['status'], { label: string; color: string }> = {
@@ -342,52 +348,49 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
 // ---------------------------------------------------------------------------
 function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; cal: CalData | null; onChanged: () => void; refreshKey: number }) {
   const [data, setData] = useState<SectionData | null>(null)
-  const [startDate, setStartDate] = useState('')
   const [block, setBlock] = useState('')
-  const [posIndex, setPosIndex] = useState<number | ''>('')
-  const [savingSched, setSavingSched] = useState(false)
-  const [savingPos, setSavingPos] = useState(false)
+  const [unitOrder, setUnitOrder] = useState<number | ''>('')
+  const [unitStart, setUnitStart] = useState('')
+  const [lessonId, setLessonId] = useState('')
+  const [saving, setSaving] = useState(false)
   const [showCal, setShowCal] = useState(false)
 
   const load = useCallback(() => {
     fetch(`/api/pacing/section?course_id=${course.id}`).then((r) => r.json()).then((d: SectionData) => {
-      // Guard against an error/empty payload so a hiccup doesn't crash the card.
-      if (!d || !d.result || !d.schedule || !Array.isArray(d.items)) return
+      if (!d || !Array.isArray(d.items)) return
       setData(d)
-      setStartDate(d.schedule.start_date ?? '')
       setBlock(d.block ?? '')
-      setPosIndex(d.result.actualIndex ?? '')
+      setUnitOrder(d.currentUnitOrder ?? '')
+      setUnitStart(d.unitStartDate ?? '')
+      setLessonId(d.currentLessonId ?? '')
     }).catch(() => {})
   }, [course.id])
 
   useEffect(() => { load() }, [load, refreshKey])
 
-  const saveSchedule = async () => {
-    setSavingSched(true)
-    try {
-      await fetch('/api/pacing/schedule', {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_id: course.id, start_date: startDate || null, block: block || null }),
-      })
-      load(); onChanged()
-    } finally { setSavingSched(false) }
-  }
-
-  const confirmPosition = async () => {
-    if (posIndex === '' || !data) return
-    const item = data.items.find((i) => i.index === posIndex)
-    if (!item) return
-    setSavingPos(true)
+  const save = async () => {
+    setSaving(true)
     try {
       await fetch('/api/pacing/section', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_id: course.id, current_lesson_id: item.lessonId, current_unit_order: item.lessonId ? null : item.unitOrder }),
+        body: JSON.stringify({
+          course_id: course.id,
+          block: block || null,
+          current_unit_order: unitOrder === '' ? null : Number(unitOrder),
+          unit_start_date: unitStart || null,
+          current_lesson_id: lessonId || null,
+        }),
       })
       load(); onChanged()
-    } finally { setSavingPos(false) }
+    } finally { setSaving(false) }
   }
 
-  const st = data ? STATUS[data.result.status] : STATUS.unknown
+  const ur = data?.unitResult ?? null
+  const st = ur ? STATUS[ur.status] : STATUS.unknown
+  const unitLessons = data && unitOrder !== ''
+    ? data.items.filter((i) => i.unitOrder === Number(unitOrder) && i.kind === 'lesson')
+    : []
+  const fieldStyle: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
 
   return (
     <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
@@ -397,49 +400,65 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
             {course.name}{course.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {course.section}</span> : null}
             {data?.block && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>{data.block} block</span>}
           </div>
-          {data && (
+          {ur && data?.unitName ? (
             <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-              {data.result.notStarted ? 'Not started yet' : <>Should be on <b style={{ color: 'var(--foreground)' }}>{data.result.plannedTitle ?? '—'}</b> · on <b style={{ color: 'var(--foreground)' }}>{data.result.actualTitle ?? '—'}</b>{data.result.actualSource === 'auto' ? ' (auto)' : ''}</>}
+              {ur.notStarted
+                ? <>Unit hasn&apos;t started yet</>
+                : <><b style={{ color: 'var(--foreground)' }}>Day {ur.elapsed} of {data.unitTotalDays}</b> in {data.unitName} — should be on <b style={{ color: 'var(--foreground)' }}>{ur.plannedTitle ?? '—'}</b>, you&apos;re on <b style={{ color: 'var(--foreground)' }}>{ur.actualTitle ?? '—'}</b></>}
             </div>
+          ) : (
+            <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Pick a unit, its start date, and your lesson below to see pacing.</div>
           )}
           <Link href={`/admin/classes/${course.id}`} className="inline-flex items-center gap-1 text-xs font-semibold mt-1.5" style={{ color: 'var(--primary)' }}>
             Open this class — roster &amp; details →
           </Link>
         </div>
-        {data && (
+        {ur && !ur.notStarted && (
           <div className="text-right">
             <span className="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium" style={{ background: `color-mix(in oklch, ${st.color} 18%, transparent)`, color: st.color }}>{st.label}</span>
-            <div className="text-sm font-medium mt-1" style={{ color: st.color }}>{deltaLabel(data.result.deltaDays, data.result.status)}</div>
+            <div className="text-sm font-medium mt-1" style={{ color: st.color }}>{deltaLabel(ur.deltaDays, ur.status)}</div>
           </div>
         )}
       </div>
 
-      {/* schedule: block + start date */}
-      <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+      {/* Unit-centric pacing inputs */}
+      <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Block</div>
-          <select value={block} onChange={(e) => setBlock(e.target.value)}
-            className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+          <select value={block} onChange={(e) => setBlock(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
             <option value="">— tag a block —</option>
             {BLOCKS.map((b) => <option key={b} value={b}>{b} block</option>)}
           </select>
         </label>
         <label className="text-sm">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Start date</div>
-          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)}
-            className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Current unit</div>
+          <select value={unitOrder} onChange={(e) => { setUnitOrder(e.target.value === '' ? '' : Number(e.target.value)); setLessonId('') }} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
+            <option value="">— choose unit —</option>
+            {(data?.units ?? []).map((u) => <option key={u.order} value={u.order}>{u.name}</option>)}
+          </select>
         </label>
-        <div className="flex items-end">
-          <button onClick={saveSchedule} disabled={savingSched}
-            className="text-sm rounded-lg border px-3 py-1.5 w-full" style={{ borderColor: 'var(--border)' }}>{savingSched ? 'Saving…' : 'Save'}</button>
-        </div>
+        <label className="text-sm">
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Unit start date</div>
+          <input type="date" value={unitStart} onChange={(e) => setUnitStart(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle} />
+        </label>
+        <label className="text-sm">
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Your lesson right now</div>
+          <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={unitOrder === ''} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
+            <option value="">{unitOrder === '' ? '— choose a unit first —' : '— select lesson —'}</option>
+            {unitLessons.map((it) => <option key={it.lessonId ?? it.index} value={it.lessonId ?? ''}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}</option>)}
+          </select>
+        </label>
       </div>
 
-      {data && !data.rotationConfigured && (
-        <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-          Set the school rotation calendar above to place this block against real dates.
-        </p>
-      )}
+      <div className="mt-3 flex items-center gap-2 flex-wrap">
+        <button onClick={save} disabled={saving}
+          className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
+          <Check size={14} /> {saving ? 'Saving…' : 'Confirm pacing'}
+        </button>
+        {data && !data.rotationConfigured && (
+          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Tip: set the school rotation above to count this block&apos;s meeting days; otherwise weekdays are used.</span>
+        )}
+      </div>
 
       {/* this section's calendar (collapsible) */}
       {cal && block && (
@@ -452,27 +471,6 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
               <MonthCalendar sections={cal.sections} items={cal.items} calendar={cal.calendar} filterCourseId={course.id} compact />
             </div>
           )}
-        </div>
-      )}
-
-      {/* confirm position */}
-      {data && (
-        <div className="mt-4 pt-4 border-t flex items-end gap-2 flex-wrap" style={{ borderColor: 'var(--border)' }}>
-          <label className="text-sm flex-1 min-w-[220px]">
-            <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Where are you right now?</div>
-            <select value={posIndex} onChange={(e) => setPosIndex(e.target.value === '' ? '' : Number(e.target.value))}
-              className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-              <option value="">— select lesson —</option>
-              {data.items.map((it) => <option key={it.index} value={it.index}>{it.kind === 'unit' ? `${it.title} (unit)` : it.title}</option>)}
-            </select>
-          </label>
-          <button onClick={confirmPosition} disabled={savingPos || posIndex === ''}
-            className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: savingPos || posIndex === '' ? 0.6 : 1 }}>
-            <Check size={14} /> Confirm position
-          </button>
-          {data.confirmed
-            ? <span className="text-xs" style={{ color: 'var(--success)' }}>Confirmed</span>
-            : data.autoIndex != null && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>auto-detected</span>}
         </div>
       )}
     </div>
