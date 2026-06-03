@@ -16,6 +16,8 @@ const UNIT_LABEL: Record<string, string> = {
   'unit-7': 'Unit 7 · Electricity & Magnetism',
   'unit-8': 'Unit 8 · Car Project',
 }
+// Units that have a student packet file in /public/student-packets.
+const PACKET_UNITS = new Set(['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7'])
 
 export default function TeacherPlansPage() {
   const [days, setDays] = useState<DayPlan[]>([])
@@ -77,6 +79,32 @@ export default function TeacherPlansPage() {
             )
           })}
         </div>
+      )}
+
+      {/* Unit-level student packet — download (Word) / print (PDF) */}
+      {PACKET_UNITS.has(unit) ? (
+        <div className="rounded-xl border p-3 mb-5 flex items-center gap-3 flex-wrap"
+          style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'color-mix(in oklch, var(--primary) 6%, var(--card))' }}>
+          <div className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: 'var(--primary)' }}>
+            <BookOpen size={15} /> Student packet — {unit.replace('unit-', 'Unit ')}
+          </div>
+          <div className="flex items-center gap-1.5 sm:ml-auto">
+            <a href={`/student-packets/${unit}.docx`} download={`${unit.replace('unit-', 'Unit ')} Student Packet.docx`}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-1.5"
+              style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }}
+              title="Download the student packet as a Word document">
+              <Download size={14} /> Word
+            </a>
+            <a href={`/student-packets/${unit}.pdf`} target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-1.5"
+              style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }}
+              title="Open the student packet PDF to view or print">
+              <FileText size={14} /> PDF
+            </a>
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs mb-5" style={{ color: 'var(--muted-foreground)' }}>No student packet on file for this unit yet.</p>
       )}
 
       {loading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading plans…</p>}
