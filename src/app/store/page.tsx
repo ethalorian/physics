@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import EnrollmentGate from '@/components/EnrollmentGate'
 
-interface Reward { id: string; name: string; description?: string; cost_points: number; category?: string }
-interface Redemption { id: string; reward_name: string; cost_points: number; status: string; created_at: string }
+interface Reward { id: string; name: string; description?: string; cost_points: number; category?: string; grant_lesson_id?: string | null }
+interface Redemption { id: string; reward_id?: string; reward_name: string; cost_points: number; status: string; created_at: string }
 interface Balance { lifetimeEarned: number; spent: number; balance: number }
 
 const C = {
@@ -52,6 +52,15 @@ export default function StorePage() {
 
   const bal = balance?.balance ?? 0
 
+  // Car parts are earned by passing build lessons (not bought); everything else is a normal priced reward.
+  const carParts = rewards.filter((r) => r.grant_lesson_id || r.category === 'Car Part')
+  const shopRewards = rewards.filter((r) => !(r.grant_lesson_id || r.category === 'Car Part'))
+  const earnedIds = new Set(redemptions.map((d) => d.reward_id).filter(Boolean) as string[])
+  const earnedCount = carParts.filter((p) => earnedIds.has(p.id)).length
+  // Redemption history: hide the auto-granted parts (shown in the build section above).
+  const carPartIds = new Set(carParts.map((p) => p.id))
+  const shopRedemptions = redemptions.filter((d) => !(d.reward_id && carPartIds.has(d.reward_id)))
+
   return (
     <EnrollmentGate>
     <div className="max-w-3xl mx-auto p-4" style={{ color: C.indigo }}>
@@ -70,35 +79,79 @@ export default function StorePage() {
       {msg && <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: C.tint, color: C.indigo }}>{msg}</div>}
       {loading && <p className="text-sm" style={{ color: C.muted }}>Loading the store…</p>}
 
-      <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-        {rewards.map((r) => {
-          const afford = bal >= r.cost_points
-          return (
-            <div key={r.id} className="rounded-lg border p-4 bg-card flex flex-col" style={{ borderColor: C.hairline }}>
-              <div className="font-medium" style={{ color: C.indigo }}>{r.name}</div>
-              {r.description && <div className="text-sm mt-1 flex-1" style={{ color: C.muted }}>{r.description}</div>}
-              <div className="flex items-center justify-between mt-3">
-                <span className="text-sm font-medium" style={{ color: C.reward }}>{r.cost_points} pts</span>
-                <button
-                  onClick={() => redeem(r)}
-                  disabled={!afford || busy === r.id}
-                  className="text-sm rounded-md border px-3 py-1 disabled:opacity-50"
-                  style={{ borderColor: C.hairline, background: afford ? C.sage : 'var(--card)', color: afford ? '#fff' : C.muted }}
+      {/* Your car build — parts earned by passing each Unit 8 build lesson */}
+      {carParts.length > 0 && (
+        <section className="mb-6">
+          <div className="flex items-baseline justify-between mb-2">
+            <h2 className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>Your car build</h2>
+            <span className="text-xs" style={{ color: C.muted }}>{earnedCount} of {carParts.length} parts earned</span>
+          </div>
+          <p className="text-xs mb-3" style={{ color: C.muted }}>
+            Pass each build day (score 60 or higher) to unlock the materials you need for the next day. No points needed — earn it by mastering the lesson.
+          </p>
+          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+            {carParts.map((p) => {
+              const earned = earnedIds.has(p.id)
+              return (
+                <div
+                  key={p.id}
+                  className="rounded-lg border p-4 flex flex-col"
+                  style={{
+                    borderColor: earned ? C.sage : C.hairline,
+                    background: earned ? 'color-mix(in srgb, var(--success) 8%, var(--card))' : 'var(--card)',
+                    opacity: earned ? 1 : 0.85,
+                  }}
                 >
-                  {busy === r.id ? '…' : afford ? 'Redeem' : 'Need more'}
-                </button>
-              </div>
-            </div>
-          )
-        })}
-      </div>
+                  <div className="flex items-center justify-between">
+                    <div className="font-medium" style={{ color: C.indigo }}>{p.name}</div>
+                    <span aria-hidden style={{ color: earned ? C.sage : C.muted }}>{earned ? '✓' : '🔒'}</span>
+                  </div>
+                  {p.description && <div className="text-sm mt-1 flex-1" style={{ color: C.muted }}>{p.description}</div>}
+                  <div className="mt-3 text-xs font-medium" style={{ color: earned ? C.sage : C.muted }}>
+                    {earned ? 'Earned' : 'Locked'}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* Priced rewards (if any are active) */}
+      {shopRewards.length > 0 && (
+        <section className="mb-6">
+          <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Spend your points</h2>
+          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+            {shopRewards.map((r) => {
+              const afford = bal >= r.cost_points
+              return (
+                <div key={r.id} className="rounded-lg border p-4 bg-card flex flex-col" style={{ borderColor: C.hairline }}>
+                  <div className="font-medium" style={{ color: C.indigo }}>{r.name}</div>
+                  {r.description && <div className="text-sm mt-1 flex-1" style={{ color: C.muted }}>{r.description}</div>}
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-sm font-medium" style={{ color: C.reward }}>{r.cost_points} pts</span>
+                    <button
+                      onClick={() => redeem(r)}
+                      disabled={!afford || busy === r.id}
+                      className="text-sm rounded-md border px-3 py-1 disabled:opacity-50"
+                      style={{ borderColor: C.hairline, background: afford ? C.sage : 'var(--card)', color: afford ? '#fff' : C.muted }}
+                    >
+                      {busy === r.id ? '…' : afford ? 'Redeem' : 'Need more'}
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
       <h2 className="text-sm font-medium mt-6 mb-2" style={{ color: 'var(--secondary-foreground)' }}>Your redemptions</h2>
-      {redemptions.length === 0 ? (
+      {shopRedemptions.length === 0 ? (
         <p className="text-sm" style={{ color: C.muted }}>Nothing redeemed yet.</p>
       ) : (
         <div className="rounded-lg border bg-card px-4" style={{ borderColor: C.hairline }}>
-          {redemptions.map((r, i) => (
+          {shopRedemptions.map((r, i) => (
             <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
               <span className="flex-1 text-sm">{r.reward_name}</span>
               <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} pts</span>

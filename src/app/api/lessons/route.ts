@@ -17,6 +17,16 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       )
     }
 
+    // Guardrail: a brand-new lesson can't carry a learning target yet (targets
+    // reference the lesson id), so it can never be safely published on creation.
+    // Force the create-then-target-then-publish order.
+    if (body.published === true) {
+      return NextResponse.json(
+        { error: 'A new lesson can’t be published on creation — it has no learning target yet. Create it unpublished, add at least one learning target, then publish.' },
+        { status: 422 },
+      )
+    }
+
     // Build lesson data
     const lessonData: any = {
       title: body.title,

@@ -40,6 +40,23 @@ export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request
     // Add updated timestamp
     updateData.updated_at = new Date().toISOString()
 
+    // Guardrail: refuse to publish a lesson that has no learning target. Without a
+    // target the control room can't open or grade that lesson's work (the cell is
+    // dead and the drawer can't resolve the work), so a published-but-targetless
+    // lesson silently strands student work — and, in Unit 8, blocks car-part grants.
+    if (updateData.published === true) {
+      const { count } = await supabaseAdmin
+        .from('learning_targets')
+        .select('id', { count: 'exact', head: true })
+        .eq('lesson_id', params.id)
+      if (!count) {
+        return NextResponse.json(
+          { error: 'Cannot publish: this lesson has no learning target. Add at least one learning target first — without it, students’ work can’t be opened or graded in the control room.' },
+          { status: 422 },
+        )
+      }
+    }
+
     const { data, error } = await supabaseAdmin
       .from('lessons')
       .update(updateData)
