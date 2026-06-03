@@ -17,9 +17,12 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   }
   const courseIds = classes.map((c) => c.id)
 
+  // Teachers can only release what a super-admin has GLOBALLY PUBLISHED, so the
+  // board only ever lists published lessons. Drafts never reach this view.
   const { data: lessonRows } = await supabaseAdmin
     .from('lessons')
     .select('id, title, slug, unit, lesson_number, published')
+    .eq('published', true)
     .order('lesson_number', { ascending: true })
   const lessons = (lessonRows ?? []) as {
     id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean

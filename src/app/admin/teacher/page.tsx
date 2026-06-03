@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import {
   LayoutGrid, GraduationCap, CalendarClock, Gift, Eye, Sparkles,
-  BookOpen, Compass, Check, ArrowRight, type LucideIcon,
+  BookOpen, Compass, Check, ArrowRight, DoorOpen, type LucideIcon,
 } from 'lucide-react'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
@@ -48,6 +48,7 @@ const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; acce
   { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/roster', label: 'Roster & classes', desc: 'Your synced classes and student performance', Icon: GraduationCap, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/pacing', label: 'Pacing', desc: 'Where each of your sections is on the calendar', Icon: CalendarClock, accent: 'var(--reward)', needs: 'pacing' },
+  { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close published lessons for each class, and schedule dates', Icon: DoorOpen, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', Icon: Gift, accent: 'var(--reward)' },
   { href: '/home', label: 'View as student', desc: 'See what your students see', Icon: Eye, accent: 'var(--muted-foreground)' },
 ]

@@ -101,16 +101,16 @@ export default function LessonAccessPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/home" className="inline-flex items-center gap-1 text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Command center
+      <Link href="/admin/teacher" className="inline-flex items-center gap-1 text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
+        <ArrowLeft size={15} /> Dashboard
       </Link>
       <div className="flex items-center gap-2 mb-1">
         <CalendarClock size={18} style={{ color: 'var(--primary)' }} />
         <h1 className="text-2xl font-semibold tracking-tight">Lesson access</h1>
       </div>
       <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        Open and close each published lesson per class. Tap a cell to flip it now, or hit the clock to schedule dates.
-        Publishing (whether a lesson exists at all) is managed on <Link href="/admin/dashboard" className="underline" style={{ color: 'var(--primary)' }}>Manage</Link>.
+        These are the published lessons you can release to your classes. Tap a cell to open or close a lesson now,
+        or hit the calendar icon to set open and close dates. New lessons appear here once they’re published.
       </p>
 
       {!data ? (
@@ -138,17 +138,15 @@ export default function LessonAccessPage() {
             </thead>
             <tbody>
               {data.lessons.map((l, i) => (
-                <tr key={l.id} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)', opacity: l.published ? 1 : 0.5 }}>
+                <tr key={l.id} style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
                   <td className="px-3 py-2" style={{ whiteSpace: 'nowrap', position: 'sticky', left: 0, background: 'var(--card)' }}>
                     <span className="font-medium">{l.lesson_number ? `D${l.lesson_number} · ` : ''}{l.title}</span>
-                    {!l.published && <span className="text-[10px] ml-1" style={{ color: 'var(--muted-foreground)' }}>(draft)</span>}
                   </td>
                   {data.classes.map((c) => {
                     const key = `${c.id}|${l.id}`
                     const w = data.windows[key]
                     const st = statusOf(w)
                     const s = STATUS_STYLE[st]
-                    if (!l.published) return <td key={c.id} className="px-2 py-2 text-center" style={{ color: 'var(--muted-foreground)' }}>—</td>
                     return (
                       <td key={c.id} className="px-2 py-2">
                         <div className="flex items-center justify-center gap-1">
