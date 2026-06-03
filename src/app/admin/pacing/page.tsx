@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
 import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
-import MonthCalendar, { type CalSection, type CalItem } from '@/components/pacing/MonthCalendar'
+import MonthCalendar, { type CalSection } from '@/components/pacing/MonthCalendar'
 
 function LongLegend() {
   return (
@@ -50,7 +50,7 @@ function deltaLabel(d: number, status: PacingResult['status']): string {
   return d > 0 ? `${n} days ahead` : `${n} days behind`
 }
 
-interface CalData { sections: CalSection[]; items: CalItem[]; calendar: RotationCalendar }
+interface CalData { sections: CalSection[]; calendar: RotationCalendar }
 
 export default function PacingPage() {
   const { role } = useViewAs()
@@ -64,7 +64,7 @@ export default function PacingPage() {
       .then((d: Partial<CalData>) => {
         // Only accept a well-formed payload; a transient error/empty response
         // must not crash the page.
-        if (Array.isArray(d?.sections) && Array.isArray(d?.items) && d?.calendar) setCal(d as CalData)
+        if (Array.isArray(d?.sections) && d?.calendar) setCal(d as CalData)
         else setCal(null)
       })
       .catch(() => setCal(null))
@@ -121,7 +121,7 @@ export default function PacingPage() {
             </div>
             <LongLegend />
           </div>
-          <MonthCalendar sections={cal.sections} items={cal.items} calendar={cal.calendar} />
+          <MonthCalendar sections={cal.sections} calendar={cal.calendar} />
         </div>
       )}
 
@@ -468,7 +468,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           </button>
           {showCal && (
             <div className="mt-3">
-              <MonthCalendar sections={cal.sections} items={cal.items} calendar={cal.calendar} filterCourseId={course.id} compact />
+              <MonthCalendar sections={cal.sections} calendar={cal.calendar} filterCourseId={course.id} compact />
             </div>
           )}
         </div>

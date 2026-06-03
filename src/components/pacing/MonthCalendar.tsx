@@ -5,11 +5,10 @@ import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { blockMeetsOnDate, blockMeetingsElapsed, type Block, type RotationCalendar } from '@/lib/rotation'
 
-export interface CalSection { courseId: string; name: string; section: string | null; block: string | null; startDate: string | null }
 export interface CalItem { index: number; cumStart: number; plannedDays: number; lessonId: string | null; title: string; unitName: string; kind: 'lesson' | 'unit' }
+export interface CalSection { courseId: string; name: string; section: string | null; block: string | null; startDate: string | null; items: CalItem[] }
 interface Props {
   sections: CalSection[]
-  items: CalItem[]
   calendar: RotationCalendar
   filterCourseId?: string   // when set, show only this section
   compact?: boolean
@@ -29,7 +28,7 @@ function isoOf(y: number, m: number, d: number): string {
 
 interface Meeting { courseId: string; section: string | null; block: string; long: boolean; lessonId: string | null; title: string }
 
-export default function MonthCalendar({ sections, items, calendar, filterCourseId, compact }: Props) {
+export default function MonthCalendar({ sections, calendar, filterCourseId, compact }: Props) {
   const router = useRouter()
   const now = new Date()
   const [year, setYear] = useState(now.getUTCFullYear())
@@ -56,7 +55,8 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
           if (meets) {
             const idx = blockMeetingsElapsed(calendar, block, start, d) - 1
             if (idx >= 0) {
-              const item = items.find((i) => idx >= i.cumStart && idx < i.cumStart + i.plannedDays) ?? items[items.length - 1]
+              // Use THIS section's current-unit lessons; nothing past the unit's end.
+              const item = s.items.find((i) => idx >= i.cumStart && idx < i.cumStart + i.plannedDays)
               if (item) {
                 const iso = isoOf(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
                 const arr = map.get(iso) ?? []
@@ -72,7 +72,7 @@ export default function MonthCalendar({ sections, items, calendar, filterCourseI
     // stable order by block within a day
     for (const arr of map.values()) arr.sort((a, b) => a.block.localeCompare(b.block))
     return map
-  }, [activeSections, items, calendar, year, month])
+  }, [activeSections, calendar, year, month])
 
   // build Mon–Fri week rows covering the month
   const weeks = useMemo(() => {
