@@ -117,12 +117,15 @@ export default async function AdminManagePage() {
         <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your units</h2>
       </div>
       <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-        Flip <strong>Publish</strong> when a lesson is ready. It still stays closed to students until you open it for each class — set the open/close <strong>dates</strong> on each <Link href="/admin/oversight" className="underline" style={{ color: 'var(--primary)' }}>class page</Link> under “Lesson access.”
+        {role === 'admin'
+          ? <><strong>Publish</strong> marks a lesson as ready in the catalog (super-admin only). </>
+          : <>Lessons are published by your administrator. </>}
+        To choose which classes see a lesson and when, use the <Link href="/admin/lesson-access" className="underline" style={{ color: 'var(--primary)' }}>Lesson access</Link> board.
       </p>
 
       {lessons.length === 0
         ? <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No lessons yet.</p>
-        : <ManageUnits units={manageUnits} orphans={orphans} />}
+        : <ManageUnits units={manageUnits} orphans={orphans} canPublish={role === 'admin'} />}
     </div>
   )
 }

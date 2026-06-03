@@ -403,7 +403,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
             </div>
           )}
           <Link href={`/admin/classes/${course.id}`} className="inline-flex items-center gap-1 text-xs font-semibold mt-1.5" style={{ color: 'var(--primary)' }}>
-            Open this class — schedule &amp; publish lessons (open / close dates) →
+            Open this class — roster &amp; details →
           </Link>
         </div>
         {data && (
