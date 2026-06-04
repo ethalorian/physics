@@ -75,20 +75,26 @@ export const GET = withAuth(async (_req, ctx) => {
     }
   } catch { /* ignore */ }
 
-  // 5. Car parts earned (Unit-8 grant-type rewards, auto-fulfilled on store load)
+  // 5. Car parts earned (Unit-8 grant-type rewards). Created PENDING when the build
+  //    lesson is passed; the teacher releases the physical part from the admin queue.
   try {
     const { data } = await supabaseAdmin
       .from('reward_redemptions')
-      .select('id, reward_name, created_at, reward:rewards(grant_lesson_id, category)')
+      .select('id, reward_name, status, created_at, reward:rewards(grant_lesson_id, category)')
       .eq('user_id', me)
-      .eq('status', 'fulfilled')
+      .neq('status', 'denied')
       .order('created_at', { ascending: false })
       .limit(8)
     type RInfo = { grant_lesson_id: string | null; category: string | null }
-    for (const r of (data ?? []) as { id: string; reward_name: string; created_at: string; reward: RInfo | RInfo[] | null }[]) {
+    for (const r of (data ?? []) as { id: string; reward_name: string; status: string; created_at: string; reward: RInfo | RInfo[] | null }[]) {
       const rw = Array.isArray(r.reward) ? r.reward[0] : r.reward
       if (!rw || !(rw.grant_lesson_id || rw.category === 'Car Part')) continue
-      items.push({ id: `part:${r.id}`, type: 'part', title: 'Car part earned!', detail: `${r.reward_name} unlocked — you passed the build lesson`, at: r.created_at, href: '/store', unread: isUnread(r.created_at) })
+      const released = r.status === 'fulfilled'
+      items.push({
+        id: `part:${r.id}`, type: 'part', title: 'Car part earned!',
+        detail: `${r.reward_name} — ${released ? 'released by your teacher' : 'ask your teacher for it in class'}`,
+        at: r.created_at, href: '/store', unread: isUnread(r.created_at),
+      })
     }
   } catch { /* ignore */ }
 

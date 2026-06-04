@@ -55,9 +55,11 @@ export default function StorePage() {
   // Car parts are earned by passing build lessons (not bought); everything else is a normal priced reward.
   const carParts = rewards.filter((r) => r.grant_lesson_id || r.category === 'Car Part')
   const shopRewards = rewards.filter((r) => !(r.grant_lesson_id || r.category === 'Car Part'))
-  // Only FULFILLED rows count as earned — auto-grants are inserted fulfilled, so a
-  // stray pending/denied row can never light up a part.
-  const earnedIds = new Set(redemptions.filter((d) => d.status === 'fulfilled').map((d) => d.reward_id).filter(Boolean) as string[])
+  // Car parts have three states: locked → earned (pending, teacher hasn't handed it
+  // out yet) → received (teacher hit Fulfill). Denied rows count as nothing.
+  const receivedIds = new Set(redemptions.filter((d) => d.status === 'fulfilled').map((d) => d.reward_id).filter(Boolean) as string[])
+  const waitingIds = new Set(redemptions.filter((d) => d.status === 'pending' || d.status === 'approved').map((d) => d.reward_id).filter(Boolean) as string[])
+  const earnedIds = new Set([...receivedIds, ...waitingIds])
   const earnedCount = carParts.filter((p) => earnedIds.has(p.id)).length
   // Redemption history: hide the auto-granted parts (shown in the build section above).
   const carPartIds = new Set(carParts.map((p) => p.id))
@@ -89,28 +91,31 @@ export default function StorePage() {
             <span className="text-xs" style={{ color: C.muted }}>{earnedCount} of {carParts.length} parts earned</span>
           </div>
           <p className="text-xs mb-3" style={{ color: C.muted }}>
-            Pass each build day (score 60 or higher) to unlock the materials you need for the next day. No points needed — earn it by mastering the lesson.
+            Pass each build day (score 60 or higher) to earn the materials you need for the next day. No points needed —
+            once a part says <strong>Earned</strong>, your teacher will hand it to you in class.
           </p>
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
             {carParts.map((p) => {
-              const earned = earnedIds.has(p.id)
+              const received = receivedIds.has(p.id)
+              const waiting = !received && waitingIds.has(p.id)
+              const accent = received ? C.sage : waiting ? C.reward : C.muted
               return (
                 <div
                   key={p.id}
                   className="rounded-lg border p-4 flex flex-col"
                   style={{
-                    borderColor: earned ? C.sage : C.hairline,
-                    background: earned ? 'color-mix(in srgb, var(--success) 8%, var(--card))' : 'var(--card)',
-                    opacity: earned ? 1 : 0.85,
+                    borderColor: received ? C.sage : waiting ? 'color-mix(in srgb, var(--reward) 55%, var(--border))' : C.hairline,
+                    background: received ? 'color-mix(in srgb, var(--success) 8%, var(--card))' : waiting ? 'color-mix(in srgb, var(--reward) 7%, var(--card))' : 'var(--card)',
+                    opacity: received || waiting ? 1 : 0.85,
                   }}
                 >
                   <div className="flex items-center justify-between">
                     <div className="font-medium" style={{ color: C.indigo }}>{p.name}</div>
-                    <span aria-hidden style={{ color: earned ? C.sage : C.muted }}>{earned ? '✓' : '🔒'}</span>
+                    <span aria-hidden style={{ color: accent }}>{received ? '✓' : waiting ? '🛠' : '🔒'}</span>
                   </div>
                   {p.description && <div className="text-sm mt-1 flex-1" style={{ color: C.muted }}>{p.description}</div>}
-                  <div className="mt-3 text-xs font-medium" style={{ color: earned ? C.sage : C.muted }}>
-                    {earned ? 'Earned' : 'Locked'}
+                  <div className="mt-3 text-xs font-medium" style={{ color: accent }}>
+                    {received ? 'Received' : waiting ? 'Earned — ask your teacher for it' : 'Locked'}
                   </div>
                 </div>
               )

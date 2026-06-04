@@ -7,8 +7,9 @@ import { supabaseAdmin } from '@/lib/supabase'
  *
  * Lesson grades live in `gradebook_entries` (item_type='lesson', item_id=lesson_id,
  * percentage / score / max_score), written by the control room when a teacher grades
- * a day. The grant is a free, fulfilled `reward_redemption` (cost 0); the XP for the
- * work flows through the normal economy.
+ * a day. The grant is a free `reward_redemption` (cost 0) created as PENDING — the
+ * part is earned, but the teacher physically releases it by hitting Fulfill in the
+ * admin store queue. The XP for the work flows through the normal economy.
  *
  * Reconcile model: idempotent, safe to call on every store load. It never grants the
  * same part twice (checks existing redemptions), and it reads the student's BEST
@@ -54,8 +55,8 @@ export async function grantEarnedCarParts(userId: string): Promise<void> {
     reward_id: p.id,
     reward_name: p.name,
     cost_points: 0,
-    status: 'fulfilled',
-    note: 'Earned by passing the build lesson',
+    status: 'pending',
+    note: 'Earned by passing the build lesson — release to hand out the part',
   }))
   await supabaseAdmin.from('reward_redemptions').insert(rows)
 }
