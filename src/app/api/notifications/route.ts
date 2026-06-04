@@ -9,7 +9,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 interface Notif {
   id: string
-  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due'
+  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part'
   title: string
   detail: string
   at: string        // ISO — drives sort + unread
@@ -75,7 +75,24 @@ export const GET = withAuth(async (_req, ctx) => {
     }
   } catch { /* ignore */ }
 
-  // 5. Due soon (assignments not finished, due within 3 days). Becomes "unread"
+  // 5. Car parts earned (Unit-8 grant-type rewards, auto-fulfilled on store load)
+  try {
+    const { data } = await supabaseAdmin
+      .from('reward_redemptions')
+      .select('id, reward_name, created_at, reward:rewards(grant_lesson_id, category)')
+      .eq('user_id', me)
+      .eq('status', 'fulfilled')
+      .order('created_at', { ascending: false })
+      .limit(8)
+    type RInfo = { grant_lesson_id: string | null; category: string | null }
+    for (const r of (data ?? []) as { id: string; reward_name: string; created_at: string; reward: RInfo | RInfo[] | null }[]) {
+      const rw = Array.isArray(r.reward) ? r.reward[0] : r.reward
+      if (!rw || !(rw.grant_lesson_id || rw.category === 'Car Part')) continue
+      items.push({ id: `part:${r.id}`, type: 'part', title: 'Car part earned!', detail: `${r.reward_name} unlocked — you passed the build lesson`, at: r.created_at, href: '/store', unread: isUnread(r.created_at) })
+    }
+  } catch { /* ignore */ }
+
+  // 6. Due soon (assignments not finished, due within 3 days). Becomes "unread"
   //    when it enters the 2-day window — so it nags until the bell is opened.
   if (email) {
     try {

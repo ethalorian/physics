@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { Bell, Star, FileText, Swords, Clock, Sigma, type LucideIcon } from 'lucide-react'
+import { Bell, Star, FileText, Swords, Clock, Sigma, Car, type LucideIcon } from 'lucide-react'
 
 interface Notif {
   id: string
-  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due'
+  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part'
   title: string
   detail: string
   at: string
@@ -14,9 +14,9 @@ interface Notif {
   unread: boolean
 }
 
-const ICON: Record<Notif['type'], LucideIcon> = { mastery: Star, grade: FileText, math: Sigma, duel: Swords, due: Clock }
+const ICON: Record<Notif['type'], LucideIcon> = { mastery: Star, grade: FileText, math: Sigma, duel: Swords, due: Clock, part: Car }
 const TINT: Record<Notif['type'], string> = {
-  mastery: 'var(--reward)', grade: 'var(--success)', math: 'var(--primary)', duel: 'var(--primary)', due: 'var(--destructive)',
+  mastery: 'var(--reward)', grade: 'var(--success)', math: 'var(--primary)', duel: 'var(--primary)', due: 'var(--destructive)', part: 'var(--reward)',
 }
 
 function ago(iso: string): string {

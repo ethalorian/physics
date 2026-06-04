@@ -55,7 +55,9 @@ export default function StorePage() {
   // Car parts are earned by passing build lessons (not bought); everything else is a normal priced reward.
   const carParts = rewards.filter((r) => r.grant_lesson_id || r.category === 'Car Part')
   const shopRewards = rewards.filter((r) => !(r.grant_lesson_id || r.category === 'Car Part'))
-  const earnedIds = new Set(redemptions.map((d) => d.reward_id).filter(Boolean) as string[])
+  // Only FULFILLED rows count as earned — auto-grants are inserted fulfilled, so a
+  // stray pending/denied row can never light up a part.
+  const earnedIds = new Set(redemptions.filter((d) => d.status === 'fulfilled').map((d) => d.reward_id).filter(Boolean) as string[])
   const earnedCount = carParts.filter((p) => earnedIds.has(p.id)).length
   // Redemption history: hide the auto-granted parts (shown in the build section above).
   const carPartIds = new Set(carParts.map((p) => p.id))

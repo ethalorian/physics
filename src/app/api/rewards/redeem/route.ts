@@ -11,6 +11,21 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       return NextResponse.json({ error: 'Missing reward_id' }, { status: 400 })
     }
 
+    // Grant-type rewards (Unit-8 car parts) are EARNED by passing their build
+    // lesson, never redeemed manually. Without this guard a student could POST a
+    // part's id directly — it costs 0, so the funds check would happily pass.
+    const { data: grantCheck } = await supabaseAdmin
+      .from('rewards')
+      .select('grant_lesson_id, category')
+      .eq('id', String(body.reward_id))
+      .maybeSingle()
+    if (grantCheck && (grantCheck.grant_lesson_id || grantCheck.category === 'Car Part')) {
+      return NextResponse.json(
+        { error: 'Car parts are earned by passing the build lesson, not redeemed' },
+        { status: 400 }
+      )
+    }
+
     // Balance check + redemption insert happen atomically (and serialized
     // per-user) inside the redeem_reward RPC so two concurrent requests can't
     // both pass the balance check and double-spend.
