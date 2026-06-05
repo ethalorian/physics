@@ -1,5 +1,5 @@
 "use client"
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import VocabPlaySource, { type ResolvedPlay } from '@/components/vocabulary/arcade/VocabPlaySource'
@@ -33,7 +33,32 @@ function WordShootInner() {
     totalQuestions: number
     timeSpent: number
   } | null>(null)
-  
+  // Deep links from a lesson go STRAIGHT into the game — no setup screen. We
+  // resolve the lesson's terms here (not via the picker) and auto-start once.
+  // `autoDone` guards so "Back to Setup" doesn't relaunch the game.
+  const [autoDone, setAutoDone] = useState(!lessonIdParam)
+
+  useEffect(() => {
+    if (!lessonIdParam || autoDone) return
+    let alive = true
+    fetch(`/api/vocab/play?lesson_id=${encodeURIComponent(lessonIdParam)}&tier=all`)
+      .then((r) => r.json())
+      .then((d: ResolvedPlay) => {
+        if (!alive) return
+        setAutoDone(true)
+        const n = d.terms?.length ?? 0
+        if (n >= 3) {
+          // Enough for a question + distractors: launch immediately, sized to fit.
+          setPlay(d)
+          setGameLength(Math.min(20, n))
+          setGameStarted(true)
+        }
+        // Fewer than 3 terms: fall back to the setup screen (picker preselected).
+      })
+      .catch(() => { if (alive) setAutoDone(true) })
+    return () => { alive = false }
+  }, [lessonIdParam, autoDone])
+
   if (status === 'loading') {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -68,6 +93,21 @@ function WordShootInner() {
   const resetGame = () => {
     setGameStarted(false)
     setGameResults(null)
+    // Auto-launch may have used a length that isn't a picker option (e.g. 5);
+    // snap back to a valid choice so the setup screen renders sensibly.
+    setGameLength((g) => ([10, 15, 20, 25].includes(g) ? g : 20))
+  }
+
+  // Still resolving a lesson deep link — hold a blank loading frame, never the setup screen.
+  if (!autoDone && !gameStarted && !gameResults) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <p className="text-sm text-muted-foreground">Loading Word Shoot…</p>
+        </div>
+      </div>
+    )
   }
 
   if (gameResults) {
