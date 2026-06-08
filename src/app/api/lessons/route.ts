@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withRole } from '@/lib/api-auth'
+import { withContentEditor } from '@/lib/api-auth'
 
 /**
  * POST /api/lessons
  * Create a new lesson (admin/teacher only)
  */
-export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
+export const POST = withContentEditor('lessons', async (request, ctx) => {
     const body = await request.json()
 
     // Validate required fields

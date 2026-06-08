@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withRole } from '@/lib/api-auth'
+import { withContentEditor } from '@/lib/api-auth'
 
-export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
+export const POST = withContentEditor('vocabulary', async (request, ctx) => {
     const body = await request.json()
     const { vocabularySets } = body
 

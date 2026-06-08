@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@/lib/auth'
 import { getUserRole } from '@/lib/permissions'
 import { supabase, supabaseAdmin } from '@/lib/supabase'
-import { withRole } from '@/lib/api-auth'
+import { withContentEditor } from '@/lib/api-auth'
 
 /**
  * GET /api/simulations - Fetch simulations with optional filters
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export const PUT = withRole(['teacher', 'admin'], async (request) => {
+export const PUT = withContentEditor('simulations', async (request) => {
     const body = await request.json()
     const { id, ...updates } = body
 

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withAuth, withRole } from '@/lib/api-auth'
+import { withAuth, withContentEditor } from '@/lib/api-auth'
 
 export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
@@ -90,7 +90,7 @@ export const GET = withAuth(async (request, ctx) => {
     }
 })
 
-export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
+export const POST = withContentEditor('vocabulary', async (request, ctx) => {
     const body = await request.json()
     const { name, description, unit, lesson, terms } = body
 
@@ -152,7 +152,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     return NextResponse.json(vocabularySet)
 })
 
-export const PUT = withAuth(async (request) => {
+export const PUT = withContentEditor('vocabulary', async (request) => {
     const body = await request.json()
     const { id, name, description, unit, lesson, terms, published } = body
 
@@ -217,7 +217,7 @@ export const PUT = withAuth(async (request) => {
     return NextResponse.json(vocabularySet)
 })
 
-export const DELETE = withAuth(async (request) => {
+export const DELETE = withContentEditor('vocabulary', async (request) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 

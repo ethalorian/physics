@@ -43,6 +43,7 @@ const GROUPS: { title: string; tools: Tool[] }[] = [
       { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
+      { href: '/admin/collaborators', label: 'Collaborators', desc: 'Grant per-area curriculum edit rights to specific people', icon: Users, accent: 'var(--primary)', adminOnly: true },
     ],
   },
   {

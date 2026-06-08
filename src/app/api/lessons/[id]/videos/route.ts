@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withRole } from '@/lib/api-auth'
+import { withContentEditor } from '@/lib/api-auth'
 
-export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+export const PUT = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
     const { id } = await ctx.params
     const body = await request.json()
     const { videos, objectives, estimated_time } = body

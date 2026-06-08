@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { requireEnrolledStudent } from '@/lib/student-enrollment'
 import type { UserRole } from '@/lib/permissions'
+import { canEditArea, type ContentArea } from '@/lib/content-access'
 
 /**
  * API route authorization wrappers.
@@ -124,6 +125,23 @@ export function withRole<P extends Record<string, string> = Record<string, strin
   return withAuth<P>(async (request, ctx) => {
     const isAllowed = ctx.realRole === 'admin' || allowed.includes(ctx.role)
     if (!isAllowed) return forbidden()
+    return handler(request, ctx)
+  })
+}
+
+/**
+ * Require a valid session AND permission to AUTHOR a curriculum area. Admins pass
+ * for every area; a non-admin must hold a content_editor grant for that area.
+ * Teachers (without a grant) are rejected — curriculum is shared, so editing it is
+ * not a teacher capability. Use on lesson/simulation/vocabulary write endpoints.
+ */
+export function withContentEditor<P extends Record<string, string> = Record<string, string>>(
+  area: ContentArea,
+  handler: Handler<P>,
+) {
+  return withAuth<P>(async (request, ctx) => {
+    const isAdmin = ctx.realRole === 'admin'
+    if (!(await canEditArea(ctx.email, area, isAdmin))) return forbidden()
     return handler(request, ctx)
   })
 }

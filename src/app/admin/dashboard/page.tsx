@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
-import { getUserRole } from '@/lib/permissions'
+import { getEffectiveContext } from '@/lib/effective-context'
+import { canEditArea } from '@/lib/content-access'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
@@ -29,8 +30,17 @@ function toManageLesson(l: LessonRow): ManageLesson {
 
 export default async function AdminManagePage() {
   const session = await auth()
-  const role = session?.user?.email ? getUserRole(session.user.email) : 'student'
-  if (role !== 'admin' && role !== 'teacher') redirect('/home')
+  const email = session?.user?.email ?? ''
+  if (!email) redirect('/home')
+  // This is the curriculum AUTHORING hub — admins and collaborators granted the
+  // 'lessons' area only. Teachers (who assign but don't author) are sent back to
+  // their command center, not the content builder.
+  const ec = await getEffectiveContext(email)
+  const isAdmin = ec.realRole === 'admin'
+  if (!(await canEditArea(email, 'lessons', isAdmin))) {
+    redirect(ec.realRole === 'student' ? '/home' : '/admin/home')
+  }
+  const role = ec.realRole // drives publish (super-admin only)
 
   const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
   const units = (unitRows ?? []) as UnitRow[]

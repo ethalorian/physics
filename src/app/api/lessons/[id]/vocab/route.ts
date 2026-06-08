@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withAuth, withRole } from '@/lib/api-auth'
+import { withAuth, withContentEditor } from '@/lib/api-auth'
 
 // A lesson's tiered SEI vocab lives in ONE vocabulary_set bound to the lesson.
 // GET  /api/lessons/[id]/vocab  — the lesson's tiered terms
@@ -39,7 +39,7 @@ export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
     return NextResponse.json({ setId: s.id, published: s.published ?? false, terms: terms ?? [] })
 })
 
-export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (req, ctx) => {
+export const PUT = withContentEditor<{ id: string }>('lessons', async (req, ctx) => {
     const { id: lessonId } = await ctx.params
     const body = (await req.json()) as { terms?: TermInput[]; published?: boolean }
     const terms = (body.terms ?? []).filter((t) => t.term?.trim())

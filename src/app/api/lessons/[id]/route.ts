@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withAuth, withRole } from '@/lib/api-auth'
+import { withAuth, withContentEditor } from '@/lib/api-auth'
 
 /**
  * GET /api/lessons/[id]
@@ -30,7 +30,7 @@ export const GET = withAuth<{ id: string }>(async (request, ctx) => {
  * PUT /api/lessons/[id]
  * Update a lesson (admin/teacher only)
  */
-export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+export const PUT = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
   const params = await ctx.params
     const body = await request.json()
 
@@ -80,7 +80,7 @@ export const PUT = withRole<{ id: string }>(['teacher', 'admin'], async (request
  * DELETE /api/lessons/[id]
  * Delete a lesson (admin/teacher only)
  */
-export const DELETE = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
+export const DELETE = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
   const params = await ctx.params
     console.log(`Attempting to delete lesson with ID: ${params.id}`)
 
