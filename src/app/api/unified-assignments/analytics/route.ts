@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseAdmin } from '@/lib/supabase'
 import { AssignmentAnalytics, TeacherDashboardSummary, StudentDashboardSummary } from '@/types/unified-assignment'
 
 /**
@@ -20,11 +20,26 @@ export const GET = withAuth(async (request, ctx) => {
     const courseId = searchParams.get('course_id')
 
     if (type === 'assignment') {
+      // Assignment-level analytics are staff-only; a student must never pull a
+      // class's grade distribution. A teacher may only see assignments they own.
+      if (userRole !== 'admin' && userRole !== 'teacher') {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
       if (!assignmentId) {
         return NextResponse.json(
           { error: 'assignment_id required for assignment analytics' },
           { status: 400 }
         )
+      }
+      if (userRole === 'teacher') {
+        const { data: owned } = await supabaseAdmin
+          .from('unified_assignments')
+          .select('assigned_by')
+          .eq('id', assignmentId)
+          .maybeSingle()
+        if (!owned || (owned as { assigned_by: string | null }).assigned_by !== ctx.scopeEmail) {
+          return NextResponse.json({ error: 'Forbidden - not your assignment' }, { status: 403 })
+        }
       }
 
       const analytics = await getAssignmentAnalytics(assignmentId)

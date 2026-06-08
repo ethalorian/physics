@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { recordMathObservation } from '@/lib/math-spine-server'
+import { teacherCanAccessStudent } from '@/lib/teacher-scope'
 
 // POST /api/math-spine/warmup-review
 // The teacher reviews a submitted warm-up and assigns a Marzano fluency level.
@@ -31,6 +32,11 @@ export const POST = withAuth(async (request, ctx) => {
     .single()
   if (subErr || !sub) {
     return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
+  }
+
+  // A teacher may only review a warm-up from a student on their own roster.
+  if (role === 'teacher' && !(await teacherCanAccessStudent(ctx.scopeEmail, sub.user_id))) {
+    return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
   }
 
   const tested: string[] = sub.tested_competency_ids ?? []

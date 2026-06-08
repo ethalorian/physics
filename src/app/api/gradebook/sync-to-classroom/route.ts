@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getTeacherStudentEmails } from '@/lib/teacher-scope'
 
 // POST - Sync grades to Google Classroom
 export const POST = withAuth(async (request, ctx) => {
@@ -30,11 +31,20 @@ export const POST = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: fetchError.message }, { status: 500 })
     }
 
+    // A teacher may only sync grades for students on their own roster (this both
+    // returns student emails and pushes grades, so an unscoped sync leaked across
+    // teachers). Admins: unrestricted.
+    let entriesToSync = entries || []
+    if (userRole === 'teacher') {
+      const rosterEmails = new Set(await getTeacherStudentEmails(ctx.scopeEmail))
+      entriesToSync = entriesToSync.filter((e: { user_email: string | null }) => e.user_email && rosterEmails.has(e.user_email))
+    }
+
     const syncResults = []
     const errors = []
 
     // Sync each entry to Google Classroom
-    for (const entry of entries || []) {
+    for (const entry of entriesToSync) {
       try {
         // Call Google Classroom API
         const classroomResponse = await fetch(

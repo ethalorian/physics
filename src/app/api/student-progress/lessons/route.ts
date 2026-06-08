@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { getScopedDb } from '@/lib/user-db'
 
 // POST - Update lesson progress
 export const POST = withAuth(async (request, ctx) => {
@@ -71,7 +72,8 @@ export const GET = withAuth(async (request, ctx) => {
     const lessonId = searchParams.get('lesson_id')
     const status = searchParams.get('status')
 
-    let query = supabaseAdmin
+    // Defense in depth: scoped to the caller when the RLS net is enabled.
+    let query = getScopedDb(ctx)
       .from('lesson_progress')
       .select('*')
       .eq('user_id', userId)

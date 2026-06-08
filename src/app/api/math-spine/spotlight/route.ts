@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { buildSpotlightGrant } from '@/lib/math-spine'
+import { teacherCanAccessStudent } from '@/lib/teacher-scope'
 
 // POST /api/math-spine/spotlight
 // A teacher "spotlight": a manual recognition grant for a specific student's
@@ -18,6 +19,11 @@ export const POST = withAuth(async (request, ctx) => {
   const { user_id } = body
   if (!user_id) {
     return NextResponse.json({ error: 'Missing required field: user_id' }, { status: 400 })
+  }
+
+  // A teacher may only spotlight a student on their own roster (admins: any).
+  if (role === 'teacher' && !(await teacherCanAccessStudent(ctx.scopeEmail, user_id))) {
+    return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
   }
 
   const spec = buildSpotlightGrant({

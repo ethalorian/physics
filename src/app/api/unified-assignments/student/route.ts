@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import { getTeacherStudentGids } from '@/lib/teacher-scope'
 
 /**
  * GET /api/unified-assignments/student
@@ -8,10 +9,25 @@ import { supabase } from '@/lib/supabase'
  */
 export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const studentId = searchParams.get('student_id')
-
-    // Use provided student_id or fallback to session email
-    const studentEmail = studentId || ctx.email
+    // `student_id` here is actually an email. A student may only read their own;
+    // an admin may read anyone; a teacher only students on their own roster.
+    // (Previously this trusted the param from any caller — an IDOR.)
+    const requestedEmail = searchParams.get('student_id')
+    let studentEmail = ctx.email
+    if (requestedEmail && requestedEmail !== ctx.email) {
+      if (ctx.role === 'admin') {
+        studentEmail = requestedEmail
+      } else if (ctx.role === 'teacher') {
+        const gids = await getTeacherStudentGids(ctx.scopeEmail)
+        const { data: roster } = await supabaseAdmin.from('students').select('email').in('google_user_id', gids)
+        const allowed = (roster ?? []).some((s: { email: string | null }) => s.email === requestedEmail)
+        if (!allowed) return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        studentEmail = requestedEmail
+      } else {
+        return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      }
+    }
+    const supabase = supabaseAdmin
 
     // Query student's assignment progress with assignment details
     const { data: progressRecords, error: progressError } = await supabase

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { getScopedDb } from '@/lib/user-db'
 
 // POST - Save vocabulary game score
 export const POST = withEnrolledStudent(async (request, ctx) => {
@@ -49,12 +51,24 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
 // GET - Fetch game scores
 export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('user_id') || ctx.userId
+    // A student may only read their own scores; admins anyone; a teacher only
+    // students on their own roster. (Previously this trusted ?user_id= from any caller.)
+    const resolved = await resolveTargetStudent({
+      role: ctx.role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId: searchParams.get('user_id'),
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const userId = resolved.userId
     const gameType = searchParams.get('game_type')
     const vocabularySetId = searchParams.get('vocabulary_set_id')
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    let query = supabaseAdmin
+    // Defense in depth: scoped to the caller when the RLS net is enabled.
+    let query = getScopedDb(ctx)
       .from('vocabulary_game_scores')
       .select('*')
       .eq('user_id', userId)

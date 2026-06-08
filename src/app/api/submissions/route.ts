@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server'
 // Internal imports
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withRole } from '@/lib/api-auth'
-import { getTeacherStudentGids } from '@/lib/teacher-scope'
+import { getTeacherStudentGids, teacherCanAccessStudent } from '@/lib/teacher-scope'
 import { Submission } from '@/types/assignment'
 
 // GET - Fetch submissions
@@ -28,15 +28,16 @@ export const GET = withAuth(async (request, ctx) => {
       query = query.eq('user_id', ctx.userId)
     } else if (userRole === 'teacher') {
       // Teachers are constrained to their own roster — they may narrow to a
-      // single student only if that student is on their roster.
-      const rosterGids = await getTeacherStudentGids(ctx.email)
+      // single student only if that student is on their roster. (scopeEmail so
+      // an admin "viewing as teacher" sees the impersonated teacher's roster.)
+      const rosterGids = await getTeacherStudentGids(ctx.scopeEmail)
       if (userId) {
         if (!rosterGids.includes(userId)) {
           return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
         }
         query = query.eq('user_id', userId)
       } else {
-        query = query.in('user_id', rosterGids)
+        query = query.in('user_id', rosterGids.length ? rosterGids : ['__none__'])
       }
     } else if (userId) {
       // Admins are unrestricted; may filter by any student.
@@ -140,6 +141,17 @@ export const PUT = withAuth(async (request, ctx) => {
           { status: 403 }
         )
       }
+    } else if (userRole === 'teacher') {
+      // Teachers may only grade submissions from students on their own roster.
+      const { data: existingSubmission } = await supabaseAdmin
+        .from('submissions')
+        .select('user_id')
+        .eq('id', id)
+        .maybeSingle()
+      const ownerGid = (existingSubmission as { user_id: string | null } | null)?.user_id
+      if (!ownerGid || !(await teacherCanAccessStudent(ctx.scopeEmail, ownerGid))) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
     }
 
     // Update graded_at if status changed to graded
@@ -168,12 +180,21 @@ export const PUT = withAuth(async (request, ctx) => {
 })
 
 // DELETE - Delete submission (teachers/admins only)
-export const DELETE = withRole(['teacher', 'admin'], async (request) => {
+export const DELETE = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
 
     if (!id) {
       return NextResponse.json({ error: 'Submission ID is required' }, { status: 400 })
+    }
+
+    // Teachers may only delete a submission from a student on their own roster.
+    if (ctx.role === 'teacher') {
+      const { data: existing } = await supabaseAdmin.from('submissions').select('user_id').eq('id', id).maybeSingle()
+      const ownerGid = (existing as { user_id: string | null } | null)?.user_id
+      if (!ownerGid || !(await teacherCanAccessStudent(ctx.scopeEmail, ownerGid))) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
     }
 
     // Delete submission

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { getScopedDb } from '@/lib/user-db'
 
 // POST - Save video question response
 export const POST = withAuth(async (request, ctx) => {
@@ -46,11 +48,24 @@ export const POST = withAuth(async (request, ctx) => {
 // GET - Fetch video question responses
 export const GET = withAuth(async (request, ctx) => {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('user_id') || ctx.userId
+    // Own data only; teachers limited to their roster; admins unrestricted.
+    // (Previously this trusted ?user_id= from any caller — an IDOR.)
+    const resolved = await resolveTargetStudent({
+      role: ctx.role,
+      selfId: ctx.userId,
+      scopeEmail: ctx.email,
+      requestedUserId: searchParams.get('user_id'),
+    })
+    if (!resolved.ok) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+    const userId = resolved.userId
     const lessonId = searchParams.get('lesson_id')
     const videoId = searchParams.get('video_id')
 
-    let query = supabaseAdmin
+    // Defense in depth: when the RLS net is enabled this query runs as the user,
+    // so the database itself limits rows even if scoping above were ever missed.
+    let query = getScopedDb(ctx)
       .from('video_question_responses')
       .select('*')
       .eq('user_id', userId)

@@ -2,12 +2,40 @@ import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 
+// Ownership guards: admins may act on anything; a teacher only on sections/courses
+// they own. Section ownership flows from section.teacher_email or the owning course.
+async function staffCanAccessSection(role: string, scopeEmail: string, sectionId: string): Promise<boolean> {
+  if (role === 'admin') return true
+  const { data } = await supabaseAdmin.from('sections').select('course_id, teacher_email').eq('id', sectionId).maybeSingle()
+  const sec = data as { course_id: string | null; teacher_email: string | null } | null
+  if (!sec) return false
+  if (sec.teacher_email && sec.teacher_email === scopeEmail) return true
+  if (sec.course_id) {
+    const { data: course } = await supabaseAdmin.from('courses').select('teacher_email').eq('id', sec.course_id).maybeSingle()
+    return (course as { teacher_email: string | null } | null)?.teacher_email === scopeEmail
+  }
+  return false
+}
+async function staffCanAccessCourse(role: string, scopeEmail: string, courseId: string): Promise<boolean> {
+  if (role === 'admin') return true
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(courseId)
+  let q = supabaseAdmin.from('courses').select('teacher_email')
+  q = isUuid ? q.eq('id', courseId) : q.eq('google_course_id', courseId)
+  const { data } = await q.maybeSingle()
+  return (data as { teacher_email: string | null } | null)?.teacher_email === scopeEmail
+}
+const forbiddenSection = () => NextResponse.json({ error: 'Forbidden - not your section' }, { status: 403 })
+
 // GET - Get sections for a course or all sections
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     const { searchParams } = new URL(request.url)
     const courseId = searchParams.get('course_id')
 
     if (courseId) {
+      // A teacher may only list sections for a course they own.
+      if (!(await staffCanAccessCourse(ctx.role, ctx.scopeEmail, courseId))) {
+        return NextResponse.json({ error: 'Forbidden - not your course' }, { status: 403 })
+      }
       // Get sections for a specific course using the RPC function
       const { data, error } = await supabaseAdmin
         .rpc('get_course_sections', { p_course_id: courseId })
@@ -19,8 +47,8 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
 
       return NextResponse.json({ sections: data || [] })
     } else {
-      // Get all sections with course info
-      const { data, error } = await supabaseAdmin
+      // Get all sections with course info — a teacher sees only their own.
+      let q = supabaseAdmin
         .from('sections')
         .select(`
           id,
@@ -35,6 +63,8 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
         `)
         .eq('is_active', true)
         .order('name')
+      if (ctx.role === 'teacher') q = q.eq('teacher_email', ctx.scopeEmail)
+      const { data, error } = await q
 
       if (error) {
         console.error('Error fetching sections:', error)
@@ -56,6 +86,9 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
       if (!courseId || !name) {
         return NextResponse.json({ error: 'Course ID and section name are required' }, { status: 400 })
+      }
+      if (!(await staffCanAccessCourse(ctx.role, ctx.scopeEmail, courseId))) {
+        return NextResponse.json({ error: 'Forbidden - not your course' }, { status: 403 })
       }
 
       const { data, error } = await supabaseAdmin
@@ -88,6 +121,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       if (!studentId || !sectionId) {
         return NextResponse.json({ error: 'Student ID and section ID are required' }, { status: 400 })
       }
+      if (!(await staffCanAccessSection(ctx.role, ctx.scopeEmail, sectionId))) return forbiddenSection()
 
       const { data, error } = await supabaseAdmin
         .rpc('assign_student_to_section', {
@@ -110,6 +144,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       if (!Array.isArray(studentIds) || studentIds.length === 0 || !sectionId) {
         return NextResponse.json({ error: 'Student IDs array and section ID are required' }, { status: 400 })
       }
+      if (!(await staffCanAccessSection(ctx.role, ctx.scopeEmail, sectionId))) return forbiddenSection()
 
       const results = {
         success: 0,
@@ -153,6 +188,7 @@ export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
     if (!sectionId) {
       return NextResponse.json({ error: 'Section ID is required' }, { status: 400 })
     }
+    if (!(await staffCanAccessSection(ctx.role, ctx.scopeEmail, sectionId))) return forbiddenSection()
 
     const updateData: Record<string, unknown> = {}
     if (name !== undefined) updateData.name = name
@@ -191,6 +227,7 @@ export const DELETE = withRole(['teacher', 'admin'], async (request, ctx) => {
       if (!sectionId || !studentId) {
         return NextResponse.json({ error: 'Section ID and student ID are required' }, { status: 400 })
       }
+      if (!(await staffCanAccessSection(ctx.role, ctx.scopeEmail, sectionId))) return forbiddenSection()
 
       const { error } = await supabaseAdmin
         .from('student_sections')
@@ -210,6 +247,7 @@ export const DELETE = withRole(['teacher', 'admin'], async (request, ctx) => {
       if (!sectionId) {
         return NextResponse.json({ error: 'Section ID is required' }, { status: 400 })
       }
+      if (!(await staffCanAccessSection(ctx.role, ctx.scopeEmail, sectionId))) return forbiddenSection()
 
       const { error } = await supabaseAdmin
         .from('sections')

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { decayingAverage } from '@/data/curriculum-types'
+import { getTeacherStudentGids, teacherCanAccessStudent } from '@/lib/teacher-scope'
 
 // GET /api/mastery/lesson-comparison?target_id=...&user_id=...
 // Quick drawer analytic: this student's mastery on the clicked target's LESSON
@@ -18,6 +19,16 @@ export const GET = withAuth(async (request, ctx) => {
     const targetId = searchParams.get('target_id')
     const userId = searchParams.get('user_id')
     if (!targetId || !userId) return NextResponse.json({ error: 'Missing target_id or user_id' }, { status: 400 })
+
+    // A teacher may only inspect a student on their own roster, and their "class
+    // average" must be THEIR class — not every student in the school.
+    let rosterGids: Set<string> | null = null
+    if (ctx.role === 'teacher') {
+      if (!(await teacherCanAccessStudent(ctx.scopeEmail, userId))) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
+      rosterGids = new Set(await getTeacherStudentGids(ctx.scopeEmail))
+    }
 
     // target → its lesson → the lesson's full set of targets
     const { data: tRow } = await supabaseAdmin.from('learning_targets').select('lesson_id').eq('id', targetId).maybeSingle()
@@ -42,6 +53,8 @@ export const GET = withAuth(async (request, ctx) => {
     const byUser = new Map<string, Map<string, number[]>>()
     for (const r of recs ?? []) {
       const uid = r.user_id as string
+      // For teachers, only count students on their roster toward the class average.
+      if (rosterGids && !rosterGids.has(uid)) continue
       const tid = r.target_id as string
       if (!byUser.has(uid)) byUser.set(uid, new Map())
       const tmap = byUser.get(uid)!

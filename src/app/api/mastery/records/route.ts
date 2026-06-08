@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { teacherCanAccessStudent } from '@/lib/teacher-scope'
 
 // POST /api/mastery/records
 // Records a single Marzano observation (1-3) for a student on a target.
@@ -21,6 +22,11 @@ export const POST = withAuth(async (request, ctx) => {
         { error: 'Missing or invalid fields: user_id, target_id, level (1, 2, or 3)' },
         { status: 400 },
       )
+    }
+
+    // A teacher may only rate a student on their own roster (admins unrestricted).
+    if (role === 'teacher' && !(await teacherCanAccessStudent(ctx.scopeEmail, user_id))) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
     }
 
     const row = {

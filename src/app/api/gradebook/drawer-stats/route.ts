@@ -39,6 +39,13 @@ export const GET = withAuth(async (request, ctx) => {
     // Who counts toward the "class" figures (respects class + teacher/admin scope).
     const scope = await resolveRosterScope({ classId, role: ctx.role, scopeEmail: ctx.scopeEmail })
 
+    // The requested student must be within the caller's scope — otherwise a teacher
+    // could read one off-roster student's completion %. (Admin with no class: scope
+    // is null = unrestricted.)
+    if (scope.gids && !scope.gids.includes(userId)) {
+      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    }
+
     // Gradebook entries for this unit's lessons, scoped to the class roster.
     let gbQuery = supabaseAdmin
       .from('gradebook_entries')

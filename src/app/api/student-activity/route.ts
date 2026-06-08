@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUserRole } from '@/lib/permissions'
+import { getTeacherStudentEmails } from '@/lib/teacher-scope'
 
 // GET - Retrieve student activity data (admin/teacher only)
 export const GET = withAuth(async (request, ctx) => {
-    const userRole = getUserRole(ctx.email)
-    if (userRole !== 'admin' && userRole !== 'teacher') {
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
       return NextResponse.json({ error: 'Forbidden - Admin/Teacher access required' }, { status: 403 })
     }
 
@@ -28,8 +27,19 @@ export const GET = withAuth(async (request, ctx) => {
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    // Apply filters
-    if (studentEmail) {
+    // Roster scoping: a teacher may only see their own students' activity (this
+    // returns IP/user-agent, so an unscoped read was a real leak). Admins: any.
+    if (ctx.role === 'teacher') {
+      const rosterEmails = await getTeacherStudentEmails(ctx.scopeEmail)
+      if (studentEmail) {
+        if (!rosterEmails.includes(studentEmail)) {
+          return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        }
+        query = query.eq('user_email', studentEmail)
+      } else {
+        query = query.in('user_email', rosterEmails.length ? rosterEmails : ['__none__'])
+      }
+    } else if (studentEmail) {
       query = query.eq('user_email', studentEmail)
     }
     if (activityType) {

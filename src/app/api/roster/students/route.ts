@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { resolveRosterScope } from '@/lib/teacher-scope'
+import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET - Get imported students, SCOPED to who's asking: a teacher sees only the
 // students enrolled in their own classes; an admin sees everyone. Pass
@@ -73,6 +73,16 @@ export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
     if (typeof body.last_name === 'string') update.last_name = body.last_name.trim()
     if (Object.keys(update).length === 0) {
       return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
+    }
+
+    // A teacher may only edit a student on their own roster (admins unrestricted).
+    if (ctx.role === 'teacher') {
+      const { data: stu } = await supabaseAdmin.from('students').select('google_user_id').eq('id', id).maybeSingle()
+      const gids = await getTeacherStudentGids(ctx.scopeEmail)
+      const gid = (stu as { google_user_id: string | null } | null)?.google_user_id
+      if (!gid || !gids.includes(gid)) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
     }
 
     const { data, error } = await supabaseAdmin

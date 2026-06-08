@@ -36,6 +36,20 @@ export async function getTeacherStudentGids(teacherEmail: string): Promise<strin
   )]
 }
 
+// The emails of all students on a teacher's roster. Some surfaces key student
+// data by email (student_email) rather than google_user_id; this gives the
+// roster set to constrain those queries. Empty array = no rostered students.
+export async function getTeacherStudentEmails(teacherEmail: string): Promise<string[]> {
+  const gids = await getTeacherStudentGids(teacherEmail)
+  if (gids.length === 0) return []
+  const { data } = await supabaseAdmin.from('students').select('email').in('google_user_id', gids)
+  return [...new Set(
+    ((data ?? []) as { email: string | null }[])
+      .map((s) => s.email)
+      .filter((e): e is string => Boolean(e)),
+  )]
+}
+
 // The google_user_ids of students enrolled in ONE specific course.
 // Used to scope a surface to a single class (the per-class drill-in).
 export async function getCourseStudentGids(courseId: string): Promise<string[]> {

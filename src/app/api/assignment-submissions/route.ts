@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getTeacherStudentEmails } from '@/lib/teacher-scope'
 
 // GET - Retrieve assignment submissions (admin/teacher only)
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
@@ -17,12 +18,23 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
       .order('time_submitted', { ascending: false })
       .range(offset, offset + limit - 1)
 
-    // Apply filters
+    // Roster scoping: a teacher may only see their own students' submissions
+    // (previously an unfiltered call paged through every teacher's submissions).
+    if (ctx.role === 'teacher') {
+      const rosterEmails = await getTeacherStudentEmails(ctx.scopeEmail)
+      if (studentEmail) {
+        if (!rosterEmails.includes(studentEmail)) {
+          return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        }
+        query = query.eq('user_email', studentEmail)
+      } else {
+        query = query.in('user_email', rosterEmails.length ? rosterEmails : ['__none__'])
+      }
+    } else if (studentEmail) {
+      query = query.eq('user_email', studentEmail)
+    }
     if (assignmentId) {
       query = query.eq('assignment_id', assignmentId)
-    }
-    if (studentEmail) {
-      query = query.eq('user_email', studentEmail)
     }
 
     const { data: submissions, error } = await query
@@ -100,6 +112,19 @@ export const PUT = withRole(['teacher', 'admin'], async (request, ctx) => {
 
     if (!submission_id) {
       return NextResponse.json({ error: 'submission_id is required' }, { status: 400 })
+    }
+
+    // A teacher may only grade a submission from a student on their roster.
+    if (ctx.role === 'teacher') {
+      const { data: sub } = await supabaseAdmin
+        .from('assignment_submissions')
+        .select('user_email')
+        .eq('id', submission_id)
+        .maybeSingle()
+      const rosterEmails = await getTeacherStudentEmails(ctx.scopeEmail)
+      if (!sub || !rosterEmails.includes((sub as { user_email: string | null }).user_email ?? '')) {
+        return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+      }
     }
 
     const updates: any = {

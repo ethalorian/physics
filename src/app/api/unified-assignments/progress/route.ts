@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import { getTeacherStudentEmails } from '@/lib/teacher-scope'
 import { UpdateStudentProgressRequest } from '@/types/unified-assignment'
+
+// Isolation is enforced in-handler (roster scoping); all access via service role.
+const supabase = supabaseAdmin
 
 /**
  * GET /api/unified-assignments/progress
@@ -47,14 +51,17 @@ export const GET = withAuth(async (request, ctx) => {
       `)
 
     // Role-based filtering
-    if (userRole === 'admin' || userRole === 'teacher') {
-      // Teachers see all progress for their assignments
-      if (assignmentId) {
-        query = query.eq('unified_assignment_id', assignmentId)
-      }
-      if (studentId) {
-        query = query.eq('student_id', studentId)
-      }
+    if (userRole === 'admin') {
+      // Admins are unrestricted.
+      if (assignmentId) query = query.eq('unified_assignment_id', assignmentId)
+      if (studentId) query = query.eq('student_id', studentId)
+    } else if (userRole === 'teacher') {
+      // Teachers are constrained to their own roster (previously they saw EVERY
+      // student app-wide). Filter to the roster's student emails.
+      const rosterEmails = await getTeacherStudentEmails(ctx.scopeEmail)
+      query = query.in('student_email', rosterEmails.length ? rosterEmails : ['__none__'])
+      if (assignmentId) query = query.eq('unified_assignment_id', assignmentId)
+      if (studentId) query = query.eq('student_id', studentId)
     } else {
       // Students see only their own progress
       query = query.eq('student_email', ctx.email)
@@ -161,6 +168,14 @@ export const PUT = withAuth(async (request, ctx) => {
 
       return NextResponse.json(data)
     } else {
+      // Teachers may only grade students on their own roster (admins unrestricted).
+      // (Previously any teacher could grade any progress_id, cross-tenant.)
+      if (userRole === 'teacher') {
+        const rosterEmails = await getTeacherStudentEmails(ctx.scopeEmail)
+        if (!rosterEmails.includes(existing.student_email)) {
+          return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+        }
+      }
       // Teachers/admins can update all fields including grading
       const teacherUpdates: any = {
         ...updates,
