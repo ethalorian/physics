@@ -19,6 +19,20 @@ export async function getGrantedRole(email: string): Promise<GrantedRole | null>
   return r === 'teacher' || r === 'admin' ? r : null
 }
 
+// Record a pending teacher-access request (a district staff member tried to sign
+// in but isn't granted yet). Idempotent: never reopens an already-APPROVED request,
+// but a fresh attempt after a denial re-opens it to pending so the admin sees it.
+export async function requestTeacherAccess(email: string, name?: string | null): Promise<void> {
+  const e = email.trim().toLowerCase()
+  if (!e) return
+  const { data: existing } = await supabaseAdmin.from('teacher_access_requests').select('status').eq('email', e).maybeSingle()
+  if ((existing as { status?: string } | null)?.status === 'approved') return
+  await supabaseAdmin.from('teacher_access_requests').upsert(
+    { email: e, name: name ?? null, status: 'pending', created_at: new Date().toISOString() },
+    { onConflict: 'email' },
+  )
+}
+
 export async function grantTeacher(
   email: string,
   source: 'classroom' | 'admin_approval' | 'seed',

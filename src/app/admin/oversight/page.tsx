@@ -9,6 +9,7 @@ interface TeacherRow { email: string; students: number; masteryRatings: number; 
 interface Engagement { active7d: number; idle: number; atRisk: number; total: number }
 interface Feature { key: string; label: string; count: number }
 interface Oversight { pulse: Pulse; teachers: TeacherRow[]; engagement: Engagement; features: Feature[]; you: string }
+interface AccessReq { email: string; name: string | null; note: string | null; status: string; created_at: string }
 
 const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—')
 const STATUS: Record<string, { label: string; color: string; bg: string }> = {
@@ -42,6 +43,10 @@ export default function OversightPage() {
   const [d, setD] = useState<Oversight | null>(null)
   const [loading, setLoading] = useState(true)
   const [classes, setClasses] = useState<ClassRow[]>([])
+  const [requests, setRequests] = useState<AccessReq[]>([])
+
+  const loadRequests = () => fetch('/api/admin/teacher-requests')
+    .then((r) => r.json()).then((data: { pending?: AccessReq[] }) => setRequests(data.pending ?? [])).catch(() => {})
 
   useEffect(() => {
     fetch('/api/admin/oversight')
@@ -52,7 +57,15 @@ export default function OversightPage() {
       .then((r) => r.json())
       .then((data: { courses?: ClassRow[] }) => setClasses(data.courses ?? []))
       .catch(() => {})
+    loadRequests()
   }, [])
+
+  const decide = async (email: string, decision: 'approve' | 'deny') => {
+    await fetch('/api/admin/teacher-requests', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, decision }),
+    }).catch(() => {})
+    loadRequests()
+  }
 
   // Group classes by the teacher who owns them, for the click-into-any-class directory.
   const classesByTeacher = classes.reduce<Record<string, ClassRow[]>>((acc, c) => {
@@ -71,6 +84,25 @@ export default function OversightPage() {
       <p className="text-sm mt-1 mb-6" style={{ color: 'var(--muted-foreground)' }}>All teachers, all students — adoption taking hold.</p>
 
       {loading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading the overview…</p>}
+
+      {/* TEACHER ACCESS REQUESTS — colleagues waiting for you to approve sign-in */}
+      {requests.length > 0 && (
+        <div className="rounded-2xl border mb-6 p-4" style={{ borderColor: 'color-mix(in oklch, var(--primary) 38%, var(--border))', background: 'color-mix(in oklch, var(--primary) 8%, var(--card))' }}>
+          <h2 className="text-sm font-bold mb-1">Teacher access requests · {requests.length}</h2>
+          <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>Staff who tried to sign in and are waiting for approval. Approving gives them teacher access.</p>
+          <div className="flex flex-col gap-2">
+            {requests.map((r) => (
+              <div key={r.email} className="flex flex-wrap items-center gap-3 rounded-xl border px-3 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+                <span className="flex-1 min-w-[12rem] text-sm font-medium">
+                  {r.name || r.email}{r.name && <span className="text-xs ml-2" style={{ color: 'var(--muted-foreground)' }}>{r.email}</span>}
+                </span>
+                <button onClick={() => decide(r.email, 'approve')} className="text-xs font-semibold rounded-md px-3 py-1.5" style={{ background: 'var(--success)', color: '#fff', border: 'none', cursor: 'pointer' }}>Approve</button>
+                <button onClick={() => decide(r.email, 'deny')} className="text-xs rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Deny</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {!loading && d && (
         <>

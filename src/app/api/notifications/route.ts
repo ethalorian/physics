@@ -9,7 +9,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 interface Notif {
   id: string
-  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part'
+  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part' | 'access'
   title: string
   detail: string
   at: string        // ISO — drives sort + unread
@@ -120,6 +120,26 @@ export const GET = withAuth(async (_req, ctx) => {
         items.push({
           id: `due:${r.id}`, type: 'due', title: 'Due soon', detail: `${a.title ?? 'Assignment'} · due ${days === 0 ? 'today' : days === 1 ? 'tomorrow' : `in ${days} days`}`,
           at: a.due_date, href: '/dashboard', unread: now >= new Date(soonThreshold).getTime() && isUnread(soonThreshold),
+        })
+      }
+    } catch { /* ignore */ }
+  }
+
+  // 7. Teacher access requests (ADMIN only) — a colleague tried to sign in and is
+  //    waiting for approval. Links to the oversight page where you approve them.
+  if (ctx.realRole === 'admin') {
+    try {
+      const { data } = await supabaseAdmin
+        .from('teacher_access_requests')
+        .select('email, name, created_at')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(10)
+      for (const r of (data ?? []) as { email: string; name: string | null; created_at: string }[]) {
+        items.push({
+          id: `access:${r.email}`, type: 'access', title: 'Teacher access request',
+          detail: `${r.name || r.email} is waiting for approval`,
+          at: r.created_at, href: '/admin/oversight', unread: isUnread(r.created_at),
         })
       }
     } catch { /* ignore */ }

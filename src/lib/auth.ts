@@ -13,8 +13,8 @@ import {
 } from './oauth-security'
 import { ensureStudentRecord } from './student-management'
 import { getUserRole } from './permissions'
-import { getGrantedRole } from './roles'
-import { isSchoolStudentEmail } from './access'
+import { getGrantedRole, requestTeacherAccess } from './roles'
+import { isSchoolStudentEmail, isSchoolStaffEmail } from './access'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -353,6 +353,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const email = user?.email ?? null
         const isStaff = (await resolveUserRole(email)) !== 'student'
         if (!isStaff && !isSchoolStudentEmail(email)) {
+          // A district STAFF email with no grant yet is a prospective teacher:
+          // capture an access request so an admin is notified and can approve it
+          // (bell + /admin/oversight). The session is still denied until approved.
+          if (isSchoolStaffEmail(email) && email) {
+            try { await requestTeacherAccess(email, user?.name) }
+            catch (e) { console.error('Failed to record teacher access request:', e) }
+          }
           console.warn(`⛔ Sign-in blocked for non-school account: ${email ?? '(no email)'}`)
           return false // → /auth/error?error=AccessDenied
         }

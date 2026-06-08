@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withEnrolledStudent } from '@/lib/api-auth'
+import { getStudentCourseIds } from '@/lib/teacher-scope'
 
 // POST /api/rewards/redeem  { reward_id }
 // Creates a 'pending' redemption (request → teacher approves). Reserves the points
@@ -24,6 +25,23 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         { error: 'Car parts are earned by passing the build lesson, not redeemed' },
         { status: 400 }
       )
+    }
+
+    // The reward must be PLACED in one of this student's periods (and active).
+    // Otherwise a student could redeem a reward from another period/teacher by id.
+    const courseIds = await getStudentCourseIds(ctx.userId)
+    let inStore = false
+    if (courseIds.length > 0) {
+      const { data: placed } = await supabaseAdmin
+        .from('store_reward_placements').select('reward_id')
+        .in('course_id', courseIds).eq('reward_id', String(body.reward_id)).limit(1)
+      if (placed && placed.length > 0) {
+        const { data: rw } = await supabaseAdmin.from('rewards').select('active').eq('id', String(body.reward_id)).maybeSingle()
+        inStore = !!(rw as { active: boolean } | null)?.active
+      }
+    }
+    if (!inStore) {
+      return NextResponse.json({ error: 'That reward is not available in your store' }, { status: 400 })
     }
 
     // Balance check + redemption insert happen atomically (and serialized

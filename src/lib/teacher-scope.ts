@@ -50,6 +50,33 @@ export async function getTeacherStudentEmails(teacherEmail: string): Promise<str
   )]
 }
 
+// The course ids a student is enrolled in. Used to resolve their per-period
+// reward store (rewards placed in those courses).
+export async function getStudentCourseIds(studentGid: string): Promise<string[]> {
+  const { data: stud } = await supabaseAdmin.from('students').select('id').eq('google_user_id', studentGid).maybeSingle()
+  const sid = (stud as { id: string } | null)?.id
+  if (!sid) return []
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', sid)
+  return [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => r.course_id).filter(Boolean))]
+}
+
+// The emails of the teacher(s) whose courses a student is enrolled in. Used to
+// resolve which curated store(s) a student should see (their teacher's rewards).
+export async function getStudentTeacherEmails(studentGid: string): Promise<string[]> {
+  const { data: stud } = await supabaseAdmin.from('students').select('id').eq('google_user_id', studentGid).maybeSingle()
+  const sid = (stud as { id: string } | null)?.id
+  if (!sid) return []
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', sid)
+  const courseIds = [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => r.course_id))]
+  if (courseIds.length === 0) return []
+  const { data: courses } = await supabaseAdmin.from('courses').select('teacher_email').in('id', courseIds)
+  return [...new Set(
+    ((courses ?? []) as { teacher_email: string | null }[])
+      .map((c) => c.teacher_email)
+      .filter((e): e is string => Boolean(e)),
+  )]
+}
+
 // The google_user_ids of students enrolled in ONE specific course.
 // Used to scope a surface to a single class (the per-class drill-in).
 export async function getCourseStudentGids(courseId: string): Promise<string[]> {

@@ -10,8 +10,17 @@
 /** District student sign-in domain. Students authenticate as <name>@this. */
 export const STUDENT_EMAIL_DOMAIN = 'student.fitchburgschools.org'
 
+/** District STAFF sign-in domain. Teachers/admins authenticate as <name>@this. */
+export const STAFF_EMAIL_DOMAIN = 'fitchburg.k12.ma.us'
+
 /** True if the email is a district student account. Case-insensitive. */
 export function isSchoolStudentEmail(email: string | null | undefined): boolean {
   if (!email) return false
   return email.trim().toLowerCase().endsWith(`@${STUDENT_EMAIL_DOMAIN}`)
+}
+
+/** True if the email is a district staff account (eligible to request teacher access). */
+export function isSchoolStaffEmail(email: string | null | undefined): boolean {
+  if (!email) return false
+  return email.trim().toLowerCase().endsWith(`@${STAFF_EMAIL_DOMAIN}`)
 }

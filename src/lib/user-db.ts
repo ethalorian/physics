@@ -21,9 +21,11 @@ import { supabaseAdmin } from '@/lib/supabase'
  */
 
 const RLS_ENABLED = process.env.SUPABASE_RLS_USER_CLIENT === 'on'
-const JWT_SECRET = process.env.SUPABASE_JWT_SECRET
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL
-const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// The Vercel↔Supabase integration provides the JWT secret prefixed
+// (SUPABASE_SUPABASE_JWT_SECRET); accept either name so no copying is needed.
+const JWT_SECRET = process.env.SUPABASE_JWT_SECRET ?? process.env.SUPABASE_SUPABASE_JWT_SECRET
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? process.env.SUPABASE_SUPABASE_URL
+const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? process.env.SUPABASE_NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 /**
  * Mint a Supabase-compatible JWT for this user (HS256, short TTL).

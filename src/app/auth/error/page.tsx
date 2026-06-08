@@ -28,8 +28,8 @@ function AuthErrorContent() {
       case "AccessDenied":
         return {
           title: "Access Denied",
-          message: "You don't have permission to sign in.",
-          solution: "Make sure you're using your school Google account and that you've been added to the class.",
+          message: "You don't have permission to sign in yet.",
+          solution: "Students: use your @student.fitchburgschools.org account and make sure you've been added to the class. Staff (@fitchburg.k12.ma.us): your access request has been sent to your administrator — you'll be able to sign in once they approve it.",
           showTryAgain: true
         }
       case "Verification":
