@@ -13,6 +13,8 @@
  *     exit ticket → formative, GEWA → graded work.
  */
 
+import type { FormulaCategory } from './physics-reference';
+
 export type BlockId = string;
 
 export type DayType =
@@ -134,8 +136,10 @@ export interface GewaBlock extends BaseBlock {
   capture: true;
   prompt: string;
   givenHint?: string;
-  equationHint?: string;      // student fills GIVEN / EQUATION / WORK / ANSWER; saved + AI-gradable
-  equationOptions?: string[]; // optional equation bank (recognition-by-sight); falls back to a kinematics set
+  equationHint?: string;      // hint shown at the Equation step
+  equationOptions?: string[]; // legacy: restrict the bank to these exact display strings
+  solveFor?: string;          // MCAS symbol to isolate (defaults to the chosen formula's own subject)
+  equationCategories?: FormulaCategory[]; // scope the equation bank to these topics (e.g. ['Kinematics'])
 }
 
 export interface EquationSandboxBlock extends BaseBlock {

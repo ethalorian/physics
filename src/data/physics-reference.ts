@@ -207,3 +207,46 @@ export function isMcasUnit(u: string): boolean {
 export function variableBySymbol(symbol: string): PhysicsVariable | undefined {
   return PHYSICS_VARIABLES.find((v) => v.symbol === symbol)
 }
+
+// ---------------------------------------------------------------------------
+// UNIT CONVERSIONS — common off-sheet units → their MCAS base. Used by the GEWA
+// "Given" step: a known entered in km/cm/g/min/h auto-converts to m/kg/s when it
+// drops into the equation, and the block shows the student WHY (the factor and
+// what changed). The conversion target is always an MCAS base unit.
+// ---------------------------------------------------------------------------
+export interface UnitConversion {
+  from: string      // unit as entered ('km')
+  to: string        // MCAS base unit ('m')
+  factor: number    // multiply the value by this to reach `to`
+  rule: string      // human explanation ('1 km = 1,000 m')
+}
+
+export const UNIT_CONVERSIONS: readonly UnitConversion[] = [
+  { from: 'km', to: 'm', factor: 1000, rule: '1 km = 1,000 m' },
+  { from: 'cm', to: 'm', factor: 0.01, rule: '100 cm = 1 m' },
+  { from: 'mm', to: 'm', factor: 0.001, rule: '1,000 mm = 1 m' },
+  { from: 'g', to: 'kg', factor: 0.001, rule: '1,000 g = 1 kg' },
+  { from: 'mg', to: 'kg', factor: 1e-6, rule: '1,000,000 mg = 1 kg' },
+  { from: 'min', to: 's', factor: 60, rule: '1 min = 60 s' },
+  { from: 'h', to: 's', factor: 3600, rule: '1 h = 3,600 s' },
+  { from: 'hr', to: 's', factor: 3600, rule: '1 hr = 3,600 s' },
+  { from: 'ms', to: 's', factor: 0.001, rule: '1,000 ms = 1 s' },
+  { from: 'km/h', to: 'm/s', factor: 1 / 3.6, rule: '1 m/s = 3.6 km/h' },
+] as const
+
+/** Units the GEWA "Given" dropdown offers: MCAS units plus the convertible ones. */
+export const GEWA_UNIT_OPTIONS: readonly string[] = [
+  ...MCAS_UNIT_OPTIONS,
+  ...UNIT_CONVERSIONS.map((c) => c.from).filter((u) => !MCAS_UNIT_OPTIONS.includes(u)),
+]
+
+/**
+ * Convert a value+unit to MCAS base units when needed. Returns the converted
+ * value, the MCAS unit, and the rule to show the student — or null when the unit
+ * is already MCAS (or unknown, in which case it is left untouched).
+ */
+export function convertToMcas(value: number, unit: string): { value: number; unit: string; rule: string } | null {
+  const c = UNIT_CONVERSIONS.find((x) => x.from === unit)
+  if (!c) return null
+  return { value: value * c.factor, unit: c.to, rule: c.rule }
+}
