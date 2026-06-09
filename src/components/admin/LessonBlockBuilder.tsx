@@ -146,6 +146,10 @@ export default function LessonBlockBuilder({
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
   const [sims, setSims] = useState<{ slug: string; title: string }[]>([])
+  // Transient UI feedback: which block just changed (pulse) / is leaving (collapse).
+  const [flashId, setFlashId] = useState<string | null>(null)
+  const [removingId, setRemovingId] = useState<string | null>(null)
+  const flash = (id: string) => { setFlashId(id); window.setTimeout(() => setFlashId((c) => (c === id ? null : c)), 850) }
 
   useEffect(() => {
     fetch('/api/simulations')
@@ -156,9 +160,22 @@ export default function LessonBlockBuilder({
       .catch(() => {})
   }, [])
 
-  const addBlock = (type: string) => setBlocks((prev) => [...prev, { id: mkId(), type, data: {} }])
-  const removeBlock = (id: string) => setBlocks((prev) => prev.filter((b) => b.id !== id))
-  const moveBlock = (id: string, dir: -1 | 1) =>
+  const addBlock = (type: string) => {
+    const id = mkId()
+    setBlocks((prev) => [...prev, { id, type, data: {} }])
+    flash(id)
+    // Let it mount, then scroll the new card into view so the add is unmistakable.
+    window.setTimeout(() => { document.querySelector(`[data-bid="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }) }, 40)
+  }
+  const removeBlock = (id: string) => {
+    // Play the collapse-out, then actually drop it from state.
+    setRemovingId(id)
+    window.setTimeout(() => {
+      setBlocks((prev) => prev.filter((b) => b.id !== id))
+      setRemovingId((c) => (c === id ? null : c))
+    }, 260)
+  }
+  const moveBlock = (id: string, dir: -1 | 1) => {
     setBlocks((prev) => {
       const i = prev.findIndex((b) => b.id === id)
       const j = i + dir
@@ -167,6 +184,8 @@ export default function LessonBlockBuilder({
       ;[next[i], next[j]] = [next[j], next[i]]
       return next
     })
+    flash(id)
+  }
   const setField = (id: string, key: string, value: unknown) =>
     setBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, data: { ...b.data, [key]: value } } : b)))
 
@@ -190,6 +209,12 @@ export default function LessonBlockBuilder({
 
   return (
     <div className="max-w-4xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <style>{`
+        @keyframes bbFlash { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 70%, transparent); background: color-mix(in oklch, var(--primary) 9%, var(--card)); } 100% { box-shadow: 0 0 0 12px transparent; background: var(--card); } }
+        @keyframes bbOut { from { opacity: 1; max-height: 1200px; } to { opacity: 0; transform: translateX(12px); max-height: 0; margin-top: -12px; padding-top: 0; padding-bottom: 0; } }
+        @keyframes bbPress { 50% { transform: scale(0.94); } }
+        .bb-btn:active { animation: bbPress 0.15s ease; }
+      `}</style>
       {/* header */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
         <div>
@@ -213,14 +238,20 @@ export default function LessonBlockBuilder({
           {blocks.length === 0 && <p className="text-sm rounded-xl border p-6 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No blocks yet — add one from the palette.</p>}
           {blocks.map((b, i) => {
             const def = DEF_BY_TYPE.get(b.type)
+            const removing = removingId === b.id
+            const flashing = flashId === b.id
             return (
-              <div key={b.id} className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <div key={b.id} data-bid={b.id} className="rounded-xl border p-4" style={{
+                borderColor: 'var(--border)', background: 'var(--card)',
+                overflow: removing ? 'hidden' : undefined,
+                animation: removing ? 'bbOut 0.26s ease forwards' : flashing ? 'bbFlash 0.85s ease' : undefined,
+              }}>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-sm font-bold">{def?.label ?? b.type}{def?.capture ? <span className="ml-2 text-xs font-semibold" style={{ color: 'var(--reward-foreground)' }}>captures work</span> : null}</span>
                   <div className="flex items-center gap-1">
-                    <button onClick={() => moveBlock(b.id, -1)} disabled={i === 0} className="text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move up">↑</button>
-                    <button onClick={() => moveBlock(b.id, 1)} disabled={i === blocks.length - 1} className="text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move down">↓</button>
-                    <button onClick={() => removeBlock(b.id)} className="text-sm px-2 py-1 rounded" style={{ border: '1px solid var(--border)', color: 'var(--destructive)' }} aria-label="remove">✕</button>
+                    <button onClick={() => moveBlock(b.id, -1)} disabled={i === 0} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move up">↑</button>
+                    <button onClick={() => moveBlock(b.id, 1)} disabled={i === blocks.length - 1} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move down">↓</button>
+                    <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-2 py-1 rounded" style={{ border: '1px solid var(--border)', color: 'var(--destructive)' }} aria-label="remove">✕</button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -251,7 +282,7 @@ export default function LessonBlockBuilder({
                 <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>{group}</div>
                 <div className="flex flex-col gap-1.5">
                   {BLOCK_DEFS.filter((d) => d.group === group).map((d) => (
-                    <button key={d.type} onClick={() => addBlock(d.type)} className="text-left text-sm rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>+ {d.label}</button>
+                    <button key={d.type} onClick={() => addBlock(d.type)} className="bb-btn text-left text-sm rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>+ {d.label}</button>
                   ))}
                 </div>
               </div>
