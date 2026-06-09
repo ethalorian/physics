@@ -11,7 +11,7 @@ import { withRole } from '@/lib/api-auth'
 
 const ANTHROPIC_MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6'
 
-type Target = 'diagram' | 'graph'
+type Target = 'diagram' | 'graph' | 'scaffold'
 
 const DIAGRAM_SYSTEM = `You convert a high-school physics teacher's plain-English description into the DATA for a code-drawn diagram. Reply with ONLY a JSON object (no prose, no markdown).
 
@@ -55,6 +55,15 @@ const GRAPH_SYSTEM = `You convert a high-school physics teacher's plain-English 
 - Choose axis labels WITH units that match the description. Make the numbers physically sensible (e.g. constant velocity = straight sloped line; constant acceleration = straight v-t line; position under constant accel = upward curve).
 - Include multiple series only if the description compares cases. Keep labels short.`
 
+const SCAFFOLD_SYSTEM = `You produce a faint, line-only SVG "scaffold" that a high-school student will TRACE OVER and draw on top of, inside a 640×360 canvas. Reply with ONLY the raw <svg>…</svg> element — no prose, no markdown, no code fences.
+
+Rules:
+- Root exactly: <svg viewBox="0 0 640 360" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"> … </svg>
+- It is a GUIDE, not the finished drawing: light line art only. Use stroke colors in the light-gray range (#9aa3ad, #b8c0c8), stroke-width 1.5–2.5, fill="none" (or very pale fills like #f2f4f6).
+- Draw only the essential shapes the description names (e.g. an oval race track seen from above, plus a small start/finish tick). Keep it clean and uncluttered.
+- A few short text labels are OK only if clearly useful: font-size 12, fill="#889099".
+- Absolutely no <script>, no event handlers (onload/onclick/…), no <foreignObject>, no external <image>, no animation. Keep all coordinates within 0–640 (x) and 0–360 (y).`
+
 function clampNum(v: unknown, lo: number, hi: number, dflt: number): number {
   const n = typeof v === 'number' ? v : Number(v)
   if (!Number.isFinite(n)) return dflt
@@ -67,9 +76,42 @@ export const POST = withRole(['teacher', 'admin'], async (request) => {
     }
 
     const body = (await request.json()) as { target?: Target; diagramKind?: string; prompt?: string }
-    const target: Target = body.target === 'graph' ? 'graph' : 'diagram'
+    const target: Target = body.target === 'graph' ? 'graph' : body.target === 'scaffold' ? 'scaffold' : 'diagram'
     const prompt = (body.prompt ?? '').trim()
     if (!prompt) return NextResponse.json({ error: 'Describe the visual first.' }, { status: 400 })
+
+    // ---- scaffold: a faint, traceable raw SVG behind a sketch canvas ---------
+    if (target === 'scaffold') {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'x-api-key': process.env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+        body: JSON.stringify({
+          model: ANTHROPIC_MODEL, max_tokens: 2000, system: SCAFFOLD_SYSTEM,
+          messages: [{ role: 'user', content: `Draw a faint, line-only SVG scaffold for a student to trace over:\n\n${prompt}` }],
+        }),
+      })
+      if (!res.ok) {
+        const detail = await res.text(); console.error('Anthropic API error:', res.status, detail)
+        return NextResponse.json({ error: 'Generation request failed' }, { status: 502 })
+      }
+      const data = (await res.json()) as { content?: { text?: string }[] }
+      const text = data.content?.map((c) => c.text ?? '').join('') ?? ''
+      const m = text.match(/<svg[\s\S]*?<\/svg>/i)
+      let svg = m ? m[0] : ''
+      // Defense-in-depth: this string is injected into the page, so strip anything
+      // active even though the author is a gated teacher/admin.
+      svg = svg
+        .replace(/<script[\s\S]*?<\/script>/gi, '')
+        .replace(/<foreignObject[\s\S]*?<\/foreignObject>/gi, '')
+        .replace(/\son\w+\s*=\s*"[^"]*"/gi, '')
+        .replace(/\son\w+\s*=\s*'[^']*'/gi, '')
+        .replace(/javascript:/gi, '')
+        .slice(0, 24000)
+      if (!/<svg[\s\S]*<\/svg>/i.test(svg)) {
+        return NextResponse.json({ error: 'Could not draw that. Try describing the shapes more concretely (e.g. “an oval track seen from above with a start line at the top”).' }, { status: 422 })
+      }
+      return NextResponse.json({ block: { scaffoldSvg: svg } })
+    }
 
     const diagramKind = ['free_body', 'vectors', 'motion_map', 'circuit', 'energy_chain', 'friction_asymmetry'].includes(body.diagramKind ?? '')
       ? (body.diagramKind as string) : 'free_body'

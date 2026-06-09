@@ -75,18 +75,6 @@ export interface SentenceFrameBlock extends BaseBlock {
   wordBank?: string[];
 }
 
-export interface DoodleBlock extends BaseBlock {
-  type: 'doodle';
-  capture?: true;             // sketches register as logged work (see CAPTURE_BLOCK_TYPES)
-  instruction: string;        // one-line framing
-  prompts?: string[];         // explicit, numbered directions for what to draw (scaffolding)
-  scaffoldSvg?: string;       // pre-drawn scaffold the student completes (faint background)
-  imageUrl?: string;          // alternative raster scaffold
-  palette?: string[];         // colors offered to the student (defaults provided)
-  grid?: boolean;             // graph-paper background for a blank sketch
-  backgroundDiagram?: DiagramScene; // draw/annotate ON TOP of a physics diagram
-}
-
 /** A lab-notebook capture block: an annotatable sketch area + labeled
  *  reasoning/step boxes, so students record their thinking AND their work
  *  together in context. Response shape: { strokes, fields: Record<label,text> }. */
@@ -250,8 +238,8 @@ export interface CircuitComponent { kind: 'battery' | 'switch' | 'motor' | 'resi
 export interface EnergyChainLink { label: string; sublabel?: string; color?: string }
 
 /** The data for a code-drawn physics diagram, decoupled from the block wrapper so
- *  it can also be used as an annotatable background behind a sketch (doodle /
- *  lab_notebook). Mirrors the renderable fields of DiagramBlock. */
+ *  it can also be used as an annotatable background behind a sketch or
+ *  lab_notebook. Mirrors the renderable fields of DiagramBlock. */
 export interface DiagramScene {
   kind: DiagramKind;
   title?: string;
@@ -356,7 +344,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | DoodleBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
+  | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
@@ -372,7 +360,7 @@ export interface BlockDocument {
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
 export const CAPTURE_BLOCK_TYPES: BlockType[] = [
   'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
-  'doodle', 'lab_notebook', 'sketch',
+  'lab_notebook', 'sketch',
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {
@@ -438,7 +426,7 @@ export interface LessonPage {
  */
 export const VISUAL_BLOCK_TYPES: BlockType[] = [
   'figure', 'diagram', 'graph', 'sim_embed', 'equation_visualizer',
-  'doodle', 'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
+  'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
 ];
 export function isVisualBlock(b: ContentBlock): boolean {
   return (VISUAL_BLOCK_TYPES as string[]).includes(b.type)

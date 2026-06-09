@@ -10,7 +10,7 @@ import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, MCAS_SYMBOLS } from '@/data/physi
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
 // ---------------------------------------------------------------------------
-type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload' | 'formulapicker' | 'solvefor'
+type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload' | 'formulapicker' | 'solvefor' | 'toggle' | 'svggen'
 interface FieldDef { key: string; label: string; kind: FieldKind; options?: string[]; placeholder?: string }
 interface BlockDef { type: string; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
@@ -75,9 +75,13 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'xLabel', label: 'X-axis label (optional override)', kind: 'text' },
     { key: 'yLabel', label: 'Y-axis label (optional override)', kind: 'text' },
   ] },
-  { type: 'doodle', label: 'Doodle / sketch', group: 'Practice', capture: true, fields: [
-    { key: 'instruction', label: 'Instruction', kind: 'text' },
-    { key: 'prompts', label: 'Numbered prompts', kind: 'stringlist' },
+  { type: 'sketch', label: 'Sketch / draw (with optional trace-over)', group: 'Practice', capture: true, fields: [
+    { key: 'instruction', label: 'Task — what to draw and how', kind: 'textarea' },
+    { key: 'prompts', label: 'Checklist bullets (shown under the canvas)', kind: 'stringlist' },
+    { key: 'scaffoldSvg', label: 'Trace-over background (describe it, or paste SVG)', kind: 'svggen' },
+    { key: 'grid', label: 'Coordinate grid behind the canvas', kind: 'toggle' },
+    { key: 'xLabel', label: 'X-axis label (if grid on)', kind: 'text' },
+    { key: 'yLabel', label: 'Y-axis label (if grid on)', kind: 'text' },
   ] },
   { type: 'lab_notebook', label: 'Lab notebook (sketch + log)', group: 'Practice', capture: true, fields: [
     { key: 'instruction', label: 'Instruction', kind: 'text' },
@@ -391,6 +395,17 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
       </div>
     )
   }
+  if (field.kind === 'toggle') {
+    return (
+      <label className="flex items-center gap-2 text-xs font-semibold" style={{ color: 'var(--secondary-foreground)', cursor: 'pointer' }}>
+        <input type="checkbox" checked={value === true} onChange={(e) => onChange(e.target.checked)} />
+        {field.label}
+      </label>
+    )
+  }
+  if (field.kind === 'svggen') {
+    return <div>{label}<SvgGenField value={String(value ?? '')} onChange={(v) => onChange(v || undefined)} /></div>
+  }
   if (field.kind === 'stringlist') {
     const list = Array.isArray(value) ? (value as string[]) : []
     return (
@@ -436,6 +451,50 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
 // Visual generator — describe a diagram/graph in plain English, Claude builds
 // the structured data, and a live preview renders right here. No JSON.
 // ---------------------------------------------------------------------------
+// Generate (or paste) a faint, traceable SVG that sits behind a sketch canvas —
+// e.g. a race-track oval the student traces to show distance vs. displacement.
+function SvgGenField({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [prompt, setPrompt] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  const generate = async () => {
+    if (!prompt.trim()) { setErr('Describe what to trace over first.'); return }
+    setBusy(true); setErr(null)
+    try {
+      const res = await fetch('/api/blocks/generate-visual', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ target: 'scaffold', prompt }),
+      })
+      const j = await res.json()
+      if (!res.ok) { setErr(j.error || 'Could not generate'); return }
+      if (typeof j.block?.scaffoldSvg === 'string') onChange(j.block.scaffoldSvg)
+      else setErr('No SVG returned')
+    } catch { setErr('Could not generate') } finally { setBusy(false) }
+  }
+  return (
+    <div>
+      <textarea value={prompt} onChange={(e) => setPrompt(e.target.value)} rows={2}
+        placeholder="Describe a faint drawing to trace over — e.g. “an oval race track seen from above with a start/finish line at the top”"
+        className="w-full rounded-lg border p-2 text-sm" style={inputStyle} />
+      <div className="flex items-center gap-2 mt-1.5">
+        <button onClick={generate} disabled={busy} className="text-xs font-bold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: busy ? 0.6 : 1 }}>
+          {busy ? 'Drawing…' : (value ? 'Regenerate SVG' : 'Generate SVG')}
+        </button>
+        {value && <button onClick={() => onChange('')} className="text-xs rounded-lg border px-2 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>Clear</button>}
+        {err && <span className="text-xs" style={{ color: 'var(--destructive)' }}>{err}</span>}
+        {!err && value && <span className="text-xs" style={{ color: 'var(--success)' }}>Set ✓ — students trace over this.</span>}
+      </div>
+      {value && (
+        <div className="mt-2 rounded-lg border" style={{ borderColor: 'var(--border)', maxWidth: 360, aspectRatio: '16 / 9', overflow: 'hidden', background: '#fff' }} dangerouslySetInnerHTML={{ __html: value }} />
+      )}
+      <details className="mt-2">
+        <summary className="text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>or paste your own SVG</summary>
+        <textarea value={value} onChange={(e) => onChange(e.target.value)} rows={3} placeholder="<svg …>…</svg>" className="w-full rounded-lg border p-2 text-xs mt-1" style={{ ...inputStyle, fontFamily: 'monospace' }} />
+      </details>
+    </div>
+  )
+}
+
 function VisualGenField({
   prompt, placeholder, target, diagramKind, data, onPromptChange, onPatch,
 }: {

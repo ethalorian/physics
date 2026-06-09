@@ -75,7 +75,6 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   sentence_frame: { label: 'Sentence frame', domain: 'R', Icon: MessageSquareQuote },
   sim_embed: { label: 'Simulation', domain: 'S', Icon: FlaskConical },
   equation_visualizer: { label: 'Equation explorer', domain: 'S', Icon: Sigma },
-  doodle: { label: 'Sketch it', domain: 'S', Icon: Pencil },
   marzano: { label: 'Self-check', domain: 'meta', Icon: Gauge },
   exit_ticket: { label: 'Exit ticket', domain: 'P', Icon: Ticket },
   gewa: { label: 'Solve it', domain: 'S', Icon: PencilRuler },
@@ -518,20 +517,6 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <EquationVisualizer />
     case 'lesson_vocab':
       return <LessonVocabView lessonId={lessonId} />
-    case 'doodle':
-      return (
-        <DoodleCanvas
-          instruction={b.instruction}
-          prompts={b.prompts}
-          scaffoldSvg={b.scaffoldSvg}
-          imageUrl={b.imageUrl}
-          palette={b.palette}
-          grid={b.grid}
-          backgroundNode={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined}
-          initialStrokes={((saved as { strokes?: Stroke[] })?.strokes) ?? []}
-          onSave={(strokes) => save(b.id, 'doodle', { strokes })}
-        />
-      )
     case 'lab_notebook':
       return <LabNotebook b={b} saved={saved} save={save} />
     case 'sketch':
