@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Gift, LayoutGrid, Users } from "lucide-react"
+import { Menu, BookOpen, Settings, Home, Gamepad2, Trophy, Gift, LayoutGrid, Users, Sigma } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -70,6 +70,7 @@ export default function Navbar() {
     return [
       { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
+      { href: "/reference", label: "Reference", icon: Sigma },
       { href: "/lobby", label: "Lobby", icon: Users },
       { href: "/vocabulary", label: "Arcade", icon: Gamepad2 },
       { href: "/leaderboard", label: "Leaderboard", icon: Trophy },

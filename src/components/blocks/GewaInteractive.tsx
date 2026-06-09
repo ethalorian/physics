@@ -5,6 +5,7 @@ import PaintPad from './PaintPad'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import EquationField from './EquationField'
 import type { Stroke } from './DoodleCanvas'
+import { MCAS_SYMBOLS, MCAS_UNIT_OPTIONS, MCAS_EQUATION_BANK } from '@/data/physics-reference'
 
 // Given + Equation stay structured (chips / equation bank). Work & Answer are now
 // HANDWRITTEN on a drawing pad (workStrokes) — students show their solution by
@@ -31,9 +32,12 @@ interface GewaInteractiveProps {
   onSave: (v: GewaValue) => void
 }
 
-const DEFAULT_EQUATIONS = ['v = d / t', 'd = v × t', 'a = Δv / Δt', 'v = v₀ + a·t', 'd = v₀·t + ½at²']
-const SYMBOLS = ['d', 't', 'v', 'a', 'v₀', 'x', 'm', 'F']
-const UNITS = ['m', 'km', 'cm', 's', 'min', 'h', 'm/s', 'km/h', 'm/s²', 'kg', 'N']
+// Symbols, units, and the equation bank are sourced STRICTLY from the MCAS
+// reference sheet (src/data/physics-reference.ts) so students enter and pick the
+// exact notation they are tested on. Edit the sheet there, not here.
+const DEFAULT_EQUATIONS = [...MCAS_EQUATION_BANK]
+const SYMBOLS = [...MCAS_SYMBOLS]
+const UNITS = [...MCAS_UNIT_OPTIONS]
 
 function parseGiven(s?: string): Chip[] {
   if (!s) return [{ sym: '', val: '', unit: '' }]

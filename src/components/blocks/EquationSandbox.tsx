@@ -2,6 +2,7 @@
 
 import { useState, type DragEvent as RDragEvent, type KeyboardEvent as RKeyboardEvent, type FocusEvent as RFocusEvent } from 'react'
 import { InlineMath } from '@/components/MathMarkdown'
+import { isMcasUnit } from '@/data/physics-reference'
 
 // A fluid math scratch surface for the Work step. Students write their solution
 // one step per line; the line they're editing is plain text, and every other
@@ -91,12 +92,9 @@ function evaluate(raw: string): number | null {
 
 const round = (n: number) => (Number.isInteger(n) ? n.toLocaleString() : parseFloat(n.toFixed(4)).toLocaleString(undefined, { maximumFractionDigits: 4 }))
 
-// Recognized units (kinematics/forces + common); compounds split on / · *.
-const BASE_UNITS = new Set(['m', 'km', 'cm', 'mm', 'nm', 's', 'ms', 'min', 'h', 'hr', 'kg', 'g', 'mg', 'n', 'j', 'kj', 'w', 'kw', 'pa', 'kpa', 'atm', 'v', 'a', 'c', 'k', 'hz', 'khz', 'rad', 'deg', 'mol', 'l', 'ml'])
-const isKnownUnit = (u: string) => {
-  const cleaned = u.replace(/[()]/g, '').trim()
-  return cleaned.length > 0 && cleaned.split(/[\s/·*]+/).filter(Boolean).every((p) => BASE_UNITS.has(p.replace(/[²³⁴]/g, '').replace(/\^\d+/g, '').toLowerCase()))
-}
+// Units are validated STRICTLY against the MCAS reference sheet — single source
+// of truth in src/data/physics-reference.ts (compounds split on / · *).
+const isKnownUnit = isMcasUnit
 // True when a line ends in a number but no recognized unit — used only for a
 // gentle reminder on the final answer (never blocks, never judges the value).
 const lacksUnit = (line: string) => {
