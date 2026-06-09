@@ -5,10 +5,10 @@ import Link from 'next/link'
 
 interface ClassRow { id: string; name: string; section: string | null; teacher_email: string | null; student_count: number }
 interface Pulse { students: number; colleagues: number; activeStudents7d: number; masteryRatings: number; publishedLessons: number; pendingRewards: number; loginsTrend: number[] }
-interface TeacherRow { email: string; students: number; masteryRatings: number; assignments: number; lastActiveAt: string | null; status: 'active' | 'ramping' | 'dormant' }
+interface TeacherEng { email: string; role: string; classes: number; students: number; lessonsGraded: number; masteryRatings: number; rewardsFulfilled: number; assignments: number; mathReviews: number; storeItems: number; actions: number; lastActiveAt: string | null; status: 'active' | 'ramping' | 'dormant' }
 interface Engagement { active7d: number; idle: number; atRisk: number; total: number }
 interface Feature { key: string; label: string; count: number }
-interface Oversight { pulse: Pulse; teachers: TeacherRow[]; engagement: Engagement; features: Feature[]; you: string }
+interface Oversight { pulse: Pulse; teacherEngagement: TeacherEng[]; teacherTools: Feature[]; engagement: Engagement; features: Feature[]; you: string }
 interface AccessReq { email: string; name: string | null; note: string | null; status: string; created_at: string }
 interface Grant { email: string; role: string; source: string | null; granted_by: string | null; granted_at: string | null }
 
@@ -166,39 +166,58 @@ export default function OversightPage() {
             </div>
           </div>
 
-          {/* COLLEAGUE ADOPTION */}
-          <h2 className="text-xs font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--muted-foreground)' }}>Colleague adoption</h2>
+          {/* TEACHER ENGAGEMENT — what each teacher is doing in the app */}
+          <h2 className="text-xs font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--muted-foreground)' }}>Teacher engagement</h2>
           <div className="rounded-2xl border overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 560 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820 }}>
               <thead>
                 <tr style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
-                  {['Teacher', 'Students', 'Mastery ratings', 'Assignments', 'Last active', 'Status'].map((h) => (
-                    <th key={h} className="text-left text-xs font-bold uppercase tracking-wide px-4 py-2.5" style={{ color: 'var(--muted-foreground)' }}>{h}</th>
+                  {['Teacher', 'Classes', 'Students', 'Lessons graded', 'Mastery', 'Rewards filled', 'Assignments', 'Math', 'Store', 'Last active', 'Status'].map((h) => (
+                    <th key={h} className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5 whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {d.teachers.length === 0 && (
-                  <tr><td colSpan={6} className="px-4 py-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>No teachers on the roster yet.</td></tr>
+                {d.teacherEngagement.length === 0 && (
+                  <tr><td colSpan={11} className="px-4 py-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>No teachers yet.</td></tr>
                 )}
-                {d.teachers.map((t) => {
+                {d.teacherEngagement.map((t) => {
                   const st = STATUS[t.status] ?? STATUS.dormant
+                  const num = (n: number) => <td className="px-3 py-3 text-sm" style={{ color: n ? 'var(--foreground)' : 'var(--muted-foreground)' }}>{n}</td>
                   return (
                     <tr key={t.email} style={{ borderTop: '1px solid var(--border)' }}>
-                      <td className="px-4 py-3 text-sm font-medium">
-                        {t.email}{t.email === d.you && <span className="ml-2 text-xs font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)', border: '1px solid color-mix(in oklch, var(--primary) 50%, var(--border))' }}>YOU</span>}
+                      <td className="px-3 py-3 text-sm font-medium whitespace-nowrap">
+                        {t.email}
+                        {t.email === d.you && <span className="ml-2 text-xs font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)', border: '1px solid color-mix(in oklch, var(--primary) 50%, var(--border))' }}>YOU</span>}
+                        {t.role === 'admin' && t.email !== d.you && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)' }}>ADMIN</span>}
                       </td>
-                      <td className="px-4 py-3 text-sm">{t.students}</td>
-                      <td className="px-4 py-3 text-sm">{t.masteryRatings}</td>
-                      <td className="px-4 py-3 text-sm">{t.assignments}</td>
-                      <td className="px-4 py-3 text-sm" style={{ color: 'var(--muted-foreground)' }}>{fmtDate(t.lastActiveAt)}</td>
-                      <td className="px-4 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ color: st.color, background: st.bg }}>{st.label}</span></td>
+                      {num(t.classes)}{num(t.students)}{num(t.lessonsGraded)}{num(t.masteryRatings)}{num(t.rewardsFulfilled)}{num(t.assignments)}{num(t.mathReviews)}{num(t.storeItems)}
+                      <td className="px-3 py-3 text-sm whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{fmtDate(t.lastActiveAt)}</td>
+                      <td className="px-3 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ color: st.color, background: st.bg }}>{st.label}</span></td>
                     </tr>
                   )
                 })}
               </tbody>
             </table>
           </div>
+
+          {/* WHAT TEACHERS USE MOST — the aggregate that answers "what's valuable" */}
+          {d.teacherTools.some((f) => f.count > 0) && (
+            <div className="rounded-2xl border p-5 mt-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <h3 className="font-bold mb-1" style={{ fontSize: 15 }}>What teachers use most</h3>
+              <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>Total teacher actions by tool — the longest bars are what your staff lean on</p>
+              <div className="flex flex-col gap-3">
+                {(() => { const max = Math.max(1, ...d.teacherTools.map((f) => f.count)); return d.teacherTools.map((f) => (
+                  <div key={f.key}>
+                    <div className="flex justify-between text-sm mb-1"><span>{f.label}</span><span style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>{f.count}</span></div>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
+                      <span style={{ display: 'block', height: '100%', width: `${(f.count / max) * 100}%`, background: 'var(--reward)' }} />
+                    </div>
+                  </div>
+                )) })()}
+              </div>
+            </div>
+          )}
 
           {/* CLASS DIRECTORY — click into any class in the system */}
           <h2 className="text-xs font-bold uppercase tracking-widest mt-8 mb-3" style={{ color: 'var(--muted-foreground)' }}>Classes — open any one</h2>

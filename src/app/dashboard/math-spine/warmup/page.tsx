@@ -18,6 +18,7 @@ import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/Wa
 import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
 import { tieredLessonsForCode, pickTier, TIER_LABELS, type MiniLesson } from '@/lib/math-spine-lessons'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
+import { useTranslator } from '@/lib/math-translate-store'
 
 interface DailyItem {
   spiralItemId: string
@@ -118,6 +119,11 @@ export default function WarmupPage() {
   const effLang = lang && item?.translations?.[lang] ? lang : (availLangs[0]?.code ?? '')
   const displayPrompt = translated && effLang && item?.translations?.[effLang] ? item.translations[effLang] : (item?.prompt ?? '')
 
+  // When translation is on, every visible string flows through t() (chrome,
+  // statement, mini-lesson) and the child components receive the language.
+  const activeLang = canTranslate && translated ? effLang : ''
+  const t = useTranslator(activeLang)
+
   const translateBar = canTranslate ? (
     <div className="flex items-center gap-2 mt-2">
       <button onClick={() => setTranslated((t) => !t)} className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-3 py-1" style={{ border: '1px solid var(--primary)', color: 'var(--primary)' }}>
@@ -133,11 +139,11 @@ export default function WarmupPage() {
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-4">
       <Link href="/home" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4 mr-1.5" /> Back
+        <ArrowLeft className="h-4 w-4 mr-1.5" /> {t('Back')}
       </Link>
 
-      {loading && <p className="text-sm text-muted-foreground">Loading your warm-up…</p>}
-      {!loading && !item && <p className="text-sm text-muted-foreground">No warm-up available right now — check back soon.</p>}
+      {loading && <p className="text-sm text-muted-foreground">{t('Loading your warm-up…')}</p>}
+      {!loading && !item && <p className="text-sm text-muted-foreground">{t('No warm-up available right now — check back soon.')}</p>}
 
       {!loading && item && (
         <>
@@ -148,13 +154,13 @@ export default function WarmupPage() {
           >
             <div className="flex items-center gap-2 mb-1.5">
               <Target className="h-4 w-4" style={{ color: 'var(--primary)' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Today&apos;s problem</span>
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>{t("Today's problem")}</span>
               <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums ml-auto">{item.competencyCode}</span>
             </div>
             <p className="text-base font-semibold text-foreground leading-snug">{displayPrompt}</p>
             {translateBar}
-            <p className="text-xs text-muted-foreground mt-2">{item.competencyStatement}</p>
-            <p className="text-[11px] text-muted-foreground mt-1">This is your one math warm-up for today — a new one unlocks tomorrow.</p>
+            <p className="text-xs text-muted-foreground mt-2">{t(item.competencyStatement)}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{t('This is your one math warm-up for today — a new one unlocks tomorrow.')}</p>
           </div>
 
           {/* Mini-lesson with an explicit diagram */}
@@ -163,18 +169,18 @@ export default function WarmupPage() {
               <CardHeader>
                 <div className="flex items-center gap-2 flex-wrap">
                   <Lightbulb className="h-4 w-4 text-amber-500" />
-                  <CardTitle className="text-foreground text-base">How to do it: {lesson.title}</CardTitle>
+                  <CardTitle className="text-foreground text-base">{t('How to do it:')} {t(lesson.title)}</CardTitle>
                   <span className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground">
-                    {TIER_LABELS[tierIdx]} · {tierIdx + 1} of 3
+                    {t(TIER_LABELS[tierIdx])} · {tierIdx + 1} of 3
                   </span>
                 </div>
               </CardHeader>
               <CardContent>
-                <MathSpineDiagram code={item.competencyCode} />
+                <MathSpineDiagram code={item.competencyCode} lang={activeLang} />
                 <ol className="list-decimal pl-5 space-y-1.5 text-sm text-foreground mt-2">
-                  {lesson.steps.map((s, i) => <li key={i}>{s}</li>)}
+                  {lesson.steps.map((s, i) => <li key={i}>{t(s)}</li>)}
                 </ol>
-                {lesson.tip && <p className="text-xs text-muted-foreground mt-3 rounded-md bg-muted/60 px-3 py-2">💡 {lesson.tip}</p>}
+                {lesson.tip && <p className="text-xs text-muted-foreground mt-3 rounded-md bg-muted/60 px-3 py-2">💡 {t(lesson.tip)}</p>}
               </CardContent>
             </Card>
           )}
@@ -185,21 +191,21 @@ export default function WarmupPage() {
               <CardContent className="py-6">
                 <div className="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
                   <CheckCircle2 className="h-5 w-5" />
-                  Submitted — your teacher will review your work and rate your fluency.
+                  {t('Submitted — your teacher will review your work and rate your fluency.')}
                 </div>
                 <Link href="/dashboard/math-spine">
-                  <Button variant="ghost" size="sm" className="rounded-full mt-3 -ml-2 text-muted-foreground">See your math literacy →</Button>
+                  <Button variant="ghost" size="sm" className="rounded-full mt-3 -ml-2 text-muted-foreground">{t('See your math literacy →')}</Button>
                 </Link>
               </CardContent>
             </Card>
           ) : (
             <Card className="apple-card">
               <CardHeader>
-                <CardTitle className="text-foreground text-base">Your work</CardTitle>
+                <CardTitle className="text-foreground text-base">{t('Your work')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="rounded-lg border-l-4 px-3 py-2" style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 6%, transparent)' }}>
-                  <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>Solve this</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>{t('Solve this')}</span>
                   <p className="text-sm font-medium text-foreground">{displayPrompt}</p>
                 </div>
                 <WarmupAnswer
@@ -207,12 +213,13 @@ export default function WarmupPage() {
                   needsGraph={item.needsGraph}
                   needsEquationBuilder={item.needsEquationBuilder}
                   onChange={setAns}
+                  lang={activeLang}
                 />
                 <div className="flex items-center gap-2 pt-2 border-t border-border">
                   <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">
-                    {submitting ? 'Submitting…' : 'Submit for review'}
+                    {submitting ? t('Submitting…') : t('Submit for review')}
                   </Button>
-                  {!hasWork && <span className="text-xs text-muted-foreground">Show your work or enter an answer first.</span>}
+                  {!hasWork && <span className="text-xs text-muted-foreground">{t('Show your work or enter an answer first.')}</span>}
                   {error && <span className="text-xs text-red-600">{error}</span>}
                 </div>
               </CardContent>

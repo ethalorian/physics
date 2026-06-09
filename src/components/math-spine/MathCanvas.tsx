@@ -17,6 +17,7 @@ import { paintStrokes } from '@/lib/draw/strokes'
 import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
 import PaintToolbar from '@/components/draw/PaintToolbar'
 import { Type } from 'lucide-react'
+import { useTranslator } from '@/lib/math-translate-store'
 
 export interface CanvasText { x: number; y: number; text: string; size?: number }
 export interface MathCanvasValue { strokes: Stroke[]; texts: CanvasText[] }
@@ -28,7 +29,8 @@ const TEXT_SIZE = 26
 // The drawing tools plus a 'text' tool unique to this surface.
 type Tool = EditorTool | 'text'
 
-export default function MathCanvas({ value, onChange, gridded = false }: { value?: MathCanvasValue; onChange: (v: MathCanvasValue) => void; gridded?: boolean }) {
+export default function MathCanvas({ value, onChange, gridded = false, lang = '' }: { value?: MathCanvasValue; onChange: (v: MathCanvasValue) => void; gridded?: boolean; lang?: string }) {
+  const t = useTranslator(lang)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const strokesRef = useRef<Stroke[]>((value?.strokes ?? []).map((s) => ({ ...s, points: s.points.slice() })))
   const redoRef = useRef<Stroke[]>([])
@@ -145,9 +147,9 @@ export default function MathCanvas({ value, onChange, gridded = false }: { value
       <div className="flex items-center gap-1.5 mb-2">
         <button onClick={() => setTool('text')} aria-label="type" title="Type text"
           className="rounded-md border h-7 px-2 inline-flex items-center gap-1 text-xs font-semibold" style={tb(tool === 'text')}>
-          <Type size={14} /> Text
+          <Type size={14} /> {t('Text')}
         </button>
-        <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>or draw with the tools below</span>
+        <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{t('or draw with the tools below')}</span>
       </div>
 
       <PaintToolbar
@@ -159,7 +161,7 @@ export default function MathCanvas({ value, onChange, gridded = false }: { value
       />
 
       <p className="text-[11px] mb-1" style={{ color: 'var(--muted-foreground)' }}>
-        {tool === 'text' ? 'Tap the board to type a number or equation; tap existing text to edit it.' : tool === 'eraser' ? 'Drag over a drawn mark to erase it.' : 'Draw on the board — your marks go on top of the text.'}
+        {tool === 'text' ? t('Tap the board to type a number or equation; tap existing text to edit it.') : tool === 'eraser' ? t('Drag over a drawn mark to erase it.') : t('Draw on the board — your marks go on top of the text.')}
       </p>
 
       <div style={{ position: 'relative', width: '100%' }}>
@@ -189,7 +191,7 @@ export default function MathCanvas({ value, onChange, gridded = false }: { value
               value={editor.value}
               onChange={(e) => setEditor({ ...editor, value: e.target.value })}
               onKeyDown={(e) => { if (e.key === 'Enter') commitEditor(); if (e.key === 'Escape') setEditor(null) }}
-              placeholder="type a number or equation…"
+              placeholder={t('type a number or equation…')}
               className="rounded border px-1.5 py-1 text-sm"
               style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 150 }}
             />
