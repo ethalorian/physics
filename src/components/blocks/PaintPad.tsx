@@ -41,7 +41,10 @@ export default function PaintPad({
     const ctx = canvasRef.current?.getContext('2d')
     if (!ctx) return
     ctx.clearRect(0, 0, W, H)
-    if (!transparent) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H) }
+    // Only paint a white fill when there's nothing behind the canvas. If a
+    // background node (grid / diagram / trace-over SVG) is layered behind, keep
+    // the canvas pixels clear so it shows through — otherwise the white fill hides it.
+    if (!transparent && !background) { ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H) }
     paintStrokes(ctx, strokesRef.current)
   }
   useEffect(() => { repaint() }, [])
