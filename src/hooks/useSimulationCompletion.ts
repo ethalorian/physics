@@ -71,6 +71,28 @@ export function useSimulationCompletion(
     }
   }, [])
   
+  // Base state WITHOUT the derived `progress` field. `customCheck` receives this
+  // (not the full getState()) so it can never re-enter calculateProgress — which
+  // is what created an infinite getState <-> calculateProgress recursion and a
+  // "Maximum call stack size exceeded" crash for any sim defining a customCheck.
+  const getBaseState = useCallback((): SimulationCompletionState => {
+    const actionsRequired = config.requiredActions?.length || 0
+    const actionsCompleted = config.requiredActions?.filter(a => completedActions.has(a)).length || 0
+
+    return {
+      completedActions,
+      interactionCount,
+      timeSpent,
+      isCompleted,
+      progress: 0, // filled in by getState(); kept 0 here to avoid the cycle
+      criteria: {
+        actions: { completed: actionsCompleted, required: actionsRequired },
+        interactions: { current: interactionCount, required: config.minInteractions || 0 },
+        time: { current: timeSpent, required: config.minTimeSeconds || 0 },
+      },
+    }
+  }, [completedActions, interactionCount, timeSpent, isCompleted, config])
+
   // Calculate progress
   const calculateProgress = useCallback((): number => {
     const weights = {
@@ -78,70 +100,48 @@ export function useSimulationCompletion(
       interactions: 0.3,
       time: 0.3
     }
-    
+
     let totalProgress = 0
     let totalWeight = 0
-    
+
     // Actions progress
     if (config.requiredActions && config.requiredActions.length > 0) {
-      const actionsCompleted = config.requiredActions.filter(action => 
+      const actionsCompleted = config.requiredActions.filter(action =>
         completedActions.has(action)
       ).length
       totalProgress += (actionsCompleted / config.requiredActions.length) * 100 * weights.actions
       totalWeight += weights.actions
     }
-    
+
     // Interactions progress
     if (config.minInteractions && config.minInteractions > 0) {
       const interactionProgress = Math.min(100, (interactionCount / config.minInteractions) * 100)
       totalProgress += interactionProgress * weights.interactions
       totalWeight += weights.interactions
     }
-    
+
     // Time progress
     if (config.minTimeSeconds && config.minTimeSeconds > 0) {
       const timeProgress = Math.min(100, (timeSpent / config.minTimeSeconds) * 100)
       totalProgress += timeProgress * weights.time
       totalWeight += weights.time
     }
-    
+
     // Custom check contributes to overall if provided
     if (config.customCheck) {
-      const customMet = config.customCheck(getState()) ? 100 : 0
+      const customMet = config.customCheck(getBaseState()) ? 100 : 0
       totalProgress += customMet * 0.2 // 20% weight for custom
       totalWeight += 0.2
     }
-    
+
     return totalWeight > 0 ? Math.round(totalProgress / totalWeight) : 0
-  }, [completedActions, interactionCount, timeSpent, config])
-  
-  // Get current state
-  const getState = useCallback((): SimulationCompletionState => {
-    const actionsRequired = config.requiredActions?.length || 0
-    const actionsCompleted = config.requiredActions?.filter(a => completedActions.has(a)).length || 0
-    
-    return {
-      completedActions,
-      interactionCount,
-      timeSpent,
-      isCompleted,
-      progress: calculateProgress(),
-      criteria: {
-        actions: { 
-          completed: actionsCompleted, 
-          required: actionsRequired 
-        },
-        interactions: { 
-          current: interactionCount, 
-          required: config.minInteractions || 0 
-        },
-        time: { 
-          current: timeSpent, 
-          required: config.minTimeSeconds || 0 
-        }
-      }
-    }
-  }, [completedActions, interactionCount, timeSpent, isCompleted, calculateProgress, config])
+  }, [completedActions, interactionCount, timeSpent, config, getBaseState])
+
+  // Get current state (base state + the derived progress)
+  const getState = useCallback((): SimulationCompletionState => ({
+    ...getBaseState(),
+    progress: calculateProgress(),
+  }), [getBaseState, calculateProgress])
   
   // Track an interaction
   const trackInteraction = useCallback((action: string, data?: Record<string, any>) => {
