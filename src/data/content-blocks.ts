@@ -138,6 +138,7 @@ export interface GewaBlock extends BaseBlock {
   givenHint?: string;
   equationHint?: string;      // hint shown at the Equation step
   equationOptions?: string[]; // legacy: restrict the bank to these exact display strings
+  equationIds?: string[];     // curated subset of formula ids — the short, unit-relevant bank (e.g. ['avg-speed','final-velocity'])
   solveFor?: string;          // MCAS symbol to isolate (defaults to the chosen formula's own subject)
   equationCategories?: FormulaCategory[]; // scope the equation bank to these topics (e.g. ['Kinematics'])
 }

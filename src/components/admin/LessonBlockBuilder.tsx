@@ -5,11 +5,12 @@ import Link from 'next/link'
 import { BlockDocument } from '@/data/content-blocks'
 import PhysicsDiagram from '@/components/blocks/PhysicsDiagram'
 import FigureGraph from '@/components/blocks/FigureGraph'
+import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, MCAS_SYMBOLS } from '@/data/physics-reference'
 
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
 // ---------------------------------------------------------------------------
-type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload'
+type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload' | 'formulapicker' | 'solvefor'
 interface FieldDef { key: string; label: string; kind: FieldKind; options?: string[]; placeholder?: string }
 interface BlockDef { type: string; label: string; group: 'Teach' | 'Practice'; capture?: boolean; fields: FieldDef[] }
 
@@ -86,7 +87,8 @@ const BLOCK_DEFS: BlockDef[] = [
     { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
     { key: 'givenHint', label: 'Given hint', kind: 'text' },
     { key: 'equationHint', label: 'Equation hint', kind: 'text' },
-    { key: 'equationOptions', label: 'Equation bank', kind: 'stringlist' },
+    { key: 'equationIds', label: 'Formula bank — pick the formulas students may use', kind: 'formulapicker' },
+    { key: 'solveFor', label: 'Solve for (the unknown to isolate)', kind: 'solvefor' },
   ] },
   { type: 'equation_sandbox', label: 'Equation sandbox', group: 'Practice', capture: true, fields: [
     { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
@@ -351,6 +353,43 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
   }
   if (field.kind === 'select') {
     return <div>{label}<select value={String(value ?? field.options?.[0] ?? '')} onChange={(e) => onChange(e.target.value)} className="w-full rounded-lg border p-2 text-sm" style={inputStyle}>{(field.options ?? []).map((o) => <option key={o} value={o}>{o}</option>)}</select></div>
+  }
+  if (field.kind === 'solvefor') {
+    return (
+      <div>{label}
+        <select value={String(value ?? '')} onChange={(e) => onChange(e.target.value || undefined)} className="w-full rounded-lg border p-2 text-sm" style={inputStyle}>
+          <option value="">(auto — the formula&apos;s own subject)</option>
+          {MCAS_SYMBOLS.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+    )
+  }
+  if (field.kind === 'formulapicker') {
+    const ids = Array.isArray(value) ? (value as string[]) : []
+    const toggle = (id: string) => onChange(ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id])
+    return (
+      <div>{label}
+        <p className="text-[11px] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Check the formulas relevant to this unit — only those appear in the student&apos;s bank. Leave all unchecked to show every formula.</p>
+        <div className="flex flex-col gap-2">
+          {FORMULA_CATEGORIES.map((cat) => (
+            <div key={cat}>
+              <div className="text-[10px] font-semibold uppercase tracking-wide mb-1" style={{ color: 'var(--primary)' }}>{cat}</div>
+              <div className="flex flex-wrap gap-1.5">
+                {PHYSICS_FORMULAS.filter((f) => f.category === cat).map((f) => {
+                  const on = ids.includes(f.id)
+                  return (
+                    <button key={f.id} type="button" onClick={() => toggle(f.id)} title={f.name} className="rounded-md px-2 py-1 text-xs"
+                      style={{ border: `1px solid ${on ? 'var(--primary)' : 'var(--border)'}`, background: on ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontFamily: 'Georgia, serif' }}>
+                      {on ? '✓ ' : ''}{f.display}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
   if (field.kind === 'stringlist') {
     const list = Array.isArray(value) ? (value as string[]) : []

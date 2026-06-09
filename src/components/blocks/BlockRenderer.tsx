@@ -541,7 +541,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'exit_ticket':
       return <TextCapture prompt={b.prompt} frame={b.frame} value={saved as string | undefined} onSave={(t) => save(b.id, 'exit_ticket', t)} />
     case 'gewa':
-      return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} />
+      return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} />
     case 'equation_sandbox':
       return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
