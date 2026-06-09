@@ -8,7 +8,7 @@ import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 // The per-class drill-in: course meta + its roster + a compact mastery/completion
 // summary. Admins can open any class; a teacher can only open a class they own.
 
-type CourseRow = { id: string; name: string; section: string | null; teacher_email: string | null }
+type CourseRow = { id: string; name: string; section: string | null; teacher_email: string | null; math_translation_enabled: boolean | null }
 type StudentRow = { google_user_id: string | null; name: string; first_name: string | null; last_name: string | null }
 type RecRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
@@ -26,7 +26,7 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
 
     const { data: courseRaw } = await supabaseAdmin
       .from('courses')
-      .select('id, name, section, teacher_email')
+      .select('id, name, section, teacher_email, math_translation_enabled')
       .eq('id', courseId)
       .maybeSingle()
     const course = courseRaw as CourseRow | null
@@ -91,7 +91,7 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
       .map((l) => ({ id: l.id, title: l.title, lessonNumber: l.lesson_number, unit: l.unit }))
 
     return NextResponse.json({
-      course: { id: course.id, name: course.name, section: course.section, teacherEmail: course.teacher_email },
+      course: { id: course.id, name: course.name, section: course.section, teacherEmail: course.teacher_email, mathTranslationEnabled: course.math_translation_enabled ?? false },
       students,
       lessons,
       summary: {
@@ -101,4 +101,26 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
         lessonsGraded,
       },
     })
+})
+
+// PATCH /api/classes/[courseId] — update per-section settings (currently the
+// math-fluency translation toggle). Teachers may only change a class they own.
+export const PATCH = withAuth<{ courseId: string }>(async (request, ctx) => {
+  const { courseId } = await ctx.params
+  if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+  const owner = await getCourseOwnerEmail(courseId)
+  if (ctx.role === 'teacher' && owner !== ctx.scopeEmail) {
+    return NextResponse.json({ error: 'Not your class' }, { status: 403 })
+  }
+  const body = await request.json().catch(() => ({}))
+  const patch: Record<string, unknown> = {}
+  if (typeof body.math_translation_enabled === 'boolean') patch.math_translation_enabled = body.math_translation_enabled
+  if (Object.keys(patch).length === 0) {
+    return NextResponse.json({ error: 'Nothing to update' }, { status: 400 })
+  }
+  const { error } = await supabaseAdmin.from('courses').update(patch).eq('id', courseId)
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ ok: true })
 })

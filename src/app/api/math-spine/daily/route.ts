@@ -61,7 +61,7 @@ export const GET = withAuth(async (request, ctx) => {
   // Spiral items for that competency; rotate by day so it varies.
   const { data: itemRows } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder')
+    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
   const tiersFromDb = (target.mini_lesson as { tiers?: unknown } | null)?.tiers ?? null
@@ -77,6 +77,7 @@ export const GET = withAuth(async (request, ctx) => {
     needsEquationBuilder?: boolean
     competencyValue: number | null
     miniLessonTiers?: unknown
+    translations?: Record<string, string>
   } | null = null
   if (itemRows && itemRows.length > 0) {
     const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
@@ -93,6 +94,22 @@ export const GET = withAuth(async (request, ctx) => {
       needsEquationBuilder: chosen.needs_equation_builder ?? false,
       competencyValue: valueOf(target.id),
       miniLessonTiers: tiersFromDb,
+      translations: (chosen.translations ?? {}) as Record<string, string>,
+    }
+  }
+
+  // Does any section this student is in have the translation toggle on? Only then
+  // do we expose the Translate option (google_user_id → students.id → courses).
+  let translationEnabled = false
+  {
+    const { data: s } = await supabaseAdmin.from('students').select('id').eq('google_user_id', targetUserId).maybeSingle()
+    if (s?.id) {
+      const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', s.id)
+      const courseIds = (cs ?? []).map((c) => c.course_id)
+      if (courseIds.length > 0) {
+        const { data: en } = await supabaseAdmin.from('courses').select('id').in('id', courseIds).eq('math_translation_enabled', true).limit(1)
+        translationEnabled = (en ?? []).length > 0
+      }
     }
   }
 
@@ -122,6 +139,7 @@ export const GET = withAuth(async (request, ctx) => {
   return NextResponse.json({
     item,
     alreadySubmitted,
+    translationEnabled,
     snapshot: { mathPointsEarned, fluentCount, total: competencies.length },
   })
 })

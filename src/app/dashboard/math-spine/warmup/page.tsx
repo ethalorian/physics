@@ -13,10 +13,11 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, Lightbulb, Target } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Lightbulb, Target, Languages } from 'lucide-react'
 import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/WarmupAnswer'
 import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
 import { tieredLessonsForCode, pickTier, TIER_LABELS, type MiniLesson } from '@/lib/math-spine-lessons'
+import { MATH_LANGUAGES } from '@/lib/math-languages'
 
 interface DailyItem {
   spiralItemId: string
@@ -30,6 +31,7 @@ interface DailyItem {
   needsEquationBuilder?: boolean
   competencyValue?: number | null
   miniLessonTiers?: MiniLesson[] | null
+  translations?: Record<string, string>
 }
 
 function strandForCode(code: string | undefined): string {
@@ -50,6 +52,9 @@ export default function WarmupPage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [translationEnabled, setTranslationEnabled] = useState(false)
+  const [lang, setLang] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('mathLang') || '' : ''))
+  const [translated, setTranslated] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -59,6 +64,7 @@ export default function WarmupPage() {
         if (!active || !d) return
         setItem(d.item ?? null)
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
+        setTranslationEnabled(Boolean(d.translationEnabled))
         setLoading(false)
       })
       .catch(() => { if (active) setLoading(false) })
@@ -105,6 +111,25 @@ export default function WarmupPage() {
   const lesson: MiniLesson | null = tiers ? (tiers[tierIdx] ?? tiers[0]) : null
   const done = submitted || alreadySubmitted
 
+  // Translation: only when the student's section has it enabled AND this question
+  // carries translations. English stays primary; the student taps to swap.
+  const availLangs = item ? MATH_LANGUAGES.filter((l) => item.translations?.[l.code]) : []
+  const canTranslate = translationEnabled && availLangs.length > 0
+  const effLang = lang && item?.translations?.[lang] ? lang : (availLangs[0]?.code ?? '')
+  const displayPrompt = translated && effLang && item?.translations?.[effLang] ? item.translations[effLang] : (item?.prompt ?? '')
+
+  const translateBar = canTranslate ? (
+    <div className="flex items-center gap-2 mt-2">
+      <button onClick={() => setTranslated((t) => !t)} className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-3 py-1" style={{ border: '1px solid var(--primary)', color: 'var(--primary)' }}>
+        <Languages className="h-3.5 w-3.5" /> {translated ? 'Show English' : 'Translate'}
+      </button>
+      <select value={effLang} onChange={(e) => { setLang(e.target.value); if (typeof window !== 'undefined') localStorage.setItem('mathLang', e.target.value); setTranslated(true) }}
+        className="text-xs rounded-full border px-2 py-1 bg-transparent" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }} aria-label="translation language">
+        {availLangs.map((l) => <option key={l.code} value={l.code}>{l.label}</option>)}
+      </select>
+    </div>
+  ) : null
+
   return (
     <div className="max-w-2xl mx-auto p-4 space-y-4">
       <Link href="/home" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
@@ -126,7 +151,8 @@ export default function WarmupPage() {
               <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Today&apos;s problem</span>
               <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums ml-auto">{item.competencyCode}</span>
             </div>
-            <p className="text-base font-semibold text-foreground leading-snug">{item.prompt}</p>
+            <p className="text-base font-semibold text-foreground leading-snug">{displayPrompt}</p>
+            {translateBar}
             <p className="text-xs text-muted-foreground mt-2">{item.competencyStatement}</p>
             <p className="text-[11px] text-muted-foreground mt-1">This is your one math warm-up for today — a new one unlocks tomorrow.</p>
           </div>
@@ -174,7 +200,7 @@ export default function WarmupPage() {
               <CardContent className="space-y-4">
                 <div className="rounded-lg border-l-4 px-3 py-2" style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 6%, transparent)' }}>
                   <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>Solve this</span>
-                  <p className="text-sm font-medium text-foreground">{item.prompt}</p>
+                  <p className="text-sm font-medium text-foreground">{displayPrompt}</p>
                 </div>
                 <WarmupAnswer
                   strand={strandForCode(item.competencyCode)}

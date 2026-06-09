@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { translateMathPrompt } from '@/lib/math-translation'
 
 // /api/math-spine/bank — teacher-managed warm-up item bank.
 //   GET    → all items (with tested competency ids) + all competencies
@@ -77,6 +78,13 @@ export const POST = withAuth(async (request, ctx) => {
     .single()
   if (error || !item) return NextResponse.json({ error: error?.message ?? 'Insert failed' }, { status: 500 })
 
+  // Generate SEI translations of the prompt up front (one AI call). Best-effort:
+  // if it's unavailable the item still saves with no translations.
+  const translations = await translateMathPrompt(String(prompt))
+  if (Object.keys(translations).length) {
+    await supabaseAdmin.from('math_spiral_items').update({ translations }).eq('id', item.id)
+  }
+
   const tested = new Set<string>([competency_id, ...(Array.isArray(body.tested_competency_ids) ? body.tested_competency_ids : [])])
   await supabaseAdmin
     .from('math_spiral_item_competencies')
@@ -92,7 +100,11 @@ export const PATCH = withAuth(async (request, ctx) => {
   if (!id) return NextResponse.json({ error: 'id is required' }, { status: 400 })
 
   const patch: Record<string, unknown> = { updated_at: new Date().toISOString() }
-  if (body.prompt !== undefined) patch.prompt = String(body.prompt)
+  if (body.prompt !== undefined) {
+    patch.prompt = String(body.prompt)
+    // Prompt changed → regenerate translations so they never drift from the text.
+    patch.translations = await translateMathPrompt(String(body.prompt))
+  }
   if (body.answer_key !== undefined) patch.answer_key = body.answer_key
   if (body.first_unit_id !== undefined) patch.first_unit_id = body.first_unit_id
   if (body.difficulty !== undefined) patch.difficulty = body.difficulty

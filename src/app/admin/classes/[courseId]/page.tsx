@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
-import { LayoutGrid, CalendarClock, Users, TrendingUp, BookOpen, ArrowLeft, GraduationCap } from 'lucide-react'
+import { LayoutGrid, CalendarClock, Users, TrendingUp, BookOpen, ArrowLeft, GraduationCap, Languages } from 'lucide-react'
 
 interface Lesson { id: string; title: string; lessonNumber: number | null; unit: string }
 interface ClassData {
-  course: { id: string; name: string; section: string | null; teacherEmail: string | null }
+  course: { id: string; name: string; section: string | null; teacherEmail: string | null; mathTranslationEnabled?: boolean }
   students: { id: string; name: string; firstName: string | null; lastName: string | null }[]
   lessons: Lesson[]
   summary: { studentCount: number; classMasteryAvg: number | null; ratingsLogged: number; lessonsGraded: number }
@@ -29,6 +29,8 @@ export default function ClassPage() {
   const [data, setData] = useState<ClassData | null>(null)
   const [loading, setLoading] = useState(true)
   const [err, setErr] = useState<string | null>(null)
+  const [mathTx, setMathTx] = useState(false)
+  const [savingTx, setSavingTx] = useState(false)
 
   useEffect(() => {
     if (!courseId) return
@@ -37,11 +39,22 @@ export default function ClassPage() {
       .then((r) => r.json())
       .then((d: ClassData) => {
         if (d.error) setErr(d.error)
-        else setData(d)
+        else { setData(d); setMathTx(Boolean(d.course?.mathTranslationEnabled)) }
         setLoading(false)
       })
       .catch(() => { setErr('Could not load this class'); setLoading(false) })
   }, [courseId])
+
+  const toggleMathTx = async (next: boolean) => {
+    setMathTx(next); setSavingTx(true)
+    try {
+      const res = await fetch(`/api/classes/${encodeURIComponent(courseId)}`, {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ math_translation_enabled: next }),
+      })
+      if (!res.ok) setMathTx(!next)
+    } catch { setMathTx(!next) } finally { setSavingTx(false) }
+  }
 
   const c = data?.course
   const s = data?.summary
@@ -89,6 +102,23 @@ export default function ClassPage() {
               <Tile value={s.lessonsGraded} label="Lesson scores in gradebook" />
             </div>
           )}
+
+          {/* Per-section setting: math-fluency translations (SEI control). */}
+          <div className="rounded-2xl border p-4 mb-7 flex items-start justify-between gap-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Languages size={15} style={{ color: 'var(--primary)' }} />
+                <span className="text-sm font-semibold">Math fluency translations</span>
+              </div>
+              <p className="text-xs" style={{ color: 'var(--muted-foreground)', maxWidth: 560 }}>
+                When on, students in this section get a Translate button on their daily math warm-up (Spanish, French, Portuguese, Haitian Creole). Turn it off when you want them working in English only.
+              </p>
+            </div>
+            <button onClick={() => toggleMathTx(!mathTx)} disabled={savingTx} aria-pressed={mathTx}
+              className="shrink-0 rounded-full px-4 py-1.5 text-xs font-bold" style={{ border: '1px solid var(--border)', background: mathTx ? 'var(--primary)' : 'var(--card)', color: mathTx ? 'var(--primary-foreground)' : 'var(--muted-foreground)', opacity: savingTx ? 0.6 : 1 }}>
+              {mathTx ? 'On' : 'Off'}
+            </button>
+          </div>
 
           {/* Lesson access is now managed on one unified board for all classes. */}
           <Link href="/admin/lesson-access" className="rounded-2xl border p-4 flex items-center justify-between gap-3 mb-7"
