@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 interface ClassRow { id: string; name: string; section: string | null; teacher_email: string | null; student_count: number }
 interface Pulse { students: number; colleagues: number; activeStudents7d: number; masteryRatings: number; publishedLessons: number; pendingRewards: number; loginsTrend: number[] }
-interface TeacherEng { email: string; role: string; classes: number; students: number; lessonsGraded: number; masteryRatings: number; rewardsFulfilled: number; assignments: number; mathReviews: number; storeItems: number; actions: number; lastActiveAt: string | null; status: 'active' | 'ramping' | 'dormant' }
+interface TeacherEng { email: string; role: string; classes: number; students: number; lessonsGraded: number; masteryRatings: number; rewardsFulfilled: number; assignments: number; mathReviews: number; storeItems: number; actions: number; lastActiveAt: string | null; lastLoginAt: string | null; activeNow: boolean; status: 'active' | 'ramping' | 'dormant' }
 interface Engagement { active7d: number; idle: number; atRisk: number; total: number }
 interface Feature { key: string; label: string; count: number }
 interface Oversight { pulse: Pulse; teacherEngagement: TeacherEng[]; teacherTools: Feature[]; engagement: Engagement; features: Feature[]; you: string }
@@ -13,6 +13,7 @@ interface AccessReq { email: string; name: string | null; note: string | null; s
 interface Grant { email: string; role: string; source: string | null; granted_by: string | null; granted_at: string | null }
 
 const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—')
+const fmtDateTime = (iso: string | null) => (iso ? new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Never')
 const STATUS: Record<string, { label: string; color: string; bg: string }> = {
   active: { label: 'Active', color: 'var(--success)', bg: 'color-mix(in oklch, var(--success) 18%, transparent)' },
   ramping: { label: 'Ramping up', color: 'var(--reward-foreground)', bg: 'color-mix(in oklch, var(--reward) 28%, transparent)' },
@@ -53,17 +54,22 @@ export default function OversightPage() {
   const loadGrants = () => fetch('/api/admin/teacher-access')
     .then((r) => r.json()).then((data: { grants?: Grant[]; builtinAdmins?: string[] }) => { setGrants(data.grants ?? []); setBuiltinAdmins(data.builtinAdmins ?? []) }).catch(() => {})
 
+  const loadOversight = () => fetch('/api/admin/oversight')
+    .then((r) => r.json())
+    .then((data: Oversight) => { setD(data); setLoading(false) })
+    .catch(() => setLoading(false))
+
   useEffect(() => {
-    fetch('/api/admin/oversight')
-      .then((r) => r.json())
-      .then((data: Oversight) => { setD(data); setLoading(false) })
-      .catch(() => setLoading(false))
+    loadOversight()
     fetch('/api/courses')
       .then((r) => r.json())
       .then((data: { courses?: ClassRow[] }) => setClasses(data.courses ?? []))
       .catch(() => {})
     loadRequests()
     loadGrants()
+    // Refresh so the live "active now" dots stay current while you watch.
+    const t = setInterval(loadOversight, 30000)
+    return () => clearInterval(t)
   }, [])
 
   const decide = async (email: string, decision: 'approve' | 'deny') => {
@@ -172,7 +178,7 @@ export default function OversightPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820 }}>
               <thead>
                 <tr style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
-                  {['Teacher', 'Classes', 'Students', 'Lessons graded', 'Mastery', 'Rewards filled', 'Assignments', 'Math', 'Store', 'Last active', 'Status'].map((h) => (
+                  {['Teacher', 'Classes', 'Students', 'Lessons graded', 'Mastery', 'Rewards filled', 'Assignments', 'Math', 'Store', 'Last login', 'Status'].map((h) => (
                     <th key={h} className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5 whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{h}</th>
                   ))}
                 </tr>
@@ -187,12 +193,18 @@ export default function OversightPage() {
                   return (
                     <tr key={t.email} style={{ borderTop: '1px solid var(--border)' }}>
                       <td className="px-3 py-3 text-sm font-medium whitespace-nowrap">
+                        <span
+                          title={t.activeNow ? 'Active now' : 'Offline'}
+                          style={{ display: 'inline-block', width: 9, height: 9, borderRadius: '50%', marginRight: 8, verticalAlign: 'middle',
+                            background: t.activeNow ? 'var(--success)' : 'var(--destructive)',
+                            boxShadow: t.activeNow ? '0 0 0 3px color-mix(in oklch, var(--success) 22%, transparent)' : 'none' }}
+                        />
                         {t.email}
                         {t.email === d.you && <span className="ml-2 text-xs font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)', border: '1px solid color-mix(in oklch, var(--primary) 50%, var(--border))' }}>YOU</span>}
                         {t.role === 'admin' && t.email !== d.you && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)' }}>ADMIN</span>}
                       </td>
                       {num(t.classes)}{num(t.students)}{num(t.lessonsGraded)}{num(t.masteryRatings)}{num(t.rewardsFulfilled)}{num(t.assignments)}{num(t.mathReviews)}{num(t.storeItems)}
-                      <td className="px-3 py-3 text-sm whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{fmtDate(t.lastActiveAt)}</td>
+                      <td className="px-3 py-3 text-sm whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{fmtDateTime(t.lastLoginAt)}</td>
                       <td className="px-3 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ color: st.color, background: st.bg }}>{st.label}</span></td>
                     </tr>
                   )

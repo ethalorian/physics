@@ -15,6 +15,7 @@ import { ensureStudentRecord } from './student-management'
 import { getUserRole } from './permissions'
 import { getGrantedRole, requestTeacherAccess } from './roles'
 import { isSchoolStudentEmail, isSchoolStaffEmail } from './access'
+import { recordStaffLogin } from './presence'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -217,6 +218,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Store the avatar image in the token
         if (user.image) {
           token.picture = user.image;
+        }
+        // Record staff sign-in for the presence dashboard (last login).
+        if (token.role === 'admin' || token.role === 'teacher') {
+          try { await recordStaffLogin(user.email) } catch (e) { console.error('presence login record failed:', e) }
         }
       }
 

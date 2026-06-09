@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getStaffPresence } from '@/lib/presence'
+
+const ACTIVE_WINDOW = 3 * 60 * 1000 // "active now" = seen in the last 3 minutes
 
 // GET /api/admin/oversight
 // Owner's-eye view: pulse, TEACHER ENGAGEMENT (what each teacher is doing and how
@@ -90,16 +93,27 @@ export const GET = withRole('admin', async (_request, ctx) => {
     const placements = await safe(async () => (await supabaseAdmin.from('store_reward_placements').select('added_by, added_at').limit(50000)).data ?? [], [] as { added_by: string | null; added_at: string | null }[])
     for (const r of placements) bump(r.added_by, 'storeItems', t(r.added_at))
 
+    // presence (last login + live "active now")
+    const presenceRows = await safe(() => getStaffPresence(), [] as Awaited<ReturnType<typeof getStaffPresence>>)
+    const presenceByEmail = new Map<string, { last_login: string | null; last_seen: string | null }>()
+    for (const p of presenceRows) presenceByEmail.set(p.email.toLowerCase(), { last_login: p.last_login, last_seen: p.last_seen })
+
     const teacherEngagement = Array.from(agg.values())
-      .map((a) => ({
-        ...a,
-        lastActiveAt: a.lastActiveAt ? new Date(a.lastActiveAt).toISOString() : null,
-        actions: a.lessonsGraded + a.masteryRatings + a.rewardsFulfilled + a.assignments + a.mathReviews + a.storeItems,
-        status: a.lastActiveAt && now - a.lastActiveAt < 7 * DAY ? 'active'
-          : a.lastActiveAt && now - a.lastActiveAt < 30 * DAY ? 'ramping'
-          : 'dormant',
-      }))
-      .sort((x, y) => y.actions - x.actions || y.students - x.students)
+      .map((a) => {
+        const pres = presenceByEmail.get(a.email.toLowerCase())
+        const lastSeen = t(pres?.last_seen)
+        return {
+          ...a,
+          lastActiveAt: a.lastActiveAt ? new Date(a.lastActiveAt).toISOString() : null,
+          lastLoginAt: pres?.last_login ?? null,
+          activeNow: !!lastSeen && now - lastSeen < ACTIVE_WINDOW,
+          actions: a.lessonsGraded + a.masteryRatings + a.rewardsFulfilled + a.assignments + a.mathReviews + a.storeItems,
+          status: a.lastActiveAt && now - a.lastActiveAt < 7 * DAY ? 'active'
+            : a.lastActiveAt && now - a.lastActiveAt < 30 * DAY ? 'ramping'
+            : 'dormant',
+        }
+      })
+      .sort((x, y) => Number(y.activeNow) - Number(x.activeNow) || y.actions - x.actions || y.students - x.students)
 
     // ---- "what teachers use most" — raw totals (no double-count) -------------
     const teacherTools = [
