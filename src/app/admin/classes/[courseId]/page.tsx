@@ -8,10 +8,27 @@ import { LayoutGrid, CalendarClock, Users, TrendingUp, BookOpen, ArrowLeft, Grad
 interface Lesson { id: string; title: string; lessonNumber: number | null; unit: string }
 interface ClassData {
   course: { id: string; name: string; section: string | null; teacherEmail: string | null; mathTranslationEnabled?: boolean }
-  students: { id: string; name: string; firstName: string | null; lastName: string | null }[]
+  students: { id: string; name: string; firstName: string | null; lastName: string | null; lastLoginAt: string | null; lastSeenAt: string | null }[]
   lessons: Lesson[]
   summary: { studentCount: number; classMasteryAvg: number | null; ratingsLogged: number; lessonsGraded: number }
   error?: string
+}
+
+const fmtSeen = (iso: string | null) => {
+  if (!iso) return 'Never signed in'
+  const ms = Date.now() - new Date(iso).getTime()
+  if (ms < 60000) return 'just now'
+  const m = Math.floor(ms / 60000); if (m < 60) return `${m}m ago`
+  const h = Math.floor(m / 60); if (h < 24) return `${h}h ago`
+  const d = Math.floor(h / 24); if (d < 7) return `${d}d ago`
+  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+}
+const seenColor = (iso: string | null) => {
+  if (!iso) return 'var(--muted-foreground)'
+  const ms = Date.now() - new Date(iso).getTime()
+  if (ms < 24 * 3600000) return 'var(--success)'
+  if (ms < 7 * 24 * 3600000) return 'var(--reward-foreground)'
+  return 'var(--muted-foreground)'
 }
 
 function Tile({ value, label }: { value: string | number; label: string }) {
@@ -130,18 +147,23 @@ export default function ClassPage() {
             <CalendarClock size={18} style={{ color: 'var(--primary)' }} />
           </Link>
 
-          <div className="text-xs font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
-            <Users size={14} /> Roster ({data.students.length})
+          <div className="text-xs font-bold uppercase tracking-widest mb-3 flex items-center justify-between gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
+            <span className="flex items-center gap-1.5"><Users size={14} /> Roster ({data.students.length})</span>
+            <span className="font-medium normal-case tracking-normal">Last signed in</span>
           </div>
           {data.students.length === 0 ? (
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No students enrolled in this class yet.</p>
           ) : (
             <div className="rounded-2xl border overflow-hidden" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
               {data.students.map((st, i) => (
-                <div key={st.id} className="flex items-center justify-between px-4 py-2.5" style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
-                  <span className="text-sm font-medium">{st.name}</span>
-                  <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                    {st.lastName || '—'}{st.firstName ? `, ${st.firstName}` : ''}
+                <div key={st.id} className="flex items-center justify-between gap-3 px-4 py-2.5" style={{ borderTop: i === 0 ? 'none' : '1px solid var(--border)' }}>
+                  <span className="text-sm font-medium truncate">{st.name}</span>
+                  <span
+                    className="text-xs font-medium whitespace-nowrap"
+                    style={{ color: seenColor(st.lastSeenAt) }}
+                    title={st.lastSeenAt ? `Last seen ${new Date(st.lastSeenAt).toLocaleString()}` : 'No recorded sign-in yet'}
+                  >
+                    {fmtSeen(st.lastSeenAt)}
                   </span>
                 </div>
               ))}

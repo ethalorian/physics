@@ -68,6 +68,24 @@ function workToText(r: unknown): string {
 }
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
+// "Last signed in" for the roster: friendly relative time + recency color.
+function lastSeenLabel(iso: string | null): string {
+  if (!iso) return 'never'
+  const ms = Date.now() - new Date(iso).getTime()
+  if (ms < 60000) return 'now'
+  const m = Math.floor(ms / 60000); if (m < 60) return `${m}m`
+  const h = Math.floor(m / 60); if (h < 24) return `${h}h`
+  const d = Math.floor(h / 24); if (d < 7) return `${d}d`
+  return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+}
+function lastSeenColor(iso: string | null): string {
+  if (!iso) return 'var(--muted-foreground)'
+  const ms = Date.now() - new Date(iso).getTime()
+  if (ms < 24 * 3600000) return 'var(--success)'
+  if (ms < 7 * 24 * 3600000) return 'var(--reward-foreground)'
+  return 'var(--muted-foreground)'
+}
+
 type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
 function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string }) {
   if (!strokes || strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
@@ -269,6 +287,26 @@ export default function ControlRoomPage() {
       .catch(() => {})
   }, [classQuery])
   useEffect(() => { loadLessonGrid(unitId) }, [unitId, loadLessonGrid])
+
+  // Per-student "last signed in" for the roster (so each student shows when they
+  // were last active, right in the grids).
+  const [presence, setPresence] = useState<Map<string, { lastLoginAt: string | null; lastSeenAt: string | null }>>(new Map())
+  const loadPresence = useCallback(() => {
+    const url = '/api/roster/last-login' + (classQuery ? '?' + classQuery.slice(1) : '')
+    fetch(url)
+      .then((r) => r.json())
+      .then((d: { presence?: { gid: string; lastLoginAt: string | null; lastSeenAt: string | null }[] }) => {
+        const m = new Map<string, { lastLoginAt: string | null; lastSeenAt: string | null }>()
+        for (const p of d.presence ?? []) m.set(p.gid, { lastLoginAt: p.lastLoginAt, lastSeenAt: p.lastSeenAt })
+        setPresence(m)
+      })
+      .catch(() => {})
+  }, [classQuery])
+  useEffect(() => { loadPresence() }, [loadPresence])
+  const seenTag = (gid: string) => {
+    const iso = presence.get(gid)?.lastSeenAt ?? null
+    return <span style={{ fontSize: 10, fontWeight: 600, marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
+  }
 
   const openCell = useCallback((studentId: string, targetId: string, lesson?: { id: string; title: string; number: number }) => {
     setSel({ studentId, targetId, lesson })
@@ -690,7 +728,7 @@ export default function ControlRoomPage() {
             <tbody>
               {grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())).map((s) => (
                 <tr key={s.id}>
-                  <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}</td>
+                  <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
                   {grid.targets.map((t) => {
                     const c = grid.cells[s.id]?.[t.id]
                     const b = band(c?.value ?? null)
@@ -788,7 +826,7 @@ export default function ControlRoomPage() {
               <tbody>
                 {sortedStudents.map((s) => (
                   <tr key={s.id}>
-                    <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}</td>
+                    <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
                     {lessonGrid.lessons.map((l) => {
                       const c = lessonGrid.cells[s.id]?.[l.id]
                       const st = c?.status ?? 'not_started'
@@ -864,7 +902,7 @@ export default function ControlRoomPage() {
                         color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer',
                       }}
                     >
-                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</span>
+                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}{seenTag(s.id)}</span>
                       {done ? (
                         <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
                       ) : (

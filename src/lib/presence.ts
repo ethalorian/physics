@@ -28,6 +28,12 @@ export async function touchStaffPresence(email: string | null | undefined): Prom
   )
 }
 
+/** Stamp a student's most recent sign-in on their student record. */
+export async function recordStudentLogin(googleUserId: string | null | undefined): Promise<void> {
+  if (!googleUserId) return
+  await supabaseAdmin.from('students').update({ last_login: new Date().toISOString() }).eq('google_user_id', googleUserId)
+}
+
 /** All staff presence rows (for the oversight dashboard). */
 export async function getStaffPresence(): Promise<Presence[]> {
   const { data } = await supabaseAdmin.from('staff_presence').select('email, last_login, last_seen')

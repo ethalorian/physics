@@ -15,7 +15,7 @@ import { ensureStudentRecord } from './student-management'
 import { getUserRole } from './permissions'
 import { getGrantedRole, requestTeacherAccess } from './roles'
 import { isSchoolStudentEmail, isSchoolStaffEmail } from './access'
-import { recordStaffLogin } from './presence'
+import { recordStaffLogin, recordStudentLogin } from './presence'
 
 // Extend the built-in session types
 declare module "next-auth" {
@@ -219,10 +219,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (user.image) {
           token.picture = user.image;
         }
-        // Record staff sign-in for the presence dashboard (last login).
+        // Record sign-in: staff presence for the oversight dashboard, and every
+        // user's student-record last_login (so teachers see when students last
+        // signed in). The student update is a no-op for accounts without a row.
         if (token.role === 'admin' || token.role === 'teacher') {
           try { await recordStaffLogin(user.email) } catch (e) { console.error('presence login record failed:', e) }
         }
+        try { await recordStudentLogin(user.id) } catch (e) { console.error('student login record failed:', e) }
       }
 
       // Populate role for pre-existing sessions (post-deploy) that predate this

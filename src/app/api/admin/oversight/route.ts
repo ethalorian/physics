@@ -3,7 +3,10 @@ import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getStaffPresence } from '@/lib/presence'
 
-const ACTIVE_WINDOW = 3 * 60 * 1000 // "active now" = seen in the last 3 minutes
+// "Active now" = seen (loaded/navigated a page) in the last 10 minutes. Presence is
+// page-load driven (no heartbeat timer), so the window is a bit wider than a live
+// poll would need, to avoid showing an actively-reading teacher as offline.
+const ACTIVE_WINDOW = 10 * 60 * 1000
 
 // GET /api/admin/oversight
 // Owner's-eye view: pulse, TEACHER ENGAGEMENT (what each teacher is doing and how

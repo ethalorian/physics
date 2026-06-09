@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { touchStaffPresence } from '@/lib/presence'
 
 // Derived notification feed. Rather than insert a row at every event source, we
 // query recent events (mastery ratings, grades, math points, duel challenges,
@@ -23,12 +22,6 @@ const LEVEL_WORD = (l: number) => (l >= 2.5 ? 'Got it' : l >= 1.5 ? 'Almost' : '
 export const GET = withAuth(async (_req, ctx) => {
   const me = ctx.userId
   const items: Notif[] = []
-
-  // Presence heartbeat: this endpoint is polled every 60s by the navbar bell on
-  // every staff page, so it doubles as the "still online" signal for staff.
-  if (ctx.realRole === 'admin' || ctx.realRole === 'teacher') {
-    try { await touchStaffPresence(ctx.email) } catch { /* ignore */ }
-  }
 
   // last-seen baseline (default: 3 days ago so a new student sees recent activity)
   const { data: readRow } = await supabaseAdmin.from('notification_reads').select('seen_at').eq('user_id', me).maybeSingle()

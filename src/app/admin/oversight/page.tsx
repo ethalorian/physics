@@ -67,9 +67,8 @@ export default function OversightPage() {
       .catch(() => {})
     loadRequests()
     loadGrants()
-    // Refresh so the live "active now" dots stay current while you watch.
-    const t = setInterval(loadOversight, 30000)
-    return () => clearInterval(t)
+    // Page-load check only — no polling. Reload the page (or use the browser
+    // refresh) to re-check who's active.
   }, [])
 
   const decide = async (email: string, decision: 'approve' | 'deny') => {

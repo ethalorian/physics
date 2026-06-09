@@ -9,7 +9,7 @@ import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 // summary. Admins can open any class; a teacher can only open a class they own.
 
 type CourseRow = { id: string; name: string; section: string | null; teacher_email: string | null; math_translation_enabled: boolean | null }
-type StudentRow = { google_user_id: string | null; name: string; first_name: string | null; last_name: string | null }
+type StudentRow = { google_user_id: string | null; name: string; first_name: string | null; last_name: string | null; last_login: string | null }
 type RecRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
 export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
@@ -34,15 +34,33 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
 
     // Roster (ordered by last name to match Aspen / the rest of the app).
     const gids = await getCourseStudentGids(courseId)
-    let students: { id: string; name: string; firstName: string | null; lastName: string | null }[] = []
+    let students: { id: string; name: string; firstName: string | null; lastName: string | null; lastLoginAt: string | null; lastSeenAt: string | null }[] = []
     if (gids.length > 0) {
       const { data: srRaw } = await supabaseAdmin
         .from('students')
-        .select('google_user_id, name, first_name, last_name')
+        .select('google_user_id, name, first_name, last_name, last_login')
         .in('google_user_id', gids)
+
+      // Most recent activity per student (so "last seen" has data even for students
+      // who signed in before login recording started).
+      const lastActByGid = new Map<string, number>()
+      const { data: actRaw } = await supabaseAdmin
+        .from('student_activity').select('user_id, created_at').in('user_id', gids)
+        .order('created_at', { ascending: false }).limit(5000)
+      for (const a of (actRaw ?? []) as { user_id: string | null; created_at: string }[]) {
+        if (!a.user_id) continue
+        const ts = new Date(a.created_at).getTime()
+        if (ts > (lastActByGid.get(a.user_id) ?? 0)) lastActByGid.set(a.user_id, ts)
+      }
+
       students = ((srRaw ?? []) as StudentRow[])
         .filter((s) => s.google_user_id)
-        .map((s) => ({ id: s.google_user_id as string, name: s.name, firstName: s.first_name, lastName: s.last_name }))
+        .map((s) => {
+          const gid = s.google_user_id as string
+          const login = s.last_login ? new Date(s.last_login).getTime() : 0
+          const seen = Math.max(login, lastActByGid.get(gid) ?? 0)
+          return { id: gid, name: s.name, firstName: s.first_name, lastName: s.last_name, lastLoginAt: s.last_login ?? null, lastSeenAt: seen ? new Date(seen).toISOString() : null }
+        })
         .sort((a, b) => (a.lastName || a.name).toLowerCase().localeCompare((b.lastName || b.name).toLowerCase()))
     }
 

@@ -43,6 +43,16 @@ export default function Navbar() {
     setMounted(true)
   }, [])
 
+  // Presence: stamp "last seen" once per page load/navigation (staff only). This is
+  // a page-load check — no polling timer — so the oversight dashboard can show who
+  // is currently active without any background job.
+  const sessionRole = session?.user?.role
+  useEffect(() => {
+    if (sessionRole === 'admin' || sessionRole === 'teacher') {
+      fetch('/api/presence/ping', { method: 'POST' }).catch(() => {})
+    }
+  }, [pathname, sessionRole])
+
   // Show loading state while session is loading to prevent hydration mismatch
   const isLoading = !mounted || status === "loading"
 
