@@ -10,6 +10,7 @@ interface Engagement { active7d: number; idle: number; atRisk: number; total: nu
 interface Feature { key: string; label: string; count: number }
 interface Oversight { pulse: Pulse; teachers: TeacherRow[]; engagement: Engagement; features: Feature[]; you: string }
 interface AccessReq { email: string; name: string | null; note: string | null; status: string; created_at: string }
+interface Grant { email: string; role: string; source: string | null; granted_by: string | null; granted_at: string | null }
 
 const fmtDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '—')
 const STATUS: Record<string, { label: string; color: string; bg: string }> = {
@@ -44,9 +45,13 @@ export default function OversightPage() {
   const [loading, setLoading] = useState(true)
   const [classes, setClasses] = useState<ClassRow[]>([])
   const [requests, setRequests] = useState<AccessReq[]>([])
+  const [grants, setGrants] = useState<Grant[]>([])
+  const [builtinAdmins, setBuiltinAdmins] = useState<string[]>([])
 
   const loadRequests = () => fetch('/api/admin/teacher-requests')
     .then((r) => r.json()).then((data: { pending?: AccessReq[] }) => setRequests(data.pending ?? [])).catch(() => {})
+  const loadGrants = () => fetch('/api/admin/teacher-access')
+    .then((r) => r.json()).then((data: { grants?: Grant[]; builtinAdmins?: string[] }) => { setGrants(data.grants ?? []); setBuiltinAdmins(data.builtinAdmins ?? []) }).catch(() => {})
 
   useEffect(() => {
     fetch('/api/admin/oversight')
@@ -58,6 +63,7 @@ export default function OversightPage() {
       .then((data: { courses?: ClassRow[] }) => setClasses(data.courses ?? []))
       .catch(() => {})
     loadRequests()
+    loadGrants()
   }, [])
 
   const decide = async (email: string, decision: 'approve' | 'deny') => {
@@ -65,6 +71,15 @@ export default function OversightPage() {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, decision }),
     }).catch(() => {})
     loadRequests()
+    loadGrants()
+  }
+
+  const revoke = async (email: string) => {
+    if (!confirm(`Remove teacher access for ${email}?`)) return
+    await fetch('/api/admin/teacher-access', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, action: 'revoke' }),
+    }).catch(() => {})
+    loadGrants()
   }
 
   // Group classes by the teacher who owns them, for the click-into-any-class directory.
@@ -103,6 +118,38 @@ export default function OversightPage() {
           </div>
         </div>
       )}
+
+      {/* TEACHERS & ACCESS — who currently has staff access, with revoke */}
+      <div className="rounded-2xl border mb-6 p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <h2 className="text-sm font-bold mb-1">Teachers &amp; access</h2>
+        <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>Everyone who can sign in as staff. Revoking returns a teacher to student access.</p>
+        {grants.length === 0 && builtinAdmins.length === 0 ? (
+          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No granted teachers yet.</p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {builtinAdmins.map((email) => (
+              <div key={email} className="flex flex-wrap items-center gap-3 rounded-xl border px-3 py-2" style={{ borderColor: 'var(--border)' }}>
+                <span className="flex-1 min-w-[12rem] text-sm font-medium">{email}</span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 14%, transparent)' }}>Admin · built-in</span>
+              </div>
+            ))}
+            {grants.map((g) => (
+              <div key={g.email} className="flex flex-wrap items-center gap-3 rounded-xl border px-3 py-2" style={{ borderColor: 'var(--border)' }}>
+                <span className="flex-1 min-w-[12rem] text-sm font-medium">
+                  {g.email}
+                  {(g.granted_at || g.granted_by) && (
+                    <span className="text-xs ml-2" style={{ color: 'var(--muted-foreground)' }}>
+                      onboarded{g.granted_at ? ` ${fmtDate(g.granted_at)}` : ''}{g.granted_by ? ` by ${g.granted_by}` : ''}
+                    </span>
+                  )}
+                </span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 16%, transparent)' }}>{g.role === 'admin' ? 'Admin' : 'Teacher'}</span>
+                <button onClick={() => revoke(g.email)} className="text-xs rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--destructive)', cursor: 'pointer' }}>Revoke</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {!loading && d && (
         <>

@@ -38,10 +38,30 @@ export async function grantTeacher(
   source: 'classroom' | 'admin_approval' | 'seed',
   grantedBy: string | null,
 ): Promise<void> {
-  await supabaseAdmin
+  const { error } = await supabaseAdmin
     .from('user_roles')
     .upsert(
-      { email, role: 'teacher', source, granted_by: grantedBy, granted_at: new Date().toISOString() },
+      { email: email.trim().toLowerCase(), role: 'teacher', source, granted_by: grantedBy, granted_at: new Date().toISOString() },
       { onConflict: 'email' },
     )
+  // Surface failures loudly — a silently-failed grant marks a request "approved"
+  // while granting nothing (the exact bug this replaced).
+  if (error) throw new Error(`grantTeacher failed for ${email}: ${error.message}`)
+}
+
+export interface RoleGrant { email: string; role: string; source: string | null; granted_by: string | null; granted_at: string | null }
+
+// All DB-granted staff (teachers/admins added via approval, Classroom, or seed).
+export async function listRoleGrants(): Promise<RoleGrant[]> {
+  const { data } = await supabaseAdmin
+    .from('user_roles')
+    .select('email, role, source, granted_by, granted_at')
+    .order('granted_at', { ascending: false })
+  return (data ?? []) as RoleGrant[]
+}
+
+// Remove a DB role grant (returns the person to student on their next request).
+export async function revokeRole(email: string): Promise<void> {
+  const { error } = await supabaseAdmin.from('user_roles').delete().eq('email', email.trim().toLowerCase())
+  if (error) throw new Error(`revokeRole failed for ${email}: ${error.message}`)
 }
