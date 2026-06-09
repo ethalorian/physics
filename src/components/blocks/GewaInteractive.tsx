@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
-  PHYSICS_FORMULAS, type FormulaCategory, MCAS_SYMBOLS, GEWA_UNIT_OPTIONS,
+  PHYSICS_FORMULAS, type FormulaCategory, MCAS_SYMBOLS, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
   convertToMcas, variableBySymbol,
 } from '@/data/physics-reference'
 import {
@@ -71,6 +71,22 @@ function FactorView({ x }: { x: Factor }) {
   return <span><Symbol base={x.base} />{x.exp !== 1 ? <sup>{x.exp}</sup> : null}</span>
 }
 const factorLabel = (x: Factor) => x.base.replace('_', '') + (x.exp !== 1 ? `^${x.exp}` : '')
+const factorText = (x: Factor) => x.base + (x.exp !== 1 ? `^${x.exp}` : '')
+function termText(t: Term): string {
+  const c = Math.abs(t.coeff) === 1 ? '' : Math.abs(t.coeff) === 0.5 ? '½' : String(Math.abs(t.coeff))
+  const body = (c + t.num.map(factorText).join('')) || '1'
+  return t.den.length ? `${body}/${t.den.map(factorText).join('')}` : body
+}
+// Plain-English statement of the inverse operation a move applies to BOTH sides —
+// the thing students need to internalize ("a factor that was multiplying becomes
+// dividing when it crosses the =").
+function describeMove(eq: Equation, d: Drag): string {
+  if (d.type !== 'move') return ''
+  if (d.kind === 'factor') return d.pos === 'num' ? `Divide both sides by ${d.label}` : `Multiply both sides by ${d.label}`
+  const t = eq[d.which].terms[d.index]
+  if (!t) return ''
+  return t.coeff < 0 ? `Add ${termText(t)} to both sides` : `Subtract ${termText(t)} from both sides`
+}
 
 const badge = (l: string, color: string, fg = 'var(--primary-foreground)') => (
   <span className="grid place-items-center font-bold flex-shrink-0" style={{ width: 30, height: 30, borderRadius: 9, fontSize: 14, background: color, color: fg }}>{l}</span>
@@ -87,9 +103,13 @@ export default function GewaInteractive({
   const [eq, setEq] = useState<Equation | null>(value?.rearranged ?? (value?.equationId ? FORMULA_AST[value.equationId] : null))
   const [subs, setSubs] = useState<GewaValue['substitutions']>(value?.substitutions ?? {})
   const [convNote, setConvNote] = useState<string | null>(null)
-  const [answer, setAnswer] = useState(value?.answer ?? '')
+  const initAns = (value?.answer ?? '').match(/^(-?\d*\.?\d+)\s*(.*)$/)
+  const [answerVal, setAnswerVal] = useState(initAns ? initAns[1] : '')
+  const [answerUnit, setAnswerUnit] = useState(initAns ? (initAns[2] || '').trim() : '')
+  const [opHistory, setOpHistory] = useState<string[]>([])
   const [feedback, setFeedback] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
+  const answer = answerVal ? `${answerVal}${answerUnit ? ' ' + answerUnit : ''}` : ''
 
   // drag state
   const [drag, setDrag] = useState<Drag | null>(null)
@@ -123,9 +143,11 @@ export default function GewaInteractive({
   const givenString = () => chips.filter((c) => c.sym || c.val).map((c) => `${c.sym}${c.sym ? ' = ' : ''}${c.val}${c.unit ? ' ' + c.unit : ''}`.trim()).join('; ')
 
   const pickFormula = (id: string) => {
-    setFormulaId(id); setEq(JSON.parse(JSON.stringify(FORMULA_AST[id]))); setSubs({}); setConvNote(null); setAnswer(''); setFeedback([]); setSaved(false)
+    const defUnit = variableBySymbol(solveFor || PHYSICS_FORMULAS.find((f) => f.id === id)?.lhs || '')?.unit ?? ''
+    setFormulaId(id); setEq(JSON.parse(JSON.stringify(FORMULA_AST[id]))); setSubs({}); setConvNote(null)
+    setAnswerVal(''); setAnswerUnit(defUnit); setOpHistory([]); setFeedback([]); setSaved(false)
   }
-  const resetEquation = () => { if (formulaId) { setEq(JSON.parse(JSON.stringify(FORMULA_AST[formulaId]))); setSubs({}); setConvNote(null) } }
+  const resetEquation = () => { if (formulaId) { setEq(JSON.parse(JSON.stringify(FORMULA_AST[formulaId]))); setSubs({}); setConvNote(null); setOpHistory([]) } }
 
   const fillSlot = (chip: Chip) => {
     const raw = parseFloat(chip.val)
@@ -157,6 +179,7 @@ export default function GewaInteractive({
         if (drag.type === 'move') {
           const target = drop.startsWith('side:') ? drop.slice(5) : null
           if ((target === 'lhs' || target === 'rhs') && target !== drag.which) {
+            setOpHistory((h) => [...h, describeMove(eq, drag)])
             setEq(drag.kind === 'term' ? moveTerm(eq, drag.which, drag.index) : moveFactor(eq, drag.which, drag.pos, drag.index))
             setSaved(false)
           }
@@ -203,6 +226,10 @@ export default function GewaInteractive({
           : { ok: false, msg: 'That doesn’t match what the equation gives — recheck your arithmetic and units.' })
       }
     } else if (answer.trim()) fb.push({ ok: true, msg: 'Answer recorded.' })
+    const expUnit = variableBySymbol(unknown)?.unit
+    if (answerVal && expUnit) fb.push(answerUnit === expUnit
+      ? { ok: true, msg: `Unit ${answerUnit} matches.` }
+      : { ok: false, msg: `Check your unit — ${unknown} is measured in ${expUnit}.` })
     setFeedback(fb)
   }
 
@@ -289,6 +316,8 @@ export default function GewaInteractive({
   }
 
   const unknownUnit = variableBySymbol(unknown)?.unit
+  const answerUnitOptions = unknownUnit && !MCAS_UNIT_OPTIONS.includes(unknownUnit) ? [unknownUnit, ...MCAS_UNIT_OPTIONS] : [...MCAS_UNIT_OPTIONS]
+  const dragOpHint = drag && drag.type === 'move' && eq ? describeMove(eq, drag) : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -344,6 +373,23 @@ export default function GewaInteractive({
               {renderSide('lhs')}<span style={{ color: 'var(--muted-foreground)' }}>=</span>{renderSide('rhs')}
             </span>
           </div>
+          {/* live: what THIS drag will do to both sides */}
+          {dragOpHint && (
+            <p className="mt-2 text-sm rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, oklch(0.58 0.10 255) 14%, transparent)', color: 'oklch(0.42 0.12 255)', fontWeight: 600 }}>
+              <i>Drop to:</i> {dragOpHint}
+            </p>
+          )}
+          {/* the algebra trail — every operation performed so far */}
+          {opHistory.length > 0 && (
+            <ol className="mt-2 flex flex-col gap-1" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+              {opHistory.map((op, i) => (
+                <li key={i} className="text-xs flex items-center gap-2" style={{ color: 'var(--muted-foreground)' }}>
+                  <span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: '50%', background: 'color-mix(in oklch, oklch(0.58 0.10 255) 20%, var(--card))', color: 'oklch(0.42 0.12 255)', fontWeight: 700, fontSize: 10 }}>{i + 1}</span>
+                  {op}
+                </li>
+              ))}
+            </ol>
+          )}
           {!isolatedOn && <button onClick={resetEquation} className="mt-2 text-xs rounded-md border px-2.5 py-1" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>Reset equation</button>}
         </div>
       )}
@@ -383,8 +429,12 @@ export default function GewaInteractive({
         <div>
           {stepHead('A', 'var(--success)', 'Answer — compute it and box it', 'white')}
           <div className="flex items-center gap-2 flex-wrap">
-            <input value={answer} onChange={(e) => { setAnswer(e.target.value); setSaved(false) }} placeholder={`your answer${unknownUnit ? ` (in ${unknownUnit})` : ''}`} className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 220 }} />
-            {unknownUnit && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>expected unit: {unknownUnit}</span>}
+            <input value={answerVal} onChange={(e) => { setAnswerVal(e.target.value); setSaved(false) }} inputMode="decimal" placeholder="your number" className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 150 }} />
+            <select value={answerUnit} onChange={(e) => { setAnswerUnit(e.target.value); setSaved(false) }} className="rounded-md border px-2 py-2 text-sm" style={{ ...fieldBg, width: 110 }}>
+              <option value="">unit</option>
+              {answerUnitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
+            </select>
+            {unknownUnit && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>expected: {unknownUnit}</span>}
           </div>
         </div>
       )}
