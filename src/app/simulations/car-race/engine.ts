@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData, SensorSample } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawGrid, axes as drawAxes, panel, groundShadow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, grid as drawGrid, axes as drawAxes, panel, groundShadow, chip, roundRectPath } from '@/components/simulations/lab/draw'
 
 // Car race — two cars move at CONSTANT velocity with independent start delays
 // down a straight track. The split canvas shows the race up top and a LIVE
@@ -64,8 +64,8 @@ export function createCarRaceEngine(canvas: HTMLCanvasElement, ctx: CanvasRender
   function drawCar(x: number, y: number, fill: string, win: string, tag: string) {
     groundShadow(ctx, x, y + 15, 24, 5)
     ctx.fillStyle = fill
-    ctx.beginPath(); ctx.roundRect(x - 22, y - 11, 44, 22, 6); ctx.fill()
-    ctx.fillStyle = win; ctx.beginPath(); ctx.roundRect(x + 3, y - 8, 14, 16, 3); ctx.fill()
+    roundRectPath(ctx, x - 22, y - 11, 44, 22, 6); ctx.fill()
+    ctx.fillStyle = win; roundRectPath(ctx, x + 3, y - 8, 14, 16, 3); ctx.fill()
     ctx.fillStyle = COL.wheel
     ctx.beginPath(); ctx.arc(x - 12, y + 12, 4.5, 0, Math.PI * 2); ctx.fill()
     ctx.beginPath(); ctx.arc(x + 12, y + 12, 4.5, 0, Math.PI * 2); ctx.fill()

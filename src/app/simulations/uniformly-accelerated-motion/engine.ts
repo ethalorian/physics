@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, groundShadow, arrow, label, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, groundShadow, arrow, label, chip, roundRectPath } from '@/components/simulations/lab/draw'
 
 // Uniformly accelerated motion — the "oil-drop ticker": a car drops a spot every
 // second, and the growing/shrinking spacing reveals constant acceleration. The
@@ -84,8 +84,8 @@ export function createUAMEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingC
     }
     // body
     ctx.fillStyle = COL.car
-    ctx.beginPath(); ctx.roundRect(cx - 16, cy - 9, 32, 16, 4); ctx.fill()
-    ctx.fillStyle = COL.window; ctx.beginPath(); ctx.roundRect(cx + 2, cy - 6, 9, 7, 2); ctx.fill()
+    roundRectPath(ctx, cx - 16, cy - 9, 32, 16, 4); ctx.fill()
+    ctx.fillStyle = COL.window; roundRectPath(ctx, cx + 2, cy - 6, 9, 7, 2); ctx.fill()
     ctx.fillStyle = COL.wheel
     ctx.beginPath(); ctx.arc(cx - 8, cy + 8, 4, 0, Math.PI * 2); ctx.arc(cx + 8, cy + 8, 4, 0, Math.PI * 2); ctx.fill()
 

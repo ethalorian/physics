@@ -37,7 +37,10 @@ export const PAL = {
 
 export type RGB = string
 
-function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+// Cross-browser rounded-rect PATH (arcTo, supported everywhere). Engines call
+// this instead of the native ctx.roundRect — which throws on Safari < 16 / older
+// iPads, taking the whole sim down. Builds the path only; caller fills/strokes.
+export function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   const rr = Math.min(r, w / 2, h / 2)
   ctx.beginPath()
   ctx.moveTo(x + rr, y)

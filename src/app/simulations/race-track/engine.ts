@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, groundShadow, arrow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, groundShadow, arrow, chip, roundRectPath } from '@/components/simulations/lab/draw'
 
 // Race track — a car circles a track at constant speed. DISTANCE (the path) rises
 // forever; DISPLACEMENT (straight line from start) rises to the diameter then
@@ -94,7 +94,7 @@ export function createRaceTrackEngine(canvas: HTMLCanvasElement, ctx: CanvasRend
     // car (tangent to track)
     groundShadow(ctx, sx(c.x), sy(c.y) + 12, 12, 4)
     ctx.save(); ctx.translate(sx(c.x), sy(c.y)); ctx.rotate(carAngle() + Math.PI)
-    ctx.fillStyle = COL.car; ctx.beginPath(); ctx.roundRect(-7, -11, 14, 22, 3); ctx.fill()
+    ctx.fillStyle = COL.car; roundRectPath(ctx, -7, -11, 14, 22, 3); ctx.fill()
     ctx.fillStyle = COL.carWin; ctx.fillRect(-5, -7, 10, 6)
     ctx.fillStyle = COL.wheel
     ctx.fillRect(-9, -7, 3, 5); ctx.fillRect(6, -7, 3, 5); ctx.fillRect(-9, 2, 3, 5); ctx.fillRect(6, 2, 3, 5)

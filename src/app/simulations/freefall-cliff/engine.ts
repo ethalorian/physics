@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, groundShadow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, groundShadow, chip, roundRectPath } from '@/components/simulations/lab/draw'
 
 // Freefall cliff — drop a stone from a cliff of known height; it falls under g
 // from rest (h = ½gt², exact). Position traces stamp every 0.25 s and spread
@@ -89,13 +89,13 @@ export function createFreefallEngine(canvas: HTMLCanvasElement, ctx: CanvasRende
     // lit edge
     ctx.fillStyle = COL.rockLight; ctx.fillRect(cliffR - 4, lipY, 4, h - lipY)
     // grassy cap
-    ctx.fillStyle = COL.grass; ctx.beginPath(); ctx.roundRect(0, lipY - 8, cliffR, 12, 4); ctx.fill()
+    ctx.fillStyle = COL.grass; roundRectPath(ctx, 0, lipY - 8, cliffR, 12, 4); ctx.fill()
     ctx.fillStyle = COL.grassDark; ctx.fillRect(0, lipY + 2, cliffR, 2)
 
     // ---- traveler at the lip ----
     const tx = cliffR - 24
     ctx.fillStyle = COL.head; ctx.beginPath(); ctx.arc(tx, lipY - 24, 5.5, 0, Math.PI * 2); ctx.fill()
-    ctx.fillStyle = COL.body; ctx.beginPath(); ctx.roundRect(tx - 4, lipY - 18, 8, 13, 3); ctx.fill()
+    ctx.fillStyle = COL.body; roundRectPath(ctx, tx - 4, lipY - 18, 8, 13, 3); ctx.fill()
     ctx.strokeStyle = COL.body; ctx.lineWidth = 3
     ctx.beginPath(); ctx.moveTo(tx - 3, lipY - 5); ctx.lineTo(tx - 5, lipY - 1); ctx.moveTo(tx + 3, lipY - 5); ctx.lineTo(tx + 5, lipY - 1); ctx.stroke()
 

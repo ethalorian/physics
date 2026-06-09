@@ -1,5 +1,5 @@
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawGrid, axes as drawAxes, groundShadow, arrow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, grid as drawGrid, axes as drawAxes, groundShadow, arrow, chip, roundRectPath } from '@/components/simulations/lab/draw'
 
 // Scene-specific tones (ceiling/desk stay illustrative); structural + semantic
 // tones come from the shared PAL so this sim matches every other lab.
@@ -287,9 +287,9 @@ export function createMonkeyHunterEngine(
       const bannerW = Math.min(w - 24, 460)
       const bx = w / 2 - bannerW / 2
       ctx.fillStyle = 'rgba(255, 255, 255, 0.86)'
-      ctx.beginPath(); ctx.roundRect(bx, 30, bannerW, 78, 10); ctx.fill()
+      roundRectPath(ctx, bx, 30, bannerW, 78, 10); ctx.fill()
       ctx.strokeStyle = PAL.force; ctx.lineWidth = 2
-      ctx.beginPath(); ctx.roundRect(bx, 30, bannerW, 78, 10); ctx.stroke()
+      roundRectPath(ctx, bx, 30, bannerW, 78, 10); ctx.stroke()
 
       ctx.fillStyle = PAL.force; ctx.font = 'bold 16px ui-sans-serif, system-ui, sans-serif'
       ctx.fillText('Dart fell short', w / 2, 50)
