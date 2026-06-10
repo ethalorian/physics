@@ -1,8 +1,12 @@
-/* eslint-disable no-restricted-syntax -- public endpoint, pending auth review (audit follow-up) */
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { withRole } from '@/lib/api-auth'
 import { googleClassroomAPI } from '@/lib/google-classroom'
 
-export async function GET(request: NextRequest) {
+// Staff-only proxy to the Google Classroom API. The caller supplies their own
+// Google OAuth access token (Bearer header), so Google still enforces what the
+// token may see — withRole closes the previously-open audit follow-up by also
+// requiring a signed-in teacher/admin session on our side.
+export const GET = withRole(['teacher', 'admin'], async (request) => {
   try {
     const { searchParams } = new URL(request.url)
     const action = searchParams.get('action')
@@ -65,9 +69,9 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
-}
+})
 
-export async function POST(request: NextRequest) {
+export const POST = withRole(['teacher', 'admin'], async (request) => {
   try {
     const body = await request.json()
     const { action, courseId, email } = body
@@ -105,4 +109,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
+})
