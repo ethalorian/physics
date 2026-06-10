@@ -6,6 +6,7 @@
 
 import { useEffect, useState } from 'react'
 import { Scene, YearBanner, Narration, Speech, FactBox, NextButton, StepDots, MC, NumQ } from './ui'
+import { Ch4Scene } from './scenes'
 
 function hand(cx: number, cy: number, angleDeg: number, len: number, width: number, color: string) {
   const a = ((angleDeg - 90) * Math.PI) / 180
@@ -107,6 +108,7 @@ export default function Ch4Time({ onComplete }: { onComplete: () => void }) {
         <YearBanner year="1793" place="Paris — a city resetting its clocks" />
         <StepDots total={STEPS} index={step} />
       </div>
+      <Ch4Scene step={step} />
 
       {step === 0 && (
         <>

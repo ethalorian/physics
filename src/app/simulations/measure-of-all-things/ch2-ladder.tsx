@@ -6,6 +6,7 @@
 
 import { useMemo, useState } from 'react'
 import { Scene, YearBanner, Narration, FactBox, NextButton, StepDots, MC, NumQ } from './ui'
+import { Ch2Scene } from './scenes'
 
 interface Rung {
   symbol: string
@@ -174,6 +175,7 @@ export default function Ch2Ladder({ onComplete }: { onComplete: () => void }) {
         <YearBanner year="1795" place="The new Republic of France" />
         <StepDots total={STEPS} index={step} />
       </div>
+      <Ch2Scene step={step} />
 
       {step === 0 && (
         <>

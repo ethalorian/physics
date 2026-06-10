@@ -6,6 +6,7 @@
 
 import { useState } from 'react'
 import { Scene, YearBanner, Narration, Speech, FactBox, NextButton, StepDots, MC, NumQ } from './ui'
+import { Ch0Scene } from './scenes'
 
 const LILLE_AUNE = 0.70   // Flemish ell, meters
 const PARIS_AUNE = 1.19   // Paris aune, meters
@@ -48,6 +49,7 @@ export default function Ch0Market({ onComplete }: { onComplete: () => void }) {
         <YearBanner year="1789" place="The roads of France" />
         <StepDots total={STEPS} index={step} />
       </div>
+      <Ch0Scene step={step} />
 
       {step === 0 && (
         <>

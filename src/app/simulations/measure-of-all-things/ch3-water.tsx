@@ -6,6 +6,7 @@
 
 import { useState } from 'react'
 import { Scene, YearBanner, Narration, FactBox, NextButton, StepDots, MC, NumQ } from './ui'
+import { Ch3Scene } from './scenes'
 
 function CubeBuilder({ onBuilt }: { onBuilt: () => void }) {
   const [side, setSide] = useState(4)
@@ -103,6 +104,7 @@ export default function Ch3Water({ onComplete }: { onComplete: () => void }) {
         <YearBanner year="1795" place="A laboratory in Paris" />
         <StepDots total={STEPS} index={step} />
       </div>
+      <Ch3Scene step={step} />
 
       {step === 0 && (
         <>

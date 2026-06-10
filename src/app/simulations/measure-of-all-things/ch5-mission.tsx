@@ -7,6 +7,7 @@
 
 import { useCallback, useMemo, useState } from 'react'
 import { Scene, YearBanner, Narration, NextButton, MC, NumQ } from './ui'
+import { Ch5Scene } from './scenes'
 import { MASTERY_THRESHOLD } from './types'
 
 type BankItem =
@@ -105,6 +106,10 @@ export default function Ch5Mission({ onFinish, finished, bestScore }: {
   return (
     <Scene>
       <YearBanner year="1799" place="The National Archives, Paris" />
+      <Ch5Scene
+        phase={phase}
+        mastery={Math.max(lastScore ?? 0, bestScore ?? 0) >= MASTERY_THRESHOLD}
+      />
 
       {phase === 'brief' && (
         <>

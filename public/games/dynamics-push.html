@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>PUSH // a dynamics arcade</title>
+<!--
+  PUSH — a dynamics arcade in three acts. Companion cabinet to DESCENT.
+  Single file, no dependencies. Works offline.
+
+  ACT I   THE ALLEY  — impulse shuffleboard: F·Δt, then friction decides
+  ACT II  BREAKAWAY  — static vs kinetic friction, conveyor belts, live control
+  ACT III THE RAMP   — inclines: mg sinθ / mg cosθ, slide-back, the valley
+
+  The telemetry star is a LIVE FREE-BODY DIAGRAM: weight, normal, applied,
+  friction — arrows scaled in newtons, recomputed every frame. The F–t graph
+  shows static friction exactly mirroring the applied force until it hits the
+  μsN ceiling and the crate breaks loose.
+
+  Speaks the arcade bridge protocol (see docs/ARCADE_PATTERN.md): embedded at
+  /arcade/push a run costs XP; opened raw it is free practice, never ranked.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#fb923c; --neon2:#5eead4; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#100c08ee; --edge:#fb923c55;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#0a0705}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #fb923c22, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #fb923c88}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #fb923c66;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:var(--neon2)} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#1a0c04;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #fb923c66;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#1c1208;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#241808}
+  .choice.right{background:#0c2a22;border-color:var(--neon2);color:var(--neon2)}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #5eead455;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#171008;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const D2R=Math.PI/180, G=9.8;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('push2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('push2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('push2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('push2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false,pushGain=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator();o.type='sawtooth';o.frequency.value=33;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=160;
+  pushGain=AC.createGain();pushGain.gain.value=0;
+  o.connect(lp);lp.connect(pushGain);pushGain.connect(AC.destination);o.start();}catch(e){}}
+function setPushSound(on){if(!AC||!pushGain)return;
+  pushGain.gain.setTargetAtTime(on&&!muted?0.06:0,AC.currentTime,0.05);}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function boom(){if(!AC||muted)return;const len=AC.sampleRate*0.6,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+  const s=AC.createBufferSource();s.buffer=buf;const g=AC.createGain();g.gain.value=.45;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=350;
+  s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'push-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== level data
+   Terrain = segments along the track: {len(m), ang(deg, + = uphill in +s),
+   mus, muk, belt(m/s, surface velocity), kind: concrete|ice|sand|belt|dock}.
+   zone:[a,b] = success span (s meters). red:[a,b] = instant-fail span.
+   Act 1: shots + dtMax (impulse mode). Acts 2/3: battery (N·s of push). */
+const ACT_META={
+ 1:{name:'THE ALLEY', col:'#5eead4', blurb:'Impulse shuffleboard. One push — force × time — then friction owns your crate. Stop it in the zone.'},
+ 2:{name:'BREAKAWAY', col:'#fbbf24', blurb:'Live control. Static friction holds until you out-push it — then the lurch. Belts, ice, and a battery that always runs dry.'},
+ 3:{name:'THE RAMP',  col:'#f472b6', blurb:'Inclines. Gravity gets a component along the track and it never gets tired. Park on the high ground.'},
+};
+function seg(len,ang,mus,muk,kind,belt){return{len,ang:ang||0,mus,muk,kind:kind||'concrete',belt:belt||0};}
+const ACT1=[
+ {name:'WAREHOUSE 7', m:10, F:200, dtMax:2.0, shots:3, assist:true,
+  segs:[seg(44,0,.25,.20)], zone:[24,28], red:null, vcrash:6,
+  tip:'Your push lasts Δt seconds: v ≈ (F−f)·Δt/m. After that, only friction acts — a constant backward force, a constant deceleration. The v–t graph will be a triangle. Its area is your distance.'},
+ {name:'HEAVY FREIGHT', m:40, F:340, dtMax:2.2, shots:3, assist:true,
+  segs:[seg(40,0,.25,.20)], zone:[21,24.5], red:null, vcrash:6,
+  tip:'Four times the mass: a = F/m says the same push gives a quarter of the acceleration. But once it’s sliding, deceleration is μg — mass cancels! Same speed, same stopping distance, any crate.'},
+ {name:'THE ICE STRIP', m:14, F:220, dtMax:2.0, shots:3, assist:false,
+  segs:[seg(8,0,.25,.20),seg(22,0,.06,.04,'ice'),seg(14,0,.25,.20)], zone:[32,35.5], red:null, vcrash:6,
+  tip:'No assist. Ice barely decelerates (μk = 0.04) — almost Newton’s first law made visible: no net force, no change. Plan the concrete, coast the ice.'},
+ {name:'THE SANDLOT', m:18, F:300, dtMax:2.4, shots:3, assist:false,
+  segs:[seg(12,0,.25,.20),seg(10,0,.65,.55,'sand'),seg(16,0,.25,.20)], zone:[24,27.5], red:null, vcrash:6,
+  tip:'Sand: μk = 0.55. The v–t slope steepens the instant you cross on — watch the friction line jump in the F–t graph. Budget speed for the toll.'},
+ {name:'PATCHWORK', m:22, F:320, dtMax:2.4, shots:3, assist:false,
+  segs:[seg(7,0,.25,.20),seg(7,0,.06,.04,'ice'),seg(7,0,.55,.45,'sand'),seg(7,0,.25,.20),seg(8,0,.06,.04,'ice'),seg(10,0,.25,.20)], zone:[37,40], red:null, vcrash:6,
+  tip:'Five surfaces, one push. Each patch rewrites your deceleration. Read the track like an equation: Σ(2·μ·g·d) of everything you must cross.'},
+];
+const ACT2=[
+ {name:'DOCK 101', m:15, F:130, battery:1600, assist:true,
+  segs:[seg(30,0,.50,.30)], zone:[24,27.5], red:null, vcrash:5,
+  tip:'Hold → to build force. NOTHING moves until you beat static friction: μs·m·g = 73.5 N. Watch the F–t graph — friction copies your push exactly, newton for newton, until the ceiling breaks.'},
+ {name:'THE LURCH', m:30, F:260, battery:2600, assist:true,
+  segs:[seg(32,0,.70,.25)], zone:[26,29.5], red:null, vcrash:5,
+  tip:'μs = 0.70 but μk = 0.25. The instant it breaks away, friction drops by two-thirds and the crate LURCHES. That gap is why pulling heavy furniture starts with a jolt.'},
+ {name:'COLD STORAGE', m:18, F:150, battery:1500, assist:false,
+  segs:[seg(8,0,.50,.30),seg(18,0,.06,.04,'ice'),seg(10,0,.50,.30)], zone:[28,31],
+  red:[34,36], vcrash:5,
+  tip:'Easy to start on ice, nearly impossible to stop. Push BACKWARD to brake — friction alone won’t save you. Past the dock is the red line. Do not cross it.'},
+ {name:'THE BELT', m:16, F:140, battery:1400, assist:false,
+  segs:[seg(8,0,.50,.30),seg(14,0,.45,.35,'belt',2.2),seg(12,0,.50,.30)], zone:[27,30], red:null, vcrash:5,
+  tip:'The belt surface moves at 2.2 m/s. Friction acts on RELATIVE motion: stand still on a moving belt and kinetic friction drags you along. Park on it and it carries you. Use it — it’s free battery.'},
+ {name:'THE GAUNTLET', m:26, F:220, battery:2200, assist:false,
+  segs:[seg(6,0,.60,.30),seg(8,0,.06,.04,'ice'),seg(8,0,.45,.35,'belt',-2),seg(8,0,.50,.30),seg(10,0,.06,.04,'ice'),seg(8,0,.50,.30)], zone:[39,42],
+  red:[44,46], vcrash:5,
+  tip:'Ice, a belt running AGAINST you, more ice, and a red line at the end. Every surface is a different F_net. The FBD is your map.'},
+];
+const ACT3=[
+ {name:'THE GENTLE GRADE', m:15, F:190, battery:2400, assist:true,
+  segs:[seg(8,0,.40,.30),seg(14,12,.40,.30),seg(10,0,.40,.30)], zone:[26,29.5], red:null, vcrash:5,
+  tip:'On the slope, gravity gains a track component: mg·sinθ = 30.6 N, downhill, forever. Your normal force shrinks to mg·cosθ. Watch both arrows tilt in the FBD.'},
+ {name:'STEEPSIDE', m:14, F:210, battery:2600, assist:true,
+  segs:[seg(7,0,.30,.22),seg(13,25,.30,.22),seg(9,0,.30,.22)], zone:[24,27], red:null, vcrash:5,
+  tip:'25° and tanθ > μs: if you rest on this slope, you SLIDE BACK — static friction maxes out below mg·sinθ. There is no parking on Steepside. Commit.'},
+ {name:'GLASS HILL', m:12, F:160, battery:2200, assist:false,
+  segs:[seg(7,0,.40,.30),seg(12,15,.07,.05,'ice'),seg(9,0,.40,.30)], zone:[23,26], red:null, vcrash:5,
+  tip:'An icy ramp: gravity’s component pulls down-slope and friction barely objects. Going up costs everything; coming down is nearly free fall along the track.'},
+ {name:'THE DESCENT', m:20, F:200, battery:1800, assist:false,
+  segs:[seg(6,0,.40,.30),seg(13,-18,.40,.30),seg(11,0,.40,.30)], zone:[23,26.5],
+  red:[28.5,30], vcrash:5,
+  tip:'Downhill, gravity is your engine — and your enemy. Push BACKWARD to brake. The red line at the bottom does not negotiate. Spend battery like brakes, not like fuel.'},
+ {name:'THE VALLEY', m:16, F:185, battery:2000, assist:false,
+  segs:[seg(6,0,.35,.25),seg(9,-15,.35,.25),seg(8,0,.10,.06,'ice'),seg(10,18,.35,.25),seg(7,0,.35,.25)], zone:[35,38.5], red:null, vcrash:6,
+  tip:'Down, across the frozen lake, up the far wall. Let gravity pay for the descent and bank that speed for the climb — energy is force × distance, and your battery is finite.'},
+];
+const SITES=['SECTOR 9','BAY K','SUBLEVEL 4','OUTPOST 12','DEPOT X','PLATFORM 0','VAULT 77'];
+function endless1(w){
+  const m=Math.round(rnd(8,45)),muk=+rnd(.08,.45).toFixed(2),mus=+(muk+rnd(.05,.2)).toFixed(2);
+  const L=Math.round(rnd(40,58));
+  const zc=L*rnd(.55,.8),zw=Math.max(2.5,5-w*.3);
+  return {name:pick(SITES)+' · WAVE '+w, m, F:Math.round(m*rnd(14,22)), dtMax:2.4, shots:3, assist:false,
+    segs:[seg(L,0,mus,muk)], zone:[+(zc-zw/2).toFixed(1),+(zc+zw/2).toFixed(1)], red:null, vcrash:6,
+    tip:'Unmarked freight. The physics shipped with it.'};
+}
+function endless2(w){
+  const m=Math.round(rnd(10,38)),mus=+rnd(.35,.75).toFixed(2),muk=+Math.max(.05,mus-rnd(.15,.35)).toFixed(2);
+  const F=Math.round(mus*m*G*rnd(1.3,1.7));
+  const L=Math.round(rnd(30,44)),zw=Math.max(2.5,4.2-w*.2),zc=L*rnd(.7,.85);
+  const segs=[seg(L*.3,0,mus,muk),seg(L*.4,0,Math.max(.05,mus-.3),Math.max(.03,muk-.2),'ice'),seg(L*.3,0,mus,muk)];
+  return {name:pick(SITES)+' · WAVE '+w, m, F, battery:Math.round(F*rnd(9,12)*Math.max(1.1,1.5-w*.05)), assist:false,
+    segs, zone:[+(zc-zw/2).toFixed(1),+(zc+zw/2).toFixed(1)],
+    red:w>1?[+(zc+zw/2+1.5).toFixed(1),+(zc+zw/2+3.5).toFixed(1)]:null, vcrash:5,
+    tip:'Deep storage. Mind the lurch.'};
+}
+function endless3(w){
+  const m=Math.round(rnd(10,24)),mu=+rnd(.2,.4).toFixed(2),muk=+Math.max(.05,mu-.1).toFixed(2);
+  const th=Math.round(rnd(10,26)),up=Math.random()<.6;
+  const need=m*G*Math.sin(th*D2R)+muk*m*G*Math.cos(th*D2R);
+  const F=Math.round(need*rnd(1.5,1.9));
+  const ramp=Math.round(rnd(10,15));
+  const segs=up?[seg(7,0,mu,muk),seg(ramp,th,mu,muk),seg(9,0,mu,muk)]
+              :[seg(6,0,mu,muk),seg(ramp,-th,mu,muk),seg(11,0,mu,muk)];
+  const L=segs.reduce((s,x)=>s+x.len,0),zw=Math.max(2.5,4-w*.2);
+  return {name:pick(SITES)+' · WAVE '+w, m, F, battery:Math.round(F*rnd(11,14)*Math.max(1.1,1.5-w*.05)), assist:false,
+    segs, zone:[+(L-9).toFixed(1),+(L-9+zw).toFixed(1)], red:up?null:[+(L-2.5).toFixed(1),+L.toFixed(1)], vcrash:6,
+    tip:'Uncharted grade. Gravity never sleeps.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let crate={s:0,v:0,fapp:0}, battery=0, shotsUsed=0, aim={F:100,dt:1.0};
+let pushL=false,pushR=false, settleT=0, parkT=0, attemptT=0;
+let marks=[], t=0, samples=[], lastSamp=-1, acc=0;
+let particles=[], popups=[], shake=0, flash=0, timeScale=1, landedOK=false, downTimer=0, lastResult=null;
+let primary=null, lastTickS=-1;
+let TRACK={segs:[],nodes:[],S:0};
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||26,t:0,
+  x:rnd(-20,20),y:rnd(-10,10)});}
+
+/* ================================================== terrain */
+function buildTrack(){
+  TRACK={segs:lv.segs,nodes:[],S:0};
+  let x=0,y=0,s=0;
+  TRACK.nodes.push({s,x,y});
+  for(const sg of lv.segs){
+    const th=sg.ang*D2R;
+    x+=sg.len*Math.cos(th);y+=sg.len*Math.sin(th);s+=sg.len;
+    TRACK.nodes.push({s,x,y});
+  }
+  TRACK.S=s;
+}
+function segAt(s){
+  let a=0;
+  for(const sg of TRACK.segs){if(s<=a+sg.len)return sg;a+=sg.len;}
+  return TRACK.segs[TRACK.segs.length-1];
+}
+function posAt(s){
+  s=clamp(s,0,TRACK.S);
+  let a=0;
+  for(let i=0;i<TRACK.segs.length;i++){
+    const sg=TRACK.segs[i];
+    if(s<=a+sg.len){
+      const f=(s-a)/sg.len,n0=TRACK.nodes[i],n1=TRACK.nodes[i+1];
+      return {x:n0.x+(n1.x-n0.x)*f,y:n0.y+(n1.y-n0.y)*f,ang:sg.ang*D2R};
+    }
+    a+=sg.len;
+  }
+  const n=TRACK.nodes[TRACK.nodes.length-1];
+  return {x:n.x,y:n.y,ang:0};
+}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];buildTrack();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>PUSH</h1>
+     <div class="tag">A DYNAMICS ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       Nothing moves until something pushes. <b style="color:var(--ink)">F = ma decides the rest.</b><br><br>
+       <b style="color:#5eead4">ACT I — THE ALLEY</b> &nbsp;one push, then friction owns it<br>
+       <b style="color:#fbbf24">ACT II — BREAKAWAY</b> &nbsp;beat static friction, mind the lurch<br>
+       <b style="color:#f472b6">ACT III — THE RAMP</b> &nbsp;gravity gets a component<br><br>
+       The live FREE-BODY DIAGRAM on the right is the real game.
+       Four arrows. Learn to read them and crates start obeying.<br><br>
+       <span class="kbd">P</span> pause &nbsp; <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — ALLEY ${HIS[1].toLocaleString()} · BREAKAWAY ${HIS[2].toLocaleString()} · RAMP ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE LOADING FLOOR</h2>
+     <div class="sub">Pick your shift. Each act is a chapter of the dynamics unit.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE FLOOR</button></div>`);
+    primary=select_;
+  });
+}
+function showMission(level){
+  lv=level;state='mission';buildTrack();
+  const th=Math.max(...lv.segs.map(s=>Math.abs(s.ang)));
+  let params='',controls='';
+  if(act===1){
+    params=`crate <b>${lv.m} kg</b> · max push <b>${lv.F} N</b> for up to <b>${fmt(lv.dtMax)} s</b>
+      · <b>${lv.shots} shots</b> · zone at <b>${fmt(lv.zone[0])}–${fmt(lv.zone[1])} m</b>`;
+    controls=`<span class="kbd">←</span><span class="kbd">→</span> force · <span class="kbd">↑</span><span class="kbd">↓</span> push time · <span class="kbd">SPACE</span> to SHOVE.`;
+  }else{
+    params=`crate <b>${lv.m} kg</b> · thrusters <b>${lv.F} N</b> · battery <b>${lv.battery} N·s</b>
+      · dock at <b>${fmt(lv.zone[0])}–${fmt(lv.zone[1])} m</b>
+      ${th?` · grade up to <b>${Math.round(th)}°</b>`:''}
+      ${lv.red?` · <b style="color:var(--red)">red line at ${fmt(lv.red[0])} m</b>`:''}`;
+    controls=`Hold <span class="kbd">→</span> to push forward, <span class="kbd">←</span> to push back (brake). Park it INSIDE the dock and let go.`;
+  }
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:30px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">${controls}</div>
+     <button class="btn" onclick="launch()">${act===1?'⌖ TO THE LINE':'▶ CLOCK IN'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;samples=[];lastSamp=-1;particles=[];popups=[];shake=0;flash=0;acc=0;timeScale=1;
+  crate={s:1.2,v:0,fapp:0};settleT=0;parkT=0;attemptT=0;lastTickS=-1;
+  pushL=pushR=false;
+  hideOverlay();
+  if(act===1){
+    if(state==='mission'||shotsUsed>=lv.shots)shotsUsed=0,marks=[];
+    aim={F:Math.round(lv.F*0.6),dt:+(lv.dtMax*0.5).toFixed(1)};
+    state='aim';
+  }else{
+    battery=lv.battery;
+    state='play';
+  }
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;timeScale=1;
+  setPushSound(false);
+  const z0=lv.zone[0],z1=lv.zone[1],center=(z0+z1)/2,hw=(z1-z0)/2;
+  const err=Math.abs(crate.s-center)/hw;
+  const mult=Math.min(3,streak);
+  let tier,base;
+  if(err<=0.2){tier='BULLSEYE';base=act===1?1500:900;}
+  else if(err<=0.55){tier='GREAT';base=act===1?1000:650;}
+  else {tier='CLEAN';base=act===1?700:480;}
+  let bonus=0,bonusTxt='';
+  if(act===1){
+    base=Math.round(base*[1,.65,.4][Math.min(2,shotsUsed)]);
+    if(shotsUsed===0&&tier==='BULLSEYE'){bonus+=500;bonusTxt='PERFECT PUSH +500';}
+  }else{
+    bonus+=Math.round((battery/lv.battery)*400);
+    if(lv.red){const d=lv.red[0]-crate.s;
+      if(d>=0&&d<3){const dd=Math.round((1-d/3)*400);bonus+=dd;bonusTxt=`DAREDEVIL +${dd}`;}}
+  }
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,err,stop:crate.s,shot:shotsUsed+1,bonusTxt,
+    battFrac:act===1?null:battery/lv.battery};
+  score+=pts;bumpHi();
+  popup(tier+'!','#5eead4',40);if(bonusTxt)setTimeout(()=>popup(bonusTxt,'#fbbf24',24),350);
+  chord(tier==='BULLSEYE'?[659,830,988,1318]:[523,659,784,1046]);
+  for(let i=0;i<40;i++)particles.push({s:crate.s,h:0.6,vs:rnd(-5,5),vh:rnd(2,9),
+    life:rnd(.5,1.3),col:pick(['#5eead4','#fbbf24','#f472b6']),size:rnd(2,4)});
+}
+function failAttempt(msg){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;timeScale=1;
+  setPushSound(false);boom();
+  lastResult={failMsg:msg,stop:crate.s};
+  popup(msg,'#f87171',30);
+  for(let i=0;i<60;i++)particles.push({s:crate.s,h:0.5,vs:rnd(-9,9),vh:rnd(0,10),
+    life:rnd(.4,1.4),col:pick(['#f87171','#fbbf24','#fb923c','#fff']),size:rnd(2,5)});
+}
+function nextShot(){ // act 1 miss with shots remaining
+  marks.push(crate.s);shotsUsed++;
+  beep(170,.25,'sawtooth',.16,-60);shake=.35;
+  popup(['SHORT!','LONG!'][crate.s<lv.zone[0]?0:1],'#f87171',26);
+  crate={s:1.2,v:0,fapp:0};t=0;samples=[];lastSamp=-1;settleT=0;timeScale=1;lastTickS=-1;
+  state='aim';
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    let body='';
+    if(act===1)body=`
+       <div class="stat"><span>Precision</span><b class="good">${r.tier} — stopped at ${fmt(r.stop)} m (zone ${fmt(lv.zone[0])}–${fmt(lv.zone[1])})</b></div>
+       <div class="stat"><span>Shot</span><b>${r.shot} of ${lv.shots}</b></div>
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="sub" style="margin-top:10px">The v–t graph tells the whole story: a sharp rise while you pushed, then a straight slide down — constant friction, constant deceleration. The area under it is exactly where the crate sits.</div>`;
+    else body=`
+       <div class="stat"><span>Precision</span><b class="good">${r.tier} — parked at ${fmt(r.stop)} m</b></div>
+       <div class="stat"><span>Battery left</span><b>${Math.round(r.battFrac*100)}%</b></div>
+       ${r.bonusTxt?`<div class="stat"><span>Bonus</span><b>${r.bonusTxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="sub" style="margin-top:10px">Parked means equilibrium: every arrow in the FBD cancels. ΣF = 0 isn’t "no forces" — it’s a tug-of-war nobody is winning.</div>`;
+    overlay(`
+     <div class="card">
+       <h2 class="good">${act===1?'IN THE ZONE':'DOCKED'} — ${lv.name}</h2>
+       ${body}
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg||'CARGO LOST'}</h2>
+       <div class="sub">${failHint()}</div>
+       <div class="stat"><span>Crates left</span><b>${'■ '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">BACK TO WORK</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function failHint(){
+  if(act===1)return 'Use your skid marks — every miss is data. Stopping distance scales with v², and v scales with (F−f)·Δt/m. Bracket it like a pro.';
+  if(act===3)return 'On a slope the FBD never rests: mg·sinθ pulls down-track even while you think. Brake early going down; keep pushing going up.';
+  return 'Static friction sets the price of motion; kinetic friction sets the price of stopping. Push backward to brake — and watch the battery.';
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — BREAKAWAY unlocked.</b> Time to fight static friction in person.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f472b6">ACT III — THE RAMP unlocked.</b> Gravity wants a word.';}
+  else if(act===3)unlockMsg='<b style="color:#5eead4">You have completed the dynamics campaign.</b> Crates everywhere fear you.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS SHIFT</button>
+     <button class="btn alt" onclick="select_()">THE FLOOR</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>SHIFT TERMINATED</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">Friction is undefeated. But now you know its rates.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">THE FLOOR</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>{const F=pick([60,90,120,150]),m=pick([10,15,20,30]);
+     return qNum(`A ${F} N net force acts on a ${m} kg crate. What is its acceleration?`,
+       F/m,'m/s²',[m/F,F*m/100,F/m/2],
+       `a = F_net/m = ${F}/${m} = ${fmt(F/m)} m/s². Newton's second law — the whole game in one line.`);},
+   ()=>{const mu=pick([0.2,0.3,0.4,0.5]);
+     return qNum(`A crate slides freely with μk = ${mu}. What is the magnitude of its deceleration? (g = 9.8)`,
+       mu*G,'m/s²',[mu,G,mu*G/2],
+       `f = μk·m·g, so a = f/m = μk·g = ${mu} × 9.8 = ${fmt(mu*G)} m/s². The mass cancels — every crate slows the same on this floor.`);},
+   ()=>{const v=pick([4,6,8]),mu=pick([0.2,0.25,0.4]);
+     return qNum(`A crate is sliding at ${v} m/s on a floor with μk = ${mu}. How far does it slide before stopping?`,
+       v*v/(2*mu*G),'m',[v/(mu*G),v*v/(mu*G),v*mu*G],
+       `v² = 2·a·d with a = μk·g → d = v²/(2μk·g) = ${v}²/(2·${mu}·9.8) = ${fmt(v*v/(2*mu*G))} m.`);},
+   ()=>qCon('A crate slides onto a PERFECTLY frictionless floor. With no one touching it, the crate will…',
+     'keep moving at constant velocity forever',['gradually slow and stop','speed up','stop immediately'],
+     'Newton’s first law. Things don’t "run out" of motion — they only change velocity when a net force acts. The ice strip is this law, almost.'),
+   ()=>qCon('Two crates get the IDENTICAL push (same force, same time). Crate B has twice the mass of crate A. Just after the push…',
+     'B moves at half of A’s speed',['B moves at the same speed','B moves at twice A’s speed','B doesn’t move at all'],
+     'Same F·Δt means same momentum change: m·v is equal, so double m → half v. Inertia is the price tag on motion.'),
+   ()=>qCon('A 10 kg crate and a 40 kg crate slide across the same floor at the SAME speed. Which stops in a shorter distance?',
+     'neither — identical stopping distance',['the 10 kg crate','the 40 kg crate','depends on their material'],
+     'Friction force grows with mass (f = μmg) but so does inertia (ma). They cancel: a = μg for both. Distance = v²/2μg — no m anywhere.'),
+  ];
+  const bank2=[
+   ()=>{const m=pick([12,20,25]),mus=pick([0.4,0.5,0.6]);
+     return qNum(`A ${m} kg crate sits on a floor with μs = ${mus}. What minimum force starts it moving? (g = 9.8)`,
+       mus*m*G,'N',[mus*m,m*G,mus*G],
+       `Breakaway: F > μs·N = μs·m·g = ${mus} × ${m} × 9.8 = ${fmt(mus*m*G)} N. One newton less and it sits there forever.`);},
+   ()=>{const m=pick([15,20]),mus=0.5,F=Math.round(mus*m*G*0.6);
+     return qNum(`That ${m} kg crate (μs = 0.5) is being pushed with only ${F} N — not enough to move it. What is the friction force right now?`,
+       F,'N',[mus*m*G,0,m*G],
+       `Static friction is a MATCHER, not a constant: it equals your push exactly (${F} N) until you exceed its ceiling of μs·m·g = ${fmt(mus*m*G)} N. Watch the F–t graph do this live.`);},
+   ()=>qCon('Why does a heavy crate LURCH forward the moment it starts moving?',
+     'static friction (holding it) is stronger than kinetic friction (once moving)',['kinetic friction is stronger than static','the crate stores up force','your push gets stronger automatically'],
+     'μs > μk. The instant it breaks away, the opposing force DROPS, so the same push suddenly has leftover net force. That surplus is the lurch.'),
+   ()=>qCon('A crate rides a conveyor belt moving at CONSTANT velocity, moving with the belt. The friction force on the crate is…',
+     'zero',['kinetic, pointing forward','static, pointing backward','equal to μs·mg'],
+     'Constant velocity → ΣF = 0. No other horizontal force acts, so friction must be zero too. Friction only acts when something needs resisting — or accelerating.'),
+   ()=>qCon('A crate sits on a belt that suddenly ACCELERATES forward. The friction on the crate points…',
+     'forward — friction is what accelerates the crate',['backward — friction always opposes motion','nowhere; friction is zero','downward'],
+     'Friction opposes RELATIVE sliding, not motion itself. The belt slides backward under the crate, so friction on the crate points forward. Friction is the engine here.'),
+   ()=>{const m=pick([16,24]),muk=pick([0.3,0.35]);
+     return qNum(`A ${m} kg crate slides while you push it. What is the kinetic friction force? (μk = ${muk}, g = 9.8)`,
+       muk*m*G,'N',[muk*m,m*G,muk*G*10],
+       `f_k = μk·N = μk·m·g = ${muk} × ${m} × 9.8 = ${fmt(muk*m*G)} N — constant while sliding, no matter how hard you push.`);},
+  ];
+  const bank3=[
+   ()=>{const m=pick([10,14,20]),th=pick([30,37,53]);
+     return qNum(`A ${m} kg crate rests on a ${th}° ramp. What is gravity's component ALONG the ramp? (g = 9.8)`,
+       m*G*Math.sin(th*D2R),'N',[m*G*Math.cos(th*D2R),m*G,m*G*Math.tan(th*D2R)],
+       `F_along = mg·sinθ = ${m} × 9.8 × sin${th}° = ${fmt(m*G*Math.sin(th*D2R))} N. It pulls down-track the entire time you're on the slope.`);},
+   ()=>qCon('On a ramp, the normal force on the crate is…',
+     'less than its weight: N = mg·cosθ',['equal to its weight','greater than its weight','zero unless it moves'],
+     'The surface only pushes back against the component of weight pressing INTO it: mg·cosθ. Tilt the floor and the normal arrow shrinks — watch it in the FBD.'),
+   ()=>qCon('A crate rests on a slope. It will start sliding down on its own when…',
+     'tanθ exceeds μs',['θ exceeds 45° exactly','its mass is large enough','μk exceeds μs'],
+     'Slide-back: mg·sinθ > μs·mg·cosθ → tanθ > μs. Mass cancels — Steepside betrays every crate equally.'),
+   ()=>{const m=pick([12,15]),th=30,muk=0.2;
+     const F=m*G*(Math.sin(th*D2R)+muk*Math.cos(th*D2R));
+     return qNum(`Pushing a ${m} kg crate UP a ${th}° ramp at CONSTANT velocity (μk = ${muk}). How hard are you pushing?`,
+       F,'N',[m*G*Math.sin(th*D2R),m*G,muk*m*G],
+       `Constant v → ΣF = 0: F = mg·sinθ + μk·mg·cosθ = ${fmt(m*G*Math.sin(th*D2R))} + ${fmt(muk*m*G*Math.cos(th*D2R))} = ${fmt(F)} N. You pay gravity AND friction.`);},
+   ()=>{const m=pick([10,16]),th=pick([30,37]);
+     return qNum(`On a FRICTIONLESS ${th}° ramp, what force (along the ramp) holds a ${m} kg crate still?`,
+       m*G*Math.sin(th*D2R),'N',[m*G,m*G*Math.cos(th*D2R),m*G/2],
+       `Just balance the track component: F = mg·sinθ = ${fmt(m*G*Math.sin(th*D2R))} N. The ramp's normal force handles the rest of the weight for free.`);},
+   ()=>qCon('You push a crate UP a ramp; going up, friction points…',
+     'down the ramp — opposing the crate’s sliding',['up the ramp, helping you','horizontally','nowhere; ramps have no friction'],
+     'Kinetic friction opposes relative sliding. Moving up-track → friction acts down-track, teaming up with mg·sinθ against you. Coming down, friction switches sides.'),
+  ];
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag">PHYSICS BONUS · +750</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== physics */
+const DT=1/120;
+let lastPushOn=false;
+function fire1(){ // act 1: commit the shove
+  if(state!=='aim')return;
+  t=0;samples=[];lastSamp=-1;settleT=0;lastTickS=-1;
+  state='play';
+  beep(220,.15,'square',.16,260);shake=.3;
+  popup(aim.F+' N × '+fmt(aim.dt)+' s','#5eead4',20);
+}
+function step(dt){
+  const sg=segAt(crate.s), th=sg.ang*D2R, m=lv.m;
+  const N=m*G*Math.cos(th);
+  const grav=-m*G*Math.sin(th);
+  let F=0;
+  if(act===1)F=(t<aim.dt)?aim.F:0;
+  else{
+    if(pushR&&battery>0)F+=lv.F;
+    if(pushL&&battery>0)F-=lv.F;
+    if(F!==0)battery=Math.max(0,battery-Math.abs(F)*dt);
+  }
+  crate.fapp=F;
+  const pushOn=F!==0;
+  if(pushOn!==lastPushOn){setPushSound(pushOn);lastPushOn=pushOn;}
+  const belt=sg.belt||0, vr=crate.v-belt;
+  let ffric,a;
+  const still=Math.abs(vr)<0.03;
+  if(still){
+    const needed=F+grav, fmax=sg.mus*N;
+    if(Math.abs(needed)<=fmax){ffric=-needed;a=0;crate.v=belt;}
+    else{ // breakaway! the lurch
+      ffric=-Math.sign(needed)*sg.muk*N;
+      a=(F+grav+ffric)/m;
+      if(act!==1&&Math.abs(crate.v)<0.05){shake=Math.max(shake,.35);
+        beep(90,.18,'sawtooth',.2,120);popup('BREAKAWAY!','#fbbf24',24);}
+    }
+  }else{
+    ffric=-Math.sign(vr)*sg.muk*N;
+    a=(F+grav+ffric)/m;
+  }
+  crate.v+=a*dt;crate.s+=crate.v*dt;
+  // walls
+  if(crate.s<0.6||crate.s>TRACK.S-0.6){
+    crate.s=clamp(crate.s,0.6,TRACK.S-0.6);
+    if(Math.abs(crate.v)>lv.vcrash){failAttempt('WALL IMPACT');return;}
+    if(Math.abs(crate.v)>0.5)beep(120,.1,'square',.12);
+    crate.v*=-0.25;
+  }
+  if(lv.red&&crate.s>=lv.red[0]&&crate.s<=lv.red[1]){failAttempt('RED LINE CROSSED');return;}
+  t+=dt;
+  if(t-lastSamp>=1/30){samples.push({t,v:crate.v,fapp:F,ffric,a,fsmax:sg.mus*N});
+    lastSamp=t;if(samples.length>6000)samples.shift();}
+  // surface juice
+  const speed=Math.abs(vr);
+  if(speed>0.6&&Math.random()<speed*0.06){
+    const col=sg.kind==='ice'?'#bfeaff':sg.kind==='sand'?'#d8b46a':'#9ca3af';
+    particles.push({s:crate.s+rnd(-.4,.4),h:0.05,vs:-Math.sign(crate.v)*rnd(1,3),vh:rnd(.5,2.5),
+      life:rnd(.2,.6),col,size:rnd(1.5,3)});}
+  if(pushOn&&speed<0.05&&Math.random()<.3) // straining against static friction
+    particles.push({s:crate.s+(F>0?-0.7:0.7),h:0.1,vs:(F>0?-1:1)*rnd(.5,2),vh:rnd(.5,2),
+      life:rnd(.15,.4),col:'#fb923c',size:2});
+  // slow-mo drama: the long coast toward the zone (act 1)
+  if(act===1&&F===0&&speed>0.05){
+    const center=(lv.zone[0]+lv.zone[1])/2;
+    const closing=(crate.v>0&&crate.s<center)||(crate.v<0&&crate.s>center);
+    timeScale=(closing&&Math.abs(center-crate.s)<8&&speed<2.4)?0.35:1;
+  }else if(act===1)timeScale=1;
+  // meter ticks with rising pitch during the drama
+  const ms=Math.floor(crate.s);
+  if(ms!==lastTickS&&speed>0.05){lastTickS=ms;
+    if(timeScale<1){const center=(lv.zone[0]+lv.zone[1])/2;
+      const prox=clamp(1-Math.abs(center-crate.s)/10,0,1);
+      beep(280+prox*560,.05,'square',.07);}}
+  // settle / park
+  const resting=Math.abs(vr)<0.03&&Math.abs(crate.v)<0.03;
+  if(act===1){
+    if(resting&&F===0){settleT+=dt;
+      if(settleT>0.5){timeScale=1;
+        if(crate.s>=lv.zone[0]&&crate.s<=lv.zone[1])succeed();
+        else if(shotsUsed<lv.shots-1)nextShot();
+        else failAttempt('OUT OF SHOTS');
+      }
+    }else settleT=0;
+  }else{
+    const inZone=crate.s>=lv.zone[0]&&crate.s<=lv.zone[1];
+    if(resting&&F===0){
+      if(inZone){parkT+=dt;if(parkT>0.8)succeed();}
+      else if(battery<=0){settleT+=dt;if(settleT>1.2)failAttempt('BATTERY DEAD');}
+    }else{parkT=0;settleT=0;}
+    attemptT+=dt;
+    if(attemptT>120)failAttempt('SHIFT EXPIRED');
+  }
+}
+
+/* ================================================== render */
+const BGS={1:['#06090c','#0d181c'],2:['#0c0905','#1c1208'],3:['#0b0610','#190f22']};
+let VIEW={x0:0,y0:0,k:1};
+/* scene dressing — each act looks like the place its physics lives in */
+function drawBackdrop(SW,now){
+  const horizon=H*0.60;
+  if(act===1){ // WAREHOUSE: shelving racks stacked with freight, hanging lamps
+    ctx.fillStyle='#0a0e12';ctx.fillRect(0,0,SW,horizon);
+    for(let i=0;i<5;i++){
+      const rx=(i*0.21+0.02)*SW, rw=SW*0.17, ry=H*0.14, rh=H*0.40;
+      ctx.strokeStyle='#1b2531';ctx.lineWidth=3;ctx.strokeRect(rx,ry,rw,rh);
+      for(let s=1;s<=2;s++){ctx.beginPath();ctx.moveTo(rx,ry+rh*s/3);ctx.lineTo(rx+rw,ry+rh*s/3);ctx.stroke();}
+      ctx.lineWidth=1;
+      for(let s=0;s<3;s++)for(let b=0;b<3;b++)if((i*7+s*3+b)%3!==0){
+        ctx.fillStyle=['#16222b','#1a2630','#142028'][(i+s+b)%3];
+        ctx.fillRect(rx+5+b*(rw/3),ry+rh*(s+1)/3-16,rw/3-8,14);}
+    }
+  }else if(act===2){ // LOADING DOCK: roller doors, dock numbers, caution stripes
+    ctx.fillStyle='#100c07';ctx.fillRect(0,0,SW,horizon);
+    for(let i=0;i<4;i++){
+      const dx=(i*0.26+0.03)*SW, dw=SW*0.2, dy=H*0.16, dh=H*0.36;
+      ctx.fillStyle='#181208';ctx.fillRect(dx,dy,dw,dh);
+      ctx.strokeStyle='#241c10';
+      for(let s=1;s<6;s++){ctx.beginPath();ctx.moveTo(dx,dy+dh*s/6);ctx.lineTo(dx+dw,dy+dh*s/6);ctx.stroke();}
+      ctx.strokeStyle='#2c2210';ctx.strokeRect(dx,dy,dw,dh);
+      ctx.fillStyle='#fbbf2433';ctx.font='700 18px Orbitron,monospace';ctx.textAlign='center';
+      ctx.fillText(String(i+4),dx+dw/2,dy-8);ctx.textAlign='left';
+      ctx.fillStyle='#fbbf2422';
+      for(let s=0;s<5;s++)ctx.fillRect(dx+s*dw/5,dy+dh+6,dw/10,5);
+    }
+  }else{ // RAMP FACILITY: mountain silhouette, support trusses under the grade
+    ctx.fillStyle='#0d0813';ctx.fillRect(0,0,SW,horizon);
+    ctx.fillStyle='#160d20';
+    ctx.beginPath();ctx.moveTo(0,horizon);
+    ctx.lineTo(SW*0.2,H*0.30);ctx.lineTo(SW*0.38,H*0.44);ctx.lineTo(SW*0.6,H*0.18);
+    ctx.lineTo(SW*0.8,H*0.4);ctx.lineTo(SW,H*0.26);ctx.lineTo(SW,horizon);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#1f1430';
+    ctx.beginPath();ctx.moveTo(0,horizon);
+    ctx.lineTo(SW*0.3,H*0.46);ctx.lineTo(SW*0.55,H*0.52);ctx.lineTo(SW*0.85,H*0.42);
+    ctx.lineTo(SW,horizon);ctx.closePath();ctx.fill();
+  }
+  // hanging lamps with flicker
+  for(let i=0;i<4;i++){
+    const lx=(i*0.27+0.12)*SW;
+    ctx.strokeStyle='#ffffff18';
+    ctx.beginPath();ctx.moveTo(lx,0);ctx.lineTo(lx,34);ctx.stroke();
+    const on=Math.sin(now*2+i*2.4)>-0.92;
+    ctx.fillStyle=on?'#fde68a':'#574e2c';
+    ctx.beginPath();ctx.arc(lx,38,4,0,7);ctx.fill();
+    if(on){const g=ctx.createLinearGradient(0,38,0,H*0.55);
+      g.addColorStop(0,'#fde68a14');g.addColorStop(1,'#fde68a00');
+      ctx.fillStyle=g;
+      ctx.beginPath();ctx.moveTo(lx-4,40);ctx.lineTo(lx+4,40);
+      ctx.lineTo(lx+50,H*0.55);ctx.lineTo(lx-50,H*0.55);ctx.closePath();ctx.fill();}
+  }
+}
+function sceneRect(){const pw=Math.min(420,W*0.37);return {w:W-pw,pw};}
+function world2px(s,h){ // s along track, h above surface (m)
+  const p=posAt(s);
+  const nx=-Math.sin(p.ang),ny=Math.cos(p.ang);
+  return {x:VIEW.x0+(p.x+nx*h)*VIEW.k,y:VIEW.y0-(p.y+ny*h)*VIEW.k,ang:p.ang};
+}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*12,rnd(-1,1)*shake*12);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  const B=BGS[act]||BGS[1];bg.addColorStop(0,B[0]);bg.addColorStop(1,B[1]);
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  drawBackdrop(SW,now);
+  // view transform
+  let minX=1e9,maxX=-1e9,minY=1e9,maxY=-1e9;
+  for(const n of TRACK.nodes){minX=Math.min(minX,n.x);maxX=Math.max(maxX,n.x);
+    minY=Math.min(minY,n.y);maxY=Math.max(maxY,n.y);}
+  VIEW.k=Math.min((SW-90)/Math.max(1,maxX-minX),(H*0.42)/Math.max(6,maxY-minY));
+  VIEW.x0=45-minX*VIEW.k;
+  VIEW.y0=H-150+minY*VIEW.k+ (maxY-minY)*VIEW.k*0.5;
+  const now=performance.now()/1000;
+  // track segments
+  let s0=0;
+  for(const sg of TRACK.segs){
+    const a=world2px(s0,0),b=world2px(s0+sg.len,0);
+    // fill to floor
+    ctx.fillStyle='#11151a';
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+    ctx.lineTo(b.x,H);ctx.lineTo(a.x,H);ctx.closePath();ctx.fill();
+    const col=sg.kind==='ice'?'#7fd4f0':sg.kind==='sand'?'#b08b4a':sg.kind==='belt'?'#566070':'#4a5260';
+    ctx.strokeStyle=col;ctx.lineWidth=5;
+    ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+    if(sg.kind==='ice'){ // glassy sheet: glare line + frozen sparkles
+      ctx.strokeStyle='#e8f8ff88';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(a.x,a.y-3);ctx.lineTo(b.x,b.y-3);ctx.stroke();
+      ctx.fillStyle='#ffffff';
+      for(let d=1;d<sg.len;d+=2.3){const p=world2px(s0+d,0.12);
+        ctx.globalAlpha=.25+.55*Math.abs(Math.sin(now*2+d*3));
+        ctx.fillRect(p.x,p.y,1.6,1.6);}
+      ctx.globalAlpha=1;
+    }else if(sg.kind==='sand'){ // grit mounds
+      ctx.fillStyle='#8a6a35';
+      for(let d=0.5;d<sg.len;d+=0.9){const p=world2px(s0+d,0.04);
+        ctx.beginPath();ctx.ellipse(p.x,p.y,3.4,1.6,-p.ang,0,7);ctx.fill();}
+    }else if(sg.kind==='belt'){ // roller drums under the surface
+      ctx.strokeStyle='#2b3340';ctx.fillStyle='#1c222c';
+      for(let d=1;d<sg.len;d+=2.2){const p=world2px(s0+d,-0.35);
+        ctx.beginPath();ctx.arc(p.x,p.y,5,0,7);ctx.fill();ctx.stroke();
+        const ra=now*sg.belt*1.4+d;
+        ctx.beginPath();ctx.moveTo(p.x-4*Math.cos(ra),p.y-4*Math.sin(ra));
+        ctx.lineTo(p.x+4*Math.cos(ra),p.y+4*Math.sin(ra));ctx.stroke();}
+    }else{ // concrete: expansion seams
+      ctx.strokeStyle='#00000055';
+      for(let d=2;d<sg.len;d+=2.5){const p=world2px(s0+d,0);
+        ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x,p.y+4);ctx.stroke();}
+    }
+    if(sg.kind==='belt'){ // animated chevrons show belt motion
+      const n=Math.floor(sg.len/1.6),off=((now*sg.belt)%1.6+1.6)%1.6;
+      ctx.fillStyle='#fbbf24';
+      for(let i=0;i<n;i++){const ss=s0+((i*1.6+off)%sg.len);
+        const p=world2px(ss,0.12);
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-p.ang);
+        ctx.beginPath();ctx.moveTo(-4,2);ctx.lineTo(Math.sign(sg.belt)*5,0);ctx.lineTo(-4,-2);
+        ctx.closePath();ctx.fill();ctx.restore();}}
+    ctx.lineWidth=1;
+    s0+=sg.len;
+  }
+  // ruler every 5 m
+  ctx.fillStyle='#ffffff44';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+  for(let mm=5;mm<TRACK.S;mm+=5){const p=world2px(mm,-0.5);
+    ctx.fillRect(p.x-0.5,p.y-3,1,6);ctx.fillText(mm+'',p.x,p.y+14);}
+  ctx.textAlign='left';
+  // zone: a teal spotlight column pouring onto the target span — no floating text
+  {const a=world2px(lv.zone[0],0),b=world2px(lv.zone[1],0);
+   const glow=.5+.5*Math.sin(now*4);
+   const mid=world2px((lv.zone[0]+lv.zone[1])/2,0);
+   const sg2=ctx.createLinearGradient(0,52,0,mid.y);
+   sg2.addColorStop(0,`rgba(94,234,212,${.16+.08*glow})`);sg2.addColorStop(1,'rgba(94,234,212,0.02)');
+   ctx.fillStyle=sg2;
+   ctx.beginPath();ctx.moveTo(mid.x-9,52);ctx.lineTo(mid.x+9,52);
+   ctx.lineTo(b.x,b.y);ctx.lineTo(a.x,a.y);ctx.closePath();ctx.fill();
+   ctx.fillStyle='#5eead4';ctx.beginPath();ctx.arc(mid.x,48,5,0,7);ctx.fill();
+   ctx.strokeStyle='#ffffff22';ctx.beginPath();ctx.moveTo(mid.x,0);ctx.lineTo(mid.x,44);ctx.stroke();
+   ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+   ctx.fillText(act===1?'ZONE':'DOCK',mid.x,40);ctx.textAlign='left';
+   ctx.strokeStyle=`rgba(94,234,212,${.45+.4*glow})`;ctx.lineWidth=7;
+   ctx.beginPath();ctx.moveTo(a.x,a.y+5);ctx.lineTo(b.x,b.y+5);ctx.stroke();ctx.lineWidth=1;}
+  // red zone
+  if(lv.red){const a=world2px(lv.red[0],0),b=world2px(lv.red[1],0);
+    ctx.strokeStyle='#f87171';ctx.lineWidth=7;ctx.setLineDash([6,5]);
+    ctx.beginPath();ctx.moveTo(a.x,a.y+5);ctx.lineTo(b.x,b.y+5);ctx.stroke();
+    ctx.setLineDash([]);ctx.lineWidth=1;
+    const rm=world2px((lv.red[0]+lv.red[1])/2,1.2);
+    ctx.fillStyle='#f87171';ctx.textAlign='center';ctx.fillText('☠ RED LINE',rm.x,rm.y-22);ctx.textAlign='left';}
+  // walls
+  for(const ws of [0,TRACK.S]){const p=world2px(ws,0);
+    ctx.fillStyle='#272c33';ctx.fillRect(p.x-(ws?0:8),p.y-44,8,46);
+    ctx.fillStyle='#fbbf24';
+    for(let i=0;i<4;i++)ctx.fillRect(p.x-(ws?0:8),p.y-44+i*12,8,5);}
+  // skid marks (act 1 misses)
+  ctx.font='13px "Share Tech Mono",monospace';
+  for(const mk of marks){const p=world2px(mk,0.4);
+    ctx.fillStyle='#f87171aa';ctx.textAlign='center';ctx.fillText('✕',p.x,p.y);ctx.textAlign='left';}
+  // assist: predicted stop marker (aim phase, assist levels)
+  if(act===1&&state==='aim'&&lv.assist){
+    const ps=predictStop();
+    if(ps!==null){const p=world2px(ps,0.9);
+      ctx.strokeStyle='#5eead488';ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x,p.y-18);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle='#5eead4cc';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+      ctx.fillText('predicted stop',p.x,p.y-24);ctx.textAlign='left';}}
+  drawCrate();
+  // particles (s,h world coords)
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.s+=p.vs/60;p.h+=p.vh/60;p.vh-=4/60;
+    const q=world2px(p.s,Math.max(0,p.h));
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(q.x,q.y,p.size,p.size);}
+  ctx.globalAlpha=1;
+  // popups
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    const c=world2px(crate.s,1.8);
+    const cpx=clamp(c.x,80,sceneRect().w-80);
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,cpx+p.x,c.y-56-p.t*46+p.y);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(timeScale<1&&state==='play'){ctx.fillStyle='#5eead40d';ctx.fillRect(0,0,SW,H);}
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#fb923c';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#5eead4':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function predictStop(){ // fast forward-sim of the current aim (assist levels)
+  let s=1.2,v=0,tt=0;
+  for(let i=0;i<12000;i++){
+    const sg=segAt(s),th=sg.ang*D2R,N=lv.m*G*Math.cos(th);
+    const F=tt<aim.dt?aim.F:0,grav=-lv.m*G*Math.sin(th);
+    let a;
+    if(Math.abs(v)<0.03){const need=F+grav;
+      if(Math.abs(need)<=sg.mus*N){if(F===0)return s;a=0;v=0;}
+      else a=(F+grav-Math.sign(need)*sg.muk*N)/lv.m;}
+    else a=(F+grav-Math.sign(v)*sg.muk*N)/lv.m;
+    v+=a*DT;s+=v*DT;tt+=DT;
+    if(s<0.6||s>TRACK.S-0.6)return clamp(s,0.6,TRACK.S-0.6);
+  }
+  return null;
+}
+function drawCrate(){
+  const sg=segAt(crate.s);
+  const size=Math.max(16,(0.9+lv.m/60)*VIEW.k);
+  const p=world2px(crate.s,(size/VIEW.k)/2);
+  ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-p.ang);
+  const strain=crate.fapp!==0&&Math.abs(crate.v)<0.05;
+  if(strain)ctx.rotate(rnd(-.015,.015)); // trembling against static friction
+  ctx.fillStyle='#8a6d4a';ctx.strokeStyle='#241a10';ctx.lineWidth=2;
+  ctx.fillRect(-size/2,-size/2,size,size);ctx.strokeRect(-size/2,-size/2,size,size);
+  ctx.strokeStyle='#241a1066';
+  ctx.beginPath();ctx.moveTo(-size/2,-size/6);ctx.lineTo(size/2,-size/6);ctx.stroke();
+  // wooden planks + steel corner brackets + stencil
+  ctx.strokeStyle='#241a1059';
+  for(let i=1;i<=2;i++){ctx.beginPath();
+    ctx.moveTo(-size/2,-size/2+size*i/3);ctx.lineTo(size/2,-size/2+size*i/3);ctx.stroke();}
+  ctx.fillStyle='#3f3f46';
+  const br=Math.max(3,size*0.14);
+  for(const[bx,by]of[[-1,-1],[1,-1],[-1,1],[1,1]])
+    ctx.fillRect(bx*size/2-(bx>0?br:0),by*size/2-(by>0?br:0),br,br);
+  ctx.fillStyle='#241a10';ctx.font=`700 ${Math.max(9,size*0.28)}px Orbitron,monospace`;
+  ctx.textAlign='center';ctx.fillText(lv.m+'kg',0,size*0.16);ctx.textAlign='left';
+  ctx.restore();
+  // the TUG-BOT: applied force made visible — a little machine doing the pushing
+  const F=crate.fapp;
+  if(F!==0&&(state==='play'||state==='paused')){
+    const dir=Math.sign(F);
+    const bw2=Math.max(14,size*0.7), bh2=Math.max(10,size*0.42);
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(-p.ang);
+    ctx.translate(-dir*(size/2+bw2/2+1),size/2-bh2/2-2);
+    const strain=Math.abs(crate.v)<0.05;
+    if(strain)ctx.translate(rnd(-.8,.8),0); // wheels screaming against static friction
+    ctx.fillStyle='#fb923c';ctx.strokeStyle='#241a10';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(-bw2/2,-bh2/2,bw2,bh2,3);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#fde68a';ctx.fillRect(dir*bw2/2-(dir>0?3:0),-bh2/2+2,3,3); // headlight
+    ctx.fillStyle='#0e0a06';ctx.fillRect(dir*(bw2/2)-(dir>0?2:0),-bh2/2+5,2,bh2-6); // push pad
+    const wr=Math.max(3.5,bh2*0.42);
+    const wa=strain?performance.now()/40:crate.s*3;
+    for(const wx of[-bw2/4,bw2/4]){
+      ctx.fillStyle='#1c1917';ctx.beginPath();ctx.arc(wx,bh2/2,wr,0,7);ctx.fill();
+      ctx.strokeStyle='#57534e';
+      ctx.beginPath();ctx.moveTo(wx-wr*Math.cos(wa),bh2/2-wr*Math.sin(wa));
+      ctx.lineTo(wx+wr*Math.cos(wa),bh2/2+wr*Math.sin(wa));ctx.stroke();}
+    ctx.restore();
+  }
+}
+function arrow(x,y,v,col){
+  const L=Math.hypot(v.x,v.y);if(L<3)return;
+  ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+v.x,y+v.y);ctx.stroke();
+  const a=Math.atan2(v.y,v.x);
+  ctx.beginPath();ctx.moveTo(x+v.x,y+v.y);
+  ctx.lineTo(x+v.x-7*Math.cos(a-.45),y+v.y-7*Math.sin(a-.45));
+  ctx.lineTo(x+v.x-7*Math.cos(a+.45),y+v.y-7*Math.sin(a+.45));
+  ctx.closePath();ctx.fill();ctx.lineWidth=1;
+}
+
+/* ================================================== HUD */
+let shoveBtn=null;
+function drawHUD(SW){
+  if(!(state==='aim'||state==='play'||state==='paused'||state==='down'))return;
+  const sg=segAt(crate.s);
+  ctx.font='13px "Share Tech Mono",monospace';
+  const x=14;let y=22;
+  ctx.fillStyle='#0008';ctx.fillRect(x-8,6,212,act===1?66:86);
+  const rows=[ // lean: force lives in the FBD panel, mass is stenciled on the crate
+    ['SURFACE','μs '+fmt(sg.mus,2)+' / μk '+fmt(sg.muk,2)+(sg.belt?' · belt '+fmt(sg.belt):''),
+      sg.kind==='ice'?'#7fd4f0':sg.kind==='sand'?'#d8b46a':'#9ca3af'],
+    ['VEL',(crate.v>0?'+':'')+fmt(crate.v)+' m/s','#fbbf24'],
+  ];
+  for(const[k2,v2,c]of rows){ctx.fillStyle='#8b96ad';ctx.fillText(k2,x,y);
+    ctx.fillStyle=c;ctx.fillText(v2,x+72,y);y+=20;}
+  if(act!==1){ // battery
+    ctx.fillStyle='#8b96ad';ctx.fillText('BATT',x,y);
+    ctx.fillStyle='#1f2937';ctx.fillRect(x+72,y-10,120,11);
+    const fr=battery/lv.battery;
+    ctx.fillStyle=fr>.3?'#5eead4':'#f87171';ctx.fillRect(x+72,y-10,120*fr,11);
+  }
+  // aim meters (act 1)
+  if(act===1&&state==='aim'){
+    const bx=14,by=H-150;
+    ctx.fillStyle='#0009';ctx.fillRect(bx-8,by-22,250,118);
+    ctx.fillStyle='#5eead4';ctx.font='700 13px Orbitron,monospace';
+    ctx.fillText('SET YOUR SHOVE',bx,by-6);
+    ctx.font='12px "Share Tech Mono",monospace';
+    ctx.fillStyle='#8b96ad';ctx.fillText('FORCE  ←/→',bx,by+14);
+    ctx.fillStyle='#1f2937';ctx.fillRect(bx,by+20,200,13);
+    ctx.fillStyle='#fb923c';ctx.fillRect(bx,by+20,200*aim.F/lv.F,13);
+    ctx.fillStyle='#fff';ctx.fillText(aim.F+' N',bx+206,by+31);
+    ctx.fillStyle='#8b96ad';ctx.fillText('PUSH TIME  ↑/↓',bx,by+50);
+    ctx.fillStyle='#1f2937';ctx.fillRect(bx,by+56,200,13);
+    ctx.fillStyle='#fbbf24';ctx.fillRect(bx,by+56,200*aim.dt/lv.dtMax,13);
+    ctx.fillStyle='#fff';ctx.fillText(fmt(aim.dt)+' s',bx+206,by+67);
+    shoveBtn={x:bx,y:by+78,w:130,h:34};
+    ctx.fillStyle='#fb923c';ctx.fillRect(shoveBtn.x,shoveBtn.y,shoveBtn.w,shoveBtn.h);
+    ctx.fillStyle='#1a0c04';ctx.font='900 16px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('SHOVE',shoveBtn.x+65,shoveBtn.y+23);ctx.textAlign='left';
+    // impulse readout — the physics in their face
+    ctx.fillStyle='#5eead4';ctx.font='11px "Share Tech Mono",monospace';
+    ctx.fillText('impulse F·Δt = '+Math.round(aim.F*aim.dt)+' N·s',shoveBtn.x+140,shoveBtn.y+21);
+  }else shoveBtn=null;
+  // top bar
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-228,6,220,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,26);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  let info=(ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    'CRATES '+'■'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1));
+  if(act===1)info='SHOT '+Math.min(lv.shots,shotsUsed+1)+'/'+lv.shots+'  '+info;
+  ctx.fillText(info,SW-16,46);
+  ctx.textAlign='left';
+}
+
+/* ================================================== telemetry panel */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#0d0a07';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#fb923c33';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#fb923c';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('FORCE TELEMETRY',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name:'',SW+160,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=16;
+  const fh=(H-top-3*gap-14)*0.42, gh=((H-top-3*gap-14)-fh)/2;
+  drawFBD(gx,top,gw,fh);
+  drawGraph(gx,top+fh+gap,gw,gh,'VELOCITY  v (m/s)','single',
+    [{color:'#5eead4',get:s=>s.v}],{zero:true});
+  drawGraph(gx,top+fh+gh+2*gap,gw,gh,'FORCES (N) — applied vs friction','multi',
+    [{color:'#fbbf24',get:s=>s.fapp},{color:'#f87171',get:s=>s.ffric},
+     {color:'#ffffff55',get:s=>s.fsmax,dash:true},{color:'#ffffff55',get:s=>-s.fsmax,dash:true}],
+    {zero:true});
+}
+function drawFBD(gx,gy,gw,gh){
+  ctx.fillStyle='#14100b';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('FREE-BODY DIAGRAM  (live, newtons)',gx+8,gy+14);
+  const cx=gx+gw/2,cy=gy+gh/2+8;
+  const sg=segAt(crate.s),th=sg.ang*D2R,mg=lv.m*G;
+  const last=samples[samples.length-1];
+  const Fapp=crate.fapp, ffric=last?last.ffric:0, N=mg*Math.cos(th);
+  const maxF=Math.max(mg,Math.abs(Fapp),N)*1.15;
+  const k=(Math.min(gw,gh)*0.36)/maxF;
+  // surface line through the crate
+  ctx.strokeStyle='#ffffff22';
+  ctx.beginPath();
+  ctx.moveTo(cx-gw*0.4*Math.cos(th),cy+gw*0.4*Math.sin(th));
+  ctx.lineTo(cx+gw*0.4*Math.cos(th),cy-gw*0.4*Math.sin(th));
+  ctx.stroke();
+  // crate
+  ctx.save();ctx.translate(cx,cy);ctx.rotate(-th);
+  ctx.fillStyle='#8a6d4a';ctx.strokeStyle='#241a10';ctx.lineWidth=2;
+  ctx.fillRect(-16,-16,32,32);ctx.strokeRect(-16,-16,32,32);ctx.restore();ctx.lineWidth=1;
+  const along=f=>({x:Math.cos(th)*f*k,y:-Math.sin(th)*f*k});
+  const perp=f=>({x:-Math.sin(th)*f*k,y:-Math.cos(th)*f*k});
+  const lbl=(v,txt,col)=>{if(Math.hypot(v.x,v.y)<6)return;
+    ctx.fillStyle=col;ctx.font='10px "Share Tech Mono",monospace';
+    ctx.fillText(txt,cx+v.x*1.18+(v.x>=0?4:-46),cy+v.y*1.18+(v.y>=0?12:-6));};
+  let v;
+  v={x:0,y:mg*k};arrow(cx,cy,v,'#e7ecf5');lbl(v,'mg '+Math.round(mg),'#e7ecf5');
+  v=perp(N);arrow(cx,cy,v,'#5eead4');lbl(v,'N '+Math.round(N),'#5eead4');
+  if(Math.abs(Fapp)>0.5){v=along(Fapp);arrow(cx,cy,v,'#fbbf24');lbl(v,'F '+Math.round(Math.abs(Fapp)),'#fbbf24');}
+  if(Math.abs(ffric)>0.5){v=along(ffric);arrow(cx,cy,v,'#f87171');lbl(v,'f '+Math.round(Math.abs(ffric)),'#f87171');}
+  if(th!==0){ // gravity's track component — the act III lesson
+    v=along(-mg*Math.sin(th));
+    ctx.setLineDash([4,4]);arrow(cx,cy,v,'#c084fc');ctx.setLineDash([]);
+    lbl(v,'mg·sinθ '+Math.round(mg*Math.abs(Math.sin(th))),'#c084fc');}
+  const net=(last?last.a:0)*lv.m;
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('ΣF = '+fmt(net)+' N   →   a = ΣF/m = '+fmt(last?last.a:0)+' m/s²',gx+8,gy+gh-10);
+}
+function drawGraph(gx,gy,gw,gh,label,mode,series,opts){
+  ctx.fillStyle='#14100b';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText(label,gx+8,gy+14);
+  if(samples.length<2)return;
+  const WIN=10,t1=Math.max(t,WIN),t0=t1-WIN;
+  const vis=samples.filter(s=>s.t>=t0);
+  if(vis.length<2)return;
+  let lo=Infinity,hi2=-Infinity;
+  for(const s of vis)for(const ser of series){const v=ser.get(s);
+    if(v<lo)lo=v;if(v>hi2)hi2=v;}
+  if(opts.zero){lo=Math.min(lo,0);hi2=Math.max(hi2,0);}
+  const pad=(hi2-lo)*0.15+1e-6;lo-=pad;hi2+=pad;
+  const X=tt=>gx+8+((tt-t0)/WIN)*(gw-16);
+  const Y=v=>gy+gh-8-((v-lo)/(hi2-lo))*(gh-26);
+  if(lo<0&&hi2>0){ctx.strokeStyle='#ffffff22';ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(gx+8,Y(0));ctx.lineTo(gx+gw-8,Y(0));ctx.stroke();ctx.setLineDash([]);}
+  for(const ser of series){
+    ctx.strokeStyle=ser.color;ctx.lineWidth=ser.dash?1:2;
+    if(ser.dash)ctx.setLineDash([4,4]);
+    else{ctx.shadowColor=ser.color;ctx.shadowBlur=5;}
+    ctx.beginPath();
+    vis.forEach((s,i)=>{const px=X(s.t),py=Y(ser.get(s));
+      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});
+    ctx.stroke();ctx.shadowBlur=0;ctx.setLineDash([]);ctx.lineWidth=1;
+  }
+  const lastS=vis[vis.length-1];
+  ctx.fillStyle='#fff';ctx.beginPath();
+  ctx.arc(X(lastS.t),Y(series[0].get(lastS)),2.6,0,7);ctx.fill();
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){acc+=el*timeScale;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}}
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+  if(state==='aim'){
+    if(e.code==='ArrowRight')aim.F=clamp(aim.F+5,5,lv.F);
+    if(e.code==='ArrowLeft')aim.F=clamp(aim.F-5,5,lv.F);
+    if(e.code==='ArrowUp')aim.dt=clamp(+(aim.dt+0.1).toFixed(1),0.1,lv.dtMax);
+    if(e.code==='ArrowDown')aim.dt=clamp(+(aim.dt-0.1).toFixed(1),0.1,lv.dtMax);
+    if(e.code==='Space'&&!e.repeat)fire1();
+    return;
+  }
+  if(e.repeat)return;
+  if(state==='play'&&act!==1){
+    if(e.code==='ArrowRight'||e.code==='KeyD')pushR=true;
+    if(e.code==='ArrowLeft'||e.code==='KeyA')pushL=true;
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';
+    pushL=pushR=false;setPushSound(false);lastPushOn=false;}
+  if(e.code==='KeyM'){muted=!muted;setPushSound(false);lastPushOn=false;}
+});
+window.addEventListener('keyup',e=>{
+  if(e.code==='ArrowRight'||e.code==='KeyD')pushR=false;
+  if(e.code==='ArrowLeft'||e.code==='KeyA')pushL=false;
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  if(state==='aim'){
+    if(shoveBtn&&e.clientX>=shoveBtn.x&&e.clientX<=shoveBtn.x+shoveBtn.w&&
+       e.clientY>=shoveBtn.y&&e.clientY<=shoveBtn.y+shoveBtn.h){fire1();return;}
+    return;
+  }
+  if(state==='play'&&act!==1){const {w:SW}=sceneRect();
+    if(e.clientX<SW/2)pushL=true;else if(e.clientX<SW)pushR=true;}
+});
+window.addEventListener('pointerup',()=>{pushL=pushR=false;});
+window.addEventListener('blur',()=>{pushL=pushR=false;});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

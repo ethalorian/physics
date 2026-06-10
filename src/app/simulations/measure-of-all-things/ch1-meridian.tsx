@@ -6,6 +6,7 @@
 
 import { useState } from 'react'
 import { Scene, YearBanner, Narration, Speech, FactBox, NextButton, StepDots, MC, NumQ } from './ui'
+import { Ch1Scene } from './scenes'
 
 function MeridianGlobe() {
   // Simple globe with the Paris meridian quadrant (pole -> equator) highlighted
@@ -68,6 +69,7 @@ export default function Ch1Meridian({ onComplete }: { onComplete: () => void }) 
         <YearBanner year="1792" place="Academy of Sciences, Paris" />
         <StepDots total={STEPS} index={step} />
       </div>
+      <Ch1Scene step={step} />
 
       {step === 0 && (
         <>

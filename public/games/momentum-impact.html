@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>IMPACT // a momentum arcade</title>
+<!--
+  IMPACT v2 — a momentum arcade, rebuilt around ONE continuous verb.
+
+  You are a salvage tug with NO ENGINE. Throwing and catching mass is your
+  only control. Every throw recoils you (conservation, exactly); every catch
+  yanks you (the cargo's momentum is yours now). 2D field, mouse-aimed,
+  real-time, zero consoles to type into — the recoil preview on your cursor
+  IS the physics.
+
+  ACT I   DRIFT GOLF  — dock through rings under speed limits; par = throws
+  ACT II  THE RELAY   — intercept flying cargo, redirect it into chutes
+  ACT III BREAKWATER  — deflect incoming rock by throwing mass into it
+
+  DESIGN RULE: NO ENERGY. Momentum only. Energy gets its own cabinet.
+  Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#fb7185; --neon2:#5eead4; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#120609ee; --edge:#fb718555;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#0b0407}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #fb718522, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #fb718588}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #fb718566;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:var(--neon2)} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#1a040a;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #fb718566;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#1c0a10;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#260d15}
+  .choice.right{background:#0c2a22;border-color:var(--neon2);color:var(--neon2)}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #5eead455;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#190a10;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const hyp=Math.hypot;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('impact3_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('impact3_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('impact3_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('impact3_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function thunk(big){if(!AC||muted)return;
+  beep(big?70:120,.16,'sawtooth',big?.22:.15,-30);
+  const len=AC.sampleRate*0.18,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3);
+  const s=AC.createBufferSource();s.buffer=buf;const g=AC.createGain();g.gain.value=big?.4:.22;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=500;
+  s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
+function boom(){if(!AC||muted)return;const len=AC.sampleRate*0.6,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+  const s=AC.createBufferSource();s.buffer=buf;const g=AC.createGain();g.gain.value=.5;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;
+  s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'impact-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== world + level data
+   World units: meters. Field WLD.w × WLD.h, y points DOWN (screen-aligned).
+   The tug: dry mass 28 kg, throw speed u = 12 m/s relative, carry cap 4.
+   Recoil per throw: Δv = m·u/(M−m). A 12 kg crate kicks ~2.6–4.3 m/s. */
+const WLD={w:48,h:30}, TUG_DRY=28, THROW_U=12, CARRY_CAP=4, TUG_R=1.3;
+const ACT_META={
+ 1:{name:'DRIFT GOLF', col:'#5eead4', blurb:'Dock through the ring under its speed limit. Par is counted in THROWS. Angled throws shed exactly the velocity you choose — that’s the whole short game.'},
+ 2:{name:'THE RELAY',  col:'#fbbf24', blurb:'Cargo flies across the field. Catch it (it yanks you), sling it into the chute (you recoil). Sixty seconds. Make quota.'},
+ 3:{name:'BREAKWATER', col:'#f472b6', blurb:'Rock is falling toward the station window. The only thing between them is you — and whatever you can throw at it.'},
+};
+/* ACT I — holes: {par, tug, cargo, ring:{x,y,r,vmax}, rocks, pickups} */
+const ACT1=[
+ {name:'HOLE 1 · STRAIGHT DRIVE', par:1,
+  tug:{x:8,y:15}, cargo:[12,12], ring:{x:40,y:15,r:3,vmax:9}, rocks:[], pickups:[],
+  tip:'Aim AWAY from the ring and throw: the crate goes one way, you go exactly the other. One clean throw, then let Newton’s first law do the putting.'},
+ {name:'HOLE 2 · THE BRAKE', par:2,
+  tug:{x:8,y:15}, cargo:[12,12,12], ring:{x:38,y:15,r:2.6,vmax:1.2}, rocks:[], pickups:[],
+  tip:'The ring’s limit is 1.2 m/s — you’ll arrive hot. Throw a crate AHEAD of you to brake. Pro secret: your tug gets lighter with every throw, so brakes kick harder than drives. Angle the brake throw to shed exactly what you need.'},
+ {name:'HOLE 3 · THE DOGLEG', par:2,
+  tug:{x:8,y:22}, cargo:[10,10,10], ring:{x:40,y:7,r:2.8,vmax:2.5},
+  rocks:[{x:24,y:13,r:2.2,m:420},{x:24,y:18,r:2.0,m:380},{x:24,y:23,r:2.4,m:460}], pickups:[],
+  tip:'A rock wall blocks the straight line. Momentum is a VECTOR: two throws at angles add up to any path you want. Drive past the wall, then turn with a sideways throw.'},
+ {name:'HOLE 4 · REFUEL', par:2,
+  tug:{x:8,y:15}, cargo:[12], ring:{x:40,y:15,r:2.6,vmax:1.5},
+  rocks:[], pickups:[{x:30,y:4,m:12,vx:0,vy:1.6}],
+  tip:'One crate aboard — not enough to drive AND brake. A supply crate is drifting down across your path: CATCH it. Careful: catching it means absorbing its momentum. The catch is part of your flight plan.'},
+ {name:'HOLE 5 · THE MOUSEHOLE', par:3,
+  tug:{x:6,y:26}, cargo:[8,8,12,12], ring:{x:42,y:5,r:2.2,vmax:1.2},
+  rocks:[{x:20,y:10,r:2.6,m:460},{x:28,y:20,r:2.6,m:460},{x:36,y:12,r:2.2,m:420}], pickups:[],
+  tip:'Tight ring, hard limit, three boulders in the lane. Plan the whole ledger before the first throw: every kilogram you spend early is a brake you won’t have late.'},
+];
+/* ACT II — shifts: {dur, quota, cargo, dispensers:[{x,y,dir°,m,speed,every,col}], chutes:[{x,y,col}]} */
+const C_TEAL='#5eead4', C_AMBER='#fbbf24';
+const ACT2=[
+ {name:'SHIFT 1 · FIRST CATCH', dur:60, quota:4, cargo:[10],
+  dispensers:[{x:1,y:15,dir:0,m:10,speed:4.5,every:6,col:C_TEAL}],
+  chutes:[{x:47,y:15,col:C_TEAL}],
+  tip:'Crates cross the field; the chute wants them. CATCH one — feel it yank you in its direction of travel; that’s its momentum joining yours. Then sling it home and feel the recoil. You are a momentum middleman.'},
+ {name:'SHIFT 2 · CROSSFIRE', dur:60, quota:6, cargo:[10],
+  dispensers:[{x:1,y:10,dir:0,m:10,speed:4.5,every:5,col:C_TEAL},
+              {x:24,y:1,dir:90,m:8,speed:4,every:5,col:C_TEAL}],
+  chutes:[{x:47,y:15,col:C_TEAL}],
+  tip:'Two streams now. Every catch bends your course — use the yank as free transport toward the next interception. Good players don’t fight the momentum they’re handed; they ride it.'},
+ {name:'SHIFT 3 · SORTED', dur:65, quota:6, cargo:[10],
+  dispensers:[{x:1,y:8,dir:0,m:10,speed:4.5,every:6,col:C_TEAL},
+              {x:1,y:22,dir:0,m:10,speed:4.5,every:6,col:C_AMBER}],
+  chutes:[{x:47,y:8,col:C_TEAL},{x:47,y:22,col:C_AMBER}],
+  tip:'Color-matched chutes. Same physics, more decisions: WHICH crate you’re carrying decides where you must go — and its mass decides how hard getting there kicks.'},
+ {name:'SHIFT 4 · HEAVY FREIGHT', dur:65, quota:7, cargo:[10],
+  dispensers:[{x:1,y:12,dir:0,m:8,speed:5,every:5,col:C_TEAL},
+              {x:1,y:20,dir:0,m:22,speed:3.5,every:8,col:C_TEAL}],
+  chutes:[{x:47,y:15,col:C_TEAL}],
+  tip:'The 22 kg crates carry nearly triple the momentum at the same speed — catching one yanks HARD, and throwing it kicks harder. Heavy cargo pays the same at the chute. Choose your battles by m·v, not by size on screen.'},
+ {name:'SHIFT 5 · RUSH HOUR', dur:70, quota:9, cargo:[10,10],
+  dispensers:[{x:1,y:8,dir:0,m:10,speed:5,every:4.5,col:C_TEAL},
+              {x:24,y:1,dir:90,m:8,speed:4.5,every:5,col:C_AMBER},
+              {x:1,y:24,dir:0,m:14,speed:4,every:6,col:C_AMBER}],
+  chutes:[{x:47,y:10,col:C_TEAL},{x:47,y:21,col:C_AMBER}],
+  tip:'Three streams, two chutes, seventy seconds. There is no time to stop — so don’t. Chain catches into throws and let the recoils carry you station to station.'},
+];
+/* ACT III — waves: {dur, hp, ammoEvery, spawns:[{at,x,m,r,vx,vy,split}]} */
+const ACT3=[
+ {name:'WAVE 1 · PEBBLES', dur:55, hp:3, ammoEvery:7,
+  spawns:[{at:2,x:10,m:10,r:1.2,vx:.3,vy:1.6},{at:9,x:30,m:10,r:1.2,vx:-.3,vy:1.6},
+          {at:17,x:20,m:12,r:1.3,vx:.2,vy:1.8},{at:26,x:38,m:10,r:1.2,vx:-.5,vy:1.7},
+          {at:35,x:14,m:12,r:1.3,vx:.4,vy:1.9},{at:43,x:33,m:10,r:1.2,vx:-.2,vy:2}],
+  tip:'Rock falls toward the window. Throw mass INTO it — your crate’s momentum joins the rock’s, and the sum sets its new course. Hit it early: a small nudge far out beats a big one up close. Small rocks (≤12 kg) can simply be CAUGHT.'},
+ {name:'WAVE 2 · THE BOULDER', dur:55, hp:3, ammoEvery:6,
+  spawns:[{at:3,x:24,m:60,r:2.6,vx:0,vy:1.1},{at:14,x:10,m:10,r:1.2,vx:.4,vy:1.7},
+          {at:24,x:38,m:10,r:1.2,vx:-.4,vy:1.7},{at:34,x:18,m:12,r:1.3,vx:.3,vy:1.9}],
+  tip:'Sixty kilograms. Your 8 kg crate at 12 m/s carries 96 kg·m/s — the boulder carries 66 straight down. One perfect side-on hit can turn it; two sloppy ones might not. Lead it, and spend momentum where it counts.'},
+ {name:'WAVE 3 · THE SPLITTER', dur:60, hp:3, ammoEvery:6,
+  spawns:[{at:3,x:24,m:50,r:2.4,vx:0,vy:1.2,split:true},{at:18,x:12,m:10,r:1.2,vx:.4,vy:1.8},
+          {at:28,x:36,m:50,r:2.4,vx:-.3,vy:1.3,split:true},{at:44,x:20,m:12,r:1.3,vx:.2,vy:2}],
+  tip:'These rocks SHATTER when hit hard. Watch the ledger when one splits: the pieces fly apart, but their momenta still sum to rock-plus-crate. Conservation doesn’t care how many pieces you make — aim so the pieces miss.'},
+ {name:'WAVE 4 · CROSSWINDS', dur:60, hp:3, ammoEvery:5,
+  spawns:[{at:2,x:2,m:14,r:1.4,vx:1.4,vy:1.2},{at:10,x:46,m:14,r:1.4,vx:-1.4,vy:1.2},
+          {at:19,x:4,m:30,r:1.9,vx:1.1,vy:1.1},{at:30,x:44,m:30,r:1.9,vx:-1.1,vy:1.2},
+          {at:41,x:2,m:14,r:1.4,vx:1.6,vy:1.4},{at:49,x:46,m:12,r:1.3,vx:-1.5,vy:1.5}],
+  tip:'Now the rock comes in sideways — so must your answer. To cancel a crosswind rock you throw ACROSS its path, not at its nose. Think in components: kill the vx, and gravity-of-the-situation handles the rest. (Figure of speech. No gravity out here.)'},
+ {name:'WAVE 5 · THE SWARM', dur:70, hp:3, ammoEvery:4.5,
+  spawns:[{at:2,x:8,m:10,r:1.2,vx:.5,vy:1.8},{at:7,x:28,m:10,r:1.2,vx:-.2,vy:1.9},
+          {at:13,x:40,m:14,r:1.4,vx:-.8,vy:1.6},{at:19,x:16,m:50,r:2.4,vx:.3,vy:1.2,split:true},
+          {at:27,x:34,m:12,r:1.3,vx:-.4,vy:2},{at:33,x:6,m:14,r:1.4,vx:1,vy:1.5},
+          {at:40,x:42,m:60,r:2.6,vx:-.5,vy:1.1},{at:50,x:22,m:10,r:1.2,vx:.2,vy:2.2},
+          {at:56,x:12,m:12,r:1.3,vx:.6,vy:2},{at:61,x:36,m:14,r:1.4,vx:-.7,vy:1.9}],
+  tip:'Everything at once. Catch the small ones for ammunition, shoulder-check the medium ones, and save your heaviest throws for what you cannot stop any other way. The window is counting on you.'},
+];
+const SITES=['BAY K','SPUR 9','SIDING 4','OUTPOST 12','AIRLOCK 7','SECTOR Z','GANTRY 5'];
+function endless1(w){
+  const ring={x:rnd(36,44),y:rnd(6,24),r:Math.max(1.8,3-w*.15),vmax:Math.max(1,2.6-w*.2)};
+  const rocks=[];const n=Math.min(4,1+Math.floor(w/2));
+  for(let i=0;i<n;i++)rocks.push({x:rnd(16,34),y:rnd(5,25),r:rnd(1.8,2.6),m:rnd(350,500)});
+  return {name:pick(SITES)+' · HOLE '+w, par:Math.min(4,2+Math.floor(w/3)),
+    tug:{x:rnd(5,9),y:rnd(8,22)}, cargo:[10,10,12,12].slice(0,Math.max(2,4-Math.floor(w/4))),
+    ring, rocks, pickups:w>2?[{x:rnd(20,30),y:3,m:12,vx:0,vy:rnd(1.2,1.8)}]:[],
+    tip:'Unmapped fairway. Same ledger.'};
+}
+function endless2(w){
+  const two=w>1;
+  return {name:pick(SITES)+' · SHIFT '+w, dur:60+Math.min(20,w*2),
+    quota:4+Math.ceil(w*1.5), cargo:[10],
+    dispensers:[{x:1,y:rnd(8,14),dir:0,m:10,speed:4.5+w*.1,every:Math.max(3.5,6-w*.3),col:C_TEAL}]
+      .concat(two?[{x:rnd(18,30),y:1,dir:90,m:pick([8,14,22]),speed:4,every:Math.max(4,7-w*.3),col:w>2?C_AMBER:C_TEAL}]:[]),
+    chutes:two&&w>2?[{x:47,y:9,col:C_TEAL},{x:47,y:21,col:C_AMBER}]:[{x:47,y:15,col:C_TEAL}],
+    tip:'Another shift on the manifest.'};
+}
+function endless3(w){
+  const spawns=[];const n=5+Math.min(7,w);let at=2;
+  for(let i=0;i<n;i++){
+    const big=Math.random()<.25+w*.03;
+    spawns.push({at,x:rnd(4,44),m:big?Math.round(rnd(40,70)):Math.round(rnd(10,16)),
+      r:big?rnd(2.2,2.7):rnd(1.2,1.5),vx:rnd(-1.2,1.2),vy:rnd(1.4,2.2)+w*.06,
+      split:big&&Math.random()<.5});
+    at+=rnd(4,8-Math.min(3,w*.3));}
+  return {name:pick(SITES)+' · WAVE '+w, dur:Math.ceil(at+8), hp:3,
+    ammoEvery:Math.max(3.5,7-w*.4), spawns,
+    tip:'The belt never runs out of rock.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let tug={x:10,y:15,vx:0,vy:0}, carried=[], selCargo=0;
+let bodies=[], throws=0, delivered=0, comboR=0, maxCombo=0, hp=3, deflects=0;
+let t=0, acc=0, dispTimers=[], spawnIdx=0, ammoT=0, adriftT=0, throwCd=0;
+let mouse={x:24,y:10,inScene:false};
+let particles=[], popups=[], shake=0, flash=0, hitStop=0, slowmoT=0, timeScale=1;
+let landedOK=false, downTimer=0, lastResult=null, primary=null, lastEvent=null;
+function tugM(){return TUG_DRY+carried.reduce((s,c)=>s+c.m,0);}
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size,wx,wy){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,
+  wx:wx!==undefined?wx:tug.x,wy:wy!==undefined?wy:tug.y,jx:rnd(-10,10)});}
+function burst(wx,wy,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,6.28),s2=rnd(.3,sp||3);
+  particles.push({x:wx,y:wy,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>IMPACT</h1>
+     <div class="tag">A MOMENTUM ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       You fly a salvage tug with <b style="color:var(--ink)">no engine</b>.
+       Throwing and catching mass is your ONLY control. Every throw recoils you;
+       every catch yanks you. Conservation of momentum isn't the lesson here —
+       it's the steering wheel.<br><br>
+       <b style="color:#5eead4">ACT I — DRIFT GOLF</b> &nbsp;dock through rings; par is counted in throws<br>
+       <b style="color:#fbbf24">ACT II — THE RELAY</b> &nbsp;catch flying cargo, sling it into chutes<br>
+       <b style="color:#f472b6">ACT III — BREAKWATER</b> &nbsp;deflect the rock or lose the window<br><br>
+       <span class="kbd">MOUSE</span> aim · <span class="kbd">CLICK</span>/<span class="kbd">SPACE</span> throw ·
+       <span class="kbd">1-4</span>/<span class="kbd">scroll</span> pick crate ·
+       <span class="kbd">P</span> pause · <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — GOLF ${HIS[1].toLocaleString()} · RELAY ${HIS[2].toLocaleString()} · BREAKWATER ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE SALVAGE DECK</h2>
+     <div class="sub">Pick your contract. No engine on the tug — the cargo manifest IS the engine.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE DECK</button></div>`);
+    primary=select_;
+  });
+}
+function showMission(level){
+  lv=level;state='mission';
+  let params='';
+  if(act===1)params=`PAR <b>${lv.par}</b> (throws) · ring speed limit <b>${fmt(lv.ring.vmax)} m/s</b>
+    · cargo aboard <b>${lv.cargo.join(' + ')} kg</b> · throw speed <b>${THROW_U} m/s</b>`;
+  else if(act===2)params=`<b>${lv.dur} s</b> on the clock · quota <b>${lv.quota}</b> crates delivered
+    · ${lv.dispensers.length} dispenser${lv.dispensers.length>1?'s':''} · ${lv.chutes.length} chute${lv.chutes.length>1?'s (match colors!)':''}`;
+  else params=`<b>${lv.dur} s</b> of rockfall · station shield <b>${lv.hp} hits</b>
+    · ammo crates resupply every <b>~${Math.round(lv.ammoEvery)} s</b> · small rock (≤12 kg) is CATCHABLE`;
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">Aim with the <span class="kbd">MOUSE</span> — the pink arrow on your tug previews your recoil. <span class="kbd">CLICK</span> to throw the selected crate.</div>
+     <button class="btn" onclick="launch()">▶ ${act===1?'TEE OFF':act===2?'CLOCK IN':'MAN THE WALL'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;particles=[];popups=[];shake=0;flash=0;hitStop=0;slowmoT=0;timeScale=1;
+  throws=0;delivered=0;comboR=0;maxCombo=0;deflects=0;adriftT=0;throwCd=0;
+  spawnIdx=0;ammoT=0;lastEvent=null;selCargo=0;bodies=[];
+  if(act===1){
+    tug={x:lv.tug.x,y:lv.tug.y,vx:0,vy:0};
+    carried=lv.cargo.map(m=>({m,col:'#c084fc'}));
+    for(const r of lv.rocks)bodies.push({x:r.x,y:r.y,vx:0,vy:0,m:r.m,r:r.r,kind:'rock',col:'#57534e'});
+    for(const p of lv.pickups)bodies.push({x:p.x,y:p.y,vx:p.vx,vy:p.vy,m:p.m,r:0.9,kind:'crate',col:'#c084fc'});
+  }else if(act===2){
+    tug={x:24,y:15,vx:0,vy:0};
+    carried=lv.cargo.map(m=>({m,col:C_TEAL}));
+    dispTimers=lv.dispensers.map(d=>d.every*0.5);
+  }else{
+    tug={x:24,y:18,vx:0,vy:0};
+    carried=[{m:8,col:'#c084fc'},{m:8,col:'#c084fc'}];
+    hp=lv.hp;
+  }
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(tier,base,bonus,bonusTxt,note){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;timeScale=1;hitStop=0;
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,bonusTxt,note};
+  score+=pts;bumpHi();
+  popup(tier+'!','#5eead4',38);
+  if(bonusTxt)setTimeout(()=>popup(bonusTxt,'#fbbf24',20),350);
+  chord([659,830,988,1318]);
+  burst(tug.x,tug.y,40,['#5eead4','#fbbf24','#f472b6'],4);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;timeScale=1;hitStop=0;
+  boom();
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',30);
+  burst(tug.x,tug.y,60,['#f87171','#fbbf24','#fb923c','#fff'],6);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.note?`<div class="sub">${r.note}</div>`:''}
+       ${r.bonusTxt?`<div class="stat"><span>Bonus</span><b>${r.bonusTxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Tugs left</span><b>${'⛟ '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">BACK OUT THERE</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — THE RELAY unlocked.</b> The freight company heard about your short game.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f472b6">ACT III — BREAKWATER unlocked.</b> The station needs a wall. You’re it.';}
+  else if(act===3)unlockMsg='<b style="color:#5eead4">You completed the momentum campaign</b> — without ever owning an engine. Tell your physics teacher why that was possible.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS CONTRACT</button>
+     <button class="btn alt" onclick="select_()">SALVAGE DECK</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>CONTRACT TERMINATED</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">Momentum was conserved. Your tug was not.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">SALVAGE DECK</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions (momentum only — never energy) */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>{const m=pick([8,12,22]),v=pick([4,6,12]);
+     return qNum(`A ${m} kg crate flies at ${v} m/s. What is its momentum?`,
+       m*v,'kg·m/s',[m+v,m*v/2,m*v*2],
+       `p = m·v = ${m} × ${v} = ${m*v} kg·m/s. Mass times velocity — the only currency your tug spends.`);},
+   ()=>{const M=pick([40,52]),m=12;
+     return qNum(`Your tug (${M} kg total, at rest) throws a ${m} kg crate at 12 m/s. Your recoil speed?`,
+       m*12/(M-m),'m/s',[m*12/M,12*m/100,12/(M-m)],
+       `0 = ${m}·12 + ${M-m}·v → v = ${m*12}/${M-m} = ${fmt(m*12/(M-m))} m/s opposite the throw. You bought velocity and paid in mass.`);},
+   ()=>qCon('Why does throwing a crate FORWARD slow your tug down?',
+     'the crate gains forward momentum, so you must lose exactly that much',['air resistance from the throw','the crate pushes space backward','it doesn’t — throwing always speeds you up'],
+     'Conservation is bookkeeping: total p is fixed, so every kg·m/s the crate carries off forward is subtracted from you. A forward throw is a brake.'),
+   ()=>qCon('You catch a crate drifting straight DOWN while you drift RIGHT. Just after the catch you move…',
+     'right and slightly down — its momentum added to yours',['right, unchanged — you absorbed it','straight down — the crate wins','you stop — catches cancel motion'],
+     'A catch is a merger: p_total = p_you + p_crate, new velocity = that total over the combined mass. Its downward momentum is yours now. Vectors add; they don’t argue.'),
+   ()=>qCon('Your loaded tug is heavier than your empty tug. The SAME throw kicks the loaded tug…',
+     'less — same Δp spread over more mass',['more — heavier things push harder','exactly the same','backward instead of forward'],
+     'The throw changes your momentum by the same m·u either way, but Δv = Δp/M. More M, less Δv. This is why your last crate kicks hardest — the rocket equation in miniature.'),
+  ];
+  const bank2=[
+   ()=>{const dp=pick([24,36,60]);
+     return qNum(`Your thrown crate changes a rock's momentum by ${dp} kg·m/s. The crate's own momentum changed by…`,
+       -dp,'kg·m/s',[dp,0,-dp/2],
+       `−${dp} kg·m/s — exactly opposite. Δp_A = −Δp_B in every collision, no exceptions. One object's gain is the other's loss, to the decimal.`);},
+   ()=>{const dp=pick([30,48]),dt2=pick([0.05,0.1]);
+     return qNum(`A collision transfers ${dp} kg·m/s of momentum in ${dt2} s of contact. Average force during the hit?`,
+       dp/dt2,'N',[dp*dt2,dp,dp/dt2/2],
+       `F = Δp/Δt = ${dp}/${dt2} = ${fmt(dp/dt2)} N. Same momentum change, shorter contact, bigger force — why hard objects hit harder than soft ones.`);},
+   ()=>qCon('To deflect a heavy rock most effectively with one thrown crate, you want the crate to arrive with…',
+     'the largest possible momentum (its m·v)',['the largest possible size','the brightest color','the longest flight time'],
+     'The rock’s course changes by the momentum you deliver. m·v is the whole transaction — a heavier crate or a faster crate, the rock cannot tell the difference.'),
+   ()=>qCon('A big rock SHATTERS into three pieces when your crate hits it. The total momentum of all the pieces (plus your crate)…',
+     'equals the rock-plus-crate total from just before the hit',['is zero — the rock broke','is three times larger','depends on how loud the crack was'],
+     'Breaking is internal forces — and internal forces can’t change the total. Count every fragment’s m·v and the ledger still balances. Conservation doesn’t care how many pieces you make.'),
+   ()=>qCon('A crate bounces OFF the scaffold wall and comes back at nearly the same speed. Its momentum…',
+     'reversed — a change of nearly 2mv, delivered by the wall',['is unchanged — same speed','dropped to zero','doubled in magnitude'],
+     'Momentum is a vector: same speed, opposite direction = change of ~2mv. The wall is external to your ledger — walls are the only thing out here that can change your total.'),
+  ];
+  const bank3=[
+   ()=>{const mb=0.01,vb=pick([300,400]),mr=pick([4,5]);
+     return qNum(`A ${mr} kg rifle fires a ${mb*1000} g bullet at ${vb} m/s. The rifle's recoil speed?`,
+       mb*vb/mr,'m/s',[vb/mr,mb*vb,vb*mr/1000],
+       `0 = m_b·v_b + m_r·v_r → v_r = ${mb}·${vb}/${mr} = ${fmt(mb*vb/mr)} m/s. Tiny mass at huge speed one way; huge mass at tiny speed the other. Your tug fires crates instead of bullets.`);},
+   ()=>qCon('An astronaut floating at rest throws a wrench FORWARD. The astronaut…',
+     'drifts backward',['stays exactly still','drifts forward after it','spins but doesn’t move'],
+     'Total momentum was zero and stays zero: wrench forward means astronaut backward. You have been doing this with crates all game.'),
+   ()=>qCon('Your tug and all its cargo start at rest (total p = 0). After ANY number of throws and catches among them, the total momentum of everything is…',
+     'still exactly zero',['positive if you threw left more','growing with each throw','zero only if you catch everything back'],
+     'Throws and catches are internal — they shuffle momentum between you and the cargo, never create it. Only something EXTERNAL (the scaffold, incoming rock) can change the total.'),
+   ()=>qCon('To get the biggest velocity kick from your LAST crate, you should throw it when your tug is…',
+     'as empty as possible — minimum remaining mass',['as full as possible','moving as fast as possible','touching the scaffold'],
+     'Δv = m·u/(M−m): the same throw divided by less remaining mass. Empty the hold, then the last crate kicks hardest. Rockets stage for exactly this reason.'),
+   ()=>qCon('A crate drifts toward you from the RIGHT and you catch it. The catch kicks your tug…',
+     'toward the LEFT — you inherit its leftward momentum',['toward the right','nowhere if you grip firmly','straight up'],
+     'Catching is a perfectly inelastic collision: its momentum joins yours the instant it’s aboard. Catch ammunition, inherit its politics.'),
+  ];
+  const bank=act===1?bank1:act===2?bank1.slice(3).concat(bank2.slice(0,3)):act===3?bank2.slice(2).concat(bank3):bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag">PHYSICS BONUS · +750</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== engine */
+const DT=1/120;
+let tooHotCd=0;
+function throwCrate(){
+  if(state!=='play'||throwCd>0||carried.length===0)return;
+  const c=carried.splice(selCargo,1)[0];
+  selCargo=clamp(selCargo,0,Math.max(0,carried.length-1));
+  const dx=mouse.x-tug.x,dy=mouse.y-tug.y,L=hyp(dx,dy)||1;
+  const nx=dx/L,ny=dy/L;
+  const M=tugM()+c.m; // mass including the crate, pre-throw
+  const cvx=tug.vx+nx*THROW_U,cvy=tug.vy+ny*THROW_U;
+  tug.vx=(M*tug.vx-c.m*cvx)/(M-c.m);
+  tug.vy=(M*tug.vy-c.m*cvy)/(M-c.m);
+  bodies.push({x:tug.x+nx*(TUG_R+1.1),y:tug.y+ny*(TUG_R+1.1),
+    vx:cvx,vy:cvy,m:c.m,r:0.9,kind:'crate',col:c.col,thrown:true,age:0});
+  throws++;throwCd=0.18;shake=Math.max(shake,.15);adriftT=0;
+  beep(330,.1,'square',.14,200);
+  lastEvent={la:'YOU',lb:fmt(c.m)+' kg',age:0,
+    dpa:{x:-c.m*THROW_U*nx,y:-c.m*THROW_U*ny},
+    dpb:{x: c.m*THROW_U*nx,y: c.m*THROW_U*ny}};
+  burst(tug.x+nx*TUG_R,tug.y+ny*TUG_R,8,['#fb7185','#fbbf24'],3);
+}
+function tryCatch(b){
+  const catchable=b.kind==='crate'||(act===3&&b.kind==='rock'&&b.m<=12);
+  const rel=hyp(b.vx-tug.vx,b.vy-tug.vy);
+  if(!catchable||carried.length>=CARRY_CAP||rel>8)return false;
+  const M=tugM(),oldvx=tug.vx,oldvy=tug.vy;
+  tug.vx=(M*tug.vx+b.m*b.vx)/(M+b.m);
+  tug.vy=(M*tug.vy+b.m*b.vy)/(M+b.m);
+  carried.push({m:b.m,col:b.kind==='rock'?'#a8a29e':b.col});
+  lastEvent={la:'YOU',lb:fmt(b.m)+' kg',age:0,
+    dpa:{x:M*(tug.vx-oldvx),y:M*(tug.vy-oldvy)},
+    dpb:{x:b.m*(tug.vx-b.vx),y:b.m*(tug.vy-b.vy)}};
+  bodies.splice(bodies.indexOf(b),1);
+  popup('CAUGHT +'+fmt(b.m)+' kg','#c084fc',18);
+  thunk(false);hitStop=0.06;slowmoT=0.25;adriftT=0;
+  return true;
+}
+function bounce(A,B,e){ // 2D collision along the line of centers
+  const dx=B.x-A.x,dy=B.y-A.y,d=hyp(dx,dy)||0.001;
+  const nx=dx/d,ny=dy/d;
+  const rel=(A.vx-B.vx)*nx+(A.vy-B.vy)*ny;
+  if(rel<=0)return 0; // separating already
+  const J=(1+e)*rel/(1/A.m+1/B.m);
+  A.vx-=J*nx/A.m;A.vy-=J*ny/A.m;
+  B.vx+=J*nx/B.m;B.vy+=J*ny/B.m;
+  const overlap=(A.r+B.r)-d;
+  if(overlap>0){A.x-=nx*overlap/2;A.y-=ny*overlap/2;B.x+=nx*overlap/2;B.y+=ny*overlap/2;}
+  return J;
+}
+function splitRock(b,J,nx,ny){
+  const px2=b.x,py2=b.y;
+  bodies.splice(bodies.indexOf(b),1);
+  for(const s of [-1,1]){
+    bodies.push({x:px2+s*(-ny)*b.r*0.7,y:py2+s*(nx)*b.r*0.7,
+      vx:b.vx+s*(-ny)*1.4,vy:b.vy+s*(nx)*1.4, // symmetric: momenta sum to parent's
+      m:b.m/2,r:b.r*0.72,kind:'rock',col:b.col,age:0});}
+  popup('SHATTERED — ledger intact','#facc15',18,px2,py2);
+  burst(px2,py2,24,['#a8a29e','#57534e','#facc15'],5);
+  boom();shake=Math.max(shake,.5);
+}
+function step(dt){
+  throwCd=Math.max(0,throwCd-dt);tooHotCd=Math.max(0,tooHotCd-dt);
+  t+=dt;
+  // integrate tug + edge scaffold (external force — the one thing that breaks the ledger)
+  tug.x+=tug.vx*dt;tug.y+=tug.vy*dt;
+  if(tug.x<TUG_R){tug.x=TUG_R;tug.vx=Math.abs(tug.vx)*.7;scaffold();}
+  if(tug.x>WLD.w-TUG_R){tug.x=WLD.w-TUG_R;tug.vx=-Math.abs(tug.vx)*.7;scaffold();}
+  if(tug.y<TUG_R){tug.y=TUG_R;tug.vy=Math.abs(tug.vy)*.7;scaffold();}
+  if(tug.y>WLD.h-TUG_R){tug.y=WLD.h-TUG_R;tug.vy=-Math.abs(tug.vy)*.7;scaffold();}
+  // spawns
+  if(act===2)lv.dispensers.forEach((d2,i)=>{
+    dispTimers[i]-=dt;
+    if(dispTimers[i]<=0){dispTimers[i]=d2.every;
+      const a=d2.dir*Math.PI/180;
+      bodies.push({x:d2.x,y:d2.y,vx:Math.cos(a)*d2.speed,vy:Math.sin(a)*d2.speed,
+        m:d2.m,r:0.9,kind:'crate',col:d2.col,fresh:true,age:0});
+      beep(520,.06,'square',.07);}});
+  if(act===3){
+    while(spawnIdx<lv.spawns.length&&lv.spawns[spawnIdx].at<=t){
+      const s=lv.spawns[spawnIdx++];
+      bodies.push({x:s.x,y:-2,vx:s.vx,vy:s.vy,m:s.m,r:s.r,kind:'rock',
+        col:s.m>20?'#57534e':'#78716c',split:!!s.split,age:0});
+      beep(140,.2,'sawtooth',.1,-40);}
+    ammoT-=dt;
+    if(ammoT<=0){ammoT=lv.ammoEvery;
+      const left=Math.random()<.5;
+      bodies.push({x:left?0.5:WLD.w-0.5,y:rnd(8,22),vx:left?3.2:-3.2,vy:rnd(-.3,.3),
+        m:8,r:0.9,kind:'crate',col:'#c084fc',age:0});}
+  }
+  // integrate bodies
+  for(let i=bodies.length-1;i>=0;i--){const b=bodies[i];
+    b.x+=b.vx*dt;b.y+=b.vy*dt;b.age+=dt;
+    // edges per act
+    if(act===1){ // golf: everything banks off the scaffold
+      if(b.x<b.r){b.x=b.r;b.vx=Math.abs(b.vx)*.7;}
+      if(b.x>WLD.w-b.r){b.x=WLD.w-b.r;b.vx=-Math.abs(b.vx)*.7;}
+      if(b.y<b.r){b.y=b.r;b.vy=Math.abs(b.vy)*.7;}
+      if(b.y>WLD.h-b.r){b.y=WLD.h-b.r;b.vy=-Math.abs(b.vy)*.7;}
+    }else if(b.x<-2||b.x>WLD.w+2||b.y<-3||b.y>WLD.h+2){
+      if(act===3&&b.kind==='rock'&&b.y>WLD.h-1){ // station strike
+        hp--;flash=1;shake=1;boom();
+        popup('SHIELD HIT — '+hp+' LEFT','#f87171',26,b.x,WLD.h-3);
+        burst(b.x,WLD.h-1,30,['#f87171','#fbbf24','#fff'],5);
+        bodies.splice(i,1);
+        if(hp<=0){failAttempt('THE WINDOW IS GONE','Deflect earlier: a small sideways momentum donation 20 m out beats a heroic block at the glass.');return;}
+        continue;}
+      if(act===2&&b.kind==='crate'&&b.fresh){comboR=0;popup('MISSED CARGO','#f87171',16,clamp(b.x,3,45),clamp(b.y,3,27));}
+      bodies.splice(i,1);continue;
+    }
+  }
+  // tug ↔ bodies
+  for(let i=bodies.length-1;i>=0;i--){const b=bodies[i];
+    const d=hyp(b.x-tug.x,b.y-tug.y);
+    if(d<TUG_R+b.r){
+      if(tryCatch(b))continue;
+      const rel=hyp(b.vx-tug.vx,b.vy-tug.vy);
+      if(b.kind==='rock'&&rel>6){failAttempt('HULL BREACH','Rocks at speed are not catchable, and not survivable. Take them side-on with thrown mass — never with the hull.');return;}
+      const T={x:tug.x,y:tug.y,vx:tug.vx,vy:tug.vy,m:tugM(),r:TUG_R};
+      bounce(T,b,0.6);
+      tug.vx=T.vx;tug.vy=T.vy;tug.x=T.x;tug.y=T.y;
+      thunk(false);shake=Math.max(shake,.2);
+    }
+  }
+  // body ↔ body
+  for(let i=0;i<bodies.length;i++)for(let j=i+1;j<bodies.length;j++){
+    const A=bodies[i],B=bodies[j];
+    const d=hyp(B.x-A.x,B.y-A.y);
+    if(d<A.r+B.r){
+      const nx=(B.x-A.x)/(d||0.001),ny=(B.y-A.y)/(d||0.001);
+      const pA={x:A.m*A.vx,y:A.m*A.vy},pB={x:B.m*B.vx,y:B.m*B.vy};
+      const J=bounce(A,B,0.85);
+      if(J>0){
+        lastEvent={la:A.kind==='rock'?'ROCK':fmt(A.m)+' kg',lb:B.kind==='rock'?'ROCK':fmt(B.m)+' kg',age:0,
+          dpa:{x:A.m*A.vx-pA.x,y:A.m*A.vy-pA.y},dpb:{x:B.m*B.vx-pB.x,y:B.m*B.vy-pB.y}};
+        thunk(J>40);hitStop=0.07;slowmoT=0.3;
+        burst((A.x+B.x)/2,(A.y+B.y)/2,10,['#fff','#fbbf24'],4);
+        const rock=A.kind==='rock'?A:B.kind==='rock'?B:null;
+        const crate=A.kind==='crate'?A:B.kind==='crate'?B:null;
+        if(act===3&&rock&&crate){deflects++;popup('DEFLECT! Δp = '+fmt(J)+' kg·m/s','#5eead4',16,rock.x,rock.y);
+          if(rock.split&&J>50)splitRock(rock,J,nx,ny);}
+      }
+    }
+  }
+  // act objectives
+  if(act===1){
+    const R=lv.ring,d=hyp(tug.x-R.x,tug.y-R.y),sp=hyp(tug.vx,tug.vy);
+    if(d<R.r){
+      if(sp<=R.vmax){
+        const over=throws-lv.par;
+        const tier=over<0?'UNDER PAR':over===0?'PAR':over<=2?'BOGEY':'SCRAMBLE';
+        const base=over<0?1600:over===0?1100:over<=2?650:450;
+        const soft=Math.round((1-sp/R.vmax)*300);
+        succeed(tier,base,soft,soft?('SOFT DOCK +'+soft):'',
+          `Docked in ${throws} throw${throws===1?'':'s'} (par ${lv.par}) at ${fmt(sp,2)} m/s.`);return;
+      }else if(tooHotCd<=0){tooHotCd=1.2;popup('TOO HOT — '+fmt(sp,1)+' m/s','#f87171',20);beep(200,.2,'sawtooth',.12,-60);}
+    }
+    const sp2=hyp(tug.vx,tug.vy);
+    const ammoLeft=carried.length>0||bodies.some(b=>b.kind==='crate');
+    if(!ammoLeft&&sp2<0.15){adriftT+=dt;if(adriftT>4){failAttempt('ADRIFT','Out of crates, out of motion. Budget the manifest: count the throws a hole needs BEFORE the first one — that is what par is telling you.');return;}}
+    else adriftT=0;
+  }else if(act===2){
+    for(const ch of lv.chutes){
+      // hand delivery: fly your cargo right into the chute mouth (no recoil — but no range either)
+      if(hyp(tug.x-ch.x,tug.y-ch.y)<2.8&&throwCd<=0){
+        const i2=carried.findIndex(c=>c.col===ch.col);
+        if(i2>=0){carried.splice(i2,1);selCargo=clamp(selCargo,0,Math.max(0,carried.length-1));
+          delivered++;comboR++;maxCombo=Math.max(maxCombo,comboR);throwCd=0.5;
+          popup('HAND DELIVERY '+delivered+'/'+lv.quota,'#5eead4',18,ch.x-5,ch.y);
+          chord([784,1046],.06);burst(ch.x,ch.y,12,[ch.col,'#fff'],3);}
+      }
+      for(let i=bodies.length-1;i>=0;i--){const b=bodies[i];
+        if(b.kind!=='crate'||!b.thrown)continue;
+        if(hyp(b.x-ch.x,b.y-ch.y)<2.4){
+          if(b.col===ch.col){
+            delivered++;comboR++;maxCombo=Math.max(maxCombo,comboR);
+            popup('DELIVERED '+delivered+'/'+lv.quota+(comboR>1?'  ⛓×'+comboR:''),'#5eead4',20,ch.x-4,ch.y);
+            chord([784,1046],.06);burst(ch.x,ch.y,14,[ch.col,'#fff'],4);
+            bodies.splice(i,1);
+          }else{b.vx=-Math.abs(b.vx)*.8;b.x=ch.x-2.6;
+            popup('WRONG CHUTE','#f87171',16,ch.x-5,ch.y);beep(180,.15,'sawtooth',.12);}
+        }}}
+    if(t>=lv.dur){
+      if(delivered>=lv.quota){
+        const over=delivered-lv.quota;
+        const tier=over>=3?'FOREMAN’S LEGEND':over>=1?'OVER QUOTA':'QUOTA MET';
+        const base=over>=3?1600:over>=1?1250:1000;
+        const cb=delivered*100+maxCombo*80;
+        succeed(tier,base,cb,'CARGO +'+cb,
+          `${delivered} delivered (quota ${lv.quota}) · best chain ×${maxCombo}.`);return;
+      }
+      failAttempt('QUOTA MISSED — '+delivered+'/'+lv.quota,
+        'Ride the yanks: a good catch is free transport toward your next interception. Stopping to aim is the only real waste out here.');return;
+    }
+  }else{
+    if(spawnIdx>=lv.spawns.length&&!bodies.some(b=>b.kind==='rock')){
+      const tier=hp>=3?'UNSCRATCHED':hp===2?'HELD THE LINE':'BY A THREAD';
+      const base=hp>=3?1600:hp===2?1100:700;
+      const db=deflects*60;
+      succeed(tier,base,db,'DEFLECTIONS +'+db,
+        `${deflects} deflection${deflects===1?'':'s'} · shield ${hp}/${lv.hp}.`);return;
+    }
+  }
+}
+function scaffold(){thunk(false);shake=Math.max(shake,.12);
+  if(Math.random()<.5)popup('SCAFFOLD','#8b96ad',12);}
+
+/* ================================================== render */
+const STARS=[];for(let i=0;i<130;i++)STARS.push({x:Math.random(),y:Math.random(),r:rnd(.4,1.5),tw:rnd(0,6.28)});
+let VX=0,VY=0,VS=1;
+function sceneRect(){const pw=Math.min(400,W*0.32);return {w:W-pw,pw};}
+function X2(x){return VX+x*VS;}
+function Y2(y){return VY+y*VS;}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  VS=Math.min((SW-24)/WLD.w,(H-24)/WLD.h);
+  VX=(SW-WLD.w*VS)/2;VY=(H-WLD.h*VS)/2;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*12,rnd(-1,1)*shake*12);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createRadialGradient(SW/2,H/2,80,SW/2,H/2,SW*0.7);
+  bg.addColorStop(0,'#0c0512');bg.addColorStop(1,'#040208');
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  const now=performance.now()/1000;
+  for(const s of STARS){ctx.globalAlpha=(.3+.7*Math.abs(Math.sin(now+s.tw)))*.7;
+    ctx.fillStyle='#cfe8ff';ctx.fillRect(s.x*SW,s.y*H,s.r,s.r);}
+  ctx.globalAlpha=1;
+  // scaffold frame (the field boundary — and the only external force out here)
+  ctx.strokeStyle='#3b2d42';ctx.lineWidth=6;
+  ctx.strokeRect(X2(0),Y2(0),WLD.w*VS,WLD.h*VS);
+  ctx.lineWidth=1;ctx.strokeStyle='#5b4a66';
+  for(let i=0;i<=12;i++){const fx=X2(i*WLD.w/12);
+    ctx.beginPath();ctx.moveTo(fx,Y2(0)-3);ctx.lineTo(fx,Y2(0)+3);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(fx,Y2(WLD.h)-3);ctx.lineTo(fx,Y2(WLD.h)+3);ctx.stroke();}
+  // ---- act furniture
+  if(act===1){
+    const R=lv.ring,pulse=.5+.5*Math.sin(now*4);
+    ctx.strokeStyle=`rgba(94,234,212,${.5+.4*pulse})`;ctx.lineWidth=3;
+    ctx.beginPath();ctx.arc(X2(R.x),Y2(R.y),R.r*VS,0,7);ctx.stroke();
+    ctx.strokeStyle='#5eead455';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(X2(R.x),Y2(R.y),R.r*VS+5,0,7);ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle='#5eead4';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText('⌖ DOCK ≤ '+fmt(R.vmax)+' m/s',X2(R.x),Y2(R.y+R.r)+16);ctx.textAlign='left';
+  }
+  if(act===2){
+    for(const d2 of lv.dispensers){ // turret
+      ctx.fillStyle='#272c33';ctx.strokeStyle=d2.col;
+      ctx.fillRect(X2(d2.x)-8,Y2(d2.y)-8,16,16);ctx.strokeRect(X2(d2.x)-8,Y2(d2.y)-8,16,16);}
+    for(const ch of lv.chutes){ // funnel mouth
+      const cx2=X2(ch.x),cy2=Y2(ch.y),g=.5+.5*Math.sin(now*5);
+      ctx.fillStyle=ch.col+'22';ctx.strokeStyle=ch.col;
+      ctx.beginPath();ctx.moveTo(cx2+10,cy2-2.4*VS);ctx.lineTo(cx2-2.2*VS,cy2);
+      ctx.lineTo(cx2+10,cy2+2.4*VS);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.globalAlpha=.4+.4*g;
+      ctx.beginPath();ctx.arc(cx2-2.2*VS,cy2,4,0,7);ctx.fillStyle=ch.col;ctx.fill();
+      ctx.globalAlpha=1;}
+  }
+  if(act===3){ // the station window strip
+    const sy=Y2(WLD.h);
+    const g2=ctx.createLinearGradient(0,sy,0,sy+26);
+    g2.addColorStop(0,'#7fd4f033');g2.addColorStop(1,'#7fd4f000');
+    ctx.fillStyle=g2;ctx.fillRect(X2(0),sy,WLD.w*VS,26);
+    ctx.fillStyle='#101720';ctx.fillRect(X2(0),sy+4,WLD.w*VS,18);
+    for(let i=0;i<14;i++){ctx.fillStyle=hp>0?'#7fd4f0'+((i%3)?'66':'aa'):'#1c2530';
+      ctx.fillRect(X2(1.5+i*3.3),sy+8,2.2*VS,9);}
+    ctx.fillStyle='#f472b6';ctx.font='10px "Share Tech Mono",monospace';
+    ctx.fillText('STATION WINDOW — SHIELD '+'▰'.repeat(Math.max(0,hp))+'▱'.repeat(Math.max(0,lv.hp-hp)),X2(1),sy-6);
+  }
+  // ---- bodies
+  for(const b of bodies)drawBody(b,now);
+  // ---- tug + aim
+  drawTug(now);
+  // particles (world coords)
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.x+=p.vx/60;p.y+=p.vy/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(X2(p.x),Y2(p.y),p.size,p.size);}
+  ctx.globalAlpha=1;
+  // popups
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,clamp(X2(p.wx),70,SW-70)+p.jx,Y2(p.wy)-26-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW,now);
+  if(timeScale<1&&state==='play'){ctx.fillStyle='#fb71850d';ctx.fillRect(0,0,SW,H);}
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#fb7185';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#5eead4':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function drawBody(b,now){
+  const px=X2(b.x),py=Y2(b.y),r=b.r*VS;
+  if(b.kind==='rock'){
+    if(!b.shape){b.shape=[];for(let i=0;i<9;i++)b.shape.push(rnd(.65,1.1));}
+    ctx.save();ctx.translate(px,py);ctx.rotate(now*0.5+(b.m%7));
+    ctx.fillStyle=b.col;ctx.strokeStyle='#1c1917';ctx.lineWidth=2;
+    ctx.beginPath();
+    b.shape.forEach((f,i)=>{const a=i/9*6.28;
+      i===0?ctx.moveTo(Math.cos(a)*r*f,Math.sin(a)*r*f):ctx.lineTo(Math.cos(a)*r*f,Math.sin(a)*r*f);});
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#00000044';
+    ctx.beginPath();ctx.arc(r*0.25,-r*0.2,r*0.22,0,7);ctx.fill();
+    ctx.restore();ctx.lineWidth=1;
+    ctx.fillStyle='#d6d3d1';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(fmt(b.m)+'kg',px,py-r-5);ctx.textAlign='left';
+  }else{ // crate canister
+    ctx.save();ctx.translate(px,py);ctx.rotate(b.age*1.2);
+    ctx.fillStyle=b.col;ctx.strokeStyle='#0b0407';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.roundRect(-r,-r,r*2,r*2,r*0.4);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#0b040766';
+    ctx.beginPath();ctx.moveTo(-r,0);ctx.lineTo(r,0);ctx.stroke();
+    ctx.restore();ctx.lineWidth=1;
+    ctx.fillStyle=b.col;ctx.font='8px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(fmt(b.m)+'kg',px,py-r-4);ctx.textAlign='left';
+  }
+}
+function drawTug(now){
+  const px=X2(tug.x),py=Y2(tug.y),r=TUG_R*VS;
+  // carried crates latched around the hull
+  carried.forEach((c,i)=>{
+    const a=now*0.4+i*(6.28/Math.max(3,carried.length));
+    const cx2=px+Math.cos(a)*r*1.45,cy2=py+Math.sin(a)*r*1.45;
+    ctx.fillStyle=c.col;ctx.strokeStyle=i===selCargo?'#fff':'#0b0407';
+    ctx.lineWidth=i===selCargo?2:1;
+    ctx.beginPath();ctx.roundRect(cx2-5,cy2-5,10,10,2);ctx.fill();ctx.stroke();
+    ctx.strokeStyle='#8b96ad44';
+    ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(cx2,cy2);ctx.stroke();ctx.lineWidth=1;});
+  // hull
+  ctx.fillStyle='#e7ecf5';ctx.strokeStyle='#0b0407';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#fb7185';
+  ctx.beginPath();ctx.arc(px,py,r*0.45,0,7);ctx.fill();ctx.lineWidth=1;
+  // grapple arms toward cursor
+  if(state==='play'){
+    const dx=mouse.x-tug.x,dy=mouse.y-tug.y,L=hyp(dx,dy)||1,nx=dx/L,ny=dy/L;
+    ctx.strokeStyle='#e7ecf5';ctx.lineWidth=2;
+    for(const s of[-.5,.5]){
+      ctx.beginPath();ctx.moveTo(px+(nx*Math.cos(s)-ny*Math.sin(s))*r,py+(ny*Math.cos(s)+nx*Math.sin(s))*r);
+      ctx.lineTo(px+(nx*Math.cos(s*.6)-ny*Math.sin(s*.6))*r*1.6,py+(ny*Math.cos(s*.6)+nx*Math.sin(s*.6))*r*1.6);
+      ctx.stroke();}
+    ctx.lineWidth=1;
+    // aim line + recoil preview: the physics IS the gunsight
+    ctx.setLineDash([4,6]);ctx.strokeStyle='#ffffff33';
+    ctx.beginPath();ctx.moveTo(px+nx*r*1.8,py+ny*r*1.8);
+    ctx.lineTo(X2(mouse.x),Y2(mouse.y));ctx.stroke();ctx.setLineDash([]);
+    if(carried.length>0){
+      const m=carried[selCargo].m,M=tugM();
+      const dv=m*THROW_U/(M-m);
+      const al=clamp(dv*14,10,60);
+      ctx.strokeStyle='#fb7185';ctx.fillStyle='#fb7185';ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px-nx*al,py-ny*al);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(px-nx*al,py-ny*al);
+      ctx.lineTo(px-nx*al+(nx*.5-ny*.35)*9,py-ny*al+(ny*.5+nx*.35)*9);
+      ctx.lineTo(px-nx*al+(nx*.5+ny*.35)*9,py-ny*al+(ny*.5-nx*.35)*9);
+      ctx.closePath();ctx.fill();ctx.lineWidth=1;
+      ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+      ctx.fillText('recoil '+fmt(dv,2)+' m/s',px-nx*(al+16),py-ny*(al+16)+4);ctx.textAlign='left';
+    }
+  }
+}
+function drawHUD(SW,now){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  // act widget — one box, top-left, nothing else in the field
+  ctx.fillStyle='#0008';ctx.fillRect(8,8,210,act===1?46:50);
+  ctx.font='12px "Share Tech Mono",monospace';
+  if(act===1){
+    ctx.fillStyle='#8b96ad';ctx.fillText('THROWS',16,26);
+    ctx.fillStyle=throws>lv.par?'#f87171':'#5eead4';
+    ctx.font='700 15px Orbitron,monospace';
+    ctx.fillText(throws+' / par '+lv.par,80,27);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+    ctx.fillText('speed '+fmt(hyp(tug.vx,tug.vy),2)+' m/s',16,44);
+  }else if(act===2){
+    const left=Math.max(0,lv.dur-t);
+    ctx.fillStyle=left<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+    ctx.fillText(Math.ceil(left)+'s',16,28);
+    ctx.fillStyle='#5eead4';
+    ctx.fillText(delivered+' / '+lv.quota,70,28);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+    ctx.fillText('delivered'+(comboR>1?'  ·  chain ×'+comboR:''),70,46);
+    ctx.fillText('time',16,46);
+  }else{
+    const left=Math.max(0,lv.dur-t);
+    ctx.fillStyle=left<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+    ctx.fillText(Math.ceil(left)+'s',16,28);
+    ctx.fillStyle='#f472b6';ctx.fillText('▰'.repeat(Math.max(0,hp)),70,28);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+    ctx.fillText('shield  ·  deflects '+deflects,70,46);
+    ctx.fillText('wave',16,46);
+  }
+  // score strip
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '⛟'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,48);
+  ctx.textAlign='left';
+}
+/* ================================================== panel: the momentum desk */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#0e0509';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#fb718533';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#fb7185';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('MOMENTUM DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name.split('·')[0].trim():'',SW+160,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=(H-top-3*gap-14);
+  drawCompass(gx,top,gw,ch2*0.40);
+  drawHold(gx,top+ch2*0.40+gap,gw,ch2*0.34);
+  drawEvent(gx,top+ch2*0.74+2*gap,gw,ch2*0.26-gap);
+}
+function drawCompass(gx,gy,gw,gh){
+  ctx.fillStyle='#160a10';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('YOUR MOMENTUM  p = M·v',gx+8,gy+14);
+  const cx2=gx+gw/2,cy2=gy+gh/2+6,R=Math.min(gw,gh)*0.32;
+  ctx.strokeStyle='#ffffff18';
+  ctx.beginPath();ctx.arc(cx2,cy2,R,0,7);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx2-R,cy2);ctx.lineTo(cx2+R,cy2);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx2,cy2-R);ctx.lineTo(cx2,cy2+R);ctx.stroke();
+  const M=tugM(),px2=M*tug.vx,py2=M*tug.vy,pm=hyp(px2,py2);
+  const scale=R/Math.max(60,pm*1.1);
+  if(pm>1){
+    ctx.strokeStyle='#facc15';ctx.fillStyle='#facc15';ctx.lineWidth=3;
+    ctx.shadowColor='#facc15';ctx.shadowBlur=8;
+    const ex=cx2+px2*scale,ey=cy2+py2*scale;
+    ctx.beginPath();ctx.moveTo(cx2,cy2);ctx.lineTo(ex,ey);ctx.stroke();
+    const a=Math.atan2(ey-cy2,ex-cx2);
+    ctx.beginPath();ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-9*Math.cos(a-.4),ey-9*Math.sin(a-.4));
+    ctx.lineTo(ex-9*Math.cos(a+.4),ey-9*Math.sin(a+.4));
+    ctx.closePath();ctx.fill();
+    ctx.shadowBlur=0;ctx.lineWidth=1;
+  }else{ctx.fillStyle='#57534e';ctx.font='10px "Share Tech Mono",monospace';
+    ctx.textAlign='center';ctx.fillText('— at rest —',cx2,cy2-R-6);ctx.textAlign='left';}
+  ctx.fillStyle='#facc15';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('|p| '+fmt(pm)+' kg·m/s',gx+8,gy+gh-24);
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText('M '+fmt(M)+' kg  ·  v '+fmt(hyp(tug.vx,tug.vy),2)+' m/s',gx+8,gy+gh-10);
+}
+function drawHold(gx,gy,gw,gh){
+  ctx.fillStyle='#160a10';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('CARGO HOLD  (1-4 / scroll · each shows its kick)',gx+8,gy+14);
+  if(carried.length===0){ctx.fillStyle='#57534e';
+    ctx.fillText('— empty — catch something —',gx+8,gy+gh/2+4);return;}
+  const M=tugM();
+  carried.forEach((c,i)=>{
+    const y=gy+24+i*((gh-30)/CARRY_CAP),sel=i===selCargo;
+    ctx.fillStyle=sel?c.col:'#1f1620';
+    ctx.beginPath();ctx.roundRect(gx+8,y-10,64,18,4);ctx.fill();
+    if(sel){ctx.strokeStyle='#fff';ctx.strokeRect(gx+8,y-10,64,18);}
+    ctx.fillStyle=sel?'#0b0407':'#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+    ctx.textAlign='center';ctx.fillText(fmt(c.m)+' kg',gx+40,y+3);ctx.textAlign='left';
+    const dv=c.m*THROW_U/(M-c.m);
+    ctx.fillStyle=sel?'#fb7185':'#57534e';
+    ctx.fillText('Δv '+fmt(dv,2)+' m/s',gx+82,y+3);
+    ctx.fillStyle='#57534e';
+    ctx.fillText('p '+fmt(c.m*THROW_U)+' kg·m/s',gx+170,y+3);
+  });
+}
+function drawEvent(gx,gy,gw,gh){
+  ctx.fillStyle='#160a10';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('LAST EXCHANGE — equal & opposite, always',gx+8,gy+14);
+  if(!lastEvent){ctx.fillStyle='#57534e';
+    ctx.fillText('awaiting first transaction…',gx+8,gy+gh/2+6);return;}
+  const a=clamp(1.6-lastEvent.age*0.3,0.25,1);
+  ctx.globalAlpha=a;
+  const cx2=gx+gw/2,cy2=gy+gh/2+8;
+  const mag=Math.max(hyp(lastEvent.dpa.x,lastEvent.dpa.y),1);
+  const k=Math.min(gw*0.3,46)/mag;
+  const draw=(dp,col)=>{const ex=cx2+dp.x*k,ey=cy2+dp.y*k;
+    ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(cx2,cy2);ctx.lineTo(ex,ey);ctx.stroke();
+    const an=Math.atan2(ey-cy2,ex-cx2);
+    ctx.beginPath();ctx.moveTo(ex,ey);
+    ctx.lineTo(ex-8*Math.cos(an-.4),ey-8*Math.sin(an-.4));
+    ctx.lineTo(ex-8*Math.cos(an+.4),ey-8*Math.sin(an+.4));
+    ctx.closePath();ctx.fill();ctx.lineWidth=1;};
+  draw(lastEvent.dpa,'#5eead4');
+  draw(lastEvent.dpb,'#f87171');
+  ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillStyle='#5eead4';ctx.fillText('Δp '+lastEvent.la+' '+fmt(hyp(lastEvent.dpa.x,lastEvent.dpa.y)),gx+8,gy+gh-10);
+  ctx.fillStyle='#f87171';ctx.textAlign='right';
+  ctx.fillText('Δp '+lastEvent.lb+' '+fmt(hyp(lastEvent.dpb.x,lastEvent.dpb.y)),gx+gw-8,gy+gh-10);
+  ctx.textAlign='left';ctx.globalAlpha=1;
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(lastEvent)lastEvent.age+=el;
+  if(state==='play'){
+    if(hitStop>0)hitStop-=el;
+    else{
+      if(slowmoT>0){slowmoT-=el;timeScale=0.4;}else timeScale=1;
+      acc+=el*timeScale;
+      while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+    }
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+cv.addEventListener('pointermove',e=>{
+  mouse.x=clamp((e.clientX-VX)/VS,0,WLD.w);
+  mouse.y=clamp((e.clientY-VY)/VS,0,WLD.h);
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  mouse.x=clamp((e.clientX-VX)/VS,0,WLD.w);
+  mouse.y=clamp((e.clientY-VY)/VS,0,WLD.h);
+  if(state==='play')throwCrate();
+});
+window.addEventListener('wheel',e=>{
+  if(state!=='play'||carried.length===0)return;
+  selCargo=(selCargo+(e.deltaY>0?1:-1)+carried.length)%carried.length;
+},{passive:true});
+window.addEventListener('keydown',e=>{
+  if(e.code==='Space')e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(e.code==='Space')throwCrate();
+    if(/^Digit[1-4]$/.test(e.code)){const i=+e.code.slice(5)-1;
+      if(i<carried.length)selCargo=i;}
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused'))
+    state=state==='play'?'paused':'play';
+  if(e.code==='KeyM')muted=!muted;
+});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
