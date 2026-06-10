@@ -72,7 +72,9 @@ export default function ArcadeCabinetPage() {
         if (r.ok && d.playId) {
           playIdRef.current = d.playId
           if (typeof d.balance === 'number') setBalance(d.balance)
-          setNotice(d.staff ? 'Staff run — free, unranked.' : `Coin accepted — ${d.costXp} XP. Good luck.`)
+          setNotice(d.staff ? 'Staff run — free, unranked.'
+            : d.freebie ? 'First coin’s on the house — this run is RANKED. Make it count.'
+            : `Coin accepted — ${d.costXp} XP. Good luck.`)
           reply({ type: 'arcade:coinAccepted', playId: d.playId, balance: d.balance })
         } else {
           setNotice(d.error === 'Not enough XP'

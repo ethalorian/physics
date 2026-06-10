@@ -25,6 +25,11 @@ student clicks INSERT COIN (inside the game iframe)
 **One coin = one credit = play until GAME OVER.** Checkpoint posts
 (`final:false`) along the way protect the score if a Chromebook lid closes.
 
+**The first coin is on the house.** A student's very first arcade play —
+any cabinet, ever — is free but fully ranked (`meta.freebie`). The
+leaderboard should hook them *before* the grind. Eligibility is simply
+"no prior arcade_plays rows," so it costs nothing to administer.
+
 **Practice is free by design.** A game opened at its raw URL
 (`/games/whatever.html`) has no bridge, gets no coin reply, and falls back
 to practice mode after ~900 ms: fully playable, never ranked. Students pay

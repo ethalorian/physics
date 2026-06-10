@@ -67,6 +67,7 @@ export default function Navbar() {
       const staff = [
         { href: "/admin/home", label: "Home", icon: Home },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
+        { href: "/arcade", label: "Arcade", icon: Joystick }, // staff runs are free + unranked
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
       ]

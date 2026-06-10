@@ -30,7 +30,19 @@ export const POST = withAuth(async (request, ctx) => {
   const staff = isStaff(ctx)
   let redemptionId: string | null = null
 
+  // First coin's on the house: a student's very first arcade play (any game)
+  // is free but fully ranked — the leaderboard should hook them BEFORE the
+  // grind. One per student, ever; eligibility = no prior plays.
+  let freebie = false
   if (!staff && g.cost_xp > 0) {
+    const { count } = await supabaseAdmin
+      .from('arcade_plays')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', ctx.userId)
+    freebie = (count ?? 0) === 0
+  }
+
+  if (!staff && !freebie && g.cost_xp > 0) {
     const before = await getBalance(ctx.userId)
     if (before.balance < g.cost_xp) {
       return NextResponse.json(
@@ -65,7 +77,7 @@ export const POST = withAuth(async (request, ctx) => {
       game_slug: g.slug,
       redemption_id: redemptionId,
       status: 'active',
-      meta: staff ? { staff: true } : {},
+      meta: staff ? { staff: true } : freebie ? { freebie: true } : {},
     })
     .select('id')
     .single()
@@ -77,8 +89,9 @@ export const POST = withAuth(async (request, ctx) => {
   const after = staff ? null : await getBalance(ctx.userId)
   return NextResponse.json({
     playId: play.id,
-    costXp: staff ? 0 : g.cost_xp,
+    costXp: staff || freebie ? 0 : g.cost_xp,
     balance: after?.balance ?? null,
     staff,
+    freebie,
   })
 })

@@ -24,6 +24,7 @@ type Cabinet = {
 }
 type CabinetResponse = {
   balance: { balance: number; lifetimeEarned: number; spent: number }
+  freeCreditAvailable: boolean
   games: Cabinet[]
 }
 
@@ -61,10 +62,18 @@ export default function ArcadePage() {
         )}
       </div>
 
-      <p className="text-xs mb-5 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
+      <p className="text-xs mb-3 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
         <Sparkles size={13} />
         Low on XP? Vocabulary games and lessons are the earners — the arcade only spends.
       </p>
+
+      {data?.freeCreditAvailable && (
+        <div className="rounded-xl border px-4 py-3 mb-5 text-sm font-medium flex items-center gap-2"
+          style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 12%, transparent)' }}>
+          <Coins size={16} style={{ color: 'var(--primary)' }} />
+          Your first coin is on the house — one free ranked run. Make it count.
+        </div>
+      )}
 
       {err && <p className="text-sm" style={{ color: 'var(--destructive)' }}>{err}</p>}
       {!data && !err && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Powering on the cabinets…</p>}
@@ -72,7 +81,7 @@ export default function ArcadePage() {
       <div className="grid gap-4 sm:grid-cols-2">
         {data?.games.map((g) => {
           const accent = g.accent || 'var(--primary)'
-          const canAfford = data.balance.balance >= g.costXp
+          const canAfford = data.balance.balance >= g.costXp || data.freeCreditAvailable
           return (
             <div key={g.slug} className="rounded-2xl border p-5 flex flex-col" style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 0 3px 0 ${accent}` }}>
               <div className="flex items-start justify-between gap-2">
@@ -106,7 +115,7 @@ export default function ArcadePage() {
                 className="mt-4 text-center text-sm font-semibold rounded-lg px-4 py-2.5"
                 style={{ background: canAfford ? accent : 'var(--muted)', color: canAfford ? '#04060d' : 'var(--muted-foreground)' }}
               >
-                {canAfford ? '▶ INSERT COIN' : `Need ${g.costXp} XP`}
+                {data.freeCreditAvailable ? '▶ FREE CREDIT' : canAfford ? '▶ INSERT COIN' : `Need ${g.costXp} XP`}
               </Link>
             </div>
           )

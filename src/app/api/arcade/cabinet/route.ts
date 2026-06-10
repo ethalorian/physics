@@ -19,8 +19,16 @@ export const GET = withAuth(async (request, ctx) => {
     getBalance(ctx.userId),
   ])
   const games = (gamesRaw ?? []) as ArcadeGame[]
+
+  // First arcade play ever (any cabinet) is free — see /api/arcade/coin.
+  const { count: priorPlays } = await supabaseAdmin
+    .from('arcade_plays')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', ctx.userId)
+  const freeCreditAvailable = (priorPlays ?? 0) === 0
+
   if (games.length === 0) {
-    return NextResponse.json({ balance, games: [] })
+    return NextResponse.json({ balance, freeCreditAvailable, games: [] })
   }
 
   const { data: playsRaw } = await supabaseAdmin
@@ -51,6 +59,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   return NextResponse.json({
     balance,
+    freeCreditAvailable,
     weekStart,
     games: perGame.map(({ g, allTime, weekly, myBest, myWeeklyRank }) => ({
       slug: g.slug,
