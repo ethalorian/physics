@@ -409,8 +409,8 @@ function launch(){
   if(act===1){
     tug={x:lv.tug.x,y:lv.tug.y,vx:0,vy:0};
     carried=lv.cargo.map(m=>({m,col:'#c084fc'}));
-    for(const r of lv.rocks)bodies.push({x:r.x,y:r.y,vx:0,vy:0,m:r.m,r:r.r,kind:'rock',col:'#57534e'});
-    for(const p of lv.pickups)bodies.push({x:p.x,y:p.y,vx:p.vx,vy:p.vy,m:p.m,r:0.9,kind:'crate',col:'#c084fc'});
+    for(const r of lv.rocks)bodies.push({x:r.x,y:r.y,vx:0,vy:0,m:r.m,r:r.r,kind:'rock',col:'#57534e',age:0});
+    for(const p of lv.pickups)bodies.push({x:p.x,y:p.y,vx:p.vx,vy:p.vy,m:p.m,r:0.9,kind:'crate',col:'#c084fc',age:0});
   }else if(act===2){
     tug={x:24,y:15,vx:0,vy:0};
     carried=lv.cargo.map(m=>({m,col:C_TEAL}));
