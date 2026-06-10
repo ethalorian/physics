@@ -73,10 +73,14 @@ export default function VocabularyArcade() {
         <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <Gamepad2 size={24} />
         </div>
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Physics arcade</h1>
-          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Play to climb the board and keep your streak alive.</p>
+        <div className="flex-1">
+          <h1 className="text-2xl font-semibold tracking-tight">Training floor</h1>
+          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Word games earn the XP — keep your streak alive, then spend it on the main floor.</p>
         </div>
+        <Link href="/arcade" className="text-sm flex items-center gap-1.5 rounded-lg border px-3 py-2"
+          style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+          To the Arcade <ArrowRight size={14} />
+        </Link>
       </div>
 
       {/* motivation strip */}

@@ -40,6 +40,24 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLessonId])
 
+  // Deep-linked from the arcade hub's "current focus" steer (?lesson_id= or
+  // ?unit_id= on ANY game page): preselect and resolve, no prop plumbing
+  // needed. window.location (not useSearchParams) keeps prerender happy.
+  useEffect(() => {
+    if (initialLessonId) return
+    const sp = new URLSearchParams(window.location.search)
+    const lid = sp.get('lesson_id'), uid = sp.get('unit_id')
+    if (!lid && !uid) return
+    const scope2 = lid ? 'lesson' as const : 'unit' as const
+    const id = (lid ?? uid)!
+    setScope(scope2)
+    if (lid) setLessonId(lid); else setUnitId(id)
+    fetch(`/api/vocab/play?${lid ? 'lesson_id' : 'unit_id'}=${id}&tier=all`).then((r) => r.json())
+      .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
+      .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const resolve = useCallback((nextScope: 'lesson' | 'unit', id: string, t: string) => {
     if (!id) { setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }); return }
     const qs = nextScope === 'lesson' ? `lesson_id=${id}` : `unit_id=${id}`

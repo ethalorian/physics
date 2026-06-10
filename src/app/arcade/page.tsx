@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Coins, Trophy, Crown, Gamepad2, Sparkles } from 'lucide-react'
+import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, ArrowRight } from 'lucide-react'
 
 /**
- * The Arcade floor. Ranked play costs XP (a pure sink — vocab games are the
- * earners); the payout is the public leaderboard. Each cabinet card shows the
- * coin price, the player's best, this week's leader, and the all-time record.
+ * THE ARCADE — one unified hub for the whole economy loop.
+ *
+ *   TRAINING FLOOR (top): vocabulary games — the XP EARNERS (capped daily).
+ *   MAIN FLOOR (bottom): ranked physics cabinets — the XP SPENDERS.
+ *
+ * Play the word games to fund the fun games. One door for everything.
  */
 
 type Cabinet = {
@@ -27,9 +30,31 @@ type CabinetResponse = {
   freeCreditAvailable: boolean
   games: Cabinet[]
 }
+type HubData = {
+  level: number
+  xp: { into: number; forNext: number; total: number }
+  streakDays: number
+  daily: { gamesPlayed: number; gamesGoal: number; pointsToday: number; pointsGoal: number; complete: boolean }
+  games: { id: string; best: number; plays: number }[]
+  myRank: number | null
+}
+
+const VOCAB_GAMES = [
+  // steer: solo games accept ?lesson_id=/?unit_id= and preload the focus vocab
+  { id: 'word-shoot', title: 'Word shoot', desc: 'Blast the right term before it escapes', icon: Zap, href: '/vocabulary/word-shoot', steer: true },
+  { id: 'quiz-bowl', title: 'Quiz bowl', desc: 'Rapid-fire physics questions', icon: Trophy, href: '/vocabulary/quiz-bowl', steer: true },
+  { id: 'matching', title: 'Matching', desc: 'Pair terms with definitions, fast', icon: Shuffle, href: '/vocabulary/matching', steer: true },
+  { id: 'concentration', title: 'Concentration', desc: 'Flip and remember the pairs', icon: Brain, href: '/vocabulary/concentration', steer: true },
+  { id: 'letter-catch', title: 'Letter Catch', desc: 'Catch falling letters to spell the term', icon: ShoppingBasket, href: '/vocabulary/letter-catch', steer: true },
+  { id: 'duel', title: 'Vocab Duel', desc: 'Race a classmate head-to-head', icon: Swords, href: '/vocabulary/duel', steer: false },
+  { id: 'balderdash', title: 'Balderdash', desc: 'Fake definitions, real bluffing (3+)', icon: Feather, href: '/vocabulary/balderdash', steer: false },
+]
+type Focus = { scope: 'lesson' | 'unit' | null; id?: string; label?: string }
 
 export default function ArcadePage() {
   const [data, setData] = useState<CabinetResponse | null>(null)
+  const [hub, setHub] = useState<HubData | null>(null)
+  const [focus, setFocus] = useState<Focus | null>(null)
   const [err, setErr] = useState('')
 
   useEffect(() => {
@@ -37,19 +62,36 @@ export default function ArcadePage() {
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Sign in to enter the arcade'))))
       .then(setData)
       .catch((e) => setErr(e.message))
+    fetch('/api/arcade/hub')
+      .then((r) => r.json())
+      .then((d: HubData) => { if (d && typeof d.level === 'number') setHub(d) })
+      .catch(() => {})
+    fetch('/api/arcade/focus')
+      .then((r) => r.json())
+      .then((f: Focus) => { if (f && f.scope) setFocus(f) })
+      .catch(() => {})
   }, [])
 
+  const steerQS = focus?.scope ? `?${focus.scope === 'lesson' ? 'lesson_id' : 'unit_id'}=${focus.id}` : ''
+  const games = focus?.scope
+    ? [...VOCAB_GAMES].sort((a, b) => Number(b.steer) - Number(a.steer))
+    : VOCAB_GAMES
+
+  const bestById = new Map((hub?.games ?? []).map((g) => [g.id, g]))
+  const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
+
   return (
-    <div className="max-w-4xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+    <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      {/* ===== marquee ===== */}
       <div className="flex items-center justify-between flex-wrap gap-3 mt-2 mb-1">
         <div className="flex items-center gap-3">
           <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
-            <Gamepad2 size={24} />
+            <Joystick size={24} />
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">The Arcade</h1>
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Ranked runs cost XP. Glory is the only payout.
+              Earn XP on the training floor. Spend it on the main floor. One door.
             </p>
           </div>
         </div>
@@ -62,23 +104,103 @@ export default function ArcadePage() {
         )}
       </div>
 
-      <p className="text-xs mb-3 flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
-        <Sparkles size={13} />
-        Low on XP? Vocabulary games and lessons are the earners — the arcade only spends.
-      </p>
+      {err && <p className="text-sm mt-3" style={{ color: 'var(--destructive)' }}>{err}</p>}
+      {!data && !err && <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)' }}>Powering on the cabinets…</p>}
 
       {data?.freeCreditAvailable && (
-        <div className="rounded-xl border px-4 py-3 mb-5 text-sm font-medium flex items-center gap-2"
+        <div className="rounded-xl border px-4 py-3 mt-4 text-sm font-medium flex items-center gap-2"
           style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 12%, transparent)' }}>
           <Coins size={16} style={{ color: 'var(--primary)' }} />
-          Your first coin is on the house — one free ranked run. Make it count.
+          Your first coin is on the house — one free ranked run downstairs. Make it count.
         </div>
       )}
 
-      {err && <p className="text-sm" style={{ color: 'var(--destructive)' }}>{err}</p>}
-      {!data && !err && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Powering on the cabinets…</p>}
+      {/* ===== TRAINING FLOOR — the earners ===== */}
+      <div className="flex items-center justify-between mt-7 mb-3">
+        <div className="flex items-center gap-2">
+          <Gamepad2 size={16} style={{ color: 'var(--success, #22c55e)' }} />
+          <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+            Training floor · earn XP
+          </h2>
+        </div>
+        <Link href="/vocabulary" className="text-xs flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
+          full stats & streaks <ArrowRight size={12} />
+        </Link>
+      </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      {/* daily challenge strip */}
+      <div className="rounded-2xl border p-4 flex items-center gap-4 flex-wrap mb-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <div className="grid place-items-center" style={{ width: 38, height: 38, borderRadius: '50%', background: 'color-mix(in oklch, var(--reward, #f59e0b) 18%, transparent)', color: 'var(--reward, #f59e0b)' }}>
+          <Target size={20} />
+        </div>
+        <div className="flex-1 min-w-[200px]">
+          <div className="font-medium text-sm">
+            Daily challenge {hub?.daily.complete && <span className="text-xs ml-1" style={{ color: 'var(--success, #22c55e)' }}>done ✓</span>}
+            {hub && <span className="text-xs font-normal ml-2" style={{ color: 'var(--muted-foreground)' }}>
+              {hub.daily.gamesPlayed}/{hub.daily.gamesGoal} games · {hub.daily.pointsToday}/{hub.daily.pointsGoal} pts
+            </span>}
+          </div>
+          <div className="h-1.5 rounded-full mt-2 overflow-hidden" style={{ background: 'var(--border)' }}>
+            <div className="h-full" style={{ width: `${dailyPct}%`, background: 'var(--reward, #f59e0b)' }} />
+          </div>
+        </div>
+        {hub && (
+          <div className="flex items-center gap-1.5 text-sm" title="Daily play streak">
+            <Flame size={16} style={{ color: 'var(--reward, #f59e0b)' }} />
+            <span className="font-semibold">{hub.streakDays}d</span>
+          </div>
+        )}
+      </div>
+
+      {focus?.scope && (
+        <div className="rounded-xl border px-4 py-2.5 mb-3 text-sm flex items-center gap-2 flex-wrap"
+          style={{ borderColor: 'color-mix(in oklch, var(--success, #22c55e) 45%, transparent)', background: 'color-mix(in oklch, var(--success, #22c55e) 10%, transparent)' }}>
+          <Target size={15} style={{ color: 'var(--success, #22c55e)' }} />
+          <span><b>Current focus: {focus.label}</b></span>
+          <span style={{ color: 'var(--muted-foreground)' }}>
+            — starred games open preloaded with the words you’re learning right now.
+          </span>
+        </div>
+      )}
+
+      <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))' }}>
+        {games.map((g) => {
+          const Icon = g.icon
+          const best = bestById.get(g.id)
+          const steered = !!focus?.scope && g.steer
+          return (
+            <Link key={g.id} href={steered ? g.href + steerQS : g.href}
+              className="rounded-xl border p-3 flex items-start gap-3 transition-transform hover:-translate-y-0.5"
+              style={{
+                borderColor: steered ? 'color-mix(in oklch, var(--success, #22c55e) 55%, transparent)' : 'var(--border)',
+                background: 'var(--card)',
+                boxShadow: steered ? 'inset 0 2px 0 color-mix(in oklch, var(--success, #22c55e) 60%, transparent)' : 'none',
+              }}>
+              <span className="mt-0.5" style={{ color: 'var(--success, #22c55e)' }}><Icon size={18} /></span>
+              <span>
+                <span className="block text-sm font-semibold">
+                  {g.title}{steered && <span title={`preloaded: ${focus?.label}`} style={{ color: 'var(--success, #22c55e)' }}> ★</span>}
+                </span>
+                <span className="block text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{g.desc}</span>
+                {steered && <span className="block text-[11px] mt-1" style={{ color: 'var(--success, #22c55e)' }}>{focus?.label}</span>}
+                {best && best.best > 0 && (
+                  <span className="block text-[11px] mt-1" style={{ color: 'var(--reward, #f59e0b)' }}>best {best.best.toLocaleString()}</span>
+                )}
+              </span>
+            </Link>
+          )
+        })}
+      </div>
+
+      {/* ===== MAIN FLOOR — the ranked cabinets ===== */}
+      <div className="flex items-center gap-2 mt-8 mb-3">
+        <Joystick size={16} style={{ color: 'var(--primary)' }} />
+        <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+          Main floor · ranked cabinets · coins cost XP
+        </h2>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {data?.games.map((g) => {
           const accent = g.accent || 'var(--primary)'
           const canAfford = data.balance.balance >= g.costXp || data.freeCreditAvailable
@@ -86,27 +208,27 @@ export default function ArcadePage() {
             <div key={g.slug} className="rounded-2xl border p-5 flex flex-col" style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 0 3px 0 ${accent}` }}>
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h2 className="text-lg font-bold tracking-wide" style={{ color: accent }}>{g.name}</h2>
+                  <h3 className="text-lg font-bold tracking-wide" style={{ color: accent }}>{g.name}</h3>
                   {g.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</span>}
                 </div>
                 <span className="flex items-center gap-1 text-sm font-semibold rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
-                  <Coins size={14} style={{ color: accent }} /> {g.costXp} XP
+                  <Coins size={14} style={{ color: accent }} /> {g.costXp}
                 </span>
               </div>
-              {g.blurb && <p className="text-sm mt-2" style={{ color: 'var(--muted-foreground)' }}>{g.blurb}</p>}
+              {g.blurb && <p className="text-sm mt-2 flex-1" style={{ color: 'var(--muted-foreground)' }}>{g.blurb}</p>}
 
               <div className="mt-4 grid grid-cols-1 gap-1.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Trophy size={14} /> Week leader</span>
+                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Trophy size={14} /> Week</span>
                   <span className="font-medium">{g.weeklyLeader ? `${g.weeklyLeader.name} — ${g.weeklyLeader.score.toLocaleString()}` : 'unclaimed'}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Crown size={14} /> Hall of Fame</span>
+                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Crown size={14} /> All-time</span>
                   <span className="font-medium">{g.hallOfFame ? `${g.hallOfFame.name} — ${g.hallOfFame.score.toLocaleString()}` : 'be the first'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span style={{ color: 'var(--muted-foreground)' }}>Your best</span>
-                  <span className="font-medium">{g.myBest ? g.myBest.toLocaleString() : '—'}{g.myWeeklyRank ? ` (#${g.myWeeklyRank} this week)` : ''}</span>
+                  <span className="font-medium">{g.myBest ? g.myBest.toLocaleString() : '—'}{g.myWeeklyRank ? ` (#${g.myWeeklyRank})` : ''}</span>
                 </div>
               </div>
 
@@ -124,6 +246,12 @@ export default function ArcadePage() {
 
       {data && data.games.length === 0 && (
         <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No cabinets are powered on yet. Check back soon.</p>
+      )}
+
+      {data && data.balance.balance < 25 && !data.freeCreditAvailable && (
+        <p className="text-xs mt-6 text-center" style={{ color: 'var(--muted-foreground)' }}>
+          Short on coins? The training floor upstairs pays — vocabulary games earn up to 50 XP a day, and lessons pay too.
+        </p>
       )}
     </div>
   )
