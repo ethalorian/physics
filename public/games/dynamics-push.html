@@ -639,6 +639,18 @@ function makeQuestion(){
      'down the ramp — opposing the crate’s sliding',['up the ramp, helping you','horizontally','nowhere; ramps have no friction'],
      'Kinetic friction opposes relative sliding. Moving up-track → friction acts down-track, teaming up with mg·sinθ against you. Coming down, friction switches sides.'),
   ];
+  /* CROSSOVER bank — bridges back to the DESCENT cabinet (kinematics).
+     Connections pay more than facts: these award +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · DESCENT — While the tug-bot pushes with a constant net force, your crate’s v–t graph is a straight ramp. In DESCENT you learned that slope is the acceleration. Here, that same slope equals…',
+     'F_net/m — dynamics names the cause of the slope kinematics measured',['μk·g always','the applied force in newtons','zero, since the force is constant'],
+     'This is the hinge between the two cabinets: DESCENT read a = slope of v–t off the graph; PUSH explains WHERE the slope comes from — a = F_net/m. Same number, two units of physics shaking hands.'),
+   ()=>{const v=pick([4,6,8]),a=pick([2,3,4]);
+     return qNum(`CROSSOVER · DESCENT — In DESCENT you used v² = 2aΔy for a falling ship. Your crate slides at ${v} m/s and friction decelerates it at ${a} m/s². How far does it slide?`,
+       v*v/(2*a),'m',[v/a,v*v/a,v*a],
+       `d = v²/2a = ${v}²/(2·${a}) = ${fmt(v*v/(2*a))} m — the exact equation from the kinematics cabinet, with friction now playing the role gravity played there. New cause, same mathematics.`);},
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
   const bank=act===1?bank1:act===2?bank2:bank3;
   return pick(bank)();
 }
@@ -647,7 +659,7 @@ function askQuestion(){
   state='question';curQ=makeQuestion();
   overlay(`
    <div class="card">
-     <div class="tag">PHYSICS BONUS · +750</div>
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
      <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
      <div class="choices">${curQ.choices.map((c,i)=>
        `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
@@ -663,7 +675,7 @@ function answer(i){
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
   $('#contBtn').style.display='inline-block';
-  if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;}
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
   else beep(180,.3,'sawtooth',.15,-100);
   primary=nextLevel;
 }

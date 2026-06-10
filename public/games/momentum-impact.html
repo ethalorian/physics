@@ -583,6 +583,21 @@ function makeQuestion(){
      'toward the LEFT — you inherit its leftward momentum',['toward the right','nowhere if you grip firmly','straight up'],
      'Catching is a perfectly inelastic collision: its momentum joins yours the instant it’s aboard. Catch ammunition, inherit its politics.'),
   ];
+  /* CROSSOVER bank — bridges back to PUSH (dynamics) and DESCENT (kinematics).
+     Connections pay more than facts: these award +1000. */
+  const cross=[
+   ()=>{const F=pick([30,40,60]),dt2=pick([2,3]);
+     return qNum(`CROSSOVER · PUSH — A tug-bot from the dynamics cabinet pushes a crate with ${F} N of net force for ${dt2} s. By how much does the crate's MOMENTUM change?`,
+       F*dt2,'kg·m/s',[F/dt2,F,F*dt2*2],
+       `Δp = F·Δt = ${F} × ${dt2} = ${F*dt2} kg·m/s. PUSH's force-times-time IS impulse — the tug-bot was doing momentum transfers all along; nobody told you yet.`);},
+   ()=>qCon('CROSSOVER · PUSH — In the dynamics cabinet, force was F = ma. In this cabinet you computed F = Δp/Δt for collisions. These two formulas are…',
+     'the same law — Δ(mv)/Δt becomes ma when mass is constant',['rivals; only one is correct','unrelated; one is about crates, one about pucks','approximations of a third, secret law'],
+     'Newton actually WROTE his second law as Δp/Δt. The ma version is the special case where mass holds still. Your salvage tug — whose mass changes with every throw — needs the original.'),
+   ()=>qCon('CROSSOVER · DESCENT — Your thrown crate coasts across the field in a straight line at constant speed. Which DESCENT lesson is it obeying?',
+     'no net force → constant velocity — the flat part of the v–t graph',['v² = v₀² + 2gΔy','slope of v–t equals g','area under a–t is position'],
+     'In DESCENT, the ship coasting between burns drew a flat v–t line. Out here with no gravity and no rail, EVERYTHING is that flat line until a collision redraws it.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
   const bank=act===1?bank1:act===2?bank1.slice(3).concat(bank2.slice(0,3)):act===3?bank2.slice(2).concat(bank3):bank3;
   return pick(bank)();
 }
@@ -591,7 +606,7 @@ function askQuestion(){
   state='question';curQ=makeQuestion();
   overlay(`
    <div class="card">
-     <div class="tag">PHYSICS BONUS · +750</div>
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
      <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
      <div class="choices">${curQ.choices.map((c,i)=>
        `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
@@ -607,7 +622,7 @@ function answer(i){
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
   $('#contBtn').style.display='inline-block';
-  if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;}
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
   else beep(180,.3,'sawtooth',.15,-100);
   primary=nextLevel;
 }
