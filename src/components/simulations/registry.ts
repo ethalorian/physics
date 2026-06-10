@@ -25,6 +25,7 @@ export const SIM_COMPONENTS: Record<string, ComponentType> = {
   'freefall-cliff': load(() => import('@/app/simulations/freefall-cliff/page')),
   'impulse-momentum': load(() => import('@/app/simulations/impulse-momentum/page')),
   'maze-vectors': load(() => import('@/app/simulations/maze-vectors/page')),
+  'measure-of-all-things': load(() => import('@/app/simulations/measure-of-all-things/page')),
   'measurement-precision': load(() => import('@/app/simulations/measurement-precision/page')),
   'monkey-hunter': load(() => import('@/app/simulations/monkey-hunter/page')),
   'picket-fence-g': load(() => import('@/app/simulations/picket-fence-g/page')),

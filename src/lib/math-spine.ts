@@ -41,6 +41,10 @@ export const POINT_VALUES = {
   'competency-fluent': 20,
   'strand-complete': 75,
   'spotlight': 15,
+  // Token point for an extra self-checked practice rep (capped 3/day in the
+  // practice route). Deliberately tiny relative to 'competency-fluent' so
+  // grinding reps can never beat honest ladder progress.
+  'practice-rep': 1,
 } as const
 
 export type Milestone = keyof typeof POINT_VALUES

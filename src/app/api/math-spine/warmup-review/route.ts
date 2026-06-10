@@ -56,24 +56,25 @@ export const POST = withAuth(async (request, ctx) => {
     return NextResponse.json({ error: result.error }, { status: 500 })
   }
 
-  // Track which tested competencies are now rated; resolve only when all are.
+  // One competency per warm-up (redesign decision 12): a single rating fully
+  // resolves the submission. Legacy multi-competency submissions resolve on
+  // their first rating too — no half-rated 'pending' limbo.
   const rated = new Set<string>(sub.rated_competency_ids ?? [])
   rated.add(competency_id)
-  const allRated = tested.length > 0 && tested.every((id) => rated.has(id))
 
   const { error: updErr } = await supabaseAdmin
     .from('math_warmup_submissions')
     .update({
       rated_competency_ids: [...rated],
-      status: allRated ? 'reviewed' : 'pending',
+      status: 'reviewed',
       resulting_level: level,
       reviewed_by: ctx.email,
-      reviewed_at: allRated ? new Date().toISOString() : null,
+      reviewed_at: new Date().toISOString(),
     })
     .eq('id', submission_id)
   if (updErr) {
     console.error('Error updating warm-up submission:', updErr)
   }
 
-  return NextResponse.json({ awarded: result.awarded, resolved: allRated }, { status: 201 })
+  return NextResponse.json({ awarded: result.awarded, resolved: true }, { status: 201 })
 })

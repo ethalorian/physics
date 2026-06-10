@@ -2,6 +2,16 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { translateMathPrompt } from '@/lib/math-translation'
+import { validateTemplate, type ItemTemplate } from '@/lib/math-item-template'
+
+/** Parse + validate an authored template; null clears it. Throws a message on bad input. */
+function templateFromBody(prompt: string, raw: unknown): ItemTemplate | null {
+  if (raw === null || raw === undefined || raw === '') return null
+  const tpl = raw as ItemTemplate
+  const problem = validateTemplate(prompt, tpl)
+  if (problem) throw new Error(problem)
+  return { vars: tpl.vars, answer: tpl.answer, answerUnit: tpl.answerUnit || undefined, sigFigs: tpl.sigFigs || undefined }
+}
 
 // /api/math-spine/bank — teacher-managed warm-up item bank.
 //   GET    → all items (with tested competency ids) + all competencies
@@ -26,7 +36,7 @@ export const GET = withAuth(async (_request, ctx) => {
 
   const { data: items } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, competency_id, prompt, answer_key, first_unit_id, difficulty, needs_graph, needs_equation_builder, created_at')
+    .select('id, competency_id, prompt, answer_key, first_unit_id, difficulty, needs_graph, needs_equation_builder, template, created_at')
     .order('created_at', { ascending: true })
 
   const { data: tags } = await supabaseAdmin
@@ -48,6 +58,7 @@ export const GET = withAuth(async (_request, ctx) => {
     difficulty: i.difficulty,
     needsGraph: i.needs_graph ?? false,
     needsEquationBuilder: i.needs_equation_builder ?? false,
+    template: i.template ?? null,
     testedCompetencyIds: testedByItem.get(i.id) ?? [i.competency_id],
   }))
 
@@ -62,6 +73,13 @@ export const POST = withAuth(async (request, ctx) => {
     return NextResponse.json({ error: 'prompt and competency_id are required' }, { status: 400 })
   }
 
+  let template: ItemTemplate | null = null
+  try {
+    template = templateFromBody(String(prompt), body.template)
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : 'Invalid template' }, { status: 400 })
+  }
+
   const { data: item, error } = await supabaseAdmin
     .from('math_spiral_items')
     .insert({
@@ -72,6 +90,7 @@ export const POST = withAuth(async (request, ctx) => {
       difficulty: body.difficulty ?? null,
       needs_graph: Boolean(body.needs_graph),
       needs_equation_builder: Boolean(body.needs_equation_builder),
+      template,
       created_by: ctx.email,
     })
     .select('id')
@@ -106,6 +125,19 @@ export const PATCH = withAuth(async (request, ctx) => {
     patch.translations = await translateMathPrompt(String(body.prompt))
   }
   if (body.answer_key !== undefined) patch.answer_key = body.answer_key
+  if (body.template !== undefined) {
+    // Validate against the prompt being saved (or the stored one when only the template changes).
+    let promptForCheck = body.prompt !== undefined ? String(body.prompt) : ''
+    if (!promptForCheck) {
+      const { data: existing } = await supabaseAdmin.from('math_spiral_items').select('prompt').eq('id', id).maybeSingle()
+      promptForCheck = existing?.prompt ?? ''
+    }
+    try {
+      patch.template = templateFromBody(promptForCheck, body.template)
+    } catch (e) {
+      return NextResponse.json({ error: e instanceof Error ? e.message : 'Invalid template' }, { status: 400 })
+    }
+  }
   if (body.first_unit_id !== undefined) patch.first_unit_id = body.first_unit_id
   if (body.difficulty !== undefined) patch.difficulty = body.difficulty
   if (body.competency_id !== undefined) patch.competency_id = body.competency_id

@@ -13,7 +13,9 @@
  */
 import { MathCompetencyRecord, MathStrand, DEFAULT_RECENCY_WEIGHT } from '@/data/curriculum-types'
 import { STRAND_ORDER, STRAND_LABEL } from '@/lib/math-spine'
+import { rungState, RUNG_STATE_LABEL } from '@/lib/math-spine-picker'
 import MathClimb from './MathClimb'
+import MathLadder, { type LadderRung } from './MathLadder'
 import {
   PALETTE,
   levelWord,
@@ -31,6 +33,9 @@ export interface SpineCompetency {
   code: string
   statement: string
   strand: MathStrand
+  /** ladder position; falls back to orderIndex when unset */
+  sequenceOrder?: number | null
+  orderIndex?: number
 }
 
 export interface SpineGrant {
@@ -53,9 +58,10 @@ export interface MathSpineGrowthProps {
 
 const MILESTONE_LABEL: Record<string, string> = {
   'levelup-almost': 'Reached "Almost"',
-  'competency-fluent': 'Became Fluent',
+  'competency-fluent': 'Reached "Got it"',
   'strand-complete': 'Completed a strand',
   'spotlight': 'Teacher spotlight',
+  'practice-rep': 'Extra practice rep',
 }
 
 function TrendIcon({ trend }: { trend: Trend }) {
@@ -102,7 +108,29 @@ export default function MathSpineGrowth({
   const fluentCount = competencies.filter(
     (c) => (competencyValue(byCompetency.get(c.id), recencyWeight) ?? 0) >= 2.5,
   ).length
+  // Token practice points count toward the total, but the celebration trail
+  // shows real milestones only — reps would drown them out.
+  const trailGrants = grants.filter((g) => g.milestone !== 'practice-rep')
   const strandsComplete = grants.filter((g) => g.milestone === 'strand-complete').length
+
+  // The ladder: same rung states the daily picker uses (one source of truth).
+  const levelsFor = (id: string) =>
+    (byCompetency.get(id) ?? [])
+      .slice()
+      .sort((a, b) => a.observedAt.localeCompare(b.observedAt))
+      .map((r) => r.level)
+  const ladderRungs: LadderRung[] = [...competencies]
+    .sort(
+      (a, b) =>
+        (a.sequenceOrder ?? 999) - (b.sequenceOrder ?? 999) ||
+        (a.orderIndex ?? 0) - (b.orderIndex ?? 0),
+    )
+    .map((c) => ({
+      competencyId: c.id,
+      code: c.code,
+      statement: c.statement,
+      state: rungState(levelsFor(c.id), recencyWeight),
+    }))
 
   return (
     <div style={{ background: 'var(--card)', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
@@ -129,6 +157,11 @@ export default function MathSpineGrowth({
         <span className="text-lg font-semibold tabular-nums" style={{ color: PALETTE.sage }}>
           {mathPointsEarned} pts
         </span>
+      </div>
+
+      {/* The skill ladder — the same states the daily picker climbs */}
+      <div className="mb-4">
+        <MathLadder rungs={ladderRungs} />
       </div>
 
       {/* Your math climb — ratings over time */}
@@ -212,7 +245,7 @@ export default function MathSpineGrowth({
                     </span>
                     <span className="flex-1 text-[13px] leading-snug">{c.statement}</span>
                     {fluent && (
-                      <span aria-label="Fluent" title="Fluent" style={{ color: PALETTE.sage }}>
+                      <span aria-label={RUNG_STATE_LABEL['got-it']} title={RUNG_STATE_LABEL['got-it']} style={{ color: PALETTE.sage }}>
                         ★
                       </span>
                     )}
@@ -241,7 +274,7 @@ export default function MathSpineGrowth({
           className="text-xs rounded-full px-3 py-1"
           style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}
         >
-          ★ {fluentCount} of {competencies.length} skills Fluent
+          ★ {fluentCount} of {competencies.length} skills at &ldquo;Got it&rdquo;
         </span>
         <span
           className="text-xs rounded-full px-3 py-1"
@@ -250,9 +283,9 @@ export default function MathSpineGrowth({
           {strandsComplete} strand{strandsComplete === 1 ? '' : 's'} complete
         </span>
       </div>
-      {grants.length > 0 && (
+      {trailGrants.length > 0 && (
         <div className="rounded-lg border bg-card mt-2 px-4" style={{ borderColor: PALETTE.hairline }}>
-          {grants.slice(0, 6).map((g, i) => (
+          {trailGrants.slice(0, 6).map((g, i) => (
             <div
               key={`${g.milestone}-${i}`}
               className="flex items-center gap-3 py-2 text-[13px]"

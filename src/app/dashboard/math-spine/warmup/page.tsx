@@ -3,20 +3,28 @@
 /**
  * Daily math warm-up — its own screen.
  *
- * Three parts: (1) the prompt, (2) a mini-lesson with an explicit diagram showing
- * HOW to do this kind of problem, and (3) the work surface — a work canvas (type
- * or draw any kind of work by hand) plus a final answer, with an
- * optional Given/Equation set-up for solve problems. Submitting sends the answer
- * to the teacher's control-room review queue.
+ * Three parts: (1) the prompt, framed by WHY the picker chose it (climb /
+ * re-check / refresh / maintenance), (2) a mini-lesson with an explicit diagram
+ * showing HOW to do this kind of problem, and (3) the work surface — a work
+ * canvas plus a final answer. Submitting sends the answer to the teacher's
+ * control-room review queue AND returns an instant self-check verdict on the
+ * answer (the machine judges the answer; the teacher rates the thinking).
+ * After submitting, the student can keep practicing with instant-checked reps.
+ *
+ * Vocabulary: students see ONE scale everywhere — Not yet / Almost / Got it
+ * (plus "Needs a refresh" on the ladder). See warmup_remediation_redesign.md.
  */
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, Lightbulb, Target, Languages } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, Lightbulb, Target, Languages, RefreshCw } from 'lucide-react'
 import WarmupAnswer, { type WarmupAnswerValue } from '@/components/math-spine/WarmupAnswer'
 import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
-import { tieredLessonsForCode, pickTier, TIER_LABELS, type MiniLesson } from '@/lib/math-spine-lessons'
+import MathLadder, { type LadderRung } from '@/components/math-spine/MathLadder'
+import PracticeRep from '@/components/math-spine/PracticeRep'
+import { tieredLessonsForCode, pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
+import type { PickKind } from '@/lib/math-spine-picker'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
 import { useTranslator } from '@/lib/math-translate-store'
 
@@ -26,7 +34,6 @@ interface DailyItem {
   competencyCode: string
   competencyStatement: string
   prompt: string
-  answerKey?: string
   difficulty?: string
   needsGraph?: boolean
   needsEquationBuilder?: boolean
@@ -34,6 +41,8 @@ interface DailyItem {
   miniLessonTiers?: MiniLesson[] | null
   translations?: Record<string, string>
 }
+
+type SelfCheck = 'match' | 'mismatch' | 'unknown'
 
 function strandForCode(code: string | undefined): string {
   const p = (code ?? '').slice(0, 2)
@@ -45,13 +54,39 @@ function strandForCode(code: string | undefined): string {
   return ''
 }
 
+/** One student vocabulary: the mini-lesson tier mirrors the student's level. */
+const LEVEL_WORDS = ['Not yet', 'Almost', 'Got it'] as const
+
+/** Why today's problem is THIS problem — the picker's reason, in student words. */
+const PICK_FRAMING: Record<PickKind, { label: string; explain: string }> = {
+  climb: {
+    label: "Today's problem",
+    explain: 'This is your current rung on the ladder — get it to “Got it” to unlock the next skill.',
+  },
+  refresh: {
+    label: 'Patch it back up',
+    explain: 'You had this skill at “Got it” before and it slipped. Refreshing it comes first — it holds up everything above it.',
+  },
+  recheck: {
+    label: 'Still got it?',
+    explain: 'A quick check on a skill you already own — keeping it warm is part of fluency.',
+  },
+  maintenance: {
+    label: 'Keeping it sharp',
+    explain: 'Your whole ladder is at “Got it” — today is upkeep and stretch.',
+  },
+}
+
 export default function WarmupPage() {
   const [item, setItem] = useState<DailyItem | null>(null)
+  const [pickKind, setPickKind] = useState<PickKind>('climb')
+  const [ladder, setLadder] = useState<LadderRung[]>([])
   const [loading, setLoading] = useState(true)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [ans, setAns] = useState<WarmupAnswerValue | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [selfCheck, setSelfCheck] = useState<SelfCheck | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [translationEnabled, setTranslationEnabled] = useState(false)
   const [lang, setLang] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('mathLang') || '' : ''))
@@ -64,6 +99,8 @@ export default function WarmupPage() {
       .then((d) => {
         if (!active || !d) return
         setItem(d.item ?? null)
+        setPickKind((d.pickKind as PickKind) ?? 'climb')
+        setLadder((d.ladder as LadderRung[]) ?? [])
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
         setTranslationEnabled(Boolean(d.translationEnabled))
         setLoading(false)
@@ -95,10 +132,11 @@ export default function WarmupPage() {
           response_json: ans,
         }),
       })
+      const j = await res.json().catch(() => ({}))
       if (!res.ok) {
-        const j = await res.json().catch(() => ({}))
         throw new Error(j.error || `Submit failed (${res.status})`)
       }
+      setSelfCheck((j.selfCheck as SelfCheck) ?? 'unknown')
       setSubmitted(true)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Submit failed')
@@ -111,6 +149,7 @@ export default function WarmupPage() {
   const tierIdx = pickTier(item?.competencyValue)
   const lesson: MiniLesson | null = tiers ? (tiers[tierIdx] ?? tiers[0]) : null
   const done = submitted || alreadySubmitted
+  const framing = PICK_FRAMING[pickKind]
 
   // Translation: only when the student's section has it enabled AND this question
   // carries translations. English stays primary; the student taps to swap.
@@ -147,20 +186,32 @@ export default function WarmupPage() {
 
       {!loading && item && (
         <>
-          {/* Today's problem — the can't-miss callout */}
+          {/* Today's problem — the can't-miss callout, framed by WHY it was picked */}
           <div
             className="rounded-xl border-l-4 p-4 shadow-sm"
             style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 9%, var(--card))' }}
           >
             <div className="flex items-center gap-2 mb-1.5">
-              <Target className="h-4 w-4" style={{ color: 'var(--primary)' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>{t("Today's problem")}</span>
+              {pickKind === 'refresh' || pickKind === 'recheck'
+                ? <RefreshCw className="h-4 w-4" style={{ color: 'var(--primary)' }} />
+                : <Target className="h-4 w-4" style={{ color: 'var(--primary)' }} />}
+              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>{t(framing.label)}</span>
               <span className="text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums ml-auto">{item.competencyCode}</span>
             </div>
             <p className="text-base font-semibold text-foreground leading-snug">{displayPrompt}</p>
             {translateBar}
             <p className="text-xs text-muted-foreground mt-2">{t(item.competencyStatement)}</p>
-            <p className="text-[11px] text-muted-foreground mt-1">{t('This is your one math warm-up for today — a new one unlocks tomorrow.')}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">{t(framing.explain)}</p>
+
+            {/* Where this problem sits on the ladder */}
+            {ladder.length > 0 && (
+              <div className="mt-3 pt-2.5" style={{ borderTop: '0.5px solid var(--border)' }}>
+                <MathLadder rungs={ladder} compact />
+                <Link href="/dashboard/math-spine" className="text-[11px] font-medium" style={{ color: 'var(--primary)' }}>
+                  {t('See your full ladder →')}
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mini-lesson with an explicit diagram */}
@@ -171,7 +222,7 @@ export default function WarmupPage() {
                   <Lightbulb className="h-4 w-4 text-amber-500" />
                   <CardTitle className="text-foreground text-base">{t('How to do it:')} {t(lesson.title)}</CardTitle>
                   <span className="text-[11px] rounded-full px-2 py-0.5 bg-muted text-muted-foreground">
-                    {t(TIER_LABELS[tierIdx])} · {tierIdx + 1} of 3
+                    {t('matched to you')} · {t(LEVEL_WORDS[tierIdx])}
                   </span>
                 </div>
               </CardHeader>
@@ -185,19 +236,44 @@ export default function WarmupPage() {
             </Card>
           )}
 
-          {/* Work surface */}
+          {/* Work surface / post-submit state */}
           {done ? (
-            <Card className="apple-card">
-              <CardContent className="py-6">
-                <div className="flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-300">
-                  <CheckCircle2 className="h-5 w-5" />
-                  {t('Submitted — your teacher will review your work and rate your fluency.')}
-                </div>
-                <Link href="/dashboard/math-spine">
-                  <Button variant="ghost" size="sm" className="rounded-full mt-3 -ml-2 text-muted-foreground">{t('See your math literacy →')}</Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <>
+              <Card className="apple-card">
+                <CardContent className="py-6 space-y-2">
+                  {selfCheck === 'match' && (
+                    <div className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+                      <CheckCircle2 className="h-5 w-5 shrink-0" />
+                      <span>
+                        {t('Your answer matches!')}{' '}
+                        <span className="text-muted-foreground">{t('Your teacher rates the thinking — Not yet, Almost, or Got it — and that moves your ladder.')}</span>
+                      </span>
+                    </div>
+                  )}
+                  {selfCheck === 'mismatch' && (
+                    <div className="flex items-start gap-2 text-sm" style={{ color: 'var(--viz-down)' }}>
+                      <XCircle className="h-5 w-5 shrink-0" />
+                      <span>
+                        {t("Your answer doesn't match the expected one — worth another look at the mini-lesson.")}{' '}
+                        <span className="text-muted-foreground">{t('Your teacher will read your work either way. Try a practice rep below to nail it.')}</span>
+                      </span>
+                    </div>
+                  )}
+                  {(selfCheck === 'unknown' || selfCheck === null) && (
+                    <div className="flex items-start gap-2 text-sm text-emerald-700 dark:text-emerald-300">
+                      <CheckCircle2 className="h-5 w-5 shrink-0" />
+                      <span>{t('Submitted — your teacher will check your work and rate it: Not yet, Almost, or Got it.')}</span>
+                    </div>
+                  )}
+                  <Link href="/dashboard/math-spine">
+                    <Button variant="ghost" size="sm" className="rounded-full mt-1 -ml-2 text-muted-foreground">{t('See your ladder & math literacy →')}</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              {/* Unlimited extra reps — instant check, token points, no records */}
+              <PracticeRep />
+            </>
           ) : (
             <Card className="apple-card">
               <CardHeader>
@@ -215,11 +291,12 @@ export default function WarmupPage() {
                   onChange={setAns}
                   lang={activeLang}
                 />
-                <div className="flex items-center gap-2 pt-2 border-t border-border">
+                <div className="flex items-center gap-2 pt-2 border-t border-border flex-wrap">
                   <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">
-                    {submitting ? t('Submitting…') : t('Submit for review')}
+                    {submitting ? t('Submitting…') : t('Submit — instant check')}
                   </Button>
                   {!hasWork && <span className="text-xs text-muted-foreground">{t('Show your work or enter an answer first.')}</span>}
+                  {hasWork && <span className="text-xs text-muted-foreground">{t('Show your work to get the instant answer check.')}</span>}
                   {error && <span className="text-xs text-red-600">{error}</span>}
                 </div>
               </CardContent>

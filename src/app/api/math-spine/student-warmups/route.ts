@@ -25,7 +25,7 @@ export const GET = withAuth(async (request, ctx) => {
   // Submissions (pending first, newest first), optionally scoped to one competency.
   let subQuery = supabaseAdmin
     .from('math_warmup_submissions')
-    .select('id, competency_id, prompt, response, response_json, status, resulting_level, submitted_at, reviewed_at, tested_competency_ids, rated_competency_ids')
+    .select('id, competency_id, prompt, response, response_json, status, resulting_level, submitted_at, reviewed_at, tested_competency_ids, rated_competency_ids, self_check')
     .eq('user_id', userId)
     .order('submitted_at', { ascending: false })
     .limit(20)

@@ -35,14 +35,14 @@ export const GET = withAuth(async (request, ctx) => {
   // 1) Competencies (the permanent spine).
   const { data: compRows, error: compErr } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, slug, code, statement, strand, rationale, is_active, order_index')
+    .select('id, slug, code, statement, strand, rationale, is_active, order_index, sequence_order')
     .eq('is_active', true)
     .order('strand', { ascending: true })
     .order('order_index', { ascending: true })
   if (compErr) {
     return NextResponse.json({ error: compErr.message }, { status: 500 })
   }
-  const competencies: (MathCompetency & { slug: string })[] = (compRows ?? []).map((c) => ({
+  const competencies: (MathCompetency & { slug: string; sequenceOrder: number | null })[] = (compRows ?? []).map((c) => ({
     id: c.id,
     slug: c.slug,
     code: c.code,
@@ -51,6 +51,7 @@ export const GET = withAuth(async (request, ctx) => {
     rationale: c.rationale ?? undefined,
     isActive: c.is_active,
     orderIndex: c.order_index,
+    sequenceOrder: c.sequence_order ?? null,
   }))
   const competencyIds = competencies.map((c) => c.id)
 

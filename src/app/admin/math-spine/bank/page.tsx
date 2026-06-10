@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Pencil, Trash2, ArrowLeft, Lightbulb } from 'lucide-react'
 import { tieredLessonsForCode, TIER_LABELS } from '@/lib/math-spine-lessons'
+import { instantiateTemplate, validateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 
 interface MiniLesson { title: string; steps: string[]; tip?: string }
 interface Comp { id: string; code: string; statement: string; strand: string; mini_lesson: { tiers: MiniLesson[] } | null }
@@ -25,8 +26,12 @@ interface Item {
   difficulty: string | null
   needsGraph?: boolean
   needsEquationBuilder?: boolean
+  template?: ItemTemplate | null
   testedCompetencyIds: string[]
 }
+
+/** Editable row form of a template variable. */
+interface VarDraft { name: string; min: string; max: string; step: string }
 
 const UNITS = ['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7']
 const DIFFICULTIES = ['easy', 'medium', 'hard']
@@ -41,11 +46,43 @@ interface ItemForm {
   tested: string[]
   needsGraph: boolean
   needsEquationBuilder: boolean
+  randomize: boolean
+  tplVars: VarDraft[]
+  tplAnswer: string
+  tplUnit: string
 }
 const emptyForm = (competencyId = ''): ItemForm => ({
   prompt: '', answerKey: '', difficulty: 'easy', firstUnitId: 'unit-1', competencyId, tested: [],
   needsGraph: false, needsEquationBuilder: false,
+  randomize: false, tplVars: [{ name: 'a', min: '1', max: '10', step: '1' }], tplAnswer: '', tplUnit: '',
 })
+
+/** Build the template object the API expects from the form draft (or null). */
+function templateFromForm(f: ItemForm): ItemTemplate | null {
+  if (!f.randomize) return null
+  const vars: ItemTemplate['vars'] = {}
+  for (const v of f.tplVars) {
+    if (!v.name.trim()) continue
+    vars[v.name.trim()] = {
+      min: parseFloat(v.min),
+      max: parseFloat(v.max),
+      step: v.step.trim() ? parseFloat(v.step) : undefined,
+    }
+  }
+  return { vars, answer: f.tplAnswer.trim(), answerUnit: f.tplUnit.trim() || undefined }
+}
+
+function formFromTemplate(tpl: ItemTemplate | null | undefined): Pick<ItemForm, 'randomize' | 'tplVars' | 'tplAnswer' | 'tplUnit'> {
+  if (!tpl) return { randomize: false, tplVars: [{ name: 'a', min: '1', max: '10', step: '1' }], tplAnswer: '', tplUnit: '' }
+  return {
+    randomize: true,
+    tplVars: Object.entries(tpl.vars).map(([name, v]) => ({
+      name, min: String(v.min), max: String(v.max), step: v.step !== undefined ? String(v.step) : '',
+    })),
+    tplAnswer: tpl.answer,
+    tplUnit: tpl.answerUnit ?? '',
+  }
+}
 
 export default function WarmupBankPage() {
   const [comps, setComps] = useState<Comp[]>([])
@@ -88,6 +125,7 @@ export default function WarmupBankPage() {
       tested: it.testedCompetencyIds.filter((c) => c !== it.competencyId),
       needsGraph: Boolean(it.needsGraph),
       needsEquationBuilder: Boolean(it.needsEquationBuilder),
+      ...formFromTemplate(it.template),
     })
     setEditingId(it.id)
   }
@@ -99,6 +137,11 @@ export default function WarmupBankPage() {
 
   async function saveItem() {
     if (!form.prompt.trim() || !form.competencyId) { setError('A prompt and a primary competency are required.'); return }
+    const template = templateFromForm(form)
+    if (template) {
+      const problem = validateTemplate(form.prompt, template)
+      if (problem) { setError(problem); return }
+    }
     setBusy(true); setError(null)
     try {
       const payload = {
@@ -111,6 +154,7 @@ export default function WarmupBankPage() {
         tested_competency_ids: form.tested,
         needs_graph: form.needsGraph,
         needs_equation_builder: form.needsEquationBuilder,
+        template,
       }
       const res = await fetch('/api/math-spine/bank', {
         method: editingId === 'new' ? 'POST' : 'PATCH',
@@ -177,6 +221,58 @@ export default function WarmupBankPage() {
                 <div>
                   <label className="text-xs font-medium text-muted-foreground">Answer key (teacher / self-check)</label>
                   <input className={inputCls} value={form.answerKey} onChange={(e) => setForm({ ...form, answerKey: e.target.value })} />
+                </div>
+                <div className="rounded-lg border border-border p-3 space-y-2">
+                  <label className="inline-flex items-center gap-2 text-sm font-medium text-foreground cursor-pointer">
+                    <input type="checkbox" checked={form.randomize} onChange={(e) => setForm({ ...form, randomize: e.target.checked })} />
+                    Randomize numbers (same problem, different values per student)
+                  </label>
+                  {form.randomize && (
+                    <>
+                      <p className="text-[11px] text-muted-foreground">
+                        Write the prompt with slots like <code className="bg-muted px-1 rounded">{'{a}'}</code>. Each student gets values drawn
+                        from the ranges below; the answer key is computed from your expression, so the self-check works per student.
+                      </p>
+                      {form.tplVars.map((v, i) => (
+                        <div key={i} className="flex flex-wrap items-end gap-2">
+                          <div>
+                            <label className="text-[11px] text-muted-foreground">variable</label>
+                            <input className={`${inputCls} w-16`} value={v.name} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, name: e.target.value } : x) })} />
+                          </div>
+                          <div>
+                            <label className="text-[11px] text-muted-foreground">min</label>
+                            <input className={`${inputCls} w-20`} value={v.min} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, min: e.target.value } : x) })} />
+                          </div>
+                          <div>
+                            <label className="text-[11px] text-muted-foreground">max</label>
+                            <input className={`${inputCls} w-20`} value={v.max} onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, max: e.target.value } : x) })} />
+                          </div>
+                          <div>
+                            <label className="text-[11px] text-muted-foreground">step</label>
+                            <input className={`${inputCls} w-16`} value={v.step} placeholder="1" onChange={(e) => setForm({ ...form, tplVars: form.tplVars.map((x, j) => j === i ? { ...x, step: e.target.value } : x) })} />
+                          </div>
+                          {form.tplVars.length > 1 && (
+                            <Button size="sm" variant="ghost" className="rounded-full text-red-600" onClick={() => setForm({ ...form, tplVars: form.tplVars.filter((_, j) => j !== i) })}>✕</Button>
+                          )}
+                        </div>
+                      ))}
+                      <Button size="sm" variant="ghost" className="rounded-full -ml-2 text-muted-foreground"
+                        onClick={() => setForm({ ...form, tplVars: [...form.tplVars, { name: '', min: '1', max: '10', step: '1' }] })}>
+                        + add variable
+                      </Button>
+                      <div className="flex flex-wrap gap-2">
+                        <div className="flex-1 min-w-40">
+                          <label className="text-[11px] text-muted-foreground">answer expression (e.g. d / t, 0.5*m*v^2, sqrt(x))</label>
+                          <input className={inputCls} value={form.tplAnswer} onChange={(e) => setForm({ ...form, tplAnswer: e.target.value })} />
+                        </div>
+                        <div>
+                          <label className="text-[11px] text-muted-foreground">answer unit</label>
+                          <input className={`${inputCls} w-24`} value={form.tplUnit} placeholder="m/s" onChange={(e) => setForm({ ...form, tplUnit: e.target.value })} />
+                        </div>
+                      </div>
+                      <TemplatePreview form={form} />
+                    </>
+                  )}
                 </div>
                 <div>
                   <label className="text-xs font-medium text-muted-foreground">Answer tools (shown to the student when needed)</label>
@@ -246,6 +342,7 @@ export default function WarmupBankPage() {
                         {it.firstUnitId && <span className="text-[11px] text-muted-foreground">· {it.firstUnitId}</span>}
                         {it.needsGraph && <Badge variant="outline" className="text-[10px]">graph</Badge>}
                         {it.needsEquationBuilder && <Badge variant="outline" className="text-[10px]">equation</Badge>}
+                        {it.template && <Badge variant="outline" className="text-[10px]">🎲 random</Badge>}
                       </div>
                       <p className="text-sm text-foreground">{it.prompt}</p>
                     </div>
@@ -270,6 +367,24 @@ export default function WarmupBankPage() {
       )}
     </div>
   )
+}
+
+/** Live example of a templated item, revalidated as the teacher types. */
+function TemplatePreview({ form }: { form: ItemForm }) {
+  const tpl = templateFromForm(form)
+  if (!tpl) return null
+  const problem = validateTemplate(form.prompt, tpl)
+  if (problem) return <p className="text-[11px] text-amber-600">{problem}</p>
+  try {
+    const ex = instantiateTemplate(form.prompt, tpl, `preview:${Date.now() % 7}`)
+    return (
+      <p className="text-[11px] text-muted-foreground rounded-md bg-muted/60 px-2 py-1.5">
+        <b>Example student version:</b> {ex.prompt} <b>→ key:</b> {ex.answerKey}
+      </p>
+    )
+  } catch {
+    return null
+  }
 }
 
 interface TierDraft { title: string; stepsText: string; tip: string }

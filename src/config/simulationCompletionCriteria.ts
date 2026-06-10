@@ -6,6 +6,14 @@ import { SimulationCompletionConfig } from '@/hooks/useSimulationCompletion'
  */
 
 export const simulationCompletionCriteria: Record<string, SimulationCompletionConfig> = {
+  // The Measure of All Things - narrative metric-system quest.
+  // Completion is driven manually (markComplete) when all six chapters are
+  // finished; autoComplete must stay off so the default time/interaction
+  // criteria can't mark the story complete prematurely.
+  'measure-of-all-things': {
+    autoComplete: false
+  },
+
   // Free Body Diagram - Forces and Newton's Laws
   'free-body-diagram': {
     requiredActions: ['force_added', 'mass_changed', 'force_modified'],

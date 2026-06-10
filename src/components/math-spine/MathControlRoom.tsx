@@ -43,6 +43,7 @@ interface Submission {
   submitted_at: string
   tested_competency_ids: string[]
   rated_competency_ids: string[]
+  self_check?: 'match' | 'mismatch' | 'unknown' | null
 }
 
 type BoardText = { x: number; y: number; text: string; size?: number }
@@ -368,7 +369,16 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
 
             {!drawerLoading && activeSub && (
               <div className="rounded-lg border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-                <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Submitted {fmtDate(activeSub.submitted_at)}</div>
+                <div className="flex items-center gap-2 text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>
+                  <span>Submitted {fmtDate(activeSub.submitted_at)}</span>
+                  {/* Instant self-check triage chip: the machine's verdict on the ANSWER only */}
+                  {activeSub.self_check === 'match' && (
+                    <span className="rounded-full px-2 py-0.5 font-semibold" style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}>✓ answer matched</span>
+                  )}
+                  {activeSub.self_check === 'mismatch' && (
+                    <span className="rounded-full px-2 py-0.5 font-semibold" style={{ background: 'color-mix(in oklch, var(--viz-down) 12%, transparent)', color: 'var(--viz-down)' }}>✗ answer off</span>
+                  )}
+                </div>
                 {activeSub.prompt && (
                   <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}><b>Prompt:</b> {activeSub.prompt}</p>
                 )}
