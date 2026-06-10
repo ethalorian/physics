@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, ArrowRight } from 'lucide-react'
+import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather } from 'lucide-react'
+import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 
 /**
  * THE ARCADE — one unified hub for the whole economy loop.
@@ -115,17 +116,33 @@ export default function ArcadePage() {
         </div>
       )}
 
+      {/* daily spin — a tiny trickle of XP, one distant jackpot */}
+      <div className="mt-4">
+        <DailySpinWheel onWon={(xp) => setData((d) => d ? {
+          ...d,
+          balance: { ...d.balance, balance: d.balance.balance + xp, lifetimeEarned: d.balance.lifetimeEarned + xp },
+        } : d)} />
+      </div>
+
       {/* ===== TRAINING FLOOR — the earners ===== */}
-      <div className="flex items-center justify-between mt-7 mb-3">
+      <div className="flex items-center justify-between flex-wrap gap-2 mt-7 mb-3">
         <div className="flex items-center gap-2">
           <Gamepad2 size={16} style={{ color: 'var(--success, #22c55e)' }} />
           <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
             Training floor · earn XP
           </h2>
         </div>
-        <Link href="/vocabulary" className="text-xs flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
-          full stats & streaks <ArrowRight size={12} />
-        </Link>
+        {hub && (
+          <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            <span title={`${hub.xp.into}/${hub.xp.forNext} XP into level ${hub.level}`}>
+              Lv <b style={{ color: 'var(--primary)' }}>{hub.level}</b>
+              <span className="inline-block align-middle ml-1.5 h-1.5 w-14 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
+                <span className="block h-full" style={{ width: `${Math.round((hub.xp.into / hub.xp.forNext) * 100)}%`, background: 'var(--primary)' }} />
+              </span>
+            </span>
+            {hub.myRank && <span>this week <b style={{ color: 'var(--success, #22c55e)' }}>#{hub.myRank}</b></span>}
+          </div>
+        )}
       </div>
 
       {/* daily challenge strip */}

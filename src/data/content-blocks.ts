@@ -93,6 +93,20 @@ export interface SimEmbedBlock extends BaseBlock {
   simulationSlug: string;     // links to simulations.slug
 }
 
+/**
+ * ANIMATION_3D — a scripted instructional Three.js animation with ONE knob.
+ * Pedagogically distinct from sim_embed: students WATCH a scripted sequence
+ * (play/pause/scrub + step captions) and may re-run it after changing a single
+ * parameter to test a prediction. Display-only (no capture) in v1.
+ * Components live in src/components/animations/ keyed by `animationSlug`,
+ * separate from the SimLab machinery — these are lessons' film strips, not labs.
+ */
+export interface Animation3DBlock extends BaseBlock {
+  type: 'animation_3d';
+  animationSlug: string;      // → ANIMATION_REGISTRY key
+  caption?: string;           // student-facing framing shown above the canvas
+}
+
 export interface EquationVisualizerBlock extends BaseBlock {
   type: 'equation_visualizer'; // native interactive equation explorer (no iframe)
 }
@@ -344,7 +358,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
+  | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
@@ -425,7 +439,7 @@ export interface LessonPage {
  * they render a canvas, plot, or figure.
  */
 export const VISUAL_BLOCK_TYPES: BlockType[] = [
-  'figure', 'diagram', 'graph', 'sim_embed', 'equation_visualizer',
+  'figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'equation_visualizer',
   'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
 ];
 export function isVisualBlock(b: ContentBlock): boolean {

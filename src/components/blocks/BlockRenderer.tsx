@@ -28,6 +28,9 @@ const LessonVocabView = dynamic(() => import('./LessonVocabView'), { ssr: false,
 const FigureGraph = dynamic(() => import('./FigureGraph'), { ssr: false, loading: () => null })
 // react-pdf is client-only + heavy — lazy-load the reader/exercise block.
 const ConceptExercise = dynamic(() => import('./ConceptExercise'), { ssr: false, loading: () => null })
+// Three.js is heavy — the instructional-animation block lazy-loads its engine
+// (and three itself) only when a lesson actually contains one.
+const Animation3DView = dynamic(() => import('@/components/animations/Animation3DView'), { ssr: false, loading: () => null })
 
 const C = {
   indigo: 'var(--foreground)',
@@ -74,6 +77,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   procedure: { label: 'Build steps', domain: 'S', Icon: Wrench },
   sentence_frame: { label: 'Sentence frame', domain: 'R', Icon: MessageSquareQuote },
   sim_embed: { label: 'Simulation', domain: 'S', Icon: FlaskConical },
+  animation_3d: { label: 'Watch & predict', domain: 'R', Icon: Orbit },
   equation_visualizer: { label: 'Equation explorer', domain: 'S', Icon: Sigma },
   marzano: { label: 'Self-check', domain: 'meta', Icon: Gauge },
   exit_ticket: { label: 'Exit ticket', domain: 'P', Icon: Ticket },
@@ -513,6 +517,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     case 'sim_embed':
       return <SimEmbed slug={b.simulationSlug} />
+    case 'animation_3d':
+      return <Animation3DView slug={b.animationSlug} caption={b.caption} />
     case 'equation_visualizer':
       return <EquationVisualizer />
     case 'lesson_vocab':

@@ -54,6 +54,10 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'sim_embed', label: 'Simulation embed', group: 'Teach', fields: [
     { key: 'simulationSlug', label: 'Simulation', kind: 'simref' },
   ] },
+  { type: 'animation_3d', label: '3D animation (watch & predict)', group: 'Teach', fields: [
+    { key: 'animationSlug', label: 'Animation slug (e.g. approach-geometry)', kind: 'text' },
+    { key: 'caption', label: 'Caption — frame what to watch for (optional)', kind: 'textarea' },
+  ] },
   { type: 'equation_visualizer', label: 'Equation visualizer', group: 'Teach', fields: [] },
   { type: 'lesson_vocab', label: 'Lesson vocabulary', group: 'Teach', fields: [] },
   { type: 'figure', label: 'Figure / image', group: 'Teach', fields: [
