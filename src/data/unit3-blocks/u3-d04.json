@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can explain why extending Δt reduces the force needed to deliver the same Δp, and I can apply this to airbags, padded floors, follow-through, and asteroid deflection.",
+      "targetId": "u3.r1-extend-time"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "To deflect 2026-XJ we want the LARGEST Δp possible — either short-and-hard (DART) or long-and-soft (gravity tractor).",
+      "connection": "Same physics that saves lives in a car crash (long Δt, small F) shapes how planetary defense engineers design asteroid pushers."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The trade nobody can escape\n\nJ = F·Δt is a fixed budget: if the Δp is decided (a sprinter must stop; a ball must reverse), then **F and Δt trade off exactly**.\n\n- Stretch Δt by 10× → F drops to **1/10**.\n- That's an airbag, a crumple zone, a gymnastics mat, a parkour roll, bent knees on a landing.\n- Flip the goal: a hitter wants MORE Δp delivered to the ball. **Follow-through** extends Δt → bigger J → bigger Δp → ball goes farther.\n\nSame equation, both directions."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Crumple zone / cushion",
+          "definition": "A region designed to DEFORM during impact, extending Δt and so reducing peak force. Modern car fronts are designed to crumple: same Δp, but Δt × 5 means F ÷ 5.",
+          "cognate": "Sp. zona de absorción · Pt. zona de deformação"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "A crumple zone doesn't 'absorb momentum'",
+      "markdown": "Δp is the SAME either way — the car still stops. The crumple zone **spreads the time**, so the peak force drops. Don't say momentum was absorbed; say the time was stretched."
+    },
+    {
+      "id": "b6",
+      "type": "graph",
+      "title": "Same Δp = 720 kg·m/s — force vs. stopping time",
+      "xLabel": "Stopping time Δt (s)",
+      "yLabel": "Average force F (N)",
+      "genPrompt": "F = 720/Δt hyperbola showing the force-time tradeoff for a fixed impulse of 720 N·s.",
+      "series": [
+        {
+          "label": "F = Δp / Δt",
+          "points": [[0.05, 14400], [0.1, 7200], [0.2, 3600], [0.3, 2400], [0.4, 1800], [0.5, 1440], [0.75, 960], [1.0, 720]]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "An 80-kg sprinter at 9 m/s stops in (a) 0.05 s on concrete, or (b) 0.5 s into a foam pit. Compute the average force in each case.",
+      "given": "m = 80 kg · Δv = 9 m/s (he stops) · Δt_a = 0.05 s · Δt_b = 0.5 s",
+      "equation": "Δp = m·Δv ; F = Δp / Δt",
+      "work": "Δp = 80·9 = 720 kg·m/s (same for both)\nF_a = 720 / 0.05 = 14,400 N (concrete)\nF_b = 720 / 0.5 = 1,440 N (foam — 10× smaller!)",
+      "answer": "Concrete: 14.4 kN. Foam: 1.44 kN. Stretching Δt by 10× cut F by 10×."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Pick one: airbag, helmet, boxing glove, gymnastics mat, parkour roll, or follow-through on a tennis swing. Explain how it uses LONGER Δt to reduce F for the SAME Δp (or, for follow-through, longer Δt to deliver MORE Δp). Be specific about what physically extends the contact time.",
+      "givenHint": "Name your case and what the Δp is (what stops, or what speeds up).",
+      "equationHint": "J = F·Δt = Δp — argue with the equation, not just words.",
+      "equationIds": ["impulse", "momentum"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does a boxer 'roll with the punch'? Use 'Δp', 'Δt', and 'F' in your answer.",
+      "frame": "Rolling with the punch keeps ___ roughly the same but makes ___ larger — which makes ___ smaller."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.r1-extend-time"
+    }
+  ]
+}

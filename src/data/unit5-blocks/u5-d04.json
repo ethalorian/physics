@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute the heat needed to phase-change a mass using Q = mL, explain why temperature is constant during phase changes, and add multiple Q's across a full heating curve (ice → water → steam).",
+      "targetId": "u5.k3-latent-heat"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ doesn't just heat up at impact — it MELTS rock, then VAPORIZES rock. Each transition takes enormous energy.",
+      "connection": "The crater's heat doesn't just raise rock temperature; it phases rock into vapor. Day 11 uses latent heat values to compute the vaporization energy at the impact site."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## When the thermometer stops moving\n\nHeat a block of ice and watch the thermometer. It climbs… then STOPS at 0 °C while the ice melts… then climbs again… then STOPS at 100 °C while the water boils. During the flat stretches you're still pouring energy in — it's just going into **breaking molecular bonds**, not into faster molecules.\n\nThe energy price of a phase change is:\n\n**Q = m · L**\n\nwhere L is the **latent heat** in J/kg. For water:\n\n| Transition | L (J/kg) |\n|---|---|\n| Melting / freezing (L_f, fusion) | 334,000 |\n| Boiling / condensing (L_v, vaporization) | 2,260,000 |\n\nNotice L_v is about **7× bigger** than L_f — fully separating molecules into a gas costs far more than loosening them into a liquid.\n\nA full heating curve (say, ice at −10 °C → steam at 110 °C) is just an **addition problem**: sloped segments use Q = mcΔT (with the right c for ice, water, or steam), flat segments use Q = mL. Compute each piece, add them up."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Phase change",
+          "definition": "A transition between solid ⇄ liquid ⇄ gas. Temperature stays CONSTANT during the change while energy goes into breaking molecular bonds (not into KE). Example: pure ice at 0 °C absorbs heat → stays at 0 °C while it melts → only AFTER it's all liquid does the temperature rise.",
+          "cognate": "Sp. cambio de fase · Pt. mudança de fase · HC chanjman faz"
+        },
+        {
+          "term": "Latent heat (L)",
+          "definition": "Energy per kg required for a phase change at the transition temperature. L_f = latent heat of FUSION (melt/freeze). L_v = latent heat of VAPORIZATION (boil/condense). Units: J/kg. Water L_f = 334,000 J/kg — to melt 1 kg of ice: Q = 1 · 334,000 = 334 kJ. Water L_v = 2,260,000 J/kg — boiling needs 7× more energy than melting! 'Latent' means hidden — the energy goes into breaking bonds, not into temperature.",
+          "cognate": "Sp. calor latente · Pt. calor latente · HC chalè latant"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Adding heat but the thermometer doesn't move?",
+      "markdown": "During a phase change you ARE adding energy — but it's breaking bonds, not raising the average molecular KE. So T holds constant until the entire mass has changed phase. A thermometer reading a flat line does NOT mean the heat stopped."
+    },
+    {
+      "id": "b6",
+      "type": "graph",
+      "title": "Heating curve — 0.5 kg of water from ice at −10 °C to steam at 110 °C",
+      "xLabel": "Total heat added Q (kJ)",
+      "yLabel": "Temperature (°C)",
+      "genPrompt": "Heating curve for 0.5 kg: warm ice (−10→0 °C, 10 kJ), melt flat at 0 °C (167 kJ), warm water (0→100 °C, 209 kJ), boil flat at 100 °C (1130 kJ), warm steam (100→110 °C, 10 kJ). The boiling plateau dominates the x-axis.",
+      "series": [
+        {
+          "label": "T vs. heat added",
+          "points": [
+            [
+              0,
+              -10
+            ],
+            [
+              10,
+              0
+            ],
+            [
+              177,
+              0
+            ],
+            [
+              387,
+              100
+            ],
+            [
+              1517,
+              100
+            ],
+            [
+              1527,
+              110
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Label each segment of the heating curve with its equation (Q = mcΔT or Q = mL). Mark where T stays constant. Which flat segment is LONGER — melting or boiling? Why?",
+      "prompts": [
+        "Copy the staircase shape; label all 5 segments with the right equation.",
+        "Circle the two flat (constant-T) segments.",
+        "One sentence: why is the boiling plateau so much longer?"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "How much heat is needed to melt 0.5 kg of ice at 0 °C? (L_f = 334 kJ/kg.)",
+      "given": "m = 0.5 kg · L_f = 334,000 J/kg",
+      "equation": "Q = m · L_f",
+      "work": "Q = 0.5 · 334,000\nQ = 167,000 J\nQ = 167 kJ",
+      "answer": "167 kJ — and the ice stays at 0 °C the whole time."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "Total heat to convert 0.5 kg of ice at -10 °C to steam at 110 °C? Five sub-steps. Add them up.",
+      "given": "m = 0.5 kg · c_ice = 2090 · c_water = 4186 · c_steam = 2010 · L_f = 334,000 · L_v = 2,260,000",
+      "equation": "Q_total = Q_warm_ice + Q_melt + Q_warm_water + Q_boil + Q_warm_steam",
+      "work": "Q₁ = 0.5 · 2090 · 10 = 10,450 J   (warm ice -10 → 0)\nQ₂ = 0.5 · 334,000 = 167,000 J    (MELT at 0)\nQ₃ = 0.5 · 4186 · 100 = 209,300 J (warm water 0 → 100)\nQ₄ = 0.5 · 2,260,000 = 1,130,000 J (BOIL at 100)\nQ₅ = 0.5 · 2010 · 10 = 10,050 J   (warm steam 100 → 110)\nQ_total ≈ 1,526,800 J ≈ 1.5 × 10⁶ J",
+      "answer": "≈ 1.5 × 10⁶ J. The BOILING step alone is ~75% of the total energy."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "How much heat is needed to vaporize 0.2 kg of water already at 100 °C? (L_v = 2,260,000 J/kg.)",
+      "givenHint": "m = 0.2 kg · L_v = 2,260,000 J/kg · water is ALREADY at 100 °C, so no warming step.",
+      "equationHint": "Q = m · L_v — one step, no ΔT term (the temperature doesn't change during the phase change).",
+      "equationOptions": [
+        "Q = m · L_v",
+        "Q = m · c · ΔT",
+        "Q = m · L_f",
+        "KE = ½ · m · v²"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why sweating works",
+      "markdown": "This is why sweating cools you: every drop of sweat that evaporates carries off 2,260 kJ/kg of body heat. The high L_v of water is a survival adaptation."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "How much heat to vaporize 0.2 kg of water at 100 °C? (Use L_v = 2,260,000 J/kg.) Then complete the frame.",
+      "frame": "During a phase change, temperature stays ___ because energy is going into ___, not into ___. Boiling water requires ___× more energy than melting the same mass of ice."
+    },
+    {
+      "id": "rd-ch23",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **23.1–23.8** (evaporation, condensation, boiling, freezing, regelation, and the energy of phase changes). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch23",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 23,
+      "title": "Change of Phase — read & practice",
+      "sectionIds": [
+        "23.1",
+        "23.2",
+        "23.3",
+        "23.4",
+        "23.5",
+        "23.6",
+        "23.7",
+        "23.8"
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.k3-latent-heat"
+    }
+  ]
+}

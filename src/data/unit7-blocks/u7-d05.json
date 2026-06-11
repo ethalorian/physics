@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe current as the RATE of charge flow (coulombs per second), distinguish conventional current from electron flow, and compute current from charge and time.",
+      "targetId": "u7.k4-current"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Day 4: voltage = energy per charge.",
+      "connection": "Today: how FAST charge flows. Voltage and current together (Day 6) = power (Day 11) — the framework for predicting the Car motor (Day 17)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Charge per second\n\nVoltage told us how much energy each coulomb carries. Current tells us how many coulombs go by each second:\n\n**I = q / t** — coulombs PER SECOND, measured in amperes (A). 1 A = 1 C/s.\n\nIt's a RATE, like Unit 1's speed: speed was meters per second of position; current is coulombs per second of charge. Rearranged, **q = I·t** gives the total charge that passes in time t.\n\nOne historical wrinkle: in a copper wire the things that actually move are ELECTRONS, drifting from the − terminal toward +. But the arrows we draw — **conventional current** — point the way POSITIVE charge would flow, from + to −. Ben Franklin guessed wrong about which charge moves, and we kept his convention. Same physics, opposite arrow.\n\nBenchmarks: phone charger ≈ 1 A · Car Project motor ≈ 2 A · car headlight 5–10 A · microwave 12 A · lightning bolt peak 30,000 A."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Electric current (I)",
+          "definition": "Rate of charge flow past a point. I = q / t. Units: amperes (A) = coulombs / second. A 1A current means 1 coulomb of charge passes a given cross-section every second. A USB phone charger ≈ 1 A. The Car motor ≈ 2 A.",
+          "cognate": "Sp. corriente eléctrica · Pt. corrente elétrica · HC kouran elektrik"
+        },
+        {
+          "term": "Conventional current (vs. electron flow)",
+          "definition": "Conventional current = direction POSITIVE charges would flow (high V to low V). Actual electrons flow OPPOSITE — from low V to high V (− terminal to + terminal). In a copper wire, electrons drift from − to +, but we draw current arrows from + to −. Same idea, opposite arrow.",
+          "cognate": "Sp. corriente convencional · Pt. corrente convencional · HC kouran konvansyonèl"
+        },
+        {
+          "term": "Ampere (A)",
+          "definition": "The SI unit of current. 1 A = 1 C/s. Named for André-Marie Ampère. Phone charger: 1 A. Car headlight: 5–10 A. Microwave: 12 A. Lightning bolt peak: 30,000 A.",
+          "cognate": "Sp. amperio · Pt. ampère · HC anpè"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Current (rate) is not charge (amount)",
+      "markdown": "Don't confuse 'A' (amps) with 'C' (coulombs). A is a RATE; C is an AMOUNT. 1A flowing for 1s = 1C; the same 1A flowing for 10s = 10C. Just like speed vs. distance."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "A wire seen in cross-section. Electrons (each carrying −e) flow one way; conventional current is drawn the OPPOSITE way. Label both. How would you count current?",
+      "prompts": [
+        "Wire cross-section with electrons drifting one way.",
+        "Conventional-current arrow the OPPOSITE way.",
+        "Write how you'd COUNT the current (charge past the line per second)."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "CURRENT FROM CHARGE AND TIME — A 30 C of charge passes through a wire in 10 seconds. What's the current?",
+      "given": "q = 30 C · t = 10 s",
+      "equation": "I = q/t",
+      "work": "I = 30 / 10\nI = 3 A",
+      "answer": "I = 3 A (3 coulombs per second)."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "CHARGE FROM CURRENT AND TIME — A 2 A current flows for 60 seconds. How much charge passes?",
+      "given": "I = 2 A · t = 60 s",
+      "equation": "q = I·t",
+      "work": "q = 2 · 60\nq = 120 C",
+      "answer": "q = 120 C of charge passes in 1 minute at 2 A."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — CAR MOTOR CURRENT (PREVIEW). The Car Project motor pulls about 2 A for the duration of a 15-second race. How much total charge flows through the motor?",
+      "givenHint": "I = 2 A · t = 15 s · q = ?",
+      "equationHint": "q = I·t — same move as the second worked example.",
+      "equationOptions": [
+        "q = I·t",
+        "I = q/t",
+        "U = q·V",
+        "V = I·R"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "30 C through the motor — and 270 J",
+      "markdown": "2 A · 15 s = 30 C of charge through the motor. Each coulomb carries 9 J (from the 9V battery), so total energy delivered = 30 · 9 = 270 J. Day 11 (power) ties this together."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.5 A current flows for 5 minutes. How many coulombs of charge pass? Show one line of work. (Careful — convert minutes to seconds.) Then complete the frame.",
+      "frame": "Current is ___ per second. 1 A = 1 ___ / s. Conventional current flows from ___ terminal to ___ terminal. Electrons actually flow the opposite direction."
+    },
+    {
+      "id": "rd-ch34-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **34.1–34.4** (flow of charge, electric current, voltage sources, and resistance). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch34-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 34,
+      "title": "Electric Current — read & practice",
+      "sectionIds": [
+        "34.1",
+        "34.2",
+        "34.3",
+        "34.4"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k4-current"
+    }
+  ]
+}

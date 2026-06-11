@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can solve a multi-hill roller-coaster problem using ME conservation and find a pendulum's speed at the bottom from its release angle.",
+      "targetId": "u4.r3-coaster-pendulum"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ in an elliptical orbit IS a roller coaster — KE and PE trade off periodically. Faster at perihelion (low U), slower at aphelion (high U).",
+      "connection": "Same equation, different scale. The bookkeeping is identical."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Hills and swings — same bookkeeping\n\nOn a frictionless coaster, **ME = KE + PE stays constant** at every point on the track. That gives a shortcut that skips kinematics entirely:\n\n**½v² + gh = constant** (the mass cancels — every cart, heavy or light, gets the same speeds)\n\nStarting from rest at height h₁, the speed at any other height h is:\n\n**v = √(2g·(h₁ − h))**\n\nOnly the DROP matters — not the shape of the track between.\n\nA pendulum is the same problem in disguise. The only new step is geometry: a bob on a string of length L released at angle θ from vertical starts at height\n\n**h = L(1 − cosθ)**\n\nabove its lowest point. From there it's the same bookkeeping: mgh = ½mv² at the bottom."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Pendulum height formula",
+          "definition": "For a pendulum of length L released from angle θ, the bob's height above its lowest point is h = L − L·cosθ = L(1 − cosθ). A 1-m pendulum released at 60° above vertical: h = 1·(1 − cos60°) = 1·(1 − 0.5) = 0.5 m.",
+          "cognate": "Sp. altura de péndulo · Pt. altura do pêndulo"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The height is L(1 − cosθ), not L",
+      "markdown": "Don't use the string length L as the height. The bob only rises h = L(1 − cosθ) above its lowest point — at 60°, that's exactly HALF the string length."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "THREE-HILL ROLLER COASTER. A coaster cart starts from rest at the top of hill 1 (h₁ = 30 m). Frictionless. Find its speed at the top of hill 2 (h₂ = 18 m) and hill 3 (h₃ = 22 m).",
+      "given": "v₁ = 0 · h₁ = 30 m · h₂ = 18 m · h₃ = 22 m",
+      "equation": "ME₁ = ME₂ = ME₃ → ½v² + gh = ½v₁² + gh₁ = gh₁",
+      "work": "At hill 2: v₂² = 2g(h₁ − h₂) = 2·9.81·12 = 235.4\nv₂ ≈ 15.3 m/s\nAt hill 3: v₃² = 2g(h₁ − h₃) = 2·9.81·8 = 157\nv₃ ≈ 12.5 m/s",
+      "answer": "v₂ ≈ 15.3 m/s, v₃ ≈ 12.5 m/s. Higher hill → slower cart."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "PENDULUM RELEASED AT 60°. A 1-kg pendulum bob on a 1-m string is released from θ = 60° above vertical. Find the bob's speed at the bottom of its swing.",
+      "given": "m = 1 kg · L = 1 m · θ = 60° · friction-free",
+      "equation": "h = L(1 − cosθ) AND mgh = ½mv²",
+      "work": "h = 1·(1 − cos60°) = 1·(1 − 0.5) = 0.5 m\nv = √(2gh) = √(2·9.81·0.5) = √9.81\nv ≈ 3.13 m/s",
+      "answer": "≈ 3.13 m/s at the bottom of the swing."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "Orbits are roller coasters",
+      "markdown": "An asteroid in elliptical orbit: KE and PE trade. Faster near the Sun, slower far away. Same physics as a roller coaster — just on cosmic scale."
+    },
+    {
+      "id": "b9",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the three-hill coaster (h₁ = 30 m, h₂ = 18 m, h₃ = 22 m) and the pendulum released at 60°. Label the heights that matter.",
+      "prompts": [
+        "On the coaster, mark the DROP h₁ − h₂ — that difference is what sets v₂.",
+        "On the pendulum, show h = L(1 − cosθ), NOT the string length L.",
+        "Put a speed arrow where each object moves fastest."
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "COASTER BOTTOM FROM 40 M. A coaster cart starts from rest at the top of a 40-m hill. Frictionless. What's its speed at the bottom?",
+      "givenHint": "v_i = 0 · h = 40 m · frictionless.",
+      "equationHint": "mgh = ½mv² → v = √(2gh).",
+      "equationIds": ["potential-energy", "kinetic-energy"]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your 40-m coaster answer, then complete the pendulum frame.",
+      "frame": "A pendulum at angle θ has height h = ___ above its lowest point. The bottom speed is v = ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r3-coaster-pendulum"
+    }
+  ]
+}

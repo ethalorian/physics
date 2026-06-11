@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can trace the FULL radar measurement chain: send a pulse, time the round trip for DISTANCE (d = c·Δt/2), measure the frequency SHIFT for VELOCITY (v = (Δf/f)·c), and estimate SIZE from signal strength.",
+      "targetId": "u6.r5-radar-chain"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "For five units we've USED 2026-XJ numbers. Today we see WHERE THEY CAME FROM.",
+      "connection": "Every Unit 6 idea is required: v = fλ (Day 3), reflection (Day 4), Doppler (Day 11), EM waves (Day 12), mirrors (Day 13). Today they combine into the radar measurement chain."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ THE REVEAL · Where the numbers came from",
+      "markdown": "Since Unit 1 you have used these 2026-XJ numbers: distance from Earth, closing velocity, mass, trajectory, impact KE, damage radii. Every one had to be MEASURED. The instrument is RADAR — specifically NASA's Goldstone (California) and Arecibo-era (Puerto Rico) planetary radar systems. Modern planetary radar transmits 2.4 GHz radio pulses at very high power, listens for the echo from the asteroid, and extracts three pieces of information from the return:\n\n► **DISTANCE:** from the round-trip TIME Δt: d = c · Δt / 2. At c = 3×10⁸ m/s, a Δt = 2.5 s means the asteroid is 375 000 km away.\n\n► **VELOCITY (line-of-sight):** from the DOPPLER SHIFT Δf: v = (Δf / f) · c. A 5 kHz shift on a 2.4 GHz carrier means v ≈ 312 m/s closing (or receding).\n\n► **SIZE (estimate):** from signal STRENGTH vs. distance: a stronger echo means a larger radar cross-section. Combined with an assumed albedo + density, size and mass estimates fall out — with uncertainty."
+    },
+    {
+      "id": "b4",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "links": [
+        { "label": "Transmit", "sublabel": "Goldstone dish sends a 2.4 GHz pulse (f_T) toward 2026-XJ" },
+        { "label": "Echo returns", "sublabel": "Pulse reflects off the asteroid; intensity falls as 1/r⁴ (out AND back)" },
+        { "label": "Time Δt → DISTANCE", "sublabel": "d = c·Δt/2 — precise to meters" },
+        { "label": "Shift Δf → VELOCITY", "sublabel": "v = (Δf/f_T)·c — higher echo f = approaching; precise to mm/s" },
+        { "label": "Strength → SIZE", "sublabel": "Radar cross-section + assumed albedo/density → size + mass, with the biggest uncertainty" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "The unit's centerpiece. Trace the full chain. Mark Δt (round-trip time). Compare outgoing wave (f_T) to returning wave (f_R) — does it look compressed or stretched? What does that tell you about asteroid motion?",
+      "prompts": [
+        "Draw Earth dish → pulse out → 2026-XJ → echo back. Mark Δt across the round trip.",
+        "Sketch the outgoing wave at f_T and the returning wave at f_R — compressed or stretched?",
+        "Annotate what each measured quantity (Δt, Δf, strength) tells NASA."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "STEP 1 — DISTANCE FROM ROUND-TRIP TIME. A radar pulse is sent toward 2026-XJ. The echo returns Δt = 2.5 s later. How far away is the asteroid?",
+      "given": "Δt = 2.5 s · c = 3.00 × 10⁸ m/s",
+      "equation": "d = c · Δt / 2 (round trip → one way)",
+      "work": "d = (3.00 × 10⁸) · 2.5 / 2\nd = 7.5 × 10⁸ / 2\nd = 3.75 × 10⁸ m\nd = 375 000 km",
+      "answer": "d ≈ 375 000 km — about the distance to the Moon. Real-world precision: ±100 m."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "STEP 2 — VELOCITY FROM THE DOPPLER SHIFT. The transmitted radar pulse is at f_T = 2.4 GHz. The echo returns at f_R = 2.40005 GHz (5 kHz HIGHER). What's the asteroid's line-of-sight velocity? Is it approaching or receding?",
+      "given": "f_T = 2.4 × 10⁹ Hz · f_R = 2.400005 × 10⁹ Hz · Δf = 5 000 Hz · c = 3 × 10⁸ m/s",
+      "equation": "v = (Δf / f_T) · c (HIGHER echo → APPROACHING)",
+      "work": "v = (5000 / 2.4 × 10⁹) · 3 × 10⁸\nv = (2.08 × 10⁻⁶) · 3 × 10⁸\nv ≈ 625 m/s",
+      "answer": "v ≈ 625 m/s, APPROACHING (echo frequency was higher than transmitted). Modern systems detect Δf down to 0.01 Hz — ~mm/s velocity precision."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "STEP 3 — SIZE ESTIMATE FROM SIGNAL STRENGTH. The echo's STRENGTH (energy per square meter back at Earth) depends on (a) how far the wave traveled (1/r⁴ — out AND back), and (b) the asteroid's RADAR CROSS-SECTION (effective area). Why does the signal weaken as 1/r⁴, not just 1/r²?",
+      "given": "Wave travels: Earth → asteroid → Earth. Two legs, each inverse-square.",
+      "equation": "I ∝ 1 / (r² × r²) = 1 / r⁴",
+      "work": "Outgoing wave to asteroid: I drops as 1/r² (Day 11).\nAfter reflecting, echo wave back to Earth: ANOTHER 1/r² drop.\nTotal: 1/r⁴. So radar at TWICE the distance is 16× weaker.",
+      "answer": "1/r⁴ is brutal — that's why planetary radar transmits MEGAWATT pulses. Larger asteroid → larger cross-section → stronger echo → size estimate."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "These numbers are REAL outputs of this chain",
+      "markdown": "The 2026-XJ mass estimate has the largest uncertainty (depends on assumed albedo + density). The velocity is precise to mm/s. The distance is precise to meters. That's WHY the impact KE has uncertainty — not because the physics is wrong, but because the measurement is bounded by what radar can resolve."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does NASA need MULTIPLE radar observations of the same asteroid (over weeks or months) to predict its orbit precisely?",
+      "frame": "Radar measures asteroid distance from ___ (the round-trip time times c, halved). Radar measures velocity from ___ (the Doppler frequency shift). Higher echo frequency → asteroid is ___; lower → receding. Mass uncertainty comes from the fact that signal STRENGTH only gives a ___ estimate of size."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r5-radar-chain"
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute 2026-XJ's KE at impact, convert it to TNT-equivalent tons (1 ton TNT = 4.184 × 10⁹ J), and place the result on the Hiroshima / Tunguska / Chicxulub scale.",
+      "targetId": "u4.r6-tnt-yield"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Today the entire unit cashes out. We have all the tools: KE = ½mv², the asteroid's mass, its impact velocity from Unit 2.",
+      "connection": "Today's number IS the answer to the impact-branch question from UPDATE 4. After today, the question 'how bad is 2026-XJ?' has a real answer in the same units NASA uses for everything else."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The payoff — putting a number on 2026-XJ\n\nUPDATE 4 asked: if 2026-XJ does impact, HOW BAD IS IT ACTUALLY? Today we answer, in the units the public — and NASA — actually use: **TNT-equivalent tons**.\n\nThe recipe has three steps:\n\n1. **KE at impact:** KE = ½mv², with m = 1 × 10⁹ kg and v = 3 × 10⁴ m/s (from Unit 2).\n2. **Convert:** yield (tons) = KE ÷ (4.184 × 10⁹ J per ton).\n3. **Place it on the scale:**\n\n| Event | Yield (tons TNT) | Context |\n|---|---|---|\n| Hiroshima | 1.5 × 10⁴ | atomic bomb, 1945 · destroyed a city |\n| Chelyabinsk | 5 × 10⁵ | Russia airburst, 2013 · broke windows 100 km out |\n| Tunguska | 1.5 × 10⁷ | Siberia airburst, 1908 · flattened 2,000 km² of forest |\n| **2026-XJ (you)** | **≈ 10⁸** | your answer · a regional-to-continental event |\n| Chicxulub | 1 × 10¹⁴ | 66 Ma · killed the dinosaurs |"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "TNT yield",
+          "definition": "The standard unit for comparing energetic events. 1 ton TNT = 4.184 × 10⁹ J. Used for bombs, asteroids, earthquakes. \"TNT-equivalent\" means \"this much energy, expressed in the units of how-much-TNT-it-would-take\" — the actual asteroid is rock, not TNT. Hiroshima ≈ 15 kilotons = 1.5×10⁴ tons; Chicxulub ≈ 100 million megatons = 10¹⁴ tons.",
+          "cognate": "Sp. equivalente en TNT · Pt. equivalente em TNT"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "From impact KE to a TNT number",
+      "caption": "The impact is perfectly inelastic, so ALL the kinetic energy converts to damage — and dividing by 4.184 × 10⁹ J/ton puts it in the units NASA reports.",
+      "links": [
+        { "label": "Asteroid KE at impact", "sublabel": "½·(10⁹ kg)·(3×10⁴ m/s)² = 4.5 × 10¹⁷ J" },
+        { "label": "Heat, blast, light, seismic waves", "sublabel": "perfectly inelastic — ALL of it converts" },
+        { "label": "TNT-equivalent yield", "sublabel": "÷ 4.184 × 10⁹ J/ton ≈ 108 megatons" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "THE BIG COMPUTATION — STEP 1: KE AT IMPACT. 2026-XJ: m = 1 × 10⁹ kg, impact velocity v = 3 × 10⁴ m/s. Compute its kinetic energy at impact.",
+      "given": "m = 1 × 10⁹ kg · v = 3 × 10⁴ m/s",
+      "equation": "KE = ½ · m · v²",
+      "work": "KE = ½ · (1 × 10⁹) · (3 × 10⁴)²\nKE = ½ · (1 × 10⁹) · (9 × 10⁸)\nKE = ½ · 9 × 10¹⁷\nKE = 4.5 × 10¹⁷ J",
+      "answer": "≈ 4.5 × 10¹⁷ Joules of kinetic energy at impact."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "STEP 2: CONVERT TO TNT-EQUIVALENT TONS. Convert your KE to TNT-equivalent tons. 1 ton TNT = 4.184 × 10⁹ J.",
+      "given": "KE = 4.5 × 10¹⁷ J · 1 ton TNT = 4.184 × 10⁹ J",
+      "equation": "yield (tons) = KE / (4.184 × 10⁹)",
+      "work": "yield = (4.5 × 10¹⁷) / (4.184 × 10⁹)\nyield ≈ 1.075 × 10⁸ tons TNT\nyield ≈ 108 million tons TNT\nyield ≈ 108 MEGATONS",
+      "answer": "≈ 1.08 × 10⁸ tons TNT ≈ 108 megatons. (Roughly 7000 Hiroshimas.)"
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "Damage scale — match to your computed yield",
+      "markdown": "- 10⁴–10⁵ tons: city-block destruction (Hiroshima-class)\n- 10⁶–10⁷ tons: regional flattening (Tunguska-class — 2,000 km²)\n- 10⁸–10⁹ tons: multi-continent thermal pulse + months-long climate dimming\n- 10¹⁰–10¹² tons: mass-extinction event begins (smaller K-Pg analog)\n- 10¹³–10¹⁴ tons: Chicxulub — 75% of species extinct, dinosaurs gone"
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The asteroid is fictional. The math is real.",
+      "markdown": "NASA's Planetary Defense Coordination Office does exactly this kind of yield calculation for every newly-discovered Near-Earth Object."
+    },
+    {
+      "id": "b10",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw a log-scale yield ladder from 10⁴ to 10¹⁴ tons. Mark Hiroshima, Chelyabinsk, Tunguska, and Chicxulub — then draw 2026-XJ's bar at your computed yield. Where does it fall? Closer to Hiroshima? Tunguska? Or much higher?",
+      "prompts": [
+        "Each rung of the ladder is ×10.",
+        "Mark 2026-XJ's bar at ≈ 10⁸ tons — between Tunguska and Chicxulub.",
+        "Label the damage class at 2026-XJ's level."
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write one sentence stating 2026-XJ's TNT-equivalent yield. Then one sentence comparing it to a historical event. Then one sentence about what that means physically.",
+      "frame": "2026-XJ would deliver about ___ tons of TNT-equivalent energy. That's roughly ___ Hiroshimas, and would correspond to ___-scale damage."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r6-tnt-yield"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write F = G·m₁·m₂/r², explain what each symbol means, and reason about how F changes when masses or distance change.",
+      "targetId": "u2.k1-universal-gravitation"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "The asteroid feels gravity from the Sun and (weakly) Earth.",
+      "connection": "THIS is the equation we've been building toward. The 1/r² geometry decides how steeply gravity grows as 2026-XJ approaches."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The equation that runs the solar system\n\n**F = G · m₁ · m₂ / r²**\n\n- **F** — the gravitational force between the two masses (newtons)\n- **G** = 6.67 × 10⁻¹¹ N·m²/kg² — always the same. That's why we call it *universal*.\n- **m₁** — mass of one object (kg)\n- **m₂** — mass of the other object (kg)\n- **r** — distance between the **centers** of the two objects (meters)\n- **r²** — r SQUARED. Doubling r makes F drop to **1/4**. Tripling r makes F drop to **1/9**.\n\nEvery mass pulls on every other mass. Earth pulls the Moon; the Moon pulls Earth back (that's the tides). You pull on your neighbor — tiny, but real."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Universal gravitation",
+          "definition": "Every mass pulls on every other mass with a force F = G·m₁·m₂/r². Earth pulls the Moon; the Moon pulls Earth back (tides).",
+          "cognate": "Sp. gravitación universal · Pt. gravitação universal"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "r is between CENTERS",
+      "markdown": "r is measured center-to-center, **not** surface-to-surface. For an Earth–asteroid calculation, r ≈ the gap between them **plus Earth's radius**."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Gravity is not just 'Earth pulling things down'",
+      "markdown": "Every **pair** of masses attracts. The reason you don't feel your neighbor's pull is the sizes involved: with human-scale masses, G·m₁·m₂ is microscopic. It takes a planet-sized m to make F noticeable."
+    },
+    {
+      "id": "b7",
+      "type": "equation_sandbox",
+      "capture": true,
+      "prompt": "Explore F = G·m₁·m₂/r². Start with reasonable asteroid numbers, then test: what happens to F when you double r? Triple it? Double one of the masses? Write what you find.",
+      "variables": [
+        { "symbol": "G", "value": "6.67e-11", "unit": "N·m²/kg²" },
+        { "symbol": "m₁", "value": "5.97e24", "unit": "kg" },
+        { "symbol": "m₂", "value": "3.5e11", "unit": "kg" },
+        { "symbol": "r", "unit": "m" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "If 2026-XJ doubles its distance from Earth, what happens to F_gravity? What if it triples its distance?",
+      "frame": "At 2r, F drops to ___ of its old value. At 3r, F drops to ___. The pattern is called an ___-square law."
+    },
+    {
+      "id": "rd-ch13-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **13.1–13.4** (the falling apple, the falling moon, the falling Earth, Newton's law of universal gravitation). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch13-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 13,
+      "title": "Universal Gravitation — read & practice",
+      "sectionIds": ["13.1", "13.2", "13.3", "13.4"]
+    },
+    {
+      "id": "b9",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.k1-universal-gravitation"
+    }
+  ]
+}

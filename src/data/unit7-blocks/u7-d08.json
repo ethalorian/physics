@@ -1,0 +1,141 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can identify a parallel circuit, compute total resistance using the reciprocal rule, compute the SHARED voltage and the CURRENT IN EACH BRANCH, and explain why one branch can fail without breaking the others.",
+      "targetId": "u7.s2-parallel-circuits"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Day 7: series — one path, shared current.",
+      "connection": "Today: multiple paths, shared voltage. Real-world appliances are almost always wired in parallel (so your toaster doesn't die when the microwave is unplugged)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Many paths, one voltage\n\nA **parallel circuit** flips every series rule. Instead of one loop, the current has multiple independent branches between the same two nodes. The headline rule:\n\n**The SAME voltage is across every branch.**\n\nEach branch then draws its own current by Ohm's law — **I_i = V / R_i** — and the branch currents ADD to give the total leaving the battery. Lower-R branches hog more current (a **current divider**).\n\nCombined resistance uses the reciprocal rule:\n\n**1/R_parallel = 1/R₁ + 1/R₂ + 1/R₃ + ...**\n\nThe result is always SMALLER than the smallest branch — more paths means easier flow. Handy special case: two equal resistors in parallel give R/2.\n\nWhy your house is wired this way: every outlet gets the full 120V regardless of what's plugged in elsewhere, and one dead lamp doesn't kill the refrigerator. Each branch lives independently — the opposite of series' break-one-lose-all."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Parallel circuit",
+          "definition": "Multiple independent paths between two nodes. The SAME voltage is across each branch. Your house's wall outlets are in parallel — each receives 120V regardless of what's plugged into the others.",
+          "cognate": "Sp. circuito en paralelo · Pt. circuito em paralelo · HC sikui paralèl"
+        },
+        {
+          "term": "R_parallel (combined)",
+          "definition": "1/R_parallel = 1/R₁ + 1/R₂ + 1/R₃ + ... Always SMALLER than the smallest individual R. Two equal resistors in parallel: R_p = R/2. Example: 3Ω || 6Ω: 1/R = 1/3 + 1/6 = 2/6 + 1/6 = 3/6 = 1/2 → R = 2Ω. Smaller than either! Adding MORE branches LOWERS total R (more paths for current).",
+          "cognate": "Sp. resistencia en paralelo · Pt. resistência em paralelo · HC rezistans paralèl"
+        },
+        {
+          "term": "Current divider",
+          "definition": "A parallel circuit divides current among branches inversely with resistance. Lower R = more current; higher R = less current. 9V across 3Ω || 6Ω: each branch sees 9V. I₁ = 9/3 = 3 A; I₂ = 9/6 = 1.5 A. Total I_in = 4.5 A.",
+          "cognate": "Sp. divisor de corriente · Pt. divisor de corrente · HC divizè kouran"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Parallel divides CURRENT, not voltage — and a short steals everything",
+      "markdown": "In PARALLEL, the SAME voltage is across each branch; it's the CURRENT that divides (more through lower-R branches). In the limit of R → 0 (a short circuit), ALL the current goes through that branch — burning out the wire."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw three resistors in parallel across a battery. Each branch sees the full battery voltage. Mark currents in each branch. Verify I_total = I₁ + I₂ + I₃.",
+      "prompts": [
+        "Battery on the left; three side-by-side branches, each its own resistor.",
+        "Label 9V across EVERY branch.",
+        "Branch current arrows — check they add to I_total."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "THREE RESISTORS IN PARALLEL — 9V battery across R₁ = 3Ω, R₂ = 6Ω, R₃ = 9Ω in parallel. Find: voltage on each, current in each, total current, R_parallel.",
+      "given": "V = 9 V · R₁ = 3 Ω · R₂ = 6 Ω · R₃ = 9 Ω (all in parallel)",
+      "equation": "V is the SAME on each branch ; I_i = V / R_i ; 1/R_p = Σ(1/R_i)",
+      "work": "V₁ = V₂ = V₃ = 9 V\nI₁ = 9/3 = 3 A\nI₂ = 9/6 = 1.5 A\nI₃ = 9/9 = 1.0 A\nI_total = 3 + 1.5 + 1.0 = 5.5 A\n1/R_p = 1/3 + 1/6 + 1/9 = 6/18 + 3/18 + 2/18 = 11/18\nR_p = 18/11 ≈ 1.64 Ω\nCheck: 9 / 1.64 ≈ 5.5 A ✓",
+      "answer": "Each branch sees 9V. Currents 3 A / 1.5 A / 1.0 A. R_parallel ≈ 1.64 Ω."
+    },
+    {
+      "id": "b8",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "What the battery 'sees' — the equivalent loop",
+      "caption": "This diagram can only draw ONE loop, so it shows the worked example AFTER reduction: the three parallel branches (3Ω, 6Ω, 9Ω) collapse into a single equivalent resistor R_p ≈ 1.64 Ω. From the battery's point of view the two circuits are identical: same 9 V, same 5.5 A.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "9V battery"
+        },
+        {
+          "kind": "resistor",
+          "side": "right",
+          "label": "R_p ≈ 1.64Ω (3Ω ∥ 6Ω ∥ 9Ω)"
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — TWO EQUAL RESISTORS IN PARALLEL. Two 10Ω resistors in parallel. What's R_parallel? If 12V is applied, what's the current in each branch and total?",
+      "givenHint": "R₁ = R₂ = 10 Ω (parallel) · V = 12 V",
+      "equationHint": "Shortcut for two EQUAL resistors: R_p = R/2. Then each branch: I = V/R. Total = sum of branches.",
+      "equationOptions": [
+        "1/R_p = 1/R₁ + 1/R₂ ; I_i = V/R_i",
+        "R_series = R₁ + R₂",
+        "V_i = (R_i/R_total)·V",
+        "U = q·V"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why circuit breakers exist",
+      "markdown": "A house has many appliances in parallel. The TV doesn't care if the lamp is on. But every parallel branch DRAWS current from the main supply — too many high-draw devices, and the circuit breaker trips (typically at 15 or 20 A) to prevent wire overheating."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "12V across 4Ω || 6Ω. Find R_parallel and the current in each branch. Show one line of work per quantity. Then complete the frame.",
+      "frame": "In a parallel circuit, the VOLTAGE is the same across every ___. The CURRENTS in each branch ADD up to the ___ current. Total resistance is ___ than any individual resistance."
+    },
+    {
+      "id": "rd-ch35-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **35.4** (parallel circuits). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch35-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 35,
+      "title": "Electric Circuits — read & practice",
+      "sectionIds": [
+        "35.4"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.s2-parallel-circuits"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe Oersted's 1820 discovery (compass deflects near a current-carrying wire), use the right-hand rule to predict B-field direction around a wire, and explain why a coil of wire (solenoid) acts like a bar magnet.",
+      "targetId": "u7.k8-oersted"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Day 12: magnets create B-fields.",
+      "connection": "Today: CURRENTS also create B-fields. This was the discovery that unified electricity and magnetism — and made the Car motor (Day 15) possible."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The accident that unified two sciences\n\nIn 1820, Hans Christian Oersted was lecturing in Copenhagen with a battery circuit on the bench. A compass happened to sit near the wire. When he closed the circuit, the needle **swung away from North** — and snapped back when he opened it. The conclusion was enormous: **electric currents create magnetic fields.** Before that moment, electricity and magnetism were thought to be separate subjects. After it, they were one: electromagnetism.\n\nThe geometry: a straight wire's B-field wraps in **circles around the wire**. To find the direction, use the **right-hand rule**: point your thumb along the current I, and your fingers **curl in the direction of B**.\n\nNow wrap that wire into a coil — a **solenoid**. Each loop's circular field adds to its neighbors', and the stacked result looks exactly like a bar magnet's field, with an N end and an S end. Strength scales with (number of turns) × (current): more turns, more current → stronger electromagnet. Switch the current off and the field vanishes — a magnet with an OFF switch. That controllable magnet is the heart of doorbells, relays, speakers, and the DC motor you'll build with in Unit 8."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Oersted's discovery (1820)",
+          "definition": "Hans Christian Oersted accidentally noticed: a compass needle DEFLECTS when held near a wire carrying current. Conclusion: electric currents create magnetic fields. Example: the compass needle aligned WITH the new magnetic field, not with Earth's. Removing the current → needle returns to North. This was the first link between electricity and magnetism.",
+          "cognate": "Sp. descubrimiento de Oersted · Pt. descoberta de Oersted · HC dekouvèt Oersted"
+        },
+        {
+          "term": "Right-hand rule (straight wire)",
+          "definition": "To find direction of B around a wire: point thumb in direction of current I, fingers CURL in direction of B field. Example: current pointing UP: B circles the wire counterclockwise as viewed from above. Current pointing into the page (×): B circles clockwise as viewed from in front.",
+          "cognate": "Sp. regla de la mano derecha · Pt. regra da mão direita · HC règ men dwat"
+        },
+        {
+          "term": "Solenoid (coiled wire = electromagnet)",
+          "definition": "A wire wrapped into a coil. When current flows, the individual loops' B-fields add up, producing a B-field much like a bar magnet — with N and S poles at the ends. Example: doorbells, relays, electromagnets, MRI machines, the speakers in your phone, the inside of a DC motor — all are solenoids in disguise. Strength depends on (number of turns) × (current) × (μ₀); switching off current = field vanishes.",
+          "cognate": "Sp. solenoide · Pt. solenoide · HC solenoyid"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "ALWAYS the right hand",
+      "markdown": "ALWAYS use your right hand. A left-hand rule does the opposite — confusion-inducing. Even if you're left-handed, the right-hand rule is the convention."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Three parts: (A) straight wire with concentric circular B-lines, (B) right hand showing thumb-along-I, fingers-curling-B, (C) coiled wire = bar-magnet-like B-field.",
+      "prompts": [
+        "(A) Straight wire, concentric B circles around it.",
+        "(B) Right hand: thumb = I, curling fingers = B.",
+        "(C) Solenoid with a bar-magnet-shaped field, N and S labeled."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "DIRECTION OF B AROUND A WIRE — A long straight wire carries current flowing UP. A compass is placed to the EAST of the wire. Which way does the compass needle deflect?",
+      "given": "I points UP · compass is to the EAST of the wire",
+      "equation": "Right-hand rule: thumb UP → fingers curl from N → E → S → W → N (counterclockwise viewed from above)",
+      "work": "To the EAST of the wire, the B field points SOUTH (since fingers curl from East toward South).\nCompass N pole aligns with B → compass needle points SOUTH.",
+      "answer": "Compass deflects to point SOUTH."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "SOLENOID POLARITY — A solenoid (coiled wire) is wound so that — viewed from one end — the current flows COUNTERCLOCKWISE. Use the right-hand rule (curl fingers along current, thumb points to N pole) to determine which end of the solenoid is N.",
+      "givenHint": "Viewed from one end, current circulates counterclockwise.",
+      "equationHint": "Coil version of the rule: curl your fingers along the current; your thumb points out of the N pole.",
+      "equationOptions": [
+        "Curl fingers along current → thumb points to N",
+        "Point thumb along current → fingers point to N",
+        "F = I · L · B",
+        "V = I · R"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ Half of electromagnetism — the other half is Day 14",
+      "markdown": "Oersted's discovery is the OPENING of electromagnetism. Day 14 will give the REVERSE: changing B-field creates VOLTAGE. Together, these two laws (Oersted + Faraday) make every motor, every generator, every transformer, and every wireless charger work."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A straight wire has current flowing to the RIGHT. Above the wire, which direction does B point? (Use right-hand rule.) Show or describe your work.",
+      "frame": "Oersted discovered that currents create ___ fields. The right-hand rule says to point your ___ in the direction of current, then your fingers curl in the direction of ___. A coiled wire (solenoid) acts like a ___."
+    },
+    {
+      "id": "rd-ch36-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **36.5–36.8** (currents make magnetic fields, forces on moving charges and wires, and meters to motors). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch36-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 36,
+      "title": "Magnetism — read & practice",
+      "sectionIds": [
+        "36.5",
+        "36.6",
+        "36.7",
+        "36.8"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k8-oersted"
+    }
+  ]
+}

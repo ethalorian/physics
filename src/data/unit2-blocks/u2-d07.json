@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can graph g vs. altitude, read the curve, and explain qualitatively why weightlessness in orbit is FREE FALL — not the absence of gravity.",
+      "targetId": "u2.r3-compare-g"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's distance is changing, so the g it feels is changing.",
+      "connection": "g(r) is the function that lets us compute the force on the asteroid at ANY distance — not just at Earth's surface."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## g is a curve, not a constant\n\nYesterday's equation g(r) = G·M/r² isn't just for one altitude — it's a **function**. Feed it any r, it returns the field strength there.\n\nBecause of the r², the curve falls fast at first and then flattens: going up 400 km only costs you ~11% of g, but by the Moon's distance, Earth's g has shrunk to about **1/3600** of its surface value.\n\nRead the graph below: where does g drop to half? To a tenth?"
+    },
+    {
+      "id": "b4",
+      "type": "graph",
+      "title": "Earth's gravitational field strength vs. altitude",
+      "xLabel": "Altitude above surface (km)",
+      "yLabel": "g (m/s²)",
+      "genPrompt": "g(r) = G·M_Earth/r² computed at increasing altitudes, showing the inverse-square falloff from 9.81 at the surface.",
+      "series": [
+        {
+          "label": "g(r) = G·M/r²",
+          "points": [[0, 9.81], [400, 8.7], [1000, 7.33], [2000, 5.68], [3000, 4.53], [5000, 3.08], [8000, 1.93], [10000, 1.49], [15000, 0.87], [20000, 0.57], [35786, 0.22]]
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch the g-vs-altitude curve from the graph above. MARK the altitude where g drops to half (≈ 4.9 m/s²). MARK where it drops to about a tenth (≈ 1 m/s²). Then, in a corner, answer in 2 sentences: why doesn't the ISS fall straight down?",
+      "prompts": [
+        "Mark and label the half-g point.",
+        "Mark and label the tenth-g point.",
+        "2 sentences: why doesn't the ISS fall straight down?"
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "Find Earth's g at the Moon's average orbital distance (r = 3.84 × 10⁸ m). Compare to surface g.",
+      "given": "M_Earth = 5.97×10²⁴ kg · r = 3.84×10⁸ m",
+      "equation": "g(r) = G·M / r²",
+      "work": "g = (6.67×10⁻¹¹)(5.97×10²⁴) / (3.84×10⁸)²\ng = (3.98×10¹⁴) / (1.47×10¹⁷)\ng ≈ 0.0027 m/s²",
+      "answer": "≈ 0.0027 m/s² — about 1/3600 of surface g. The Moon still feels Earth's pull."
+    },
+    {
+      "id": "b7",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Find the altitude above Earth's surface where g = 4.9 m/s² (half of surface g). Hint: solve g = G·M/r² for r. Then subtract R_Earth.",
+      "givenHint": "g = 4.9 m/s², G, M_Earth = 5.97 × 10²⁴ kg, R_Earth = 6.37 × 10⁶ m.",
+      "equationHint": "Rearrange: r = √(G·M/g). Don't forget to subtract R_Earth at the end — the question asks for ALTITUDE.",
+      "equationOptions": ["g(r) = G·M/r²", "r = √(G·M/g)", "F = m·g", "F = G·m₁·m₂/r²"]
+    },
+    {
+      "id": "b8",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Explain the difference between (a) 'no gravity in orbit' and (b) 'falling freely in orbit.' Which one is true?",
+      "frame": "Statement ___ is true. In orbit, gravity is ___ — the station and astronauts are both ___."
+    },
+    {
+      "id": "b9",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.r3-compare-g"
+    }
+  ]
+}

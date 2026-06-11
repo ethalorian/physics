@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can state that temperature is proportional to the average KE per molecule (KE_avg = 3/2 · k · T), explain phase changes as bond-breaking at the molecular level, and predict what happens to molecular speed as T changes.",
+      "targetId": "u5.k4-kinetic-theory"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Day 1: thermal energy is total molecular KE. From Day 4: phase changes happen at constant T.",
+      "connection": "The molecular picture explains BOTH. Temperature is avg KE per molecule. During a phase change, added energy goes into breaking bonds — not into raising avg KE. So T stays put while the bonds break."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Zoom in far enough and 'hot' means 'fast'\n\nKinetic theory says matter is molecules in constant motion: in a gas they fly randomly, in a liquid they jostle, in a solid they vibrate in place. Temperature is nothing mysterious — it's a **speedometer reading averaged over molecules**:\n\n**KE_avg = (3/2) · k · T**\n\nwhere k = Boltzmann's constant (1.38 × 10⁻²³ J/K) and T is in **Kelvin** (add 273 to °C).\n\nThis one idea closes two loops from earlier in the unit:\n\n- **Day 1's distinction**: thermal energy = TOTAL molecular KE (extensive); temperature = AVERAGE KE per molecule (intensive). Same molecules, two different bookkeeping questions.\n- **Day 4's flat plateaus**: during a phase change, the added heat breaks intermolecular bonds instead of speeding molecules up. Average KE doesn't change → the thermometer doesn't move.\n\nOne more payoff: since KE = ½mv², doubling the Kelvin temperature doubles the average KE — but speed only grows by **√2**, because v sits inside a square."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Kinetic theory",
+          "definition": "Matter is made of molecules in constant motion. In a gas, they fly randomly. In a liquid, they jostle. In a solid, they vibrate in place. Temperature measures the AVERAGE KE per molecule. At room temperature, an N₂ molecule moves at ~500 m/s on average — heat the gas, molecules speed up; cool it, they slow down. ALL molecules move (even in solids — they vibrate); absolute zero (0 K = -273 °C) is the theoretical floor where motion is minimum.",
+          "cognate": "Sp. teoría cinética · Pt. teoria cinética · HC teyori sinetik"
+        },
+        {
+          "term": "KE_avg = (3/2) · k · T",
+          "definition": "The average kinetic energy per molecule of a gas, where k = Boltzmann's constant (1.38 × 10⁻²³ J/K) and T is in Kelvin. At T = 300 K: KE_avg = 1.5 · 1.38e-23 · 300 ≈ 6.2 × 10⁻²¹ J per molecule. Multiply by ~10²³ molecules per mole → ~620 J per mole.",
+          "cognate": "Sp. energía cinética promedio · Pt. energia cinética média"
+        },
+        {
+          "term": "Phase change at the molecular level",
+          "definition": "Adding heat breaks intermolecular BONDS. Energy goes into breaking bonds, not into faster motion. So T stays constant. At 0 °C, ice molecules vibrate; add heat and molecules break loose into liquid — same average speed as the ice they came from. T stays at 0 °C until all the ice is melted. The latent heat from Day 4 is exactly the energy that goes into BOND-BREAKING, not into avg KE.",
+          "cognate": "Sp. ruptura de enlaces · Pt. ruptura de ligações"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "T must be in KELVIN, not Celsius",
+      "markdown": "KE_avg = (3/2)·k·T only works with absolute temperature. Add 273 to °C to get K. (Using 27 °C instead of 300 K makes the answer 11× too small — and 0 °C would absurdly predict zero molecular motion.)"
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Compare the three panels (solid · liquid · gas). Where are molecules FASTEST on average? Where do they have the MOST freedom of position? Why does temperature stay constant during a phase change?",
+      "prompts": [
+        "Three panels: vibrating lattice (solid), jostling crowd (liquid), flying dots (gas).",
+        "Mark which panel has the fastest average molecules and which has the most positional freedom.",
+        "One sentence: where does the energy go during a phase change?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "Compute the average KE per molecule for a gas at room temperature (T = 300 K). Use k = 1.38 × 10⁻²³ J/K.",
+      "given": "T = 300 K · k = 1.38 × 10⁻²³ J/K",
+      "equation": "KE_avg = (3/2) · k · T",
+      "work": "KE_avg = 1.5 · 1.38e-23 · 300\nKE_avg = 1.5 · 4.14e-21\nKE_avg ≈ 6.2 × 10⁻²¹ J per molecule",
+      "answer": "≈ 6.2 × 10⁻²¹ J per molecule — a tiny number, but multiply by ~10²³ molecules and you get the gas's thermal energy."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "If you double the Kelvin temperature (300 K → 600 K), what happens to the average molecular KE? What happens to the average molecular SPEED? (Hint: KE = ½mv².)",
+      "givenHint": "T doubles: 300 K → 600 K. KE_avg ∝ T. Speed hides inside KE = ½mv².",
+      "equationHint": "KE_avg = (3/2)·k·T says KE doubles. Then KE = ½·m·v² — if KE doubles, v grows by √2 ≈ 1.41×, not 2×.",
+      "equationOptions": ["KE_avg = (3/2) · k · T", "KE = ½ · m · v²", "Q = m · c · ΔT", "p = m · v"]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Try it — PhET States of Matter",
+      "markdown": "PhET States of Matter sim: heat solid argon. Watch molecular motion increase. See solid → liquid → gas transitions. Look for the moments when T plateaus (phase change in progress). Search \"PhET States of Matter\" — it runs free in any browser."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does temperature stay constant during a phase change, even though heat is being added? Answer in terms of where the energy is GOING at the molecular level. Then complete the frame.",
+      "frame": "Temperature is the ___ kinetic energy per molecule. During a phase change, added heat goes into ___ instead of raising avg KE — so the thermometer doesn't move."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.k4-kinetic-theory"
+    }
+  ]
+}

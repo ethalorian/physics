@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe a heat engine cycle (heat in from hot reservoir → some work out → waste heat to cold reservoir), compute efficiency from Q_hot and W, and compare to the Carnot limit η_max = 1 − T_cold/T_hot.",
+      "targetId": "u5.r2-heat-engines"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "The expanding fireball after impact is a NATURAL heat engine — it converts some thermal energy to mechanical work (the shockwave).",
+      "connection": "No engine — not even an impact fireball — converts 100% of heat to work. The second law forbids it. Day 11's KE partition (vaporization + shockwave + thermal radiation) reflects exactly this limit."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Heat in, work out, waste required\n\nA **heat engine** is any device that turns heat into work: car engine, power plant, jet turbine — or an impact fireball. Every one of them runs the same three-arrow cycle:\n\n1. **Q_hot** flows IN from a hot reservoir (burning gasoline, steam, the fireball).\n2. SOME of it leaves as useful **work W** (piston, turbine, shockwave).\n3. The REST is dumped as waste heat **Q_cold** to a cold reservoir (exhaust, cooling tower, the surrounding air).\n\nEnergy conservation ties them together: **Q_hot = W + Q_cold**. The fraction that becomes work is the **efficiency**:\n\n**η = W / Q_hot = 1 − Q_cold/Q_hot** — always less than 1.\n\nAnd the second law puts a hard ceiling on it. The best ANY engine can do between a hot reservoir at T_H and a cold one at T_C (both in Kelvin) is the **Carnot limit**:\n\n**η_max = 1 − T_C/T_H**\n\nNo design, no fuel, no clever engineering beats it. A real engine can only creep closer."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Heat engine",
+          "definition": "A device that takes heat IN from a hot reservoir, converts SOME to useful work, and DUMPS the rest as waste heat to a cold reservoir. Car engine: gasoline combustion (hot) → piston work (W) → exhaust heat (Q_cold to outside). Power plant: steam (hot) → turbine work → cooling tower (cold). The cold reservoir is REQUIRED — without a cold side the engine can't work; the second law mandates waste heat.",
+          "cognate": "Sp. máquina térmica · Pt. máquina térmica · HC machin a chalè"
+        },
+        {
+          "term": "Efficiency (η)",
+          "definition": "The fraction of heat input that becomes useful work. η = W / Q_hot = 1 − Q_cold/Q_hot. Always < 1. Power plant: 1000 J in, 400 J of work, 600 J waste → η = 400/1000 = 40%. Car: ~25%. Human body: ~25%. η is dimensionless (between 0 and 1, or 0% and 100%); 1 (100%) is impossible.",
+          "cognate": "Sp. eficiencia · Pt. eficiência · HC efikasite"
+        },
+        {
+          "term": "Carnot limit (η_max)",
+          "definition": "The MAXIMUM possible efficiency for an engine between hot reservoir at T_H (Kelvin) and cold reservoir at T_C (Kelvin). η_max = 1 − T_C/T_H. Real engines are always below this. Power plant with T_H = 600 K, T_C = 300 K → η_max = 1 − 300/600 = 0.50 = 50%. Real plant gets 40% — below the limit.",
+          "cognate": "Sp. límite de Carnot · Pt. limite de Carnot"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "USE KELVIN. ALWAYS.",
+      "markdown": "T_C/T_H is a RATIO — only Kelvin gives the right ratio. Don't use °C. (300 K / 600 K = 0.5, but 27 °C / 327 °C = 0.08 — nonsense.) Convert first: K = °C + 273.15."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "links": [
+        {
+          "label": "Q_hot in",
+          "sublabel": "1000 J from hot reservoir (600 K steam)"
+        },
+        {
+          "label": "Engine converts SOME to work",
+          "sublabel": "W = 400 J useful (turbine / piston / shockwave)"
+        },
+        {
+          "label": "Q_cold dumped",
+          "sublabel": "600 J waste heat to cold reservoir (300 K cooling tower)"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the heat-engine box diagram: hot reservoir on top, engine box in the middle, cold reservoir on the bottom. Label Q_hot, W, and Q_cold with arrows.",
+      "prompts": [
+        "Label the power-plant numbers: 1000 J in, 400 J of work out — where does the other 600 J go?",
+        "Compute the efficiency for that example and write it inside the engine box",
+        "Compute the Carnot limit at T_H = 500 K, T_C = 300 K and compare"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "POWER PLANT EFFICIENCY — A power plant takes 1000 J of heat from steam at 600 K, produces 400 J of useful work, and dumps 600 J as waste heat to a 300-K cooling tower. (a) Real efficiency? (b) Carnot limit at these temperatures? (c) Is the real engine doing OK?",
+      "given": "Q_hot = 1000 J · W = 400 J · Q_cold = 600 J · T_H = 600 K · T_C = 300 K",
+      "equation": "η = W/Q_hot AND η_max = 1 − T_C/T_H",
+      "work": "η = 400 / 1000 = 0.40 = 40%\nη_max = 1 − 300/600 = 1 − 0.5 = 0.50 = 50%\nReal / Carnot = 40 / 50 = 80% of the limit.",
+      "answer": "40% efficient. Carnot limit is 50%. The plant is at 80% of the theoretical max."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "CAR ENGINE — A car engine receives 1500 J of heat per cycle and produces 400 J of work. (a) Efficiency? (b) How much heat is wasted to exhaust?",
+      "givenHint": "Q_hot = 1500 J · W = 400 J per cycle",
+      "equationHint": "η = W/Q_hot for part (a). For part (b): Q_cold = Q_hot − W.",
+      "equationIds": [
+        "efficiency"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "CARNOT FOR A STEAM ENGINE — A steam engine runs between T_H = 450 K (steam) and T_C = 300 K (condenser). What is the maximum possible efficiency?",
+      "givenHint": "T_H = 450 K · T_C = 300 K (already in Kelvin — no conversion needed)",
+      "equationHint": "η_max = 1 − T_C/T_H — temperatures in Kelvin only.",
+      "equationOptions": [
+        "η_max = 1 − T_C/T_H",
+        "η = W/Q_hot",
+        "ΔU = Q − W",
+        "Q = m·c·ΔT"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The Carnot limit is set by the TEMPERATURES alone",
+      "markdown": "Not by the working fluid or the engine design. You can never beat it. You can only get closer to it."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A car engine receives 1500 J of heat per cycle and produces 400 J of work. What's its efficiency? Then complete the frame.",
+      "frame": "An engine's efficiency is bounded by η_max = ___, which depends only on the hot and cold ___ (in ___). Real engines fall ___ this limit because of friction and other losses."
+    },
+    {
+      "id": "rd-ch24-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **24.5** (heat engines and the second law — Carnot's ideal efficiency). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch24-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 24,
+      "title": "Thermodynamics — read & practice",
+      "sectionIds": [
+        "24.5"
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.r2-heat-engines"
+    }
+  ]
+}

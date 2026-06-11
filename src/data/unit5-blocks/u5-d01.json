@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can distinguish THERMAL ENERGY (total molecular KE), TEMPERATURE (intensive — average per molecule), and HEAT (thermal energy that TRANSFERS) — and explain why a bathtub at 40 °C has MORE thermal energy than a thimble at 100 °C.",
+      "targetId": "u5.anchor-heat-vs-temp"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 4: 2026-XJ delivers ~4.5 × 10¹⁷ J ≈ 108 megatons. That's the YIELD. But yield isn't damage — damage is what the energy DOES.",
+      "connection": "The damage MECHANISM is heat. Day 10 explains atmospheric burn-up. Day 11 builds the impact thermal damage map. Today we untangle the words."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "NASA / Planetary Defense Briefing — Update 5",
+      "markdown": "The Unit 4 yield number — 2026-XJ KE ≈ **4.5 × 10¹⁷ J ≈ 108 megatons TNT ≈ \"7000 Hiroshimas\"** — is real, but INCOMPLETE. A shockwave alone doesn't account for the full damage profile. What people remember about asteroid impacts — Tunguska's flattened forest, Chelyabinsk's broken windows — is largely **THERMAL**. The fireball. The infrared pulse. The atmospheric entry glow that's hot enough to ignite vegetation kilometers away from where the rock lands.\n\nToday there are THREE new pieces of data on our desks:\n\n**(1)** At 2026-XJ's size, does the atmosphere actually slow it down enough to matter? Most asteroids burn up before they hit. Where's the size threshold?\n\n**(2)** If it does reach the ground, how does its KE partition into vaporized rock vs. shockwave vs. thermal radiation? Each component has a different damage radius.\n\n**(3)** Closer to home: the Unit 4 yield calculation assumed a clean energy-to-shockwave conversion. The yield is REAL, but the FRAMEWORK was missing heat. Unit 5 builds it.\n\nThe two payoff days are Day 10 (atmospheric entry — the burn-up question) and Day 11 (impact thermal damage — the damage-by-distance map). The Day 12 transfer task asks the burn-up question for a sample pebble-sized rock.\n\n*This is fiction. The physics — and the equations — are real.*"
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## Three words people mix up — and physics doesn't\n\n**Thermal energy** is the TOTAL kinetic energy of all the molecules in an object. It's *extensive*: more molecules → more thermal energy. Units: Joules.\n\n**Temperature** is the AVERAGE kinetic energy PER molecule. It's *intensive*: it doesn't care how much stuff there is. Units: °C or K.\n\n**Heat (Q)** is thermal energy that is *TRANSFERRED* from one object to another because of a temperature difference. Also Joules.\n\nSo a thimble of boiling water (100 °C) has hotter molecules per piece — higher temperature. But a bathtub at 40 °C has *billions of times more molecules*, so its TOTAL — its thermal energy — is far larger. \"Which is hotter?\" and \"which holds more energy?\" are **different questions**, and Unit 5 needs both: temperature decides which way heat flows; total energy decides how much damage it can do."
+    },
+    {
+      "id": "b5",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "Demo: a thimble of boiling water (100 °C) next to a bathtub of warm bathwater (40 °C). Which has MORE thermal energy? Same question for a match flame vs. a campfire. What did you NOTICE?",
+      "interpretPrompt": "What do you WONDER?",
+      "frame": "I notice ___. I wonder ___."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Compare A (thimble, 100 °C) and B (bathtub, 40 °C). Which has more thermal energy? Which has higher temperature? Why are these DIFFERENT questions?",
+      "prompts": [
+        "Draw A and B side by side; label each with its temperature.",
+        "Mark which wins on TEMPERATURE and which wins on THERMAL ENERGY.",
+        "One sentence: why are these different questions?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Thermal energy",
+          "definition": "The TOTAL kinetic energy of all the molecules in an object. Extensive — depends on HOW MANY molecules. Units: Joules. A bathtub of warm water has billions of times more molecules than a thimble of boiling water — so its thermal energy is far larger, even though it's cooler.",
+          "cognate": "Sp. energía térmica · Pt. energia térmica · HC enèji tèmik"
+        },
+        {
+          "term": "Temperature",
+          "definition": "The AVERAGE kinetic energy PER molecule. Intensive — doesn't depend on how much stuff. Units: °C or K. 100 °C boiling water has hotter molecules per piece than 40 °C bathwater — regardless of how much water there is.",
+          "cognate": "Sp. temperatura · Pt. temperatura · HC tanperati"
+        },
+        {
+          "term": "Heat (Q)",
+          "definition": "Thermal energy that is TRANSFERRED from one object to another, because of a temperature difference. Units: Joules. Symbol: Q. Putting your hand on a cold ice cube — heat (Q) flows from your hand to the ice. The ice warms; your hand cools.",
+          "cognate": "Sp. calor · Pt. calor · HC chalè"
+        }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Objects don't 'have heat' — heat is energy IN TRANSIT",
+      "markdown": "Once heat arrives, it's just the receiving object's thermal energy. Don't say \"the object has heat\" — say \"thermal energy.\" And thermal energy ≠ temperature: a cool ocean has VASTLY more thermal energy than a cup of hot tea, and \"hot\" only means high temperature (fast molecules) — it says nothing about how much total energy is there."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "MY GUESS — which would burn me worse: a teaspoon of boiling water spilled on my hand, or my hand in a bathtub at 40 °C? Why?",
+      "frame": "My guess: ___ would burn me worse, because ___."
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Where this unit is headed",
+      "markdown": "Unit 5 has TWO payoff days: Day 10 (atmospheric burn-up — the size threshold) and Day 11 (impact damage map — the unit's centerpiece). Both require **Q = mcΔT** and **Q = mL**. We get those tomorrow and Day 4."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Which contains MORE THERMAL ENERGY: a cup of hot coffee at 80 °C, or a cold lake at 5 °C? Which is at HIGHER TEMPERATURE? In two sentences, explain why these are different questions.",
+      "frame": "The ___ has more thermal energy; the ___ has higher temperature. They're different questions because thermal energy is the ___ and temperature is the ___."
+    },
+    {
+      "id": "rd-ch21-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **21.1–21.5** (temperature, heat, thermal equilibrium, internal energy, and measuring heat with the calorie). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch21-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 21,
+      "title": "Temperature, Heat, and Expansion — read & practice",
+      "sectionIds": [
+        "21.1",
+        "21.2",
+        "21.3",
+        "21.4",
+        "21.5"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.anchor-heat-vs-temp"
+    }
+  ]
+}

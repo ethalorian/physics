@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can identify f, λ, A, and T on a wave diagram, give correct units for each, and use f = 1/T to convert between frequency and period.",
+      "targetId": "u6.k1-wave-anatomy"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radar uses radio waves around f ≈ 10⁹ Hz (gigahertz). At c = 3×10⁸ m/s, that's λ ≈ 0.3 m wavelength.",
+      "connection": "Today: the vocabulary that lets us describe radar precisely. Day 3: the equation that connects them."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Four numbers describe any wave\n\nTwo are **SPACE** measurements, taken from a snapshot of the wave:\n\n- **Wavelength λ** — distance from one crest to the next. Units: meters.\n- **Amplitude A** — maximum displacement from rest. Units: meters (or Pa for sound pressure).\n\nTwo are **TIME** measurements, taken by watching one point oscillate:\n\n- **Period T** — time for ONE complete cycle. Units: seconds.\n- **Frequency f** — cycles per second. Units: hertz (Hz).\n\nT and f are reciprocals of each other:\n\n**f = 1/T** and **T = 1/f**\n\n| Property | Type | Symbol | Units |\n|---|---|---|---|\n| Wavelength | SPACE | λ | m, mm, nm |\n| Amplitude | SPACE | A | m (Pa for sound) |\n| Period | TIME | T | s |\n| Frequency | TIME | f | Hz |"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Wavelength (λ)",
+          "definition": "Distance from one crest to the next crest (or any equivalent point). A SPACE measurement. Units: m, mm, nm. Visible light ≈ 500 nm. Sound (at 440 Hz, A4) ≈ 0.78 m. Ocean swell ≈ 30 m. Radio FM ≈ 3 m.",
+          "cognate": "Sp. longitud de onda · Pt. comprimento de onda · HC longè vag"
+        },
+        {
+          "term": "Amplitude (A)",
+          "definition": "Maximum displacement from the rest position. A SPACE measurement. Units: m for transverse, Pa for sound pressure. A loud sound has bigger A than a soft sound at the same pitch. Bright light has bigger A than dim light at the same color.",
+          "cognate": "Sp. amplitud · Pt. amplitude · HC anplitid"
+        },
+        {
+          "term": "Period (T)",
+          "definition": "Time for ONE complete cycle. A TIME measurement. Units: seconds (s). A 440 Hz tuning fork has T = 1/440 ≈ 0.00227 s. Earth's orbit: T = 1 year.",
+          "cognate": "Sp. período · Pt. período · HC peryòd"
+        },
+        {
+          "term": "Frequency (f)",
+          "definition": "Number of cycles per second. Units: hertz (Hz). f = 1/T. A 440 Hz tuning fork vibrates 440 times per second. FM radio at 95.7 MHz vibrates 9.57 × 10⁷ times per second.",
+          "cognate": "Sp. frecuencia · Pt. frequência · HC fwekans"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Watch out — units and reciprocals",
+      "markdown": "λ is in METERS, not seconds — it's a distance. A is the MAX displacement, not crest-to-trough (full peak-to-peak is 2A). T is SECONDS PER CYCLE; f is CYCLES PER SECOND — they are reciprocals, so higher f = MORE cycles per second = shorter T. For sound: higher f = higher pitch."
+    },
+    {
+      "id": "b6",
+      "type": "graph",
+      "title": "One snapshot of a transverse wave (λ = 4 m, A = 2 m)",
+      "xLabel": "position (m)",
+      "yLabel": "displacement (m)",
+      "series": [
+        {
+          "label": "y = A·sin(2πx/λ)",
+          "points": [
+            [
+              0,
+              0
+            ],
+            [
+              0.5,
+              1.41
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              1.5,
+              1.41
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2.5,
+              -1.41
+            ],
+            [
+              3,
+              -2
+            ],
+            [
+              3.5,
+              -1.41
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4.5,
+              1.41
+            ],
+            [
+              5,
+              2
+            ],
+            [
+              5.5,
+              1.41
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              6.5,
+              -1.41
+            ],
+            [
+              7,
+              -2
+            ],
+            [
+              7.5,
+              -1.41
+            ],
+            [
+              8,
+              0
+            ]
+          ]
+        }
+      ],
+      "genPrompt": "Read λ off this snapshot (crest at x = 1 m to crest at x = 5 m) and A (peak height). Which property — T — CANNOT be read from a single snapshot, and why?"
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Label each property — λ, A, T — on the sine wave with arrows. Then identify which label is a SPACE measurement and which is a TIME measurement.",
+      "prompts": [
+        "Draw one sine wave; arrow λ crest-to-crest and A rest-to-crest.",
+        "Note: T can't be shown on a snapshot — it needs a clock.",
+        "Tag each label SPACE or TIME."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A wave has period T = 0.004 s. What's its frequency?",
+      "given": "T = 0.004 s",
+      "equation": "f = 1/T",
+      "work": "f = 1 / 0.004\nf = 250 Hz",
+      "answer": "f = 250 Hz (250 cycles per second)."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "A tuning fork has f = 440 Hz. What's its period?",
+      "given": "f = 440 Hz",
+      "equation": "T = 1/f",
+      "work": "T = 1 / 440\nT ≈ 0.00227 s\nT ≈ 2.27 ms",
+      "answer": "T ≈ 2.27 milliseconds."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A radar transmitter operates at f = 2.4 GHz = 2.4 × 10⁹ Hz. What's its period (in seconds and nanoseconds)?",
+      "givenHint": "f = 2.4 × 10⁹ Hz. 1 ns = 10⁻⁹ s.",
+      "equationHint": "T = 1/f — then convert seconds to nanoseconds.",
+      "equationIds": [
+        "period"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Thousands of cycles per pulse",
+      "markdown": "ONE 2.4 GHz radio pulse takes about 0.42 nanoseconds per cycle. In a 1 μs pulse, that's 2400 cycles. Day 15 will show why pulses contain THOUSANDS of cycles — for precise distance + Doppler measurement."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A wave has f = 250 Hz. What's its period? Show one line of work. Then complete the frame.",
+      "frame": "f tells us ___ per second. T tells us seconds per ___. They are reciprocals, so high f means ___ T."
+    },
+    {
+      "id": "rd-ch25-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **25.1–25.3** (pendulums and the period, wave anatomy: crests, troughs, amplitude, wavelength, frequency, and how waves carry energy — not matter). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch25-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 25,
+      "title": "Vibrations and Waves — read & practice",
+      "sectionIds": [
+        "25.1",
+        "25.2",
+        "25.3"
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k1-wave-anatomy"
+    }
+  ]
+}

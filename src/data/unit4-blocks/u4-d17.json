@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute KE_before and KE_after for an elastic and a perfectly inelastic collision, and explain WHERE the missing KE went.",
+      "targetId": "u4.r4-ke-collisions"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid impact is perfectly inelastic. The KE doesn't disappear — it converts to heat, sound, light, mechanical deformation.",
+      "connection": "That's the missing piece: ALL of the asteroid's KE becomes 'damage' in an inelastic event. Day 19 will measure that KE in TNT-equivalents."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Momentum survives every collision. KE doesn't.\n\nUnit 3 gave us the rule: Σp_before = Σp_after in EVERY collision. Kinetic energy plays by a different rule:\n\n- **Elastic** (magnetic bumpers): KE_before = KE_after. Nothing lost.\n- **Perfectly inelastic** (they stick): KE_after < KE_before. The maximum possible KE is converted.\n\nThe recipe for any sticking collision:\n\n1. v_f from momentum: m₁v₁ = (m₁ + m₂)·v_f\n2. KE_before = ½m₁v₁² (+ ½m₂v₂² if both move)\n3. KE_after = ½(m₁ + m₂)·v_f²\n4. **KE_lost = KE_before − KE_after** → becomes heat, sound, deformation\n\nAn asteroid impact is the ultimate perfectly inelastic collision — and on Day 19 we'll measure its 'lost' KE in TNT-equivalents."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "KE lost",
+          "definition": "In a perfectly inelastic collision, KE_before > KE_after. The DIFFERENCE = the KE converted to other forms (heat, sound, deformation). 'KE was lost' does NOT mean energy disappeared — energy is ALWAYS conserved; the KE just transferred to a different form. Example: a 1-kg ball at 6 m/s hits a 1-kg ball at rest, they stick: KE_before = 18 J, KE_after = 9 J, lost: 9 J → heat/sound.",
+          "cognate": "Sp. energía cinética perdida · Pt. energia cinética perdida"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Re-run Unit 3's collisions — with energy eyes",
+      "markdown": "Run the cart-collisions simulation below in both bumper modes. Magnetic (elastic): compute KE before and after — they match. Velcro (stick): compute KE before and after — where did the difference go?"
+    },
+    {
+      "id": "b6",
+      "type": "sim_embed",
+      "simulationSlug": "cart-collisions"
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "EQUAL-MASS PERFECTLY INELASTIC. A 1-kg ball at 6 m/s east strikes an identical ball at rest. They stick. Find: (a) v_f from momentum conservation, (b) KE_before, (c) KE_after, (d) KE lost.",
+      "given": "m₁ = m₂ = 1 kg · v₁ᵢ = 6 m/s · v₂ᵢ = 0",
+      "equation": "m₁·v₁ = (m₁+m₂)·v_f ; KE = ½·m·v²",
+      "work": "v_f = (1·6) / (1+1) = 3 m/s\nKE_before = ½·1·6² + 0 = 18 J\nKE_after = ½·2·3² = 9 J\nKE_lost = 18 − 9 = 9 J",
+      "answer": "Half of the original KE became heat, sound, deformation. The other half stayed as motion."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "BULLET INTO BLOCK. A 0.05-kg bullet at 400 m/s embeds in a 5-kg block (ballistic pendulum from Unit 3). Find v_f, KE_before, KE_after, KE_lost.",
+      "given": "m₁ = 0.05 kg · v₁ = 400 m/s · M = 5 kg · V = 0",
+      "equation": "m·v = (m+M)·v_f ; KE = ½·m·v²",
+      "work": "v_f = (0.05·400)/(5.05) ≈ 3.96 m/s\nKE_before = ½·0.05·400² = 4000 J\nKE_after = ½·5.05·3.96² ≈ 39.6 J\nKE_lost ≈ 3960 J (over 99% lost!)",
+      "answer": "Over 99% of the bullet's KE was \"lost\" — became heat in the wood, deformation, sound."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Momentum and KE follow different rules",
+      "markdown": "Momentum is conserved in EVERY collision. KE is only conserved in elastic ones. Don't confuse 'energy lost' with 'momentum lost.' Different rules."
+    },
+    {
+      "id": "b10",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the equal-mass collision BEFORE and AFTER. Then show the missing 9 J leaving the system — squiggles!",
+      "prompts": [
+        "Before: 1 kg at 6 m/s → 1 kg at rest.",
+        "After: 2-kg stuck pair at 3 m/s.",
+        "Squiggles: heat, sound waves, dents carrying away the lost 9 J."
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "CLAY ONTO STATIONARY BLOCK. A 0.5-kg ball at 10 m/s strikes a 1.5-kg stationary block; they stick. How much KE was lost?",
+      "givenHint": "m₁ = 0.5 kg · v₁ = 10 m/s · m₂ = 1.5 kg · v₂ = 0 · they stick.",
+      "equationHint": "First v_f from momentum conservation, then KE_before − KE_after.",
+      "equationIds": ["momentum", "kinetic-energy"]
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your clay-block answer, then complete the frame.",
+      "frame": "In a perfectly inelastic collision, momentum is ___ but kinetic energy is ___. The missing KE becomes ___."
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r4-ke-collisions"
+    }
+  ]
+}

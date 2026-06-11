@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 7 tool — Coulomb's law, electric field, voltage, current, Ohm's law, series + parallel circuits, power, magnetism, Oersted, Faraday, and the motor prediction — independently on the transfer task.",
+      "targetId": "u7.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every Unit 7 tool: Coulomb's law, E field, V = U/q, I = q/t, V = IR, series + parallel rules, P = VI = I²R = V²/R, magnetism + Oersted, Faraday induction, motors.",
+      "connection": "Problem 5 is the load-bearing PREDICT prompt: given a different motor and battery, predict current AND power BEFORE the build. Same logic as Day 17."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 5 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Coulomb's law.** Two +5 μC charges are 0.20 m apart. Compute the force on each. Then compute the new force if the distance is doubled to 0.40 m. Show inverse-square scaling.\n- **Problem 2 — Ohm's law + power.** A circuit measures V = 12 V across a resistor and I = 0.30 A through it. (a) Find R. (b) Find P dissipated. (c) Find energy dissipated in 60 s of operation.\n- **Problem 3 — Series + parallel.** 9V battery powers (R₁ = 2Ω in series with R₂ = 4Ω ∥ R₃ = 4Ω). Find R_total, the battery current, and the current in each parallel branch.\n- **Problem 4 — Magnetic field.** A long straight wire carries current flowing into the page. (a) Describe (with right-hand rule) the direction of B in the four cardinal directions around the wire. (b) Why does a compass placed to the SOUTH of the wire deflect WEST?\n- **Problem 5 — ★ Car Project bridge (predict).** A different team's hobby motor has estimated R = 5.5 Ω. Connected to a 9 V battery: (a) Predict current. (b) Predict power. (c) If the motor is 35% efficient, estimate the mechanical power out. (d) If a 15-second race uses this power continuously, how much TOTAL energy is delivered, and how much becomes heat?\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Five problems, five physics ideas. Match each problem to its Unit 7 idea BEFORE you begin. Problem 5 is the ★ — it bridges into Unit 8.",
+      "prompts": [
+        "Write the five problem numbers and draw a line to the Unit 7 idea each one uses.",
+        "Mark Problem 5 with a ★ — it's the bridge into Unit 8."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 7 Equation Reference card and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b7",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: what order will you tackle the five problems, and where do you predict you will struggle?",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b8",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 7 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before Unit 8 puts this unit's circuit into a machine you build with your hands."
+    },
+    {
+      "id": "b9",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u7.k1-coulombs-law",
+        "u7.k2-electric-field",
+        "u7.k3-voltage",
+        "u7.k4-current",
+        "u7.k5-ohms-law",
+        "u7.s1-series-circuits",
+        "u7.s2-parallel-circuits",
+        "u7.s3-combination-circuits",
+        "u7.s4-vernier-circuit-lab",
+        "u7.k6-electric-power",
+        "u7.k7-magnetism",
+        "u7.k8-oersted",
+        "u7.r1-faraday",
+        "u7.r2-motors-generators",
+        "u7.r3-magnetosphere-emp"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 8 (The Car Project — theory becomes engineering)?",
+      "frame": "I grew most on ___. Before Unit 8 I want to lock in ___."
+    }
+  ]
+}

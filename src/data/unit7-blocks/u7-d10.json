@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can wire a circuit with a Vernier voltmeter (parallel) and ammeter (series), read V and I correctly, verify V = IR for a single resistor, and confirm the series rule (same I) and the parallel rule (same V).",
+      "targetId": "u7.s4-vernier-circuit-lab"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Days 6-9 gave us the EQUATIONS. Today we verify them in the lab.",
+      "connection": "If V = IR holds for resistors we measure, we trust it for the Car motor on Day 17."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 7.1 — Verify Ohm's law + circuit rules",
+      "markdown": "**Driving question:** Can we verify Ohm's law (V = IR) and the series + parallel circuit rules using a Vernier voltmeter and ammeter on a small DC circuit?\n\n**Equipment:** Vernier LabQuest + voltage probe + current probe (one set per pair) · DC power supply or 9V battery + battery holder · set of resistors: 100 Ω, 220 Ω, 470 Ω (color bands provided) · breadboard + jumper wires · switch (push-button or toggle).\n\n**How this lab serves the year's question:** if the Ohm's law verification is within 5%, you trust V = IR for the Car motor prediction (Day 17). Same physics, scaled up to a working motor."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "**PART A — Ohm's law check.** Build: battery → switch → ammeter (in SERIES with one resistor) → back. Voltmeter ACROSS the resistor (in parallel).",
+        "Choose three resistors (100 Ω, 220 Ω, 470 Ω). For each, close switch, read V and I, compute R_measured = V/I.",
+        "Compare to nominal R (color-band value). Compute percent error.",
+        "**PART B — Series rule.** Build battery → switch → ammeter → R₁ → R₂ → back. Voltmeter across EACH resistor in turn.",
+        "Check: same I throughout? V₁ + V₂ = V_battery?",
+        "**PART C — Parallel rule.** Build battery → switch → split into two branches, R₁ and R₂. Ammeter in each branch separately. Voltmeter across the parallel pair.",
+        "Check: same V across each branch? I₁ + I₂ = total I (from battery)?"
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Don't short-circuit the battery (positive directly to negative). High current can overheat wires + drain battery in seconds. Use the switch — open before rewiring."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Ammeter in SERIES, voltmeter in PARALLEL",
+      "markdown": "Ammeter goes in SERIES (broken into the circuit). Voltmeter goes in PARALLEL (across the component). Hooking them up the wrong way is a common error — and a voltmeter wired in series sees no current, while an ammeter in parallel can short out and damage itself."
+    },
+    {
+      "id": "b7",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "Part A hookup — the loop you build",
+      "caption": "Battery → switch → resistor, one series loop. The ammeter breaks INTO the loop next to the resistor; the voltmeter clips ACROSS the resistor (parallel) — it is not part of the loop.",
+      "components": [
+        { "kind": "battery", "side": "left", "label": "9V battery" },
+        { "kind": "switch", "side": "top", "label": "switch (open before rewiring)" },
+        { "kind": "resistor", "side": "right", "label": "R — ammeter in series here, voltmeter across" }
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch the lab: battery + switch + resistor in a loop. Ammeter IN SERIES with the resistor. Voltmeter IN PARALLEL across the resistor. Label which probe is which.",
+      "prompts": [
+        "Draw the series loop: battery → switch → resistor → back.",
+        "Show the ammeter broken INTO the loop, the voltmeter clipped ACROSS the resistor.",
+        "Label which Vernier probe is which."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["R nominal (Ω)", "V (V)", "I (A)", "R_measured = V/I (Ω)", "% error"],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "DATA TABLE A — Ohm's law verification. Compute the mean % error across your resistors. How close does R_measured come to the nominal value?"
+    },
+    {
+      "id": "b10",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["R₁ + R₂ (Ω)", "V₁ (V)", "V₂ (V)", "V_total (V)", "I (A) constant?"],
+      "rows": 3,
+      "plot": false,
+      "patternPrompt": "DATA TABLE B — Series rule (battery V_total). Check: does V₁ + V₂ match V_battery? Is the current the same everywhere in the loop?"
+    },
+    {
+      "id": "b11",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["R₁ ∥ R₂ (Ω)", "V across pair (V)", "I₁ (A)", "I₂ (A)", "I_total (A)"],
+      "rows": 3,
+      "plot": false,
+      "patternPrompt": "DATA TABLE C — Parallel rule. Sum check: does I₁ + I₂ match I_total from the battery?"
+    },
+    {
+      "id": "b12",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "In your Ohm's law data (Part A), how well does R_measured match the nominal value? What's the largest source of error — your reading precision, the resistor tolerance, or something else?",
+      "interpretPrompt": "In your parallel data (Part C), is I_total ≈ I₁ + I₂? Within what percent? If they DIDN'T match, what would that tell you (about charge conservation)? And the asteroid connection: how does this serve the year's question?",
+      "frame": "We measured R for three resistors. The mean % error was ___ %. Our series-rule data confirmed that the current was ___ throughout. The parallel data confirmed that the voltage was ___ across each branch and I₁ + I₂ = ___."
+    },
+    {
+      "id": "b13",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A voltmeter reads 6.0 V across a resistor. An ammeter reads 0.25 A through it. What is R? Show one line of work.",
+      "frame": "R = V / I = ___ Ω."
+    },
+    {
+      "id": "b14",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.s4-vernier-circuit-lab"
+    }
+  ]
+}

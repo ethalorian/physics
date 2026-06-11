@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can use Kepler's third law and universal gravitation to compute 2026-XJ's period, its perihelion distance, and whether/when its orbit crosses Earth's.",
+      "targetId": "u2.r4-closest-approach"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Refined parameters (from the cover briefing): a = 1.42 AU, e = 0.31, currently closing.",
+      "connection": "This is the day the unit pays off. We use EVERY tool we built — universal gravitation, fields, orbits, Kepler — to answer: when does 2026-XJ next cross Earth's path?"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The payoff — three steps to an answer\n\nEverything this unit built converges on three calculations:\n\n1. **Period** from Kepler's third law: T² = a³.\n2. **Perihelion and aphelion** from the orbit's shape: r_peri = a(1−e), r_apo = a(1+e).\n3. **The crossing question:** if perihelion is INSIDE Earth's orbit (1.00 AU), the asteroid crosses Earth's path twice per pass — once inbound, once outbound. Then the only question left is **timing**.\n\nWork the steps below. Steps 1 and 2 are worked for you; step 3 is yours."
+    },
+    {
+      "id": "b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Watch it happen",
+      "markdown": "Run the trajectory simulation below while you work. You're computing, by hand, exactly what the simulation integrates numerically — the same physics, two methods."
+    },
+    {
+      "id": "b5",
+      "type": "sim_embed",
+      "simulationSlug": "asteroid-trajectory"
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "STEP 1 — Period from Kepler's third law. Use T² = a³ with a = 1.42 AU. Find 2026-XJ's orbital period in years.",
+      "given": "a = 1.42 AU (heliocentric, around the Sun)",
+      "equation": "T² = a³ → T = √(a³)",
+      "work": "T² = (1.42)³ = 2.86\nT = √2.86 ≈ 1.69 years",
+      "answer": "≈ 1.69 Earth-years — about 20 months for one full orbit of the Sun."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "STEP 2 — Perihelion and aphelion distances. Use perihelion = a(1−e) and aphelion = a(1+e) with a = 1.42 AU and e = 0.31.",
+      "given": "a = 1.42 AU · e = 0.31",
+      "equation": "r_peri = a(1−e) ; r_apo = a(1+e)",
+      "work": "r_peri = 1.42 × (1 − 0.31) = 1.42 × 0.69 ≈ 0.98 AU\nr_apo = 1.42 × (1 + 0.31) = 1.42 × 1.31 ≈ 1.86 AU",
+      "answer": "Perihelion ≈ 0.98 AU; aphelion ≈ 1.86 AU. PERIHELION IS INSIDE EARTH'S ORBIT (1.00 AU)."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STEP 3 — Does it cross Earth's orbit? WHEN? Since 2026-XJ's perihelion is 0.98 AU and Earth's orbit is 1.00 AU, the asteroid CROSSES Earth's orbit twice per pass — once going in, once going out. Use your period (≈ 1.69 yr) to estimate WHEN it next reaches perihelion. (Use any reasonable assumption about its current position in the orbit; show your reasoning.)",
+      "givenHint": "T ≈ 1.69 yr, r_peri ≈ 0.98 AU, current distance ≈ 1.18 AU and closing. State your assumption about where it is in its orbit.",
+      "equationHint": "Reason with fractions of the period — e.g., if it's partway from aphelion to perihelion, what fraction of T remains?",
+      "equationOptions": ["T² = a³", "r_peri = a(1−e)", "r_apo = a(1+e)", "v = √(G·M/r)"]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "This is what NASA actually does",
+      "markdown": "The math you ran here is the same kind they run on real near-Earth objects — the constants are real, the equations are real, only the asteroid is fictional."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write one sentence to a non-physics friend explaining when (year + roughly what month) 2026-XJ next crosses Earth's orbit — and whether being at the SAME PLACE in space at the SAME TIME is likely. Be honest about the uncertainty. Then complete the comparison frame.",
+      "frame": "Compared to Unit 1's prediction, this answer is more trustworthy because Unit 1 assumed ___, but we now know that ___ depends on r. The new tools we used were ___ and ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.r4-closest-approach"
+    }
+  ]
+}

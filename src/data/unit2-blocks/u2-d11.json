@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can decompose a launch velocity into vₓ = v cos θ and v_y = v sin θ, compute flight time, and explain why 45° maximizes range on level ground.",
+      "targetId": "u2.r2-predict-landing"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's velocity has both horizontal and angled components in Earth's frame.",
+      "connection": "If the asteroid entered the atmosphere, this is the math we'd use to predict the impact point."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Angled launches — split the velocity first\n\nAn angled launch is just a horizontal launch wearing a disguise. Strip it with two lines of trig:\n\n- **vₓ = v·cos θ** — the horizontal piece (constant the whole flight)\n- **v_y = v·sin θ** — the vertical piece (gravity eats it at g per second)\n\nOn level ground the flight time is **t = 2·v_y/g** (up and back down), and the range is **x = vₓ·t**.\n\nWhy is **45°** the max-range angle on level ground? Because the speed is split **equally** between the two jobs: enough v_y to buy time in the air, enough vₓ to use that time covering ground. Tilt steeper and you buy time you can't use; tilt shallower and you have speed with no time to spend it."
+    },
+    {
+      "id": "b4",
+      "type": "worked_example",
+      "prompt": "A ball launches at 20 m/s at 30° above level ground. Find (a) vₓ, (b) v_y, (c) flight time, (d) range.",
+      "given": "v = 20 m/s · θ = 30° · level ground · g = 9.81 m/s²",
+      "equation": "vₓ = v cos θ · v_y = v sin θ · t_flight = 2·v_y/g · x = vₓ·t_flight",
+      "work": "vₓ = 20·cos30° ≈ 17.3 m/s\nv_y = 20·sin30° = 10.0 m/s\nt_flight = 2·10.0 / 9.81 ≈ 2.04 s\nx = 17.3 × 2.04 ≈ 35.3 m",
+      "answer": "≈ 35 m. (Try 45° — you'll get ≈ 40.8 m, the maximum on level ground.)"
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Pick a launch speed v. Draw three arcs from the same launch point: one at 30°, one at 45°, one at 60°. Make the 45° arc go farthest. Then write a 1-sentence reason WHY 45° wins.",
+      "prompts": [
+        "Same launch speed for all three arcs.",
+        "30° and 60° should land at about the SAME spot (try it tomorrow with the math!).",
+        "Your one-sentence WHY in a corner."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Same launch speed (20 m/s), but now θ = 60°. Predict first: will the range be bigger, smaller, or the same as 30°? Then compute it.",
+      "givenHint": "v = 20 m/s, θ = 60°, level ground. Write your prediction in the Given box too.",
+      "equationHint": "Same four-equation chain as the worked example: components → flight time → range.",
+      "equationOptions": ["vₓ = v·cos θ", "v_y = v·sin θ", "t = 2·v_y/g", "x = vₓ·t"]
+    },
+    {
+      "id": "b7",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does 45° give max range on level ground? Reason it physically (not just algebraically).",
+      "frame": "On level ground, 45° gives max range because the launch speed is split ___ between horizontal and vertical, balancing ___ in the air with ___ across the ground."
+    },
+    {
+      "id": "b8",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.r2-predict-landing"
+    }
+  ]
+}

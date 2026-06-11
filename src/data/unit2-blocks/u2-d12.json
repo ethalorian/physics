@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute a_c = v²/r and F_c = m·v²/r for an object in circular motion and explain why F_c always points toward the center.",
+      "targetId": "u2.s3-centripetal-calc"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An orbit IS circular motion. The force that holds an orbit is gravity.",
+      "connection": "Today we get the centripetal math. Tomorrow we connect it to gravity and discover that orbits ARE FALLING."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Turning is accelerating\n\nAn object moving in a circle at constant **speed** is still accelerating — its **direction** is changing every instant. That acceleration points toward the center:\n\n- **a_c = v² / r** — centripetal acceleration\n- **F_c = m·v² / r** — the net inward force required to keep the circle\n\nFaster (bigger v) or tighter (smaller r) → more force needed. If the available force can't supply F_c, the object leaves the circle."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Centripetal force",
+          "definition": "The NET inward force that keeps an object on a circular path; F_c = m·v²/r. A car turning a corner: friction is the centripetal force. A satellite orbiting: gravity is.",
+          "cognate": "Sp. fuerza centrípeta · Pt. força centrípeta · HC fòs santipèt"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Centripetal force is a ROLE, not a new force",
+      "markdown": "It's not a new kind of force. It's the role played by an **existing** force — friction, gravity, tension — whenever that force points toward the center. And when the string cuts, the ball flies along the **TANGENT** — not outward. There's no 'centrifugal force' pushing it out; the inward force just disappears."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "vectors",
+      "title": "Ball on a string — the two arrows that matter",
+      "caption": "v points along the tangent (where the ball would go if released). F_c points inward along the string. If the string cuts, the ball follows v — straight out along the tangent.",
+      "genPrompt": "A ball in circular motion: velocity vector tangent to the circle, centripetal force vector pointing toward the center, 90 degrees apart.",
+      "vectors": [
+        { "label": "v (tangent)", "angle": 0, "mag": 80 },
+        { "label": "F_c (toward center)", "angle": 90, "mag": 60 }
+      ],
+      "showResultant": false
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "A 1500 kg car rounds a 50 m radius curve at 20 m/s. What centripetal force must friction provide?",
+      "given": "m = 1500 kg · v = 20 m/s · r = 50 m",
+      "equation": "F_c = m·v² / r",
+      "work": "F_c = 1500 × (20)² / 50\nF_c = 1500 × 400 / 50\nF_c = 12,000 N",
+      "answer": "12,000 N inward. Friction has to provide all of it — if it can't, the car skids out."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A 0.2 kg ball moves in a horizontal circle at 4 m/s on a 1 m string. What is the centripetal force? What provides it?",
+      "givenHint": "m = 0.2 kg, v = 4 m/s, r = 1 m. Name the force playing the centripetal role in your Answer.",
+      "equationHint": "F_c = m·v²/r.",
+      "equationOptions": ["F_c = m·v²/r", "a_c = v²/r", "F = m·g", "F = G·m₁·m₂/r²"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "The string cuts while the ball is circling. Which way does the ball fly, and why is 'it gets flung outward by centrifugal force' the wrong explanation?",
+      "frame": "The ball flies along the ___, because the only thing that changed is that the ___ force disappeared."
+    },
+    {
+      "id": "rd-ch10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **10.1–10.5** (rotation vs. revolution, rotational and tangential speed, centripetal force, and why 'centrifugal force' isn't a true force). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch10",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 10,
+      "title": "Circular Motion — read & practice",
+      "sectionIds": ["10.1", "10.2", "10.3", "10.4", "10.5"]
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.s3-centripetal-calc"
+    }
+  ]
+}

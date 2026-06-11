@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can run elastic and perfectly inelastic cart collisions with photogates, compute Σp_before and Σp_after, and report the % difference with one credible source of error.",
+      "targetId": "u3.s4-vernier-collisions"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We've been STATING that Σp is conserved for 7 days. Today we MEASURE it.",
+      "connection": "If our lab carts confirm conservation, we can trust the same rule for asteroids. Days 11–13 depend on it."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 3.1 — Verify conservation",
+      "markdown": "**Driving question:** How well does Σp_before match Σp_after in our lab carts? And does it work for BOTH elastic and perfectly inelastic collisions?\n\n**Equipment:** Vernier dynamics track (1 per pair) + 2 carts · magnetic bumpers (elastic trial) · velcro pads (perfectly inelastic trial) · 2 photogates + LabQuest + Logger Pro or Graphical Analysis · balance to weigh each cart (record m₁ and m₂ first).\n\n**How this lab serves the year's question:** if conservation holds in carts within a few percent, the asteroid math on Days 11–13 stands."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Level the track. Weigh both carts and record m₁, m₂.",
+        "**ELASTIC trials** (magnet bumpers): cart 2 at rest. Push cart 1 gently. Photogates read v₁ᵢ, v₁f, and v₂f.",
+        "Compute Σp_before = m₁v₁ᵢ and Σp_after = m₁v₁f + m₂v₂f. Compare.",
+        "**PERFECTLY INELASTIC trials** (velcro): cart 2 at rest. Push cart 1; carts stick.",
+        "Compute Σp_after = (m₁+m₂)·v_combined. Compare to Σp_before.",
+        "Two trials of each type. Compute % difference for each."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Cart speeds gentle. Photogates clamped firmly. Hands clear of cart paths."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Not in class today?",
+      "markdown": "Run the cart-collision simulation below in both bumper modes (magnetic = elastic, velcro = stick). Read the before/after velocities off the sim and fill the data tables from those."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "cart-collisions"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch your setup: track, both carts, both photogates. Record m₁ and m₂ on the diagram.",
+      "prompts": [
+        "Label both carts with their measured masses.",
+        "Mark where each photogate reads velocity.",
+        "Show the push direction."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "v₁ᵢ (m/s)", "v₁f (m/s)", "v₂f (m/s)", "Σp_before", "Σp_after", "% diff"],
+      "rows": 2,
+      "plot": false,
+      "patternPrompt": "ELASTIC trials (magnet bumpers, cart 2 at rest). How close are your before/after totals?"
+    },
+    {
+      "id": "b10",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "v₁ᵢ (m/s)", "v_combined (m/s)", "Σp_before", "Σp_after", "% diff"],
+      "rows": 2,
+      "plot": false,
+      "patternPrompt": "PERFECTLY INELASTIC trials (velcro, cart 2 at rest). How close are your before/after totals?"
+    },
+    {
+      "id": "b11",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "In your trials, did Σp_after match Σp_before? Within what %?",
+      "interpretPrompt": "If there's a difference, what physical thing leaked momentum out? Was it the same for elastic and inelastic trials? And the asteroid connection: how does this serve the year's question?",
+      "frame": "My elastic Σp matched within ___ %; my perfectly inelastic Σp matched within ___ %. The biggest source of error was ___."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write a one-sentence CLAIM about what your lab showed, then one sentence of EVIDENCE (your numbers), then one sentence of REASONING (why the % difference is small).",
+      "frame": "CLAIM: ___. EVIDENCE: ___. REASONING: ___."
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.s4-vernier-collisions"
+    }
+  ]
+}

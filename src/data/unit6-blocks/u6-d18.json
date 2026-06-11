@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 6 tool — v = fλ, reflection, refraction, diffraction, interference, Doppler, dB, EM spectrum, mirrors, lenses, Wien's law, and tsunami physics — independently on the transfer task.",
+      "targetId": "u6.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every Unit 6 tool: v = fλ, reflection, refraction, diffraction, interference, Doppler, dB, EM spectrum, mirrors, lenses, Wien's law, tsunami v = √(g·d), seismic speeds.",
+      "connection": "Problem 5 is the load-bearing R4 prompt: given a radar return + Doppler shift, compute distance + velocity, then predict tsunami arrival on a coast. The whole unit in one problem."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 5 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Wave equation across media.** A 1000 Hz sound moves from air (v = 343 m/s) into water (v = 1480 m/s). Compute λ in each medium. Explain what stays the same and what changes (and why).\n- **Problem 2 — Reflection.** A flat mirror is 2.0 m from a 1.6-m-tall person. Locate the image and compute its height. State whether real or virtual. Sketch a 2-ray diagram.\n- **Problem 3 — Doppler.** A 1000 Hz ambulance siren moves at 25 m/s toward a stationary listener. What frequency is heard? What about the listener BEHIND the ambulance (away)? Use f ' = f · v / (v ∓ v_source).\n- **Problem 4 — EM spectrum.** A radio station broadcasts at f = 540 kHz. Compute λ. Which EM band is this? (Use c = 3 × 10⁸ m/s.) Is this AM or FM?\n- **Problem 5 — ★ Asteroid scenario.** Radar pulse to 2026-XJ: transmitted f_T = 2.4 GHz, round-trip time Δt = 2.4 s, echo received at f_R = 2.40010 GHz (10 kHz higher). (a) Compute distance. (b) Compute approach velocity. (c) If 2026-XJ impacts the ocean 1500 km from a coast (d_ocean = 4 km), how long until the tsunami arrives at the coast?\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 6 Equation Reference card and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b6",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: match each of the five problems to its Unit 6 idea, decide what order you'll tackle them, and predict where you will struggle. (Problem 5 is the ★ — it integrates radar + Doppler + tsunami.)",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b7",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 6 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before Unit 7 builds on this one."
+    },
+    {
+      "id": "b8",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u6.k1-wave-anatomy",
+        "u6.k2-wave-equation",
+        "u6.k3-reflection",
+        "u6.k4-refraction",
+        "u6.k5-diffraction",
+        "u6.r1-interference",
+        "u6.k6-sound-longitudinal",
+        "u6.r2-resonance",
+        "u6.s1-echo-lab",
+        "u6.r3-doppler",
+        "u6.k7-em-spectrum",
+        "u6.k8-mirrors",
+        "u6.r4-lenses",
+        "u6.r5-radar-chain",
+        "u6.r6-wiens-law",
+        "u6.r7-tsunami"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 7 (electricity & magnetism)?",
+      "frame": "I grew most on ___. Before Unit 7 I want to lock in ___."
+    }
+  ]
+}

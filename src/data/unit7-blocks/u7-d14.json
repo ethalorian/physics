@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe Faraday's discovery (moving a magnet near a coil induces a voltage and current), predict the direction of induced current using flux change, and explain why generators and transformers all run on this principle.",
+      "targetId": "u7.r1-faraday"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Day 13: current creates B. Today: the reverse — changing B creates current.",
+      "connection": "Together, Days 13 and 14 are the ENGINE of every motor, generator, and transformer. Day 15 puts both into one machine."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Faraday flips Oersted's arrow\n\nOersted (1820): current → magnetic field. Michael Faraday spent a decade hunting the reverse, and in 1831 found it — with a catch that IS the whole law:\n\n**A CHANGING magnetic flux through a coil induces a voltage (EMF) in the coil.**\n\nPush a magnet INTO a coil → the ammeter swings one way. Pull it OUT → it swings the other way. Hold it perfectly STILL — even a huge magnet — **nothing**. It's the CHANGE that matters, never the value.\n\n**Magnetic flux Φ** measures how much B-field passes through the loop: Φ = B · A · cos θ (roughly), in webers (Wb). Flux changes when ANY of B, A, or the angle changes — move the magnet, or spin the loop.\n\nThe size of the induced voltage: **ε ≈ N · ΔΦ/Δt**. Faster change → bigger voltage. More turns N → bigger voltage.\n\nThis is how a **generator** works: spin a coil inside a magnetic field, the flux through it changes every instant of the rotation, and voltage is induced. Wind turbines, hydroelectric dams, car alternators, hand-crank flashlights — all the same trick: mechanical motion in, electricity out. The exact opposite of a motor — and Day 15 shows they're literally the same machine."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Faraday's law (1831)",
+          "definition": "A CHANGING magnetic flux through a coil INDUCES a voltage (EMF) in the coil. The faster the change, or the more turns of wire, the bigger the induced voltage. Example: push a magnet INTO a coil → ammeter swings one way. Pull it OUT → swings the other way. STILL magnet → no current.",
+          "cognate": "Sp. ley de Faraday · Pt. lei de Faraday · HC lwa Faraday"
+        },
+        {
+          "term": "Magnetic flux (Φ)",
+          "definition": "The amount of magnetic field passing through a loop. Φ = B · A · cos θ (roughly). Units: webers (Wb) = T·m². Example: a 0.1 T field through a 0.01 m² loop perpendicular to the field: Φ = 0.001 Wb. Rotate the loop 90° so field is parallel → Φ drops to 0. Flux changes when ANY of B, A, or angle changes.",
+          "cognate": "Sp. flujo magnético · Pt. fluxo magnético · HC fliks mayetik"
+        },
+        {
+          "term": "Generator",
+          "definition": "A machine that converts mechanical motion into electrical voltage by spinning a coil inside a magnetic field. The OPPOSITE of a motor. Example: wind turbines, hydroelectric dams, car alternators, hand-crank flashlights — all generators. Each rotation changes flux → induced voltage → current.",
+          "cognate": "Sp. generador · Pt. gerador · HC jeneratè"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "It's the CHANGE that matters",
+      "markdown": "It's the CHANGE in B that matters, not the value. A constant B-field (even huge) produces NO induced voltage. A magnet sitting motionless inside a coil does nothing at all."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Coil of wire connected to an ammeter. A bar magnet is being PUSHED into the coil. Show the ammeter needle deflecting. Then a second sketch: pulling out → needle deflects the OTHER way.",
+      "prompts": [
+        "Sketch 1: magnet pushed IN, ammeter needle deflecting.",
+        "Sketch 2: magnet pulled OUT, needle deflecting the OTHER way.",
+        "Annotate: still magnet = no deflection."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "INDUCED VOLTAGE FROM CHANGING FLUX — A 100-turn coil has a magnetic flux that changes by Φ = 0.005 Wb over Δt = 0.1 s. What's the induced EMF? (ε ≈ N · ΔΦ/Δt.)",
+      "given": "N = 100 turns · ΔΦ = 0.005 Wb · Δt = 0.1 s",
+      "equation": "ε ≈ N · ΔΦ / Δt",
+      "work": "ε = 100 · (0.005 / 0.1)\nε = 100 · 0.05\nε = 5 V",
+      "answer": "ε = 5 V induced across the coil's ends — drives current if connected to a circuit."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "FASTER MOTION — Same 100-turn coil, same ΔΦ = 0.005 Wb, but you push the magnet TWICE as fast (Δt = 0.05 s). What's the new EMF?",
+      "givenHint": "N = 100 turns · ΔΦ = 0.005 Wb · Δt = 0.05 s.",
+      "equationHint": "Same equation as the worked example — halving Δt should do something predictable to ε.",
+      "equationOptions": [
+        "ε ≈ N · ΔΦ / Δt",
+        "ε ≈ N · ΔΦ · Δt",
+        "Φ = B · A · cos θ",
+        "V = I · R"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ Why grid power is AC",
+      "markdown": "Generators produce AC (alternating current) because the rotating coil's flux changes sinusoidally — sometimes increasing, sometimes decreasing. The induced voltage alternates direction with each half-rotation. That's why grid power is AC."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does pushing a magnet into a coil light up an attached LED — but holding it still does nothing? Answer in two sentences using the word 'changing'.",
+      "frame": "Faraday's law says a ___ magnetic flux through a coil induces a ___. The induced voltage is BIGGER when (a) the change is ___, (b) there are ___ turns of wire. A generator works by ___ a coil through a magnetic field."
+    },
+    {
+      "id": "rd-ch37-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **37.1–37.2 and 37.7–37.8** (electromagnetic induction, Faraday's law, induced fields, and electromagnetic waves). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch37-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 37,
+      "title": "Electromagnetic Induction — read & practice",
+      "sectionIds": [
+        "37.1",
+        "37.2",
+        "37.7",
+        "37.8"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.r1-faraday"
+    }
+  ]
+}

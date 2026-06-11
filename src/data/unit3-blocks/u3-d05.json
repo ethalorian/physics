@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can state conservation of momentum (Σp_before = Σp_after) and its condition (no net external force), and I can use it to solve recoil/explosion problems.",
+      "targetId": "u3.k3-conservation"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "When DART hit Dimorphos, total momentum BEFORE = total momentum AFTER. The asteroid sped up; the spacecraft slowed (and was destroyed).",
+      "connection": "Today's rule is the BIG one of the unit. The next eight days are all special cases of it."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The big rule\n\n**Σp_before = Σp_after** — total momentum of a system stays constant, **provided no net EXTERNAL force acts**.\n\nInternal forces don't count. Bullet pushes rifle, rifle pushes bullet — those are internal to the bullet+rifle system, and they cancel (Newton's 3rd Law, Unit 1). Only an outside push — friction, gravity pulling the system sideways, a wall — can change the total.\n\nFor recoil/explosion problems the recipe is short: the system starts at rest, so **Σp = 0 before and 0 after**. Whatever momentum one piece carries east, the other piece must carry west."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Conservation of momentum",
+          "definition": "If the NET external force on a system is zero, the TOTAL momentum of the system stays constant: Σp_before = Σp_after. A rifle at rest fires a bullet east; the rifle recoils west; total p stays zero.",
+          "cognate": "Sp. conservación del momento · Pt. conservação do momento · HC konsèvasyon mouvman"
+        },
+        {
+          "term": "Recoil",
+          "definition": "When an object at rest splits into two pieces (or expels mass), the pieces move in opposite directions so total p stays the same. The smaller mass moves FASTER: m₁v₁ = m₂v₂ in size, opposite in sign.",
+          "cognate": "Sp. retroceso · Pt. recuo · HC rekil"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The condition is NO NET EXTERNAL FORCE — not 'no forces'",
+      "markdown": "Internal forces (between bullet and rifle, between two exploding pieces) are fine — they cancel in pairs. Only EXTERNAL forces (friction, a wall, gravity acting unevenly) can change the system's total p."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Watch recoil happen",
+      "markdown": "Run the third-law carts simulation below: two carts at rest push apart. Watch the lighter cart leave faster — exactly what 0 = m₁v₁ + m₂v₂ demands."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "carts-third-law"
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A 70-kg ice skater (initially at rest) throws a 5-kg ball east at 8 m/s. What is the skater's recoil velocity?",
+      "given": "m_skater = 70 kg · m_ball = 5 kg · v_ball = +8 m/s east · both at rest before",
+      "equation": "Σp_before = Σp_after → 0 = m_skater·v_skater + m_ball·v_ball",
+      "work": "0 = 70·v_skater + 5·(+8)\n0 = 70·v_skater + 40\nv_skater = −40/70 ≈ −0.57 m/s",
+      "answer": "Skater drifts WEST at about 0.57 m/s. (Small, because she's 14× heavier than the ball.)"
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A 0.5-kg firework at REST explodes into two pieces: a 0.3-kg chunk goes east at 12 m/s. The other piece (0.2 kg) goes — what direction and how fast?",
+      "givenHint": "Total p before = 0. Piece 1: 0.3 kg at +12 m/s. Piece 2: 0.2 kg at v = ?",
+      "equationHint": "0 = m₁v₁ + m₂v₂ — solve for v₂ and read its sign as a direction.",
+      "equationOptions": ["Σp_before = Σp_after", "0 = m₁v₁ + m₂v₂", "p = m·v", "J = F·Δt"]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your firework answer, then complete the frame about WHY total momentum stayed the same.",
+      "frame": "The 0.2-kg piece goes ___ at ___ m/s. Total momentum stays the same because the only forces during the explosion are ___ (between the pieces), which means no NET ___ force."
+    },
+    {
+      "id": "rd-ch08-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **8.3–8.4** (bouncing makes impulses bigger; the law of conservation of momentum and cannon recoil). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch08-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 8,
+      "title": "Momentum — read & practice",
+      "sectionIds": ["8.3", "8.4"]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.k3-conservation"
+    }
+  ]
+}

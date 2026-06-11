@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write KE = ½mv², compute KE for moving objects across mass and speed scales, and state the work-energy theorem W_net = ΔKE.",
+      "targetId": "u4.k2-kinetic-energy"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "The DAMAGE number for asteroids is their KINETIC ENERGY at impact, not their momentum.",
+      "connection": "Today's equation is the heart of Unit 4. By Day 19, we plug 2026-XJ into it and get its yield in tons of TNT."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The squared-v reveal\n\nDay 1 you guessed it. Here it is:\n\n**KE = ½ · m · v²** — the energy of motion. Units: Joules (kg·m²/s²). Always positive, regardless of direction.\n\nThe load-bearing feature is the **squared v**. KE is NOT proportional to v — it's proportional to v². Doubling speed **quadruples** KE. Tripling speed gives **nine times** the KE.\n\nAnd here's the link back to yesterday: **W_net = ΔKE = KE_f − KE_i**. The NET work done on an object equals the change in its kinetic energy. Push energy in (positive net work) → it speeds up. Drag energy out (negative net work) → it slows down. This is the **work-energy theorem**, and it's the engine of the whole unit."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Kinetic energy (KE)",
+          "definition": "The energy of motion. KE = ½ · m · v². Units: Joules (kg·m²/s²). Always positive, regardless of direction. A 1500-kg car at 30 m/s has KE = ½·1500·900 = 675,000 J. At 60 m/s: KE = 2,700,000 J — FOUR times as much.",
+          "cognate": "Sp. energía cinética · Pt. energia cinética · HC enèji sinetik"
+        },
+        {
+          "term": "Work-energy theorem",
+          "definition": "The NET work done on an object equals the change in its KE: W_net = ΔKE = KE_f − KE_i. A 1-kg cart at rest gets 50 J of net work → KE_f = 50 J → v_f = √(2·50/1) = 10 m/s. It's the NET work that matters — the sum of ALL forces' contributions, not just one.",
+          "cognate": "Sp. teorema del trabajo-energía · Pt. teorema do trabalho-energia"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The squared v matters",
+      "markdown": "KE is NOT proportional to v — it's proportional to v². Doubling speed quadruples KE."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "A 1500-kg car moves at (a) 30 m/s, (b) 60 m/s. Find the KE in each case.",
+      "given": "m = 1500 kg · v_a = 30 m/s · v_b = 60 m/s",
+      "equation": "KE = ½ · m · v²",
+      "work": "KE_a = ½ · 1500 · 30² = ½ · 1500 · 900 = 675,000 J\nKE_b = ½ · 1500 · 60² = ½ · 1500 · 3600 = 2,700,000 J\nKE_b / KE_a = 4 (matches: v doubled → KE × 4)",
+      "answer": "At 30 m/s: 6.75 × 10⁵ J. At 60 m/s: 2.7 × 10⁶ J — FOUR times the energy."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why highway speeds are different",
+      "markdown": "Highway speeds aren't twice as dangerous as 30 mph. They're FOUR TIMES. This is the squared v at work — and it's why 2026-XJ matters."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "KE OF 2026-XJ — 2026-XJ has m = 1 × 10⁹ kg and impact speed v = 3 × 10⁴ m/s. Find its KE at impact.",
+      "givenHint": "m = 1 × 10⁹ kg · v = 3 × 10⁴ m/s. Square the speed FIRST, then multiply.",
+      "equationHint": "Same equation as the car — just bigger numbers. Keep the powers of 10 organized.",
+      "equationIds": [
+        "kinetic-energy"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "WORK-ENERGY THEOREM — A 2-kg ball moves at 3 m/s. A net 27 J of work is done on it. What's its final speed? (Use W_net = ΔKE.)",
+      "givenHint": "m = 2 kg · v_i = 3 m/s → KE_i = 9 J · W_net = 27 J → KE_f = ?",
+      "equationHint": "W_net = KE_f − KE_i. Find KE_f first, then solve ½mv_f² = KE_f for v_f.",
+      "equationOptions": [
+        "W_net = ΔKE = KE_f − KE_i",
+        "KE = ½ · m · v²",
+        "W = F · d · cos θ",
+        "p = m · v"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 2-kg ball at 3 m/s has 9 J of KE. If a net 27 J of work is done on it, what's its final speed? Then complete the frame.",
+      "frame": "Doubling a car's speed ___ the kinetic energy, because KE depends on v ___ (not just v)."
+    },
+    {
+      "id": "rd-ch09-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **9.3** and **9.5–9.6** (mechanical energy, kinetic energy, the work-energy theorem). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch09-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 9,
+      "title": "Energy — read & practice",
+      "sectionIds": [
+        "9.3",
+        "9.5",
+        "9.6"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k2-kinetic-energy"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe Earth's magnetosphere as a planetary-scale electromagnetic shield, explain why it protects life from solar wind, and describe how a large asteroid impact could generate an EMP (electromagnetic pulse) that disrupts the field temporarily.",
+      "targetId": "u7.r3-magnetosphere-emp"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ has a non-trivial impact probability. Day 11 (Wien's law from Unit 6) tells us a large impactor will produce intense heat and EM radiation.",
+      "connection": "Today's PAYOFF: the same E&M physics that runs the Car motor also runs the magnetosphere — the planetary shield. Without it, life on Earth wouldn't exist. A large impact could perturb it."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Planetary-scale E&M\n\nEverything in this unit so far has been bench-top scale: resistors, coils, hobby motors. Today, the same three laws run at the scale of a planet.\n\n**The dynamo (Oersted at planetary scale).** Molten iron circulates in Earth's outer core. Moving charge is current; current makes a magnetic field. The result is the **magnetosphere** — the region of space dominated by Earth's field, stretching ~10 Earth radii toward the Sun and ~100 on the night side, dragged into a teardrop by the solar wind.\n\n**The shield.** The **solar wind** — charged particles streaming off the Sun at 300-800 km/s, continuously — slams into that field and gets deflected around the planet. Charged particles curving in a magnetic field: that's the F-on-a-moving-charge physics from Day 15, planetary edition. The few particles that leak in get funneled down the field lines to the poles — that glow is the **aurora**. Without the shield, the solar wind would have stripped Earth's atmosphere billions of years ago.\n\n**The vulnerability (Faraday at planetary scale).** A violent event — a giant solar storm, or a large asteroid impact that ionizes a huge volume of atmosphere — sends a fast-changing electromagnetic burst across the surface: an **EMP**. Faraday's law says a changing field induces voltage in every conductor it crosses. Power lines hundreds of kilometers long act as giant pickup coils — induced currents can cook transformers and drop grids. Same law that lights the LED in the Day 14 demo; very different stakes."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Magnetosphere",
+          "definition": "The region of space around Earth dominated by Earth's magnetic field. Extends ~10× Earth radii on the day side and ~100× on the night side (stretched by solar wind). Example: the magnetosphere deflects most of the solar wind (charged particles, ~400 km/s). Particles that DO enter are funneled to the poles → aurora (northern + southern lights).",
+          "cognate": "Sp. magnetosfera · Pt. magnetosfera · HC mayetosfè"
+        },
+        {
+          "term": "Solar wind",
+          "definition": "A continuous stream of charged particles (mostly protons + electrons) flowing outward from the Sun at 300-800 km/s. Example: during solar storms (CMEs — coronal mass ejections), the wind intensifies. Disruptions to satellites, GPS, and power grids on Earth can result if the magnetosphere is overwhelmed. The wind is CONTINUOUS — not just during storms.",
+          "cognate": "Sp. viento solar · Pt. vento solar · HC van solè"
+        },
+        {
+          "term": "EMP (electromagnetic pulse)",
+          "definition": "A burst of electromagnetic radiation strong enough to induce huge currents in electrical conductors — potentially damaging electronics and power grids. Example: a large asteroid impact compresses + heats air, which ionizes it; the rapidly moving charges produce intense EM radiation = EMP. A high-altitude nuclear detonation can also produce one. Effects: from radio static to grid failure (the 1989 Quebec aurora-induced blackout is a real example).",
+          "cognate": "Sp. PEM (pulso electromagnético) · Pt. PEM (pulso eletromagnético) · HC PEM"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Magnetosphere ≠ atmosphere",
+      "markdown": "The magnetosphere is the magnetic shield. The ATMOSPHERE is the air layer beneath it. Both protect us — magnetosphere from charged particles, atmosphere from radiation."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "From core dynamo to a living planet",
+      "caption": "The same physics chain as the Car motor — current makes field, field exerts force — running continuously at planetary scale for billions of years.",
+      "links": [
+        { "label": "Molten iron flows", "sublabel": "outer-core dynamo = current" },
+        { "label": "Earth's B-field", "sublabel": "≈ 25–65 μT at the surface" },
+        { "label": "Solar wind deflected", "sublabel": "≈ 127 GW turned aside, continuously" },
+        { "label": "Atmosphere survives", "sublabel": "→ life on Earth" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sun on the left sending solar wind. Earth on the right with a magnetosphere (teardrop shape). Most particles deflect around. Some funnel to poles → aurora. Annotate Day 16 scenario: how could 2026-XJ disturb this?",
+      "prompts": [
+        "Sun → solar wind arrows → teardrop-shaped magnetosphere around Earth.",
+        "Most particles deflect; a few funnel to the poles → aurora.",
+        "Annotate: how could a 2026-XJ impact disturb this shield?"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "SOLAR WIND ENERGY FLUX DEFLECTED — The solar wind delivers about 1 mW per square meter of energy to Earth's vicinity. Earth's cross-section (πR²) ≈ 1.27 × 10¹⁴ m². What's the total power deflected by the magnetosphere?",
+      "given": "P_per_area = 10⁻³ W/m² · A = 1.27 × 10¹⁴ m²",
+      "equation": "P_total = P_per_area · A",
+      "work": "P_total = 10⁻³ · 1.27 × 10¹⁴\nP_total = 1.27 × 10¹¹ W\n     = 127 GW",
+      "answer": "≈ 127 gigawatts of solar wind power deflected continuously by Earth's magnetic shield."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "MAGNETOSPHERE DISTURBANCE SCENARIO — A 2026-XJ-sized impact generates an EMP. If the pulse induces 10 V/m in the atmosphere over a 10-meter-long power line, what voltage spike is delivered to a transformer at its end? (V = E · L for a uniform field.)",
+      "givenHint": "E = 10 V/m · L = 10 m.",
+      "equationHint": "For a uniform field along the line: V = E · L.",
+      "equationOptions": ["V = E · L", "V = I · R", "E = F / q", "P = V · I"]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ The Carrington Event, 1859",
+      "markdown": "The 1859 Carrington Event: a solar coronal mass ejection induced geomagnetic currents that fried telegraph lines worldwide. Operators got electric shocks. Some lines caught fire. If it happened today, modern power grids could fail for weeks. This is the SAME physics — changing B-field → induced V → current → damage."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does Earth need a magnetosphere? Answer in two sentences using 'solar wind' and 'atmosphere'.",
+      "frame": "Earth's magnetosphere is generated by the ___ at the core. It deflects the ___ — without it, Earth's atmosphere would erode. A ___ from a major impact or solar storm could induce damaging currents in our electrical grid."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.r3-magnetosphere-emp"
+    }
+  ]
+}

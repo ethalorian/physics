@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute W = F·d·cos θ for an angled force, and I can assign the correct SIGN of work for forces that aid or oppose motion.",
+      "targetId": "u4.r1-work-angle"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "If 2026-XJ enters our atmosphere, air drag does NEGATIVE work on it — taking energy AWAY.",
+      "connection": "That's why meteors GLOW. Their KE is converting to heat and light because atmospheric friction did massive negative work."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Work at an angle — and work with a sign\n\nYesterday's W = F·d assumed the force points exactly along the motion. Usually it doesn't. The fix:\n\n**W = F · d · cos θ** — where θ is the angle between the force and the motion. Only the **component of F along the motion** does work.\n\nThe cos θ does three jobs at once:\n\n| θ | cos θ | Meaning |\n|---|---|---|\n| 0° | 1 | force fully helps → full positive work |\n| 90° | 0 | force ⊥ motion → ZERO work |\n| 180° | −1 | force opposes motion → NEGATIVE work |\n\nNegative work is real work: it **removes** energy from the object. Friction always does negative work on a sliding object — that's where the object's energy of motion goes."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Work at an angle",
+          "definition": "When the force F makes an angle θ with the direction of motion d, only the COMPONENT of F along d does work: W = F · d · cos θ. Pulling a suitcase with a 100-N handle force at 30° above horizontal over 10 m: W = 100·10·cos30° ≈ 866 J. At θ = 90°, cos θ = 0 and W = 0 — even though there's a big force.",
+          "cognate": "Sp. trabajo con ángulo · Pt. trabalho com ângulo · HC travay ak ang"
+        },
+        {
+          "term": "Negative work",
+          "definition": "Work done by a force that opposes the motion (θ between 90° and 180°). cos θ is negative, so W is negative — energy is taken AWAY from the object. Friction always does negative work on a sliding object: cos180° = −1.",
+          "cognate": "Sp. trabajo negativo · Pt. trabalho negativo · HC travay negatif"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "\"Negative work\" doesn't mean \"no work\"",
+      "markdown": "It means energy is being REMOVED from the object, not added. Zero work and negative work are different things."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "You pull a 100-N handle force on a suitcase 10 m at 30° above the horizontal. Friction opposes the motion with 20 N. Find: (a) work done by you, (b) work done by friction, (c) NET work.",
+      "given": "F_you = 100 N, θ_you = 30° · F_fric = 20 N, θ_fric = 180° · d = 10 m",
+      "equation": "W = F · d · cos θ (for each force)",
+      "work": "W_you = 100·10·cos30° = 1000·0.866 = 866 J\nW_fric = 20·10·cos180° = 200·(−1) = −200 J\nW_net = 866 + (−200) = 666 J",
+      "answer": "You did 866 J of POSITIVE work. Friction did 200 J of NEGATIVE work. Net: 666 J."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Write the angle FIRST",
+      "markdown": "ALWAYS write the angle BEFORE you compute. θ is between F and d, NOT between F and the floor. cos180° = −1, cos90° = 0, cos0° = 1."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "You push a 30-N box 4 m across the floor at constant speed against 12 N of friction. (a) What work did YOU do? (b) What work did friction do? (c) What's the NET work?",
+      "givenHint": "F_you = 30 N at θ = 0° · F_fric = 12 N at θ = 180° · d = 4 m",
+      "equationHint": "Compute each force's work with its own angle, then add them (signs and all).",
+      "equationOptions": ["W = F · d · cos θ", "W = F · d", "KE = ½ · m · v²", "F = m · a"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "You push a 30-N box 4 m at constant speed against 12 N of friction. What's the NET work? Then complete the frame about friction's sign.",
+      "frame": "Friction does NEGATIVE work because the friction force points ___ to the motion, so cos θ = ___, so W comes out ___."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r1-work-angle"
+    }
+  ]
+}

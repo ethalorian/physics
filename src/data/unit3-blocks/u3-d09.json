@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can solve a 1D elastic collision using conservation of momentum AND conservation of kinetic energy, and I can apply the equal-mass and one-at-rest simplifications.",
+      "targetId": "u3.s3-elastic-solve"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "A gravity flyby (no contact) is essentially elastic — both p and KE conserved.",
+      "connection": "The math here is what we'd use to predict an asteroid's path AFTER a gravity-assist swing-by."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The elastic pair\n\nElastic collisions obey TWO rules at once:\n\n- **p:** m₁v₁ᵢ + m₂v₂ᵢ = m₁v₁f + m₂v₂f\n- **KE:** ½m₁v₁ᵢ² + ½m₂v₂ᵢ² = ½m₁v₁f² + ½m₂v₂f²\n\nTwo equations, two unknowns (v₁f, v₂f) — solvable. And when object 2 starts **at rest**, the algebra collapses into two shortcut formulas:\n\n- **v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ**\n- **v₂f = (2m₁/(m₁+m₂))·v₁ᵢ**"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Elastic — one at rest (special case)",
+          "definition": "Object 1 (mass m₁, speed v₁ᵢ) strikes object 2 (mass m₂, at rest): v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ and v₂f = (2m₁/(m₁+m₂))·v₁ᵢ — both straight from the two conservation rules. If m₁ = m₂: v₁f = 0, v₂f = v₁ᵢ — the mover STOPS, the resting one takes off (Newton's cradle).",
+          "cognate": "Sp. un cuerpo en reposo · Pt. um corpo em repouso"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "worked_example",
+      "prompt": "A 0.5-kg ball at 4 m/s east strikes a 1.0-kg ball at rest, elastically. Find v₁f and v₂f.",
+      "given": "m₁ = 0.5 kg, v₁ᵢ = +4 m/s · m₂ = 1.0 kg, v₂ᵢ = 0",
+      "equation": "v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ ; v₂f = (2m₁/(m₁+m₂))·v₁ᵢ",
+      "work": "v₁f = ((0.5 − 1.0)/(0.5 + 1.0))·(4) = (−0.5/1.5)·4 ≈ −1.33 m/s\nv₂f = (2·0.5/1.5)·(4) = (1/1.5)·4 ≈ 2.67 m/s",
+      "answer": "v₁f ≈ −1.33 m/s (bounces BACK west). v₂f ≈ 2.67 m/s east."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "note",
+      "title": "Newton's cradle is the equal-mass rule",
+      "markdown": "The moving ball stops; an identical ball on the far end leaves at the original speed. Conservation of both p AND KE forces it — no other outcome satisfies both equations."
+    },
+    {
+      "id": "b7",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Pattern-finding — use the one-at-rest formulas to predict each case. (a) m₁ = m₂ (equal masses). (b) m₁ ≫ m₂ (big hits small). (c) m₁ ≪ m₂ (small hits big).",
+      "frame": "(a) v₁f = ___, v₂f = ___. (b) v₁f ≈ ___ (continues almost unchanged?), v₂f ≈ ___. (c) v₁f ≈ ___ (bounces back?), v₂f ≈ ___ (barely moves?)."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A 0.2-kg superball moving east at 5 m/s strikes a 0.2-kg superball at rest, elastically. Use the equal-mass result to predict v₁f and v₂f.",
+      "givenHint": "m₁ = m₂ = 0.2 kg; v₁ᵢ = +5 m/s; ball 2 at rest.",
+      "equationHint": "Equal masses: the mover stops, the resting ball takes the full velocity.",
+      "equationOptions": ["v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ", "v₂f = (2m₁/(m₁+m₂))·v₁ᵢ", "m₁v₁ + m₂v₂ = (m₁+m₂)·v_f", "p = m·v"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.2-kg superball at 5 m/s east strikes a 0.2-kg ball at rest, elastically. What happens to each?",
+      "frame": "Ball 1 ___; ball 2 ___ at ___ m/s. This is exactly what happens in ___ (the desk toy)."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.s3-elastic-solve"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can derive FΔt = Δp from F = ma, name FΔt as impulse, and use the equation to find force, time, or change in momentum given the other two.",
+      "targetId": "u3.k2-impulse-theorem"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "To CHANGE 2026-XJ's momentum we need to apply a force OVER A TIME.",
+      "connection": "Today's equation IS the DART equation. A small spacecraft, hitting an asteroid for a tiny instant, delivers a Δp — same math we use for a bat hitting a ball."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Where FΔt = Δp comes from\n\nStart with Unit 1's law and unpack the acceleration:\n\n**F = m·a = m·(Δv/Δt)**\n\nMultiply both sides by Δt:\n\n**F·Δt = m·Δv = Δp**\n\nName F·Δt the **impulse**, J. Then **J = Δp**. Units check: N·s = kg·m/s — impulse and momentum are the same kind of quantity, which is exactly why one can change the other."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Impulse (J)",
+          "definition": "The product of force and the time it acts: J = F·Δt. Equals the change in momentum Δp. A 0.002-s bat-hit at 6,750 N delivers J = 13.5 N·s of impulse to the baseball.",
+          "cognate": "Sp. impulso · Pt. impulso · HC enpilsyon"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Impulse is NOT just force",
+      "markdown": "It's force × TIME. Half the force for twice the time gives the **same** impulse — and the same Δp."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "See it in the simulation",
+      "markdown": "Run the impulse-momentum simulation below. Watch the F-vs-t graph during the collision: the AREA under that curve is the impulse, and it always equals the cart's Δp."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "impulse-momentum"
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A 0.15-kg baseball moves east at 40 m/s, then rebounds WEST at 50 m/s. Bat-ball contact lasts 0.002 s. Find (a) Δp, (b) the average force.",
+      "given": "m = 0.15 kg · v_i = +40 m/s · v_f = −50 m/s · Δt = 0.002 s",
+      "equation": "Δp = m·(v_f − v_i) ; F = Δp / Δt",
+      "work": "Δp = 0.15·(−50 − 40) = 0.15·(−90) = −13.5 kg·m/s\nF = −13.5 / 0.002 = −6750 N",
+      "answer": "Δp = −13.5 kg·m/s (westward). F ≈ −6750 N (westward, applied BY the bat ON the ball)."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "DART hit Dimorphos for about 0.05 s with an average force of about 8 × 10⁵ N. What change in asteroid momentum did it deliver?",
+      "givenHint": "F = 8 × 10⁵ N and Δt = 0.05 s.",
+      "equationHint": "J = F·Δt = Δp.",
+      "equationIds": ["impulse", "momentum", "newton-2nd"]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Two roads to the same J",
+      "markdown": "The same J can come from **BIG F over a SHORT Δt** or **SMALL F over a LONG Δt**. That choice is tomorrow's payoff — it's the difference between DART and a gravity tractor."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "DART hit its target for 0.05 s with an average 8×10⁵ N. What Δp did it deliver to the asteroid? Show your work.",
+      "frame": "J = F·Δt = ___ × ___ = ___ kg·m/s = Δp."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.k2-impulse-theorem"
+    },
+    {
+      "id": "rd-ch08-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **8.2** (impulse changes momentum; increasing vs. decreasing momentum; extending impact time). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch08-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 8,
+      "title": "Momentum — read & practice",
+      "sectionIds": ["8.2"]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.s1-compute-impulse"
+    }
+  ]
+}

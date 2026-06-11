@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can mix hot + cold water using styrofoam-cup calorimetry, predict T_final using Q_lost = Q_gained, measure T_final with a Vernier probe, and identify an unknown metal by its specific heat with one credible source of error noted.",
+      "targetId": "u5.s1-calorimetry-lab"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We've stated Q = mcΔT and the calorimetry balance Q_lost = Q_gained. Today we measure them.",
+      "connection": "If we trust the equation in our cups, we can trust it for the planetary-scale calculations on Day 11 (impact vaporization)."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 5.1 — Calorimetry: predict, measure, identify",
+      "markdown": "**Driving question:** Does the predicted final temperature of mixed hot + cold water match the measured value within 5%? Then: can we identify an unknown metal from its measured c?\n\n**Equipment:** Vernier temperature probe + LabQuest (or Graphical Analysis) · two styrofoam cups (insulated calorimeter) + lid with hole for probe · hot-water source (~70 °C) and ice-cooled water (~20 °C) · balance (read m_water to 0.1 g) · unknown metal samples labeled 'A' and 'B' (aluminum + copper) · hot plate or pre-heated water bath to bring metals to ~95 °C · tongs (HOT METAL — do not touch with bare hands).\n\n**How this lab serves the year's question:** A successful Q_lost = Q_gained check confirms calorimetry works — the foundation for the impact vaporization calculation on Day 11."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "**TRIAL A — mix two waters.** Mass cup empty. Add 100 mL hot water; record m_h and T_h. Pour in 100 mL cold water; record m_c and T_c. Cover. Stir gently. Watch probe. Record T_final when steady.",
+        "Predict T_f using m_h·c·(T_h − T_f) = m_c·c·(T_f − T_c). Compare to measured. % diff.",
+        "Repeat Trial A two more times with different mass ratios. Three rows of data.",
+        "**TRIAL B — identify a metal.** Heat a known mass of metal A to ~95 °C in a hot bath. Drop into a fresh cup of cold water. Record T_final.",
+        "Compute Q_gained_water = m_w·c_w·(T_f − T_c) and set = -Q_lost_metal = m_m·c_m·(T_f − T_m_initial). Solve for c_m. Compare to table.",
+        "Repeat for metal B. Identify both samples."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "HOT WATER and HOT METAL. Use tongs. Pour with care. Goggles always."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Not in class today?",
+      "markdown": "There's no simulation for this one — use this sample run instead and do all the math yourself. **Trial A:** 100.0 g of hot water at 70.0 °C mixed with 100.0 g of cold water at 20.0 °C; the probe settled at **44.2 °C** (prediction first — what SHOULD it be for equal masses?). **Trial B:** Sample A — 50.0 g of metal at 95.0 °C dropped into 100.0 g of water at 20.0 °C; T_f = **27.0 °C**. Sample B — 50.0 g of metal at 95.0 °C into 100.0 g of water at 20.0 °C; T_f = **23.2 °C**. Fill the data tables from these numbers, compute c for each metal, and identify both samples from the table (water 4186 · aluminum 900 · copper 387)."
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch your setup for BOTH trials. Label masses and starting temperatures on the diagram. Fill in T_final after each trial.",
+      "prompts": [
+        "Trial A panel: two cups, probe through the lid, m_h/T_h and m_c/T_c labeled.",
+        "Trial B panel: hot bath with metal, tongs, fresh cup of cold water.",
+        "Write T_final on each panel after the trial."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "m_h (g)", "T_h (°C)", "m_c (g)", "T_c (°C)", "T_f predicted (°C)", "T_f measured (°C)", "% diff"],
+      "rows": 3,
+      "plot": false,
+      "patternPrompt": "TRIAL A — mix hot + cold water (three trials, different mass ratios). How close are your predicted and measured T_f values?"
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Sample", "m_metal (g)", "T_metal_i (°C)", "m_water (g)", "T_water_i (°C)", "T_f (°C)", "c_metal computed", "identified as"],
+      "rows": 2,
+      "plot": false,
+      "patternPrompt": "TRIAL B — identify the unknown metal. Does your computed c land near a table value?"
+    },
+    {
+      "id": "b10",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "In Trial A, did T_predicted match T_measured? Across all 3 trials, within what %?",
+      "interpretPrompt": "In Trial B, which metals did A and B turn out to be? Did c land within 10% of the table value? If not, what physical thing did we miss? Asteroid connection: how does this serve the year's question?",
+      "frame": "My T_f predictions agreed within ___ %. Metal A came out closest to ___ (with c = ___). The biggest source of error was ___."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Complete the frame about WHY calorimetry works.",
+      "frame": "Calorimetry works because the energy LOST by the hot water equals the energy GAINED by the ___. The cup is styrofoam to MINIMIZE ___."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write a one-sentence CLAIM about what the lab confirmed, then one sentence of EVIDENCE (your numbers), then one sentence of REASONING (why the % difference is small — or not).",
+      "frame": "CLAIM: ___. EVIDENCE: ___. REASONING: ___."
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.s1-calorimetry-lab"
+    }
+  ]
+}

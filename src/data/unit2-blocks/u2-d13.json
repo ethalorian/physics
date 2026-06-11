@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can explain an orbit as continuous free fall, and I can use the PhET Gravity and Orbits sim to find what launch speed produces a circular orbit at a given altitude.",
+      "targetId": "u2.k5-orbit-free-fall"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Two orbits (Earth's and 2026-XJ's) can cross. The question is timing.",
+      "connection": "Today we discover that an orbit IS falling — at exactly the speed that lets the ground curve away as fast as you fall toward it."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Newton's cannon\n\nNewton's thought experiment: fire a cannonball horizontally from a tall mountain.\n\n- Fire it **slow** → it falls and hits the ground nearby.\n- Fire it **faster** → it still falls, but lands farther away.\n- Fire it at exactly the right speed → it falls toward Earth at the same rate the Earth's surface **curves away beneath it**. It falls forever and never lands.\n\nThat last case **is an orbit**. Nothing is holding the object up. It is falling the entire time — which is exactly why astronauts inside it float."
+    },
+    {
+      "id": "b4",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 2.2 — PhET Gravity and Orbits",
+      "markdown": "**Driving question:** What launch speed produces a CIRCULAR orbit at a given altitude?\n\n**Equipment:** laptop with the PhET *Gravity and Orbits* sim ([phet.colorado.edu](https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_en.html)) · calculator · today's data table.\n\n**How this lab serves the year's question:** 2026-XJ is on a Sun-orbit. The same v_orbit equation applies — only the central mass changes."
+    },
+    {
+      "id": "b5",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Open PhET **Gravity and Orbits**. Place a satellite near Earth at a chosen altitude.",
+        "Try a small launch velocity. What happens? (Crashes.)",
+        "Increase the velocity. Find a speed that makes a **CIRCULAR** orbit.",
+        "Then compute v_orbit = √(G·M/r) for that altitude. Compare."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "Altitude (km)", "Launch v (m/s)", "Result (crash / oval / circle / escape)"],
+      "rows": 5,
+      "plot": false,
+      "patternPrompt": "What pattern connects launch speed to the shape of the path?"
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw Earth and three cannonball paths from the same launch point: label which is 'slow' (crashes near), which is 'faster' (crashes far), and which is 'orbit speed' (never lands). Then write the key idea sentence using the words 'falling' and 'horizontal'.",
+      "prompts": [
+        "Three paths, one launch point.",
+        "Labels: slow / faster / orbit speed.",
+        "Key sentence with 'falling' and 'horizontal'."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "For a circular orbit, gravity IS the centripetal force. Set F_gravity = F_centripetal and solve for v. Show every step.",
+      "given": "Circular orbit at radius r around mass M",
+      "equation": "F_g = G·M·m/r² ; F_c = m·v²/r ; set them equal",
+      "work": "G·M·m / r² = m·v² / r\nG·M / r² = v² / r         (cancel m)\nG·M / r = v²              (multiply both sides by r)\nv = √(G·M / r)",
+      "answer": "v_orbit = √(G·M / r). The orbit speed depends on the CENTRAL mass and the radius — not on the satellite's mass."
+    },
+    {
+      "id": "b9",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "What was the launch speed for a CLEAN circular orbit at 400 km altitude in the sim?",
+      "interpretPrompt": "Compare your sim value to v_orbit = √(G·M_Earth / r) at r = R_Earth + 400 km. Do they match? And the asteroid connection: how does this serve the year's question?",
+      "frame": "The launch speed for a circular orbit at 400 km is about ___ m/s. Theory predicts ___ m/s. The sim agrees ___."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "In 2-3 sentences, explain why the ISS doesn't fall straight down. Use the words 'falling', 'horizontal', and 'curves away'.",
+      "frame": "The ISS IS falling — but it also moves ___ so fast that the Earth ___ beneath it as fast as it falls."
+    },
+    {
+      "id": "rd-ch14-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **14.1–14.2** (what makes an Earth satellite and why a circular orbit holds constant speed). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch14-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 14,
+      "title": "Satellite Motion — read & practice",
+      "sectionIds": ["14.1", "14.2"]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.k5-orbit-free-fall"
+    }
+  ]
+}

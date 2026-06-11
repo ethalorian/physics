@@ -28,6 +28,7 @@ type Board = { weekly: BoardRow[]; hallOfFame: BoardRow[]; myWeeklyRank: number 
 export default function ArcadeCabinetPage() {
   const { slug } = useParams<{ slug: string }>()
   const [game, setGame] = useState<Cabinet | null>(null)
+  const [gameOk, setGameOk] = useState<boolean | null>(null) // does the game file actually exist in this deploy?
   const [balance, setBalance] = useState<number | null>(null)
   const [board, setBoard] = useState<Board | null>(null)
   const [notice, setNotice] = useState('')
@@ -50,6 +51,11 @@ export default function ArcadeCabinetPage() {
         if (!g) throw new Error('This cabinet is unplugged')
         setGame(g)
         setBalance(d.balance.balance)
+        // Guard: a cabinet row can exist in the DB before its game file ships
+        // in a deploy. Without this check the iframe renders the app 404 page.
+        fetch(g.srcPath, { method: 'HEAD' })
+          .then((r) => setGameOk(r.ok))
+          .catch(() => setGameOk(false))
       })
       .catch((e) => setErr(e.message))
     loadBoard()
@@ -135,7 +141,7 @@ export default function ArcadeCabinetPage() {
       )}
       {err && <p className="text-sm" style={{ color: 'var(--destructive)' }}>{err}</p>}
 
-      {game && (
+      {game && gameOk === true && (
         <iframe
           ref={frameRef}
           src={game.srcPath}
@@ -144,6 +150,18 @@ export default function ArcadeCabinetPage() {
           style={{ borderColor: 'var(--border)', height: 'min(78vh, 820px)', background: '#04060d' }}
           allow="autoplay"
         />
+      )}
+      {game && gameOk === false && (
+        <div className="w-full rounded-xl border grid place-items-center text-center p-8"
+          style={{ borderColor: 'var(--border)', height: 'min(78vh, 820px)', background: '#04060d' }}>
+          <div>
+            <div className="text-lg font-bold tracking-wide" style={{ color: accent }}>CABINET BEING INSTALLED</div>
+            <p className="text-sm mt-2" style={{ color: 'var(--muted-foreground)' }}>
+              {game.name} is on the truck — the game ships with the next site update.<br />
+              No XP has been charged. Check back soon.
+            </p>
+          </div>
+        </div>
       )}
 
       {board && (

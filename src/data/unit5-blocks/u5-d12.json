@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 5 tool — Q = mcΔT, Q = mL, the calorimetry balance, ΔU = Q − W, efficiency, the Carnot limit, and the atmospheric-entry energy comparison — independently on the transfer task.",
+      "targetId": "u5.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every Unit 5 tool is in your hands: Q = mcΔT, Q = mL, calorimetry balance, ΔU = Q − W, efficiency, Carnot, atmospheric entry energy comparison.",
+      "connection": "Problem 4 is the burn-up question — for a small pebble. You will decide whether a sample asteroid reaches the ground or vaporizes in flight."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 4 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Calorimetry.** Mix two known water samples at different temperatures. Predict T_f using Q_lost = Q_gained. Verify with the value you'd MEASURE if you had a probe.\n- **Problem 2 — Phase change.** Total heat to convert 0.5 kg of ice at −10 °C to steam at 110 °C. Five-step calculation. Identify which step is the LARGEST and explain why.\n- **Problem 3 — Heat engine.** Given Q_hot, Q_cold, T_H, T_C: compute real efficiency. Compute the Carnot limit. Comment on the engine's performance relative to its theoretical max.\n- **Problem 4 — Atmospheric entry (R3 reasoning).** Given a pebble's mass (2 kg) and speed (20 km/s), compute its KE. Then compute the energy to vaporize it entirely (use c_rock + L_v_rock). Compare the two. Does the rock reach the ground? Justify your conclusion.\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 5 Equation Reference card (with the specific heat, latent heat, and damage-threshold tables) and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b6",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: four problems, four physics ideas — identify the equation you'll use for each, decide your order, and predict where you'll struggle.",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b7",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 5 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before Unit 6 (Waves, Sound & Light) builds on this one."
+    },
+    {
+      "id": "b8",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u5.k1-specific-heat",
+        "u5.k2-transfer-modes",
+        "u5.k3-latent-heat",
+        "u5.s1-calorimetry-lab",
+        "u5.k4-kinetic-theory",
+        "u5.k5-first-law",
+        "u5.r1-second-law",
+        "u5.r2-heat-engines",
+        "u5.r3-atmospheric-entry",
+        "u5.r4-thermal-damage"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 6 (Waves, Sound & Light)?",
+      "frame": "I grew most on ___. Before Unit 6 I want to lock in ___."
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can partition 2026-XJ's impact KE into vaporization, shockwave, and thermal radiation; use I = E/(4πr²) with the threshold values to compute the wildfire-ignition and third-degree-burn radii; and build a damage-by-distance map.",
+      "targetId": "u5.r4-thermal-damage"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 4 Day 19: 2026-XJ's impact KE ≈ 4.5 × 10¹⁷ J ≈ 108 megatons TNT. That's the YIELD. Today the unit PAYS OFF: where does that energy GO thermally?",
+      "connection": "A shockwave alone doesn't explain Tunguska's flattened forest (mostly thermal!) or Chelyabinsk's burning eyes (UV pulse). The fireball is doing damage at HUGE distances. Today: how far?"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The payoff day — from yield to damage map\n\nUnit 4 gave us the number: 4.5 × 10¹⁷ J. Today we turn that number into a MAP. Three steps:\n\n**1. Partition the energy.** Impact KE doesn't become one thing — it splits roughly into thirds: vaporized rock, atmospheric shockwave, and thermal radiation (the fireball glow + infrared pulse). About 10% goes to 'other' (ground heating, sound, light losses).\n\n**2. Spread the radiation over a sphere.** The thermal pulse races outward in all directions. At distance r it has spread over a sphere of area 4πr², so the energy per square meter is\n\n**I = E / (4π·r²)** — intensity falls off as 1/r².\n\n**3. Compare to damage thresholds.** Each thermal effect has a known energy-per-area threshold (0.4 cal/cm² ignites paper; 5 cal/cm² causes third-degree burns). Set I equal to a threshold and solve for the radius:\n\n**r = √(E / (4π · threshold))**\n\nEach threshold gives one RING on the map. The shocking result you'll compute today: the wildfire ring reaches ~**800 km** — far beyond the shockwave's ~5 km. Heat, not blast, owns the long range."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Energy partition",
+          "definition": "At impact, KE doesn't all become one thing. It splits roughly into thirds: vaporized rock, atmospheric shockwave, and thermal radiation (fireball glow + infrared pulse). For 2026-XJ: vaporization ≈ 1.5 × 10¹⁷ J · shockwave ≈ 1.5 × 10¹⁷ J · radiation ≈ 1.5 × 10¹⁷ J. The exact partition depends on impact angle, target type, and composition — ~⅓ each is a useful first estimate.",
+          "cognate": "Sp. partición de energía · Pt. partição de energia"
+        },
+        {
+          "term": "Thermal radiation intensity",
+          "definition": "The thermal energy per area received at distance r from a point source emitting energy E. I = E / (4π·r²). Falls off as 1/r². The 4π comes from a SPHERICAL surface at distance r — energy spreads over the whole sphere. 2026-XJ radiates ~1.5 × 10¹⁷ J: at r = 10 km, I ≈ 2900 cal/cm²; at 100 km, ~29 cal/cm²; at 500 km, ~1.1 cal/cm² (still enough to ignite paper).",
+          "cognate": "Sp. intensidad de radiación · Pt. intensidade de radiação"
+        },
+        {
+          "term": "Damage thresholds",
+          "definition": "Energy-per-area values for specific thermal damage. 0.4 cal/cm² = paper ignites. 5 cal/cm² = third-degree burns. Below ~0.1 cal/cm² = felt but not damaging. Set I = threshold and solve for r: r = √(E / (4π · threshold)). Convert carefully: 1 cal/cm² = 4.184 × 10⁴ J/m².",
+          "cognate": "Sp. umbrales de daño · Pt. limiares de dano"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "links": [
+        { "label": "Impact KE", "sublabel": "4.5 × 10¹⁷ J ≈ 108 megatons (Unit 4 yield)" },
+        { "label": "Vaporized rock (~30%)", "sublabel": "1.35 × 10¹⁷ J → R1 ≈ 140 m crater core" },
+        { "label": "Shockwave (~30%)", "sublabel": "1.35 × 10¹⁷ J → R2 ≈ 5 km structures flattened" },
+        { "label": "Thermal radiation (~30%)", "sublabel": "1.35 × 10¹⁷ J → R3 ≈ 800 km wildfire ring — the longest reach" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "This is the centerpiece of the unit. Draw concentric rings around the impact point and fill in the radii R1–R5 using today's calculations. Each ring is a different damage mode.",
+      "prompts": [
+        "R1 ≈ ___ m: total vaporization (crater) · R2 ≈ 5 km: shockwave destruction",
+        "R4 ≈ ___ km: third-degree burns · R3 ≈ ___ km: wildfire ignition",
+        "R5 ≈ thousands of km: felt but not catastrophic — which ring is biggest, and why?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "STEP 1 — PARTITION 2026-XJ'S IMPACT KE. 2026-XJ delivers 4.5 × 10¹⁷ J at impact. Partition it: 30% to vaporized rock, 30% to shockwave KE, 30% to thermal radiation, 10% other.",
+      "given": "KE_total = 4.5 × 10¹⁷ J",
+      "equation": "E_x = (fraction) · KE_total",
+      "work": "E_vap = 0.30 · 4.5e17 ≈ 1.35 × 10¹⁷ J\nE_shock = 0.30 · 4.5e17 ≈ 1.35 × 10¹⁷ J\nE_rad = 0.30 · 4.5e17 ≈ 1.35 × 10¹⁷ J\n(other = 0.10 · 4.5e17 ≈ 4.5 × 10¹⁶ J — ground heating, sound, light losses)",
+      "answer": "Each major channel gets ~1.35 × 10¹⁷ J. Thermal radiation is the one with the LONGEST reach."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "STEP 2 — COMPUTE R1, THE TOTAL-VAPORIZATION RADIUS (CRATER). Using E_vap = 1.35 × 10¹⁷ J, and energy to vaporize rock = 8.6 × 10⁶ J/kg, plus ρ_rock = 2700 kg/m³, compute the mass of rock vaporized and the spherical radius it occupies (assume rock is vaporized from a hemisphere).",
+      "given": "E_vap = 1.35 × 10¹⁷ J · e_per_kg = 8.6 × 10⁶ J/kg · ρ = 2700 kg/m³",
+      "equation": "m = E_vap / e_per_kg · V = m / ρ · V = ⅔πR1³ → R1",
+      "work": "m_vap = 1.35e17 / 8.6e6 ≈ 1.57 × 10¹⁰ kg\nV = 1.57e10 / 2700 ≈ 5.8 × 10⁶ m³\nR1 = (V · 3 / (2π))^(1/3) ≈ (2.77 × 10⁶)^(1/3) ≈ 140 m",
+      "answer": "R1 ≈ 140 m. Inside this hemisphere: total rock vaporization (the crater core)."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "STEP 3 — COMPUTE R3, THE WILDFIRE-IGNITION RADIUS (0.4 CAL/CM²). Using E_rad = 1.35 × 10¹⁷ J, compute the radius at which intensity drops to 0.4 cal/cm² = 1.67 × 10⁴ J/m².",
+      "given": "E_rad = 1.35 × 10¹⁷ J · I_paper = 1.67 × 10⁴ J/m²",
+      "equation": "I = E / (4π·r²) → r = √(E / (4π·I))",
+      "work": "r² = 1.35e17 / (4π · 1.67e4)\nr² = 1.35e17 / 2.10e5\nr² ≈ 6.43 × 10¹¹\nr = √(6.43 × 10¹¹) ≈ 8.0 × 10⁵ m ≈ 800 km",
+      "answer": "R3 ≈ 800 km. Inside this ring, paper and dry vegetation can spontaneously ignite. That's a continent-scale wildfire zone."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STEP 4 — YOUR TURN: COMPUTE R4, THE THIRD-DEGREE BURN RADIUS (5 CAL/CM²). Using E_rad = 1.35 × 10¹⁷ J, compute the radius at which intensity drops to 5 cal/cm² = 2.09 × 10⁵ J/m².",
+      "givenHint": "E_rad = 1.35 × 10¹⁷ J · I_3rd-burn = 2.09 × 10⁵ J/m²",
+      "equationHint": "Same move as Step 3, new threshold: r = √(E / (4π·I)). Expect R4 SMALLER than R3 — a bigger threshold needs a closer ring.",
+      "equationOptions": [
+        "I = E/(4π·r²) → r = √(E/(4π·I))",
+        "Q = m·c·ΔT",
+        "KE = ½mv²",
+        "η = W/Q_hot"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "prose",
+      "markdown": "## Damage-by-distance map — 2026-XJ thermal damage\n\n| Ring | Radius | Damage mode | What happens |\n|---|---|---|---|\n| **R1** | ~140 m | Total vaporization (crater zone) | everything melted/vapor |\n| **R2** | ~5 km | Shockwave destruction (Unit 4 Day 19 reference) | all structures flattened |\n| **R4** | ~227 km | Third-degree burns (5 cal/cm²) | exposed skin burns |\n| **R3** | ~800 km | Wildfire ignition (0.4 cal/cm²) | paper + vegetation burn |\n| **R5** | ~thousands of km | Felt but not catastrophic | windows broken; bright flash |"
+    },
+    {
+      "id": "b12",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Thermal radiation has the LONGEST reach",
+      "markdown": "The R3 wildfire radius (~800 km) is HIGHER than R4 (~227 km) and even the shockwave radius (R2 ~5 km). Thermal radiation has the LONGEST reach — which is why historical impacts are remembered for their fires."
+    },
+    {
+      "id": "b13",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Of vaporization, shockwave, and thermal radiation — which damage mode reaches the FURTHEST from a 108-megaton impact? Why? Write two sentences, then complete the frame.",
+      "frame": "2026-XJ's impact does damage by THREE main mechanisms: ___ (out to ~140 m), ___ (out to ~5 km), and ___ (out to ~800 km). The thermal pulse has the ___ reach."
+    },
+    {
+      "id": "b14",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.r4-thermal-damage"
+    }
+  ]
+}

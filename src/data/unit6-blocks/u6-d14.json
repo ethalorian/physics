@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can distinguish convex (converging) from concave (diverging) lenses by their shape and ray behavior, and identify whether the image is REAL or VIRTUAL.",
+      "targetId": "u6.r4-lenses"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Optical telescopes combine MIRRORS (objective) + LENSES (eyepiece) to magnify distant objects. Asteroid optical telescopes are limited by diffraction (Day 6) and lens / mirror size.",
+      "connection": "Day 15 will mention that NASA's Goldstone radar dish is a parabolic reflector — a giant curved mirror for radio."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Lenses: refraction with a job to do\n\nA lens is just shaped glass exploiting Day 5 refraction. Light slows down in glass; curve the surfaces and you control WHERE each ray bends. Two shapes, two opposite jobs:\n\n**Convex (converging):** thicker in the middle. Parallel rays bend inward and CONVERGE to a real focal point F, a distance f from the lens. This is the magnifying glass, the camera lens, your eye's lens.\n\n**Concave (diverging):** thinner in the middle. Parallel rays bend outward and DIVERGE; trace them backward and they appear to come from a virtual focal point on the incoming side. This is nearsighted glasses and the door peephole.\n\n**Real vs. virtual is the payoff question.** A REAL image forms where light actually converges — you can catch it on a screen (movie projector, camera sensor). A VIRTUAL image is where rays only APPEAR to come from — only an eye or camera looking through the lens sees it (magnifying glass held close to print). Concave lenses can ONLY make virtual images; convex lenses make real OR virtual depending on where the object sits relative to F."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Convex lens",
+          "definition": "A lens that is THICKER in the middle than at the edges. Refraction at the curved surfaces makes parallel rays CONVERGE to a focal point F at distance f from the lens. Example: a magnifying glass, a camera lens, the eye's lens. \"Convex\" = bulging outward; \"converging\" = brings rays together. Both apply.",
+          "cognate": "Sp. lente convexa · Pt. lente convexa · HC lant konvèks"
+        },
+        {
+          "term": "Concave lens",
+          "definition": "A lens THINNER in the middle. Refraction makes parallel rays DIVERGE outward; tracing them back gives a virtual focal point on the incoming side. Example: eyeglasses for nearsightedness (myopia), a peephole / door viewer (wide-angle). Concave lenses ALWAYS make virtual images — they spread rays out, can't focus them onto a screen.",
+          "cognate": "Sp. lente cóncava · Pt. lente côncava · HC lant konkav"
+        },
+        {
+          "term": "Focal length (f)",
+          "definition": "Distance from a lens (or mirror) to its focal point. Shorter f = stronger converging. Convex: real F; concave: virtual F. Example: a magnifying glass with f = 10 cm has its focal point 10 cm from the lens — the Sun's rays focused to a tiny spot there can ignite paper. Note: the 'f' in focal length is NOT the same as the 'f' for frequency. Context.",
+          "cognate": "Sp. distancia focal · Pt. distância focal · HC distans fokal"
+        },
+        {
+          "term": "Real vs. virtual image",
+          "definition": "REAL image: light rays actually converge to the image point — CAN be caught on a screen. VIRTUAL image: rays only APPEAR to converge (after tracing back) — cannot be caught on a screen. Example: movie projector → REAL image on the screen; magnifying glass close to small print → VIRTUAL magnified image (you see it through the lens). Real ↔ catchable on a screen; virtual ↔ only seen by an eye/camera looking through the lens.",
+          "cognate": "Sp. imagen real/virtual · Pt. imagem real/virtual"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "TOP: parallel rays hit a convex lens — converge to focal point F. BOTTOM: same rays hit a concave lens — diverge outward; trace back (dashed) to a virtual F. Which lens is in a magnifying glass? In nearsighted glasses?",
+      "prompts": [
+        "Top panel: convex lens, parallel rays converging to a labeled real F.",
+        "Bottom panel: concave lens, rays diverging, dashed back-traces to a virtual F.",
+        "Label which lens belongs in a magnifying glass and which in nearsighted glasses."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "CLASSIFY EACH APPLICATION. For each application, identify the lens type (convex/concave) and image type (real/virtual): (a) magnifying glass; (b) camera; (c) movie projector; (d) nearsighted glasses; (e) door peephole.",
+      "given": "—",
+      "equation": "(qualitative reasoning — no equation)",
+      "work": "(a) magnifying glass: CONVEX, VIRTUAL (close to object)\n(b) camera: CONVEX, REAL (image on sensor)\n(c) movie projector: CONVEX, REAL (image on screen)\n(d) nearsighted glasses: CONCAVE, VIRTUAL (diverges focus)\n(e) peephole: CONCAVE, VIRTUAL (wide-angle view)",
+      "answer": "3 convex (2 real, 1 virtual), 2 concave (both virtual)."
+    },
+    {
+      "id": "b7",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — BURN PAPER WITH THE SUN. You hold a magnifying glass (convex, f = 10 cm) above a piece of dry paper on a sunny day. At what distance above the paper do you hold the lens to focus the Sun's image and ignite the paper?",
+      "givenHint": "Convex lens, f = 10 cm. The Sun is effectively at infinite distance → its rays arrive parallel.",
+      "equationHint": "Parallel rays converge at the focal point. Where must the paper sit relative to the lens?",
+      "equationOptions": [
+        "Parallel rays (Sun at ∞) → image at the focal point: hold the lens f = 10 cm above the paper",
+        "Hold it at 2f = 20 cm — images always form at twice the focal length",
+        "v = f · λ",
+        "θᵢ = θᵣ"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "warning",
+      "title": "That last one is real",
+      "markdown": "Kids burn ants with magnifying glasses for a reason. The focused Sun's image at the focal point has roughly 1000× the intensity of unfocused sunlight. Inverse-square-law (Day 11) in reverse: small area → concentrated power."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does looking through a magnifying glass make small print bigger? In one sentence, say what kind of lens it is + what kind of image is formed.",
+      "frame": "A ___ lens brings parallel rays to a real focal point — it CONVERGES light. A ___ lens spreads them out, producing only virtual images. The KIND of image depends on the lens shape and the object's ___."
+    },
+    {
+      "id": "rd-ch30",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **30.1–30.8** (converging and diverging lenses, real and virtual images, ray diagrams, optical instruments, the eye, and defects in vision and lenses). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch30",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 30,
+      "title": "Lenses — read & practice",
+      "sectionIds": [
+        "30.1",
+        "30.2",
+        "30.3",
+        "30.4",
+        "30.5",
+        "30.6",
+        "30.7",
+        "30.8"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r4-lenses"
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can distinguish CONDUCTION (direct molecular contact), CONVECTION (fluid currents), and RADIATION (electromagnetic waves), and identify the dominant mode in real scenarios.",
+      "targetId": "u5.k2-transfer-modes"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "During atmospheric entry, the asteroid loses heat by ALL three modes — friction (conduction at its surface), convection (heated air swept around), and radiation (the asteroid GLOWS).",
+      "connection": "Radiation is the one that reaches OBSERVERS — what we see as a meteor's glow. Day 11's damage map uses radiation only to compute the burn radius."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Three ways heat moves\n\nHeat always flows hot → cold, but it has exactly three vehicles:\n\n**Conduction** — molecule bumps molecule. Fast-moving molecules pass KE to slower neighbors by direct contact. No matter moves; only energy does. Needs touching. Metals are great at it; air and styrofoam are terrible.\n\n**Convection** — the fluid itself moves. Warm (less dense) fluid rises, cool (denser) fluid sinks, and the bulk motion carries energy with it. Needs a FLUID — a liquid or a gas.\n\n**Radiation** — electromagnetic waves (especially infrared). Needs NOTHING — it crosses a vacuum. It's how the Sun reaches Earth across 150 million km of empty space.\n\n| Mode | Carrier | Needs a medium? |\n|---|---|---|\n| Conduction | molecular collisions | yes — direct contact |\n| Convection | moving fluid | yes — liquid or gas |\n| Radiation | EM waves (IR) | no — works in vacuum |\n\nMost real scenarios involve more than one mode — your job is to name the **dominant** one."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Conduction",
+          "definition": "Heat transfer by direct molecular contact. Fast-moving molecules bump slower-moving neighbors and pass energy along. No bulk motion of matter. Example: a metal spoon in hot soup — the handle warms because molecules at the soup end transfer KE up the spoon. Needs DIRECT CONTACT; metals conduct well, air and styrofoam do not.",
+          "cognate": "Sp. conducción · Pt. condução · HC kondiksyon"
+        },
+        {
+          "term": "Convection",
+          "definition": "Heat transfer by FLUID CURRENTS. Warmer (less dense) fluid rises; cooler (denser) fluid sinks. Bulk motion of the fluid carries energy. Example: boiling water — hot bubbles rise, cool water replaces them at the bottom; house heating — warm air rises from radiators. Needs a FLUID (liquid or gas); solids don't convect.",
+          "cognate": "Sp. convección · Pt. convecção · HC konveksyon"
+        },
+        {
+          "term": "Radiation (thermal)",
+          "definition": "Heat transfer by ELECTROMAGNETIC WAVES (especially infrared). No medium needed — works through a vacuum. Example: the Sun warms Earth across 150 million km of vacuum; a meteor's glow reaches your eye through air. This is THERMAL radiation (light/infrared) — not the same as nuclear radiation.",
+          "cognate": "Sp. radiación · Pt. radiação · HC radyasyon"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "Where an entering asteroid's heat goes",
+      "caption": "Entry KE becomes surface heat by contact with the slamming air (conduction), the heated air is swept away behind the rock (convection), and the white-hot surface glows (radiation). Only the radiation crosses kilometers of air — or vacuum — to reach your eye on the ground.",
+      "genPrompt": "Left-to-right energy chain for atmospheric entry: asteroid KE → surface heating by air contact (conduction) → hot air swept away (convection) → glow (radiation) reaching observers.",
+      "links": [
+        {
+          "label": "Asteroid KE",
+          "sublabel": "entry speed ~ km/s"
+        },
+        {
+          "label": "Surface heating",
+          "sublabel": "conduction — air slams the rock face"
+        },
+        {
+          "label": "Hot air swept away",
+          "sublabel": "convection — currents behind the rock"
+        },
+        {
+          "label": "Glow",
+          "sublabel": "radiation — EM waves reach YOU"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "For each panel (conduction, convection, radiation), write ONE sentence about HOW energy moves from hot to less-hot. Bottom: which TWO modes carry heat AWAY from an asteroid entering the atmosphere?",
+      "prompts": [
+        "Three panels: spoon in soup, boiling pot, the Sun warming Earth.",
+        "One sentence per panel: how does energy move?",
+        "Name the TWO modes that carry heat away from an entering asteroid."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "For each, write the dominant mode: (a) Sun warms Earth. (b) Hot drink in your hand. (c) Convection oven. (d) Wind chill. (e) Asteroid glow seen from the ground. (f) Microwave heats food.",
+      "given": "—",
+      "equation": "(no equation — name the mode for each)",
+      "work": "(a) Sun → Earth: RADIATION (vacuum, EM waves)\n(b) Hot mug → hand: CONDUCTION (direct contact)\n(c) Convection oven: CONVECTION (forced hot air currents)\n(d) Wind chill: CONVECTION (moving air sweeps heat off skin)\n(e) Meteor glow: RADIATION (EM waves through air/vacuum)\n(f) Microwave: RADIATION (microwaves are EM waves)",
+      "answer": "3 radiation, 2 convection, 1 conduction."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Classify each: (a) ice cube melts on a metal plate. (b) Lake surface freezes from the top down in winter. (c) You feel a hot stove without touching. (d) A thermos with vacuum gap.",
+      "givenHint": "Four scenarios — for each, ask: is there direct contact? a moving fluid? or EM waves crossing a gap?",
+      "equationHint": "No equation today — name the dominant MODE for each scenario (the thermos question: which mode does the vacuum gap FAIL to block?).",
+      "equationOptions": [
+        "Conduction — direct molecular contact",
+        "Convection — fluid currents",
+        "Radiation — EM waves (works in vacuum)"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The thermos trick — vacuum beats two modes, not three",
+      "markdown": "A vacuum thermos defeats CONDUCTION and CONVECTION (no air to transfer through) but NOT radiation — so the inside is shiny to reflect IR. The vacuum is the key engineering trick."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "You see a glowing meteor cross the sky. By which mode does the meteor lose energy to YOU on the ground? Why is that the only possible mode? Then complete the frame.",
+      "frame": "An asteroid burns up in the atmosphere because ___ (mode) heats its surface, then ___ (mode) carries heat away as the rock glows. Only one of these can happen through a vacuum."
+    },
+    {
+      "id": "rd-ch22",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **22.1–22.7** (conduction, convection, radiation, emission and absorption of radiant energy, Newton's law of cooling, and the greenhouse effect). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch22",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 22,
+      "title": "Heat Transfer — read & practice",
+      "sectionIds": [
+        "22.1",
+        "22.2",
+        "22.3",
+        "22.4",
+        "22.5",
+        "22.6",
+        "22.7"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.k2-transfer-modes"
+    }
+  ]
+}

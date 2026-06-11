@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can state that KE + PE = constant when only conservative forces act, and apply it to a simple drop.",
+      "targetId": "u4.k5-conservation"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid in free fall (no air) obeys ME conservation perfectly.",
+      "connection": "This is the big rule of Phase 4. Days 11-13 are all special cases. Day 19 uses it to convert PE to impact KE."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The big rule of Phase 4\n\n**KE + PE = constant** — when only conservative forces (gravity, springs) act, the total **mechanical energy** ME = KE + PE never changes. Energy just trades between the two accounts.\n\nA ball dropped from 5 m:\n\n| Position | KE | PE | ME |\n|---|---|---|---|\n| Top (at rest) | 0 | mg·5 | mg·5 |\n| Halfway | ½mv² | mg·2.5 | mg·5 |\n| Bottom | ½mv² | 0 | mg·5 |\n\nSet ME_top = ME_bottom: **mgh = ½mv²**. The mass cancels, and v = √(2gh) pops out — no forces, no time, no kinematics.\n\nThe condition matters: gravity and springs are **conservative** (their work depends only on start and end positions, not the path). Friction is NOT — when friction acts, ME leaks away to thermal energy and this shortcut needs a correction."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Mechanical energy (ME)",
+          "definition": "The sum of KE and PE: ME = KE + PE. When only conservative forces act (gravity, springs), ME stays constant. A ball dropped from 5 m: at top, ME = 0 + mg·5; at bottom, ME = ½mv² + 0. Setting them equal gives v.",
+          "cognate": "Sp. energía mecánica · Pt. energia mecânica · HC enèji mekanik"
+        },
+        {
+          "term": "Conservative force",
+          "definition": "A force whose work depends only on START and END positions, not the path. Gravity, springs. (Friction is NOT.) Walking up a ramp or taking a vertical lift to the same height: gravity does the SAME work. \"Conservative\" is a math word here — it doesn't mean \"saves\" or \"preserves\"; it means the work is path-independent.",
+          "cognate": "Sp. fuerza conservativa · Pt. força conservativa"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Friction is NOT conservative",
+      "markdown": "When friction acts, ME is NOT conserved — it leaks to thermal energy. Check for friction BEFORE you write KE + PE = const."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "A drop, in energy language",
+      "caption": "Total mechanical energy stays the same at every level — it just moves from the PE account to the KE account as the ball falls.",
+      "links": [
+        {
+          "label": "PE at the top",
+          "sublabel": "m·g·h, at rest"
+        },
+        {
+          "label": "PE + KE midway",
+          "sublabel": "trading, same total"
+        },
+        {
+          "label": "KE at the bottom",
+          "sublabel": "½·m·v², h = 0"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "BALL DROPPED FROM 5 M — A 0.2-kg ball is dropped (from rest) from 5 m above the floor. What's its speed at the floor?",
+      "given": "m = 0.2 kg · v_top = 0 · h = 5 m · g = 9.81",
+      "equation": "KE_top + PE_top = KE_bot + PE_bot → 0 + m·g·h = ½·m·v² + 0",
+      "work": "m·g·h = ½ · m · v²   (m cancels)\nv = √(2 · g · h) = √(2 · 9.81 · 5)\nv = √98.1 ≈ 9.9 m/s",
+      "answer": "≈ 9.9 m/s at impact. Mass canceled — the answer only depends on h."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Check the condition first",
+      "markdown": "ME conservation only works when ALL forces are conservative. If friction or air drag acts, you must include their work — which is NEGATIVE."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "DROP FROM 1.8 M — A 0.5-kg ball is dropped from 1.8 m (friction-free). Find its speed at impact.",
+      "givenHint": "m = 0.5 kg · v_top = 0 · h = 1.8 m · g = 9.81 m/s²",
+      "equationHint": "Set PE at the top equal to KE at the bottom. The mass will cancel.",
+      "equationIds": [
+        "potential-energy",
+        "kinetic-energy"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.2-kg ball is dropped from 1.8 m. Speed at impact? Then complete the frame.",
+      "frame": "The ball's KE at the bottom equals its ___ at the top, because total ___ is conserved when only gravity acts."
+    },
+    {
+      "id": "rd-ch09-d",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **9.7** (the law of conservation of energy and energy transformations). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch09-d",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 9,
+      "title": "Energy — read & practice",
+      "sectionIds": [
+        "9.7"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k5-conservation"
+    }
+  ]
+}

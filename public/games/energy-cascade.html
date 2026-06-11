@@ -316,7 +316,7 @@ function muAt(x){for(const r of lv.rough)if(x>=r.x0&&x<=r.x1)return r.mu;return 
 let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
 let cart={x:2,v:0}, spring=0, budget=0, battery=0, heat=0, E0=1;
 let charging=false, braking=false, boosting=false;
-let t=0, acc=0, attemptT=0, settleT=0, samples=[], lastSamp=-1;
+let t=0, acc=0, attemptT=0, settleT=0, hopelessT=0, samples=[], lastSamp=-1;
 let particles=[], popups=[], shake=0, flash=0;
 let landedOK=false, downTimer=0, lastResult=null, primary=null;
 function ke(){return 0.5*CART_M*cart.v*cart.v;}
@@ -428,7 +428,7 @@ function showMission(level){
   primary=launch;
 }
 function launch(){
-  t=0;acc=0;attemptT=0;settleT=0;samples=[];lastSamp=-1;
+  t=0;acc=0;attemptT=0;settleT=0;hopelessT=0;samples=[];lastSamp=-1;
   particles=[];popups=[];shake=0;flash=0;
   cart={x:2,v:lv.springMax>0?0:2.4}; // springless carts get a release-push off the ledge
   spring=0;budget=lv.budget;battery=lv.battery0;heat=0;
@@ -738,7 +738,21 @@ function step(dt){
         return;}
     }
   }else settleT=0;
-  if(attemptT>150){failAttempt('SHIFT EXPIRED','One hundred fifty seconds is a long time to be lost on a mountain.');return;}
+  // HOPELESS: a crest between cart and dock stands above the energy horizon,
+  // and nothing aboard can raise it. The ledger has already decided — say so
+  // now instead of letting the cart rock in a valley until the clock dies.
+  const pool=act===3?battery:budget;
+  if(spring<=0&&(act===1||pool<300)){
+    const reach=TRK.ymin+(ke()+pe())/(CART_M*G);
+    const dockMid=(lv.dock[0]+lv.dock[1])/2;
+    const lo=Math.min(cart.x,dockMid),hi3=Math.max(cart.x,dockMid);
+    const wall=TRK.crests.some(c=>c.x>lo&&c.x<hi3&&c.y>reach+0.05);
+    if(wall){hopelessT+=dt;
+      if(hopelessT>3){failAttempt('BELOW THE HORIZON',
+        'There is a crest between you and the dock that stands above your energy horizon — and nothing on this cart can raise that line. The dashed line never lies; next run, keep it above the mountains you still owe.');return;}}
+    else hopelessT=0;
+  }else hopelessT=0;
+  if(attemptT>100){failAttempt('SHIFT EXPIRED','A hundred seconds is a long time to be lost on a mountain.');return;}
 }
 
 /* ================================================== render */

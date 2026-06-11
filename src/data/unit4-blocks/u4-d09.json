@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply U = −GMm/r to compute the PE of an asteroid at different distances and compute ΔU as it falls (= KE gained).",
+      "targetId": "u4.k4-universal-pe"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's PE depends on its distance from Earth. As it gets closer, U becomes MORE NEGATIVE — meaning the asteroid is GAINING kinetic energy.",
+      "connection": "ΔU as the asteroid falls is the KE it brings to impact. Day 19 puts a number on this."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The universal formula\n\n**U = − G·M·m / r** — the gravitational PE between two masses M and m separated by distance r (center to center).\n\nThe conventions:\n\n- **PE = 0 at infinity** — the natural zero, since gravity fades to nothing out there.\n- **PE is negative everywhere closer** — the object sits in a gravitational *well*. You'd have to do positive work to lift it out to infinity.\n- **Falling in: U gets MORE negative** — and since total energy is conserved, KE goes UP by exactly the amount U went down. ΔU is the KE the fall delivers.\n\nNo constant-g assumption anywhere. This formula is honest at any altitude — desk height or Moon distance — which is why it's the one the asteroid math needs."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "U = − G·M·m / r",
+          "definition": "The universal gravitational PE between two masses M and m separated by distance r. PE = 0 at infinity; negative everywhere closer. A 1-kg object at Earth's surface (r = 6.37×10⁶ m): U = −(6.67e-11)(6e24)(1)/(6.37e6) ≈ −6.28 × 10⁷ J.",
+          "cognate": "Sp. energía potencial gravitacional universal · Pt. energia potencial gravitacional universal"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Negative U doesn't mean \"missing energy\"",
+      "markdown": "It means the object is in a gravitational well — you'd have to do work to lift it out to infinity."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "PE OF AN ASTEROID AT THREE DISTANCES — A 1000-kg test mass at (a) 384,000 km from Earth's center, (b) Earth's surface (6,371 km), (c) at infinity. Find U at each, then ΔU from (a) to (b).",
+      "given": "m = 1000 kg · G = 6.67×10⁻¹¹ · M = 5.97 × 10²⁴ kg · r_a = 3.84 × 10⁸ m · r_b = 6.37 × 10⁶ m · r_c = ∞",
+      "equation": "U = − G·M·m / r",
+      "work": "U_a = − (6.67e-11)(5.97e24)(1000)/(3.84e8) ≈ −1.04 × 10⁹ J\nU_b = − (6.67e-11)(5.97e24)(1000)/(6.37e6) ≈ −6.25 × 10¹⁰ J\nU_c = 0 J\nΔU (a → b) = U_b − U_a ≈ −6.15 × 10¹⁰ J",
+      "answer": "The 1000-kg mass GAINS 6.15 × 10¹⁰ J of KE falling from Moon's distance to surface."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "note",
+      "title": "Two derivations, one number",
+      "markdown": "A 500-kg meteorite from infinity hits Earth at v ≈ 11.2 km/s — Earth's escape velocity. Same number, two derivations. Day 20 confirms."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "KE GAINED FROM INFINITY — A 500-kg meteorite falls from infinity to Earth's surface (no air friction). How much KE does it gain?",
+      "givenHint": "m = 500 kg · r_start = ∞ (so U_start = 0) · r_end = 6.37 × 10⁶ m · G = 6.67×10⁻¹¹ · M = 5.97 × 10²⁴ kg",
+      "equationHint": "KE gained = −ΔU = U_start − U_end = 0 − (−GMm/r_surface).",
+      "equationOptions": ["U = − G·M·m / r", "U = m·g·h", "KE = ½ · m · v²", "F = G·M·m / r²"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 500-kg object falls from infinity to Earth's surface (no air drag). What KE does it gain? Then complete the frame.",
+      "frame": "An asteroid GAINS kinetic energy as it falls because its U becomes ___ (more negative). The total ME stays constant, so ___ goes up by the same amount."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k4-universal-pe"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can predict the arrival time of seismic P-waves and S-waves at distant locations, and apply v = √(g·d) to estimate tsunami speed + arrival time at a distant coastline.",
+      "targetId": "u6.r7-tsunami"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ has a 70% chance of impacting OCEAN. If it does, the dominant long-range damage mechanism shifts to TSUNAMI. If it hits land, SEISMIC waves register globally.",
+      "connection": "Today's payoff: both kinds of mechanical waves carry impact damage far beyond the immediate strike zone. Wave physics scales up to planetary geometry."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Mechanical waves at continental scale\n\nEverything from Days 1–9 — longitudinal vs. transverse, v set by the medium, energy carried without matter — now scales up to a planet.\n\n**Seismic waves** travel through rock. **P-waves** are longitudinal (compressions of rock, like sound), move ~6 km/s in the mantle, and arrive FIRST. **S-waves** are transverse (side-to-side rock motion), move ~4 km/s, and arrive SECOND. The P–S arrival gap is how seismologists triangulate a source. Bonus diagnostic: S-waves can't cross liquid — which is how we know Earth's outer core is liquid.\n\n**Tsunamis** travel along the ocean surface. Their speed depends only on ocean depth: **v = √(g·d)**. At d = 4 km, v ≈ 200 m/s ≈ 700 km/h — jet-airliner fast. In deep water the wave is only ~1 m tall. Near shore, d shrinks, so v drops — but the wave's energy has to go somewhere (**energy conservation**), so the amplitude GROWS. Fast-and-low in deep water becomes slow-and-tall at the coast. That's why the coast is where the damage happens.\n\nFor an ocean impact, every distance becomes an arrival TIME via t = d/v — and the differences between those times are the warning windows."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Seismic P-wave (primary)",
+          "definition": "A LONGITUDINAL mechanical wave traveling through Earth's crust + mantle. Compressions and rarefactions of rock. ≈ 6 km/s in mantle. FIRST to arrive at a seismograph (hence 'P'). Example: diameter of Earth (~12 700 km) / 6 km/s ≈ 35 min — P-waves traverse the whole planet in about half an hour. They can travel through solid AND liquid — the only seismic wave that crosses Earth's liquid outer core.",
+          "cognate": "Sp. onda P · Pt. onda P · HC vag P"
+        },
+        {
+          "term": "Seismic S-wave (secondary)",
+          "definition": "A TRANSVERSE mechanical wave through Earth's crust + mantle. Side-to-side oscillation of rock. ≈ 4 km/s in mantle. ARRIVES SECOND. The TIME GAP between P and S arrival is how seismologists triangulate the source distance. S-waves can NOT travel through liquids — that's how we know Earth's outer core is liquid: S-waves don't make it through; P-waves do.",
+          "cognate": "Sp. onda S · Pt. onda S · HC vag S"
+        },
+        {
+          "term": "Tsunami",
+          "definition": "An ocean-surface gravity wave triggered by a sudden displacement of water (impact, undersea earthquake, landslide). Speed v = √(g · d), where d is ocean depth. Example: a 2026-XJ ocean impact at 4 km depth generates a tsunami moving at v = √(9.8 · 4000) ≈ 200 m/s ≈ 700 km/h — reaching a coast 1500 km away in about 2 hours. In DEEP water it's only ~1 m tall but fast; in SHALLOW water it slows AND grows tall (energy conservation). Coast is where damage happens.",
+          "cognate": "Sp. tsunami · Pt. tsunami · HC tsunami"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "links": [
+        { "label": "Ocean impact", "sublabel": "2026-XJ displaces a column of water — impact KE becomes wave energy" },
+        { "label": "Deep ocean (d ≈ 4 km)", "sublabel": "v = √(g·d) ≈ 200 m/s — fast, but only ~1 m tall" },
+        { "label": "Shallowing shelf", "sublabel": "d drops → v drops; energy conservation forces amplitude UP" },
+        { "label": "Coastline", "sublabel": "Slow + tall — catastrophic run-up where people live" }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Cross-section of the ocean. Tsunami in DEEP water is fast + low. As it reaches the SHALLOW coast, it slows AND amplifies. Where does the most energy build up? What happens at the shoreline?",
+      "prompts": [
+        "Draw the ocean floor rising toward the coast, with depth d labeled at two spots.",
+        "Show the wave low-and-fast over deep water, tall-and-slow near shore.",
+        "Annotate where the energy concentrates and what happens at the shoreline."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "P-WAVE ARRIVAL ACROSS EARTH. An asteroid impact in Africa launches seismic waves. How long until the P-waves are detected by a seismograph in California, about 13 000 km away through Earth?",
+      "given": "d = 13 000 km = 1.3 × 10⁷ m · v_P = 6 km/s = 6000 m/s",
+      "equation": "t = d / v",
+      "work": "t = 1.3 × 10⁷ / 6000\nt = 2167 s\nt ≈ 36 minutes",
+      "answer": "≈ 36 min after impact. S-waves arrive ~18 minutes later (slower at 4 km/s)."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "TSUNAMI SPEED IN DEEP OCEAN. An ocean impact occurs at d = 4 km depth. What's the tsunami's deep-ocean speed?",
+      "given": "g = 9.8 m/s² · d = 4000 m",
+      "equation": "v = √(g · d)",
+      "work": "v = √(9.8 · 4000)\nv = √(39 200)\nv ≈ 198 m/s\nv ≈ 200 m/s ≈ 700 km/h",
+      "answer": "≈ 200 m/s ≈ 700 km/h. As fast as a jet airliner."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "ARRIVAL TIME ON A DISTANT COAST. Continuing the example above: how long until that tsunami reaches a coastline 1500 km away?",
+      "given": "d = 1.5 × 10⁶ m · v = 200 m/s",
+      "equation": "t = d / v",
+      "work": "t = 1.5 × 10⁶ / 200\nt = 7500 s\nt ≈ 125 min\nt ≈ 2.1 hours",
+      "answer": "≈ 2 hours warning before impact at the coast. That window is why tsunami early-warning networks (DART buoys + seismic detection) exist."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — S-WAVE ARRIVAL. After the same African impact, how long until the S-waves arrive in California (13 000 km away, v_S = 4 km/s)? Compute the GAP between P-wave and S-wave arrival.",
+      "givenHint": "d = 13 000 km = 1.3 × 10⁷ m · v_S = 4 km/s = 4000 m/s · P-wave arrival from the worked example: ≈ 36 min",
+      "equationHint": "Same t = d/v move as the P-wave, then subtract the two arrival times for the gap.",
+      "equationOptions": [
+        "t = d / v",
+        "v = √(g · d)",
+        "d = c · Δt / 2",
+        "v = f · λ"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "prose",
+      "markdown": "## Wave damage-by-distance · 2026-XJ ocean impact scenario\n\n| Mechanism | Arrival | Reach | Effect |\n|---|---|---|---|\n| ► Atmospheric shockwave | minutes | few hundred km | broken windows; flattened forest |\n| ► Thermal pulse (Unit 5) | seconds | ~800 km | wildfire ignition radius |\n| ► Seismic P-wave | ~35 min | global (~12 700 km) | registers worldwide |\n| ► Seismic S-wave | ~50 min | via mantle (no liquid core) | global on land |\n| ► Tsunami | ~2 hours | thousands of km | catastrophic at the coast |"
+    },
+    {
+      "id": "b12",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The warning window",
+      "markdown": "If 2026-XJ splashes down 1500 km from a coast, the THERMAL pulse arrives in seconds, the SEISMIC arrival in ~35 min, but the TSUNAMI takes ~2 hours. That's the warning window. Whether the warning saves lives depends on how fast it's relayed."
+    },
+    {
+      "id": "b13",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why is a tsunami much more dangerous on the shoreline than in deep ocean? Answer in two sentences using the phrase 'energy conservation'.",
+      "frame": "Seismic P-waves are ___ (longitudinal/transverse) and travel ~___ km/s. S-waves are ___ and travel ~___ km/s. A tsunami moves at v = √(___), so deeper ocean → ___ tsunami."
+    },
+    {
+      "id": "b14",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r7-tsunami"
+    }
+  ]
+}

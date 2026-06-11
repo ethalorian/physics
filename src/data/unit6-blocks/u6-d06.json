@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can predict how much diffraction occurs given the ratio of wavelength to obstacle size, and explain why we can HEAR around a corner but not SEE around one.",
+      "targetId": "u6.k5-diffraction"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Long-wavelength radar diffracts around mountains (over-the-horizon radar). Short-wavelength radar doesn't diffract around small objects — better RESOLUTION for asteroid imaging.",
+      "connection": "Engineers CHOOSE the radar wavelength based on what they want to detect. Diffraction sets the trade-off."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Waves bend around things — sometimes\n\n**Diffraction** is the spreading of a wave as it passes an obstacle or squeezes through an opening. The amount of spreading is governed by ONE ratio:\n\n**λ / (size of opening or obstacle)**\n\n- Ratio near 1 (or bigger) → **strong** diffraction. The wave fans out and fills the space behind the obstacle.\n- Ratio tiny → almost **no** diffraction. The wave goes straight, leaving sharp shadows.\n\nSound through a doorway: λ ≈ 1 m, doorway ≈ 1 m → ratio ≈ 1 → sound floods around the corner. Light through the same doorway: λ ≈ 5×10⁻⁷ m → ratio ≈ 10⁻⁷ → light travels in straight lines and you can't see the speaker.\n\nThe same ratio limits **resolution**: a wave can't resolve features much smaller than its own λ. That's the radar designer's trade-off — long λ bends around obstacles but sees only big features; short λ gives crisp detail but is blocked by terrain."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Diffraction",
+          "definition": "The spreading of a wave as it passes by an obstacle or through an opening. More diffraction when the opening is comparable to or smaller than the wavelength. Sound (λ ≈ 1 m) diffracts easily around doorways. Visible light (λ ≈ 500 nm) barely diffracts around everyday objects — that's why we get sharp shadows.",
+          "cognate": "Sp. difracción · Pt. difração · HC difraksyon"
+        },
+        {
+          "term": "Resolution (in radar / imaging) — preview",
+          "definition": "The minimum size of detail you can distinguish. Limited by diffraction — you can't resolve features smaller than ~λ. Radar at λ ≈ 0.1 m can resolve asteroid features down to ~0.1 m. Shorter wavelength = better resolution — that's why X-ray crystallography (λ ≈ 0.1 nm) can image molecules.",
+          "cognate": "Sp. resolución · Pt. resolução · HC rezolisyon"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Diffraction depends on the RATIO, not the wave alone",
+      "markdown": "More diffraction when λ ≈ obstacle size. If the obstacle is much BIGGER than λ, the wave just passes straight (light through a window) or stops (light by a wall). The same wave can diffract strongly around one obstacle and not at all around another."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Compare the wide slit vs. narrow slit. Which produces a wave-fan? Why? What sets the amount of fanning — the slit size, the wavelength, or BOTH?",
+      "prompts": [
+        "Two panels: plane waves hitting a WIDE slit, then a NARROW slit.",
+        "Show the fan (curved wavefronts) behind the narrow slit.",
+        "Write the ratio that controls it: λ / opening."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "Sound has λ ≈ 1 m. Visible light has λ ≈ 500 nm = 5 × 10⁻⁷ m. A doorway is 1 m wide. Compare each wave's λ-to-opening ratio. Which diffracts strongly through the doorway?",
+      "given": "λ_sound = 1 m · λ_light = 5 × 10⁻⁷ m · opening width = 1 m",
+      "equation": "ratio = λ / opening → compare",
+      "work": "λ_sound / 1 m = 1          (comparable)\nλ_light / 1 m = 5 × 10⁻⁷ (tiny)\nSound: ratio ≈ 1, strong diffraction.\nLight: ratio ≈ 10⁻⁷, essentially no diffraction.",
+      "answer": "Sound diffracts → you HEAR around the doorway. Light doesn't diffract → you can't SEE around the doorway."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PICK A RADAR WAVELENGTH — You want to image an asteroid the size of a city block (~100 m across) but resolve features ~1 m in size. Should you use long-wavelength radio (~10 m) or short-wavelength radar (~0.1 m)? Explain.",
+      "givenHint": "Target features ≈ 1 m. Option A: λ ≈ 10 m. Option B: λ ≈ 0.1 m. You can't resolve features smaller than ~λ.",
+      "equationHint": "Compare λ to the feature size — resolution requires λ ≲ feature size.",
+      "equationOptions": [
+        "resolution limit ≈ λ (can't resolve features smaller than ~λ)",
+        "resolution limit ≈ 1/λ",
+        "ratio = λ / opening → compare",
+        "v = f·λ"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Different wavelengths, different views",
+      "markdown": "Radio telescopes can see HUGE features in galaxies that optical telescopes can't — long wavelengths diffract around the dust clouds blocking visible light. Different wavelengths = different VIEWS of the universe."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why can you hear a conversation around a corner but not see the speaker? Answer with wavelengths.",
+      "frame": "Diffraction happens when a wave passes through an opening or around an obstacle whose size is comparable to its ___. The bigger the ratio of λ to obstacle size, the MORE the wave ___."
+    },
+    {
+      "id": "rd-ch31-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **31.1–31.2 and 31.6–31.7** (Huygens' principle, diffraction around obstacles and through openings, laser light, and holograms). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch31-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 31,
+      "title": "Diffraction and Interference — read & practice",
+      "sectionIds": [
+        "31.1",
+        "31.2",
+        "31.6",
+        "31.7"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k5-diffraction"
+    }
+  ]
+}

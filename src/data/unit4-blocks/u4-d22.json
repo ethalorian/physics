@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 4 tool — work, kinetic and potential energy, conservation, springs, power, TNT yield, and escape velocity — independently on the transfer task.",
+      "targetId": "u4.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every tool from Unit 4 is in your hands: W = Fd (and W = Fd cosθ), KE, U (mgh and −GMm/r), conservation, springs, power, TNT yield, escape velocity.",
+      "connection": "One of the 5 transfer problems is the asteroid yield problem. Another is escape velocity from a body you've never seen. The rest test technique."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 5 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Work + work-energy theorem.** A braking car: given m, v_i, braking force, find the stopping distance using W_net = ΔKE.\n- **Problem 2 — Conservation of ME.** A roller coaster: given heights and a starting speed, find the speed at multiple points. Account for friction in one part.\n- **Problem 3 — Spring-launched projectile.** Given spring constant + compression + launch angle, use ½kx² → KE + (mgh as needed) to find launch speed and max height.\n- **Problem 4 — Power.** An elevator lifting a known mass at a given rate. Compute power required.\n- **Problem 5 — Asteroid impact yield IN TONS TNT + escape velocity from an unfamiliar body.** Asteroid mass + impact speed given; convert KE to TNT tons and place on the scale. Then: compute v_esc for a body with given M and r.\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 4 Equation Reference card and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b6",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: what order will you tackle the five problems, and where do you predict you will struggle?",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b7",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 4 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before Unit 5 picks up the heat bridge."
+    },
+    {
+      "id": "b8",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u4.k1-work",
+        "u4.r1-work-angle",
+        "u4.k2-kinetic-energy",
+        "u4.s1-work-energy-theorem",
+        "u4.s2-vernier-ke-lab",
+        "u4.k3-gpe-mgh",
+        "u4.r2-mgh-limits",
+        "u4.k4-universal-pe",
+        "u4.k5-conservation",
+        "u4.s3-conservation-solve",
+        "u4.r3-coaster-pendulum",
+        "u4.s4-vernier-ramp-lab",
+        "u4.k6-hookes-law",
+        "u4.s5-spring-pe",
+        "u4.k7-power",
+        "u4.r4-ke-collisions",
+        "u4.r5-heat-bridge",
+        "u4.r6-tnt-yield",
+        "u4.r7-escape-velocity"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 5 (heat & thermal energy)?",
+      "frame": "I grew most on ___. Before Unit 5 I want to lock in ___."
+    }
+  ]
+}

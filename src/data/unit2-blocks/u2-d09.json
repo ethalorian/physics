@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can decompose a projectile's motion into independent horizontal and vertical pieces, and I can explain why a side-pushed ball and a dropped ball hit the ground at the same time.",
+      "targetId": "u2.k3-projectile-independence"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid in flight is technically a projectile — gravity bends its path.",
+      "connection": "What you learn about projectiles in 3 days scales straight up to orbits. The math is the same; only the distances grow."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Two motions, one object\n\nA projectile's motion splits into two **independent** pieces:\n\n- **Horizontal:** x = vₓ · t — horizontal velocity **never changes** (no horizontal force).\n- **Vertical:** y = y₀ − ½·g·t² — vertical velocity changes at g per second (gravity acts here).\n\nThe two pieces don't talk to each other. **Time is the only link** between them."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Projectile",
+          "definition": "Any object moving under gravity alone after launch — no engine, no air force. A thrown baseball. A horizontally-fired bullet. An asteroid in free fall.",
+          "cognate": "Sp. proyectil · Pt. projétil · HC pwojektil"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "note",
+      "title": "The drop-and-push race",
+      "markdown": "Drop one ball. Push another sideways at the **same instant**. They hit the ground at the **SAME time**. Time is set by the VERTICAL motion alone — the sideways push changes *where* it lands, not *when*."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — monkey and hunter",
+      "markdown": "We watched the classic monkey-and-hunter setup: aim straight at the target, and if the target drops the instant you fire, you ALWAYS hit it — both fall at the same g. Run the simulation below and test which prediction survives."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "monkey-hunter"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the dropped ball and the side-pushed ball at three moments (t = 0, 1 s, 2 s). For the pushed ball, label vₓ at each moment (it never changes) and v_y at each moment (it grows by ~10 m/s each second).",
+      "prompts": [
+        "Both balls at the SAME height at each moment.",
+        "vₓ labels: same value all three times.",
+        "v_y labels: 0, ~10, ~20 m/s."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does a side-pushed ball NOT take longer to fall than a ball that's just dropped? Use the word 'independent' in your answer.",
+      "frame": "The horizontal and vertical motions are ___, so the sideways push changes ___ but not ___."
+    },
+    {
+      "id": "rd-ch05-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **5.1–5.4** (vectors and scalars, velocity vectors, components of vectors, and what makes a projectile). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch05-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 5,
+      "title": "Projectile Motion — read & practice",
+      "sectionIds": ["5.1", "5.2", "5.3", "5.4"]
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.k3-projectile-independence"
+    }
+  ]
+}

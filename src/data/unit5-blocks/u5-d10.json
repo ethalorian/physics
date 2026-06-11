@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compare an asteroid's KE to the energy required to vaporize its mass and explain why surface-area-to-mass ratio sets the size threshold for atmospheric burn-up.",
+      "targetId": "u5.r3-atmospheric-entry"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ is HUGE (m ≈ 10⁹ kg, r ≈ 50 m). The Chelyabinsk meteor was tiny (m ≈ 10⁴ kg) — it burst in the atmosphere with no crater.",
+      "connection": "Today's question: at 2026-XJ's size, does the atmosphere matter at all? Where's the size threshold between 'burns up' and 'reaches ground'?"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Why pebbles burn up and boulders don't\n\nA rock entering the atmosphere at 15 km/s carries an enormous KE = ½mv². Atmospheric drag does NEGATIVE work on it, and every joule the drag removes shows up as **heat at the rock's surface**.\n\nHere's the surprise: per kilogram, EVERY rock at 15 km/s carries the same KE — about 1.1 × 10⁸ J/kg — which is roughly **13× the energy needed to vaporize that kilogram** (E_vap ≈ 8.6 × 10⁶ J/kg, using c_rock·ΔT + L_v). So why doesn't everything vaporize?\n\n**Geometry.** Drag heating happens at the SURFACE; mass lives in the VOLUME. For a sphere, A/m = 3/(ρ·r):\n\n- A **1-kg pebble** is essentially ALL surface — high A/m, huge drag per kg, every gram gets cooked. It vaporizes completely. (That's a shooting star.)\n- A **10⁹-kg asteroid** has 1000× less surface area per kg. The heat chews on the outside (**ablation**) while the core never feels it. It loses < 1% of its mass and arrives at the ground at nearly full KE.\n\nThe per-kg energy ratio is identical for both. The size threshold isn't about energy — it's about WHERE the heat can reach."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Atmospheric drag",
+          "definition": "A friction-like force that air exerts on a fast-moving object. Does NEGATIVE work — takes KE away. The KE removed becomes HEAT at the object's surface. A satellite re-entering at 7.8 km/s heats its surface to ~2000 °C from drag — this is why re-entry shielding matters. The faster the object, the MORE drag per second (drag ∝ v² roughly).",
+          "cognate": "Sp. arrastre atmosférico · Pt. arrasto atmosférico"
+        },
+        {
+          "term": "Surface-area-to-mass ratio",
+          "definition": "For a sphere, A/m = 3/(ρ·r). SMALL rocks have HIGH A/m → lots of drag per kg → vaporize. BIG rocks have LOW A/m → little drag per kg → survive. A 1-kg pebble has ~1000× more A/m than a 10⁹-kg asteroid: the pebble burns away entirely; the asteroid loses < 1% of its mass to ablation.",
+          "cognate": "Sp. área/masa · Pt. área/massa"
+        },
+        {
+          "term": "Ablation",
+          "definition": "The process by which a rock's outer layer vaporizes during atmospheric entry, carrying heat AWAY from the rock as molten/vapor mass. The Apollo capsules used ablative heat shields — designed to char and vaporize, carrying heat away rather than letting it into the spacecraft. Ablation HELPS: without it, big asteroids would heat all the way through.",
+          "cognate": "Sp. ablación · Pt. ablação"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "It's drag PER KG, not total drag",
+      "markdown": "It's not the rock's TOTAL drag force that decides survival — it's the drag force PER KG of rock. Big rocks have lots of drag too, but they have even more mass."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "links": [
+        { "label": "Kinetic energy", "sublabel": "½mv² of the incoming rock at ~15 km/s" },
+        { "label": "Drag does negative work", "sublabel": "air resistance strips KE during entry" },
+        { "label": "Heat at the surface", "sublabel": "surface reaches ~2000 °C — the glow" },
+        { "label": "Ablation / vaporization", "sublabel": "outer layer vaporizes, carrying heat away; high A/m → ALL of it goes" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw three rocks entering the atmosphere: a 1-kg pebble, a 1000-kg boulder, and 10⁹-kg 2026-XJ. Compare them.",
+      "prompts": [
+        "Why does the 1-kg pebble vaporize completely?",
+        "Why does the 10⁹-kg asteroid arrive at essentially full mass?",
+        "Mark the size threshold between 'burns up' and 'reaches ground' on your diagram"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "THE BIG COMPARISON — KE VS. VAPORIZATION ENERGY. Three rocks at v = 15 km/s. For each, compute (1) KE = ½mv² and (2) energy to vaporize: E_vap = m · (c_rock · ΔT + L_v_rock) where c_rock ≈ 800 J/kg·°C, ΔT ≈ 2000 °C, L_v ≈ 7 × 10⁶ J/kg. Compare ratios.",
+      "given": "v = 1.5 × 10⁴ m/s · c_rock = 800 · ΔT ≈ 2000 · L_v ≈ 7 × 10⁶\nE_vap per kg = (800·2000) + (7 × 10⁶) = 1.6 × 10⁶ + 7 × 10⁶ ≈ 8.6 × 10⁶ J/kg",
+      "equation": "KE = ½ m v²   AND   E_vap = m · 8.6 × 10⁶ J/kg",
+      "work": "ROCK A: m = 1 kg\n  KE = 0.5 · 1 · (1.5e4)² = 1.125 × 10⁸ J\n  E_vap = 1 · 8.6e6 = 8.6 × 10⁶ J\n  ratio KE / E_vap ≈ 13 → KE is 13× more than needed to vaporize. BURNS UP.\n\nROCK B: m = 1000 kg\n  KE = 0.5 · 1000 · (1.5e4)² = 1.125 × 10¹¹ J\n  E_vap = 1000 · 8.6e6 = 8.6 × 10⁹ J\n  ratio = 13 → same ratio per kg — but most heat goes into the surface, not the core. Only OUTER ~10% vaporizes.\n\nROCK C: m = 10⁹ kg (2026-XJ)\n  KE = 0.5 · 1e9 · (1.5e4)² ≈ 1.125 × 10¹⁷ J\n  E_vap = 1e9 · 8.6e6 = 8.6 × 10¹⁵ J\n  ratio = 13 → surface ablation is < 1% of mass. REACHES GROUND.",
+      "answer": "Small rocks: ALL surface, vaporize entirely. Big rocks: surface ablates, core survives. The ratio per kg is the SAME — it's geometry (A/m) that decides."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Chelyabinsk, February 2013",
+      "markdown": "The Chelyabinsk meteor was ~10⁴ kg — small enough that it AIRBURST 30 km up. No crater. Just a shockwave that broke 100,000 windows and injured 1500 people. Big rocks behave differently — Day 11 explains how."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "WOULD A 10-KG ROCK SURVIVE? A 10-kg rock at v = 15 km/s. Compute KE, E_vap, and the ratio. Will it reach the ground intact? Why?",
+      "givenHint": "m = 10 kg · v = 1.5 × 10⁴ m/s · E_vap per kg ≈ 8.6 × 10⁶ J/kg",
+      "equationHint": "KE = ½mv² and E_vap = m · 8.6 × 10⁶ J/kg. Compare the ratio — then think about A/m: is a 10-kg rock closer to the pebble or the asteroid?",
+      "equationIds": ["kinetic-energy", "heat"]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why does a 1-kg rock burn up but a 10⁹-kg asteroid reach the ground? Reason in terms of surface-area-to-mass ratio.",
+      "frame": "A small rock burns up because its surface area per kg is ___, so drag per kg is ___ and ALL its KE becomes heat at the surface. 2026-XJ's surface area per kg is ___, so only ___ % ablates and the rest reaches the ground."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.r3-atmospheric-entry"
+    }
+  ]
+}

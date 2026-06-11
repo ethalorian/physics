@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can capture a v–t graph for a falling ball with a Vernier motion detector and find g from the slope.",
+      "targetId": "u2.s4-vernier-measure-g"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We've been USING g = 9.81 m/s² for a week. Today we MEASURE it.",
+      "connection": "If our lab number matches theory, the F = G·m₁·m₂/r² framework we'll apply to 2026-XJ stands on tested ground."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 2.1 — Measure g",
+      "markdown": "**Driving question:** How close can we come to measuring g = 9.81 m/s² in this room?\n\n**Equipment:** Vernier motion detector + LabQuest (1 per pair) · Logger Pro or Graphical Analysis on a laptop · a drop ball (≥ 4 cm diameter — bigger is better for the sensor) · tape measure (to set drop height) · clear floor zone (head and toes out of the drop path).\n\n**How this lab serves the year's question:** if the lab confirms g near Earth, the equations we use for 2026-XJ are trustworthy."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Point the motion detector UP. Hold the ball at a known height above it.",
+        "Start data collection. Release the ball cleanly (no toss).",
+        "On the v–t graph, the falling portion is a straight line. Fit it. **Slope = g.**",
+        "Repeat for 3 trials. Average. Compare to 9.81 m/s²."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Catch the ball **before** it hits the sensor. Keep hands and faces clear of the drop path. Don't release toward another group."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Not in class today?",
+      "markdown": "Run the picket-fence simulation below — it's the same measurement: an object falls past a sensor, you read g from the slope of the v–t graph. Use its values to fill your data table."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "picket-fence-g"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch your lab setup: detector pointing up, ball above it, drop height h marked. Record your h value on the diagram.",
+      "prompts": [
+        "Show the detector, the ball, and the drop path.",
+        "Label the drop height h with its value.",
+        "Mark the 'clear zone' around the drop path."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "Drop height (m)", "Slope of v–t (m/s²)", "Notes (release? ball wobble?)"],
+      "rows": 5,
+      "plot": false,
+      "patternPrompt": "Row 5 is your average. How consistent are your slopes across trials?"
+    },
+    {
+      "id": "b10",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "How close is your AVERAGE to 9.81 m/s²? Compute your percent error.",
+      "interpretPrompt": "If your value is LOW, what in your setup might cause that? If HIGH, what might? And the asteroid connection: how does this measurement serve the year's question?",
+      "frame": "My measured g was ___ m/s². The accepted value is 9.81 m/s². My percent error was ___. I think the biggest source of error was ___."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write a claim-evidence-reasoning paragraph about your measurement.",
+      "frame": "From my data, I claim g = ___ m/s². My evidence is ___. This is ___% off from 9.81 m/s². I think the difference is because ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.s4-vernier-measure-g"
+    }
+  ]
+}

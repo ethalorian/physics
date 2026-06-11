@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "dayType": "SYNTHESIS",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can run a complete 2026-XJ energy analysis on all three branches (impact yield, deflection feasibility, escape) and articulate which TWO unit ideas were load-bearing.",
+      "targetId": "u4.synthesis-energy-budget"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We have every tool: KE, PE (local + universal), conservation, springs, power, TNT yield, escape velocity.",
+      "connection": "Today is the rehearsal for Day 22's transfer task. Done in groups, compiled as a class, written down in your packet."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Three branches, one energy report\n\nToday you run the COMPLETE 2026-XJ energy budget, the way a planetary defense team would:\n\n- **Branch 1 — IMPACT YIELD:** KE at impact → TNT-equivalent tons → place on the historical scale (Day 19's calculation, now yours end-to-end).\n- **Branch 2 — DEFLECTION ENERGY:** how much KE does a DART-class impactor carry, and how much KE change does it actually buy on the asteroid? Is deflection energy-feasible?\n- **Branch 3 — ESCAPE:** could 2026-XJ leave the solar system at its current speed — or is it bound to keep coming back?\n\nThen the class compiles its consensus energy report."
+    },
+    {
+      "id": "b4",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the three-branch decision tree: IMPACT / DEFLECTION / ESCAPE. Fill in each branch's TOOLS and ANSWER box. Then circle ONE tool that shows up in TWO branches.",
+      "prompts": [
+        "Impact branch: which equations?",
+        "Deflection and escape branches: which equations?",
+        "Circle the shared tool."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STATION 1 — IMPACT YIELD (revisit Day 19). 2026-XJ has m = 1×10⁹ kg, impact velocity v = 3×10⁴ m/s. (a) Compute KE at impact. (b) Convert to TNT-equivalent tons. (c) Identify it on the Hiroshima/Tunguska/Chicxulub scale.",
+      "givenHint": "m = 1×10⁹ kg · v = 3×10⁴ m/s · 1 ton TNT = 4.184×10⁹ J.",
+      "equationHint": "(a) KE = ½mv². (b) divide by 4.184×10⁹. (c) compare to the scale.",
+      "equationOptions": ["KE = ½·m·v²", "yield (tons) = KE / (4.184 × 10⁹ J)", "U = m·g·h", "P = W / t"]
+    },
+    {
+      "id": "b6",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STATION 2 — DEFLECTION ENERGY (revisit Unit 3 DART). Unit 3 said a single DART-class impactor (600 kg at 6 km/s) delivers about Δv ≈ 7 × 10⁻⁴ m/s to a 5×10⁹ kg asteroid. (a) Compute the KE of a single DART spacecraft at launch. (b) That energy translated into Δv on the asteroid — what KE does the asteroid GAIN in its new (slightly faster) state? (Hint: ΔKE_asteroid ≈ M · v · Δv, where v is the asteroid's prior speed.) (c) Comment on whether this is energy-feasible.",
+      "givenHint": "m_DART = 600 kg · v_DART = 6×10³ m/s · M = 5×10⁹ kg · Δv ≈ 7×10⁻⁴ m/s · asteroid prior speed v ≈ 3×10⁴ m/s.",
+      "equationHint": "(a) KE = ½mv². (b) ΔKE_asteroid ≈ M·v·Δv. (c) compare the two numbers.",
+      "equationOptions": ["KE = ½·m·v²", "ΔKE_asteroid ≈ M·v·Δv", "p = m·v", "W = F·d"]
+    },
+    {
+      "id": "b7",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STATION 3 — ESCAPE FROM THE SUN. 2026-XJ currently orbits the Sun at v ≈ 3×10⁴ m/s (comparable to Earth). Escape velocity from the Sun at Earth's orbital distance (r = 1.5×10¹¹ m) is v_esc ≈ √(2·G·M_Sun/r), with M_Sun = 2×10³⁰ kg. (a) Compute v_esc. (b) Compare to 2026-XJ's current speed. (c) Could 2026-XJ escape the solar system at its current speed?",
+      "givenHint": "G = 6.67×10⁻¹¹ · M_Sun = 2×10³⁰ kg · r = 1.5×10¹¹ m · current v ≈ 3×10⁴ m/s.",
+      "equationHint": "(a) v_esc = √(2GM_Sun/r). (b)–(c) compare v to v_esc.",
+      "equationOptions": ["v_esc = √(2·G·M_Sun / r)", "KE = ½·m·v²", "U = −G·M·m / r", "g = G·M / r²"]
+    },
+    {
+      "id": "b8",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "CLASS CONSENSUS — WHAT'S OUR ENERGY REPORT? Compile across groups (or, at home, across your own three stations). What did each branch conclude?",
+      "interpretPrompt": "Write two sentences: one about the impact yield, one about whether deflection AND escape are feasible.",
+      "frame": "Our impact sentence: 2026-XJ would deliver ___. Our feasibility sentence: deflection is ___ and escape is ___."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "This is the real job",
+      "markdown": "Real planetary defense reports include all three branches. Your numbers are within an order of magnitude of NASA's actual analyses."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Of all the things you learned in Unit 4, which TWO ideas were MOST load-bearing for the three-branch analysis? Why?",
+      "frame": "Of all the ideas from Unit 4, the TWO most load-bearing for today's analysis were ___ (used in impact) and ___ (used in deflection/escape). Both rest on conservation of ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.synthesis-energy-budget"
+    }
+  ]
+}

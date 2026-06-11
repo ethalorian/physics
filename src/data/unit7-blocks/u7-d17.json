@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "dayType": "SYNTHESIS",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can preview the Car Project parts kit, identify which UNIT each part traces to, and predict the motor's CURRENT and POWER using V = IR and P = VI — BEFORE I build.",
+      "targetId": "u7.bridge-car-project"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "FINAL REFRAMING — the asteroid arc is closing. For ONE year you've done physics on a cosmic backdrop — distance, gravity, energy, heat, waves, charge.",
+      "connection": "Unit 8 opens the BUILD arc. Starting next week you're building a working machine, by hand, with what you've learned. Today is the explicit handoff: we preview the parts kit, you predict the numbers, and Unit 8 Day 1 you'll measure to compare."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## ★ Car Project — parts preview\n\nEvery part in the kit traces back to a unit of this year. Theory becomes engineering:\n\n| Part | Traces to | The physics |\n|---|---|---|\n| 9V battery | Unit 7 Day 4 | voltage = energy per charge (V = U/q) |\n| Wires + switch | Unit 7 Days 5-6 | current (I = q/t) + resistance (V = IR) |\n| DC motor | Unit 7 Day 15 | current-in-field → torque (F = I·L·B) |\n| Gears (reduction) | Unit 2 | mechanical advantage (input/output gear teeth) |\n| Wheels | Unit 2 | rotational → translational motion (v = ωr) |\n| Starting impulse | Unit 3 | Δp = F·Δt — what gets the car moving |\n| Top-speed kinetic energy | Unit 4 | KE = ½mv² — what the motor builds up |\n| Friction (wheels, bearings) | Unit 2 + Unit 5 | μ·N + heat dissipation |\n\nThe electrical heart of the build is the simplest circuit in this unit: **battery → switch → motor → back**. One series loop. Today you predict its numbers; next week you measure them."
+    },
+    {
+      "id": "b4",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "The Car Project circuit — one series loop",
+      "caption": "Battery → switch → motor → back. This is the exact circuit you will build on Day 1 of Unit 8. Everything you verified in the Day 10 lab applies to it directly.",
+      "components": [
+        { "kind": "battery", "side": "left", "label": "9V battery" },
+        { "kind": "switch", "side": "top", "label": "switch (ON/OFF)" },
+        { "kind": "motor", "side": "right", "label": "DC motor, R ≈ 3-5 Ω" }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the Car Project with each part labeled with its origin unit. The visual centerpiece of this page — and of the bridge from Unit 7 to Unit 8.",
+      "prompts": [
+        "Battery, switch, motor, gears, wheels — all drawn and labeled.",
+        "Next to each part: the unit it traces to (use the parts table).",
+        "Circle the Unit 7 parts — that's what this week was for."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "★ STEP 1 — PREDICT MOTOR CURRENT. Given: Car Project uses a 9V battery. Estimated motor resistance: R ≈ 3-5 Ω (we'll measure on Day 1 of Unit 8). Predict the current the motor will draw.",
+      "given": "V = 9 V · R ≈ 3-5 Ω (motor)",
+      "equation": "I = V / R (Ohm's law, Day 6)",
+      "work": "If R = 3 Ω: I = 9/3 = 3 A\nIf R = 4 Ω: I = 9/4 = 2.25 A\nIf R = 5 Ω: I = 9/5 = 1.8 A\n→ Expected range: I ≈ 1.8 to 3.0 A",
+      "answer": "PREDICTION: the motor will draw between 1.8 A and 3.0 A. Most likely ≈ 2-2.5 A."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "★ STEP 2 — PREDICT MOTOR POWER. Using your predicted current from Step 1, compute the electrical power delivered to the motor. (P = V·I.)",
+      "given": "V = 9 V · I ≈ 1.8 to 3.0 A (your prediction)",
+      "equation": "P = V · I (Day 11)",
+      "work": "If I = 1.8 A: P = 9 · 1.8 = 16.2 W\nIf I = 2.25 A: P = 9 · 2.25 = 20.25 W\nIf I = 3.0 A: P = 9 · 3.0 = 27 W\n→ Expected range: P ≈ 16 to 27 W\n→ About 40% becomes motion; 60% becomes heat (Day 15).",
+      "answer": "PREDICTION: motor draws ≈ 16-27 W. Mechanical power out ≈ 7-11 W."
+    },
+    {
+      "id": "b8",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "TEAM PREDICTION — use the most likely numbers from Steps 1 and 2. Fill in the frame, then circle one: the motor will (get warm / not get warm).",
+      "frame": "Our team predicts the motor will draw ___ A and consume ___ W. About ___ W will become motion; ___ W will become heat. The motor will (get warm / not get warm)."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ Prediction now, measurement next week",
+      "markdown": "The PREDICTION is a Marzano-3 deliverable. The MEASUREMENT happens on Day 1 of Unit 8 (next week). The TRANSFER task (Day 18) will ask you to predict for a different motor."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "WHY is the Car Project's circuit wired in SERIES (battery → switch → motor → back) instead of parallel? Reason about what would happen if any one wire breaks. (Hint: a series-only circuit is what an ON/OFF switch can fully control.)",
+      "frame": "A series loop has ___ path for current, so opening the switch ___. If any one wire breaks, ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.bridge-car-project"
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply v = fλ to compute any one of v, f, or λ given the other two, and explain WHY a wave changing media keeps the same f but changes λ.",
+      "targetId": "u6.k2-wave-equation"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radar pulses travel at v = c = 3×10⁸ m/s. The round-trip time tells distance.",
+      "connection": "Today's equation IS the radar equation in disguise. Once you trust v = fλ for everyday waves, you trust d = c·Δt/2 for radar."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## One equation for every wave\n\n**v = f · λ**\n\nWhy it has to be true: in one period T, a wave moves forward exactly one wavelength λ. Speed = distance / time = λ/T — and since f = 1/T, that's **v = fλ**. Same equation for water, sound, light, radio.\n\nThe division of labor:\n\n- **v is set by the MEDIUM** (343 m/s for sound in air, 1480 m/s in water, 3×10⁸ m/s for radio in vacuum).\n- **f is set by the SOURCE** (the tuning fork vibrates at 440 Hz no matter what it's in).\n- **λ adjusts** to satisfy the equation: λ = v/f.\n\nSame source, different medium → same f, different λ. Hold that thought — it's exactly why refraction (Day 5) happens at a boundary."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "v = f · λ (the wave equation)",
+          "definition": "Speed of a wave equals frequency times wavelength. Same equation for water, sound, light, radio. Sound at 440 Hz with λ = 0.78 m: v = 440 · 0.78 ≈ 343 m/s (sound in air).",
+          "cognate": "Sp. v = f · λ · Pt. v = f · λ (universal symbols)"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Who sets what",
+      "markdown": "v depends on the MEDIUM. f is set by the SOURCE. λ adjusts: λ = v/f. Same source, different medium → different λ. Don't let the equation fool you into thinking cranking up f makes the wave travel faster — it just shortens λ."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Two snapshots of the same wave, one period apart. Mark a single crest in both. How far did it travel? Write the relationship: speed = distance / time.",
+      "prompts": [
+        "Top: snapshot at t = 0. Bottom: snapshot at t = T.",
+        "Arrow the SAME crest in both — it moved exactly one λ.",
+        "Write v = λ/T = fλ underneath."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "An A4 tuning fork at 440 Hz makes sound that travels at v = 343 m/s in air. What's the wavelength?",
+      "given": "f = 440 Hz · v = 343 m/s",
+      "equation": "v = f·λ → λ = v/f",
+      "work": "λ = 343 / 440\nλ ≈ 0.78 m",
+      "answer": "λ ≈ 0.78 m ≈ 78 cm."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "An FM radio station broadcasts at f = 100 MHz = 10⁸ Hz. Radio waves travel at c = 3 × 10⁸ m/s. What's the wavelength?",
+      "given": "f = 10⁸ Hz · c = 3 × 10⁸ m/s",
+      "equation": "λ = c/f",
+      "work": "λ = (3 × 10⁸) / 10⁸\nλ = 3 m",
+      "answer": "λ = 3 m. An FM antenna sized at λ/4 ≈ 75 cm captures these waves efficiently."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A4 IN WATER — The same A4 tuning fork (f = 440 Hz) sounds underwater. Sound in water moves at v ≈ 1480 m/s. What's the new wavelength?",
+      "givenHint": "f = 440 Hz (set by the source — unchanged) · v = 1480 m/s in water.",
+      "equationHint": "λ = v/f — bigger v, same f → bigger λ.",
+      "equationIds": [
+        "wave-speed"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "RADAR WAVELENGTH — NASA's planetary radar transmits at f = 2.4 GHz = 2.4 × 10⁹ Hz. Radio in vacuum travels at c = 3 × 10⁸ m/s. What's λ?",
+      "givenHint": "f = 2.4 × 10⁹ Hz · c = 3 × 10⁸ m/s.",
+      "equationHint": "λ = c/f — watch the powers of 10.",
+      "equationIds": [
+        "wave-speed"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Same source, two media",
+      "markdown": "Same FREQUENCY (set by the source). But because v differs in each medium, the WAVELENGTH adjusts to fit. This is exactly why refraction (Day 5) happens at a boundary."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "An FM radio wave has f = 95 MHz. What's its wavelength? (Use c = 3 × 10⁸ m/s.) Then complete the frame.",
+      "frame": "When a wave enters a new medium, the SOURCE doesn't change. So f stays the ___. But v changes, so by v = fλ, the ___ must change. If v decreases, λ ___."
+    },
+    {
+      "id": "rd-ch25-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **25.4–25.6** (wave speed v = λf, transverse waves, and longitudinal waves). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch25-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 25,
+      "title": "Vibrations and Waves — read & practice",
+      "sectionIds": [
+        "25.4",
+        "25.5",
+        "25.6"
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k2-wave-equation"
+    }
+  ]
+}

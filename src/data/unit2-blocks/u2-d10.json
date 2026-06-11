@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can solve a horizontal-launch projectile problem: find fall time from height, then find horizontal range.",
+      "targetId": "u2.s2-projectile-calc"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ has both horizontal and vertical velocity (with respect to Earth).",
+      "connection": "Cliff problems are the small-scale version. The recipe (find t first, then x) is the same recipe orbit problems use."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The two-step recipe\n\nEvery horizontal-launch problem is the same two steps, in the same order:\n\n1. **Find time from the VERTICAL motion:** h = ½·g·t² → t = √(2h/g). The height alone decides how long it's in the air.\n2. **Find range from the HORIZONTAL motion:** x = vₓ·t. Plug in the t you just found.\n\nNever the other way around. The horizontal motion can't tell you the time — vₓ never changes, so it has no clock in it."
+    },
+    {
+      "id": "b4",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Strategy every time",
+      "markdown": "**FIND TIME FIRST** from the vertical motion. Then plug t into x = vₓ·t."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Test it in the simulation",
+      "markdown": "Launch a few projectiles below. Change the height and watch the fall time change; change vₓ and watch the range change while the fall time stays put. That asymmetry IS the independence from yesterday."
+    },
+    {
+      "id": "b6",
+      "type": "sim_embed",
+      "simulationSlug": "projectile-motion"
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "A ball is fired horizontally from a 5 m cliff at vₓ = 10 m/s. (a) How long until it hits the ground? (b) How far from the cliff base?",
+      "given": "h = 5 m · vₓ = 10 m/s · g = 9.81 m/s²",
+      "equation": "(1) h = ½·g·t²      (2) x = vₓ·t",
+      "work": "(1) 5 = ½·(9.81)·t² → t² = 10/9.81 → t ≈ 1.01 s\n(2) x = 10 × 1.01 ≈ 10.1 m",
+      "answer": "t ≈ 1.0 s, lands ≈ 10 m from the cliff."
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Pick your own numbers for cliff height h and launch speed vₓ. Draw the cliff, the launch arrow, and trace the parabola lightly. Label the range x where it lands.",
+      "prompts": [
+        "Label h on the cliff and vₓ on the launch arrow.",
+        "The path curves down more and more steeply — a parabola.",
+        "Label the range x along the ground."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A ball is fired horizontally from a 45 m cliff at vₓ = 15 m/s. (a) Find fall time. (b) Find horizontal range.",
+      "givenHint": "h = 45 m, vₓ = 15 m/s, g = 9.81 m/s².",
+      "equationHint": "Step 1: h = ½·g·t² gives the time. Step 2: x = vₓ·t gives the range.",
+      "equationOptions": ["h = ½·g·t²", "x = vₓ·t", "vₓ = v·cos θ", "v_y = v·sin θ"]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "From a 20 m cliff at vₓ = 8 m/s, where does the ball land? Show both steps.",
+      "frame": "Step 1 (time from height): t ≈ ___ s. Step 2 (range): x = 8 × ___ ≈ ___ m."
+    },
+    {
+      "id": "rd-ch05-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **5.5–5.6** (projectiles launched horizontally and projectiles launched at an angle). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch05-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 5,
+      "title": "Projectile Motion — read & practice",
+      "sectionIds": ["5.5", "5.6"]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.s2-projectile-calc"
+    }
+  ]
+}

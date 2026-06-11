@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply the law of reflection to predict the reflected angle, measuring angles from the NORMAL — not from the surface — and explain why the law holds for sound, light, and radar.",
+      "targetId": "u6.k3-reflection"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radar works because radio waves REFLECT off the asteroid. Without reflection, no echo, no distance, no Doppler.",
+      "connection": "Today: the law that says EVERY wave reflects with equal angles. Day 15 applies this to the radar echo from 2026-XJ."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Equal angles — from the normal\n\nWhen a wave hits a flat surface, it bounces off obeying one rule:\n\n**θᵢ = θᵣ** — angle of incidence equals angle of reflection.\n\nBoth angles are measured from the **NORMAL**: the imaginary line perpendicular to the surface at the point of impact. Not from the surface. From the normal. Every reflection problem starts by drawing that line.\n\nThe law is the same for light off a mirror, sound off a wall, and radar off an asteroid — because reflection is geometry, not chemistry.\n\nOne more thing happens at every boundary: **some of the wave reflects, some transmits** into the new medium. A brick wall reflects almost all the sound; a curtain lets most of it through. Radar engineers live on this split — the echo we detect is the reflected fraction."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Law of reflection",
+          "definition": "The angle of incidence equals the angle of reflection. Both angles are measured from the NORMAL (perpendicular to the surface). Light at 35° from normal reflects at 35° from normal — on the OTHER side of the normal. Same for radar off an asteroid.",
+          "cognate": "Sp. ley de reflexión · Pt. lei da reflexão · HC lwa refleksyon"
+        },
+        {
+          "term": "Normal",
+          "definition": "A line perpendicular to the surface at the point where the wave hits. On a flat tabletop, the normal points straight up. On a curved mirror, the normal is perpendicular to the tangent at that point. 'Normal' in physics means perpendicular — not 'usual'.",
+          "cognate": "Sp. normal · Pt. normal · HC nòmal"
+        },
+        {
+          "term": "Transmission (vs. reflection)",
+          "definition": "When a wave hits a boundary, SOME reflects and SOME transmits into the new medium. The fraction depends on the impedance contrast between the two media. A wave hits a brick wall → almost all reflects. Hits a curtain → much passes through. Light through window → most transmits. Reflection + transmission together conserve the wave's energy (minus any absorbed).",
+          "cognate": "Sp. transmisión · Pt. transmissão · HC transmisyon"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Measure from the NORMAL, not the surface",
+      "markdown": "A common mistake: \"35° from the mirror\" — that's actually 55° from the normal. Always convert to angle-from-normal FIRST, apply θᵣ = θᵢ, then convert back if the question asks in surface terms."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Mark angle of incidence (θᵢ) and angle of reflection (θᵣ) — both from the NORMAL, not from the mirror surface. Verify the angles are equal.",
+      "prompts": [
+        "Draw the surface, then the dashed NORMAL perpendicular to it.",
+        "Incoming ray on one side of the normal, outgoing on the other.",
+        "Label θᵢ = θᵣ at the normal."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "You shine a laser at a mirror so the beam makes a 35° angle with the NORMAL. At what angle does it reflect?",
+      "given": "θᵢ = 35° (from normal)",
+      "equation": "θᵣ = θᵢ",
+      "work": "θᵣ = 35°",
+      "answer": "The beam reflects at 35° from the normal, on the OTHER side of the normal."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A radar beam strikes a flat asteroid surface at 20° from the SURFACE (i.e., a glancing hit). At what angle from the surface does it reflect?",
+      "given": "20° from surface → 70° from normal",
+      "equation": "θᵣ (from normal) = θᵢ (from normal) = 70°",
+      "work": "θᵣ (from surface) = 90° − 70° = 20°",
+      "answer": "20° from the surface — same as it came in. (Always convert to angle-from-normal first.)"
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "SOUND OFF A WALL — A sound wave hits a wall at 50° from the normal. At what angle does the echo return? What if measured from the wall surface?",
+      "givenHint": "θᵢ = 50° from the normal. From the surface that's 90° − 50° = 40°.",
+      "equationHint": "θᵣ = θᵢ (both from the normal); angle-from-surface = 90° − angle-from-normal.",
+      "equationOptions": [
+        "θᵣ = θᵢ (both measured from the normal)",
+        "θᵣ = 90° − θᵢ",
+        "θᵣ = 2·θᵢ",
+        "v = f·λ"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Real asteroids are rough",
+      "markdown": "A perfectly mirrored asteroid would reflect the radar straight back if hit head-on. Real asteroids have ROUGH surfaces — radar scatters in many directions. The echo we detect is whatever reflects toward Earth. Signal strength × distance² ≈ size estimate (Day 15)."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "You shine a laser at a mirror at 35° from the normal. At what angle does it reflect? If you accidentally measured 35° from the mirror surface, what would the reflected angle be in that frame?",
+      "frame": "When a wave hits a flat surface, the angle measured from the ___ on the way IN equals the angle on the way OUT. We never measure from the ___ itself."
+    },
+    {
+      "id": "rd-ch29-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **29.1–29.5** (reflection at boundaries, the law of reflection, plane and curved mirrors, diffuse reflection, and echoes). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch29-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 29,
+      "title": "Reflection and Refraction — read & practice",
+      "sectionIds": [
+        "29.1",
+        "29.2",
+        "29.3",
+        "29.4",
+        "29.5"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k3-reflection"
+    }
+  ]
+}

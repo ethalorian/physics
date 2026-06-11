@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write U = mgh, compute PE relative to a chosen reference, and explain that only DIFFERENCES in PE are physically meaningful.",
+      "targetId": "u4.k3-gpe-mgh"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ has gravitational PE relative to Earth. As it falls, that PE converts to KE.",
+      "connection": "Near the surface, U = mgh is the cleanest formula. By Day 9, we'll meet its more general cousin for asteroid distances."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Stored energy of height\n\n**U = m · g · h** — the energy stored by lifting a mass m against gravity to a height h above a **reference level**.\n\nIt's literally the work you did lifting it: weight (mg) times distance (h). Let it fall, and gravity pays that energy back as KE.\n\nThe subtle part is the **reference**. A 2-kg book on a 1-m desk has U ≈ 20 J *relative to the floor* — and U = 0 *relative to the desktop*. Both answers are correct. PE has no absolute zero; **only DIFFERENCES in PE are physically meaningful**. You pick the zero level for convenience, you state it, and you stick with it for the whole problem."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Gravitational PE (near surface)",
+          "definition": "The energy stored by lifting a mass m against gravity to height h above a reference level. U = m · g · h. A 2-kg book on a 1-m desk: U = 2·9.81·1 ≈ 20 J (above floor). Same book on the floor: U = 0 (relative to floor). PE depends on the CHOICE of zero height — two answers can both be \"right\" if they use different references.",
+          "cognate": "Sp. energía potencial gravitatoria · Pt. energia potencial gravitacional · HC enèji potansyèl gravite"
+        },
+        {
+          "term": "Reference height",
+          "definition": "The chosen zero level for PE. Usually the floor, ground, or some convenient surface. A book on a desk has PE = 20 J relative to floor, but PE = 0 relative to the desktop. Only DIFFERENCES in PE matter physically — the choice of zero is for our convenience.",
+          "cognate": "Sp. altura de referencia · Pt. altura de referência"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "worked_example",
+      "prompt": "BOOK ON A DESK — A 2-kg book sits on a desk 1.0 m above the floor. Find its PE (a) relative to the floor, (b) relative to the desktop.",
+      "given": "m = 2 kg · g = 9.81 m/s² · h_floor = 1.0 m · h_desk = 0",
+      "equation": "U = m · g · h",
+      "work": "U_floor = 2 · 9.81 · 1.0 = 19.6 J\nU_desk = 2 · 9.81 · 0 = 0 J",
+      "answer": "Both answers are correct — they just use different zero levels."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Always STATE your reference",
+      "markdown": "\"PE = 20 J\" is meaningless without saying \"above what?\""
+    },
+    {
+      "id": "b7",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PERSON ON TOP OF A BUILDING — A 70-kg person stands at the top of a 100-m building, relative to the street. Find their PE.",
+      "givenHint": "m = 70 kg · g = 9.81 m/s² · h = 100 m (reference: the street)",
+      "equationHint": "Mass times g times height above the stated reference.",
+      "equationIds": [
+        "potential-energy"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "CART ON A RAMP — A 50-kg cart sits at the top of an 8-m ramp. Find its PE relative to the bottom of the ramp.",
+      "givenHint": "m = 50 kg · g = 9.81 m/s² · h = 8 m (reference: bottom of the ramp)",
+      "equationHint": "Same recipe — and notice the reference is part of the answer.",
+      "equationIds": [
+        "potential-energy"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 2-kg book on a desk 1.0 m above the floor. PE relative to floor? PE relative to desktop? Then complete the frame.",
+      "frame": "The book on the desk has PE = 20 J above ___, but PE = 0 above ___. Both are correct — physics cares about ___."
+    },
+    {
+      "id": "rd-ch09-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **9.4** (elastic, chemical, and gravitational potential energy; PE = mgh). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch09-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 9,
+      "title": "Energy — read & practice",
+      "sectionIds": [
+        "9.4"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k3-gpe-mgh"
+    }
+  ]
+}

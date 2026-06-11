@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute the gravitational force between two masses given their distance, and I can reason about how F scales when any input changes.",
+      "targetId": "u2.s1-compute-gravitation"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's mass: roughly 3.5 × 10¹¹ kg (estimate). Sun's mass: 1.99 × 10³⁰ kg.",
+      "connection": "Today you compute real Earth–Moon, Earth–Sun, Earth–asteroid forces. The biggest force in 2026-XJ's life is the SUN."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Calculation day — two skills, one equation\n\n**Skill 1 — compute.** Plug into F = G·m₁·m₂/r² with scientific notation. Keep the powers of ten organized: multiply the front numbers, add the exponents on top, subtract the bottom's.\n\n**Skill 2 — scale.** When only r changes, don't recompute from scratch. Use the 1/r² rule:\n\n- r × 2 → F × ¼\n- r × 3 → F × 1/9\n- r × ½ → F × **4**\n\nScaling is faster than recomputing — and it's the skill the transfer task rewards."
+    },
+    {
+      "id": "b4",
+      "type": "worked_example",
+      "prompt": "Find F between Earth (m₁ = 5.97 × 10²⁴ kg) and Moon (m₂ = 7.35 × 10²² kg) at r = 3.84 × 10⁸ m.",
+      "given": "m₁ = 5.97×10²⁴ kg · m₂ = 7.35×10²² kg · r = 3.84×10⁸ m · G = 6.67×10⁻¹¹",
+      "equation": "F = G·m₁·m₂ / r²",
+      "work": "F = (6.67×10⁻¹¹)(5.97×10²⁴)(7.35×10²²) / (3.84×10⁸)²\nF = (2.93×10³⁷) / (1.47×10¹⁷)\nF ≈ 1.99 × 10²⁰ N",
+      "answer": "≈ 2.0 × 10²⁰ N — gigantic, but felt by a gigantic Moon."
+    },
+    {
+      "id": "b5",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Find F between Earth (m₁ = 5.97 × 10²⁴ kg) and 2026-XJ (m₂ = 3.5 × 10¹¹ kg) at r = 1.0 × 10¹⁰ m (about 26 lunar distances).",
+      "givenHint": "Both masses, the distance r, and G = 6.67 × 10⁻¹¹.",
+      "equationHint": "Newton's universal gravitation — same recipe as the worked example.",
+      "equationIds": ["gravitation", "weight", "newton-2nd", "avg-speed", "displacement"]
+    },
+    {
+      "id": "b6",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "If 2026-XJ moves to r = 5.0 × 10⁹ m (HALF the previous distance), what is F now? You can SCALE rather than recompute: F_new = F_old × (factor).",
+      "givenHint": "Your previous answer for F, and the fact that r was cut in half.",
+      "equationHint": "r × ½ → F × 4. Scale your previous answer.",
+      "equationIds": ["gravitation"]
+    },
+    {
+      "id": "b7",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "If 2026-XJ is currently at 5 lunar distances from Earth and gets to 1 lunar distance, how many times larger is the gravitational force?",
+      "frame": "r shrinks by a factor of ___, so F grows by a factor of ___² = ___."
+    },
+    {
+      "id": "b8",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.s1-compute-gravitation"
+    },
+    {
+      "id": "rd-ch13-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **13.5–13.11** (the inverse-square law, gravitational fields, weight and weightlessness, ocean tides, black holes, and gravity's reach across the universe). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch13-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 13,
+      "title": "Universal Gravitation — read & practice",
+      "sectionIds": ["13.5", "13.6", "13.7", "13.8", "13.9", "13.10", "13.11"]
+    },
+    {
+      "id": "b9",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.r1-scale-f"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can construct a ray diagram for a plane mirror, locate the virtual image at equal distance behind the mirror, and explain why the image is upright + same size.",
+      "targetId": "u6.k8-mirrors"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radio telescopes are giant CURVED mirrors that focus radio waves to a detector. The Day 4 reflection law applies directly.",
+      "connection": "Today the FLAT-mirror case. Day 14 generalizes to curves (lenses). Day 15 mentions parabolic radio dishes that combine both ideas."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Where IS your mirror image, really?\n\nWhen you look in a flat mirror, your brain does ray-tracing without asking permission. Light leaves your face, reflects off the mirror obeying the Day 4 law (θᵢ = θᵣ), and enters your eye. Your brain assumes light travels in straight lines, so it traces those rays **backward** — and they converge at a point **behind** the mirror.\n\nNo light is actually there. That's a **virtual image**: it can't be caught on a screen, because the rays never really meet. But the geometry is exact and predictable:\n\n- **d_image = d_object** — the image sits exactly as far behind the mirror as you stand in front of it.\n- **h_image = h_object** — same size, no magnification.\n- **Upright** — a plane mirror never flips you top-to-bottom.\n\nTwo rays from any point on the object, reflected by the law and traced backward, are enough to locate the image. That two-ray construction is today's core skill — and it's the same construction that explains why a radio dish needs to be CURVED to focus signals to one point."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Plane mirror",
+          "definition": "A flat reflecting surface. Light obeys the law of reflection (Day 4). Produces VIRTUAL images behind the mirror at equal distance from the object. Example: your bathroom mirror, a glass storefront, a still pond surface. \"Plane\" means flat — not like an airplane; curved mirrors (concave, convex) behave differently and are not on the CPA scope.",
+          "cognate": "Sp. espejo plano · Pt. espelho plano · HC miwa plat"
+        },
+        {
+          "term": "Virtual image",
+          "definition": "An image that LIGHT DOES NOT ACTUALLY REACH. The brain TRACES light rays backward and locates the image at the convergence point. Cannot be projected on a screen. Example: your mirror image — the light reflects off the mirror and into your eye; the image APPEARS to be behind the mirror, but no light is actually there.",
+          "cognate": "Sp. imagen virtual · Pt. imagem virtual · HC imaj vityèl"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Watch out",
+      "markdown": "A virtual image cannot be 'caught' on a screen. A real image CAN. Plane mirrors always make virtual images."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Object on the left of the mirror. Draw two rays from the object's tip — through the law of reflection. Trace each reflected ray BACKWARD (dashed). They converge at the VIRTUAL image, equal distance behind the mirror.",
+      "prompts": [
+        "Draw the mirror as a vertical line and the object on the left.",
+        "Reflect two rays from the object's tip using θᵢ = θᵣ.",
+        "Extend the reflected rays backward as dashed lines and mark where they converge — the virtual image."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "IMAGE LOCATION. A 2.0-m-tall person stands 1.5 m from a flat mirror. Where is their image? How tall does it appear?",
+      "given": "height = 2.0 m · d_object = 1.5 m from mirror",
+      "equation": "d_image = d_object · h_image = h_object (plane mirror)",
+      "work": "d_image = 1.5 m behind the mirror.\nh_image = 2.0 m tall.\nImage is upright + virtual + same size.",
+      "answer": "1.5 m behind the mirror, 2.0 m tall, upright."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "CLOSING THE DISTANCE. You walk 0.5 m closer to a mirror. By how much do you and your image close on each other?",
+      "given": "You move 0.5 m toward mirror. Mirror is stationary.",
+      "equation": "d_you = − 0.5 m → d_image = + 0.5 m closer also (mirror)",
+      "work": "Your distance to mirror: ↓ 0.5 m\nImage's distance to mirror (= your distance): ↓ 0.5 m\nImage moves 0.5 m TOWARD mirror also.\nTotal closing: 1.0 m.",
+      "answer": "You and your image close on each other by 1.0 m total."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — SHORTEST MIRROR TO SEE YOURSELF. What's the shortest mirror that lets you see your full body (top of head to feet)? Hint: trace two rays — one from your eyes to your feet, one from your eyes to the top of your head. The mirror only needs to cover the midpoints.",
+      "givenHint": "Your full height h. Eyes near the top of your head. Mirror is vertical, flat.",
+      "equationHint": "Trace the eye-to-feet ray and the eye-to-head-top ray. Each reflection point sits at the MIDPOINT — so how much mirror do you actually need?",
+      "equationOptions": [
+        "h_mirror = ½ · h_person (ray midpoints)",
+        "h_mirror = h_person (full height)",
+        "d_image = 2 · d_object",
+        "v = f · λ"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "The answer to the YOUR TURN problem",
+      "markdown": "A mirror HALF your height, mounted at the right height (top edge at eye level + half of forehead, bottom edge at feet midpoint), shows you head-to-toe regardless of how far away you stand."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 2-m-tall person stands 1.5 m from a flat mirror. Where is their image? How tall does it appear? Answer in one line.",
+      "frame": "A plane mirror produces a ___ image (light doesn't actually reach it). The image is the same ___ as the object, located the same ___ behind the mirror as the object is in front. It is ___ (upright/inverted)."
+    },
+    {
+      "id": "rd-ch27-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **27.5–27.8** (opaque materials, shadows and eclipses, polarization, and 3-D viewing). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch27-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 27,
+      "title": "Light — read & practice",
+      "sectionIds": [
+        "27.5",
+        "27.6",
+        "27.7",
+        "27.8"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k8-mirrors"
+    }
+  ]
+}

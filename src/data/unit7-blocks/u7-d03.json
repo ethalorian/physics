@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can interpret electric field lines (out of + charges, into − charges, denser = stronger), use E = F/q to compute force on a charge in a known field, and explain why a NEUTRAL object can still feel a force in an electric field (induced polarization).",
+      "targetId": "u7.k2-electric-field"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Coulomb's law tells us the force between charges. But what if there are MANY charges, or a charge in empty space?",
+      "connection": "Field is the answer to 'how does one charge KNOW about another at a distance?' It's a property of every point in space — what a + test charge would feel."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Force per coulomb\n\nCoulomb's law handles two charges at a time. But space around a charge is already 'primed' — drop a test charge anywhere and it feels a push. That readiness-to-push is the **electric field**:\n\n**E = F / q** — the force PER UNIT of positive charge, in N/C.\n\nFlip it around and it becomes a tool: if you know the field, the force on any charge q is **F = E·q**. Positive charges get pushed ALONG the field; negative charges get pushed AGAINST it.\n\nWe draw fields with **field lines**: out of + charges, into − charges, denser where the field is stronger. And for a single point charge, the field strength at distance r is **E = kq/r²** — Coulomb's law with one charge factored out.\n\nToday also pays off Day 1's mystery: why did NEUTRAL paper bits jump to the balloon? The field **polarizes** them — rearranges their internal charges — and the nearer side wins the tug-of-war."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Electric field (E)",
+          "definition": "A vector quantity at every point in space. E = F/q — the force per unit positive charge. Units: N/C (or V/m). In a uniform field E = 100 N/C, a +2 C charge feels F = E·q = 200 N in the direction of E.",
+          "cognate": "Sp. campo eléctrico · Pt. campo elétrico · HC chan elektrik"
+        },
+        {
+          "term": "Field lines",
+          "definition": "Drawn arrows showing E direction at every point. Lines come OUT of + charges, INTO − charges. Denser lines = stronger field. A single + charge: field lines radiate outward like spokes. A single − charge: lines point inward. Between + and −: lines arc from + to −.",
+          "cognate": "Sp. líneas de campo · Pt. linhas de campo · HC liy chan"
+        },
+        {
+          "term": "Polarization (induced)",
+          "definition": "A neutral object placed in an electric field rearranges its own charges — the + side faces toward the − source, and vice versa. The object becomes a tiny dipole. The balloon attracts neutral paper bits because the field POLARIZES the paper: the closer (+) end feels stronger attraction than the (−) end feels repulsion → net pull toward the balloon.",
+          "cognate": "Sp. polarización · Pt. polarização · HC polarizasyon"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Field lines are a DRAWING TOOL — and E doesn't depend on the test charge",
+      "markdown": "There aren't actually 'lines' in space — the field exists at EVERY point. And E is a property of the SOURCE charges, independent of the test charge; the test charge just tells you what HAPPENS in the field."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch field lines for: (A) a single + charge alone, (B) a single − charge alone, (C) a + and − together (dipole). Where are the lines most dense? Where is E strongest?",
+      "prompts": [
+        "Three panels: A (+ alone), B (− alone), C (dipole).",
+        "Arrows OUT of +, INTO −.",
+        "Circle where the lines are densest (strongest E)."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "FORCE ON A CHARGE IN A KNOWN FIELD — An electric field E = 50 N/C points to the right (+x). What force does it exert on a +3 C charge placed in it?",
+      "given": "E = 50 N/C (in +x direction) · q = +3 C",
+      "equation": "F = E·q",
+      "work": "F = 50 · 3\nF = 150 N (in +x direction)",
+      "answer": "F = 150 N pointing right (same direction as E, because q is positive)."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "FORCE ON A NEGATIVE CHARGE IN THE SAME FIELD — Same field E = 50 N/C in +x. Now place a −2 C charge in it. Compute the force.",
+      "given": "E = 50 N/C in +x · q = −2 C",
+      "equation": "F = E·q",
+      "work": "F = 50 · (−2)\nF = −100 N (in +x direction)\nF = 100 N pointing in −x (LEFT)",
+      "answer": "F = 100 N to the LEFT. Negative charges feel force OPPOSITE to E."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — FIELD FROM A + CHARGE. A +5 μC point charge is fixed at the origin. What's the electric field magnitude at a point 0.10 m away? (E = kq/r², for a point source.)",
+      "givenHint": "q = 5 × 10⁻⁶ C · r = 0.10 m · k = 9 × 10⁹ N·m²/C²",
+      "equationHint": "E = kq/r² — one charge, so no q₂. Expect a few million N/C.",
+      "equationOptions": [
+        "E = kq/r²",
+        "E = F/q",
+        "F = k·q₁·q₂/r²",
+        "F = E·q"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Day 1's mystery, solved",
+      "markdown": "The paper bits leaping to the balloon: the balloon's negative charge creates an E field. The neutral paper polarizes — its + side closer to the balloon — so the attractive force on the + side wins. NEUTRAL objects feel forces in NON-UNIFORM fields."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "An electric field E = 100 N/C points east. A −1 μC charge sits in the field. What force does it feel? (Magnitude AND direction.) Show one line of work. Then complete the frame.",
+      "frame": "Electric field lines come OUT of ___ charges, IN to ___ charges. The force on a charge q is F = ___. For a positive q, F points along ___; for a negative q, F points ___."
+    },
+    {
+      "id": "rd-ch33-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **33.1–33.3** (electric fields, field lines, and shielding). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch33-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 33,
+      "title": "Electric Fields and Potential — read & practice",
+      "sectionIds": [
+        "33.1",
+        "33.2",
+        "33.3"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k2-electric-field"
+    }
+  ]
+}

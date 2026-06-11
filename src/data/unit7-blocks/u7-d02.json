@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply Coulomb's law to compute the electric force between two point charges, predict the direction (attract vs. repel), and explain why it's an INVERSE-SQUARE law (just like gravity).",
+      "targetId": "u7.k1-coulombs-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 2: F_grav = G m₁m₂/r². Same inverse-square SHAPE.",
+      "connection": "Today: the electric version. Same equation pattern — different constant, different 'charges' instead of masses. Both fall off as 1/r²."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The force law between charges\n\nYesterday you saw charges push and pull. Today you compute HOW HARD:\n\n**F = k · q₁ · q₂ / r²**\n\nwhere k = 9 × 10⁹ N·m²/C². Compare it to Unit 2's gravity, F = G·m₁·m₂/r² — same shape, charge swapped in for mass. Both are **inverse-square laws**: double the distance, the force drops to ¼; triple it, 1/9.\n\nTwo differences from gravity matter:\n\n- **Direction comes from the signs.** Same signs (both +, both −) → repel. Different signs → attract. Gravity only attracts.\n- **k is gigantic compared to G.** Two +1 C charges 1 m apart would repel with 9 × 10⁹ N. That's why lab charges are measured in μC (10⁻⁶ C) and nC (10⁻⁹ C) — and why electric forces, not gravity, run everything at the atomic scale."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Coulomb's law",
+          "definition": "F = k · q₁ · q₂ / r². The electric force between two point charges. k = 9 × 10⁹ N·m²/C² (Coulomb's constant). Two +1 C charges 1 m apart would repel with F = 9 × 10⁹ N — HUGE. (That's why we usually deal with μC or nC in lab.)",
+          "cognate": "Sp. ley de Coulomb · Pt. lei de Coulomb · HC lwa Coulomb"
+        },
+        {
+          "term": "Inverse-square law",
+          "definition": "Force falls off as 1/r². Double the distance → ¼ the force. Triple the distance → 1/9 the force. Gravity (F = Gm₁m₂/r²) and Coulomb force (F = kq₁q₂/r²) are both inverse-square. So is light intensity and sound intensity.",
+          "cognate": "Sp. ley del inverso del cuadrado · Pt. lei do inverso do quadrado · HC lwa envès kare"
+        },
+        {
+          "term": "Point charge",
+          "definition": "An idealization — a charge concentrated at one point with no size. Coulomb's law applies exactly to point charges, approximately to small charged objects. A charged balloon isn't a point — but at distances much larger than the balloon, it acts like one. Same for electrons + protons.",
+          "cognate": "Sp. carga puntual · Pt. carga pontual · HC chaj pwen"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The 'square' is in the DENOMINATOR — and don't lose the sign",
+      "markdown": "If r doubles, you divide F by 2² = 4. **NOT** by 2. And the SIGN of the force tells you direction: same signs (both +, both −) → repel; different signs → attract. Don't lose the sign in algebra."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch two charged spheres with the force arrows on each. Show what happens when you DOUBLE the distance between them. (Inverse-square — force drops by 4.)",
+      "prompts": [
+        "Two spheres, force arrows on EACH (equal and opposite).",
+        "Redraw at double the distance.",
+        "Label the new force as F/4."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "TWO EQUAL POSITIVE CHARGES — Two equal +2 μC charges are 0.30 m apart. Compute the force on each.",
+      "given": "q₁ = q₂ = +2 × 10⁻⁶ C · r = 0.30 m · k = 9 × 10⁹ N·m²/C²",
+      "equation": "F = k · q₁ · q₂ / r²",
+      "work": "F = (9 × 10⁹) · (2 × 10⁻⁶) · (2 × 10⁻⁶) / (0.30)²\nF = (9 × 10⁹) · (4 × 10⁻¹²) / 0.09\nF = (3.6 × 10⁻²) / 0.09\nF = 0.4 N",
+      "answer": "F = 0.4 N on each charge, pushing them APART (like charges repel)."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "INVERSE-SQUARE SCALING — Same two +2 μC charges, but now 0.60 m apart (double the distance). What's the new force?",
+      "given": "r' = 0.60 m = 2 · 0.30 m",
+      "equation": "F' = F / (r'/r)² = F / 4",
+      "work": "F' = 0.4 / 4\nF' = 0.1 N",
+      "answer": "F' = 0.1 N. Doubling distance → force divided by 4. Inverse-square."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — PROTON AND ELECTRON IN A HYDROGEN ATOM. A proton (+e) and an electron (−e) are 5.3 × 10⁻¹¹ m apart (Bohr radius). Compute the magnitude of the Coulomb attraction. e = 1.6 × 10⁻¹⁹ C.",
+      "givenHint": "q₁ = q₂ = 1.6 × 10⁻¹⁹ C (magnitudes) · r = 5.3 × 10⁻¹¹ m · k = 9 × 10⁹ N·m²/C²",
+      "equationHint": "Same move as the worked example: F = kq₁q₂/r². Watch the exponents — the answer is around 10⁻⁸ N.",
+      "equationIds": [
+        "coulomb"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why atoms hold together",
+      "markdown": "The Coulomb attraction inside an atom is ENORMOUS at that scale — about 10⁸ N when scaled per kg of mass. That's what holds atoms together. Gravity, by contrast, is irrelevant at this distance."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Two +3 μC charges are 0.1 m apart. Compute the force. (k = 9 × 10⁹.) Show one line of work. Then complete the frame.",
+      "frame": "Coulomb's law and Newton's gravity both fall off as ___. The Coulomb constant k is much ___ than the gravitational constant G, so electric forces dominate at the ___ scale; gravity dominates at the ___ scale."
+    },
+    {
+      "id": "rd-ch32-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **32.3–32.7** (Coulomb's law; conductors and insulators; charging by friction, contact, and induction; charge polarization). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch32-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 32,
+      "title": "Electrostatics — read & practice",
+      "sectionIds": [
+        "32.3",
+        "32.4",
+        "32.5",
+        "32.6",
+        "32.7"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k1-coulombs-law"
+    }
+  ]
+}

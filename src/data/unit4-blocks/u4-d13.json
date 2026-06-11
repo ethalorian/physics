@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can release a cart from a measured height, predict v at the bottom from mgh = ½mv², measure v with a photogate, and confirm ME conservation across 3 trials.",
+      "targetId": "u4.s4-vernier-ramp-lab"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "ME conservation is the rule we'll use Day 19 to convert asteroid PE to impact KE.",
+      "connection": "Today we confirm the rule. If our cart's measured v matches the predicted v, the Day 19 yield calculation rests on solid ground."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 4.2 — PE → KE on a ramp",
+      "markdown": "**Driving question:** Does v at the bottom of an incline (predicted from mgh = ½mv²) match the photogate's measured v, across 3 release heights? Can we recover g from a plot of v² vs. h?\n\n**Equipment:** Vernier dynamics track + cart + tilt apparatus · photogate + LabQuest + Logger Pro · meter stick + protractor (or pre-measured incline angle) · balance for cart mass.\n\n**How this lab serves the year's question:** if our lab confirms PE → KE at small scale, we trust it at asteroid scale on Day 19."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Set the incline at ~15°. Measure the incline angle and length.",
+        "Release the cart from h = 10 cm (above the photogate). Record measured v.",
+        "Compute predicted v = √(2gh). Compare to measured. Compute % difference.",
+        "Repeat at h = 20 cm. Then h = 30 cm. Three trials total.",
+        "Plot v_measured² vs. h. The slope should be 2g — does it match?"
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Hands clear of the cart at the bottom. Catch the cart. Photogate clamped firmly."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Not in class today?",
+      "markdown": "Run the freefall simulation below: drop the object from three different heights and read the impact speed each time. Those are your v_meas values; your predicted v is still √(2gh). Fill the data table from the sim and do the same v² vs. h analysis."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "freefall-cliff"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch your incline + photogate. Record h₁, h₂, h₃ as you run trials.",
+      "prompts": [
+        "Mark the release height h measured VERTICALLY, not along the track.",
+        "Show where the photogate reads v.",
+        "Note the incline angle."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "h (m)", "v_pred (m/s)", "v_meas (m/s)", "% diff", "v_meas² (m²/s²)", "Notes"],
+      "rows": 3,
+      "plot": true,
+      "xCol": "h (m)",
+      "yCol": "v_meas² (m²/s²)",
+      "patternPrompt": "Three release heights (0.10 m, 0.20 m, 0.30 m). Does measured v match √(2gh)? The v² vs. h plot's slope should be 2g ≈ 19.6."
+    },
+    {
+      "id": "b10",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "Did v_predicted match v_measured? Within what %? Was the gap larger or smaller at higher h? If you plotted v_meas² vs. h, what was the slope — did 2g ≈ 19.6 match?",
+      "interpretPrompt": "From your slope, what value of g does your data imply? Compared to 9.81, was your measurement high, low, or right on? And the asteroid connection: how does this serve the year's question?",
+      "frame": "My trials confirmed mgh = ½mv² within ___ %. The biggest source of error was ___. From my slope, I estimated g ≈ ___ m/s²."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write a CLAIM about what your lab showed, then EVIDENCE (your slope or one % diff), then REASONING (why the slope is approximately 2g).",
+      "frame": "CLAIM: ___. EVIDENCE: ___. REASONING: ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.s4-vernier-ramp-lab"
+    }
+  ]
+}

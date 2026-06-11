@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute power dissipated by a resistor using any of the three forms, pick the form matching what's GIVEN, and explain why a motor or resistor heats up when current flows (P = I²R → heat).",
+      "targetId": "u7.k6-electric-power"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Days 4-6: V, I, R individually.",
+      "connection": "Today: power = rate of energy delivery. Same idea as Unit 4 — but now for electricity. P = V·I is the master equation of the Car Project's electrical power."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Power: how fast a circuit moves energy\n\nA volt is a joule per coulomb. An amp is a coulomb per second. Multiply them and the coulombs cancel:\n\n**P = V · I**  →  (joules/coulomb) · (coulombs/second) = **joules per second = watts (W)**\n\nThat's power: the RATE at which the circuit delivers (or burns) energy. Substitute Ohm's law (V = IR) into it and you get two more forms of the same fact:\n\n- **P = V · I** — use when you know V and I\n- **P = I² · R** — use when you know I and R\n- **P = V² / R** — use when you know V and R\n\nPick the form using the variables you KNOW. And the heat connection: every resistor (and every motor winding) carrying current dissipates **P = I²R** as heat. That's why a running motor is warm — and why we'll care about it in the Car Project.\n\nTotal energy is power × time: **U = P · t**. A 1000 W toaster running 300 s uses 300 000 J. Your electric bill counts kilowatt-hours (kW · hours) — TOTAL energy, not rate."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Electric power (P)",
+          "definition": "Rate of energy delivered or dissipated. P = V · I. Units: watts (W) = joules / second. Example: a 9V battery driving 2 A through a motor: P = 18 W of electrical power. Some becomes mechanical work; some becomes heat.",
+          "cognate": "Sp. potencia eléctrica · Pt. potência elétrica · HC pwisans elektrik"
+        },
+        {
+          "term": "Three forms of P",
+          "definition": "Substitute Ohm's law into P = VI: P = I²R (when you know I and R), P = V²/R (when you know V and R). All three describe the same thing. Example: same 4 Ω resistor in a 9 V circuit. By any form: P = V·I = 9·2.25 = 20.25 W = V²/R = 81/4 = 20.25 W = I²R = 5.06·4 = 20.25 W ✓. Pick the form using the variables you KNOW.",
+          "cognate": "Sp. tres formas de P · Pt. três formas de P · HC twa fòm P"
+        },
+        {
+          "term": "Watt (W)",
+          "definition": "SI unit of power. 1 W = 1 J/s = 1 V·A. Named for James Watt. Example: LED bulb: 8 W. Incandescent bulb: 60 W. Toaster: 1000 W. Hair dryer: 1500 W. Microwave: 1100 W.",
+          "cognate": "Sp. vatio · Pt. watt · HC wat"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Power is a RATE — energy is a TOTAL",
+      "markdown": "Power is energy per time. Energy is the total. Confusing them is a common error. Watts measure the RATE of energy use; kilowatt-hours (kWh) on your electric bill measure TOTAL energy (kW · hours)."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch a resistor with current flowing through it. Show heat radiating outward (wavy lines). Write the three forms of P next to it. Annotate which form to use with which givens.",
+      "prompts": [
+        "Resistor + current arrow + wavy heat lines.",
+        "P = V·I, P = I²R, P = V²/R written beside it.",
+        "Annotate: which form goes with which pair of givens?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "POWER DISSIPATED BY A RESISTOR — A 5 Ω resistor carries 2 A of current. How much power does it dissipate as heat?",
+      "given": "I = 2 A · R = 5 Ω",
+      "equation": "P = I² · R",
+      "work": "P = (2)² · 5\nP = 4 · 5\nP = 20 W",
+      "answer": "P = 20 W dissipated as heat in the resistor."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "HOUSEHOLD APPLIANCE — A toaster runs on 120 V and draws 8 A. What's its power? How much energy does it use in 5 minutes of operation?",
+      "given": "V = 120 V · I = 8 A · t = 5 min = 300 s",
+      "equation": "P = V · I ; energy = P · t",
+      "work": "P = 120 · 8 = 960 W ≈ 1 kW\nU = 960 · 300 = 288 000 J ≈ 288 kJ\nOr: 960 W · (5/60 hr) ≈ 0.08 kWh",
+      "answer": "P ≈ 960 W ≈ 1 kW. 5 min uses ≈ 0.08 kWh of energy."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "CAR MOTOR POWER — The Car Project motor: V = 9 V, R ≈ 4 Ω. Find I, then power delivered, using P = V²/R AND P = V·I to check yourself.",
+      "givenHint": "V = 9 V · R ≈ 4 Ω. First find I from Ohm's law.",
+      "equationHint": "I = V/R, then P = V²/R — and check that P = V·I gives the same number.",
+      "equationOptions": [
+        "P = V² / R",
+        "P = V · I",
+        "P = I² · R",
+        "V = I · R"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ The Car motor gets WARM",
+      "markdown": "The Car Project motor (9V, ~2A) dissipates ~18-20 W. NOT all 18 W becomes mechanical power — most goes to heat (P = I²R loss in the motor's windings). Efficiency of a small DC motor: typically 30-50%. The rest comes out as heat. Touch a motor that's been running — it's WARM."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 120 V hair dryer draws 12.5 A. How much power does it use? How much energy in 2 minutes of use? Show one line of work for each.",
+      "frame": "Power equals voltage times ___, in units of ___. The three forms are P = V·I, P = ___, and P = V²/R. Choose the form by which variables you ___."
+    },
+    {
+      "id": "rd-ch34-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **34.11** (electric power). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch34-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 34,
+      "title": "Electric Current — read & practice",
+      "sectionIds": [
+        "34.11"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k6-electric-power"
+    }
+  ]
+}

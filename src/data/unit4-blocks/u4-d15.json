@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write U_spring = ½kx², compute spring PE for a given compression, and apply ½kx² = ½mv² (or = mgh) to launch problems.",
+      "targetId": "u4.s5-spring-pe"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Spring PE and KE have IDENTICAL mathematical structure: both are ½·constant·squared.",
+      "connection": "A spring-launched projectile is a clean model for any device that stores energy and releases it as motion."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Where the ½ comes from\n\nThe spring force grows LINEARLY from 0 (at x = 0) to k·x (at compression x).\n\nWork = AVERAGE force × distance. Average force = ½·(0 + kx) = ½kx.\n\nTherefore: **W = ½kx · x = ½·k·x²**. That stored work IS the spring PE.\n\nOnce stored, it spends like any other energy. The launch recipe:\n\n- **Horizontal launch:** ½kx² = ½mv² → solve for v\n- **Vertical launch:** ½kx² = mgh → solve for h\n\nEither way, you're just moving Joules from one column of the energy ledger to another."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Spring PE",
+          "definition": "The energy stored in a compressed or stretched spring: U_spring = ½·k·x². Always positive. It's ½kx², NOT kx² — the ½ comes from averaging the force as it grows from 0 to kx during compression. A spring with k = 500 N/m compressed 0.2 m stores U = ½·500·0.04 = 10 J.",
+          "cognate": "Sp. energía potencial elástica · Pt. energia potencial elástica · HC enèji potansyèl resò"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "note",
+      "title": "Same shape, deep reason",
+      "markdown": "½kx² has the SAME structure as ½mv². Both are ½ · (a property) · (a quantity)². That's not a coincidence — both come from integrating a linearly-growing force."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "A spring launch, in energy language",
+      "caption": "The stored ½kx² spends as motion — and if the launch is vertical, the motion spends as height. Same Joules, three accounts.",
+      "links": [
+        { "label": "Spring PE", "sublabel": "U = ½kx² — stored in the compression" },
+        { "label": "Kinetic energy", "sublabel": "½mv² — the cart leaves the spring" },
+        { "label": "Gravitational PE", "sublabel": "mgh — if launched upward, KE buys height" }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "SPRING LAUNCHES A CART. A spring (k = 500 N/m) is compressed 0.20 m, then released. A 0.4-kg cart sits against the spring, free to slide on a frictionless track. Find the cart's speed when it leaves the spring.",
+      "given": "k = 500 N/m · x = 0.20 m · m = 0.4 kg · horizontal, frictionless",
+      "equation": "U_spring = ½ · k · x² = KE_cart = ½ · m · v²",
+      "work": "U = ½ · 500 · (0.2)² = ½ · 500 · 0.04 = 10 J\n½ · 0.4 · v² = 10\nv² = 50\nv ≈ 7.07 m/s",
+      "answer": "≈ 7.07 m/s. All 10 J of spring PE became cart KE."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "VERTICAL LAUNCH. A spring with k = 800 N/m is compressed 5 cm (0.05 m). It launches a 0.1-kg ball straight up (friction-free). How high does the ball go?",
+      "givenHint": "k = 800 N/m · x = 0.05 m · m = 0.1 kg.",
+      "equationHint": "All the spring PE becomes gravitational PE at the top: ½kx² = mgh → solve for h.",
+      "equationOptions": ["½·k·x² = m·g·h", "½·k·x² = ½·m·v²", "F_spring = −k·x", "P = W / t"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your vertical-launch answer, then complete the frame.",
+      "frame": "A spring launches the cart because the spring's ___ is fully converted into the cart's ___. The total energy is conserved."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.s5-spring-pe"
+    }
+  ]
+}

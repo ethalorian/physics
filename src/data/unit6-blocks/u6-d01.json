@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe how a wave carries ENERGY and INFORMATION through a medium without carrying matter, and name the unit's three payoff days (Day 15 radar, Day 16 meteor color, Day 17 seismic + tsunami).",
+      "targetId": "u6.anchor-energy-not-matter"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Units 1–5: 2026-XJ — distance, velocity, mass, impact yield, damage radii. But every NUMBER had to come from a measurement.",
+      "connection": "The measurement was RADAR. Radio waves SENT, BOUNCED, RECEIVED — and Doppler-shifted by the moving asteroid. Unit 6 is the framework that makes radar work. Day 15 is the reveal."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "NASA / Planetary Defense Briefing — Update 6",
+      "markdown": "For five units, you have been computing things about 2026-XJ. Distance. Velocity. Mass. Trajectory. Impact yield. Damage radii. Every one of those numbers had to come from a measurement.\n\nBut HOW did NASA measure them? You haven't been told. The answer is **RADAR**.\n\nFor decades, NASA's planetary radar network has tracked near-Earth asteroids by sending out radio pulses and timing the return. The **TIME** tells distance. The frequency **SHIFT** tells velocity (Doppler effect). The signal **STRENGTH** tells size. Every number you've used was derived from bounced radio waves.\n\nUnit 6 reveals the measurement chain. By Day 15, you will walk through the FULL chain — radar pulse out, radar echo back, what each piece of the signal tells us about 2026-XJ.\n\nTwo new pieces of data this unit:\n\n**(1)** 2026-XJ has a **70% chance of impacting OCEAN**, not land. Earth is 70% water. If it splashes down instead of landing, the damage mechanism shifts from thermal-pulse-and-shockwave to **TSUNAMI**. Day 17 builds the tsunami physics.\n\n**(2)** Meteor color tells temperature. The atmospheric-entry glow from Day 10 of Unit 5 is yellow-white. Why not red, why not blue? **Wien's law** connects color directly to temperature. Day 16 explains.\n\n*This is fiction. The physics — and the equations — are real.*"
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## What travels — and what doesn't\n\nA **wave** is a disturbance that carries **energy and information** through a medium — *without carrying the medium itself*. The cork on the ocean bobs in place while the wave races past. The air molecules near your ear wiggle back and forth while a friend's voice crosses the room.\n\nTwo basic kinds, by how the medium moves:\n\n- **Transverse** — the medium wiggles **perpendicular** to the wave's travel (rope shaken up-down, light, seismic S-waves).\n- **Longitudinal** — the medium wiggles **parallel** to the wave's travel, as compressions and rarefactions (sound, a push-pulled slinky, seismic P-waves).\n\nThis one idea — *energy travels, matter stays* — is why a radio pulse from Earth can reach 2026-XJ millions of km away, bounce, and come home carrying information. Nothing material makes the trip. The **pattern** does."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — the slinky demo",
+      "markdown": "A slinky stretched along the floor, two students holding the ends. Pulse it side-to-side (transverse), then push-pull it (longitudinal). If you're at home: tie a rope or phone-charger cable to a doorknob and flick it — watch a single point on the rope. Does it travel to the door, or just wiggle in place?"
+    },
+    {
+      "id": "b6",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "Demo: a slinky stretched along the floor. Pulse it side-to-side (transverse), then push-pull (longitudinal). Watch CAREFULLY. What TRAVELED down the slinky? What did NOT travel?",
+      "interpretPrompt": "What do you WONDER about how a wave could measure an asteroid millions of km away?",
+      "frame": "I notice ___. I wonder ___."
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Trace what happens to a single coil during each kind of pulse. Does any coil move all the way across the slinky? What DOES travel from end to end?",
+      "prompts": [
+        "Two panels: transverse pulse, longitudinal pulse.",
+        "Mark ONE coil and show its motion with arrows.",
+        "Write what travels end to end (and what doesn't)."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Wave",
+          "definition": "A disturbance that transfers ENERGY (and information) through a medium without transferring matter. The medium oscillates in place; only the pattern moves. A floating cork bobs up and down as an ocean wave passes — but doesn't move with the wave. Sound makes air molecules wiggle in place; the COMPRESSION pattern travels.",
+          "cognate": "Sp. onda · Pt. onda · HC vag"
+        },
+        {
+          "term": "Transverse wave",
+          "definition": "The medium oscillates PERPENDICULAR to the direction the wave travels. A rope shaken up and down. Light waves. Seismic S-waves. Picture the wave moving →, but the medium wiggling ↕ — two different directions.",
+          "cognate": "Sp. onda transversal · Pt. onda transversal · HC vag transvèsal"
+        },
+        {
+          "term": "Longitudinal wave",
+          "definition": "The medium oscillates PARALLEL to the direction the wave travels — compressions and rarefactions. Sound waves in air. A slinky pushed-and-pulled along its length. Seismic P-waves. A wave's TYPE (transverse / longitudinal) is about how the medium moves, NOT about what carries the wave.",
+          "cognate": "Sp. onda longitudinal · Pt. onda longitudinal · HC vag longitidinal"
+        }
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The medium does NOT travel",
+      "markdown": "Only the DISTURBANCE travels. A wave can move kilometers; the water molecules barely shift. If you think the water itself crosses the ocean, ask the cork — it just bobs."
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Three payoff days",
+      "markdown": "Unit 6 has THREE payoff days. **Day 15: RADAR** — every 2026-XJ number traces to bounced radio waves. **Day 16: METEOR COLOR** — Wien's law connects glow color to temperature. **Day 17: SEISMIC + TSUNAMI** — mechanical waves carry impact damage across the planet."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "MY GUESS — If a wave can transfer energy without transferring matter, how could a signal from Earth ever measure something millions of km away? (Day 15 is the answer.)",
+      "frame": "My guess: we could send ___ and learn about the asteroid from ___."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "You wave the end of a rope. A pulse travels down the rope. What's moving through the rope: rope material, energy, or both? Explain in two sentences.",
+      "frame": "What moves through the rope is ___. The rope material itself ___."
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.anchor-energy-not-matter"
+    }
+  ]
+}

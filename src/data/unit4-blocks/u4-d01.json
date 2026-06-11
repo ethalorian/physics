@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can articulate why MOMENTUM gave us force at impact, but didn't give us a DAMAGE answer — and I can predict that something involving SPEED-SQUARED is doing the work.",
+      "targetId": "u4.anchor-damage-energy"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 3: 2026-XJ's momentum at impact is enormous, and the AVERAGE force of impact is ~10¹⁴ N. But \"force\" doesn't tell us crater size, fire radius, or tsunami height.",
+      "connection": "What people quote for asteroid impacts is the asteroid's KINETIC ENERGY in TNT-equivalents. Unit 4 builds that framework. Day 19 cashes it in."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "NASA / Planetary Defense Briefing — Update 4",
+      "markdown": "The Unit 3 DART feasibility analysis came back **INCONCLUSIVE**. The required Δv depends sensitively on lead time — and we may not have lead time. So now Unit 4 has to answer the OTHER branch: if 2026-XJ does impact, **HOW BAD IS IT ACTUALLY?**\n\nReports talk about \"Tunguska-scale\" or \"Chicxulub-scale\" events — but those are TNT-equivalent yields. To compute a yield, we need a framework we don't have yet: **ENERGY**. Specifically, the asteroid's KINETIC ENERGY at impact, converted into the same units the public uses for nuclear weapons and historical impacts.\n\nUnit 4 builds that framework. Day 19 is the payoff — we put a number on 2026-XJ and place it on the same scale as Hiroshima, Tunguska, Chelyabinsk, and Chicxulub.\n\nAnd there's a parallel question we owe ourselves: could 2026-XJ have ESCAPED — slipped past Earth and out of the system — if it had been moving faster, or if we'd pushed it sooner? That's escape velocity. The same energy framework answers both questions.\n\n*This is fiction. The physics — and the equations — are real.*"
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## Damage isn't just force\n\nUnit 3 ended with a number: the average force of a 2026-XJ impact is around 10¹⁴ N. Impressive — but it doesn't answer the question anyone actually asks: *how bad?* Crater size, fire radius, tsunami height — none of those come from force alone.\n\nToday's demo asks a simpler version of the same question. Three drops onto the floor:\n\n- **A** — a tennis ball from **waist** height\n- **B** — the *same* tennis ball from **head** height\n- **C** — a **baseball** from head height\n\nRank \"how hard did the floor get hit\" 1-2-3. A vs. B: same mass, more **height** (so more speed at the floor). B vs. C: same height, more **mass**. Two things matter for damage — and by the end of the unit you'll see that one of them matters *more* than the other, because it comes in **squared**."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — the drop demo",
+      "markdown": "We dropped a tennis ball from waist height, the same tennis ball from head height, and a baseball from head height, and ranked how hard the floor got hit. At home, run the freefall simulation below: drop from different heights and watch how the impact speed grows with height — that speed is what carries the damage."
+    },
+    {
+      "id": "b6",
+      "type": "sim_embed",
+      "simulationSlug": "freefall-cliff"
+    },
+    {
+      "id": "b7",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "Watch the drop demo: tennis ball from waist, tennis ball from head, baseball from head. Rank \"how hard did the floor get hit\" 1-2-3. What did you NOTICE?",
+      "interpretPrompt": "What do you WONDER?",
+      "frame": "I notice ___. I wonder ___."
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Rank the three drops 1-2-3. What stays the same A vs. B? What changes? Same question for B vs. C. What TWO things matter for damage?",
+      "prompts": [
+        "Three quick panels: A (tennis, waist), B (tennis, head), C (baseball, head).",
+        "A vs. B: what stayed the same, what changed?",
+        "Name the TWO things that matter for damage."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "MY GUESS — does damage grow like m·v, or faster? Commit to a guess before the spoiler below.",
+      "frame": "I think damage grows like ___, because ___."
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Spoiler",
+      "markdown": "The answer is **KINETIC ENERGY = ½ · m · v²** — and that SQUARED v is the load-bearing feature of the entire unit. We don't formalize it today; we feel it."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "If you DOUBLE a moving car's SPEED, does the damage in a crash double, or more than double? Why might that be? (One sentence, your best guess.)",
+      "frame": "I think the damage ___, because ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.anchor-damage-energy"
+    }
+  ]
+}

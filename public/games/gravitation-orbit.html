@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ORBIT // a gravitation arcade</title>
+<!--
+  ORBIT — a gravitation arcade in three acts. Fifth cabinet, filling the
+  Unit 2 (Gravitation & Fields) gap between PUSH and IMPACT. Single file.
+
+  Real inverse-square gravity: a = GM/r², integrated live, with a dotted
+  TRAJECTORY PREDICTION that reshapes as you burn — your ellipse, drawn.
+  The telemetry star is the INVERSE-SQUARE METER: the g(r) curve with your
+  ship riding it as a live dot.
+
+  ACT I   FIRST ORBIT — hold the ring; discover that LOWER means FASTER
+  ACT II  BEACON RUN  — transfer orbits, chase beacons, mind the moon
+  ACT III 2026-XJ     — the asteroid from Unit 1 arrives; deflect it with
+                        a GRAVITY TRACTOR (F = Gm₁m₂/r², made playable)
+
+  Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#818cf8; --neon2:#34d399; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#080a16ee; --edge:#818cf855;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#04050c}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #818cf822, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #818cf888}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #818cf866;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:var(--neon2)} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#0a0c1c;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #818cf866;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#0c0f22;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#10142c}
+  .choice.right{background:#0c2a22;border-color:var(--neon2);color:var(--neon2)}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #34d39955;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#0c1020;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const hyp=Math.hypot;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('orbit2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('orbit2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('orbit2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('orbit2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false,thrustGain=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  const o=AC.createOscillator();o.type='sawtooth';o.frequency.value=44;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=220;
+  thrustGain=AC.createGain();thrustGain.gain.value=0;
+  o.connect(lp);lp.connect(thrustGain);thrustGain.connect(AC.destination);o.start();}catch(e){}}
+function setThrust(on){if(!AC||!thrustGain)return;
+  thrustGain.gain.setTargetAtTime(on&&!muted?0.06:0,AC.currentTime,0.05);}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function boom(){if(!AC||muted)return;const len=AC.sampleRate*0.6,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+  const s=AC.createBufferSource();s.buffer=buf;const g=AC.createGain();g.gain.value=.5;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=380;
+  s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'orbit-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== world + level data
+   Game units: the planet sits at the origin, radius PR. GM sets everything:
+   g(r) = GM/r², v_circ(r) = √(GM/r). Thrust burns along/against velocity.
+   ACT I  ring:[r0,r1] — stay inside the band for holdT seconds.
+   ACT II beacons:[{r,ang°,orbiting}] — touch them all. moon optional.
+   ACT III asteroid:{r,ang°,speed,m} on an impact course — gravity-tractor it
+          until its PREDICTED path misses the planet by missBy. */
+const PR=26, GM=51200, THR=8, BURNRATE=1;  // fuel burns 1/s of thrust
+const ACT_META={
+ 1:{name:'FIRST ORBIT', col:'#34d399', blurb:'Hold the glowing ring. You’ll fight every instinct you have: out here, slowing down drops you and speeding up lifts you — and LOWER orbits move FASTER.'},
+ 2:{name:'BEACON RUN', col:'#fbbf24', blurb:'Beacons on other orbits. Burn prograde to climb, retrograde to dive, and learn why the fastest way to catch something ahead of you is to slow down.'},
+ 3:{name:'2026-XJ', col:'#f87171', blurb:'The asteroid from Unit 1 is back, and it is not a drill. Park beside it and let YOUR gravity pull it off course — F = Gm₁m₂/r², now with a deadline.'},
+};
+const ACT1=[
+ {name:'THE WIDE RING', fuel:14, holdT:6, startR:120, startVF:0.82,
+  ring:[70,95], beacons:[], moon:null, asteroid:null, maxR:260,
+  tip:'You start on an ellipse. The dotted line is your future — burn retrograde (◀) and watch the far side of your orbit DROP toward the ring. Trajectory first, position second: out here you steer the ellipse, not the ship.'},
+ {name:'THE LOW LANE', fuel:13, holdT:6, startR:115, startVF:1.0,
+  ring:[52,68], beacons:[], moon:null, asteroid:null, maxR:240,
+  tip:'A lower ring. Notice your speed readout as you descend: faster, not slower — v = √(GM/r). The price of altitude is speed, and gravity sets the exchange rate.'},
+ {name:'THE HIGH PERCH', fuel:12, holdT:6, startR:80, startVF:1.0,
+  ring:[130,155], beacons:[], moon:null, asteroid:null, maxR:300,
+  tip:'Climbing costs TWO burns: one to raise the far side of your ellipse, then one AT the top to round it off. Skip the second and you’ll fall right back to where you started. Gravity keeps receipts.'},
+ {name:'THE NEEDLE', fuel:11, holdT:7, startR:140, startVF:0.78,
+  ring:[82,94], beacons:[], moon:null, asteroid:null, maxR:280,
+  tip:'A narrow band and a sloppy ellipse to fix. Watch the inverse-square meter: g changes fast down low and slowly up high — your margins shrink as you descend.'},
+ {name:'THE SKIM', fuel:10, holdT:7, startR:120, startVF:0.9,
+  ring:[36,46], beacons:[], moon:null, asteroid:null, maxR:240,
+  tip:'Just above the atmosphere, where g is strongest and orbits are fastest. One sloppy retro-burn and the dotted line clips the planet. The prediction never lies — believe it before you believe your nerve.'},
+];
+const ACT2=[
+ {name:'THREE AHEAD', fuel:14, holdT:0, startR:90, startVF:1.0,
+  ring:null, beacons:[{r:90,ang:80,orbiting:true},{r:90,ang:170,orbiting:true},{r:90,ang:260,orbiting:true}],
+  moon:null, asteroid:null, maxR:260,
+  tip:'Three beacons share your orbit, all ahead of you. You cannot just throttle up — speeding up RAISES you onto a slower track. The trick: retro-burn to a lower, FASTER lane, lap them, and climb back. Orbital mechanics is a passing maneuver.'},
+ {name:'THE LADDER', fuel:14, holdT:0, startR:60, startVF:1.0,
+  ring:null, beacons:[{r:60,ang:140,orbiting:true},{r:100,ang:40,orbiting:true},{r:145,ang:300,orbiting:true}],
+  moon:null, asteroid:null, maxR:300,
+  tip:'One beacon per rung. Climb with prograde burns at the bottom of your transfer, round off at the top — each rung costs energy, and the inverse-square meter shows why the high rungs come cheaper than you fear.'},
+ {name:'MOONLIGHT', fuel:13, holdT:0, startR:80, startVF:1.0,
+  ring:null, beacons:[{r:80,ang:200,orbiting:true},{r:130,ang:90,orbiting:true},{r:170,ang:340,orbiting:true}],
+  moon:{r:200,ang:0,gm:5200,rad:7,speed:1}, asteroid:null, maxR:340,
+  tip:'A moon patrols the high ground, and every mass pulls on every other — Newton allows no exceptions. Near the moon your dotted line bends in ways the planet alone can’t explain. Use it or fear it.'},
+ {name:'THIN TANKS', fuel:9, holdT:0, startR:120, startVF:1.0,
+  ring:null, beacons:[{r:55,ang:30,orbiting:true},{r:120,ang:220,orbiting:true},{r:160,ang:120,orbiting:true}],
+  moon:null, asteroid:null, maxR:300,
+  tip:'Nine seconds of fuel for three orbits’ worth of errands. Plan transfers like a miser: every burn at the WRONG point of the orbit costs double. Where you burn matters more than how long.'},
+ {name:'GRAND TOUR', fuel:12, holdT:0, startR:90, startVF:1.0,
+  ring:null, beacons:[{r:50,ang:300,orbiting:true},{r:90,ang:150,orbiting:true},{r:135,ang:10,orbiting:true},{r:175,ang:230,orbiting:true}],
+  moon:{r:210,ang:120,gm:5200,rad:7,speed:1}, asteroid:null, maxR:350,
+  tip:'Four beacons, one moon, one tank. The full curriculum in one flight plan. Fly the ellipses, read the meter, respect the moon.'},
+];
+const ACT3=[
+ {name:'CONTACT LIGHT', fuel:14, holdT:0, startR:90, startVF:1.0,
+  ring:null, beacons:[], moon:null, maxR:380,
+  asteroid:{r:330,ang:25,speed:11,rad:5,gms:110,missBy:55},
+  tip:'There it is — 2026-XJ, the rock from Unit 1, inbound for real this time. Do NOT touch it. Park close and hover: your ship’s gravity pulls it, weakly, constantly — and F = Gm₁m₂/r² means HALF the distance buys FOUR times the pull. Watch its predicted path bend away.'},
+ {name:'CLOSER', fuel:13, holdT:0, startR:90, startVF:1.0,
+  ring:null, beacons:[], moon:null, maxR:380,
+  asteroid:{r:330,ang:155,speed:13,rad:5,gms:110,missBy:60},
+  tip:'Faster rock, same physics. The tractor rewards courage quadratically and punishes it the same way — drift inside five units and you’re a crater on a crater. Find the radius where pull beats panic.'},
+ {name:'THE LONG REACH', fuel:12, holdT:0, startR:60, startVF:1.0,
+  ring:null, beacons:[], moon:null, maxR:400,
+  asteroid:{r:350,ang:265,speed:12,rad:5,gms:110,missBy:60},
+  tip:'You start in a low parking orbit and the rock is WAY out there. Spend fuel climbing to meet it early — a nudge applied far from the planet moves the impact point more than a heroic shove at the last second. Leverage is a gravity concept too.'},
+ {name:'CROWDED SKY', fuel:12, holdT:0, startR:90, startVF:1.0,
+  ring:null, beacons:[], moon:{r:180,ang:200,gm:5200,rad:7,speed:1}, maxR:400,
+  asteroid:{r:340,ang:70,speed:13,rad:5,gms:110,missBy:60},
+  tip:'A moon stands between you and the intercept. Every mass pulls every other — the moon tugs you, the planet tugs the rock, you tug the rock, and the rock even tugs you back. Newton’s third law never sleeps, even at this scale.'},
+ {name:'2026-XJ · FINAL APPROACH', fuel:11, holdT:0, startR:80, startVF:1.0,
+  ring:null, beacons:[], moon:{r:200,ang:340,gm:5200,rad:7,speed:1}, maxR:420,
+  asteroid:{r:360,ang:200,speed:15,rad:6,gms:110,missBy:70},
+  tip:'The big one — fast, heavy, and the window is closing. Everything the arcade taught you is on this screen: thrust is force, orbits are energy, and one small mass pulling on another, patiently, at the right distance, can move a mountain. Go move it.'},
+];
+const CALLS=['STATION K','HIGH HARBOR','THE SHELF','FARSIDE','RELAY 9','THE ANNEX','DEEP YARD'];
+function endless1(w){
+  const lo=Math.round(rnd(40,120)),width=Math.max(9,22-w*1.2);
+  return {name:pick(CALLS)+' · ORBIT '+w, fuel:Math.max(8,14-w*0.5), holdT:Math.min(9,6+w*0.3),
+    startR:Math.round(rnd(70,150)), startVF:+rnd(0.78,1.05).toFixed(2),
+    ring:[lo,lo+Math.round(width)], beacons:[], moon:w>3?{r:rnd(180,220),ang:rnd(0,360),gm:5200,rad:7,speed:1}:null,
+    asteroid:null, maxR:300,
+    tip:'Unscheduled traffic pattern. Hold the lane.'};
+}
+function endless2(w){
+  const n=Math.min(5,2+Math.ceil(w/2)),bs=[];
+  for(let i=0;i<n;i++)bs.push({r:Math.round(rnd(50,170)),ang:Math.round(rnd(0,360)),orbiting:true});
+  return {name:pick(CALLS)+' · RUN '+w, fuel:Math.max(8,14-w*0.6), holdT:0,
+    startR:90, startVF:1.0, ring:null, beacons:bs,
+    moon:w>1?{r:rnd(190,230),ang:rnd(0,360),gm:5200,rad:7,speed:1}:null,
+    asteroid:null, maxR:340,
+    tip:'More errands, thinner tanks.'};
+}
+function endless3(w){
+  return {name:'ROCK '+(w+5)+' OF THE SWARM', fuel:Math.max(8,14-w*0.5), holdT:0,
+    startR:90, startVF:1.0, ring:null, beacons:[],
+    moon:w>1?{r:rnd(170,210),ang:rnd(0,360),gm:5200,rad:7,speed:1}:null,
+    asteroid:{r:Math.round(rnd(320,380)),ang:Math.round(rnd(0,360)),
+      speed:Math.min(18,11+w),rad:5,gms:110,missBy:55+Math.min(25,w*4)},
+    /* gms 110: gentle tractor — a 15-unit hover pulls ~0.5 u/s², so the
+       deflection takes the whole approach. Whispering, not yanking. */
+    maxR:420,
+    tip:'The swarm behind 2026-XJ. Same law, next rock.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let ship={x:120,y:0,vx:0,vy:0,fuel:12};
+let pro=false, retro=false;            // prograde / retrograde burn keys
+let beacons=[], moon=null, ast=null, ringT=0, gotCount=0;
+let t=0, acc=0, attemptT=0, lostT=0, doomT=0;
+let predShip=[], predAst=[], astMiss=Infinity, predTick=0;
+let particles=[], popups=[], shake=0, flash=0;
+let landedOK=false, downTimer=0, lastResult=null, primary=null;
+const vCirc=r=>Math.sqrt(GM/r);
+const gAt=r=>GM/(r*r);
+function shipR(){return hyp(ship.x,ship.y);}
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,jx:rnd(-12,12)});}
+function burst(wx,wy,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,6.28),s2=rnd(2,sp||8);
+  particles.push({x:wx,y:wy,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];setupLevel();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>ORBIT</h1>
+     <div class="tag">A GRAVITATION ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       One planet. One law: <b style="color:var(--ink)">F = Gm₁m₂/r²</b> —
+       and everything in the sky obeys it, including you.
+       The dotted line is your orbit’s future; burns reshape it live.<br><br>
+       <b style="color:#34d399">ACT I — FIRST ORBIT</b> &nbsp;hold the ring; lower is faster<br>
+       <b style="color:#fbbf24">ACT II — BEACON RUN</b> &nbsp;transfer orbits, chase beacons<br>
+       <b style="color:#f87171">ACT III — 2026-XJ</b> &nbsp;deflect the asteroid with your own gravity<br><br>
+       <span class="kbd">→</span> prograde burn (climb) · <span class="kbd">←</span> retrograde burn (dive)<br>
+       <span class="kbd">P</span> pause &nbsp; <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — ORBIT ${HIS[1].toLocaleString()} · RUN ${HIS[2].toLocaleString()} · XJ ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>MISSION CONTROL</h2>
+     <div class="sub">Pick your assignment. Each act is a chapter of the gravitation unit.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO MISSION CONTROL</button></div>`);
+    primary=select_;
+  });
+}
+function setupLevel(){
+  const D2R=Math.PI/180;
+  ship={x:lv.startR,y:0,vx:0,vy:-vCirc(lv.startR)*lv.startVF,fuel:lv.fuel};
+  beacons=lv.beacons.map(b=>({r:b.r,th:b.ang*D2R,orbiting:b.orbiting,got:false}));
+  gotCount=0;ringT=0;
+  moon=lv.moon?{r:lv.moon.r,th:lv.moon.ang*D2R,gm:lv.moon.gm,rad:lv.moon.rad,
+    w:vCirc(lv.moon.r)/lv.moon.r*lv.moon.speed,x:0,y:0}:null;
+  if(moon){moon.x=moon.r*Math.cos(moon.th);moon.y=moon.r*Math.sin(moon.th);}
+  if(lv.asteroid){
+    const A=lv.asteroid,ax=A.r*Math.cos(A.ang*D2R),ay=A.r*Math.sin(A.ang*D2R);
+    // aim just off planet center so the natural path is a confirmed impact
+    const px=-ay/A.r*PR*0.25,py=ax/A.r*PR*0.25;
+    const dx=px-ax,dy=py-ay,L=hyp(dx,dy);
+    ast={x:ax,y:ay,vx:dx/L*A.speed,vy:dy/L*A.speed,rad:A.rad,gms:A.gms,alive:true};
+  }else ast=null;
+  predShip=[];predAst=[];astMiss=Infinity;predTick=0;
+}
+function showMission(level){
+  lv=level;state='mission';setupLevel();
+  let goal='';
+  if(act===1)goal=`hold the <b>${lv.ring[0]}–${lv.ring[1]}</b> ring for <b>${lv.holdT} s</b>`;
+  else if(act===2)goal=`collect <b>${lv.beacons.length} beacons</b>`;
+  else goal=`bend 2026-XJ’s predicted path to miss by <b>${lv.asteroid.missBy}</b>`;
+  let params=`fuel <b>${lv.fuel} s</b> of burn · ${goal}
+    · g at start <b>${fmt(gAt(lv.startR),2)}</b> · orbital speed there <b>${fmt(vCirc(lv.startR))}</b>`;
+  if(lv.moon)params+=' · <b style="color:var(--red)">moon in play</b>';
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px"><span class="kbd">→</span> prograde (with your motion — raises the far side) ·
+       <span class="kbd">←</span> retrograde (against it — lowers the far side). Touch: right/left half of the sky.</div>
+     <button class="btn" onclick="launch()">▶ GO FOR BURN</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;attemptT=0;lostT=0;doomT=0;
+  particles=[];popups=[];shake=0;flash=0;pro=retro=false;
+  setupLevel();
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(extraTxt){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setThrust(false);
+  const ff=ship.fuel/lv.fuel;
+  const tier=ff>=0.5?'FLIGHT DIRECTOR':ff>=0.25?'GREAT':'CLEAN';
+  const base=ff>=0.5?1500:ff>=0.25?1000:700;
+  let bonus=0,btxt='';
+  if(act===2){bonus=gotCount*100;btxt='BEACONS +'+bonus;}
+  if(act===3){bonus=400;btxt='PLANET SAVED +400';}
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,btxt,fuelF:ff,extraTxt};
+  score+=pts;bumpHi();
+  popup(tier+'!','#34d399',38);
+  if(btxt)setTimeout(()=>popup(btxt,'#fbbf24',20),350);
+  chord(tier==='FLIGHT DIRECTOR'?[659,830,988,1318]:[523,659,784,1046]);
+  burst(ship.x,ship.y,40,['#34d399','#fbbf24','#818cf8'],10);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;setThrust(false);
+  boom();
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',28);
+  burst(ship.x,ship.y,50,['#f87171','#fbbf24','#fb923c','#fff'],12);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.extraTxt?`<div class="sub">${r.extraTxt}</div>`:''}
+       <div class="stat"><span>Fuel remaining</span><b>${Math.round(r.fuelF*100)}%</b></div>
+       ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Ships left</span><b>${'▲ '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">NEXT SHIP UP</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — BEACON RUN unlocked.</b> Now do it with errands.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f87171">ACT III — 2026-XJ unlocked.</b> Remember the asteroid from Unit 1? It remembers you.';}
+  else if(act===3)unlockMsg='<b style="color:#34d399">You completed the gravitation campaign.</b> You moved a mountain with f = Gm₁m₂/r² and patience.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS PATROL</button>
+     <button class="btn alt" onclick="select_()">MISSION CONTROL</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>SPLASHDOWN</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">Gravity is undefeated across the entire arcade. There is a theme here.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">MISSION CONTROL</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>qCon('Two satellites circle the same planet — one low, one high. Which moves FASTER?',
+     'the low one — v = √(GM/r), and smaller r means bigger v',['the high one; it has farther to go','both the same','whichever burned more fuel'],
+     'The counterintuitive heart of Act I: gravity is stronger down low, so staying in a circle requires more speed. Speed and altitude trade against each other — you felt it every time you dove.'),
+   ()=>qCon('Your station is on YOUR orbit, a quarter-lap AHEAD of you. The fastest way to catch it is to…',
+     'burn retrograde — drop to a lower, faster lane, then climb back',['burn prograde and chase it','burn straight toward it','wait; orbits never close gaps'],
+     'Burning prograde RAISES you onto a slower track — you fall further behind. Racing in orbit means downshifting: dive, lap, return. Every rendezvous in history has worked this way.'),
+   ()=>{const r1=64;
+     return qNum(`A satellite orbits at radius r with speed 24. Moved to radius 4r, its circular speed becomes…`,
+       12,'units/s',[6,24,48],
+       `v = √(GM/r): quadruple the radius, halve the speed — the square root tames the change. ${r1>0?'':''}High orbits are slow, stately places.`);},
+   ()=>qCon('You burn PROGRADE (with your motion) for two seconds. What happens to your orbit?',
+     'the far side of the ellipse rises',['you immediately spiral outward','your whole orbit shifts sideways','nothing until you stop burning'],
+     'Burns reshape the OTHER side of the orbit. Prograde here lifts there; retrograde here drops there. You watched the dotted line do it — that line is the whole lesson.'),
+  ];
+  const bank2=[
+   ()=>qNum('Earth’s surface gravity is 9.8 m/s². At ONE Earth radius of altitude (r = 2R from the center), g is…',
+     2.45,'m/s²',[4.9,9.8,1.09],
+     'g = GM/r²: double the distance from the CENTER, quarter the field. The ISS at +400 km still feels ~8.7 m/s² — astronauts float because they FALL, not because gravity quit.'),
+   ()=>qNum('At distance r the field is 9 units. At 3r it will be…',
+     1,'unit',[3,27,4.5],
+     'Inverse square: 3× the distance, 9× weaker. That curve on your panel — plummeting then flattening — is the same shape for planets, charges, and lamplight.'),
+   ()=>qCon('An astronaut “floating” in the ISS is actually…',
+     'in free fall, falling around the Earth with the station',['beyond Earth’s gravity','held up by the station’s speed pushing outward','weightless because space has no gravity'],
+     'At ISS altitude gravity is ~90% of surface strength. Orbit IS falling — with enough sideways speed to keep missing the ground. Newton drew this cannonball in 1687.'),
+   ()=>qCon('Take your ${CART}80 kg lab cart to a high orbit. Its MASS there is…'.replace('${CART}',''),
+     'still 80 kg — mass never changes; weight (mg) is what shrank',['much less — things weigh less up there','zero','depends on the orbit'],
+     'Mass is the amount of stuff; weight is gravity’s pull on it (W = mg = GMm/r²). Move the cart and you change g, never m. PUSH taught you m is the stubborn one — it still is.'),
+   ()=>qCon('Gravitational field arrows around a planet point…',
+     'toward the planet’s center, everywhere',['along the orbits','outward','toward the nearest moon'],
+     'The field tells a test mass which way it would fall: radially inward, always. Orbits are what falling looks like when you also happen to be moving sideways.'),
+  ];
+  const bank3=[
+   ()=>qCon('Your gravity tractor hovers beside 2026-XJ. You close to HALF the distance. The pull on the asteroid becomes…',
+     '4× stronger — inverse square works both ways',['2× stronger','unchanged','8× stronger'],
+     'F = Gm₁m₂/r²: halve r, quadruple F. It also quadruples how fast a mistake becomes a collision — which is why Act III felt the way it did.'),
+   ()=>qCon('Double the asteroid’s mass AND double your ship’s mass. The gravitational force between them…',
+     'quadruples — both masses multiply in',['doubles','stays the same','halves'],
+     'F = G·m₁·m₂/r²: each mass is a factor. Gravity is democratic — every kilogram of you pulls on every kilogram of it, and vice versa, always.'),
+   ()=>qCon('While your ship pulls 2026-XJ off course, the asteroid pulls your ship…',
+     'with exactly the same force, opposite direction',['with much less force; it’s not trying','with more force; it’s heavier','not at all'],
+     'Newton’s third law has no mass exemption. The FORCES are equal; the ACCELERATIONS differ because a = F/m — the rock barely shrugs, your little ship gets yanked. You felt that drift.'),
+   ()=>qCon('Newton imagined a cannonball fired sideways from a tall mountain, faster and faster, until it…',
+     'fell all the way around the Earth — the first orbit',['escaped gravity entirely','stopped falling','burned up'],
+     'Fast enough sideways, and the ground curves away exactly as fast as you fall toward it. The Moon is that cannonball. So were you, all game.'),
+  ];
+  /* CROSSOVER bank — bridges back to DESCENT and PUSH. +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · DESCENT — In the kinematics cabinet, Luna’s g was 1.6 and Jupiter’s was 24.8, and you just took them as settings. THIS cabinet reveals those numbers were…',
+     'GM/r² — each world’s mass and radius, run through one formula',['arbitrary game design choices','measured but unexplainable','properties of your ship'],
+     'DESCENT’s g-dial was always this unit in disguise: g = GM/r². Same ship, different M and r, different fall. The arcade has been one physics course wearing five costumes.'),
+   ()=>qNum('CROSSOVER · DESCENT — JUPITER’s surface gravity in that cabinet was 24.8 m/s². Hovering at ONE Jupiter-radius of altitude (r = 2R), your lander would feel g =',
+     6.2,'m/s²',[12.4,24.8,3.1],
+     'g = GM/r² → at 2R it is 24.8/4 = 6.2 m/s². Your suicide-burn timing would be four times more forgiving up there. Inverse square is a pilot’s best friend and worst enemy.'),
+   ()=>qCon('CROSSOVER · PUSH — In the dynamics cabinet, the weight arrow on every FBD was “mg”. Universal gravitation says that arrow was really…',
+     'GmM/r² with r = the planet’s radius — mg is its nickname',['a different force entirely','an approximation with no exact form','only valid on inclines'],
+     'Near a planet’s surface r barely changes, so GM/r² collapses to one number we nickname g. PUSH’s humble weight arrow and ORBIT’s grand law are the same force at different zoom levels.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== physics */
+const DT=1/240;
+let predDoom=false;
+function gravAt(x,y){
+  const r=hyp(x,y)||1,a=GM/(r*r);
+  let ax=-a*x/r,ay=-a*y/r;
+  if(moon){const dx=moon.x-x,dy=moon.y-y,d=hyp(dx,dy)||1;
+    const am=moon.gm/(d*d);ax+=am*dx/d;ay+=am*dy/d;}
+  return [ax,ay];
+}
+function step(dt){
+  if(moon){moon.th-=moon.w*dt;
+    moon.x=moon.r*Math.cos(moon.th);moon.y=moon.r*Math.sin(moon.th);}
+  for(const b of beacons)if(b.orbiting&&!b.got)b.th-=vCirc(b.r)/b.r*dt;
+  // ship
+  let g2=gravAt(ship.x,ship.y),ax=g2[0],ay=g2[1];
+  if(ast&&ast.alive){ // the rock pulls back — third law at scale
+    const dx=ast.x-ship.x,dy=ast.y-ship.y,d=hyp(dx,dy)||1;
+    const aa=ast.gms*0.4/(d*d);ax+=aa*dx/d;ay+=aa*dy/d;}
+  const sp=hyp(ship.vx,ship.vy)||1;
+  const burn=(pro?1:0)-(retro?1:0);
+  const burning=burn!==0&&ship.fuel>0;
+  if(burning){
+    ax+=burn*THR*ship.vx/sp;ay+=burn*THR*ship.vy/sp;
+    ship.fuel=Math.max(0,ship.fuel-BURNRATE*dt);
+    if(Math.random()<.5)particles.push({x:ship.x-burn*ship.vx/sp*2,y:ship.y-burn*ship.vy/sp*2,
+      vx:-burn*ship.vx/sp*rnd(8,16)+rnd(-3,3),vy:-burn*ship.vy/sp*rnd(8,16)+rnd(-3,3),
+      life:rnd(.15,.4),col:burn>0?'#fbbf24':'#818cf8',size:2});
+  }
+  setThrust(burning);
+  ship.vx+=ax*dt;ship.vy+=ay*dt;
+  ship.x+=ship.vx*dt;ship.y+=ship.vy*dt;
+  // asteroid
+  if(ast&&ast.alive){
+    let g3=gravAt(ast.x,ast.y),bx=g3[0],by=g3[1];
+    const dx=ship.x-ast.x,dy=ship.y-ast.y,d=hyp(dx,dy)||1;
+    const at2=ast.gms/(d*d);bx+=at2*dx/d;by+=at2*dy/d; // the tractor
+    ast.vx+=bx*dt;ast.vy+=by*dt;
+    ast.x+=ast.vx*dt;ast.y+=ast.vy*dt;
+    if(d<ast.rad+3){failAttempt('YOU HIT THE ROCK',
+      'The tractor rewards distance discipline: close enough to pull hard, far enough to never touch. Quadratic courage, quadratic consequences.');return;}
+    if(hyp(ast.x,ast.y)<PR+2){failAttempt('IMPACT — 2026-XJ CAME DOWN',
+      'The rock won this one. Bend its path EARLY — a tiny pull applied far out beats a desperate one at the end. Leverage is a gravity concept.');return;}
+  }
+  t+=dt;attemptT+=dt;
+  const r=shipR();
+  // act objectives
+  if(act===1){
+    if(r>=lv.ring[0]&&r<=lv.ring[1]){
+      ringT+=dt;
+      if(ringT>=lv.holdT){succeed(`Held the ${lv.ring[0]}–${lv.ring[1]} lane for ${lv.holdT} s at v ≈ ${fmt(hyp(ship.vx,ship.vy))} (orbital there: ${fmt(vCirc(r))}).`);return;}
+    }else ringT=0;
+  }else if(act===2){
+    for(const b of beacons){
+      if(b.got)continue;
+      const bx2=b.r*Math.cos(b.th),by2=b.r*Math.sin(b.th);
+      if(hyp(ship.x-bx2,ship.y-by2)<7){
+        b.got=true;gotCount++;
+        popup('BEACON '+gotCount+'/'+beacons.length,'#fbbf24',22);
+        chord([784,1046],.06);burst(bx2,by2,14,['#fbbf24','#fff'],8);
+        if(gotCount>=beacons.length){succeed('All beacons collected — transfers flown, fuel respected.');return;}
+      }
+    }
+  }else if(ast&&ast.alive&&astMiss>=lv.asteroid.missBy){
+    ast.alive=false;
+    succeed(`2026-XJ’s path now misses by ${fmt(astMiss)} — bent with nothing but your ship’s gravity and ${fmt(lv.fuel-ship.fuel)} s of stationkeeping.`);return;
+  }
+  // universal fails
+  if(r<PR+4){failAttempt('ATMOSPHERIC ENTRY','The dotted line clipped the planet and you flew it anyway. The prediction is not a suggestion.');return;}
+  if(moon&&hyp(ship.x-moon.x,ship.y-moon.y)<moon.rad+3){failAttempt('MOON STRIKE','Every mass pulls — and some of them also have surfaces.');return;}
+  if(r>lv.maxR){lostT+=dt;
+    if(lostT>3){failAttempt('LOST TO DEEP SPACE','Past the patrol boundary the tug fleet stops looking. Retrograde was RIGHT THERE.');return;}}
+  else lostT=0;
+  if(ship.fuel<=0.01&&predDoom){doomT+=dt;
+    if(doomT>2){failAttempt('COMMITTED TO IMPACT','No fuel, and the prediction ends on the planet. The ellipse was already written; you just got to watch.');return;}}
+  else doomT=0;
+  if(attemptT>140){failAttempt('SHIFT EXPIRED','Mission control reassigned your slot. Orbits reward patience, but not THAT much patience.');return;}
+}
+/* trajectory prediction — the dotted future */
+function predict(){
+  // ship: planet + (frozen) moon, no thrust
+  predShip=[];predDoom=false;
+  let x=ship.x,y=ship.y,vx=ship.vx,vy=ship.vy;
+  const pdt=0.06;
+  for(let i=0;i<1400;i++){
+    const g2=gravAt(x,y);
+    vx+=g2[0]*pdt;vy+=g2[1]*pdt;
+    x+=vx*pdt;y+=vy*pdt;
+    if(i%6===0)predShip.push({x,y});
+    const rr=hyp(x,y);
+    if(rr<PR+3){predDoom=true;break;}
+    if(rr>lv.maxR*1.5)break;
+  }
+  // asteroid: natural path (planet + moon, NO tractor) → projected miss
+  predAst=[];astMiss=Infinity;
+  if(ast&&ast.alive){
+    let x2=ast.x,y2=ast.y,vx2=ast.vx,vy2=ast.vy;
+    for(let i=0;i<2200;i++){
+      const g3=gravAt(x2,y2);
+      vx2+=g3[0]*pdt;vy2+=g3[1]*pdt;
+      x2+=vx2*pdt;y2+=vy2*pdt;
+      if(i%8===0)predAst.push({x:x2,y:y2});
+      const rr=hyp(x2,y2);
+      astMiss=Math.min(astMiss,rr-PR);
+      if(rr<PR+1){astMiss=Math.min(astMiss,0);break;}
+      if(rr>lv.maxR*1.6&&i>200)break;
+    }
+  }
+}
+let predApo=0,predPeri=0;
+
+/* ================================================== render */
+const STARS=[];for(let i=0;i<160;i++)STARS.push({x:Math.random(),y:Math.random(),r:rnd(.4,1.5),tw:rnd(0,6.28)});
+let VS=1,CX=0,CY=0;
+function sceneRect(){const pw=Math.min(420,W*0.34);return {w:W-pw,pw};}
+function SX(x){return CX+x*VS;}
+function SY(y){return CY+y*VS;}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  const now=performance.now()/1000;
+  VS=Math.min(SW,H)/(2*lv.maxR*0.82);
+  CX=SW/2;CY=H/2;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*10,rnd(-1,1)*shake*10);shake=Math.max(0,shake-0.02);}
+  ctx.fillStyle='#04050c';ctx.fillRect(-20,-20,SW+40,H+40);
+  for(const s of STARS){ctx.globalAlpha=(.3+.7*Math.abs(Math.sin(now+s.tw)))*.6;
+    ctx.fillStyle='#cfe8ff';ctx.fillRect(s.x*SW,s.y*H,s.r,s.r);}
+  ctx.globalAlpha=1;
+  // altitude grid rings
+  ctx.strokeStyle='#ffffff0c';ctx.fillStyle='#ffffff2e';
+  ctx.font='9px "Share Tech Mono",monospace';
+  for(let rr=80;rr<=lv.maxR;rr+=60){
+    ctx.beginPath();ctx.arc(CX,CY,rr*VS,0,7);ctx.stroke();
+    ctx.fillText('r '+rr,CX+rr*VS*0.707+3,CY-rr*VS*0.707-3);}
+  // act I target ring band + hold progress
+  if(act===1&&lv.ring){
+    const glow=.5+.5*Math.sin(now*4);
+    ctx.beginPath();ctx.arc(CX,CY,lv.ring[1]*VS,0,7);
+    ctx.arc(CX,CY,lv.ring[0]*VS,0,7,true);
+    ctx.fillStyle=`rgba(52,211,153,${.07+.05*glow})`;ctx.fill();
+    ctx.strokeStyle=`rgba(52,211,153,${.4+.3*glow})`;
+    ctx.beginPath();ctx.arc(CX,CY,lv.ring[0]*VS,0,7);ctx.stroke();
+    ctx.beginPath();ctx.arc(CX,CY,lv.ring[1]*VS,0,7);ctx.stroke();
+    if(ringT>0){ // hold arc
+      ctx.strokeStyle='#34d399';ctx.lineWidth=4;
+      ctx.beginPath();ctx.arc(CX,CY,(lv.ring[1]+6)*VS,-Math.PI/2,-Math.PI/2+(ringT/lv.holdT)*6.283);
+      ctx.stroke();ctx.lineWidth=1;}
+  }
+  // moon + its lane
+  if(moon){
+    ctx.strokeStyle='#ffffff14';
+    ctx.beginPath();ctx.arc(CX,CY,moon.r*VS,0,7);ctx.stroke();
+    ctx.fillStyle='#9ca3af';ctx.strokeStyle='#0b0407';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(SX(moon.x),SY(moon.y),Math.max(5,moon.rad*VS),0,7);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#6b7280';
+    ctx.beginPath();ctx.arc(SX(moon.x)-2,SY(moon.y)-2,Math.max(1.5,moon.rad*VS*0.3),0,7);ctx.fill();
+    ctx.lineWidth=1;}
+  // planet
+  {const pr=PR*VS;
+   const pg=ctx.createRadialGradient(CX-pr*0.4,CY-pr*0.4,pr*0.2,CX,CY,pr);
+   pg.addColorStop(0,'#7c8df0');pg.addColorStop(.6,'#3b4a99');pg.addColorStop(1,'#141b40');
+   ctx.fillStyle=pg;ctx.beginPath();ctx.arc(CX,CY,pr,0,7);ctx.fill();
+   ctx.strokeStyle='#aab6ff33';
+   for(let i=-2;i<=2;i++){ctx.beginPath();
+     ctx.ellipse(CX,CY,pr*0.96,pr*0.3,0,0,7);ctx.save();ctx.clip();
+     ctx.beginPath();ctx.moveTo(CX-pr,CY+i*pr*0.28);ctx.lineTo(CX+pr,CY+i*pr*0.28+pr*0.06);ctx.stroke();
+     ctx.restore();}
+   ctx.strokeStyle='#f8717155'; // atmosphere line — the death line
+   ctx.setLineDash([4,5]);
+   ctx.beginPath();ctx.arc(CX,CY,(PR+4)*VS,0,7);ctx.stroke();ctx.setLineDash([]);}
+  // ship trajectory prediction
+  if(state==='play'||state==='paused'){
+    ctx.fillStyle=predDoom?'#f87171cc':'#e7ecf577';
+    for(let i=0;i<predShip.length;i++){const p=predShip[i];
+      ctx.globalAlpha=(1-i/predShip.length)*(predDoom?0.9:0.6);
+      ctx.fillRect(SX(p.x)-1,SY(p.y)-1,2,2);}
+    ctx.globalAlpha=1;
+  }
+  // beacons
+  for(const b of beacons){
+    if(b.got)continue;
+    const bx2=b.r*Math.cos(b.th),by2=b.r*Math.sin(b.th);
+    const px=SX(bx2),py=SY(by2),pul=.6+.4*Math.sin(now*5+b.th);
+    ctx.save();ctx.translate(px,py);ctx.rotate(now);
+    ctx.fillStyle=`rgba(251,191,36,${pul})`;ctx.strokeStyle='#0b0407';
+    ctx.beginPath();ctx.moveTo(0,-7);ctx.lineTo(7,0);ctx.lineTo(0,7);ctx.lineTo(-7,0);
+    ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  }
+  // asteroid + its predicted (natural) path
+  if(ast&&ast.alive){
+    ctx.fillStyle='#f8717188';
+    for(let i=0;i<predAst.length;i++){const p=predAst[i];
+      ctx.globalAlpha=(1-i/predAst.length)*0.8;
+      ctx.fillRect(SX(p.x)-1.2,SY(p.y)-1.2,2.4,2.4);}
+    ctx.globalAlpha=1;
+    if(!ast.shape){ast.shape=[];for(let i=0;i<9;i++)ast.shape.push(rnd(.65,1.1));}
+    const px=SX(ast.x),py=SY(ast.y),r2=Math.max(6,ast.rad*VS);
+    ctx.save();ctx.translate(px,py);ctx.rotate(now*0.6);
+    ctx.fillStyle='#78716c';ctx.strokeStyle='#1c1917';ctx.lineWidth=2;
+    ctx.beginPath();
+    ast.shape.forEach((f,i)=>{const a=i/9*6.28;
+      i===0?ctx.moveTo(Math.cos(a)*r2*f,Math.sin(a)*r2*f):ctx.lineTo(Math.cos(a)*r2*f,Math.sin(a)*r2*f);});
+    ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle='#00000044';
+    ctx.beginPath();ctx.arc(r2*0.25,-r2*0.2,r2*0.22,0,7);ctx.fill();
+    ctx.restore();ctx.lineWidth=1;
+    ctx.fillStyle='#f87171';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText('2026-XJ',px,py-r2-8);ctx.textAlign='left';
+    // tractor link — inverse-square made visible
+    const d=hyp(ast.x-ship.x,ast.y-ship.y);
+    if(d<90){
+      const f=ast.gms/(d*d);
+      ctx.strokeStyle=`rgba(129,140,248,${clamp(f*8,0.08,0.8)})`;
+      ctx.lineWidth=clamp(f*14,0.5,4);
+      ctx.setLineDash([3,6]);
+      ctx.beginPath();ctx.moveTo(SX(ship.x),SY(ship.y));ctx.lineTo(px,py);ctx.stroke();
+      ctx.setLineDash([]);ctx.lineWidth=1;
+      ctx.fillStyle='#818cf8';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+      ctx.fillText('F ∝ 1/r²  ·  '+fmt(f*1000)+' mN',(SX(ship.x)+px)/2,(SY(ship.y)+py)/2-8);
+      ctx.textAlign='left';
+    }
+  }
+  // ship
+  if(state!=='down'||landedOK){
+    const px=SX(ship.x),py=SY(ship.y);
+    const a=Math.atan2(ship.vy,ship.vx);
+    ctx.save();ctx.translate(px,py);ctx.rotate(a);
+    const burn=(pro?1:0)-(retro?1:0);
+    if(burn!==0&&ship.fuel>0&&state==='play'){
+      ctx.fillStyle=burn>0?'#fbbf24':'#818cf8';
+      const fl=rnd(8,16);
+      ctx.beginPath();
+      if(burn>0){ctx.moveTo(-7,-3);ctx.lineTo(-7-fl,0);ctx.lineTo(-7,3);}
+      else{ctx.moveTo(7,-3);ctx.lineTo(7+fl,0);ctx.lineTo(7,3);}
+      ctx.closePath();ctx.fill();}
+    ctx.fillStyle='#e7ecf5';ctx.strokeStyle='#0b0407';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(8,0);ctx.lineTo(-6,-5);ctx.lineTo(-3,0);ctx.lineTo(-6,5);
+    ctx.closePath();ctx.fill();ctx.stroke();ctx.lineWidth=1;
+    ctx.restore();
+  }
+  // particles
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.x+=p.vx/60;p.y+=p.vy/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(SX(p.x),SY(p.y),p.size,p.size);}
+  ctx.globalAlpha=1;
+  // popups
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,clamp(SX(ship.x),80,SW-80)+p.jx,SY(ship.y)-30-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#818cf8';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#34d399':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function drawHUD(SW){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  ctx.fillStyle='#0008';ctx.fillRect(8,8,226,act===3?66:48);
+  ctx.font='12px "Share Tech Mono",monospace';
+  ctx.fillStyle='#8b96ad';ctx.fillText('FUEL',16,26);
+  ctx.fillStyle='#1f2937';ctx.fillRect(60,17,130,11);
+  const fr=ship.fuel/lv.fuel;
+  ctx.fillStyle=fr>.3?'#34d399':'#f87171';ctx.fillRect(60,17,130*fr,11);
+  ctx.fillStyle='#fff';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText(fmt(ship.fuel)+'s',196,26);
+  ctx.font='11px "Share Tech Mono",monospace';
+  if(act===1){ctx.fillStyle='#34d399';
+    ctx.fillText('RING '+fmt(ringT,1)+' / '+lv.holdT+' s',16,44);}
+  else if(act===2){ctx.fillStyle='#fbbf24';
+    ctx.fillText('BEACONS '+gotCount+' / '+beacons.length,16,44);}
+  else{
+    const need=lv.asteroid.missBy;
+    const ok=astMiss>=need;
+    ctx.fillStyle=ok?'#34d399':'#f87171';
+    ctx.fillText('PREDICTED MISS '+(astMiss===Infinity?'—':fmt(Math.max(0,astMiss)))+' / '+need,16,44);
+    ctx.fillStyle='#1f2937';ctx.fillRect(16,52,200,8);
+    ctx.fillStyle=ok?'#34d399':'#f87171';
+    ctx.fillRect(16,52,200*clamp(astMiss/need,0,1),8);
+  }
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '▲'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,48);
+  ctx.textAlign='left';
+}
+/* ================================================== the field desk panel */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#070918';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#818cf833';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#818cf8';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('FIELD DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name:'',SW+118,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=H-top-2*gap-14;
+  drawInvSq(gx,top,gw,ch2*0.5);
+  drawOrbitData(gx,top+ch2*0.5+gap,gw,ch2*0.5);
+}
+function drawInvSq(gx,gy,gw,gh){
+  ctx.fillStyle='#0c0f22';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('INVERSE-SQUARE METER — g(r) = GM/r², you are the dot',gx+8,gy+14);
+  const r0=PR,r1=lv.maxR;
+  const gmax=gAt(r0+4);
+  const X=r=>gx+10+((r-r0)/(r1-r0))*(gw-20);
+  const Y=g2=>gy+gh-12-(clamp(g2/gmax,0,1))*(gh-36);
+  ctx.strokeStyle='#818cf8';ctx.lineWidth=2;ctx.shadowColor='#818cf8';ctx.shadowBlur=6;
+  ctx.beginPath();
+  for(let r=r0+4;r<=r1;r+=3){
+    const px=X(r),py=Y(gAt(r));
+    r===r0+4?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+  ctx.stroke();ctx.shadowBlur=0;ctx.lineWidth=1;
+  // ring band markers (act 1)
+  if(act===1&&lv.ring){ctx.fillStyle='#34d39922';
+    ctx.fillRect(X(lv.ring[0]),gy+18,X(lv.ring[1])-X(lv.ring[0]),gh-30);}
+  // you
+  const r=clamp(shipR(),r0+4,r1);
+  ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.shadowBlur=8;
+  ctx.beginPath();ctx.arc(X(r),Y(gAt(r)),4,0,7);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#fff';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('g = '+fmt(gAt(shipR()),2),X(r)+8,Y(gAt(r))-6);
+  ctx.fillStyle='#57534e';
+  ctx.fillText('r →',gx+gw-30,gy+gh-4);
+}
+function drawOrbitData(gx,gy,gw,gh){
+  ctx.fillStyle='#0c0f22';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('ORBIT DATA',gx+8,gy+14);
+  const r=shipR(),v=hyp(ship.vx,ship.vy),vc=vCirc(r);
+  const rows=[
+    ['radius r',fmt(r),'#e7ecf5'],
+    ['speed v',fmt(v),'#fbbf24'],
+    ['circular v at r',fmt(vc),'#34d399'],
+    ['apoapsis (pred.)',predApo>0?fmt(predApo):'—','#818cf8'],
+    ['periapsis (pred.)',predPeri>0?fmt(predPeri):'—','#818cf8'],
+  ];
+  let y=gy+34;
+  ctx.font='12px "Share Tech Mono",monospace';
+  for(const[k,v2,c]of rows){
+    ctx.fillStyle='#8b96ad';ctx.fillText(k,gx+10,y);
+    ctx.fillStyle=c;ctx.textAlign='right';ctx.fillText(v2,gx+gw-12,y);ctx.textAlign='left';
+    y+=20;}
+  // the v vs v_circ verdict — climbing or falling?
+  const diff=v-vc;
+  ctx.fillStyle=Math.abs(diff)<0.6?'#34d399':'#fbbf24';
+  ctx.fillText(Math.abs(diff)<0.6?'≈ circular — riding the curve'
+    :diff>0?'faster than circular → swinging OUT':'slower than circular → falling IN',gx+10,y+4);
+}
+
+/* ================================================== loop + input */
+let last=performance.now(),frameN=0;
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){
+    acc+=el;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+    if(frameN++%3===0){predict();
+      predApo=0;predPeri=Infinity;
+      for(const p of predShip){const rr=hyp(p.x,p.y);
+        predApo=Math.max(predApo,rr);predPeri=Math.min(predPeri,rr);}
+      if(predPeri===Infinity)predPeri=0;
+    }
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(e.code==='ArrowRight'||e.code==='KeyD')pro=true;
+    if(e.code==='ArrowLeft'||e.code==='KeyA')retro=true;
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';pro=retro=false;setThrust(false);}
+  if(e.code==='KeyM'){muted=!muted;setThrust(false);}
+});
+window.addEventListener('keyup',e=>{
+  if(e.code==='ArrowRight'||e.code==='KeyD')pro=false;
+  if(e.code==='ArrowLeft'||e.code==='KeyA')retro=false;
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  if(state!=='play')return;
+  const {w:SW}=sceneRect();
+  if(e.clientX<SW/2)retro=true;else if(e.clientX<SW)pro=true;
+});
+window.addEventListener('pointerup',()=>{pro=retro=false;});
+window.addEventListener('blur',()=>{pro=retro=false;setThrust(false);});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

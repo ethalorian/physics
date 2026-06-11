@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 2 tool — gravitation, fields, projectiles, circular motion, orbits, Kepler — independently on the transfer task.",
+      "targetId": "u2.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every tool from Unit 2 is in your hands: free fall, F = mg, universal gravitation, field strength g(r), projectiles, centripetal force, orbits, Kepler.",
+      "connection": "One of the 4 transfer problems anchors in 2026-XJ — compute F_gravity between Earth and the asteroid at a specific separation and reason about how F changes."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 4 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Universal gravitation.** Compute F between Earth and 2026-XJ at a given r. Then reason about how F changes if r is halved.\n- **Problem 2 — Projectile motion.** A ball is launched at 25° from a 30 m cliff at 18 m/s. Find time of flight, range, and max height.\n- **Problem 3 — Orbital speed.** Given the ISS altitude and Earth's mass, compute v_orbit.\n- **Problem 4 — Kepler's third law.** Given a Sun-orbiting asteroid's semi-major axis, find its period; reason about its closest approach to Earth.\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 2 Equation Reference card and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b6",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: what order will you tackle the four problems, and where do you predict you will struggle?",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b7",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 2 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before the next unit builds on this one."
+    },
+    {
+      "id": "b8",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u2.anchor-why-bend",
+        "u2.free-fall-g",
+        "u2.mass-vs-weight",
+        "u2.k1-universal-gravitation",
+        "u2.s1-compute-gravitation",
+        "u2.r1-scale-f",
+        "u2.k2-field-strength",
+        "u2.r3-compare-g",
+        "u2.s4-vernier-measure-g",
+        "u2.k3-projectile-independence",
+        "u2.s2-projectile-calc",
+        "u2.r2-predict-landing",
+        "u2.s3-centripetal-calc",
+        "u2.k5-orbit-free-fall",
+        "u2.k4-keplers-laws",
+        "u2.r4-closest-approach"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 3?",
+      "frame": "I grew most on ___. Before Unit 3 I want to lock in ___."
+    }
+  ]
+}

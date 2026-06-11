@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply I ∝ 1/r² for a point source, convert intensity to decibels using dB = 10·log₁₀(I/I₀), and predict whether a Doppler-shifted frequency rises or falls based on relative motion.",
+      "targetId": "u6.r3-doppler"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Doppler is HOW radar measures asteroid velocity. The echo's frequency shift from the transmit frequency tells the line-of-sight speed.",
+      "connection": "Today: Doppler on a familiar scale (ambulance siren). Day 15: Doppler applied to 2026-XJ's radar return."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Loudness, distance, and motion\n\nThree ideas today, all about how sound changes between source and listener.\n\n**Intensity falls as 1/r².** A point source spreads its power over a sphere of area 4πr². Double the distance and the same power covers 4× the area — so intensity drops to ¼. That's the inverse-square law, and it will come back with a vengeance on Day 15 (radar echoes fall as 1/r⁴ — out AND back).\n\n**The decibel scale is logarithmic.** Your ear handles intensities spanning 12 orders of magnitude, so we compress them: **dB = 10 · log₁₀(I / I₀)** with I₀ = 10⁻¹² W/m². Every +10 dB means ×10 in intensity. A 110 dB rock concert is 10¹¹ times more intense than the threshold of hearing.\n\n**The Doppler effect.** A moving source compresses wavefronts ahead of it and stretches the ones behind. Approach → higher observed frequency. Recede → lower. The equation: **f ' = f · v / (v ∓ v_source)** — minus sign for approaching (f rises), plus sign for receding (f falls)."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Intensity (I)",
+          "definition": "Power per unit area. Units: W/m². Drops as 1/r² for a point source (energy spread over a 4πr² sphere). Example: a 1 W bulb 1 m away delivers I = 1/(4π) ≈ 0.080 W/m². At 2 m, only ¼ as much (0.020 W/m²).",
+          "cognate": "Sp. intensidad · Pt. intensidade · HC entansite"
+        },
+        {
+          "term": "Decibel (dB)",
+          "definition": "A logarithmic measure of intensity. dB = 10 · log₁₀(I / I₀), with I₀ = 10⁻¹² W/m² (threshold of hearing). Every +10 dB = ×10 in intensity. Example: 0 dB hearing threshold, 60 dB normal conversation, 120 dB pain. A rock concert (110 dB) is 10¹¹ times more intense than the threshold.",
+          "cognate": "Sp. decibelio · Pt. decibel · HC desibèl"
+        },
+        {
+          "term": "Doppler effect",
+          "definition": "When a wave SOURCE moves relative to an observer, the observed frequency SHIFTS. Approach → higher f. Recede → lower f. Example: an ambulance siren goes from high pitch to low pitch as it passes you; a train horn rises in pitch as it approaches.",
+          "cognate": "Sp. efecto Doppler · Pt. efeito Doppler · HC efè Doppler"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Watch out",
+      "markdown": "**Inverse SQUARE law:** double the distance → ¼ the intensity, not ½.\n\n**dB is a LOG scale:** +20 dB ≠ +2× intensity — it's +100× intensity. Hearing damage starts around 85 dB with prolonged exposure.\n\n**Doppler is about RELATIVE motion:** the SOURCE moving toward you gives the same shift as YOU moving toward the source."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "An ambulance moves right. Wavefronts AHEAD of it are compressed (higher f for the approaching listener). Wavefronts BEHIND it are stretched (lower f for the receder). Label which side hears HIGHER pitch.",
+      "prompts": [
+        "Draw the ambulance with circular wavefronts bunched up ahead and spread out behind.",
+        "Place a listener on each side and label what each one hears (higher/lower pitch).",
+        "Mark the direction of motion with an arrow."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "DOPPLER SHIFT, AMBULANCE APPROACHING. An ambulance siren emits at f = 800 Hz. The ambulance approaches you at v_source = 30 m/s. Sound in air: v = 343 m/s. What frequency do you hear?",
+      "given": "f = 800 Hz · v = 343 m/s · v_source = 30 m/s (toward listener)",
+      "equation": "f ' = f · v / (v − v_source)",
+      "work": "f ' = 800 · 343 / (343 − 30)\nf ' = 800 · 343 / 313\nf ' = 274 400 / 313\nf ' ≈ 877 Hz",
+      "answer": "You hear ≈ 877 Hz — about a half-step higher in pitch."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "DECIBEL RATIO. A whisper measures 30 dB. A motorcycle measures 100 dB. The motorcycle is how many times more INTENSE than the whisper?",
+      "given": "ΔdB = 100 − 30 = 70 dB",
+      "equation": "ratio = 10^(ΔdB / 10)",
+      "work": "ratio = 10^(70 / 10)\nratio = 10⁷\nratio = 10 000 000",
+      "answer": "The motorcycle is 10 million times more INTENSE than the whisper. (Perceived loudness rises slower than intensity.)"
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — TRAIN HORN RECEDING. A train with a 600 Hz horn moves AWAY from you at 20 m/s. What frequency do you hear? (v_sound = 343 m/s. Use plus sign for receding.)",
+      "givenHint": "f = 600 Hz · v = 343 m/s · v_source = 20 m/s (away from listener)",
+      "equationHint": "Receding source → plus sign in the denominator → lower frequency. Expect f ' below 600 Hz.",
+      "equationOptions": [
+        "f ' = f · v / (v + v_source)",
+        "f ' = f · v / (v − v_source)",
+        "dB = 10 · log₁₀(I / I₀)",
+        "v = f · λ"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Same Doppler logic, scaled to radar",
+      "markdown": "2026-XJ at v_source returns radar with a tiny frequency shift Δf. NASA detects shifts as small as 0.01 Hz on a 2.4 GHz carrier. That's 4 parts in 10¹². Day 15 walks through the full chain."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A train with a 600 Hz horn moves at 20 m/s. You stand on the platform as it APPROACHES. What frequency do you hear? (Use v_sound = 343 m/s.) Show your work.",
+      "frame": "A source moving TOWARD you compresses wavefronts → higher ___. Moving AWAY stretches them → lower ___. The dB scale is ___ in intensity: every +10 dB is ___× more intense."
+    },
+    {
+      "id": "rd-ch25-d",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **25.9–25.11** (the Doppler effect, bow waves, and shock waves with sonic booms). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch25-d",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 25,
+      "title": "Vibrations and Waves — read & practice",
+      "sectionIds": [
+        "25.9",
+        "25.10",
+        "25.11"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r3-doppler"
+    }
+  ]
+}

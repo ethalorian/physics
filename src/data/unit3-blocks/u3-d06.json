@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can distinguish elastic, inelastic, and perfectly inelastic collisions, and I can identify which real-world collisions fit each category.",
+      "targetId": "u3.k4-collision-types"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid striking Earth would be PERFECTLY INELASTIC — it becomes part of Earth (after vaporizing). A pure gravity flyby (no contact) is ELASTIC. DART was somewhere in between.",
+      "connection": "Once you know which TYPE you have, you know which equations to use."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Three flavors, one family\n\n| Type | Momentum | Kinetic energy | After impact |\n|---|---|---|---|\n| **Elastic** | conserved | conserved | bounce apart, no energy lost |\n| **Inelastic** | conserved | some lost | bounce apart, energy → heat/sound/dents |\n| **Perfectly inelastic** | conserved | maximum lost | **stick together** |\n\nThe family resemblance: **all three conserve momentum**. The flavor only tells you what happens to the kinetic energy — and whether the objects separate."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Elastic collision",
+          "definition": "Both MOMENTUM and KINETIC ENERGY are conserved. Objects bounce off without losing energy. Superball off concrete; Newton's cradle; billiard balls (approximately); gravity flybys.",
+          "cognate": "Sp. colisión elástica · Pt. colisão elástica · HC kolizyon elastik"
+        },
+        {
+          "term": "Inelastic collision",
+          "definition": "MOMENTUM is conserved but KINETIC ENERGY is NOT — some KE goes to heat, sound, deformation. Most car crashes; a dropped clay ball that flattens but doesn't stick.",
+          "cognate": "Sp. colisión inelástica · Pt. colisão inelástica · HC kolizyon inelastik"
+        },
+        {
+          "term": "Perfectly inelastic collision",
+          "definition": "The objects STICK TOGETHER after impact. Momentum conserved; maximum KE lost. Clay into wall; bullet into block (ballistic pendulum); asteroid impact. 'Perfectly' means 'stuck completely,' not 'ideal.'",
+          "cognate": "Sp. perfectamente inelástica · Pt. perfeitamente inelástica · HC pèfètman inelastik"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Energy lost ≠ momentum lost",
+      "markdown": "ALL THREE types conserve momentum. Only ELASTIC conserves kinetic energy. 'The collision lost energy' is often true; 'the collision lost momentum' never is (absent external forces). They're different rules."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Try all three in the sim",
+      "markdown": "In the cart-collision simulation below, switch the bumper type: magnetic bumpers ≈ elastic, plain bumpers ≈ inelastic, velcro = perfectly inelastic. Watch what stays the same (Σp) and what changes (KE) across the three."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "cart-collisions"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Make a three-column chart: Elastic | Inelastic | Perfectly inelastic. In each column, write/draw the textbook example AND add ONE more real example from your own life. Circle the ones you've personally seen.",
+      "prompts": [
+        "Three columns, labeled.",
+        "One example of your own per column.",
+        "Circle what you've witnessed."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Classification drill — label each scenario E (elastic), I (inelastic), or PI (perfectly inelastic). Be ready to defend each. (a) Two billiard balls bouncing off each other. (b) A car rear-ends a stalled truck, bumpers lock. (c) Football tackle — players grip each other and tumble. (d) Bullet hits a wood block and sticks. (e) Two magnets repel and bounce apart without touching. (f) Asteroid hits Earth. (g) Newton's cradle — end ball stops, opposite end ball moves. (h) Wet clay ball thrown against a wall, sticks.",
+      "frame": "a) ___ b) ___ c) ___ d) ___ e) ___ f) ___ g) ___ h) ___"
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A meteorite buries itself in the desert. What kind of collision is this? Where did its kinetic energy go?",
+      "frame": "It's a ___ collision. The kinetic energy went to ___."
+    },
+    {
+      "id": "rd-ch08-d",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **8.5–8.6** (elastic vs. inelastic collisions; momentum as a vector in 2D collisions). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch08-d",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 8,
+      "title": "Momentum — read & practice",
+      "sectionIds": ["8.5", "8.6"]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.k4-collision-types"
+    }
+  ]
+}

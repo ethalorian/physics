@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can state the second law (heat flows spontaneously HOT → COLD; entropy of the universe always increases), and classify everyday processes as spontaneous (entropy-increasing) or requiring an external energy input.",
+      "targetId": "u5.r1-second-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's KE at impact becomes thermal energy — a HIGH-entropy state.",
+      "connection": "There's no natural process that converts that heat back into organized motion. The impact is IRREVERSIBLE — it can't be undone. The second law tells us why."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The law with a direction built in\n\nThe first law says energy is conserved — but it never says which WAY a process runs. Energy would still be conserved if your coffee spontaneously got hotter by pulling heat out of the cool room. That never happens. The **second law** is the rule that gives nature its one-way arrow:\n\n- **Clausius form:** heat NEVER spontaneously flows from cold to hot. To push it backward, you must do external work (that's what a refrigerator is).\n- **Entropy form:** in every spontaneous process, the total **entropy** (disorder) of the universe INCREASES.\n\nShuffled cards don't un-shuffle. Broken eggs don't un-break. Mixed cream doesn't un-mix. And an asteroid impact — organized kinetic energy turned into the random jiggling of hot rock, hot air, and hot vapor — can never run in reverse. Today you'll classify processes: **spontaneous** (entropy goes up, no help needed) versus **requires input** (entropy drops locally only because something outside pays for it)."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Second law (Clausius)",
+          "definition": "Heat NEVER spontaneously flows from cold to hot. To move heat backward, you must do external work (a refrigerator). Coffee never spontaneously gets hotter sitting in a cool room — it always cools. 'Spontaneous' doesn't mean fast — it means happens WITHOUT external help.",
+          "cognate": "Sp. segunda ley · Pt. segunda lei"
+        },
+        {
+          "term": "Entropy (S)",
+          "definition": "A measure of disorder — the number of ways the molecules in a system can be arranged. Higher entropy = more disorder = more possible arrangements. An organized deck of cards has LOW entropy; shuffled, HIGH. Entropy can drop LOCALLY (your fridge cools), but the room outside heats more than the fridge cools — the universe's TOTAL entropy increases.",
+          "cognate": "Sp. entropía · Pt. entropia"
+        },
+        {
+          "term": "Arrow of time",
+          "definition": "The reason we feel time as moving forward — it's the direction of increasing entropy. A movie of an ice cube melting looks normal. Reversed (cold water spontaneously freezing into a cube), it looks bizarre — even though physics doesn't forbid the molecular motion. Statistically, it just never happens.",
+          "cognate": "Sp. flecha del tiempo · Pt. seta do tempo"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The FIRST law doesn't forbid cold → hot. The SECOND law does.",
+      "markdown": "Heat flowing from cold to hot would still conserve energy — the first law is perfectly happy with it. It's the second law that rules it out. That's why we need BOTH laws: one for the amount, one for the direction."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw a HOT block and a COLD block touching. Mark the ALLOWED direction of spontaneous heat flow and the FORBIDDEN direction. Bottom of the page: the open-fridge kitchen.",
+      "prompts": [
+        "Arrow for the allowed direction; an X over the forbidden one",
+        "Sketch the kitchen with the fridge door open — draw every heat flow, including the motor's work",
+        "Why can't you cool a room by leaving the fridge door open?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "CLASSIFY 6 PROCESSES — For each, write SPONTANEOUS (entropy increases) or REQUIRES INPUT (entropy decreases locally): (a) hot coffee cools. (b) egg breaks. (c) sugar dissolves in water. (d) iron rusts. (e) refrigerator cools food. (f) battery being charged.",
+      "given": "—",
+      "equation": "(no equation — classify each)",
+      "work": "(a) coffee cools: SPONTANEOUS (entropy ↑)\n(b) egg breaks: SPONTANEOUS (entropy ↑)\n(c) sugar dissolves: SPONTANEOUS (entropy ↑)\n(d) iron rusts: SPONTANEOUS (entropy ↑ slowly)\n(e) refrigerator cools food: REQUIRES INPUT (electricity from outlet)\n(f) battery charges: REQUIRES INPUT (electrical work)",
+      "answer": "All natural processes go entropy ↑. Reversing them costs energy."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "FRIDGE WITH DOOR OPEN — You leave the fridge door open hoping to cool your kitchen. Will the room get colder? Explain using the second law. (Hint: where does the heat removed from inside the fridge GO?)",
+      "givenHint": "The fridge PUMPS heat from inside (cool) to its coils outside (warmer) — and the kitchen contains BOTH sides.",
+      "equationHint": "Track every heat flow, including the work the motor adds — that work ends up as heat in the kitchen too.",
+      "equationOptions": [
+        "Second law: heat flows hot → cold; pushing it backward costs external work",
+        "ΔU = Q − W",
+        "Q = m·c·ΔT",
+        "η_max = 1 − T_C/T_H"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why the open-door fridge HEATS the room",
+      "markdown": "A refrigerator pumps heat from inside (cool) to outside (warmer). With the door open, the kitchen is BOTH inside and outside the fridge — so the kitchen heats up (because the fridge motor adds work, which becomes heat)."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why can't you cool your kitchen by leaving the refrigerator door open? Use the second law in your answer. Then complete the frame.",
+      "frame": "Heat flows from hot to cold spontaneously because that direction ___ entropy. Going the other way requires ___. A refrigerator does this by ___."
+    },
+    {
+      "id": "rd-ch24-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **24.4, 24.6–24.7** (the second and third laws, order tending to disorder, and entropy). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch24-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 24,
+      "title": "Thermodynamics — read & practice",
+      "sectionIds": [
+        "24.4",
+        "24.6",
+        "24.7"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.r1-second-law"
+    }
+  ]
+}

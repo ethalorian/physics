@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can use a Vernier microphone + LabQuest to time the delay between a clap and its echo from a known distance, compute v_sound = 2L/Δt, and compare to the accepted value with one credible source of error noted.",
+      "targetId": "u6.s1-echo-lab"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We've stated v_sound ≈ 343 m/s in air. Today we measure it ourselves.",
+      "connection": "If we trust v = fλ + echo timing for everyday sound, we trust the same logic for radar pulse + Doppler analysis on Day 15."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 6.1 — Measure v_sound by timing the echo",
+      "markdown": "**Driving question:** Can we measure the speed of sound in our classroom by clapping toward a wall and timing the echo with a Vernier microphone?\n\n**Equipment:** Vernier LabQuest + microphone (one per pair) · tape measure or laser distance finder · wall (or large flat surface) at least 10 m away · thermometer (room temp affects v_sound) · spreadsheet or LoggerPro for waveform analysis.\n\n**How this lab serves the year's question:** If our v_sound is accurate to within 2% from a simple clap, NASA's Doppler radar (timing nanosecond pulses) achieves accuracy thousands of times better. Same physics, scaled."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Choose a wall and measure L (one-way distance) to ±0.05 m. Record.",
+        "Set LabQuest sample rate to at least 10 kHz so the clap waveform is clean.",
+        "Have one partner clap sharply near the microphone. The other partner triggers data capture.",
+        "On the captured waveform, identify the clap peak + the echo peak. Read off Δt between them.",
+        "Compute v_sound = 2L / Δt. Round-trip distance is 2L.",
+        "Repeat for 3 trials. Average. Note room temperature.",
+        "Compare to expected 343 m/s + temperature correction (about +0.6 m/s per °C above 20 °C)."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Loud claps near the microphone can damage hearing if amplified — keep volume low and don't clap directly at someone's ear."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Small Δt warning",
+      "markdown": "A 10 m wall + a 0.06 s round trip means Δt is small. Use a sample rate ≥ 10 kHz, or use a longer corridor (15–20 m) to spread the peaks apart."
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch the setup: clapper + Vernier mic + wall + tape measure. Label L. The waveform shows two peaks; mark Δt between them. Compute v_sound = 2L/Δt.",
+      "prompts": [
+        "Label the one-way distance L on your diagram.",
+        "Draw the captured waveform with the clap peak and the echo peak — mark Δt between them.",
+        "Write the working equation v_sound = 2L/Δt next to the waveform."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "L (m)", "Δt (s)", "v_sound (m/s)", "Notes"],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "CLAP-ECHO TIMING. After your trials, compute the mean v_sound and note the room temperature."
+    },
+    {
+      "id": "b9",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "How close did your average come to 343 m/s? What's the percent difference? Was the room warmer or cooler than 20 °C?",
+      "interpretPrompt": "If you could only improve ONE of (L precision, Δt precision, room temperature control) — which would shrink your error the most? And the asteroid connection: how does this serve the year's question?",
+      "frame": "We measured v_sound = ___ m/s. The accepted value at room temperature is ___ m/s. Our percent difference is ___ %. The main source of error was likely ___."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "If you measured v_sound = 350 m/s and your wall was 10.0 m away, what Δt did you record? Show one line of work.",
+      "frame": "Δt = 2L / v_sound = ___ s."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.s1-echo-lab"
+    }
+  ]
+}

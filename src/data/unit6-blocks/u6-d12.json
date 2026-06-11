@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can identify the bands of the EM spectrum in order (radio → gamma), explain that all travel at c in vacuum, and compute λ from f using c = fλ for any band.",
+      "targetId": "u6.k7-em-spectrum"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radar (radio band) and the meteor's atmospheric-entry GLOW (visible) are the SAME kind of wave family. Different f, same physics.",
+      "connection": "Day 16 makes this concrete — the meteor's GLOW color (visible light) tells us its temperature (Wien's law)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Light is a wave — and it has a LOT of relatives\n\nEverything from radio to gamma rays is the same physical thing: a transverse wave of oscillating electric and magnetic fields, traveling at **c = 3 × 10⁸ m/s** in vacuum. No medium needed — that's how sunlight crosses 150 million km of empty space.\n\nThe only difference between the bands is frequency (and therefore wavelength, since **c = fλ** always holds). Walk the spectrum from longest λ to shortest:\n\n| Band | λ (vacuum) | Use |\n|---|---|---|\n| Radio | > 1 m | Broadcasting, cell, planetary radar (Day 15) |\n| Microwave | 1 m to 1 mm | Microwave oven (2.4 GHz), radar |\n| Infrared (IR) | 1 mm to 700 nm | Heat, night vision, TV remote |\n| Visible | 700 to 400 nm | ROYGBIV — what our eyes detect |\n| Ultraviolet (UV) | 400 to 10 nm | Sunburn, sterilization |\n| X-ray | 10 to 0.01 nm | Medical imaging |\n| Gamma | < 0.01 nm | Nuclear processes, cosmic events |\n\nSame wave equation as Day 3 — just substitute c for v: **λ = c / f** and **f = c / λ**. Master those two moves and you can place any EM wave on the spectrum."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Electromagnetic wave",
+          "definition": "A transverse wave of oscillating electric + magnetic fields. Travels at c = 3 × 10⁸ m/s in vacuum. No medium needed — EM waves are NOT mechanical, which is why they cross vacuum from the Sun to Earth. Example: light, radio, X-rays, microwaves — all the same kind of wave, different frequencies.",
+          "cognate": "Sp. onda electromagnética · Pt. onda eletromagnética · HC onn elektwomayetik"
+        },
+        {
+          "term": "EM spectrum",
+          "definition": "The full range of EM frequencies, from low-f radio (km wavelengths) up to high-f gamma rays (sub-nm wavelengths). Example: radio (km), microwave (cm), infrared (μm), VISIBLE (400–700 nm), UV (10s of nm), X-ray (nm), gamma (sub-nm). The bands shade into each other — the names are conventions, not sharp edges.",
+          "cognate": "Sp. espectro electromagnético · Pt. espectro eletromagnético"
+        },
+        {
+          "term": "Visible light",
+          "definition": "The narrow band of EM the human eye detects, from ~400 nm (violet) to ~700 nm (red). The Sun emits its peak intensity here. Example: ROYGBIV — red has the longest visible λ, violet the shortest. Color = wavelength. \"Visible\" is just our species' window: bees see UV, some snakes see IR.",
+          "cognate": "Sp. luz visible · Pt. luz visível · HC limyè vizib"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Walk left-to-right through the EM bands. Which band has the LONGEST wavelength? The HIGHEST frequency? Where does our radar fall? Where does visible light fall?",
+      "prompts": [
+        "Draw the spectrum as a left-to-right strip: radio → microwave → IR → visible → UV → X-ray → gamma.",
+        "Label which end has long λ / low f and which has short λ / high f.",
+        "Mark where NASA's 2.4 GHz radar sits and where the meteor's visible glow sits."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "MICROWAVE WAVELENGTH. Your microwave oven operates at f = 2.4 GHz = 2.4 × 10⁹ Hz. What's its wavelength? Which EM band is this?",
+      "given": "f = 2.4 × 10⁹ Hz · c = 3 × 10⁸ m/s",
+      "equation": "λ = c / f",
+      "work": "λ = (3 × 10⁸) / (2.4 × 10⁹)\nλ = 0.125 m\nλ = 12.5 cm",
+      "answer": "λ ≈ 12.5 cm. This is in the MICROWAVE band — sized to make food molecules absorb."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "VISIBLE GREEN LIGHT. Green light has λ ≈ 530 nm. What's its frequency?",
+      "given": "λ = 530 nm = 5.30 × 10⁻⁷ m · c = 3 × 10⁸ m/s",
+      "equation": "f = c / λ",
+      "work": "f = (3 × 10⁸) / (5.30 × 10⁻⁷)\nf = 5.66 × 10¹⁴ Hz",
+      "answer": "f ≈ 5.66 × 10¹⁴ Hz ≈ 566 THz — about a half-quadrillion cycles per second."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — X-RAY FREQUENCY. An X-ray has λ ≈ 1.0 × 10⁻¹⁰ m. What's its frequency?",
+      "givenHint": "λ = 1.0 × 10⁻¹⁰ m · c = 3 × 10⁸ m/s",
+      "equationHint": "Same move as the green-light example: f = c / λ. Expect a HUGE number — X-rays are near the top of the spectrum.",
+      "equationIds": [
+        "wave-speed"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why X-rays are dangerous but visible light is safe",
+      "markdown": "Energy per photon depends on frequency. Higher f = higher-energy photons. X-rays can ionize molecules (break bonds). Visible photons can't."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "What's the wavelength of a microwave oven's 2.4 GHz radiation? (Use c = 3 × 10⁸.) Which EM band is this?",
+      "frame": "All EM waves travel at ___ in vacuum. The EM spectrum is ordered from longest wavelength (___) to shortest (___). Visible light is just one narrow band, from ~___ nm to ~___ nm."
+    },
+    {
+      "id": "rd-ch27-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **27.1–27.4** (early ideas about light, measuring the speed of light, the electromagnetic spectrum, and why glass is transparent). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch27-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 27,
+      "title": "Light — read & practice",
+      "sectionIds": [
+        "27.1",
+        "27.2",
+        "27.3",
+        "27.4"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k7-em-spectrum"
+    }
+  ]
+}

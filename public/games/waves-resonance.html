@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>RESONANCE // a waves arcade</title>
+<!--
+  RESONANCE — a waves arcade in three acts. Sixth cabinet (Unit 6: Waves,
+  Sound & Light). Single file, no dependencies.
+
+  This cabinet is the only one that can PLAY its physics: your emitter and
+  the target crystals are real WebAudio tones, so beats are not a diagram —
+  they are the throb you hear shrinking as you tune in. (M mutes.)
+
+  ACT I   THE TUNER — match beacon crystals given λ and v; the dial IS f = v/λ
+  ACT II  THE ORGAN — standing waves: fn = n·v/2L; shatter orbs at antinodes
+  ACT III THE CHOIR — two-source interference; park bells on constructive
+                      fringes and hush-zones on destructive ones
+
+  Telemetry star: a live oscilloscope + the v = fλ triangle, always lit.
+  Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#22d3ee; --neon2:#f472b6; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#051016ee; --edge:#22d3ee55;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#030b10}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #22d3ee22, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #22d3ee88}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #22d3ee66;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:var(--neon)} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#03141a;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #22d3ee66;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#081820;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#0a2030}
+  .choice.right{background:#0c2a22;border-color:var(--neon);color:var(--neon)}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #f472b655;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#08141c;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const hyp=Math.hypot, TAU=Math.PI*2;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('resonance2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('resonance2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('resonance2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('resonance2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio — the physics, audible
+   Two live oscillators: YOURS (the emitter you tune) and the nearest TARGET.
+   Both faint; the beating between them is real, not simulated. */
+let AC=null,muted=false,oscMine=null,gMine=null,oscTgt=null,gTgt=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  oscMine=AC.createOscillator();oscMine.type='sine';oscMine.frequency.value=220;
+  gMine=AC.createGain();gMine.gain.value=0;
+  oscMine.connect(gMine);gMine.connect(AC.destination);oscMine.start();
+  oscTgt=AC.createOscillator();oscTgt.type='sine';oscTgt.frequency.value=220;
+  gTgt=AC.createGain();gTgt.gain.value=0;
+  oscTgt.connect(gTgt);gTgt.connect(AC.destination);oscTgt.start();}catch(e){}}
+function setTones(fMine,vMine,fTarget,vTarget){
+  if(!AC)return;
+  const tc=0.06,now2=AC.currentTime;
+  if(oscMine){oscMine.frequency.setTargetAtTime(clamp(fMine,40,2000),now2,tc);
+    gMine.gain.setTargetAtTime(muted?0:clamp(vMine,0,.07),now2,tc);}
+  if(oscTgt){oscTgt.frequency.setTargetAtTime(clamp(fTarget||220,40,2000),now2,tc);
+    gTgt.gain.setTargetAtTime(muted?0:clamp(vTarget,0,.05),now2,tc);}
+}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function shatterSnd(){if(!AC||muted)return;const len=AC.sampleRate*0.35,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2);
+  const s=AC.createBufferSource();s.buffer=buf;const g=AC.createGain();g.gain.value=.35;
+  const hp=AC.createBiquadFilter();hp.type='highpass';hp.frequency.value=1800;
+  s.connect(hp);hp.connect(g);g.connect(AC.destination);s.start();}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'resonance-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== level data
+   ACT I  crystals:[{f? λ? v}] — dial your f to match (lock ±4 Hz for 1.2 s).
+          Some crystals state only λ (and the chamber's v): f = v/λ is the dial.
+   ACT II string/pipe: {L, v, closed} — resonances at n·v/2L (string) or odd
+          n·v/4L (closed pipe). orbs:[{frac}] sit along the string; an orb
+          shatters only when YOUR mode has an antinode there and amp peaks.
+   ACT III λ (maybe dial), towers A fixed/B movable; bells need constructive
+          (Δd ≈ nλ), hushes need destructive (Δd ≈ (n+½)λ); hold all 3 s. */
+const ACT_META={
+ 1:{name:'THE TUNER', col:'#34d399', blurb:'Beacon crystals hum at hidden frequencies. Your dial is f, the chamber sets v, the crystal states λ — and v = fλ is the lock pick. Listen for the beats: when the throb slows, you’re close.'},
+ 2:{name:'THE ORGAN', col:'#fbbf24', blurb:'A string, a driver, and the harmonic series. Hit fn = n·v/2L and the standing wave blooms; park an antinode under the orb and sing it to pieces. Closed pipes hide every other rung.'},
+ 3:{name:'THE CHOIR', col:'#f472b6', blurb:'Two towers, one field. Where paths differ by nλ the sound doubles; at (n+½)λ it dies. Drag tower B until every bell rings and every hush goes silent.'},
+};
+const ACT1=[
+ {name:'FIRST LIGHT', dur:75, v:340,
+  crystals:[{f:220},{f:330}],
+  tip:'Two crystals, frequencies posted. Sweep with ↑/↓, fine-tune with taps. As your tone nears a crystal’s, listen: the slow WAH-WAH-WAH is the beat frequency — exactly |your f − its f|. Beats at 2 Hz means you are 2 Hz away. Zero the throb.'},
+ {name:'READ THE WAVE', dur:80, v:340,
+  crystals:[{lam:1.0},{lam:0.85},{lam:0.68}],
+  tip:'These crystals post only their WAVELENGTH. The chamber speed is 340 m/s, so the dial setting is f = v/λ. The telemetry triangle does the bookkeeping — but the thinking is yours.'},
+ {name:'MIXED SIGNALS', dur:80, v:340,
+  crystals:[{f:262},{lam:0.773},{lam:0.515}],
+  tip:'One posts f, two post λ. Same law either way: v = fλ never blinks. (And yes — those λ values were chosen so the answers land on real musical notes. The universe tunes in C.)'},
+ {name:'TWO CHAMBERS', dur:85, v:340,
+  crystals:[{lam:1.31,v:340},{lam:1.31,v:1480},{lam:2.96,v:1480}],
+  tip:'Same λ, DIFFERENT chamber: the right-hand crystals sit in water, where sound runs at 1480 m/s. Wave speed belongs to the MEDIUM, not the wave — so identical wavelengths demand wildly different frequencies. f = v/λ, and v just changed.'},
+ {name:'THE SILENT ONE', dur:85, v:340,
+  crystals:[{f:392},{lam:0.62},{lam:0.97},{scope:1.55}],
+  tip:'The last crystal posts NOTHING — but its waveform is drawn on the scope with a meter grid behind it. Read λ off the grid yourself, then dial f = v/λ. This is the whole unit in one move: see a wave, know its number.'},
+];
+const ACT2=[
+ {name:'FUNDAMENTAL', dur:75, L:1.0, v:440, closed:false, fretMin:0, fretMax:0,
+  orbs:[{frac:0.5}],
+  tip:'One string, length 1 m, wave speed 440 m/s. The fundamental lives at f₁ = v/2L = 220 Hz: one fat antinode in the middle. Park your dial there, hold it, and watch the amplitude bloom — resonance is a swing pushed at exactly the right moment, ten times a second.'},
+ {name:'THE SECOND RUNG', dur:75, L:1.0, v:440, closed:false, fretMin:0, fretMax:0,
+  orbs:[{frac:0.25},{frac:0.75}],
+  tip:'Two orbs at L/4 and 3L/4 — exactly the antinodes of the SECOND harmonic (440 Hz). The fundamental has a node where these orbs hang; it will never touch them. Pick the mode whose shape fits the job.'},
+ {name:'THE FRET', dur:85, L:1.0, v:440, closed:false, fretMin:0.6, fretMax:1.2,
+  orbs:[{frac:0.5},{frac:0.5,needL:0.75}],
+  tip:'New lever: ←/→ slides the bridge, changing L itself. Same dial-f, but now fn = n·v/2L has TWO knobs. Shorter string, higher song — every guitarist’s left hand knows this equation.'},
+ {name:'THE STOPPED PIPE', dur:85, L:1.0, v:340, closed:true, fretMin:0, fretMax:0,
+  orbs:[{frac:0.999},{frac:0.33,n:3}],
+  tip:'A pipe closed at one end: node at the cap, antinode at the mouth, and ONLY ODD harmonics — f = n·v/4L for n = 1, 3, 5… Sweep the dial and feel the missing rungs. The second orb answers only to n = 3.'},
+ {name:'THE CARILLON', dur:90, L:1.0, v:440, closed:false, fretMin:0.6, fretMax:1.2,
+  orbs:[{frac:0.5},{frac:0.25},{frac:0.167,n:3}],
+  tip:'Three orbs, three different modes, one clock. Fundamental for the middle, second harmonic for the quarter-point, third for the sixth-point. Play the whole series — this is why one string can be a chord.'},
+];
+const ACT3=[
+ {name:'ONE BELL', dur:75, lam:3.0, lamDial:false,
+  bells:[{x:34,y:10}], hushes:[],
+  tip:'Tower A is fixed; drag tower B with the arrows. The bell rings where the two path lengths differ by a WHOLE number of wavelengths — crest meets crest, Δd = nλ. The bright fringes on the floor are exactly those places. Park one on the bell.'},
+ {name:'BELL AND LIBRARY', dur:80, lam:3.0, lamDial:false,
+  bells:[{x:36,y:8}], hushes:[{x:30,y:22}],
+  tip:'Ring the bell AND silence the library: it needs Δd = (n+½)λ — crest meets trough, perfect cancellation. Two constraints, one tower position. The dark fringes are real places; the library wants to live in one.'},
+ {name:'TWO BELLS', dur:85, lam:2.6, lamDial:false,
+  bells:[{x:34,y:7},{x:38,y:18}], hushes:[{x:26,y:14}],
+  tip:'Three constraints now. Notice you can’t fix one without moving the others — fringes come as a SET, spaced by geometry and λ. Hunt the position where the whole pattern fits the room.'},
+ {name:'THE λ DIAL', dur:90, lam:3.0, lamDial:true,
+  bells:[{x:35,y:9},{x:30,y:23}], hushes:[{x:40,y:16},{x:24,y:6}],
+  tip:'New lever: ↑/↓ changes the wavelength itself. Longer λ spreads the fringes apart; shorter λ packs them tight. When no tower position works, change the RULER the room is measured with.'},
+ {name:'FULL CHOIR', dur:95, lam:2.8, lamDial:true,
+  bells:[{x:34,y:6},{x:40,y:14},{x:28,y:25}], hushes:[{x:24,y:12},{x:38,y:24}],
+  tip:'Five constraints, two levers, one held breath. Everything Act III taught: fringes are path-difference contours, λ sets their spacing, and somewhere in this room is the one chord that satisfies them all. Find it and hold it.'},
+];
+const HALLS=['THE UNDERCROFT','GLASS GALLERY','THE BELFRY','ECHO COURT','THE STACKS','NAVE NINE','THE CISTERN'];
+function endless1(w){
+  const n=Math.min(5,2+Math.ceil(w/2)),cs=[];
+  for(let i=0;i<n;i++){
+    const f=Math.round(rnd(180,720));
+    const mode=pick(w>1?['f','lam','lam']:['f','lam']);
+    if(mode==='f')cs.push({f});
+    else cs.push({lam:+(340/f).toFixed(2)});
+  }
+  return {name:pick(HALLS)+' · SET '+w, dur:Math.max(55,80-w*2), v:340, crystals:cs,
+    tip:'Unscheduled chime order. The triangle still holds.'};
+}
+function endless2(w){
+  const L=+rnd(0.8,1.2).toFixed(2),v=Math.round(rnd(380,500));
+  const closed=w>2&&Math.random()<.4;
+  const orbs=[{frac:0.5}];
+  if(w>1)orbs.push({frac:0.25});
+  if(w>3)orbs.push({frac:0.167,n:3});
+  return {name:pick(HALLS)+' · SET '+w, dur:Math.max(60,85-w*2), L, v, closed,
+    fretMin:w>2?0.6:0, fretMax:w>2?1.2:0, orbs,
+    tip:'New string, same series.'};
+}
+function endless3(w){
+  const bells=[],hushes=[];
+  const nb=Math.min(3,1+Math.ceil(w/2)),nh=Math.min(2,Math.floor(w/2));
+  for(let i=0;i<nb;i++)bells.push({x:Math.round(rnd(24,42)),y:Math.round(rnd(5,25))});
+  for(let i=0;i<nh;i++)hushes.push({x:Math.round(rnd(22,42)),y:Math.round(rnd(5,25))});
+  return {name:pick(HALLS)+' · SET '+w, dur:Math.max(65,90-w*2),
+    lam:+rnd(2.4,3.4).toFixed(1), lamDial:w>1, bells, hushes,
+    tip:'More rooms to please. Same two levers.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let myF=220, up=false, down=false, left=false, right=false;
+let crystals=[], lockT=0, lockIdx=-1, doneCount=0;
+let amp=0, fret=1.0, orbs=[];                 // act II
+let towerA={x:10,y:15}, towerB={x:20,y:15}, lam=3, zoneT=0;  // act III
+let t=0, acc=0, attemptT=0;
+let particles=[], popups=[], shake=0, flash=0;
+let landedOK=false, downTimer=0, lastResult=null, primary=null;
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,jx:rnd(-12,12)});}
+function burstPx(px,py,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,TAU),s2=rnd(20,sp||90);
+  particles.push({px,py,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+function crystalF(c){ // every crystal resolves to a target frequency
+  if(c.f)return c.f;
+  if(c.lam)return (c.v||lv.v)/c.lam;
+  if(c.scope)return lv.v/c.scope;
+  return 220;}
+function modeFreqs(){ // act II resonance ladder for current string/pipe
+  const L=lv.fretMax>0?fret:lv.L, v=lv.v, out=[];
+  if(lv.closed){for(let n=1;n<=9;n+=2)out.push({n,f:n*v/(4*L)});}
+  else{for(let n=1;n<=6;n++)out.push({n,f:n*v/(2*L)});}
+  return out;}
+function nearestMode(){
+  let best=null;
+  for(const m of modeFreqs()){
+    if(!best||Math.abs(m.f-myF)<Math.abs(best.f-myF))best=m;}
+  return best;}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];setupLevel();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>RESONANCE</h1>
+     <div class="tag">A WAVES ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       The only cabinet that can <b style="color:var(--ink)">play its own physics</b>.
+       Your emitter is a real tone; the targets are real tones; the throbbing
+       you hear when you’re close is real beats. Tune with your ears.<br><br>
+       <b style="color:#34d399">ACT I — THE TUNER</b> &nbsp;v = fλ is the lock pick<br>
+       <b style="color:#fbbf24">ACT II — THE ORGAN</b> &nbsp;standing waves; fn = n·v/2L<br>
+       <b style="color:#f472b6">ACT III — THE CHOIR</b> &nbsp;interference; Δd = nλ or (n+½)λ<br><br>
+       <span class="kbd">↑</span><span class="kbd">↓</span> tune f ·
+       <span class="kbd">←</span><span class="kbd">→</span> fret / move tower ·
+       <span class="kbd">M</span> mute (but you’ll be tuning blind)
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — TUNER ${HIS[1].toLocaleString()} · ORGAN ${HIS[2].toLocaleString()} · CHOIR ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE BELL TOWER</h2>
+     <div class="sub">Pick your floor. Each act is a chapter of the waves unit.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE TOWER</button></div>`);
+    primary=select_;
+  });
+}
+function setupLevel(){
+  myF=220;lockT=0;lockIdx=-1;doneCount=0;amp=0;zoneT=0;
+  fret=lv.fretMax>0?lv.L:(lv.L||1);
+  crystals=(lv.crystals||[]).map(c=>({...c,target:0,got:false}));
+  for(const c of crystals)c.target=crystalF(c);
+  orbs=(lv.orbs||[]).map(o=>({...o,got:false,charge:0}));
+  towerB={x:20,y:15};lam=lv.lam||3;
+}
+function showMission(level){
+  lv=level;state='mission';setupLevel();
+  let goal='';
+  if(act===1)goal=`tune to all <b>${crystals.length} crystals</b> (lock ±4 Hz)`;
+  else if(act===2)goal=`shatter <b>${orbs.length} orb${orbs.length>1?'s':''}</b> with the right modes`;
+  else goal=`satisfy <b>${lv.bells.length} bell${lv.bells.length>1?'s':''}${lv.hushes.length?' + '+lv.hushes.length+' hush zone'+(lv.hushes.length>1?'s':''):''}</b> at once for 3 s`;
+  let params=`<b>${lv.dur} s</b> on the clock · ${goal}`;
+  if(act===1)params+=` · chamber v = <b>${lv.v} m/s</b>`;
+  if(act===2)params+=` · ${lv.closed?'CLOSED PIPE':'string'} L = <b>${lv.L} m</b> · v = <b>${lv.v} m/s</b>${lv.fretMax>0?' · fret unlocked':''}`;
+  if(act===3)params+=` · λ = <b>${lv.lam} m</b>${lv.lamDial?' (tunable)':''}`;
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">
+       ${act===3?'<span class="kbd">←→↑↓ </span> move tower B'+(lv.lamDial?' · <span class="kbd">W</span>/<span class="kbd">S</span> tune λ':'')
+        :'<span class="kbd">↑</span><span class="kbd">↓</span> tune f (hold to sweep)'+(act===2&&lv.fretMax>0?' · <span class="kbd">←</span><span class="kbd">→</span> slide the fret':'')}
+     </div>
+     <button class="btn" onclick="launch()">▶ ${act===1?'OPEN THE HALL':act===2?'TAKE THE BENCH':'RAISE THE TOWERS'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;attemptT=0;
+  particles=[];popups=[];shake=0;flash=0;
+  up=down=left=right=false;
+  setupLevel();
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(extraTxt){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setTones(myF,0,220,0);
+  const tf=Math.max(0,lv.dur-attemptT)/lv.dur;
+  const tier=tf>=0.45?'PERFECT PITCH':tf>=0.2?'GREAT':'CLEAN';
+  const base=tf>=0.45?1500:tf>=0.2?1000:700;
+  const bonus=Math.round(tf*400);
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,btxt:bonus>0?('TEMPO +'+bonus):'',extraTxt};
+  score+=pts;bumpHi();
+  popup(tier+'!','#22d3ee',38);
+  chord(tier==='PERFECT PITCH'?[659,830,988,1318]:[523,659,784,1046]);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;setTones(myF,0,220,0);
+  beep(120,.4,'sawtooth',.2,-60);
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',28);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.extraTxt?`<div class="sub">${r.extraTxt}</div>`:''}
+       ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Encores left</span><b>${'♪ '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">ONE MORE VERSE</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — THE ORGAN unlocked.</b> One string, infinite rungs.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f472b6">ACT III — THE CHOIR unlocked.</b> Two voices, and the silence between them.';}
+  else if(act===3)unlockMsg='<b style="color:#22d3ee">You completed the waves campaign.</b> You can hear the equations now. That doesn’t go away.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS RECITAL</button>
+     <button class="btn alt" onclick="select_()">BELL TOWER</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>THE HALL GOES DARK</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">The crystals keep humming whether you find them or not. That is rather the point.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">BELL TOWER</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>{const f=pick([200,340,425]);
+     return qNum(`Sound travels at 340 m/s. A crystal hums at ${f} Hz. Its wavelength is…`,
+       340/f,'m',[f/340,340*f/1000,340/f/2],
+       `λ = v/f = 340/${f} = ${fmt(340/f,2)} m. Speed belongs to the medium, frequency to the source — wavelength is just their quotient.`);},
+   ()=>{const T=pick([0.004,0.005,0.01]);
+     return qNum(`A wave repeats every ${T} s. Its frequency is…`,
+       1/T,'Hz',[T*1000,1/T/2,2/T],
+       `f = 1/T = 1/${T} = ${fmt(1/T)} Hz. Period and frequency are the same fact read in two directions.`);},
+   ()=>{const f1=pick([220,440]),d=pick([3,5,7]);
+     return qNum(`Your emitter at ${f1} Hz beats against a crystal ${d} times per second. The crystal could be humming at…`,
+       f1+d,'Hz',[f1*d,f1-2*d,f1+2*d],
+       `Beat frequency = |f₁ − f₂|, so the crystal sits at ${f1} ± ${d} Hz — and ${f1+d} is the listed match. You tuned this way all act: the throb IS the difference.`);},
+   ()=>qCon('A wave crosses from air into water and SPEEDS UP. Its frequency…',
+     'stays the same — the source sets f; the medium resets λ',['rises with the speed','falls with the speed','reverses'],
+     'Frequency is set by whatever is shaking and cannot change mid-flight (crests cannot pile up or vanish). So v = fλ rebalances entirely through wavelength. Two Chambers, remembered.'),
+   ()=>qCon('In a SOUND wave traveling through air, the air molecules move…',
+     'back and forth ALONG the travel direction — longitudinal',['up and down, across the travel direction','in circles','they travel with the wave to your ear'],
+     'Sound is a longitudinal pressure wave: the air jiggles in place; only the PATTERN travels. The molecules that left the crystal never reach you — the wave does.'),
+  ];
+  const bank2=[
+   ()=>{const L=pick([0.5,1,2]),v=pick([400,440]);
+     return qNum(`A string of length ${L} m carries waves at ${v} m/s. Its FUNDAMENTAL frequency is…`,
+       v/(2*L),'Hz',[v/L,v/(4*L),2*v/L],
+       `f₁ = v/2L = ${v}/(2·${L}) = ${fmt(v/(2*L))} Hz — the longest wave that fits: half a wavelength between the fixed ends.`);},
+   ()=>qCon('A pipe CLOSED at one end resonates only at…',
+     'odd harmonics — f, 3f, 5f…',['even harmonics','every harmonic','one single frequency'],
+     'The closed end demands a node, the open end an antinode — only odd quarter-wavelength counts fit both. That hollow, clarinet-ish sound IS the missing even harmonics.'),
+   ()=>qCon('Why does amplitude EXPLODE when you drive a string exactly at fn?',
+     'each push arrives in step with the motion, adding energy every cycle',['the string gets longer','the wave speed increases','friction disappears'],
+     'Resonance is a swing pushed at the right moment, hundreds of times a second. Off-frequency pushes fight the motion as often as they help; on-frequency pushes ALWAYS help. Same physics that closed the Tacoma Narrows bridge.'),
+   ()=>qCon('Your second harmonic is ringing. At the CENTER of the string there is…',
+     'a node — the one point standing still',['the biggest swing','a moving crest','nothing special'],
+     'n = 2 means a full wavelength on the string: antinodes at the quarter points, dead still in the middle. That is why the center orb ignored you — you parked the silence on it.'),
+   ()=>{const L=1.0,v=440;
+     return qNum(`String: L = ${L} m, v = ${v} m/s. To put antinodes at L/4 and 3L/4 you drove the SECOND harmonic, at…`,
+       v/L,'Hz',[v/(2*L),3*v/(2*L),v/(4*L)],
+       `fn = n·v/2L → f₂ = 2·${v}/(2·${L}) = ${v/L} Hz. Each harmonic is a different SHAPE, and the shape decides where the energy lives.`);},
+  ];
+  const bank3=[
+   ()=>{const lam=pick([2,3,4]),n=pick([1,2,3]);
+     return qCon(`Two in-step towers, λ = ${lam} m. A listener stands ${n*lam} m farther from one tower than the other. They hear…`,
+       'loud — whole-wavelength path difference, crest meets crest',['silence — the waves cancel','an echo','a beat'],
+       `Δd = ${n*lam} m = ${n}λ exactly: the farther wave arrives a whole number of cycles late, which is the same as on time. Constructive. The bright fringes in Act III were these contours drawn on the floor.`);},
+   ()=>{const lam=pick([2,4]);
+     return qCon(`Same towers, λ = ${lam} m, but now the path difference is ${fmt(lam*1.5)} m. The listener hears…`,
+       'almost nothing — half-wavelength offset, crest meets trough',['double loudness','a higher pitch','the towers separately'],
+       `Δd = 1.5λ: the (n+½)λ condition. Two loud sources, one silent spot — energy is not destroyed, it is redirected to the bright fringes. The hush zones lived here.`);},
+   ()=>qCon('A siren rushes TOWARD you. The pitch you hear is…',
+     'higher than the siren’s true pitch — crests arrive bunched up',['lower','the same, just louder','wobbling like beats'],
+     'Doppler: a moving source crowds its own wavefronts ahead of it. Shorter effective λ at your ear, same v of sound → higher f. Behind it, the opposite. You can hear motion.'),
+   ()=>qCon('Red and blue light differ in…',
+     'frequency — blue waves oscillate faster (shorter λ)',['speed in a vacuum','amplitude','direction'],
+     'Color is frequency, the visible octave of the same wave physics you played all game. In vacuum every color runs at c; what your eye reads as hue is f. Light is the choir, transposed up forty octaves.'),
+  ];
+  /* CROSSOVER bank — bridges back to CASCADE, ORBIT, IMPACT. +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · CASCADE — In the energy cabinet, doubling speed quadrupled KE and doubling spring compression quadrupled ½kx². Doubling a wave’s AMPLITUDE multiplies the energy it carries by…',
+     '4 — energy rides the square of amplitude, the same square law',['2','8','it depends on frequency'],
+     'A wave is a spring-mass chain: each piece stores ½kx² with x = amplitude. The square law you met in CASCADE follows the wave everywhere — twice the wave height, four times the punch.'),
+   ()=>qCon('CROSSOVER · ORBIT — In the gravitation cabinet, g fell off as 1/r². Far from a small source, sound INTENSITY also falls off as 1/r², because…',
+     'the same energy spreads over a sphere whose area grows as r²',['sound is a kind of gravity','air absorbs it quadratically','frequency drops with distance'],
+     'Both laws are geometry, not coincidence: a fixed output spread over 4πr² of sphere thins as 1/r². Gravity, sound, light, Wi-Fi — one law of spheres wearing four costumes.'),
+   ()=>qCon('CROSSOVER · IMPACT — In the momentum cabinet, things moved by carrying their mass with them. A wave crossing the hall moves WHAT from crystal to ear?',
+     'energy and a pattern — the air itself stays home, jiggling in place',['the air molecules themselves','tiny pieces of the crystal','nothing measurable'],
+     'IMPACT’s rule was m·v in transit. A wave breaks the habit: the medium oscillates around fixed positions while energy streams through it. Transport without traffic — the deepest trick in the unit.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== physics */
+const DT=1/120;
+function step(dt){
+  t+=dt;attemptT+=dt;
+  // dials
+  const sweep=60*dt;
+  if(act<3){
+    if(up)myF=clamp(myF+sweep,60,900);
+    if(down)myF=clamp(myF-sweep,60,900);
+    if(act===2&&lv.fretMax>0){
+      if(right)fret=clamp(fret+0.12*dt*3,lv.fretMin,lv.fretMax);
+      if(left)fret=clamp(fret-0.12*dt*3,lv.fretMin,lv.fretMax);}
+  }else{
+    const mv=9*dt;
+    if(left)towerB.x=clamp(towerB.x-mv,14,46);
+    if(right)towerB.x=clamp(towerB.x+mv,14,46);
+    if(up)towerB.y=clamp(towerB.y-mv,3,27);
+    if(down)towerB.y=clamp(towerB.y+mv,3,27);
+  }
+  if(act===1){
+    // nearest unmatched crystal & lock logic
+    let near=null,nd=1e9;
+    crystals.forEach((c,i)=>{if(c.got)return;
+      const d=Math.abs(c.target-myF);if(d<nd){nd=d;near=i;}});
+    if(near!==null){
+      const c=crystals[near];
+      setTones(myF,0.05,c.target,clamp(1-nd/60,0,1)*0.04);
+      if(nd<=4){if(lockIdx!==near){lockIdx=near;lockT=0;}
+        lockT+=dt;
+        if(lockT>=1.2){
+          c.got=true;doneCount++;lockIdx=-1;lockT=0;
+          popup('LOCKED — '+fmt(c.target)+' Hz','#34d399',24);
+          shatterSnd();chord([c.target,c.target*1.5],.05);
+          flash=.3;shake=.3;
+          if(doneCount>=crystals.length){
+            succeed(`All ${crystals.length} crystals matched — the hall is in tune.`);return;}
+        }
+      }else{lockIdx=-1;lockT=0;}
+    }else setTones(myF,0.05,220,0);
+  }else if(act===2){
+    // resonance response: Lorentzian peak around nearest mode
+    const m=nearestMode();
+    const width=6;
+    const resp=1/(1+Math.pow((myF-m.f)/width,2));
+    amp+=(resp*2.2-1.4*amp)*dt;
+    amp=clamp(amp,0,1);
+    setTones(myF,0.05,m.f,resp*0.03);
+    const L=lv.fretMax>0?fret:lv.L;
+    for(const o of orbs){
+      if(o.got)continue;
+      // does the CURRENT mode put an antinode at the orb? (within 6% of L)
+      // open string, mode n: antinodes at x = (k+½)·L/n
+      // closed pipe, mode n (odd): λ = 4L/n; antinodes every λ/2 down from the open end
+      let anti=false;
+      if(resp>0.5&&(!o.n||o.n===m.n)){
+        const n=m.n;
+        if(lv.closed){
+          const lam2=4*L/n;
+          for(let k=0;k*lam2/2<=L+1e-6;k++)
+            if(Math.abs((L-k*lam2/2)-o.frac*L)<L*0.06){anti=true;break;}
+        }else{
+          for(let k=0;k<n;k++)
+            if(Math.abs((k+0.5)*L/n-o.frac*L)<L*0.06){anti=true;break;}
+        }
+      }
+      if(anti&&amp>0.85&&(!o.needL||Math.abs(L-o.needL)<0.04)){
+        o.charge+=dt;
+        if(o.charge>0.8){
+          o.got=true;doneCount++;
+          popup('SHATTERED — n = '+m.n,'#fbbf24',26);
+          shatterSnd();flash=.4;shake=.5;
+          if(orbs.every(x=>x.got)){
+            succeed(`Every orb met its antinode — the harmonic series, played in full.`);return;}
+        }
+      }else o.charge=Math.max(0,o.charge-dt*0.7);
+    }
+  }else{
+    // interference: each zone checks its path difference
+    setTones(0,0,220,0);
+    let allOk=true;
+    const chk=(z,wantHalf)=>{
+      const d1=hyp(z.x-towerA.x,z.y-towerA.y),d2=hyp(z.x-towerB.x,z.y-towerB.y);
+      const dd=Math.abs(d1-d2)/lam;          // in wavelengths
+      const frac=dd-Math.floor(dd);
+      const distTo=wantHalf?Math.abs(frac-0.5):Math.min(frac,1-frac);
+      z.ok=distTo<0.12;
+      if(!z.ok)allOk=false;
+    };
+    for(const b of lv.bells)chk(b,false);
+    for(const h of lv.hushes)chk(h,true);
+    if(allOk){zoneT+=dt;
+      if(zoneT>=3){succeed('Every bell on a bright fringe, every hush in a dark one — one position, all conditions.');return;}}
+    else zoneT=0;
+  }
+  if(attemptT>=lv.dur){
+    failAttempt('TIME — THE HALL FELL SILENT',
+      act===1?'Trust the beats: the throb rate IS your distance in hertz. Sweep fast when it’s fast, creep when it crawls.'
+      :act===2?'Find the rung first (sweep until the string blooms), THEN worry about which orb. Amplitude is patience plus the right frequency.'
+      :'Move along a fringe, not across them — slide WITH the bright line to keep a bell lit while you hunt for the next condition.');
+    return;}
+}
+function antiClosed(n,k,L){ // closed pipe (node at x=0, antinode at x=L): antinodes at L·(2k+1)/n? — use x = L·(2k+1)/(n+? ) — for mode n (odd), antinodes at x = L·(2k+1)/n · ... simplified: spacing λ/2 starting at the open end
+  // mode n (odd): λ = 4L/n. Antinodes at x = L − m·(λ/2), m = 0,1,…
+  const lam2=4*L/n,out=[];
+  for(let m2=0;m2*lam2/2<=L;m2++)out.push(L-m2*lam2/2);
+  return out[k]!==undefined?out[k]:-99;
+}
+
+/* ================================================== render */
+function sceneRect(){const pw=Math.min(420,W*0.34);return {w:W-pw,pw};}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  const now=performance.now()/1000;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*10,rnd(-1,1)*shake*10);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#03070d');bg.addColorStop(1,'#071318');
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  // stone arches backdrop — the bell tower
+  ctx.strokeStyle='#ffffff0a';ctx.lineWidth=8;
+  for(let i=0;i<5;i++){const ax=SW*(i*0.22+0.07);
+    ctx.beginPath();ctx.arc(ax,H*0.42,H*0.3,Math.PI,0);ctx.stroke();}
+  ctx.lineWidth=1;
+  if(act===1)scene1(SW,now);
+  else if(act===2)scene2(SW,now);
+  else scene3(SW,now);
+  // particles (screen px)
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.px+=p.vx/60;p.py+=p.vy/60;p.vy+=40/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(p.px,p.py,p.size,p.size);}
+  ctx.globalAlpha=1;
+  // popups
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,SW/2+p.jx,H*0.3-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#22d3ee';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#22d3ee':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function scene1(SW,now){
+  // your emitter + expanding wavefronts (spacing ∝ λ = v/f)
+  const ex=SW/2,ey=H-70;
+  const lamPx=clamp((lv.v/myF)*60,18,200);
+  ctx.strokeStyle='#22d3ee44';
+  for(let i=0;i<8;i++){
+    const r=((now*lamPx*(myF/340))%lamPx)+i*lamPx;
+    if(r>H*0.9)continue;
+    ctx.globalAlpha=clamp(1-r/(H*0.9),0,1)*0.5;
+    ctx.beginPath();ctx.arc(ex,ey,r,Math.PI*1.05,Math.PI*1.95);ctx.stroke();}
+  ctx.globalAlpha=1;
+  ctx.fillStyle='#22d3ee';ctx.strokeStyle='#03141a';
+  ctx.beginPath();ctx.arc(ex,ey,12,0,TAU);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#03141a';ctx.font='700 9px Orbitron,monospace';ctx.textAlign='center';
+  ctx.fillText('YOU',ex,ey+3);ctx.textAlign='left';
+  // crystals across the top
+  const n=crystals.length;
+  crystals.forEach((c,i)=>{
+    const cx2=SW*(i+1)/(n+1),cy2=110;
+    const nd=Math.abs(c.target-myF);
+    const glow=c.got?0:clamp(1-nd/60,0,1);
+    if(c.got){ctx.globalAlpha=.25;}
+    // gem
+    ctx.save();ctx.translate(cx2,cy2);ctx.rotate(Math.sin(now+i)*0.1);
+    ctx.fillStyle=c.got?'#1f2937':`rgba(52,211,153,${.5+.5*glow})`;
+    ctx.strokeStyle='#03141a';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(0,-22);ctx.lineTo(15,0);ctx.lineTo(0,22);ctx.lineTo(-15,0);
+    ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();ctx.lineWidth=1;
+    if(glow>0.3&&!c.got){ // halo pulses at the BEAT frequency — audible and visible
+      const beat=Math.abs(c.target-myF);
+      const pul=.5+.5*Math.sin(now*TAU*clamp(beat,0.5,12));
+      ctx.strokeStyle=`rgba(52,211,153,${glow*pul*.8})`;
+      ctx.beginPath();ctx.arc(cx2,cy2,30,0,TAU);ctx.stroke();}
+    if(lockIdx===i&&lockT>0){ // lock ring
+      ctx.strokeStyle='#34d399';ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(cx2,cy2,26,-Math.PI/2,-Math.PI/2+(lockT/1.2)*TAU);ctx.stroke();
+      ctx.lineWidth=1;}
+    ctx.globalAlpha=1;
+    // the crystal's card: what it tells you
+    ctx.fillStyle='#0008';ctx.fillRect(cx2-52,cy2+30,104,c.scope?54:34);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+    if(c.got){ctx.fillStyle='#34d399';ctx.fillText('✓ '+fmt(c.target)+' Hz',cx2,cy2+50);}
+    else if(c.f){ctx.fillStyle='#e7ecf5';ctx.fillText('f = '+c.f+' Hz',cx2,cy2+50);}
+    else if(c.lam){ctx.fillStyle='#fbbf24';ctx.fillText('λ = '+c.lam+' m',cx2,cy2+44);
+      ctx.fillStyle='#8b96ad';ctx.fillText('v = '+(c.v||lv.v)+' m/s',cx2,cy2+58);}
+    else{ // scope-only: draw its waveform with a meter grid
+      ctx.strokeStyle='#ffffff22';
+      for(let g2=0;g2<=4;g2++){const gx2=cx2-48+g2*24;
+        ctx.beginPath();ctx.moveTo(gx2,cy2+34);ctx.lineTo(gx2,cy2+78);ctx.stroke();}
+      ctx.fillStyle='#8b96ad';ctx.fillText('1 m grid — read λ',cx2,cy2+90);
+      ctx.strokeStyle='#f472b6';ctx.beginPath();
+      for(let px2=0;px2<=96;px2++){
+        const xm=px2/24; // meters
+        const y2=cy2+56+14*Math.sin(TAU*xm/c.scope);
+        px2===0?ctx.moveTo(cx2-48+px2,y2):ctx.lineTo(cx2-48+px2,y2);}
+      ctx.stroke();
+    }
+    ctx.textAlign='left';
+  });
+}
+function scene2(SW,now){
+  const L=lv.fretMax>0?fret:lv.L;
+  const x0=SW*0.12,x1=SW*0.88,y0=H*0.58;
+  const px=f2=>x0+(x1-x0)*f2; // frac of full bench → px (bench is fretMax or L)
+  const benchL=lv.fretMax>0?lv.fretMax:lv.L;
+  const pxOfMeters=m2=>x0+(x1-x0)*(m2/benchL);
+  // posts + bench
+  ctx.fillStyle='#1c2530';
+  ctx.fillRect(x0-10,y0-60,10,120);ctx.fillRect(pxOfMeters(L),y0-60,10,120);
+  ctx.fillStyle='#0e151c';ctx.fillRect(x0-10,y0+58,(x1-x0)+30,10);
+  if(lv.closed){ // pipe body
+    ctx.fillStyle='#10202a';
+    ctx.fillRect(x0,y0-26,pxOfMeters(L)-x0,52);
+    ctx.fillStyle='#1c2530';ctx.fillRect(x0-6,y0-30,8,60); // closed cap at x=0
+  }
+  // the standing wave
+  const m=nearestMode();
+  ctx.strokeStyle=lv.closed?'#fbbf24':'#22d3ee';ctx.lineWidth=2.5;
+  ctx.shadowColor=ctx.strokeStyle;ctx.shadowBlur=amp*14;
+  ctx.beginPath();
+  for(let i=0;i<=140;i++){
+    const xm=L*i/140;
+    let shape;
+    if(lv.closed)shape=Math.sin(TAU*xm/(4*L/m.n)/1); // sin(2πx/λ), node at 0
+    else shape=Math.sin(Math.PI*m.n*xm/L);
+    const y2=y0+amp*44*shape*Math.cos(now*TAU*3);
+    i===0?ctx.moveTo(pxOfMeters(xm),y2):ctx.lineTo(pxOfMeters(xm),y2);}
+  ctx.stroke();ctx.shadowBlur=0;ctx.lineWidth=1;
+  // fret slider
+  if(lv.fretMax>0){
+    ctx.fillStyle='#f472b6';
+    ctx.beginPath();ctx.moveTo(pxOfMeters(L),y0+62);ctx.lineTo(pxOfMeters(L)-7,y0+76);
+    ctx.lineTo(pxOfMeters(L)+7,y0+76);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText('L = '+fmt(L,2)+' m  (←/→)',pxOfMeters(L),y0+90);ctx.textAlign='left';}
+  // orbs
+  for(const o of orbs){
+    const ox=pxOfMeters(o.frac*L),oy=y0-78;
+    if(o.got){ctx.globalAlpha=.2;}
+    ctx.strokeStyle='#8b96ad';
+    ctx.beginPath();ctx.moveTo(ox,y0-110);ctx.lineTo(ox,oy-12);ctx.stroke();
+    const chg=clamp(o.charge/0.8,0,1);
+    ctx.fillStyle=o.got?'#1f2937':`rgba(251,191,36,${.35+.6*chg})`;
+    ctx.strokeStyle='#03141a';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(ox,oy,12+chg*4,0,TAU);ctx.fill();ctx.stroke();ctx.lineWidth=1;
+    ctx.globalAlpha=1;
+    ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText((o.n?('n='+o.n+' · '):'')+'x='+fmt(o.frac*L,2)+(o.needL?' · L='+o.needL:''),ox,oy-20);
+    ctx.textAlign='left';
+    if(!o.got&&chg>0){ctx.strokeStyle='#fbbf24';ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.arc(ox,oy,18,-Math.PI/2,-Math.PI/2+chg*TAU);ctx.stroke();ctx.lineWidth=1;}
+  }
+  // mode ladder readout in-scene
+  ctx.fillStyle='#0008';ctx.fillRect(SW/2-150,H-64,300,40);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText((lv.closed?'closed pipe — odd n only · fn = n·v/4L':'string · fn = n·v/2L'),SW/2,H-48);
+  ctx.fillStyle=Math.abs(myF-m.f)<6?'#34d399':'#fbbf24';
+  ctx.fillText('nearest rung: n='+m.n+' at '+fmt(m.f)+' Hz · you: '+fmt(myF)+' Hz',SW/2,H-32);
+  ctx.textAlign='left';
+}
+function scene3(SW,now){
+  const ww=48,wh=30;
+  const s=Math.min((SW-40)/ww,(H-80)/wh);
+  const ox=(SW-ww*s)/2,oy=(H-wh*s)/2+10;
+  const X2=x=>ox+x*s,Y2=y=>oy+y*s;
+  // interference field — path-difference fringes, drawn live
+  const cell=Math.max(10,Math.round(s*1.1));
+  for(let px2=ox;px2<ox+ww*s;px2+=cell)for(let py2=oy;py2<oy+wh*s;py2+=cell){
+    const x=(px2-ox)/s,y=(py2-oy)/s;
+    const dd=Math.abs(hyp(x-towerA.x,y-towerA.y)-hyp(x-towerB.x,y-towerB.y));
+    const I=Math.pow(Math.cos(Math.PI*dd/lam),2);
+    ctx.fillStyle=`rgba(34,211,238,${I*0.22})`;
+    ctx.fillRect(px2,py2,cell-1,cell-1);}
+  ctx.strokeStyle='#22d3ee33';ctx.strokeRect(ox,oy,ww*s,wh*s);
+  // towers
+  const tower=(tx,ty,col,label,me)=>{
+    const px2=X2(tx),py2=Y2(ty);
+    ctx.strokeStyle=col+'55';
+    for(let i=1;i<4;i++){const r=((now*lam)%lam+i*lam)*s*0.5;
+      ctx.globalAlpha=clamp(1-r/(lam*s*2),0,1)*.6;
+      ctx.beginPath();ctx.arc(px2,py2,r,0,TAU);ctx.stroke();}
+    ctx.globalAlpha=1;
+    ctx.fillStyle=col;ctx.strokeStyle='#03141a';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px2-8,py2+9);ctx.lineTo(px2+8,py2+9);ctx.lineTo(px2,py2-12);
+    ctx.closePath();ctx.fill();ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle=col;ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(label+(me?' (you)':''),px2,py2+22);ctx.textAlign='left';};
+  tower(towerA.x,towerA.y,'#8b96ad','A',false);
+  tower(towerB.x,towerB.y,'#f472b6','B',true);
+  // zones
+  const zone=(z,isBell)=>{
+    const px2=X2(z.x),py2=Y2(z.y);
+    const col=isBell?'#fbbf24':'#818cf8';
+    ctx.strokeStyle=z.ok?col:'#ffffff33';ctx.lineWidth=z.ok?2.5:1.5;
+    ctx.beginPath();ctx.arc(px2,py2,12,0,TAU);ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle=z.ok?col:'#8b96ad';
+    ctx.font='13px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(isBell?'🔔':'🤫',px2,py2+5);
+    // its current path difference, in λ — the readout that teaches
+    const dd=Math.abs(hyp(z.x-towerA.x,z.y-towerA.y)-hyp(z.x-towerB.x,z.y-towerB.y))/lam;
+    ctx.font='9px "Share Tech Mono",monospace';
+    ctx.fillText('Δd '+fmt(dd,2)+'λ',px2,py2+26);ctx.textAlign='left';};
+  for(const b of lv.bells)zone(b,true);
+  for(const h of lv.hushes)zone(h,false);
+  // hold progress
+  if(zoneT>0){ctx.strokeStyle='#34d399';ctx.lineWidth=4;
+    ctx.beginPath();ctx.arc(SW/2,oy-2,14,-Math.PI/2,-Math.PI/2+(zoneT/3)*TAU);ctx.stroke();
+    ctx.lineWidth=1;}
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('λ = '+fmt(lam,1)+' m'+(lv.lamDial?'  (W/S)':''),ox+6,oy+wh*s+18);
+}
+function drawHUD(SW){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  const left2=Math.max(0,lv.dur-attemptT);
+  ctx.fillStyle='#0008';ctx.fillRect(8,8,210,48);
+  ctx.fillStyle=left2<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+  ctx.fillText(Math.ceil(left2)+'s',16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  if(act===1)ctx.fillText('crystals '+doneCount+' / '+crystals.length,70,28);
+  else if(act===2)ctx.fillText('orbs '+orbs.filter(o=>o.got).length+' / '+orbs.length,70,28);
+  else ctx.fillText('hold all '+fmt(Math.max(0,3-zoneT),1)+'s',70,28);
+  ctx.fillText('time',16,46);
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '♪'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,48);
+  ctx.textAlign='left';
+}
+/* ================================================== the listening desk */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#050d12';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#22d3ee33';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#22d3ee';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('LISTENING DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name:'',SW+158,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=H-top-2*gap-14;
+  drawScope(gx,top,gw,ch2*0.46);
+  drawTriangle(gx,top+ch2*0.46+gap,gw,ch2*0.54);
+}
+function drawScope(gx,gy,gw,gh){
+  ctx.fillStyle='#081820';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  const now=performance.now()/1000;
+  if(act===2){
+    ctx.fillText('MODE SHAPE — where the wave lives on the string',gx+8,gy+14);
+    const m2=nearestMode(),L=lv.fretMax>0?fret:lv.L;
+    ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+    ctx.beginPath();
+    for(let i=0;i<=100;i++){
+      const xm=L*i/100;
+      const shape=lv.closed?Math.sin(TAU*xm/(4*L/m2.n)):Math.sin(Math.PI*m2.n*xm/L);
+      const y2=gy+gh/2+amp*(gh*0.32)*shape*Math.cos(now*TAU*3);
+      i===0?ctx.moveTo(gx+10+(gw-20)*i/100,y2):ctx.lineTo(gx+10+(gw-20)*i/100,y2);}
+    ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle='#8b96ad';
+    ctx.fillText('amp '+Math.round(amp*100)+'%  ·  n = '+m2.n,gx+8,gy+gh-8);
+  }else{
+    ctx.fillText(act===1?'SCOPE — you (cyan) vs nearest crystal (pink); their SUM beats':'SCOPE — the two towers, heard at bell №1',gx+8,gy+14);
+    let f1=myF,f2=myF;
+    if(act===1){let nd=1e9;
+      for(const c of crystals)if(!c.got&&Math.abs(c.target-myF)<nd){nd=Math.abs(c.target-myF);f2=c.target;}}
+    else{ // act 3: phase difference at first bell
+      const z=lv.bells[0];
+      f1=300;f2=300;
+      const dd=Math.abs(hyp(z.x-towerA.x,z.y-towerA.y)-hyp(z.x-towerB.x,z.y-towerB.y));
+      var ph3=TAU*dd/lam; // phase offset at the bell
+    }
+    const mid=gy+gh*0.42;
+    const drawW=(f,col,ph,amp2,yy)=>{
+      ctx.strokeStyle=col;ctx.lineWidth=1.5;
+      ctx.beginPath();
+      for(let i=0;i<=gw-20;i++){
+        const tt=i/(gw-20)*0.04; // 40 ms window
+        const y2=yy+amp2*Math.sin(TAU*f*(tt+now*0.02)+(ph||0));
+        i===0?ctx.moveTo(gx+10+i,y2):ctx.lineTo(gx+10+i,y2);}
+      ctx.stroke();ctx.lineWidth=1;};
+    drawW(f1,'#22d3ee',0,gh*0.13,mid-gh*0.16);
+    drawW(f2,'#f472b6',act===3?ph3:0,gh*0.13,mid-gh*0.16);
+    // the sum — beats (act 1) or interference (act 3)
+    ctx.strokeStyle='#fbbf24';ctx.lineWidth=2;
+    ctx.beginPath();
+    for(let i=0;i<=gw-20;i++){
+      const tt=i/(gw-20)*0.04;
+      const y2=gy+gh*0.72+gh*0.11*(Math.sin(TAU*f1*(tt+now*0.02))
+        +Math.sin(TAU*f2*(tt+now*0.02)+(act===3?ph3:0)))/2;
+      i===0?ctx.moveTo(gx+10+i,y2):ctx.lineTo(gx+10+i,y2);}
+    ctx.stroke();ctx.lineWidth=1;
+    if(act===1){const beat=Math.abs(f1-f2);
+      ctx.fillStyle=beat<8?'#34d399':'#8b96ad';
+      ctx.fillText('beat = |f₁−f₂| = '+fmt(beat)+' Hz',gx+8,gy+gh-8);}
+  }
+}
+function drawTriangle(gx,gy,gw,gh){
+  ctx.fillStyle='#081820';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE TRIANGLE — v = f · λ, always, everywhere',gx+8,gy+14);
+  const cx2=gx+gw/2,cy2=gy+gh*0.52,R=Math.min(gw,gh)*0.27;
+  // triangle frame
+  const A=[cx2,cy2-R],B=[cx2-R*0.95,cy2+R*0.7],C=[cx2+R*0.95,cy2+R*0.7];
+  ctx.strokeStyle='#22d3ee66';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(A[0],A[1]);ctx.lineTo(B[0],B[1]);ctx.lineTo(C[0],C[1]);
+  ctx.closePath();ctx.stroke();ctx.lineWidth=1;
+  const v=act===2?lv.v:act===3?330:lv.v;
+  const f=act===3?330/lam:myF;
+  const lam2=v/f;
+  ctx.font='700 14px Orbitron,monospace';ctx.textAlign='center';
+  ctx.fillStyle='#34d399';ctx.fillText('v',A[0],A[1]-8);
+  ctx.fillStyle='#22d3ee';ctx.fillText('f',B[0]-4,B[1]+16);
+  ctx.fillStyle='#fbbf24';ctx.fillText('λ',C[0]+4,C[1]+16);
+  ctx.font='12px "Share Tech Mono",monospace';
+  ctx.fillStyle='#34d399';ctx.fillText(fmt(v)+' m/s',A[0],A[1]+22);
+  ctx.fillStyle='#22d3ee';ctx.fillText(fmt(f)+' Hz',B[0]+6,B[1]-14);
+  ctx.fillStyle='#fbbf24';ctx.fillText(fmt(lam2,2)+' m',C[0]-6,C[1]-14);
+  ctx.textAlign='left';
+  // act-specific footer line
+  ctx.font='11px "Share Tech Mono",monospace';
+  let y3=gy+gh-30;
+  if(act===1){ctx.fillStyle='#8b96ad';
+    ctx.fillText('dial f; the medium owns v; λ follows',gx+10,y3);
+    const rem=crystals.filter(c=>!c.got).length;
+    ctx.fillStyle='#34d399';
+    ctx.fillText(rem?rem+' crystal'+(rem>1?'s':'')+' still humming':'hall in tune',gx+10,y3+16);}
+  else if(act===2){const m2=nearestMode();
+    ctx.fillStyle='#8b96ad';
+    ctx.fillText('rungs: '+modeFreqs().map(x=>Math.round(x.f)).join(' · '),gx+10,y3);
+    ctx.fillStyle=Math.abs(myF-m2.f)<6?'#34d399':'#fbbf24';
+    ctx.fillText('drive '+fmt(myF)+' Hz → n='+m2.n+' ('+fmt(m2.f)+')',gx+10,y3+16);}
+  else{ctx.fillStyle='#8b96ad';
+    ctx.fillText('bright fringe: Δd = nλ · dark: (n+½)λ',gx+10,y3);
+    const okN=[...lv.bells,...lv.hushes].filter(z=>z.ok).length;
+    ctx.fillStyle='#34d399';
+    ctx.fillText(okN+' / '+(lv.bells.length+lv.hushes.length)+' zones satisfied',gx+10,y3+16);}
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){
+    acc+=el;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(e.code==='ArrowUp')up=true;
+    if(e.code==='ArrowDown')down=true;
+    if(e.code==='ArrowLeft')left=true;
+    if(e.code==='ArrowRight')right=true;
+    if(act===3&&lv.lamDial){
+      if(e.code==='KeyW')lam=clamp(lam+0.2,1.6,4.5);
+      if(e.code==='KeyS')lam=clamp(lam-0.2,1.6,4.5);}
+    if(act<3){ // fine tune taps
+      if(e.code==='KeyW')myF=clamp(myF+1,60,900);
+      if(e.code==='KeyS')myF=clamp(myF-1,60,900);}
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';
+    up=down=left=right=false;setTones(myF,0,220,0);}
+  if(e.code==='KeyM'){muted=!muted;setTones(myF,0,220,0);}
+});
+window.addEventListener('keyup',e=>{
+  if(e.code==='ArrowUp')up=false;
+  if(e.code==='ArrowDown')down=false;
+  if(e.code==='ArrowLeft')left=false;
+  if(e.code==='ArrowRight')right=false;
+});
+let dragY=null;
+cv.addEventListener('pointerdown',e=>{audio();dragY=e.clientY;
+  if(state==='play'&&act===3){
+    const {w:SW}=sceneRect();
+    const ww=48,wh=30,s=Math.min((SW-40)/ww,(H-80)/wh);
+    const ox=(SW-ww*s)/2,oy=(H-wh*s)/2+10;
+    towerB.x=clamp((e.clientX-ox)/s,14,46);
+    towerB.y=clamp((e.clientY-oy)/s,3,27);
+  }
+});
+cv.addEventListener('pointermove',e=>{
+  if(dragY===null||state!=='play')return;
+  if(act<3){myF=clamp(myF+(dragY-e.clientY)*0.5,60,900);dragY=e.clientY;}
+  else{
+    const {w:SW}=sceneRect();
+    const ww=48,wh=30,s=Math.min((SW-40)/ww,(H-80)/wh);
+    const ox=(SW-ww*s)/2,oy=(H-wh*s)/2+10;
+    towerB.x=clamp((e.clientX-ox)/s,14,46);
+    towerB.y=clamp((e.clientY-oy)/s,3,27);
+  }
+});
+window.addEventListener('pointerup',()=>{dragY=null;});
+window.addEventListener('blur',()=>{up=down=left=right=false;dragY=null;});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

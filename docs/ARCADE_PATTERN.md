@@ -61,6 +61,14 @@ their plays never appear on student boards (`meta.staff`).
 3. **Set `max_plausible_score`** honestly — it is the server-side sanity
    cap on reported scores. Estimate the best conceivable run and add ~50%.
 
+4. **Register with `enabled = false` until the game file is DEPLOYED.**
+   The cabinet row lives in the database (instant); the game file lives in
+   `public/` (ships with the next deploy). Enable a cabinet whose file
+   hasn't deployed and the player iframe renders the app's 404 page.
+   The player page now HEAD-checks the file and shows a "cabinet being
+   installed" screen as a safety net — but the discipline is: file deploys
+   first, `enabled = true` second.
+
 That's it. No new tables, no new routes, no new pages per game.
 
 ## Files

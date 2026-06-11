@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute power as work-per-time, apply P = F·v for instantaneous power, and convert between Watts and horsepower.",
+      "targetId": "u4.k7-power"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Asteroid impact delivers HUGE energy in MICROSECONDS — that's the catastrophic POWER.",
+      "connection": "It's not just the energy. The same energy delivered slowly (a billion years) vs. fast (a millisecond) means lava flow vs. extinction event."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## How fast can you spend energy?\n\nWork tells you HOW MUCH energy moves. Power tells you HOW FAST:\n\n**P = W / t** — units: Watts (1 W = 1 J/s)\n\nWhen a force pushes something moving at speed v, there's an instantaneous form:\n\n**P = F · v** (from P = W/t = F·d/t = F·v)\n\n**Horsepower:** 1 hp ≈ 746 W. A 100-hp engine ≈ 75,000 W. Multiply hp by 746 to get Watts; divide Watts by 746 to get hp.\n\nSame work, different power: climbing the stairs in 5 s or in 50 s moves the SAME energy — the 5-s climb just needs 10× the power."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Power (P)",
+          "definition": "The rate of energy transfer. P = W / t. Units: Watts (1 W = 1 J/s). A 700-N person climbing a 4-m staircase in 5 s: P = (700·4)/5 = 560 W.",
+          "cognate": "Sp. potencia · Pt. potência · HC pisans"
+        },
+        {
+          "term": "Instantaneous power (P = F·v)",
+          "definition": "An instantaneous form of power: force times the speed of the point of application, derived from P = W/t = F·d/t = F·v. A car engine at 75 kW propelling the car at 27 m/s: F = P/v = 75,000/27 ≈ 2,780 N. Use P = F·v when you know force and speed simultaneously; use P = W/t when you know work over time.",
+          "cognate": "Sp. potencia instantánea · Pt. potência instantânea"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Power is NOT energy",
+      "markdown": "Power is the RATE of energy transfer. Big power = fast transfer — not necessarily a lot of energy. Two devices can do the same work; the more powerful one just does it faster."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "CLIMBING STAIRS. A 700-N student climbs a 4-m staircase in 5 s. What's their power output?",
+      "given": "F = 700 N · d = 4 m · t = 5 s",
+      "equation": "P = W / t = (F · d) / t",
+      "work": "W = 700 · 4 = 2800 J\nP = 2800 / 5 = 560 W",
+      "answer": "560 W — about 5.6 light-bulbs of power, briefly."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "CAR ENGINE POWER. A car engine outputs 100 hp (about 75,000 W) while driving at 27 m/s (≈ 60 mph). What's the driving force?",
+      "given": "P = 75,000 W · v = 27 m/s",
+      "equation": "P = F·v → F = P/v",
+      "work": "F = 75,000 / 27 ≈ 2,780 N",
+      "answer": "≈ 2,780 N of driving force — balanced by drag + rolling resistance at steady speed."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "Asteroid impact as a power event",
+      "markdown": "Asteroid impact: ~10¹⁷ J in ~0.1 s. Power ≈ 10¹⁸ W. The Sun outputs ~4×10²⁶ W. For a tenth of a second, an asteroid impact is a millionth-of-the-Sun bright at the impact site."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "LIFT POWER. A 2-kg ball is lifted 1.5 m in 0.3 s. What power does the lifter generate?",
+      "givenHint": "m = 2 kg · h = 1.5 m · t = 0.3 s. Weight first: F = mg.",
+      "equationHint": "W = m·g·h, then P = W/t.",
+      "equationOptions": [
+        "P = W / t",
+        "W = F·d",
+        "P = F·v",
+        "KE = ½·m·v²"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your lift-power answer, then complete the frame.",
+      "frame": "Power is the rate of ___ transfer. Two devices can do the same work, but the one with more power does it ___."
+    },
+    {
+      "id": "rd-ch09-e",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **9.2** and **9.8** (power and the watt; machines, levers, and pulleys). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch09-e",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 9,
+      "title": "Energy — read & practice",
+      "sectionIds": [
+        "9.2",
+        "9.8"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k7-power"
+    }
+  ]
+}

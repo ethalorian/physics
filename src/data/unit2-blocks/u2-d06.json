@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can compute g(r) = G·M/r² at any distance from a body, and I can explain g as a field that lives in space — force per unit mass.",
+      "targetId": "u2.k2-field-strength"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Earth makes a gravitational field everywhere in space.",
+      "connection": "As 2026-XJ moves through Earth's field, the strength at its location changes. The field IS the bridge between 'Earth's mass' and 'force on the asteroid.'"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## g is a field — it lives in space, not in objects\n\nTake F = G·M·m/r² and divide out the small mass m. What's left is a property of the **location**:\n\n**g(r) = G·M / r²**\n\nThis is the **gravitational field strength** at distance r from a body of mass M — the force a 1 kg mass would feel there. Units: **N/kg**, which is exactly the same as m/s².\n\nAt Earth's surface, g = 9.81 N/kg. At ISS altitude (~400 km up), g ≈ 8.7 N/kg. The field is there whether or not anything is in it — drop a mass anywhere and the field tells it how to fall."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Gravitational field",
+          "definition": "A region of space where a mass would feel a gravitational force; its strength is g(r) at each point. At Earth's surface g = 9.81 N/kg; at ISS altitude g ≈ 8.7 N/kg.",
+          "cognate": "Sp. campo gravitatorio · Pt. campo gravitacional · HC chan gravitasyonèl"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw Earth as a circle in the middle. Around it, draw field arrows pointing INWARD toward Earth. Close to Earth, make the arrows LONG (strong field). Farther away, make them SHORT (weak field). Gravity weakens with distance — your arrows should show it.",
+      "prompts": [
+        "Arrows point toward Earth's center.",
+        "Long arrows near the surface, shorter arrows farther out.",
+        "Label one near arrow '9.81 N/kg' and one far arrow with a smaller value."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "Compute g at Earth's surface using G·M_Earth / R_Earth². Show that you get 9.81 m/s².",
+      "given": "G = 6.67×10⁻¹¹ · M_Earth = 5.97×10²⁴ kg · R_Earth = 6.37×10⁶ m",
+      "equation": "g(R) = G·M / R²",
+      "work": "g = (6.67×10⁻¹¹)(5.97×10²⁴) / (6.37×10⁶)²\ng = (3.98×10¹⁴) / (4.06×10¹³)\ng ≈ 9.81 m/s²",
+      "answer": "9.81 m/s². The number matches what we measure in lab — the equation works."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "'Zero gravity' in space is a myth",
+      "markdown": "At the ISS, g is about **89% of surface g**. Astronauts float because they are **falling with the station** — that's what an orbit is. We'll prove this with numbers today and explore it fully on Day 13."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Compute g at the ISS (altitude 400 km, so r = R_Earth + 400 km = 6.77 × 10⁶ m). Then explain in one sentence why astronauts float anyway.",
+      "givenHint": "G, M_Earth = 5.97 × 10²⁴ kg, and r = 6.77 × 10⁶ m (center-to-center!).",
+      "equationHint": "Field strength: g(r) = G·M/r².",
+      "equationOptions": ["g(r) = G·M/r²", "F = G·m₁·m₂/r²", "F = m·g", "v = √(G·M/r)"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why is the ISS NOT 'in zero gravity' even though astronauts float? Use your computed g at ISS altitude in your answer.",
+      "frame": "Astronauts on the ISS float NOT because g is zero (it's about ___ m/s² up there), but because they and the station are both ___ around Earth, so they fall ___."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.k2-field-strength"
+    }
+  ]
+}

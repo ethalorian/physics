@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe sound as a longitudinal mechanical wave, identify pitch with frequency and loudness with amplitude, and explain why sound needs a MEDIUM (no sound in space).",
+      "targetId": "u6.k6-sound-longitudinal"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid impact generates HUGE atmospheric shockwaves and INFRASOUND (< 20 Hz). The infrasound from the 2013 Chelyabinsk impact traveled around the entire planet — twice.",
+      "connection": "Today: the foundation. Day 17 applies sound + seismic-wave physics to predict the damage and detection range from an asteroid strike."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Sound, dissected\n\nSound is a **longitudinal mechanical wave**: a traveling pattern of **compressions** (molecules squeezed together) and **rarefactions** (molecules spread apart). A tuning fork pushes the air forward, pulls it back, and the pattern races outward at about 343 m/s — while each air molecule just wiggles in place.\n\nThe perception dictionary:\n\n- **Pitch** ↔ frequency f. Higher f = higher pitch. Middle C ≈ 262 Hz; A4 = 440 Hz.\n- **Loudness** ↔ amplitude A (intensity). Bigger A = louder, measured logarithmically in decibels.\n\nAnd the boundary cases of human hearing: **infrasound** below 20 Hz, **ultrasound** above 20 kHz. Both are real sound waves — just outside our ears' range.\n\nBecause sound is mechanical, it needs molecules to compress. **No medium → no sound.** Space explosions are silent, no matter what the movies say."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Sound (as a wave)",
+          "definition": "A longitudinal mechanical wave — compressions and rarefactions in a medium (air, water, solid). Cannot travel through vacuum. A tuning fork pushes air molecules forward (compression), then pulls them back (rarefaction); the pattern travels outward at v ≈ 343 m/s in air.",
+          "cognate": "Sp. sonido · Pt. som · HC son"
+        },
+        {
+          "term": "Pitch",
+          "definition": "Our perception of a sound's frequency. Higher f = higher pitch. Units: Hz. Middle C ≈ 262 Hz. A4 = 440 Hz. Soprano high note ≈ 1500 Hz. Bass drum ≈ 50 Hz. Pitch is the PERCEPTUAL name; frequency is the physical quantity.",
+          "cognate": "Sp. tono · Pt. altura · HC ton"
+        },
+        {
+          "term": "Loudness",
+          "definition": "Our perception of a sound's amplitude (or intensity). Bigger A = louder. Often measured in decibels on a logarithmic scale. A whisper has small A; a rock concert has large A. Loudness is logarithmic in our ears: +10 dB feels about twice as loud, even though it's ×10 intensity.",
+          "cognate": "Sp. intensidad · Pt. intensidade · HC fòs"
+        },
+        {
+          "term": "Infrasound + ultrasound",
+          "definition": "INFRASOUND is sound below 20 Hz (we can't hear it). ULTRASOUND is above 20 kHz (we can't hear it). Both are real sound waves; just outside our range. Asteroid impacts produce powerful infrasound. Bats use ultrasound for echolocation. Medical ultrasound imaging operates near 1 MHz. Infra = below; ultra = above.",
+          "cognate": "Sp. infrasonido / ultrasonido · Pt. infrassom / ultrassom"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Sound is NOT made of moving air",
+      "markdown": "Air molecules wiggle in place; only the COMPRESSION pattern moves. Your friend's voice doesn't blow air across the room at 343 m/s — that would be a hurricane. No medium = no sound."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Pattern shows alternating dense + sparse vertical lines. Label one COMPRESSION and one RAREFACTION. Mark the direction the SOUND travels — is it the same as the molecule motion, or perpendicular?",
+      "prompts": [
+        "Draw bands of close-together lines (compression) and spread-out lines (rarefaction).",
+        "Arrow the wave's travel direction.",
+        "Arrow the molecule wiggle — PARALLEL to travel (longitudinal)."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "In a sci-fi movie, an explosion in space is shown with a loud BOOM. From a physics perspective, what's wrong?",
+      "given": "Sound = compression wave needing a medium",
+      "equation": "(qualitative — no equation needed)",
+      "work": "Space between objects is nearly vacuum.\nSound needs molecules to compress + rarefy.\nNo molecules → no compressions → no sound wave.",
+      "answer": "The boom can't propagate. Realistic space explosions are SILENT."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A 1000 Hz tuning fork is held just above the surface of a lake. What are the WAVELENGTHS of the sound (a) in air (v = 343 m/s) and (b) in water (v = 1480 m/s)?",
+      "given": "f = 1000 Hz · v_air = 343 · v_water = 1480",
+      "equation": "λ = v/f",
+      "work": "(a) λ_air = 343 / 1000 = 0.343 m\n(b) λ_water = 1480 / 1000 = 1.48 m\nSame f, but λ in water is 4.3× larger.",
+      "answer": "Air: 0.343 m. Water: 1.48 m. Same f, faster medium → longer λ."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PERIOD OF A TUNING FORK — A 512 Hz tuning fork is struck. What's the period of one cycle? (Use T = 1/f.)",
+      "givenHint": "f = 512 Hz.",
+      "equationHint": "T = 1/f — expect a few milliseconds.",
+      "equationIds": [
+        "period"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Infrasound — the impact's long-distance signature",
+      "markdown": "Below 20 Hz, sound waves travel thousands of km with little attenuation. NOAA's infrasound monitoring network has detected every major asteroid airburst since 2000."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why is there no sound in outer space, even from a violent event? Answer in two sentences using the word 'medium'.",
+      "frame": "Sound is a ___ wave (compressions + rarefactions). Pitch is the perception of ___. Loudness is the perception of ___. Without a medium, sound cannot ___."
+    },
+    {
+      "id": "rd-ch26-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **26.1–26.5** (where sound originates, compressions and rarefactions, media that transmit sound, the speed of sound, and loudness in decibels). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch26-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 26,
+      "title": "Sound — read & practice",
+      "sectionIds": [
+        "26.1",
+        "26.2",
+        "26.3",
+        "26.4",
+        "26.5"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k6-sound-longitudinal"
+    }
+  ]
+}

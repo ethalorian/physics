@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can predict constructive vs. destructive interference based on whether two waves are in phase, and identify a standing wave as the interference of a wave with its reflection.",
+      "targetId": "u6.r1-interference"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Modern radar uses INTERFEROMETRY — combining signals from multiple receivers to resolve fine asteroid details much smaller than a single antenna could see.",
+      "connection": "Day 9 builds on standing waves to explain how guitar strings + organ pipes (and Earth's seismic resonances on Day 17) work."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## When two waves meet, they ADD\n\nAt every point, the displacements of overlapping waves simply **add**:\n\n- **IN PHASE** (crest meets crest) → **CONSTRUCTIVE** interference. Net amplitude doubles.\n- **OUT OF PHASE by λ/2** (crest meets trough) → **DESTRUCTIVE** interference. Net amplitude = 0.\n\nNo energy is destroyed in the quiet spots — it's redistributed to the loud spots.\n\n**Standing waves** are the star application: a wave interferes with **its own reflection** off a fixed end. The result looks frozen in place — fixed **NODES** (no motion) and **ANTINODES** (max motion). A guitar string fixed at both ends can only host standing waves that FIT: nodes at both ends. The longest one that fits (one antinode in the middle) is the **fundamental**, with frequency\n\n**f₁ = v / (2L)** — and harmonics at f_n = n·v/(2L)."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Interference",
+          "definition": "When two waves meet, their displacements ADD at each point. Same-direction crests → bigger crest (CONSTRUCTIVE). Opposite displacements → cancellation (DESTRUCTIVE). Two stones dropped in a pond — ripples meet and create bright + dark patterns. Noise-canceling headphones produce a sound exactly opposite to incoming noise — they CANCEL.",
+          "cognate": "Sp. interferencia · Pt. interferência · HC entèfewans"
+        },
+        {
+          "term": "Constructive interference",
+          "definition": "Two waves IN PHASE: crests align with crests, troughs with troughs. Net displacement = sum (bigger). Two speakers playing the same tone reinforce each other at certain spots = LOUD. In phase doesn't mean identical — it means crests align in TIME and SPACE.",
+          "cognate": "Sp. interferencia constructiva · Pt. interferência construtiva"
+        },
+        {
+          "term": "Destructive interference",
+          "definition": "Two waves OUT OF PHASE by half a wavelength: crests align with troughs. Net displacement = 0 (cancellation). Noise-canceling headphones detect incoming noise and play the EXACT OPPOSITE — they cancel at your eardrum.",
+          "cognate": "Sp. interferencia destructiva · Pt. interferência destrutiva"
+        },
+        {
+          "term": "Standing wave",
+          "definition": "A wave interfering with its own reflection. Produces fixed NODES (no motion) and ANTINODES (max motion). The wave LOOKS stationary. A guitar string fixed at both ends: pluck it and a standing wave forms — the fundamental has nodes at the ends and one antinode in the middle.",
+          "cognate": "Sp. onda estacionaria · Pt. onda estacionária · HC vag estasyonè"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Interference doesn't destroy energy",
+      "markdown": "In destructive zones, the energy is just shifted to constructive zones elsewhere. At dark fringes the energy is zero; at bright fringes it's doubled. And a standing wave is REAL motion of the medium — it just doesn't TRANSLATE left-right; it oscillates up-down at fixed locations."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "TOP: two waves IN PHASE — sum. BOTTOM: two waves OUT OF PHASE — sum. Mark the amplitudes (in phase = double, out of phase = zero).",
+      "prompts": [
+        "Top panel: two identical sines aligned, then their sum (2A).",
+        "Bottom panel: same sines shifted by λ/2, then their sum (flat zero).",
+        "Label CONSTRUCTIVE and DESTRUCTIVE."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "Incoming engine noise enters as a 200 Hz wave with amplitude A = 1 (relative units). The headphones detect it and produce a 200 Hz wave with amplitude A = 1, but SHIFTED by half a wavelength. What's the net amplitude at your eardrum?",
+      "given": "Both waves: 200 Hz, A = 1. Headphone wave shifted by λ/2 (opposite phase).",
+      "equation": "A_net = A₁ + A₂ (where A₂ is OPPOSITE-signed)",
+      "work": "At every instant: A_net = (+1) + (−1) = 0\nContinuously for both waves → silence at the eardrum.",
+      "answer": "A_net = 0 → silence. (Headphones never PERFECTLY cancel — but ~30 dB attenuation is real.)"
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "A guitar string is 0.65 m long. The wave speed along the string is 80 m/s. What's the fundamental (lowest) standing-wave frequency?",
+      "given": "L = 0.65 m · v = 80 m/s · n = 1 (fundamental)",
+      "equation": "f₁ = v / (2L)",
+      "work": "f₁ = 80 / (2 · 0.65)\nf₁ = 80 / 1.30\nf₁ ≈ 61.5 Hz",
+      "answer": "f₁ ≈ 61.5 Hz. The second harmonic (n = 2) would be 123 Hz, third 184.5, etc."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "PIPE ORGAN — A 1.0-m-long pipe organ tube, open at both ends, supports standing waves. Sound in air is 343 m/s. What's the fundamental frequency? (Use f₁ = v/(2L).)",
+      "givenHint": "L = 1.0 m · v = 343 m/s.",
+      "equationHint": "f₁ = v/(2L) — divide the speed by twice the length.",
+      "equationOptions": [
+        "f₁ = v / (2L)",
+        "f₁ = 2L / v",
+        "f₁ = v · 2L",
+        "v = f·λ"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Geometry sets the song",
+      "markdown": "The frequencies a guitar string + pipe organ + bell + Earth's crust + even an asteroid PRODUCE are set by their geometry — which standing waves fit. That's why a long string has a low fundamental and a short string a high one."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Noise-canceling headphones produce a sound wave OPPOSITE to incoming noise. Why does this cancel? Where does the noise energy go? Answer in two sentences.",
+      "frame": "Two waves in phase produce ___ interference. Two waves out of phase by λ/2 produce ___ interference. A standing wave is what happens when a wave interferes with its own ___."
+    },
+    {
+      "id": "rd-ch25-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **25.7–25.8** (interference patterns and standing waves: nodes and antinodes). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch25-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 25,
+      "title": "Vibrations and Waves — read & practice",
+      "sectionIds": [
+        "25.7",
+        "25.8"
+      ]
+    },
+    {
+      "id": "rd-ch31-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **31.3–31.5** (interference of light: Young's double-slit experiment, diffraction gratings, and thin-film colors). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch31-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 31,
+      "title": "Diffraction and Interference — read & practice",
+      "sectionIds": [
+        "31.3",
+        "31.4",
+        "31.5"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r1-interference"
+    }
+  ]
+}

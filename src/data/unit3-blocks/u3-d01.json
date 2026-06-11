@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can name the two things that make a moving object hard to stop, and I can frame the two questions Unit 3 must answer about 2026-XJ.",
+      "targetId": "u3.anchor-two-questions"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 2: 2026-XJ and Earth arrive at the orbit-crossing point within HOURS of each other. Closest-approach distance: 40,000–100,000 km — inside the Moon's orbit.",
+      "connection": "Unit 2 told us WHERE 2026-XJ is going. Today we open Unit 3 with two new questions: (1) IF it hits, what does the physics say? (2) Could we PUSH it off course before it gets here, like NASA's DART mission did in 2022?"
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "NASA / Planetary Defense Briefing — Update 3",
+      "markdown": "NASA has run high-precision ephemeris simulations and confirmed: at current trajectory, 2026-XJ and Earth will arrive at the orbit-crossing point within **HOURS** of each other. Refined closest-approach distance: somewhere between **40,000 and 100,000 km**. For reference, Earth's radius is 6,371 km, and the Moon orbits at about 384,000 km. So: not a definite impact — but uncomfortably **inside the Moon's orbit**.\n\nPrecedent on the table: in 2022, NASA's **DART** mission deliberately crashed a 600-kg spacecraft into a small asteroid called Dimorphos and changed its orbital period by 32 minutes. The math behind DART is exactly the math you'll learn this unit.\n\n*This is fiction. The physics — and the equations — are real.*"
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## What makes something hard to stop?\n\nWatch the three crashes (live or in the simulation below):\n\n- **A** — a toy car rolls *gently* into a cardboard wall. The wall stands.\n- **B** — the *same* car going **fast**. The wall moves.\n- **C** — a **heavier** cart at the slow speed. The wall moves.\n\nA vs. B says **speed** matters. A vs. C says **mass** matters. Two properties, multiplied together — that product gets a name tomorrow: **momentum**."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — the wall crashes",
+      "markdown": "We ran the Hot Wheels crashes live. At home, run the cart-collision simulation below: vary the mass, then vary the speed, and watch what changes how hard the carts slam."
+    },
+    {
+      "id": "b6",
+      "type": "sim_embed",
+      "simulationSlug": "cart-collisions"
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch the three crash cases (A: slow car, B: fast car, C: heavy cart slow). Circle the cases where the wall MOVES. Then write: what do A & B tell you? What do A & C tell you? What TWO things matter?",
+      "prompts": [
+        "Three quick panels: A, B, C.",
+        "Circle the wall-movers.",
+        "Name the TWO properties that matter."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "What did you NOTICE in the crash demos (live or in the simulation)?",
+      "interpretPrompt": "What do you WONDER about stopping — or deflecting — something as big as an asteroid?",
+      "frame": "I notice ___. I wonder ___."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write your ONE question about deflecting (or surviving) an asteroid.",
+      "frame": "My one question is ___."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Between (a) a 1500-kg car at 30 m/s and (b) a 0.05-kg bullet at 400 m/s, which would be HARDER to stop with your hand? Why? (Both have honest defenses — name the trade-off.)",
+      "frame": "I'd say ___ is harder to stop, because even though ___, its ___ is much bigger."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.anchor-two-questions"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply W_net = ΔKE as a shortcut to find stopping distance, final speed, or net force without solving for time.",
+      "targetId": "u4.s1-work-energy-theorem"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Gravity does work on the falling asteroid. That work IS its impact KE.",
+      "connection": "The work-energy theorem lets us skip the time-history of the fall and go straight from forces to impact speed. That's tomorrow's lab."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The shortcut that skips time\n\nIn Unit 1 you'd solve a stopping problem with kinematics: find a, find t, find d. The work-energy theorem skips all of that.\n\nWhen forces are CONSTANT:\n\n**W_net = F_net · d · cos θ = ½m·v_f² − ½m·v_i²**\n\nThree knowns → one unknown. No time variable anywhere. Today is a reps day — two worked examples, then yours:\n\n1. **Stopping distance**: known force, known speeds → solve for d.\n2. **Speed at the bottom**: known gravity work → solve for v_f.\n\nThe decision rule: if you KNOW the forces and the DISTANCES — but not the time — the work-energy theorem is the fast lane."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "W_net = ΔKE (shortcut form)",
+          "definition": "When forces are CONSTANT, W_net = F_net · d · cosθ = ½m·v_f² − ½m·v_i². Three knowns → one unknown. A 1500-kg car at 30 m/s, brakes apply 9000 N. Stopping distance? W_net = −F·d = 0 − ½mv² → d = ½·1500·900/9000 = 75 m.",
+          "cognate": "Sp. teorema trabajo-energía aplicado · Pt. teorema aplicado"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "W_net is the work of the NET force",
+      "markdown": "Not any single force. Add up ALL the works (with signs) first — then set the total equal to ΔKE."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "STOPPING DISTANCE OF A CAR — A 1500-kg car at 30 m/s brakes to rest. The brakes apply 9000 N (constant). How far does the car travel before stopping?",
+      "given": "m = 1500 kg · v_i = 30 m/s · v_f = 0 · F_brake = 9000 N (opposes motion)",
+      "equation": "W_net = ΔKE → −F·d = 0 − ½m·v_i²",
+      "work": "−9000 · d = − ½ · 1500 · 30²\n−9000 · d = − 675,000\nd = 675,000 / 9000 = 75 m",
+      "answer": "The car travels 75 m before stopping."
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "ROLLER-COASTER: FROM GRAVITY WORK TO BOTTOM SPEED — A 100-kg coaster cart starts at rest at the top of a 10-m incline. Friction-free. What's its speed at the bottom?",
+      "given": "m = 100 kg · v_i = 0 · h = 10 m · g = 9.81 m/s²",
+      "equation": "W_grav = m·g·h   AND   W_net = ΔKE = ½m·v_f²",
+      "work": "W_grav = 100 · 9.81 · 10 = 9810 J\n9810 = ½ · 100 · v_f²\nv_f² = 196.2\nv_f ≈ 14 m/s",
+      "answer": "≈ 14 m/s at the bottom. Faster than kinematics — no time needed."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "When to take the shortcut",
+      "markdown": "If you KNOW the forces and DISTANCES, skip kinematics. Compute the work, set it equal to ΔKE, solve."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "SPRING-LAUNCHED BALL — A 0.5-kg ball is fired from a spring that does 8 J of work on it. The ball starts at rest. What's its speed leaving the spring?",
+      "givenHint": "m = 0.5 kg · v_i = 0 (so KE_i = 0) · W_net = 8 J",
+      "equationHint": "All 8 J becomes KE_f. Set ½m·v_f² = 8 and solve for v_f.",
+      "equationOptions": ["W_net = ΔKE = ½m·v_f² − ½m·v_i²", "KE = ½ · m · v²", "W = F · d", "p = m · v"]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.5-kg ball is fired from a spring that does 8 J of work on it. The ball starts at rest. What's its speed? Then complete the frame.",
+      "frame": "The work-energy theorem is faster than kinematics when I already know the ___ and the ___, but not the ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.s1-work-energy-theorem"
+    }
+  ]
+}

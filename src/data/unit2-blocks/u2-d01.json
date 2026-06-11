@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "dayType": "ANCHOR",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can explain why 2026-XJ's velocity won't stay constant, and I can name the force that bends its path.",
+      "targetId": "u2.anchor-why-bend"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "NASA has refined 2026-XJ's orbit using three more weeks of radar tracking. Semi-major axis a ≈ 1.42 AU, eccentricity e ≈ 0.31, currently about 1.18 AU out — and closing.",
+      "connection": "Unit 1 answered HOW FAST. Unit 2 answers WHY — and that means a force. Today we name that force and frame the unit's question: does the asteroid's path bend enough to bring it to Earth?"
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "NASA / Planetary Defense Briefing — Update 2",
+      "markdown": "The earlier Unit 1 prediction assumed the asteroid's velocity stayed constant. **It does not.** Gravity bends its path. The new orbit solution treats 2026-XJ as a Sun-orbiting body governed by Newton's law of universal gravitation.\n\nThe new question: where does its orbit **cross Earth's**? And — load-bearing — will both objects arrive at the crossing at the **same time**? Unit 2 builds the physics to answer this.\n\n*This is fiction. The physics — and the equations — are real.*"
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## What makes a path bend?\n\nNewton's 1st Law (Unit 1): with **no net force**, an object keeps moving in a straight line at constant velocity. Forever.\n\n2026-XJ is **not** moving in a straight line — radar shows its path curving around the Sun. By Newton's own logic, something must be pulling on it.\n\nThat something is **gravity** — mostly the Sun's, and (much more weakly) Earth's. This unit is about how that pull works, how strong it is at any distance, and what kind of path it produces."
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Predict before the demo runs: a book and a FLAT sheet of paper are dropped together; then a book and a CRUMPLED sheet of paper. Sketch the race(s), circle which one(s) you think hit first, and write WHY next to your sketch.",
+      "prompts": [
+        "Round 1: book vs. flat paper — who wins?",
+        "Round 2: book vs. crumpled paper — who wins?",
+        "Write your WHY in a corner of the canvas."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — the drop races",
+      "markdown": "We ran the races live: book vs. flat paper, then book vs. crumpled paper. The flat sheet drifts down late; the crumpled one essentially **ties the book**. Air resistance — not gravity — made the difference. Run the vacuum-chamber simulation below and watch what happens when air is removed entirely."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "vacuum-chamber"
+    },
+    {
+      "id": "b8",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "What did you NOTICE in the drop races (live or in the simulation)?",
+      "interpretPrompt": "What do you WONDER about gravity after watching them?",
+      "frame": "I notice ___. I wonder ___."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write your ONE question about gravity — the thing you most want this unit to answer.",
+      "frame": "My one question about gravity is ___."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why doesn't 2026-XJ just drift off into space at constant velocity? What pulls on it?",
+      "frame": "It can't keep a constant velocity because ___ is pulling on it, so its path ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.anchor-why-bend"
+    }
+  ]
+}

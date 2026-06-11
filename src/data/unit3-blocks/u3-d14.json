@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "dayType": "TRANSFER",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply every Unit 3 tool — momentum, impulse, conservation, collision types, 2D components, and the deflection/impact branches — independently on the transfer task.",
+      "targetId": "u3.transfer-task"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Every tool from Unit 3 is in your hands: p = mv, J = FΔt = Δp, conservation, three collision types, 2D components, and the DART/impact branches.",
+      "connection": "One of the 4 transfer problems anchors in 2026-XJ — given a DART-style Δv, compute the lead time required for an Earth-radius lateral shift."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "warning",
+      "title": "This task is on paper, in class",
+      "markdown": "The transfer task itself is completed **on paper during class** — keep your work in the room. This page is your **planning and reflection space** around it. Use it to get ready and to capture your thinking; the graded task lives on the paper packet."
+    },
+    {
+      "id": "b4",
+      "type": "prose",
+      "markdown": "## The task — 4 multi-part problems, ~40 minutes, independent\n\n- **Problem 1 — Momentum + impulse.** A baseball-bat collision: given m, v_i, v_f, and contact time, find Δp and the average force.\n- **Problem 2 — Ballistic pendulum (perfectly inelastic).** Given bullet mass, bullet speed, and block mass, find the combined velocity. Then find the kinetic energy lost (preview to Unit 4).\n- **Problem 3 — 2D billiards.** Given m₁, m₂, v_cue_i, and the cue ball's final speed + angle, find the second ball's final speed and direction.\n- **Problem 4 — Asteroid deflection.** Given the Δv from a DART-style impactor and a target lateral shift of 6,400 km, how much lead time is needed?\n\n### How it's scored — 4 dimensions, each 0–4\n\n- **Science** — correct physics: vectors, kinematics, units.\n- **Reasoning** — sound method; uncertainty explained, not just stated.\n- **Communication** — work shown, units labeled, organized, readable.\n- **Transfer-to-Asteroid** — honest public-facing connection to 2026-XJ."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Allowed today",
+      "markdown": "The Unit 3 Equation Reference card and a calculator. Every equation on it is on the MCAS Equation Sheet — you do **not** need to memorize them. You DO need to recognize when each one applies. You may ask **clarifying** questions about what the task means — but not physics-content questions."
+    },
+    {
+      "id": "b6",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Before you start the paper task, write your plan: what order will you tackle the four problems, and where do you predict you will struggle?",
+      "frame": "My plan: first I will ___, then ___. I expect to struggle most with ___."
+    },
+    {
+      "id": "b7",
+      "type": "prose",
+      "markdown": "## After the task — final unit self-assessment\n\nRate yourself on every Unit 3 target below. This is your end-of-unit Marzano record — it feeds your Mastery Growth Chart and tells us both exactly where to focus before Unit 4 builds on this one."
+    },
+    {
+      "id": "b8",
+      "type": "self_assessment",
+      "capture": true,
+      "targetIds": [
+        "u3.k1-momentum-vector",
+        "u3.k2-impulse-theorem",
+        "u3.k3-conservation",
+        "u3.k4-collision-types",
+        "u3.s1-compute-impulse",
+        "u3.s2-inelastic-solve",
+        "u3.s3-elastic-solve",
+        "u3.s4-vernier-collisions",
+        "u3.r1-extend-time",
+        "u3.r2-2d-components",
+        "u3.r3-deflection",
+        "u3.r4-impact-analysis"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "End-of-unit reflection: where did you grow the most this unit, and what's the one idea you want locked in before Unit 4 (energy)?",
+      "frame": "I grew most on ___. Before Unit 4 I want to lock in ___."
+    }
+  ]
+}

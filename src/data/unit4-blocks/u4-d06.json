@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "dayType": "LAB",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can run a Vernier dynamics-cart trial with a hanging-mass pull, compute predicted v from W_net = ΔKE, measure v with a photogate, and report the % difference with one credible source of error.",
+      "targetId": "u4.s2-vernier-ke-lab"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We've stated W_net = ΔKE. Today we measure it.",
+      "connection": "If our cart confirms the theorem, we can trust it for asteroid energy on Day 19."
+    },
+    {
+      "id": "b3",
+      "type": "callout",
+      "variant": "note",
+      "title": "Investigation 4.1 — Confirm W_net = ΔKE",
+      "markdown": "**Driving question:** Does the predicted final speed of a cart (from W_net = ΔKE) match the measured speed from the photogate? Across 3 trials with different hanging masses?\n\n**Equipment:** Vernier dynamics track (1 per pair) + 1 cart · pulley clamped at end of track + string · hanging masses (50 g, 100 g, 150 g) · 1 photogate + LabQuest + Logger Pro or Graphical Analysis · balance to weigh cart (record m_cart) and meter stick for d.\n\n**How this lab serves the year's question:** if the theorem holds in our carts, the Day 19 yield calculation is on solid ground."
+    },
+    {
+      "id": "b4",
+      "type": "procedure",
+      "title": "What you do",
+      "steps": [
+        "Level the track. Weigh the cart and record m_cart.",
+        "Set up pulley + string. Hang first mass m_h. Compute F_pull = m_h · g.",
+        "Mark the cart's starting position. Measure d to the photogate.",
+        "Release. Photogate reads v_measured.",
+        "Compute W_net = F_pull · d, predict v from W_net = ½m_cart·v². Compare to measured.",
+        "Repeat with the other two hanging masses. Three trials total. Compute % difference."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Safety",
+      "markdown": "Hanging masses below knee level. Catch them at end of run. Photogates clamped firmly."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Not in class today?",
+      "markdown": "Run the Atwood-machine simulation below — it's the same physics: a hanging mass pulls a load through a distance. Pick a hanging mass, read off the final speed, and compare it to what W_net = ΔKE predicts. Fill the data table from sim values."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "atwood-machine"
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Sketch your setup: track, cart, pulley, string, hanging mass, photogate. Record m_cart and m_h on the diagram. Fill v_predicted and v_measured as you go.",
+      "prompts": [
+        "Label the cart with m_cart and the hanger with m_h.",
+        "Mark where the photogate reads velocity.",
+        "Show the pull direction of the string."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Trial", "m_h (kg)", "F_pull (N)", "d (m)", "W_net (J)", "v_pred (m/s)", "v_meas (m/s)", "% diff"],
+      "rows": 3,
+      "plot": false,
+      "patternPrompt": "Three trials with different hanging masses. How close are your predicted and measured speeds?"
+    },
+    {
+      "id": "b10",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "Did v_predicted match v_measured? Across all 3 trials, within what %?",
+      "interpretPrompt": "If there's a gap, what physical thing did NEGATIVE work that we didn't count? Is the gap bigger for smaller or larger hanging masses? And the asteroid connection: how does this serve the year's question?",
+      "frame": "My v values matched within ___ %. The most likely source of error was ___, because it would ___ the cart's KE."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write a one-sentence CLAIM about what the lab showed, then one sentence of EVIDENCE (your numbers), then one sentence of REASONING (why the % difference is small).",
+      "frame": "CLAIM: ___. EVIDENCE: ___. REASONING: ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.s2-vernier-ke-lab"
+    }
+  ]
+}

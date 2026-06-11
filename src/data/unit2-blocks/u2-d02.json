@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe free fall as constant acceleration g, read g off a v–t slope, and calculate fall times for short drops.",
+      "targetId": "u2.free-fall-g"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ would fall at g if it were close enough to Earth.",
+      "connection": "g is a NUMBER (9.81 m/s² near Earth). Today you read it off a graph and use it. Same g for a coin, a feather, and an asteroid."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Everything falls at g\n\nDrop anything near Earth's surface (and ignore air): its velocity grows by **9.81 m/s every second**. That steady growth is an acceleration, and it has a name: **g**.\n\nTwo equations do all of today's work:\n\n- **v = g·t** — how fast after falling for time t\n- **y = ½·g·t²** — how far it has fallen after time t\n\nOn a **velocity–time graph** of a falling object, the line is straight and its **slope is g**. That's not a coincidence — it's the definition of acceleration from Unit 1, with gravity setting the rate."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Free fall",
+          "definition": "Motion under gravity only — no air resistance, no other forces. A ball dropped 1 m takes about 0.45 s to fall (ignoring air). All objects fall the same.",
+          "cognate": "Sp. caída libre · Pt. queda livre · HC chit lib"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Free fall doesn't mean 'floating'",
+      "markdown": "Free fall means gravity is the **only** force acting. Falling IS the motion — a skydiver before the parachute, a dropped coin, and an orbiting station are all in free fall."
+    },
+    {
+      "id": "b6",
+      "type": "graph",
+      "title": "v–t graph for a dropped object",
+      "xLabel": "Time (s)",
+      "yLabel": "Velocity (m/s)",
+      "series": [
+        {
+          "label": "Falling from rest",
+          "points": [[0, 0], [0.5, 4.9], [1, 9.8], [1.5, 14.7], [2, 19.6], [2.5, 24.5], [3, 29.4]]
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "tip",
+      "title": "Read the graph like a physicist",
+      "markdown": "Pick any two points on the line. Δv between them, divided by Δt, gives the slope. You should get **≈ 9.8 m/s²** no matter which two points you pick — that's what 'constant acceleration' looks like. Try the cliff-drop simulation below and watch the v–t graph build."
+    },
+    {
+      "id": "b8",
+      "type": "sim_embed",
+      "simulationSlug": "freefall-cliff"
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "A coin is dropped from rest off a 10 m balcony. How long until it hits the ground? (Ignore air. Use y = ½·g·t².)",
+      "given": "y = 10 m · v₀ = 0 · g = 9.81 m/s²",
+      "equation": "y = ½·g·t²",
+      "work": "10 = ½·(9.81)·t² → t² = 20/9.81 ≈ 2.04 → t ≈ 1.43 s",
+      "answer": "≈ 1.43 s. The coin falls for about a second and a half."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A pebble is dropped from a 100 m bridge. How long until it hits the water? Show your work.",
+      "givenHint": "The fall height, the starting velocity (it's dropped), and g.",
+      "equationHint": "The fall-distance equation: y = ½·g·t². Solve it for t.",
+      "equationOptions": ["y = ½·g·t²", "v = g·t", "x = vₓ·t", "F = G·m₁·m₂/r²"]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "How long does it take a coin to fall 1 m from rest, ignoring air? Show your work — then complete the frame about the v–t graph.",
+      "frame": "t ≈ ___ s. On the v–t graph for a falling object, the slope is ___, because v increases by ___ every second."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.free-fall-g"
+    }
+  ]
+}

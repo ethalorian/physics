@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply KE + PE = const to pendulums, slides, roller coasters, and drops — and recognize that the technique is the same regardless of path shape.",
+      "targetId": "u4.s3-conservation-solve"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Path SHAPE doesn't change the energy answer — only the heights.",
+      "connection": "That's why we don't need to know the asteroid's exact trajectory. Just its starting and ending heights (effectively, its r values)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## One technique, four shapes\n\nPendulum, slide, roller coaster, free drop — four different paths, ONE recipe:\n\n1. Find the **high-PE point** and the **low-PE point**.\n2. Set **ME_high = ME_low**: ½mv_high² + mgh_high = ½mv_low² + mgh_low.\n3. Solve for the unknown.\n\nThe mass usually cancels, and the path between the two points never enters the math. A swinging bob and a falling rock released from the same height arrive at the bottom with the **same speed** — gravity is conservative, so only the height difference Δh matters.\n\nToday is a station day: same equation at every station, different geometry."
+    },
+    {
+      "id": "b4",
+      "type": "worked_example",
+      "prompt": "SLED DOWN A HILL — A 50-kg sled starts at rest at the top of a 12-m hill. Friction-free. Find the speed at the bottom.",
+      "given": "m = 50 kg · v_top = 0 · h = 12 m · g = 9.81",
+      "equation": "m·g·h = ½·m·v²   (m cancels)",
+      "work": "9.81 · 12 = ½ · v²\nv² = 235.4\nv ≈ 15.3 m/s",
+      "answer": "≈ 15.3 m/s — same number for any sled mass."
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "tip",
+      "title": "In class today — station rotation: pendulum / coaster / slide / drop",
+      "markdown": "We rotate through four stations. At each one: identify the HIGH-PE point and LOW-PE point, set ME_high = ME_low, solve for the unknown.\n\n- **Station 1 — PENDULUM:** released from h = 0.6 m above the bottom. Find v at the bottom.\n- **Station 2 — SLIDE:** ramp height 2.0 m, length 5 m, frictionless. Find v at the bottom.\n- **Station 3 — ROLLER COASTER:** starts from rest at h₁ = 30 m, then rides to the top of the next hill at h₂ = 18 m. Find v at the top of h₂.\n- **Station 4 — FREE FALL:** 10-kg rock dropped from 7 m. Find v at impact.\n\nNot in class? Solve all four with ME conservation, then check Station 4 in the freefall simulation below."
+    },
+    {
+      "id": "b6",
+      "type": "sim_embed",
+      "simulationSlug": "freefall-cliff"
+    },
+    {
+      "id": "b7",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Station", "Δh (m)", "v (m/s)"],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "Fill in as you rotate: pendulum (Δh = 0.6), slide (Δh = 2.0), coaster (Δh = 30 − 18 = 12), free fall (Δh = 7). What do all four solutions have in common?"
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "The magic of conservative forces",
+      "markdown": "Across all four: the answer depends ONLY on the HEIGHT difference. Path shape doesn't matter. That's the magic of conservative forces."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.3-kg pendulum bob is released from 0.6 m above its lowest point (friction-free). What's its speed at the bottom? Then complete the frame.",
+      "frame": "Across all four stations, v at the bottom depended only on ___ — not on the ___. That's why we say gravity is ___."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.s3-conservation-solve"
+    }
+  ]
+}

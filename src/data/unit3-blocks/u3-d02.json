@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write p = m·v, give the units (kg·m/s), compute momentum for a moving object, and explain why momentum is a VECTOR (sign and direction matter).",
+      "targetId": "u3.k1-momentum-vector"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's mass is ~10⁹ kg; its speed (with respect to Earth) is ~30 km/s.",
+      "connection": "Today we put a NUMBER on what makes the asteroid hard to stop. Spoiler: the number is enormous, and the rest of Unit 3 figures out what to do with that fact."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Momentum: mass in motion\n\n**p = m·v** — units: **kg·m/s**.\n\nMomentum is a **vector**: it points the same direction as the velocity. That's not bookkeeping pedantry — when two objects move in *opposite* directions, one of them carries **negative** momentum, and the negatives do real work in every calculation this unit.\n\nThe rule for change: **Δp = p_f − p_i = m·(v_f − v_i)**, with signed velocities. Pick a positive direction first, assign signs second, compute third."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Momentum (p)",
+          "definition": "A measure of how hard it is to stop a moving object. p = m·v. Vector — has the same direction as the velocity. A 1500-kg car at 30 m/s has p = 45,000 kg·m/s; a 0.05-kg bullet at 400 m/s has p = 20 kg·m/s. The car wins.",
+          "cognate": "Sp. cantidad de movimiento (momento lineal) · Pt. quantidade de movimento · HC kantite mouvman"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Momentum is NOT the same as speed",
+      "markdown": "A slow heavy thing can have MORE momentum than a fast light thing. A drifting cruise ship out-momentums a rifle bullet by orders of magnitude."
+    },
+    {
+      "id": "b6",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["Object", "m (kg)", "v (m/s)", "p = m·v (kg·m/s)"],
+      "rows": 5,
+      "plot": false,
+      "patternPrompt": "Compute p for each object you choose (try: bullet, sprinter, car, loaded truck, cruise ship). Rank biggest to smallest. What surprised you about the spread?"
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "A 1500-kg car moves east at 30 m/s. Find its momentum (magnitude AND direction).",
+      "given": "m = 1500 kg · v = 30 m/s east",
+      "equation": "p = m·v",
+      "work": "p = 1500 × 30 = 45,000 kg·m/s\np = 4.5 × 10⁴ kg·m/s east",
+      "answer": "4.5 × 10⁴ kg·m/s east. (East matters — p is a vector.)"
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "2026-XJ has mass m = 1.0 × 10⁹ kg and approaches at v = 3.0 × 10⁴ m/s toward Earth. Find its momentum.",
+      "givenHint": "The asteroid's mass and speed (toward Earth).",
+      "equationHint": "p = m·v — keep the powers of ten organized.",
+      "equationIds": ["momentum", "impulse", "newton-2nd", "avg-speed"]
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A 0.15-kg baseball moves east at 40 m/s, meets the bat, and bounces back west at 50 m/s. What is the CHANGE in its momentum, Δp = p_f − p_i? (Hint: pick east = positive, so v_f = −50.)",
+      "givenHint": "m = 0.15 kg, v_i = +40 m/s, v_f = −50 m/s. Write the sign convention first.",
+      "equationHint": "Δp = m·(v_f − v_i) — with SIGNED velocities.",
+      "equationIds": ["momentum", "impulse"]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Sign matters",
+      "markdown": "If you ignore the negative on v_f, your Δp will look like 1.5 kg·m/s. The real Δp is **−13.5 kg·m/s** — almost 10× bigger. The direction of Δp is opposite v_i."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 0.15-kg baseball moves east at 40 m/s. After the bat, it goes WEST at 50 m/s. Find Δp — force the sign. Then complete the cruise-ship frame.",
+      "frame": "Δp = ___ kg·m/s. Momentum is bigger for the cruise ship than the bullet because, even though the ship is ___, its ___ is overwhelmingly larger."
+    },
+    {
+      "id": "rd-ch08-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **8.1** (momentum — inertia in motion; what makes momentum large). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch08-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 8,
+      "title": "Momentum — read & practice",
+      "sectionIds": ["8.1"]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.k1-momentum-vector"
+    }
+  ]
+}

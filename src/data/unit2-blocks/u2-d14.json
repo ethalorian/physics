@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can state Kepler's three laws in my own words and use Kepler's third law to compare orbital periods.",
+      "targetId": "u2.k4-keplers-laws"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's semi-major axis a ≈ 1.42 AU (refined orbit).",
+      "connection": "Kepler's third law gives 2026-XJ's PERIOD — and that's the timing we need to answer Phase 5's question: WHEN does it next cross Earth's orbit?"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Kepler's three laws, plainly\n\n1. **Orbits are ellipses**, with the central body at one focus (not at the center).\n2. **Equal areas in equal times** — an orbiting body sweeps out area at a steady rate. Near the Sun it moves FAST (perihelion); far from the Sun it moves SLOW (aphelion).\n3. **T² = a³** — for Sun-orbits with T in years and a in AU. Bigger orbit → much longer year, because T² grows as a³.\n\nKepler found these from data alone, decades before Newton explained WHY with universal gravitation."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Ellipse",
+          "definition": "An oval-shaped closed curve with TWO foci. Every planet's orbit is an ellipse with the central body at one focus. Earth's orbit is nearly circular (e ≈ 0.017); a comet's can be e ≈ 0.9.",
+          "cognate": "Sp. elipse · Pt. elipse · HC elips"
+        },
+        {
+          "term": "Period (T)",
+          "definition": "The time for one full orbit. Earth's period around the Sun = 1 year. Moon's period around Earth ≈ 27.3 days. A longer period means a longer orbit, not a slower object.",
+          "cognate": "Sp. periodo · Pt. período · HC peryòd"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Two foci, one Sun",
+      "markdown": "An ellipse has TWO foci. The central body sits at **one** of them — not at the center of the oval. The other focus is empty space."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw an elliptical orbit with the Sun at one focus (off-center!). MARK the point where the object moves FASTEST (perihelion — closest to the Sun) and the point where it moves SLOWEST (aphelion — farthest). Then write WHY in one sentence (think: equal areas in equal times).",
+      "prompts": [
+        "Sun at one focus, visibly off-center.",
+        "Label perihelion (fastest) and aphelion (slowest).",
+        "One sentence: why faster when closer?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "Mars has a semi-major axis a = 1.52 AU. Find its period in years using Kepler's third law.",
+      "given": "a = 1.52 AU · use T² = a³ (Sun-orbit, T in years)",
+      "equation": "T² = a³ → T = √(a³)",
+      "work": "T² = (1.52)³ = 3.51\nT = √3.51 ≈ 1.87 years",
+      "answer": "≈ 1.87 Earth-years. (Real value: 1.88. Match.)"
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "2026-XJ has a = 1.42 AU. Find its period in years. (This number tells us how often it could return to its current location.)",
+      "givenHint": "a = 1.42 AU. Sun-orbit, so T² = a³ works directly with T in years.",
+      "equationHint": "Cube a, then square-root: T = √(a³).",
+      "equationOptions": ["T² = a³", "v = √(G·M/r)", "F = G·m₁·m₂/r²", "F_c = m·v²/r"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Write each of Kepler's three laws in ONE sentence in your own words.",
+      "frame": "1) Orbits are ___. 2) Objects sweep ___ in equal times, so they move faster when ___. 3) T² = ___ for Sun-orbits."
+    },
+    {
+      "id": "rd-ch14-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **14.3–14.6** (elliptical orbits, energy conservation in orbit, Kepler's laws, and escape speed). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch14-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 14,
+      "title": "Satellite Motion — read & practice",
+      "sectionIds": ["14.3", "14.4", "14.5", "14.6"]
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.k4-keplers-laws"
+    }
+  ]
+}

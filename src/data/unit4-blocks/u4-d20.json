@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can derive v_esc from KE = |U|, compute Earth's escape velocity, and compare it to other bodies (Moon, Mars).",
+      "targetId": "u4.r7-escape-velocity"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "If 2026-XJ had been moving FASTER than the local escape velocity, it could have slipped past Earth (or the Sun) and never come back.",
+      "connection": "Same energy framework as the impact yield — but instead of asking 'how much PE did the asteroid gain falling in,' we ask 'how much KE does it need to climb back out.'"
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Climbing out of the gravity well\n\nThrow a ball up: it comes back. Throw it FAST enough and it never does. 'Fast enough' is **escape velocity** — and it falls straight out of energy conservation plus the universal PE from earlier this unit (U = −G·M·m/r).\n\n**Setup:** object at the surface (distance r from the center), mass m, given some launch speed v. At infinity, we want the object to JUST barely have KE_∞ = 0 (any extra is wasted).\n\nConservation of total energy: KE_surface + U_surface = KE_∞ + U_∞\n\n½·m·v_esc² + (−G·M·m/r) = 0 + 0\n\n½·v_esc² = G·M/r → **v_esc = √(2·G·M/r)**\n\nMass m cancels. Escape velocity is a property of the BODY you're leaving, not the escapee — a feather and a battleship need the same launch speed."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Escape velocity",
+          "definition": "The minimum speed at distance r from a body of mass M such that the object can reach infinity with KE ≥ 0: v_esc = √(2GM/r). It doesn't depend on the escaping object's mass — m cancels out. Earth's surface escape velocity: ≈ 11.2 km/s (≈ 25,000 mph). Moon's: ≈ 2.4 km/s.",
+          "cognate": "Sp. velocidad de escape · Pt. velocidade de escape · HC vitès chape"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why small worlds are airless",
+      "markdown": "Small bodies (Moon, Pluto, asteroids) have LOW escape velocities. That's why they don't hold atmospheres — gas molecules at typical room temperatures easily exceed v_esc and drift away."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "tip",
+      "title": "See escape vs. capture",
+      "markdown": "Run the asteroid-trajectory simulation below: try slower and faster approach speeds and watch which trajectories swing past Earth and away — and which fall in. That's escape velocity drawn as a picture."
+    },
+    {
+      "id": "b7",
+      "type": "sim_embed",
+      "simulationSlug": "asteroid-trajectory"
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "EARTH'S ESCAPE VELOCITY. Compute v_esc at Earth's surface.",
+      "given": "G = 6.67 × 10⁻¹¹ · M = 5.97 × 10²⁴ kg · r = 6.37 × 10⁶ m",
+      "equation": "v_esc = √(2 · G · M / r)",
+      "work": "v_esc = √(2 · 6.67×10⁻¹¹ · 5.97×10²⁴ / 6.37×10⁶)\n= √(1.25 × 10⁸)\n≈ 1.12 × 10⁴ m/s ≈ 11.2 km/s",
+      "answer": "≈ 11.2 km/s ≈ 25,000 mph. Any slower → eventually falls back to Earth."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "MARS ESCAPE VELOCITY. Compute v_esc at Mars's surface. M_Mars = 6.4×10²³ kg, r_Mars = 3.39×10⁶ m.",
+      "givenHint": "G = 6.67×10⁻¹¹ · M = 6.4×10²³ kg · r = 3.39×10⁶ m.",
+      "equationHint": "Same recipe as Earth: plug into √(2GM/r).",
+      "equationOptions": ["v_esc = √(2·G·M / r)", "U = −G·M·m / r", "KE = ½·m·v²", "g = G·M / r²"]
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "MOON ESCAPE VELOCITY. Compute v_esc at the Moon's surface. M_Moon = 7.35×10²² kg, r_Moon = 1.74×10⁶ m. (This explains why Apollo astronauts could leave the Moon with a small ascent stage.)",
+      "givenHint": "G = 6.67×10⁻¹¹ · M = 7.35×10²² kg · r = 1.74×10⁶ m.",
+      "equationHint": "√(2GM/r) again — expect a much smaller answer than Earth's 11.2 km/s.",
+      "equationOptions": ["v_esc = √(2·G·M / r)", "U = −G·M·m / r", "KE = ½·m·v²", "g = G·M / r²"]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your Mars answer, then complete the atmosphere frame.",
+      "frame": "Earth holds an atmosphere because the speed of a typical air molecule at room temperature is ___ Earth's escape velocity. The Moon doesn't because its v_esc is ___."
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r7-escape-velocity"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe how a DC motor uses F = ILB (force on a current in a B-field) to produce torque, and explain why a motor and a generator are the SAME machine running in opposite directions.",
+      "targetId": "u7.r2-motors-generators"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Day 13: current → B. Day 14: changing B → voltage.",
+      "connection": "Today combines them. A motor takes voltage IN → mechanical rotation OUT. The actual machine you'll use in Unit 8 next week."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The Car Project's heart\n\nPut Oersted and Faraday in one box and you get the most useful machine of the last two centuries.\n\n**The motor side.** A wire carrying current I, of length L, sitting in a perpendicular magnetic field B, feels a sideways force:\n\n**F = I · L · B**\n\nThe direction is perpendicular to BOTH I and B (right-hand rule again). Inside a DC motor, a coil sits between permanent magnets. Current flows through the coil → each side of the coil feels an opposite sideways force → the pair of forces is a **torque** → the coil spins. Repeat every rotation, and the motor runs — thousands of RPM on the Car Project's little 9V motor, geared down to turn the wheels.\n\n**The generator side.** Run the same machine backwards: spin the shaft by hand and the coil's flux through the magnets changes — Faraday's law induces a voltage at the terminals. **Motor and generator are the SAME machine** — current in, motion out (motor); motion in, voltage out (generator).\n\n**The energy ledger.** The Car motor draws ≈ 2 A at 9 V, so P = 18 W of electrical power flows in. A small hobby motor is only ~40% efficient: ≈ 7 W comes out the shaft as motion, and the other ≈ 11 W heats the windings (P = I²R, Day 11). That's why a running motor is warm."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "DC motor",
+          "definition": "A machine that converts electrical energy to MECHANICAL rotation. Current flows through a coil in a magnetic field; the field pushes the coil sideways (F = I·L·B); the coil spins. Example: the Car Project motor: 9V input, ≈ 2A current, ≈ 18W of power. Spins the output shaft at thousands of RPM. Gears reduce the speed and increase the torque. DC means 'direct current' — steady one-direction flow (battery).",
+          "cognate": "Sp. motor DC · Pt. motor DC · HC motè DC"
+        },
+        {
+          "term": "Force on a current-carrying wire in B (qualitative)",
+          "definition": "A wire with current I, length L, in a perpendicular B field, feels a force F = I·L·B. Direction is PERPENDICULAR to both I and B (right-hand rule again). Example: inside the motor: current in coil + permanent magnets' B-field → coil feels sideways force → torque → spin. Repeat each rotation, and the motor runs.",
+          "cognate": "Sp. fuerza sobre corriente · Pt. força sobre corrente · HC fòs sou kouran"
+        },
+        {
+          "term": "Motor ⟷ generator (same machine)",
+          "definition": "A motor and a generator are the SAME mechanical device. Drive it with current → motor (mechanical out). Spin it by hand → generator (voltage out). Example: a car alternator is a generator that recharges the battery from engine rotation; the starter motor is a motor that turns the engine over from battery power. Internally — same coil-in-field structure. This symmetry is why regenerative braking in electric cars works.",
+          "cognate": "Sp. motor y generador · Pt. motor e gerador · HC motè jeneratè"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "energy_chain",
+      "title": "Where the motor's 18 W goes",
+      "caption": "Electrical power in, mechanical power out — with a big heat toll on the way. Small DC motors are typically 30-50% efficient.",
+      "links": [
+        {
+          "label": "9V battery",
+          "sublabel": "electrical: P = V·I ≈ 18 W"
+        },
+        {
+          "label": "Coil in B-field",
+          "sublabel": "F = I·L·B → torque"
+        },
+        {
+          "label": "Shaft spins",
+          "sublabel": "mechanical: ≈ 7 W (η ≈ 40%)"
+        },
+        {
+          "label": "Heat in windings",
+          "sublabel": "≈ 11 W lost (P = I²R)"
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Cross-section of a DC motor: permanent magnets (N + S) on the outside, current-carrying coil in the middle. Mark forces on each side of the coil. Mark direction of rotation. F = ILB.",
+      "prompts": [
+        "Permanent magnets N + S on the outside, coil in the middle.",
+        "Force arrows on each side of the coil (opposite directions = torque).",
+        "Rotation arrow + F = I·L·B written on the diagram."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "CAR MOTOR POWER — The Car Project motor draws 2.0 A from a 9 V battery. What's the electrical power delivered? If the motor is 40% efficient (typical for small hobby motors), how much mechanical power comes out the shaft?",
+      "given": "V = 9 V · I = 2 A · efficiency η = 0.40",
+      "equation": "P_electrical = V · I ; P_mechanical = P_electrical · η",
+      "work": "P_electrical = 9 · 2 = 18 W\nP_mechanical = 18 · 0.40 = 7.2 W\nHeat dissipated in windings: 18 − 7.2 = 10.8 W",
+      "answer": "P_electrical = 18 W. About 7 W becomes mechanical motion; 11 W becomes heat (motor gets warm)."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "EFFICIENT MOTOR PREDICTIONS — A different motor is 60% efficient at 9V and 1.5A. Compute electrical input, mechanical output, and heat dissipated.",
+      "givenHint": "V = 9 V · I = 1.5 A · η = 0.60.",
+      "equationHint": "P_in = V·I, then P_mech = η·P_in, then heat = P_in − P_mech.",
+      "equationOptions": [
+        "P = V · I, then P_mech = η · P",
+        "P = V² / R",
+        "F = I · L · B",
+        "ε ≈ N · ΔΦ / Δt"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "★ Don't stall the Car Project motor",
+      "markdown": "A real DC motor's resistance changes when it's spinning — it generates its own back-EMF (Faraday's law!) which opposes the source. Stalled motor (not spinning): R ≈ 3-4Ω, full current → too much heat → can damage. Running motor: effective R higher, current lower, runs cool. Don't stall the Car Project motor!"
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "The Car Project motor pulls 2 A at 9 V. (1) What's the electrical power? (2) Where does the energy go? (Two destinations.) Show work.",
+      "frame": "A DC motor converts ___ energy into ___ rotation. The force on a current in a magnetic field is F = ___. A motor and a generator are the ___ machine — different inputs."
+    },
+    {
+      "id": "rd-ch37-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **37.3–37.6** (generators and AC, motor–generator comparison, transformers, and power transmission). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch37-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 37,
+      "title": "Electromagnetic Induction — read & practice",
+      "sectionIds": [
+        "37.3",
+        "37.4",
+        "37.5",
+        "37.6"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.r2-motors-generators"
+    }
+  ]
+}

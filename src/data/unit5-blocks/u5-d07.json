@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply ΔU = Q − W to gas systems, assign correct signs to Q (heat in = +) and W (work BY system = +), and predict ΔU in heating, cooling, expansion, and compression cases.",
+      "targetId": "u5.k5-first-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "After impact, the fireball is a high-temperature gas EXPANDING against the surrounding atmosphere — a thermodynamic system.",
+      "connection": "The first law describes how the fireball's internal energy converts to WORK pushing on the surrounding air — that's the shockwave. Day 11 will partition the impact KE using this framework."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Energy bookkeeping for a gas\n\n**ΔU = Q − W** — the first law of thermodynamics. It's conservation of energy, written for gases: the change in a system's internal energy equals the heat that flows IN minus the work the system does on its surroundings.\n\nThere are exactly two ways to change a gas's internal energy U:\n\n1. **Heat (Q)** crosses the boundary. Heat IN: Q > 0. Heat OUT: Q < 0.\n2. **Work (W)** is done across the boundary. The gas EXPANDS and pushes on the surroundings: W > 0 (the system spends energy). The gas is COMPRESSED by an outside push: W < 0 (the system gains energy).\n\nA bike pump warms up with NO flame anywhere — you do work ON the gas, so W is negative, and ΔU = 0 − (−W) is positive. Compression alone raises temperature. The impact fireball runs the same equation in reverse: a huge ΔU drives expansion work on the air — the shockwave."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Internal energy (U)",
+          "definition": "The total energy contained inside a system — sum of all molecules' KE and bond PE. Symbol: U. Units: Joules. Heating a gas raises U. Cooling lowers U. Compressing it without heat exchange ALSO raises U (work done on the system).",
+          "cognate": "Sp. energía interna · Pt. energia interna · HC enèji entèn"
+        },
+        {
+          "term": "First law: ΔU = Q − W",
+          "definition": "Change in internal energy = heat added to the system MINUS work done BY the system on the surroundings. Energy conservation, written for gases. Example: 500 J of heat IN, gas does 200 J of work expanding → ΔU = 500 − 200 = 300 J. Internal energy rises by 300 J.",
+          "cognate": "Sp. primera ley · Pt. primeira lei"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "U lives INSIDE — Q and W cross the boundary",
+      "markdown": "U is the system's OWN energy. Q and W are how energy MOVES across the boundary. ΔU = what stays. Don't write Q or W as 'energy the gas has' — they're flows, not contents."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw a gas in a cylinder with a movable piston. Label Q (heat crossing the boundary), W (work at the piston), and ΔU (inside the gas). Then sketch the signs for the three cases.",
+      "prompts": [
+        "Case 1: heat enters and the gas expands — signs of Q, W, ΔU?",
+        "Case 2: heat enters and the gas is held still — signs?",
+        "Case 3: a bike pump compresses the gas with no heat exchange — signs?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "HEAT A GAS, IT EXPANDS — 500 J of heat is added to a gas. The gas does 200 J of work as it expands. What is ΔU?",
+      "given": "Q = +500 J (heat IN) · W = +200 J (work BY system, expansion)",
+      "equation": "ΔU = Q − W",
+      "work": "ΔU = 500 − 200\nΔU = +300 J",
+      "answer": "Internal energy rises by 300 J. Some heat became work; the rest stayed."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "BIKE PUMP (ADIABATIC COMPRESSION) — You compress air in a bike pump. 300 J of work is done ON the gas (so W = −300 J from the system's perspective). No heat is exchanged (adiabatic; Q = 0). What is ΔU? Why does the pump get warm?",
+      "given": "Q = 0 (adiabatic — no heat in) · W = −300 J (work done ON the gas)",
+      "equation": "ΔU = Q − W",
+      "work": "ΔU = 0 − (−300)\nΔU = +300 J",
+      "answer": "Internal energy rises by 300 J → temperature rises. That's why the pump is warm."
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "warning",
+      "title": "SIGNS, SIGNS, SIGNS",
+      "markdown": "Stop on every problem and ask: is heat going IN or OUT? Is work being done BY the system or ON it? Get these right and the math is easy."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "SYSTEM DOES MORE WORK THAN HEAT ADDED — 100 J of heat enters a system. The system does 150 J of work on the surroundings. What is ΔU? What's happening physically?",
+      "givenHint": "Q = +100 J (heat IN) · W = +150 J (work BY the system)",
+      "equationHint": "ΔU = Q − W — the system does MORE work than the heat coming in, so watch the sign of ΔU.",
+      "equationOptions": [
+        "ΔU = Q − W",
+        "Q = m·c·ΔT",
+        "η = W/Q_hot",
+        "KE = ½mv²"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your YOUR TURN answer: 100 J of heat enters a system and the system does 150 J of work. What is ΔU, and what does the sign tell you? Then complete the bike-pump frame.",
+      "frame": "When the bike pump warms up, the work I do ON the gas becomes ___. With Q = 0 and W negative (work done ON the gas), ΔU is ___ — so T ___."
+    },
+    {
+      "id": "rd-ch24-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **24.1–24.3** (absolute zero, the first law of thermodynamics, and adiabatic processes). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch24-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 24,
+      "title": "Thermodynamics — read & practice",
+      "sectionIds": [
+        "24.1",
+        "24.2",
+        "24.3"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.k5-first-law"
+    }
+  ]
+}

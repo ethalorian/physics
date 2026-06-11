@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply conservation of momentum SEPARATELY to the x- and y-components, and I can solve a 2D glancing collision.",
+      "targetId": "u3.r2-2d-components"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "An asteroid that's nudged doesn't just slow down — it DEFLECTS sideways.",
+      "connection": "2D momentum is the framework for asking 'how much sideways?' Tomorrow's DART analysis depends on it."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Momentum conserves axis by axis\n\nMomentum is a **vector**, so conservation isn't one equation — it's one **per axis**:\n\n- **Σp_x before = Σp_x after**\n- **Σp_y before = Σp_y after**\n\nUnit 1's vector decomposition (v·cos θ, v·sin θ) comes straight back. A glancing billiards shot gives two equations and two unknowns (the second ball's speed and angle) — solvable, every time."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Component-wise conservation",
+          "definition": "Total momentum is a VECTOR. Conservation applies separately to its x- and y-components. A cue ball east strikes a stationary ball; afterward both move at angles — Σp_x and Σp_y each balance on their own.",
+          "cognate": "Sp. componentes (x, y) · Pt. componentes (x, y)"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "diagram",
+      "kind": "vectors",
+      "title": "Glancing collision — before and after",
+      "caption": "Before: the cue ball carries all the momentum east. After: the cue ball goes 30° north of east, so the struck ball MUST go south of east — the y-components have to cancel.",
+      "genPrompt": "Cue ball initial velocity east, cue ball final at +30 degrees, struck ball final at about -24 degrees, showing y-components canceling.",
+      "vectors": [
+        { "label": "p_cue before (east)", "angle": 0, "mag": 90 },
+        { "label": "p_cue after (30° N of E)", "angle": 30, "mag": 45 },
+        { "label": "p_ball2 after (≈24° S of E)", "angle": -24, "mag": 55 }
+      ],
+      "showResultant": false
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "A 0.16-kg cue ball moves east at 2 m/s and strikes a 0.16-kg ball at rest. Afterward, the cue ball moves at 1 m/s, 30° north of east. Find the second ball's speed and direction.",
+      "given": "m₁ = m₂ = 0.16 kg (cancels) · v_cue_i = +2 m/s east · v_cue_f = 1 m/s @ +30° · v₂_i = 0",
+      "equation": "Σp_x: m·v_i = m·v_cue_f·cos30° + m·v₂·cos θ\nΣp_y: 0 = m·v_cue_f·sin30° − m·v₂·sin θ",
+      "work": "Drop the masses (cancel):\nx: 2 = 1·cos30° + v₂·cos θ → v₂·cos θ = 2 − 0.866 = 1.134\ny: 0 = 1·sin30° − v₂·sin θ → v₂·sin θ = 0.500\ntan θ = 0.500/1.134 → θ ≈ 23.8° (south of east)\nv₂ = 0.500/sin23.8° ≈ 1.24 m/s",
+      "answer": "Ball 2: ≈ 1.24 m/s at ≈ 23.8° south of east."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The y-components must cancel",
+      "markdown": "If the cue ball was originally moving only along x, then Σp_y starts at ZERO and must stay zero. One ball goes 'north' → the other must go 'south' in its y-component. Use this as a sanity check on every answer."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "Same setup, but now the cue ball goes 1.5 m/s at 45° north of east after impact. Find the second ball's speed and direction.",
+      "givenHint": "Equal masses (cancel). v_cue_i = 2 m/s east; v_cue_f = 1.5 m/s @ 45°.",
+      "equationHint": "Balance x: v₂cosθ = 2 − 1.5·cos45°. Balance y: v₂sinθ = 1.5·sin45°. Then tan θ and v₂.",
+      "equationOptions": ["Σp_x: before = after", "Σp_y: before = after", "vₓ = v·cos θ", "v_y = v·sin θ"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Why must p_x and p_y each be conserved separately, not just total p? Use the word 'vector' in your answer.",
+      "frame": "We can't just balance the total magnitudes. We need to balance x and y ___, because momentum is a ___."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.r2-2d-components"
+    }
+  ]
+}

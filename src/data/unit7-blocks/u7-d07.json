@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can identify a series circuit, add resistances to find the total, compute the SHARED current using V = IR, and explain why an open switch (or broken wire) kills the whole circuit.",
+      "targetId": "u7.s1-series-circuits"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Day 6: V = IR for a single component.",
+      "connection": "Today: what happens when multiple resistances are in a single loop — the SAME current passes through all. Day 8: the other way to wire them."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## One path, one current\n\nA **series circuit** is a single loop: current leaves the battery, passes through every component in order, and returns. One path means one rule above all:\n\n**The SAME current flows through every component.**\n\nThe current sees the resistances stacked along its one path, so they simply add:\n\n**R_series = R₁ + R₂ + R₃ + ...** — always BIGGER than any one component.\n\nThe recipe for any series problem:\n\n1. Add the resistances → R_total.\n2. **I = V / R_total** → the one shared current.\n3. **V_i = I · R_i** → the voltage across each component.\n\nStep 3 reveals the series circuit's second personality: it's a **voltage divider**. The source voltage splits among the components in proportion to their resistance — and the pieces always add back up to the source.\n\nThe dark side of one path: break the loop ANYWHERE (open switch, burned-out bulb, cracked wire) and current stops EVERYWHERE."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Series circuit",
+          "definition": "One single path for current. Components are connected end-to-end. The SAME current passes through every component. Three resistors (2Ω, 3Ω, 5Ω) in series across 9V: R_total = 10Ω; I = 0.9 A through all three.",
+          "cognate": "Sp. circuito en serie · Pt. circuito em série · HC sikui an seri"
+        },
+        {
+          "term": "R_series (total resistance)",
+          "definition": "R_series = R₁ + R₂ + R₃ + ... Just add them. Always BIGGER than any one component. 2Ω + 3Ω + 5Ω = 10Ω total — the current sees the SUM of resistances along its one path. Adding resistors in series ALWAYS increases resistance; parallel (Day 8) does the opposite.",
+          "cognate": "Sp. resistencia total · Pt. resistência total · HC rezistans total"
+        },
+        {
+          "term": "Voltage divider",
+          "definition": "A series circuit DIVIDES the source voltage across components in proportion to their resistance. V_i = (R_i / R_total) · V_source. 9V across 2Ω + 3Ω + 5Ω: V₁ = (2/10)·9 = 1.8V, V₂ = (3/10)·9 = 2.7V, V₃ = (5/10)·9 = 4.5V. Sum = 9V ✓.",
+          "cognate": "Sp. divisor de voltaje · Pt. divisor de tensão · HC divizè vòltaj"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Series divides VOLTAGE, not current",
+      "markdown": "In series, the CURRENT is the same everywhere — it's the VOLTAGE that divides among components (proportional to each R), and those voltages ADD UP TO the source. Don't split the current."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "Three resistors in one series loop",
+      "caption": "Battery → R₁ → R₂ → R₃ → back to battery. One loop, so the SAME 0.9 A flows through all three (for the 9V worked example below). The 9 V divides: 1.8 V + 2.7 V + 4.5 V = 9 V.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "9V battery"
+        },
+        {
+          "kind": "resistor",
+          "side": "top",
+          "label": "R₁ = 2Ω"
+        },
+        {
+          "kind": "resistor",
+          "side": "right",
+          "label": "R₂ = 3Ω"
+        },
+        {
+          "kind": "resistor",
+          "side": "bottom",
+          "label": "R₃ = 5Ω"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the schematic: battery + three resistors in series. Mark current with an arrow. Mark voltage across each resistor. Verify that V₁ + V₂ + V₃ = V_battery.",
+      "prompts": [
+        "One loop: battery + three resistors end-to-end.",
+        "ONE current arrow around the loop.",
+        "Label V across each R and check the sum."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "THREE RESISTORS IN SERIES — 9V battery across R₁ = 2Ω, R₂ = 3Ω, R₃ = 5Ω in series. Find: R_total, current through each, voltage across each.",
+      "given": "V = 9 V · R₁ = 2 Ω · R₂ = 3 Ω · R₃ = 5 Ω",
+      "equation": "R_series = R₁ + R₂ + R₃ ; I = V / R_total ; V_i = I · R_i",
+      "work": "R_total = 2 + 3 + 5 = 10 Ω\nI = 9 / 10 = 0.9 A (through ALL three)\nV₁ = 0.9 · 2 = 1.8 V\nV₂ = 0.9 · 3 = 2.7 V\nV₃ = 0.9 · 5 = 4.5 V\nCheck: 1.8 + 2.7 + 4.5 = 9.0 V ✓",
+      "answer": "I = 0.9 A through all. Voltages 1.8 V / 2.7 V / 4.5 V — they add to 9 V."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — TWO RESISTORS IN SERIES. 12V across 4Ω + 8Ω in series. Find R_total, I, and the voltage across each.",
+      "givenHint": "V = 12 V · R₁ = 4 Ω · R₂ = 8 Ω (series)",
+      "equationHint": "Same three steps: R_total = R₁ + R₂, then I = V/R_total, then V_i = I·R_i. Check that the two voltages add to 12 V.",
+      "equationOptions": [
+        "R_series = R₁ + R₂ ; I = V/R_total ; V_i = I·R_i",
+        "1/R_p = 1/R₁ + 1/R₂",
+        "V = I·R only",
+        "q = I·t"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Break one, lose all",
+      "markdown": "Series Christmas-tree lights from the old days: one bulb burns out → the whole string dies. That's the BREAK-ONE-LOSE-ALL rule of series. Modern strings put bulbs in parallel — Day 8. The Car Project is a SERIES circuit (battery → switch → motor → back to battery)."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "9V across three 3Ω resistors in series. Find R_total and the current. Show one line of work for each. Then complete the frame.",
+      "frame": "In a series circuit, the CURRENT is the same through every ___. The VOLTAGES across components ADD up to the ___. Total resistance is the ___ of individual resistances."
+    },
+    {
+      "id": "rd-ch35-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **35.1–35.3** (a battery and a bulb, electric circuits, and series circuits). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch35-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 35,
+      "title": "Electric Circuits — read & practice",
+      "sectionIds": [
+        "35.1",
+        "35.2",
+        "35.3"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.s1-series-circuits"
+    }
+  ]
+}

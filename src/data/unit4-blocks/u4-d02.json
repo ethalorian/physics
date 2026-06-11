@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write W = F·d, give units (Joules = N·m), compute work in 1D, and identify cases where work is ZERO even though a force is applied.",
+      "targetId": "u4.k1-work"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Earth's gravity does WORK on 2026-XJ as it falls. That work is what increases the asteroid's energy.",
+      "connection": "Work is the bridge between FORCE (Unit 1, Unit 3) and ENERGY (today on). It's how energy MOVES from one object to another."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Work: the bridge from force to energy\n\n**W = F·d** — work is energy transferred to (or from) an object by a force applied **along its motion**. Units: **Joules**, where 1 J = 1 N·m.\n\nPush a 50-N box 4 m → W = 200 J transferred into the box. Lift a 20-N book 1.5 m → W = 30 J transferred into the book (against gravity).\n\nThe catch: work needs **both** a force **and** motion in the direction of that force. Three famous zero-work cases:\n\n| Case | Why W = 0 |\n|---|---|\n| Push hard on a wall; it doesn't move | d = 0 |\n| Carry a book level across the room | force (up) ⊥ motion (sideways) |\n| Satellite in circular orbit | gravity ⊥ velocity, always |"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Work (W)",
+          "definition": "Energy transferred to (or from) an object via a force applied along its motion. W = F·d. Pushing a 50-N box 4 m → W = 200 J. Lifting a 20-N book 1.5 m → W = 30 J.",
+          "cognate": "Sp. trabajo · Pt. trabalho · HC travay"
+        },
+        {
+          "term": "Joule (J)",
+          "definition": "The unit of work and energy. 1 Joule = 1 Newton · 1 meter. Lifting an apple (~1 N) up 1 m takes about 1 J of work. A Joule is small: a snack bar has ~10⁶ J; the asteroid's KE is ~10¹⁷ J — you'll see scientific notation a lot this unit.",
+          "cognate": "Sp. julio · Pt. joule · HC joul"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Work is NOT the same as effort",
+      "markdown": "If you push a wall and it doesn't move, you've done ZERO work — even though you got tired. (Your body did work internally, but not on the wall.)"
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "You push a 50-N box 4 m across the floor with a constant horizontal force. How much work do you do?",
+      "given": "F = 50 N (along motion) · d = 4 m",
+      "equation": "W = F·d",
+      "work": "W = 50 · 4\nW = 200 J",
+      "answer": "200 J of work done on the box."
+    },
+    {
+      "id": "b7",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "You lift a 20-N book straight up 1.5 m at constant speed. How much work do you do AGAINST gravity?",
+      "givenHint": "F = 20 N (the book's weight, lifted along the motion) · d = 1.5 m",
+      "equationHint": "Same recipe as the box — force along the motion times distance.",
+      "equationIds": [
+        "work"
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "THREE ZERO-WORK CASES — for each case, write W and explain in ONE phrase why it's zero. (a) You push hard on a wall; the wall doesn't move. (b) You carry a 20-N book level across a 5-m room. (c) A satellite in CIRCULAR orbit moves around Earth.",
+      "givenHint": "For each case ask: is there a d? Is the force ALONG the motion?",
+      "equationHint": "W = F·d — lose the d, or lose the 'along the motion', and W = 0.",
+      "equationIds": [
+        "work"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Both ingredients, or zero",
+      "markdown": "Work needs BOTH a force AND motion in the direction of that force. Lose either one → W = 0."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "You lift a 20-N book 1.5 m, then walk 3 m holding the book at that height. How much work did you do TOTAL on the book? Then complete the frame about the level carry.",
+      "frame": "Carrying a book level across the room does NO WORK on the book because the force is ___ and the motion is ___ — and the angle between them is ___°."
+    },
+    {
+      "id": "rd-ch09-a",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **9.1** (work as force × distance, when work is done, the joule). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch09-a",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 9,
+      "title": "Energy — read & practice",
+      "sectionIds": [
+        "9.1"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k1-work"
+    }
+  ]
+}

@@ -784,10 +784,16 @@ function step(dt){
           `Docked in ${throws} throw${throws===1?'':'s'} (par ${lv.par}) at ${fmt(sp,2)} m/s.`);return;
       }else if(tooHotCd<=0){tooHotCd=1.2;popup('TOO HOT — '+fmt(sp,1)+' m/s','#f87171',20);beep(200,.2,'sawtooth',.12,-60);}
     }
+    // ADRIFT: at rest, hold empty, and nothing inbound that could become ammo.
+    // (A crate floating at rest across the field cannot save you — it counts
+    // as scenery, not hope.)
     const sp2=hyp(tug.vx,tug.vy);
-    const ammoLeft=carried.length>0||bodies.some(b=>b.kind==='crate');
-    if(!ammoLeft&&sp2<0.15){adriftT+=dt;if(adriftT>4){failAttempt('ADRIFT','Out of crates, out of motion. Budget the manifest: count the throws a hole needs BEFORE the first one — that is what par is telling you.');return;}}
+    const hope=carried.length>0||
+      bodies.some(b=>b.kind==='crate'&&hyp(b.vx,b.vy)>0.3);
+    if(!hope&&sp2<0.15){adriftT+=dt;if(adriftT>4){failAttempt('ADRIFT','Out of crates, out of motion. Budget the manifest: count the throws a hole needs BEFORE the first one — that is what par is telling you.');return;}}
     else adriftT=0;
+    // the course closes eventually, docked or not
+    if(attemptT>75){failAttempt('COURSE CLOSED','Seventy-five seconds on one hole. The line marshal has opinions. Plan the throws, then throw the plan.');return;}
   }else if(act===2){
     for(const ch of lv.chutes){
       // hand delivery: fly your cargo right into the chute mouth (no recoil — but no range either)
@@ -822,6 +828,22 @@ function step(dt){
         'Ride the yanks: a good catch is free transport toward your next interception. Stopping to aim is the only real waste out here.');return;
     }
   }else{
+    // stray sweep: a rock deflected to a near-stop can float mid-field forever.
+    // Once the spawns are done, slow strays get tractor-swept so the wave can end.
+    if(spawnIdx>=lv.spawns.length){
+      const lastAt=lv.spawns.length?lv.spawns[lv.spawns.length-1].at:0;
+      if(t>lastAt+35){
+        for(let i=bodies.length-1;i>=0;i--){const b=bodies[i];
+          if(b.kind==='rock'&&hyp(b.vx,b.vy)<0.6){
+            popup('STRAY SWEPT','#8b96ad',14,b.x,b.y);
+            burst(b.x,b.y,8,['#8b96ad','#57534e'],3);
+            bodies.splice(i,1);}}
+      }
+      if(t>lastAt+60){ // hard stop: anything still falling gets the same broom
+        for(let i=bodies.length-1;i>=0;i--)
+          if(bodies[i].kind==='rock')bodies.splice(i,1);
+      }
+    }
     if(spawnIdx>=lv.spawns.length&&!bodies.some(b=>b.kind==='rock')){
       const tier=hp>=3?'UNSCRATCHED':hp===2?'HELD THE LINE':'BY A THREAD';
       const base=hp>=3?1600:hp===2?1100:700;

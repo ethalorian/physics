@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "dayType": "SYNTHESIS",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can run a full 2026-XJ analysis on both branches (deflection and impact) and articulate which two ideas from the unit were load-bearing for the conclusion.",
+      "targetId": "u3.synthesis-two-branch"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "We have every tool we need. Days 11 and 12 each gave us a branch. Today the class does both, compiles, and reports.",
+      "connection": "Tomorrow is the transfer task. Today is the rehearsal — done in groups, with talk and revision."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Two branches, one decision\n\nToday you run BOTH analyses end-to-end, the way a planetary defense team would:\n\n- **Branch 1 — DEFLECT:** what Δv does one DART-class impactor give 2026-XJ, what Δv do we need, and how many impactors is that?\n- **Branch 2 — IMPACT:** if we don't deflect, what momentum arrives, what force does the impact site absorb, and what (negligibly) happens to Earth's motion?\n\nThen the class writes its consensus: what do we tell NASA?"
+    },
+    {
+      "id": "b4",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the two-branch decision tree. On the LEFT branch (deflect), list the physics tools you'll use. On the RIGHT branch (impact), do the same. Then circle one tool that shows up in BOTH.",
+      "prompts": [
+        "Left branch: deflection tools.",
+        "Right branch: impact tools.",
+        "Circle the shared tool."
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STATION 1 — DEFLECTION. 2026-XJ has M = 1 × 10⁹ kg, will pass Earth in t = 1.5 × 10⁷ s (6 months). We need to shift its position by 6.4 × 10⁶ m (one Earth-radius). A DART-class impactor has m = 600 kg at v = 6 × 10³ m/s. (a) Find the Δv from ONE impactor. (b) Find the Δv we NEED (Δv = shift / time). (c) How many DART impactors would it take?",
+      "givenHint": "All the numbers are in the prompt — organize them by which sub-question they serve.",
+      "equationHint": "(a) Δv ≈ m·v/M. (b) Δv = shift/time. (c) divide.",
+      "equationOptions": ["Δv ≈ m·v / M", "Δv = shift / time", "p = m·v", "J = F·Δt"]
+    },
+    {
+      "id": "b6",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "STATION 2 — IMPACT. 2026-XJ at v = 3 × 10⁴ m/s, M = 1 × 10⁹ kg, hits Earth and stops in Δt = 0.1 s. (a) Find the asteroid's momentum at impact. (b) Find the average impact force. (c) Compare F to: Hoover Dam weight (6 × 10⁹ N) or Burj Khalifa weight (5 × 10⁹ N).",
+      "givenHint": "m, v, Δt, and your comparison weight.",
+      "equationHint": "(a) p = m·v. (b) F = Δp/Δt. (c) divide.",
+      "equationIds": ["momentum", "impulse", "newton-2nd"]
+    },
+    {
+      "id": "b7",
+      "type": "observation",
+      "capture": true,
+      "patternPrompt": "CLASS CONSENSUS — after both stations, compare answers across groups (or, at home, across your own two branches). Is DART-scale deflection realistic for 2026-XJ with 6 months of lead time?",
+      "interpretPrompt": "What would the impact branch mean if deflection isn't attempted? Write the 2-sentence consensus statement you'd send NASA.",
+      "frame": "Our consensus: deflection is ___ because ___. If we don't deflect, the impact branch says ___."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "This is the real job",
+      "markdown": "Real planetary defense analysts do exactly this kind of two-branch reasoning. Your numbers are within an order of magnitude of NASA's. The asteroid is fictional; the math is real."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Of all the things you learned in Unit 3, which TWO ideas were load-bearing for today's analysis? Why?",
+      "frame": "The two most load-bearing ideas were ___ (used in deflection) and ___ (used in impact). Both rely on conservation of ___."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.synthesis-two-branch"
+    }
+  ]
+}

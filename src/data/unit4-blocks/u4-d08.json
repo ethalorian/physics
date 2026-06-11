@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can explain why U = mgh assumes constant g and breaks at altitudes comparable to Earth's radius, and I can preview U = −GMm/r as the fix.",
+      "targetId": "u4.r2-mgh-limits"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ is currently 40,000–100,000 km out. At that distance, g is NOT 9.81 m/s².",
+      "connection": "If we used mgh for the asteroid's PE, we'd get a hilariously wrong answer. Today we see WHY and preview the fix."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The hidden assumption in mgh\n\nU = mgh quietly assumes that **g is constant** all the way up. Near the surface, that's fine — lift a book a meter and g barely changes.\n\nBut from Unit 2 you know where g actually comes from: **g(r) = G·M / r²**. At Earth's surface (r ≈ 6,371 km), g ≈ 9.81 m/s². Move out to 100,000 km — asteroid territory — and g ≈ 0.04 m/s². Out at the Moon (r ≈ 384,000 km), Earth's pull is about 0.003 m/s². Almost nothing.\n\nSo mgh works when h is small compared to Earth's radius, and **fails by orders of magnitude** when h is comparable to (or bigger than) Earth's radius. Today we put a number on exactly how wrong it gets — then preview the formula that fixes it."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "g varies with r",
+          "definition": "From Unit 2: g(r) = G·M / r². At Earth's surface (r ≈ 6,371 km) g ≈ 9.81. At 100,000 km out, g ≈ 0.04. The Moon (r ≈ 384,000 km from Earth) feels g_Earth ≈ 0.003 m/s² — almost nothing. On Earth's surface, g feels constant only because we don't move far enough vertically; across asteroid distances, g changes by orders of magnitude.",
+          "cognate": "Sp. g varía · Pt. g varia"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "graph",
+      "title": "g falls off as 1/r² — the assumption behind mgh breaks",
+      "xLabel": "Distance from Earth's center r (thousands of km)",
+      "yLabel": "g (m/s²)",
+      "genPrompt": "g(r) = GM/r² from Earth's surface (6,371 km, g = 9.81) out to 100,000 km (g ≈ 0.04), showing the steep 1/r² drop-off across asteroid distances.",
+      "series": [
+        {
+          "label": "g(r) = G·M / r²",
+          "points": [[6.4, 9.81], [10, 3.98], [15, 1.77], [20, 1.0], [30, 0.44], [40, 0.25], [60, 0.11], [80, 0.06], [100, 0.04]]
+        }
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "On the curve, mark where g = 9.8 (surface). Mark where g ≈ 0.04 (asteroid distance). What's the ratio? What does that mean for mgh?",
+      "prompts": [
+        "Mark the surface point (6,371 km, 9.81 m/s²).",
+        "Mark the asteroid-distance point (~100,000 km, ~0.04 m/s²).",
+        "Write the ratio between the two g values — and what it does to mgh."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "WORKED PROBE — WHAT MGH WOULD SAY AT ALTITUDE: Using U = mgh with g = 9.81 m/s² (the surface value), find the PE of a 1000-kg object at h = 100,000 km altitude. Then compute g at that altitude using g(r) = GM/r² with r = 6.4×10⁶ + 1×10⁸ m. Comment on the error.",
+      "given": "m = 1000 kg · h = 1 × 10⁸ m · g_surface = 9.81 m/s² · G = 6.67×10⁻¹¹ · M_Earth = 6 × 10²⁴ kg",
+      "equation": "U_mgh = m · g · h   AND   g(r) = G·M / r²",
+      "work": "U_mgh = 1000 · 9.81 · 10⁸ = 9.81 × 10¹¹ J\nr ≈ 1.06 × 10⁸ m\ng(r) = (6.67e-11)(6e24)/(1.06e8)² ≈ 0.036 m/s²\nSo mgh OVERESTIMATES by a factor of 9.81 / 0.036 ≈ 270×",
+      "answer": "The mgh number is 270 times too big. We need a formula that uses g(r), not g_surface."
+    },
+    {
+      "id": "b8",
+      "type": "callout",
+      "variant": "note",
+      "title": "THE FIX — coming Day 9: U = − G·M·m / r",
+      "markdown": "PE = 0 at INFINITY. PE is NEGATIVE everywhere closer (because gravity does positive work pulling things in — they LOSE potential as they fall).\n\nThe negative sign is correct and important: closer = MORE negative PE; farther = closer to zero. This lets us cleanly write KE_at_infinity = 0 = KE_surface + U_surface, which gives escape velocity."
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "At Earth's surface, what's the PE of a 1-kg object using U = −GMm/r? Compare to U = mgh with h = 0. (Different — that's OK. Why?) Then complete the frame.",
+      "frame": "U = mgh fails when h is comparable to ___, because g is not ___. We need U = ___ to be accurate across altitudes."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.r2-mgh-limits"
+    }
+  ]
+}

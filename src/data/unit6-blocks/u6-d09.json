@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can predict the speed of sound in different media (air, water, solid) and apply f_n = nv/(2L) to find the fundamental + harmonics of a standing wave instrument.",
+      "targetId": "u6.r2-resonance"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Earth has natural resonant frequencies — when a major impact (or earthquake) happens, the planet 'rings' at characteristic frequencies.",
+      "connection": "Day 17's seismic waves are launched at these resonances. A 2026-XJ impact would excite them measurably from the other side of the planet."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## How fast — and why instruments sing\n\n**Speed of sound depends on the medium.** Stiff media snap back fast, so compressions travel fast:\n\n| Medium | v_sound |\n|---|---|\n| Air (20 °C) | ≈ 343 m/s |\n| Water | ≈ 1480 m/s |\n| Steel | ≈ 5960 m/s |\n\nIn gases, v rises with temperature — about +0.6 m/s per °C in air.\n\n**Resonance:** every object has natural standing-wave frequencies set by its geometry. Drive it AT one of those frequencies and energy builds up — the swing goes higher, the wine glass shatters, the string sings. Drive it at the wrong frequency and nothing accumulates.\n\nFor a string (or open pipe) of length L with wave speed v:\n\n**f_n = n·v / (2L)** — fundamental at n = 1, harmonics at n = 2, 3, …\n\nBonus tool from yesterday's reflection ideas: an **echo** is sound reflecting back to you, and the round-trip time gives distance: **d = v·Δt / 2**. (Sound today; radar on Day 15 — same equation, different wave.)"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Speed of sound (v_sound)",
+          "definition": "The speed at which compression waves travel through a medium. Faster in stiff media, slower in compressible ones. Increases with temperature in gases. Air at 20 °C: ≈ 343 m/s. Water: ≈ 1480 m/s. Steel: ≈ 5960 m/s. Adding 1 °C to air adds about 0.6 m/s.",
+          "cognate": "Sp. velocidad del sonido · Pt. velocidade do som · HC vitès son"
+        },
+        {
+          "term": "Resonance",
+          "definition": "When you drive a system at one of its natural standing-wave frequencies, energy builds up. The system 'sings' loudly at that frequency. Push a kid on a swing at exactly the swing's natural period → they go very high. Hit the right note near a wine glass → it shatters. Earth rings at low-Hz frequencies after large earthquakes.",
+          "cognate": "Sp. resonancia · Pt. ressonância · HC rezonans"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Stiff means FASTER, not slower",
+      "markdown": "A stiff medium (steel) transmits sound FASTER, not slower. Stiff = fast restoring force = fast wave. And resonance requires MATCHING the natural frequency — wrong frequency → energy doesn't build up."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Three rows show n = 1, 2, 3 standing waves on a fixed-end string. For n = 1, λ = ____. Compute f₁ using v = 80 m/s, L = 0.65 m.",
+      "prompts": [
+        "Row n = 1: nodes at ends, one antinode (λ = 2L).",
+        "Rows n = 2 and n = 3: add a node each time.",
+        "Compute f₁ = v/(2L) below your sketch."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "A guitar string is 0.65 m long. Wave speed on the string is 80 m/s. What's the fundamental frequency?",
+      "given": "L = 0.65 m · v = 80 m/s · n = 1",
+      "equation": "f_n = n · v / (2L)",
+      "work": "f₁ = 1 · 80 / (2 · 0.65)\nf₁ = 80 / 1.30\nf₁ ≈ 61.5 Hz",
+      "answer": "f₁ ≈ 61.5 Hz (close to a low B on a bass guitar)."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "You shout into a canyon and hear the echo 3.0 s later. How far away is the canyon wall? (v_sound in air = 343 m/s.)",
+      "given": "Δt_round_trip = 3.0 s · v = 343 m/s",
+      "equation": "d = v · Δt / 2 (round-trip → one-way)",
+      "work": "d = 343 · 3.0 / 2\nd = 1029 / 2\nd ≈ 514 m",
+      "answer": "≈ 514 m. (Quick rule: 1 second of echo delay ≈ 170 m to wall.)"
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "HARMONICS OF AN OPEN PIPE — A 0.85-m pipe organ tube, open at both ends, has v_sound = 343 m/s. Compute f₁ and f₂.",
+      "givenHint": "L = 0.85 m · v = 343 m/s · n = 1 then n = 2.",
+      "equationHint": "f_n = n·v/(2L) — compute f₁, then f₂ = 2·f₁.",
+      "equationOptions": [
+        "f_n = n·v / (2L)",
+        "f_n = 2L / (n·v)",
+        "d = v·Δt / 2",
+        "v = f·λ"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Earth rang like a bell",
+      "markdown": "The 1960 Chilean earthquake (9.5 magnitude) rang Earth like a bell for weeks. Some of its longest-period oscillations had T ≈ 54 minutes — below 1 mHz infrasound. Day 17 returns to seismic resonance."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A guitar string is 65 cm long. The wave speed on the string is 80 m/s. What's the fundamental frequency? Show one line of work.",
+      "frame": "A standing wave's frequency depends on the medium speed ___ and the geometry ___ — specifically, f₁ = v/(2L). The harmonics are multiples of ___."
+    },
+    {
+      "id": "rd-ch26-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **26.6–26.10** (natural frequency, forced vibration, resonance, interference of sound, and beats). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch26-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 26,
+      "title": "Sound — read & practice",
+      "sectionIds": [
+        "26.6",
+        "26.7",
+        "26.8",
+        "26.9",
+        "26.10"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r2-resonance"
+    }
+  ]
+}

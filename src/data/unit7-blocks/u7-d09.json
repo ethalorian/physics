@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can analyze a circuit that mixes series and parallel by collapsing parallel sections first, then adding remaining series resistors, finding total current at the battery, and working backward to find current/voltage in each branch.",
+      "targetId": "u7.s3-combination-circuits"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Day 7 (series) and Day 8 (parallel). Each works in isolation.",
+      "connection": "Real circuits mix BOTH. The reduction technique is a Unit 7 problem-solving skill — and shows up on the Day 18 transfer task."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Reduce piece-by-piece\n\nReal circuits mix series and parallel in the same loop. You don't need new physics — you need a STRATEGY: collapse the circuit one chunk at a time until it's simple, then trace your way back.\n\n**The reduction recipe:**\n\n1. Identify the innermost **parallel** groups.\n2. Replace each with its equivalent resistance R_eq (reciprocal rule, or R_eq = R₁R₂/(R₁+R₂) for two).\n3. The circuit is now pure **series** — add everything up → R_total.\n4. **I_total = V / R_total** gives the battery current.\n5. **Trace backward**: use I_total to find the voltage across each section, then Ohm's law inside each parallel group for the branch currents.\n\nTwo sanity checks that catch almost every error: voltages around the loop must add to the battery voltage, and branch currents must add back to I_total."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Combination circuit",
+          "definition": "A circuit containing BOTH series and parallel sections. Analyzed by REDUCING — collapse parallel groups first, then add what remains in series. Example: battery → R₁ in series → (R₂ || R₃) → back to battery. Step 1: combine R₂ || R₃ → R_eq. Step 2: R_total = R₁ + R_eq.",
+          "cognate": "Sp. circuito combinado · Pt. circuito combinado · HC sikui konbine"
+        },
+        {
+          "term": "Equivalent resistance",
+          "definition": "A single value that 'replaces' a complex sub-circuit. Same voltage, same total current. 3Ω || 6Ω → R_eq = 2Ω: from the rest of the circuit's perspective, it sees ONE 2Ω resistor instead of two in parallel. A calculation tool, not a real component — simplify, then trace back for branch details.",
+          "cognate": "Sp. resistencia equivalente · Pt. resistência equivalente · HC rezistans ekivalan"
+        },
+        {
+          "term": "Reduction strategy",
+          "definition": "(1) Identify innermost parallel groups. (2) Replace each with R_eq. (3) Now the circuit is pure series; add up. (4) Use V = IR_total for battery current. (5) Trace backward. See the worked example — a 3-step reduction.",
+          "cognate": "Sp. reducción del circuito · Pt. redução do circuito · HC redui sikui a"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Don't write one huge equation",
+      "markdown": "It's tempting to cram the whole circuit into a single formula. DON'T. Reduce step by step — fewer errors, easier to check. Big-picture currents come from R_total; backward-trace gives branch details."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "The worked example, drawn as its reduced loop",
+      "caption": "Battery → R₁ = 2Ω in series → a parallel pair (R₂ = 4Ω ∥ R₃ = 4Ω) drawn here as its single equivalent, R_eq = 2Ω. The diagram can only draw one series loop — the parallel pair really splits into two side-by-side 4Ω branches that share 4.5 V.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "9V battery"
+        },
+        {
+          "kind": "resistor",
+          "side": "top",
+          "label": "R₁ = 2Ω (series)"
+        },
+        {
+          "kind": "resistor",
+          "side": "right",
+          "label": "R_eq = 2Ω (4Ω ∥ 4Ω)"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Three steps of the reduction. ORIGINAL → collapse parallel → final series → total. Mark each R, each current direction, and the answers at each step.",
+      "prompts": [
+        "Panel 1: the original circuit with the parallel pair drawn as two branches.",
+        "Panel 2: parallel pair replaced by R_eq.",
+        "Panel 3: one loop, one R_total — write I_total."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "SERIES + PARALLEL COMBINATION — 9V battery → R₁ = 2Ω in series → (R₂ = 4Ω || R₃ = 4Ω) → back to battery. Find R_total, I_total (battery current), V across each section, and current in each parallel branch.",
+      "given": "V = 9 V · R₁ = 2 Ω (series) · R₂ = R₃ = 4 Ω (parallel pair)",
+      "equation": "STEP 1: R_eq of parallel pair. STEP 2: R_total = R₁ + R_eq. STEP 3: I_total = V/R_total. STEP 4: trace.",
+      "work": "STEP 1: R_eq = (R₂·R₃)/(R₂+R₃) = (4·4)/(4+4) = 16/8 = 2 Ω\nSTEP 2: R_total = R₁ + R_eq = 2 + 2 = 4 Ω\nSTEP 3: I_total = 9 / 4 = 2.25 A (through battery + R₁)\nSTEP 4: V across R₁ = 2.25 · 2 = 4.5 V\n      V across the parallel pair = 9 − 4.5 = 4.5 V\n      I₂ = 4.5 / 4 = 1.125 A ; I₃ = 4.5 / 4 = 1.125 A\n      Check: I₂ + I₃ = 2.25 A = I_total ✓",
+      "answer": "R_total = 4 Ω · I_total = 2.25 A · V on R₁ = 4.5 V · V on pair = 4.5 V · I in each branch = 1.125 A."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — MIXED REDUCTION. 12V → R₁ = 3Ω in series → (R₂ = 6Ω || R₃ = 3Ω) → back. Find R_total, I_total, and current in each parallel branch.",
+      "givenHint": "V = 12 V · R₁ = 3 Ω (series) · R₂ = 6 Ω || R₃ = 3 Ω",
+      "equationHint": "Step 1: R_eq = (6·3)/(6+3). Step 2: add R₁. Step 3: I_total = V/R_total. Step 4: V across the pair = 12 − I_total·R₁, then each branch current by Ohm's law.",
+      "equationOptions": [
+        "R_eq = (R₂·R₃)/(R₂+R₃) ; R_total = R₁ + R_eq ; I = V/R_total",
+        "R_total = R₁ + R₂ + R₃",
+        "1/R_total = 1/R₁ + 1/R₂ + 1/R₃",
+        "V = I·R only"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Inside-out reduction",
+      "markdown": "Identify the deepest parallel group → collapse → then series-add what's left. This is a problem-solving SKILL, not a formula. Practice on a few until it's automatic."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "9V → R₁ = 1Ω in series → (R₂ = 4Ω || R₄ = 4Ω) → back. Find R_total and I_total. Show work for both reduction steps. Then complete the frame.",
+      "frame": "Reduce a combination circuit by collapsing ___ groups first, then adding remaining ___ resistances. Find I_total from ___, then trace BACKWARD to find current in each ___."
+    },
+    {
+      "id": "rd-ch35-c",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **35.5–35.7** (schematic diagrams, combining resistors, and overloading/home circuits). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch35-c",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 35,
+      "title": "Electric Circuits — read & practice",
+      "sectionIds": [
+        "35.5",
+        "35.6",
+        "35.7"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.s3-combination-circuits"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply Wien's law qualitatively (and the constant 2.9 × 10⁻³ m·K quantitatively if stretched) to predict the COLOR of a thermally radiating object — meteor, star, stovetop — from its TEMPERATURE.",
+      "targetId": "u6.r6-wiens-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "A meteor's atmospheric-entry glow (Unit 5 Day 10) heats it to 5000–10 000 K. It glows yellow-white, sometimes blue-white.",
+      "connection": "Wien's law explains WHY. Same rule that classifies stars by color. Both 2026-XJ's entry glow AND the impact fireball follow this law."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Color is a thermometer\n\nEvery warm object glows. You glow (in infrared). A stovetop coil glows red. The Sun glows yellow-white. A welding arc glows blue-white. The pattern is not a coincidence — it's **blackbody radiation**, and the color is set entirely by temperature.\n\n**Wien's law** pins it down: the peak emission wavelength times the temperature is a constant.\n\n**λ_max · T = 2.9 × 10⁻³ m·K**, so **λ_max = b / T**.\n\nHotter object → shorter peak wavelength → color slides from red toward blue:\n\n- Red-hot iron, ~1000 K → λ_max ≈ 3 μm, mostly infrared; only the longest visible reds leak through. Looks RED.\n- The Sun, ~6000 K → λ_max ≈ 500 nm. Looks YELLOW-WHITE.\n- Meteor entry glow, ~5000 K → λ_max ≈ 580 nm. YELLOW-WHITE — exactly what observers report.\n- Extreme entry, ~10 000 K → λ_max ≈ 290 nm, in the UV; the visible tail is weighted blue. Looks BLUE-WHITE.\n\nOne law, one constant, and suddenly meteor color, star classification, and \"warm vs. cool\" light bulbs are all the same physics."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Blackbody radiation",
+          "definition": "The EM radiation emitted by ALL warm objects, with a spectrum determined entirely by temperature. Hotter object = higher peak frequency. Example: a red-hot iron, a glowing meteor, the Sun, the Cosmic Microwave Background — all blackbodies at different T. A blackbody doesn't have to look black — it's an idealization that real objects approximate well at high T.",
+          "cognate": "Sp. radiación de cuerpo negro · Pt. radiação de corpo negro"
+        },
+        {
+          "term": "Wien's law",
+          "definition": "The peak wavelength of a blackbody's emission is inversely proportional to its temperature: λ_max · T = 2.9 × 10⁻³ m·K. Higher T → shorter λ_max (toward blue). Example: the Sun at T ≈ 6000 K → λ_max ≈ 500 nm (yellow-green); a red-hot iron at 1000 K → λ_max ≈ 3 μm (mostly infrared; only the longest visible reds are seen). At very high T (10 000 K+) the peak shifts into UV — but visible red + blue together look BLUE-WHITE to us.",
+          "cognate": "Sp. ley de Wien · Pt. lei de Wien"
+        },
+        {
+          "term": "Color temperature",
+          "definition": "A way of expressing the COLOR of a thermally radiating object as a temperature (in Kelvin). Used in photography, astronomy, lighting design. Example: incandescent bulb 2700 K (warm yellow), sunlight 5500–6500 K (white), cloudy sky 10 000 K (blue tint). Counterintuitive: \"warm\" light is LOWER T; \"cool\" light is HIGHER T — higher color temperature looks BLUER.",
+          "cognate": "Sp. temperatura de color · Pt. temperatura de cor"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Order from coolest to hottest: red-hot iron, yellow flame, the Sun, atmospheric meteor, blue star. Each step UP in temperature shifts peak emission toward SHORTER wavelengths.",
+      "prompts": [
+        "Draw a temperature ladder, coolest at the bottom, hottest at the top.",
+        "Place all five objects on the ladder with an estimated T for each.",
+        "Next to each, mark its glow color — watch it slide red → yellow → white → blue."
+      ]
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "METEOR PEAK WAVELENGTH. A meteor at atmospheric entry is heated to T ≈ 5000 K. Compute the peak emission wavelength using Wien's law: λ_max · T = 2.9 × 10⁻³ m·K. What color does this correspond to?",
+      "given": "T = 5000 K · b = 2.9 × 10⁻³ m·K",
+      "equation": "λ_max = b / T",
+      "work": "λ_max = (2.9 × 10⁻³) / 5000\nλ_max = 5.8 × 10⁻⁷ m\nλ_max = 580 nm",
+      "answer": "λ_max ≈ 580 nm — YELLOW. (The peak's in yellow; the wings reach red + green, making the meteor look YELLOW-WHITE.)"
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "EXTREME ENTRY SPEED. A faster meteor (or an asteroid at high entry speed) can heat to T ≈ 10 000 K. What's the peak λ? What color?",
+      "given": "T = 10 000 K · b = 2.9 × 10⁻³ m·K",
+      "equation": "λ_max = b / T",
+      "work": "λ_max = (2.9 × 10⁻³) / 10 000\nλ_max = 2.9 × 10⁻⁷ m\nλ_max = 290 nm",
+      "answer": "λ_max ≈ 290 nm — UV. The visible part looks BLUE-WHITE (heavily weighted toward blue + violet)."
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — CLASSIFY BY COLOR. A red-hot iron glows at T ≈ 1000 K. What's λ_max? Why does it look RED to us (despite λ_max being beyond visible)?",
+      "givenHint": "T = 1000 K · b = 2.9 × 10⁻³ m·K",
+      "equationHint": "Same move as the meteor examples. Expect λ_max in the infrared — then explain which visible wavelengths leak through.",
+      "equationOptions": [
+        "λ_max = b / T",
+        "λ_max = b · T",
+        "v = f · λ",
+        "dB = 10 · log₁₀(I / I₀)"
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "callout",
+      "variant": "note",
+      "title": "Stars are classified by this law",
+      "markdown": "Astronomers measure star COLOR to estimate surface temperature. Cool stars (M-class, 3000 K) are RED. Sun-like stars (G-class, 6000 K) are YELLOW. Hot stars (O-class, 30 000 K) are BLUE. Same physics as the meteor glow."
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A meteor entering at extreme speed could heat to 10 000 K. What color would it glow? How does this compare to a typical meteor (5000 K)? Give a one-sentence comparison.",
+      "frame": "Hotter object → peak emission at ___ wavelength. The Sun (6000 K) peaks at ___ nm. A 10 000 K meteor peaks at ___ nm — in the ___ band. Visible color combines the WHOLE spectrum, weighted by intensity."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.r6-wiens-law"
+    }
+  ]
+}

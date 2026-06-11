@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe voltage as the ENERGY each coulomb of charge carries (J/C), use the water-tank analogy to predict whether charge will flow, and identify the voltage of common sources (AA = 1.5V, 9V battery, household = 120V).",
+      "targetId": "u7.k3-voltage"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Unit 4: energy is conserved and can be transferred. From Day 1: charge is the fundamental quantity.",
+      "connection": "Voltage marries them: how much ENERGY each unit of CHARGE carries. The 9V battery in the Car Project (Day 17 preview) carries 9 J per C."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Energy per coulomb\n\nVoltage glues Unit 4 (energy) to Unit 7 (charge):\n\n**V = U / q** — joules of energy carried PER COULOMB of charge.\n\nA 9V battery stamps 9 J onto every coulomb that passes through it. A 1.5V AA cell: only 1.5 J/C. A wall outlet: 120 J/C. Rearranged, **U = q·V** tells you the TOTAL energy delivered when charge q flows through voltage V.\n\nThe water-tank picture: voltage is like water-tank HEIGHT. Water flows from the high tank to the low tank — and charge flows from high voltage to low voltage. No height difference, no flow; no voltage difference, no current. (Current itself is tomorrow.)\n\nCommon sources to memorize: **AA cell = 1.5V · 9V battery = 9V · car battery = 12V · US household outlet = 120V**."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Voltage (V)",
+          "definition": "Electric potential difference. The energy carried per coulomb of charge. V = U / q. Units: volts (V) = joules / coulomb. A 9V battery means 9 J of energy per coulomb of charge that passes through. A 1.5V AA cell: 1.5 J/C.",
+          "cognate": "Sp. voltaje · Pt. voltagem · HC voltaj"
+        },
+        {
+          "term": "Electric potential energy (U)",
+          "definition": "The energy a charge has due to its position in an electric field. Like gravitational PE = mgh, but for charge: U = q·V. A 0.5 C charge in a 9V battery has U = 0.5 · 9 = 4.5 J of potential energy waiting to be released through the circuit. Potential energy belongs to the CHARGE; voltage is per-coulomb.",
+          "cognate": "Sp. energía potencial eléctrica · Pt. energia potencial elétrica · HC enèji potansyèl elektrik"
+        },
+        {
+          "term": "EMF (electromotive force)",
+          "definition": "The voltage a battery (or other source) PROVIDES to push charge around a circuit. Confusingly NOT a force — it's a voltage. Symbol: ε. Units: volts. A fresh 9V battery has EMF ≈ 9V; as it drains, the EMF drops. The 'force' name is historical.",
+          "cognate": "Sp. fuerza electromotriz · Pt. força eletromotriz · HC fòs elektwomotè"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Voltage is energy PER charge — not total energy",
+      "markdown": "A 9V battery has limited TOTAL energy (depends on its size) but the same 9V no matter how full. And EMF is measured in VOLTS, not newtons — the 'force' word is misleading; it's really a per-charge ENERGY."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Two water tanks at different heights. Label which is 'high voltage' and which is 'low voltage'. Mark the JOULES PER COULOMB analogy.",
+      "prompts": [
+        "Two tanks, one higher than the other.",
+        "Arrow for the flow direction (high → low).",
+        "Label: height ↔ voltage, water ↔ charge."
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "ENERGY DELIVERED BY A BATTERY — A 9V battery pushes 0.5 C of charge through a circuit. How much energy did the battery deliver?",
+      "given": "V = 9 V · q = 0.5 C",
+      "equation": "U = q·V",
+      "work": "U = 0.5 · 9\nU = 4.5 J",
+      "answer": "U = 4.5 J of electrical energy delivered to the circuit."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "SAME CHARGE, DIFFERENT BATTERY — The same 0.5 C of charge passes through a 1.5V AA battery. How much energy this time?",
+      "given": "V = 1.5 V · q = 0.5 C",
+      "equation": "U = q·V",
+      "work": "U = 0.5 · 1.5\nU = 0.75 J",
+      "answer": "U = 0.75 J. Same charge, less voltage → less energy. Six times less, because 9/1.5 = 6."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — CHARGE NEEDED FOR 100 J. You want a 9V battery to deliver 100 J of energy to a circuit. How many coulombs of charge must flow through?",
+      "givenHint": "V = 9 V · U = 100 J · q = ?",
+      "equationHint": "Rearrange U = q·V to solve for q. Expect a number bigger than 10.",
+      "equationOptions": [
+        "q = U/V",
+        "U = q·V",
+        "V = U/q",
+        "I = q/t"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why so many small batteries?",
+      "markdown": "AA is 1.5V — too low for most uses. So we stack them in series: 4 AA = 6V, 6 AA = 9V. **Voltages in series ADD.** The Car Project uses a single 9V (compact rectangular) for simplicity."
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "How much energy does a 12V car battery deliver when 1.0 C of charge flows through it? Show one line of work. Then complete the frame.",
+      "frame": "Voltage measures ___ per ___. A 9V battery gives ___ J to every coulomb of charge that flows through. To deliver more total energy, you need more ___ (charge to flow)."
+    },
+    {
+      "id": "rd-ch33-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **33.4–33.7** (electrical potential energy, electric potential (voltage), energy storage, and the Van de Graaff generator). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch33-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 33,
+      "title": "Electric Fields and Potential — read & practice",
+      "sectionIds": [
+        "33.4",
+        "33.5",
+        "33.6",
+        "33.7"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k3-voltage"
+    }
+  ]
+}

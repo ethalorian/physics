@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can distinguish mass from weight, calculate weight on different worlds with F = mg, and explain why weight changes but mass does not.",
+      "targetId": "u2.mass-vs-weight"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "2026-XJ's mass is the same everywhere. Its weight depends on WHERE it is.",
+      "connection": "Set up the question: if 2026-XJ stood on Earth's surface, what would it weigh? Tomorrow we get the equation that gives g on any world."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Mass is what you are. Weight is what gravity does to you.\n\n- **Mass** (kg) — how much matter is in an object. The same on Earth, on the Moon, on 2026-XJ.\n- **Weight** (N) — the **force** of gravity pulling on that mass: **F_w = m·g**.\n\nChange worlds and you change g — so your weight changes. Your mass never does.\n\n| World | g (m/s²) |\n|---|---|\n| Earth | 9.81 |\n| Moon | 1.62 |\n| Mars | 3.71 |"
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Mass",
+          "definition": "How much MATTER is in an object. Same everywhere in the universe. Measured in kg.",
+          "cognate": "Sp. masa · Pt. massa · HC mas"
+        },
+        {
+          "term": "Weight",
+          "definition": "The FORCE of gravity pulling on a mass. Depends on local g. A 70 kg student weighs 686 N on Earth, 113 N on the Moon, 260 N on Mars.",
+          "cognate": "Sp. peso · Pt. peso · HC pwa"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Cognate alert",
+      "markdown": "*peso* = weight (Sp.), *masa* = mass (Sp.). Don't mix them up. Your bathroom scale measures **force** (weight), not 'how much stuff' (mass)."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "A 70 kg student stands on the Moon. What is their weight? (g_Moon = 1.62 m/s²)",
+      "given": "m = 70 kg · g_Moon = 1.62 m/s²",
+      "equation": "F_w = m·g",
+      "work": "F_w = 70 × 1.62 = 113.4 N",
+      "answer": "113 N. About 1/6 their Earth weight, but their mass is unchanged."
+    },
+    {
+      "id": "b7",
+      "type": "data_table",
+      "capture": true,
+      "columns": ["World", "g (m/s²)", "My weight F = m·g (N)"],
+      "rows": 4,
+      "plot": false,
+      "patternPrompt": "Pick your own mass (be honest). Fill in your weight on Earth, the Moon, Mars, and one world of your choice. What pattern connects g and your weight?"
+    },
+    {
+      "id": "b8",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "If you weigh 600 N on Earth, find your mass first. Then calculate your weight on Mars (g_Mars = 3.71 m/s²).",
+      "givenHint": "Earth weight (600 N), g_Earth = 9.81 m/s², g_Mars = 3.71 m/s².",
+      "equationHint": "Use F_w = m·g twice: once backwards to get m, once forwards on Mars.",
+      "equationIds": ["weight", "gravitation", "newton-2nd", "avg-speed", "displacement"]
+    },
+    {
+      "id": "b9",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "If you weigh 600 N on Earth, what is your mass? What would you weigh on a planet with g = 25 m/s²?",
+      "frame": "My mass is ___ kg, because mass = weight ÷ ___. On the g = 25 planet I would weigh ___ N."
+    },
+    {
+      "id": "b10",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u2.mass-vs-weight"
+    }
+  ]
+}

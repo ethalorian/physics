@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write Q = mcΔT, identify each piece with units, look up c from a table, and solve for any one variable given the other three.",
+      "targetId": "u5.k1-specific-heat"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Asteroids are mostly rock (c ≈ 800 J/kg·°C). Oceans are water (c ≈ 4186). Water's c is 5× rock's.",
+      "connection": "When 2026-XJ heats up entering atmosphere, the same energy raises rock temperature 5× more than it would water. That asymmetry sets the atmospheric burn-up threshold on Day 10."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The price of a degree\n\nDifferent materials charge different prices to warm up. **Specific heat (c)** is the energy needed to raise 1 kg of a material by 1 °C — and the equation that totals the bill is:\n\n**Q = m · c · ΔT**\n\nwhere Q is heat in Joules, m is mass in kg, c is in J/kg·°C, and ΔT is the temperature CHANGE in °C (final − initial).\n\n| Material | c (J/kg·°C) |\n|---|---|\n| Water | 4186 |\n| Aluminum | 900 |\n| Rock (typical) | ≈ 800 |\n| Copper | 387 |\n\nWater is the most expensive material on the list — over 5× rock, over 10× copper. Give the same 1000 J to 1 kg of each, and the copper warms more than 10× as much as the water. That one fact runs through the whole unit: it's why oceans moderate climate, why calorimetry labs use water, and why entering rock heats up FAST on Day 10."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Specific heat (c)",
+          "definition": "The energy needed to raise 1 kg of a material by 1 °C. Units: J/kg·°C. Material-specific. Water: c = 4186 J/kg·°C — to raise 1 kg by 1 °C takes 4186 J. Aluminum: c = 900. Copper: 387. Water needs the MOST per kg per °C — that's why it heats slowly.",
+          "cognate": "Sp. calor específico · Pt. calor específico · HC chalè espesifik"
+        },
+        {
+          "term": "Q = m · c · ΔT",
+          "definition": "Heat needed to change a mass m by ΔT, with material specific heat c. Q in J, m in kg, ΔT in °C. Example: 0.5 kg of water raised by 20 °C: Q = 0.5 · 4186 · 20 = 41,860 J.",
+          "cognate": "Sp. ecuación de calor · Pt. equação de calor"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "ΔT can be NEGATIVE",
+      "markdown": "If an object COOLS, ΔT = T_final − T_initial is negative — so Q comes out negative. That's not an error: negative Q means heat flowed OUT of the object. Keep the sign; it tells you the direction."
+    },
+    {
+      "id": "b6",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Compare the bars for water, aluminum, rock, copper. If you give each 1000 J, which warms by the LEAST? Why?",
+      "prompts": [
+        "Draw four bars showing c for water (4186), aluminum (900), rock (≈800), copper (387).",
+        "Mark which material warms LEAST with the same 1000 J.",
+        "One sentence: how does ΔT depend on c?"
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "worked_example",
+      "prompt": "How much heat is required to raise 0.5 kg of water from 20 °C to 40 °C?",
+      "given": "m = 0.5 kg · c_water = 4186 J/kg·°C · ΔT = 40 − 20 = 20 °C",
+      "equation": "Q = m · c · ΔT",
+      "work": "Q = 0.5 · 4186 · 20\nQ = 0.5 · 83,720\nQ = 41,860 J",
+      "answer": "≈ 4.2 × 10⁴ J ≈ 42 kJ to heat 0.5 kg of water by 20 °C."
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "Apply the same 41,860 J of energy to 0.5 kg of aluminum (c = 900). What's the temperature rise?",
+      "given": "Q = 41,860 J · m = 0.5 kg · c_Al = 900 J/kg·°C",
+      "equation": "Q = m · c · ΔT → ΔT = Q / (m · c)",
+      "work": "ΔT = 41,860 / (0.5 · 900)\nΔT = 41,860 / 450\nΔT ≈ 93 °C",
+      "answer": "≈ 93 °C — the aluminum heats almost 5× as much as the water did with the same energy."
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "How much heat is needed to raise 2 kg of copper from 20 °C to 80 °C? (c_Cu = 387 J/kg·°C.)",
+      "givenHint": "m = 2 kg · c_Cu = 387 J/kg·°C · ΔT = 80 − 20 = 60 °C",
+      "equationHint": "Q = m · c · ΔT — multiply straight through.",
+      "equationIds": [
+        "heat"
+      ]
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "A 0.20-kg metal sample receives 1800 J and warms by 50 °C. What's its specific heat? Use the table to identify the metal.",
+      "givenHint": "Q = 1800 J · m = 0.20 kg · ΔT = 50 °C · c = ?",
+      "equationHint": "Q = m · c · ΔT → c = Q / (m · ΔT). Then compare your c to the table values to name the metal.",
+      "equationIds": [
+        "heat"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "callout",
+      "variant": "note",
+      "title": "Why beach sand burns your feet",
+      "markdown": "Water's high c is why beach sand burns your feet but the ocean still feels cool — same sun, but the sand (low c) heats fast while the water (high c) barely budges. It's also why oceans are Earth's thermostat."
+    },
+    {
+      "id": "b12",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "How much heat is needed to raise 2 kg of copper from 20 °C to 80 °C? (c_Cu = 387 J/kg·°C.) Then complete the frame.",
+      "frame": "Water has a c that is ___ times bigger than rock's. Given the same energy, water heats ___ than rock does. This is why ___."
+    },
+    {
+      "id": "rd-ch21-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **21.6–21.9** (specific heat capacity, water's high specific heat, thermal expansion, and the odd expansion of water). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch21-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 21,
+      "title": "Temperature, Heat, and Expansion — read & practice",
+      "sectionIds": [
+        "21.6",
+        "21.7",
+        "21.8",
+        "21.9"
+      ]
+    },
+    {
+      "id": "b13",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u5.k1-specific-heat"
+    }
+  ]
+}

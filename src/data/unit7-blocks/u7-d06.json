@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can apply V = IR to compute any one of V, I, or R given the other two; explain RESISTANCE as 'how hard charge has to push through' a component; and use the triangle to read off the formula.",
+      "targetId": "u7.k5-ohms-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "From Day 4: voltage. From Day 5: current. These two are linked by RESISTANCE.",
+      "connection": "Ohm's law is the master equation of every circuit — and the equation that lets us PREDICT the Car motor's current on Day 17 (given V and R)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The master equation\n\nVoltage pushes; resistance pushes back; current is what results:\n\n**V = I · R**\n\nResistance R measures how hard charge has to push through a component, in ohms (Ω). 1 Ω = 1 V/A. Crank up V and current rises; crank up R and current falls.\n\nThe three equivalent forms — pick the one that solves for your unknown:\n\n| Want | Use |\n|------|-----|\n| Voltage | **V = I·R** |\n| Current | **I = V/R** |\n| Resistance | **R = V/I** |\n\nThe TRIANGLE trick: V on top, I and R on the bottom. Cover the unknown and read off the formula.\n\nFeel for the numbers: copper wire ≈ 0.01 Ω (almost free) · a motor ≈ 3–5 Ω · a toaster element ≈ 15 Ω · an incandescent bulb ≈ 100 Ω. An open switch is R = infinity (no current); a short circuit is R ≈ 0 (huge current — dangerous)."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Resistance (R)",
+          "definition": "How much a component opposes the flow of charge. R = V / I. Units: ohms (Ω). 1 Ω = 1 V/A. A copper wire: R ≈ 0.01 Ω (very low). A motor: R ≈ 3–5 Ω. An incandescent lightbulb: R ≈ 100 Ω. A toaster element: R ≈ 15 Ω (carries a lot of current).",
+          "cognate": "Sp. resistencia · Pt. resistência · HC rezistans"
+        },
+        {
+          "term": "Ohm's law",
+          "definition": "V = I · R. Equivalent forms: I = V/R, R = V/I. The TRIANGLE: cover the unknown, read the formula. 9V across a 3Ω motor → I = V/R = 9/3 = 3 A. Works for OHMIC materials — metals at constant temperature; bulbs and motors are not strictly ohmic (R changes with temperature), but we use it as an approximation.",
+          "cognate": "Sp. ley de Ohm · Pt. lei de Ohm · HC lwa Ohm"
+        },
+        {
+          "term": "Ohm (Ω)",
+          "definition": "SI unit of resistance. 1 Ω = 1 V/A. Named for Georg Ohm. Common resistor values: 100 Ω, 1 kΩ, 10 kΩ, 1 MΩ — sized for the current and voltage of your circuit. (Capital omega Ω is 'ohm'; lowercase ω is angular frequency — different concept.)",
+          "cognate": "Sp. ohmio · Pt. ohm · HC ohm"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "High R means LITTLE current — and R ≈ 0 means danger",
+      "markdown": "High R = LITTLE current at a given V (and vice versa). An open switch is R = infinity (no current at all). A short circuit is R ≈ 0 — Ohm's law then demands a HUGE current, which overheats wires. That's why shorts are dangerous."
+    },
+    {
+      "id": "b6",
+      "type": "diagram",
+      "kind": "circuit",
+      "title": "The simplest circuit Ohm's law describes",
+      "caption": "One loop: battery (the V), switch, resistor (the R). Close the switch and one current I = V/R flows around the whole loop. This is also EXACTLY the Car Project circuit — swap the resistor for a motor.",
+      "components": [
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "battery (V)"
+        },
+        {
+          "kind": "switch",
+          "side": "top",
+          "label": "switch"
+        },
+        {
+          "kind": "resistor",
+          "side": "right",
+          "label": "resistor (R)"
+        }
+      ]
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the Ohm's triangle. Cover V → read V = IR. Cover I → read I = V/R. Cover R → read R = V/I. Practice each.",
+      "prompts": [
+        "Triangle: V on top, I and R on the bottom.",
+        "Cover each letter in turn and write the formula you read.",
+        "Three formulas total — check them against the table."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "CURRENT THROUGH A RESISTOR — A 6V battery is connected across a 12Ω resistor. What's the current?",
+      "given": "V = 6 V · R = 12 Ω",
+      "equation": "I = V/R",
+      "work": "I = 6 / 12\nI = 0.5 A",
+      "answer": "I = 0.5 A through the resistor."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "RESISTANCE FROM V AND I — A circuit measures V = 9V across a component and I = 3 A through it. What's the resistance?",
+      "given": "V = 9 V · I = 3 A",
+      "equation": "R = V/I",
+      "work": "R = 9 / 3\nR = 3 Ω",
+      "answer": "R = 3 Ω."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — VOLTAGE ACROSS A COMPONENT. A current of 2.5 A flows through a 4 Ω resistor. What's the voltage across it?",
+      "givenHint": "I = 2.5 A · R = 4 Ω · V = ?",
+      "equationHint": "Cover the V on the triangle: V = I·R.",
+      "equationIds": [
+        "ohms-law"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "YOUR TURN — CAR MOTOR CURRENT PREVIEW. Estimate: the Car Project motor has R ≈ 4 Ω (estimated). Connected to a 9V battery, what current will it draw?",
+      "givenHint": "V = 9 V · R ≈ 4 Ω · I = ?",
+      "equationHint": "Cover the I on the triangle: I = V/R. Expect a bit over 2 A.",
+      "equationIds": [
+        "ohms-law"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "callout",
+      "variant": "note",
+      "title": "Your first Car Project prediction",
+      "markdown": "9V / 4Ω = 2.25 A. That's the Car motor current PREDICTED from Ohm's law. Day 17 you'll do this prediction in full detail. Day 18 transfer task will ask you to predict again. Day 1 of Unit 8: you'll MEASURE."
+    },
+    {
+      "id": "b13",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "A 12V battery drives 4 A through a wire-wound resistor. What's the resistance? Show one line of work. Then complete the frame.",
+      "frame": "Ohm's law says V = ___. To find current, use I = ___. To find resistance, use R = ___. A 'short circuit' has R close to ___, leading to a ___ current."
+    },
+    {
+      "id": "rd-ch34-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **34.5–34.10** (Ohm's law, electric shock, DC vs. AC, converting AC to DC, and how electrons actually move in a circuit). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch34-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 34,
+      "title": "Electric Current — read & practice",
+      "sectionIds": [
+        "34.5",
+        "34.6",
+        "34.7",
+        "34.8",
+        "34.9",
+        "34.10"
+      ]
+    },
+    {
+      "id": "b14",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u7.k5-ohms-law"
+    }
+  ]
+}

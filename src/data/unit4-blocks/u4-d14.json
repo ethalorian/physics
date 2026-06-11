@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can write F_spring = −kx, compute the spring constant k from a measured stretch + load, and predict the force at any other displacement.",
+      "targetId": "u4.k6-hookes-law"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Springs are the textbook template for ELASTIC restoring forces.",
+      "connection": "Spring physics shows up in crumple zones (Unit 3 callback), in atomic bonds, and in any system that wants to return to equilibrium."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## A force that fights back\n\nStretch a spring and it pulls back. Compress it and it pushes back. The spring always tries to return to its natural length — its **equilibrium**. Hooke's law says how hard:\n\n**F_spring = −k·x**\n\n- x = displacement from equilibrium (m)\n- k = spring constant (N/m) — the spring's stiffness\n- the minus sign = the force points OPPOSITE the displacement (a *restoring* force)\n\n**Finding k:** hang a known mass and let it settle. In equilibrium the spring force balances the weight:\n\nk·x = m·g → **k = m·g / x**\n\nOnce you know k, you can predict the force at ANY displacement: magnitude F = k·|x|."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Hooke's law",
+          "definition": "The force a spring exerts is proportional to its displacement from equilibrium, in the OPPOSITE direction: F_spring = −k·x. A spring with k = 200 N/m, compressed 0.08 m: F = −200·0.08 = −16 N (force pushes BACK toward equilibrium).",
+          "cognate": "Sp. ley de Hooke · Pt. lei de Hooke · HC lwa Hooke"
+        },
+        {
+          "term": "Spring constant (k)",
+          "definition": "A property of the spring measuring its stiffness. Units: N/m. Bigger k = stiffer spring — and k belongs to the SPRING, not the load: same spring, same k, regardless of how much you stretch it. A car suspension spring might have k ≈ 30,000 N/m; a toy slinky might have k ≈ 1 N/m.",
+          "cognate": "Sp. constante del resorte · Pt. constante da mola"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "The minus sign is a DIRECTION marker",
+      "markdown": "The negative sign in F_spring = −kx isn't part of the size — it says the force always OPPOSES the displacement. Stretch the spring down, it pulls up; compress it left, it pushes right. Magnitude is k·|x|."
+    },
+    {
+      "id": "b6",
+      "type": "worked_example",
+      "prompt": "FINDING K. A spring stretches 5 cm (0.05 m) when a 1-kg mass hangs from it. Find the spring constant. Then: what force does the same spring exert if stretched 12 cm?",
+      "given": "m = 1 kg · x₁ = 0.05 m · g = 9.81. Find k. Then F at x₂ = 0.12 m.",
+      "equation": "In equilibrium: F_spring = m·g → k·x = m·g → k = m·g/x",
+      "work": "k = (1)(9.81) / 0.05 = 196.2 N/m\nF at x₂ = k · x₂ = 196.2 · 0.12 = 23.5 N",
+      "answer": "k ≈ 196 N/m. At 12 cm stretch, F ≈ 23.5 N."
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "warning",
+      "title": "Linear has limits",
+      "markdown": "Hooke's law is a LINEAR approximation. Real springs deviate from it once you stretch them too far (the \"elastic limit\"). For our problems we stay linear."
+    },
+    {
+      "id": "b8",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "Draw the same spring three times: at equilibrium, stretched 5 cm by the 1-kg load, and stretched 12 cm. Draw the spring-force arrow in each stretched case.",
+      "prompts": [
+        "Force arrows point BACK toward equilibrium.",
+        "More stretch → longer arrow (12 cm arrow ≈ 2.4× the 5 cm arrow).",
+        "Label k = 196 N/m — same spring, same k in every panel."
+      ]
+    },
+    {
+      "id": "b9",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "SPRING UNDER COMPRESSION. A spring with k = 200 N/m is compressed 0.08 m. What force does it exert? Which direction?",
+      "givenHint": "k = 200 N/m · x = 0.08 m (compression).",
+      "equationHint": "Magnitude k·|x|; direction OPPOSES the displacement (pushes back out).",
+      "equationOptions": ["F_spring = −k·x", "U_spring = ½·k·x²", "W = F·d", "F = m·a"]
+    },
+    {
+      "id": "b10",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Check your compression answer (force AND direction), then complete the frame.",
+      "frame": "Hooke's law says the spring force is PROPORTIONAL to ___ and OPPOSITE to the ___ direction. The proportionality constant is ___."
+    },
+    {
+      "id": "b11",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u4.k6-hookes-law"
+    }
+  ]
+}

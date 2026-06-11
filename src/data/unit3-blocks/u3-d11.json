@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can use conservation of momentum to compute the Δv DART gave to Dimorphos, and I can apply the same calculation to 2026-XJ to estimate what it would take to deflect it.",
+      "targetId": "u3.r3-deflection"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "On Sept 26, 2022, NASA's DART spacecraft (~600 kg, ~6 km/s) crashed into a small asteroid called Dimorphos (~5 × 10⁹ kg). It changed Dimorphos's orbital period by 32 minutes.",
+      "connection": "This is the day the unit pays off. Today's math is the math we'd use on 2026-XJ. If the Δv we need is DART-scale, deflection is on the table. If not, we'd need a much bigger push (or a different strategy)."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## DART, in two equations\n\n**Equation 1 — the strike.** Treat the impact as perfectly inelastic with M ≫ m:\n\n**Δv ≈ m·v / M** — spacecraft momentum, spread over the asteroid's mass.\n\n**Equation 2 — why tiny works.**\n\n**offset = Δv × lead time**\n\nIf Δv ≈ 1 mm/s and we have 1 year (3.15 × 10⁷ s): offset ≈ 31.5 km. The push is microscopic; the **time** does the heavy lifting. More lead time = more offset. Linear in both."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "DART (Double Asteroid Redirection Test)",
+          "definition": "NASA's 2022 mission that deliberately crashed a 600-kg spacecraft into a small asteroid to test whether kinetic impact can change its trajectory. DART hit Dimorphos at ~6 km/s, delivering only ~3 mm/s of Δv — but that tiny push, accumulated over time, shifts position by kilometers.",
+          "cognate": "Sp. misión DART · Pt. missão DART · HC misyon DART"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "worked_example",
+      "prompt": "DART (m = 600 kg) hit Dimorphos (M = 5 × 10⁹ kg) at v = 6 × 10³ m/s, treating the impact as perfectly inelastic. Find the velocity change Δv of the asteroid. (Hint: M ≫ m, so (m+M) ≈ M.)",
+      "given": "m = 600 kg · v = 6000 m/s · M = 5×10⁹ kg · asteroid initially at rest in DART's frame",
+      "equation": "m·v + M·0 = (m + M)·Δv ≈ M·Δv → Δv ≈ m·v / M",
+      "work": "Δv ≈ (600 × 6000) / (5 × 10⁹)\nΔv ≈ 3.6 × 10⁶ / 5 × 10⁹\nΔv ≈ 7.2 × 10⁻⁴ m/s ≈ 0.72 mm/s\n(NASA measured ≈ 2.7 mm/s with momentum enhancement from ejecta — same order of magnitude.)",
+      "answer": "≈ 0.72 mm/s (less than a millimeter per second). Tiny — but it adds up."
+    },
+    {
+      "id": "b6",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "2026-XJ has mass M ≈ 1 × 10⁹ kg and will pass Earth in 6 months (t ≈ 1.5 × 10⁷ s). We need to shift its position by R_Earth ≈ 6.4 × 10⁶ m to miss us. What Δv does it need? Then: would a DART-scale strike (600 kg at 6 km/s) deliver it?",
+      "givenHint": "Required: Δv = shift / time. Available from one DART: Δv = m·v / M with M = 10⁹ kg.",
+      "equationHint": "Compute the NEEDED Δv first, then the DELIVERED Δv, then compare.",
+      "equationOptions": ["Δv = shift / time", "Δv ≈ m·v / M", "p = m·v", "J = F·Δt"]
+    },
+    {
+      "id": "b7",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read your own gap",
+      "markdown": "When you compare the required Δv to what a single DART gives: the gap tells you whether one impactor is enough, or whether we'd need many — or need to have launched **sooner**."
+    },
+    {
+      "id": "b8",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Complete the deflection frame, then answer: why doesn't NASA need a HUGE Δv to deflect an asteroid? Use 'lead time' and 'small change in velocity' in your answer.",
+      "frame": "To deflect 2026-XJ by one Earth-radius in 6 months, we need Δv ≈ ___. A single DART-class strike would give about ___. So we'd need ___ DARTs (or more lead time)."
+    },
+    {
+      "id": "b9",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u3.r3-deflection"
+    }
+  ]
+}

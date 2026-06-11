@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 1,
+  "dayType": "STANDARD",
+  "blocks": [
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can predict whether a wave bends TOWARD or AWAY from the normal as it enters a new medium, given which medium is faster.",
+      "targetId": "u6.k4-refraction"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Radio waves don't refract much in vacuum, but they DO refract in Earth's atmosphere. Sound from a distant impact refracts in air (sound bends toward cooler air).",
+      "connection": "The pencil-in-water effect IS refraction. Same rule explains why distant thunder can be heard around hills."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## Speed change → direction change\n\n**Refraction** is the bending of a wave at a boundary, caused by a change in wave SPEED. The rule fits in two lines:\n\n- Entering a **SLOWER** medium → bends **TOWARD** the normal.\n- Entering a **FASTER** medium → bends **AWAY** from the normal.\n\nWhy? The marching-band picture: a row of marchers crosses from pavement into mud at an angle. The side that hits the mud first **slows first**, the row pivots, and the whole line swings toward the normal. Waves do exactly this — the wavefront twists because one edge slows before the other.\n\nRemember from Day 3: crossing a boundary, **f stays the same** (set by the source) while **v and λ change** together. The speed change is the whole engine of refraction — same speed on both sides, no bend at all."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "Refraction",
+          "definition": "The BENDING of a wave at a boundary, caused by a change in wave SPEED. Slower medium → bends TOWARD normal. Faster medium → bends AWAY. Light going from air (faster) into water (slower) bends TOWARD the normal — that's why a pencil in a glass of water looks broken at the surface.",
+          "cognate": "Sp. refracción · Pt. refração · HC refraksyon"
+        },
+        {
+          "term": "Index of refraction (n) — advanced",
+          "definition": "A ratio: n = c / v_in_medium. Higher n = slower wave. Air ≈ 1.00, water ≈ 1.33, glass ≈ 1.50. In glass (n = 1.5), light travels at 2 × 10⁸ m/s — two-thirds of c. Big n = SLOWER medium: the bigger the n, the more the wave slows and the more it bends toward normal.",
+          "cognate": "Sp. índice de refracción · Pt. índice de refração"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "callout",
+      "variant": "misconception",
+      "title": "Refraction needs a SPEED CHANGE, not just a boundary",
+      "markdown": "If two media have the same wave speed, no refraction occurs — the wave crosses the boundary in a straight line. The bend is caused by the speed mismatch, not by the surface itself."
+    },
+    {
+      "id": "b6",
+      "type": "callout",
+      "variant": "warning",
+      "title": "The marching-band analogy",
+      "markdown": "A row of soldiers marching at angle into mud. The side hitting mud first slows; the row twists. Same with waves entering the slower medium. The geometry follows."
+    },
+    {
+      "id": "b7",
+      "type": "sketch",
+      "capture": true,
+      "instruction": "The pencil enters water at an angle. Draw the normal at the air-water boundary. Which way does the wave bend? Mark θ₁ (above) and θ₂ (below).",
+      "prompts": [
+        "Dashed normal perpendicular to the water surface.",
+        "Ray in air at θ₁; ray in water bent TOWARD the normal at θ₂ < θ₁.",
+        "Label which medium is faster."
+      ]
+    },
+    {
+      "id": "b8",
+      "type": "worked_example",
+      "prompt": "Light enters water from air. Does it bend TOWARD or AWAY from the normal? Why?",
+      "given": "Light in air: v ≈ c (faster) · Light in water: v ≈ 0.75c (slower)",
+      "equation": "Slower medium → bends TOWARD normal",
+      "work": "Water is the slower medium.\nTherefore the light bends TOWARD the normal in water.\nθ₂ (in water) < θ₁ (in air).",
+      "answer": "Bends TOWARD normal. The refracted ray is closer to vertical than the incident ray."
+    },
+    {
+      "id": "b9",
+      "type": "worked_example",
+      "prompt": "A swimmer underwater shines a flashlight UP through the water surface into the air. Does the beam bend toward or away from the normal as it exits water into air?",
+      "given": "Light leaves water (slow) and enters air (fast).",
+      "equation": "Faster medium → bends AWAY from normal",
+      "work": "Air is the faster medium.\nTherefore the light bends AWAY from the normal as it leaves water.",
+      "answer": "AWAY from the normal. The beam tilts further from vertical as it exits."
+    },
+    {
+      "id": "b10",
+      "type": "gewa",
+      "capture": true,
+      "prompt": "RADIO IN ATMOSPHERE — Radio waves enter Earth's atmosphere from space. The ionosphere slows them slightly compared to vacuum. Which way would the waves bend?",
+      "givenHint": "Vacuum: faster. Ionosphere: slightly slower. The wave is entering the SLOWER medium.",
+      "equationHint": "Slower medium → bends TOWARD the normal (qualitative — no numbers needed).",
+      "equationOptions": [
+        "Slower medium → bends TOWARD the normal",
+        "Slower medium → bends AWAY from the normal",
+        "θᵣ = θᵢ (reflection rule)",
+        "No bend — boundaries alone don't matter"
+      ]
+    },
+    {
+      "id": "b11",
+      "type": "exit_ticket",
+      "capture": true,
+      "prompt": "Light enters glass (n = 1.5) from air (n = 1.0). Does it bend toward or away from the normal? In one sentence, explain why.",
+      "frame": "When a wave enters a SLOWER medium, the side that hits the boundary first ___ first. That makes the wavefront ___, bending it ___ the normal."
+    },
+    {
+      "id": "rd-ch29-b",
+      "type": "callout",
+      "variant": "note",
+      "title": "Read & practice",
+      "markdown": "Open the reader and read **29.6–29.12** (refraction of sound and light, mirages, dispersion in a prism, rainbows, and total internal reflection). Answer the questions beside the reading as you go."
+    },
+    {
+      "id": "ce-ch29-b",
+      "type": "concept_exercise",
+      "capture": true,
+      "chapter": 29,
+      "title": "Reflection and Refraction — read & practice",
+      "sectionIds": [
+        "29.6",
+        "29.7",
+        "29.8",
+        "29.9",
+        "29.10",
+        "29.11",
+        "29.12"
+      ]
+    },
+    {
+      "id": "b12",
+      "type": "marzano",
+      "capture": true,
+      "targetId": "u6.k4-refraction"
+    }
+  ]
+}
