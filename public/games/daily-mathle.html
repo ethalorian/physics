@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>MATHLE — crack the equation</title>
+<style>
+  :root{
+    --bg:#0d1021; --panel:#161a33; --panel2:#1d2244;
+    --cyan:#2ee6ff; --mag:#ff3df0; --lime:#7dff4a; --amber:#ffc83d; --red:#ff4d6b; --violet:#c792ff;
+    --text:#eef1ff; --dim:#8b93c9;
+    --green:#1f8a3d; --gold:#b58a1e; --gray:#2a3055;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(1200px 800px at 50% -10%, #1b2150 0%, var(--bg) 55%);
+    color:var(--text);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; user-select:none; -webkit-user-select:none;
+  }
+  #wrap{width:min(420px,96vw); display:flex; flex-direction:column; gap:8px; padding:8px 0;}
+
+  #hud{display:flex; justify-content:space-between; align-items:center; gap:6px; padding:0 2px;}
+  .stat{background:var(--panel); border:1px solid #2a3160; border-radius:10px; padding:4px 9px; text-align:center; min-width:56px;}
+  .stat .lab{font-size:8.5px; letter-spacing:1.5px; color:var(--dim); text-transform:uppercase;}
+  .stat .val{font-size:16px; font-weight:800; font-variant-numeric:tabular-nums;}
+  #scoreV{color:var(--cyan);} #solvedV{color:var(--lime);} #puzzleV{color:var(--amber); font-size:12px;}
+  #practiceTag{display:none; font-size:9px; letter-spacing:1px; color:var(--amber);
+    border:1px dashed var(--amber); border-radius:7px; padding:3px 7px;}
+  body.practice #practiceTag{display:inline-block;}
+  .iconbtn{background:var(--panel); border:1px solid #2a3160; color:var(--dim); border-radius:10px;
+    width:34px;height:34px; font-size:14px; cursor:pointer;}
+  .iconbtn:active{transform:scale(.93);}
+
+  #puzzleBar{
+    background:linear-gradient(160deg,#222a63,#1a2050); border:1px solid #3d49a8; border-radius:13px;
+    padding:7px 12px; text-align:center;
+  }
+  #puzzleTag{font-size:10px; letter-spacing:2px; color:var(--violet); font-weight:700;}
+  #puzzleSub{font-size:11px; color:var(--dim); margin-top:1px;}
+
+  /* ---------- grid ---------- */
+  #gridWrap{display:flex; justify-content:center;}
+  #grid{display:grid; grid-template-rows:repeat(6,1fr); gap:5px;}
+  .grow{display:grid; grid-template-columns:repeat(8,1fr); gap:5px;}
+  .cell{
+    width:42px; height:42px; border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:21px; font-weight:800; font-variant-numeric:tabular-nums;
+    background:var(--panel); border:1.5px solid #2a3160;
+    transition:transform .08s;
+  }
+  .cell.filled{border-color:#4a55a8; transform:scale(1.04);}
+  .cell.green{background:var(--green); border-color:#2eb854; color:#eafff0;}
+  .cell.gold{background:var(--gold); border-color:#e0b133; color:#fff8e0;}
+  .cell.gray{background:var(--gray); border-color:#343b6b; color:#7a82b8;}
+  .cell.flip{animation:flip .42s;}
+  @keyframes flip{0%{transform:rotateX(0)}50%{transform:rotateX(90deg)}100%{transform:rotateX(0)}}
+  .grow.shake{animation:rowshake .4s;}
+  @keyframes rowshake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(3px)}}
+  .grow.win .cell{animation:winhop .5s;}
+  .grow.win .cell:nth-child(2){animation-delay:.06s}
+  .grow.win .cell:nth-child(3){animation-delay:.12s}
+  .grow.win .cell:nth-child(4){animation-delay:.18s}
+  .grow.win .cell:nth-child(5){animation-delay:.24s}
+  .grow.win .cell:nth-child(6){animation-delay:.3s}
+  .grow.win .cell:nth-child(7){animation-delay:.36s}
+  .grow.win .cell:nth-child(8){animation-delay:.42s}
+  @keyframes winhop{0%,100%{transform:none}45%{transform:translateY(-14px) scale(1.08)}}
+
+  /* ---------- keypad ---------- */
+  #pad{display:flex; flex-direction:column; gap:6px;}
+  .prow{display:flex; gap:6px; justify-content:center;}
+  .pkey{
+    flex:1; max-width:44px; padding:12px 0; font-size:17px; font-weight:800;
+    background:linear-gradient(180deg,var(--panel2),var(--panel));
+    color:var(--text); border:1px solid #39418a; border-radius:9px; cursor:pointer;
+    font-family:inherit; transition:transform .06s; text-align:center;
+  }
+  .pkey:active{transform:scale(.92);}
+  .pkey.wide{max-width:96px; flex:2.3; font-size:13px; letter-spacing:1px;}
+  .pkey.op{color:var(--amber);}
+  .pkey.green{background:var(--green); border-color:#2eb854;}
+  .pkey.gold{background:var(--gold); border-color:#e0b133;}
+  .pkey.gray{background:#1a1f3d; border-color:#262c52; color:#596094;}
+
+  #toast{
+    position:fixed; top:14%; left:50%; transform:translateX(-50%);
+    background:var(--panel2); border:1px solid #4a55a8; color:var(--text);
+    padding:8px 16px; border-radius:10px; font-size:13.5px; font-weight:700; white-space:nowrap;
+    opacity:0; transition:opacity .2s; z-index:45;
+  }
+  #toast.show{opacity:1;}
+  #toast.err{border-color:var(--red); color:#ffb3c0;}
+
+  /* ---------- overlays ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(8,10,26,.88); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; z-index:50;}
+  .panel{width:min(420px,92vw); background:var(--panel); border:1px solid #343c7a; border-radius:18px;
+    padding:24px; text-align:center; box-shadow:0 20px 80px rgba(0,0,0,.6); max-height:94vh; overflow-y:auto;}
+  h1{font-size:31px; font-weight:900; letter-spacing:1px;
+    background:linear-gradient(90deg,#facc15,var(--lime));
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .tag{color:var(--dim); font-size:13px; margin:4px 0 14px;}
+  .howto{text-align:left; font-size:13px; line-height:1.5; color:#c4cbf5;
+    background:var(--panel2); border-radius:12px; padding:11px 13px; margin-bottom:13px;}
+  .howto b{color:var(--cyan);}
+  #legend{margin-bottom:13px; background:var(--panel2); border-radius:12px; padding:9px 13px; text-align:left;}
+  #legend .lt{font-size:9px; letter-spacing:2px; color:var(--dim); margin-bottom:6px;}
+  .legendrow{display:flex; align-items:center; gap:10px; margin:6px 0;}
+  .minicell{width:30px; height:30px; border-radius:7px; display:inline-flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:15px; flex-shrink:0;}
+  .legendrow .lx{font-size:12px; color:#c4cbf5; line-height:1.3;}
+  .bigbtn{display:block; width:100%; margin-top:8px; padding:12px; font-size:15px; font-weight:800;
+    border:none; border-radius:12px; cursor:pointer; font-family:inherit; color:#081020; transition:transform .08s;}
+  .bigbtn:active{transform:scale(.97);}
+  .bigbtn.easy{background:linear-gradient(90deg,#56e39f,#7dff4a);}
+  .bigbtn.med{background:linear-gradient(90deg,#2ee6ff,#5a8cff);}
+  .bigbtn.hard{background:linear-gradient(90deg,#ff3df0,#ff4d6b); color:#fff;}
+  .bigbtn small{display:block; font-size:11px; font-weight:600; opacity:.8;}
+  .statgrid{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:14px 0;}
+  .statgrid .stat{min-width:0; padding:10px;}
+  .statgrid .val{font-size:20px;}
+  #xpLine{font-size:15px; font-weight:800; color:var(--lime); margin:4px 0 8px; min-height:20px;}
+  #xpLine.capped{color:var(--amber);}
+  #xpLine.pulse{animation:xpPulse .8s;}
+  @keyframes xpPulse{0%{transform:scale(.6); opacity:0}40%{transform:scale(1.25); opacity:1}100%{transform:scale(1)}}
+  #revealEq{font-size:21px; font-weight:900; color:var(--amber); margin:6px 0 2px; font-variant-numeric:tabular-nums; letter-spacing:2px;}
+  #hsline{font-size:12px; color:var(--amber); margin-top:10px; font-weight:700;}
+  #shareBtn{margin-top:4px;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+  <div id="hud">
+    <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+    <div class="stat"><div class="lab">Solved</div><div class="val" id="solvedV">0</div></div>
+    <div class="stat"><div class="lab">Puzzle</div><div class="val" id="puzzleV">—</div></div>
+    <span id="practiceTag">PRACTICE</span>
+    <button class="iconbtn" id="muteBtn" title="sound">🔊</button>
+  </div>
+
+  <div id="puzzleBar">
+    <div id="puzzleTag"></div>
+    <div id="puzzleSub"></div>
+  </div>
+
+  <div id="gridWrap"><div id="grid"></div></div>
+
+  <div id="pad"></div>
+  <div id="toast"></div>
+</div>
+
+<!-- START -->
+<div class="overlay" id="startOv">
+  <div class="panel">
+    <h1>MATHLE</h1>
+    <div class="tag">crack the equation 🔢 free to play · accuracy pays XP</div>
+    <div class="howto">
+      A hidden <b>8-character equation</b>. Six guesses. Every guess must be a
+      <b>true equation</b> (PEMDAS counts: 3+4×2=11). Colors tell you what's right.
+      Today's first puzzle is <b>THE DAILY</b> — same for the whole class.
+      Crack it and bonus rounds keep your run alive… until one stumps you.
+    </div>
+    <div id="legend">
+      <div class="lt">HOW TO READ THE COLORS</div>
+      <div class="legendrow"><span class="minicell" style="background:var(--green); border:1px solid #2eb854;">7</span><span class="lx">right character, right spot</span></div>
+      <div class="legendrow"><span class="minicell" style="background:var(--gold); border:1px solid #e0b133;">×</span><span class="lx">in the equation, wrong spot</span></div>
+      <div class="legendrow"><span class="minicell" style="background:var(--gray); border:1px solid #343b6b; color:#7a82b8;">9</span><span class="lx">not in the equation at all</span></div>
+    </div>
+    <button class="bigbtn easy" data-lv="1">APPRENTICE<small>bonus rounds: one-operation equations</small></button>
+    <button class="bigbtn med" data-lv="4">CRACKER<small>bonus rounds: mixed</small></button>
+    <button class="bigbtn hard" data-lv="7">FIENDISH<small>bonus rounds: two operations, pure PEMDAS</small></button>
+    <div id="hsline"></div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div class="overlay hidden" id="overOv">
+  <div class="panel">
+    <h1 style="font-size:26px" id="overTitle">STUMPED</h1>
+    <div class="tag" id="overQuip"></div>
+    <div id="revealEq"></div>
+    <div class="tag" style="margin-top:0">it was hiding in plain sight</div>
+    <div class="statgrid">
+      <div class="stat"><div class="lab">Final Score</div><div class="val" id="fScore" style="color:var(--cyan)">0</div></div>
+      <div class="stat"><div class="lab">Cracked</div><div class="val" id="fSolved" style="color:var(--lime)">0</div></div>
+      <div class="stat"><div class="lab">Accuracy</div><div class="val" id="fAcc" style="color:var(--amber)">0%</div></div>
+      <div class="stat"><div class="lab">Daily</div><div class="val" id="fDaily" style="color:var(--mag); font-size:14px;">—</div></div>
+    </div>
+    <div id="xpLine"></div>
+    <div id="newHS" class="hidden" style="color:var(--amber); font-weight:900; margin-bottom:8px;">★ NEW HIGH SCORE ★</div>
+    <button class="bigbtn easy" id="shareBtn">📋 COPY RESULT FOR THE CLASS CHAT</button>
+    <button class="bigbtn med" id="againBtn">RUN IT BACK</button>
+    <button class="bigbtn hard" id="menuBtn">CHANGE DIFFICULTY</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================================================================
+   PURE-LOGIC-START  (equation gen, validation, scoring — Node-testable)
+   ================================================================ */
+const M = "−";
+const CHARS = "0123456789+"+M+"×÷=";
+const LEN = 8, ROWS = 6;
+
+function mulberry32(seed){
+  return function(){
+    seed|=0; seed=(seed+0x6D2B79F5)|0;
+    let t=Math.imul(seed^(seed>>>15),1|seed);
+    t=(t+Math.imul(t^(t>>>7),61|t))^t;
+    return ((t^(t>>>14))>>>0)/4294967296;
+  };
+}
+function hashStr(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); }
+  return h>>>0;
+}
+function rint(rng,a,b){ return Math.floor(rng()*(b-a+1))+a; }
+function rpick(rng,arr){ return arr[Math.floor(rng()*arr.length)]; }
+
+/* ---- expression parsing & PEMDAS evaluation (digits + 4 ops) ---- */
+function evalExpr(s){
+  if(!s || /[^0-9+−×÷]/.test(s.replace(new RegExp(M,"g"),"−"))) {/*charset checked below*/}
+  const toks=[];
+  let num="";
+  for(const ch of s){
+    if(ch>="0"&&ch<="9") num+=ch;
+    else if(ch==="+"||ch===M||ch==="×"||ch==="÷"){
+      if(num==="") return null;          // op without left operand / double op
+      toks.push(num,ch); num="";
+    } else return null;
+  }
+  if(num==="") return null;              // trailing op
+  toks.push(num);
+  // leading zeros: "05" invalid, "0" alone fine
+  for(let i=0;i<toks.length;i+=2)
+    if(toks[i].length>1 && toks[i][0]==="0") return null;
+  const nums=[], ops=[];
+  for(let i=0;i<toks.length;i++){
+    if(i%2===0) nums.push(parseInt(toks[i],10)); else ops.push(toks[i]);
+  }
+  // PEMDAS: × ÷ first
+  for(let i=0;i<ops.length;){
+    if(ops[i]==="×"||ops[i]==="÷"){
+      if(ops[i]==="÷" && nums[i+1]===0) return null;
+      const r=ops[i]==="×" ? nums[i]*nums[i+1] : nums[i]/nums[i+1];
+      nums.splice(i,2,r); ops.splice(i,1);
+    } else i++;
+  }
+  let acc=nums[0];
+  for(let i=0;i<ops.length;i++) acc = ops[i]==="+" ? acc+nums[i+1] : acc-nums[i+1];
+  return acc;
+}
+
+/* a guess/solution is valid iff: 8 chars from CHARS, one '=', LHS evals,
+   RHS is a plain non-negative integer (no leading zero), and LHS === RHS */
+function validate(s){
+  if(typeof s!=="string" || s.length!==LEN) return {ok:false, why:"need exactly 8 characters"};
+  for(const ch of s) if(!CHARS.includes(ch)) return {ok:false, why:"only digits and + "+M+" × ÷ ="};
+  const parts=s.split("=");
+  if(parts.length!==2) return {ok:false, why:"needs exactly one ="};
+  const [lhs,rhs]=parts;
+  if(!/^\d+$/.test(rhs)) return {ok:false, why:"right side must be a plain number"};
+  if(rhs.length>1 && rhs[0]==="0") return {ok:false, why:"no leading zeros"};
+  const v=evalExpr(lhs);
+  if(v===null) return {ok:false, why:"left side doesn't compute"};
+  if(Math.abs(v-parseInt(rhs,10))>1e-9) return {ok:false, why:lhs+" = "+(Number.isInteger(v)?v:"not "+rhs)+", not "+rhs};
+  return {ok:true};
+}
+
+/* ---- equation generator. diff: 1 = one-op, 2 = mixed, 3 = two-op.
+   Digit-length partitions are chosen FIRST so the 8-char budget is met by
+   construction, then operands are sampled to fit — no lucky-search needed. */
+const DIGRANGE=[null,[1,9],[10,99],[100,999]];
+const PARTS_1OP=[[1,2,3],[1,3,2],[2,1,3],[2,2,2],[2,3,1],[3,1,2],[3,2,1]]; // la+lb+lc=6
+const PARTS_2OP=[[1,1,1,2],[1,1,2,1],[1,2,1,1],[2,1,1,1]];                 // +ld =5
+function digLen(n){ return String(n).length; }
+function genEquation(rng, diff){
+  for(let tries=0; tries<6000; tries++){
+    const twoOp = diff===3 || (diff===2 && rng()<0.5);
+    let s;
+    if(!twoOp){
+      const [la,lb,lc]=rpick(rng,PARTS_1OP);
+      const op=rpick(rng,["+",M,"×","÷"]);
+      const a=rint(rng,DIGRANGE[la][0],DIGRANGE[la][1]);
+      const b=rint(rng,DIGRANGE[lb][0],DIGRANGE[lb][1]);
+      let c;
+      if(op==="+") c=a+b;
+      else if(op===M){ c=a-b; if(c<=0) continue; }
+      else if(op==="×") c=a*b;
+      else { if(a%b!==0) continue; c=a/b; }
+      if(digLen(c)!==lc) continue;
+      s=String(a)+op+String(b)+"="+String(c);
+    } else {
+      const [la,lb,lc,ld]=rpick(rng,PARTS_2OP);
+      const o1=rpick(rng,["+",M,"×"]), o2=rpick(rng,["+",M,"×","÷"]);
+      const a=rint(rng,DIGRANGE[la][0],DIGRANGE[la][1]);
+      const b=rint(rng,DIGRANGE[lb][0],DIGRANGE[lb][1]);
+      const c=rint(rng,DIGRANGE[lc][0],DIGRANGE[lc][1]);
+      const lhs=String(a)+o1+String(b)+o2+String(c);
+      const v=evalExpr(lhs);
+      if(v===null || v<=0 || !Number.isInteger(v) || digLen(v)!==ld) continue;
+      s=lhs+"="+String(v);
+    }
+    if(s.length===LEN && validate(s).ok) return s;
+  }
+  return diff===3 ? "1+9×9=82" : "12+35=47"; // effectively unreachable, both valid
+}
+
+function dailyNumber(dateStr){
+  const t=Date.UTC(+dateStr.slice(0,4), +dateStr.slice(5,7)-1, +dateStr.slice(8,10));
+  return Math.floor((t-Date.UTC(2026,5,1))/86400000)+1;   // #1 = 2026-06-01
+}
+function dailyEquation(dateStr){
+  return genEquation(mulberry32(hashStr("mathle:"+dateStr)), 2);
+}
+
+/* ---- Wordle-style feedback with duplicate handling ----
+   returns array of "green"|"gold"|"gray" */
+function scoreGuess(guess, target){
+  const res=Array(LEN).fill("gray");
+  const remaining={};
+  for(let i=0;i<LEN;i++){
+    if(guess[i]===target[i]) res[i]="green";
+    else remaining[target[i]]=(remaining[target[i]]||0)+1;
+  }
+  for(let i=0;i<LEN;i++){
+    if(res[i]==="green") continue;
+    const ch=guess[i];
+    if(remaining[ch]>0){ res[i]="gold"; remaining[ch]--; }
+  }
+  return res;
+}
+/* ================================================================
+   PURE-LOGIC-END
+   ================================================================ */
+
+if (typeof document !== "undefined") (function(){
+
+  const $=id=>document.getElementById(id);
+  let S=null, muted=false, busy=false, practice=false, lastDoor="4";
+
+  /* ---------- arcade bridge ---------- */
+  const ARCADE={
+    embedded: window.parent!==window,
+    playId:null, pendingCoin:null,
+    emit(type,data){ if(this.embedded)
+      window.parent.postMessage(Object.assign({source:"mathle",type},data||{}),"*"); },
+    requestCoin(cb){
+      if(!this.embedded){ cb({ok:true,practice:true}); return; }
+      this.pendingCoin=cb;
+      this.emit("arcade:coinRequest");
+      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
+    },
+    reportScore(final){
+      if(this.playId && S) this.emit("arcade:score",{
+        score:S.score, act:S.puzzleNum, final:!!final,
+        stats:{ solved:S.solvedCt, right:S.solvedCt, wrong:S.failedCt,
+                bestStreak:S.solvedCt, startLv:S.startLvNum, mode:"mathle" }
+      });
+    },
+  };
+  window.addEventListener("message",e=>{
+    const m=e.data||{};
+    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
+      ARCADE.playId=m.playId||null;
+      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
+    }
+    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
+      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
+    }
+    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
+  });
+
+  /* ---------- audio ---------- */
+  let AC=null;
+  function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+  function beep(f,dur,type,vol,when){
+    if(muted) return; const ctx=ac(); if(!ctx) return;
+    const t=ctx.currentTime+(when||0);
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(vol||.08,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur);
+  }
+  const sKey =()=>beep(420,.04,"sine",.04);
+  const sFlip=i=>beep(500+i*40,.06,"triangle",.05,i*.05);
+  const sWin =()=>{ [523,659,784,1047,1319].forEach((f,i)=>beep(f,.14,"triangle",.09,i*.06)); };
+  const sBad =()=>{ beep(150,.2,"sawtooth",.09); beep(110,.22,"sawtooth",.08,.05); };
+  const sLose=()=>{ [330,262,196,131].forEach((f,i)=>beep(f,.2,"sine",.1,i*.12)); };
+
+  /* ---------- grid & pad ---------- */
+  const gridEl=$("grid");
+  function buildGrid(){
+    gridEl.innerHTML="";
+    for(let r=0;r<ROWS;r++){
+      const row=document.createElement("div"); row.className="grow";
+      for(let c=0;c<LEN;c++){ const d=document.createElement("div"); d.className="cell"; row.appendChild(d); }
+      gridEl.appendChild(row);
+    }
+  }
+  const PAD_LAYOUT=[["1","2","3","4","5","6","7","8","9","0"],["+",M,"×","÷","=","⌫","ENTER"]];
+  const keyEls={};
+  function buildPad(){
+    const pad=$("pad"); pad.innerHTML="";
+    for(const rowKeys of PAD_LAYOUT){
+      const row=document.createElement("div"); row.className="prow";
+      for(const k of rowKeys){
+        const b=document.createElement("button");
+        b.className="pkey"+("+−×÷=".includes(k)||k===M?" op":"")+(k==="ENTER"?" wide":"");
+        b.textContent=k;
+        b.addEventListener("click",()=>press(k));
+        row.appendChild(b);
+        keyEls[k]=b;
+      }
+      pad.appendChild(row);
+    }
+  }
+  function padColor(ch,status){
+    const el=keyEls[ch]; if(!el) return;
+    const rank={green:3,gold:2,gray:1};
+    const cur=el.dataset.s? rank[el.dataset.s]:0;
+    if(rank[status]>cur){ el.dataset.s=status; el.classList.remove("green","gold","gray"); el.classList.add(status); }
+  }
+  function padReset(){
+    for(const el of Object.values(keyEls)){ delete el.dataset.s; el.classList.remove("green","gold","gray"); }
+  }
+
+  function rowEl(r){ return gridEl.children[r]; }
+  function renderRow(r){
+    const row=rowEl(r);
+    for(let c=0;c<LEN;c++){
+      const cell=row.children[c];
+      cell.textContent=S.cur[c]||"";
+      cell.classList.toggle("filled", !!S.cur[c]);
+    }
+  }
+  function toast(msg,err){
+    const t=$("toast");
+    t.textContent=msg; t.classList.toggle("err",!!err); t.classList.add("show");
+    clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1900);
+  }
+
+  /* ---------- puzzle flow ---------- */
+  function localDateStr(){
+    const d=new Date();
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function newPuzzle(){
+    S.puzzleNum++;
+    S.isDaily = S.puzzleNum===1;
+    S.target = S.isDaily ? dailyEquation(localDateStr())
+                         : genEquation(mulberry32((Math.random()*2**31)|0), S.startLvNum>=7?3:S.startLvNum>=4?2:1);
+    S.row=0; S.cur=[];
+    buildGrid(); padReset();
+    $("puzzleV").textContent = S.isDaily? "DAILY" : "#"+S.puzzleNum;
+    $("puzzleTag").textContent = S.isDaily
+      ? "🗓 THE DAILY · #"+dailyNumber(localDateStr())+" · same for the whole class"
+      : "BONUS ROUND "+(S.puzzleNum-1)+" · "+(S.startLvNum>=7?"two ops, pure PEMDAS":S.startLvNum>=4?"mixed":"one op");
+    $("puzzleSub").textContent = "guess a TRUE 8-character equation · 6 tries";
+    hud();
+  }
+  function hud(){
+    $("scoreV").textContent=S.score;
+    $("solvedV").textContent=S.solvedCt;
+  }
+
+  function press(k){
+    if(busy || !S || !S.running) return;
+    if(k==="ENTER"){ submit(); return; }
+    if(k==="⌫"){ S.cur.pop(); renderRow(S.row); return; }
+    if(S.cur.length>=LEN) return;
+    sKey();
+    S.cur.push(k); renderRow(S.row);
+  }
+
+  async function submit(){
+    const g=S.cur.join("");
+    const v=validate(g);
+    if(!v.ok){
+      sBad();
+      const row=rowEl(S.row);
+      row.classList.remove("shake"); void row.offsetWidth; row.classList.add("shake");
+      toast("❌ "+v.why, true);
+      return;                                  // invalid guesses don't burn a row
+    }
+    busy=true;
+    const res=scoreGuess(g, S.target);
+    const row=rowEl(S.row);
+    for(let c=0;c<LEN;c++){
+      const cell=row.children[c];
+      await new Promise(r=>setTimeout(r,70));
+      cell.classList.add("flip"); sFlip(c);
+      setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls); padColor(ch,cls); })(cell,res[c],g[c]),200);
+    }
+    await new Promise(r=>setTimeout(r,420));
+    S.guessRecords.push(res);
+    if(g===S.target){
+      row.classList.add("win"); sWin();
+      S.solvedCt++;
+      const rowsUsed=S.row+1;
+      const tier=S.startLvNum>=7?2:S.startLvNum>=4?1.5:1;
+      const gain=Math.round(((7-rowsUsed)*30+40)*tier*(S.isDaily?2:1));
+      S.score+=gain;
+      if(S.isDaily) S.dailyResult="✓ in "+rowsUsed;
+      toast((S.isDaily?"🗓 DAILY CRACKED":"✓ CRACKED")+" in "+rowsUsed+" — +"+gain);
+      ARCADE.reportScore(false);
+      hud();
+      await new Promise(r=>setTimeout(r,1400));
+      newPuzzle();
+      busy=false;
+      return;
+    }
+    S.row++; S.cur=[];
+    if(S.row>=ROWS){
+      S.failedCt++;
+      if(S.isDaily) S.dailyResult="✗ missed";
+      sLose();
+      await new Promise(r=>setTimeout(r,500));
+      gameOver();
+      return;
+    }
+    busy=false;
+  }
+
+  /* ---------- flow ---------- */
+  function freshState(door){
+    return { score:0, solvedCt:0, failedCt:0, puzzleNum:0, row:0, cur:[],
+             target:"", isDaily:true, dailyResult:"—", guessRecords:[],
+             startLvNum:+door, running:false };
+  }
+  function start(door){
+    lastDoor=door;
+    S=freshState(door);
+    $("startOv").classList.add("hidden");
+    $("overOv").classList.add("hidden");
+    $("xpLine").textContent=""; $("xpLine").classList.remove("pulse","capped");
+    ARCADE.playId=null;
+    ARCADE.requestCoin(res=>{
+      practice=!!res.practice || !res.ok;
+      document.body.classList.toggle("practice",practice);
+      S.running=true;
+      newPuzzle();
+    });
+  }
+
+  function gameOver(){
+    S.running=false; busy=false;
+    ARCADE.reportScore(true);
+    const att=S.solvedCt+S.failedCt;
+    $("overTitle").textContent = S.solvedCt>0 ? "STUMPED AT LAST" : "STUMPED";
+    $("revealEq").textContent=S.target;
+    $("fScore").textContent=S.score;
+    $("fSolved").textContent=S.solvedCt;
+    $("fAcc").textContent = att>0? Math.round(100*S.solvedCt/att)+"%" : "—";
+    $("fDaily").textContent=S.dailyResult;
+    $("overQuip").textContent=pickQuip();
+    let hs=0; try{ hs=+localStorage.getItem("hs_mathle")||0; }catch(e){}
+    const nh=S.score>hs;
+    if(nh){ try{ localStorage.setItem("hs_mathle",S.score); }catch(e){} }
+    $("newHS").classList.toggle("hidden",!nh);
+    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
+    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    $("overOv").classList.remove("hidden");
+  }
+  function pickQuip(){
+    return ["The equation kept its secret.","So close. The = was judging you.",
+      "PEMDAS giveth, PEMDAS taketh away.","Every gray tile was a clue too.",
+      "Tomorrow's daily is already waiting."][Math.floor(Math.random()*5)];
+  }
+
+  $("shareBtn").addEventListener("click",()=>{
+    const map={green:"🟩",gold:"🟨",gray:"⬛"};
+    const lines=S.guessRecords.map(r=>r.map(x=>map[x]).join(""));
+    const txt="MATHLE #"+dailyNumber(localDateStr())+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
+    try{ navigator.clipboard.writeText(txt); toast("copied! 📋"); }catch(e){ toast("couldn't copy",true); }
+  });
+
+  function showXPText(txt,capped){
+    const el=$("xpLine");
+    el.textContent=txt;
+    el.classList.toggle("capped",!!capped);
+    el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
+  }
+  function showXP(xp,capped){
+    if(typeof xp!=="number") return;
+    if(xp>0) showXPText("⚡ +"+xp+" XP BANKED"+(capped?" (daily cap reached)":""),capped);
+    else showXPText(capped? "Daily XP cap reached — score still counts!" :
+      "No XP this run — crack at least half your puzzles to get paid.", true);
+  }
+  function hsLine(){
+    let hs=0; try{ hs=+localStorage.getItem("hs_mathle")||0; }catch(e){}
+    $("hsline").textContent = hs>0 ? "🏆 HIGH SCORE: "+hs : "";
+  }
+
+  /* ---------- wiring ---------- */
+  document.addEventListener("keydown",e=>{
+    if(!S || !S.running) return;
+    if(e.key>="0"&&e.key<="9") press(e.key);
+    else if(e.key==="+") press("+");
+    else if(e.key==="-") press(M);
+    else if(e.key==="*"||e.key==="x"||e.key==="X") press("×");
+    else if(e.key==="/"){ e.preventDefault(); press("÷"); }
+    else if(e.key==="=") press("=");
+    else if(e.key==="Enter") press("ENTER");
+    else if(e.key==="Backspace") press("⌫");
+  });
+  document.querySelectorAll("#startOv .bigbtn").forEach(b=>
+    b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
+  $("againBtn").addEventListener("click",()=>start(lastDoor));
+  $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+
+  buildGrid(); buildPad(); hsLine();
+})();
+</script>
+</body>
+</html>

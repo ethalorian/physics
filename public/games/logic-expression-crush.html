@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>EXPRESSION CRUSH — build it right or gridlock</title>
+<style>
+  :root{
+    --bg:#0d1021; --panel:#161a33; --panel2:#1d2244;
+    --cyan:#2ee6ff; --mag:#ff3df0; --lime:#7dff4a; --amber:#ffc83d; --red:#ff4d6b; --violet:#c792ff;
+    --text:#eef1ff; --dim:#8b93c9;
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    background:radial-gradient(1200px 800px at 50% -10%, #1b2150 0%, var(--bg) 55%);
+    color:var(--text);
+    font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden; user-select:none; -webkit-user-select:none;
+  }
+  #wrap{width:min(420px,96vw); display:flex; flex-direction:column; gap:8px; padding:8px 0;}
+
+  /* ---------- HUD ---------- */
+  #hud{display:flex; justify-content:space-between; align-items:center; gap:6px; padding:0 2px;}
+  .stat{background:var(--panel); border:1px solid #2a3160; border-radius:10px; padding:4px 9px; text-align:center; min-width:58px;}
+  .stat .lab{font-size:8.5px; letter-spacing:1.5px; color:var(--dim); text-transform:uppercase;}
+  .stat .val{font-size:16px; font-weight:800; font-variant-numeric:tabular-nums;}
+  #scoreV{color:var(--cyan);} #movesV{color:var(--amber);} #heartsV{color:var(--red); letter-spacing:-1px;}
+  #practiceTag{display:none; font-size:9px; letter-spacing:1px; color:var(--amber);
+    border:1px dashed var(--amber); border-radius:7px; padding:3px 7px;}
+  body.practice #practiceTag{display:inline-block;}
+  .iconbtn{background:var(--panel); border:1px solid #2a3160; color:var(--dim); border-radius:10px;
+    width:34px;height:34px; font-size:14px; cursor:pointer;}
+  .iconbtn:active{transform:scale(.93);}
+
+  /* ---------- target bar ---------- */
+  #targetBar{
+    background:linear-gradient(160deg,#222a63,#1a2050); border:1px solid #3d49a8; border-radius:13px;
+    padding:9px 12px; text-align:center; position:relative; overflow:hidden;
+  }
+  #targetBar.flash{animation:tbflash .5s;}
+  @keyframes tbflash{0%{box-shadow:0 0 0 rgba(125,255,74,0)}40%{box-shadow:0 0 34px rgba(125,255,74,.7)}100%{box-shadow:none}}
+  #phaseTag{font-size:9px; letter-spacing:2px; color:var(--violet); font-weight:700;}
+  #targetMain{font-size:21px; font-weight:900; margin:1px 0; font-variant-numeric:tabular-nums;}
+  #targetSub{font-size:11.5px; color:var(--dim); min-height:14px; line-height:1.3;}
+  #quotaDots{display:flex; gap:5px; justify-content:center; margin-top:5px;}
+  .qdot{width:8px;height:8px;border-radius:50%;background:#39418a;}
+  .qdot.done{background:var(--lime); box-shadow:0 0 6px var(--lime);}
+
+  /* ---------- board ---------- */
+  #boardWrap{position:relative;}
+  #board{
+    position:relative; border-radius:14px; overflow:hidden;
+    background:linear-gradient(180deg,#101430 0%, #141a3e 100%);
+    border:1px solid #2a3160; box-shadow:inset 0 0 60px rgba(20,28,90,.8);
+    touch-action:none;
+  }
+  #board.shake{animation:shake .35s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
+  #vig{position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .4s; z-index:4;
+    box-shadow:inset 0 0 70px rgba(255,40,70,.55);}
+  #board.danger #vig{opacity:1; animation:vigpulse 1.1s infinite;}
+  @keyframes vigpulse{0%,100%{opacity:.45}50%{opacity:1}}
+
+  .tile{
+    position:absolute; display:flex; align-items:center; justify-content:center;
+    border-radius:11px; font-weight:800; cursor:pointer; z-index:2;
+    background:linear-gradient(180deg,#232a5e,#1a2050); border:1px solid #39418a;
+    transition:left .18s cubic-bezier(.3,.7,.4,1.1), top .22s cubic-bezier(.3,.8,.4,1.15), transform .12s, opacity .2s;
+    color:var(--text);
+  }
+  .tile.op{background:linear-gradient(180deg,#4a3a14,#33290e); border-color:#8a6d1e; color:var(--amber); font-weight:900;}
+  .tile.given{background:linear-gradient(180deg,#3b2a63,#2a1d4e); border-color:var(--violet); color:var(--violet);
+    box-shadow:0 0 14px rgba(199,146,255,.45); animation:givenPulse 1.6s infinite;}
+  @keyframes givenPulse{0%,100%{box-shadow:0 0 8px rgba(199,146,255,.35)}50%{box-shadow:0 0 18px rgba(199,146,255,.7)}}
+  .tile.sym{background:linear-gradient(180deg,#173f2a,#10301f); border-color:#2e7d4f; color:var(--lime);
+    font-family:Georgia,"Times New Roman",serif; font-style:italic;}
+  .tile.sel{transform:scale(1.12); border-color:var(--cyan); box-shadow:0 0 16px rgba(46,230,255,.6); z-index:3;}
+  .tile.popping{transform:scale(.1) rotate(140deg); opacity:0;}
+  .tile.trap{animation:trapFlash .5s;}
+  @keyframes trapFlash{0%,100%{filter:none}30%{filter:brightness(2) hue-rotate(-60deg); transform:scale(1.08)}}
+  .tile.enter{}
+
+  .particle{position:absolute; width:7px; height:7px; border-radius:2px; pointer-events:none; z-index:5;
+    animation:fly .6s ease-out forwards;}
+  @keyframes fly{to{transform:translate(var(--dx),var(--dy)) rotate(var(--rot)); opacity:0;}}
+
+  #combo{
+    position:absolute; left:50%; top:40%; transform:translateX(-50%);
+    font-size:27px; font-weight:900; color:var(--amber); text-shadow:0 0 16px rgba(255,200,61,.8);
+    opacity:0; pointer-events:none; white-space:nowrap; z-index:6;
+  }
+  #combo.show{animation:comboAn .8s;}
+  @keyframes comboAn{0%{opacity:0; transform:translateX(-50%) scale(.4)}25%{opacity:1; transform:translateX(-50%) scale(1.15)}70%{opacity:1}100%{opacity:0; transform:translateX(-50%) scale(1)}}
+
+  #gridlock{position:absolute; left:0; right:0; top:36%; display:none; justify-content:center; gap:4px; z-index:7;}
+  #gridlock.show{display:flex;}
+  #gridlock span{
+    font-size:42px; font-weight:900; color:var(--red); opacity:0;
+    text-shadow:0 0 22px rgba(255,77,107,.9), 0 4px 0 #6b1020;
+    animation:slamIn .32s cubic-bezier(.6,0,1,.4) forwards;
+  }
+  @keyframes slamIn{0%{transform:translateY(-220px) scale(1.5); opacity:0}55%{opacity:1}
+    75%{transform:translateY(5px) scale(.95); opacity:1}100%{transform:none; opacity:1}}
+
+  #toast{
+    position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+    background:rgba(255,77,107,.14); border:1px solid rgba(255,77,107,.5); color:#ffb3c0;
+    padding:6px 12px; border-radius:9px; font-size:12px; font-weight:600; white-space:nowrap;
+    opacity:0; transition:opacity .2s; max-width:95%; overflow:hidden; text-overflow:ellipsis; z-index:6;
+  }
+  #toast.show{opacity:1;}
+  #toast.goodToast{background:rgba(125,255,74,.12); border-color:rgba(125,255,74,.5); color:#c9ffb0;}
+
+  /* ---------- overlays ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(8,10,26,.88); backdrop-filter:blur(6px);
+    display:flex; align-items:center; justify-content:center; z-index:50;}
+  .panel{width:min(420px,92vw); background:var(--panel); border:1px solid #343c7a; border-radius:18px;
+    padding:24px; text-align:center; box-shadow:0 20px 80px rgba(0,0,0,.6); max-height:94vh; overflow-y:auto;}
+  h1{font-size:29px; font-weight:900; letter-spacing:1px;
+    background:linear-gradient(90deg,var(--mag),var(--amber));
+    -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .tag{color:var(--dim); font-size:13px; margin:4px 0 14px;}
+  .howto{text-align:left; font-size:13px; line-height:1.5; color:#c4cbf5;
+    background:var(--panel2); border-radius:12px; padding:11px 13px; margin-bottom:13px;}
+  .howto b{color:var(--cyan);}
+  #legend{margin-bottom:13px; background:var(--panel2); border-radius:12px; padding:9px 13px; text-align:left;}
+  #legend .lt{font-size:9px; letter-spacing:2px; color:var(--dim); margin-bottom:6px;}
+  .legendrow{display:flex; align-items:center; gap:10px; margin:6px 0;}
+  .minitile{width:30px; height:30px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:14px; flex-shrink:0;}
+  .legendrow .lx{font-size:12px; color:#c4cbf5; line-height:1.3;}
+  .bigbtn{display:block; width:100%; margin-top:8px; padding:12px; font-size:15px; font-weight:800;
+    border:none; border-radius:12px; cursor:pointer; font-family:inherit; color:#081020; transition:transform .08s;}
+  .bigbtn:active{transform:scale(.97);}
+  .bigbtn.easy{background:linear-gradient(90deg,#56e39f,#7dff4a);}
+  .bigbtn.med{background:linear-gradient(90deg,#2ee6ff,#5a8cff);}
+  .bigbtn.hard{background:linear-gradient(90deg,#ff3df0,#ff4d6b); color:#fff;}
+  .bigbtn small{display:block; font-size:11px; font-weight:600; opacity:.8;}
+  .statgrid{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin:14px 0;}
+  .statgrid .stat{min-width:0; padding:10px;}
+  .statgrid .val{font-size:20px;}
+  #xpLine{font-size:15px; font-weight:800; color:var(--lime); margin:4px 0 8px; min-height:20px;}
+  #xpLine.capped{color:var(--amber);}
+  #xpLine.pulse{animation:xpPulse .8s;}
+  @keyframes xpPulse{0%{transform:scale(.6); opacity:0}40%{transform:scale(1.25); opacity:1}100%{transform:scale(1)}}
+  #hsline{font-size:12px; color:var(--amber); margin-top:10px; font-weight:700;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+
+<div id="wrap">
+  <div id="hud">
+    <div class="stat"><div class="lab">Score</div><div class="val" id="scoreV">0</div></div>
+    <div class="stat"><div class="lab">Moves</div><div class="val" id="movesV">0</div></div>
+    <div class="stat"><div class="lab">Lives</div><div class="val" id="heartsV">♥♥♥</div></div>
+    <span id="practiceTag">PRACTICE</span>
+    <button class="iconbtn" id="muteBtn" title="sound">🔊</button>
+  </div>
+
+  <div id="targetBar">
+    <div id="phaseTag"></div>
+    <div id="targetMain"></div>
+    <div id="targetSub"></div>
+    <div id="quotaDots"></div>
+  </div>
+
+  <div id="boardWrap">
+    <div id="board">
+      <div id="vig"></div>
+      <div id="gridlock"><span>G</span><span>R</span><span>I</span><span>D</span><span>L</span><span>O</span><span>C</span><span>K</span></div>
+      <div id="combo"></div>
+      <div id="toast"></div>
+    </div>
+  </div>
+</div>
+
+<!-- START -->
+<div class="overlay" id="startOv">
+  <div class="panel">
+    <h1>EXPRESSION CRUSH</h1>
+    <div class="tag">build it right or gridlock 🍬 free to play · accuracy pays XP</div>
+    <div class="howto">
+      Swap neighboring tiles to <b>build expressions that hit the target</b> — they detonate
+      and the board cascades. Order of operations is the law: <b>3 + 4 × 2 makes 11, not 14</b>.
+      Later: glowing tiles are the <b>givens of a physics scenario</b> — model it. Finale:
+      assemble the <b>formulas themselves</b>. Run out of moves → lose a heart. Three hearts → GRIDLOCK.
+    </div>
+    <div id="legend">
+      <div class="lt">HOW TO READ THE TILES</div>
+      <div class="legendrow"><span class="minitile" style="background:linear-gradient(180deg,#232a5e,#1a2050); border:1px solid #39418a; color:var(--text)">7</span><span class="lx">a number — raw material</span></div>
+      <div class="legendrow"><span class="minitile" style="background:linear-gradient(180deg,#4a3a14,#33290e); border:1px solid #8a6d1e; color:var(--amber)">×</span><span class="lx">an operator — glues numbers into expressions</span></div>
+      <div class="legendrow"><span class="minitile" style="background:linear-gradient(180deg,#3b2a63,#2a1d4e); border:1px solid var(--violet); color:var(--violet); box-shadow:0 0 10px rgba(199,146,255,.5)">5</span><span class="lx">a glowing GIVEN — the scenario's data; your build must use both</span></div>
+      <div class="legendrow"><span class="minitile" style="background:linear-gradient(180deg,#173f2a,#10301f); border:1px solid #2e7d4f; color:var(--lime); font-style:italic; font-family:Georgia,serif">v²</span><span class="lx">a physics symbol — line them up to build the formula</span></div>
+    </div>
+    <button class="bigbtn easy" data-lv="1">BUILDER<small>make the number — order of operations</small></button>
+    <button class="bigbtn med" data-lv="4">MODELER<small>turn scenarios into expressions</small></button>
+    <button class="bigbtn hard" data-lv="7">PHYSICIST<small>assemble the formulas themselves</small></button>
+    <div id="hsline"></div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div class="overlay hidden" id="overOv">
+  <div class="panel">
+    <h1 style="font-size:26px">GRIDLOCKED</h1>
+    <div class="tag" id="overQuip"></div>
+    <div class="statgrid">
+      <div class="stat"><div class="lab">Final Score</div><div class="val" id="fScore" style="color:var(--cyan)">0</div></div>
+      <div class="stat"><div class="lab">Built</div><div class="val" id="fSolved" style="color:var(--lime)">0</div></div>
+      <div class="stat"><div class="lab">Accuracy</div><div class="val" id="fAcc" style="color:var(--amber)">0%</div></div>
+      <div class="stat"><div class="lab">Best Streak</div><div class="val" id="fStreak" style="color:var(--mag)">0</div></div>
+    </div>
+    <div id="xpLine"></div>
+    <div id="newHS" class="hidden" style="color:var(--amber); font-weight:900; margin-bottom:8px;">★ NEW HIGH SCORE ★</div>
+    <button class="bigbtn med" id="againBtn">RUN IT BACK</button>
+    <button class="bigbtn easy" id="menuBtn">CHANGE MODE</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================================================================
+   PURE-LOGIC-START  (board + expression logic — testable in Node)
+   ================================================================ */
+const M = "−";
+function ri(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+let TID=1;
+const mkNum  = v => ({id:TID++, k:"n", v, l:String(v)});
+const mkOp   = o => ({id:TID++, k:"o", v:o, l:o});
+const mkGiven= v => ({id:TID++, k:"g", v, l:String(v)});
+const mkSym  = (s,l) => ({id:TID++, k:"s", s, l});
+const isNum  = t => !!t && (t.k==="n"||t.k==="g");
+
+/* evaluate nums/ops chain; pemdas=true → ×÷ first */
+function evalChain(nums, ops, pemdas){
+  if(pemdas){
+    const N=nums.slice(), O=ops.slice();
+    for(let i=0;i<O.length;){
+      if(O[i]==="×"||O[i]==="÷"){
+        const r = O[i]==="×" ? N[i]*N[i+1] : N[i]/N[i+1];
+        N.splice(i,2,r); O.splice(i,1);
+      } else i++;
+    }
+    let acc=N[0];
+    for(let i=0;i<O.length;i++) acc = O[i]==="+" ? acc+N[i+1] : acc-N[i+1];
+    return acc;
+  }
+  let acc=nums[0];
+  for(let i=0;i<ops.length;i++){
+    const b=nums[i+1];
+    acc = ops[i]==="+"?acc+b : ops[i]==="−"?acc-b : ops[i]==="×"?acc*b : acc/b;
+  }
+  return acc;
+}
+
+/* tiles → {nums, ops} if alternating num-op-num…, else null */
+function parseWin(tiles){
+  if(tiles.length<3 || tiles.length%2===0) return null;
+  const nums=[], ops=[];
+  for(let i=0;i<tiles.length;i++){
+    const t=tiles[i];
+    if(!t) return null;
+    if(i%2===0){ if(!isNum(t)) return null; nums.push(t.v); }
+    else { if(t.k!=="o") return null; ops.push(t.v); }
+  }
+  return {nums, ops};
+}
+
+/* enumerate contiguous windows of given lengths in rows & cols */
+function windows(R,C,lens){
+  const out=[];
+  for(const L of lens){
+    for(let r=0;r<R;r++) for(let c=0;c+L<=C;c++)
+      out.push(Array.from({length:L},(_,k)=>r*C+c+k));
+    for(let c=0;c<C;c++) for(let r=0;r+L<=R;r++)
+      out.push(Array.from({length:L},(_,k)=>(r+k)*C+c));
+  }
+  return out;
+}
+
+const EPS=1e-9;
+const near=(a,b)=>Math.abs(a-b)<EPS;
+
+/* phase A: windows (len 3 & 5) evaluating (PEMDAS) to target.
+   Also returns "traps": len-5 windows that hit target left-to-right but NOT
+   under PEMDAS — the misconception, surfaced as feedback. */
+function findClearsA(grid,R,C,target,useFive){
+  const lens = useFive ? [3,5] : [3];
+  const hits=[], traps=[];
+  for(const w of windows(R,C,lens)){
+    const p=parseWin(w.map(i=>grid[i]));
+    if(!p) continue;
+    const v=evalChain(p.nums,p.ops,true);
+    if(near(v,target)){ hits.push(w); continue; }
+    if(w.length===5){
+      const lt=evalChain(p.nums,p.ops,false);
+      if(near(lt,target)) traps.push({cells:w, correct:v});
+    }
+  }
+  return {hits, traps};
+}
+
+/* phase B: len-3 windows whose two numbers are BOTH given tiles and eval = target */
+function findClearsB(grid,R,C,target){
+  const hits=[];
+  for(const w of windows(R,C,[3])){
+    const ts=w.map(i=>grid[i]);
+    if(!ts[0]||!ts[2]||ts[0].k!=="g"||ts[2].k!=="g") continue;
+    const p=parseWin(ts);
+    if(p && near(evalChain(p.nums,p.ops,true),target)) hits.push(w);
+  }
+  return {hits, traps:[]};
+}
+
+/* phase C: contiguous all-symbol windows matching the formula multiset */
+function findClearsC(grid,R,C,syms){
+  const L=syms.length, hits=[];
+  const want=syms.slice().sort().join("|");
+  for(const w of windows(R,C,[L])){
+    const ts=w.map(i=>grid[i]);
+    if(ts.some(t=>!t||t.k!=="s")) continue;
+    if(ts.map(t=>t.s).sort().join("|")===want) hits.push(w);
+  }
+  return {hits, traps:[]};
+}
+
+function findClears(grid,R,C,round){
+  if(round.phase==="A") return findClearsA(grid,R,C,round.target,round.useFive);
+  if(round.phase==="B") return findClearsB(grid,R,C,round.target);
+  return findClearsC(grid,R,C,round.formula.syms);
+}
+
+/* does any single adjacent swap produce a clear? */
+function swapSolvable(grid,R,C,round){
+  const test=g=>findClears(g,R,C,round).hits.length>0;
+  for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+    const i=r*C+c;
+    if(c+1<C){ const g=grid.slice(); [g[i],g[i+1]]=[g[i+1],g[i]]; if(test(g)) return true; }
+    if(r+1<R){ const j=i+C; const g=grid.slice(); [g[i],g[j]]=[g[j],g[i]]; if(test(g)) return true; }
+  }
+  return false;
+}
+
+/* ---------- spawners ---------- */
+function spawnNumeric(ops){
+  return Math.random()<0.62 ? mkNum(ri(1,9)) : mkOp(pick(ops));
+}
+function genBoardA(R,C,ops){
+  return Array.from({length:R*C},()=>spawnNumeric(ops));
+}
+
+/* pick an achievable target: values of windows reachable now or via one swap */
+function collectWindowValues(grid,R,C,useFive){
+  const vals=new Set();
+  const scan=g=>{
+    for(const w of windows(R,C,useFive?[3,5]:[3])){
+      const p=parseWin(w.map(i=>g[i]));
+      if(!p) continue;
+      const v=evalChain(p.nums,p.ops,true);
+      if(Number.isFinite(v) && near(v,Math.round(v)) && v>=2 && v<=60) vals.add(Math.round(v));
+    }
+  };
+  scan(grid);
+  for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+    const i=r*C+c;
+    if(c+1<C){ const g=grid.slice(); [g[i],g[i+1]]=[g[i+1],g[i]]; scan(g); }
+    if(r+1<R){ const j=i+C; const g=grid.slice(); [g[i],g[j]]=[g[j],g[i]]; scan(g); }
+  }
+  return [...vals];
+}
+function pickTargetA(grid,R,C,useFive){
+  const vals=collectWindowValues(grid,R,C,useFive);
+  if(vals.length===0) return null;
+  return pick(vals);
+}
+
+/* ---------- phase B scenarios ---------- */
+const SCENARIOS = [
+  {p:"A 5 kg cart accelerates at 2 m/s². Build the net force (N).", a:5,  b:2, op:"×", t:10, f:"F = ma"},
+  {p:"A 3 kg ball accelerates at 4 m/s². Build the net force (N).", a:3,  b:4, op:"×", t:12, f:"F = ma"},
+  {p:"You cover 12 m in 3 s. Build your speed (m/s).",              a:12, b:3, op:"÷", t:4,  f:"v = d/t"},
+  {p:"A drone flies 24 m in 4 s. Build its speed (m/s).",           a:24, b:4, op:"÷", t:6,  f:"v = d/t"},
+  {p:"v = 6 m/s for 2 s. Build the distance (m).",                  a:6,  b:2, op:"×", t:12, f:"d = vt"},
+  {p:"A 4 kg ball moves at 3 m/s. Build the momentum (kg·m/s).",    a:4,  b:3, op:"×", t:12, f:"p = mv"},
+  {p:"8 N pushes a crate 5 m. Build the work (J).",                 a:8,  b:5, op:"×", t:40, f:"W = Fd"},
+  {p:"60 J of work in 5 s. Build the power (W).",                   a:60, b:5, op:"÷", t:12, f:"P = W/t"},
+  {p:"Frequency 5 Hz, wavelength 3 m. Build the wave speed (m/s).", a:5,  b:3, op:"×", t:15, f:"v = fλ"},
+  {p:"18 kg of water fills 9 L. Build the density (kg/L).",         a:18, b:9, op:"÷", t:2,  f:"ρ = m/V"},
+  {p:"A spring with k = 6 N/m stretches 4 m. Build the force (N).", a:6,  b:4, op:"×", t:24, f:"F = kx"},
+];
+
+function genBoardB(R,C,sc){
+  const ops = sc.op==="×" ? ["×","+","−"] : ["÷","+","×"];
+  const grid=Array.from({length:R*C},()=>spawnNumeric(ops));
+  // place the two givens FIRST, on distinct non-adjacent cells
+  const ai=ri(0,R*C-1);
+  let bi=ri(0,R*C-1), guard=0;
+  while((bi===ai || Math.abs(bi-ai)===1 || Math.abs(bi-ai)===C) && guard++<60) bi=ri(0,R*C-1);
+  grid[ai]=mkGiven(sc.a); grid[bi]=mkGiven(sc.b);
+  // then guarantee at least three of the needed operator on non-given cells
+  let need=3 - grid.filter(t=>t.k==="o"&&t.v===sc.op).length;
+  guard=0;
+  while(need>0 && guard++<120){
+    const i=ri(0,R*C-1);
+    if(grid[i].k==="n"){ grid[i]=mkOp(sc.op); need--; }
+  }
+  return grid;
+}
+
+/* ---------- phase C formulas ---------- */
+const SYM_LABELS = {m:"m", a:"a", v:"v", v2:"v²", g:"g", h:"h", d:"d", F:"F", half:"½", f:"f", lam:"λ", t:"t"};
+const FORMULAS = [
+  {name:"Newton's 2nd Law", show:"F = ?", syms:["m","a"],        say:"F = ma"},
+  {name:"Momentum",         show:"p = ?", syms:["m","v"],        say:"p = mv"},
+  {name:"Work",             show:"W = ?", syms:["F","d"],        say:"W = Fd"},
+  {name:"Distance",         show:"d = ?", syms:["v","t"],        say:"d = vt"},
+  {name:"Wave speed",       show:"v = ?", syms:["f","lam"],      say:"v = fλ"},
+  {name:"Gravitational PE", show:"PE = ?",syms:["m","g","h"],    say:"PE = mgh"},
+  {name:"Kinetic Energy",   show:"KE = ?",syms:["half","m","v2"],say:"KE = ½mv²"},
+];
+function genBoardC(R,C,formula){
+  const all=Object.keys(SYM_LABELS);
+  const decoys=all.filter(s=>!formula.syms.includes(s));
+  const pool=[];
+  for(const s of formula.syms){ pool.push(s,s); }       // two full sets
+  while(pool.length<R*C) pool.push(Math.random()<0.4 ? pick(formula.syms) : pick(decoys));
+  return shuffle(pool).slice(0,R*C).map(s=>mkSym(s,SYM_LABELS[s]));
+}
+
+/* ---------- rounds ---------- */
+function phaseFor(roundNum, startPhase){
+  const seq = startPhase==="A" ? ["A","A","A","B","B","B","C","C","C"]
+            : startPhase==="B" ? ["B","B","B","C","C","C","A","A","A"]
+            :                    ["C","C","C","B","B","A","C","C","C"];
+  return seq[(roundNum-1) % seq.length];
+}
+function makeRound(phase, roundNum, R, C){
+  const cycle=Math.floor((roundNum-1)/9);             // each full lap gets tighter
+  if(phase==="A"){
+    const useFive = roundNum>1 || cycle>0;
+    const ops = roundNum<=1 && cycle===0 ? ["+","−","×"] : ["+","−","×","÷"];
+    const grid=genBoardA(R,C,ops);
+    const target=pickTargetA(grid,R,C,useFive);
+    return { phase, grid, target, useFive,
+             quota:3, moves:Math.max(7,12-cycle*2),
+             head:"MAKE  "+target, sub:useFive?"3 or 5 tiles · PEMDAS is the law":"three tiles: number · op · number" };
+  }
+  if(phase==="B"){
+    const sc=pick(SCENARIOS);
+    return { phase, grid:genBoardB(R,C,sc), target:sc.t, sc,
+             quota:1, moves:Math.max(6,10-cycle),
+             head:"MODEL IT", sub:sc.p };
+  }
+  const fo=pick(FORMULAS);
+  return { phase, grid:genBoardC(R,C,fo), formula:fo,
+           quota:1, moves:Math.max(5,9-cycle),
+           head:"BUILD:  "+fo.show, sub:fo.name+" — line up the symbols, any order" };
+}
+/* ================================================================
+   PURE-LOGIC-END
+   ================================================================ */
+
+if (typeof document !== "undefined") (function(){
+
+  const $=id=>document.getElementById(id);
+  const boardEl=$("board"), toastEl=$("toast"), comboEl=$("combo");
+  const R=6, C=6;
+  let TS=56, PAD=4;                          // tile size, gap — set responsive below
+
+  let S=null, muted=false, busy=false, practice=false, lastDoor="1";
+  const nodes=new Map();                     // tile id → DOM node
+
+  /* ---------- arcade bridge ---------- */
+  const ARCADE={
+    embedded: window.parent!==window,
+    playId:null, pendingCoin:null,
+    emit(type,data){ if(this.embedded)
+      window.parent.postMessage(Object.assign({source:"expression-crush",type},data||{}),"*"); },
+    requestCoin(cb){
+      if(!this.embedded){ cb({ok:true,practice:true}); return; }
+      this.pendingCoin=cb;
+      this.emit("arcade:coinRequest");
+      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
+    },
+    reportScore(final){
+      if(this.playId && S) this.emit("arcade:score",{
+        score:S.score, act:S.roundNum, final:!!final,
+        stats:{ solved:S.solved, right:S.right, wrong:S.wrong,
+                bestStreak:S.bestStreak, startLv:S.startLvNum, mode:"crush" }
+      });
+    },
+  };
+  window.addEventListener("message",e=>{
+    const m=e.data||{};
+    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
+      ARCADE.playId=m.playId||null;
+      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
+    }
+    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
+      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
+    }
+    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
+  });
+
+  /* ---------- audio ---------- */
+  let AC=null;
+  function ac(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} } return AC; }
+  function beep(f,dur,type,vol,when){
+    if(muted) return; const ctx=ac(); if(!ctx) return;
+    const t=ctx.currentTime+(when||0);
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=type||"square"; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(vol||.08,t);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t+dur);
+  }
+  const sSwap =()=>beep(300,.06,"sine",.06);
+  const sPop  =d=>{ [620,830,1100].forEach((f,i)=>beep(f*(1+d*.18),.1,"triangle",.08,i*.04)); };
+  const sBad  =()=>{ beep(150,.2,"sawtooth",.09); beep(110,.22,"sawtooth",.08,.05); };
+  const sRound=()=>{ [523,659,784,1047].forEach((f,i)=>beep(f,.13,"triangle",.09,i*.06)); };
+  const sHeart=()=>{ beep(220,.3,"sine",.12); beep(165,.35,"sine",.12,.12); };
+  const sThud =f=>beep(f,.16,"sine",.16);
+
+  /* ---------- layout ---------- */
+  function sizeBoard(){
+    const w=Math.min(412, document.getElementById("wrap").clientWidth);
+    TS=Math.floor((w - PAD*(C+1))/C);
+    boardEl.style.width = (C*TS + PAD*(C+1))+"px";
+    boardEl.style.height= (R*TS + PAD*(R+1))+"px";
+  }
+  const xOf=c=>PAD + c*(TS+PAD);
+  const yOf=r=>PAD + r*(TS+PAD);
+
+  function tileNode(t){
+    let n=nodes.get(t.id);
+    if(n) return n;
+    n=document.createElement("div");
+    n.className="tile"+(t.k==="o"?" op":t.k==="g"?" given":t.k==="s"?" sym":"");
+    n.textContent=t.l;
+    n.style.width=TS+"px"; n.style.height=TS+"px";
+    n.style.fontSize=(t.l.length>2? TS*.34 : TS*.44)+"px";
+    n.addEventListener("pointerdown",ev=>{ ev.preventDefault(); onTilePress(t.id); });
+    nodes.set(t.id,n);
+    boardEl.appendChild(n);
+    return n;
+  }
+  function placeAll(immediate){
+    for(let i=0;i<R*C;i++){
+      const t=S.round.grid[i];
+      if(!t) continue;
+      const n=tileNode(t);
+      if(immediate) n.style.transition="none";
+      n.style.left=xOf(i%C)+"px";
+      n.style.top =yOf(Math.floor(i/C))+"px";
+      if(immediate){ void n.offsetWidth; n.style.transition=""; }
+    }
+  }
+  function clearNodes(){
+    for(const n of nodes.values()) n.remove();
+    nodes.clear();
+  }
+
+  /* ---------- HUD ---------- */
+  function hud(){
+    $("scoreV").textContent=S.score;
+    $("movesV").textContent=S.moves;
+    $("heartsV").textContent="♥".repeat(S.hearts)+"♡".repeat(3-S.hearts);
+    boardEl.classList.toggle("danger", S.hearts===1 || S.moves<=2);
+    $("phaseTag").textContent =
+      (S.round.phase==="A"?"STRUCTURE · ":S.round.phase==="B"?"MODEL THE SCENARIO · ":"PHYSICS FINALE · ")
+      +"ROUND "+S.roundNum + (S.streak>=2? " · 🔥"+S.streak : "");
+    $("targetMain").textContent=S.round.head;
+    $("targetSub").textContent=S.round.sub;
+    $("quotaDots").innerHTML=Array.from({length:S.round.quota},(_,k)=>
+      `<span class="qdot${k<S.cleared?" done":""}"></span>`).join("");
+  }
+
+  function toast(msg,good){
+    toastEl.textContent=msg;
+    toastEl.classList.toggle("goodToast",!!good);
+    toastEl.classList.add("show");
+    clearTimeout(toastEl._t);
+    toastEl._t=setTimeout(()=>toastEl.classList.remove("show"),2100);
+  }
+  function comboPop(msg){
+    comboEl.textContent=msg; comboEl.classList.remove("show");
+    void comboEl.offsetWidth; comboEl.classList.add("show");
+  }
+  function particlesAt(i){
+    const x=xOf(i%C)+TS/2, y=yOf(Math.floor(i/C))+TS/2;
+    const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
+    for(let k=0;k<6;k++){
+      const p=document.createElement("div"); p.className="particle";
+      p.style.left=x+"px"; p.style.top=y+"px";
+      p.style.background=pick(colors);
+      p.style.setProperty("--dx",(Math.random()*120-60)+"px");
+      p.style.setProperty("--dy",(Math.random()*-110-10)+"px");
+      p.style.setProperty("--rot",(Math.random()*400-200)+"deg");
+      boardEl.appendChild(p); setTimeout(()=>p.remove(),650);
+    }
+  }
+  function shakeBoard(){ boardEl.classList.remove("shake"); void boardEl.offsetWidth; boardEl.classList.add("shake"); }
+
+  /* ---------- input ---------- */
+  let selId=null;
+  function onTilePress(id){
+    if(busy || !S || !S.running) return;
+    const idx=S.round.grid.findIndex(t=>t&&t.id===id);
+    if(idx<0) return;
+    if(selId===null){ selId=id; nodes.get(id).classList.add("sel"); return; }
+    if(selId===id){ nodes.get(id).classList.remove("sel"); selId=null; return; }
+    const sIdx=S.round.grid.findIndex(t=>t&&t.id===selId);
+    nodes.get(selId).classList.remove("sel");
+    const adjacent = (Math.abs(sIdx-idx)===1 && Math.floor(sIdx/C)===Math.floor(idx/C)) || Math.abs(sIdx-idx)===C;
+    if(!adjacent){ selId=id; nodes.get(id).classList.add("sel"); return; }
+    selId=null;
+    doSwap(sIdx, idx);
+  }
+
+  async function doSwap(i,j){
+    busy=true; sSwap();
+    const g=S.round.grid;
+    [g[i],g[j]]=[g[j],g[i]];
+    S.moves--; hud(); placeAll();
+    await wait(200);
+    const found=await resolveClears(0);
+    if(!found){
+      // surface PEMDAS traps as teaching moments
+      const {traps}=findClears(g,R,C,S.round);
+      if(traps.length){
+        S.wrong++;
+        traps[0].cells.forEach(ci=>{ const t=g[ci]; if(t){ const n=nodes.get(t.id); n.classList.remove("trap"); void n.offsetWidth; n.classList.add("trap"); } });
+        sBad();
+        toast("❌ Left-to-right says yes — PEMDAS says "+traps[0].correct+". × and ÷ go first!");
+      }
+    }
+    if(S.moves<=0 && S.cleared<S.round.quota && S.running){ await failRound(); }
+    else if(S.running && S.round.phase==="A"){ ensureSolvableA(); }
+    busy=false; hud();
+  }
+
+  const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+  /* clear → gravity → refill → cascade */
+  async function resolveClears(depth){
+    const g=S.round.grid;
+    const {hits}=findClears(g,R,C,S.round);
+    if(hits.length===0) return false;
+    const cells=new Set(); hits.forEach(w=>w.forEach(i=>cells.add(i)));
+    // score & fx
+    const gain=(40 + depth*25) * (S.round.phase==="A"?1:S.round.phase==="B"?2:3) * multNow();
+    S.score+=Math.round(gain);
+    S.solved+=hits.length; S.right+=hits.length;
+    S.cleared=Math.min(S.round.quota, S.cleared+hits.length);
+    sPop(depth);
+    if(depth>0) comboPop("CASCADE ×"+(depth+1)+"!");
+    $("targetBar").classList.remove("flash"); void $("targetBar").offsetWidth; $("targetBar").classList.add("flash");
+    for(const i of cells){
+      const t=g[i];
+      if(t){ particlesAt(i); const n=nodes.get(t.id); if(n) n.classList.add("popping"); }
+    }
+    await wait(230);
+    for(const i of cells){
+      const t=g[i];
+      if(t){ const n=nodes.get(t.id); if(n){ n.remove(); nodes.delete(t.id); } g[i]=null; }
+    }
+    // gravity + refill (numeric phases refill numeric; C refills symbols)
+    for(let c=0;c<C;c++){
+      let write=R-1;
+      for(let r=R-1;r>=0;r--){
+        const i=r*C+c;
+        if(g[i]){ if(write!==r){ g[write*C+c]=g[i]; g[i]=null; } write--; }
+      }
+      for(let r=write;r>=0;r--){
+        const t = S.round.phase==="C"
+          ? mkSym(pick(Object.keys(SYM_LABELS)), null)
+          : spawnNumeric(["+","−","×","÷"]);
+        if(t.k==="s") t.l=SYM_LABELS[t.s];
+        g[r*C+c]=t;
+        const n=tileNode(t);
+        n.style.transition="none";
+        n.style.left=xOf(c)+"px"; n.style.top=(yOf(0)-((write-r+1)*(TS+PAD)))+"px";
+        void n.offsetWidth; n.style.transition="";
+      }
+    }
+    placeAll();
+    await wait(260);
+    hud();
+    if(S.cleared>=S.round.quota){ await completeRound(); return true; }
+    if(S.round.phase==="A") await resolveClears(depth+1);
+    return true;
+  }
+
+  function multNow(){ return Math.min(4, 1+Math.floor(S.streak/2)); }
+
+  async function completeRound(){
+    sRound();
+    S.score += S.moves*5*multNow();
+    S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
+    comboPop(S.round.phase==="C" ? "⚛ "+S.round.formula.say+" ✓" : "✓ BUILT!");
+    ARCADE.reportScore(false);
+    await wait(700);
+    nextRound();
+  }
+  async function failRound(){
+    S.hearts--; S.streak=0; S.wrong++;
+    sHeart(); shakeBoard(); hud();
+    if(S.hearts<=0){ gameOver(); return; }
+    toast("💔 Out of moves — new board, same mission.");
+    await wait(600);
+    nextRound(true);
+  }
+
+  function nextRound(samePhase){
+    S.roundNum += samePhase?0:1;
+    const phase=phaseFor(S.roundNum, S.startPhase);
+    clearNodes();
+    S.round=makeRound(phase,S.roundNum,R,C);
+    if(S.round.phase==="A" && S.round.target===null){ nextRound(true); return; }
+    S.cleared=0; S.moves=S.round.moves;
+    placeAll(true); hud();
+    if(S.round.phase==="A") ensureSolvableA();
+  }
+
+  function ensureSolvableA(){
+    const g=S.round.grid;
+    let guard=0;
+    while(!swapSolvable(g,R,C,S.round) && findClears(g,R,C,S.round).hits.length===0 && guard++<20){
+      const perm=shuffle(g.filter(Boolean));
+      for(let i=0;i<g.length;i++) g[i]=perm[i];
+    }
+    if(guard>0){ placeAll(); if(guard>=20){ S.round.target=pickTargetA(g,R,C,S.round.useFive)??S.round.target; hud(); }
+      else toast("board reshuffled — a build is out there", true); }
+  }
+
+  /* ---------- game flow ---------- */
+  function freshState(door){
+    return { score:0, solved:0, right:0, wrong:0, streak:0, bestStreak:0,
+             hearts:3, moves:0, cleared:0, roundNum:1, running:false,
+             startPhase: door==="1"?"A":door==="4"?"B":"C",
+             startLvNum:+door, round:null };
+  }
+  function start(door){
+    lastDoor=door;
+    S=freshState(door);
+    $("startOv").classList.add("hidden");
+    $("overOv").classList.add("hidden");
+    $("gridlock").classList.remove("show");
+    $("xpLine").textContent=""; $("xpLine").classList.remove("pulse","capped");
+    clearNodes(); sizeBoard();
+    ARCADE.playId=null;
+    ARCADE.requestCoin(res=>{
+      practice = !!res.practice || !res.ok;
+      document.body.classList.toggle("practice", practice);
+      S.running=true;
+      S.roundNum=1;
+      const phase=phaseFor(1,S.startPhase);
+      S.round=makeRound(phase,1,R,C);
+      if(S.round.phase==="A" && S.round.target===null) nextRound(true);
+      else { S.cleared=0; S.moves=S.round.moves; placeAll(true); hud();
+             if(S.round.phase==="A") ensureSolvableA(); }
+    });
+  }
+
+  /* ---------- GRIDLOCK ---------- */
+  async function gameOver(){
+    S.running=false;
+    ARCADE.reportScore(true);
+    // tiles crack & rain out
+    const g=S.round.grid;
+    const order=shuffle(Array.from({length:R*C},(_,i)=>i));
+    for(let k=0;k<order.length;k++){
+      const t=g[order[k]];
+      if(t){ const n=nodes.get(t.id);
+        if(n){ n.style.transition="top .5s cubic-bezier(.5,0,1,.5), opacity .5s";
+               n.style.top=(R*(TS+PAD)+80)+"px"; n.style.opacity="0"; } }
+      if(k%6===0){ sThud(140-k*2); shakeBoard(); }
+      if(k%3===0) await wait(40);
+    }
+    $("gridlock").classList.add("show");
+    const spans=document.querySelectorAll("#gridlock span");
+    spans.forEach((s,k)=>{
+      s.style.animationDelay=(k*0.08)+"s";
+      setTimeout(()=>sThud(70+k*7), k*80+200);
+    });
+    await wait(spans.length*80+700);
+    showOverPanel();
+  }
+
+  const QUIPS=[
+    "The grid won. The grid always collects.",
+    "3 + 4 × 2 is 11. The tiles knew.",
+    "So many expressions, so few moves.",
+    "PEMDAS isn't a suggestion.",
+    "The formula was right there. Scattered, but there.",
+  ];
+  function showOverPanel(){
+    const acc=S.right+S.wrong>0 ? Math.round(100*S.right/(S.right+S.wrong)) : 0;
+    $("fScore").textContent=S.score;
+    $("fSolved").textContent=S.solved;
+    $("fAcc").textContent=acc+"%";
+    $("fStreak").textContent=S.bestStreak;
+    $("overQuip").textContent=pick(QUIPS);
+    let hs=0; try{ hs=+localStorage.getItem("hs_crush")||0; }catch(e){}
+    const nh=S.score>hs;
+    if(nh){ try{ localStorage.setItem("hs_crush",S.score); }catch(e){} }
+    $("newHS").classList.toggle("hidden",!nh);
+    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
+    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    $("overOv").classList.remove("hidden");
+  }
+  function showXPText(txt,capped){
+    const el=$("xpLine");
+    el.textContent=txt;
+    el.classList.toggle("capped",!!capped);
+    el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
+  }
+  function showXP(xp,capped){
+    if(typeof xp!=="number") return;
+    if(xp>0) showXPText("⚡ +"+xp+" XP BANKED"+(capped?" (daily cap reached)":""),capped);
+    else showXPText(capped? "Daily XP cap reached — score still counts!" :
+      "No XP this run — accuracy below 50% pays nothing.", true);
+  }
+  function hsLine(){
+    let hs=0; try{ hs=+localStorage.getItem("hs_crush")||0; }catch(e){}
+    $("hsline").textContent = hs>0 ? "🏆 HIGH SCORE: "+hs : "";
+  }
+
+  /* ---------- wiring ---------- */
+  document.querySelectorAll("#startOv .bigbtn").forEach(b=>
+    b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
+  $("againBtn").addEventListener("click",()=>start(lastDoor));
+  $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+  $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
+  window.addEventListener("resize",()=>{ if(S){ sizeBoard(); placeAll(true); } });
+
+  sizeBoard(); hsLine();
+})();
+</script>
+</body>
+</html>
