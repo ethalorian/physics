@@ -14,9 +14,10 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { BarChart3, LogOut, Eye, EyeOff, Smile } from 'lucide-react'
+import { BarChart3, LogOut, Eye, EyeOff, Smile, GraduationCap } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
-import { setViewAs, clearViewAs } from '@/lib/view-as-shared'
+import { setViewAs, clearViewAs, setStudentView, clearStudentView } from '@/lib/view-as-shared'
+import { useViewMode } from '@/contexts/ViewModeContext'
 import UserContextSheet from '@/components/UserContextSheet'
 import { useRouter } from 'next/navigation'
 
@@ -29,7 +30,15 @@ export default function AccountMenu() {
   const { data: session } = useSession()
   const [progressOpen, setProgressOpen] = useState(false)
   const { role, realRole, viewingAs } = useViewAs()
+  const { viewMode, canToggleView } = useViewMode()
   const router = useRouter()
+
+  // "View as student" is a UI-only preview for staff. The cookie helpers keep
+  // it mutually exclusive with the admin's "view as teacher"; a full reload
+  // (matching the teacher-view toggle) keeps every consumer of the cookies in
+  // sync — no half-switched chrome.
+  const studentViewActive = canToggleView && viewMode === 'student'
+  const displayRole = studentViewActive ? 'student' : role
   const [me, setMe] = useState<MeBundle | null>(_meCache)
 
   useEffect(() => {
@@ -109,7 +118,9 @@ export default function AccountMenu() {
           <DropdownMenuLabel className="flex flex-col gap-1">
             <span className="font-semibold leading-tight">{session?.user?.name || 'User'}</span>
             <span className="text-xs font-normal text-muted-foreground truncate">{session?.user?.email}</span>
-            <Badge variant={role === 'student' ? 'default' : 'secondary'} className="mt-1 w-fit">{role}</Badge>
+            <Badge variant={displayRole === 'student' ? 'default' : 'secondary'} className="mt-1 w-fit">
+              {studentViewActive ? 'student (preview)' : displayRole}
+            </Badge>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={() => { setTimeout(() => setProgressOpen(true), 0) }}>
@@ -120,8 +131,8 @@ export default function AccountMenu() {
             <Smile className="h-4 w-4 mr-2" />
             My avatar
           </DropdownMenuItem>
-          {realRole === 'admin' && !viewingAs && (
-            <DropdownMenuItem onSelect={() => { if (session?.user?.email) { setViewAs(session.user.email); window.location.reload() } }}>
+          {realRole === 'admin' && !viewingAs && !studentViewActive && (
+            <DropdownMenuItem onSelect={() => { if (session?.user?.email) { clearStudentView(); setViewAs(session.user.email); window.location.reload() } }}>
               <Eye className="h-4 w-4 mr-2" />
               View as teacher
             </DropdownMenuItem>
@@ -130,6 +141,18 @@ export default function AccountMenu() {
             <DropdownMenuItem onSelect={() => { clearViewAs(); window.location.reload() }}>
               <EyeOff className="h-4 w-4 mr-2" />
               Exit teacher view
+            </DropdownMenuItem>
+          )}
+          {canToggleView && !studentViewActive && (
+            <DropdownMenuItem onSelect={() => { setStudentView(); window.location.reload() }}>
+              <GraduationCap className="h-4 w-4 mr-2" />
+              View as student
+            </DropdownMenuItem>
+          )}
+          {studentViewActive && (
+            <DropdownMenuItem onSelect={() => { clearStudentView(); window.location.reload() }}>
+              <EyeOff className="h-4 w-4 mr-2" />
+              Exit student view
             </DropdownMenuItem>
           )}
           <DropdownMenuSeparator />

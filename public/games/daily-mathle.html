@@ -17,10 +17,12 @@
     background:radial-gradient(1200px 800px at 50% -10%, #1b2150 0%, var(--bg) 55%);
     color:var(--text);
     font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:flex-start; justify-content:center;
     overflow:hidden; user-select:none; -webkit-user-select:none;
   }
   #wrap{width:min(420px,96vw); display:flex; flex-direction:column; gap:8px; padding:8px 0;}
+
+  .panel{transform:scale(var(--uiscale,1)); transform-origin:center;}
 
   #hud{display:flex; justify-content:space-between; align-items:center; gap:6px; padding:0 2px;}
   .stat{background:var(--panel); border:1px solid #2a3160; border-radius:10px; padding:4px 9px; text-align:center; min-width:56px;}
@@ -131,6 +133,18 @@
   #hsline{font-size:12px; color:var(--amber); margin-top:10px; font-weight:700;}
   #shareBtn{margin-top:4px;}
   .hidden{display:none !important;}
+
+  /* ---- Chromebook-class landscape: guess grid left, keypad right ---- */
+  @media (orientation:landscape) and (max-height:900px) and (min-width:760px){
+    #wrap{width:min(820px,97vw); display:grid; column-gap:16px; row-gap:10px;
+      grid-template-columns:minmax(0,1fr) minmax(320px,1fr);
+      grid-template-rows:auto auto 1fr; align-items:start;
+      grid-template-areas:"grid hud" "grid puzzle" "grid pad";}
+    #hud{grid-area:hud;}
+    #puzzleBar{grid-area:puzzle;}
+    #gridWrap{grid-area:grid;}
+    #pad{grid-area:pad; align-self:end;}
+  }
 </style>
 </head>
 <body>
@@ -620,6 +634,26 @@ if (typeof document !== "undefined") (function(){
   $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
 
   buildGrid(); buildPad(); hsLine();
+})();
+</script>
+<script>
+/* ---------- native-display autoscale: fill the frame on big screens,
+   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+(function(){
+  const wrap=document.getElementById("wrap");
+  if(!wrap) return;
+  function fit(){
+    wrap.style.transform="none"; wrap.style.marginTop="0px";
+    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+    wrap.style.transformOrigin="top center";
+    wrap.style.transform="scale("+k+")";
+    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+  }
+  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+  window.addEventListener("resize",fit);
+  setTimeout(fit,60); fit();
 })();
 </script>
 </body>

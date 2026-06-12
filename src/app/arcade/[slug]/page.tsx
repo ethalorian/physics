@@ -165,13 +165,13 @@ export default function ArcadeCabinetPage() {
           src={game.srcPath}
           title={game.name}
           className="w-full rounded-xl border"
-          style={{ borderColor: 'var(--border)', height: 'min(78vh, 820px)', background: '#04060d' }}
+          style={{ borderColor: 'var(--border)', height: 'clamp(520px, calc(100vh - 200px), 1100px)', background: '#04060d' }}
           allow="autoplay"
         />
       )}
       {game && gameOk === false && (
         <div className="w-full rounded-xl border grid place-items-center text-center p-8"
-          style={{ borderColor: 'var(--border)', height: 'min(78vh, 820px)', background: '#04060d' }}>
+          style={{ borderColor: 'var(--border)', height: 'clamp(520px, calc(100vh - 200px), 1100px)', background: '#04060d' }}>
           <div>
             <div className="text-lg font-bold tracking-wide" style={{ color: accent }}>CABINET BEING INSTALLED</div>
             <p className="text-sm mt-2" style={{ color: 'var(--muted-foreground)' }}>

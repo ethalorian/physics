@@ -16,10 +16,11 @@
     background:radial-gradient(1200px 800px at 50% -10%, #1b2150 0%, var(--bg) 55%);
     color:var(--text);
     font-family:"Avenir Next","Segoe UI",system-ui,-apple-system,sans-serif;
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:flex-start; justify-content:center;
     overflow:hidden; user-select:none; -webkit-user-select:none;
   }
   #wrap{width:min(440px,96vw); display:flex; flex-direction:column; gap:8px; padding:8px 0;}
+  .panel{transform:scale(var(--uiscale,1)); transform-origin:center;}
 
   #hud{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:0 4px;}
   .stat{background:var(--panel); border:1px solid #2a3160; border-radius:10px; padding:5px 10px; text-align:center; min-width:64px;}
@@ -200,6 +201,19 @@
   #hsline{font-size:12px; color:var(--amber); margin-top:10px; font-weight:700;}
   #pausePanel p{color:var(--dim); margin:10px 0 4px;}
   .hidden{display:none !important;}
+
+  /* ---- Chromebook-class landscape: board left, controls right ---- */
+  @media (orientation:landscape) and (max-height:900px) and (min-width:760px){
+    #wrap{width:min(880px,97vw); display:grid; column-gap:14px; row-gap:10px;
+      grid-template-columns:minmax(0,1.2fr) minmax(300px,1fr);
+      grid-template-rows:auto auto 1fr; align-items:start;
+      grid-template-areas:"board hud" "board next" "board chips";}
+    #hud{grid-area:hud;}
+    #board{grid-area:board; height:min(86vh,640px);}
+    #nextbar{grid-area:next;}
+    #chips{grid-area:chips; align-self:stretch; grid-auto-rows:1fr;}
+    .chip{min-height:84px;}
+  }
 </style>
 </head>
 <body>
@@ -705,20 +719,24 @@ if (typeof document !== "undefined") (function(){
       cardEl.appendChild(s); setTimeout(()=>s.remove(),750);
     });
   }
+  function boardScale(){
+    const br=boardEl.getBoundingClientRect();
+    return (br.width/boardEl.offsetWidth)||1;   // outer autoscale factor
+  }
   function ringAt(){
-    const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect();
+    const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
     const ring=document.createElement("div"); ring.className="ring";
-    ring.style.left=(r.left-br.left+r.width/2-10)+"px";
-    ring.style.top =(r.top -br.top +r.height/2-10)+"px";
+    ring.style.left=((r.left-br.left+r.width/2)/sc-10)+"px";
+    ring.style.top =((r.top -br.top +r.height/2)/sc-10)+"px";
     boardEl.appendChild(ring); setTimeout(()=>ring.remove(),520);
   }
   function particles(){
-    const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect();
+    const r=cardEl.getBoundingClientRect(), br=boardEl.getBoundingClientRect(), sc=boardScale();
     const colors=["#2ee6ff","#ff3df0","#7dff4a","#ffc83d"];
     for(let i=0;i<16;i++){
       const p=document.createElement("div"); p.className="particle";
-      p.style.left=(r.left-br.left+r.width/2)+"px";
-      p.style.top =(r.top -br.top +r.height/2)+"px";
+      p.style.left=((r.left-br.left+r.width/2)/sc)+"px";
+      p.style.top =((r.top -br.top +r.height/2)/sc)+"px";
       p.style.background=pick(colors);
       p.style.setProperty("--dx",(Math.random()*180-90)+"px");
       p.style.setProperty("--dy",(Math.random()*-150-20)+"px");
@@ -949,6 +967,26 @@ if (typeof document !== "undefined") (function(){
   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
 
   hsLine();
+})();
+</script>
+<script>
+/* ---------- native-display autoscale: fill the frame on big screens,
+   shrink to fit on short ones — no scrollbars, no skinny column ---------- */
+(function(){
+  const wrap=document.getElementById("wrap");
+  if(!wrap) return;
+  function fit(){
+    wrap.style.transform="none"; wrap.style.marginTop="0px";
+    const w=wrap.offsetWidth||1, h=wrap.offsetHeight||1;
+    const k=Math.max(.5, Math.min((window.innerWidth-10)/w,(window.innerHeight-10)/h, 1.8));
+    wrap.style.transformOrigin="top center";
+    wrap.style.transform="scale("+k+")";
+    wrap.style.marginTop=Math.max(0,(window.innerHeight-h*k)/2)+"px";
+    document.documentElement.style.setProperty("--uiscale", Math.min(k,1.45));
+  }
+  try{ new ResizeObserver(fit).observe(wrap); }catch(e){}
+  window.addEventListener("resize",fit);
+  setTimeout(fit,60); fit();
 })();
 </script>
 </body>

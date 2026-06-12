@@ -15,7 +15,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose 
 import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { PhysicsLevelBadge } from "@/components/physics-level-badge"
 import { useViewAs } from "@/lib/use-view-as"
-import { clearViewAs } from "@/lib/view-as-shared"
+import { clearViewAs, clearStudentView } from "@/lib/view-as-shared"
 import { useViewMode } from "@/contexts/ViewModeContext"
 import { useViewAwarePermissions } from "@/hooks/useViewAwarePermissions"
 import AccountMenu from "@/components/AccountMenu"
@@ -33,7 +33,14 @@ export default function Navbar() {
   } = useViewAwarePermissions(viewMode)
 
   // "View as teacher" (admin previewing the colleague experience)
-  const { viewingAs, teacherEmail } = useViewAs()
+  const { role, viewingAs, teacherEmail } = useViewAs()
+
+  // Staff = effective teacher or admin. The nav branches on THIS, not on
+  // canAccessAdmin — that flag is admin-only, which is exactly the bug that
+  // dropped DB-granted teachers into the student nav by default. "View as
+  // student" (viewMode, cookie-persisted) overrides it back to the student nav.
+  const isStaff = role === 'teacher' || role === 'admin'
+  const studentViewActive = isStaff && viewMode === 'student'
 
   // Prevent hydration errors by ensuring client-side rendering for auth-dependent content
   const [mounted, setMounted] = useState(false)
@@ -61,9 +68,9 @@ export default function Navbar() {
     if (!isAuthenticated) return []
     
     // Staff get a focused tool bar (the Admin Home launches everything else);
-    // students get their own journey. "View as student" flips canAccessAdmin off,
-    // so staff can still preview the student nav.
-    if (canAccessAdmin) {
+    // students get their own journey. "View as student" sends staff to the
+    // student nav below so they can preview it.
+    if (isStaff && !studentViewActive) {
       const staff = [
         { href: "/admin/home", label: "Home", icon: Home },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
@@ -71,8 +78,9 @@ export default function Navbar() {
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
       ]
-      // Hide the global Admin tab while previewing the teacher experience.
-      return viewingAs ? staff.filter((i) => i.href !== "/admin/dashboard") : staff
+      // The global Admin tab is admin-only; it's also hidden while an admin is
+      // previewing the teacher experience.
+      return canAccessAdmin && !viewingAs ? staff : staff.filter((i) => i.href !== "/admin/dashboard")
     }
 
     // Student nav: orient → work → play → compete → spend. Simulations are
@@ -100,6 +108,12 @@ export default function Navbar() {
       <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
         <span>Viewing as teacher{teacherEmail ? ` · ${teacherEmail}` : ''} — admin tools hidden.</span>
         <button onClick={() => { clearViewAs(); window.location.reload() }} className="underline font-medium">Exit</button>
+      </div>
+    )}
+    {studentViewActive && (
+      <div className="w-full text-sm flex items-center justify-center gap-3 py-1.5 px-4" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)' }}>
+        <span>Viewing as student — staff tools hidden.</span>
+        <button onClick={() => { clearStudentView(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
     )}
     <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">

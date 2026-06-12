@@ -5,6 +5,7 @@ import { createContext, useContext, useState, useEffect } from "react"
 
 // Internal imports
 import { usePermissions } from "@/hooks/usePermissions"
+import { readStudentViewCookie, setStudentView, clearStudentView } from "@/lib/view-as-shared"
 
 export type ViewMode = 'admin' | 'student'
 
@@ -20,37 +21,42 @@ const ViewModeContext = createContext<ViewModeContextType | undefined>(undefined
 
 export function ViewModeProvider({ children }: { children: React.ReactNode }) {
   const { canAccessAdmin, userRole } = usePermissions()
-  const [viewMode, setViewMode] = useState<ViewMode>('admin')
-  
+  const [viewMode, setViewModeState] = useState<ViewMode>('admin')
+
   // Only admins and teachers can toggle views
   const canToggleView = canAccessAdmin || userRole === 'teacher'
-  
+
   // Check if current view mode is different from user's default role
   const isViewModeOverride = canToggleView && viewMode === 'student'
-  
-  // Initialize view mode based on user role
+
+  // Initialize view mode: staff default to the staff view, but a persisted
+  // "view as student" cookie (set from the avatar menu) keeps them in the
+  // student preview across reloads until they exit it. Real students always
+  // get the student view — their cookie (if any) is ignored.
   useEffect(() => {
-    if (canAccessAdmin) {
-      // Admins default to admin view
-      setViewMode('admin')
-    } else if (userRole === 'teacher') {
-      // Teachers default to admin view (they have most admin permissions)
-      setViewMode('admin')
+    if (canAccessAdmin || userRole === 'teacher') {
+      setViewModeState(readStudentViewCookie() ? 'student' : 'admin')
     } else {
-      // Students always see student view
-      setViewMode('student')
+      setViewModeState('student')
     }
   }, [canAccessAdmin, userRole])
-  
+
+  // Single write path: update state AND persist the choice (staff only).
+  const setViewMode = (mode: ViewMode) => {
+    setViewModeState(mode)
+    if (!canToggleView) return
+    if (mode === 'student') setStudentView()
+    else clearStudentView()
+  }
+
   // Toggle between admin and student view
   const toggleViewMode = () => {
     if (!canToggleView) return
-    
-    setViewMode(prevMode => prevMode === 'admin' ? 'student' : 'admin')
+    setViewMode(viewMode === 'admin' ? 'student' : 'admin')
   }
-  
+
   return (
-    <ViewModeContext.Provider 
+    <ViewModeContext.Provider
       value={{
         viewMode,
         setViewMode,
@@ -71,4 +77,3 @@ export function useViewMode() {
   }
   return context
 }
-
