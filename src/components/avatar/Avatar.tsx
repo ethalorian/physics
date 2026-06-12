@@ -4,9 +4,18 @@
 // Traits are authored here (identity); items come in from the DB catalog and
 // are rendered with their svg_layer strings.
 
-import type { AvatarTraits, AvatarItem, EquippedItems, SkinTone, FaceShape, HairStyle, HairColor, EyeShape, BrowStyle, MouthStyle, NoseStyle, Freckles, CheekBlush } from '@/lib/avatar/types'
+import type { ReactNode } from 'react'
+import type { AvatarTraits, AvatarItem, EquippedItems, SkinTone, FaceShape, HairStyle, HairColor, EyeShape, EyeColor, EyeSpacing, EyeScale, EyeTilt, BrowStyle, BrowHeight, MouthStyle, MouthWidth, NoseStyle, Freckles, CheekBlush } from '@/lib/avatar/types'
 import { withDefaults } from '@/lib/avatar/types'
-import { SKIN, HAIR, DEFAULT_SHIRT, FACE_GEO } from '@/lib/avatar/palette'
+import { SKIN, HAIR, EYE, DEFAULT_SHIRT, FACE_GEO } from '@/lib/avatar/palette'
+
+// Knob steps → geometry. Middle step is always the identity so avatars saved
+// before the knobs existed render pixel-identical through withDefaults.
+const EYE_SPACING_DX: Record<EyeSpacing, number> = { close: -3, normal: 0, wide: 3 }
+const EYE_SCALE_K: Record<EyeScale, number> = { small: 0.85, normal: 1, large: 1.2 }
+const EYE_TILT_DEG: Record<EyeTilt, number> = { down: -8, level: 0, up: 8 }
+const BROW_DY: Record<BrowHeight, number> = { low: 3, normal: 0, high: -4 }
+const MOUTH_SX: Record<MouthWidth, number> = { narrow: 0.8, normal: 1, wide: 1.25 }
 
 interface Props {
   traits: Partial<AvatarTraits> | null | undefined
@@ -77,13 +86,17 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
           hats) and pins (chest) are anchored to the silhouette, not the
           features, so they live outside this group. */}
       <g transform={featureTransform}>
-        <Brows style={t.brows} hairColor={t.hair_color} />
+        <g transform={BROW_DY[t.brow_height] !== 0 ? `translate(0, ${BROW_DY[t.brow_height]})` : undefined}>
+          <Brows style={t.brows} hairColor={t.hair_color} />
+        </g>
         <CheekBlushLayer style={t.cheek_blush} />
         <FrecklesLayer density={t.freckles} skin={t.skin} />
-        <Eyes shape={t.eyes} />
+        <Eyes shape={t.eyes} color={t.eye_color} spacing={t.eye_spacing} scale={t.eye_scale} tilt={t.eye_tilt} />
         <Nose style={t.nose} skin={t.skin} />
         {itemBySlot.facial_hair && <RawLayer svg={itemBySlot.facial_hair.svg_layer} />}
-        <Mouth style={t.mouth} />
+        <g transform={MOUTH_SX[t.mouth_width] !== 1 ? `scale(${MOUTH_SX[t.mouth_width]}, 1)` : undefined}>
+          <Mouth style={t.mouth} />
+        </g>
         {itemBySlot.eyewear && <RawLayer svg={itemBySlot.eyewear.svg_layer} />}
       </g>
       {itemBySlot.head && <RawLayer svg={itemBySlot.head.svg_layer} />}
@@ -342,45 +355,70 @@ function Brows({ style, hairColor }: { style: BrowStyle; hairColor: HairColor })
   )
 }
 
-function Eyes({ shape }: { shape: EyeShape }) {
+// Each eye shape is authored ONCE, centered on its own origin, then composed
+// twice by <Eyes> with per-side translate/rotate/scale. That's what makes
+// spacing, size, and tilt independent knobs (Mii-style) instead of baked-in
+// coordinates. `cy` is the shape's resting height on the face — small/narrow
+// sit at -4, big/wide at -2, exactly where the old hardcoded versions sat.
+function singleEye(shape: EyeShape, color: EyeColor): { node: ReactNode; cy: number } {
+  const c = EYE[color]
   if (shape === 'small') {
-    return (
-      <g>
-        <ellipse cx="-15" cy="-4" rx="3" ry="3.6" fill="#1F1812" />
-        <ellipse cx="15" cy="-4" rx="3" ry="3.6" fill="#1F1812" />
-        {/* catch-lights — keep the plain dots consistent with big/wide eyes */}
-        <circle cx="-13.7" cy="-5.4" r="0.9" fill="#FFFFFF" />
-        <circle cx="16.3" cy="-5.4" r="0.9" fill="#FFFFFF" />
-      </g>
-    )
+    return {
+      cy: -4,
+      node: (
+        <>
+          <ellipse cx="0" cy="0" rx="3" ry="3.6" fill={c} />
+          {/* catch-light — same offset on both eyes (light from upper-left) */}
+          <circle cx="1.3" cy="-1.4" r="0.9" fill="#FFFFFF" />
+        </>
+      ),
+    }
   }
   if (shape === 'big') {
-    return (
-      <g>
-        <ellipse cx="-15" cy="-2" rx="4.2" ry="5" fill="#1F1812" />
-        <ellipse cx="15" cy="-2" rx="4.2" ry="5" fill="#1F1812" />
-        <circle cx="-13" cy="-4" r="1.4" fill="#FFFFFF" />
-        <circle cx="17" cy="-4" r="1.4" fill="#FFFFFF" />
-      </g>
-    )
+    return {
+      cy: -2,
+      node: (
+        <>
+          <ellipse cx="0" cy="0" rx="4.2" ry="5" fill={c} />
+          <circle cx="2" cy="-2" r="1.4" fill="#FFFFFF" />
+        </>
+      ),
+    }
   }
   if (shape === 'narrow') {
-    return (
-      <g>
-        <ellipse cx="-15" cy="-4" rx="4" ry="1.4" fill="#1F1812" />
-        <ellipse cx="15" cy="-4" rx="4" ry="1.4" fill="#1F1812" />
-      </g>
-    )
+    return { cy: -4, node: <ellipse cx="0" cy="0" rx="4" ry="1.4" fill={c} /> }
   }
-  // wide — white sclera + dark iris + highlight (anime-bright)
+  // wide — white sclera + tinted iris + highlight (anime-bright). Only the
+  // iris takes the eye colour; the outline stays the legacy near-black.
+  return {
+    cy: -2,
+    node: (
+      <>
+        <ellipse cx="0" cy="0" rx="5.5" ry="6" fill="#FFFFFF" stroke="#1F1812" strokeWidth="0.6" />
+        <ellipse cx="0" cy="1" rx="3" ry="3.4" fill={c} />
+        <circle cx="1" cy="-1" r="1.3" fill="#FFFFFF" />
+      </>
+    ),
+  }
+}
+
+function Eyes({ shape, color, spacing, scale, tilt }: { shape: EyeShape; color: EyeColor; spacing: EyeSpacing; scale: EyeScale; tilt: EyeTilt }) {
+  const x = 15 + EYE_SPACING_DX[spacing]
+  const k = EYE_SCALE_K[scale]
+  const deg = EYE_TILT_DEG[tilt]
+  const { node, cy } = singleEye(shape, color)
+  // Tilt rotates each eye around its own center, mirrored so 'up' raises the
+  // OUTER corners on both sides (left eye rotates +deg, right eye -deg).
+  const tf = (side: -1 | 1) => {
+    const parts = [`translate(${side * x}, ${cy})`]
+    if (deg !== 0) parts.push(`rotate(${side === -1 ? deg : -deg})`)
+    if (k !== 1) parts.push(`scale(${k})`)
+    return parts.join(' ')
+  }
   return (
     <g>
-      <ellipse cx="-15" cy="-2" rx="5.5" ry="6" fill="#FFFFFF" stroke="#1F1812" strokeWidth="0.6" />
-      <ellipse cx="-15" cy="-1" rx="3" ry="3.4" fill="#1F1812" />
-      <circle cx="-14" cy="-3" r="1.3" fill="#FFFFFF" />
-      <ellipse cx="15" cy="-2" rx="5.5" ry="6" fill="#FFFFFF" stroke="#1F1812" strokeWidth="0.6" />
-      <ellipse cx="15" cy="-1" rx="3" ry="3.4" fill="#1F1812" />
-      <circle cx="16" cy="-3" r="1.3" fill="#FFFFFF" />
+      <g transform={tf(-1)}>{node}</g>
+      <g transform={tf(1)}>{node}</g>
     </g>
   )
 }

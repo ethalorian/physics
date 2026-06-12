@@ -134,6 +134,18 @@ Balances are **derived, not stored**, so this took effect the moment the code sh
 every student's XP recomputed down automatically (no migration). Worth a heads-up to
 students that XP numbers reset to the new, slower scale.
 
+**Update 2026-06-11 — earn weights re-tilted toward math remediation.**
+The Math Spine gym (five free arcade cabinets paying mastery-weighted XP via
+`/api/arcade/payout`) is now the deliberate top earner: its daily cap is **75**,
+while vocab games dropped from 50/day to **25/day** (`GAME_PER_DAY_CAP` in
+`points.ts`). Rationale: math fluency is the remediation priority, so the
+economy should pay best exactly there. Engaged-student ceiling ≈ 75 (math) +
+25 (vocab) + lesson/graded work ≈ 110–130/day for a student doing everything —
+practically, most days land well under that because the math payout is
+accuracy-gated. Note: the vocab cap change recomputes lifetime-earned
+retroactively (balances are derived); students who used to max vocab days will
+see a small drop.
+
 **Still on the table (not done):** Option B (split XP for status vs Coins for the
 store). The over-earning is fixed without it, but if you want games to keep pumping a
 generous *leaderboard* XP while the *store* stays scarce, that's the follow-up — a

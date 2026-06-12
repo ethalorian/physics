@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GARAGE // the car project cabinet</title>
+<!--
+  GARAGE — the Car Project cabinet (Unit 8). Ninth and final machine: not a
+  unit, a SYNTHESIS. This game is a rehearsal of the real 9-day build —
+  every act mirrors the actual classroom days, every tip cites the real
+  build steps, and the two decisions that make or break the physical car
+  (CIRCUIT DESIGN and GEAR RATIO) are the gameplay itself.
+
+  ACT I   THE WIRING BAY — Day 2/6: wire battery, switch, motor. Series vs
+                           parallel cells, polarity, no shorts, and a
+                           diagnose-the-fault level (real debugging rehearsal).
+  ACT II  THE GEAR LAB   — Day 3: pinion × gear × wheel against a real DC
+                           motor curve. Three events, three different best
+                           ratios — then the WHEEL COMMIT: one setup for all.
+  ACT III RACE DAY       — Day 9: circuit + gears + mass-vs-decoration,
+                           against rival ghost cars and the judging table.
+
+  Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#e879f9; --neon2:#fbbf24; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#130814ee; --edge:#e879f955;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#0b040c}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #e879f922, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #e879f988}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #e879f966;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:#34d399} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#16051a;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #e879f966;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#1c0a1e;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#240d28}
+  .choice.right{background:#0c2a22;border-color:#34d399;color:#34d399}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #fbbf2455;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#190a1c;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const hyp=Math.hypot, TAU=Math.PI*2;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('garage2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('garage2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('garage2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('garage2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false,motorGain=null,motorOsc=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  motorOsc=AC.createOscillator();motorOsc.type='sawtooth';motorOsc.frequency.value=80;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=600;
+  motorGain=AC.createGain();motorGain.gain.value=0;
+  motorOsc.connect(lp);lp.connect(motorGain);motorGain.connect(AC.destination);motorOsc.start();}catch(e){}}
+function setMotor(level,rpmFrac){if(!AC||!motorGain)return;
+  motorGain.gain.setTargetAtTime(muted?0:clamp(level,0,0.06),AC.currentTime,0.06);
+  if(motorOsc)motorOsc.frequency.setTargetAtTime(60+clamp(rpmFrac||0,0,1)*240,AC.currentTime,0.06);}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function bzzt(){beep(110,.3,'sawtooth',.2,-40);}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'garage-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== the car — shared model
+   Toy DC motor (130-size): free speed and stall torque scale with voltage.
+     ω_free = 620 rad/s · (V/3)      τ_stall = 0.030 N·m · (V/3)
+     τ(ω) = τ_stall·(1 − ω/ω_free)   I = 0.2 + 2.0·(τ/τ_stall) amps-ish
+   Drivetrain: ratio G = gear/pinion. Wheel: v = (ω/G)·r, F = τ·G·η/r, η=0.85.
+   Car: base mass 0.25 kg; decoration adds mass AND judging points.
+   PARTS (mirrors the store kit): pinions 8/12/16t · gears 24/32/40/48t ·
+   wheels r = 20/27.5/35 mm. CELLS: one (1.5 V), two SERIES (3 V, fast),
+   two PARALLEL (1.5 V, double endurance). */
+const PINIONS=[8,12,16], GEARS=[24,32,40,48], WHEELS=[0.020,0.0275,0.035];
+const CELLS=[{label:'1 CELL · 1.5 V',V:1.5,cap:1},{label:'2 SERIES · 3 V',V:3,cap:1},{label:'2 PARALLEL · 1.5 V',V:1.5,cap:2}];
+const ETA=0.85, BASE_M=0.25, MU=0.5;
+function motorFree(V){return 400*(V/3);}   // rad/s — geared-down toy pace
+function motorStall(V){return 0.022*(V/3);} // N·m
+/* car performance from a config {pi,gi,wi,ci,deco} */
+function carCalc(c){
+  const V=CELLS[c.ci].V, G=GEARS[c.gi]/PINIONS[c.pi], r=WHEELS[c.wi];
+  const m=BASE_M+(c.deco||0)*0.02;
+  const vTop=motorFree(V)/G*r;
+  const fMax=Math.min(motorStall(V)*G*ETA/r, MU*m*9.8);
+  return {V,G,r,m,vTop,fMax};
+}
+
+/* ================================================== level data
+   ACT I posts: B+ B− S1 S2 M+ M− (+C+ C− when a 2nd cell is present).
+   Player wires post-pairs; TEST evaluates the loop. Required: motor driven
+   through the switch, correct cell arrangement, no shorts.
+   ACT II events: pick pinion/gear/wheel, then run the event sim.
+   ACT III race: full config incl. cells + decoration vs rival ghosts. */
+const ACT_META={
+ 1:{name:'THE WIRING BAY', col:'#38bdf8', blurb:'Day 2 and Day 6 of the real build, rehearsed: battery, switch, motor, solder by solder. Series cells for speed, parallel for endurance, and absolutely no shorts — the smoke is not a special effect.'},
+ 2:{name:'THE GEAR LAB', col:'#fbbf24', blurb:'Day 3, the decision that haunts every race: gear ratio. Big gear = force, small gear = speed, and the motor curve only gives you one or the other. Three events want three different cars. You get one.'},
+ 3:{name:'RACE DAY', col:'#e879f9', blurb:'Day 9. Everything on the line: your circuit, your ratio, your wheels — and the judging table, where decoration scores points and adds grams. Three rivals are already on the grid.'},
+};
+const ACT1=[
+ {name:'FIRST LIGHT (Build 10–12)', dur:120, cells:1, fault:false,
+  need:{series:false},
+  tip:'The real thing, rehearsed: battery holder’s RED lead to one switch terminal, switch’s other terminal to a motor lead, motor’s second lead back to BLACK. One loop, no branches. Wire it, hit TEST, watch the motor spin — this is exactly build steps 10–12 on Day 6.'},
+ {name:'MASTER SWITCH (Build 13)', dur:120, cells:1, fault:false,
+  need:{series:false,switched:true},
+  tip:'Inspection rule from the real build: the switch must actually CONTROL the motor — wired in SERIES, not dangling on a branch. A switch the current can sneak around fails tech inspection here and in the classroom. Test must show ON spins, OFF stops.'},
+ {name:'DOUBLE POWER (Day 2 + Build 14)', dur:140, cells:2, fault:false,
+  need:{series:true,switched:true},
+  tip:'Add the second cell IN SERIES: first cell’s − to second cell’s +, and the loop sees 3 V. The motor’s free speed doubles with voltage — listen to it. Get the chain backwards and the cells fight each other to a 0 V standstill.'},
+ {name:'THE LONG HAUL (Day 2)', dur:140, cells:2, fault:false,
+  need:{series:false,parallel:true,switched:true},
+  tip:'Same two cells, wired PARALLEL: + to +, − to −. Still 1.5 V — but twice the charge to spend. Slower car, longer life: the endurance racer’s circuit. Know both wirings before Day 6 makes you choose.'},
+ {name:'THE SICK CAR (Day 7 rescue)', dur:150, cells:2, fault:true,
+  need:{series:true,switched:true},
+  tip:'A classmate’s car: it hums but won’t spin, and the switch does nothing. Somewhere in this rat’s nest is a short and a bypassed switch. Find them, cut the bad wires, rewire it right. This is the single most useful skill on Day 7 — every class has a sick car.'},
+];
+const ACT2=[
+ {name:'THE SPRINT (5 m)', dur:120, event:'sprint', dist:5, ramp:0, spec:{time:3.2},
+  tip:'Flat and fast: 5 meters, beat 3.2 s. Small ratio (small gear ÷ big pinion) means high top speed — but gear TOO low and the motor bogs, accelerating like cold honey. The dyno curve on your desk shows the tradeoff: pick the operating point, not the fantasy.'},
+ {name:'THE HILL (1.2 m at 12°)', dur:120, event:'climb', dist:1.2, ramp:12, spec:{time:6},
+  tip:'A 12° ramp. Now you need FORCE at the wheel: F = τ·G/r, so big gear, small pinion, small wheels. The sprint car stalls here, humming sadly — torque is the currency and gravity sets the price. Mechanical advantage, Day 3, in one climb.'},
+ {name:'THE TUG (drag the brick)', dur:120, event:'tug', dist:1.5, ramp:0, drag:1.2, spec:{time:8},
+  tip:'Drag a 120 g brick 1.5 m. Pure pulling power — and a hard lesson: past a point, more gear stops helping because the WHEELS SLIP. Traction (μ·m·g) caps every drivetrain; the strongest motor on Earth cannot out-pull its own grip.'},
+ {name:'EFFICIENCY RUN (one charge)', dur:130, event:'endure', dist:14, ramp:0, spec:{dist:14},
+  tip:'How far on one battery bar? Current tracks torque, so a heavily-geared car gulps amps even at crawl speed. There is a sweet ratio where meters-per-charge peaks — find it with the dyno before you spend the battery finding it the hard way.'},
+ {name:'THE WHEEL COMMIT (Day 3)', dur:160, event:'commit', dist:0, ramp:0,
+  spec:{sprint:4.0,climb:8,endure:9},
+  tip:'The real Day 3 decision: ONE gear-and-wheel setup must now pass ALL THREE — sprint under 4 s, the hill under 8 s, and 9 m on a charge. No single event’s hero survives this; the committed car is a compromise. Choose like it’s going on your real chassis. It is.'},
+];
+const ACT3=[
+ {name:'QUALIFYING (5 m flat)', dur:140, track:{dist:5,ramp:0},
+  rivals:[{t:2.9,name:'PERIWINKLE'},{t:3.4,name:'BIG SLOW'},{t:4.2,name:'GLUE HAZARD'}],
+  judge:false,
+  tip:'Race day begins. Full car this time — cells AND gears AND wheels. The rivals are last year’s builds; beat at least one to advance. Series cells scream, but watch the battery bar: 3 V drinks twice as fast.'},
+ {name:'HILL FINISH (4 m + ramp)', dur:140, track:{dist:4,ramp:10,rampAt:2.5},
+  rivals:[{t:4.2,name:'PERIWINKLE'},{t:5.0,name:'BIG SLOW'},{t:6.5,name:'GLUE HAZARD'}],
+  judge:false,
+  tip:'Flat start, ramp finish — the course that breaks one-trick cars. Gear for the hill and you lose the flat; gear for the flat and you stall at the base. Somewhere between is a car that does both adequately. Adequate wins races.'},
+ {name:'THE MARATHON (12 m)', dur:150, track:{dist:12,ramp:0},
+  rivals:[{t:6.5,name:'PERIWINKLE'},{t:8,name:'BIG SLOW'},{t:10,name:'GLUE HAZARD'}],
+  judge:false,
+  tip:'Twelve meters — three classroom tables end to end. Endurance circuit (parallel cells) or speed (series) that might die at meter ten? The battery bar does not negotiate, and a dead car at 11.5 m scores exactly like a parked one.'},
+ {name:'CONCOURS D’ELEGANCE (5 m + judging)', dur:150, track:{dist:5,ramp:0},
+  rivals:[{t:3.0,name:'PERIWINKLE'},{t:3.5,name:'BIG SLOW'},{t:4.3,name:'GLUE HAZARD'}],
+  judge:true,
+  tip:'Day 8 meets Day 9: the judging table scores decoration — but every sticker, spoiler and flame decal is GRAMS, and F = ma never heard of style. Slide the decoration bar and watch your sprint time move. Beauty has a mass budget.'},
+ {name:'THE CHAMPIONSHIP (8 m + ramp + judging)', dur:170, track:{dist:8,ramp:10,rampAt:5},
+  rivals:[{t:7.0,name:'PERIWINKLE'},{t:8.5,name:'BIG SLOW'},{t:10.5,name:'GLUE HAZARD'}],
+  judge:true,
+  tip:'Build step 24: the final race. Circuit, ratio, wheels, mass, style — every decision from every cabinet in this arcade is riding on four little wheels. Whatever happens at the finish line: this is the car you should build on Monday.'},
+];
+const BAYS=['BAY 1','BAY 2','THE LIFT','PAINT BOOTH','PIT LANE','THE WORKBENCH','TECH INSPECTION'];
+function endless1(w){
+  return {name:pick(BAYS)+' · JOB '+w, dur:Math.max(90,150-w*5),
+    cells:w>1?2:1, fault:w>2,
+    need:w>2?{series:Math.random()<.5,parallel:false,switched:true}
+        :w>1?{series:true,switched:true}:{series:false,switched:true},
+    tip:'Another car on the lift. Wire it clean.'};
+}
+function endless2(w){
+  const ev=pick(['sprint','climb','tug','endure']);
+  const spec=ev==='sprint'?{time:Math.max(2.6,3.4-w*0.1)}
+    :ev==='climb'?{time:Math.max(4.5,6.5-w*0.2)}
+    :ev==='tug'?{time:Math.max(6,9-w*0.3)}
+    :{dist:12+w};
+  return {name:pick(BAYS)+' · TRIAL '+w, dur:Math.max(90,130-w*4),
+    event:ev, dist:ev==='sprint'?5:ev==='climb'?1.2:ev==='tug'?1.5:14,
+    ramp:ev==='climb'?Math.min(16,10+w):0, drag:ev==='tug'?1.2+w*0.1:0, spec,
+    tip:'New spec sheet, same physics.'};
+}
+function endless3(w){
+  const d=5+Math.min(8,w);
+  return {name:pick(BAYS)+' · HEAT '+w, dur:Math.max(110,160-w*5),
+    track:{dist:d,ramp:w%2?10:0,rampAt:d*0.6},
+    rivals:[{t:d*0.68-w*0.02,name:'PERIWINKLE'},{t:d*0.8,name:'BIG SLOW'},{t:d*0.95,name:'GLUE HAZARD'}],
+    judge:w>1,
+    tip:'The grid refills. So does the glue gun.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+// ACT I — wiring
+let posts=[], wires=[], selPost=-1, smokes=0, testFx=0, testMsg='', switchOn=true;
+// ACT II/III — car config + run
+let cfg={pi:1,gi:1,wi:1,ci:1,deco:0}, selField=0;
+let run=null; // {x,v,t,charge,phase,event,results:{}, commitIdx}
+let t=0, acc=0, attemptT=0;
+let particles=[], popups=[], shake=0, flash=0;
+let landedOK=false, downTimer=0, lastResult=null, primary=null;
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,jx:rnd(-12,12)});}
+function burstPx(px,py,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,TAU),s2=rnd(20,sp||90);
+  particles.push({px,py,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];setupLevel();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>GARAGE</h1>
+     <div class="tag">THE CAR PROJECT CABINET · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       This is not a unit. This is <b style="color:var(--ink)">the rehearsal for the
+       real thing</b> — the nine-day build, the soldering iron, the race at the
+       end. Every level mirrors an actual build day; every mistake here is one
+       you won’t make on your real car.<br><br>
+       <b style="color:#38bdf8">ACT I — THE WIRING BAY</b> &nbsp;circuit design: cells, switch, motor<br>
+       <b style="color:#fbbf24">ACT II — THE GEAR LAB</b> &nbsp;gear ratio: the Day 3 decision<br>
+       <b style="color:#e879f9">ACT III — RACE DAY</b> &nbsp;everything, against the grid<br><br>
+       <span class="kbd">←</span><span class="kbd">→</span><span class="kbd">↑</span><span class="kbd">↓</span> select ·
+       <span class="kbd">SPACE</span> connect / run ·
+       <span class="kbd">T</span> test circuit · <span class="kbd">P</span> pause · <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — WIRING ${HIS[1].toLocaleString()} · GEARS ${HIS[2].toLocaleString()} · RACE ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE GARAGE FLOOR</h2>
+     <div class="sub">Pick your station. Each act rehearses part of the real nine-day build.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE FLOOR</button></div>`);
+    primary=select_;
+  });
+}
+function setupLevel(){
+  // wiring bay
+  posts=['B+','B−','S1','S2','M+','M−'];
+  if((lv.cells||1)===2)posts=posts.concat(['C+','C−']);
+  wires=[];selPost=-1;smokes=0;testFx=0;testMsg='';switchOn=true;
+  if(lv.fault){ // the sick car: a short and a bypassed switch, pre-wired
+    wires=[[0,4],[1,5],[0,1],[2,3]];           // B+→M+, B−→M−, B+→B− (SHORT), S1→S2 stub
+    if(posts.length>6)wires.push([6,7]);       // C+→C− another short, for flavor
+  }
+  // car config
+  cfg={pi:1,gi:1,wi:1,ci:1,deco:0};selField=0;
+  run=null;
+}
+function showMission(level){
+  lv=level;state='mission';setupLevel();
+  let params='';
+  if(act===1){
+    const needs=[];
+    if(lv.need.switched)needs.push('switch must control the motor');
+    if(lv.need.series)needs.push('cells in SERIES (3 V)');
+    if(lv.need.parallel)needs.push('cells in PARALLEL (endurance)');
+    if(!needs.length)needs.push('motor must spin');
+    params=`<b>${lv.cells} cell${lv.cells>1?'s':''}</b> · ${needs.join(' · ')} · no shorts (two smokes = scrapped) · <b>${lv.dur} s</b>`;
+  }else if(act===2){
+    params=lv.event==='commit'
+      ?`ONE setup must pass: sprint &lt; <b>${lv.spec.sprint} s</b> · hill &lt; <b>${lv.spec.climb} s</b> · <b>${lv.spec.endure} m</b> on a charge · <b>${lv.dur} s</b>`
+      :`${lv.event.toUpperCase()} — ${lv.spec.time?('beat <b>'+lv.spec.time+' s</b>'):('reach <b>'+lv.spec.dist+' m</b>')} · adjust gears between runs · <b>${lv.dur} s</b>`;
+  }else{
+    params=`track <b>${lv.track.dist} m${lv.track.ramp?' + '+lv.track.ramp+'° ramp':''}</b>
+      · rivals: ${lv.rivals.map(r=>r.name).join(', ')}
+      ${lv.judge?' · <b style="color:var(--neon)">judging table active</b>':''} · <b>${lv.dur} s</b>`;
+  }
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:26px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">
+       ${act===1?'<span class="kbd">←</span><span class="kbd">→</span> pick a post · <span class="kbd">SPACE</span> connect two posts (again to cut) · <span class="kbd">O</span> flip switch · <span class="kbd">T</span> TEST'
+        :act===2?'<span class="kbd">←</span><span class="kbd">→</span> field · <span class="kbd">↑</span><span class="kbd">↓</span> change · <span class="kbd">SPACE</span> run the event'
+        :'<span class="kbd">←</span><span class="kbd">→</span> field · <span class="kbd">↑</span><span class="kbd">↓</span> change (incl. cells & decoration) · <span class="kbd">SPACE</span> race'}
+     </div>
+     <button class="btn" onclick="launch()">▶ ${act===1?'TO THE BENCH':act===2?'TO THE DYNO':'TO THE GRID'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;attemptT=0;
+  particles=[];popups=[];shake=0;flash=0;
+  setupLevel();
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(extraTxt,craft){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setMotor(0);
+  const tf=Math.max(0,lv.dur-attemptT)/lv.dur;
+  const tier=tf>=0.4?'SHOP FOREMAN':tf>=0.18?'GREAT':'CLEAN';
+  const base=tf>=0.4?1500:tf>=0.18?1000:700;
+  const bonus=(craft||0)+Math.round(tf*300);
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,btxt:bonus>0?('CRAFT +'+bonus):'',extraTxt};
+  score+=pts;bumpHi();
+  popup(tier+'!','#e879f9',38);
+  chord(tier==='SHOP FOREMAN'?[659,830,988,1318]:[523,659,784,1046]);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;setMotor(0);
+  bzzt();
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',28);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.extraTxt?`<div class="sub">${r.extraTxt}</div>`:''}
+       ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Kits left</span><b>${'🔧 '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">FRESH KIT</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — THE GEAR LAB unlocked.</b> The circuit lives; now make it move something well.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#e879f9">ACT III — RACE DAY unlocked.</b> Build step 24 awaits.';}
+  else if(act===3)unlockMsg='<b style="color:#38bdf8">You finished the Car Project rehearsal</b> — and the arcade. Nine cabinets, one course, and a real car waiting for these exact decisions on Monday.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS SHIFT</button>
+     <button class="btn alt" onclick="select_()">GARAGE FLOOR</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>LIGHTS OFF IN THE BAY</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">Every scrapped kit here is one you didn’t scrap on Day 6. Cheap tuition.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">GARAGE FLOOR</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>qCon('Two 1.5 V cells wired in SERIES give your motor…',
+     '3 V — voltages add along the chain',['1.5 V','0.75 V','depends on the motor'],
+     'Series stacks the pushes: − of one cell to + of the next, like two people pushing the same swing in turn. Your real car’s battery holder does exactly this — check which way the springs face.'),
+   ()=>qCon('Two 1.5 V cells in PARALLEL give…',
+     '1.5 V, but twice the endurance',['3 V','0.75 V and half the life','3 V and twice the life'],
+     'Parallel cells share the load instead of stacking the voltage — same speed, double the tank. For the long-distance race day option, this is the wiring to know.'),
+   ()=>qCon('For the switch to actually control the motor, it must be wired…',
+     'in SERIES with the motor — all current must pass through it',['in parallel with the motor','across the battery','anywhere; switches always work'],
+     'A switch only rules the current that has no way around it. Wired in parallel it is decorative — and decorative switches fail tech inspection on Day 6, every year.'),
+   ()=>qCon('A “short circuit” is…',
+     'a path from + to − that skips the motor — huge current, hot wires, dead cells',['any broken wire','a circuit that is physically small','wiring the motor backwards'],
+     'Current takes every path offered, and the easy path wins. Skip the motor and nothing limits the flow: wires heat, batteries drain in minutes, and the magic smoke escapes. Check before you solder.'),
+   ()=>qCon('Wiring the motor with + and − swapped will…',
+     'spin it BACKWARD — annoying, but harmless and easy to fix',['destroy the motor','blow the battery','do nothing'],
+     'A DC motor’s direction follows the current’s direction. Half the cars on first-power day drive backward off the bench — now you know the five-second fix: swap the leads.'),
+  ];
+  const bank2=[
+   ()=>{const p=pick([8,12]),g=pick([32,48]);
+     return qNum(`Pinion ${p} teeth, axle gear ${g} teeth. How many motor turns per wheel turn?`,
+       g/p,'turns',[p/g,g-p,g*p/100],
+       `G = gear/pinion = ${g}/${p} = ${fmt(g/p)}. The motor spins ${fmt(g/p)} times for each wheel revolution — trading its speed for the wheel’s force.`);},
+   ()=>qCon('You swap to a BIGGER axle gear. Your car becomes…',
+     'stronger but slower — more wheel torque, less wheel speed',['faster and stronger','faster but weaker','unchanged; gears are cosmetic'],
+     'Gears are levers in a circle: a bigger gear is a longer lever arm. Torque multiplies by G, speed divides by G. The Day 3 wheel commit is choosing where on that seesaw your car lives.'),
+   ()=>{const w=pick([300,420]),r=pick([2.75,3.5]);
+     return qNum(`Your wheel turns at ${w} RPM with radius ${r} cm. Ground speed ≈ (use v = ωr)`,
+       w/60*TAU*r/100,'m/s',[w*r/100,w/60*r,w/60*TAU*r],
+       `ω = ${w} RPM = ${fmt(w/60*TAU,1)} rad/s, so v = ωr = ${fmt(w/60*TAU,1)} × ${r/100} = ${fmt(w/60*TAU*r/100,2)} m/s. Day 6’s RPM measurement plus today’s formula = a speed prediction before the car ever touches the floor.`);},
+   ()=>qCon('Past a certain gear ratio, adding MORE gear stops helping the tug-of-war because…',
+     'the wheels slip — traction (μmg) caps the usable force',['the motor explodes','gears stop multiplying torque','the battery refuses'],
+     'The drivetrain can deliver more force than the floor can hold. Once wheel force exceeds μ·m·g the tires spin in place — PUSH’s friction ceiling, now working against you. Grip, not gearing, sets the limit.'),
+   ()=>qCon('Your geared-down car draws MORE battery current when climbing because…',
+     'current tracks torque — hard pushing is expensive, fast spinning is cheap',['higher speed uses more current','gears leak electricity','ramps are conductive'],
+     'A DC motor’s current is roughly proportional to its torque load. The climb demands torque, torque demands amps, and amps drain the tank — why the efficiency run punishes over-gearing.'),
+  ];
+  const bank3=[
+   ()=>qCon('Every gram of decoration on race day costs you…',
+     'acceleration — a = F/m, and m just grew',['top speed only','battery voltage','traction'],
+     'The motor’s force is fixed; mass dilutes it. (Extra mass DOES buy a little traction — but far less than it costs in a = F/m.) The judging table pays in points; the stopwatch charges in grams.'),
+   ()=>qCon('Your series-cell speedster died at meter ten of the twelve-meter marathon. The endurance fix is…',
+     'parallel cells — same 1.5 V, double the charge',['a third cell in series','bigger wheels','more decoration'],
+     'Race strategy is an energy budget: distance ≈ charge ÷ current draw. Parallel wiring doubles the tank; gentler gearing shrinks the draw. The Wiring Bay and the Gear Lab were both training for this call.'),
+   ()=>qCon('The car that wins the hill-finish race is usually…',
+     'the adequate all-rounder — geared between the sprint car and the climber',['the fastest flat-ground car','the strongest climber','the lightest car regardless of gearing'],
+     'Mixed courses punish specialists: the sprinter stalls at the ramp, the climber crawls the flat. Day 3’s wheel commit and Day 9’s podium both belong to the honest compromise.'),
+   ()=>qCon('Before race day, the smartest use of your practice runs (Day 8) is to…',
+     'measure — time a known distance, watch the battery, then adjust ONE thing',['repaint the chassis','swap every part at once','save the battery by not testing'],
+     'Engineering is changing one variable while measuring. Swap everything at once and a faster car teaches you nothing. The dyno in this cabinet is the habit; the real stopwatch is the exam.'),
+  ];
+  /* CROSSOVER bank — the synthesis cabinet bridges EVERYWHERE. +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · FLUX — Your car’s circuit (cells, switch, motor) is the GRID act of FLUX made physical. The motor’s current is highest…',
+     'at stall — zero speed, maximum torque, maximum amps',['at top speed','when the switch is open','halfway up the ramp, always'],
+     'A stalled DC motor is nearly a short circuit — huge current, no motion, fast-draining cells and a warm motor. If your real car ever jams against a wall, switch it OFF: FLUX’s fuse lesson, now with your own batteries.'),
+   ()=>qCon('CROSSOVER · CASCADE — A gearbox multiplies torque ×G and divides speed ÷G. The POWER through it (τ·ω) is…',
+     'unchanged (minus friction) — gears trade force for speed, never create energy',['multiplied by G','divided by G','stored in the teeth'],
+     'CASCADE’s law survives the gear teeth: energy per second in equals energy per second out, minus a little heat. A gearbox is a currency exchange, not a mint — there is no ratio that gives you something for nothing.'),
+   ()=>qCon('CROSSOVER · PUSH — Your drive wheels grip the floor with at most μ·m·g of force. This is the same law that, in the dynamics cabinet…',
+     'set the breakaway force for every sliding crate',['made the v–t graphs straight','powered the tug-bot','melted the ice levels'],
+     'Friction caps your crate-pushing there and your wheel-driving here — the same μ·N ceiling, working for you now instead of against you. More mass grips better but accelerates worse: physics never gives a clean win.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== circuit evaluation */
+function reach(edges,n,from){
+  const adj=Array.from({length:n},()=>[]);
+  for(const w of edges){adj[w[0]].push(w[1]);adj[w[1]].push(w[0]);}
+  const seen=new Set([from]),q=[from];
+  while(q.length){const x=q.pop();
+    for(const y of adj[x])if(!seen.has(y)){seen.add(y);q.push(y);}}
+  return seen;
+}
+function evalCircuit(closed){
+  const n=posts.length;
+  const base=wires.slice();
+  if(closed)base.push([2,3]);
+  let V=1.5,cap=1,mode='single',pPos=0,pNeg=1;
+  if(n>6){
+    const has=(a,b)=>wires.some(w=>(w[0]===a&&w[1]===b)||(w[0]===b&&w[1]===a));
+    const chainA=has(1,6),chainB=has(0,7),par=has(0,6)&&has(1,7);
+    if((chainA&&chainB)||(par&&(chainA||chainB)))
+      return {bad:'CELL LOOP — the cells are fighting each other'};
+    if(chainA){mode='series';V=3;pPos=0;pNeg=7;}
+    else if(chainB){mode='series';V=3;pPos=6;pNeg=1;}
+    else if(par){mode='parallel';V=1.5;cap=2;}
+  }
+  const r1=reach(base,n,pPos);
+  if(r1.has(pNeg))return {bad:'SHORT'};
+  const withMotor=base.concat([[4,5]]);
+  const r2=reach(withMotor,n,pPos);
+  return {drives:r2.has(pNeg),V,cap,mode,fwd:r1.has(4)};
+}
+function runTest(){
+  const on=evalCircuit(true),off=evalCircuit(false);
+  testFx=1.4;
+  if(on.bad||off.bad){
+    smokes++;shake=.8;flash=.5;bzzt();
+    burstPx(W*0.3,H*0.4,30,['#6b7280','#374151','#f87171'],100);
+    testMsg=(on.bad||off.bad)+' !';
+    popup('SMOKE — strike '+smokes+'/2','#f87171',26);
+    if(smokes>=2){failAttempt('MAGIC SMOKE RELEASED',
+      'Trace the path before you test: from + back to −, the current must pass THROUGH the motor. Any route around it is a short — and real cells get hot enough to matter.');}
+    return;
+  }
+  const spins=on.drives, stopsOff=!off.drives;
+  if(!spins){testMsg='no spin — the loop is not complete';beep(160,.3,'sawtooth',.14);return;}
+  setMotor(0.05,on.V/3);
+  if(lv.need.switched&&!stopsOff){testMsg='spins… but the switch does nothing (bypassed)';
+    beep(220,.2,'sawtooth',.12);return;}
+  if(lv.need.series&&on.mode!=='series'){testMsg='spins at 1.5 V — the cells are not in series';
+    beep(220,.2,'sawtooth',.12);return;}
+  if(lv.need.parallel&&on.mode!=='parallel'){testMsg='runs, but on a single cell — wire the second in parallel';
+    beep(220,.2,'sawtooth',.12);return;}
+  const craft=(smokes===0?200:0)+(on.fwd?60:0);
+  succeed('Circuit passes inspection: '+(on.mode==='series'?'3 V series':on.mode==='parallel'?'parallel endurance':'single cell')
+    +(on.fwd?', forward polarity':', reversed (it drives backward — easy fix)')
+    +(smokes===0?', zero smoke.':'.'),craft);
+}
+
+/* ================================================== car simulation */
+function simEvent(opts){
+  const cc=carCalc(cfg);
+  const V=CELLS[cfg.ci].V,wF=motorFree(V),tS=motorStall(V);
+  const m=cc.m+(opts.drag?0.12:0);
+  let x=0,v=0,tt=0,charge=CELLS[cfg.ci].cap*6; // tight tank: efficiency is real
+  const dt=1/120,trace=[];
+  for(let i=0;i<120*45;i++){
+    const onRamp=(opts.ramp||0)>0&&x>=(opts.rampAt||0);
+    const th=onRamp?opts.ramp*Math.PI/180:0;
+    const w2=v/cc.r*cc.G;
+    const tau=charge>0?Math.max(0,tS*(1-w2/wF)):0;
+    const F=Math.min(tau*cc.G*ETA/cc.r,MU*m*9.8);
+    const I=charge>0?0.35+2.2*(tau/tS):0; // current tracks torque — climbing is expensive
+    charge=Math.max(0,charge-I*dt);
+    const Fnet=F-0.06*m*9.8-m*9.8*Math.sin(th)-(opts.drag?0.6:0);
+    v=Math.max(0,v+Fnet/m*dt);
+    x+=v*dt;tt+=dt;
+    if(i%6===0)trace.push({t:tt,x,v});
+    if(opts.dist&&x>=opts.dist)return {time:tt,dist:x,stalled:false,charge,trace,done:true};
+    if(v<=0.002&&tt>0.8)return {time:tt,dist:x,stalled:true,charge,trace,done:false};
+    if(charge<=0&&v<=0.02)return {time:tt,dist:x,stalled:true,charge:0,trace,done:false};
+  }
+  return {time:45,dist:x,stalled:false,charge,trace,done:false};
+}
+function startRun(){
+  if(act===2){
+    if(lv.event==='commit'){
+      // three back-to-back events with the SAME config
+      const sprint=simEvent({dist:5});
+      const climb=simEvent({dist:1.2,ramp:12,rampAt:0});
+      const endure=simEvent({});
+      run={kind:'commit',phases:[
+        {label:'SPRINT',res:sprint,pass:sprint.done&&sprint.time<=lv.spec.sprint,spec:lv.spec.sprint+' s'},
+        {label:'HILL',res:climb,pass:climb.done&&climb.time<=lv.spec.climb,spec:lv.spec.climb+' s'},
+        {label:'CHARGE',res:endure,pass:endure.dist>=lv.spec.endure,spec:lv.spec.endure+' m'},
+      ],idx:0,tAnim:0};
+    }else{
+      const opts=lv.event==='sprint'?{dist:lv.dist}
+        :lv.event==='climb'?{dist:lv.dist,ramp:lv.ramp,rampAt:0}
+        :lv.event==='tug'?{dist:lv.dist,drag:1}
+        :{};
+      const res=simEvent(opts);
+      run={kind:'single',res,tAnim:0};
+    }
+  }else{
+    const res=simEvent({dist:lv.track.dist,ramp:lv.track.ramp,rampAt:lv.track.rampAt||0});
+    run={kind:'race',res,tAnim:0};
+  }
+  beep(330,.12,'square',.14,200);
+}
+function finishRun(){
+  const r=run;run=null;setMotor(0);
+  if(act===2){
+    if(r.kind==='commit'){
+      const allPass=r.phases.every(p=>p.pass);
+      if(allPass){
+        succeed('THE WHEEL COMMIT: '+PINIONS[cfg.pi]+'t pinion · '+GEARS[cfg.gi]+'t gear · '
+          +Math.round(WHEELS[cfg.wi]*2000)+' mm wheels — one car, all three specs. Write it down for Day 3.',300);return;}
+      const failed=r.phases.filter(p=>!p.pass).map(p=>p.label).join(', ');
+      popup('NOT YET — '+failed,'#f87171',22);
+      testMsg=failed+' failed — adjust and re-run';
+      return;
+    }
+    const res=r.res;
+    const pass=lv.spec.time?(res.done&&res.time<=lv.spec.time):(res.dist>=lv.spec.dist);
+    if(pass){
+      const margin=lv.spec.time?(lv.spec.time-res.time):(res.dist-lv.spec.dist);
+      succeed(lv.event.toUpperCase()+': '+(lv.spec.time?fmt(res.time,2)+' s (spec '+lv.spec.time+')':fmt(res.dist,1)+' m (spec '+lv.spec.dist+')'),
+        Math.round(clamp(margin,0,3)*100));return;
+    }
+    popup(res.stalled?'STALLED':'MISSED SPEC','#f87171',24);
+    testMsg=(res.stalled?'stalled — more gear or smaller wheels'
+      :lv.spec.time?('ran '+fmt(res.time,2)+' s, spec '+lv.spec.time)
+      :('reached '+fmt(res.dist,1)+' m, spec '+lv.spec.dist))+' — adjust and re-run';
+    return;
+  }
+  // race day
+  const res=r.res;
+  if(!res.done){
+    popup(res.charge<=0?'BATTERY DIED at '+fmt(res.dist,1)+' m':'STALLED on course','#f87171',24);
+    testMsg='DNF — re-gear or re-wire and race again';
+    return;
+  }
+  const beaten=lv.rivals.filter(rv=>res.time<rv.t).length;
+  if(beaten===0){
+    popup('LAST PLACE — '+fmt(res.time,2)+' s','#f87171',24);
+    testMsg='all three rivals were faster — adjust and race again';
+    return;
+  }
+  const place=lv.rivals.length-beaten+1;
+  const judgePts=lv.judge?cfg.deco*8:0;
+  succeed('P'+place+' in '+fmt(res.time,2)+' s — beat '+beaten+' of '+lv.rivals.length
+    +(lv.judge?(' · judging +'+judgePts+' (deco '+cfg.deco+'/10)'):'')
+    +' · battery '+Math.round(res.charge)+' left',
+    beaten*200+judgePts+Math.round(res.charge*2));
+}
+
+/* ================================================== step (animation clock) */
+const DT=1/60;
+function step(dt){
+  t+=dt;attemptT+=dt;
+  testFx=Math.max(0,testFx-dt);
+  if(run){
+    run.tAnim+=dt;
+    const res=run.kind==='commit'?run.phases[run.idx].res:run.res;
+    setMotor(0.05,clamp((res.trace.length?res.trace[Math.min(res.trace.length-1,Math.floor(run.tAnim*20))].v:0)/4,0,1));
+    if(run.tAnim>=res.time+0.6){
+      if(run.kind==='commit'&&run.idx<run.phases.length-1){run.idx++;run.tAnim=0;}
+      else finishRun();
+    }
+  }
+  if(state==='play'&&attemptT>=lv.dur){
+    failAttempt(act===1?'BENCH TIME OVER':'THE BELL — STATION CLOSED',
+      act===1?'Wire the happy path first — battery, switch, motor, one clean loop — THEN test. Rewiring under a clock is how real cars get shorts.'
+      :act===2?'Use the dyno curve before you run: the operating point predicts the result. Guess-and-check is for people with more battery than sense.'
+      :'A race entry needs a finisher, not a masterpiece. Field a safe setup FIRST, then tune upward from a car that completes the course.');
+    return;
+  }
+}
+
+/* ================================================== render */
+let cursorPost=0,anchorPost=-1,testBtn=null;
+function sceneRect(){const pw=Math.min(430,W*0.35);return {w:W-pw,pw};}
+function postXY(i,SW){
+  const cy2=H*0.5;
+  const lay={
+    0:[SW*0.16,cy2-30],1:[SW*0.16,cy2+30],          // B+ B−
+    2:[SW*0.46,cy2-110],3:[SW*0.62,cy2-110],        // S1 S2
+    4:[SW*0.84,cy2-30],5:[SW*0.84,cy2+30],          // M+ M−
+    6:[SW*0.30,cy2+110],7:[SW*0.46,cy2+110],        // C+ C−
+  };
+  return lay[i]||[SW/2,cy2];
+}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  const now=performance.now()/1000;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*10,rnd(-1,1)*shake*10);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0a040c');bg.addColorStop(1,'#160a18');
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  // pegboard backdrop
+  ctx.fillStyle='#ffffff08';
+  for(let px2=24;px2<SW;px2+=34)for(let py2=24;py2<H*0.3;py2+=34){
+    ctx.beginPath();ctx.arc(px2,py2,2,0,TAU);ctx.fill();}
+  if(state==='mission'){cursorPost=0;anchorPost=-1;}
+  if(act===1)scene1(SW,now);
+  else scene23(SW,now);
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.px+=p.vx/60;p.py+=p.vy/60;p.vy-=20/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(p.px,p.py,p.size,p.size);}
+  ctx.globalAlpha=1;
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,SW/2+p.jx,H*0.24-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#e879f9';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#34d399':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function scene1(SW,now){
+  const cy2=H*0.5;
+  // battery pack(s)
+  const cell=(x,y,label)=>{
+    ctx.fillStyle='#1f2937';ctx.fillRect(x-44,y-26,88,52);
+    ctx.strokeStyle='#6b7280';ctx.strokeRect(x-44,y-26,88,52);
+    ctx.fillStyle='#fbbf24';ctx.fillRect(x-44,y-26,88,10);
+    ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(label,x,y+40);ctx.textAlign='left';};
+  cell(SW*0.16,cy2,'CELL A · 1.5 V');
+  if(posts.length>6)cell(SW*0.38,cy2+110,'CELL B · 1.5 V');
+  // switch
+  ctx.fillStyle='#1f2937';ctx.fillRect(SW*0.46-20,cy2-130,SW*0.16+40,44);
+  ctx.strokeStyle='#6b7280';ctx.strokeRect(SW*0.46-20,cy2-130,SW*0.16+40,44);
+  ctx.strokeStyle=switchOn?'#34d399':'#8b96ad';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(SW*0.46,cy2-110);
+  ctx.lineTo(SW*0.46+(SW*0.16)*(switchOn?1:0.8),cy2-110-(switchOn?0:22));ctx.stroke();ctx.lineWidth=1;
+  ctx.fillStyle=switchOn?'#34d399':'#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.textAlign='center';
+  ctx.fillText('SWITCH — '+(switchOn?'ON':'OFF')+'  (O)',SW*0.54,cy2-138);ctx.textAlign='left';
+  // motor
+  const mx=SW*0.84,spin=testFx>0&&!testMsg.includes('!')?now*10:0;
+  ctx.fillStyle='#374151';ctx.beginPath();ctx.arc(mx,cy2,34,0,TAU);ctx.fill();
+  ctx.strokeStyle='#6b7280';ctx.stroke();
+  ctx.strokeStyle='#e7ecf5';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(mx,cy2);
+  ctx.lineTo(mx+22*Math.cos(spin),cy2+22*Math.sin(spin));ctx.stroke();ctx.lineWidth=1;
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('MOTOR',mx,cy2+52);ctx.textAlign='left';
+  // wires
+  wires.forEach((w2,wi2)=>{
+    const a=postXY(w2[0],SW),b=postXY(w2[1],SW);
+    ctx.strokeStyle=['#f87171','#38bdf8','#fbbf24','#34d399','#c084fc','#fb923c'][wi2%6];
+    ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(a[0],a[1]);
+    ctx.quadraticCurveTo((a[0]+b[0])/2,(a[1]+b[1])/2+34,b[0],b[1]);ctx.stroke();
+    ctx.lineWidth=1;});
+  // posts
+  posts.forEach((p,i)=>{
+    const [px2,py2]=postXY(i,SW);
+    const isCur=i===cursorPost,isAnch=i===anchorPost;
+    ctx.fillStyle=p.includes('+')?'#f87171':p.includes('−')?'#38bdf8':'#fbbf24';
+    ctx.strokeStyle='#0b040c';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(px2,py2,9,0,TAU);ctx.fill();ctx.stroke();ctx.lineWidth=1;
+    if(isAnch){ctx.strokeStyle='#e879f9';ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(px2,py2,15,0,TAU);ctx.stroke();ctx.lineWidth=1;}
+    if(isCur){ctx.strokeStyle='#fff';
+      ctx.beginPath();ctx.arc(px2,py2,13+2*Math.sin(now*6),0,TAU);ctx.stroke();}
+    ctx.fillStyle='#e7ecf5';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(p,px2,py2-18);ctx.textAlign='left';
+  });
+  // TEST button
+  testBtn={x:SW/2-60,y:H-86,w:120,h:38};
+  ctx.fillStyle='#e879f9';ctx.fillRect(testBtn.x,testBtn.y,testBtn.w,testBtn.h);
+  ctx.fillStyle='#16051a';ctx.font='900 16px Orbitron,monospace';ctx.textAlign='center';
+  ctx.fillText('TEST (T)',SW/2,testBtn.y+25);ctx.textAlign='left';
+  if(testMsg){ctx.fillStyle=testMsg.includes('!')?'#f87171':'#fbbf24';
+    ctx.font='12px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(testMsg,SW/2,H-100);ctx.textAlign='left';}
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('smoke strikes: '+smokes+'/2',SW/2,H-36);ctx.textAlign='left';
+}
+function scene23(SW,now){
+  // config bar
+  const fields=act===2?[['PINION',PINIONS[cfg.pi]+'t'],['GEAR',GEARS[cfg.gi]+'t'],['WHEEL',Math.round(WHEELS[cfg.wi]*2000)+'mm']]
+    :[['PINION',PINIONS[cfg.pi]+'t'],['GEAR',GEARS[cfg.gi]+'t'],['WHEEL',Math.round(WHEELS[cfg.wi]*2000)+'mm'],['CELLS',CELLS[cfg.ci].label.split(' ·')[0]],['DECO',cfg.deco+'/10']];
+  const fw=Math.min(150,(SW-60)/fields.length);
+  fields.forEach((f,i)=>{
+    const x=30+i*fw,sel2=i===selField;
+    ctx.fillStyle=sel2?'#e879f922':'#ffffff08';
+    ctx.fillRect(x,26,fw-10,56);
+    ctx.strokeStyle=sel2?'#e879f9':'#ffffff22';ctx.strokeRect(x,26,fw-10,56);
+    ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(f[0],x+(fw-10)/2,42);
+    ctx.fillStyle=sel2?'#e879f9':'#e7ecf5';ctx.font='700 15px Orbitron,monospace';
+    ctx.fillText(f[1],x+(fw-10)/2,68);ctx.textAlign='left';
+  });
+  const cc=carCalc(cfg);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('ratio '+fmt(cc.G,1)+':1 · top '+fmt(cc.vTop,1)+' m/s · force '+fmt(cc.fMax,1)+' N · mass '+Math.round(cc.m*1000)+' g',30,104);
+  // track strip
+  const ty=H*0.62,x0=40,x1=SW-40;
+  const dist=act===2?(lv.event==='endure'?16:lv.dist):lv.track.dist;
+  const X2=d=>x0+(x1-x0)*clamp(d/dist,0,1.02);
+  const ramp=act===2?(lv.ramp||0):(lv.track.ramp||0);
+  const rampAt=act===2?0:(lv.track.rampAt||0);
+  const Yat=d=>ramp>0&&d>rampAt?ty-(d-rampAt)*14*Math.tan(ramp*Math.PI/180)*3:ty;
+  ctx.strokeStyle='#6b7280';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(X2(0),ty);
+  for(let d=0;d<=dist;d+=dist/60)ctx.lineTo(X2(d),Yat(d));
+  ctx.stroke();ctx.lineWidth=1;
+  // meter marks
+  ctx.fillStyle='#ffffff44';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+  for(let d2=1;d2<=dist;d2++){ctx.fillRect(X2(d2)-0.5,Yat(d2)+4,1,6);
+    if(d2%2===0)ctx.fillText(d2+'',X2(d2),Yat(d2)+22);}
+  ctx.textAlign='left';
+  // finish flag
+  ctx.fillStyle='#e7ecf5';
+  const fxp=X2(act===2&&lv.event==='endure'?(lv.spec&&lv.spec.dist?lv.spec.dist:14):dist);
+  ctx.fillRect(fxp,Yat(dist)-44,2,44);
+  for(let r2=0;r2<3;r2++)for(let c2=0;c2<2;c2++){
+    ctx.fillStyle=(r2+c2)%2?'#e7ecf5':'#0b040c';
+    ctx.fillRect(fxp+2+c2*7,Yat(dist)-44+r2*7,7,7);}
+  // rivals (race day): ghosts at constant pace
+  if(act===3&&run){
+    lv.rivals.forEach((rv,i)=>{
+      const rx=clamp(run.tAnim/rv.t,0,1)*dist;
+      drawCar(X2(rx),Yat(rx)-10,0.7,'#6b7280',i);
+    });
+  }
+  // your car
+  let myD=0,myV=0;
+  if(run){
+    const res=run.kind==='commit'?run.phases[run.idx].res:run.res;
+    const tr=res.trace;
+    const k2=Math.min(tr.length-1,Math.floor(run.tAnim*20));
+    if(tr.length){myD=tr[k2].x;myV=tr[k2].v;}
+    if(run.kind==='commit'){
+      ctx.fillStyle='#fbbf24';ctx.font='700 13px Orbitron,monospace';ctx.textAlign='center';
+      ctx.fillText(run.phases[run.idx].label+' — spec '+run.phases[run.idx].spec,SW/2,ty-110);
+      ctx.textAlign='left';}
+  }
+  drawCar(X2(Math.min(myD,dist)),Yat(Math.min(myD,dist))-10,1,'#e879f9',-1);
+  if(run){
+    ctx.fillStyle='#fbbf24';ctx.font='11px "Share Tech Mono",monospace';
+    ctx.fillText('t '+fmt(run.tAnim,2)+' s · v '+fmt(myV,2)+' m/s · x '+fmt(myD,2)+' m',30,ty+44);
+  }else if(testMsg){
+    ctx.fillStyle='#fbbf24';ctx.font='11px "Share Tech Mono",monospace';
+    ctx.fillText(testMsg,30,ty+44);
+  }
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText(run?'running…':'SPACE to run',30,ty+62);
+}
+function drawCar(px,py,s,col,seed){
+  ctx.save();ctx.translate(px,py);ctx.scale(s,s);
+  ctx.fillStyle=col;ctx.strokeStyle='#0b040c';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.roundRect(-16,-10,32,10,3);ctx.fill();ctx.stroke();
+  if(seed<0&&cfg.deco>0){ // your decoration: a little spoiler + stripes
+    ctx.fillStyle='#fbbf24';
+    ctx.fillRect(-16,-14,4,4);
+    if(cfg.deco>4)ctx.fillRect(10,-14,6,4);
+    if(cfg.deco>7){ctx.fillStyle='#38bdf8';ctx.fillRect(-6,-13,8,3);}
+  }
+  const wr=(seed<0?WHEELS[cfg.wi]/0.0275:1)*4.5;
+  for(const wx of[-9,9]){
+    ctx.fillStyle='#1c1917';
+    ctx.beginPath();ctx.arc(wx,0,wr,0,TAU);ctx.fill();ctx.stroke();}
+  ctx.restore();ctx.lineWidth=1;
+}
+function drawHUD(SW){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  const left2=Math.max(0,lv.dur-attemptT);
+  ctx.fillStyle='#0008';ctx.fillRect(8,H-58,210,48);
+  ctx.fillStyle=left2<15?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+  ctx.fillText(Math.ceil(left2)+'s',16,H-38);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText('station clock',16,H-20);
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,H-58,230,48);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,H-38);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '🔧'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,H-20);
+  ctx.textAlign='left';
+}
+/* ================================================== the foreman's desk */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#100612';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#e879f933';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#e879f9';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('FOREMAN’S DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name.split('(')[0].trim():'',SW+148,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=H-top-2*gap-14;
+  if(act===1){drawChecklist(gx,top,gw,ch2);}
+  else {drawMotorCurve(gx,top,gw,ch2*0.52);drawBuildNotes(gx,top+ch2*0.52+gap,gw,ch2*0.48);}
+}
+function drawChecklist(gx,gy,gw,gh){
+  ctx.fillStyle='#180a1c';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE REAL BUILD — what this level rehearses',gx+8,gy+14);
+  const on=evalCircuit(true),off=evalCircuit(false);
+  const spins=!on.bad&&on.drives;
+  const items=[
+    ['Day 2: PhET circuit + soldering practice',true],
+    ['Build 10–12: battery → switch → motor loop',spins],
+    ['Build 13: switch in SERIES (controls motor)',spins&&!off.bad&&!off.drives],
+  ];
+  if((lv.cells||1)===2){
+    if(lv.need.series)items.push(['Build 14: second cell IN SERIES (3 V)',spins&&on.mode==='series']);
+    if(lv.need.parallel)items.push(['Day 2: parallel option (endurance)',spins&&on.mode==='parallel']);
+  }
+  if(lv.fault)items.push(['Day 7: find the short, free the switch',spins&&!off.drives]);
+  items.push(['No shorts — ever ('+(2-smokes)+' strike'+(2-smokes===1?'':'s')+' left)',smokes===0]);
+  let y=gy+38;
+  ctx.font='12px "Share Tech Mono",monospace';
+  for(const[label,done]of items){
+    ctx.fillStyle=done?'#34d399':'#57534e';
+    ctx.fillText((done?'☑':'☐')+' '+label,gx+10,y);y+=22;
+  }
+  y+=8;
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('posts: '+posts.join(' · '),gx+10,y);y+=18;
+  ctx.fillStyle='#57534e';
+  ctx.fillText('red = +, blue = −, gold = switch.',gx+10,y);y+=16;
+  ctx.fillText('current flows + → − through the motor.',gx+10,y);y+=16;
+  ctx.fillText('every wire here is a solder joint there.',gx+10,y);
+}
+function drawMotorCurve(gx,gy,gw,gh){
+  ctx.fillStyle='#180a1c';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('AT THE WHEEL — force vs speed for YOUR setup',gx+8,gy+14);
+  const cc=carCalc(cfg);
+  const fTrac=MU*cc.m*9.8;
+  const fStall=motorStall(CELLS[cfg.ci].V)*cc.G*ETA/cc.r;
+  const vMax=Math.max(cc.vTop*1.1,1),fScale=Math.max(fStall,fTrac)*1.15;
+  const X=v=>gx+10+(v/vMax)*(gw-20);
+  const Y=f=>gy+gh-14-clamp(f/fScale,0,1)*(gh-36);
+  // drive-force line (linear motor curve mapped to wheel)
+  ctx.strokeStyle='#e879f9';ctx.lineWidth=2;ctx.shadowColor='#e879f9';ctx.shadowBlur=6;
+  ctx.beginPath();ctx.moveTo(X(0),Y(fStall));ctx.lineTo(X(cc.vTop),Y(0));ctx.stroke();
+  ctx.shadowBlur=0;ctx.lineWidth=1;
+  // traction ceiling
+  ctx.strokeStyle='#f87171';ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(gx+10,Y(fTrac));ctx.lineTo(gx+gw-10,Y(fTrac));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#f87171';ctx.font='9px "Share Tech Mono",monospace';
+  ctx.fillText('grip limit μmg = '+fmt(fTrac,1)+' N',gx+12,Y(fTrac)-4);
+  // rolling resistance floor
+  ctx.strokeStyle='#8b96ad55';
+  ctx.beginPath();ctx.moveTo(gx+10,Y(0.06*cc.m*9.8));ctx.lineTo(gx+gw-10,Y(0.06*cc.m*9.8));ctx.stroke();
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText('top speed '+fmt(cc.vTop,1)+' m/s →',X(cc.vTop)-86,gy+gh-18);
+  ctx.fillStyle='#57534e';
+  ctx.fillText('bigger gear: line tilts UP-left. smaller: DOWN-right.',gx+10,gy+gh-4);
+}
+function drawBuildNotes(gx,gy,gw,gh){
+  ctx.fillStyle='#180a1c';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText(act===2?'DAY 3 NOTES — the wheel commit':'DAY 9 NOTES — race + judging',gx+8,gy+14);
+  const cc=carCalc(cfg);
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+36;
+  ctx.fillStyle='#e879f9';
+  ctx.fillText('G = '+GEARS[cfg.gi]+'/'+PINIONS[cfg.pi]+' = '+fmt(cc.G,2)+':1',gx+10,y);y+=20;
+  ctx.fillStyle='#fbbf24';
+  ctx.fillText('v_top = ω/G · r = '+fmt(cc.vTop,2)+' m/s',gx+10,y);y+=20;
+  ctx.fillStyle='#34d399';
+  ctx.fillText('F_wheel = τ·G·η/r = '+fmt(Math.min(motorStall(CELLS[cfg.ci].V)*cc.G*ETA/cc.r,MU*cc.m*9.8),2)+' N',gx+10,y);y+=20;
+  if(act===3){
+    ctx.fillStyle='#38bdf8';
+    ctx.fillText(CELLS[cfg.ci].label+' · charge ×'+CELLS[cfg.ci].cap,gx+10,y);y+=20;
+    ctx.fillStyle=cfg.deco>0?'#e879f9':'#57534e';
+    ctx.fillText('decoration '+cfg.deco+'/10 · +'+(cfg.deco*8)+' judging · +'+(cfg.deco*20)+' g',gx+10,y);y+=20;
+  }
+  y+=4;
+  ctx.fillStyle='#57534e';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('write your committed setup on the',gx+10,y);y+=16;
+  ctx.fillText('whiteboard — Monday’s car wants it.',gx+10,y);
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){
+    acc+=el;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+function bumpField(dir){
+  const f=act===2?['pi','gi','wi'][selField]:['pi','gi','wi','ci','deco'][selField];
+  if(f==='pi')cfg.pi=clamp(cfg.pi+dir,0,PINIONS.length-1);
+  if(f==='gi')cfg.gi=clamp(cfg.gi+dir,0,GEARS.length-1);
+  if(f==='wi')cfg.wi=clamp(cfg.wi+dir,0,WHEELS.length-1);
+  if(f==='ci')cfg.ci=clamp(cfg.ci+dir,0,CELLS.length-1);
+  if(f==='deco')cfg.deco=clamp(cfg.deco+dir,0,10);
+  beep(440+dir*60,.05,'square',.08);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(act===1){
+      if(e.code==='ArrowRight')cursorPost=(cursorPost+1)%posts.length;
+      if(e.code==='ArrowLeft')cursorPost=(cursorPost+posts.length-1)%posts.length;
+      if(e.code==='Space'){
+        if(anchorPost<0){anchorPost=cursorPost;beep(520,.06,'square',.1);}
+        else if(anchorPost===cursorPost){anchorPost=-1;beep(300,.06,'square',.08);}
+        else{
+          const a=Math.min(anchorPost,cursorPost),b=Math.max(anchorPost,cursorPost);
+          const i=wires.findIndex(w2=>w2[0]===a&&w2[1]===b);
+          if(i>=0){wires.splice(i,1);beep(260,.08,'square',.1);popup('CUT','#8b96ad',14);}
+          else if(wires.length>=9){popup('OUT OF WIRE','#f87171',16);}
+          else{wires.push([a,b]);beep(660,.08,'square',.12);}
+          anchorPost=-1;testMsg='';
+        }
+      }
+      if(e.code==='KeyO'){switchOn=!switchOn;beep(switchOn?600:340,.07,'square',.1);}
+      if(e.code==='KeyT')runTest();
+    }else{
+      const nf=act===2?3:5;
+      if(e.code==='ArrowRight')selField=(selField+1)%nf;
+      if(e.code==='ArrowLeft')selField=(selField+nf-1)%nf;
+      if(e.code==='ArrowUp')bumpField(1);
+      if(e.code==='ArrowDown')bumpField(-1);
+      if(e.code==='Space'&&!run)startRun();
+    }
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';setMotor(0);}
+  if(e.code==='KeyM'){muted=!muted;setMotor(0);}
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  if(state!=='play')return;
+  const {w:SW}=sceneRect();
+  if(act===1){
+    if(testBtn&&e.clientX>=testBtn.x&&e.clientX<=testBtn.x+testBtn.w&&
+       e.clientY>=testBtn.y&&e.clientY<=testBtn.y+testBtn.h){runTest();return;}
+    let best=-1,bd=1e9;
+    posts.forEach((p,i)=>{const [px2,py2]=postXY(i,SW);
+      const d=hyp(e.clientX-px2,e.clientY-py2);
+      if(d<bd){bd=d;best=i;}});
+    if(bd<40){
+      cursorPost=best;
+      if(anchorPost<0)anchorPost=best;
+      else if(anchorPost===best)anchorPost=-1;
+      else{
+        const a=Math.min(anchorPost,best),b=Math.max(anchorPost,best);
+        const i=wires.findIndex(w2=>w2[0]===a&&w2[1]===b);
+        if(i>=0)wires.splice(i,1);
+        else if(wires.length<9)wires.push([a,b]);
+        anchorPost=-1;testMsg='';
+        beep(660,.08,'square',.12);
+      }
+    }
+  }else{
+    // tap a config box to select; tap track to run
+    const fields=act===2?3:5;
+    const fw=Math.min(150,(SW-60)/fields);
+    if(e.clientY<92&&e.clientX>30&&e.clientX<30+fields*fw){
+      const i=Math.floor((e.clientX-30)/fw);
+      if(i===selField)bumpField(1);else selField=i;
+    }else if(!run)startRun();
+  }
+});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

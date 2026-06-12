@@ -6,7 +6,10 @@ import { supabaseAdmin } from '@/lib/supabase'
  * rather than arcade grinding: games are a small capped bonus, lessons/graded
  * work/mastery are the real paycheck. See docs/XP_ECONOMY_REVIEW.md.
  *
- *   lifetimeEarned = Σ_day  min(50, Σ_play min(25, gameScore/10))   // games: per-play & daily caps
+ *   lifetimeEarned = Σ_day  min(25, Σ_play min(25, gameScore/10))   // vocab games: per-play & daily caps
+ *                                                                   // (kept LOW — math-gym payouts are the
+ *                                                                   //  priority earner, cap 75/day, see
+ *                                                                   //  /api/arcade/payout)
  *                  + Σ (round(progress_percentage/4) + 5·video_questions_correct)  // lessons: ≤25 from progress
  *                  + Σ min(40, graded submission score)             // graded work, capped
  *                  + Σ math-literacy milestone grants               // mastery: best per-event paycheck
@@ -15,7 +18,7 @@ import { supabaseAdmin } from '@/lib/supabase'
  */
 
 const GAME_PER_PLAY_CAP = 25
-const GAME_PER_DAY_CAP = 50
+const GAME_PER_DAY_CAP = 25 // vocab kept low: math remediation (math gym, 75/day) is the priority earner
 const LESSON_PROGRESS_DIVISOR = 4   // progress_percentage (0–100) → 0–25
 const SUBMISSION_CAP = 40
 

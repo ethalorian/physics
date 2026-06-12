@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>REDLINE // a kinematics grand prix</title>
+<!--
+  REDLINE — a kinematics grand prix. Replacement bonus cabinet for Unit 1.
+  8-bit Excitebike blood: renders to a 224×240 virtual canvas blitted with
+  smoothing OFF, NES palette, square-wave audio. Single file, no deps.
+
+  The conceit that makes a motocross game a physics machine: the THROTTLE IS
+  ACCELERATION (a = +6 m/s², posted), the overheat gauge makes acceleration a
+  budgeted resource, and the track itself demands kinematics:
+
+    GRAPH GATES — zones that only open if you ride a posted v–t shape:
+      CRUISE band (hold v in [lo,hi]), ACCEL zone (gain ≥ Δv), STOP box
+      (reach v ≈ 0 inside), SPEED TRAP (cross under the limit).
+    JUMPS — every gap is a projectile. Ramp angle 30°, desert spec g = 10:
+      range = v²·sin60°/g, so the sign can post the minimum takeoff speed
+      and the student can check it on the speedometer BEFORE the lip.
+
+  Fail states (no soft-locks): every level has a hard DNF clock (2.5× par);
+  6 crashes in one level = MECHANICAL; 3 bikes per run, then GAME OVER.
+
+  ACT I   QUALIFYING  — reading v: cruise bands, traps, stop boxes
+  ACT II  THE HEAT    — acceleration: gain zones, braking distance, overheat
+  ACT III AIRBORNE GP — projectiles: gaps, landing windows, the finale
+
+  Bridge protocol: identical to every other cabinet (coinRequest / score).
+  Practice mode after 900 ms without a bridge reply.
+-->
+<style>
+  @font-face {
+    font-family: 'PressStart';
+    src: local('Press Start 2P');
+  }
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f8e8c8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #04060d; overflow: hidden;
+    font-family: 'Press Start 2P', 'PressStart', 'Courier New', monospace;
+    -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+  #wrap { display: flex; height: 100%; align-items: stretch; justify-content: center; gap: 10px; padding: 10px; }
+  #stage { position: relative; flex: 0 1 auto; display: flex; align-items: center; justify-content: center; }
+  #game { image-rendering: pixelated; image-rendering: crisp-edges; background: #000;
+    border: 4px solid #2a2a3a; box-shadow: 0 0 0 4px #101018, 0 0 44px rgba(248,184,0,.12); }
+  #panel { width: 300px; flex: 0 0 300px; background: #0a0c14; border: 4px solid #2a2a3a;
+    box-shadow: 0 0 0 4px #101018; padding: 12px; display: flex; flex-direction: column; gap: 10px; color: #cdd3e0; }
+  #panel h3 { font-size: 9px; letter-spacing: 2px; color: #f8b800; }
+  #panel .sub { font-size: 7px; line-height: 1.8; color: #8a93a8; }
+  #vtcanvas { width: 100%; image-rendering: pixelated; background: #060810; border: 2px solid #222433; }
+  #reqcard { border: 2px solid #f8b800; background: #14100a; padding: 8px; font-size: 7px; line-height: 1.9; color: #fce8b0; min-height: 86px; }
+  #reqcard .big { font-size: 9px; color: #f8b800; }
+  #reqcard .eq { color: #80d010; }
+  #heatrow { display: flex; align-items: center; gap: 8px; font-size: 7px; }
+  #heatbar { flex: 1; height: 12px; border: 2px solid #222433; background: #060810; position: relative; }
+  #heatfill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #80d010; }
+  #parrow { font-size: 7px; line-height: 1.9; color: #8a93a8; }
+  /* full-screen overlays drawn in-canvas; DOM only for touch buttons */
+  #touch { position: absolute; inset: 0; display: none; }
+  #touch .tz { position: absolute; bottom: 0; top: 0; width: 50%; }
+  #tBrake { left: 0; } #tGas { right: 0; }
+  .scanlines::after { content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); }
+  @media (max-width: 760px) {
+    #wrap { flex-direction: column; align-items: center; overflow-y: auto; }
+    #panel { width: 100%; max-width: 460px; flex: 0 0 auto; }
+    #touch { display: block; }
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage" class="scanlines">
+    <canvas id="game"></canvas>
+    <div id="touch">
+      <div class="tz" id="tBrake"></div>
+      <div class="tz" id="tGas"></div>
+    </div>
+  </div>
+  <aside id="panel">
+    <h3>▣ PIT WALL</h3>
+    <canvas id="vtcanvas" width="276" height="150"></canvas>
+    <div class="sub" id="vtlabel">v–t TELEMETRY — your ride draws the graph. Shaded stripe = the band the track demands.</div>
+    <div id="heatrow"><span>HEAT</span><div id="heatbar"><div id="heatfill"></div></div><span id="heatpct">0%</span></div>
+    <div id="reqcard">INSERT COIN TO QUALIFY</div>
+    <div id="parrow">—</div>
+  </aside>
+</div>
+
+<script>
+'use strict';
+/* ============================================================ *
+ *  0. CONSTANTS, PALETTE, CANVAS PIPELINE
+ * ============================================================ */
+const VW = 224, VH = 240;            // virtual NES canvas
+const PXM = 5;                       // pixels per meter (44.8 m visible)
+const GY = 178;                      // ground line (virtual px)
+const BIKE_SX = 56;                  // bike's fixed screen x (virtual px)
+
+// physics — these numbers are POSTED in-game; do not change casually
+const G = 10;                        // desert spec, printed on signage
+const A_GAS = 6;                     // throttle acceleration (m/s²)
+const A_BRK = -9;                    // brake (m/s²)
+const A_COAST = -1.2;                // rolling resistance
+const VMAX = 26;                     // m/s
+const RAMP_DEG = 30;                 // every ramp
+const SIN2T = Math.sin(2 * RAMP_DEG * Math.PI / 180);   // sin60° ≈ 0.866
+const COST = Math.cos(RAMP_DEG * Math.PI / 180);
+const SINT = Math.sin(RAMP_DEG * Math.PI / 180);
+const HEAT_UP = 16, HEAT_DN = 13;    // %/s while throttling / not
+const STALL_T = 2.6;                 // overheat stall seconds
+const STALL_HEAT = 30;               // heat after the stall clears
+const STOP_V = 0.4;                  // "stopped" threshold
+const CRUISE_GRACE = 0.7;            // seconds allowed out-of-band per zone
+const DNF_MULT = 2.5;                // hard clock = par × this
+const MAX_CRASH = 6;                 // crashes per level before MECHANICAL
+
+function vminFor(gap) { return Math.sqrt(G * gap / SIN2T); }  // min takeoff v
+
+const PAL = {
+  sky1: '#7c3800', sky2: '#fc9838', sun: '#f8d878',
+  mesa: '#a04000', mesaD: '#702800', dune: '#e0a044', duneD: '#c08030',
+  track: '#3c2410', trackLight: '#50301a', edge: '#f8e0a0',
+  ink: '#0a0a0a', white: '#fcfcfc', gold: '#f8b800', red: '#f83800',
+  green: '#80d010', blue: '#3cbcfc', grayD: '#2a2a3a', flag: '#fcfcfc',
+  bike: '#f83800', bikeD: '#a81000', rider: '#3cbcfc', tire: '#181818',
+  pit: '#100800', banner: '#0058f8',
+};
+
+const cv = document.getElementById('game');
+const cx = cv.getContext('2d');
+const buf = document.createElement('canvas');
+buf.width = VW; buf.height = VH;
+const bx = buf.getContext('2d');
+bx.imageSmoothingEnabled = false;
+
+let SCALE = 2;
+function fit() {
+  const stage = document.getElementById('stage');
+  const aw = Math.min(window.innerWidth - (window.innerWidth > 760 ? 360 : 40), 900);
+  const ah = window.innerHeight - 40;
+  SCALE = Math.max(1, Math.floor(Math.min(aw / VW, ah / VH)));
+  cv.width = VW * SCALE; cv.height = VH * SCALE;
+  cv.style.width = (VW * SCALE) + 'px'; cv.style.height = (VH * SCALE) + 'px';
+  cx.imageSmoothingEnabled = false;
+}
+window.addEventListener('resize', fit);
+fit();
+
+/* ============================================================ *
+ *  1. ARCADE BRIDGE (identical contract to every other cabinet)
+ * ============================================================ */
+const ARCADE = {
+  playId: null, ranked: false, pending: false, practice: false,
+  requestCoin() {
+    if (this.pending) return;
+    this.pending = true; this.practice = false; this.playId = null; this.ranked = false;
+    try { window.parent.postMessage({ type: 'arcade:coinRequest', source: 'redline-arcade' }, '*'); } catch (e) {}
+    setTimeout(() => {
+      if (this.pending) { this.pending = false; this.practice = true; onCoinResult(true); }
+    }, 900);
+  },
+  postScore(score, act, final, stats) {
+    if (!this.ranked || !this.playId) return;
+    try {
+      window.parent.postMessage({ type: 'arcade:score', source: 'redline-arcade',
+        playId: this.playId, score: Math.round(score), act, final: !!final, stats: stats || undefined }, '*');
+    } catch (e) {}
+  },
+};
+window.addEventListener('message', (ev) => {
+  const d = ev && ev.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'arcade:coinAccepted') {
+    ARCADE.pending = false; ARCADE.playId = d.playId || null; ARCADE.ranked = !!d.playId;
+    ARCADE.practice = false; onCoinResult(true);
+  } else if (d.type === 'arcade:coinDenied') {
+    ARCADE.pending = false; ARCADE.practice = false; onCoinResult(false);
+  }
+});
+
+/* ============================================================ *
+ *  2. AUDIO — square/saw synth, engine pitch ∝ v
+ * ============================================================ */
+const AU = {
+  ctx: null, engineOsc: null, engineGain: null, growlOsc: null, growlGain: null,
+  ensure() {
+    if (this.ctx) return;
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+    const c = this.ctx;
+    this.engineOsc = c.createOscillator(); this.engineOsc.type = 'square';
+    this.engineGain = c.createGain(); this.engineGain.gain.value = 0;
+    this.engineOsc.connect(this.engineGain); this.engineGain.connect(c.destination);
+    this.engineOsc.start();
+    this.growlOsc = c.createOscillator(); this.growlOsc.type = 'sawtooth';
+    this.growlGain = c.createGain(); this.growlGain.gain.value = 0;
+    this.growlOsc.connect(this.growlGain); this.growlGain.connect(c.destination);
+    this.growlOsc.start();
+  },
+  engine(v, throttling, stalled) {
+    if (!this.ctx) return;
+    const on = state.screen === 'play';
+    this.engineGain.gain.value = on ? (stalled ? 0.008 : 0.025) : 0;
+    this.growlGain.gain.value = (on && throttling && !stalled) ? 0.018 : 0;
+    this.engineOsc.frequency.value = 50 + v * 7 + (stalled ? -20 : 0);
+    this.growlOsc.frequency.value = 90 + v * 11;
+  },
+  blip(f, dur, type, vol) {
+    if (!this.ctx) return;
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'square'; o.frequency.value = f;
+    g.gain.setValueAtTime(vol || 0.05, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + (dur || 0.12));
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + (dur || 0.12) + 0.02);
+  },
+  ding() { this.blip(880, 0.1); this.blip(1320, 0.18); },
+  gate() { this.blip(660, 0.08); setTimeout(() => this.blip(990, 0.14), 70); },
+  crash() { this.blip(110, 0.4, 'sawtooth', 0.09); this.blip(70, 0.5, 'square', 0.07); },
+  alarm() { this.blip(220, 0.3, 'square', 0.06); },
+  fanfare() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.blip(f, 0.16), i * 110)); },
+  sad() { [392, 330, 262, 196].forEach((f, i) => setTimeout(() => this.blip(f, 0.2, 'square', 0.05), i * 140)); },
+};
+
+/* ============================================================ *
+ *  3. COURSE DATA — twelve levels, three acts
+ *     Feature grammar (all distances in meters from the start line):
+ *       cruise {x0,x1,lo,hi}   hold lo ≤ v ≤ hi through the zone
+ *       trap   {x,max}         cross the line at v ≤ max
+ *       stop   {x0,x1}         reach v < 0.4 inside the box
+ *       accel  {x0,x1,gain}    leave the zone ≥ gain m/s faster than you entered
+ *       jump   {x,gap,land?}   ramp lip at x; clear gap; optional landing window
+ *     Every gate that fails closes a barrier → crash → retry from the zone.
+ *     BEATABILITY margins are noted per level (audited, not vibes).
+ * ============================================================ */
+const ACT_META = {
+  1: { name: 'QUALIFYING', sub: 'READ THE SPEEDOMETER. RIDE THE BAND.',
+       brief: ['THE TRACK POSTS A v-t SHAPE.', 'YOUR THROTTLE: a = +6 m/s2', 'YOUR BRAKE:    a = -9 m/s2', 'RIDE THE SHAPE OR THE GATE', 'STAYS CLOSED.'] },
+  2: { name: 'THE HEAT', sub: 'ACCELERATION IS A BUDGET. SPEND IT WELL.',
+       brief: ['FULL THROTTLE BUILDS HEAT:', '+16%/s ON, -13%/s OFF.', 'REDLINE THE GAUGE = 2.6s STALL.', 'GAIN ZONES DEMAND Dv.', 'STOP BOXES DEMAND v2=2ad.'] },
+  3: { name: 'AIRBORNE GP', sub: 'EVERY GAP IS A PROJECTILE.',
+       brief: ['RAMPS LAUNCH AT 30 DEG.', 'DESERT SPEC: g = 10 m/s2.', 'RANGE = v2 sin60 / g.', 'THE SIGN POSTS THE MINIMUM.', 'CHECK YOUR SPEEDO AT THE LIP.'] },
+};
+
+const LEVELS = {
+  1: [
+    // margins: bands ≥4 m/s wide; traps ≥4 above band tops; boxes reachable from band speeds
+    { name: 'PRACTICE OVAL', len: 240, par: 24, feats: [
+      { t: 'cruise', x0: 60, x1: 140, lo: 8, hi: 14 },
+      { t: 'trap', x: 190, max: 18 },
+    ]},
+    { name: 'PADDOCK RUN', len: 300, par: 32, feats: [
+      { t: 'stop', x0: 120, x1: 136 },
+      { t: 'cruise', x0: 180, x1: 260, lo: 10, hi: 16 },
+    ]},
+    { name: 'SCRUTINEERING', len: 320, par: 36, feats: [
+      { t: 'trap', x: 80, max: 12 },
+      { t: 'cruise', x0: 120, x1: 220, lo: 14, hi: 18 },
+      { t: 'stop', x0: 260, x1: 276 },
+    ]},
+    { name: 'POLE POSITION', len: 360, par: 40, feats: [
+      { t: 'trap', x: 60, max: 14 },
+      { t: 'cruise', x0: 100, x1: 200, lo: 12, hi: 15 },
+      { t: 'trap', x: 250, max: 20 },
+      { t: 'stop', x0: 310, x1: 326 },
+    ]},
+  ],
+  2: [
+    // margins: gain zones sized ≥2× the minimum distance at a=+6 from band entry speeds
+    { name: 'DYNO PULL', len: 300, par: 26, feats: [
+      { t: 'accel', x0: 40, x1: 120, gain: 10 },
+      { t: 'trap', x: 160, max: 22 },
+      { t: 'stop', x0: 220, x1: 240 },
+    ]},
+    { name: 'DRAG STRIP', len: 260, par: 16, feats: [
+      { t: 'trap', x: 250, max: 26 },
+    ]},
+    { name: 'HEAT SOAK', len: 340, par: 30, feats: [
+      { t: 'accel', x0: 30, x1: 110, gain: 8 },
+      { t: 'cruise', x0: 150, x1: 250, lo: 18, hi: 22 },
+      { t: 'stop', x0: 290, x1: 310 },
+    ]},
+    { name: 'SIGN FLIP', len: 380, par: 36, feats: [
+      { t: 'accel', x0: 30, x1: 130, gain: 12 },
+      { t: 'trap', x: 200, max: 14 },
+      { t: 'accel', x0: 240, x1: 320, gain: 8 },
+      { t: 'stop', x0: 350, x1: 368 },
+    ]},
+  ],
+  3: [
+    // margins: VMAX=26 vs largest minimum 17.4 (gap 26) → 1.49×; windows ≥2.3 m/s wide
+    { name: 'FIRST AIR', len: 300, par: 26, feats: [
+      { t: 'jump', x: 140, gap: 10 },
+      { t: 'jump', x: 240, gap: 14 },
+    ]},
+    { name: 'TABLE TOP', len: 340, par: 32, feats: [
+      { t: 'trap', x: 60, max: 16 },
+      { t: 'jump', x: 140, gap: 18 },
+      { t: 'jump', x: 260, gap: 12, land: 8 },
+    ]},
+    { name: 'CANYON DOUBLES', len: 380, par: 36, feats: [
+      { t: 'jump', x: 100, gap: 22 },
+      { t: 'stop', x0: 200, x1: 220 },
+      { t: 'jump', x: 300, gap: 16, land: 6 },
+    ]},
+    { name: 'THE GRAND PRIX', len: 440, par: 46, feats: [
+      { t: 'cruise', x0: 30, x1: 100, lo: 12, hi: 16 },
+      { t: 'accel', x0: 130, x1: 210, gain: 8 },
+      { t: 'trap', x: 250, max: 20 },
+      { t: 'jump', x: 320, gap: 26 },
+      { t: 'jump', x: 410, gap: 12, land: 8 },
+    ]},
+  ],
+};
+
+/* ============================================================ *
+ *  4. QUESTION BANKS — +750 flag questions between levels,
+ *     +1000 gold CROSSOVER at each act finale (DESCENT, the sibling
+ *     kinematics cabinet, supplies the spaced-review hooks).
+ * ============================================================ */
+function bank1() { // constant velocity
+  const v = 8 + 2 * ((Math.random() * 5) | 0);          // 8..16
+  const t = 3 + ((Math.random() * 5) | 0);              // 3..7
+  const pick = (Math.random() * 3) | 0;
+  if (pick === 0) {
+    return { q: 'YOU HELD ' + v + ' m/s THROUGH THE\nCRUISE ZONE FOR ' + t + ' s.\nHOW FAR DID YOU TRAVEL?',
+      c: [(v * t) + ' m', (v + t) + ' m', (v * t * 2) + ' m'], a: 0,
+      why: 'CONSTANT v: d = vt = ' + v + 'x' + t + ' = ' + (v * t) + ' m' };
+  }
+  if (pick === 1) {
+    const d = v * t;
+    return { q: 'A RIVAL COVERS ' + d + ' m IN ' + t + ' s\nAT CONSTANT SPEED.\nHOW FAST IS THE RIVAL?',
+      c: [v + ' m/s', (v * 2) + ' m/s', (d - t) + ' m/s'], a: 0,
+      why: 'v = d/t = ' + d + '/' + t + ' = ' + v + ' m/s' };
+  }
+  return { q: 'ON A v-t GRAPH, A FLAT\nHORIZONTAL LINE MEANS...',
+    c: ['CONSTANT VELOCITY', 'STOPPED', 'CONSTANT ACCELERATION'], a: 0,
+    why: 'FLAT v-t LINE: v UNCHANGING.\nSTOPPED IS FLAT AT ZERO.' };
+}
+function bank2() { // acceleration
+  const pick = (Math.random() * 3) | 0;
+  if (pick === 0) {
+    const t = 2 + ((Math.random() * 3) | 0);            // 2..4
+    return { q: 'FULL THROTTLE (a = +6 m/s2)\nFROM REST FOR ' + t + ' s.\nFINAL SPEED?',
+      c: [(6 * t) + ' m/s', (6 + t) + ' m/s', (3 * t) + ' m/s'], a: 0,
+      why: 'v = v0 + at = 0 + 6x' + t + ' = ' + (6 * t) + ' m/s' };
+  }
+  if (pick === 1) {
+    const v = 12 + 6 * ((Math.random() * 2) | 0);       // 12 or 18
+    const d = (v * v) / 18;                              // v²/(2·9), exact for these v
+    return { q: 'BRAKING AT a = -9 m/s2 FROM\n' + v + ' m/s. STOPPING DISTANCE?\n(v2 = 2ad)',
+      c: [d + ' m', Math.round(d / 2) + ' m', (d * 2) + ' m'], a: 0,
+      why: 'd = v2/(2a) = ' + (v * v) + '/18 = ' + d + ' m' };
+  }
+  return { q: 'ON A v-t GRAPH, THE SLOPE\nOF THE LINE IS...',
+    c: ['ACCELERATION', 'DISTANCE', 'POSITION'], a: 0,
+    why: 'SLOPE = Dv/Dt = a.\nAREA UNDER IT = DISTANCE.' };
+}
+function bank3() { // projectiles off the 30° ramp, g = 10
+  const pick = (Math.random() * 3) | 0;
+  if (pick === 0) {
+    const v = 10 + 5 * ((Math.random() * 2) | 0);       // 10 or 15
+    const vy = v * 0.5;                                  // sin30 = 0.5 exactly
+    return { q: 'YOU LEAVE THE 30 DEG RAMP\nAT ' + v + ' m/s. VERTICAL LAUNCH\nSPEED? (sin30 = 0.5)',
+      c: [vy + ' m/s', v + ' m/s', (v * 2) + ' m/s'], a: 0,
+      why: 'vy = v sin30 = ' + v + 'x0.5 = ' + vy + ' m/s' };
+  }
+  if (pick === 1) {
+    const vy = 5 + 5 * ((Math.random() * 2) | 0);       // 5 or 10
+    const t = (2 * vy) / G;
+    return { q: 'LAUNCH WITH vy = ' + vy + ' m/s,\ng = 10. TOTAL AIR TIME?\n(t = 2vy/g)',
+      c: [t + ' s', (vy) + ' s', (t * 2) + ' s'], a: 0,
+      why: 't = 2vy/g = ' + (2 * vy) + '/10 = ' + t + ' s' };
+  }
+  return { q: 'AT THE TOP OF THE JUMP ARC,\nYOUR VERTICAL VELOCITY IS...',
+    c: ['ZERO', 'MAXIMUM', 'EQUAL TO g'], a: 0,
+    why: 'APEX: vy = 0. ax STAYS 0,\nay STAYS -g THE WHOLE FLIGHT.' };
+}
+const CROSSOVERS = [
+  { q: 'CROSSOVER // DESCENT:\nYOUR SHIP FALLS WITH NO BURN.\nITS v-t GRAPH IS...',
+    c: ['A STRAIGHT SLOPING LINE', 'A FLAT LINE', 'A CURVE THAT LEVELS OFF'], a: 0,
+    why: 'CONSTANT a = CONSTANT SLOPE.\nSAME LINE YOUR ACCEL ZONES\nDEMAND HERE.' },
+  { q: 'CROSSOVER // DESCENT:\nTHE NO-BURN GHOST PREDICTED\nYOUR IMPACT POINT USING...',
+    c: ['x = x0 + v0t + at2/2', 'F = ma', 'p = mv'], a: 0,
+    why: 'SAME EQUATION AS A JUMP HERE.\nPREDICTION = KINEMATICS.' },
+  { q: 'CROSSOVER // DESCENT:\nHOVERING AT CONSTANT HEIGHT,\nYOUR ACCELERATION IS...',
+    c: ['ZERO', 'g DOWNWARD', '6 m/s2 UP'], a: 0,
+    why: 'v CONSTANT (ZERO) MEANS a = 0.\nCRUISE BAND, VERTICAL EDITION.' },
+];
+const BANKS = { 1: bank1, 2: bank2, 3: bank3 };
+/* ============================================================ *
+ *  5. STATE, PROGRESSION, SCREEN FLOW
+ *     localStorage: redline2_prog (highest act unlocked), redline2_hi
+ *     Screens: attract → acts → brief → play ⇄ question → clear →
+ *              ... → gameover.  Teacher override code: FNET.
+ * ============================================================ */
+const store = {
+  get prog() { try { return Math.max(1, Math.min(3, parseInt(localStorage.getItem('redline2_prog') || '1', 10) || 1)); } catch (e) { return 1; } },
+  set prog(v) { try { localStorage.setItem('redline2_prog', String(v)); } catch (e) {} },
+  get hi() { try { return parseInt(localStorage.getItem('redline2_hi') || '0', 10) || 0; } catch (e) { return 0; } },
+  set hi(v) { try { localStorage.setItem('redline2_hi', String(v)); } catch (e) {} },
+};
+
+const state = {
+  screen: 'attract',          // attract | acts | brief | play | question | clear | gameover
+  act: 1, level: 0,           // level: 0..3 within the act
+  score: 0, bikes: 3,
+  coinFlash: 0, practice: false,
+  menuIdx: 0, override: '',   // typed letters toward FNET
+  // per-level run
+  bike: null, course: null,
+  t: 0, par: 0, crashes: 0,
+  flash: null, flashT: 0,     // big center text
+  question: null, qPick: -1, qResolved: false, qIsCross: false,
+  clearInfo: null,
+  // telemetry ring for the v-t panel (24 s window @ 10 Hz)
+  trace: [], traceClock: 0,
+  stats: { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0 },
+};
+
+function freshBike() {
+  return { x: 0, v: 0, y: 0, vy: 0, air: false,
+    heat: 0, stalled: 0,            // stalled = seconds remaining
+    gas: false, brake: false,
+    lean: 0, dead: 0,               // dead = crash anim timer
+    cpX: 0,                         // respawn x
+    mech: false, jumpRef: null };   // out-of-spares flag, active jump
+}
+
+function buildCourse(act, level) {
+  const def = LEVELS[act][level];
+  const feats = def.feats.map((f) => Object.assign({}, f, {
+    state: 'pending',   // pending | active | passed | failed
+    vIn: 0, offBand: 0, stopped: false, firstTry: true,
+  }));
+  return { def, feats, len: def.len };
+}
+
+function startLevel() {
+  state.course = buildCourse(state.act, state.level);
+  state.bike = freshBike();
+  state.t = 0; state.par = state.course.def.par;
+  state.crashes = 0;
+  state.trace = []; state.traceClock = 0;
+  state.flash = 'GO!'; state.flashT = 1.1;
+  state.screen = 'play';
+  AU.ding();
+}
+
+function onCoinResult(ok) {
+  if (!ok) { state.screen = 'attract'; state.flash = 'COIN DENIED'; state.flashT = 1.5; return; }
+  state.practice = ARCADE.practice;
+  state.score = 0; state.bikes = 3;
+  state.stats = { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0 };
+  state.screen = 'acts'; state.menuIdx = 0;
+  AU.ding();
+}
+
+function actUnlocked(a) { return a <= store.prog; }
+
+function chooseAct(a) {
+  if (!actUnlocked(a)) { AU.alarm(); return; }
+  state.act = a; state.level = 0;
+  state.screen = 'brief';
+  AU.gate();
+}
+
+/* ---- level end paths ---- */
+function levelCleared() {
+  const c = state.course, b = state.bike;
+  const gates = c.feats.length;
+  const perfect = c.feats.filter((f) => f.firstTry && f.state === 'passed').length;
+  const timeBonus = Math.max(0, Math.round((state.par * 1.6 - state.t) * 120));
+  const noCrash = state.crashes === 0 ? 1000 : 0;
+  const gained = 1500 + perfect * 400 + timeBonus + noCrash;
+  state.score += gained;
+  state.stats.gates += gates; state.stats.perfectGates += perfect;
+  state.clearInfo = { name: c.def.name, time: state.t, par: state.par,
+    perfect, gates, timeBonus, noCrash, gained };
+  ARCADE.postScore(state.score, state.act, false);
+  state.screen = 'clear';
+  AU.fanfare();
+  void b; // (b referenced for clarity; nothing else needed)
+}
+
+function nextAfterClear() {
+  // a flag question after every level; the act finale's question is a gold crossover
+  const finale = state.level === 3;
+  state.qIsCross = finale;
+  state.question = finale
+    ? CROSSOVERS[(Math.random() * CROSSOVERS.length) | 0]
+    : BANKS[state.act]();
+  state.qPick = -1; state.qResolved = false;
+  state.screen = 'question';
+}
+
+function afterQuestion() {
+  if (state.level < 3) {
+    state.level += 1;
+    startLevel();
+  } else {
+    // act complete
+    if (state.act < 3 && store.prog < state.act + 1) store.prog = state.act + 1;
+    if (state.act < 3) {
+      state.flash = 'ACT ' + state.act + ' COMPLETE'; state.flashT = 2;
+      state.act += 1; state.level = 0;
+      state.screen = 'brief';
+      AU.fanfare();
+    } else {
+      endRun('CHAMPION OF THE DESERT', true);
+    }
+  }
+}
+
+function loseBike(reason) {
+  state.bikes -= 1;
+  AU.sad();
+  if (state.bikes <= 0) {
+    endRun(reason, false);
+  } else {
+    startLevel();   // retry the same level on a fresh bike
+    // set the flash AFTER startLevel so the reason isn't overwritten by GO!
+    state.flash = reason + ' // BIKES LEFT: ' + state.bikes; state.flashT = 2.4;
+  }
+}
+
+function endRun(reason, champion) {
+  if (state.score > store.hi) store.hi = state.score;
+  state.clearInfo = { reason, champion };
+  ARCADE.postScore(state.score, state.act, true, {
+    right: state.stats.right, wrong: state.stats.wrong,
+    solved: state.stats.perfectGates, bestStreak: 0, startLv: state.act, mode: 'redline',
+  });
+  state.screen = 'gameover';
+}
+
+/* ---- question answering ---- */
+function answerQuestion(i) {
+  if (state.qResolved) return;
+  state.qPick = i; state.qResolved = true;
+  if (i === state.question.a) {
+    const pts = state.qIsCross ? 1000 : 750;
+    state.score += pts; state.stats.right += 1;
+    AU.fanfare();
+  } else {
+    state.stats.wrong += 1;
+    AU.sad();
+  }
+  setTimeout(afterQuestion, 2600);
+}
+
+/* ---- menu / global key handling ---- */
+function menuKey(k) {
+  if (state.screen === 'attract') {
+    if (k === 'Enter' || k === ' ') { AU.ensure(); ARCADE.requestCoin(); }
+    return;
+  }
+  if (state.screen === 'acts') {
+    // teacher override: type F N E T
+    if (/^[a-zA-Z]$/.test(k)) {
+      state.override = (state.override + k.toUpperCase()).slice(-4);
+      if (state.override === 'FNET') { store.prog = 3; state.flash = 'MARSHAL OVERRIDE'; state.flashT = 1.4; AU.fanfare(); }
+    }
+    if (k === 'ArrowUp') { state.menuIdx = (state.menuIdx + 2) % 3; AU.blip(440, 0.05); }
+    if (k === 'ArrowDown') { state.menuIdx = (state.menuIdx + 1) % 3; AU.blip(440, 0.05); }
+    if (k === 'Enter' || k === ' ') chooseAct(state.menuIdx + 1);
+    return;
+  }
+  if (state.screen === 'brief') {
+    if (k === 'Enter' || k === ' ') startLevel();
+    return;
+  }
+  if (state.screen === 'clear') {
+    if (k === 'Enter' || k === ' ') nextAfterClear();
+    return;
+  }
+  if (state.screen === 'question') {
+    if (!state.qResolved && (k === '1' || k === '2' || k === '3')) answerQuestion(parseInt(k, 10) - 1);
+    return;
+  }
+  if (state.screen === 'gameover') {
+    if (k === 'Enter' || k === ' ') { state.screen = 'attract'; }
+    return;
+  }
+}
+/* ============================================================ *
+ *  6. SIMULATION — the physics is the game
+ * ============================================================ */
+function crashBike(cpX, label) {
+  const b = state.bike;
+  if (b.dead > 0) return;
+  b.dead = 1.4; b.cpX = Math.max(0, cpX);
+  state.crashes += 1; state.stats.crashes += 1;
+  state.flash = label || 'CRASH'; state.flashT = 1.4;
+  AU.crash();
+  if (state.crashes >= MAX_CRASH) {
+    // out of spares — handled after the anim so the wipe is visible
+    b.mech = true;
+  }
+}
+
+function respawn() {
+  const b = state.bike;
+  if (b.mech) { b.mech = false; loseBike('MECHANICAL'); return; }
+  b.x = b.cpX; b.v = 0; b.vy = 0; b.y = 0; b.air = false;
+  b.heat = 0; b.stalled = 0; b.lean = 0;
+}
+
+function resetFeature(f) {
+  f.state = 'pending'; f.offBand = 0; f.stopped = false; f.vIn = 0; f.firstTry = false;
+}
+
+/** The feature the PIT WALL card should explain: active one, else next ahead. */
+function currentFeature() {
+  const c = state.course; if (!c) return null;
+  const x = state.bike ? state.bike.x : 0;
+  for (const f of c.feats) {
+    if (f.state === 'passed') continue;
+    const start = (f.t === 'trap' || f.t === 'jump') ? f.x : f.x0;
+    const end = (f.t === 'trap') ? f.x : (f.t === 'jump') ? f.x + f.gap : f.x1;
+    if (x <= end + 2) return f;
+    void start;
+  }
+  return null;
+}
+
+function simStep(dt) {
+  const b = state.bike, c = state.course;
+  state.t += dt;
+  if (state.flashT > 0) state.flashT -= dt;
+
+  // hard clock — the guaranteed level end
+  if (state.t > state.par * DNF_MULT) { loseBike('DNF — FLAGGED OFF'); return; }
+
+  // crash animation owns the bike
+  if (b.dead > 0) {
+    b.dead -= dt;
+    if (b.dead <= 0) respawn();
+    return;
+  }
+
+  // ---- heat & stall ----
+  if (b.stalled > 0) {
+    b.stalled -= dt;
+    if (b.stalled <= 0) { b.heat = STALL_HEAT; state.flash = 'BACK ON'; state.flashT = 0.8; }
+  }
+  const throttling = b.gas && b.stalled <= 0 && !b.air;
+  if (throttling) {
+    b.heat = Math.min(100, b.heat + HEAT_UP * dt);
+    if (b.heat >= 100) { b.stalled = STALL_T; state.flash = 'OVERHEAT! 2.6s STALL'; state.flashT = 1.6; AU.alarm(); }
+  } else {
+    b.heat = Math.max(0, b.heat - HEAT_DN * dt);
+  }
+
+  // ---- motion ----
+  if (b.air) {
+    b.x += b.v * dt;          // v holds vx while airborne
+    b.y += b.vy * dt;
+    b.vy -= G * dt;
+    b.lean = Math.atan2(b.vy, b.v) * 0.5;
+    if (b.y <= 0 && b.vy < 0) landBike();
+  } else {
+    let a = A_COAST;
+    if (throttling) a = A_GAS;
+    else if (b.brake) a = A_BRK;
+    b.v = Math.max(0, Math.min(VMAX, b.v + a * dt));
+    b.x += b.v * dt;
+    const target = throttling ? -0.30 : (b.brake && b.v > 1 ? 0.18 : 0);
+    b.lean += (target - b.lean) * Math.min(1, dt * 8);
+  }
+
+  // ---- features ----
+  for (const f of c.feats) {
+    if (f.state === 'passed') continue;
+
+    if (f.t === 'jump') {
+      if (!b.air && f.state !== 'failed' && b.x >= f.x && b.x < f.x + f.gap) {
+        // crossed the lip — launch with whatever v the speedometer shows
+        b.air = true; b.jumpRef = f;
+        b.vy = b.v * SINT; b.v = b.v * COST; b.y = 0.01;
+        b.x = f.x; // pin to the lip so range math is exact
+        AU.blip(740, 0.12);
+      }
+      continue;
+    }
+
+    const inZone = b.x >= f.x0 && b.x <= f.x1;
+    const crossedEnd = b.x > (f.t === 'trap' ? f.x : f.x1);
+
+    if (f.t === 'trap') {
+      if (b.x >= f.x && f.state === 'pending') {
+        if (b.v <= f.max + 0.05) { f.state = 'passed'; state.score += 150; AU.gate(); }
+        else { f.state = 'pending'; f.firstTry = false; crashBike(Math.max(0, f.x - 40), 'RADAR! ' + b.v.toFixed(1) + ' IN A ' + f.max + ' ZONE'); }
+      }
+      continue;
+    }
+
+    if (inZone && f.state === 'pending') f.state = 'active';
+
+    if (f.t === 'cruise' && f.state === 'active') {
+      if (b.v < f.lo - 0.05 || b.v > f.hi + 0.05) f.offBand += dt;
+      if (crossedEnd) {
+        if (f.offBand <= CRUISE_GRACE) { f.state = 'passed'; state.score += 150; AU.gate(); }
+        else { resetFeature(f); crashBike(Math.max(0, f.x0 - 10), 'OUT OF BAND — GATE CLOSED'); }
+      }
+    }
+
+    if (f.t === 'accel') {
+      // The marshal logs your entry speed CLAMPED so vIn + gain never exceeds
+      // VMAX — a gain gate must always be physically satisfiable.
+      if (f.state === 'active' && !f.armed) { f.vIn = Math.min(b.v, VMAX - f.gain - 2); f.armed = true; }
+      if (f.state === 'active' && crossedEnd) {
+        if (b.v >= f.vIn + f.gain - 0.05) { f.state = 'passed'; state.score += 150; AU.gate(); }
+        else { resetFeature(f); f.armed = false; crashBike(Math.max(0, f.x0 - 10), 'ONLY +' + (b.v - f.vIn).toFixed(1) + ' — NEEDED +' + f.gain); }
+      }
+    }
+
+    if (f.t === 'stop' && f.state === 'active') {
+      if (!f.stopped && b.v < STOP_V && inZone) { f.stopped = true; AU.ding(); state.flash = 'FULL STOP ✓'; state.flashT = 0.8; }
+      if (crossedEnd) {
+        if (f.stopped) { f.state = 'passed'; state.score += 150; }
+        else { resetFeature(f); crashBike(Math.max(0, f.x0 - 30), 'ROLLED THE STOP BOX'); }
+      }
+    }
+  }
+
+  // ---- finish line ----
+  if (b.x >= c.len && !b.air) { levelCleared(); return; }
+
+  // ---- telemetry trace (10 Hz, 24 s window) ----
+  state.traceClock += dt;
+  if (state.traceClock >= 0.1) {
+    state.traceClock = 0;
+    state.trace.push({ t: state.t, v: b.air ? Math.hypot(b.v, b.vy) : b.v });
+    while (state.trace.length > 240) state.trace.shift();
+  }
+}
+
+function landBike() {
+  const b = state.bike, f = b.jumpRef;
+  b.air = false; b.y = 0; b.vy = 0; b.lean = 0;
+  if (!f) return;
+  b.jumpRef = null;
+  const dist = b.x - f.x;     // landing distance past the lip
+  state.stats.jumps += 1;
+  if (dist < f.gap - 0.2) {
+    // into the pit
+    resetFeature(f);
+    crashBike(Math.max(0, f.x - 45), 'CASED IT — ' + dist.toFixed(1) + ' m OF ' + f.gap);
+    return;
+  }
+  if (typeof f.land === 'number' && dist > f.gap + f.land + 0.2) {
+    resetFeature(f);
+    crashBike(Math.max(0, f.x - 45), 'OVERSHOT THE DECK — ' + dist.toFixed(1) + ' m');
+    return;
+  }
+  f.state = 'passed';
+  state.score += 250;
+  if (dist <= f.gap + 2) { state.score += 300; state.flash = 'SENT IT! +300'; state.flashT = 1.1; }
+  else { state.flash = 'CLEARED +250'; state.flashT = 0.9; }
+  AU.gate();
+}
+/* ============================================================ *
+ *  7. RENDERER — every sprite means something
+ * ============================================================ */
+const FONT = '"Press Start 2P", monospace';
+function T(s, x, y, color, size, align) {
+  bx.font = (size || 8) + 'px ' + FONT;
+  bx.textAlign = align || 'left';
+  bx.fillStyle = color || PAL.white;
+  bx.fillText(s, x, y);
+}
+function TC(s, y, color, size) { T(s, VW / 2, y, color, size, 'center'); }
+
+function wxToSx(wx) { return Math.round(BIKE_SX + (wx - state.bike.x) * PXM); }
+
+function drawWorld() {
+  // sky bands (flat NES dusk)
+  bx.fillStyle = PAL.sky1; bx.fillRect(0, 0, VW, 40);
+  bx.fillStyle = PAL.sky2; bx.fillRect(0, 40, VW, 60);
+  bx.fillStyle = PAL.sun; bx.fillRect(176, 22, 18, 18);
+  // mesas — slow parallax, scaled by bike.x
+  const m1 = -((state.bike.x * PXM * 0.18) % 280);
+  bx.fillStyle = PAL.mesaD;
+  for (let i = -1; i < 3; i++) {
+    const ox = m1 + i * 280;
+    bx.fillRect(ox + 20, 64, 70, 36); bx.fillRect(ox + 30, 56, 50, 8);
+    bx.fillRect(ox + 150, 72, 90, 28); bx.fillRect(ox + 165, 64, 60, 8);
+  }
+  // dunes — mid parallax
+  const m2 = -((state.bike.x * PXM * 0.45) % 180);
+  bx.fillStyle = PAL.dune;
+  bx.fillRect(0, 100, VW, GY - 100);
+  bx.fillStyle = PAL.duneD;
+  for (let i = -1; i < 3; i++) {
+    const ox = m2 + i * 180;
+    bx.fillRect(ox + 10, 112, 64, 6); bx.fillRect(ox + 96, 130, 52, 5);
+  }
+  // crowd banner strip (race-day dressing)
+  bx.fillStyle = PAL.banner; bx.fillRect(0, 146, VW, 8);
+  bx.fillStyle = PAL.white;
+  const m3 = -((state.bike.x * PXM) % 16);
+  for (let sx = m3 - 16; sx < VW + 16; sx += 16) bx.fillRect(Math.round(sx), 148, 4, 4);
+  // track
+  bx.fillStyle = PAL.track; bx.fillRect(0, GY - 8, VW, VH - GY + 8);
+  bx.fillStyle = PAL.trackLight; bx.fillRect(0, GY - 8, VW, 3);
+  // distance markers every 20 m with meter labels — the track IS the x-axis
+  const first = Math.floor((state.bike.x - BIKE_SX / PXM) / 20) * 20;
+  for (let wx = first; wx < state.bike.x + (VW / PXM) + 20; wx += 20) {
+    if (wx < 0) continue;
+    const sx = wxToSx(wx);
+    bx.fillStyle = PAL.edge; bx.fillRect(sx, GY - 8, 2, 6);
+    T(String(wx), sx + 3, GY + 14, PAL.edge, 6);
+  }
+}
+
+function drawFeature(f) {
+  const c = state.course;
+  void c;
+  if (f.t === 'cruise') {
+    const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
+    if (b2 < -40 || a > VW + 40) return;
+    // green striped zone + arches with the band posted
+    bx.fillStyle = f.state === 'failed' ? 'rgba(248,56,0,.25)' : 'rgba(128,208,16,.18)';
+    bx.fillRect(a, GY - 8, b2 - a, 14);
+    for (const ax of [a, b2]) {
+      bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.gold;
+      bx.fillRect(ax - 2, GY - 52, 4, 44);
+      bx.fillRect(ax - 10, GY - 56, 20, 6);
+    }
+    T(f.lo + '-' + f.hi, a + 4, GY - 44, PAL.green, 6);
+    T('HOLD', a + 4, GY - 36, PAL.edge, 6);
+    if (f.state !== 'passed') drawBarrier(b2, f.offBand > CRUISE_GRACE);
+  } else if (f.t === 'accel') {
+    const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
+    if (b2 < -40 || a > VW + 40) return;
+    bx.fillStyle = 'rgba(60,188,252,.16)';
+    bx.fillRect(a, GY - 8, b2 - a, 14);
+    bx.fillStyle = PAL.blue;
+    for (let sx = a + 6; sx < b2 - 6; sx += 18) { // chevrons say "speed up"
+      bx.fillRect(sx, GY - 4, 6, 2); bx.fillRect(sx + 4, GY - 6, 4, 2); bx.fillRect(sx + 4, GY - 2, 4, 2);
+    }
+    bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.blue;
+    bx.fillRect(a - 2, GY - 52, 4, 44); bx.fillRect(b2 - 2, GY - 52, 4, 44);
+    T('GAIN +' + f.gain, a + 4, GY - 44, PAL.blue, 6);
+    if (f.armed && f.state === 'active') T('LOG ' + f.vIn.toFixed(1), a + 4, GY - 36, PAL.edge, 6);
+    if (f.state !== 'passed') drawBarrier(b2, false);
+  } else if (f.t === 'stop') {
+    const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
+    if (b2 < -40 || a > VW + 40) return;
+    for (let sx = a; sx < b2; sx += 8) { // checkered box
+      bx.fillStyle = ((sx - a) / 8) % 2 ? PAL.white : PAL.red;
+      bx.fillRect(sx, GY - 6, Math.min(8, b2 - sx), 10);
+    }
+    T('STOP', a + 2, GY - 12, f.stopped ? PAL.green : PAL.red, 6);
+    if (f.state !== 'passed') drawBarrier(b2, false);
+  } else if (f.t === 'trap') {
+    const sx = wxToSx(f.x);
+    if (sx < -40 || sx > VW + 40) return;
+    bx.fillStyle = PAL.grayD; bx.fillRect(sx - 1, GY - 40, 3, 32); // radar post
+    bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.red;
+    bx.fillRect(sx - 6, GY - 48, 12, 10);
+    T('MAX', sx, GY - 52, PAL.white, 6, 'center');
+    T(String(f.max), sx, GY - 41, PAL.ink, 6, 'center');
+  } else if (f.t === 'jump') {
+    const lip = wxToSx(f.x), far = wxToSx(f.x + f.gap);
+    if (far < -60 || lip > VW + 60) return;
+    // pit
+    bx.fillStyle = PAL.pit; bx.fillRect(lip, GY - 8, far - lip, VH - GY + 8);
+    bx.fillStyle = PAL.red;
+    for (let sx = lip + 4; sx < far - 4; sx += 12) bx.fillRect(sx, GY + 16, 6, 3); // hazard ticks
+    // ramp (30°) — rises 12 px over ~21 px run
+    bx.fillStyle = PAL.trackLight;
+    bx.beginPath(); bx.moveTo(lip - 21, GY - 8); bx.lineTo(lip, GY - 20); bx.lineTo(lip, GY - 8); bx.closePath(); bx.fill();
+    // landing deck window, if any
+    if (typeof f.land === 'number') {
+      const deckEnd = wxToSx(f.x + f.gap + f.land);
+      bx.fillStyle = PAL.green; bx.fillRect(far, GY - 9, Math.max(2, deckEnd - far), 3);
+      bx.fillStyle = PAL.pit; bx.fillRect(deckEnd, GY - 8, 40, VH - GY + 8);
+    }
+    // the SIGN — minimum takeoff speed, computable and posted
+    const sgx = lip - 52;
+    bx.fillStyle = PAL.ink; bx.fillRect(sgx - 2, GY - 58, 50, 24);
+    bx.fillStyle = PAL.gold; bx.fillRect(sgx - 2, GY - 58, 50, 2);
+    T('GAP ' + f.gap + 'm', sgx + 2, GY - 48, PAL.gold, 6);
+    T('v>=' + vminFor(f.gap).toFixed(1), sgx + 2, GY - 39, PAL.white, 6);
+    bx.fillStyle = PAL.grayD; bx.fillRect(sgx + 20, GY - 34, 3, 26);
+  }
+}
+
+function drawBarrier(sx, closedHard) {
+  if (sx < -10 || sx > VW + 10) return;
+  bx.fillStyle = closedHard ? PAL.red : 'rgba(248,224,160,.35)';
+  bx.fillRect(sx - 1, GY - 30, 2, 22);
+}
+
+function drawBike() {
+  const b = state.bike;
+  const sy = GY - 8 - Math.round(b.y * PXM);
+  bx.save();
+  bx.translate(BIKE_SX, sy);
+  bx.rotate(b.lean);
+  if (b.dead > 0) bx.rotate(b.dead * 5); // tumble
+  // wheels
+  bx.fillStyle = PAL.tire;
+  bx.fillRect(-12, -4, 7, 7); bx.fillRect(6, -4, 7, 7);
+  // frame + tank (red — the machine)
+  bx.fillStyle = b.stalled > 0 ? PAL.grayD : PAL.bike;
+  bx.fillRect(-9, -8, 18, 5);
+  bx.fillStyle = PAL.bikeD; bx.fillRect(2, -11, 7, 4);
+  // rider (blue) — crouched, head forward
+  bx.fillStyle = PAL.rider;
+  bx.fillRect(-5, -16, 8, 8);
+  bx.fillStyle = PAL.white; bx.fillRect(0, -20, 6, 5); // helmet
+  bx.restore();
+  // exhaust — visible acceleration
+  if (b.gas && b.stalled <= 0 && !b.air && b.dead <= 0) {
+    for (let i = 0; i < 3; i++) {
+      bx.fillStyle = i ? '#888' : PAL.white;
+      bx.fillRect(BIKE_SX - 16 - i * 5 - ((state.t * 60) % 4), sy - 4 + (i % 2) * 3, 3, 3);
+    }
+  }
+  // overheat smoke
+  if (b.stalled > 0) {
+    bx.fillStyle = '#aaa';
+    for (let i = 0; i < 4; i++) bx.fillRect(BIKE_SX - 2 + ((i * 13 + state.t * 40) % 10) - 5, sy - 22 - ((state.t * 30 + i * 9) % 14), 3, 3);
+  }
+}
+
+function drawHUD() {
+  bx.fillStyle = 'rgba(4,6,13,.85)'; bx.fillRect(0, 0, VW, 20);
+  T('v ' + state.bike.v.toFixed(1), 4, 13, PAL.gold, 8);
+  // speed bar — the speedometer is the protagonist
+  bx.fillStyle = PAL.grayD; bx.fillRect(58, 6, 54, 8);
+  bx.fillStyle = state.bike.v > 22 ? PAL.red : PAL.green;
+  bx.fillRect(58, 6, Math.round(54 * state.bike.v / VMAX), 8);
+  T('T' + state.t.toFixed(0) + '/' + state.par, 118, 13, PAL.white, 6);
+  T(String(state.score), 220, 13, PAL.white, 6, 'right');
+  // bikes + crash pips
+  for (let i = 0; i < state.bikes; i++) { bx.fillStyle = PAL.bike; bx.fillRect(4 + i * 8, 16, 6, 3); }
+  for (let i = 0; i < state.crashes; i++) { bx.fillStyle = PAL.red; bx.fillRect(118 + i * 7, 16, 5, 3); }
+  if (state.practice) T('PRACTICE', 220, 19, PAL.blue, 6, 'right');
+  // DNF warning
+  const left = state.par * DNF_MULT - state.t;
+  if (left < 10) TC('DNF IN ' + Math.max(0, left).toFixed(0), 32, PAL.red, 8);
+}
+
+/* ---- full-screen states ---- */
+function drawAttract() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawWorldStatic();
+  TC('REDLINE', 64, PAL.red, 16);
+  TC('A KINEMATICS GRAND PRIX', 80, PAL.gold, 6);
+  TC('THE THROTTLE IS a = +6 m/s2', 104, PAL.white, 6);
+  TC('THE TRACK DEMANDS A v-t SHAPE', 116, PAL.white, 6);
+  TC('RIDE THE GRAPH OR CRASH', 128, PAL.white, 6);
+  if ((performance.now() / 500 | 0) % 2) TC('INSERT COIN', 168, PAL.gold, 8);
+  TC('HI ' + store.hi, 188, PAL.edge, 6);
+  TC('HOLD →/SPACE GAS · ← BRAKE', 216, PAL.edge, 6);
+}
+function drawWorldStatic() {
+  bx.fillStyle = PAL.sky1; bx.fillRect(0, 0, VW, 40);
+  bx.fillStyle = PAL.sky2; bx.fillRect(0, 40, VW, 100);
+  bx.fillStyle = PAL.dune; bx.fillRect(0, 140, VW, 60);
+  bx.fillStyle = PAL.track; bx.fillRect(0, 200, VW, 40);
+}
+function drawActs() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawWorldStatic();
+  TC('SELECT EVENT', 48, PAL.gold, 10);
+  for (let i = 0; i < 3; i++) {
+    const a = i + 1, y = 92 + i * 30, sel = state.menuIdx === i, open = actUnlocked(a);
+    if (sel) { bx.fillStyle = 'rgba(248,184,0,.18)'; bx.fillRect(12, y - 12, VW - 24, 24); }
+    T((sel ? '> ' : '  ') + 'ACT ' + a + ' ' + ACT_META[a].name, 18, y, open ? (sel ? PAL.gold : PAL.white) : PAL.grayD, 8);
+    if (!open) T('LOCK', 200, y, PAL.red, 6, 'right');
+  }
+  TC('CLEAR AN ACT TO UNLOCK THE NEXT', 196, PAL.edge, 6);
+  TC('MARSHAL CODE UNLOCKS ALL', 208, PAL.grayD, 6);
+}
+function drawBrief() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  const m = ACT_META[state.act];
+  TC('ACT ' + state.act, 44, PAL.gold, 8);
+  TC(m.name, 62, PAL.red, 12);
+  TC(m.sub, 80, PAL.edge, 6);
+  for (let i = 0; i < m.brief.length; i++) TC(m.brief[i], 110 + i * 14, PAL.white, 6);
+  if ((performance.now() / 500 | 0) % 2) TC('PRESS START', 210, PAL.gold, 8);
+}
+function drawClear() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  const ci = state.clearInfo;
+  TC('STAGE CLEAR', 48, PAL.green, 12);
+  TC(ci.name, 66, PAL.gold, 7);
+  T('TIME', 30, 96, PAL.edge, 7); T(ci.time.toFixed(1) + 's / PAR ' + ci.par, 194, 96, PAL.white, 7, 'right');
+  T('GATES FIRST TRY', 30, 112, PAL.edge, 7); T(ci.perfect + '/' + ci.gates + '  +' + (ci.perfect * 400), 194, 112, PAL.white, 7, 'right');
+  T('TIME BONUS', 30, 128, PAL.edge, 7); T('+' + ci.timeBonus, 194, 128, PAL.white, 7, 'right');
+  T('NO-CRASH', 30, 144, PAL.edge, 7); T(ci.noCrash ? '+1000' : '—', 194, 144, ci.noCrash ? PAL.green : PAL.grayD, 7, 'right');
+  T('STAGE TOTAL', 30, 164, PAL.gold, 7); T('+' + ci.gained, 194, 164, PAL.gold, 7, 'right');
+  if ((performance.now() / 500 | 0) % 2) TC('PRESS START FOR THE FLAG Q', 206, PAL.gold, 6);
+}
+function drawQuestion() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  const q = state.question;
+  TC(state.qIsCross ? '★ CROSSOVER +1000 ★' : 'FLAG QUESTION +750', 36, state.qIsCross ? PAL.gold : PAL.green, 7);
+  const lines = q.q.split('\n');
+  for (let i = 0; i < lines.length; i++) TC(lines[i], 60 + i * 13, PAL.white, 6);
+  for (let i = 0; i < 3; i++) {
+    const y = 120 + i * 30;
+    let col = PAL.white;
+    if (state.qResolved) col = (i === q.a) ? PAL.green : (i === state.qPick ? PAL.red : PAL.grayD);
+    bx.fillStyle = 'rgba(255,255,255,.06)'; bx.fillRect(16, y - 11, VW - 32, 22);
+    T((i + 1) + ') ' + q.c[i], 24, y + 3, col, 7);
+  }
+  if (state.qResolved) {
+    const why = q.why.split('\n');
+    for (let i = 0; i < why.length; i++) TC(why[i], 216 + i * 11, PAL.edge, 6);
+  } else {
+    TC('PRESS 1, 2 OR 3 (OR TAP)', 222, PAL.edge, 6);
+  }
+}
+function drawGameOver() {
+  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  const ci = state.clearInfo || { reason: 'GAME OVER', champion: false };
+  TC(ci.champion ? '★ CHAMPION ★' : 'GAME OVER', 70, ci.champion ? PAL.gold : PAL.red, 12);
+  TC(ci.reason, 92, PAL.edge, 6);
+  TC('SCORE ' + state.score, 124, PAL.white, 8);
+  TC('HI    ' + store.hi, 142, PAL.gold, 8);
+  if ((performance.now() / 500 | 0) % 2) TC('PRESS START', 200, PAL.gold, 8);
+}
+
+function drawPlay() {
+  drawWorld();
+  for (const f of state.course.feats) drawFeature(f);
+  // finish banner
+  const fx = wxToSx(state.course.len);
+  if (fx > -20 && fx < VW + 20) {
+    bx.fillStyle = PAL.grayD; bx.fillRect(fx, GY - 60, 3, 52);
+    for (let i = 0; i < 6; i++) { bx.fillStyle = i % 2 ? PAL.ink : PAL.white; bx.fillRect(fx + 3 + i * 5, GY - 60, 5, 8); }
+  }
+  drawBike();
+  drawHUD();
+  if (state.flashT > 0 && state.flash) TC(state.flash, 60, PAL.gold, 8);
+}
+
+/* ============================================================ *
+ *  8. PIT WALL PANEL — live v-t graph + requirement card
+ * ============================================================ */
+const vt = document.getElementById('vtcanvas').getContext('2d');
+const elHeatFill = document.getElementById('heatfill');
+const elHeatPct = document.getElementById('heatpct');
+const elReq = document.getElementById('reqcard');
+const elPar = document.getElementById('parrow');
+let lastReqHTML = '';
+
+function drawPanel() {
+  const W = 276, H = 150;
+  vt.fillStyle = '#060810'; vt.fillRect(0, 0, W, H);
+  const vToY = (v) => H - 8 - (v / 28) * (H - 20);
+  // grid
+  vt.strokeStyle = '#1a1d2c'; vt.lineWidth = 1;
+  for (const v of [0, 7, 14, 21, 28]) {
+    vt.beginPath(); vt.moveTo(24, vToY(v)); vt.lineTo(W - 4, vToY(v)); vt.stroke();
+    vt.fillStyle = '#5a6275'; vt.font = '7px monospace'; vt.fillText(String(v), 4, vToY(v) + 2);
+  }
+  const f = state.screen === 'play' ? currentFeature() : null;
+  // demand stripe — what the track wants, drawn on the same axes you ride
+  if (f) {
+    if (f.t === 'cruise') {
+      vt.fillStyle = 'rgba(128,208,16,.22)';
+      vt.fillRect(24, vToY(f.hi), W - 28, vToY(f.lo) - vToY(f.hi));
+    } else if (f.t === 'trap') {
+      vt.strokeStyle = '#f83800'; vt.setLineDash([3, 3]);
+      vt.beginPath(); vt.moveTo(24, vToY(f.max)); vt.lineTo(W - 4, vToY(f.max)); vt.stroke();
+      vt.setLineDash([]);
+    } else if (f.t === 'stop') {
+      vt.fillStyle = 'rgba(248,56,0,.22)';
+      vt.fillRect(24, vToY(0.8), W - 28, vToY(0) - vToY(0.8));
+    } else if (f.t === 'accel' && f.armed) {
+      vt.strokeStyle = '#3cbcfc'; vt.setLineDash([3, 3]);
+      vt.beginPath(); vt.moveTo(24, vToY(f.vIn + f.gain)); vt.lineTo(W - 4, vToY(f.vIn + f.gain)); vt.stroke();
+      vt.setLineDash([]);
+    } else if (f.t === 'jump') {
+      vt.strokeStyle = '#f8b800'; vt.setLineDash([3, 3]);
+      vt.beginPath(); vt.moveTo(24, vToY(vminFor(f.gap))); vt.lineTo(W - 4, vToY(vminFor(f.gap))); vt.stroke();
+      vt.setLineDash([]);
+    }
+  }
+  // the trace — your last 24 s of riding
+  if (state.trace.length > 1) {
+    const t1 = state.trace[state.trace.length - 1].t, t0 = Math.max(0, t1 - 24);
+    vt.strokeStyle = '#f8b800'; vt.lineWidth = 2; vt.beginPath();
+    let started = false;
+    for (const p of state.trace) {
+      if (p.t < t0) continue;
+      const px = 24 + ((p.t - t0) / 24) * (W - 28);
+      const py = vToY(Math.min(28, p.v));
+      if (!started) { vt.moveTo(px, py); started = true; } else vt.lineTo(px, py);
+    }
+    vt.stroke();
+  }
+  // DOM widgets
+  if (state.bike) {
+    const h = state.bike.heat;
+    elHeatFill.style.width = h.toFixed(0) + '%';
+    elHeatFill.style.background = h > 80 ? '#f83800' : h > 55 ? '#f8b800' : '#80d010';
+    elHeatPct.textContent = h.toFixed(0) + '%';
+  }
+  let html;
+  if (state.screen !== 'play') {
+    html = state.screen === 'attract' ? 'INSERT COIN TO QUALIFY' : 'PIT WALL STANDING BY';
+  } else if (!f) {
+    html = '<span class="big">RUN TO THE FLAG</span><br>FINISH AT ' + state.course.len + ' m.<br>NOTHING LEFT BUT THROTTLE.';
+  } else if (f.t === 'cruise') {
+    html = '<span class="big">CRUISE BAND ' + f.lo + '–' + f.hi + ' m/s</span><br>' +
+      'HOLD v INSIDE THE STRIPE.<br><span class="eq">FLAT v–t LINE = a ≈ 0</span><br>' +
+      'TAP THE GAS — DON&#8217;T HOLD IT.<br>GRACE: ' + CRUISE_GRACE + ' s OUT OF BAND.';
+  } else if (f.t === 'accel') {
+    const need = (f.gain / A_GAS).toFixed(1);
+    html = '<span class="big">GAIN ZONE +' + f.gain + ' m/s</span><br>' +
+      'EXIT FASTER THAN YOU ENTERED.<br><span class="eq">Δv = aΔt → ' + f.gain + ' = 6·t → t ≥ ' + need + ' s</span><br>' +
+      'OF FULL THROTTLE. WATCH HEAT.';
+  } else if (f.t === 'stop') {
+    const v = state.bike.v, d = (v * v) / (2 * Math.abs(A_BRK));
+    html = '<span class="big">STOP BOX AHEAD</span><br>' +
+      'REACH v = 0 INSIDE THE BOX.<br><span class="eq">d = v²/2a = ' + (v * v).toFixed(0) + '/18 = ' + d.toFixed(1) + ' m</span><br>' +
+      'THAT&#8217;S YOUR BRAKING DISTANCE<br>AT THIS SPEED. RIGHT NOW.';
+  } else if (f.t === 'trap') {
+    html = '<span class="big">SPEED TRAP — MAX ' + f.max + '</span><br>' +
+      'CROSS THE RADAR UNDER LIMIT.<br><span class="eq">NEED Δv = ' + Math.max(0, state.bike.v - f.max).toFixed(1) + ' m/s OF BRAKING</span>';
+  } else if (f.t === 'jump') {
+    const vm = vminFor(f.gap);
+    html = '<span class="big">JUMP — GAP ' + f.gap + ' m</span><br>' +
+      '30° RAMP, g = 10.<br><span class="eq">R = v²sin60°/g ≥ ' + f.gap + ' → v ≥ ' + vm.toFixed(1) + '</span><br>' +
+      (typeof f.land === 'number'
+        ? 'DECK ENDS AT ' + (f.gap + f.land) + ' m:<br>KEEP v ≤ ' + vminFor(f.gap + f.land).toFixed(1) + ' m/s. A WINDOW.'
+        : 'CHECK THE SPEEDO AT THE LIP.');
+  } else {
+    html = '';
+  }
+  if (html !== lastReqHTML) { elReq.innerHTML = html; lastReqHTML = html; }
+  elPar.textContent = state.screen === 'play'
+    ? 'TIME ' + state.t.toFixed(1) + 's · PAR ' + state.par + 's · DNF AT ' + (state.par * DNF_MULT).toFixed(0) + 's · CRASHES ' + state.crashes + '/' + MAX_CRASH
+    : 'HI ' + store.hi;
+}
+
+/* ============================================================ *
+ *  9. INPUT
+ * ============================================================ */
+const GAS_KEYS = ['ArrowRight', 'ArrowUp', 'x', 'X', ' '];
+const BRK_KEYS = ['ArrowLeft', 'ArrowDown', 'z', 'Z'];
+window.addEventListener('keydown', (e) => {
+  AU.ensure();
+  if (state.screen === 'play') {
+    if (GAS_KEYS.includes(e.key)) { state.bike.gas = true; e.preventDefault(); }
+    if (BRK_KEYS.includes(e.key)) { state.bike.brake = true; e.preventDefault(); }
+  } else {
+    if ([' ', 'ArrowUp', 'ArrowDown'].includes(e.key)) e.preventDefault();
+    menuKey(e.key);
+  }
+});
+window.addEventListener('keyup', (e) => {
+  if (!state.bike) return;
+  if (GAS_KEYS.includes(e.key)) state.bike.gas = false;
+  if (BRK_KEYS.includes(e.key)) state.bike.brake = false;
+});
+// touch zones (mobile): right half gas, left half brake
+function bindZone(id, prop) {
+  const el = document.getElementById(id);
+  const on = (e) => { AU.ensure(); if (state.bike) state.bike[prop] = true; e.preventDefault(); };
+  const off = (e) => { if (state.bike) state.bike[prop] = false; e.preventDefault(); };
+  el.addEventListener('pointerdown', on);
+  el.addEventListener('pointerup', off);
+  el.addEventListener('pointercancel', off);
+  el.addEventListener('pointerleave', off);
+}
+bindZone('tGas', 'gas');
+bindZone('tBrake', 'brake');
+// canvas taps: menus advance; questions pick by row; acts menu picks by row
+cv.addEventListener('pointerdown', (e) => {
+  AU.ensure();
+  const vy = (e.offsetY / SCALE);
+  if (state.screen === 'question') {
+    if (!state.qResolved) {
+      const idx = Math.floor((vy - 109) / 30);
+      if (idx >= 0 && idx <= 2) answerQuestion(idx);
+    }
+    return;
+  }
+  if (state.screen === 'acts') {
+    const idx = Math.floor((vy - 80) / 30);
+    if (idx >= 0 && idx <= 2) { state.menuIdx = idx; chooseAct(idx + 1); }
+    return;
+  }
+  if (state.screen !== 'play') menuKey('Enter');
+});
+
+/* ============================================================ *
+ *  10. MAIN LOOP
+ * ============================================================ */
+let last = performance.now() / 1000;
+function frame() {
+  const now = performance.now() / 1000;       // declared before ANY use
+  const dt = Math.min(0.05, Math.max(0, now - last));
+  last = now;
+
+  if (state.screen === 'play') simStep(dt);
+
+  if (state.screen === 'play') drawPlay();
+  else if (state.screen === 'attract') drawAttract();
+  else if (state.screen === 'acts') drawActs();
+  else if (state.screen === 'brief') drawBrief();
+  else if (state.screen === 'clear') drawClear();
+  else if (state.screen === 'question') drawQuestion();
+  else if (state.screen === 'gameover') drawGameOver();
+
+  // non-play flashes (act complete, coin denied) draw over menus too
+  if (state.screen !== 'play' && state.flashT > 0 && state.flash) {
+    state.flashT -= dt;
+    TC(state.flash, 232, PAL.gold, 6);
+  }
+
+  drawPanel();
+  // touch zones must not eat menu taps — only intercept while riding
+  document.getElementById('touch').style.pointerEvents = state.screen === 'play' ? 'auto' : 'none';
+  AU.engine(state.bike ? state.bike.v : 0,
+    !!(state.bike && state.bike.gas), !!(state.bike && state.bike.stalled > 0));
+
+  // blit virtual → real at integer scale, smoothing off
+  cx.imageSmoothingEnabled = false;
+  cx.clearRect(0, 0, cv.width, cv.height);
+  cx.drawImage(buf, 0, 0, VW, VH, 0, 0, VW * SCALE, VH * SCALE);
+
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

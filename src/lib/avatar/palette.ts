@@ -1,4 +1,4 @@
-import type { SkinTone, HairColor, FaceShape } from './types'
+import type { SkinTone, HairColor, FaceShape, EyeColor } from './types'
 
 // Face geometry — extents of each face silhouette + a per-shape feature
 // y-offset so the feature group (brows / eyes / nose / mouth / blush /
@@ -61,6 +61,20 @@ export const HAIR: Record<HairColor, { main: string; dark: string }> = {
   gray:   { main: '#8E8B86', dark: '#5F5C58' },
   white:  { main: '#E8E5DE', dark: '#A8A5A0' },
   teal:   { main: '#3FA59B', dark: '#1E7570' },
+}
+
+// Eye colour. For the dot-style eye shapes (small/big/narrow) this fills the
+// whole eye, Mii-style; for 'wide' it tints only the iris (sclera stays
+// white). 'black' is the legacy #1F1812 so pre-existing avatars are
+// unchanged. All tones are kept dark enough to read on the palest skin.
+export const EYE: Record<EyeColor, string> = {
+  black:  '#1F1812',
+  brown:  '#4A2E1C',
+  hazel:  '#7A5B2E',
+  green:  '#3E6B3A',
+  blue:   '#2F5D8A',
+  gray:   '#5E6168',
+  violet: '#6B4FA0',
 }
 
 // Default shirt tone — overridden when a body slot item is equipped.

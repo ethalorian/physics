@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FLUX // an electromagnetism arcade</title>
+<!--
+  FLUX — an electromagnetism arcade in three acts. Eighth and final subject
+  cabinet (Unit 7: Electricity & Magnetism). Single file, no dependencies.
+
+  ACT I   STATIC     — fly a charged probe by FLIPPING YOUR OWN POLARITY:
+                       attraction and repulsion are the only engine.
+                       Coulomb is ORBIT's 1/r², now with two signs.
+  ACT II  THE GRID   — switchboard duty: route current through parallel
+                       loads, hit brightness targets, respect the fuse.
+  ACT III THE DYNAMO — Faraday's law as rhythm: only CHANGE makes current.
+                       Telemetry draws Φ and EMF = −dΦ/dt stacked, live.
+
+  Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#a3e635; --neon2:#38bdf8; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#0c1206ee; --edge:#a3e63555;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#070b04}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #a3e63522, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #a3e63588}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #a3e63566;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:#34d399} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#0c1404;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #a3e63566;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#101a08;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#15220a}
+  .choice.right{background:#0c2a22;border-color:#34d399;color:#34d399}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #38bdf855;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#0e1607;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const hyp=Math.hypot, TAU=Math.PI*2;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('flux2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('flux2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('flux2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('flux2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false,humGain=null,humOsc=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  humOsc=AC.createOscillator();humOsc.type='sawtooth';humOsc.frequency.value=60;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=200;
+  humGain=AC.createGain();humGain.gain.value=0;
+  humOsc.connect(lp);lp.connect(humGain);humGain.connect(AC.destination);humOsc.start();}catch(e){}}
+function setHum(level,f){if(!AC||!humGain)return;
+  humGain.gain.setTargetAtTime(muted?0:clamp(level,0,0.06),AC.currentTime,0.08);
+  if(humOsc&&f)humOsc.frequency.setTargetAtTime(clamp(f,40,300),AC.currentTime,0.08);}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function zap(){beep(1200,.2,'sawtooth',.2,-900);beep(80,.25,'square',.18);}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'flux-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== level data
+   ACT I  world 48×30. pylons:[{x,y,q:±1..±2}] fixed charges; your probe has
+          |q| = 1 and ONE control: flip sign. F = K·q·qi/r² on you. Touch a
+          pylon = ZAP. dock:[x,y,r]. Reach the dock slower than vDock.
+   ACT II battery V=12 → fuse Imax → series Rs → parallel branches
+          {R, sw, target:[lo,hi] brightness % or 0 for OFF}. Brightness from
+          P = V'²/R against a reference. Hold every target 4 s. Surges may
+          rewrite a bulb's R mid-shift.
+   ACT III magnet stroke x∈[0,1]: hold = drive in, release = spring out.
+          Φ = S(x), EMF = −dΦ/dt, I = EMF/R. Bank energy to the target;
+          |I| over Imax trips the breaker. */
+const K=130, VDOCK=6;
+const ACT_META={
+ 1:{name:'STATIC', col:'#38bdf8', blurb:'Your probe has no engine — only a sign. Flip + to −, repulsion to attraction, and surf Coulomb’s inverse square between the pylons. Gravity wishes it had this trick.'},
+ 2:{name:'THE GRID', col:'#fbbf24', blurb:'Switchboard duty. Parallel branches each draw their own current and the fuse counts ALL of it. Light exactly what the order sheet says — V = IR is the whole rulebook.'},
+ 3:{name:'THE DYNAMO', col:'#a3e635', blurb:'A magnet, a coil, and Faraday’s one commandment: only CHANGE makes current. Pump for power, watch EMF ride the slope of the flux — and don’t out-shove the breaker.'},
+};
+const ACT1=[
+ {name:'FIRST FLIP', dur:75,
+  probe:{x:5,y:15}, dock:{x:43,y:15,r:3},
+  pylons:[{x:24,y:15,q:2}],
+  tip:'One positive pylon. Start positive: it shoves you away. Flip NEGATIVE mid-flight and it reels you in — flip back to + before you arrive and it brakes you. Attraction, repulsion, and timing: that is the entire engine.'},
+ {name:'THE GATE', dur:75,
+  probe:{x:5,y:15}, dock:{x:43,y:15,r:3},
+  pylons:[{x:22,y:9,q:2},{x:22,y:21,q:-2}],
+  tip:'A + above, a − below. Whatever sign you wear, one pulls while the other pushes — the pair STEERS you. Note the force falls as 1/r²: passing close to a pylon is where all the action (and all the danger) lives.'},
+ {name:'THE LADDER', dur:85,
+  probe:{x:4,y:26}, dock:{x:44,y:5,r:3},
+  pylons:[{x:14,y:22,q:2},{x:24,y:15,q:-2},{x:34,y:9,q:2}],
+  tip:'Alternating charges in a row. Ride each one: attract in, flip to repel out, catch the next. Polarity surfing has a rhythm — fall toward, flip, fling away. Lightning does something similar, with less patience.'},
+ {name:'THE NARROWS', dur:85,
+  probe:{x:5,y:15}, dock:{x:44,y:15,r:2.6},
+  pylons:[{x:18,y:11,q:2},{x:18,y:19,q:2},{x:31,y:11,q:-2},{x:31,y:19,q:-2}],
+  tip:'Two + posts, then two − posts, with a slot between each pair. Stay negative and the first gate funnels you in; go positive for the second. Symmetric charges cancel sideways forces ON the centerline — drift off it and they do not.'},
+ {name:'THE STORM YARD', dur:95,
+  probe:{x:4,y:5}, dock:{x:44,y:25,r:2.6},
+  pylons:[{x:13,y:10,q:2},{x:22,y:20,q:-2},{x:30,y:8,q:2},{x:37,y:18,q:-1},{x:25,y:5,q:-1},{x:15,y:25,q:1}],
+  tip:'Six pylons, every sign, no straight lines. Read the field before you fly it — where the pulls and pushes balance, you coast; where they align, you scream. The dock takes you under 6 speed. Plan your last flip early.'},
+];
+const ACT2=[
+ {name:'THREE LAMPS', dur:70, V:12, Imax:5, Rs:0,
+  branches:[{R:6,target:[60,100]},{R:6,target:[60,100]},{R:6,target:0}],
+  surges:[],
+  tip:'Three identical lamps in PARALLEL: each one sees the full 12 V and draws its own 2 A — switches don’t share, they ADD. The order sheet wants two lit, one dark, and the fuse tolerates 5 A. Count before you close.'},
+ {name:'THE SHARED LINE', dur:80, V:12, Imax:6, Rs:2,
+  branches:[{R:6,target:[35,65]},{R:6,target:[35,65]},{R:6,target:0}],
+  surges:[],
+  tip:'Now a 2 Ω series resistor guards the line. Every branch you close pulls MORE total current, which drops MORE voltage across that resistor — and every lamp dims together. Series steals; parallel shares. Find the combination the targets want.'},
+ {name:'MIXED ORDERS', dur:85, V:12, Imax:6, Rs:1,
+  branches:[{R:4,target:[55,90]},{R:8,target:[20,50]},{R:6,target:0},{R:12,target:[8,35]}],
+  surges:[],
+  tip:'Different resistances now. Low-R lamps burn bright and gulp current; high-R lamps sip and glow. P = V²/R: resistance is the dimmer knob built into the bulb itself. Satisfy four different appetites without feeding the fuse.'},
+ {name:'THE SURGE', dur:90, V:12, Imax:6, Rs:1,
+  branches:[{R:6,target:[40,75]},{R:6,target:[40,75]},{R:8,target:[20,55]}],
+  surges:[{at:25,branch:0,R:3},{at:55,branch:2,R:4}],
+  tip:'Mid-shift, a lamp’s filament SAGS — its resistance drops and it suddenly gulps double current. The board will flash the change. Re-route fast: yesterday’s safe combination is today’s blown fuse.'},
+ {name:'BLACKOUT WATCH', dur:95, V:12, Imax:5, Rs:1.5,
+  branches:[{R:5,target:[35,70]},{R:7,target:[25,60]},{R:6,target:0},{R:10,target:[10,40]}],
+  surges:[{at:20,branch:1,R:4},{at:45,branch:3,R:6},{at:70,branch:0,R:7}],
+  tip:'A mean fuse, a hungry line, and three surges on the schedule. This is the dispatcher’s art: hold every target inside its band while the grid shifts under your hands. Ohm wrote the law; you enforce it.'},
+];
+const ACT3=[
+ {name:'FIRST LIGHT', dur:70, R:2, Imax:9, vIn:2.2, vOut:1.6, Etarget:260, ac:false,
+  tip:'Hold to drive the magnet in, release and the spring returns it. Watch the desk: flux Φ climbs as the magnet enters — and the EMF below it is the SLOPE of that curve. Magnet parked = flat Φ = zero volts, no matter how deep it sits. Faraday’s whole law is that one picture.'},
+ {name:'THE SPRINT', dur:70, R:2, Imax:8, vIn:3.0, vOut:2.0, Etarget:380, ac:false,
+  tip:'A faster drive. Same magnet, same coil, same depth — but quicker change means bigger EMF and bigger current. Speed, not strength, is what the coil pays for. Mind the breaker: it counts amps, not effort.'},
+ {name:'STIFF SPRING', dur:75, R:1.6, Imax:8, vIn:2.4, vOut:3.4, Etarget:430, ac:false,
+  tip:'The return spring is stronger than your push now — the OUT-stroke makes more EMF than the in-stroke (look: the flux slope is steeper going down). Induction doesn’t care which way the flux changes, only how fast. Harvest the recoil.'},
+ {name:'BREAKER’S EDGE', dur:80, R:1.2, Imax:6.5, vIn:3.2, vOut:2.6, Etarget:480, ac:false,
+  tip:'A low-resistance coil: every volt of EMF becomes MORE current (I = EMF/R), so the breaker is suddenly very near. Find the deepest stroke that stays under 6.5 A — the rhythm of a professional, not the frenzy of an amateur.'},
+ {name:'SIXTY HERTZ', dur:85, R:1.5, Imax:8, vIn:3.0, vOut:3.0, Etarget:520, ac:true,
+  tip:'Pump steadily and look at the EMF trace: in, out, in, out — the current ALTERNATES. You are hand-cranking AC, the same wiggle that leaves every power plant on Earth. FURNACE’s engine spins this exact coil at scale. Fill the bank and finish the curriculum.'},
+];
+const YARDS=['SUBSTATION 9','THE SWITCHHOUSE','COIL BARN','PYLON FIELD','BREAKER ROW','THE CAPACITORIUM','DYNAMO HALL'];
+function endless1(w){
+  const n=Math.min(7,2+w),py=[];
+  for(let i=0;i<n;i++)py.push({x:Math.round(rnd(10,40)),y:Math.round(rnd(4,26)),
+    q:pick([1,2,-1,-2])});
+  return {name:pick(YARDS)+' · RUN '+w, dur:Math.max(60,90-w*2),
+    probe:{x:4,y:Math.round(rnd(5,25))}, dock:{x:44,y:Math.round(rnd(5,25)),r:Math.max(2.2,3-w*0.1)},
+    pylons:py,
+    tip:'Unmapped pylons. Same two rules: likes repel, unlikes attract.'};
+}
+function endless2(w){
+  const n=Math.min(5,3+Math.floor(w/2)),br=[];
+  for(let i=0;i<n;i++){const R=pick([4,5,6,7,8,10,12]);
+    br.push({R,target:Math.random()<0.25?0:[Math.round(rnd(15,45)),Math.round(rnd(55,90))]});}
+  const sg=[];
+  for(let i=0;i<Math.min(3,w);i++)sg.push({at:Math.round(rnd(15,70)),
+    branch:Math.floor(rnd(0,n)),R:pick([3,4,5,7])});
+  return {name:pick(YARDS)+' · SHIFT '+w, dur:Math.max(70,95-w*2),
+    V:12, Imax:Math.max(4.5,6.5-w*0.2), Rs:+rnd(0.5,2).toFixed(1),
+    branches:br, surges:sg,
+    tip:'New orders, same law.'};
+}
+function endless3(w){
+  return {name:pick(YARDS)+' · CRANK '+w, dur:Math.max(65,85-w*2),
+    R:+Math.max(1,2.2-w*0.15).toFixed(1), Imax:Math.max(5.5,9-w*0.4),
+    vIn:+(2.2+w*0.15).toFixed(1), vOut:+(1.8+w*0.15).toFixed(1),
+    Etarget:Math.round(260+w*45), ac:w>2,
+    tip:'The bank is never full for long.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let probe={x:5,y:15,vx:0,vy:0,sign:1};                 // act I
+let branches=[], selBr=0, surgeIdx=0, gridHold=0, fuseHot=0; // act II
+let mag=0, magV=0, driving=false, bank=0, lastEMF=0, lastI=0, tripT=0; // act III
+let t=0, acc=0, attemptT=0, samples=[], lastSamp=-1;
+let particles=[], popups=[], shake=0, flash=0;
+let landedOK=false, downTimer=0, lastResult=null, primary=null;
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,jx:rnd(-12,12)});}
+function burstPx(px,py,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,TAU),s2=rnd(20,sp||90);
+  particles.push({px,py,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+/* ACT II solver: V' = V / (1 + Rs·Σ(1/Ri)) over CLOSED branches.
+   Branch current = V'/Ri; brightness % = 100·(V'²/Ri)/(V²/Ri) = 100·(V'/V)². */
+function solveGrid(){
+  let sumInv=0;
+  for(const b of branches)if(b.sw)sumInv+=1/b.R;
+  const Vp=sumInv>0?lv.V/(1+lv.Rs*sumInv):lv.V;
+  let Itot=0;
+  for(const b of branches){
+    b.I=b.sw?Vp/b.R:0;Itot+=b.I;
+    b.bright=b.sw?Math.round(100*(Vp/lv.V)*(Vp/lv.V)*(6/b.R)):0;
+    b.bright=clamp(b.bright,0,130);
+  }
+  return {Vp,Itot};
+}
+function fluxS(x){return (1-Math.cos(Math.PI*clamp(x,0,1)))/2;} // smooth 0→1
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];setupLevel();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>FLUX</h1>
+     <div class="tag">AN ELECTROMAGNETISM ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       The invisible half of physics: charge, current, and the fields between.
+       The final subject cabinet — <b style="color:var(--ink)">everything the
+       arcade taught you comes home to the wall socket.</b><br><br>
+       <b style="color:#38bdf8">ACT I — STATIC</b> &nbsp;fly by flipping your own polarity<br>
+       <b style="color:#fbbf24">ACT II — THE GRID</b> &nbsp;V = IR, switch by switch<br>
+       <b style="color:#a3e635">ACT III — THE DYNAMO</b> &nbsp;only change makes current<br><br>
+       <span class="kbd">SPACE</span> flip / toggle / drive ·
+       <span class="kbd">←</span><span class="kbd">→</span> pick a switch ·
+       <span class="kbd">P</span> pause · <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — STATIC ${HIS[1].toLocaleString()} · GRID ${HIS[2].toLocaleString()} · DYNAMO ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE SWITCHHOUSE</h2>
+     <div class="sub">Pick your post. Each act is a chapter of the E&M unit.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE SWITCHHOUSE</button></div>`);
+    primary=select_;
+  });
+}
+function setupLevel(){
+  probe={x:(lv.probe||{x:5,y:15}).x,y:(lv.probe||{x:5,y:15}).y,vx:0,vy:0,sign:1};
+  branches=(lv.branches||[]).map(b=>({...b,sw:false,I:0,bright:0}));
+  selBr=0;surgeIdx=0;gridHold=0;fuseHot=0;
+  mag=0;magV=0;driving=false;bank=0;lastEMF=0;lastI=0;tripT=0;
+  lastPhi=0;
+  samples=[];lastSamp=-1;
+}
+function showMission(level){
+  lv=level;state='mission';setupLevel();
+  let params='';
+  if(act===1)params=`<b>${lv.pylons.length} pylon${lv.pylons.length>1?'s':''}</b> · reach the dock under <b>${VDOCK} speed</b> · <b>${lv.dur} s</b> · touching a pylon is a ZAP`;
+  else if(act===2)params=`battery <b>${lv.V} V</b> · fuse <b>${lv.Imax} A</b>${lv.Rs?` · shared line <b>${lv.Rs} Ω</b>`:''} · hold every target band <b>4 s</b> · <b>${lv.dur} s</b>${lv.surges.length?` · <b style="color:var(--red)">${lv.surges.length} surge${lv.surges.length>1?'s':''} scheduled</b>`:''}`;
+  else params=`coil <b>${lv.R} Ω</b> · breaker <b>${lv.Imax} A</b> · bank <b>${lv.Etarget} J</b> · <b>${lv.dur} s</b>${lv.ac?' · <b style="color:var(--neon)">AC shift</b>':''}`;
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">
+       ${act===1?'<span class="kbd">SPACE</span> flips your charge between + and −. That is the only control. Choose your moments.'
+        :act===2?'<span class="kbd">←</span><span class="kbd">→</span> select a switch · <span class="kbd">SPACE</span> toggle it'
+        :'hold <span class="kbd">SPACE</span> to drive the magnet into the coil; release and the spring returns it'}
+     </div>
+     <button class="btn" onclick="launch()">▶ ${act===1?'CHARGE THE PROBE':act===2?'TAKE THE BOARD':'GRAB THE HANDLE'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;attemptT=0;
+  particles=[];popups=[];shake=0;flash=0;
+  setupLevel();
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(extraTxt,craft){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setHum(0);
+  const tf=Math.max(0,lv.dur-attemptT)/lv.dur;
+  const tier=tf>=0.4?'CHIEF ELECTRICIAN':tf>=0.18?'GREAT':'CLEAN';
+  const base=tf>=0.4?1500:tf>=0.18?1000:700;
+  const bonus=(craft||0)+Math.round(tf*300);
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,btxt:bonus>0?('CRAFT +'+bonus):'',extraTxt};
+  score+=pts;bumpHi();
+  popup(tier+'!','#a3e635',38);
+  chord(tier==='CHIEF ELECTRICIAN'?[659,830,988,1318]:[523,659,784,1046]);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;setHum(0);
+  zap();
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',28);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.extraTxt?`<div class="sub">${r.extraTxt}</div>`:''}
+       ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Spares left</span><b>${'⚡ '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">FRESH PROBE</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — THE GRID unlocked.</b> The charges start moving; you start dispatching.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#a3e635">ACT III — THE DYNAMO unlocked.</b> Time to learn where every volt on Earth comes from.';}
+  else if(act===3)unlockMsg='<b style="color:#38bdf8">You completed the E&M campaign</b> — and with it, every unit in the arcade. The whole machine, from falling apples to alternating current.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS SHIFT</button>
+     <button class="btn alt" onclick="select_()">SWITCHHOUSE</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>LIGHTS OUT</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">The field is still there in the dark. It always is.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">SWITCHHOUSE</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>qCon('Two charges attract with force F. Halve the distance between them and the force becomes…',
+     '4F — Coulomb’s law is inverse square',['2F','F/2','F/4'],
+     'F = kq₁q₂/r²: halve r, quadruple F. You felt it every time you skimmed a pylon — the last meter of approach carries most of the violence.'),
+   ()=>qCon('Your negative probe approaches a negative pylon. The force between them…',
+     'pushes them apart — like charges repel',['pulls them together','is zero','depends on speed'],
+     'Like repels, unlike attracts: the two-line rulebook of Act I. Your SPACE bar toggled which rule applied to you.'),
+   ()=>qCon('Rubbing a balloon on your hair “charges” it. The charge was…',
+     'transferred — electrons moved from hair to balloon',['created by friction','destroyed and remade','converted from heat'],
+     'Charge is conserved as strictly as energy and momentum: never created, only moved. Your hair is left positive by exactly the amount the balloon went negative. The books always balance.'),
+   ()=>qCon('Metals conduct electricity and rubber does not, because in metals…',
+     'some electrons are free to roam between atoms',['atoms are heavier','protons can move','charge is stronger'],
+     'A conductor is a material with mobile charge — a sea of loose electrons. Insulators keep theirs on a leash. Every wire and every glove in Act II relied on this one distinction.'),
+   ()=>qCon('Gravity and the electric force both follow 1/r². The deepest DIFFERENCE between them is…',
+     'electricity has two signs — it can push as well as pull',['gravity is faster','electricity needs wires','gravity only works on planets'],
+     'Mass only attracts; charge does both. That single extra sign lets electricity cancel itself, hide inside neutral atoms, and build everything chemistry makes — while gravity, unopposable, quietly wins at large scales.'),
+  ];
+  const bank2=[
+   ()=>{const V=12,R=pick([4,6,8]);
+     return qNum(`A ${R} Ω lamp across a ${V} V battery draws…`,
+       V/R,'A',[V*R,R/V,V/R/2],
+       `I = V/R = ${V}/${R} = ${fmt(V/R)} A. Ohm’s law is the entire grammar of Act II — every switch you threw was this division.`);},
+   ()=>{const n=pick([2,3]),I=2;
+     return qNum(`Each closed branch draws ${I} A from the battery. With ${n} branches closed, the fuse sees…`,
+       n*I,'A',[I,I/n,n*I*2],
+       `Parallel branches don’t share current — they each take their own, and the supply line carries the SUM: ${n} × ${I} = ${n*I} A. This is why the fuse counts switches.`);},
+   ()=>qCon('You close one more parallel lamp and every lamp on the board dims slightly. The culprit is…',
+     'the shared series resistance — more total current, more voltage lost on the line',['the new lamp stealing electrons','the battery getting tired instantly','parallel circuits always dim'],
+     'Ideal parallel lamps would not interact — but real supply lines have resistance, and V_line = I_total·R_s grows with every branch. Your house lights flicker when the AC kicks on for exactly this reason.'),
+   ()=>{const V=12,I=pick([2,3]);
+     return qNum(`A lamp draws ${I} A at ${V} V. Its power is…`,
+       V*I,'W',[V/I,V+I,V*I/2],
+       `P = IV = ${V} × ${I} = ${V*I} W — joules per second, the bridge between this cabinet and CASCADE. Brightness is just power you can see.`);},
+   ()=>qCon('The fuse in your board exists to…',
+     'melt FIRST when current runs too high, breaking the circuit before the wiring burns',['boost the voltage','store spare charge','keep lamps equally bright'],
+     'A fuse is a sacrificial weak link — a wire designed to fail safely. When you blew one in Act II, you were watching a tiny, deliberate disaster prevent a large accidental one.'),
+  ];
+  const bank3=[
+   ()=>qCon('A strong magnet rests motionless INSIDE a coil. The induced voltage is…',
+     'zero — only CHANGING flux induces EMF',['maximum','equal to the magnet’s strength','alternating'],
+     'Faraday’s law cares about dΦ/dt, not Φ. A parked magnet, however mighty, induces nothing — which you proved every time you held the handle still and the EMF trace went flat.'),
+   ()=>qCon('You shove the magnet in TWICE as fast. The peak EMF…',
+     'doubles — EMF is proportional to the rate of change',['stays the same','quadruples','halves'],
+     'EMF = −dΦ/dt: same flux change in half the time means twice the slope. Speed is the dynamo’s throttle — and the breaker’s favorite reason to trip.'),
+   ()=>qCon('A generator and an electric motor are…',
+     'the same machine run in opposite directions',['completely unrelated devices','a magnet versus a battery','AC versus DC'],
+     'Spin the coil, get current (generator); feed it current, get spin (motor). One device, two directions — many EVs literally flip theirs to charge the battery while braking. CASCADE’s regen brake, unmasked.'),
+   ()=>qCon('Pumping the magnet in-out-in-out produced a current that…',
+     'alternated direction — you were generating AC',['flowed one way, growing','flowed one way, steady','stopped after the first stroke'],
+     'Flux up induces one direction; flux down induces the other. Rhythm in, alternation out — scale your hand up to a steam-spun turbine and you have the 60 Hz in every outlet.'),
+   ()=>qCon('As you drive the magnet in, the coil’s induced current creates a field that…',
+     'opposes the magnet coming in — you must push against it',['helps pull the magnet through','does nothing magnetic','reverses the magnet’s poles'],
+     'Lenz’s law: induction always fights the change that causes it. That resistance in your hand IS the energy you harvested — nothing comes free, signed, the laws of thermodynamics.'),
+  ];
+  /* CROSSOVER bank — bridges back to ORBIT, FURNACE, RESONANCE. +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · ORBIT — Gravity’s g and Coulomb’s force both die off as 1/r². Yet atoms are held together electrically while planets are held gravitationally, because…',
+     'charge comes in two signs that cancel at a distance; mass never cancels',['gravity is stronger up close','electricity stops working in space','planets are too big for charge'],
+     'Electric forces are ferociously strong but neutralize — every + finds a −, and from afar the dust looks inert. Gravity is feeble but has no off switch, so given enough mass it runs the cosmos. Same law of spheres, opposite destinies.'),
+   ()=>qCon('CROSSOVER · FURNACE — A real power plant is FURNACE’s engine room bolted to THIS cabinet’s dynamo. The full chain to your wall socket is…',
+     'heat → spinning shaft → changing flux → EMF — Carnot taxes it, Faraday delivers it',['heat → electrons directly','magnetism → heat → current','fuel → voltage, no moving parts'],
+     'The boiler makes heat, the turbine turns it into rotation (paying Carnot’s ceiling), and the rotation spins magnets past coils — your Act III handle, scaled to tons. Two cabinets, one socket.'),
+   ()=>qCon('CROSSOVER · RESONANCE — Shake a charge back and forth fast enough and the disturbance in its field travels off on its own. RESONANCE already taught you its name:',
+     'light — an electromagnetic wave, self-propagating field ripples',['sound','static','heat radiation only'],
+     'A changing electric field makes a magnetic one; a changing magnetic field makes an electric one — and the pair bootstraps through empty space at c. Every color in RESONANCE was this cabinet’s fields, waving goodbye.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== physics */
+const DT=1/120;
+let lastPhi=0;
+function step(dt){
+  t+=dt;attemptT+=dt;
+  if(act===1){
+    let ax=0,ay=0;
+    for(const p of lv.pylons){
+      const dx=probe.x-p.x,dy=probe.y-p.y,r=Math.max(1.2,hyp(dx,dy));
+      const F=K*probe.sign*p.q/(r*r); // + product = repulsion, along (probe−pylon)
+      ax+=F*dx/r;ay+=F*dy/r;
+      if(r<2){failAttempt('ZAP — PYLON CONTACT',
+        'The inverse square has teeth up close: force quadruples every halving of the gap. Make your flips two heartbeats earlier than feels right.');return;}
+    }
+    probe.vx=clamp(probe.vx+ax*dt,-30,30);
+    probe.vy=clamp(probe.vy+ay*dt,-30,30);
+    probe.x+=probe.vx*dt;probe.y+=probe.vy*dt;
+    if(probe.x<1){probe.x=1;probe.vx=Math.abs(probe.vx)*0.5;}
+    if(probe.x>47){probe.x=47;probe.vx=-Math.abs(probe.vx)*0.5;}
+    if(probe.y<1){probe.y=1;probe.vy=Math.abs(probe.vy)*0.5;}
+    if(probe.y>29){probe.y=29;probe.vy=-Math.abs(probe.vy)*0.5;}
+    const sp=hyp(probe.vx,probe.vy);
+    setHum(sp/60,60+sp*4);
+    const d=hyp(probe.x-lv.dock.x,probe.y-lv.dock.y);
+    if(d<lv.dock.r){
+      if(sp<=VDOCK){
+        succeed(`Docked at ${fmt(sp,1)} speed — flown entirely on attraction and repulsion.`,
+          Math.round((VDOCK-sp)*40));return;}
+      else if(Math.random()<0.05)popup('TOO HOT — '+fmt(sp,1),'#f87171',16);
+    }
+    if(attemptT>=lv.dur){failAttempt('PROBE RECALLED',
+      'Plan in ellipses, not lines: fall toward a pylon, flip at closest approach, and let the fling do the traveling. Coulomb is your engine — stop fighting it.');return;}
+  }else if(act===2){
+    while(surgeIdx<lv.surges.length&&lv.surges[surgeIdx].at<=attemptT){
+      const s=lv.surges[surgeIdx++];
+      branches[s.branch].R=s.R;
+      popup('SURGE — LAMP '+(s.branch+1)+' SAGGED','#f87171',24);
+      zap();shake=.4;flash=.3;
+    }
+    const {Itot}=solveGrid();
+    setHum(Itot/lv.Imax*0.05,55+Itot*8);
+    if(Itot>lv.Imax){fuseHot+=dt;
+      if(Math.random()<.3)burstPx(W*0.32,H*0.2,3,['#fbbf24','#f87171'],60);
+      if(fuseHot>1.5){failAttempt('FUSE BLOWN',
+        'The fuse counts EVERY branch — parallel paths add their currents on the supply line. Open something before you close something.');return;}}
+    else fuseHot=Math.max(0,fuseHot-dt*0.8);
+    let allOk=true;
+    for(const b of branches){
+      const ok=b.target===0?(!b.sw):(b.sw&&b.bright>=b.target[0]&&b.bright<=b.target[1]);
+      b.ok=ok;if(!ok)allOk=false;
+    }
+    if(allOk){gridHold+=dt;
+      if(gridHold>=4){
+        const head=Math.max(0,lv.Imax-Itot);
+        succeed(`Every order held — ${fmt(Itot,1)} A drawn with ${fmt(head,1)} A of headroom on the fuse.`,
+          Math.round(head*60));return;}}
+    else gridHold=0;
+    if(attemptT>=lv.dur){failAttempt('SHIFT BELL — ORDERS UNFILLED',
+      'Work the math before the switches: each closed branch draws V/R on its own. Add them up, check the fuse, THEN throw. Dispatchers calculate; gamblers re-wire.');return;}
+  }else{
+    magV=driving?lv.vIn:-lv.vOut;
+    mag=clamp(mag+magV*dt,0,1);
+    const phi=fluxS(mag)*10;
+    const emf=-(phi-lastPhi)/dt;
+    lastPhi=phi;
+    const I=emf/lv.R;
+    lastEMF=emf;lastI=I;
+    bank+=I*I*lv.R*dt*0.12; // scaled harvest — ~9 punctuated cycles per bank
+    setHum(Math.abs(I)/lv.Imax*0.06,55+Math.abs(I)*10);
+    if(t-lastSamp>=1/40){samples.push({t,phi,emf,I});lastSamp=t;
+      if(samples.length>4000)samples.shift();}
+    // thermal breaker: overcurrent heats it, pauses cool it 2.5× faster —
+    // punctuated pumping survives; continuous flogging trips.
+    if(Math.abs(I)>lv.Imax){tripT+=dt;
+      if(tripT>0.6){failAttempt('BREAKER TRIP',
+        'I = EMF/R, and EMF rides your stroke speed. Pump, then BREATHE — the breaker cools in the pauses. The dynamo rewards rhythm, not rage.');return;}}
+    else tripT=Math.max(0,tripT-dt*2.5);
+    if(bank>=lv.Etarget){
+      succeed(`${Math.round(bank)} J banked${lv.ac?' on a clean alternating rhythm':''} — every joule of it induced by CHANGE.`,
+        Math.round(clamp(Math.abs(lastI)/lv.Imax,0,1)*200));return;}
+    if(attemptT>=lv.dur){failAttempt('SHIFT BELL — BANK SHORT',
+      'A parked magnet earns nothing — the flat parts of your flux curve are wasted seconds. Keep it MOVING; the slope is the salary.');return;}
+  }
+}
+
+/* ================================================== render */
+function sceneRect(){const pw=Math.min(420,W*0.34);return {w:W-pw,pw};}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  const now=performance.now()/1000;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*10,rnd(-1,1)*shake*10);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#060a03');bg.addColorStop(1,'#0c1406');
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  if(act===1)scene1(SW,now);
+  else if(act===2)scene2(SW,now);
+  else scene3(SW,now);
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    p.px+=p.vx/60;p.py+=p.vy/60;p.vy+=50/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(p.px,p.py,p.size,p.size);}
+  ctx.globalAlpha=1;
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,SW/2+p.jx,H*0.26-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#a3e635';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#a3e635':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function scene1(SW,now){
+  const s=Math.min((SW-40)/48,(H-90)/30);
+  const ox=(SW-48*s)/2,oy=(H-30*s)/2+8;
+  const X2=x=>ox+x*s,Y2=y=>oy+y*s;
+  ctx.strokeStyle='#a3e63522';ctx.strokeRect(ox,oy,48*s,30*s);
+  // field hints: the force YOUR probe (current sign) would feel, on a coarse grid
+  for(let gx2=4;gx2<48;gx2+=5)for(let gy2=3;gy2<30;gy2+=5){
+    let fx=0,fy=0;
+    for(const p of lv.pylons){
+      const dx=gx2-p.x,dy=gy2-p.y,r=Math.max(2,hyp(dx,dy));
+      const F=probe.sign*p.q/(r*r);fx+=F*dx/r;fy+=F*dy/r;}
+    const m2=hyp(fx,fy);if(m2<0.002)continue;
+    const L=clamp(m2*220,4,14);
+    ctx.strokeStyle='#a3e63530';ctx.fillStyle='#a3e63540';
+    const px=X2(gx2),py=Y2(gy2),nx=fx/m2,ny=fy/m2;
+    ctx.beginPath();ctx.moveTo(px-nx*L/2,py-ny*L/2);ctx.lineTo(px+nx*L/2,py+ny*L/2);ctx.stroke();
+    ctx.beginPath();ctx.arc(px+nx*L/2,py+ny*L/2,1.5,0,TAU);ctx.fill();
+  }
+  // dock
+  const glow=.5+.5*Math.sin(now*4);
+  ctx.strokeStyle=`rgba(52,211,153,${.5+.4*glow})`;ctx.lineWidth=3;
+  ctx.beginPath();ctx.arc(X2(lv.dock.x),Y2(lv.dock.y),lv.dock.r*s,0,TAU);ctx.stroke();ctx.lineWidth=1;
+  ctx.fillStyle='#34d399';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('DOCK < '+VDOCK,X2(lv.dock.x),Y2(lv.dock.y-lv.dock.r)-6);ctx.textAlign='left';
+  // pylons
+  for(const p of lv.pylons){
+    const px=X2(p.x),py=Y2(p.y),R2=Math.max(8,Math.abs(p.q)*5*s*0.12+8);
+    const col=p.q>0?'#f87171':'#38bdf8';
+    ctx.fillStyle=col+'33';
+    ctx.beginPath();ctx.arc(px,py,R2*2.2,0,TAU);ctx.fill();
+    ctx.fillStyle=col;ctx.strokeStyle='#0a0f04';ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(px,py,R2,0,TAU);ctx.fill();ctx.stroke();ctx.lineWidth=1;
+    ctx.fillStyle='#0a0f04';ctx.font='700 13px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText(p.q>0?'+':'−',px,py+5);ctx.textAlign='left';
+  }
+  // probe
+  const px=X2(probe.x),py=Y2(probe.y);
+  const pc=probe.sign>0?'#f87171':'#38bdf8';
+  ctx.fillStyle=pc;ctx.strokeStyle='#fff';ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(px,py,9,0,TAU);ctx.fill();ctx.stroke();ctx.lineWidth=1;
+  ctx.fillStyle='#0a0f04';ctx.font='700 12px Orbitron,monospace';ctx.textAlign='center';
+  ctx.fillText(probe.sign>0?'+':'−',px,py+4);
+  ctx.fillStyle='#8b96ad';ctx.font='9px "Share Tech Mono",monospace';
+  ctx.fillText(fmt(hyp(probe.vx,probe.vy),1),px,py-14);ctx.textAlign='left';
+}
+function scene2(SW,now){
+  const bx=SW*0.14,topY=H*0.2,rowH=Math.min(86,(H*0.62)/Math.max(3,branches.length));
+  // battery + fuse + line
+  ctx.fillStyle='#1f2937';ctx.fillRect(bx-40,H*0.42,30,90);
+  ctx.fillStyle='#fbbf24';ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText(lv.V+' V',bx-25,H*0.42-8);
+  const {Itot}=solveGrid();
+  // fuse
+  const fx=bx+30,fy=H*0.3;
+  const hot=clamp(fuseHot/1.5,0,1);
+  ctx.fillStyle=hot>0?`rgb(${150+hot*105},${80-hot*40},60)`:'#374151';
+  ctx.fillRect(fx-16,fy-9,32,18);
+  ctx.strokeStyle=Itot>lv.Imax?'#f87171':'#6b7280';ctx.strokeRect(fx-16,fy-9,32,18);
+  ctx.fillStyle=Itot>lv.Imax?'#f87171':'#8b96ad';
+  ctx.fillText('FUSE '+fmt(Itot,1)+'/'+lv.Imax+' A',fx,fy-16);
+  if(lv.Rs>0){ctx.fillStyle='#8b96ad';
+    ctx.fillText('line '+lv.Rs+' Ω',fx+80,fy-16);
+    ctx.strokeStyle='#6b7280';
+    for(let z=0;z<5;z++){ctx.beginPath();
+      ctx.moveTo(fx+56+z*12,fy+(z%2?-6:6));ctx.lineTo(fx+62+z*12,fy+(z%2?6:-6));ctx.stroke();}}
+  ctx.textAlign='left';
+  // bus
+  ctx.strokeStyle='#6b7280';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(bx-25,H*0.42);ctx.lineTo(bx-25,fy);ctx.lineTo(SW*0.34,fy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(SW*0.34,fy);ctx.lineTo(SW*0.34,topY+branches.length*rowH);ctx.stroke();
+  ctx.lineWidth=1;
+  // branches
+  branches.forEach((b,i)=>{
+    const y=topY+i*rowH+rowH/2;
+    const seld=i===selBr;
+    if(seld){ctx.fillStyle='#a3e63514';ctx.fillRect(SW*0.3,y-rowH/2+4,SW*0.56,rowH-8);}
+    ctx.strokeStyle='#6b7280';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(SW*0.34,y);ctx.lineTo(SW*0.42,y);ctx.stroke();
+    // switch lever
+    ctx.beginPath();ctx.moveTo(SW*0.42,y);
+    ctx.lineTo(SW*0.42+34*Math.cos(b.sw?0:-0.6),y+34*Math.sin(b.sw?0:-0.6));ctx.stroke();
+    ctx.fillStyle=b.sw?'#a3e635':'#6b7280';
+    ctx.beginPath();ctx.arc(SW*0.42,y,4,0,TAU);ctx.fill();
+    // wire to lamp
+    ctx.strokeStyle='#6b7280';
+    ctx.beginPath();ctx.moveTo(SW*0.42+34,y);ctx.lineTo(SW*0.58,y);ctx.stroke();ctx.lineWidth=1;
+    // lamp
+    const lx=SW*0.62,glow2=clamp(b.bright/100,0,1.3);
+    ctx.fillStyle=`rgba(251,191,36,${glow2*0.8})`;
+    ctx.beginPath();ctx.arc(lx,y,16+glow2*10,0,TAU);ctx.fill();
+    ctx.fillStyle=glow2>0.05?'#fde68a':'#1f2937';
+    ctx.strokeStyle='#6b7280';
+    ctx.beginPath();ctx.arc(lx,y,13,0,TAU);ctx.fill();ctx.stroke();
+    ctx.fillStyle='#0a0f04';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText(b.R+'Ω',lx,y+3);
+    // target band + status
+    ctx.textAlign='left';ctx.font='11px "Share Tech Mono",monospace';
+    const tx=SW*0.70;
+    if(b.target===0){
+      ctx.fillStyle=b.ok?'#34d399':'#f87171';
+      ctx.fillText('keep OFF '+(b.ok?'✓':'✗'),tx,y+4);
+    }else{
+      ctx.fillStyle='#1f2937';ctx.fillRect(tx,y-6,120,12);
+      ctx.fillStyle='#a3e63533';
+      ctx.fillRect(tx+120*b.target[0]/130,y-6,120*(b.target[1]-b.target[0])/130,12);
+      ctx.fillStyle=b.ok?'#34d399':'#fbbf24';
+      ctx.fillRect(tx+120*clamp(b.bright,0,130)/130-2,y-8,4,16);
+      ctx.fillStyle=b.ok?'#34d399':'#8b96ad';
+      ctx.fillText(b.bright+'%',tx+126,y+4);
+    }
+    ctx.fillStyle='#8b96ad';ctx.fillText(fmt(b.I,1)+' A',SW*0.50,y-12);
+  });
+  if(gridHold>0){ctx.strokeStyle='#34d399';ctx.lineWidth=4;
+    ctx.beginPath();ctx.arc(SW*0.5,topY-24,12,-Math.PI/2,-Math.PI/2+(gridHold/4)*TAU);ctx.stroke();
+    ctx.lineWidth=1;}
+}
+function scene3(SW,now){
+  const cy2=H*0.45,coilX=SW*0.55,coilW=130;
+  // rail + magnet
+  const mx=SW*0.18+(coilX-SW*0.18+coilW*0.5)*mag;
+  ctx.strokeStyle='#374151';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(SW*0.1,cy2);ctx.lineTo(SW*0.88,cy2);ctx.stroke();ctx.lineWidth=1;
+  // spring (left)
+  ctx.strokeStyle='#6b7280';
+  ctx.beginPath();ctx.moveTo(SW*0.1,cy2);
+  const segs2=8,sl=(mx-40-SW*0.1)/segs2;
+  for(let i2=0;i2<=segs2;i2++)ctx.lineTo(SW*0.1+i2*sl,cy2+((i2%2)?-10:10));
+  ctx.stroke();
+  // magnet
+  ctx.fillStyle='#f87171';ctx.fillRect(mx-40,cy2-16,40,32);
+  ctx.fillStyle='#38bdf8';ctx.fillRect(mx,cy2-16,40,32);
+  ctx.fillStyle='#fff';ctx.font='700 13px Orbitron,monospace';ctx.textAlign='center';
+  ctx.fillText('N',mx-20,cy2+5);ctx.fillText('S',mx+20,cy2+5);
+  // coil
+  ctx.strokeStyle='#a3e635';ctx.lineWidth=3;
+  for(let i2=0;i2<7;i2++){
+    ctx.beginPath();ctx.ellipse(coilX+i2*(coilW/7)+10,cy2,9,42,0,0,TAU);ctx.stroke();}
+  ctx.lineWidth=1;
+  // current arrows on the coil wires (direction by sign of I)
+  if(Math.abs(lastI)>0.3){
+    ctx.fillStyle='#fde68a';
+    const dir=lastI>0?1:-1;
+    for(let i2=0;i2<5;i2++){
+      const ax=coilX+((now*60*dir+i2*30)%150+150)%150;
+      ctx.beginPath();ctx.arc(ax,cy2-46,2.5,0,TAU);ctx.fill();}
+  }
+  // breaker lamp + bank
+  ctx.fillStyle=tripT>0?'#f87171':'#1f2937';
+  ctx.beginPath();ctx.arc(SW*0.84,cy2-70,9,0,TAU);ctx.fill();
+  ctx.strokeStyle='#6b7280';ctx.stroke();
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('BREAKER '+lv.Imax+' A',SW*0.84,cy2-88);
+  const bf=clamp(bank/lv.Etarget,0,1);
+  ctx.fillStyle='#0009';ctx.fillRect(SW/2-160,H-66,320,30);
+  ctx.fillStyle='#1f2937';ctx.fillRect(SW/2-150,H-58,300,14);
+  ctx.fillStyle='#a3e635';ctx.fillRect(SW/2-150,H-58,300*bf,14);
+  ctx.fillStyle='#e7ecf5';
+  ctx.fillText('BANK '+Math.round(bank)+' / '+lv.Etarget+' J',SW/2,H-40);
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText('I = '+fmt(lastI,1)+' A   EMF = '+fmt(lastEMF,1)+' V',SW/2,cy2+70);
+  ctx.textAlign='left';
+}
+function drawHUD(SW){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  const left2=Math.max(0,lv.dur-attemptT);
+  ctx.fillStyle='#0008';ctx.fillRect(8,8,210,48);
+  ctx.fillStyle=left2<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+  ctx.fillText(Math.ceil(left2)+'s',16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  if(act===1)ctx.fillText('you are '+(probe.sign>0?'POSITIVE':'NEGATIVE'),70,28);
+  else if(act===2)ctx.fillText('hold all bands '+fmt(Math.max(0,4-gridHold),1)+'s',70,28);
+  else ctx.fillText('only change makes current',70,28);
+  ctx.fillText('shift clock',16,46);
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '⚡'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,48);
+  ctx.textAlign='left';
+}
+/* ================================================== the switch desk */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#0a1005';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#a3e63533';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#a3e635';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('SWITCH DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name:'',SW+128,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=H-top-2*gap-14;
+  if(act===1){drawCoulomb(gx,top,gw,ch2*0.55);drawStaticInfo(gx,top+ch2*0.55+gap,gw,ch2*0.45);}
+  else if(act===2){drawGridInfo(gx,top,gw,ch2);}
+  else {drawFluxGraphs(gx,top,gw,ch2);}
+}
+function drawCoulomb(gx,gy,gw,gh){
+  ctx.fillStyle='#0f1808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('COULOMB METER — F = kq₁q₂/r², you are the dot (again)',gx+8,gy+14);
+  // 1/r² curve, dot at distance to NEAREST pylon
+  let near=null,nd=1e9;
+  for(const p of lv.pylons){const d=hyp(probe.x-p.x,probe.y-p.y);
+    if(d<nd){nd=d;near=p;}}
+  const r0=2,r1=30;
+  const X=r=>gx+10+((r-r0)/(r1-r0))*(gw-20);
+  const Y=f=>gy+gh-12-clamp(f/(K/(r0*r0)),0,1)*(gh-34);
+  ctx.strokeStyle='#a3e635';ctx.lineWidth=2;ctx.shadowColor='#a3e635';ctx.shadowBlur=6;
+  ctx.beginPath();
+  for(let r=r0;r<=r1;r+=0.4){const px=X(r),py=Y(K/(r*r));
+    r===r0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+  ctx.stroke();ctx.shadowBlur=0;ctx.lineWidth=1;
+  if(near){
+    const rr=clamp(nd,r0,r1);
+    ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.shadowBlur=8;
+    ctx.beginPath();ctx.arc(X(rr),Y(K/(rr*rr)),4,0,TAU);ctx.fill();ctx.shadowBlur=0;
+    const attract=(probe.sign*near.q)<0;
+    ctx.fillStyle=attract?'#38bdf8':'#f87171';ctx.font='10px "Share Tech Mono",monospace';
+    ctx.fillText((attract?'ATTRACTING':'REPELLING')+' · r = '+fmt(nd,1),X(rr)+8,Y(K/(rr*rr))-6);
+  }
+  ctx.fillStyle='#57534e';ctx.fillText('r →',gx+gw-30,gy+gh-4);
+}
+function drawStaticInfo(gx,gy,gw,gh){
+  ctx.fillStyle='#0f1808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE PROBE’S LEDGER',gx+8,gy+14);
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+34;
+  ctx.fillStyle=probe.sign>0?'#f87171':'#38bdf8';
+  ctx.fillText('your charge: '+(probe.sign>0?'+1 (positive)':'−1 (negative)'),gx+10,y);y+=20;
+  ctx.fillStyle='#fbbf24';
+  ctx.fillText('speed '+fmt(hyp(probe.vx,probe.vy),1)+'  (dock under '+VDOCK+')',gx+10,y);y+=20;
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText('likes repel · unlikes attract',gx+10,y);y+=20;
+  ctx.fillStyle='#57534e';
+  ctx.fillText('the grid arrows show the force',gx+10,y);y+=16;
+  ctx.fillText('on YOU — they flip when you do.',gx+10,y);
+}
+function drawGridInfo(gx,gy,gw,gh){
+  ctx.fillStyle='#0f1808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE DISPATCHER’S LEDGER — V = IR everywhere',gx+8,gy+14);
+  const {Vp,Itot}=solveGrid();
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+36;
+  ctx.fillStyle='#fbbf24';ctx.fillText('battery  '+lv.V+' V',gx+10,y);y+=20;
+  if(lv.Rs>0){ctx.fillStyle='#f87171';
+    ctx.fillText('line drop  '+fmt(lv.V-Vp,1)+' V  (across '+lv.Rs+' Ω)',gx+10,y);y+=20;
+    ctx.fillStyle='#a3e635';
+    ctx.fillText('at the lamps  '+fmt(Vp,1)+' V',gx+10,y);y+=20;}
+  // fuse bar
+  ctx.fillStyle='#8b96ad';ctx.fillText('fuse load',gx+10,y);
+  ctx.fillStyle='#1f2937';ctx.fillRect(gx+90,y-10,gw-110,12);
+  const fr=clamp(Itot/lv.Imax,0,1.3);
+  ctx.fillStyle=fr>1?'#f87171':fr>0.85?'#fbbf24':'#34d399';
+  ctx.fillRect(gx+90,y-10,(gw-110)*clamp(fr,0,1),12);
+  y+=24;
+  branches.forEach((b,i)=>{
+    ctx.fillStyle=i===selBr?'#a3e635':'#8b96ad';
+    ctx.fillText('lamp '+(i+1)+'  '+b.R+'Ω  '+(b.sw?fmt(b.I,1)+' A':'open')+'  '+(b.ok?'✓':'·'),gx+10,y);
+    y+=18;});
+  y+=6;
+  ctx.fillStyle='#57534e';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText('parallel: currents ADD on the fuse.',gx+10,y);y+=16;
+  ctx.fillText('series: voltage is SHARED on the line.',gx+10,y);
+}
+function drawFluxGraphs(gx,gy,gw,gh){
+  // the star: Φ(t) on top, EMF = −dΦ/dt below — the derivative, drawn
+  const h1=gh*0.48,h2=gh*0.48;
+  const box=(y0,hh,label)=>{ctx.fillStyle='#0f1808';ctx.fillRect(gx,y0,gw,hh);
+    ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,y0+.5,gw-1,hh-1);
+    ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+    ctx.fillText(label,gx+8,y0+14);};
+  box(gy,h1,'FLUX Φ through the coil');
+  box(gy+h1+gh*0.04,h2,'EMF = −dΦ/dt — the SLOPE of the curve above');
+  if(samples.length<2)return;
+  const WIN=8,t1=Math.max(t,WIN),t0=t1-WIN;
+  const vis=samples.filter(s2=>s2.t>=t0);
+  if(vis.length<2)return;
+  const X=tt=>gx+8+((tt-t0)/WIN)*(gw-16);
+  // flux: 0..10
+  const Y1=v=>gy+h1-10-(clamp(v,0,10)/10)*(h1-30);
+  ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.shadowColor='#38bdf8';ctx.shadowBlur=6;
+  ctx.beginPath();
+  vis.forEach((s2,i)=>{i===0?ctx.moveTo(X(s2.t),Y1(s2.phi)):ctx.lineTo(X(s2.t),Y1(s2.phi));});
+  ctx.stroke();ctx.shadowBlur=0;
+  // emf: ±(Imax·R·1.3)
+  const eMax=lv.Imax*lv.R*1.3,y0e=gy+h1+gh*0.04;
+  const Y2=v=>y0e+h2/2-(clamp(v,-eMax,eMax)/eMax)*(h2/2-16);
+  ctx.strokeStyle='#ffffff22';ctx.setLineDash([3,4]);
+  ctx.beginPath();ctx.moveTo(gx+8,Y2(0));ctx.lineTo(gx+gw-8,Y2(0));ctx.stroke();
+  // breaker lines
+  ctx.strokeStyle='#f8717155';
+  ctx.beginPath();ctx.moveTo(gx+8,Y2(lv.Imax*lv.R));ctx.lineTo(gx+gw-8,Y2(lv.Imax*lv.R));ctx.stroke();
+  ctx.beginPath();ctx.moveTo(gx+8,Y2(-lv.Imax*lv.R));ctx.lineTo(gx+gw-8,Y2(-lv.Imax*lv.R));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.strokeStyle='#a3e635';ctx.lineWidth=2;ctx.shadowColor='#a3e635';ctx.shadowBlur=6;
+  ctx.beginPath();
+  vis.forEach((s2,i)=>{i===0?ctx.moveTo(X(s2.t),Y2(s2.emf)):ctx.lineTo(X(s2.t),Y2(s2.emf));});
+  ctx.stroke();ctx.shadowBlur=0;ctx.lineWidth=1;
+  ctx.fillStyle='#57534e';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('flat Φ → zero EMF. always.',gx+10,y0e+h2-8);
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){
+    acc+=el;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(e.code==='Space'){
+      if(act===1){probe.sign*=-1;beep(probe.sign>0?500:330,.08,'square',.12);flash=.12;}
+      else if(act===2){branches[selBr].sw=!branches[selBr].sw;
+        beep(branches[selBr].sw?620:300,.08,'square',.12);}
+      else driving=true;
+    }
+    if(act===2){
+      if(e.code==='ArrowLeft')selBr=(selBr+branches.length-1)%branches.length;
+      if(e.code==='ArrowRight'||e.code==='ArrowDown')selBr=(selBr+1)%branches.length;
+      if(e.code==='ArrowUp')selBr=(selBr+branches.length-1)%branches.length;
+    }
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';
+    driving=false;setHum(0);}
+  if(e.code==='KeyM'){muted=!muted;setHum(0);}
+});
+window.addEventListener('keyup',e=>{
+  if(e.code==='Space')driving=false;
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  if(state!=='play')return;
+  if(act===1){probe.sign*=-1;beep(probe.sign>0?500:330,.08,'square',.12);flash=.12;}
+  else if(act===2){
+    const topY=H*0.2,rowH=Math.min(86,(H*0.62)/Math.max(3,branches.length));
+    const i=Math.floor((e.clientY-topY)/rowH);
+    if(i>=0&&i<branches.length){selBr=i;branches[i].sw=!branches[i].sw;
+      beep(branches[i].sw?620:300,.08,'square',.12);}
+  }else driving=true;
+});
+window.addEventListener('pointerup',()=>{driving=false;});
+window.addEventListener('blur',()=>{driving=false;setHum(0);});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

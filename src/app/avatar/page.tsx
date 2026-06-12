@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles, Heart, Star } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
-import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
-import { SKIN, HAIR } from '@/lib/avatar/palette'
+import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, KNOB_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
+import { SKIN, HAIR, EYE } from '@/lib/avatar/palette'
 import type { CatalogState } from '@/app/api/avatar/route'
 
 type CatalogEntry = AvatarItem & { state: CatalogState; unlock_progress?: number }
@@ -23,14 +23,16 @@ interface Bundle {
   use_custom_avatar: boolean
 }
 
-type Tab = 'face' | 'items' | 'gallery'
+type Tab = 'face' | 'fine' | 'items' | 'gallery'
 
 const SLOT_LABEL: Record<ItemSlot, string> = {
   eyewear: 'Eyewear', head: 'Head & helmets', body: 'Body & coats', pin: 'Pins', background: 'Backgrounds', facial_hair: 'Facial hair',
 }
 
-// The guided builder walks these traits one at a time, in this order.
-const WIZARD_ORDER = Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]
+// The guided builder walks these traits one at a time, in this order. The
+// geometry knobs (KNOB_TRAITS) are deliberately excluded — they live in the
+// Fine-tune tab so onboarding stays short and ends on identity, not sliders.
+const WIZARD_ORDER = (Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).filter((k) => !KNOB_TRAITS.includes(k))
 
 interface GalleryAvatar {
   user_id: string; name: string; traits: Record<string, string>; equipped: Record<string, string>
@@ -168,6 +170,7 @@ export default function AvatarPage() {
 
           <div className="flex items-center gap-2 mb-4">
             <TabButton active={tab === 'face'} onClick={() => setTab('face')}>{bundle.setup_completed ? 'Edit my face' : 'Build my Mii'}</TabButton>
+            <TabButton active={tab === 'fine'} onClick={() => setTab('fine')} disabled={!bundle.setup_completed}>Fine-tune</TabButton>
             <TabButton active={tab === 'items'} onClick={() => setTab('items')} disabled={!bundle.setup_completed}>Items</TabButton>
             <TabButton active={tab === 'gallery'} onClick={() => setTab('gallery')}>Gallery</TabButton>
           </div>
@@ -178,7 +181,7 @@ export default function AvatarPage() {
               equipped={bundle.equipped}
               catalog={bundle.catalog}
               onChoose={saveTrait}
-              onFinish={() => { setMode('quick'); setTab('items'); setFlash('Your Mii is ready — nice work!'); setTimeout(() => setFlash(null), 2600) }}
+              onFinish={() => { setMode('quick'); setTab('fine'); setFlash('Your Mii is ready — now make it yours in Fine-tune!'); setTimeout(() => setFlash(null), 2600) }}
             />
           )}
 
@@ -190,16 +193,16 @@ export default function AvatarPage() {
                 </button>
               </div>
               <AccountSection alias={bundle.alias} useCustomAvatar={bundle.use_custom_avatar} onSaved={load} />
-              {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).map((key) => {
-                const value = (previewTraits[key] as string) ?? TRAIT_OPTIONS[key][0]
-                if (key === 'skin' || key === 'hair_color') {
+              {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).filter((k) => !KNOB_TRAITS.includes(k)).map((key) => {
+                const value = (previewTraits[key] as string) ?? DEFAULT_TRAITS[key]
+                if (key === 'skin' || key === 'hair_color' || key === 'eye_color') {
                   return (
                     <SwatchRow
                       key={key}
                       label={TRAIT_LABELS[key]}
                       options={TRAIT_OPTIONS[key]}
                       value={value}
-                      colorFor={(opt) => (key === 'skin' ? SKIN[opt as keyof typeof SKIN].color : HAIR[opt as keyof typeof HAIR].main)}
+                      colorFor={(opt) => (key === 'skin' ? SKIN[opt as keyof typeof SKIN].color : key === 'hair_color' ? HAIR[opt as keyof typeof HAIR].main : EYE[opt as keyof typeof EYE])}
                       onChange={(v) => saveTrait(key, v)}
                     />
                   )
@@ -214,6 +217,23 @@ export default function AvatarPage() {
                   />
                 )
               })}
+            </div>
+          )}
+
+          {tab === 'fine' && (
+            <div className="flex flex-col gap-3">
+              <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>
+                <strong>Make it yours.</strong> Small adjustments, big difference — nudge each one and watch the preview.
+              </div>
+              {KNOB_TRAITS.map((key) => (
+                <TraitCarousel
+                  key={key}
+                  label={TRAIT_LABELS[key]}
+                  options={TRAIT_OPTIONS[key]}
+                  value={(previewTraits[key] as string) ?? DEFAULT_TRAITS[key]}
+                  onChange={(v) => saveTrait(key, v)}
+                />
+              ))}
             </div>
           )}
 

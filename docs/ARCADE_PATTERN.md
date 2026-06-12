@@ -85,6 +85,24 @@ That's it. No new tables, no new routes, no new pages per game.
 | Cabinet player (iframe + bridge) | `src/app/arcade/[slug]/page.tsx` |
 | First game | `public/games/kinematics-descent.html` |
 
+## Free cabinets (the one sanctioned payout)
+
+A cabinet with `cost_xp = 0` is a **free-to-play learning game**. The Math
+Spine series maps one cabinet to each strand of `math_competencies`:
+INVERSE BLITZ (SM), MAGNITUDE (NS), SCALE STORM (PR), POWERS OF TEN (QE),
+SLOPE SNIPER (GV) — all built from the shared falling-block engine, all
+purely supplemental fluency practice (the warm-up spiral remains the rated
+mastery evidence). Coins are free, runs
+are ranked as usual, and when a run finishes the player page calls
+`POST /api/arcade/payout { playId }` — the deliberate `economy_point_grants`
+path this doc prescribes, never the score route. The payout is
+**mastery-weighted**: `floor(min(25, solved × tier × accuracy²))`, zero below
+50% accuracy, daily cap **75** across all free cabinets — deliberately higher
+than the vocab cap (25/day in `points.ts`) because math remediation is the
+priority earner. Idempotent via `dedupe_key = 'arcade-payout:<playId>'`.
+Games attach a whitelisted `stats` object to their `arcade:score` posts; the
+score route stores it on `meta`, the payout route reads it.
+
 ## Design intent (don't break these)
 
 - **Never store a balance.** Spends are `reward_redemptions` rows; the

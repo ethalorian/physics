@@ -2,16 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather } from 'lucide-react'
+import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, Sigma } from 'lucide-react'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 
 /**
  * THE ARCADE — one unified hub for the whole economy loop.
  *
- *   TRAINING FLOOR (top): vocabulary games — the XP EARNERS (capped daily).
+ *   TRAINING FLOOR (top): vocabulary games — XP EARNERS (capped daily).
+ *   MATH SPINE GYM (middle): free fluency cabinets — XP EARNERS (capped daily,
+ *     paid by accuracy via /api/arcade/payout), one per math_competencies strand.
  *   MAIN FLOOR (bottom): ranked physics cabinets — the XP SPENDERS.
  *
- * Play the word games to fund the fun games. One door for everything.
+ * Play the word & math games to fund the fun games. One door for everything.
  */
 
 type Cabinet = {
@@ -80,6 +82,52 @@ export default function ArcadePage() {
 
   const bestById = new Map((hub?.games ?? []).map((g) => [g.id, g]))
   const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
+
+  const mathGames = (data?.games ?? []).filter((g) => g.costXp === 0)
+  const coinGames = (data?.games ?? []).filter((g) => g.costXp > 0)
+
+  const renderCabinet = (g: Cabinet) => {
+    const accent = g.accent || 'var(--primary)'
+    const free = g.costXp === 0
+    const canAfford = free || (data ? data.balance.balance >= g.costXp || data.freeCreditAvailable : false)
+    return (
+      <div key={g.slug} className="rounded-2xl border p-5 flex flex-col" style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 0 3px 0 ${accent}` }}>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="text-lg font-bold tracking-wide" style={{ color: accent }}>{g.name}</h3>
+            {g.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</span>}
+          </div>
+          <span className="flex items-center gap-1 text-sm font-semibold rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
+            <Coins size={14} style={{ color: accent }} /> {free ? 'EARNS XP' : g.costXp}
+          </span>
+        </div>
+        {g.blurb && <p className="text-sm mt-2 flex-1" style={{ color: 'var(--muted-foreground)' }}>{g.blurb}</p>}
+
+        <div className="mt-4 grid grid-cols-1 gap-1.5 text-sm">
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Trophy size={14} /> Week</span>
+            <span className="font-medium">{g.weeklyLeader ? `${g.weeklyLeader.name} — ${g.weeklyLeader.score.toLocaleString()}` : 'unclaimed'}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Crown size={14} /> All-time</span>
+            <span className="font-medium">{g.hallOfFame ? `${g.hallOfFame.name} — ${g.hallOfFame.score.toLocaleString()}` : 'be the first'}</span>
+          </div>
+          <div className="flex items-center justify-between">
+            <span style={{ color: 'var(--muted-foreground)' }}>Your best</span>
+            <span className="font-medium">{g.myBest ? g.myBest.toLocaleString() : '—'}{g.myWeeklyRank ? ` (#${g.myWeeklyRank})` : ''}</span>
+          </div>
+        </div>
+
+        <Link
+          href={`/arcade/${g.slug}`}
+          className="mt-4 text-center text-sm font-semibold rounded-lg px-4 py-2.5"
+          style={{ background: canAfford ? accent : 'var(--muted)', color: canAfford ? '#04060d' : 'var(--muted-foreground)' }}
+        >
+          {free ? '▶ PLAY FREE · EARN XP' : data?.freeCreditAvailable ? '▶ FREE CREDIT' : canAfford ? '▶ INSERT COIN' : `Need ${g.costXp} XP`}
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -209,6 +257,26 @@ export default function ArcadePage() {
         })}
       </div>
 
+      {/* ===== MATH SPINE GYM — free cabinets that EARN ===== */}
+      {mathGames.length > 0 && (
+        <>
+          <div className="flex items-center justify-between flex-wrap gap-2 mt-8 mb-3">
+            <div className="flex items-center gap-2">
+              <Sigma size={16} style={{ color: 'var(--success, #22c55e)' }} />
+              <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+                Math gym · free cabinets · accuracy earns XP
+              </h2>
+            </div>
+            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+              sloppy speed pays nothing · the best-paying floor: up to 75 XP/day
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {mathGames.map(renderCabinet)}
+          </div>
+        </>
+      )}
+
       {/* ===== MAIN FLOOR — the ranked cabinets ===== */}
       <div className="flex items-center gap-2 mt-8 mb-3">
         <Joystick size={16} style={{ color: 'var(--primary)' }} />
@@ -218,47 +286,7 @@ export default function ArcadePage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {data?.games.map((g) => {
-          const accent = g.accent || 'var(--primary)'
-          const canAfford = data.balance.balance >= g.costXp || data.freeCreditAvailable
-          return (
-            <div key={g.slug} className="rounded-2xl border p-5 flex flex-col" style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 0 3px 0 ${accent}` }}>
-              <div className="flex items-start justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-bold tracking-wide" style={{ color: accent }}>{g.name}</h3>
-                  {g.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</span>}
-                </div>
-                <span className="flex items-center gap-1 text-sm font-semibold rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
-                  <Coins size={14} style={{ color: accent }} /> {g.costXp}
-                </span>
-              </div>
-              {g.blurb && <p className="text-sm mt-2 flex-1" style={{ color: 'var(--muted-foreground)' }}>{g.blurb}</p>}
-
-              <div className="mt-4 grid grid-cols-1 gap-1.5 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Trophy size={14} /> Week</span>
-                  <span className="font-medium">{g.weeklyLeader ? `${g.weeklyLeader.name} — ${g.weeklyLeader.score.toLocaleString()}` : 'unclaimed'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Crown size={14} /> All-time</span>
-                  <span className="font-medium">{g.hallOfFame ? `${g.hallOfFame.name} — ${g.hallOfFame.score.toLocaleString()}` : 'be the first'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span style={{ color: 'var(--muted-foreground)' }}>Your best</span>
-                  <span className="font-medium">{g.myBest ? g.myBest.toLocaleString() : '—'}{g.myWeeklyRank ? ` (#${g.myWeeklyRank})` : ''}</span>
-                </div>
-              </div>
-
-              <Link
-                href={`/arcade/${g.slug}`}
-                className="mt-4 text-center text-sm font-semibold rounded-lg px-4 py-2.5"
-                style={{ background: canAfford ? accent : 'var(--muted)', color: canAfford ? '#04060d' : 'var(--muted-foreground)' }}
-              >
-                {data.freeCreditAvailable ? '▶ FREE CREDIT' : canAfford ? '▶ INSERT COIN' : `Need ${g.costXp} XP`}
-              </Link>
-            </div>
-          )
-        })}
+        {coinGames.map(renderCabinet)}
       </div>
 
       {data && data.games.length === 0 && (
@@ -267,7 +295,7 @@ export default function ArcadePage() {
 
       {data && data.balance.balance < 25 && !data.freeCreditAvailable && (
         <p className="text-xs mt-6 text-center" style={{ color: 'var(--muted-foreground)' }}>
-          Short on coins? The training floor upstairs pays — vocabulary games earn up to 50 XP a day, and lessons pay too.
+          Short on coins? The math gym pays best — up to 75 XP a day for accurate runs. Vocabulary games add up to 25 a day, and lessons pay too.
         </p>
       )}
     </div>

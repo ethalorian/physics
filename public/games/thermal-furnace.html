@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FURNACE // a thermal arcade</title>
+<!--
+  FURNACE — a thermal arcade in three acts. Seventh cabinet (Unit 5: Thermal
+  Physics & the Second Law), filling the reserved slot 6. Single file.
+
+  ACT I   THE FORGE     — Q = mcΔT live: copper sprints, water crawls, and
+                          boiling freezes the thermometer (latent heat)
+  ACT II  MAXWELL'S GATE — you are the demon: sort fast from slow particles
+                          to fight equilibrium; T = average particle KE
+  ACT III THE ENGINE ROOM — time the strokes; Carnot caps you at 1 − Tc/Th
+                          and the waste heat is not optional
+
+  Telemetry star: the BOILER DESK — Q-vs-ΔT slope (that slope IS mc), a live
+  speed histogram per chamber, and an efficiency needle pinned under the
+  Carnot line. Speaks the arcade bridge protocol (docs/ARCADE_PATTERN.md).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --neon:#ef4444; --neon2:#fbbf24; --amber:#fbbf24; --red:#f87171;
+    --ink:#e7ecf5; --dim:#8b96ad; --card:#160707ee; --edge:#ef444455;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:#0d0404}
+  body{font-family:'Share Tech Mono',ui-monospace,monospace;color:var(--ink)}
+  #c{display:block;width:100vw;height:100vh;touch-action:none;cursor:crosshair}
+  #crt{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:repeating-linear-gradient(0deg,transparent 0 2px,#0001 2px 4px);
+    mix-blend-mode:overlay}
+  #vig{pointer-events:none;position:fixed;inset:0;z-index:5;
+    background:radial-gradient(ellipse at center,transparent 55%,#000a 100%)}
+  #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
+    display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  #overlay.show{display:flex}
+  @media (max-width:900px){ #overlay{width:100%} }
+  .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
+    padding:26px 30px;max-width:540px;width:100%;
+    box-shadow:0 0 40px #ef444422, inset 0 0 60px #0006;
+    animation:pop .25s ease-out}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  h1,h2{font-family:'Orbitron',sans-serif;letter-spacing:.06em}
+  h1{font-size:42px;font-weight:900;color:var(--neon);text-shadow:0 0 18px #ef444488}
+  h2{font-size:22px;color:var(--neon);text-shadow:0 0 12px #ef444466;margin-bottom:10px}
+  .tag{color:var(--neon2);font-size:13px;letter-spacing:.35em;margin:4px 0 16px}
+  .sub{color:var(--dim);font-size:14px;line-height:1.55;margin-bottom:14px}
+  .stat{display:flex;justify-content:space-between;font-size:14px;padding:3px 0;
+    border-bottom:1px dashed #ffffff14}
+  .stat b{color:var(--amber)}
+  .good{color:#34d399} .bad{color:var(--red)}
+  .btn{display:inline-block;margin-top:18px;font-family:'Orbitron',sans-serif;
+    font-size:15px;font-weight:700;letter-spacing:.12em;color:#1a0606;
+    background:var(--neon);border:none;border-radius:8px;padding:12px 26px;
+    cursor:pointer;box-shadow:0 0 18px #ef444466;transition:transform .08s}
+  .btn:hover{transform:scale(1.05)} .btn:active{transform:scale(.97)}
+  .btn.alt{background:#1f2937;color:var(--ink);box-shadow:none;border:1px solid #ffffff22}
+  .choices{display:grid;gap:8px;margin-top:12px}
+  .choice{font-family:'Share Tech Mono',monospace;font-size:15px;text-align:left;
+    background:#200a0a;border:1px solid #ffffff1c;border-radius:8px;color:var(--ink);
+    padding:11px 14px;cursor:pointer;transition:all .1s}
+  .choice:hover{border-color:var(--neon);background:#2a0d0d}
+  .choice.right{background:#0c2a22;border-color:#34d399;color:#34d399}
+  .choice.wrong{background:#2a0c12;border-color:var(--red);color:var(--red)}
+  .kbd{display:inline-block;border:1px solid #ffffff33;border-bottom-width:3px;
+    border-radius:5px;padding:1px 7px;font-size:12px;color:var(--amber);background:#ffffff0a}
+  .explain{margin-top:12px;padding:10px 12px;border-left:3px solid var(--amber);
+    background:#fbbf2410;font-size:13px;line-height:1.5;color:#fde68a;display:none}
+  .bigscore{font-family:'Orbitron',sans-serif;font-size:34px;font-weight:900;
+    color:var(--amber);text-shadow:0 0 16px #fbbf2477;margin:8px 0}
+  .planetchip{font-family:'Orbitron',sans-serif;font-size:12px;letter-spacing:.2em;
+    color:var(--neon2);border:1px solid #fbbf2455;border-radius:99px;padding:4px 12px}
+  .actgrid{display:grid;gap:12px;margin-top:14px}
+  .actcard{display:block;width:100%;text-align:left;background:#1c0909;cursor:pointer;
+    border:1px solid #ffffff1c;border-radius:12px;padding:14px 18px;color:var(--ink);
+    font-family:'Share Tech Mono',monospace;transition:all .12s}
+  .actcard:hover:not(.locked){border-color:var(--ac);box-shadow:0 0 22px var(--acGlow);transform:translateX(4px)}
+  .actcard.locked{opacity:.45;cursor:not-allowed}
+  .actname{font-family:'Orbitron',sans-serif;font-weight:700;font-size:17px;
+    letter-spacing:.08em;color:var(--ac)}
+  .actsub{font-size:12.5px;color:var(--dim);margin-top:4px;line-height:1.45}
+  .hiline{font-size:11px;color:var(--amber);margin-top:6px;letter-spacing:.08em}
+  .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
+    letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
+  .teachlink:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="crt"></div><div id="vig"></div>
+<div id="overlay"></div>
+
+<script>
+"use strict";
+/* ================================================== utils */
+const $=q=>document.querySelector(q);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=(n,d=1)=>{const s=(+n).toFixed(d);return s.replace(/\.0+$/,'');};
+const fmtE=j=>Math.abs(j)>=1000?(j/1000).toFixed(1)+' kJ':Math.round(j)+' J';
+const hyp=Math.hypot, TAU=Math.PI*2;
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ================================================== canvas */
+const cv=$('#c'),ctx=cv.getContext('2d');
+let W=0,H=0,DPR=1;
+function resize(){DPR=Math.min(2,window.devicePixelRatio||1);
+  W=window.innerWidth;H=window.innerHeight;
+  cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',resize);resize();
+
+/* ================================================== persistence */
+let PROG={a2:false,a3:false,teacher:false}, HIS={1:0,2:0,3:0};
+try{Object.assign(PROG,JSON.parse(localStorage.getItem('furnace2_prog')||'{}'));
+    Object.assign(HIS, JSON.parse(localStorage.getItem('furnace2_hi')||'{}'));}catch(e){}
+function saveProg(){try{localStorage.setItem('furnace2_prog',JSON.stringify(PROG));}catch(e){}}
+function saveHi(){try{localStorage.setItem('furnace2_hi',JSON.stringify(HIS));}catch(e){}}
+function unlocked(a){return a===1||PROG.teacher||(a===2&&PROG.a2)||(a===3&&PROG.a3);}
+
+/* ================================================== audio */
+let AC=null,muted=false,roarGain=null;
+function audio(){if(AC||muted)return;try{
+  AC=new (window.AudioContext||window.webkitAudioContext)();
+  const len=AC.sampleRate*2,buf=AC.createBuffer(1,len,AC.sampleRate);
+  const d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+  const src=AC.createBufferSource();src.buffer=buf;src.loop=true;
+  const lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=240;
+  roarGain=AC.createGain();roarGain.gain.value=0;
+  src.connect(lp);lp.connect(roarGain);roarGain.connect(AC.destination);src.start();}catch(e){}}
+function setRoar(on){if(!AC||!roarGain)return;
+  roarGain.gain.setTargetAtTime(on&&!muted?0.07:0,AC.currentTime,0.08);}
+function beep(f,dur=.12,type='square',vol=.12,slide=0){if(!AC||muted)return;
+  const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;
+  if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,f+slide),AC.currentTime+dur);
+  g.gain.value=vol;g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+dur);
+  o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+dur);}
+function chord(notes,step=.09){notes.forEach((n,i)=>setTimeout(()=>beep(n,.22,'triangle',.12),i*step*1000));}
+function hiss(){beep(900,.3,'sawtooth',.06,-500);}
+function clank(){beep(140,.15,'square',.18,-40);}
+
+/* ================================================== host-app bridge */
+const ARCADE={
+  embedded:window.parent!==window,
+  playId:null, pendingCoin:null,
+  emit(type,data){if(this.embedded)
+    window.parent.postMessage(Object.assign({source:'furnace-arcade',type},data||{}),'*');},
+  requestCoin(cb){
+    if(!this.embedded){cb({ok:true,practice:true});return;}
+    this.pendingCoin=cb;
+    this.emit('arcade:coinRequest');
+    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+  },
+  reportScore(final){
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+  },
+};
+window.addEventListener('message',e=>{
+  const m=e.data||{};
+  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
+    ARCADE.playId=m.playId||null;
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
+  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
+    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+});
+
+/* ================================================== level data
+   ACT I  burner P = 6 kW. Ingots use REAL specific heats (J/kg·K):
+          water 4186 · aluminum 900 · iron 450 · copper 385 · lead 128.
+          Each ingot: reach {target±band, hold 1.5 s} or fill a PLATEAU
+          (latent heat: T pins while the melt meter fills). Overshoot = slag.
+   ACT II two chambers, particles colored by speed. Gate opens while held.
+          Goal: T_left − T_right ≥ dT for 3 s. T is literally mean(v²) scaled.
+          leak = conduction through the wall, dragging you back to equilibrium.
+   ACT III piston cycles; press in the hot window to inject Q. W = Q·ηc·ηtiming,
+          ηc = 1 − Tc/Th. Waste fills the condenser (it drains slowly; overflow
+          = failure). Make Wtarget before the fuel runs out. */
+const MATS={
+  water:{c:4186,col:'#38bdf8',label:'WATER'},
+  aluminum:{c:900,col:'#cbd5e1',label:'ALUMINUM'},
+  iron:{c:450,col:'#94a3b8',label:'IRON'},
+  copper:{c:385,col:'#fb923c',label:'COPPER'},
+  lead:{c:128,col:'#a8a29e',label:'LEAD'},
+};
+const BURN_P=6000;
+const ACT_META={
+ 1:{name:'THE FORGE', col:'#fbbf24', blurb:'One burner, Q = mcΔT, and materials that disagree about what 6 kilowatts means. Copper sprints, water crawls — and at the boil, the thermometer stops while the energy keeps going in.'},
+ 2:{name:'MAXWELL’S GATE', col:'#38bdf8', blurb:'Temperature is just average particle energy — so sort the particles. Fast ones left, slow ones right, one gate, your reflexes against the second law. The wall leaks; equilibrium always wants back in.'},
+ 3:{name:'THE ENGINE ROOM', col:'#ef4444', blurb:'Heat flows hot to cold and you tax it on the way through. Time the strokes; Carnot sets the ceiling at 1 − Tc/Th and no rhythm on Earth beats it. The waste heat is not optional.'},
+};
+const ACT1=[
+ {name:'FIRST HEAT', dur:60,
+  ingots:[{mat:'iron',m:1.0,target:500,band:40}],
+  tip:'Iron, 1 kg, c = 450 J/kg·K. Your burner pours 6000 J/s, so the climb is P/mc ≈ 13 °C per second. Park it at 500±40 and HOLD — the forge cools whenever the flame is off. Q = mcΔT isn’t on the test; it’s on the thermometer.'},
+ {name:'TWO METALS', dur:75,
+  ingots:[{mat:'iron',m:1.0,target:450,band:40},{mat:'copper',m:1.0,target:450,band:40}],
+  tip:'Same mass, same flame, same target — but copper’s c is 385 to iron’s 450, so copper climbs faster on identical heat. Specific heat is each material’s price per degree. Juggle accordingly.'},
+ {name:'THE STUBBORN BOIL', dur:75,
+  ingots:[{mat:'water',m:0.3,target:0,band:0,plateau:{at:100,Lq:66000}}],
+  tip:'Water reaches 100 °C and then — watch the thermometer STOP while the joule counter keeps spinning. That energy is breaking molecular bonds, not raising temperature: latent heat. Fill the steam gauge to finish the job.'},
+ {name:'LEAD RUSH', dur:70,
+  ingots:[{mat:'lead',m:1.5,target:380,band:25,plateau:{at:327,Lq:42000},liquidTarget:true}],
+  tip:'Lead’s c is a tiny 128 — it climbs at over 30 °C a second, screaming toward its 327° melting plateau. Melt it through, then land the LIQUID at 380±25. Low specific heat means the throttle is touchy.'},
+ {name:'THE FULL ORDER', dur:100,
+  ingots:[{mat:'copper',m:1.2,target:520,band:35},{mat:'water',m:0.25,target:0,band:0,plateau:{at:100,Lq:55000}},{mat:'iron',m:0.8,target:430,band:35}],
+  tip:'Three commissions, one flame, and every material on its own clock. The forge masters’ secret: heat the slow ones early, visit the fast ones late, and never trust lead— wait, no lead today. Small mercies.'},
+];
+const ACT2=[
+ {name:'SIXTEEN SOULS', dur:70, N:16, dT:18, leak:0, gapH:8,
+  tip:'Red particles are fast (hot), blue are slow (cold) — and temperature is NOTHING but their average v². Hold the gate open to let a fast one cross LEFT, slam it on the slow. You are doing what nature says cannot happen for free.'},
+ {name:'A BIGGER CROWD', dur:75, N:22, dT:24, leak:0, gapH:8,
+  tip:'More particles, sharper sorting. Notice they do NOT share one speed — there’s a whole distribution in there, and the histogram on your desk is drawing it live. Temperature is a crowd statistic, not a property of any single particle.'},
+ {name:'THE LEAKY WALL', dur:80, N:24, dT:24, leak:0.02, gapH:8,
+  tip:'The wall now CONDUCTS: your hard-won difference seeps back toward equilibrium every second. This is the second law on the clock — heat flows hot to cold by itself, and only your sorting fights the tide.'},
+ {name:'NARROW GATE', dur:85, N:28, dT:28, leak:0.03, gapH:5,
+  tip:'A meaner gate and a leakier wall. Be selective: one wrong fat slow particle through costs more than three right ones gain. Maxwell imagined you in 1867; the universe has been collecting the information bill ever since.'},
+ {name:'EQUILIBRIUM’S REVENGE', dur:90, N:32, dT:32, leak:0.05, gapH:5,
+  tip:'The final sort. The leak is vicious now — entropy regenerates faster than ever, and the gate is your only argument. Win this and you’ll never again wonder what temperature actually is.'},
+];
+const ACT3=[
+ {name:'LIGHT THE BOILER', dur:75, Th:600, Tc:300, fuel:100000, Wtarget:30000, cap:70000, drain:900,
+  tip:'Reservoirs at 600 K and 300 K: Carnot says at MOST 1 − 300/600 = 50% of every injected joule can become work. Press in the glowing window to inject heat cleanly; mistimed strokes still burn fuel but mostly make waste. The condenser fills with everything that isn’t work.'},
+ {name:'WARMER COOLANT', dur:75, Th:600, Tc:360, fuel:100000, Wtarget:26000, cap:62000, drain:900,
+  tip:'Same boiler, warmer cold side — the ceiling drops to 40%. Nothing about your machine changed; the UNIVERSE changed the math. Efficiency lives in the gap between hot and cold, not in the fire alone.'},
+ {name:'TIRED CONDENSER', dur:80, Th:620, Tc:380, fuel:110000, Wtarget:26000, cap:50000, drain:750,
+  tip:'A smaller condenser that drains slower. Waste heat is mandatory — Carnot’s tax — so now you must PACE the burn: let the cooling tower breathe between strokes or drown the room in your own exhaust.'},
+ {name:'THE SUMMER SHIFT', dur:85, Th:560, Tc:392, fuel:120000, Wtarget:24000, cap:46000, drain:700,
+  tip:'A 30% ceiling. Every stroke must be nearly perfect, every joule of waste budgeted. Real power plants fight exactly this battle every August — ask why river-cooled reactors throttle in heat waves.'},
+ {name:'CARNOT’S LAST WORD', dur:90, Th:520, Tc:390, fuel:130000, Wtarget:22000, cap:42000, drain:650,
+  tip:'Ceiling: 25%. You will leave three of every four joules on the floor, and that is with PERFECT play — the second law’s final offer. No engine ever built has done better, and none ever will. Make your peace, and make your watts.'},
+];
+const SHIFTS=['NIGHT SHIFT','BOILER DECK B','THE ANNEALERY','STEAM ROW','GAUGE ALLEY','THE COKERY','UNDERPLANT'];
+function endless1(w){
+  const mats=Object.keys(MATS).filter(k=>k!=='water');
+  const n=Math.min(3,1+Math.ceil(w/2)),ing=[];
+  for(let i=0;i<n;i++){const mk=pick(mats),m2=+rnd(0.6,1.5).toFixed(1);
+    ing.push({mat:mk,m:m2,target:Math.round(rnd(350,560)),band:Math.max(22,42-w*2)});}
+  if(w>1)ing.push({mat:'water',m:0.3,target:0,band:0,plateau:{at:100,Lq:50000+w*4000}});
+  return {name:pick(SHIFTS)+' · ORDER '+w, dur:Math.max(60,70+n*14-w*2), ingots:ing,
+    tip:'Unscheduled commission. The thermometer keeps honest books.'};
+}
+function endless2(w){
+  return {name:pick(SHIFTS)+' · SORT '+w, dur:Math.max(60,90-w*2),
+    N:Math.min(36,16+w*3), dT:Math.min(38,18+w*3),
+    leak:Math.min(0.06,w*0.012), gapH:w>2?5:8,
+    tip:'The crowd grows; the law does not blink.'};
+}
+function endless3(w){
+  const Th=Math.round(rnd(520,640)),Tc=Math.round(Th*rnd(0.55,0.75));
+  const etaC=1-Tc/Th, fuel=100000+w*8000;
+  return {name:pick(SHIFTS)+' · STOKE '+w, dur:Math.max(70,90-w*2),
+    Th, Tc, fuel, Wtarget:Math.round(fuel*etaC*rnd(0.55,0.65)),
+    cap:Math.round(fuel*(1-etaC)*rnd(0.55,0.7)), drain:Math.max(500,900-w*40),
+    tip:'Another boiler, the same ceiling.'};
+}
+const ACT_LEVELS={1:ACT1,2:ACT2,3:ACT3};
+const ENDLESS={1:endless1,2:endless2,3:endless3};
+
+/* ================================================== state */
+let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
+let ingots=[], sel=0, firing=false, maxOver=0, qTotal=0;     // act I
+let parts=[], gateOpen=false, holdT=0;                        // act II
+let phase=0, fuel=0, condenser=0, work=0, lastQ=0, strokeFx=0;// act III
+let t=0, acc=0, attemptT=0;
+let particles=[], popups=[], shake=0, flash=0;
+let landedOK=false, downTimer=0, lastResult=null, primary=null;
+function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
+function popup(text,col,size){popups.push({text,col:col||'#fbbf24',size:size||24,t:0,jx:rnd(-12,12)});}
+function burstPx(px,py,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,TAU),s2=rnd(20,sp||90);
+  particles.push({px,py,vx:Math.cos(a)*s2,vy:Math.sin(a)*s2,
+    life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
+function chamberT(side){ // ACT II: temperature IS mean v², scaled
+  let s=0,n=0;
+  for(const p of parts){if((p.x<24)===(side==='L')){s+=p.vx*p.vx+p.vy*p.vy;n++;}}
+  return n?s/n/300:0;
+}
+function etaC(){return 1-lv.Tc/lv.Th;}
+
+/* ================================================== overlay + screens */
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function hideOverlay(){$('#overlay').classList.remove('show');}
+function title(){
+  state='title';act=1;lv=ACT1[0];setupLevel();
+  overlay(`
+   <div class="card" style="text-align:center">
+     <h1>FURNACE</h1>
+     <div class="tag">A THERMAL ARCADE · THREE ACTS</div>
+     <div class="sub" style="text-align:left">
+       Heat is not a substance. It is <b style="color:var(--ink)">energy on the move</b> —
+       and this cabinet makes you move it: into metal, between chambers,
+       through an engine that taxes every joule.<br><br>
+       <b style="color:#fbbf24">ACT I — THE FORGE</b> &nbsp;Q = mcΔT, live on the thermometer<br>
+       <b style="color:#38bdf8">ACT II — MAXWELL’S GATE</b> &nbsp;temperature is average particle KE<br>
+       <b style="color:#ef4444">ACT III — THE ENGINE ROOM</b> &nbsp;Carnot’s ceiling: 1 − Tc/Th<br><br>
+       <span class="kbd">SPACE</span> burner / gate / stroke ·
+       <span class="kbd">←</span><span class="kbd">→</span> pick an ingot ·
+       <span class="kbd">P</span> pause · <span class="kbd">M</span> mute
+     </div>
+     ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — FORGE ${HIS[1].toLocaleString()} · GATE ${HIS[2].toLocaleString()} · ENGINE ${HIS[3].toLocaleString()}</div>`:''}
+     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+   </div>`);
+  primary=select_;
+}
+function select_(){
+  state='select';
+  const cards=[1,2,3].map(a=>{
+    const m=ACT_META[a],open=unlocked(a);
+    const req=a===2?'clear ACT I to unlock':'clear ACT II to unlock';
+    return `<button class="actcard${open?'':' locked'}" style="--ac:${m.col};--acGlow:${m.col}44"
+      ${open?`onclick="startAct(${a})"`:''}>
+      <span class="actname">${open?'':'🔒 '}ACT ${'I'.repeat(a)} — ${m.name}</span>
+      <div class="actsub">${open?m.blurb:req+(PROG.teacher?'':' · or ask your teacher')}</div>
+      ${HIS[a]?`<div class="hiline">HIGH SCORE ${HIS[a].toLocaleString()}</div>`:''}
+    </button>`;}).join('');
+  overlay(`
+   <div class="card">
+     <h2>THE BOILER DECK</h2>
+     <div class="sub">Pick your shift. Each act is a chapter of the thermal unit.</div>
+     <div class="actgrid">${cards}</div>
+     <span class="teachlink" onclick="teacherPrompt()">TEACHER OVERRIDE${PROG.teacher?' ✓ ACTIVE':''}</span>
+   </div>`);
+  primary=null;
+}
+function teacherPrompt(){
+  const code=prompt('Teacher override code:');
+  if(code&&code.trim().toLowerCase()==='fnet'){PROG.teacher=true;saveProg();chord([659,784,988]);}
+  else if(code)beep(180,.3,'sawtooth',.15,-100);
+  select_();
+}
+
+/* ================================================== flow */
+function startAct(a){
+  audio();
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    ARCADE.emit('arcade:start',{act:a});
+    showMission(ACT_LEVELS[a][0]);};
+  if(ARCADE.playId||!ARCADE.embedded){begin();return;}
+  overlay(`<div class="card" style="text-align:center">
+    <div class="tag">INSERT COIN</div>
+    <h2>CONTACTING CABINET…</h2>
+    <div class="sub">one credit = play until GAME OVER</div></div>`);
+  primary=null;
+  ARCADE.requestCoin(res=>{
+    if(res.ok){begin();return;}
+    overlay(`<div class="card">
+      <h2 class="bad">COIN REJECTED</h2>
+      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <button class="btn alt" onclick="select_()">BACK TO THE DECK</button></div>`);
+    primary=select_;
+  });
+}
+function setupLevel(){
+  sel=0;firing=false;gateOpen=false;holdT=0;maxOver=0;qTotal=0;
+  phase=0;work=0;condenser=0;lastQ=0;strokeFx=0;
+  ingots=(lv.ingots||[]).map(g=>({...g,T:25,melt:0,done:false,hold:0}));
+  fuel=lv.fuel||0;
+  parts=[];
+  if(act===2){
+    for(let i=0;i<lv.N;i++){
+      const hot=i%2===0;
+      const sp=hot?rnd(120,180):rnd(50,100);
+      const a=rnd(0,TAU);
+      parts.push({x:rnd(3,45),y:rnd(3,27),vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,hot});
+    }
+  }
+}
+function showMission(level){
+  lv=level;state='mission';setupLevel();
+  let goal='',params='';
+  if(act===1){
+    goal=ingots.map(g=>{
+      const M=MATS[g.mat];
+      return g.plateau?`${M.label} → boil through the ${g.plateau.at}° plateau`
+        :`${M.label} → ${g.target}±${g.band}°`;
+    }).join(' · ');
+    params=`burner <b>${BURN_P/1000} kW</b> · <b>${lv.dur} s</b> · ${goal}`;
+  }else if(act===2){
+    params=`<b>${lv.N} particles</b> · build <b>ΔT ≥ ${lv.dT}</b> (left hot) and hold 3 s · <b>${lv.dur} s</b>
+      ${lv.leak?` · <b style="color:var(--red)">conducting wall</b>`:''}`;
+  }else{
+    params=`reservoirs <b>${lv.Th} K / ${lv.Tc} K</b> → Carnot ceiling <b>${Math.round(etaC()*100)}%</b>
+      · fuel <b>${fmtE(lv.fuel)}</b> · make <b>${fmtE(lv.Wtarget)}</b> of work
+      · condenser <b>${fmtE(lv.cap)}</b>`;
+  }
+  overlay(`
+   <div class="card">
+     <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
+     <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub">${params}</div>
+     <div class="explain" style="display:block">${lv.tip}</div>
+     <div class="sub" style="margin-top:12px">
+       ${act===1?'<span class="kbd">←</span><span class="kbd">→</span> move the burner · hold <span class="kbd">SPACE</span> to fire'
+        :act===2?'hold <span class="kbd">SPACE</span> to open the gate (left chamber = HOT side)'
+        :'press <span class="kbd">SPACE</span> inside the glowing window to inject heat'}
+     </div>
+     <button class="btn" onclick="launch()">▶ ${act===1?'LIGHT THE BURNER':act===2?'TAKE THE GATE':'OPEN THE THROTTLE'}</button>
+   </div>`);
+  primary=launch;
+}
+function launch(){
+  t=0;acc=0;attemptT=0;
+  particles=[];popups=[];shake=0;flash=0;
+  setupLevel();
+  hideOverlay();state='play';
+  beep(440,.08,'square',.1);beep(660,.08,'square',.1);
+}
+function succeed(extraTxt,effBonus){
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setRoar(false);
+  const tf=Math.max(0,lv.dur-attemptT)/lv.dur;
+  const tier=tf>=0.4?'MASTER STOKER':tf>=0.18?'GREAT':'CLEAN';
+  const base=tf>=0.4?1500:tf>=0.18?1000:700;
+  const bonus=(effBonus||0)+Math.round(tf*300);
+  const mult=Math.min(3,streak);
+  const pts=Math.round((base+bonus)*mult);
+  lastResult={tier,pts,mult,btxt:bonus>0?('CRAFT +'+bonus):'',extraTxt};
+  score+=pts;bumpHi();
+  popup(tier+'!','#fbbf24',38);
+  chord(tier==='MASTER STOKER'?[659,830,988,1318]:[523,659,784,1046]);
+}
+function failAttempt(msg,hint){
+  state='down';landedOK=false;downTimer=0;streak=0;lives--;shake=1;flash=1;setRoar(false);
+  clank();hiss();
+  lastResult={failMsg:msg,hint};
+  popup(msg,'#f87171',28);
+}
+function showResult(){
+  const r=lastResult;
+  if(landedOK){
+    overlay(`
+     <div class="card">
+       <h2 class="good">${r.tier} — ${lv.name}</h2>
+       ${r.extraTxt?`<div class="sub">${r.extraTxt}</div>`:''}
+       ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
+       <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
+       <div class="bigscore">+${r.pts.toLocaleString()}</div>
+       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
+       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+     </div>`);
+    primary=askQuestion;
+  }else{
+    if(lives<=0){gameOver();return;}
+    overlay(`
+     <div class="card">
+       <h2 class="bad">${r.failMsg}</h2>
+       <div class="sub">${r.hint||''}</div>
+       <div class="stat"><span>Shifts left</span><b>${'🔥 '.repeat(lives)}</b></div>
+       <button class="btn" onclick="retry()">BACK TO THE FIRE</button>
+     </div>`);
+    primary=retry;
+  }
+}
+function retry(){showMission(lv);}
+function nextLevel(){
+  levelIdx++;
+  const L=ACT_LEVELS[act];
+  if(wave===0&&levelIdx<L.length)showMission(L[levelIdx]);
+  else if(wave===0)actCleared();
+  else {wave++;showMission(ENDLESS[act](wave));}
+}
+function actCleared(){
+  let unlockMsg='';
+  if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#38bdf8">ACT II — MAXWELL’S GATE unlocked.</b> Time to meet the particles personally.';}
+  else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#ef4444">ACT III — THE ENGINE ROOM unlocked.</b> Now make the chaos pay rent.';}
+  else if(act===3)unlockMsg='<b style="color:#fbbf24">You completed the thermal campaign.</b> Hot to cold, always — but you taxed it beautifully on the way through.';
+  ARCADE.emit('arcade:actCleared',{act,score});
+  ARCADE.reportScore(false);
+  chord([523,659,784,1046,1318],.11);
+  overlay(`
+   <div class="card">
+     <div class="tag">ACT ${'I'.repeat(act)} CLEARED</div>
+     <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
+     <div class="bigscore">${score.toLocaleString()}</div>
+     <div class="sub">${unlockMsg}</div>
+     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     <button class="btn alt" onclick="goEndless()">ENDLESS SHIFT</button>
+     <button class="btn alt" onclick="select_()">BOILER DECK</button>
+   </div>`);
+  primary=act<3?()=>startAct(act+1):goEndless;
+}
+function goEndless(){wave=1;showMission(ENDLESS[act](1));}
+function gameOver(){
+  state='gameover';
+  ARCADE.emit('arcade:gameover',{act,score});
+  ARCADE.reportScore(true);
+  ARCADE.playId=null;
+  overlay(`
+   <div class="card">
+     <div class="tag">GAME OVER</div>
+     <h2>THE FIRE GOES OUT</h2>
+     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
+     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
+     <div class="sub" style="margin-top:10px">Entropy won tonight. Entropy always wins eventually — the job is to lose slowly, with style.</div>
+     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
+     <button class="btn alt" onclick="select_()">BOILER DECK</button>
+   </div>`);
+  primary=()=>startAct(act);
+}
+
+/* ================================================== questions */
+function qNum(text,ans,unit,distractors,explain){
+  const vals=[+fmt(ans)];
+  for(const d of distractors){let v=+fmt(d);
+    while(vals.some(x=>Math.abs(x-v)<0.05))v=+fmt(v+rnd(0.8,2.2));
+    vals.push(v);}
+  const choices=shuffle(vals.map((v,i)=>({s:fmt(v)+' '+unit,ok:i===0?1:0})));
+  return {text,choices,explain};
+}
+function qCon(text,right,wrongs,explain){
+  return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
+}
+function makeQuestion(){
+  const bank1=[
+   ()=>{const m=pick([0.5,1,2]),dT2=pick([10,20,30]);
+     return qNum(`How much heat raises ${m} kg of water by ${dT2} °C? (c = 4186 J/kg·K)`,
+       m*4186*dT2,'J',[4186*dT2,m*dT2*100,m*4186*dT2/2],
+       `Q = mcΔT = ${m} × 4186 × ${dT2} = ${Math.round(m*4186*dT2).toLocaleString()} J. Water’s enormous c is why oceans tame climates and why your pasta pot takes forever.`);},
+   ()=>qCon('Equal masses of copper (c = 385) and water (c = 4186) absorb the SAME heat. Which ends up hotter?',
+     'the copper — small c means big ΔT per joule',['the water','both equal — same heat, same rise','depends on the flame color'],
+     'ΔT = Q/mc: specific heat is the price of a degree, and copper degrees are cheap. You watched this race in Two Metals.'),
+   ()=>qCon('Boiling water sits at 100 °C while the burner roars underneath. The incoming energy is…',
+     'breaking molecular bonds — latent heat, not temperature rise',['leaking out the sides','destroyed at the boil','stored as pressure only'],
+     'During a phase change, energy buys ESCAPE, not speed: molecules leave the liquid instead of jiggling faster. The thermometer resumes only when the change is done.'),
+   ()=>qCon('Temperature and heat are…',
+     'different things: T is a state; heat is energy IN TRANSIT between objects',['two words for the same quantity','both measured in joules','both properties of single particles'],
+     'A bathtub at 30 °C holds far more thermal energy than a teaspoon at 90 °C. Heat is the transfer; temperature is the level. The forge taxed you for confusing them.'),
+   ()=>qCon('A hot ingot left alone in the forge ALWAYS…',
+     'cools toward room temperature — heat flows hot to cold, unprompted',['stays hot until touched','heats the room and itself','cools only if it’s metal'],
+     'Spontaneous heat flow has one direction. Act II shows you why: it’s not a law imposed on particles, it’s statistics — there are overwhelmingly more mixed arrangements than sorted ones.'),
+  ];
+  const bank2=[
+   ()=>qCon('The TEMPERATURE of a gas chamber is, at the particle level…',
+     'the average kinetic energy of its particles',['the number of particles','the speed of the fastest particle','the pressure on the gate'],
+     'That readout on your desk was literally mean(v²). Heat a gas = make its particles jiggle faster on average. There is nothing else underneath — that’s the whole secret.'),
+   ()=>qCon('In a chamber at one temperature, the particles move…',
+     'at a whole range of speeds — a distribution, not one value',['all at exactly the same speed','only in straight lines','faster near the walls'],
+     'Your histogram drew it live: a few crawlers, a few screamers, most in the middle. Temperature is a crowd average — which is exactly the loophole the demon exploits.'),
+   ()=>qCon('Why does a hot chamber and cold chamber, left connected, ALWAYS end up lukewarm?',
+     'mixed arrangements vastly outnumber sorted ones — it’s statistics, not force',['cold is attracted to hot','particles prefer equal sharing','the wall pushes heat across'],
+     'No particle knows the plan. There are astronomically more ways to be mixed than sorted, so random motion finds mixed. The second law is just counting.'),
+   ()=>qCon('You, the demon, sorted fast particles from slow and built a temperature difference “for free.” The catch (per modern physics) is…',
+     'your knowing which particle is which has a real thermodynamic cost',['the gate must be frictionless','it only works with red particles','there is no catch; entropy is optional'],
+     'Maxwell’s 1867 puzzle stood for a century until the answer arrived: INFORMATION is physical. Measuring and forgetting particle speeds generates at least as much entropy as the sorting removes. The books always balance.'),
+   ()=>qCon('Your hard-won ΔT leaked away through the conducting wall. That energy is now…',
+     'spread evenly through both chambers — still there, just useless for work',['destroyed','stored in the wall','converted to particles'],
+     'Energy survived (the first law always holds); USEFULNESS died (the second law collected). Spread-out lukewarm energy can no longer push anything — which is the whole tragedy of entropy.'),
+  ];
+  const bank3=[
+   ()=>{const Th=pick([500,600]),Tc=pick([300,350]);
+     return qNum(`An engine runs between ${Th} K and ${Tc} K. Its maximum possible efficiency is…`,
+       (1-Tc/Th)*100,'%',[Tc/Th*100,100,(1-Tc/Th)*50],
+       `η_max = 1 − Tc/Th = 1 − ${Tc}/${Th} = ${fmt((1-Tc/Th)*100)}%. Not an engineering limit — a law-of-nature limit. Carnot proved it in 1824 with no engine in sight.`);},
+   ()=>qCon('To raise an engine’s efficiency CEILING you must…',
+     'widen the temperature gap — hotter source or colder sink',['use better oil','spin it faster','add more fuel'],
+     'η = 1 − Tc/Th only has two knobs, and both are temperatures. Materials science chases hotter Th; geography chases colder Tc. Your timing only decides how far below the ceiling you fall.'),
+   ()=>qCon('A 100%-efficient heat engine (all heat → work, no waste) is…',
+     'impossible — it would need a cold reservoir at absolute zero',['possible with perfect lubrication','possible in space','already built in submarines'],
+     'η = 1 − Tc/Th hits 100% only at Tc = 0 K, which is unreachable. SOME heat must always flow through to the cold side — the toll the second law charges for turning chaos into work.'),
+   ()=>qCon('Your condenser overflowed. In a real power plant, that corresponds to…',
+     'the cooling system failing to dump mandatory waste heat',['making too much electricity','fuel burning too cleanly','the turbine spinning backward'],
+     'Every real plant moves rivers of waste heat — cooling towers ARE the second law made of concrete. When the river runs warm in August, plants throttle down. You played that exact summer.'),
+   ()=>qCon('A refrigerator moves heat from cold (inside) to hot (the kitchen). This is allowed because…',
+     'it spends work to do it — electricity pays the entropy bill',['refrigerators are exempt from the second law','cold flows to hot naturally','the door seals entropy inside'],
+     'Heat never flows cold→hot for FREE — but paid passage is legal. The compressor’s work is the fare, and the kitchen receives both the food’s heat AND the fare as waste. Feel the warm coils.'),
+  ];
+  /* CROSSOVER bank — bridges back to CASCADE, PUSH, IMPACT. +1000. */
+  const cross=[
+   ()=>qCon('CROSSOVER · CASCADE — The energy cabinet called heat “energy’s retirement” and drew it as a gray band. Act II of THIS cabinet shows what retirement actually looks like:',
+     'kinetic energy scattered into random particle motion',['energy slowly evaporating','a separate substance called caloric','potential energy in disguise'],
+     'CASCADE’s gray band was never a graveyard — it was a crowd. Every joule the brake “lost” became faster jiggling in the pads and rail. Heat is KE that lost its organization, not its existence.'),
+   ()=>qCon('CROSSOVER · PUSH — In the dynamics cabinet, friction “took” energy from every sliding crate. Microscopically, the rough floor was converting the crate’s ordered motion into…',
+     'disordered vibration of floor and crate molecules — heat',['nothing; friction destroys energy','sound only','static electricity'],
+     'One big organized velocity became trillions of tiny random ones. That one-way trade — ordered to disordered — is why friction never runs backward and shoves your crate. The second law was in PUSH all along, uncredited.'),
+   ()=>qCon('CROSSOVER · IMPACT — Gas pressure on the chamber walls is, in the momentum cabinet’s language…',
+     'countless tiny Δp transfers per second — particle collisions with the wall',['the weight of the gas','a field like gravity','the particles’ temperature pushing'],
+     'Each particle bounce is a miniature IMPACT collision: wall gains Δp, particle reverses. Pressure = momentum delivered per second per area. Your momentum unit and your thermal unit are the same physics at different headcounts.'),
+  ];
+  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
+  const bank=act===1?bank1:act===2?bank2:bank3;
+  return pick(bank)();
+}
+let curQ=null;
+function askQuestion(){
+  state='question';curQ=makeQuestion();
+  overlay(`
+   <div class="card">
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
+     <div class="choices">${curQ.choices.map((c,i)=>
+       `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
+     <div class="explain" id="explain">${curQ.explain}</div>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+   </div>`);
+  primary=null;
+}
+function answer(i){
+  if(primary)return;
+  const right=curQ.choices.findIndex(c=>c.ok);
+  curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
+    if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
+  $('#explain').style.display='block';
+  $('#contBtn').style.display='inline-block';
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
+  else beep(180,.3,'sawtooth',.15,-100);
+  primary=nextLevel;
+}
+
+/* ================================================== physics */
+const DT=1/120;
+function step(dt){
+  t+=dt;attemptT+=dt;
+  if(act===1){
+    setRoar(firing);
+    for(let i=0;i<ingots.length;i++){
+      const g=ingots[i],M=MATS[g.mat],mc=g.m*M.c;
+      const heating=firing&&i===sel;
+      if(heating){
+        qTotal+=BURN_P*dt;
+        if(g.plateau&&g.T>=g.plateau.at&&g.melt<g.plateau.Lq){
+          g.melt+=BURN_P*dt;g.T=g.plateau.at;
+          if(g.melt>=g.plateau.Lq){
+            if(!g.liquidTarget&&!g.done){g.done=true;
+              popup(M.label+' — PLATEAU CLEARED ✓','#38bdf8',22);chord([523,659],.06);}
+            else if(g.liquidTarget)popup(M.label+' MOLTEN — now land the temperature','#38bdf8',18);
+          }
+        }else g.T+=BURN_P/mc*dt;
+        if(Math.random()<.4)particles.push({px:0,py:0,vx:rnd(-30,30),vy:rnd(-90,-40),
+          life:rnd(.2,.5),col:pick(['#fbbf24','#fb923c','#ef4444']),size:rnd(2,3.5),ing:i});
+      }else if(!(g.plateau&&g.T>=g.plateau.at-0.5&&g.melt<g.plateau.Lq)){
+        g.T=Math.max(25,g.T-0.018*(g.T-25)*dt); // Newton cooling whenever the flame is elsewhere
+      }
+      const ready=!g.plateau||g.melt>=g.plateau.Lq;
+      const wantsTemp=!g.plateau||g.liquidTarget;
+      if(wantsTemp&&ready&&!g.done){
+        if(Math.abs(g.T-g.target)<=g.band){g.hold+=dt;
+          if(g.hold>=1.5){g.done=true;
+            popup(M.label+' SET ✓ '+Math.round(g.T)+'°','#34d399',22);chord([659,784],.06);}}
+        else g.hold=0;
+        maxOver=Math.max(maxOver,g.T-(g.target+g.band));
+      }
+      const ruinAt=g.plateau&&!g.liquidTarget?g.plateau.at+70:g.target+g.band+70;
+      if(g.T>ruinAt){failAttempt('SLAGGED — '+M.label+' RUINED',
+        'The flame has no brakes; only your thumb does. Lift EARLY — Q = mcΔT keeps charging while you hesitate, and low-c materials charge triple.');return;}
+    }
+    if(ingots.every(g=>g.done)){
+      const craft=Math.max(0,Math.round(300-Math.max(0,maxOver)*8));
+      succeed('Every commission delivered to temperature.',craft);return;}
+    if(attemptT>=lv.dur){failAttempt('THE BELL — ORDERS MISSED',
+      'Heat the slow, high-c pieces first; the fast ones can wait. Specific heat is a schedule, not just a number.');return;}
+  }else if(act===2){
+    const gap=lv.gapH/2;
+    for(const p of parts){
+      p.x+=p.vx*dt/8;p.y+=p.vy*dt/8;
+      if(p.x<1){p.x=1;p.vx=Math.abs(p.vx);}
+      if(p.x>47){p.x=47;p.vx=-Math.abs(p.vx);}
+      if(p.y<1){p.y=1;p.vy=Math.abs(p.vy);}
+      if(p.y>29){p.y=29;p.vy=-Math.abs(p.vy);}
+      // the wall + gate at x = 24
+      const crossing=(p.x-24)*(p.x-24-p.vx*dt/8)<0||Math.abs(p.x-24)<0.4;
+      if(crossing){
+        const inGap=Math.abs(p.y-15)<gap;
+        if(!(gateOpen&&inGap)){
+          if(p.vx>0&&p.x<24){p.x=23.5;p.vx=-Math.abs(p.vx);}
+          else if(p.vx<0&&p.x>24){p.x=24.5;p.vx=Math.abs(p.vx);}
+        }
+      }
+    }
+    if(lv.leak&&parts.length){
+      const all=parts.reduce((s,p)=>s+p.vx*p.vx+p.vy*p.vy,0)/parts.length;
+      for(const p of parts){
+        const v2=p.vx*p.vx+p.vy*p.vy||1;
+        const f=Math.sqrt(Math.max(0.5,1+(all/v2-1)*lv.leak*dt));
+        p.vx*=f;p.vy*=f;}
+    }
+    // a near-empty chamber has no meaningful temperature — no cheating the
+    // statistic by shoveling everyone left. Both sides must stay populated.
+    const nL=parts.filter(p=>p.x<24).length;
+    const balanced=Math.min(nL,parts.length-nL)>=parts.length*0.25;
+    const dT2=balanced?chamberT('L')-chamberT('R'):0;
+    if(dT2>=lv.dT){holdT+=dt;
+      if(holdT>=3){succeed(`ΔT of ${fmt(dT2)} held against ${lv.leak?'a leaking wall':'pure chance'} — Maxwell would be proud, and slightly alarmed.`,Math.round(dT2*8));return;}}
+    else holdT=0;
+    if(attemptT>=lv.dur){failAttempt('EQUILIBRIUM HOLDS',
+      'Be pickier. Let only CLEARLY red particles cross to the left, and slam the gate on everything ambiguous — one fat slow intruder undoes three good sorts.');return;}
+  }else{
+    phase=(phase+dt*1.5)%TAU;
+    condenser=Math.max(0,condenser-lv.drain*dt);
+    strokeFx=Math.max(0,strokeFx-dt);
+    if(condenser>=lv.cap){failAttempt('CONDENSER OVERFLOW',
+      'Waste heat is mandatory but its TIMING is yours. Let the cooling tower drain between strokes — pace the burn or drown in your own exhaust.');return;}
+    if(work>=lv.Wtarget){
+      const effRating=qTotal>0?clamp((work/qTotal)/etaC(),0,1):0;
+      succeed(`${fmtE(work)} of work at ${Math.round((work/Math.max(1,qTotal))*100)}% realized efficiency (ceiling ${Math.round(etaC()*100)}%).`,
+        Math.round(effRating*400));return;}
+    if(fuel<8000){failAttempt('COLD BOILER — FUEL SPENT',
+      'Mistimed strokes burn the same fuel for a third of the work. The glowing window is the whole game: wait for it, every single time.');return;}
+    if(attemptT>=lv.dur){failAttempt('SHIFT BELL',
+      'You can stroke once per cycle at best — and the condenser sets the real tempo. Find the rhythm: window, stroke, breathe.');return;}
+  }
+}
+function stroke(){
+  if(act!==3||state!=='play')return;
+  const Q=8000;
+  if(fuel<Q)return;
+  const inWin=phase>0.2&&phase<1.0;
+  const quality=inWin?1-(Math.abs(phase-0.6)/0.4)*0.45:0.25;
+  fuel-=Q;qTotal+=Q;
+  const Wq=Q*etaC()*quality;
+  work+=Wq;condenser+=Q-Wq;
+  lastQ=quality;strokeFx=0.5;
+  if(inWin){beep(220,.15,'square',.15,150);
+    popup('+'+fmtE(Wq)+' WORK'+(quality>0.92?' — PERFECT':''),'#34d399',quality>0.92?24:18);}
+  else{clank();popup('MISTIMED — mostly waste','#f87171',18);shake=.3;}
+}
+
+/* ================================================== render */
+function sceneRect(){const pw=Math.min(420,W*0.34);return {w:W-pw,pw};}
+function render(){
+  const {w:SW,pw}=sceneRect();
+  const now=performance.now()/1000;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();
+  if(shake>0){ctx.translate(rnd(-1,1)*shake*10,rnd(-1,1)*shake*10);shake=Math.max(0,shake-0.02);}
+  const bg=ctx.createLinearGradient(0,0,0,H);
+  bg.addColorStop(0,'#0c0303');bg.addColorStop(1,'#1a0a06');
+  ctx.fillStyle=bg;ctx.fillRect(-20,-20,SW+40,H+40);
+  // boiler-room pipes
+  ctx.strokeStyle='#ffffff0c';ctx.lineWidth=10;
+  for(let i=0;i<3;i++){const py2=H*(0.1+i*0.08);
+    ctx.beginPath();ctx.moveTo(0,py2);ctx.lineTo(SW,py2);ctx.stroke();}
+  ctx.lineWidth=1;
+  for(let i=0;i<6;i++){const px2=SW*(i*0.18+0.05);
+    ctx.fillStyle='#ffffff10';ctx.fillRect(px2,H*0.08,6,H*0.18);}
+  if(act===1)scene1(SW,now);
+  else if(act===2)scene2(SW,now);
+  else scene3(SW,now);
+  // particles
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];
+    p.life-=1/60;if(p.life<=0){particles.splice(i,1);continue;}
+    let bx=SW/2,by=H/2;
+    if(act===1&&p.ing!==undefined){const n=ingots.length;
+      bx=SW*(p.ing+1)/(n+1);by=H*0.62;}
+    else if(p.px){bx=0;by=0;}
+    p.px=(p.px||0)+p.vx/60;p.py=(p.py||0)+p.vy/60;
+    ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle=p.col;
+    ctx.fillRect(bx+p.px,by+p.py,p.size,p.size);}
+  ctx.globalAlpha=1;
+  // popups
+  for(let i=popups.length-1;i>=0;i--){const p=popups[i];
+    p.t+=1/60;if(p.t>1.3){popups.splice(i,1);continue;}
+    ctx.globalAlpha=clamp(1.4-p.t,0,1);
+    ctx.fillStyle=p.col;ctx.font=`900 ${p.size}px Orbitron,monospace`;ctx.textAlign='center';
+    ctx.fillText(p.text,SW/2+p.jx,H*0.3-p.t*40);}
+  ctx.globalAlpha=1;ctx.textAlign='left';
+  drawHUD(SW);
+  if(state==='paused'){ctx.fillStyle='#000a';ctx.fillRect(0,0,SW,H);
+    ctx.fillStyle='#ef4444';ctx.font='900 30px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('PAUSED',SW/2,H/2);ctx.textAlign='left';}
+  ctx.restore();
+  if(flash>0){ctx.fillStyle=landedOK?'#34d399':'#f87171';
+    ctx.globalAlpha=flash*.35;ctx.fillRect(0,0,W,H);ctx.globalAlpha=1;
+    flash=Math.max(0,flash-0.03);}
+  drawPanel(SW,pw);
+}
+function scene1(SW,now){
+  const n=ingots.length,floorY=H*0.62;
+  ctx.fillStyle='#241008';ctx.fillRect(0,floorY+30,SW,H-floorY);
+  for(let i=0;i<n;i++){
+    const g=ingots[i],M=MATS[g.mat],cx2=SW*(i+1)/(n+1);
+    // anvil/stand
+    ctx.fillStyle='#1c1917';ctx.fillRect(cx2-34,floorY+6,68,22);
+    // ingot, colored by temperature (black-red-orange-yellow glow)
+    const heat=clamp((g.T-25)/600,0,1);
+    const r=Math.round(60+heat*195),g2=Math.round(40+heat*120),b=40;
+    ctx.fillStyle=`rgb(${r},${g2},${b})`;
+    ctx.strokeStyle='#0d0404';ctx.lineWidth=2;
+    if(g.mat==='water'){ // beaker
+      ctx.strokeStyle='#94a3b8';ctx.strokeRect(cx2-22,floorY-34,44,40);
+      ctx.fillStyle=`rgba(56,189,248,${.4+heat*.3})`;
+      ctx.fillRect(cx2-20,floorY-20,40,24);
+      if(g.plateau&&g.T>=g.plateau.at-1){ // boiling bubbles
+        for(let b2=0;b2<4;b2++){const by=floorY-2-((now*40+b2*17)%26);
+          ctx.fillStyle='#e0f2fe88';
+          ctx.beginPath();ctx.arc(cx2-12+b2*8,by,2,0,TAU);ctx.fill();}}
+    }else{
+      ctx.beginPath();ctx.moveTo(cx2-26,floorY+4);ctx.lineTo(cx2+26,floorY+4);
+      ctx.lineTo(cx2+18,floorY-16);ctx.lineTo(cx2-18,floorY-16);ctx.closePath();
+      ctx.fill();ctx.stroke();
+      if(heat>0.5){ctx.globalAlpha=(heat-0.5)*1.4;ctx.shadowColor='#fb923c';ctx.shadowBlur=18;
+        ctx.fill();ctx.shadowBlur=0;ctx.globalAlpha=1;}
+    }
+    ctx.lineWidth=1;
+    // card: material, c, temperature, goal
+    ctx.fillStyle='#0009';ctx.fillRect(cx2-56,floorY-110,112,64);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillStyle=M.col;ctx.fillText(M.label+' · '+g.m+' kg',cx2,floorY-94);
+    ctx.fillStyle='#8b96ad';ctx.fillText('c = '+M.c,cx2,floorY-80);
+    ctx.fillStyle=g.done?'#34d399':'#fbbf24';ctx.font='700 14px Orbitron,monospace';
+    ctx.fillText(Math.round(g.T)+'°',cx2,floorY-62);
+    ctx.font='10px "Share Tech Mono",monospace';
+    if(g.done){ctx.fillStyle='#34d399';ctx.fillText('✓ DONE',cx2,floorY-50);}
+    else if(g.plateau&&g.melt<g.plateau.Lq&&g.T>=g.plateau.at-1){
+      ctx.fillStyle='#38bdf8';
+      ctx.fillText('PLATEAU '+Math.round(100*g.melt/g.plateau.Lq)+'%',cx2,floorY-50);}
+    else{ctx.fillStyle='#8b96ad';
+      ctx.fillText(g.plateau&&g.melt<g.plateau.Lq?'boil at '+g.plateau.at+'°':'goal '+g.target+'±'+g.band,cx2,floorY-50);}
+    // hold ring
+    if(g.hold>0&&!g.done){ctx.strokeStyle='#34d399';ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(cx2,floorY-66,20,-Math.PI/2,-Math.PI/2+(g.hold/1.5)*TAU);
+      ctx.stroke();ctx.lineWidth=1;}
+    ctx.textAlign='left';
+  }
+  // the burner cart
+  const bx=SW*(sel+1)/(n+1);
+  ctx.fillStyle='#1f2937';ctx.fillRect(bx-26,floorY+34,52,18);
+  ctx.fillStyle='#374151';
+  ctx.beginPath();ctx.arc(bx-16,floorY+54,6,0,TAU);ctx.fill();
+  ctx.beginPath();ctx.arc(bx+16,floorY+54,6,0,TAU);ctx.fill();
+  if(firing&&state==='play'){
+    for(let f=0;f<3;f++){
+      const fl=rnd(16,30);
+      ctx.fillStyle=pick(['#fbbf24','#fb923c','#ef4444']);
+      ctx.beginPath();ctx.moveTo(bx-10+f*10,floorY+34);
+      ctx.lineTo(bx-5+f*10,floorY+34-fl);ctx.lineTo(bx+f*10,floorY+34);
+      ctx.closePath();ctx.fill();}
+  }
+}
+function scene2(SW,now){
+  const s=Math.min((SW-40)/48,(H-120)/30);
+  const ox=(SW-48*s)/2,oy=(H-30*s)/2+10;
+  const X2=x=>ox+x*s,Y2=y=>oy+y*s;
+  // chambers
+  ctx.fillStyle='#11060a';ctx.fillRect(X2(0),Y2(0),48*s,30*s);
+  // temperature tint per side
+  const TL=chamberT('L'),TR=chamberT('R');
+  ctx.fillStyle=`rgba(239,68,68,${clamp(TL/120,0,0.18)})`;
+  ctx.fillRect(X2(0),Y2(0),24*s,30*s);
+  ctx.fillStyle=`rgba(56,189,248,${clamp((60-TR)/120,0,0.18)})`;
+  ctx.fillRect(X2(24),Y2(0),24*s,30*s);
+  ctx.strokeStyle='#8b96ad44';ctx.strokeRect(X2(0),Y2(0),48*s,30*s);
+  // wall + gate
+  const gap=lv.gapH/2;
+  ctx.fillStyle=lv.leak?'#7f1d1d':'#374151';
+  ctx.fillRect(X2(24)-2,Y2(0),4,(15-gap)*s);
+  ctx.fillRect(X2(24)-2,Y2(15+gap),4,(15-gap)*s);
+  if(!gateOpen){ctx.fillStyle='#fbbf24';
+    ctx.fillRect(X2(24)-2,Y2(15-gap),4,lv.gapH*s);}
+  else{ctx.strokeStyle='#fbbf24';ctx.setLineDash([3,4]);
+    ctx.beginPath();ctx.moveTo(X2(24),Y2(15-gap));ctx.lineTo(X2(24),Y2(15+gap));
+    ctx.stroke();ctx.setLineDash([]);}
+  // particles, colored by speed
+  for(const p of parts){
+    const sp=hyp(p.vx,p.vy);
+    const hot2=clamp((sp-50)/130,0,1);
+    ctx.fillStyle=`rgb(${Math.round(80+hot2*175)},${Math.round(120-hot2*40)},${Math.round(255-hot2*200)})`;
+    ctx.beginPath();ctx.arc(X2(p.x),Y2(p.y),Math.max(2.5,s*0.22),0,TAU);ctx.fill();}
+  // labels
+  ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillStyle='#ef4444';ctx.fillText('HOT SIDE — T '+fmt(TL),X2(12),Y2(0)-8);
+  ctx.fillStyle='#38bdf8';ctx.fillText('COLD SIDE — T '+fmt(TR),X2(36),Y2(0)-8);
+  const dT2=TL-TR;
+  ctx.fillStyle=dT2>=lv.dT?'#34d399':'#8b96ad';
+  ctx.fillText('ΔT '+fmt(dT2)+' / '+lv.dT+(holdT>0?'  · hold '+fmt(Math.max(0,3-holdT),1)+'s':''),X2(24),Y2(30)+20);
+  ctx.textAlign='left';
+}
+function scene3(SW,now){
+  const cx2=SW/2,cy2=H*0.52;
+  // reservoirs
+  const res=(x,T,col,label)=>{
+    ctx.fillStyle=col+'22';ctx.fillRect(x-60,cy2-90,120,180);
+    ctx.strokeStyle=col;ctx.strokeRect(x-60,cy2-90,120,180);
+    ctx.fillStyle=col;ctx.font='700 13px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText(label,x,cy2-100);
+    ctx.font='12px "Share Tech Mono",monospace';
+    ctx.fillText(T+' K',x,cy2-72);ctx.textAlign='left';};
+  res(cx2-220,lv.Th,'#ef4444','HOT');
+  res(cx2+220,lv.Tc,'#38bdf8','COLD');
+  // condenser fill (inside cold)
+  const cf=clamp(condenser/lv.cap,0,1);
+  ctx.fillStyle=cf>0.85?'#f87171aa':'#38bdf877';
+  ctx.fillRect(cx2+160,cy2+90-178*cf,120,178*cf);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('waste '+fmtE(condenser)+' / '+fmtE(lv.cap),cx2+220,cy2+106);
+  // fuel gauge (inside hot)
+  const ff=clamp(fuel/lv.fuel,0,1);
+  ctx.fillStyle='#fb923c66';
+  ctx.fillRect(cx2-280,cy2+90-178*ff,120,178*ff);
+  ctx.fillText('fuel '+fmtE(fuel),cx2-220,cy2+106);
+  // piston wheel + phase window
+  ctx.strokeStyle='#6b7280';ctx.lineWidth=5;
+  ctx.beginPath();ctx.arc(cx2,cy2,70,0,TAU);ctx.stroke();ctx.lineWidth=1;
+  // hot window arc
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=10;
+  ctx.beginPath();ctx.arc(cx2,cy2,70,0.2-Math.PI/2,1.0-Math.PI/2);ctx.stroke();ctx.lineWidth=1;
+  // crank marker
+  const mx=cx2+70*Math.cos(phase-Math.PI/2),my=cy2+70*Math.sin(phase-Math.PI/2);
+  ctx.fillStyle=phase>0.2&&phase<1.0?'#fbbf24':'#e7ecf5';
+  ctx.beginPath();ctx.arc(mx,my,9,0,TAU);ctx.fill();
+  ctx.strokeStyle='#0d0404';ctx.stroke();
+  // piston rod + cylinder
+  ctx.fillStyle='#1f2937';ctx.fillRect(cx2-26,cy2-150,52,44);
+  const ph2=Math.sin(phase)*14;
+  ctx.fillStyle='#94a3b8';ctx.fillRect(cx2-20,cy2-138+ph2,40,10);
+  ctx.strokeStyle='#6b7280';
+  ctx.beginPath();ctx.moveTo(mx,my);ctx.lineTo(cx2,cy2-128+ph2);ctx.stroke();
+  if(strokeFx>0){ctx.globalAlpha=strokeFx*2;
+    ctx.fillStyle=lastQ>0.5?'#34d399':'#f87171';
+    ctx.beginPath();ctx.arc(cx2,cy2,80,0,TAU);ctx.globalAlpha=strokeFx*0.5;ctx.fill();
+    ctx.globalAlpha=1;}
+  // work meter (bottom)
+  const wf=clamp(work/lv.Wtarget,0,1);
+  ctx.fillStyle='#0009';ctx.fillRect(cx2-160,H-66,320,30);
+  ctx.fillStyle='#1f2937';ctx.fillRect(cx2-150,H-58,300,14);
+  ctx.fillStyle='#34d399';ctx.fillRect(cx2-150,H-58,300*wf,14);
+  ctx.fillStyle='#e7ecf5';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('WORK '+fmtE(work)+' / '+fmtE(lv.Wtarget),cx2,H-40);ctx.textAlign='left';
+}
+function drawHUD(SW){
+  if(!(state==='play'||state==='paused'||state==='down'))return;
+  const left2=Math.max(0,lv.dur-attemptT);
+  ctx.fillStyle='#0008';ctx.fillRect(8,8,210,48);
+  ctx.fillStyle=left2<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
+  ctx.fillText(Math.ceil(left2)+'s',16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  if(act===1)ctx.fillText('ingots '+ingots.filter(g=>g.done).length+' / '+ingots.length,70,28);
+  else if(act===2)ctx.fillText('sort the chamber',70,28);
+  else ctx.fillText('η ceiling '+Math.round(etaC()*100)+'%',70,28);
+  ctx.fillText('shift clock',16,46);
+  ctx.textAlign='right';
+  ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);
+  ctx.fillStyle='#fbbf24';ctx.font='700 16px Orbitron,monospace';
+  ctx.fillText(score.toLocaleString(),SW-16,28);
+  ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
+  ctx.fillText((ARCADE.embedded?(ARCADE.playId?'★RANKED  ':'PRACTICE  '):'')+
+    '🔥'.repeat(Math.max(0,lives))+'  COMBO ×'+Math.min(3,Math.max(1,streak+1)),SW-16,48);
+  ctx.textAlign='left';
+}
+/* ================================================== the boiler desk */
+function drawPanel(SW,pw){
+  ctx.fillStyle='#120505';ctx.fillRect(SW,0,pw,H);
+  ctx.strokeStyle='#ef444433';ctx.beginPath();ctx.moveTo(SW+.5,0);ctx.lineTo(SW+.5,H);ctx.stroke();
+  ctx.fillStyle='#ef4444';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText('BOILER DESK',SW+18,28);
+  ctx.fillStyle='#8b96ad';ctx.font='11px "Share Tech Mono",monospace';
+  ctx.fillText(lv?lv.name:'',SW+128,28);
+  const m=18,gx=SW+m,gw=pw-2*m,top=44,gap=14;
+  const ch2=H-top-2*gap-14;
+  if(act===1){drawQGraph(gx,top,gw,ch2*0.55);drawForgeInfo(gx,top+ch2*0.55+gap,gw,ch2*0.45);}
+  else if(act===2){drawHisto(gx,top,gw,ch2*0.55);drawGateInfo(gx,top+ch2*0.55+gap,gw,ch2*0.45);}
+  else {drawEffDial(gx,top,gw,ch2*0.55);drawEngineInfo(gx,top+ch2*0.55+gap,gw,ch2*0.45);}
+}
+function drawQGraph(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('Q vs ΔT — every line’s slope is its mc',gx+8,gy+14);
+  // for each ingot, a line from origin with slope mc (Q on y, ΔT on x), dot at current state
+  const Qmax=BURN_P*lv.dur*0.8, dTmax=620;
+  const X=dt2=>gx+10+(dt2/dTmax)*(gw-20);
+  const Y=q=>gy+gh-12-(clamp(q,0,Qmax)/Qmax)*(gh-34);
+  ingots.forEach(g=>{
+    const M=MATS[g.mat],mc=g.m*M.c;
+    ctx.strokeStyle=M.col+'88';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(dTmax),Y(mc*dTmax));ctx.stroke();
+    const dT2=g.T-25,q2=mc*dT2+(g.melt||0);
+    ctx.fillStyle=M.col;
+    ctx.beginPath();ctx.arc(X(dT2),Y(q2),4,0,TAU);ctx.fill();
+    // the plateau shows as a VERTICAL jump: energy with no ΔT
+    if(g.melt>0){ctx.strokeStyle='#38bdf8';ctx.setLineDash([3,3]);
+      ctx.beginPath();ctx.moveTo(X(dT2),Y(mc*dT2));ctx.lineTo(X(dT2),Y(q2));ctx.stroke();
+      ctx.setLineDash([]);}
+  });
+  ctx.lineWidth=1;
+  ctx.fillStyle='#57534e';ctx.fillText('ΔT →',gx+gw-38,gy+gh-4);
+}
+function drawForgeInfo(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE BURNER’S LEDGER',gx+8,gy+14);
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+34;
+  ctx.fillStyle='#fbbf24';ctx.fillText('Q delivered  '+fmtE(qTotal),gx+10,y);y+=20;
+  ctx.fillStyle='#8b96ad';
+  ctx.fillText('power  '+(BURN_P/1000)+' kW · climb = P/mc',gx+10,y);y+=20;
+  const g=ingots[sel];
+  if(g){const M=MATS[g.mat];
+    ctx.fillStyle=M.col;
+    ctx.fillText('under flame: '+M.label+'  ('+fmt(BURN_P/(g.m*M.c),1)+' °/s)',gx+10,y);y+=20;}
+  ctx.fillStyle='#57534e';
+  ctx.fillText('water heats 9× slower than iron.',gx+10,y);y+=16;
+  ctx.fillText('that is not a flaw. that is c.',gx+10,y);
+}
+function drawHisto(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('SPEED HISTOGRAM — left chamber red, right blue',gx+8,gy+14);
+  const bins=10,bw=(gw-24)/bins;
+  const hL=new Array(bins).fill(0),hR=new Array(bins).fill(0);
+  for(const p of parts){
+    const sp=hyp(p.vx,p.vy);
+    const b=clamp(Math.floor((sp-40)/16),0,bins-1);
+    if(p.x<24)hL[b]++;else hR[b]++;}
+  const hmax=Math.max(1,...hL,...hR);
+  for(let b=0;b<bins;b++){
+    const x=gx+12+b*bw;
+    const lh=hL[b]/hmax*(gh-46),rh=hR[b]/hmax*(gh-46);
+    ctx.fillStyle='#ef444499';ctx.fillRect(x,gy+gh-12-lh,bw*0.42,lh);
+    ctx.fillStyle='#38bdf899';ctx.fillRect(x+bw*0.46,gy+gh-12-rh,bw*0.42,rh);}
+  ctx.fillStyle='#57534e';ctx.fillText('slow →  fast',gx+gw-78,gy+gh-2);
+}
+function drawGateInfo(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE DEMON’S LEDGER',gx+8,gy+14);
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+34;
+  const TL=chamberT('L'),TR=chamberT('R');
+  ctx.fillStyle='#ef4444';ctx.fillText('T left   '+fmt(TL)+'  (mean v², scaled)',gx+10,y);y+=20;
+  ctx.fillStyle='#38bdf8';ctx.fillText('T right  '+fmt(TR),gx+10,y);y+=20;
+  ctx.fillStyle=TL-TR>=lv.dT?'#34d399':'#fbbf24';
+  ctx.fillText('ΔT '+fmt(TL-TR)+'  /  need '+lv.dT,gx+10,y);y+=20;
+  if(lv.leak){ctx.fillStyle='#f87171';
+    ctx.fillText('wall leak: entropy regenerating',gx+10,y);y+=20;}
+  ctx.fillStyle='#57534e';
+  ctx.fillText('temperature is a crowd statistic.',gx+10,y);y+=16;
+  ctx.fillText('you are arguing with a crowd.',gx+10,y);
+}
+function drawEffDial(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('EFFICIENCY — the needle lives under Carnot’s line',gx+8,gy+14);
+  const cx2=gx+gw/2,cy2=gy+gh*0.78,R=Math.min(gw*0.38,gh*0.6);
+  // dial arc 0..100%
+  ctx.strokeStyle='#374151';ctx.lineWidth=8;
+  ctx.beginPath();ctx.arc(cx2,cy2,R,Math.PI,0);ctx.stroke();
+  // Carnot ceiling mark + forbidden zone
+  const ec=etaC();
+  ctx.strokeStyle='#f87171';ctx.lineWidth=8;
+  ctx.beginPath();ctx.arc(cx2,cy2,R,Math.PI+Math.PI*ec,0);ctx.stroke();
+  ctx.lineWidth=1;
+  ctx.fillStyle='#f87171';ctx.font='9px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('forbidden by the 2nd law',cx2+R*0.4,cy2-R*0.55);
+  // your realized efficiency needle
+  const eta=qTotal>0?clamp(work/qTotal,0,1):0;
+  const na=Math.PI+Math.PI*eta;
+  ctx.strokeStyle='#34d399';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(cx2,cy2);
+  ctx.lineTo(cx2+R*0.9*Math.cos(na),cy2+R*0.9*Math.sin(na));ctx.stroke();ctx.lineWidth=1;
+  ctx.fillStyle='#34d399';ctx.font='700 13px Orbitron,monospace';
+  ctx.fillText(Math.round(eta*100)+'%',cx2,cy2-R*0.3);
+  ctx.fillStyle='#f87171';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('ceiling '+Math.round(ec*100)+'%  (1 − '+lv.Tc+'/'+lv.Th+')',cx2,cy2+16);
+  ctx.textAlign='left';
+}
+function drawEngineInfo(gx,gy,gw,gh){
+  ctx.fillStyle='#1a0808';ctx.fillRect(gx,gy,gw,gh);
+  ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
+  ctx.fillText('THE STOKER’S LEDGER',gx+8,gy+14);
+  ctx.font='12px "Share Tech Mono",monospace';
+  let y=gy+34;
+  ctx.fillStyle='#fb923c';ctx.fillText('fuel drawn  '+fmtE(qTotal),gx+10,y);y+=20;
+  ctx.fillStyle='#34d399';ctx.fillText('work made   '+fmtE(work),gx+10,y);y+=20;
+  ctx.fillStyle='#38bdf8';ctx.fillText('waste sent  '+fmtE(qTotal-work),gx+10,y);y+=20;
+  ctx.fillStyle=lastQ>0.9?'#34d399':lastQ>0.5?'#fbbf24':'#f87171';
+  ctx.fillText('last stroke quality '+Math.round(lastQ*100)+'%',gx+10,y);y+=20;
+  ctx.fillStyle='#57534e';
+  ctx.fillText('work + waste = fuel. always.',gx+10,y);y+=16;
+  ctx.fillText('the first law audits the second.',gx+10,y);
+}
+
+/* ================================================== loop + input */
+let last=performance.now();
+function frame(now){
+  const el=Math.min(.05,(now-last)/1000);last=now;
+  if(state==='play'){
+    acc+=el;
+    while(acc>=DT&&state==='play'){step(DT);acc-=DT;}
+  }
+  if(state==='down'){downTimer+=el;
+    if(downTimer>1.1&&!$('#overlay').classList.contains('show'))showResult();}
+  render();
+  requestAnimationFrame(frame);
+}
+window.addEventListener('keydown',e=>{
+  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(e.repeat)return;
+  if(state==='play'){
+    if(e.code==='Space'){
+      if(act===1)firing=true;
+      else if(act===2)gateOpen=true;
+      else stroke();
+    }
+    if(act===1){
+      if(e.code==='ArrowLeft')sel=(sel+ingots.length-1)%ingots.length;
+      if(e.code==='ArrowRight')sel=(sel+1)%ingots.length;
+    }
+  }
+  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
+  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
+    state=state==='play'?'paused':'play';
+    firing=false;gateOpen=false;setRoar(false);}
+  if(e.code==='KeyM'){muted=!muted;setRoar(false);}
+});
+window.addEventListener('keyup',e=>{
+  if(e.code==='Space'){firing=false;gateOpen=false;}
+});
+cv.addEventListener('pointerdown',e=>{audio();
+  if(state!=='play')return;
+  if(act===1){
+    const {w:SW}=sceneRect();
+    const n=ingots.length;
+    let best=0,bd=1e9;
+    for(let i=0;i<n;i++){const d=Math.abs(e.clientX-SW*(i+1)/(n+1));
+      if(d<bd){bd=d;best=i;}}
+    sel=best;firing=true;
+  }else if(act===2)gateOpen=true;
+  else stroke();
+});
+window.addEventListener('pointerup',()=>{firing=false;gateOpen=false;});
+window.addEventListener('blur',()=>{firing=false;gateOpen=false;setRoar(false);});
+document.addEventListener('click',audio,{once:true});
+
+/* ================================================== go */
+title();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

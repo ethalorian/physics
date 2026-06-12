@@ -79,6 +79,7 @@ export default function ArcadeCabinetPage() {
           playIdRef.current = d.playId
           if (typeof d.balance === 'number') setBalance(d.balance)
           setNotice(d.staff ? 'Staff run — free, unranked.'
+            : game?.costXp === 0 ? 'Free cabinet — this run is RANKED and accuracy banks XP.'
             : d.freebie ? 'First coin’s on the house — this run is RANKED. Make it count.'
             : `Coin accepted — ${d.costXp} XP. Good luck.`)
           reply({ type: 'arcade:coinAccepted', playId: d.playId, balance: d.balance })
@@ -100,17 +101,33 @@ export default function ArcadeCabinetPage() {
             score: msg.score,
             act: msg.act,
             final: !!msg.final,
+            stats: msg.stats,
           }),
         }).catch(() => {})
         if (msg.final) {
+          const finishedPlayId = playIdRef.current
           playIdRef.current = null
+          // Free cabinets pay mastery XP via the deliberate payout route
+          // (never through the score path — see docs/ARCADE_PATTERN.md).
+          if (game?.costXp === 0 && finishedPlayId) {
+            const r = await fetch('/api/arcade/payout', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ playId: finishedPlayId }),
+            }).catch(() => null)
+            const d = r ? await r.json().catch(() => ({})) : {}
+            if (r?.ok) {
+              if (typeof d.balance === 'number') setBalance(d.balance)
+              reply({ type: 'arcade:xpAwarded', xp: d.xp ?? 0, capped: !!d.capped })
+            }
+          }
           loadBoard()
         }
       }
     }
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [slug, loadBoard])
+  }, [slug, loadBoard, game])
 
   const accent = game?.accent || 'var(--primary)'
 
@@ -127,7 +144,8 @@ export default function ArcadeCabinetPage() {
         <div className="flex items-center gap-3 text-sm">
           {game && (
             <span className="flex items-center gap-1 rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
-              <Coins size={14} style={{ color: accent }} /> {game.costXp} XP / ranked run
+              <Coins size={14} style={{ color: accent }} />
+              {game.costXp === 0 ? 'FREE · accuracy earns XP' : `${game.costXp} XP / ranked run`}
             </span>
           )}
           {balance !== null && <span className="font-semibold">{balance.toLocaleString()} XP</span>}

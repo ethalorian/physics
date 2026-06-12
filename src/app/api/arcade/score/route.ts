@@ -10,11 +10,35 @@ import { PLAY_MAX_AGE_MS, type PlayRow } from '@/lib/arcade'
  * Scores are clamped to the game's max_plausible_score and only ever move up
  * (best of the run). `final: true` closes the run; until then a run may post
  * checkpoint scores (e.g. after each cleared act).
+ *
+ * Games may attach a whitelisted `stats` object (solved/right/wrong/streak/
+ * mode) which is stored on meta. It does NOT grant anything here — free
+ * cabinets are paid by the separate, deliberate /api/arcade/payout route
+ * (per the design rule: no XP flows out of the score path).
  */
+
+/** Clamp untrusted game-reported stats to plausible, typed values. */
+function safeStats(s: unknown): Record<string, number | string> | null {
+  if (!s || typeof s !== 'object') return null
+  const o = s as Record<string, unknown>
+  const num = (k: string, max: number) =>
+    typeof o[k] === 'number' && Number.isFinite(o[k])
+      ? Math.max(0, Math.min(max, Math.round(o[k] as number)))
+      : 0
+  return {
+    solved: num('solved', 500),
+    right: num('right', 5000),
+    wrong: num('wrong', 5000),
+    bestStreak: num('bestStreak', 500),
+    startLv: num('startLv', 10),
+    mode: typeof o.mode === 'string' ? o.mode.replace(/[^a-z-]/g, '').slice(0, 16) || 'algebra' : 'algebra',
+  }
+}
+
 export const POST = withAuth(async (request, ctx) => {
   const body = await request.json().catch(() => ({}))
-  const { playId, score, act, final } = body as {
-    playId?: string; score?: number; act?: number; final?: boolean
+  const { playId, score, act, final, stats } = body as {
+    playId?: string; score?: number; act?: number; final?: boolean; stats?: unknown
   }
   if (!playId || typeof score !== 'number' || !Number.isFinite(score)) {
     return NextResponse.json({ error: 'Missing playId or score' }, { status: 400 })
@@ -45,7 +69,12 @@ export const POST = withAuth(async (request, ctx) => {
   const cap = game?.max_plausible_score ?? 100000
 
   const newScore = Math.max(play.score, Math.min(cap, Math.max(0, Math.round(score))))
-  const meta = { ...(play.meta ?? {}), ...(typeof act === 'number' ? { act } : {}) }
+  const cleanStats = safeStats(stats)
+  const meta = {
+    ...(play.meta ?? {}),
+    ...(typeof act === 'number' ? { act } : {}),
+    ...(cleanStats ? { stats: cleanStats } : {}),
+  }
 
   const { error } = await supabaseAdmin
     .from('arcade_plays')
