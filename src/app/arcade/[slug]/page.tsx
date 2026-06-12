@@ -167,6 +167,9 @@ export default function ArcadeCabinetPage() {
           className="w-full rounded-xl border"
           style={{ borderColor: 'var(--border)', height: 'clamp(520px, calc(100vh - 200px), 1100px)', background: '#04060d' }}
           allow="autoplay"
+          // keyboard goes wherever focus is — hand it to the game immediately,
+          // so arrows steer the cabinet instead of scrolling this page
+          onLoad={() => frameRef.current?.focus()}
         />
       )}
       {game && gameOk === false && (

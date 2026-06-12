@@ -461,7 +461,9 @@ function act() {
   if (state.screen === 'tween') { nextTower(); return; }
   if (state.screen === 'gameover') { state.screen = 'attract'; return; }
 }
-cv.addEventListener('pointerdown', (e) => { e.preventDefault(); act(); });
+// NOTE: no preventDefault here — it would block focus transfer to this
+// iframe, and the keyboard would keep talking to the parent page.
+cv.addEventListener('pointerdown', () => { try { window.focus(); } catch (e2) {} act(); });
 window.addEventListener('keydown', (e) => {
   if (e.repeat) return;
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); act(); }

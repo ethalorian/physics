@@ -376,8 +376,10 @@ function tapAdvance() {
   if (state.screen === 'gameover') { state.screen = 'attract'; return true; }
   return false;
 }
+// NOTE: no preventDefault here — it would block focus transfer to this
+// iframe, and arrow keys would keep scrolling the parent page instead.
 cv.addEventListener('pointerdown', (e) => {
-  e.preventDefault();
+  try { window.focus(); } catch (e2) {}
   if (tapAdvance()) return;
   const r = cv.getBoundingClientRect();
   state.dirIn = (e.clientX - r.left) < r.width / 2 ? -1 : 1;

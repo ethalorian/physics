@@ -432,8 +432,10 @@ function press(side) {
   if (state.screen === 'tween') { nextTree(); return; }
   if (state.screen === 'gameover') { state.screen = 'attract'; return; }
 }
+// NOTE: no preventDefault here — it would block focus transfer to this
+// iframe, and arrow keys would keep scrolling the parent page instead.
 cv.addEventListener('pointerdown', (e) => {
-  e.preventDefault();
+  try { window.focus(); } catch (e2) {}
   const r = cv.getBoundingClientRect();
   press((e.clientX - r.left) < r.width / 2 ? 'L' : 'R');
 });
