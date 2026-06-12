@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getStudentLessonGate } from '@/lib/lesson-windows'
+import { getStudentLessonWindowStatuses, type LessonWindowStatus } from '@/lib/lesson-windows'
 import { withAuth } from '@/lib/api-auth'
 
 /**
@@ -69,12 +69,19 @@ export const GET = withAuth(async (request, ctx) => {
       )
     }
 
-    // Per-class release gate: a student only sees lessons their class has opened
-    // (and not yet closed). Staff are ungated so they can preview/build.
+    // Per-class release windows. A student sees every lesson their class has a
+    // window for — open (with close date), scheduled (locked, with open date),
+    // or closed (locked, with closed date) — so the grid shows "what's coming"
+    // and "what's due" at a glance. Lessons with NO window stay invisible
+    // (never released = no spoilers). Only the OPEN ones are clickable; the
+    // lesson page enforces the same gate server-side, so locked cards can't be
+    // bypassed by URL. Staff are ungated so they can preview/build.
     let visibleLessons = lessons ?? []
+    const windowStatuses: Record<string, LessonWindowStatus> = {}
     if (!isAdmin && userId && visibleLessons.length > 0) {
-      const gate = await getStudentLessonGate(userId)
-      visibleLessons = visibleLessons.filter((l) => gate(l.id))
+      const statuses = await getStudentLessonWindowStatuses(userId)
+      Object.assign(windowStatuses, statuses)
+      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined)
     }
 
     // Fetch user progress if available
@@ -193,6 +200,8 @@ export const GET = withAuth(async (request, ctx) => {
         generation_metadata: generationMetadata,
         progress: progress[lesson.id] || 0,
         isNew,
+        // Release-window status for the student grid (absent for staff: ungated)
+        window: windowStatuses[lesson.id] ?? null,
         // Set default lesson_type if not present
         lesson_type: lesson.lesson_type || 'markdown',
         // Simulation data will be null if column doesn't exist yet

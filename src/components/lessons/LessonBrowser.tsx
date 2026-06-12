@@ -46,6 +46,38 @@ interface Lesson {
   progress?: number
   isNew?: boolean
   order_index?: number
+  // Release-window status (students only; null/absent for staff, who are ungated)
+  window?: LessonWindowInfo | null
+}
+
+// Mirrors LessonWindowStatus from @/lib/lesson-windows (server-only module —
+// it imports supabaseAdmin, so the shape is re-declared here for the client).
+type LessonWindowInfo =
+  | { state: 'open'; opened_at: string | null; closes_at: string | null }
+  | { state: 'scheduled'; opens_at: string }
+  | { state: 'closed'; closed_at: string | null }
+
+// "Closes today 11:59 PM" / "Opens Mon 8:00 AM" / "Closed Jun 8" — relative
+// day words near today, weekday inside a week, short date beyond.
+function fmtWhen(iso: string, withTime = true): string {
+  const d = new Date(iso)
+  const now = new Date()
+  const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime()
+  const dayDiff = Math.round((startOf(d) - startOf(now)) / 86400000)
+  let day: string
+  if (dayDiff === 0) day = 'today'
+  else if (dayDiff === 1) day = 'tomorrow'
+  else if (dayDiff === -1) day = 'yesterday'
+  else if (dayDiff > 1 && dayDiff < 7) day = d.toLocaleDateString(undefined, { weekday: 'short' })
+  else day = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  if (!withTime) return day
+  const time = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
+  return `${day} ${time}`
+}
+
+const closesSoon = (iso: string) => {
+  const dt = new Date(iso).getTime() - Date.now()
+  return dt > 0 && dt < 24 * 60 * 60 * 1000
 }
 
 interface LessonBrowserProps {
@@ -326,12 +358,19 @@ function LessonCard({
   const isCompleted = progress === 100
   const isStarted = progress > 0
 
+  // Release-window state. No window info (staff, or pre-deploy cache) = open.
+  const win = lesson.window ?? null
+  const isLocked = win?.state === 'scheduled' || win?.state === 'closed'
+  const urgent = win?.state === 'open' && !!win.closes_at && closesSoon(win.closes_at)
+
   return (
-    <Card 
-      className={`hover:shadow-lg transition-all cursor-pointer group relative overflow-hidden ${
-        isCompleted ? 'border-success/30 bg-success/5' : ''
+    <Card
+      className={`transition-all group relative overflow-hidden ${
+        isLocked
+          ? 'opacity-70 cursor-default'
+          : `hover:shadow-lg cursor-pointer ${isCompleted ? 'border-success/30 bg-success/5' : ''}`
       }`}
-      onClick={() => router.push(`/lessons/${lesson.slug}`)}
+      onClick={() => { if (!isLocked) router.push(`/lessons/${lesson.slug}`) }}
     >
       {/* Progress Bar */}
       {progress > 0 && (
@@ -402,16 +441,55 @@ function LessonCard({
           )}
         </div>
 
+        {/* Release window — opened / closes / opens / closed, at a glance */}
+        {win && (
+          <div
+            className={`flex items-center gap-1.5 text-xs font-medium ${
+              urgent
+                ? 'text-amber-600 dark:text-amber-400'
+                : win.state === 'open'
+                  ? 'text-muted-foreground'
+                  : 'text-muted-foreground/80'
+            }`}
+          >
+            {win.state === 'open' ? (
+              <>
+                <Clock className="h-3.5 w-3.5 shrink-0" />
+                <span>
+                  {win.opened_at ? `Opened ${fmtWhen(win.opened_at, false)}` : 'Open'}
+                  {win.closes_at ? ` · Closes ${fmtWhen(win.closes_at)}` : ''}
+                </span>
+              </>
+            ) : win.state === 'scheduled' ? (
+              <>
+                <Lock className="h-3.5 w-3.5 shrink-0" />
+                <span>Opens {fmtWhen(win.opens_at)}</span>
+              </>
+            ) : (
+              <>
+                <Lock className="h-3.5 w-3.5 shrink-0" />
+                <span>Closed{win.closed_at ? ` ${fmtWhen(win.closed_at, false)}` : ''}</span>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Action Button */}
-        <Button 
-          className="w-full" 
-          variant={isCompleted ? "outline" : "default"}
+        <Button
+          className="w-full"
+          variant={isCompleted || isLocked ? "outline" : "default"}
+          disabled={isLocked}
           onClick={(e) => {
             e.stopPropagation()
-            router.push(`/lessons/${lesson.slug}`)
+            if (!isLocked) router.push(`/lessons/${lesson.slug}`)
           }}
         >
-          {isCompleted ? (
+          {isLocked ? (
+            <>
+              <Lock className="h-4 w-4 mr-2" />
+              {win?.state === 'scheduled' ? `Opens ${fmtWhen(win.opens_at, false)}` : 'Closed'}
+            </>
+          ) : isCompleted ? (
             <>
               <CheckCircle className="h-4 w-4 mr-2" />
               Review
