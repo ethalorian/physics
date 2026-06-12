@@ -177,7 +177,7 @@ window.addEventListener('message',e=>{
           |I| over Imax trips the breaker. */
 const K=130, VDOCK=6;
 const ACT_META={
- 1:{name:'STATIC', col:'#38bdf8', blurb:'Your probe has no engine — only a sign. Flip + to −, repulsion to attraction, and surf Coulomb’s inverse square between the pylons. Gravity wishes it had this trick.'},
+ 1:{name:'STATIC', col:'#38bdf8', blurb:'Your engine is a SIGN: flip + to −, repulsion to attraction, and surf Coulomb’s inverse square between the pylons. Weak trim thrusters steer; the field does the flying. Gravity wishes it had this trick.'},
  2:{name:'THE GRID', col:'#fbbf24', blurb:'Switchboard duty. Parallel branches each draw their own current and the fuse counts ALL of it. Light exactly what the order sheet says — V = IR is the whole rulebook.'},
  3:{name:'THE DYNAMO', col:'#a3e635', blurb:'A magnet, a coil, and Faraday’s one commandment: only CHANGE makes current. Pump for power, watch EMF ride the slope of the flux — and don’t out-shove the breaker.'},
 };
@@ -185,7 +185,7 @@ const ACT1=[
  {name:'FIRST FLIP', dur:75,
   probe:{x:5,y:15}, dock:{x:43,y:15,r:3},
   pylons:[{x:24,y:15,q:2}],
-  tip:'One positive pylon. Start positive: it shoves you away. Flip NEGATIVE mid-flight and it reels you in — flip back to + before you arrive and it brakes you. Attraction, repulsion, and timing: that is the entire engine.'},
+  tip:'One positive pylon between you and the dock. Go NEGATIVE to fall toward it, trim SIDEWAYS with the thrusters so you swing AROUND instead of in, then flip POSITIVE on the far side and let the repulsion fling you out. The dashed line shows your flipped future — fly the line you like.'},
  {name:'THE GATE', dur:75,
   probe:{x:5,y:15}, dock:{x:43,y:15,r:3},
   pylons:[{x:22,y:9,q:2},{x:22,y:21,q:-2}],
@@ -272,6 +272,20 @@ const ENDLESS={1:endless1,2:endless2,3:endless3};
 /* ================================================== state */
 let act=1, state='title', lv=null, levelIdx=0, wave=0, lives=3, score=0, streak=0;
 let probe={x:5,y:15,vx:0,vy:0,sign:1};                 // act I
+let neutral=false,holdTO=null;                         // act I: hold = chargeless coast
+function probeQ(){return neutral?0:probe.sign;}        // effective charge
+// cold-gas trim thrusters — weak (a = 4 vs Coulomb's hundreds up close),
+// and BOTTLED: 8 s of gas per attempt. Coulomb is the engine; this is the
+// rudder — burn it all flying straight and you'll drift the rest of the way.
+const THR_A=4, GAS_MAX=8;
+let gas=GAS_MAX;
+const heldK={};let thrKX=0,thrKY=0,thrTX=0,thrTY=0,pd=null;
+function updThrK(){
+  thrKX=(heldK.ArrowRight?1:0)-(heldK.ArrowLeft?1:0);
+  thrKY=(heldK.ArrowDown?1:0)-(heldK.ArrowUp?1:0);}
+function thrustVec(){
+  let x=thrKX||thrTX,y=thrKY||thrTY;
+  const m2=hyp(x,y);return m2>0.01?[x/m2,y/m2]:[0,0];}
 let branches=[], selBr=0, surgeIdx=0, gridHold=0, fuseHot=0; // act II
 let mag=0, magV=0, driving=false, bank=0, lastEMF=0, lastI=0, tripT=0; // act III
 let t=0, acc=0, attemptT=0, samples=[], lastSamp=-1;
@@ -314,7 +328,7 @@ function title(){
        <b style="color:#38bdf8">ACT I — STATIC</b> &nbsp;fly by flipping your own polarity<br>
        <b style="color:#fbbf24">ACT II — THE GRID</b> &nbsp;V = IR, switch by switch<br>
        <b style="color:#a3e635">ACT III — THE DYNAMO</b> &nbsp;only change makes current<br><br>
-       <span class="kbd">SPACE</span> flip / toggle / drive ·
+       <span class="kbd">SPACE</span> flip / toggle / drive · hold <span class="kbd">X</span> neutral ·
        <span class="kbd">←</span><span class="kbd">→</span> pick a switch ·
        <span class="kbd">P</span> pause · <span class="kbd">M</span> mute
      </div>
@@ -373,6 +387,8 @@ function startAct(a){
 }
 function setupLevel(){
   probe={x:(lv.probe||{x:5,y:15}).x,y:(lv.probe||{x:5,y:15}).y,vx:0,vy:0,sign:1};
+  neutral=false;if(holdTO){clearTimeout(holdTO);holdTO=null;}
+  for(const k in heldK)delete heldK[k];thrKX=thrKY=0;thrTX=thrTY=0;pd=null;gas=GAS_MAX;
   branches=(lv.branches||[]).map(b=>({...b,sw:false,I:0,bright:0}));
   selBr=0;surgeIdx=0;gridHold=0;fuseHot=0;
   mag=0;magV=0;driving=false;bank=0;lastEMF=0;lastI=0;tripT=0;
@@ -392,7 +408,7 @@ function showMission(level){
      <div class="sub">${params}</div>
      <div class="explain" style="display:block">${lv.tip}</div>
      <div class="sub" style="margin-top:12px">
-       ${act===1?'<span class="kbd">SPACE</span> flips your charge between + and −. That is the only control. Choose your moments.'
+       ${act===1?'<span class="kbd">SPACE</span> (or tap) flips your charge + ⇄ − · hold <span class="kbd">X</span> (or press-and-hold) for <b>NEUTRAL</b>: zero charge, zero force · <span class="kbd">←</span><span class="kbd">↑</span><span class="kbd">↓</span><span class="kbd">→</span> (or press-and-drag) fire weak trim thrusters. Solid line = your path now; dashed = if you flip.'
         :act===2?'<span class="kbd">←</span><span class="kbd">→</span> select a switch · <span class="kbd">SPACE</span> toggle it'
         :'hold <span class="kbd">SPACE</span> to drive the magnet into the coil; release and the spring returns it'}
      </div>
@@ -615,15 +631,19 @@ function step(dt){
   t+=dt;attemptT+=dt;
   if(act===1){
     let ax=0,ay=0;
+    const q=probeQ(); // 0 while neutral — a chargeless probe feels NO electric force
     for(const p of lv.pylons){
       const dx=probe.x-p.x,dy=probe.y-p.y,r=Math.max(1.2,hyp(dx,dy));
-      const F=K*probe.sign*p.q/(r*r); // + product = repulsion, along (probe−pylon)
+      const F=K*q*p.q/(r*r); // + product = repulsion, along (probe−pylon)
       ax+=F*dx/r;ay+=F*dy/r;
       if(r<2){failAttempt('ZAP — PYLON CONTACT',
-        'The inverse square has teeth up close: force quadruples every halving of the gap. Make your flips two heartbeats earlier than feels right.');return;}
+        'The inverse square has teeth up close: force quadruples every halving of the gap. Flip earlier — or go NEUTRAL and coast straight past the danger.');return;}
     }
-    probe.vx=clamp(probe.vx+ax*dt,-30,30);
-    probe.vy=clamp(probe.vy+ay*dt,-30,30);
+    const [tx2,ty2]=thrustVec();
+    if((tx2||ty2)&&gas>0){ax+=tx2*THR_A;ay+=ty2*THR_A;gas=Math.max(0,gas-dt);}
+    const drg=Math.exp(-0.10*dt); // ionized mist: mild drag keeps speeds flyable
+    probe.vx=clamp((probe.vx+ax*dt)*drg,-30,30);
+    probe.vy=clamp((probe.vy+ay*dt)*drg,-30,30);
     probe.x+=probe.vx*dt;probe.y+=probe.vy*dt;
     if(probe.x<1){probe.x=1;probe.vx=Math.abs(probe.vx)*0.5;}
     if(probe.x>47){probe.x=47;probe.vx=-Math.abs(probe.vx)*0.5;}
@@ -734,12 +754,13 @@ function scene1(SW,now){
   const ox=(SW-48*s)/2,oy=(H-30*s)/2+8;
   const X2=x=>ox+x*s,Y2=y=>oy+y*s;
   ctx.strokeStyle='#a3e63522';ctx.strokeRect(ox,oy,48*s,30*s);
-  // field hints: the force YOUR probe (current sign) would feel, on a coarse grid
+  // field hints: the force YOUR probe (current charge) would feel, on a coarse grid
+  const qFld=probeQ()||probe.sign; // while neutral, show the sign you'll return to
   for(let gx2=4;gx2<48;gx2+=5)for(let gy2=3;gy2<30;gy2+=5){
     let fx=0,fy=0;
     for(const p of lv.pylons){
       const dx=gx2-p.x,dy=gy2-p.y,r=Math.max(2,hyp(dx,dy));
-      const F=probe.sign*p.q/(r*r);fx+=F*dx/r;fy+=F*dy/r;}
+      const F=qFld*p.q/(r*r);fx+=F*dx/r;fy+=F*dy/r;}
     const m2=hyp(fx,fy);if(m2<0.002)continue;
     const L=clamp(m2*220,4,14);
     ctx.strokeStyle='#a3e63530';ctx.fillStyle='#a3e63540';
@@ -764,15 +785,59 @@ function scene1(SW,now){
     ctx.fillStyle='#0a0f04';ctx.font='700 13px Orbitron,monospace';ctx.textAlign='center';
     ctx.fillText(p.q>0?'+':'−',px,py+5);ctx.textAlign='left';
   }
+  // trajectory ghosts — both futures, drawn on the field itself.
+  // Solid: the path your CURRENT charge flies. Dashed: the path if you flip.
+  const predictPath=(q)=>{
+    let x=probe.x,y=probe.y,vx=probe.vx,vy=probe.vy;const pts=[];
+    const sub=1/30,drg=Math.exp(-0.10*sub);
+    const [ptx,pty]=gas>0?thrustVec():[0,0]; // assume you keep doing what you're doing
+    for(let i=0;i<110;i++){
+      let ax=(i*sub<gas)?ptx*THR_A:0,ay=(i*sub<gas)?pty*THR_A:0;
+      for(const p of lv.pylons){
+        const dx=x-p.x,dy=y-p.y,r=Math.max(1.2,hyp(dx,dy));
+        if(r<2)return pts; // preview ends where the ZAP would be
+        const F=K*q*p.q/(r*r);ax+=F*dx/r;ay+=F*dy/r;}
+      vx=clamp((vx+ax*sub)*drg,-30,30);vy=clamp((vy+ay*sub)*drg,-30,30);
+      x+=vx*sub;y+=vy*sub;
+      if(x<1||x>47||y<1||y>29)return pts;
+      if(i%2===0)pts.push([x,y]);
+    }
+    return pts;};
+  const drawPath=(pts,col,dash)=>{
+    if(pts.length<2)return;
+    ctx.strokeStyle=col;ctx.lineWidth=1.5;if(dash)ctx.setLineDash([4,5]);
+    ctx.beginPath();
+    pts.forEach((pp,i)=>{i?ctx.lineTo(X2(pp[0]),Y2(pp[1])):ctx.moveTo(X2(pp[0]),Y2(pp[1]));});
+    ctx.stroke();ctx.setLineDash([]);ctx.lineWidth=1;};
+  const qNow=probeQ();
+  drawPath(predictPath(qNow),'#e7ecf5aa',false);
+  if(qNow!==0)drawPath(predictPath(-qNow),(-qNow>0?'#f87171':'#38bdf8')+'88',true);
+  else{drawPath(predictPath(1),'#f8717155',true);drawPath(predictPath(-1),'#38bdf855',true);}
   // probe
   const px=X2(probe.x),py=Y2(probe.y);
-  const pc=probe.sign>0?'#f87171':'#38bdf8';
+  const pc=neutral?'#9ca3af':probe.sign>0?'#f87171':'#38bdf8';
   ctx.fillStyle=pc;ctx.strokeStyle='#fff';ctx.lineWidth=2;
   ctx.beginPath();ctx.arc(px,py,9,0,TAU);ctx.fill();ctx.stroke();ctx.lineWidth=1;
   ctx.fillStyle='#0a0f04';ctx.font='700 12px Orbitron,monospace';ctx.textAlign='center';
-  ctx.fillText(probe.sign>0?'+':'−',px,py+4);
+  ctx.fillText(neutral?'0':probe.sign>0?'+':'−',px,py+4);
   ctx.fillStyle='#8b96ad';ctx.font='9px "Share Tech Mono",monospace';
   ctx.fillText(fmt(hyp(probe.vx,probe.vy),1),px,py-14);ctx.textAlign='left';
+  // thruster puff — drawn opposite the burn, like any honest rocket
+  const [ttx,tty]=thrustVec();
+  if((ttx||tty)&&gas>0){
+    ctx.strokeStyle='#e7ecf5aa';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(px-ttx*12,py-tty*12);ctx.lineTo(px-ttx*22,py-tty*22);ctx.stroke();
+    ctx.lineWidth=1;}
+  // gas bottle gauge
+  ctx.fillStyle='#0008';ctx.fillRect(SW/2-90,H-44,180,12);
+  ctx.fillStyle=gas>2?'#a3e635':'#f87171';
+  ctx.fillRect(SW/2-88,H-42,176*(gas/GAS_MAX),8);
+  ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('cold gas '+fmt(gas,1)+'s',SW/2,H-50);
+  // standing instruction
+  ctx.font='12px "Share Tech Mono",monospace';
+  ctx.fillText('SPACE flip ± · hold X neutral · ←↑↓→ trim thrusters ('+GAS_MAX+'s of gas) · dock under '+VDOCK+' speed',SW/2,H-12);
+  ctx.textAlign='left';
 }
 function scene2(SW,now){
   const bx=SW*0.14,topY=H*0.2,rowH=Math.min(86,(H*0.62)/Math.max(3,branches.length));
@@ -898,7 +963,7 @@ function drawHUD(SW){
   ctx.fillStyle=left2<10?'#f87171':'#fbbf24';ctx.font='700 15px Orbitron,monospace';
   ctx.fillText(Math.ceil(left2)+'s',16,28);
   ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
-  if(act===1)ctx.fillText('you are '+(probe.sign>0?'POSITIVE':'NEGATIVE'),70,28);
+  if(act===1)ctx.fillText('you are '+(neutral?'NEUTRAL — coasting':probe.sign>0?'POSITIVE':'NEGATIVE'),70,28);
   else if(act===2)ctx.fillText('hold all bands '+fmt(Math.max(0,4-gridHold),1)+'s',70,28);
   else ctx.fillText('only change makes current',70,28);
   ctx.fillText('shift clock',16,46);
@@ -959,8 +1024,8 @@ function drawStaticInfo(gx,gy,gw,gh){
   ctx.fillText('THE PROBE’S LEDGER',gx+8,gy+14);
   ctx.font='12px "Share Tech Mono",monospace';
   let y=gy+34;
-  ctx.fillStyle=probe.sign>0?'#f87171':'#38bdf8';
-  ctx.fillText('your charge: '+(probe.sign>0?'+1 (positive)':'−1 (negative)'),gx+10,y);y+=20;
+  ctx.fillStyle=neutral?'#9ca3af':probe.sign>0?'#f87171':'#38bdf8';
+  ctx.fillText('your charge: '+(neutral?'0 (neutral — no force)':probe.sign>0?'+1 (positive)':'−1 (negative)'),gx+10,y);y+=20;
   ctx.fillStyle='#fbbf24';
   ctx.fillText('speed '+fmt(hyp(probe.vx,probe.vy),1)+'  (dock under '+VDOCK+')',gx+10,y);y+=20;
   ctx.fillStyle='#8b96ad';
@@ -1059,6 +1124,10 @@ window.addEventListener('keydown',e=>{
         beep(branches[selBr].sw?620:300,.08,'square',.12);}
       else driving=true;
     }
+    if(act===1&&['KeyX','ShiftLeft','ShiftRight'].includes(e.code)){
+      neutral=true;beep(260,.06,'sine',.1);}
+    if(act===1&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code)){
+      heldK[e.code]=1;updThrK();}
     if(act===2){
       if(e.code==='ArrowLeft')selBr=(selBr+branches.length-1)%branches.length;
       if(e.code==='ArrowRight'||e.code==='ArrowDown')selBr=(selBr+1)%branches.length;
@@ -1073,10 +1142,16 @@ window.addEventListener('keydown',e=>{
 });
 window.addEventListener('keyup',e=>{
   if(e.code==='Space')driving=false;
+  if(['KeyX','ShiftLeft','ShiftRight'].includes(e.code))neutral=false;
+  if(heldK[e.code]){delete heldK[e.code];updThrK();}
 });
 cv.addEventListener('pointerdown',e=>{audio();
   if(state!=='play')return;
-  if(act===1){probe.sign*=-1;beep(probe.sign>0?500:330,.08,'square',.12);flash=.12;}
+  if(act===1){
+    // tap = flip · press-and-hold = NEUTRAL · press-and-DRAG = thrust stick
+    pd={x:e.clientX,y:e.clientY,moved:false};
+    holdTO=setTimeout(()=>{holdTO=null;if(pd&&!pd.moved){neutral=true;beep(260,.06,'sine',.1);}},180);
+  }
   else if(act===2){
     const topY=H*0.2,rowH=Math.min(86,(H*0.62)/Math.max(3,branches.length));
     const i=Math.floor((e.clientY-topY)/rowH);
@@ -1084,8 +1159,24 @@ cv.addEventListener('pointerdown',e=>{audio();
       beep(branches[i].sw?620:300,.08,'square',.12);}
   }else driving=true;
 });
-window.addEventListener('pointerup',()=>{driving=false;});
-window.addEventListener('blur',()=>{driving=false;setHum(0);});
+window.addEventListener('pointermove',e=>{
+  if(!pd||act!==1)return;
+  const dx=e.clientX-pd.x,dy=e.clientY-pd.y,d=hyp(dx,dy);
+  if(d>20){
+    pd.moved=true;
+    if(holdTO){clearTimeout(holdTO);holdTO=null;}
+    neutral=false;
+    thrTX=dx/d;thrTY=dy/d;
+  }
+});
+window.addEventListener('pointerup',()=>{
+  driving=false;
+  const wasTap=holdTO&&pd&&!pd.moved;
+  if(holdTO){clearTimeout(holdTO);holdTO=null;}
+  if(wasTap&&act===1&&state==='play'){probe.sign*=-1;beep(probe.sign>0?500:330,.08,'square',.12);flash=.12;}
+  neutral=false;thrTX=0;thrTY=0;pd=null;
+});
+window.addEventListener('blur',()=>{driving=false;neutral=false;setHum(0);});
 document.addEventListener('click',audio,{once:true});
 
 /* ================================================== go */

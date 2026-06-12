@@ -54,14 +54,35 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
   // eye/brow/mouth/cheek cluster sits balanced on each silhouette and its
   // spread tracks the face width — instead of clinging to round-face
   // coordinates. See FACE_GEO for the shape-by-shape values.
-  const { featureYShift: featureShift, featureXScale: featureScale, hairXScale: hairScale } = FACE_GEO[t.face]
+  const { featureYShift: featureShift, featureXScale: featureScale, hairXScale: hairScale, hairYScale } = FACE_GEO[t.face]
   const featureParts: string[] = []
   if (featureShift !== 0) featureParts.push(`translate(0, ${featureShift})`)
   if (featureScale !== 1) featureParts.push(`scale(${featureScale}, 1)`)
   const featureTransform = featureParts.length ? featureParts.join(' ') : undefined
   // Hair (front + back) scales to the head width so the cap frames each
-  // silhouette, the same way the feature cluster now tracks the face.
-  const hairTransform = hairScale !== 1 ? `scale(${hairScale}, 1)` : undefined
+  // silhouette, the same way the feature cluster now tracks the face. The
+  // vertical scale is anchored at the HAIRLINE (y=-6), not the origin, so
+  // stretching the cap to clear a tall crown (heart) never moves the
+  // hairline off the forehead: y' = -6·(1−k) + k·y keeps y=-6 fixed.
+  const HAIRLINE_Y = -6
+  const hairDy = Math.round(HAIRLINE_Y * (1 - hairYScale) * 1000) / 1000
+  const hairParts: string[] = []
+  if (hairDy !== 0) hairParts.push(`translate(0, ${hairDy})`)
+  if (hairScale !== 1 || hairYScale !== 1) hairParts.push(`scale(${hairScale}, ${hairYScale})`)
+  const hairTransform = hairParts.length ? hairParts.join(' ') : undefined
+  // Facial hair anchors to the CHIN, not the eye cluster. It renders inside
+  // the feature group (to keep z-order between nose and mouth), so this
+  // nested correction first undoes the feature shift/scale, then applies the
+  // chin delta vs the round face (beards are authored against round, chin
+  // y=48) and the jaw-width scale. Round face = identity, so existing
+  // catalogs are unchanged there.
+  const geo = FACE_GEO[t.face]
+  const beardDy = (geo.bottomY - 48) - geo.featureYShift
+  const beardSx = geo.beardXScale / geo.featureXScale
+  const beardParts: string[] = []
+  if (beardDy !== 0) beardParts.push(`translate(0, ${beardDy})`)
+  if (beardSx !== 1) beardParts.push(`scale(${Math.round(beardSx * 1000) / 1000}, 1)`)
+  const beardTransform = beardParts.length ? beardParts.join(' ') : undefined
   return (
     <svg
       width={size}
@@ -93,7 +114,11 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
         <FrecklesLayer density={t.freckles} skin={t.skin} />
         <Eyes shape={t.eyes} color={t.eye_color} spacing={t.eye_spacing} scale={t.eye_scale} tilt={t.eye_tilt} />
         <Nose style={t.nose} skin={t.skin} />
-        {itemBySlot.facial_hair && <RawLayer svg={itemBySlot.facial_hair.svg_layer} />}
+        {itemBySlot.facial_hair && (
+          <g transform={beardTransform}>
+            <RawLayer svg={itemBySlot.facial_hair.svg_layer} />
+          </g>
+        )}
         <g transform={MOUTH_SX[t.mouth_width] !== 1 ? `scale(${MOUTH_SX[t.mouth_width]}, 1)` : undefined}>
           <Mouth style={t.mouth} />
         </g>

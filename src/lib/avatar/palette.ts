@@ -28,13 +28,27 @@ export interface FaceGeometry {
   // because its forehead/crown — where hair sits — is broad even though its
   // chin is narrow.
   hairXScale: number
+  // Vertical scale for the HAIR trait, anchored at the hairline (y=-6) so the
+  // hairline stays fixed on the face while the cap stretches (or shrinks) to
+  // clear each silhouette's crown with ~10px of volume. Hair is authored
+  // against round (crown -48, cap top -58): heart's crown peaks at -58 so its
+  // hair must stretch ~19%, square's sits at -46 so its cap relaxes slightly.
+  hairYScale: number
+  // Horizontal scale for FACIAL HAIR items. Beards hug the jaw, which tracks
+  // the silhouette differently from both the eye cluster (featureXScale) and
+  // the crown (hairXScale): square's flat jaw runs full width, while heart
+  // tapers to a point well inside its eye line. Items are authored against
+  // the round face (chin y=48); the renderer also translates them to each
+  // shape's real chin via `bottomY`, so author beards for round and they fit
+  // every shape.
+  beardXScale: number
 }
 
 export const FACE_GEO: Record<FaceShape, FaceGeometry> = {
-  round:  { rx: 46, ry: 48, cy:  0, topY: -48, bottomY: 48, featureYShift:  0, featureXScale: 1.00, hairXScale: 1.00 },
-  egg:    { rx: 42, ry: 50, cy:  2, topY: -48, bottomY: 52, featureYShift:  3, featureXScale: 0.94, hairXScale: 0.93 },
-  square: { rx: 48, ry: 46, cy:  0, topY: -46, bottomY: 46, featureYShift: -1, featureXScale: 1.04, hairXScale: 1.05 },
-  heart:  { rx: 42, ry: 52, cy: -6, topY: -58, bottomY: 46, featureYShift:  1, featureXScale: 0.95, hairXScale: 0.97 },
+  round:  { rx: 46, ry: 48, cy:  0, topY: -48, bottomY: 48, featureYShift:  0, featureXScale: 1.00, hairXScale: 1.00, hairYScale: 1.00, beardXScale: 1.00 },
+  egg:    { rx: 42, ry: 50, cy:  2, topY: -48, bottomY: 52, featureYShift:  3, featureXScale: 0.94, hairXScale: 0.93, hairYScale: 1.00, beardXScale: 0.91 },
+  square: { rx: 48, ry: 46, cy:  0, topY: -46, bottomY: 46, featureYShift: -1, featureXScale: 1.04, hairXScale: 1.05, hairYScale: 0.96, beardXScale: 1.05 },
+  heart:  { rx: 42, ry: 52, cy: -6, topY: -58, bottomY: 46, featureYShift:  1, featureXScale: 0.95, hairXScale: 0.97, hairYScale: 1.19, beardXScale: 0.84 },
 }
 
 // Skin: `color` for face/neck/ears, `shadow` for the nose tint + freckles.

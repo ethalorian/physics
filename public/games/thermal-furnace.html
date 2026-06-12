@@ -210,15 +210,15 @@ const ACT1=[
   tip:'Three commissions, one flame, and every material on its own clock. The forge masters’ secret: heat the slow ones early, visit the fast ones late, and never trust lead— wait, no lead today. Small mercies.'},
 ];
 const ACT2=[
- {name:'SIXTEEN SOULS', dur:70, N:16, dT:18, leak:0, gapH:8,
+ {name:'SIXTEEN SOULS', dur:70, N:16, dT:14, leak:0, gapH:8,
   tip:'Red particles are fast (hot), blue are slow (cold) — and temperature is NOTHING but their average v². Hold the gate open to let a fast one cross LEFT, slam it on the slow. You are doing what nature says cannot happen for free.'},
- {name:'A BIGGER CROWD', dur:75, N:22, dT:24, leak:0, gapH:8,
+ {name:'A BIGGER CROWD', dur:75, N:22, dT:18, leak:0, gapH:8,
   tip:'More particles, sharper sorting. Notice they do NOT share one speed — there’s a whole distribution in there, and the histogram on your desk is drawing it live. Temperature is a crowd statistic, not a property of any single particle.'},
- {name:'THE LEAKY WALL', dur:80, N:24, dT:24, leak:0.02, gapH:8,
+ {name:'THE LEAKY WALL', dur:80, N:24, dT:18, leak:0.02, gapH:8,
   tip:'The wall now CONDUCTS: your hard-won difference seeps back toward equilibrium every second. This is the second law on the clock — heat flows hot to cold by itself, and only your sorting fights the tide.'},
- {name:'NARROW GATE', dur:85, N:28, dT:28, leak:0.03, gapH:5,
+ {name:'NARROW GATE', dur:85, N:28, dT:20, leak:0.025, gapH:6,
   tip:'A meaner gate and a leakier wall. Be selective: one wrong fat slow particle through costs more than three right ones gain. Maxwell imagined you in 1867; the universe has been collecting the information bill ever since.'},
- {name:'EQUILIBRIUM’S REVENGE', dur:90, N:32, dT:32, leak:0.05, gapH:5,
+ {name:'EQUILIBRIUM’S REVENGE', dur:90, N:30, dT:18, leak:0.02, gapH:6,
   tip:'The final sort. The leak is vicious now — entropy regenerates faster than ever, and the gate is your only argument. Win this and you’ll never again wonder what temperature actually is.'},
 ];
 const ACT3=[
@@ -245,8 +245,8 @@ function endless1(w){
 }
 function endless2(w){
   return {name:pick(SHIFTS)+' · SORT '+w, dur:Math.max(60,90-w*2),
-    N:Math.min(36,16+w*3), dT:Math.min(38,18+w*3),
-    leak:Math.min(0.06,w*0.012), gapH:w>2?5:8,
+    N:Math.min(36,16+w*3), dT:Math.min(26,14+w*2),
+    leak:Math.min(0.04,w*0.01), gapH:w>2?6:8,
     tip:'The crowd grows; the law does not blink.'};
 }
 function endless3(w){
@@ -386,10 +386,16 @@ function showMission(level){
       · fuel <b>${fmtE(lv.fuel)}</b> · make <b>${fmtE(lv.Wtarget)}</b> of work
       · condenser <b>${fmtE(lv.cap)}</b>`;
   }
+  const job=act===1
+    ?'YOUR JOB: park every ingot’s needle inside its GREEN band and hold it there 1.5 s. Overshoot the red line and the piece is slag.'
+    :act===2
+    ?'YOUR JOB: trap the FAST (red) particles on the LEFT and the slow (blue) on the RIGHT. The rings tell you which crossings to allow.'
+    :'YOUR JOB: press SPACE only while the marker rides the GREEN arc. Fill the WORK bar before the fuel or the condenser gives out.';
   overlay(`
    <div class="card">
      <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
      <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="sub" style="color:#e7ecf5;border-left:3px solid ${ACT_META[act].col};padding-left:10px">${job}</div>
      <div class="sub">${params}</div>
      <div class="explain" style="display:block">${lv.tip}</div>
      <div class="sub" style="margin-top:12px">
@@ -630,7 +636,7 @@ function step(dt){
         if(Math.random()<.4)particles.push({px:0,py:0,vx:rnd(-30,30),vy:rnd(-90,-40),
           life:rnd(.2,.5),col:pick(['#fbbf24','#fb923c','#ef4444']),size:rnd(2,3.5),ing:i});
       }else if(!(g.plateau&&g.T>=g.plateau.at-0.5&&g.melt<g.plateau.Lq)){
-        g.T=Math.max(25,g.T-0.018*(g.T-25)*dt); // Newton cooling whenever the flame is elsewhere
+        g.T=Math.max(25,g.T-0.008*(g.T-25)*dt); // Newton cooling whenever the flame is elsewhere
       }
       const ready=!g.plateau||g.melt>=g.plateau.Lq;
       const wantsTemp=!g.plateau||g.liquidTarget;
@@ -669,16 +675,21 @@ function step(dt){
       }
     }
     if(lv.leak&&parts.length){
-      const all=parts.reduce((s,p)=>s+p.vx*p.vx+p.vy*p.vy,0)/parts.length;
-      for(const p of parts){
-        const v2=p.vx*p.vx+p.vy*p.vy||1;
-        const f=Math.sqrt(Math.max(0.5,1+(all/v2-1)*lv.leak*dt));
-        p.vx*=f;p.vy*=f;}
+      // honest conduction: heat flows hot chamber → cold chamber THROUGH the
+      // wall, proportional to ΔT. It erodes your hard-won difference but
+      // preserves each chamber's spread — the board never becomes unwinnable.
+      const TL3=chamberT('L'),TR3=chamberT('R');
+      if(TL3>0&&TR3>0&&TL3!==TR3){
+        const d3=(TL3-TR3)*lv.leak*dt;
+        const fL=Math.sqrt(clamp(1-d3/Math.max(1,TL3),0.5,1.5));
+        const fR=Math.sqrt(clamp(1+d3/Math.max(1,TR3),0.5,1.5));
+        for(const p of parts){const f=(p.x<24)?fL:fR;p.vx*=f;p.vy*=f;}
+      }
     }
     // a near-empty chamber has no meaningful temperature — no cheating the
     // statistic by shoveling everyone left. Both sides must stay populated.
     const nL=parts.filter(p=>p.x<24).length;
-    const balanced=Math.min(nL,parts.length-nL)>=parts.length*0.25;
+    const balanced=Math.min(nL,parts.length-nL)>=parts.length*0.2;
     const dT2=balanced?chamberT('L')-chamberT('R'):0;
     if(dT2>=lv.dT){holdT+=dt;
       if(holdT>=3){succeed(`ΔT of ${fmt(dT2)} held against ${lv.leak?'a leaking wall':'pure chance'} — Maxwell would be proud, and slightly alarmed.`,Math.round(dT2*8));return;}}
@@ -768,8 +779,46 @@ function render(){
 function scene1(SW,now){
   const n=ingots.length,floorY=H*0.62;
   ctx.fillStyle='#241008';ctx.fillRect(0,floorY+30,SW,H-floorY);
+  // standing instruction — the whole act in one line
+  ctx.fillStyle='#8b96ad';ctx.font='12px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('← → move the burner · hold SPACE to fire · land every needle in its GREEN band',SW/2,H-14);
+  ctx.textAlign='left';
   for(let i=0;i<n;i++){
     const g=ingots[i],M=MATS[g.mat],cx2=SW*(i+1)/(n+1);
+    const isSel=i===sel;
+    // selection: bright arrow over the chosen ingot, everything else dims
+    ctx.globalAlpha=isSel?1:0.55;
+    if(isSel&&state==='play'){
+      const bob=Math.sin(now*5)*3;
+      ctx.fillStyle='#fbbf24';
+      ctx.beginPath();ctx.moveTo(cx2-9,floorY-128+bob);ctx.lineTo(cx2+9,floorY-128+bob);
+      ctx.lineTo(cx2,floorY-116+bob);ctx.closePath();ctx.fill();
+    }
+    // THERMOMETER — the goal made visible: green band = target, red line = slag
+    {
+      const tx=cx2+62,tTop=floorY-138,tH=128;
+      const tempY=T2=>tTop+tH-clamp((T2-25)/625,0,1)*tH;
+      ctx.fillStyle='#0d0404';ctx.fillRect(tx-5,tTop-4,10,tH+8);
+      ctx.strokeStyle='#8b96ad55';ctx.strokeRect(tx-5,tTop-4,10,tH+8);
+      const wantsTemp=!g.plateau||g.liquidTarget;
+      if(wantsTemp&&g.target){
+        const y1=tempY(g.target+g.band),y2=tempY(g.target-g.band);
+        ctx.fillStyle='#34d39955';ctx.fillRect(tx-5,y1,10,Math.max(3,y2-y1));
+        ctx.strokeStyle='#34d399';ctx.strokeRect(tx-5,y1,10,Math.max(3,y2-y1));
+      }
+      if(g.plateau){
+        ctx.fillStyle='#38bdf8';ctx.fillRect(tx-8,tempY(g.plateau.at),16,2);
+      }
+      const ruinAt2=g.plateau&&!g.liquidTarget?g.plateau.at+70:g.target+g.band+70;
+      ctx.fillStyle='#f87171';ctx.fillRect(tx-8,tempY(ruinAt2),16,2);
+      ctx.font='9px "Share Tech Mono",monospace';ctx.fillStyle='#f87171';
+      ctx.fillText('slag',tx+10,tempY(ruinAt2)+3);
+      // mercury
+      const heat3=clamp((g.T-25)/600,0,1);
+      ctx.fillStyle=`rgb(${Math.round(120+heat3*135)},${Math.round(80+heat3*60)},60)`;
+      ctx.fillRect(tx-3,tempY(g.T),6,tTop+tH-tempY(g.T));
+      ctx.beginPath();ctx.arc(tx,tTop+tH+6,7,0,TAU);ctx.fill();
+    }
     // anvil/stand
     ctx.fillStyle='#1c1917';ctx.fillRect(cx2-34,floorY+6,68,22);
     // ingot, colored by temperature (black-red-orange-yellow glow)
@@ -812,6 +861,7 @@ function scene1(SW,now){
       ctx.beginPath();ctx.arc(cx2,floorY-66,20,-Math.PI/2,-Math.PI/2+(g.hold/1.5)*TAU);
       ctx.stroke();ctx.lineWidth=1;}
     ctx.textAlign='left';
+    ctx.globalAlpha=1;
   }
   // the burner cart
   const bx=SW*(sel+1)/(n+1);
@@ -821,11 +871,15 @@ function scene1(SW,now){
   ctx.beginPath();ctx.arc(bx+16,floorY+54,6,0,TAU);ctx.fill();
   if(firing&&state==='play'){
     for(let f=0;f<3;f++){
-      const fl=rnd(16,30);
+      const fl=rnd(34,56); // tall enough to visibly lick the ingot
       ctx.fillStyle=pick(['#fbbf24','#fb923c','#ef4444']);
       ctx.beginPath();ctx.moveTo(bx-10+f*10,floorY+34);
       ctx.lineTo(bx-5+f*10,floorY+34-fl);ctx.lineTo(bx+f*10,floorY+34);
       ctx.closePath();ctx.fill();}
+  }else if(state==='play'){
+    // unlit burner: a faint pilot light so you always see WHERE the heat will go
+    ctx.fillStyle='#fb923c66';
+    ctx.beginPath();ctx.arc(bx,floorY+30,4,0,TAU);ctx.fill();
   }
 }
 function scene2(SW,now){
@@ -852,11 +906,29 @@ function scene2(SW,now){
     ctx.beginPath();ctx.moveTo(X2(24),Y2(15-gap));ctx.lineTo(X2(24),Y2(15+gap));
     ctx.stroke();ctx.setLineDash([]);}
   // particles, colored by speed
+  // "fast" is judged against the CURRENT mean v² — as the leak drags everyone
+  // toward equilibrium, the bar moves with the crowd (temperature is relative)
+  let mv2=0;for(const p of parts)mv2+=p.vx*p.vx+p.vy*p.vy;
+  mv2/=Math.max(1,parts.length);
   for(const p of parts){
     const sp=hyp(p.vx,p.vy);
     const hot2=clamp((sp-50)/130,0,1);
     ctx.fillStyle=`rgb(${Math.round(80+hot2*175)},${Math.round(120-hot2*40)},${Math.round(255-hot2*200)})`;
-    ctx.beginPath();ctx.arc(X2(p.x),Y2(p.y),Math.max(2.5,s*0.22),0,TAU);ctx.fill();}
+    ctx.beginPath();ctx.arc(X2(p.x),Y2(p.y),Math.max(2.5,s*0.22),0,TAU);ctx.fill();
+    // decision rings: a particle approaching the gate gets judged for you —
+    // GREEN ring = you WANT this crossing (fast→left or slow→right), RED = block it
+    const toward=(p.x<24&&p.vx>0)||(p.x>24&&p.vx<0);
+    if(toward&&Math.abs(p.x-24)<7&&state==='play'){
+      const fast=sp*sp>mv2;
+      const want=(p.x>24&&fast)||(p.x<24&&!fast);
+      ctx.strokeStyle=want?'#34d399':'#f87171';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(X2(p.x),Y2(p.y),Math.max(2.5,s*0.22)+4,0,TAU);ctx.stroke();
+      ctx.lineWidth=1;
+    }}
+  // standing instruction
+  ctx.fillStyle='#8b96ad';ctx.font='12px "Share Tech Mono",monospace';ctx.textAlign='center';
+  ctx.fillText('hold SPACE to open the gate · let GREEN-ringed particles cross · slam it on RED',SW/2,H-14);
+  ctx.textAlign='left';
   // labels
   ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
   ctx.fillStyle='#ef4444';ctx.fillText('HOT SIDE — T '+fmt(TL),X2(12),Y2(0)-8);
@@ -890,14 +962,27 @@ function scene3(SW,now){
   ctx.fillRect(cx2-280,cy2+90-178*ff,120,178*ff);
   ctx.fillText('fuel '+fmtE(fuel),cx2-220,cy2+106);
   // piston wheel + phase window
+  const inWin=phase>0.2&&phase<1.0;
+  // GO state: while the marker rides the window, the whole wheel says NOW
+  if(inWin&&state==='play'){
+    ctx.fillStyle='rgba(52,211,153,.16)';
+    ctx.beginPath();ctx.arc(cx2,cy2,70,0,TAU);ctx.fill();
+    ctx.fillStyle='#34d399';ctx.font='900 20px Orbitron,monospace';ctx.textAlign='center';
+    ctx.fillText('STROKE NOW',cx2,cy2-94);
+    ctx.font='11px "Share Tech Mono",monospace';ctx.fillText('press SPACE',cx2,cy2-78);
+    ctx.textAlign='left';
+  }else if(state==='play'){
+    ctx.fillStyle='#57534e';ctx.font='11px "Share Tech Mono",monospace';ctx.textAlign='center';
+    ctx.fillText('wait for the green window…',cx2,cy2-86);ctx.textAlign='left';
+  }
   ctx.strokeStyle='#6b7280';ctx.lineWidth=5;
   ctx.beginPath();ctx.arc(cx2,cy2,70,0,TAU);ctx.stroke();ctx.lineWidth=1;
-  // hot window arc
-  ctx.strokeStyle='#ef4444';ctx.lineWidth=10;
+  // the stroke window — GREEN, because it means GO
+  ctx.strokeStyle='#34d399';ctx.lineWidth=10;
   ctx.beginPath();ctx.arc(cx2,cy2,70,0.2-Math.PI/2,1.0-Math.PI/2);ctx.stroke();ctx.lineWidth=1;
   // crank marker
   const mx=cx2+70*Math.cos(phase-Math.PI/2),my=cy2+70*Math.sin(phase-Math.PI/2);
-  ctx.fillStyle=phase>0.2&&phase<1.0?'#fbbf24':'#e7ecf5';
+  ctx.fillStyle=inWin?'#fbbf24':'#e7ecf5';
   ctx.beginPath();ctx.arc(mx,my,9,0,TAU);ctx.fill();
   ctx.strokeStyle='#0d0404';ctx.stroke();
   // piston rod + cylinder
@@ -926,7 +1011,7 @@ function drawHUD(SW){
   ctx.fillText(Math.ceil(left2)+'s',16,28);
   ctx.font='11px "Share Tech Mono",monospace';ctx.fillStyle='#8b96ad';
   if(act===1)ctx.fillText('ingots '+ingots.filter(g=>g.done).length+' / '+ingots.length,70,28);
-  else if(act===2)ctx.fillText('sort the chamber',70,28);
+  else if(act===2)ctx.fillText('fast→LEFT · slow→RIGHT',70,28);
   else ctx.fillText('η ceiling '+Math.round(etaC()*100)+'%',70,28);
   ctx.fillText('shift clock',16,46);
   ctx.textAlign='right';
