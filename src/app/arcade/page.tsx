@@ -9,11 +9,13 @@ import DailySpinWheel from '@/components/arcade/DailySpinWheel'
  * THE ARCADE — one unified hub for the whole economy loop.
  *
  *   TRAINING FLOOR (top): vocabulary games — XP EARNERS (capped daily).
- *   MATH SPINE GYM (middle): free fluency cabinets — XP EARNERS (capped daily,
- *     paid by accuracy via /api/arcade/payout), one per math_competencies strand.
- *   MAIN FLOOR (bottom): ranked physics cabinets — the XP SPENDERS.
+ *   PHYSICS FLOOR: the curriculum cabinets — FREE, ranked, and accuracy
+ *     EARNS XP via /api/arcade/payout (clears × question accuracy²).
+ *   MATH SPINE GYM: free fluency cabinets — XP EARNERS (same payout route),
+ *     one per math_competencies strand.
+ *   THE MIDWAY (bottom): pure-fun cabinets — the XP SPENDERS.
  *
- * Play the word & math games to fund the fun games. One door for everything.
+ * Learn to earn; spend it on the Midway. One door for everything.
  */
 
 type Cabinet = {
@@ -83,7 +85,8 @@ export default function ArcadePage() {
   const bestById = new Map((hub?.games ?? []).map((g) => [g.id, g]))
   const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
 
-  const mathGames = (data?.games ?? []).filter((g) => g.costXp === 0)
+  const physicsGames = (data?.games ?? []).filter((g) => g.costXp === 0 && g.unit !== 'Math Spine')
+  const mathGames = (data?.games ?? []).filter((g) => g.costXp === 0 && g.unit === 'Math Spine')
   const coinGames = (data?.games ?? []).filter((g) => g.costXp > 0)
 
   const renderCabinet = (g: Cabinet) => {
@@ -140,7 +143,7 @@ export default function ArcadePage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">The Arcade</h1>
             <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Earn XP on the training floor. Spend it on the main floor. One door.
+              Physics pays. The Midway costs. One door.
             </p>
           </div>
         </div>
@@ -171,6 +174,30 @@ export default function ArcadePage() {
           balance: { ...d.balance, balance: d.balance.balance + xp, lifetimeEarned: d.balance.lifetimeEarned + xp },
         } : d)} />
       </div>
+
+      {/* ===== THE MIDWAY — featured up top: the visible reason to earn ===== */}
+      {coinGames.length > 0 && (
+        <div className="rounded-2xl border p-5 mt-5" style={{
+          borderColor: 'color-mix(in oklch, var(--primary) 45%, transparent)',
+          background: 'linear-gradient(135deg, color-mix(in oklch, var(--primary) 10%, var(--card)), var(--card))',
+          boxShadow: '0 0 32px color-mix(in oklch, var(--primary) 16%, transparent)',
+        }}>
+          <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
+            <div className="flex items-center gap-2">
+              <Gamepad2 size={18} style={{ color: 'var(--primary)' }} />
+              <h2 className="text-sm font-extrabold uppercase tracking-widest">
+                The Midway · pure fun · {coinGames[0]?.costXp ?? 25} XP a coin
+              </h2>
+            </div>
+            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+              coins are earned on the floors below — one mastered physics run ≈ one Midway coin
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {coinGames.map(renderCabinet)}
+          </div>
+        </div>
+      )}
 
       {/* ===== TRAINING FLOOR — the earners ===== */}
       <div className="flex items-center justify-between flex-wrap gap-2 mt-7 mb-3">
@@ -257,6 +284,26 @@ export default function ArcadePage() {
         })}
       </div>
 
+      {/* ===== PHYSICS FLOOR — the curriculum cabinets: free, accuracy EARNS ===== */}
+      {physicsGames.length > 0 && (
+        <>
+          <div className="flex items-center justify-between flex-wrap gap-2 mt-8 mb-3">
+            <div className="flex items-center gap-2">
+              <Joystick size={16} style={{ color: 'var(--primary)' }} />
+              <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+                Physics floor · free cabinets · play the unit, earn XP
+              </h2>
+            </div>
+            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+              ranked runs · clears + bonus-question accuracy bank the XP
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {physicsGames.map(renderCabinet)}
+          </div>
+        </>
+      )}
+
       {/* ===== MATH SPINE GYM — free cabinets that EARN ===== */}
       {mathGames.length > 0 && (
         <>
@@ -277,25 +324,13 @@ export default function ArcadePage() {
         </>
       )}
 
-      {/* ===== MAIN FLOOR — the ranked cabinets ===== */}
-      <div className="flex items-center gap-2 mt-8 mb-3">
-        <Joystick size={16} style={{ color: 'var(--primary)' }} />
-        <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-          Main floor · ranked cabinets · coins cost XP
-        </h2>
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {coinGames.map(renderCabinet)}
-      </div>
-
       {data && data.games.length === 0 && (
         <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No cabinets are powered on yet. Check back soon.</p>
       )}
 
       {data && data.balance.balance < 25 && !data.freeCreditAvailable && (
         <p className="text-xs mt-6 text-center" style={{ color: 'var(--muted-foreground)' }}>
-          Short on coins? The math gym pays best — up to 75 XP a day for accurate runs. Vocabulary games add up to 25 a day, and lessons pay too.
+          Short on coins? The physics floor and math gym pay up to 75 XP a day for accurate runs. Vocabulary games add up to 25 a day, and lessons pay too.
         </p>
       )}
     </div>

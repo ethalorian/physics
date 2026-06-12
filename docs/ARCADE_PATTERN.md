@@ -1,10 +1,17 @@
-# The Arcade Pattern — adding XP-coin games
+# The Arcade Pattern — adding cabinets
 
-The arcade is a **pure XP sink**: vocabulary games and lessons EARN XP
-(see `docs/XP_ECONOMY_REVIEW.md` and `src/lib/points.ts`); arcade games
-SPEND it. The only payout for a ranked run is leaderboard position —
-weekly boards reset Monday 00:00 UTC, all-time bests live forever in the
-Hall of Fame.
+The arcade has two kinds of cabinet, split by `cost_xp`:
+
+- **Learning cabinets EARN** (`cost_xp = 0`): the PHYSICS FLOOR (one game
+  per unit) and the MATH SPINE GYM. Free to play, fully ranked, and a
+  finished run banks mastery-weighted XP via `/api/arcade/payout`
+  (level clears × bonus-question accuracy²; see "Free cabinets" below).
+- **Fun cabinets SPEND** (`cost_xp > 0`): the MIDWAY (STACK, TIMBER,
+  VORTEX). Pure XP sinks — the only payout is leaderboard position.
+
+Weekly boards reset Monday 00:00 UTC; all-time bests live forever in the
+Hall of Fame. Vocabulary games and lessons also earn (see
+`docs/XP_ECONOMY_REVIEW.md` and `src/lib/points.ts`).
 
 ## How a coin works
 

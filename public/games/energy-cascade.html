@@ -161,7 +161,7 @@ const ARCADE={
     setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
   },
   reportScore(final){
-    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final,stats:{solved:STATS.solved,right:STATS.right,wrong:STATS.wrong,bestStreak:0,startLv:act,mode:'physics'}});
   },
 };
 window.addEventListener('message',e=>{
@@ -448,7 +448,7 @@ function launchGo(){ // spring → KE, exactly
   burst(cart.x,yAt(cart.x)+1,14,['#c084fc','#34d399'],4);
 }
 function succeed(){
-  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setRoll(0);
+  state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;setRoll(0);
   const d0=lv.dock[0],d1=lv.dock[1],center=(d0+d1)/2,hw=(d1-d0)/2;
   const err=Math.abs(cart.x-center)/hw;
   const tier=err<=0.25?'BULLSEYE':err<=0.6?'GREAT':'CLEAN';
@@ -660,6 +660,7 @@ function askQuestion(){
    </div>`);
   primary=null;
 }
+const STATS={solved:0,right:0,wrong:0}; // free-cabinet payout evidence
 function answer(i){
   if(primary)return;
   const right=curQ.choices.findIndex(c=>c.ok);
@@ -667,8 +668,8 @@ function answer(i){
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
   $('#contBtn').style.display='inline-block';
-  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
-  else beep(180,.3,'sawtooth',.15,-100);
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
+  else{beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
 }
 

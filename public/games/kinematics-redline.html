@@ -411,7 +411,7 @@ const state = {
   clearInfo: null,
   // telemetry ring for the v-t panel (24 s window @ 10 Hz)
   trace: [], traceClock: 0,
-  stats: { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0 },
+  stats: { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0, levels: 0 },
 };
 
 function freshBike() {
@@ -447,7 +447,7 @@ function onCoinResult(ok) {
   if (!ok) { state.screen = 'attract'; state.flash = 'COIN DENIED'; state.flashT = 1.5; return; }
   state.practice = ARCADE.practice;
   state.score = 0; state.bikes = 3;
-  state.stats = { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0 };
+  state.stats = { gates: 0, perfectGates: 0, jumps: 0, crashes: 0, right: 0, wrong: 0, levels: 0 };
   state.screen = 'acts'; state.menuIdx = 0;
   AU.ding();
 }
@@ -470,7 +470,7 @@ function levelCleared() {
   const noCrash = state.crashes === 0 ? 1000 : 0;
   const gained = 1500 + perfect * 400 + timeBonus + noCrash;
   state.score += gained;
-  state.stats.gates += gates; state.stats.perfectGates += perfect;
+  state.stats.gates += gates; state.stats.perfectGates += perfect; state.stats.levels += 1;
   state.clearInfo = { name: c.def.name, time: state.t, par: state.par,
     perfect, gates, timeBonus, noCrash, gained };
   ARCADE.postScore(state.score, state.act, false);
@@ -525,7 +525,7 @@ function endRun(reason, champion) {
   state.clearInfo = { reason, champion };
   ARCADE.postScore(state.score, state.act, true, {
     right: state.stats.right, wrong: state.stats.wrong,
-    solved: state.stats.perfectGates, bestStreak: 0, startLv: state.act, mode: 'redline',
+    solved: state.stats.levels, bestStreak: 0, startLv: state.act, mode: 'physics',
   });
   state.screen = 'gameover';
 }

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>TIMBER // chop till sundown</title>
+<!--
+  TIMBER — midway machine #2. Two inputs, infinite ramp.
+
+  Tap LEFT or RIGHT: you hop to that side of the trunk and chop. The tree
+  drops a segment; some segments carry a BRANCH — chop underneath one and
+  you're squashed. Meanwhile the sun is sinking: every chop buys daylight,
+  but the day drains faster the deeper your count climbs. Death is either
+  SQUASHED (your fault, by a pixel) or SUNDOWN (you simply couldn't keep
+  pace). Score = chops.
+
+  Economy: 10 XP = one coin = THREE trees; best tree counts.
+  Bridge protocol identical to every other cabinet. Practice fallback 900 ms.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: #14101f;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+  #wrap { display: flex; height: 100%; align-items: center; justify-content: center; padding: 12px; }
+  #game { border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+    cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="game"></canvas></div>
+
+<script>
+'use strict';
+/* ============================================================ canvas */
+const LW = 560, LH = 760;
+const cv = document.getElementById('game');
+const cx = cv.getContext('2d');
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+let SCALE = 1;
+function fit() {
+  const aw = window.innerWidth - 24, ah = window.innerHeight - 24;
+  SCALE = Math.max(0.35, Math.min(aw / LW, ah / LH));
+  cv.width = Math.round(LW * SCALE * DPR);
+  cv.height = Math.round(LH * SCALE * DPR);
+  cv.style.width = Math.round(LW * SCALE) + 'px';
+  cv.style.height = Math.round(LH * SCALE) + 'px';
+}
+window.addEventListener('resize', fit);
+fit();
+
+/* ============================================================ bridge */
+const ARCADE = {
+  playId: null, ranked: false, pending: false, practice: false,
+  requestCoin() {
+    if (this.pending) return;
+    this.pending = true; this.practice = false; this.playId = null; this.ranked = false;
+    try { window.parent.postMessage({ type: 'arcade:coinRequest', source: 'timber-arcade' }, '*'); } catch (e) {}
+    setTimeout(() => {
+      if (this.pending) { this.pending = false; this.practice = true; onCoinResult(true); }
+    }, 900);
+  },
+  postScore(score, act, final) {
+    if (!this.ranked || !this.playId) return;
+    try {
+      window.parent.postMessage({ type: 'arcade:score', source: 'timber-arcade',
+        playId: this.playId, score: Math.round(score), act, final: !!final }, '*');
+    } catch (e) {}
+  },
+};
+window.addEventListener('message', (ev) => {
+  const d = ev && ev.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'arcade:coinAccepted') {
+    ARCADE.pending = false; ARCADE.playId = d.playId || null; ARCADE.ranked = !!d.playId;
+    ARCADE.practice = false; onCoinResult(true);
+  } else if (d.type === 'arcade:coinDenied') {
+    ARCADE.pending = false; ARCADE.practice = false; onCoinResult(false);
+  }
+});
+
+/* ============================================================ audio */
+const AU = {
+  ctx: null,
+  ensure() { if (this.ctx) return;
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} },
+  tone(f, dur, type, vol, slide) {
+    if (!this.ctx) return;
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine'; o.frequency.value = f;
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(30, f + slide), c.currentTime + dur);
+    g.gain.setValueAtTime(vol || 0.07, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + dur + 0.02);
+  },
+  chop() { this.tone(160, 0.07, 'square', 0.08, -60); this.tone(950, 0.04, 'triangle', 0.04, -300); },
+  squash() { this.tone(140, 0.5, 'sawtooth', 0.1, -100); },
+  sundown() { [392, 330, 262].forEach((f, i) => setTimeout(() => this.tone(f, 0.3, 'sine', 0.07), i * 160)); },
+  tick() { this.tone(880, 0.05, 'sine', 0.05); },
+};
+
+/* ============================================================ state */
+const TREES = 3;
+const SEG_H = 64;            // px per trunk segment
+const VIS = 9;               // visible segments
+const BAR_MAX = 6;           // seconds of daylight the bar can hold
+const GAIN = 0.26;           // daylight per chop
+function drainRate(chops) { return 1 + chops * 0.0035; }
+
+const store = {
+  get hi() { try { return parseInt(localStorage.getItem('timber_hi') || '0', 10) || 0; } catch (e) { return 0; } },
+  set hi(v) { try { localStorage.setItem('timber_hi', String(v)); } catch (e) {} },
+};
+
+const state = {
+  screen: 'attract',   // attract | play | tween | gameover
+  practice: false,
+  tree: 1, runBest: 0, counts: [],
+  segs: [],            // [{branch:null|'L'|'R'}], segs[0] = at player level
+  side: 'L', chops: 0, bar: 4,
+  deathBy: '',         // 'SQUASHED' | 'SUNDOWN'
+  pieces: [],          // flying trunk pieces {x,y,vx,vy,rot,vr,age,branch}
+  chips: [],           // wood chip particles
+  dropAnim: 0,         // trunk drop tween 0..1
+  flashT: 0, flashMsg: '', shake: 0,
+  tweenMsg: '', tweenSub: '',
+  hueShift: 0,
+};
+
+function genSeg(prev) {
+  // a branch is never followed by another branch — every tree is survivable
+  if (prev && prev.branch) return { branch: null };
+  const p = Math.min(0.55, 0.25 + state.chops * 0.0007);
+  if (Math.random() < p) return { branch: Math.random() < 0.5 ? 'L' : 'R' };
+  return { branch: null };
+}
+function freshTree() {
+  state.segs = [{ branch: null }, { branch: null }, { branch: null }];
+  while (state.segs.length < VIS + 3) state.segs.push(genSeg(state.segs[state.segs.length - 1]));
+  state.side = 'L'; state.chops = 0; state.bar = 4;
+  state.pieces = []; state.chips = []; state.dropAnim = 0;
+  state.deathBy = '';
+}
+
+function onCoinResult(ok) {
+  if (!ok) { state.screen = 'attract'; state.flashMsg = 'COIN DENIED'; state.flashT = 1.5; return; }
+  state.practice = ARCADE.practice;
+  state.tree = 1; state.runBest = 0; state.counts = [];
+  state.hueShift = Math.random() * 60 - 30;
+  freshTree();
+  state.screen = 'play';
+  AU.tone(660, 0.1, 'sine', 0.06);
+}
+
+/* ============================================================ core */
+function chop(side) {
+  if (state.screen !== 'play') return;
+  state.side = side;
+  // the chopped segment flies off opposite your swing
+  const cut = state.segs[0];
+  state.pieces.push({ x: LW / 2, y: groundY() - SEG_H / 2, vx: side === 'L' ? 340 : -340,
+    vy: -180, rot: 0, vr: (side === 'L' ? 1 : -1) * 7, age: 0, branch: cut.branch });
+  for (let i = 0; i < 7; i++) {
+    state.chips.push({ x: LW / 2 + (side === 'L' ? -34 : 34), y: groundY() - 40 - Math.random() * 30,
+      vx: (side === 'L' ? -1 : 1) * (60 + Math.random() * 160) * -1 + (Math.random() - 0.5) * 120,
+      vy: -120 - Math.random() * 160, age: 0 });
+  }
+  state.segs.shift();
+  state.segs.push(genSeg(state.segs[state.segs.length - 1]));
+  state.chops += 1;
+  state.bar = Math.min(BAR_MAX, state.bar + GAIN);
+  state.dropAnim = 1;
+  state.shake = 0.1;
+  AU.chop();
+  // the segment now at your level: branch on your side = SQUASHED
+  if (state.segs[0].branch === side) { die('SQUASHED'); return; }
+}
+
+function die(by) {
+  state.deathBy = by;
+  if (by === 'SQUASHED') AU.squash(); else AU.sundown();
+  state.shake = 0.5;
+  const pts = state.chops * 10;
+  state.runBest = Math.max(state.runBest, pts);
+  state.counts.push(state.chops);
+  ARCADE.postScore(state.runBest, state.tree, false);
+  if (state.tree < TREES) {
+    state.tweenMsg = by;
+    state.tweenSub = state.chops + ' chops · ' + pts + ' pts';
+    state.screen = 'tween';
+  } else {
+    if (state.runBest > store.hi) store.hi = state.runBest;
+    ARCADE.postScore(state.runBest, state.tree, true);
+    state.screen = 'gameover';
+  }
+}
+function nextTree() {
+  state.tree += 1;
+  freshTree();
+  state.screen = 'play';
+  AU.tone(660, 0.1, 'sine', 0.06);
+}
+
+/* ============================================================ sim */
+let lowTickT = 0;
+function stepPlay(dt) {
+  state.bar -= drainRate(state.chops) * dt;
+  if (state.bar <= 0) { state.bar = 0; die('SUNDOWN'); return; }
+  if (state.bar < 1.2) { lowTickT += dt; if (lowTickT > 0.45) { lowTickT = 0; AU.tick(); } }
+  state.dropAnim = Math.max(0, state.dropAnim - dt * 7);
+}
+function stepCommon(dt) {
+  if (state.flashT > 0) state.flashT -= dt;
+  if (state.shake > 0) state.shake = Math.max(0, state.shake - dt * 1.4);
+  for (let i = state.pieces.length - 1; i >= 0; i--) {
+    const p = state.pieces[i];
+    p.age += dt; p.x += p.vx * dt; p.vy += 900 * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+    if (p.age > 1.6) state.pieces.splice(i, 1);
+  }
+  for (let i = state.chips.length - 1; i >= 0; i--) {
+    const p = state.chips[i];
+    p.age += dt; p.x += p.vx * dt; p.vy += 800 * dt; p.y += p.vy * dt;
+    if (p.age > 1.1) state.chips.splice(i, 1);
+  }
+}
+
+/* ============================================================ render */
+function groundY() { return LH - 120; }
+function T(s, x, y, color, size, align, weight) {
+  cx.font = (weight || 600) + ' ' + (size || 16) + 'px Inter, system-ui, sans-serif';
+  cx.textAlign = align || 'center';
+  cx.fillStyle = color;
+  cx.fillText(s, x, y);
+}
+function pulse() { return 0.55 + 0.45 * Math.sin(performance.now() / 280); }
+
+function drawWorld() {
+  // dawn-forest gradient; the sun height IS the timer
+  const dayF = state.screen === 'play' || state.screen === 'tween' || state.screen === 'gameover'
+    ? state.bar / BAR_MAX : 0.75;
+  const h = 160 + state.hueShift;
+  const g = cx.createLinearGradient(0, 0, 0, LH);
+  g.addColorStop(0, `hsl(${h + 60},40%,${8 + dayF * 12}%)`);
+  g.addColorStop(0.6, `hsl(${h + 20},45%,${16 + dayF * 16}%)`);
+  g.addColorStop(1, `hsl(${h - 10},42%,${24 + dayF * 14}%)`);
+  cx.fillStyle = g; cx.fillRect(0, 0, LW, LH);
+  // THE SUN — sinks as the day drains; SUNDOWN is literal
+  const sy = 130 + (1 - dayF) * 420;
+  const glow = cx.createRadialGradient(450, sy, 8, 450, sy, 130);
+  glow.addColorStop(0, 'rgba(255,225,170,.8)');
+  glow.addColorStop(0.3, 'rgba(255,190,120,.25)');
+  glow.addColorStop(1, 'rgba(255,190,120,0)');
+  cx.fillStyle = glow; cx.beginPath(); cx.arc(450, sy, 130, 0, 7); cx.fill();
+  cx.fillStyle = '#ffe9c4'; cx.beginPath(); cx.arc(450, sy, 30, 0, 7); cx.fill();
+  // pine silhouettes, two parallax rows
+  cx.fillStyle = 'rgba(20,14,34,.5)';
+  for (let i = 0; i < 8; i++) pine(i * 84 + 20, groundY() - 30, 60 + (i * 37 % 40));
+  cx.fillStyle = 'rgba(14,10,26,.85)';
+  for (let i = 0; i < 6; i++) pine(i * 118 - 30, groundY(), 90 + (i * 53 % 50));
+  // ground
+  cx.fillStyle = 'rgba(16,11,28,.95)'; cx.fillRect(0, groundY(), LW, LH - groundY());
+}
+function pine(x, baseY, h) {
+  cx.beginPath();
+  cx.moveTo(x, baseY);
+  cx.lineTo(x + h * 0.32, baseY - h);
+  cx.lineTo(x + h * 0.64, baseY);
+  cx.closePath(); cx.fill();
+}
+
+function drawTrunkSeg(y, branch, alpha) {
+  cx.globalAlpha = alpha == null ? 1 : alpha;
+  cx.fillStyle = '#7c4a2d';
+  cx.beginPath(); cx.roundRect(LW / 2 - 34, y - SEG_H, 68, SEG_H + 1, 4); cx.fill();
+  cx.fillStyle = 'rgba(0,0,0,.14)';
+  cx.fillRect(LW / 2 - 34, y - 5, 68, 4); // segment seam
+  cx.fillStyle = 'rgba(255,255,255,.06)';
+  cx.fillRect(LW / 2 - 28, y - SEG_H + 4, 7, SEG_H - 8); // bark highlight
+  if (branch) {
+    const dir = branch === 'L' ? -1 : 1;
+    cx.fillStyle = '#5e3a22';
+    cx.beginPath();
+    cx.roundRect(LW / 2 + dir * 34 - (dir < 0 ? 96 : 0), y - SEG_H / 2 - 12, 96, 22, 10);
+    cx.fill();
+    // needle tuft at the branch tip
+    cx.fillStyle = 'rgba(52,90,60,.9)';
+    cx.beginPath(); cx.arc(LW / 2 + dir * 130, y - SEG_H / 2 - 2, 24, 0, 7); cx.fill();
+  }
+  cx.globalAlpha = 1;
+}
+
+function drawJack() {
+  const dir = state.side === 'L' ? 1 : -1;
+  const jx = LW / 2 + (state.side === 'L' ? -92 : 92);
+  const jy = groundY();
+  cx.save();
+  cx.translate(jx, jy);
+  cx.scale(dir, 1); // always faces the trunk
+  // body silhouette w/ coral cap — same family as REDLINE's rider
+  cx.fillStyle = '#171022';
+  cx.beginPath(); cx.roundRect(-16, -58, 32, 44, 10); cx.fill();   // torso
+  cx.beginPath(); cx.arc(2, -66, 12, 0, 7); cx.fill();             // head
+  cx.fillStyle = '#ff6b6b';
+  cx.beginPath(); cx.roundRect(-8, -80, 22, 9, 4); cx.fill();      // cap
+  // axe — mid-swing when dropAnim is hot
+  const sw = state.dropAnim;
+  cx.save();
+  cx.translate(14, -44);
+  cx.rotate(-0.7 + sw * 1.1);
+  cx.fillStyle = '#3a2a20'; cx.fillRect(0, -3, 44, 6);
+  cx.fillStyle = '#cdd3e0';
+  cx.beginPath(); cx.moveTo(44, -12); cx.lineTo(58, 0); cx.lineTo(44, 12); cx.closePath(); cx.fill();
+  cx.restore();
+  // legs
+  cx.fillStyle = '#171022';
+  cx.fillRect(-14, -16, 10, 16); cx.fillRect(4, -16, 10, 16);
+  cx.restore();
+}
+
+function drawScene() {
+  drawWorld();
+  cx.save();
+  if (state.shake > 0) cx.translate((Math.random() - 0.5) * state.shake * 26, (Math.random() - 0.5) * state.shake * 26);
+  // trunk — after a chop every segment starts one slot high and settles down
+  for (let i = 0; i < VIS; i++) {
+    drawTrunkSeg(groundY() - (i + state.dropAnim) * SEG_H, state.segs[i] && state.segs[i].branch);
+  }
+  // flying pieces + chips
+  for (const p of state.pieces) {
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.rot);
+    cx.globalAlpha = Math.max(0, 1 - p.age / 1.6);
+    cx.fillStyle = '#7c4a2d';
+    cx.beginPath(); cx.roundRect(-34, -SEG_H / 2, 68, SEG_H, 4); cx.fill();
+    cx.globalAlpha = 1; cx.restore();
+  }
+  cx.fillStyle = '#c9a227';
+  for (const p of state.chips) {
+    cx.globalAlpha = Math.max(0, 1 - p.age / 1.1);
+    cx.fillRect(p.x, p.y, 5, 3);
+  }
+  cx.globalAlpha = 1;
+  drawJack();
+  cx.restore();
+}
+
+function drawHUD() {
+  T(String(state.chops), LW / 2, 96, 'rgba(255,255,255,.95)', 64, 'center', 200);
+  T('TREE ' + state.tree + ' / ' + TREES, LW / 2, 126, 'rgba(255,255,255,.55)', 14, 'center', 600);
+  T('BEST ' + Math.max(store.hi, state.runBest), LW - 20, 36, 'rgba(255,255,255,.55)', 15, 'right', 600);
+  if (state.practice) T('PRACTICE — UNRANKED', LW - 20, 58, 'rgba(150,200,255,.7)', 12, 'right', 600);
+  // daylight bar
+  const bw = 240, bf = state.bar / BAR_MAX;
+  cx.fillStyle = 'rgba(255,255,255,.1)';
+  cx.beginPath(); cx.roundRect(LW / 2 - bw / 2, 140, bw, 10, 5); cx.fill();
+  cx.fillStyle = bf < 0.25 ? '#ff6b6b' : '#ffd166';
+  cx.beginPath(); cx.roundRect(LW / 2 - bw / 2, 140, Math.max(4, bw * bf), 10, 5); cx.fill();
+  T('daylight', LW / 2, 168, 'rgba(255,255,255,.4)', 11, 'center', 500);
+  if (state.flashT > 0 && state.flashMsg) {
+    cx.globalAlpha = Math.min(1, state.flashT * 2.5);
+    T(state.flashMsg, LW / 2, 210, '#ffd166', 22, 'center', 800);
+    cx.globalAlpha = 1;
+  }
+}
+
+function drawAttract() {
+  state.bar = 4.5; // pleasant fixed dusk for the title
+  drawWorld();
+  drawTrunkPreview();
+  T('TIMBER', LW / 2, 180, 'rgba(255,255,255,.96)', 68, 'center', 800);
+  T('chop fast · dodge the branches · beat the sun', LW / 2, 218, 'rgba(255,255,255,.6)', 15, 'center', 400);
+  T('Tap LEFT or RIGHT to hop & chop that side.', LW / 2, 270, 'rgba(255,255,255,.55)', 14, 'center', 400);
+  T('Branch above you = SQUASHED. Sun down = done.', LW / 2, 292, 'rgba(255,255,255,.55)', 14, 'center', 400);
+  T('One coin = THREE trees. Best one counts.', LW / 2, 324, '#ffd166', 14, 'center', 600);
+  cx.globalAlpha = pulse();
+  T('TAP TO INSERT COIN', LW / 2, 430, '#ffd166', 20, 'center', 800);
+  cx.globalAlpha = 1;
+  T('HI ' + store.hi, LW / 2, 468, 'rgba(255,255,255,.5)', 14, 'center', 600);
+}
+function drawTrunkPreview() {
+  for (let i = 0; i < 4; i++) drawTrunkSeg(groundY() - i * SEG_H, i === 2 ? 'R' : null, 0.9);
+}
+
+function drawTween() {
+  drawScene();
+  cx.fillStyle = 'rgba(10,8,20,.55)'; cx.fillRect(0, 0, LW, LH);
+  T(state.tweenMsg, LW / 2, LH * 0.4, state.tweenMsg === 'SQUASHED' ? '#ff6b6b' : '#ffd166', 44, 'center', 800);
+  T(state.tweenSub, LW / 2, LH * 0.4 + 36, 'rgba(255,255,255,.7)', 16, 'center', 500);
+  T('TREE ' + (state.tree + 1) + ' OF ' + TREES + ' READY', LW / 2, LH * 0.4 + 90, 'rgba(255,255,255,.85)', 18, 'center', 700);
+  cx.globalAlpha = pulse();
+  T('TAP TO CHOP', LW / 2, LH * 0.4 + 130, '#ffd166', 18, 'center', 800);
+  cx.globalAlpha = 1;
+}
+
+function drawGameOver() {
+  drawScene();
+  cx.fillStyle = 'rgba(10,8,20,.62)'; cx.fillRect(0, 0, LW, LH);
+  T('GAME OVER', LW / 2, LH * 0.32, 'rgba(255,255,255,.95)', 40, 'center', 800);
+  T('best tree  ' + state.runBest, LW / 2, LH * 0.32 + 52, '#ffd166', 22, 'center', 700);
+  T('chops  ' + state.counts.join(' · '), LW / 2, LH * 0.32 + 84, 'rgba(255,255,255,.6)', 15, 'center', 500);
+  T('ALL-TIME  ' + store.hi, LW / 2, LH * 0.32 + 116, 'rgba(255,255,255,.7)', 15, 'center', 600);
+  cx.globalAlpha = pulse();
+  T('TAP FOR A NEW COIN', LW / 2, LH * 0.32 + 180, '#ffd166', 18, 'center', 800);
+  cx.globalAlpha = 1;
+}
+
+/* ============================================================ loop */
+let last = performance.now() / 1000;
+function frame() {
+  const now = performance.now() / 1000;
+  const dt = Math.min(0.05, Math.max(0, now - last));
+  last = now;
+  cx.setTransform(SCALE * DPR, 0, 0, SCALE * DPR, 0, 0);
+  cx.imageSmoothingEnabled = true;
+  cx.clearRect(0, 0, LW, LH);
+  stepCommon(dt);
+  if (state.screen === 'play') stepPlay(dt);
+  if (state.screen === 'play') { drawScene(); drawHUD(); }
+  else if (state.screen === 'attract') drawAttract();
+  else if (state.screen === 'tween') drawTween();
+  else if (state.screen === 'gameover') drawGameOver();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ============================================================ input */
+function press(side) {
+  AU.ensure();
+  if (state.screen === 'attract') { ARCADE.requestCoin(); return; }
+  if (state.screen === 'play') { chop(side); return; }
+  if (state.screen === 'tween') { nextTree(); return; }
+  if (state.screen === 'gameover') { state.screen = 'attract'; return; }
+}
+cv.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  const r = cv.getBoundingClientRect();
+  press((e.clientX - r.left) < r.width / 2 ? 'L' : 'R');
+});
+window.addEventListener('keydown', (e) => {
+  if (e.repeat) return;
+  if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); press('L'); }
+  if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); press('R'); }
+  if (['Space', 'Enter'].includes(e.code) && state.screen !== 'play') { e.preventDefault(); press('L'); }
+});
+</script>
+</body>
+</html>

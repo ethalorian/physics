@@ -167,7 +167,7 @@ const ARCADE={
     setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
   },
   reportScore(final){
-    if(this.playId)this.emit('arcade:score',{score,act,final:!!final});
+    if(this.playId)this.emit('arcade:score',{score,act,final:!!final,stats:{solved:STATS.solved,right:STATS.right,wrong:STATS.wrong,bestStreak:0,startLv:act,mode:'physics'}});
   },
 };
 window.addEventListener('message',e=>{
@@ -421,7 +421,7 @@ function launch(){
   beep(440,.08,'square',.1);beep(660,.08,'square',.1);
 }
 function succeed(extraTxt){
-  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setTones(myF,0,220,0);
+  state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;setTones(myF,0,220,0);
   const tf=Math.max(0,lv.dur-attemptT)/lv.dur;
   const tier=tf>=0.45?'PERFECT PITCH':tf>=0.2?'GREAT':'CLEAN';
   const base=tf>=0.45?1500:tf>=0.2?1000:700;
@@ -610,6 +610,7 @@ function askQuestion(){
    </div>`);
   primary=null;
 }
+const STATS={solved:0,right:0,wrong:0}; // free-cabinet payout evidence
 function answer(i){
   if(primary)return;
   const right=curQ.choices.findIndex(c=>c.ok);
@@ -617,8 +618,8 @@ function answer(i){
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
   $('#contBtn').style.display='inline-block';
-  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;}
-  else beep(180,.3,'sawtooth',.15,-100);
+  if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
+  else{beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
 }
 

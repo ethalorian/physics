@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>VORTEX // find the gap</title>
+<!--
+  VORTEX — midway machine #3, the one with the highest ceiling and the
+  meanest floor. You orbit the core; hexagonal walls collapse inward; hold
+  LEFT or RIGHT to slide around the ring and thread the gap. The board
+  spins, the walls accelerate, the music pulses, and the only score is how
+  long you lasted. Score = seconds × 100.
+
+  Economy: 10 XP = one coin = THREE runs; best run counts.
+  Bridge protocol identical to every other cabinet. Practice fallback 900 ms.
+-->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; background: #14101f;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-user-select: none; user-select: none; touch-action: manipulation; }
+  #wrap { display: flex; height: 100%; align-items: center; justify-content: center; padding: 12px; }
+  #game { border-radius: 18px;
+    box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+    cursor: pointer; }
+</style>
+</head>
+<body>
+<div id="wrap"><canvas id="game"></canvas></div>
+
+<script>
+'use strict';
+/* ============================================================ canvas */
+const LW = 560, LH = 760;
+const cv = document.getElementById('game');
+const cx = cv.getContext('2d');
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+let SCALE = 1;
+function fit() {
+  const aw = window.innerWidth - 24, ah = window.innerHeight - 24;
+  SCALE = Math.max(0.35, Math.min(aw / LW, ah / LH));
+  cv.width = Math.round(LW * SCALE * DPR);
+  cv.height = Math.round(LH * SCALE * DPR);
+  cv.style.width = Math.round(LW * SCALE) + 'px';
+  cv.style.height = Math.round(LH * SCALE) + 'px';
+}
+window.addEventListener('resize', fit);
+fit();
+
+/* ============================================================ bridge */
+const ARCADE = {
+  playId: null, ranked: false, pending: false, practice: false,
+  requestCoin() {
+    if (this.pending) return;
+    this.pending = true; this.practice = false; this.playId = null; this.ranked = false;
+    try { window.parent.postMessage({ type: 'arcade:coinRequest', source: 'vortex-arcade' }, '*'); } catch (e) {}
+    setTimeout(() => {
+      if (this.pending) { this.pending = false; this.practice = true; onCoinResult(true); }
+    }, 900);
+  },
+  postScore(score, act, final) {
+    if (!this.ranked || !this.playId) return;
+    try {
+      window.parent.postMessage({ type: 'arcade:score', source: 'vortex-arcade',
+        playId: this.playId, score: Math.round(score), act, final: !!final }, '*');
+    } catch (e) {}
+  },
+};
+window.addEventListener('message', (ev) => {
+  const d = ev && ev.data;
+  if (!d || typeof d !== 'object') return;
+  if (d.type === 'arcade:coinAccepted') {
+    ARCADE.pending = false; ARCADE.playId = d.playId || null; ARCADE.ranked = !!d.playId;
+    ARCADE.practice = false; onCoinResult(true);
+  } else if (d.type === 'arcade:coinDenied') {
+    ARCADE.pending = false; ARCADE.practice = false; onCoinResult(false);
+  }
+});
+
+/* ============================================================ audio */
+const AU = {
+  ctx: null, beatT: 0,
+  ensure() { if (this.ctx) return;
+    try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} },
+  tone(f, dur, type, vol, slide) {
+    if (!this.ctx) return;
+    const c = this.ctx, o = c.createOscillator(), g = c.createGain();
+    o.type = type || 'sine'; o.frequency.value = f;
+    if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(20, f + slide), c.currentTime + dur);
+    g.gain.setValueAtTime(vol || 0.07, c.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime + dur + 0.02);
+  },
+  beat() { this.tone(55, 0.1, 'square', 0.05); },
+  levelup() { [523, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, 0.18, 'sine', 0.08), i * 80)); },
+  crash() { this.tone(200, 0.5, 'sawtooth', 0.11, -160); this.tone(60, 0.6, 'square', 0.08); },
+};
+
+/* ============================================================ state */
+const RUNS = 3;
+const SECT = 6, SECA = Math.PI * 2 / SECT;
+const RP = 86;              // player orbit radius (px)
+const DOT = 7;              // player size
+const THICK = 26;           // wall thickness
+const SPAWN_R = 520;        // rings spawn here
+const OMEGA = 4.8;          // player angular speed (rad/s)
+function wallSpeed(t) { return 120 + t * 2.2; }
+function spawnGap(t) { return Math.max(0.5, 1.5 - t * 0.012); }
+
+const store = {
+  get hi() { try { return parseInt(localStorage.getItem('vortex_hi') || '0', 10) || 0; } catch (e) { return 0; } },
+  set hi(v) { try { localStorage.setItem('vortex_hi', String(v)); } catch (e) {} },
+};
+
+const state = {
+  screen: 'attract',   // attract | play | tween | gameover
+  practice: false,
+  run: 1, runBest: 0, times: [],
+  t: 0,                // survival seconds (THE score)
+  theta: -Math.PI / 2, // player angle
+  dirIn: 0,            // -1 left, +1 right, 0 none
+  rings: [],           // {r, mask:[bool×6]}
+  nextSpawn: 0, chain: null,
+  boardRot: 0, boardDir: 1,
+  hue: 280, level: 0,
+  beatT: 0, flashT: 0, flashMsg: '', shake: 0,
+  tweenSub: '',
+};
+
+/* pattern grammar: single gaps, double gaps, and spiral chains */
+function makeMask(gaps) {
+  const m = [true, true, true, true, true, true];
+  for (const g of gaps) m[((g % SECT) + SECT) % SECT] = false;
+  return m;
+}
+function spawnRing() {
+  const t = state.t;
+  let mask;
+  if (state.chain && state.chain.n > 0) {
+    state.chain.g += state.chain.dir;
+    state.chain.n -= 1;
+    mask = makeMask([state.chain.g]);
+    if (state.chain.n === 0) state.chain = null;
+  } else {
+    const roll = Math.random();
+    if (roll < 0.25 && t > 8) { // start a spiral chain
+      state.chain = { g: Math.floor(Math.random() * SECT), dir: Math.random() < 0.5 ? 1 : -1,
+        n: 3 + Math.floor(Math.random() * 3) };
+      mask = makeMask([state.chain.g]);
+    } else if (roll < 0.55 && t < 45) { // double gap (kind, early)
+      const g = Math.floor(Math.random() * SECT);
+      mask = makeMask([g, g + 3]);
+    } else {
+      mask = makeMask([Math.floor(Math.random() * SECT)]);
+    }
+  }
+  state.rings.push({ r: SPAWN_R, mask });
+}
+
+function freshRun() {
+  state.t = 0; state.theta = -Math.PI / 2; state.dirIn = 0;
+  state.rings = []; state.nextSpawn = 0.8; state.chain = null;
+  state.boardRot = 0; state.boardDir = 1;
+  state.hue = 200 + Math.random() * 160; state.level = 0;
+}
+function onCoinResult(ok) {
+  if (!ok) { state.screen = 'attract'; state.flashMsg = 'COIN DENIED'; state.flashT = 1.5; return; }
+  state.practice = ARCADE.practice;
+  state.run = 1; state.runBest = 0; state.times = [];
+  freshRun();
+  state.screen = 'play';
+  AU.tone(660, 0.1, 'sine', 0.06);
+}
+
+/* ============================================================ sim */
+function playerSector() {
+  const a = ((state.theta % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+  return Math.floor(a / SECA) % SECT;
+}
+function stepPlay(dt) {
+  state.t += dt;
+  state.theta += state.dirIn * OMEGA * dt;
+  // board spin — visual disorientation that flips direction now and then
+  state.boardRot += state.boardDir * (0.4 + state.t * 0.01) * dt;
+  if (Math.random() < dt / 9) state.boardDir *= -1;
+  // level pulses every 12 s
+  const lv = Math.floor(state.t / 12);
+  if (lv > state.level) {
+    state.level = lv; state.hue = (state.hue + 70) % 360;
+    state.flashMsg = 'FASTER'; state.flashT = 0.8;
+    AU.levelup();
+  }
+  // beat
+  state.beatT += dt;
+  if (state.beatT > 0.46) { state.beatT = 0; AU.beat(); }
+  // rings
+  state.nextSpawn -= dt;
+  if (state.nextSpawn <= 0) { spawnRing(); state.nextSpawn = spawnGap(state.t); }
+  const v = wallSpeed(state.t);
+  const ps = playerSector();
+  for (let i = state.rings.length - 1; i >= 0; i--) {
+    const ring = state.rings[i];
+    ring.r -= v * dt;
+    if (ring.mask[ps] && Math.abs(ring.r - THICK / 2 - RP) < THICK / 2 + DOT) {
+      runOver(); return;
+    }
+    if (ring.r < 30) state.rings.splice(i, 1);
+  }
+}
+function runOver() {
+  AU.crash();
+  state.shake = 0.5;
+  const pts = Math.round(state.t * 100);
+  state.runBest = Math.max(state.runBest, pts);
+  state.times.push(state.t.toFixed(1));
+  ARCADE.postScore(state.runBest, state.run, false);
+  if (state.run < RUNS) {
+    state.tweenSub = state.t.toFixed(1) + 's · ' + pts + ' pts';
+    state.screen = 'tween';
+  } else {
+    if (state.runBest > store.hi) store.hi = state.runBest;
+    ARCADE.postScore(state.runBest, state.run, true);
+    state.screen = 'gameover';
+  }
+}
+function nextRun() {
+  state.run += 1;
+  freshRun();
+  state.screen = 'play';
+  AU.tone(660, 0.1, 'sine', 0.06);
+}
+function stepCommon(dt) {
+  if (state.flashT > 0) state.flashT -= dt;
+  if (state.shake > 0) state.shake = Math.max(0, state.shake - dt * 1.4);
+}
+
+/* ============================================================ render */
+const CXP = LW / 2, CYP = LH * 0.46;
+function T(s, x, y, color, size, align, weight) {
+  cx.font = (weight || 600) + ' ' + (size || 16) + 'px Inter, system-ui, sans-serif';
+  cx.textAlign = align || 'center';
+  cx.fillStyle = color;
+  cx.fillText(s, x, y);
+}
+function pulse() { return 0.55 + 0.45 * Math.sin(performance.now() / 280); }
+
+function sectorPath(g, r0, r1, rot) {
+  const a0 = g * SECA + rot, a1 = (g + 1) * SECA + rot;
+  cx.beginPath();
+  cx.moveTo(CXP + r0 * Math.cos(a0), CYP + r0 * Math.sin(a0));
+  cx.lineTo(CXP + r1 * Math.cos(a0), CYP + r1 * Math.sin(a0));
+  cx.lineTo(CXP + r1 * Math.cos(a1), CYP + r1 * Math.sin(a1));
+  cx.lineTo(CXP + r0 * Math.cos(a1), CYP + r0 * Math.sin(a1));
+  cx.closePath();
+}
+function drawBoard() {
+  const h = state.hue, rot = state.boardRot;
+  const breathe = 1 + Math.max(0, 0.35 - state.beatT) * 0.10;
+  // alternating sector field
+  for (let g = 0; g < SECT; g++) {
+    cx.fillStyle = g % 2 ? `hsl(${h},42%,11%)` : `hsl(${h},46%,15%)`;
+    sectorPath(g, 0, 900, rot);
+    cx.fill();
+  }
+  // rings
+  for (const ring of state.rings) {
+    for (let g = 0; g < SECT; g++) {
+      if (!ring.mask[g]) continue;
+      cx.fillStyle = `hsl(${h},75%,62%)`;
+      sectorPath(g, Math.max(28, ring.r - THICK), ring.r, rot);
+      cx.fill();
+    }
+  }
+  // core hexagon
+  cx.strokeStyle = `hsl(${h},80%,68%)`;
+  cx.lineWidth = 4;
+  cx.beginPath();
+  for (let g = 0; g <= SECT; g++) {
+    const a = g * SECA + rot;
+    const r = 40 * breathe;
+    const px2 = CXP + r * Math.cos(a), py2 = CYP + r * Math.sin(a);
+    g === 0 ? cx.moveTo(px2, py2) : cx.lineTo(px2, py2);
+  }
+  cx.stroke(); cx.lineWidth = 1;
+  // player — small triangle pointing outward
+  const pa = state.theta + rot;
+  const px2 = CXP + RP * Math.cos(pa), py2 = CYP + RP * Math.sin(pa);
+  cx.save();
+  cx.translate(px2, py2); cx.rotate(pa + Math.PI / 2);
+  cx.fillStyle = '#ffffff';
+  cx.beginPath(); cx.moveTo(0, -DOT - 3); cx.lineTo(DOT, DOT); cx.lineTo(-DOT, DOT); cx.closePath(); cx.fill();
+  cx.restore();
+}
+
+function drawScene() {
+  cx.save();
+  if (state.shake > 0) cx.translate((Math.random() - 0.5) * state.shake * 26, (Math.random() - 0.5) * state.shake * 26);
+  drawBoard();
+  cx.restore();
+}
+function drawHUD() {
+  T(state.t.toFixed(1), LW / 2, 80, 'rgba(255,255,255,.95)', 56, 'center', 200);
+  T('RUN ' + state.run + ' / ' + RUNS, LW / 2, 108, 'rgba(255,255,255,.55)', 14, 'center', 600);
+  T('BEST ' + Math.max(store.hi, state.runBest), LW - 20, 36, 'rgba(255,255,255,.55)', 15, 'right', 600);
+  if (state.practice) T('PRACTICE — UNRANKED', LW - 20, 58, 'rgba(150,200,255,.7)', 12, 'right', 600);
+  if (state.flashT > 0 && state.flashMsg) {
+    cx.globalAlpha = Math.min(1, state.flashT * 2.5);
+    T(state.flashMsg, LW / 2, 150, '#ffd166', 26, 'center', 800);
+    cx.globalAlpha = 1;
+  }
+  T('hold LEFT / RIGHT side · thread the gap', LW / 2, LH - 22, 'rgba(255,255,255,.35)', 12, 'center', 500);
+}
+
+function drawAttract() {
+  cx.fillStyle = '#100c1e'; cx.fillRect(0, 0, LW, LH);
+  state.boardRot += 0.004; state.beatT = 0.2;
+  drawBoard();
+  cx.fillStyle = 'rgba(12,9,24,.55)'; cx.fillRect(0, 0, LW, LH);
+  T('VORTEX', LW / 2, 200, 'rgba(255,255,255,.96)', 68, 'center', 800);
+  T('orbit · thread the gap · survive', LW / 2, 238, 'rgba(255,255,255,.6)', 15, 'center', 400);
+  T('Walls collapse inward. Hold LEFT or RIGHT', LW / 2, 296, 'rgba(255,255,255,.55)', 14, 'center', 400);
+  T('to slide around the core. Score = seconds.', LW / 2, 318, 'rgba(255,255,255,.55)', 14, 'center', 400);
+  T('One coin = THREE runs. Best one counts.', LW / 2, 350, '#ffd166', 14, 'center', 600);
+  cx.globalAlpha = pulse();
+  T('TAP TO INSERT COIN', LW / 2, 452, '#ffd166', 20, 'center', 800);
+  cx.globalAlpha = 1;
+  T('HI ' + store.hi, LW / 2, 490, 'rgba(255,255,255,.5)', 14, 'center', 600);
+}
+function drawTween() {
+  drawScene();
+  cx.fillStyle = 'rgba(10,8,20,.6)'; cx.fillRect(0, 0, LW, LH);
+  T('WIPED OUT', LW / 2, LH * 0.4, '#ff6b6b', 44, 'center', 800);
+  T(state.tweenSub, LW / 2, LH * 0.4 + 36, 'rgba(255,255,255,.7)', 16, 'center', 500);
+  T('RUN ' + (state.run + 1) + ' OF ' + RUNS + ' READY', LW / 2, LH * 0.4 + 90, 'rgba(255,255,255,.85)', 18, 'center', 700);
+  cx.globalAlpha = pulse();
+  T('TAP TO SPIN', LW / 2, LH * 0.4 + 130, '#ffd166', 18, 'center', 800);
+  cx.globalAlpha = 1;
+}
+function drawGameOver() {
+  drawScene();
+  cx.fillStyle = 'rgba(10,8,20,.65)'; cx.fillRect(0, 0, LW, LH);
+  T('GAME OVER', LW / 2, LH * 0.32, 'rgba(255,255,255,.95)', 40, 'center', 800);
+  T('best run  ' + state.runBest, LW / 2, LH * 0.32 + 52, '#ffd166', 22, 'center', 700);
+  T('times  ' + state.times.join('s · ') + 's', LW / 2, LH * 0.32 + 84, 'rgba(255,255,255,.6)', 15, 'center', 500);
+  T('ALL-TIME  ' + store.hi, LW / 2, LH * 0.32 + 116, 'rgba(255,255,255,.7)', 15, 'center', 600);
+  cx.globalAlpha = pulse();
+  T('TAP FOR A NEW COIN', LW / 2, LH * 0.32 + 180, '#ffd166', 18, 'center', 800);
+  cx.globalAlpha = 1;
+}
+
+/* ============================================================ loop */
+let last = performance.now() / 1000;
+function frame() {
+  const now = performance.now() / 1000;
+  const dt = Math.min(0.05, Math.max(0, now - last));
+  last = now;
+  cx.setTransform(SCALE * DPR, 0, 0, SCALE * DPR, 0, 0);
+  cx.imageSmoothingEnabled = true;
+  cx.clearRect(0, 0, LW, LH);
+  stepCommon(dt);
+  if (state.screen === 'play') stepPlay(dt);
+  if (state.screen === 'play') { drawScene(); drawHUD(); }
+  else if (state.screen === 'attract') drawAttract();
+  else if (state.screen === 'tween') drawTween();
+  else if (state.screen === 'gameover') drawGameOver();
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+/* ============================================================ input */
+function tapAdvance() {
+  AU.ensure();
+  if (state.screen === 'attract') { ARCADE.requestCoin(); return true; }
+  if (state.screen === 'tween') { nextRun(); return true; }
+  if (state.screen === 'gameover') { state.screen = 'attract'; return true; }
+  return false;
+}
+cv.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  if (tapAdvance()) return;
+  const r = cv.getBoundingClientRect();
+  state.dirIn = (e.clientX - r.left) < r.width / 2 ? -1 : 1;
+});
+window.addEventListener('pointerup', () => { state.dirIn = 0; });
+window.addEventListener('pointercancel', () => { state.dirIn = 0; });
+const keysDown = {};
+window.addEventListener('keydown', (e) => {
+  if (e.repeat) return;
+  if (['ArrowLeft', 'KeyA'].includes(e.code)) { e.preventDefault(); if (!tapAdvance()) { keysDown.L = 1; state.dirIn = -1; } }
+  if (['ArrowRight', 'KeyD'].includes(e.code)) { e.preventDefault(); if (!tapAdvance()) { keysDown.R = 1; state.dirIn = 1; } }
+  if (['Space', 'Enter'].includes(e.code)) { e.preventDefault(); tapAdvance(); }
+});
+window.addEventListener('keyup', (e) => {
+  if (['ArrowLeft', 'KeyA'].includes(e.code)) { delete keysDown.L; state.dirIn = keysDown.R ? 1 : 0; }
+  if (['ArrowRight', 'KeyD'].includes(e.code)) { delete keysDown.R; state.dirIn = keysDown.L ? -1 : 0; }
+});
+window.addEventListener('blur', () => { state.dirIn = 0; keysDown.L = keysDown.R = undefined; });
+</script>
+</body>
+</html>
