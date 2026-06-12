@@ -6,8 +6,8 @@
 <title>REDLINE // a kinematics grand prix</title>
 <!--
   REDLINE — a kinematics grand prix. Replacement bonus cabinet for Unit 1.
-  8-bit Excitebike blood: renders to a 224×240 virtual canvas blitted with
-  smoothing OFF, NES palette, square-wave audio. Single file, no deps.
+  Excitebike blood, dusk-minimal modern skin: sunset gradient sky, silhouette
+  mesas, full-resolution vector canvas, soft synth audio. Single file, no deps.
 
   The conceit that makes a motocross game a physics machine: the THROTTLE IS
   ACCELERATION (a = +6 m/s², posted), the overheat gauge makes acceleration a
@@ -31,50 +31,44 @@
   Practice mode after 900 ms without a bridge reply.
 -->
 <style>
-  @font-face {
-    font-family: 'PressStart';
-    src: local('Press Start 2P');
-  }
-  :root {
-    --ink: #0a0a0a;
-    --paper: #f8e8c8;
-  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { height: 100%; background: #04060d; overflow: hidden;
-    font-family: 'Press Start 2P', 'PressStart', 'Courier New', monospace;
+  html, body { height: 100%; background: #14101f; overflow: hidden;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
     -webkit-user-select: none; user-select: none; touch-action: manipulation; }
-  #wrap { display: flex; height: 100%; align-items: stretch; justify-content: center; gap: 10px; padding: 10px; }
-  #stage { position: relative; flex: 0 1 auto; display: flex; align-items: center; justify-content: center; }
-  #game { image-rendering: pixelated; image-rendering: crisp-edges; background: #000;
-    border: 4px solid #2a2a3a; box-shadow: 0 0 0 4px #101018, 0 0 44px rgba(248,184,0,.12); }
-  #panel { width: 300px; flex: 0 0 300px; background: #0a0c14; border: 4px solid #2a2a3a;
-    box-shadow: 0 0 0 4px #101018; padding: 12px; display: flex; flex-direction: column; gap: 10px; color: #cdd3e0; }
-  #panel h3 { font-size: 9px; letter-spacing: 2px; color: #f8b800; }
-  #panel .sub { font-size: 7px; line-height: 1.8; color: #8a93a8; }
-  #vtcanvas { width: 100%; image-rendering: pixelated; background: #060810; border: 2px solid #222433; }
-  #reqcard { border: 2px solid #f8b800; background: #14100a; padding: 8px; font-size: 7px; line-height: 1.9; color: #fce8b0; min-height: 86px; }
-  #reqcard .big { font-size: 9px; color: #f8b800; }
-  #reqcard .eq { color: #80d010; }
-  #heatrow { display: flex; align-items: center; gap: 8px; font-size: 7px; }
-  #heatbar { flex: 1; height: 12px; border: 2px solid #222433; background: #060810; position: relative; }
-  #heatfill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #80d010; }
-  #parrow { font-size: 7px; line-height: 1.9; color: #8a93a8; }
-  /* full-screen overlays drawn in-canvas; DOM only for touch buttons */
+  #wrap { display: flex; height: 100%; align-items: center; justify-content: center; gap: 14px; padding: 14px; }
+  #stage { position: relative; display: flex; align-items: center; justify-content: center; }
+  #game { border-radius: 18px; background: #1c1338;
+    box-shadow: 0 24px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06); }
+  #panel { width: 300px; flex: 0 0 300px; align-self: center; background: #1b1430;
+    border: 1px solid rgba(255,255,255,.08); border-radius: 18px;
+    padding: 16px; display: flex; flex-direction: column; gap: 12px; color: #cfc6dd; }
+  #panel h3 { font-size: 12px; font-weight: 700; letter-spacing: .22em; color: #ffd166; }
+  #panel .sub { font-size: 11px; line-height: 1.6; color: rgba(247,237,226,.45); }
+  #vtcanvas { width: 100%; border-radius: 12px; background: #150f26; border: 1px solid rgba(255,255,255,.07); }
+  #reqcard { border-radius: 12px; background: rgba(255,209,102,.07); border: 1px solid rgba(255,209,102,.28);
+    padding: 12px; font-size: 12.5px; line-height: 1.65; color: #f3e9d8;
+    height: 130px; overflow: hidden; font-variant-numeric: tabular-nums; }
+  #reqcard .big { font-size: 14px; font-weight: 700; color: #ffd166; }
+  #reqcard .eq { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; color: #95d65c; }
+  #heatrow { display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: .12em; color: rgba(247,237,226,.6); }
+  #heatbar { flex: 1; height: 10px; border-radius: 5px; background: rgba(255,255,255,.07); position: relative; overflow: hidden; }
+  #heatfill { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: #95d65c; border-radius: 5px; transition: background .2s; }
+  #parrow { font-size: 11px; line-height: 1.6; color: rgba(247,237,226,.45);
+    height: 18px; overflow: hidden; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  #heatrow span:last-child { width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
   #touch { position: absolute; inset: 0; display: none; }
   #touch .tz { position: absolute; bottom: 0; top: 0; width: 50%; }
   #tBrake { left: 0; } #tGas { right: 0; }
-  .scanlines::after { content: ''; position: absolute; inset: 0; pointer-events: none;
-    background: repeating-linear-gradient(0deg, rgba(0,0,0,.18) 0 1px, transparent 1px 3px); }
   @media (max-width: 760px) {
     #wrap { flex-direction: column; align-items: center; overflow-y: auto; }
-    #panel { width: 100%; max-width: 460px; flex: 0 0 auto; }
+    #panel { width: 100%; max-width: 480px; flex: 0 0 auto; }
     #touch { display: block; }
   }
 </style>
 </head>
 <body>
 <div id="wrap">
-  <div id="stage" class="scanlines">
+  <div id="stage">
     <canvas id="game"></canvas>
     <div id="touch">
       <div class="tz" id="tBrake"></div>
@@ -96,10 +90,10 @@
 /* ============================================================ *
  *  0. CONSTANTS, PALETTE, CANVAS PIPELINE
  * ============================================================ */
-const VW = 224, VH = 240;            // virtual NES canvas
-const PXM = 5;                       // pixels per meter (44.8 m visible)
-const GY = 178;                      // ground line (virtual px)
-const BIKE_SX = 56;                  // bike's fixed screen x (virtual px)
+const LW = 960, LH = 540;            // logical canvas (16:9, full resolution)
+const PXM = 16;                      // pixels per meter (60 m visible)
+const GY = 440;                      // ground line (logical px)
+const BIKE_SX = 250;                 // bike's fixed screen x (logical px)
 
 // physics — these numbers are POSTED in-game; do not change casually
 const G = 10;                        // desert spec, printed on signage
@@ -122,34 +116,32 @@ const MAX_CRASH = 6;                 // crashes per level before MECHANICAL
 function vminFor(gap) { return Math.sqrt(G * gap / SIN2T); }  // min takeoff v
 
 const PAL = {
-  sky1: '#7c3800', sky2: '#fc9838', sun: '#f8d878',
-  mesa: '#a04000', mesaD: '#702800', dune: '#e0a044', duneD: '#c08030',
-  track: '#3c2410', trackLight: '#50301a', edge: '#f8e0a0',
-  ink: '#0a0a0a', white: '#fcfcfc', gold: '#f8b800', red: '#f83800',
-  green: '#80d010', blue: '#3cbcfc', grayD: '#2a2a3a', flag: '#fcfcfc',
-  bike: '#f83800', bikeD: '#a81000', rider: '#3cbcfc', tire: '#181818',
-  pit: '#100800', banner: '#0058f8',
+  text: '#f7ede2', dim: 'rgba(247,237,226,.55)', faint: 'rgba(247,237,226,.32)',
+  gold: '#ffd166', coral: '#ff6b6b', teal: '#4ecdc4', green: '#95d65c', blue: '#6cb8ff',
+  night: '#171022', body: '#211735', ground: '#241a38', trackDark: '#1b1330', pit: '#120c20',
 };
 
 const cv = document.getElementById('game');
 const cx = cv.getContext('2d');
-const buf = document.createElement('canvas');
-buf.width = VW; buf.height = VH;
-const bx = buf.getContext('2d');
-bx.imageSmoothingEnabled = false;
-
-let SCALE = 2;
+const bx = cx;                       // draw helpers target the main context
+const DPR = Math.min(2, window.devicePixelRatio || 1);
+let SCALE = 1;
 function fit() {
-  const stage = document.getElementById('stage');
-  const aw = Math.min(window.innerWidth - (window.innerWidth > 760 ? 360 : 40), 900);
+  const aw = Math.min(window.innerWidth - (window.innerWidth > 760 ? 360 : 40), 1100);
   const ah = window.innerHeight - 40;
-  SCALE = Math.max(1, Math.floor(Math.min(aw / VW, ah / VH)));
-  cv.width = VW * SCALE; cv.height = VH * SCALE;
-  cv.style.width = (VW * SCALE) + 'px'; cv.style.height = (VH * SCALE) + 'px';
-  cx.imageSmoothingEnabled = false;
+  SCALE = Math.max(0.4, Math.min(aw / LW, ah / LH));
+  cv.width = Math.round(LW * SCALE * DPR);
+  cv.height = Math.round(LH * SCALE * DPR);
+  cv.style.width = Math.round(LW * SCALE) + 'px';
+  cv.style.height = Math.round(LH * SCALE) + 'px';
 }
 window.addEventListener('resize', fit);
 fit();
+function beginFrame() {
+  cx.setTransform(SCALE * DPR, 0, 0, SCALE * DPR, 0, 0);
+  cx.imageSmoothingEnabled = true;
+  cx.clearRect(0, 0, LW, LH);
+}
 
 /* ============================================================ *
  *  1. ARCADE BRIDGE (identical contract to every other cabinet)
@@ -192,7 +184,7 @@ const AU = {
     if (this.ctx) return;
     try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
     const c = this.ctx;
-    this.engineOsc = c.createOscillator(); this.engineOsc.type = 'square';
+    this.engineOsc = c.createOscillator(); this.engineOsc.type = 'triangle';
     this.engineGain = c.createGain(); this.engineGain.gain.value = 0;
     this.engineOsc.connect(this.engineGain); this.engineGain.connect(c.destination);
     this.engineOsc.start();
@@ -204,15 +196,15 @@ const AU = {
   engine(v, throttling, stalled) {
     if (!this.ctx) return;
     const on = state.screen === 'play';
-    this.engineGain.gain.value = on ? (stalled ? 0.008 : 0.025) : 0;
-    this.growlGain.gain.value = (on && throttling && !stalled) ? 0.018 : 0;
+    this.engineGain.gain.value = on ? (stalled ? 0.008 : 0.02) : 0;
+    this.growlGain.gain.value = (on && throttling && !stalled) ? 0.012 : 0;
     this.engineOsc.frequency.value = 50 + v * 7 + (stalled ? -20 : 0);
     this.growlOsc.frequency.value = 90 + v * 11;
   },
   blip(f, dur, type, vol) {
     if (!this.ctx) return;
     const c = this.ctx, o = c.createOscillator(), g = c.createGain();
-    o.type = type || 'square'; o.frequency.value = f;
+    o.type = type || 'sine'; o.frequency.value = f;
     g.gain.setValueAtTime(vol || 0.05, c.currentTime);
     g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + (dur || 0.12));
     o.connect(g); g.connect(c.destination);
@@ -238,12 +230,12 @@ const AU = {
  *     BEATABILITY margins are noted per level (audited, not vibes).
  * ============================================================ */
 const ACT_META = {
-  1: { name: 'QUALIFYING', sub: 'READ THE SPEEDOMETER. RIDE THE BAND.',
-       brief: ['THE TRACK POSTS A v-t SHAPE.', 'YOUR THROTTLE: a = +6 m/s2', 'YOUR BRAKE:    a = -9 m/s2', 'RIDE THE SHAPE OR THE GATE', 'STAYS CLOSED.'] },
-  2: { name: 'THE HEAT', sub: 'ACCELERATION IS A BUDGET. SPEND IT WELL.',
-       brief: ['FULL THROTTLE BUILDS HEAT:', '+16%/s ON, -13%/s OFF.', 'REDLINE THE GAUGE = 2.6s STALL.', 'GAIN ZONES DEMAND Dv.', 'STOP BOXES DEMAND v2=2ad.'] },
-  3: { name: 'AIRBORNE GP', sub: 'EVERY GAP IS A PROJECTILE.',
-       brief: ['RAMPS LAUNCH AT 30 DEG.', 'DESERT SPEC: g = 10 m/s2.', 'RANGE = v2 sin60 / g.', 'THE SIGN POSTS THE MINIMUM.', 'CHECK YOUR SPEEDO AT THE LIP.'] },
+  1: { name: 'QUALIFYING', sub: 'Read the speedometer. Ride the band.',
+       brief: ['The track posts a v–t shape.', 'Throttle: a = +6 m/s² · Brake: a = −9 m/s²', 'Ride the shape, or the gate stays closed.'] },
+  2: { name: 'THE HEAT', sub: 'Acceleration is a budget. Spend it well.',
+       brief: ['Full throttle builds heat: +16%/s on, −13%/s off.', 'Redline the gauge and you stall for 2.6 s.', 'Gain zones demand Δv. Stop boxes demand v² = 2ad.'] },
+  3: { name: 'AIRBORNE GP', sub: 'Every gap is a projectile.',
+       brief: ['Ramps launch at 30°. Desert spec: g = 10 m/s².', 'Range = v²·sin 60° / g.', 'The sign posts the minimum. Check your speedo at the lip.'] },
 };
 
 const LEVELS = {
@@ -329,7 +321,7 @@ function bank1() { // constant velocity
   if (pick === 0) {
     return { q: 'YOU HELD ' + v + ' m/s THROUGH THE\nCRUISE ZONE FOR ' + t + ' s.\nHOW FAR DID YOU TRAVEL?',
       c: [(v * t) + ' m', (v + t) + ' m', (v * t * 2) + ' m'], a: 0,
-      why: 'CONSTANT v: d = vt = ' + v + 'x' + t + ' = ' + (v * t) + ' m' };
+      why: 'CONSTANT v: d = vt = ' + v + '×' + t + ' = ' + (v * t) + ' m' };
   }
   if (pick === 1) {
     const d = v * t;
@@ -345,29 +337,29 @@ function bank2() { // acceleration
   const pick = (Math.random() * 3) | 0;
   if (pick === 0) {
     const t = 2 + ((Math.random() * 3) | 0);            // 2..4
-    return { q: 'FULL THROTTLE (a = +6 m/s2)\nFROM REST FOR ' + t + ' s.\nFINAL SPEED?',
+    return { q: 'FULL THROTTLE (a = +6 m/s²)\nFROM REST FOR ' + t + ' s.\nFINAL SPEED?',
       c: [(6 * t) + ' m/s', (6 + t) + ' m/s', (3 * t) + ' m/s'], a: 0,
-      why: 'v = v0 + at = 0 + 6x' + t + ' = ' + (6 * t) + ' m/s' };
+      why: 'v = v₀ + at = 0 + 6×' + t + ' = ' + (6 * t) + ' m/s' };
   }
   if (pick === 1) {
     const v = 12 + 6 * ((Math.random() * 2) | 0);       // 12 or 18
     const d = (v * v) / 18;                              // v²/(2·9), exact for these v
-    return { q: 'BRAKING AT a = -9 m/s2 FROM\n' + v + ' m/s. STOPPING DISTANCE?\n(v2 = 2ad)',
+    return { q: 'BRAKING AT a = −9 m/s² FROM\n' + v + ' m/s. STOPPING DISTANCE?\n(v² = 2ad)',
       c: [d + ' m', Math.round(d / 2) + ' m', (d * 2) + ' m'], a: 0,
-      why: 'd = v2/(2a) = ' + (v * v) + '/18 = ' + d + ' m' };
+      why: 'd = v²/(2a) = ' + (v * v) + '/18 = ' + d + ' m' };
   }
   return { q: 'ON A v-t GRAPH, THE SLOPE\nOF THE LINE IS...',
     c: ['ACCELERATION', 'DISTANCE', 'POSITION'], a: 0,
-    why: 'SLOPE = Dv/Dt = a.\nAREA UNDER IT = DISTANCE.' };
+    why: 'SLOPE = Δv/Δt = a.\nAREA UNDER IT = DISTANCE.' };
 }
 function bank3() { // projectiles off the 30° ramp, g = 10
   const pick = (Math.random() * 3) | 0;
   if (pick === 0) {
     const v = 10 + 5 * ((Math.random() * 2) | 0);       // 10 or 15
     const vy = v * 0.5;                                  // sin30 = 0.5 exactly
-    return { q: 'YOU LEAVE THE 30 DEG RAMP\nAT ' + v + ' m/s. VERTICAL LAUNCH\nSPEED? (sin30 = 0.5)',
+    return { q: 'YOU LEAVE THE 30° RAMP\nAT ' + v + ' m/s. VERTICAL LAUNCH\nSPEED? (sin 30° = 0.5)',
       c: [vy + ' m/s', v + ' m/s', (v * 2) + ' m/s'], a: 0,
-      why: 'vy = v sin30 = ' + v + 'x0.5 = ' + vy + ' m/s' };
+      why: 'vy = v·sin 30° = ' + v + '×0.5 = ' + vy + ' m/s' };
   }
   if (pick === 1) {
     const vy = 5 + 5 * ((Math.random() * 2) | 0);       // 5 or 10
@@ -385,10 +377,10 @@ const CROSSOVERS = [
     c: ['A STRAIGHT SLOPING LINE', 'A FLAT LINE', 'A CURVE THAT LEVELS OFF'], a: 0,
     why: 'CONSTANT a = CONSTANT SLOPE.\nSAME LINE YOUR ACCEL ZONES\nDEMAND HERE.' },
   { q: 'CROSSOVER // DESCENT:\nTHE NO-BURN GHOST PREDICTED\nYOUR IMPACT POINT USING...',
-    c: ['x = x0 + v0t + at2/2', 'F = ma', 'p = mv'], a: 0,
+    c: ['x = x₀ + v₀t + ½at²', 'F = ma', 'p = mv'], a: 0,
     why: 'SAME EQUATION AS A JUMP HERE.\nPREDICTION = KINEMATICS.' },
   { q: 'CROSSOVER // DESCENT:\nHOVERING AT CONSTANT HEIGHT,\nYOUR ACCELERATION IS...',
-    c: ['ZERO', 'g DOWNWARD', '6 m/s2 UP'], a: 0,
+    c: ['ZERO', 'g DOWNWARD', '6 m/s² UP'], a: 0,
     why: 'v CONSTANT (ZERO) MEANS a = 0.\nCRUISE BAND, VERTICAL EDITION.' },
 ];
 const BANKS = { 1: bank1, 2: bank2, 3: bank3 };
@@ -765,285 +757,365 @@ function landBike() {
   AU.gate();
 }
 /* ============================================================ *
- *  7. RENDERER — every sprite means something
+ *  7. RENDERER — dusk minimal: every shape still means something
  * ============================================================ */
-const FONT = '"Press Start 2P", monospace';
-function T(s, x, y, color, size, align) {
-  bx.font = (size || 8) + 'px ' + FONT;
+function T(s, x, y, color, size, align, weight) {
+  bx.font = (weight || 600) + ' ' + (size || 16) + 'px Inter, system-ui, -apple-system, sans-serif';
   bx.textAlign = align || 'left';
-  bx.fillStyle = color || PAL.white;
+  bx.fillStyle = color || PAL.text;
   bx.fillText(s, x, y);
 }
-function TC(s, y, color, size) { T(s, VW / 2, y, color, size, 'center'); }
+function TC(s, y, color, size, weight) { T(s, LW / 2, y, color, size, 'center', weight); }
+function MONO(s, x, y, color, size, align) {
+  bx.font = (size || 13) + 'px ui-monospace, SFMono-Regular, Menlo, monospace';
+  bx.textAlign = align || 'left';
+  bx.fillStyle = color || PAL.text;
+  bx.fillText(s, x, y);
+}
+function rr(x, y, w, h, r) { bx.beginPath(); bx.roundRect(x, y, w, h, r); }
+function chip(x, y, w, h, stroke) {
+  rr(x, y, w, h, 10);
+  bx.fillStyle = 'rgba(16,11,30,.78)'; bx.fill();
+  bx.strokeStyle = stroke || 'rgba(255,255,255,.14)'; bx.lineWidth = 1; bx.stroke();
+}
 
-function wxToSx(wx) { return Math.round(BIKE_SX + (wx - state.bike.x) * PXM); }
+function camX() { return state.bike ? state.bike.x : 16; }
+function wxToSx(wx) { return BIKE_SX + (wx - camX()) * PXM; }
 
-function drawWorld() {
-  // sky bands (flat NES dusk)
-  bx.fillStyle = PAL.sky1; bx.fillRect(0, 0, VW, 40);
-  bx.fillStyle = PAL.sky2; bx.fillRect(0, 40, VW, 60);
-  bx.fillStyle = PAL.sun; bx.fillRect(176, 22, 18, 18);
-  // mesas — slow parallax, scaled by bike.x
-  const m1 = -((state.bike.x * PXM * 0.18) % 280);
-  bx.fillStyle = PAL.mesaD;
-  for (let i = -1; i < 3; i++) {
-    const ox = m1 + i * 280;
-    bx.fillRect(ox + 20, 64, 70, 36); bx.fillRect(ox + 30, 56, 50, 8);
-    bx.fillRect(ox + 150, 72, 90, 28); bx.fillRect(ox + 165, 64, 60, 8);
+let skyGrad = null;
+function drawSky() {
+  if (!skyGrad) {
+    skyGrad = cx.createLinearGradient(0, 0, 0, GY);
+    skyGrad.addColorStop(0, '#1c1338');
+    skyGrad.addColorStop(0.45, '#55305f');
+    skyGrad.addColorStop(0.78, '#c75e58');
+    skyGrad.addColorStop(1, '#f3a563');
   }
-  // dunes — mid parallax
-  const m2 = -((state.bike.x * PXM * 0.45) % 180);
-  bx.fillStyle = PAL.dune;
-  bx.fillRect(0, 100, VW, GY - 100);
-  bx.fillStyle = PAL.duneD;
-  for (let i = -1; i < 3; i++) {
-    const ox = m2 + i * 180;
-    bx.fillRect(ox + 10, 112, 64, 6); bx.fillRect(ox + 96, 130, 52, 5);
+  bx.fillStyle = skyGrad; bx.fillRect(0, 0, LW, GY);
+  const sx = 700, sy = 215;
+  const glow = cx.createRadialGradient(sx, sy, 12, sx, sy, 200);
+  glow.addColorStop(0, 'rgba(255,227,179,.8)');
+  glow.addColorStop(0.3, 'rgba(255,200,132,.28)');
+  glow.addColorStop(1, 'rgba(255,200,132,0)');
+  bx.fillStyle = glow; bx.beginPath(); bx.arc(sx, sy, 200, 0, 7); bx.fill();
+  bx.fillStyle = '#ffe9c4'; bx.beginPath(); bx.arc(sx, sy, 36, 0, 7); bx.fill();
+}
+
+function ridgeY(wx, seed) {
+  return Math.abs(Math.sin(wx * 0.011 + seed) * 26 + Math.sin(wx * 0.031 + seed * 2.7) * 14) +
+         Math.abs(Math.sin(wx * 0.005 + seed * 1.3)) * 30;
+}
+function drawMesas() {
+  const cpx = camX() * PXM;
+  const layers = [
+    { p: 0.15, base: GY - 130, col: 'rgba(70,44,104,.5)', seed: 3 },
+    { p: 0.35, base: GY - 64, col: 'rgba(44,27,68,.85)', seed: 11 },
+  ];
+  for (const L of layers) {
+    bx.fillStyle = L.col;
+    bx.beginPath();
+    bx.moveTo(0, GY);
+    for (let sx2 = 0; sx2 <= LW; sx2 += 16) {
+      bx.lineTo(sx2, L.base - ridgeY(cpx * L.p + sx2, L.seed));
+    }
+    bx.lineTo(LW, GY);
+    bx.closePath(); bx.fill();
   }
-  // crowd banner strip (race-day dressing)
-  bx.fillStyle = PAL.banner; bx.fillRect(0, 146, VW, 8);
-  bx.fillStyle = PAL.white;
-  const m3 = -((state.bike.x * PXM) % 16);
-  for (let sx = m3 - 16; sx < VW + 16; sx += 16) bx.fillRect(Math.round(sx), 148, 4, 4);
-  // track
-  bx.fillStyle = PAL.track; bx.fillRect(0, GY - 8, VW, VH - GY + 8);
-  bx.fillStyle = PAL.trackLight; bx.fillRect(0, GY - 8, VW, 3);
-  // distance markers every 20 m with meter labels — the track IS the x-axis
-  const first = Math.floor((state.bike.x - BIKE_SX / PXM) / 20) * 20;
-  for (let wx = first; wx < state.bike.x + (VW / PXM) + 20; wx += 20) {
+}
+
+function drawGround(withMarkers) {
+  bx.fillStyle = PAL.ground; bx.fillRect(0, GY - 6, LW, LH - GY + 6);
+  bx.fillStyle = PAL.trackDark; bx.fillRect(0, GY - 6, LW, 42);
+  const edge = cx.createLinearGradient(0, GY - 6, 0, GY + 8);
+  edge.addColorStop(0, 'rgba(255,209,102,.5)'); edge.addColorStop(1, 'rgba(255,209,102,0)');
+  bx.fillStyle = edge; bx.fillRect(0, GY - 6, LW, 14);
+  if (!withMarkers) return;
+  const first = Math.floor((camX() - BIKE_SX / PXM) / 20) * 20;
+  for (let wx = first; wx < camX() + LW / PXM + 20; wx += 20) {
     if (wx < 0) continue;
-    const sx = wxToSx(wx);
-    bx.fillStyle = PAL.edge; bx.fillRect(sx, GY - 8, 2, 6);
-    T(String(wx), sx + 3, GY + 14, PAL.edge, 6);
+    const sxp = wxToSx(wx);
+    bx.fillStyle = 'rgba(247,237,226,.22)'; bx.fillRect(sxp, GY - 2, 2, 10);
+    MONO(wx + ' m', sxp + 7, GY + 24, 'rgba(247,237,226,.38)', 11);
   }
+}
+
+function drawBarrier(sx, hard) {
+  if (sx < -10 || sx > LW + 10) return;
+  const g2 = cx.createLinearGradient(0, GY - 140, 0, GY);
+  g2.addColorStop(0, hard ? 'rgba(255,107,107,0)' : 'rgba(247,237,226,0)');
+  g2.addColorStop(1, hard ? 'rgba(255,107,107,.7)' : 'rgba(247,237,226,.35)');
+  bx.fillStyle = g2; bx.fillRect(sx - 2, GY - 140, 4, 134);
 }
 
 function drawFeature(f) {
-  const c = state.course;
-  void c;
-  if (f.t === 'cruise') {
+  const passed = f.state === 'passed';
+  if (f.t === 'cruise' || f.t === 'accel') {
     const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
-    if (b2 < -40 || a > VW + 40) return;
-    // green striped zone + arches with the band posted
-    bx.fillStyle = f.state === 'failed' ? 'rgba(248,56,0,.25)' : 'rgba(128,208,16,.18)';
-    bx.fillRect(a, GY - 8, b2 - a, 14);
-    for (const ax of [a, b2]) {
-      bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.gold;
-      bx.fillRect(ax - 2, GY - 52, 4, 44);
-      bx.fillRect(ax - 10, GY - 56, 20, 6);
+    if (b2 < -80 || a > LW + 80) return;
+    const isC = f.t === 'cruise';
+    const failed = isC && f.offBand > CRUISE_GRACE;
+    const col = passed ? PAL.green : failed ? PAL.coral : isC ? PAL.green : PAL.teal;
+    bx.globalAlpha = passed ? 0.35 : 1;
+    bx.fillStyle = failed ? 'rgba(255,107,107,.12)' : isC ? 'rgba(149,214,92,.10)' : 'rgba(78,205,196,.10)';
+    bx.fillRect(a, GY - 122, b2 - a, 116);
+    bx.fillStyle = col;
+    bx.fillRect(a - 1, GY - 122, 2, 116);
+    bx.fillRect(b2 - 1, GY - 122, 2, 116);
+    if (!isC) {
+      bx.strokeStyle = 'rgba(78,205,196,.7)'; bx.lineWidth = 3; bx.lineCap = 'round';
+      for (let sxp = a + 18; sxp < b2 - 18; sxp += 42) {
+        bx.beginPath(); bx.moveTo(sxp, GY + 6); bx.lineTo(sxp + 11, GY + 12); bx.lineTo(sxp, GY + 18); bx.stroke();
+      }
     }
-    T(f.lo + '-' + f.hi, a + 4, GY - 44, PAL.green, 6);
-    T('HOLD', a + 4, GY - 36, PAL.edge, 6);
-    if (f.state !== 'passed') drawBarrier(b2, f.offBand > CRUISE_GRACE);
-  } else if (f.t === 'accel') {
-    const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
-    if (b2 < -40 || a > VW + 40) return;
-    bx.fillStyle = 'rgba(60,188,252,.16)';
-    bx.fillRect(a, GY - 8, b2 - a, 14);
-    bx.fillStyle = PAL.blue;
-    for (let sx = a + 6; sx < b2 - 6; sx += 18) { // chevrons say "speed up"
-      bx.fillRect(sx, GY - 4, 6, 2); bx.fillRect(sx + 4, GY - 6, 4, 2); bx.fillRect(sx + 4, GY - 2, 4, 2);
-    }
-    bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.blue;
-    bx.fillRect(a - 2, GY - 52, 4, 44); bx.fillRect(b2 - 2, GY - 52, 4, 44);
-    T('GAIN +' + f.gain, a + 4, GY - 44, PAL.blue, 6);
-    if (f.armed && f.state === 'active') T('LOG ' + f.vIn.toFixed(1), a + 4, GY - 36, PAL.edge, 6);
-    if (f.state !== 'passed') drawBarrier(b2, false);
+    chip(a + 10, GY - 158, isC ? 196 : 206, 32, passed ? 'rgba(149,214,92,.5)' : undefined);
+    const label = isC
+      ? (passed ? '✓ HELD ' : 'HOLD ') + f.lo + '–' + f.hi + ' m/s'
+      : (passed ? '✓ GAINED +' + f.gain : 'GAIN +' + f.gain + (f.armed && f.state === 'active' ? ' · log ' + f.vIn.toFixed(1) : ''));
+    T(label, a + 24, GY - 136, col, 14, 'left', 700);
+    bx.globalAlpha = 1;
+    if (!passed) drawBarrier(b2, failed);
   } else if (f.t === 'stop') {
     const a = wxToSx(f.x0), b2 = wxToSx(f.x1);
-    if (b2 < -40 || a > VW + 40) return;
-    for (let sx = a; sx < b2; sx += 8) { // checkered box
-      bx.fillStyle = ((sx - a) / 8) % 2 ? PAL.white : PAL.red;
-      bx.fillRect(sx, GY - 6, Math.min(8, b2 - sx), 10);
-    }
-    T('STOP', a + 2, GY - 12, f.stopped ? PAL.green : PAL.red, 6);
-    if (f.state !== 'passed') drawBarrier(b2, false);
+    if (b2 < -80 || a > LW + 80) return;
+    rr(a, GY - 2, b2 - a, 16, 6);
+    bx.fillStyle = 'rgba(247,237,226,.12)'; bx.fill();
+    bx.strokeStyle = f.stopped || passed ? PAL.green : 'rgba(247,237,226,.8)'; bx.lineWidth = 2; bx.stroke();
+    chip(a - 8, GY - 158, 158, 32, f.stopped || passed ? 'rgba(149,214,92,.5)' : undefined);
+    T(f.stopped || passed ? '✓ STOPPED' : 'STOP INSIDE', a + 6, GY - 136, f.stopped || passed ? PAL.green : PAL.text, 14, 'left', 700);
+    if (!passed) drawBarrier(b2, false);
   } else if (f.t === 'trap') {
-    const sx = wxToSx(f.x);
-    if (sx < -40 || sx > VW + 40) return;
-    bx.fillStyle = PAL.grayD; bx.fillRect(sx - 1, GY - 40, 3, 32); // radar post
-    bx.fillStyle = f.state === 'passed' ? PAL.green : PAL.red;
-    bx.fillRect(sx - 6, GY - 48, 12, 10);
-    T('MAX', sx, GY - 52, PAL.white, 6, 'center');
-    T(String(f.max), sx, GY - 41, PAL.ink, 6, 'center');
+    const sxp = wxToSx(f.x);
+    if (sxp < -80 || sxp > LW + 80) return;
+    bx.fillStyle = passed ? 'rgba(149,214,92,.7)' : 'rgba(255,107,107,.8)';
+    bx.fillRect(sxp - 1, GY - 96, 3, 90);
+    bx.beginPath(); bx.arc(sxp, GY - 102, 6, 0, 7); bx.fill();
+    chip(sxp - 60, GY - 158, 120, 32, passed ? 'rgba(149,214,92,.5)' : 'rgba(255,107,107,.5)');
+    T((passed ? '✓ ' : '') + 'MAX ' + f.max, sxp, GY - 136, passed ? PAL.green : PAL.coral, 14, 'center', 700);
   } else if (f.t === 'jump') {
     const lip = wxToSx(f.x), far = wxToSx(f.x + f.gap);
-    if (far < -60 || lip > VW + 60) return;
-    // pit
-    bx.fillStyle = PAL.pit; bx.fillRect(lip, GY - 8, far - lip, VH - GY + 8);
-    bx.fillStyle = PAL.red;
-    for (let sx = lip + 4; sx < far - 4; sx += 12) bx.fillRect(sx, GY + 16, 6, 3); // hazard ticks
-    // ramp (30°) — rises 12 px over ~21 px run
-    bx.fillStyle = PAL.trackLight;
-    bx.beginPath(); bx.moveTo(lip - 21, GY - 8); bx.lineTo(lip, GY - 20); bx.lineTo(lip, GY - 8); bx.closePath(); bx.fill();
-    // landing deck window, if any
+    if (far < -120 || lip > LW + 120) return;
+    bx.fillStyle = PAL.pit; bx.fillRect(lip, GY - 4, far - lip, LH - GY + 4);
+    bx.strokeStyle = 'rgba(255,107,107,.5)'; bx.lineWidth = 2; bx.lineCap = 'round';
+    for (let sxp = lip + 14; sxp < far - 10; sxp += 30) {
+      bx.beginPath(); bx.moveTo(sxp, GY + 26); bx.lineTo(sxp + 9, GY + 33); bx.lineTo(sxp, GY + 40); bx.stroke();
+    }
+    bx.fillStyle = PAL.trackDark;
+    bx.beginPath();
+    bx.moveTo(lip - 66, GY - 4);
+    bx.quadraticCurveTo(lip - 20, GY - 10, lip, GY - 40);
+    bx.lineTo(lip, GY - 4);
+    bx.closePath(); bx.fill();
+    bx.strokeStyle = 'rgba(255,209,102,.55)'; bx.lineWidth = 2;
+    bx.beginPath(); bx.moveTo(lip - 66, GY - 5); bx.quadraticCurveTo(lip - 20, GY - 11, lip, GY - 41); bx.stroke();
     if (typeof f.land === 'number') {
       const deckEnd = wxToSx(f.x + f.gap + f.land);
-      bx.fillStyle = PAL.green; bx.fillRect(far, GY - 9, Math.max(2, deckEnd - far), 3);
-      bx.fillStyle = PAL.pit; bx.fillRect(deckEnd, GY - 8, 40, VH - GY + 8);
+      bx.fillStyle = PAL.green; bx.fillRect(far, GY - 7, Math.max(3, deckEnd - far), 4);
+      bx.fillStyle = PAL.pit; bx.fillRect(deckEnd, GY - 4, 70, LH - GY + 4);
     }
-    // the SIGN — minimum takeoff speed, computable and posted
-    const sgx = lip - 52;
-    bx.fillStyle = PAL.ink; bx.fillRect(sgx - 2, GY - 58, 50, 24);
-    bx.fillStyle = PAL.gold; bx.fillRect(sgx - 2, GY - 58, 50, 2);
-    T('GAP ' + f.gap + 'm', sgx + 2, GY - 48, PAL.gold, 6);
-    T('v>=' + vminFor(f.gap).toFixed(1), sgx + 2, GY - 39, PAL.white, 6);
-    bx.fillStyle = PAL.grayD; bx.fillRect(sgx + 20, GY - 34, 3, 26);
+    bx.globalAlpha = passed ? 0.4 : 1;
+    chip(lip - 206, GY - 196, 192, 54, 'rgba(255,209,102,.4)');
+    T('GAP ' + f.gap + ' m' + (typeof f.land === 'number' ? ' · DECK ' + f.land : ''), lip - 192, GY - 174, PAL.gold, 14, 'left', 700);
+    MONO('v ≥ ' + vminFor(f.gap).toFixed(1) + ' m/s at the lip', lip - 192, GY - 154, PAL.text, 12);
+    bx.globalAlpha = 1;
   }
-}
-
-function drawBarrier(sx, closedHard) {
-  if (sx < -10 || sx > VW + 10) return;
-  bx.fillStyle = closedHard ? PAL.red : 'rgba(248,224,160,.35)';
-  bx.fillRect(sx - 1, GY - 30, 2, 22);
 }
 
 function drawBike() {
   const b = state.bike;
-  const sy = GY - 8 - Math.round(b.y * PXM);
+  const sy = GY - 8 - b.y * PXM;
+  if (b.dead <= 0 && b.v > 5) {
+    const al = 0.35 * (b.v / VMAX);
+    bx.lineCap = 'round';
+    for (let i = 0; i < 3; i++) {
+      bx.strokeStyle = 'rgba(255,209,102,' + Math.max(0, al - i * 0.09).toFixed(2) + ')';
+      bx.lineWidth = 3 - i * 0.7;
+      bx.beginPath();
+      bx.moveTo(BIKE_SX - 34 - i * 10, sy - 14 + i * 8);
+      bx.lineTo(BIKE_SX - 34 - i * 10 - b.v * 2.2, sy - 14 + i * 8);
+      bx.stroke();
+    }
+  }
   bx.save();
   bx.translate(BIKE_SX, sy);
   bx.rotate(b.lean);
-  if (b.dead > 0) bx.rotate(b.dead * 5); // tumble
-  // wheels
-  bx.fillStyle = PAL.tire;
-  bx.fillRect(-12, -4, 7, 7); bx.fillRect(6, -4, 7, 7);
-  // frame + tank (red — the machine)
-  bx.fillStyle = b.stalled > 0 ? PAL.grayD : PAL.bike;
-  bx.fillRect(-9, -8, 18, 5);
-  bx.fillStyle = PAL.bikeD; bx.fillRect(2, -11, 7, 4);
-  // rider (blue) — crouched, head forward
-  bx.fillStyle = PAL.rider;
-  bx.fillRect(-5, -16, 8, 8);
-  bx.fillStyle = PAL.white; bx.fillRect(0, -20, 6, 5); // helmet
+  if (b.dead > 0) bx.rotate(b.dead * 5);
+  bx.fillStyle = PAL.night;
+  bx.beginPath(); bx.arc(-20, 0, 11, 0, 7); bx.arc(20, 0, 11, 0, 7); bx.fill();
+  bx.fillStyle = 'rgba(247,237,226,.25)';
+  bx.beginPath(); bx.arc(-20, 0, 4, 0, 7); bx.arc(20, 0, 4, 0, 7); bx.fill();
+  bx.fillStyle = b.stalled > 0 ? '#4a3f5c' : PAL.body;
+  rr(-26, -16, 52, 14, 7); bx.fill();
+  bx.fillStyle = b.stalled > 0 ? '#6a5a7c' : PAL.coral;
+  rr(0, -22, 18, 9, 4); bx.fill();
+  bx.fillStyle = PAL.night;
+  rr(-12, -40, 20, 26, 9); bx.fill();
+  bx.fillStyle = '#f3e9d8';
+  bx.beginPath(); bx.arc(12, -42, 8, 0, 7); bx.fill();
   bx.restore();
-  // exhaust — visible acceleration
   if (b.gas && b.stalled <= 0 && !b.air && b.dead <= 0) {
-    for (let i = 0; i < 3; i++) {
-      bx.fillStyle = i ? '#888' : PAL.white;
-      bx.fillRect(BIKE_SX - 16 - i * 5 - ((state.t * 60) % 4), sy - 4 + (i % 2) * 3, 3, 3);
+    for (let i = 0; i < 5; i++) {
+      const ph = (state.t * 3 + i * 0.7) % 1;
+      bx.fillStyle = 'rgba(243,165,99,' + (0.22 * (1 - ph)).toFixed(2) + ')';
+      bx.beginPath();
+      bx.arc(BIKE_SX - 30 - ph * 46 - i * 6, sy - 2 - ph * 14 + (i % 3) * 4, 3 + ph * 7, 0, 7);
+      bx.fill();
     }
   }
-  // overheat smoke
   if (b.stalled > 0) {
-    bx.fillStyle = '#aaa';
-    for (let i = 0; i < 4; i++) bx.fillRect(BIKE_SX - 2 + ((i * 13 + state.t * 40) % 10) - 5, sy - 22 - ((state.t * 30 + i * 9) % 14), 3, 3);
+    for (let i = 0; i < 4; i++) {
+      const ph = (state.t * 0.8 + i * 0.27) % 1;
+      bx.fillStyle = 'rgba(200,195,210,' + (0.3 * (1 - ph)).toFixed(2) + ')';
+      bx.beginPath(); bx.arc(BIKE_SX + 4 + Math.sin(ph * 9 + i) * 6, sy - 26 - ph * 44, 4 + ph * 8, 0, 7); bx.fill();
+    }
   }
 }
 
 function drawHUD() {
-  bx.fillStyle = 'rgba(4,6,13,.85)'; bx.fillRect(0, 0, VW, 20);
-  T('v ' + state.bike.v.toFixed(1), 4, 13, PAL.gold, 8);
-  // speed bar — the speedometer is the protagonist
-  bx.fillStyle = PAL.grayD; bx.fillRect(58, 6, 54, 8);
-  bx.fillStyle = state.bike.v > 22 ? PAL.red : PAL.green;
-  bx.fillRect(58, 6, Math.round(54 * state.bike.v / VMAX), 8);
-  T('T' + state.t.toFixed(0) + '/' + state.par, 118, 13, PAL.white, 6);
-  T(String(state.score), 220, 13, PAL.white, 6, 'right');
-  // bikes + crash pips
-  for (let i = 0; i < state.bikes; i++) { bx.fillStyle = PAL.bike; bx.fillRect(4 + i * 8, 16, 6, 3); }
-  for (let i = 0; i < state.crashes; i++) { bx.fillStyle = PAL.red; bx.fillRect(118 + i * 7, 16, 5, 3); }
-  if (state.practice) T('PRACTICE', 220, 19, PAL.blue, 6, 'right');
-  // DNF warning
+  const b = state.bike;
+  T(b.v.toFixed(1), 30, 74, PAL.text, 52, 'left', 300);
+  T('m/s', 30 + bx.measureText(b.v.toFixed(1)).width + 10, 74, PAL.dim, 16, 'left', 600);
+  rr(30, 88, 220, 8, 4); bx.fillStyle = 'rgba(255,255,255,.08)'; bx.fill();
+  const frac = b.v / VMAX;
+  rr(30, 88, Math.max(6, 220 * frac), 8, 4);
+  bx.fillStyle = frac > 0.85 ? PAL.coral : frac > 0.6 ? PAL.gold : PAL.teal; bx.fill();
+  for (let i = 0; i < state.bikes; i++) {
+    bx.fillStyle = PAL.coral; bx.beginPath(); bx.arc(36 + i * 18, 112, 5, 0, 7); bx.fill();
+  }
+  for (let i = 0; i < state.crashes; i++) {
+    bx.fillStyle = 'rgba(255,107,107,.45)'; bx.fillRect(96 + i * 12, 106, 7, 7);
+  }
+  chip(LW - 250, 24, 220, 34);
+  MONO('T ' + state.t.toFixed(1) + 's / PAR ' + state.par + 's', LW - 238, 46, PAL.text, 13);
+  chip(LW - 250, 64, 220, 34);
+  MONO('SCORE ' + state.score, LW - 238, 86, PAL.gold, 13);
+  if (state.practice) { chip(LW - 250, 104, 220, 30, 'rgba(108,184,255,.4)'); MONO('PRACTICE — UNRANKED', LW - 238, 124, PAL.blue, 12); }
   const left = state.par * DNF_MULT - state.t;
-  if (left < 10) TC('DNF IN ' + Math.max(0, left).toFixed(0), 32, PAL.red, 8);
+  if (left < 10) TC('DNF IN ' + Math.max(0, left).toFixed(0) + 's', 160, PAL.coral, 30, 800);
 }
 
-/* ---- full-screen states ---- */
+const MENU_Y0 = 230, MENU_H = 64, CARD_H = 52;
+
+function drawBackdrop() { drawSky(); drawMesas(); drawGround(false); }
+function pulse() { return 0.55 + 0.45 * Math.sin(performance.now() / 260); }
+
 function drawAttract() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
-  drawWorldStatic();
-  TC('REDLINE', 64, PAL.red, 16);
-  TC('A KINEMATICS GRAND PRIX', 80, PAL.gold, 6);
-  TC('THE THROTTLE IS a = +6 m/s2', 104, PAL.white, 6);
-  TC('THE TRACK DEMANDS A v-t SHAPE', 116, PAL.white, 6);
-  TC('RIDE THE GRAPH OR CRASH', 128, PAL.white, 6);
-  if ((performance.now() / 500 | 0) % 2) TC('INSERT COIN', 168, PAL.gold, 8);
-  TC('HI ' + store.hi, 188, PAL.edge, 6);
-  TC('HOLD →/SPACE GAS · ← BRAKE', 216, PAL.edge, 6);
+  drawBackdrop();
+  try { bx.letterSpacing = '10px'; } catch (e) {}
+  TC('REDLINE', 170, PAL.text, 68, 800);
+  try { bx.letterSpacing = '0px'; } catch (e) {}
+  TC('A KINEMATICS GRAND PRIX', 206, PAL.gold, 16, 700);
+  TC('The throttle is acceleration. The track demands a v–t shape.', 290, PAL.dim, 16, 400);
+  TC('Ride the graph. Clear the gaps. Mind the heat.', 318, PAL.dim, 16, 400);
+  bx.globalAlpha = pulse();
+  chip(LW / 2 - 110, 376, 220, 46, 'rgba(255,209,102,.5)');
+  TC('INSERT COIN', 406, PAL.gold, 18, 800);
+  bx.globalAlpha = 1;
+  TC('HI ' + store.hi, 460, PAL.dim, 14, 600);
+  TC('hold → or SPACE to throttle · ← to brake', 506, PAL.faint, 13, 400);
 }
-function drawWorldStatic() {
-  bx.fillStyle = PAL.sky1; bx.fillRect(0, 0, VW, 40);
-  bx.fillStyle = PAL.sky2; bx.fillRect(0, 40, VW, 100);
-  bx.fillStyle = PAL.dune; bx.fillRect(0, 140, VW, 60);
-  bx.fillStyle = PAL.track; bx.fillRect(0, 200, VW, 40);
-}
+
 function drawActs() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
-  drawWorldStatic();
-  TC('SELECT EVENT', 48, PAL.gold, 10);
+  drawBackdrop();
+  TC('SELECT EVENT', 150, PAL.gold, 15, 800);
   for (let i = 0; i < 3; i++) {
-    const a = i + 1, y = 92 + i * 30, sel = state.menuIdx === i, open = actUnlocked(a);
-    if (sel) { bx.fillStyle = 'rgba(248,184,0,.18)'; bx.fillRect(12, y - 12, VW - 24, 24); }
-    T((sel ? '> ' : '  ') + 'ACT ' + a + ' ' + ACT_META[a].name, 18, y, open ? (sel ? PAL.gold : PAL.white) : PAL.grayD, 8);
-    if (!open) T('LOCK', 200, y, PAL.red, 6, 'right');
+    const a = i + 1, sel = state.menuIdx === i, open = actUnlocked(a);
+    const cy = MENU_Y0 + i * MENU_H;
+    chip(LW / 2 - 260, cy, 520, CARD_H, sel ? 'rgba(255,209,102,.7)' : undefined);
+    T('ACT ' + a + ' — ' + ACT_META[a].name, LW / 2 - 236, cy + 32, open ? (sel ? PAL.gold : PAL.text) : PAL.faint, 17, 'left', 700);
+    T(open ? ACT_META[a].sub : 'LOCKED', LW / 2 + 236, cy + 31, open ? PAL.dim : PAL.coral, 12, 'right', 500);
   }
-  TC('CLEAR AN ACT TO UNLOCK THE NEXT', 196, PAL.edge, 6);
-  TC('MARSHAL CODE UNLOCKS ALL', 208, PAL.grayD, 6);
+  TC('Clear an act to unlock the next · marshal code unlocks all', 470, PAL.faint, 13, 400);
 }
+
 function drawBrief() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawBackdrop();
   const m = ACT_META[state.act];
-  TC('ACT ' + state.act, 44, PAL.gold, 8);
-  TC(m.name, 62, PAL.red, 12);
-  TC(m.sub, 80, PAL.edge, 6);
-  for (let i = 0; i < m.brief.length; i++) TC(m.brief[i], 110 + i * 14, PAL.white, 6);
-  if ((performance.now() / 500 | 0) % 2) TC('PRESS START', 210, PAL.gold, 8);
+  TC('ACT ' + state.act, 130, PAL.dim, 14, 700);
+  TC(m.name, 178, PAL.text, 44, 800);
+  TC(m.sub, 212, PAL.gold, 15, 600);
+  for (let i = 0; i < m.brief.length; i++) TC(m.brief[i], 280 + i * 30, PAL.dim, 15, 400);
+  bx.globalAlpha = pulse();
+  TC('PRESS START', 440, PAL.gold, 17, 800);
+  bx.globalAlpha = 1;
 }
+
 function drawClear() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawBackdrop();
   const ci = state.clearInfo;
-  TC('STAGE CLEAR', 48, PAL.green, 12);
-  TC(ci.name, 66, PAL.gold, 7);
-  T('TIME', 30, 96, PAL.edge, 7); T(ci.time.toFixed(1) + 's / PAR ' + ci.par, 194, 96, PAL.white, 7, 'right');
-  T('GATES FIRST TRY', 30, 112, PAL.edge, 7); T(ci.perfect + '/' + ci.gates + '  +' + (ci.perfect * 400), 194, 112, PAL.white, 7, 'right');
-  T('TIME BONUS', 30, 128, PAL.edge, 7); T('+' + ci.timeBonus, 194, 128, PAL.white, 7, 'right');
-  T('NO-CRASH', 30, 144, PAL.edge, 7); T(ci.noCrash ? '+1000' : '—', 194, 144, ci.noCrash ? PAL.green : PAL.grayD, 7, 'right');
-  T('STAGE TOTAL', 30, 164, PAL.gold, 7); T('+' + ci.gained, 194, 164, PAL.gold, 7, 'right');
-  if ((performance.now() / 500 | 0) % 2) TC('PRESS START FOR THE FLAG Q', 206, PAL.gold, 6);
+  TC('STAGE CLEAR', 140, PAL.green, 40, 800);
+  TC(ci.name, 174, PAL.gold, 15, 700);
+  const rows = [
+    ['TIME', ci.time.toFixed(1) + 's / par ' + ci.par + 's'],
+    ['GATES FIRST TRY', ci.perfect + ' of ' + ci.gates + '   +' + (ci.perfect * 400)],
+    ['TIME BONUS', '+' + ci.timeBonus],
+    ['NO-CRASH', ci.noCrash ? '+1000' : '—'],
+    ['STAGE TOTAL', '+' + ci.gained],
+  ];
+  for (let i = 0; i < rows.length; i++) {
+    const y = 230 + i * 38;
+    T(rows[i][0], LW / 2 - 200, y, i === 4 ? PAL.gold : PAL.dim, 14, 'left', 600);
+    MONO(rows[i][1], LW / 2 + 200, y, i === 4 ? PAL.gold : PAL.text, 14, 'right');
+  }
+  bx.globalAlpha = pulse();
+  TC('PRESS START FOR THE FLAG QUESTION', 460, PAL.gold, 14, 700);
+  bx.globalAlpha = 1;
 }
+
 function drawQuestion() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawBackdrop();
   const q = state.question;
-  TC(state.qIsCross ? '★ CROSSOVER +1000 ★' : 'FLAG QUESTION +750', 36, state.qIsCross ? PAL.gold : PAL.green, 7);
+  TC(state.qIsCross ? '★ CROSSOVER · +1000 ★' : 'FLAG QUESTION · +750', 96, state.qIsCross ? PAL.gold : PAL.green, 15, 800);
   const lines = q.q.split('\n');
-  for (let i = 0; i < lines.length; i++) TC(lines[i], 60 + i * 13, PAL.white, 6);
+  for (let i = 0; i < lines.length; i++) TC(lines[i], 136 + i * 26, PAL.text, 16, 600);
   for (let i = 0; i < 3; i++) {
-    const y = 120 + i * 30;
-    let col = PAL.white;
-    if (state.qResolved) col = (i === q.a) ? PAL.green : (i === state.qPick ? PAL.red : PAL.grayD);
-    bx.fillStyle = 'rgba(255,255,255,.06)'; bx.fillRect(16, y - 11, VW - 32, 22);
-    T((i + 1) + ') ' + q.c[i], 24, y + 3, col, 7);
+    const cy = MENU_Y0 + i * MENU_H;
+    let col = PAL.text, stroke;
+    if (state.qResolved) {
+      if (i === q.a) { col = PAL.green; stroke = 'rgba(149,214,92,.7)'; }
+      else if (i === state.qPick) { col = PAL.coral; stroke = 'rgba(255,107,107,.7)'; }
+      else col = PAL.faint;
+    }
+    chip(LW / 2 - 260, cy, 520, CARD_H, stroke);
+    T((i + 1) + '.  ' + q.c[i], LW / 2 - 232, cy + 32, col, 16, 'left', 600);
   }
   if (state.qResolved) {
     const why = q.why.split('\n');
-    for (let i = 0; i < why.length; i++) TC(why[i], 216 + i * 11, PAL.edge, 6);
+    for (let i = 0; i < why.length; i++) TC(why[i], 452 + i * 22, PAL.dim, 13, 400);
   } else {
-    TC('PRESS 1, 2 OR 3 (OR TAP)', 222, PAL.edge, 6);
+    TC('press 1, 2 or 3 — or tap a card', 462, PAL.faint, 13, 400);
   }
 }
+
 function drawGameOver() {
-  bx.fillStyle = '#04060d'; bx.fillRect(0, 0, VW, VH);
+  drawBackdrop();
   const ci = state.clearInfo || { reason: 'GAME OVER', champion: false };
-  TC(ci.champion ? '★ CHAMPION ★' : 'GAME OVER', 70, ci.champion ? PAL.gold : PAL.red, 12);
-  TC(ci.reason, 92, PAL.edge, 6);
-  TC('SCORE ' + state.score, 124, PAL.white, 8);
-  TC('HI    ' + store.hi, 142, PAL.gold, 8);
-  if ((performance.now() / 500 | 0) % 2) TC('PRESS START', 200, PAL.gold, 8);
+  TC(ci.champion ? '★ CHAMPION ★' : 'GAME OVER', 180, ci.champion ? PAL.gold : PAL.coral, 46, 800);
+  TC(ci.reason, 218, PAL.dim, 15, 500);
+  MONO('SCORE  ' + state.score, LW / 2, 290, PAL.text, 20, 'center');
+  MONO('BEST   ' + store.hi, LW / 2, 322, PAL.gold, 20, 'center');
+  bx.globalAlpha = pulse();
+  TC('PRESS START', 420, PAL.gold, 17, 800);
+  bx.globalAlpha = 1;
 }
 
 function drawPlay() {
-  drawWorld();
+  drawSky(); drawMesas(); drawGround(true);
   for (const f of state.course.feats) drawFeature(f);
-  // finish banner
   const fx = wxToSx(state.course.len);
-  if (fx > -20 && fx < VW + 20) {
-    bx.fillStyle = PAL.grayD; bx.fillRect(fx, GY - 60, 3, 52);
-    for (let i = 0; i < 6; i++) { bx.fillStyle = i % 2 ? PAL.ink : PAL.white; bx.fillRect(fx + 3 + i * 5, GY - 60, 5, 8); }
+  if (fx > -60 && fx < LW + 60) {
+    bx.fillStyle = 'rgba(247,237,226,.7)'; bx.fillRect(fx, GY - 130, 3, 124);
+    for (let r = 0; r < 2; r++) for (let i = 0; i < 5; i++) {
+      bx.fillStyle = (r + i) % 2 ? 'rgba(247,237,226,.9)' : 'rgba(23,16,34,.9)';
+      bx.fillRect(fx + 3 + i * 9, GY - 130 + r * 9, 9, 9);
+    }
   }
   drawBike();
   drawHUD();
-  if (state.flashT > 0 && state.flash) TC(state.flash, 60, PAL.gold, 8);
+  if (state.flashT > 0 && state.flash) {
+    bx.globalAlpha = Math.min(1, state.flashT * 2);
+    TC(state.flash, 200, PAL.gold, 26, 800);
+    bx.globalAlpha = 1;
+  }
 }
 
 /* ============================================================ *
@@ -1058,33 +1130,33 @@ let lastReqHTML = '';
 
 function drawPanel() {
   const W = 276, H = 150;
-  vt.fillStyle = '#060810'; vt.fillRect(0, 0, W, H);
+  vt.fillStyle = '#150f26'; vt.fillRect(0, 0, W, H);
   const vToY = (v) => H - 8 - (v / 28) * (H - 20);
   // grid
-  vt.strokeStyle = '#1a1d2c'; vt.lineWidth = 1;
+  vt.strokeStyle = '#251c3e'; vt.lineWidth = 1;
   for (const v of [0, 7, 14, 21, 28]) {
     vt.beginPath(); vt.moveTo(24, vToY(v)); vt.lineTo(W - 4, vToY(v)); vt.stroke();
-    vt.fillStyle = '#5a6275'; vt.font = '7px monospace'; vt.fillText(String(v), 4, vToY(v) + 2);
+    vt.fillStyle = '#6f6585'; vt.font = '7px monospace'; vt.fillText(String(v), 4, vToY(v) + 2);
   }
   const f = state.screen === 'play' ? currentFeature() : null;
   // demand stripe — what the track wants, drawn on the same axes you ride
   if (f) {
     if (f.t === 'cruise') {
-      vt.fillStyle = 'rgba(128,208,16,.22)';
+      vt.fillStyle = 'rgba(149,214,92,.2)';
       vt.fillRect(24, vToY(f.hi), W - 28, vToY(f.lo) - vToY(f.hi));
     } else if (f.t === 'trap') {
-      vt.strokeStyle = '#f83800'; vt.setLineDash([3, 3]);
+      vt.strokeStyle = '#ff6b6b'; vt.setLineDash([3, 3]);
       vt.beginPath(); vt.moveTo(24, vToY(f.max)); vt.lineTo(W - 4, vToY(f.max)); vt.stroke();
       vt.setLineDash([]);
     } else if (f.t === 'stop') {
-      vt.fillStyle = 'rgba(248,56,0,.22)';
+      vt.fillStyle = 'rgba(255,107,107,.2)';
       vt.fillRect(24, vToY(0.8), W - 28, vToY(0) - vToY(0.8));
     } else if (f.t === 'accel' && f.armed) {
-      vt.strokeStyle = '#3cbcfc'; vt.setLineDash([3, 3]);
+      vt.strokeStyle = '#6cb8ff'; vt.setLineDash([3, 3]);
       vt.beginPath(); vt.moveTo(24, vToY(f.vIn + f.gain)); vt.lineTo(W - 4, vToY(f.vIn + f.gain)); vt.stroke();
       vt.setLineDash([]);
     } else if (f.t === 'jump') {
-      vt.strokeStyle = '#f8b800'; vt.setLineDash([3, 3]);
+      vt.strokeStyle = '#ffd166'; vt.setLineDash([3, 3]);
       vt.beginPath(); vt.moveTo(24, vToY(vminFor(f.gap))); vt.lineTo(W - 4, vToY(vminFor(f.gap))); vt.stroke();
       vt.setLineDash([]);
     }
@@ -1092,7 +1164,7 @@ function drawPanel() {
   // the trace — your last 24 s of riding
   if (state.trace.length > 1) {
     const t1 = state.trace[state.trace.length - 1].t, t0 = Math.max(0, t1 - 24);
-    vt.strokeStyle = '#f8b800'; vt.lineWidth = 2; vt.beginPath();
+    vt.strokeStyle = '#ffd166'; vt.lineWidth = 2; vt.beginPath();
     let started = false;
     for (const p of state.trace) {
       if (p.t < t0) continue;
@@ -1106,7 +1178,7 @@ function drawPanel() {
   if (state.bike) {
     const h = state.bike.heat;
     elHeatFill.style.width = h.toFixed(0) + '%';
-    elHeatFill.style.background = h > 80 ? '#f83800' : h > 55 ? '#f8b800' : '#80d010';
+    elHeatFill.style.background = h > 80 ? '#ff6b6b' : h > 55 ? '#ffd166' : '#95d65c';
     elHeatPct.textContent = h.toFixed(0) + '%';
   }
   let html;
@@ -1143,7 +1215,7 @@ function drawPanel() {
   }
   if (html !== lastReqHTML) { elReq.innerHTML = html; lastReqHTML = html; }
   elPar.textContent = state.screen === 'play'
-    ? 'TIME ' + state.t.toFixed(1) + 's · PAR ' + state.par + 's · DNF AT ' + (state.par * DNF_MULT).toFixed(0) + 's · CRASHES ' + state.crashes + '/' + MAX_CRASH
+    ? 'T ' + state.t.toFixed(1) + 's · PAR ' + state.par + 's · DNF ' + (state.par * DNF_MULT).toFixed(0) + 's · CRASH ' + state.crashes + '/' + MAX_CRASH
     : 'HI ' + store.hi;
 }
 
@@ -1185,14 +1257,14 @@ cv.addEventListener('pointerdown', (e) => {
   const vy = (e.offsetY / SCALE);
   if (state.screen === 'question') {
     if (!state.qResolved) {
-      const idx = Math.floor((vy - 109) / 30);
-      if (idx >= 0 && idx <= 2) answerQuestion(idx);
+      const idx = Math.floor((vy - MENU_Y0) / MENU_H);
+      if (idx >= 0 && idx <= 2 && (vy - MENU_Y0) % MENU_H <= CARD_H) answerQuestion(idx);
     }
     return;
   }
   if (state.screen === 'acts') {
-    const idx = Math.floor((vy - 80) / 30);
-    if (idx >= 0 && idx <= 2) { state.menuIdx = idx; chooseAct(idx + 1); }
+    const idx = Math.floor((vy - MENU_Y0) / MENU_H);
+    if (idx >= 0 && idx <= 2 && (vy - MENU_Y0) % MENU_H <= CARD_H) { state.menuIdx = idx; chooseAct(idx + 1); }
     return;
   }
   if (state.screen !== 'play') menuKey('Enter');
@@ -1209,6 +1281,7 @@ function frame() {
 
   if (state.screen === 'play') simStep(dt);
 
+  beginFrame();
   if (state.screen === 'play') drawPlay();
   else if (state.screen === 'attract') drawAttract();
   else if (state.screen === 'acts') drawActs();
@@ -1220,7 +1293,7 @@ function frame() {
   // non-play flashes (act complete, coin denied) draw over menus too
   if (state.screen !== 'play' && state.flashT > 0 && state.flash) {
     state.flashT -= dt;
-    TC(state.flash, 232, PAL.gold, 6);
+    TC(state.flash, 500, PAL.gold, 16, 700);
   }
 
   drawPanel();
@@ -1228,11 +1301,6 @@ function frame() {
   document.getElementById('touch').style.pointerEvents = state.screen === 'play' ? 'auto' : 'none';
   AU.engine(state.bike ? state.bike.v : 0,
     !!(state.bike && state.bike.gas), !!(state.bike && state.bike.stalled > 0));
-
-  // blit virtual → real at integer scale, smoothing off
-  cx.imageSmoothingEnabled = false;
-  cx.clearRect(0, 0, cv.width, cv.height);
-  cx.drawImage(buf, 0, 0, VW, VH, 0, 0, VW * SCALE, VH * SCALE);
 
   requestAnimationFrame(frame);
 }

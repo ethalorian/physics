@@ -2,7 +2,7 @@
 --
 -- HIGH NOON (lead-calculator western) was registered disabled on 2026-06-11
 -- and retired the same day before ever being enabled — the sprites decorated
--- the physics instead of embodying it. REDLINE is the rebuild: an 8-bit
+-- the physics instead of embodying it. REDLINE is the rebuild: a dusk-minimal
 -- Excitebike-blooded motocross where the throttle IS acceleration (overheat
 -- makes `a` a budgeted resource), GRAPH GATES only open if you ride a posted
 -- v–t shape (cruise bands, accel zones, stop boxes, speed traps), and every
@@ -21,11 +21,11 @@ INSERT INTO public.arcade_games (slug, name, blurb, src_path, cost_xp, unit, acc
 VALUES (
   'redline',
   'REDLINE',
-  'An 8-bit motocross where the throttle IS acceleration. Ride v–t graph gates, manage the overheat budget, and clear labeled gaps where takeoff speed is a calculation, not a hope.',
+  'A dusk-lit motocross where the throttle IS acceleration. Ride v–t graph gates, manage the overheat budget, and clear gaps where takeoff speed is a calculation, not a hope.',
   '/games/kinematics-redline.html',
   25,
   'Kinematics',
-  '#f8b800',
+  '#ffd166',
   250000,
   10,
   false
