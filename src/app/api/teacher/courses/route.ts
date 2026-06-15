@@ -7,7 +7,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // and AP in another). A newly-imported course has track=null until assigned —
 // that's what re-prompts the teacher.
 
-const VALID_TRACKS = ['cpa'] // only CPA is live; honors/ap/pbl come later
+const VALID_TRACKS = ['cpa', 'honors'] // CPA + Honors are live; ap/pbl come later
 
 type CourseRow = { id: string; name: string; section: string | null; track: string | null }
 

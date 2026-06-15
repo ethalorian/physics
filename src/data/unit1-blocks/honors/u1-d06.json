@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d06",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — what does the slope MEAN?", "markdown": "On a velocity-time graph, the slope is the acceleration. CPA reads off the number. Honors defends what that number *is* — and refuses the common slip that confuses a high velocity with a high acceleration." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Reading an a-t story from a v-t graph\n\nThe slope of a velocity-time graph is $a = \\Delta v / \\Delta t$ — **how fast the velocity is changing**, not how fast the object is going.\n\n- A **steep** v-t line claims large acceleration: velocity changing quickly.\n- A **flat (horizontal)** v-t line claims **zero** acceleration — even if the object is moving fast. Constant velocity means no change, means no acceleration.\n- A **negative** slope claims the object is slowing (or speeding up in the negative direction).\n\nThe honors trap to avoid: *'it's moving fast, so it's accelerating fast.'* Wrong. A spacecraft cruising at 10,000 m/s with a flat v-t line has **zero** acceleration. Speed lives on the axis; acceleration lives in the slope." },
+    { "id": "h3", "type": "callout", "visibilityTrack": "honors", "variant": "misconception", "title": "Common slip", "markdown": "*'High velocity means high acceleration.'* No. A high, **flat** v-t line is fast but unaccelerated. Acceleration is the *change*, the slope — not the height of the line." },
+    { "id": "h4", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "On this v-t graph the slope is ___, which means the acceleration is ___. A classmate who says the fast-moving object 'must be accelerating a lot' is wrong because ___.", "prompt": "JUSTIFY: Point to a segment of today's velocity-time graph and state what its slope means physically. Then refute a classmate who claims a fast-moving object on a flat v-t line is accelerating — explain what the flat slope actually tells you." }
+  ]
+}

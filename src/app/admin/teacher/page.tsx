@@ -24,11 +24,12 @@ const STEPS: { key: StepKey; label: string; desc: string; href?: string; cta: st
   { key: 'tour', label: 'Take the quick tour', desc: 'A 2-minute orientation to grading and the Control Room.', cta: 'Show me around', mark: false, action: 'tour', Icon: Compass },
 ]
 
-// Curriculum tracks. Only CPA is live; the others are reserved for the Honors,
-// AP, and Project-Based classes coming later (shown but disabled).
+// Curriculum tracks. CPA and Honors are live; AP and Project-Based come later
+// (shown but disabled). A class typed 'honors' unlocks the honors thread —
+// honors-only lessons and blocks become visible for that class.
 const TRACKS: { id: string; label: string; desc: string; enabled: boolean }[] = [
-  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the current curriculum.', enabled: true },
-  { id: 'honors', label: 'Honors Physics', desc: 'Coming soon.', enabled: false },
+  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the base curriculum.', enabled: true },
+  { id: 'honors', label: 'Honors Physics', desc: 'Extends CPA with the honors thread — deeper demand, same scope.', enabled: true },
   { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false },
   { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false },
 ]

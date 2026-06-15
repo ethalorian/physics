@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d18",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — one structure, not two units", "markdown": "Today the force tools come together. The honors move is to see that **kinematics and forces are not two separate subjects** — they're the front and back of a single machine. Force decides acceleration; acceleration decides how the motion unfolds. Connect the arc out loud." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Connect the arc — forces and kinematics are one structure\n\nTrace the chain you've built since Day 1:\n\n1. **Kinematics** gave you the language of *how* things move: position, velocity, acceleration — and the equations that link them.\n2. **Newton's laws** answered the *why*: $\\Sigma\\vec{F} = m\\vec{a}$ says the net force **sets** the acceleration.\n3. A **free-body diagram** is the bridge: it turns a physical situation into the one number — net force — that feeds $a = \\Sigma F / m$.\n\nSo the structure runs **one direction**: *forces → net force → acceleration → (back into kinematics) → the whole future motion.* Friction, the normal force, weight, tension — every contact force you've studied is just an input to that single pipeline. There was never a 'kinematics chapter' and a 'forces chapter.' There's one chain, and today you can finally see both ends of it at once. That is what it means to **own** Unit 1 rather than to have covered it." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "Forces connect to kinematics through ___. If I knew every force on the asteroid, the step that turns that into its future position is ___, because ___.", "prompt": "JUSTIFY: Explain, as a single connected chain, how a free-body diagram leads all the way to a prediction of an object's future position. Name each link (net force → acceleration → motion) and defend why you can't skip the middle step." },
+    { "id": "h4", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d18-forces-synthesis" }
+  ]
+}

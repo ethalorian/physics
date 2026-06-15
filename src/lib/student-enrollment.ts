@@ -28,6 +28,26 @@ export async function getEnrollment(userId: string): Promise<EnrollmentInfo> {
 }
 
 /**
+ * The curriculum track of a student's class(es), used to gate honors content.
+ * Honors wins if the student is in ANY honors course; otherwise the first
+ * course's track (or null). A student only sees honors blocks when this is
+ * 'honors' — so honors content stays hidden until a class is typed honors.
+ */
+export async function getStudentTrack(userId: string): Promise<string | null> {
+  if (!userId) return null
+  const { data } = await supabaseAdmin
+    .from('course_students')
+    .select('courses ( track )')
+    .eq('student_id', userId)
+  const tracks = ((data ?? []) as Array<{ courses: { track: string | null } | { track: string | null }[] | null }>)
+    .flatMap((r) => (Array.isArray(r.courses) ? r.courses : r.courses ? [r.courses] : []))
+    .map((c) => c.track)
+    .filter((t): t is string => !!t)
+  if (tracks.includes('honors')) return 'honors'
+  return tracks[0] ?? null
+}
+
+/**
  * Throw-style guard for API routes. Returns null if the request should proceed
  * (staff bypass, or enrolled student). Returns a NextResponse with 403 if the
  * caller is an un-enrolled student. Use like:

@@ -10,7 +10,10 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
     const body = await request.json()
     const { courseId, accessToken } = body
-    console.log('📋 Import request for course:', courseId)
+    // Class type chosen at import. Only honors is acted on here (cpa is the default);
+    // an invalid value is ignored rather than rejected.
+    const track: string | null = body.track === 'honors' || body.track === 'cpa' ? body.track : null
+    console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)')
 
     if (!courseId || !accessToken) {
       console.log('❌ Missing required fields')
@@ -56,6 +59,17 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
       }, { status: 500 })
     }
     console.log('✅ Course synced successfully, course UUID:', courseData)
+
+    // Apply the class type chosen at import. Matched by google_course_id (stable),
+    // so it works whether this is a first import or a re-sync.
+    if (track) {
+      const { error: trackError } = await supabaseAdmin
+        .from('courses')
+        .update({ track })
+        .eq('google_course_id', course.id)
+      if (trackError) console.error('⚠️ Could not set course track:', trackError.message)
+      else console.log('🏷️ Course typed as:', track)
+    }
 
     // Fetch students from Google Classroom
     console.log('👥 Fetching students from Google Classroom...')

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d10",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — three views, one motion", "markdown": "You've now built three ways to describe the same moving thing: a **graph** (position or velocity vs. time), an **equation** (the kinematics relations), and a **vector** (magnitude plus direction). The honors move today is to prove to yourself they're not three topics — they're one idea in three costumes." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Connect backward — tie the three together\n\nLook back across the last week and make the seams explicit:\n\n- The **slope** of a position–time graph *is* the velocity in your equations *is* the magnitude-and-sign of your velocity vector. Same number, three faces.\n- The **slope** of a velocity–time graph *is* the $a$ in $v = v_0 + at$ *is* how the velocity vector is changing.\n- The **area** under a velocity–time graph *is* the $\\Delta x$ that $\\Delta x = v_0 t + \\tfrac12 a t^2$ computes.\n\nIf you can read a value off the graph, you can find it from the equation, and you can point it as a vector. A motion you can only handle one way you don't really own yet — you've memorized a procedure, not understood the motion." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "On a velocity–time graph, the slope tells me ___ and the area tells me ___. The same two facts show up in my equations as ___ and ___, and as a vector they look like ___.", "prompt": "JUSTIFY (homework): Take one velocity–time graph from today. Read its slope and its area. Then show that the *same* two quantities fall out of the kinematics equations, and describe what each one is as a vector. Make the case that the graph, the equation, and the vector are telling one story — not three." },
+    { "id": "h4", "type": "callout", "visibilityTrack": "honors", "variant": "tip", "title": "Close forward", "markdown": "You can now fully describe *how* something moves. What you still can't say is *why* it moves that way — what makes the velocity change at all. That 'why' has a name, and it's the next thing we build: **force.** Hold onto the question." }
+  ]
+}

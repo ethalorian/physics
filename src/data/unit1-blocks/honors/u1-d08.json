@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d08",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — carry the model to the asteroid", "markdown": "You can now solve a constant-acceleration problem. The honors demand isn't another plug-in — it's dropping that model onto a problem you haven't seen, the one the whole year is about." },
+    { "id": "h2", "type": "asteroid_thread", "visibilityTrack": "honors", "whatWeKnow": "We have the kinematic equations for constant acceleration and we can choose the right one and defend the choice.", "connection": "A deflection plan would give 2026-XJ a small, steady push — a constant acceleration — over a long time. Today you reason about whether that's even enough to matter, using only Unit 1's tools, and you name what those tools still can't answer." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "Using $\\Delta x = v_0 t + \\tfrac{1}{2}at^2$, a tiny steady acceleration over a long time produces ___, which is why ___. But Unit 1 alone cannot tell me ___, because ___.", "prompt": "TRANSFER: Suppose a thruster could give 2026-XJ a tiny but constant sideways acceleration for the entire year before arrival. Using constant-acceleration reasoning (not a memorized number), explain why even a small acceleration applied over a very long time can build into a meaningful sideways displacement. Then name ONE thing Unit 1's kinematics still CANNOT answer about this deflection — and which later idea (force? mass thrown off? energy?) would be needed to answer it." },
+    { "id": "h4", "type": "callout", "visibilityTrack": "honors", "variant": "tip", "title": "Close forward", "markdown": "Kinematics tells us *what a motion does* if we already know the acceleration. It never tells us **what causes** that acceleration, or how big a push it takes to produce it. That 'how big a push?' question is the door into the next unit — Newton's laws and $F = ma$. The deflection story is just getting started." },
+    { "id": "h5", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d08-kinematics-transfer" }
+  ]
+}

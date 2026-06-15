@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d13",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — the cancellation trap", "markdown": "Newton's third law says forces come in equal-and-opposite pairs. Every student's first instinct is the same wrong one: *if they're equal and opposite, they cancel — so nothing should ever move.* The honors demand today is to defend, in prose, exactly why that reasoning fails." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Why the pair doesn't cancel\n\nHere's the key the CPA packet states and honors must *defend*: the two forces in a third-law pair **act on different objects.** When you push a wall, you push the wall and the wall pushes you. Those forces are equal and opposite — but one acts on the wall and one acts on you.\n\nForces only cancel when they act on the **same** object — that's what 'net force' means. A third-law pair never acts on the same object, so it *can't* cancel. To find whether *you* accelerate, you add up only the forces on *you* (the wall's push, friction, your weight) — the force you exert on the wall isn't in that sum at all, because it isn't acting on you. Confusing 'equal and opposite' (third law, two objects) with 'balanced' (net force, one object) is the single most common dynamics error." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "The two forces in a Newton's-third-law pair don't cancel because ___. Forces only cancel when ___, but a third-law pair always ___. So 'equal and opposite means it can't move' is wrong because ___.", "prompt": "JUSTIFY (homework): A classmate insists: 'Newton's third law forces are equal and opposite, so they cancel — nothing should ever be able to accelerate.' Take a concrete example (a rocket, a swimmer, you pushing off a wall) and defend in a paragraph why the equal-and-opposite pair does NOT cancel, and how something still accelerates. Be precise about *which object* each force acts on." }
+  ]
+}

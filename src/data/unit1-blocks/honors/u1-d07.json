@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d07",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — justify WHICH equation", "markdown": "There are several kinematic equations and they all look plausible. CPA plugs into the one that works. Honors chooses on purpose — and can say why the others don't apply." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Pick the equation by what's missing\n\nThe constant-acceleration equations each leave out exactly one variable:\n\n- $v = v_0 + at$ — no displacement $\\Delta x$.\n- $\\Delta x = v_0 t + \\tfrac{1}{2}at^2$ — no final velocity $v$.\n- $v^2 = v_0^2 + 2a\\,\\Delta x$ — no time $t$.\n\nSo the honest selection rule is: **list your knowns, identify your unknown, and pick the equation that contains your unknown and none of the variables you don't have.** You're not hunting for a formula that 'works' — you're matching the equation to the information you actually possess.\n\nAnd every one of them rests on one assumption: **acceleration is constant** over the interval. If $a$ changes, none of these apply." },
+    { "id": "h3", "type": "gewa", "visibilityTrack": "honors", "capture": true, "prompt": "A probe starts at $v_0 = 200$ m/s and accelerates uniformly at $a = 12$ m/s² over a displacement of $\\Delta x = 5{,}000$ m. Find its final velocity. In your work, FIRST state which kinematic equation you chose and WHY the other two don't fit this problem.", "givenHint": "You have v0, a, and Δx — and you are NOT given time t.", "equationHint": "Choose the equation that contains your unknown (v) and does NOT require the variable you're missing (t).", "equationOptions": ["v = v₀ + at", "Δx = v₀t + ½at²", "v² = v₀² + 2aΔx"] },
+    { "id": "h4", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "I chose $v^2 = v_0^2 + 2a\\Delta x$ because my knowns were ___ and my unknown was ___, and the other equations failed because ___. All of these assume ___.", "prompt": "JUSTIFY: Explain how you decided WHICH kinematic equation to use for the probe problem — name the variable that was missing and how that ruled the others out. Then name the assumption all three equations share." }
+  ]
+}

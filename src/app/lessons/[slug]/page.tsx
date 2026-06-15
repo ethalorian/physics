@@ -4,7 +4,9 @@ import { notFound } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
-import { getEnrollment } from '@/lib/student-enrollment'
+import { getEnrollment, getStudentTrack } from '@/lib/student-enrollment'
+import { filterDocumentForViewer, type Viewer } from '@/lib/track-visibility'
+import type { BlockDocument } from '@/data/content-blocks'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import LessonActivityTracker from '@/components/lessons/LessonActivityTracker'
 import EnrollmentGateScreen from '@/components/EnrollmentGateScreen'
@@ -106,6 +108,12 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   // Enrollment gate: an un-enrolled student must not see lesson content even
   // in the initial HTML. Server-side check + early return so nothing leaks.
   const sess = await auth()
+  // Resolve the viewer (role + class track) so honors-gated blocks are filtered.
+  // Staff (admin/teacher) preview the full document here; a student sees only the
+  // blocks for their class track — honors classes get honors blocks, CPA classes
+  // don't. Unauthenticated falls back to CPA, so honors never leaks publicly.
+  // (Per-section teacher scoping lives in the class-scoped teacher views.)
+  let viewer: Viewer = { role: 'student', track: null }
   if (sess?.user?.id && sess.user.email) {
     const sctx = await getEffectiveContext(sess.user.email)
     if (sctx.realRole === 'student') {
@@ -114,6 +122,9 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
         const firstName = (sess.user.name ?? '').split(' ')[0]
         return <EnrollmentGateScreen firstName={firstName} />
       }
+      viewer = { role: 'student', track: await getStudentTrack(sess.user.id) }
+    } else {
+      viewer = { role: 'admin' } // staff: full preview, nothing hidden
     }
   }
 
@@ -139,9 +150,14 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   // All lessons are curriculum block lessons now; the legacy viewer is retired.
   const nav = await getNav(lesson.unit, slug, gate)
 
+  // Drop honors-gated blocks this viewer's class shouldn't see.
+  const lessonForView = lesson.content_blocks
+    ? { ...lesson, content_blocks: filterDocumentForViewer(lesson.content_blocks as BlockDocument, viewer) }
+    : lesson
+
   return (
     <LessonActivityTracker lessonId={lesson.id}>
-      <BlockLessonViewer lesson={lesson} nav={nav} />
+      <BlockLessonViewer lesson={lessonForView} nav={nav} />
     </LessonActivityTracker>
   )
 }

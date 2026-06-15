@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d05",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — justify the decomposition", "markdown": "CPA breaks a vector into components using sine and cosine. Honors does the same — then defends **why** that trig is the right trig, instead of guessing which function goes where." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Why sine, why cosine?\n\nFor a vector of magnitude $R$ at angle $\\theta$ measured from the **+x axis**:\n\n- $R_x = R\\cos\\theta$ — the **adjacent** side of the right triangle the vector forms.\n- $R_y = R\\sin\\theta$ — the **opposite** side.\n\nThe choice isn't a rule to memorize; it follows from *where you measured the angle from*. Measure $\\theta$ from the y-axis instead and sine and cosine swap. So before decomposing, the honors question is always: **what is my angle measured from, and which leg of the triangle is that?**\n\nThe components must also rebuild the original: $R = \\sqrt{R_x^2 + R_y^2}$. If they don't, the decomposition is wrong — a built-in check." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "I used $R_x = R\\cos\\theta$ and $R_y = R\\sin\\theta$ because my angle $\\theta$ was measured from ___, which makes the x-component the ___ side of the triangle. If the angle were measured from ___ instead, I would ___.", "prompt": "JUSTIFY: For 2026-XJ's velocity at an angle, you split it into components. Explain WHY you assigned cosine to one axis and sine to the other — tie it to where the angle is measured from and which side of the right triangle each component is." },
+    { "id": "h4", "type": "callout", "visibilityTrack": "honors", "variant": "warning", "title": "State the assumption", "markdown": "Decomposing into perpendicular x and y components assumes those two axes are **independent** — motion along x doesn't affect motion along y. That independence is what lets us treat a 2-D problem as two separate 1-D problems. It's a powerful assumption; name it, because later (projectiles, forces on the asteroid) it's exactly the assumption that does the heavy lifting." }
+  ]
+}

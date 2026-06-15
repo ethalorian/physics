@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d16",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — equilibrium is a claim, not a coincidence", "markdown": "CPA writes ΣF = 0 when an object is at rest or moving at constant velocity. Honors treats that equation as a **claim you have to defend**: *I assert the forces sum to zero, here is the evidence, here is the reasoning.* A balanced free-body diagram is the beginning of an argument, not the end of one." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## What equilibrium actually asserts\n\nWhen $\\Sigma \\vec{F} = 0$, the acceleration is zero — *and that is the whole statement.* It does **not** say the object is at rest. A crate sliding across a floor at a steady 4 m/s is in equilibrium just as much as a crate sitting still: in both, velocity isn't changing, so the net force is zero.\n\nThis is where intuition fights you. The naive model says *'moving means there's a leftover force pushing it along.'* Equilibrium says the opposite: a thing can move forever at constant velocity with **zero** net force. The friction backward exactly cancels the push forward. To claim equilibrium, you must show **every component** sums to zero — not just the ones you happened to notice." },
+    { "id": "h3", "type": "callout", "visibilityTrack": "honors", "variant": "warning", "title": "State your assumptions", "markdown": "An equilibrium claim is only as good as the model under it. Before you write ΣF = 0, name what you're assuming: that you've drawn **every** force (no hidden ones), that the object is a **point** (no rotation/torque to worry about), and that the surface, string, or support is **rigid** and not accelerating. If any of those breaks, your tidy ΣF = 0 breaks with it." },
+    { "id": "h4", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "This object IS / IS NOT in equilibrium. My evidence is ___. The assumption my claim depends on most is ___, and it would break if ___.", "prompt": "JUSTIFY: A sign hangs motionless from two angled cables. A classmate says 'it's not moving, so there are no forces on it.' Defend the correct equilibrium claim instead: explain what ΣF = 0 really asserts here, cite the forces that cancel, and name the one assumption your claim leans on hardest." },
+    { "id": "h5", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d16-equilibrium" }
+  ]
+}

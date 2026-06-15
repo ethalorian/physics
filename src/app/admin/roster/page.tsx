@@ -59,6 +59,9 @@ export default function RosterPage() {
   const [grid, setGrid] = useState<GridData | null>(null)
   const [unitId, setUnitId] = useState('unit-1')
   const [importing, setImporting] = useState<string | null>(null)
+  // Class type chosen at import, per Google Classroom course (defaults to CPA).
+  // Honors unlocks the honors thread for that class.
+  const [trackFor, setTrackFor] = useState<Record<string, 'cpa' | 'honors'>>({})
   const [status, setStatus] = useState<string | null>(null)
   // Name editor (fixes how a student's name splits for the Aspen sort)
   const [roster, setRoster] = useState<RosterStudent[]>([])
@@ -152,10 +155,11 @@ export default function RosterPage() {
     setImporting(course.id)
     setStatus(null)
     try {
+      const track = trackFor[course.id] ?? 'cpa'
       const res = await fetch('/api/roster/import', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId: course.id, accessToken: session.accessToken }),
+        body: JSON.stringify({ courseId: course.id, accessToken: session.accessToken, track }),
       })
       const d = await res.json()
       if (!res.ok) throw new Error(d?.details || d?.error || 'Import failed')
@@ -253,14 +257,33 @@ export default function RosterPage() {
                       <div className="font-medium truncate" style={{ fontSize: 14 }}>{c.name}</div>
                       {c.section && <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
                     </div>
-                    <button
-                      onClick={() => importCourse(c)}
-                      disabled={importing === c.id}
-                      className="text-xs rounded-md border px-2.5 py-1.5 whitespace-nowrap"
-                      style={{ borderColor: 'var(--border)', background: already ? 'var(--card)' : 'color-mix(in oklch, var(--success) 14%, transparent)', color: already ? 'var(--muted-foreground)' : 'var(--foreground)' }}
-                    >
-                      {importing === c.id ? 'Importing…' : already ? 'Re-sync' : 'Import roster'}
-                    </button>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {/* Class type, chosen at import. Honors unlocks the honors thread for this class. */}
+                      <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Choose the class type. Honors unlocks the honors thread for this class.">
+                        {(['cpa', 'honors'] as const).map((t) => {
+                          const on = (trackFor[c.id] ?? 'cpa') === t
+                          return (
+                            <button
+                              key={t}
+                              type="button"
+                              onClick={() => setTrackFor((m) => ({ ...m, [c.id]: t }))}
+                              className="text-[11px] font-semibold px-2 py-1"
+                              style={{ background: on ? 'color-mix(in oklch, var(--primary) 16%, var(--card))' : 'var(--card)', color: on ? 'var(--primary)' : 'var(--muted-foreground)' }}
+                            >
+                              {t === 'cpa' ? 'CPA' : 'Honors'}
+                            </button>
+                          )
+                        })}
+                      </div>
+                      <button
+                        onClick={() => importCourse(c)}
+                        disabled={importing === c.id}
+                        className="text-xs rounded-md border px-2.5 py-1.5 whitespace-nowrap"
+                        style={{ borderColor: 'var(--border)', background: already ? 'var(--card)' : 'color-mix(in oklch, var(--success) 14%, transparent)', color: already ? 'var(--muted-foreground)' : 'var(--foreground)' }}
+                      >
+                        {importing === c.id ? 'Importing…' : already ? 'Re-sync' : 'Import roster'}
+                      </button>
+                    </div>
                   </div>
                 )
               })}

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d19",
+  "dayType": "WORKSHOP",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — rehearse the peer defense", "markdown": "On the transfer task you'll defend your reasoning **aloud** to a partner. Today is the dress rehearsal for that. While CPA closes practice gaps, honors also rehearses the AP1 move that the transfer task actually scores: defending a claim out loud, on the spot." },
+    { "id": "h2", "type": "callout", "visibilityTrack": "honors", "variant": "tip", "title": "The claim–evidence–reasoning defense", "markdown": "An AP1 defense has three parts, in order:\n\n- **Claim** — the one sentence you're asserting (e.g. *'the sign is in equilibrium'*).\n- **Evidence** — the specific facts that support it (the forces, the numbers, the diagram).\n- **Reasoning** — the *why* that links evidence to claim, **including the assumptions** it rests on and where they'd break.\n\nMost answers stop at evidence. The honors bar lives in the **reasoning** step — that's the part a fast, correct student skips, and the part a partner will probe. Practice saying all three without notes." },
+    { "id": "h3", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d19-defend-aloud" },
+    { "id": "h4", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "My weakest reasoning move is ___ (stating assumptions / linking evidence to claim / naming where a model breaks). To strengthen it before the transfer task I will ___.", "prompt": "PLAN: Of the three defense steps — claim, evidence, reasoning — which is your weakest when you have to do it ALOUD with no notes? Name the specific reasoning move you fumble most, and write a concrete plan to drill it before the transfer task." }
+  ]
+}

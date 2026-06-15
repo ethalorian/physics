@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d04",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — name the hidden assumption", "markdown": "When you compute velocity as $v = \\Delta x / \\Delta t$, you get *average* velocity over the interval. Treating that one number as 'the velocity' smuggles in an assumption. Honors names it." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## The constant-velocity assumption\n\nSuppose 2026-XJ covers $1.2 \\times 10^6$ km in 140 seconds, so $v = \\Delta x / \\Delta t \\approx 8{,}570$ m/s. It's tempting to say 'the asteroid moves at 8,570 m/s.'\n\nBut $\\Delta x / \\Delta t$ only gives the **average** over that interval. Calling it *the* velocity assumes the object moved at the **same speed the entire time** — that it never sped up or slowed down. If anything pulled on it mid-interval, the average is still correct but it no longer describes any single moment.\n\nThe assumption is invisible until you say it out loud: *I am treating this velocity as constant across the interval.*" },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "When I use $v = \\Delta x/\\Delta t$ I'm assuming ___. This assumption is safe when ___, but it would fail if ___.", "prompt": "NAME THE ASSUMPTION + JUSTIFY: You computed an average velocity today. State the assumption you make when you treat that average as 'the' velocity. Give one situation where the assumption is fine, and one where it would mislead you — and explain why." }
+  ]
+}

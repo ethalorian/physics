@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d20",
+  "dayType": "SYNTHESIS",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — dress rehearsal for the transfer task", "markdown": "CPA runs one integrated analysis of 2026-XJ today. Honors runs that **and** rehearses the two moves the transfer-task rubric scores hardest: *stating your assumptions* and *locating this unit in the arc.* Treat today as the full-dress run-through, not just review." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Rehearse the two honors moves\n\nAs you walk through the asteroid analysis, narrate two things CPA doesn't have to:\n\n**1. State every assumption — and when it breaks.** Your constant-velocity prediction quietly assumes: velocity stays constant, no forces act over this leg, the asteroid is a point particle, and the motion stays in a plane. For each, say the condition that would break it. An unstated assumption is the most common way an honors '4' collapses to a '3'.\n\n**2. Locate Unit 1 in the year.** Be honest about the **edge** of what you've built. Unit 1's tools predict a *straight-line* position from constant velocity. They **cannot** tell you why the path will eventually **curve** (that's gravity, a later unit) or what an **impact** would do (that's momentum, later still). Naming that edge is the connect move — an analysis that pretends to answer everything is island-bound, and island answers cap Transfer at 3." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "One thing Unit 1 CANNOT yet answer about 2026-XJ is ___. The unit that will have to answer it is ___, because ___.", "prompt": "JUSTIFY: Name one specific question about 2026-XJ that Unit 1's physics genuinely CANNOT answer — and say which later unit will have to pick it up, and why our current tools fall short. Be precise about the edge of what you've built." },
+    { "id": "h4", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d20-locate-the-arc" }
+  ]
+}

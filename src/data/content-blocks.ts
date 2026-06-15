@@ -20,10 +20,20 @@ export type BlockId = string;
 export type DayType =
   | 'ANCHOR' | 'STANDARD' | 'LAB' | 'WORKSHOP' | 'SYNTHESIS' | 'TRANSFER';
 
+/** Curriculum track (class type). `cpa` is the base curriculum; `honors` is the
+ *  honors thread that extends it. ap/pbl reserved. */
+export type TrackId = 'cpa' | 'honors' | 'ap' | 'pbl';
+
 interface BaseBlock {
   id: BlockId;
   /** Optional teacher/author note; never shown to students. */
   note?: string;
+  /**
+   * Curriculum-track gate. If set (e.g. 'honors'), this block is shown ONLY to
+   * classes of that track; CPA classes never see it. Undefined = visible to all
+   * tracks. See src/lib/track-visibility.ts for the filtering logic.
+   */
+  visibilityTrack?: TrackId;
 }
 
 // ---------------------------------------------------------------------------

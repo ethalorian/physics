@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "lessonSlug": "u1-d03",
+  "dayType": "STANDARD",
+  "blocks": [
+    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — graphs are claims", "markdown": "In Match-the-Graph you'll line up a motion to its position-time graph. CPA reads the graph. Honors reads it as a **claim about the world** — something that could be true or false — not just a picture to match." },
+    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## Read graphs as CLAIMS\n\nA position-time graph isn't decoration. It *asserts* specific things:\n\n- A **straight, rising line** claims: *this object moves at constant velocity, never speeding up or slowing down, over this whole interval.*\n- A **horizontal line** claims: *the object is at rest — its position does not change.*\n- A **curving** line claims: *the velocity itself is changing.*\n\nBecause each is a claim, each can be **falsified**. If you can describe a real motion the graph says is impossible — and then make that motion happen — you've proven the graph wrong. That's the honors move: don't just match the graph, *interrogate* what it forbids." },
+    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "This graph claims that ___. A motion that would make this graph FALSE is ___, because ___.", "prompt": "JUSTIFY: Pick one position-time graph from today. State the claim it makes about the motion. Then describe a specific motion that would make that graph FALSE — and explain how that motion contradicts what the graph asserts." }
+  ]
+}
