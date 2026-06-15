@@ -9,11 +9,11 @@ import { supabaseAdmin } from '@/lib/supabase'
 // global `published` flag (admin-only) is reflected here read-only.
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   const { data: owned } = await supabaseAdmin
-    .from('courses').select('id, name, section').eq('teacher_email', ctx.scopeEmail).order('section')
-  let classes = (owned ?? []) as { id: string; name: string; section: string | null }[]
+    .from('courses').select('id, name, section, track').eq('teacher_email', ctx.scopeEmail).order('section')
+  let classes = (owned ?? []) as { id: string; name: string; section: string | null; track: string | null }[]
   if (classes.length === 0 && ctx.role === 'admin') {
-    const { data: all } = await supabaseAdmin.from('courses').select('id, name, section').order('section')
-    classes = (all ?? []) as { id: string; name: string; section: string | null }[]
+    const { data: all } = await supabaseAdmin.from('courses').select('id, name, section, track').order('section')
+    classes = (all ?? []) as { id: string; name: string; section: string | null; track: string | null }[]
   }
   const courseIds = classes.map((c) => c.id)
 
@@ -23,6 +23,7 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
     .from('lessons')
     .select('id, title, slug, unit, lesson_number, published')
     .eq('published', true)
+    .order('unit', { ascending: true })
     .order('lesson_number', { ascending: true })
   const lessons = (lessonRows ?? []) as {
     id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean
