@@ -91,24 +91,33 @@ export async function ensureStudentRecord(
 
     // Student exists - return existing record.
     if (existingStudent) {
-      // SELF-HEAL the identity link. Every mastery/gradebook surface keys a
-      // student by students.google_user_id, while block work is stamped with
-      // session.user.id (the Google `sub`). If the row's google_user_id has
-      // drifted from the current auth id (stale seed, a re-created OAuth client,
-      // or an env repoint), the student's submitted work becomes invisible to
-      // grading. When we match a row by email but its id differs from the
-      // current auth userId, realign it so the roster identity tracks the auth
-      // identity. (Matching is by email, so this only fires for the same person.)
-      const patch: { updated_at: string; google_user_id?: string } = {
-        updated_at: new Date().toISOString(),
-      }
-      if (userId && existingStudent.google_user_id !== userId) {
-        patch.google_user_id = userId
-        console.log(`🔗 Realigning student ${email}: google_user_id ${existingStudent.google_user_id} → ${userId}`)
+      // PIN the identity link. The student's stable app id is the
+      // google_user_id already on their (unique-email) roster row — NOT whatever
+      // sub this particular login presented. (We used to overwrite it with the
+      // incoming sub, which made the roster "chase the newest sub" and stranded a
+      // person's avatar/XP/work under older ids whenever the sub drifted across
+      // OAuth-client changes or environments.) We now KEEP the canonical id and
+      // instead record the presented sub in student_identities, so a future login
+      // on a drifted sub resolves back to this same student. Matching is by email,
+      // so this only ever links identities belonging to the same person.
+      if (userId && existingStudent.google_user_id && existingStudent.google_user_id !== userId) {
+        await supabaseAdmin
+          .from('student_identities')
+          .upsert(
+            {
+              student_id: existingStudent.id,
+              provider: 'google',
+              provider_sub: userId,
+              email_at_link: email,
+              last_seen: new Date().toISOString(),
+            },
+            { onConflict: 'provider,provider_sub' },
+          )
+        console.log(`🔗 Linked alternate sub for ${email}: ${userId} → canonical ${existingStudent.google_user_id}`)
       }
       await supabaseAdmin
         .from('students')
-        .update(patch)
+        .update({ updated_at: new Date().toISOString() })
         .eq('id', existingStudent.id)
 
       return {
@@ -172,6 +181,54 @@ export async function ensureStudentRecord(
       error: error instanceof Error ? error.message : 'Unknown error'
     }
   }
+}
+
+/**
+ * Resolve the CANONICAL, stable app user id for a signed-in person.
+ *
+ * The app keys every work table on a single id per person. That id is pinned on
+ * the student's (unique-email) roster row as `google_user_id`; the raw OAuth
+ * `sub` a given device presents may differ (sub drift across OAuth clients or
+ * environments) and must NOT be used directly as the key. This resolves the
+ * verified email to the pinned id and records the presented sub for audit and
+ * future drift-mapping. Falls back to the presented sub only for a brand-new
+ * person with no roster row yet (their first login seeds it as canonical).
+ */
+export async function resolveCanonicalUserId(
+  email: string | null | undefined,
+  presentedSub: string,
+): Promise<string> {
+  const e = (email ?? '').trim()
+  if (!e) return presentedSub
+
+  const { data: student } = await supabaseAdmin
+    .from('students')
+    .select('id, google_user_id')
+    .ilike('email', e)
+    .maybeSingle()
+
+  // No roster row yet (e.g. a race before ensureStudentRecord): the presented
+  // sub becomes this person's canonical id when their row is created.
+  if (!student?.google_user_id) return presentedSub
+
+  // Record the sub this device presented, linked to the canonical student, so a
+  // future login on a drifted sub resolves back here instead of forking.
+  if (presentedSub && presentedSub !== student.google_user_id) {
+    await supabaseAdmin
+      .from('student_identities')
+      .upsert(
+        {
+          student_id: student.id,
+          provider: 'google',
+          provider_sub: presentedSub,
+          email_at_link: e,
+          last_seen: new Date().toISOString(),
+        },
+        { onConflict: 'provider,provider_sub' },
+      )
+  }
+
+  return student.google_user_id
 }
 
 /**

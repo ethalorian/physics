@@ -11,7 +11,7 @@ import {
   logOAuthClientUsage,
   validateOAuthConfig
 } from './oauth-security'
-import { ensureStudentRecord } from './student-management'
+import { ensureStudentRecord, resolveCanonicalUserId } from './student-management'
 import { getUserRole } from './permissions'
 import { getGrantedRole, requestTeacherAccess } from './roles'
 import { isSchoolStudentEmail, isSchoolStaffEmail } from './access'
@@ -210,7 +210,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const credentials = await getCredentials()
       
       if (user) {
-        token.sub = user.id;
+        // Key the session on the person's CANONICAL, stable app id (pinned on
+        // their roster row), resolved from the verified email — NOT the raw
+        // OAuth `sub`, which drifts across OAuth clients/environments and was the
+        // root cause of avatar/XP/progress fragmenting across devices. The
+        // presented sub (user.id) is recorded as a linked identity for audit.
+        // ensureStudentRecord (signIn callback) has already created/found the
+        // row by this point, so the canonical id is available; brand-new users
+        // fall back to their presented sub, which seeds it as canonical.
+        token.sub = await resolveCanonicalUserId(user.email, user.id).catch(() => user.id);
         token.role = await resolveUserRole(user.email);
         // Stamp the moment of (re)authentication so the cutoff below can tell a
         // fresh sign-in from a pre-cutoff token.
@@ -225,7 +233,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (token.role === 'admin' || token.role === 'teacher') {
           try { await recordStaffLogin(user.email) } catch (e) { console.error('presence login record failed:', e) }
         }
-        try { await recordStudentLogin(user.id) } catch (e) { console.error('student login record failed:', e) }
+        try { await recordStudentLogin(token.sub) } catch (e) { console.error('student login record failed:', e) }
       }
 
       // Populate role for pre-existing sessions (post-deploy) that predate this
