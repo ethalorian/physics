@@ -81,6 +81,7 @@ export const GET = withAuth(async (request, ctx) => {
           description: course.description,
           student_count: countByCourse.get(course.id) ?? course.student_count ?? 0,
           teacher_email: course.teacher_email,
+          track: course.track ?? null,
           created_at: course.created_at,
           updated_at: course.updated_at
         }))

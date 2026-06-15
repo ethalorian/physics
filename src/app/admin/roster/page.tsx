@@ -23,6 +23,7 @@ interface ImportedCourse {
   name: string
   section: string | null
   student_count: number
+  track: string | null
 }
 interface GridStudent { id: string; name: string; email: string }
 interface RosterStudent { id: string; name: string; first_name: string | null; last_name: string | null }
@@ -150,12 +151,33 @@ export default function RosterPage() {
     )
   }
 
+  // The track shown/used for a course: a fresh local choice wins, else the saved
+  // track on the imported course, else CPA.
+  const trackOf = (gid: string): 'cpa' | 'honors' =>
+    trackFor[gid] ?? ((imported.find((i) => i.google_course_id === gid)?.track === 'honors') ? 'honors' : 'cpa')
+
+  // Change a course's class type. For an already-imported course, persist it
+  // immediately (so it survives a reload); otherwise hold it for import time.
+  const setCourseTrack = async (gid: string, t: 'cpa' | 'honors') => {
+    setTrackFor((m) => ({ ...m, [gid]: t }))
+    const imp = imported.find((i) => i.google_course_id === gid)
+    if (!imp) return
+    setImported((list) => list.map((i) => (i.id === imp.id ? { ...i, track: t } : i)))
+    try {
+      await fetch('/api/teacher/courses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ course_id: imp.id, track: t }),
+      })
+    } catch { /* UI already updated; will reconcile on next load */ }
+  }
+
   const importCourse = async (course: GClassCourse) => {
     if (!session?.accessToken) return
     setImporting(course.id)
     setStatus(null)
     try {
-      const track = trackFor[course.id] ?? 'cpa'
+      const track = trackOf(course.id)
       const res = await fetch('/api/roster/import', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -261,14 +283,14 @@ export default function RosterPage() {
                       {/* Class type, chosen at import. Honors unlocks the honors thread for this class. */}
                       <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Choose the class type. Honors unlocks the honors thread for this class.">
                         {(['cpa', 'honors'] as const).map((t) => {
-                          const on = (trackFor[c.id] ?? 'cpa') === t
+                          const on = trackOf(c.id) === t
                           return (
                             <button
                               key={t}
                               type="button"
-                              onClick={() => setTrackFor((m) => ({ ...m, [c.id]: t }))}
+                              onClick={() => setCourseTrack(c.id, t)}
                               className="text-[11px] font-semibold px-2 py-1"
-                              style={{ background: on ? 'color-mix(in oklch, var(--primary) 16%, var(--card))' : 'var(--card)', color: on ? 'var(--primary)' : 'var(--muted-foreground)' }}
+                              style={{ background: on ? 'var(--primary)' : 'var(--card)', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}
                             >
                               {t === 'cpa' ? 'CPA' : 'Honors'}
                             </button>
