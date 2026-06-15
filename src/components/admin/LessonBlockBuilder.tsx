@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
-import { BlockDocument } from '@/data/content-blocks'
+import { BlockDocument, type ContentBlock } from '@/data/content-blocks'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
+import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
+import { filterDocumentForViewer, type Viewer } from '@/lib/track-visibility'
 import PhysicsDiagram from '@/components/blocks/PhysicsDiagram'
 import FigureGraph from '@/components/blocks/FigureGraph'
 import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, MCAS_SYMBOLS } from '@/data/physics-reference'
@@ -155,6 +158,23 @@ export default function LessonBlockBuilder({
   const [removingId, setRemovingId] = useState<string | null>(null)
   const flash = (id: string) => { setFlashId(id); window.setTimeout(() => setFlashId((c) => (c === id ? null : c)), 850) }
 
+  // ── Play preview: render the live blocks interactively, with throwaway state ──
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [viewAs, setViewAs] = useState<'author' | 'cpa' | 'honors'>('author')
+  const [play, setPlay] = useState<BlockResponseMap>({})
+  const playSave = (id: string, _type: string, value: unknown) =>
+    setPlay((m) => ({ ...m, [id]: { response: value, created_at: new Date().toISOString() } }))
+
+  const liveBlocks = useMemo<ContentBlock[]>(() => blocks.map((b) => {
+    const def = DEF_BY_TYPE.get(b.type)
+    return { id: b.id, type: b.type, ...(def?.capture ? { capture: true } : {}), ...b.data } as unknown as ContentBlock
+  }), [blocks])
+  const shownBlocks = useMemo<ContentBlock[]>(() => {
+    if (viewAs === 'author') return liveBlocks
+    const viewer: Viewer = { role: 'student', track: viewAs }
+    return filterDocumentForViewer({ schemaVersion: 1, blocks: liveBlocks }, viewer).blocks
+  }, [liveBlocks, viewAs])
+
   useEffect(() => {
     fetch('/api/simulations')
       .then((r) => r.json())
@@ -229,14 +249,18 @@ export default function LessonBlockBuilder({
           <select value={dayType} onChange={(e) => setDayType(e.target.value)} className="rounded-lg border px-3 py-2 text-sm" style={inputStyle}>
             {DAY_TYPES.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
-          <Link href={`/lessons/${lessonSlug}`} target="_blank" className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Preview ↗</Link>
+          <button onClick={() => setPreviewOpen((v) => !v)} className="rounded-lg border px-3 py-2 text-sm font-semibold"
+            style={{ borderColor: previewOpen ? 'var(--primary)' : 'var(--border)', color: previewOpen ? 'var(--primary)' : 'var(--foreground)', background: previewOpen ? 'color-mix(in oklch, var(--primary) 10%, transparent)' : 'transparent' }}>
+            {previewOpen ? '▣ Playing' : '▷ Play'}
+          </button>
+          <Link href={`/lessons/${lessonSlug}`} target="_blank" className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Open ↗</Link>
           <button onClick={save} disabled={saving} className="rounded-lg px-4 py-2 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>{saving ? 'Saving…' : 'Save lesson'}</button>
           {msg && <span className="text-sm" style={{ color: msg.includes('✓') ? 'var(--success)' : 'var(--destructive)' }}>{msg}</span>}
         </div>
       </div>
       <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>Add blocks, fill them in, reorder, and save. Saving writes the lesson — no deploy needed.</p>
 
-      <div className="grid gap-5 md:grid-cols-[minmax(0,1fr)_220px]">
+      <div className="grid gap-5" style={{ gridTemplateColumns: previewOpen ? 'minmax(0,1fr) 188px minmax(320px,1fr)' : 'minmax(0,1fr) 220px' }}>
         {/* block list */}
         <div className="flex flex-col gap-3 order-2 md:order-1">
           {blocks.length === 0 && <p className="text-sm rounded-xl border p-6 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No blocks yet — add one from the palette.</p>}
@@ -250,9 +274,20 @@ export default function LessonBlockBuilder({
                 overflow: removing ? 'hidden' : undefined,
                 animation: removing ? 'bbOut 0.26s ease forwards' : flashing ? 'bbFlash 0.85s ease' : undefined,
               }}>
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between gap-2 mb-3">
                   <span className="text-sm font-bold">{def?.label ?? b.type}{def?.capture ? <span className="ml-2 text-xs font-semibold" style={{ color: 'var(--reward-foreground)' }}>captures work</span> : null}</span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
+                    {/* Per-block visibility: All tracks / CPA only / Honors only */}
+                    <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Who sees this block">
+                      {([['All', undefined], ['CPA', 'cpa'], ['Honors', 'honors']] as const).map(([lbl, val]) => {
+                        const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
+                        return (
+                          <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)}
+                            className="text-[10px] font-semibold px-1.5 py-0.5"
+                            style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
+                        )
+                      })}
+                    </div>
                     <button onClick={() => moveBlock(b.id, -1)} disabled={i === 0} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move up">↑</button>
                     <button onClick={() => moveBlock(b.id, 1)} disabled={i === blocks.length - 1} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move down">↓</button>
                     <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-2 py-1 rounded" style={{ border: '1px solid var(--border)', color: 'var(--destructive)' }} aria-label="remove">✕</button>
@@ -293,6 +328,36 @@ export default function LessonBlockBuilder({
             ))}
           </div>
         </div>
+
+        {/* live, interactive play preview */}
+        {previewOpen && (
+          <div className="order-3">
+            <div className="rounded-xl border sticky top-4" style={{ borderColor: 'var(--border)', background: 'var(--card)', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
+              <div className="flex items-center justify-between gap-2 p-3 border-b" style={{ borderColor: 'var(--border)' }}>
+                <div className="flex items-center gap-1">
+                  {(['author', 'cpa', 'honors'] as const).map((v) => {
+                    const on = viewAs === v
+                    return (
+                      <button key={v} onClick={() => setViewAs(v)} className="text-xs font-semibold rounded-full px-2.5 py-1"
+                        style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: `1px solid ${on ? 'transparent' : 'var(--border)'}` }}>
+                        {v === 'author' ? 'Author' : v === 'cpa' ? 'CPA' : 'Honors'}
+                      </button>
+                    )
+                  })}
+                </div>
+                <button onClick={() => setPlay({})} className="text-xs" style={{ color: 'var(--muted-foreground)', background: 'none', border: 'none', cursor: 'pointer' }} title="Clear your play responses">reset</button>
+              </div>
+              <div className="px-3 pt-2 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+                Play mode — solve, rate, and type into blocks to feel the student view. Nothing here is saved. {viewAs !== 'author' && <>Viewing as a <strong>{viewAs.toUpperCase()}</strong> student: honors-gated blocks {viewAs === 'honors' ? 'show' : 'hide'}.</>}
+              </div>
+              <div className="p-3">
+                {shownBlocks.length === 0
+                  ? <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{liveBlocks.length === 0 ? 'Add a block to play with it.' : `Nothing visible to a ${viewAs} student here.`}</p>
+                  : <BlockRenderer blocks={shownBlocks} lessonId={`play:${lessonId}`} responses={play} save={playSave} />}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
