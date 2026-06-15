@@ -171,7 +171,7 @@ $$;
 --    Returns one row per (email, loser) action taken — empty when nothing to do.
 -- ----------------------------------------------------------------------------
 create or replace function public.consolidate_fragmented_identities()
-returns table (email text, canonical text, merged_loser text)
+returns table (out_email text, out_canonical text, out_loser text)  -- out_* names avoid clashing with table columns referenced inside
 language plpgsql
 as $$
 declare
@@ -203,14 +203,15 @@ begin
     where user_id is not null and user_email is not null;
 
   -- Also fold in the id currently pinned on the roster row (it may not appear in
-  -- any work table yet but is still one of the person's identities).
+  -- any work table yet but is still one of the person's identities). NOT EXISTS
+  -- guard because the temp table has no unique constraint to dedupe against.
   insert into _bridge
     select s.google_user_id, lower(s.email) from public.students s
     where s.google_user_id is not null
-    on conflict do nothing;
+      and not exists (select 1 from _bridge b where b.user_id = s.google_user_id and b.email = lower(s.email));
 
   for r_email in
-    select email from _bridge group by email having count(distinct user_id) > 1
+    select b.email from _bridge b group by b.email having count(distinct b.user_id) > 1
   loop
     -- Canonical = the richest fragment: prefer a completed/custom avatar, then
     -- the most accumulated work, then deterministic by id.
@@ -230,8 +231,8 @@ begin
     limit 1;
 
     -- Pin the roster link to the canonical id (drops the "chase newest sub" drift).
-    update public.students set google_user_id = v_canon, updated_at = now()
-     where lower(email) = r_email;
+    update public.students s set google_user_id = v_canon, updated_at = now()
+     where lower(s.email) = r_email;
 
     -- Repoint every losing fragment onto canonical, and record it as a linked
     -- identity so a future login presenting that sub resolves to this student.
@@ -244,7 +245,7 @@ begin
 
       perform public.merge_user_identity(v_canon, r_loser);
 
-      email := r_email; canonical := v_canon; merged_loser := r_loser;
+      out_email := r_email; out_canonical := v_canon; out_loser := r_loser;
       return next;
     end loop;
   end loop;

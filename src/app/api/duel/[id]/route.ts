@@ -145,7 +145,7 @@ async function creditGhostDefense(m: MatchRow): Promise<void> {
     const { data } = await supabaseAdmin
       .from('students')
       .select('email')
-      .eq('google_user_id', m.host_id)
+      .eq('id', m.host_id)
       .maybeSingle()
     await supabaseAdmin.from('vocabulary_game_scores').insert({
       user_id: m.host_id,

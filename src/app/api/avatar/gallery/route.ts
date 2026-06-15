@@ -31,10 +31,10 @@ export const GET = withAuth(async (_request, ctx) => {
 
   // names (alias preferred; fall back to name; never expose email)
   const { data: students } = await supabaseAdmin
-    .from('students').select('google_user_id, alias, name').in('google_user_id', userIds)
+    .from('students').select('id, alias, name').in('id', userIds)
   const nameByUser = new Map<string, string>()
-  for (const s of (students ?? []) as { google_user_id: string | null; alias: string | null; name: string | null }[]) {
-    if (s.google_user_id) nameByUser.set(s.google_user_id, s.alias || s.name || 'Student')
+  for (const s of (students ?? []) as { id: string | null; alias: string | null; name: string | null }[]) {
+    if (s.id) nameByUser.set(s.id, s.alias || s.name || 'Student')
   }
 
   // resolve every equipped slug → a shared AvatarItem catalog the client renders

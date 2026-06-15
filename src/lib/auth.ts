@@ -210,15 +210,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       const credentials = await getCredentials()
       
       if (user) {
-        // Key the session on the person's CANONICAL, stable app id (pinned on
-        // their roster row), resolved from the verified email — NOT the raw
-        // OAuth `sub`, which drifts across OAuth clients/environments and was the
-        // root cause of avatar/XP/progress fragmenting across devices. The
-        // presented sub (user.id) is recorded as a linked identity for audit.
-        // ensureStudentRecord (signIn callback) has already created/found the
-        // row by this point, so the canonical id is available; brand-new users
-        // fall back to their presented sub, which seeds it as canonical.
-        token.sub = await resolveCanonicalUserId(user.email, user.id).catch(() => user.id);
+        // Key the session on the person's CANONICAL, stable app id — the
+        // `students.id` uuid — resolved from the presented OAuth sub (via
+        // student_identities) or the verified email. The raw OAuth `sub`
+        // (user.id) is only a credential and is recorded as a linked identity;
+        // it must NOT be the work-table key, since it drifts across OAuth
+        // clients/environments and was the root cause of avatar/XP/progress
+        // fragmenting across devices. ensureStudentRecord (signIn callback) has
+        // already created/found the students row by this point, so the canonical
+        // id resolves; only a transient race (no row yet) falls back to the
+        // presented sub as a placeholder.
+        const presentedSub = user.id ?? '';
+        token.sub = (await resolveCanonicalUserId(user.email, presentedSub).catch(() => null)) ?? presentedSub;
         token.role = await resolveUserRole(user.email);
         // Stamp the moment of (re)authentication so the cutoff below can tell a
         // fresh sign-in from a pre-cutoff token.

@@ -70,12 +70,12 @@ export const GET = withAuth(async (request, ctx) => {
   // alias + avatar for self and every groupmate
   const gids = Array.from(new Set([ctx.userId, ...groupMates.map((x) => x.user_id)]))
   const [{ data: studs }, avatars] = await Promise.all([
-    supabaseAdmin.from('students').select('google_user_id, alias, name').in('google_user_id', gids),
+    supabaseAdmin.from('students').select('id, alias, name').in('id', gids),
     getAvatarData(gids),
   ])
   const aliasByGid = new Map<string, string>()
-  for (const s of (studs ?? []) as { google_user_id: string | null; alias: string | null; name: string | null }[]) {
-    if (s.google_user_id) aliasByGid.set(s.google_user_id, s.alias || s.name || 'Student')
+  for (const s of (studs ?? []) as { id: string | null; alias: string | null; name: string | null }[]) {
+    if (s.id) aliasByGid.set(s.id, s.alias || s.name || 'Student')
   }
   const bundle = (gid: string) => ({
     alias: aliasByGid.get(gid) ?? 'Student',

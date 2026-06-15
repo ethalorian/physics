@@ -30,7 +30,7 @@ export const GET = withAuth(async (request, ctx) => {
       supabaseAdmin
         .from('students')
         .select('alias')
-        .eq('google_user_id', userId)
+        .eq('id', userId)
         .maybeSingle(),
     ])
 

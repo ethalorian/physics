@@ -71,17 +71,16 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
     // Test sync_student function
     try {
       const { error } = await supabaseAdmin.rpc('sync_student', {
-        p_google_user_id: 'test-user-id',
         p_email: 'test@example.com',
         p_name: 'Test Student',
         p_course_id: 'test-course-id'
       })
       tests.sync_student_function = !error
       console.log('✅ sync_student function exists:', tests.sync_student_function)
-      
+
       // Clean up test data
       if (!error) {
-        await supabaseAdmin.from('students').delete().eq('google_user_id', 'test-user-id')
+        await supabaseAdmin.from('students').delete().eq('email', 'test@example.com')
       }
     } catch (err) {
       console.log('❌ sync_student function test failed:', err)

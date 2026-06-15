@@ -12,20 +12,20 @@ const HOUR = 60 * 60 * 1000
 const WEEK = 7 * 24 * HOUR
 const AGED = 48 * HOUR
 
-type GidRow = { google_user_id: string | null }
+type GidRow = { id: string | null }
 type BrRow = { user_id: string; created_at: string }
 type MrRow = { user_id: string; observed_at: string }
 
 export const GET = withAuth(async (_request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    // students in scope (keyed by google_user_id — see teacher-scope.ts)
+    // students in scope (keyed by students.id — see teacher-scope.ts)
     let studentIds: string[] = []
     if (ctx.role === 'teacher') {
       studentIds = await getTeacherStudentGids(ctx.scopeEmail)
     } else {
-      const { data } = await supabaseAdmin.from('students').select('google_user_id')
-      studentIds = [...new Set(((data ?? []) as GidRow[]).map((s) => s.google_user_id).filter((g): g is string => Boolean(g)))]
+      const { data } = await supabaseAdmin.from('students').select('id')
+      studentIds = [...new Set(((data ?? []) as GidRow[]).map((s) => s.id).filter((g): g is string => Boolean(g)))]
     }
 
     // classes (teacher: owned; admin: all)

@@ -36,9 +36,9 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   // Names + mastery levels for the joined students (target-filtered when set).
   const { data: studs } = await supabaseAdmin
-    .from('students').select('google_user_id, name').in('google_user_id', gids)
+    .from('students').select('id, name').in('id', gids)
   const nameByGid = new Map<string, string>()
-  for (const st of studs ?? []) if (st.google_user_id) nameByGid.set(st.google_user_id, st.name ?? 'Student')
+  for (const st of studs ?? []) if (st.id) nameByGid.set(st.id, st.name ?? 'Student')
 
   let mq = supabaseAdmin.from('mastery_records').select('user_id, level').in('user_id', gids)
   if (s.target_id) mq = mq.eq('target_id', s.target_id)

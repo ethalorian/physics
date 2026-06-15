@@ -37,13 +37,13 @@ export const GET = withRole('admin', async (_request, ctx) => {
       ;(teachersByStudentUuid.get(e.student_id) ?? teachersByStudentUuid.set(e.student_id, new Set()).get(e.student_id)!).add(te)
     }
 
-    const students = await safe(async () => (await supabaseAdmin.from('students').select('id, google_user_id')).data ?? [], [] as { id: string; google_user_id: string | null }[])
-    const teachersByGid = new Map<string, Set<string>>()       // student gid → their teacher emails (mastery attribution)
+    const students = await safe(async () => (await supabaseAdmin.from('students').select('id')).data ?? [], [] as { id: string }[])
+    const teachersByGid = new Map<string, Set<string>>()       // students.id → their teacher emails (mastery attribution)
     const studentIds: string[] = []
     for (const s of students) {
-      if (s.google_user_id) studentIds.push(s.google_user_id)
+      studentIds.push(s.id)
       const tes = teachersByStudentUuid.get(s.id)
-      if (s.google_user_id && tes) teachersByGid.set(s.google_user_id, tes)
+      if (tes) teachersByGid.set(s.id, tes)
     }
 
     // ---- per-teacher aggregate ----------------------------------------------

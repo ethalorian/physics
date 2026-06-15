@@ -93,9 +93,10 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId}) to section: ${sectionName}`)
 
         // Use the new sync_student_with_section function that handles section assignment
+        // Identity is carried by the synthetic internal email (which embeds the
+        // Google sub); the students row no longer stores the sub as a column.
         const { data: studentData, error: studentError } = await supabaseAdmin
           .rpc('sync_student_with_section', {
-            p_google_user_id: googleUserId,
             p_email: internalEmail,
             p_name: fullName,
             p_photo_url: null,
@@ -110,7 +111,6 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
           
           const { data: fallbackData, error: fallbackError } = await supabaseAdmin
             .rpc('sync_student', {
-              p_google_user_id: googleUserId,
               p_email: internalEmail,
               p_name: fullName,
               p_photo_url: null,
@@ -136,11 +136,13 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         }
 
         // Persist the authoritative name parts (the sync RPCs only take the
-        // full name). Keyed on the Google user id, which is unique per student.
+        // full name). Keyed on the synthetic internal email, which embeds the
+        // Google sub and is unique per student (the sub column is gone —
+        // identity now lives in student_identities / students.id).
         const { error: nameError } = await supabaseAdmin
           .from('students')
           .update({ first_name: firstName, last_name: lastName })
-          .eq('google_user_id', googleUserId)
+          .eq('email', internalEmail)
         if (nameError) console.error(`  ⚠️ Could not store name parts for ${fullName}:`, nameError.message)
       } catch (studentErr) {
         console.error(`  ❌ Exception processing student:`, studentErr)

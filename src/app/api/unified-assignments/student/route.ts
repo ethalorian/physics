@@ -19,7 +19,7 @@ export const GET = withAuth(async (request, ctx) => {
         studentEmail = requestedEmail
       } else if (ctx.role === 'teacher') {
         const gids = await getTeacherStudentGids(ctx.scopeEmail)
-        const { data: roster } = await supabaseAdmin.from('students').select('email').in('google_user_id', gids)
+        const { data: roster } = await supabaseAdmin.from('students').select('email').in('id', gids)
         const allowed = (roster ?? []).some((s: { email: string | null }) => s.email === requestedEmail)
         if (!allowed) return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
         studentEmail = requestedEmail

@@ -142,12 +142,12 @@ export const GET = withAuth(async (request, ctx) => {
   }
 
   // Does any section this student is in have the translation toggle on? Only then
-  // do we expose the Translate option (google_user_id → students.id → courses).
+  // do we expose the Translate option. targetUserId IS students.id, which equals
+  // course_students.student_id, so we look up enrollments directly.
   let translationEnabled = false
   {
-    const { data: s } = await supabaseAdmin.from('students').select('id').eq('google_user_id', targetUserId).maybeSingle()
-    if (s?.id) {
-      const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', s.id)
+    if (targetUserId) {
+      const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', targetUserId)
       const courseIds = (cs ?? []).map((c) => c.course_id)
       if (courseIds.length > 0) {
         const { data: en } = await supabaseAdmin.from('courses').select('id').in('id', courseIds).eq('math_translation_enabled', true).limit(1)

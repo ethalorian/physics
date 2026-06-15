@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
 
-// GET /api/mastery/student-work?user_id=<google_user_id>&unit_id=unit-1
+// GET /api/mastery/student-work?user_id=<students.id>&unit_id=unit-1
 // Feeds the rate-from-work drawer: the student's submitted block work across the
 // unit's lessons (latest per block) + their mastery rating history per target.
 

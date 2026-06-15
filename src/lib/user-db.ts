@@ -8,9 +8,10 @@ import { supabaseAdmin } from '@/lib/supabase'
  * The roster-aware RLS policies (rls2_read on the student-data tables) only engage
  * when a query runs as the *authenticated user* rather than the service role. This
  * module mints a short-lived Supabase-compatible JWT from the NextAuth session
- * (sub = google_user_id, email) and returns a client that carries it, so PostgREST
+ * (email-keyed) and returns a client that carries it, so PostgREST
  * runs the query under that identity and the RLS policies become a real backstop:
  * even if a route forgot to scope, the database returns only rows the caller may see.
+ * (The token is keyed on email; app_uid() maps email → students.id, the work-table key.)
  *
  * SAFETY / ROLLOUT: this is OFF by default. `getScopedDb` returns the normal service-
  * role client UNLESS `SUPABASE_RLS_USER_CLIENT === 'on'` AND `SUPABASE_JWT_SECRET` is
@@ -30,10 +31,10 @@ const ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? process.env.SUPABA
 /**
  * Mint a Supabase-compatible JWT for this user (HS256, short TTL).
  *
- * Deliberately email-keyed, with NO `sub`: most google_user_id values are not
- * uuid-format, and Supabase's auth.uid() casts sub::uuid (which would throw). The
- * RLS policies resolve the caller's identity from `email` (app_uid() maps email →
- * google_user_id), so email is all that's needed and there is no uuid landmine.
+ * Deliberately email-keyed, with NO `sub`: the RLS policies resolve the caller's
+ * identity from `email` (app_uid() maps email → students.id), so email is all
+ * that's needed. Keeping the sub out also avoids Supabase's auth.uid() casting
+ * sub::uuid on a non-uuid value (which would throw).
  */
 export function mintSupabaseToken(email: string): string | null {
   if (!JWT_SECRET) return null

@@ -6,8 +6,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 // Admin-only. Merges the duplicate row INTO the canonical row:
 //   1. Move course_students.student_id from dup → canonical (skip if already
 //      enrolled there).
-//   2. Re-key any work tables that key by google_user_id from dup's
-//      google_user_id → canonical's google_user_id (only if they differ).
+//   2. Re-key any work tables that key by students.id (work-table user_id) from
+//      dup's id → canonical's id.
 //   3. Delete the dup students row.
 // The caller chooses which row is canonical (usually the row WITH work and
 // the real school email).
@@ -33,12 +33,10 @@ export const POST = withRole('admin', async (request) => {
     }
 
     // Fetch both rows.
-    const { data: canonical } = await supabaseAdmin.from('students').select('id, google_user_id').eq('id', canonicalId).maybeSingle()
-    const { data: dup } = await supabaseAdmin.from('students').select('id, google_user_id').eq('id', dupId).maybeSingle()
+    const { data: canonical } = await supabaseAdmin.from('students').select('id').eq('id', canonicalId).maybeSingle()
+    const { data: dup } = await supabaseAdmin.from('students').select('id').eq('id', dupId).maybeSingle()
     if (!canonical) return NextResponse.json({ error: 'Canonical row not found' }, { status: 404 })
     if (!dup) return NextResponse.json({ error: 'Duplicate row not found' }, { status: 404 })
-    const canonicalRow = canonical as { id: string; google_user_id: string | null }
-    const dupRow = dup as { id: string; google_user_id: string | null }
 
     // 1) Move enrollments. Watch for "already enrolled in same course" — we
     //    can't blindly update because the (course, student) UNIQUE would clash.
@@ -58,19 +56,18 @@ export const POST = withRole('admin', async (request) => {
       await supabaseAdmin.from('course_students').delete().in('id', enrollDeletes)
     }
 
-    // 2) Re-key work tables only if google_user_ids actually differ.
+    // 2) Re-key work tables from dup's id → canonical's id (work-table user_id
+    //    is students.id now). The ids always differ (validated above).
     const rekeyResults: Record<string, number | string> = {}
-    if (dupRow.google_user_id && canonicalRow.google_user_id && dupRow.google_user_id !== canonicalRow.google_user_id) {
-      for (const table of REKEY_TABLES) {
-        const { error, count } = await supabaseAdmin
-          .from(table)
-          .update({ user_id: canonicalRow.google_user_id }, { count: 'exact' })
-          .eq('user_id', dupRow.google_user_id)
-        if (error) {
-          rekeyResults[table] = `error: ${error.message}`
-        } else {
-          rekeyResults[table] = count ?? 0
-        }
+    for (const table of REKEY_TABLES) {
+      const { error, count } = await supabaseAdmin
+        .from(table)
+        .update({ user_id: canonicalId }, { count: 'exact' })
+        .eq('user_id', dupId)
+      if (error) {
+        rekeyResults[table] = `error: ${error.message}`
+      } else {
+        rekeyResults[table] = count ?? 0
       }
     }
 

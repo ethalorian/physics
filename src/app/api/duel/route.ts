@@ -21,7 +21,7 @@ async function displayName(userId: string, fallback: string): Promise<string> {
   const { data } = await supabaseAdmin
     .from('students')
     .select('alias, name')
-    .eq('google_user_id', userId)
+    .eq('id', userId)
     .maybeSingle()
   const s = data as { alias: string | null; name: string | null } | null
   return s?.alias || s?.name || fallback

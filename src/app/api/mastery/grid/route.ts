@@ -9,7 +9,7 @@ import { resolveRosterScope } from '@/lib/teacher-scope'
 // in a unit, with the current rolled-up level per cell (decaying average of the
 // student's records for that target). Powers the teacher control room centerpiece.
 
-type StudentRow = { google_user_id: string | null; name: string; email: string }
+type StudentRow = { id: string | null; name: string; email: string }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { user_id: string; target_id: string; level: number; observed_at: string }
 type UnitRow = { id: string; name: string; order_index: number }
@@ -43,14 +43,14 @@ export const GET = withAuth(async (request, ctx) => {
     // Students (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin
       .from('students')
-      .select('google_user_id, name, email')
+      .select('id, name, email')
       .order('name', { ascending: true })
     const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
-    if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
+    if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: studentRowsRaw } = await sQuery
     const students = ((studentRowsRaw ?? []) as StudentRow[])
-      .filter((s) => s.google_user_id)
-      .map((s) => ({ id: s.google_user_id as string, name: s.name, email: s.email }))
+      .filter((s) => s.id)
+      .map((s) => ({ id: s.id as string, name: s.name, email: s.email }))
     const studentIds = students.map((s) => s.id)
 
     // All records for those students on those targets

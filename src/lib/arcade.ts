@@ -56,10 +56,10 @@ export async function displayNames(userIds: string[]): Promise<Map<string, strin
   if (userIds.length === 0) return names
   const { data } = await supabaseAdmin
     .from('students')
-    .select('google_user_id, name, alias')
-    .in('google_user_id', userIds)
-  for (const s of (data ?? []) as { google_user_id: string | null; name: string | null; alias: string | null }[]) {
-    if (s.google_user_id) names.set(s.google_user_id, s.alias || s.name || 'Student')
+    .select('id, name, alias')
+    .in('id', userIds)
+  for (const s of (data ?? []) as { id: string | null; name: string | null; alias: string | null }[]) {
+    if (s.id) names.set(s.id, s.alias || s.name || 'Student')
   }
   return names
 }

@@ -49,13 +49,13 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   let avatars: Awaited<ReturnType<typeof getAvatarData>> = { items: [], byUser: {} }
   if (gids.length) {
     const [{ data: studs }, av] = await Promise.all([
-      supabaseAdmin.from('students').select('google_user_id, name, email').in('google_user_id', gids),
+      supabaseAdmin.from('students').select('id, name, email').in('id', gids),
       getAvatarData(gids),
     ])
-    for (const s of (studs ?? []) as { google_user_id: string | null; name: string | null; email: string | null }[]) {
-      if (s.google_user_id) {
-        nameByGid.set(s.google_user_id, s.name ?? 'Student')
-        if (s.email) emailByGid.set(s.google_user_id, s.email)
+    for (const s of (studs ?? []) as { id: string | null; name: string | null; email: string | null }[]) {
+      if (s.id) {
+        nameByGid.set(s.id, s.name ?? 'Student')
+        if (s.email) emailByGid.set(s.id, s.email)
       }
     }
     avatars = av

@@ -24,7 +24,7 @@ export const GET = withAuth(async (request, ctx) => {
     // Scope to the asker (teacher → own roster; admin → all) and optionally to
     // one class. scope.gids === null means "no filter" (admin, no class).
     const scope = await resolveRosterScope({ classId: courseId, role: ctx.role, scopeEmail: ctx.scopeEmail })
-    if (scope.gids) query = query.in('google_user_id', scope.gids)
+    if (scope.gids) query = query.in('id', scope.gids)
     if (activeOnly) {
       query = query.eq('is_active', true)
       query = query.eq('enrollment_state', 'ACTIVE')
@@ -77,10 +77,9 @@ export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
 
     // A teacher may only edit a student on their own roster (admins unrestricted).
     if (ctx.role === 'teacher') {
-      const { data: stu } = await supabaseAdmin.from('students').select('google_user_id').eq('id', id).maybeSingle()
       const gids = await getTeacherStudentGids(ctx.scopeEmail)
-      const gid = (stu as { google_user_id: string | null } | null)?.google_user_id
-      if (!gid || !gids.includes(gid)) {
+      // `id` is students.id, which is exactly the value getTeacherStudentGids returns.
+      if (!gids.includes(id)) {
         return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
       }
     }

@@ -48,7 +48,7 @@ export async function grantEarnedCarParts(userId: string): Promise<void> {
   )
   if (toGrant.length === 0) return
 
-  const { data: stud } = await supabaseAdmin.from('students').select('email').eq('google_user_id', userId).maybeSingle()
+  const { data: stud } = await supabaseAdmin.from('students').select('email').eq('id', userId).maybeSingle()
   const rows = toGrant.map((p: { id: string; name: string }) => ({
     user_id: userId,
     user_email: stud?.email ?? null,

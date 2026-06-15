@@ -57,8 +57,7 @@ export const POST = withAuth(async (request, ctx) => {
         .from('students')
         .insert({
           email: ctx.email,
-          name: ctx.session.user.name || ctx.email.split('@')[0],
-          google_user_id: ctx.userId || `user_${Date.now()}`
+          name: ctx.session.user.name || ctx.email.split('@')[0]
         })
         .select()
         .single()

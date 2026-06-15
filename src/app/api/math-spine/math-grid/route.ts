@@ -8,7 +8,7 @@ import { decayingAverage, MathStrand } from '@/data/curriculum-types'
 // The control-room "Math" view: every roster student x every active competency,
 // with the rolled-up whole-year value per cell (decaying average) and a count of
 // pending warm-up submissions awaiting review. Mirrors /api/mastery/grid.
-type StudentRow = { google_user_id: string | null; name: string; email: string }
+type StudentRow = { id: string | null; name: string; email: string }
 
 export const GET = withAuth(async (request, ctx) => {
   const role = ctx.role
@@ -33,13 +33,13 @@ export const GET = withAuth(async (request, ctx) => {
   const competencyIds = competencies.map((c) => c.id)
 
   // Students (same scoping as the rest of the control room).
-  let sQuery = supabaseAdmin.from('students').select('google_user_id, name, email').order('name', { ascending: true })
+  let sQuery = supabaseAdmin.from('students').select('id, name, email').order('name', { ascending: true })
   const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
-  if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
+  if (scope.gids) sQuery = sQuery.in('id', scope.gids)
   const { data: sr } = await sQuery
   const students = ((sr ?? []) as StudentRow[])
-    .filter((s) => s.google_user_id)
-    .map((s) => ({ id: s.google_user_id as string, name: s.name, email: s.email }))
+    .filter((s) => s.id)
+    .map((s) => ({ id: s.id as string, name: s.name, email: s.email }))
   const studentIds = students.map((s) => s.id)
 
   const cells: Record<string, Record<string, { value: number | null; count: number; pending: number }>> = {}

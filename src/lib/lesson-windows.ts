@@ -14,12 +14,11 @@ function within(w: { open_at: string | null; close_at: string | null }, now: num
   return openOk && closeOk
 }
 
-// The courses a student is enrolled in (by google_user_id → students.id → course_students).
-async function getStudentCourseIds(googleUserId: string): Promise<string[]> {
-  const { data: s } = await supabaseAdmin.from('students').select('id').eq('google_user_id', googleUserId).maybeSingle()
-  const sid = (s as { id?: string } | null)?.id
-  if (!sid) return []
-  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', sid)
+// The courses a student is enrolled in. The incoming id IS students.id, which
+// equals course_students.student_id, so we query enrollments directly.
+async function getStudentCourseIds(studentId: string): Promise<string[]> {
+  if (!studentId) return []
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId)
   return [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => String(r.course_id)))]
 }
 
@@ -28,10 +27,10 @@ async function getStudentCourseIds(googleUserId: string): Promise<string[]> {
 // class the student is in has an open window currently in effect.
 // (No enrollment / no window → closed.)
 export async function getStudentLessonGate(
-  googleUserId: string,
+  studentId: string,
   now: number = Date.now(),
 ): Promise<(lessonId: string) => boolean> {
-  const courseIds = await getStudentCourseIds(googleUserId)
+  const courseIds = await getStudentCourseIds(studentId)
   if (courseIds.length === 0) return () => false
 
   const { data } = await supabaseAdmin
@@ -65,10 +64,10 @@ export type LessonWindowStatus =
   | { state: 'closed'; closed_at: string | null }
 
 export async function getStudentLessonWindowStatuses(
-  googleUserId: string,
+  studentId: string,
   now: number = Date.now(),
 ): Promise<Record<string, LessonWindowStatus>> {
-  const courseIds = await getStudentCourseIds(googleUserId)
+  const courseIds = await getStudentCourseIds(studentId)
   if (courseIds.length === 0) return {}
 
   const { data } = await supabaseAdmin

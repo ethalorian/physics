@@ -11,11 +11,11 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const classId = new URL(request.url).searchParams.get('class')
   const scope = await resolveRosterScope({ classId, role: ctx.role as 'admin' | 'teacher', scopeEmail: ctx.scopeEmail })
 
-  let q = supabaseAdmin.from('students').select('google_user_id, last_login')
-  if (scope.gids) q = q.in('google_user_id', scope.gids.length ? scope.gids : ['__none__'])
+  let q = supabaseAdmin.from('students').select('id, last_login')
+  if (scope.gids) q = q.in('id', scope.gids.length ? scope.gids : ['__none__'])
   const { data: studs } = await q
-  const rows = ((studs ?? []) as { google_user_id: string | null; last_login: string | null }[]).filter((s) => s.google_user_id)
-  const gids = rows.map((s) => s.google_user_id as string)
+  const rows = ((studs ?? []) as { id: string | null; last_login: string | null }[]).filter((s) => s.id)
+  const gids = rows.map((s) => s.id as string)
 
   const lastActByGid = new Map<string, number>()
   if (gids.length > 0) {
@@ -30,7 +30,7 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   }
 
   const presence = rows.map((s) => {
-    const gid = s.google_user_id as string
+    const gid = s.id as string
     const login = s.last_login ? new Date(s.last_login).getTime() : 0
     const seen = Math.max(login, lastActByGid.get(gid) ?? 0)
     return { gid, lastLoginAt: s.last_login ?? null, lastSeenAt: seen ? new Date(seen).toISOString() : null }

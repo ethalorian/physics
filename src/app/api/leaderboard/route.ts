@@ -45,11 +45,12 @@ export const GET = withAuth(async (request, ctx) => {
     }
 
     // Get student names + aliases + images + avatar bundles from the roster.
-    // Lookup is by `google_user_id` because the work tables (game_scores,
-    // lesson_progress, submissions) key by session.user.id, which lives in
-    // students.google_user_id — NOT in students.id (uuid).
+    // Lookup is by `id` because the work tables (game_scores, lesson_progress,
+    // submissions) key by session.user.id, which IS students.id (uuid).
     const userIds = Array.from(userDataMap.keys())
     // Carry the students.id (uuid) per user so we can resolve avatar rows below.
+    // (It equals the work-table user_id now, but we keep the map for the
+    // student_row_id field below.)
     const studentRowIdByUser = new Map<string, string>()
     // Carry use_custom_avatar + traits + equipped per user for the client.
     const avatarByUser = new Map<string, { use_custom_avatar: boolean; traits: Record<string, string> | null; equipped: Record<string, string> }>()
@@ -57,21 +58,20 @@ export const GET = withAuth(async (request, ctx) => {
     if (userIds.length > 0) {
       const { data: students } = await supabaseAdmin
         .from('students')
-        .select('id, google_user_id, name, alias, email, profile_image')
-        .in('google_user_id', userIds)
+        .select('id, name, alias, email, profile_image')
+        .in('id', userIds)
 
-      students?.forEach((student: { id: string; google_user_id: string | null; name: string | null; alias: string | null; email: string | null; profile_image: string | null }) => {
-        if (!student.google_user_id) return
-        const userData = userDataMap.get(student.google_user_id)
+      students?.forEach((student: { id: string; name: string | null; alias: string | null; email: string | null; profile_image: string | null }) => {
+        const userData = userDataMap.get(student.id)
         if (userData) {
           // Prefer alias for the peer-facing leaderboard; fall back to real name.
           userData.name = student.alias || student.name || undefined
           userData.image = student.profile_image
-          studentRowIdByUser.set(student.google_user_id, student.id)
+          studentRowIdByUser.set(student.id, student.id)
         }
       })
 
-      // Avatar bundles keyed by google_user_id (student_avatars.user_id).
+      // Avatar bundles keyed by students.id (student_avatars.user_id).
       const { data: avs } = await supabaseAdmin
         .from('student_avatars')
         .select('user_id, traits, equipped, use_custom_avatar, setup_completed')

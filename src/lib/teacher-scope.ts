@@ -4,12 +4,13 @@ import { supabaseAdmin } from '@/lib/supabase'
 //
 // The students table has NO teacher_email column — a teacher's students are those
 // enrolled in the courses that teacher owns. So scoping flows:
-//   courses (teacher_email) -> course_students (student_id UUID) -> students (google_user_id)
+//   courses (teacher_email) -> course_students (student_id UUID == students.id)
 //
-// Returns google_user_ids, because every mastery surface keys students by
-// google_user_id (== session.user.id == mastery_records.user_id), NOT the table UUID.
-// An empty array means "this teacher has no rostered students" — callers should pass
-// it straight to `.in('google_user_id', gids)`, which correctly yields no rows.
+// Returns students.id values, because every work table keys students by
+// students.id (== session.user.id == work-table user_id). The course_students
+// .student_id UUIDs ARE those ids, so no students-table hop is needed.
+// An empty array means "this teacher has no rostered students" — callers should
+// pass it straight to `.in('user_id', gids)`, which correctly yields no rows.
 export async function getTeacherStudentGids(teacherEmail: string): Promise<string[]> {
   const { data: courseRows } = await supabaseAdmin
     .from('courses')
@@ -22,27 +23,20 @@ export async function getTeacherStudentGids(teacherEmail: string): Promise<strin
     .from('course_students')
     .select('student_id')
     .in('course_id', courseIds)
-  const studentUuids = [...new Set(((csRows ?? []) as { student_id: string }[]).map((r) => r.student_id))]
-  if (studentUuids.length === 0) return []
-
-  const { data: studentRows } = await supabaseAdmin
-    .from('students')
-    .select('google_user_id')
-    .in('id', studentUuids)
   return [...new Set(
-    ((studentRows ?? []) as { google_user_id: string | null }[])
-      .map((s) => s.google_user_id)
+    ((csRows ?? []) as { student_id: string | null }[])
+      .map((r) => r.student_id)
       .filter((g): g is string => Boolean(g)),
   )]
 }
 
 // The emails of all students on a teacher's roster. Some surfaces key student
-// data by email (student_email) rather than google_user_id; this gives the
-// roster set to constrain those queries. Empty array = no rostered students.
+// data by email (student_email) rather than students.id; this gives the roster
+// set to constrain those queries. Empty array = no rostered students.
 export async function getTeacherStudentEmails(teacherEmail: string): Promise<string[]> {
   const gids = await getTeacherStudentGids(teacherEmail)
   if (gids.length === 0) return []
-  const { data } = await supabaseAdmin.from('students').select('email').in('google_user_id', gids)
+  const { data } = await supabaseAdmin.from('students').select('email').in('id', gids)
   return [...new Set(
     ((data ?? []) as { email: string | null }[])
       .map((s) => s.email)
@@ -51,22 +45,19 @@ export async function getTeacherStudentEmails(teacherEmail: string): Promise<str
 }
 
 // The course ids a student is enrolled in. Used to resolve their per-period
-// reward store (rewards placed in those courses).
-export async function getStudentCourseIds(studentGid: string): Promise<string[]> {
-  const { data: stud } = await supabaseAdmin.from('students').select('id').eq('google_user_id', studentGid).maybeSingle()
-  const sid = (stud as { id: string } | null)?.id
-  if (!sid) return []
-  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', sid)
+// reward store (rewards placed in those courses). The incoming id IS students.id,
+// which equals course_students.student_id — no students-table lookup needed.
+export async function getStudentCourseIds(studentId: string): Promise<string[]> {
+  if (!studentId) return []
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId)
   return [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => r.course_id).filter(Boolean))]
 }
 
 // The emails of the teacher(s) whose courses a student is enrolled in. Used to
 // resolve which curated store(s) a student should see (their teacher's rewards).
-export async function getStudentTeacherEmails(studentGid: string): Promise<string[]> {
-  const { data: stud } = await supabaseAdmin.from('students').select('id').eq('google_user_id', studentGid).maybeSingle()
-  const sid = (stud as { id: string } | null)?.id
-  if (!sid) return []
-  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', sid)
+export async function getStudentTeacherEmails(studentId: string): Promise<string[]> {
+  if (!studentId) return []
+  const { data: cs } = await supabaseAdmin.from('course_students').select('course_id').eq('student_id', studentId)
   const courseIds = [...new Set(((cs ?? []) as { course_id: string }[]).map((r) => r.course_id))]
   if (courseIds.length === 0) return []
   const { data: courses } = await supabaseAdmin.from('courses').select('teacher_email').in('id', courseIds)
@@ -77,23 +68,16 @@ export async function getStudentTeacherEmails(studentGid: string): Promise<strin
   )]
 }
 
-// The google_user_ids of students enrolled in ONE specific course.
+// The students.id values of students enrolled in ONE specific course.
 // Used to scope a surface to a single class (the per-class drill-in).
 export async function getCourseStudentGids(courseId: string): Promise<string[]> {
   const { data: csRows } = await supabaseAdmin
     .from('course_students')
     .select('student_id')
     .eq('course_id', courseId)
-  const studentUuids = [...new Set(((csRows ?? []) as { student_id: string }[]).map((r) => r.student_id))]
-  if (studentUuids.length === 0) return []
-
-  const { data: studentRows } = await supabaseAdmin
-    .from('students')
-    .select('google_user_id')
-    .in('id', studentUuids)
   return [...new Set(
-    ((studentRows ?? []) as { google_user_id: string | null }[])
-      .map((s) => s.google_user_id)
+    ((csRows ?? []) as { student_id: string | null }[])
+      .map((r) => r.student_id)
       .filter((g): g is string => Boolean(g)),
   )]
 }
@@ -109,7 +93,7 @@ export async function getCourseOwnerEmail(courseId: string): Promise<string | nu
   return (data as { teacher_email: string | null } | null)?.teacher_email ?? null
 }
 
-// True if a teacher is allowed to act on a given student (by google_user_id).
+// True if a teacher is allowed to act on a given student (by students.id).
 export async function teacherCanAccessStudent(teacherEmail: string, studentGid: string): Promise<boolean> {
   const gids = await getTeacherStudentGids(teacherEmail)
   return gids.includes(studentGid)
@@ -137,7 +121,7 @@ export async function resolveTargetStudent(opts: {
   return allowed ? { ok: true, userId: requestedUserId } : { ok: false }
 }
 
-// Resolve which student google_user_ids a mastery surface should show.
+// Resolve which student ids (students.id) a mastery surface should show.
 //  - class given  → that class's students (teachers only for classes they own;
 //                   a teacher asking for someone else's class gets [] = no rows)
 //  - no class, teacher → all of that teacher's students

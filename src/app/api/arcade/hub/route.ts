@@ -80,10 +80,10 @@ export const GET = withAuth(async (request, ctx) => {
     if (ranked.length > 0) {
       const { data: studs } = await supabaseAdmin
         .from('students')
-        .select('google_user_id, name, alias')
-        .in('google_user_id', ranked.map((r) => r.id))
-      for (const s of (studs ?? []) as { google_user_id: string | null; name: string | null; alias: string | null }[]) {
-        if (s.google_user_id) nameById.set(s.google_user_id, s.alias || s.name || 'Student')
+        .select('id, name, alias')
+        .in('id', ranked.map((r) => r.id))
+      for (const s of (studs ?? []) as { id: string | null; name: string | null; alias: string | null }[]) {
+        if (s.id) nameById.set(s.id, s.alias || s.name || 'Student')
       }
     }
     const myRank = ranked.findIndex((r) => r.id === uid) + 1 || null

@@ -23,9 +23,9 @@ export const GET = withAuth(async (_request, ctx) => {
   } else {
     const { data: allStudents } = await supabaseAdmin
       .from('students')
-      .select('google_user_id')
+      .select('id')
     gids = (allStudents ?? [])
-      .map((s) => s.google_user_id)
+      .map((s) => s.id)
       .filter((g): g is string => Boolean(g))
   }
   const rosterSize = gids.length

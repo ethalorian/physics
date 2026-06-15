@@ -31,7 +31,7 @@ export const GET = withAuth(async (_req, ctx) => {
   // student email for the assignment tables (they key by email)
   let email: string | null = null
   try {
-    const { data: s } = await supabaseAdmin.from('students').select('email').eq('google_user_id', me).maybeSingle()
+    const { data: s } = await supabaseAdmin.from('students').select('email').eq('id', me).maybeSingle()
     email = s?.email ?? null
   } catch { /* ignore */ }
 
@@ -66,9 +66,9 @@ export const GET = withAuth(async (_req, ctx) => {
     const rows = (data ?? []) as { id: string; challenger_user_id: string; created_at: string }[]
     if (rows.length) {
       const ids = rows.map((r) => r.challenger_user_id)
-      const { data: studs } = await supabaseAdmin.from('students').select('google_user_id, alias, name').in('google_user_id', ids)
+      const { data: studs } = await supabaseAdmin.from('students').select('id, alias, name').in('id', ids)
       const nameBy = new Map<string, string>()
-      for (const s of (studs ?? []) as { google_user_id: string | null; alias: string | null; name: string | null }[]) if (s.google_user_id) nameBy.set(s.google_user_id, s.alias || s.name || 'A classmate')
+      for (const s of (studs ?? []) as { id: string | null; alias: string | null; name: string | null }[]) if (s.id) nameBy.set(s.id, s.alias || s.name || 'A classmate')
       for (const r of rows) {
         items.push({ id: `duel:${r.id}`, type: 'duel', title: 'Duel challenge', detail: `${nameBy.get(r.challenger_user_id) ?? 'A classmate'} challenged you`, at: r.created_at, href: '/leaderboard', unread: isUnread(r.created_at) })
       }

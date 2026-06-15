@@ -10,7 +10,6 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export interface DuplicateRow {
   id: string
-  google_user_id: string | null
   email: string | null
   name: string | null
   created_at: string | null
@@ -30,9 +29,9 @@ export const GET = withRole('admin', async () => {
     // 1) Find names that appear in students more than once.
     const { data: allStudents } = await supabaseAdmin
       .from('students')
-      .select('id, google_user_id, email, name, created_at')
+      .select('id, email, name, created_at')
       .order('created_at', { ascending: true })
-    type RawRow = { id: string; google_user_id: string | null; email: string | null; name: string | null; created_at: string | null }
+    type RawRow = { id: string; email: string | null; name: string | null; created_at: string | null }
     const rows = (allStudents ?? []) as RawRow[]
     const byName = new Map<string, RawRow[]>()
     for (const r of rows) {
@@ -48,14 +47,14 @@ export const GET = withRole('admin', async () => {
     }
 
     const allDupIds = dupNames.flatMap(([, list]) => list.map((r) => r.id))
-    const allDupGoogleIds = dupNames.flatMap(([, list]) => list.map((r) => r.google_user_id).filter((x): x is string => !!x))
 
-    // 2) Enrollment + activity counts in batches.
+    // 2) Enrollment + activity counts in batches. Work tables key by
+    //    students.id now, so the same id set drives every count.
     const [{ data: enrolled }, { data: br }, { data: lp }, { data: gs }] = await Promise.all([
       supabaseAdmin.from('course_students').select('student_id').in('student_id', allDupIds),
-      supabaseAdmin.from('block_responses').select('user_id').in('user_id', allDupGoogleIds),
-      supabaseAdmin.from('lesson_progress').select('user_id').in('user_id', allDupGoogleIds),
-      supabaseAdmin.from('vocabulary_game_scores').select('user_id').in('user_id', allDupGoogleIds),
+      supabaseAdmin.from('block_responses').select('user_id').in('user_id', allDupIds),
+      supabaseAdmin.from('lesson_progress').select('user_id').in('user_id', allDupIds),
+      supabaseAdmin.from('vocabulary_game_scores').select('user_id').in('user_id', allDupIds),
     ])
     const enrolledSet = new Set((enrolled ?? []).map((r) => (r as { student_id: string }).student_id))
     const tally = (arr: { user_id: string }[] | null | undefined) => {
@@ -71,15 +70,14 @@ export const GET = withRole('admin', async () => {
       name: list[0].name ?? name,
       rows: list.map((r): DuplicateRow => ({
         id: r.id,
-        google_user_id: r.google_user_id,
         email: r.email,
         name: r.name,
         created_at: r.created_at,
         is_classroom_stub: (r.email ?? '').endsWith('@classroom.local'),
         enrolled: enrolledSet.has(r.id),
-        block_responses: r.google_user_id ? brMap.get(r.google_user_id) ?? 0 : 0,
-        lesson_progress: r.google_user_id ? lpMap.get(r.google_user_id) ?? 0 : 0,
-        game_scores: r.google_user_id ? gsMap.get(r.google_user_id) ?? 0 : 0,
+        block_responses: brMap.get(r.id) ?? 0,
+        lesson_progress: lpMap.get(r.id) ?? 0,
+        game_scores: gsMap.get(r.id) ?? 0,
       })),
     }))
 

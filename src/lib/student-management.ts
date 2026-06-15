@@ -9,7 +9,6 @@ interface StudentRecord {
   id: string
   email: string
   name: string
-  google_user_id: string
   created_at: string
 }
 
@@ -21,24 +20,49 @@ interface EnsureStudentResult {
 }
 
 /**
+ * Record (upsert) the OAuth sub a login presented as a linked identity for a
+ * known student. Keyed on (provider, provider_sub) so re-logins are idempotent
+ * and a drifted sub resolves back to this same student on the next sign-in.
+ */
+async function linkPresentedSub(
+  studentId: string,
+  presentedSub: string,
+  email: string,
+): Promise<void> {
+  if (!presentedSub) return
+  await supabaseAdmin
+    .from('student_identities')
+    .upsert(
+      {
+        student_id: studentId,
+        provider: 'google',
+        provider_sub: presentedSub,
+        email_at_link: email,
+        last_seen: new Date().toISOString(),
+      },
+      { onConflict: 'provider,provider_sub' },
+    )
+}
+
+/**
  * Ensure student record exists in database
  * Creates record automatically on first sign-in if missing
  * @param email Student's email address
- * @param userId Google user ID (from OAuth)
+ * @param presentedSub Google OAuth sub (a credential, NOT the app id)
  * @param name Student's display name
  * @returns Student record and creation status
  */
 export async function ensureStudentRecord(
   email: string,
-  userId: string,
+  presentedSub: string,
   name?: string | null
 ): Promise<EnsureStudentResult> {
   try {
-    // Check if student already exists by email
+    // Check if student already exists by email (case-insensitive)
     const lookup = await supabaseAdmin
       .from('students')
       .select('*')
-      .eq('email', email)
+      .ilike('email', email)
       .maybeSingle()
     const fetchError = lookup.error
     // `existingStudent` is `let` because the stub-reclaim path below may
@@ -54,12 +78,14 @@ export async function ensureStudentRecord(
     // The Google Classroom roster sync writes synthetic emails of the form
     // `<google_sub>@classroom.local` when Classroom doesn't return a real
     // address. Those rows are correctly enrolled in course_students but their
-    // email and google_user_id don't match what a real sign-in produces, so
-    // the email-lookup above misses them and we'd otherwise create a duplicate
-    // account. Before that, try a NAME-MATCH against any @classroom.local stub
-    // and reclaim it: take it over with the real email + this session's
-    // google_user_id. Only fires when exactly ONE stub matches the name (so
-    // name collisions in a big roster fall through to create-new safely).
+    // email doesn't match what a real sign-in produces, so the email-lookup
+    // above misses them and we'd otherwise create a duplicate account. Before
+    // that, try a NAME-MATCH against any @classroom.local stub and reclaim it:
+    // KEEP the stub row (and its stable students.id, which all enrollment +
+    // work keys point at) and just relink the real email onto it, plus record
+    // this session's presented sub as a linked identity. Only fires when exactly
+    // ONE stub matches the name (so name collisions in a big roster fall through
+    // to create-new safely).
     if (!existingStudent && name) {
       const cleanName = name.trim()
       if (cleanName.length > 0) {
@@ -75,7 +101,6 @@ export async function ensureStudentRecord(
             .from('students')
             .update({
               email,
-              google_user_id: userId,
               updated_at: new Date().toISOString(),
             })
             .eq('id', stub.id)
@@ -91,30 +116,13 @@ export async function ensureStudentRecord(
 
     // Student exists - return existing record.
     if (existingStudent) {
-      // PIN the identity link. The student's stable app id is the
-      // google_user_id already on their (unique-email) roster row — NOT whatever
-      // sub this particular login presented. (We used to overwrite it with the
-      // incoming sub, which made the roster "chase the newest sub" and stranded a
-      // person's avatar/XP/work under older ids whenever the sub drifted across
-      // OAuth-client changes or environments.) We now KEEP the canonical id and
-      // instead record the presented sub in student_identities, so a future login
-      // on a drifted sub resolves back to this same student. Matching is by email,
-      // so this only ever links identities belonging to the same person.
-      if (userId && existingStudent.google_user_id && existingStudent.google_user_id !== userId) {
-        await supabaseAdmin
-          .from('student_identities')
-          .upsert(
-            {
-              student_id: existingStudent.id,
-              provider: 'google',
-              provider_sub: userId,
-              email_at_link: email,
-              last_seen: new Date().toISOString(),
-            },
-            { onConflict: 'provider,provider_sub' },
-          )
-        console.log(`🔗 Linked alternate sub for ${email}: ${userId} → canonical ${existingStudent.google_user_id}`)
-      }
+      // Record the sub this device presented as a linked identity, keyed to the
+      // student's stable id. We never write the sub onto the students row (that
+      // column is gone); the app id is students.id. Recording the presented sub
+      // here means a future login on a drifted sub resolves back to this same
+      // student. Matching is by email, so this only ever links identities
+      // belonging to the same person.
+      await linkPresentedSub(existingStudent.id, presentedSub, email)
       await supabaseAdmin
         .from('students')
         .update({ updated_at: new Date().toISOString() })
@@ -122,18 +130,19 @@ export async function ensureStudentRecord(
 
       return {
         success: true,
-        student: { ...existingStudent, ...(patch.google_user_id ? { google_user_id: userId } : {}) },
+        student: existingStudent,
         isNew: false
       }
     }
 
-    // Student doesn't exist - create new record
+    // Student doesn't exist - create new record. Let students.id default/gen;
+    // it becomes this person's canonical app id. The presented sub is recorded
+    // separately in student_identities (never on the students row).
     const studentName = name || email.split('@')[0] || 'Student'
-    
+
     const { data: newStudent, error: createError } = await supabaseAdmin
       .from('students')
       .insert({
-        google_user_id: userId,
         email: email,
         name: studentName,
         photo_url: null,
@@ -150,10 +159,11 @@ export async function ensureStudentRecord(
         const { data: raceStudent } = await supabaseAdmin
           .from('students')
           .select('*')
-          .eq('email', email)
+          .ilike('email', email)
           .single()
-        
+
         if (raceStudent) {
+          await linkPresentedSub(raceStudent.id, presentedSub, email)
           return {
             success: true,
             student: raceStudent,
@@ -166,8 +176,11 @@ export async function ensureStudentRecord(
       return { success: false, error: createError.message }
     }
 
+    // Record the presented sub as this new student's first linked identity.
+    await linkPresentedSub(newStudent.id, presentedSub, email)
+
     console.log(`✅ Created new student record for ${email}`)
-    
+
     return {
       success: true,
       student: newStudent,
@@ -184,51 +197,59 @@ export async function ensureStudentRecord(
 }
 
 /**
- * Resolve the CANONICAL, stable app user id for a signed-in person.
+ * Resolve the CANONICAL, stable app user id (students.id) for a signed-in person.
  *
- * The app keys every work table on a single id per person. That id is pinned on
- * the student's (unique-email) roster row as `google_user_id`; the raw OAuth
- * `sub` a given device presents may differ (sub drift across OAuth clients or
- * environments) and must NOT be used directly as the key. This resolves the
- * verified email to the pinned id and records the presented sub for audit and
- * future drift-mapping. Falls back to the presented sub only for a brand-new
- * person with no roster row yet (their first login seeds it as canonical).
+ * The app keys every work table on `students.id` (a uuid). The raw OAuth `sub` a
+ * device presents is only a CREDENTIAL — it lives in `student_identities` and may
+ * drift across OAuth clients/environments, so it must NOT be used as the key.
+ *
+ * Resolution order:
+ *   1) An existing identity for (provider='google', provider_sub) → its student_id.
+ *      (Bumps last_seen.) This is what makes a drifted sub map back to the same person.
+ *   2) Else a students row matching the verified email (case-insensitive): upsert the
+ *      presented sub into student_identities linked to that student → students.id.
+ *   3) Else null — brand-new person with no row yet; the row (and thus the id) is
+ *      created in ensureStudentRecord during signIn, and the caller falls back to the
+ *      presented sub only as a transient placeholder.
  */
 export async function resolveCanonicalUserId(
   email: string | null | undefined,
   presentedSub: string,
-): Promise<string> {
+): Promise<string | null> {
+  // 1) Known identity → its student_id (the app id).
+  if (presentedSub) {
+    const { data: identity } = await supabaseAdmin
+      .from('student_identities')
+      .select('student_id')
+      .eq('provider', 'google')
+      .eq('provider_sub', presentedSub)
+      .maybeSingle()
+    const sid = (identity as { student_id?: string } | null)?.student_id
+    if (sid) {
+      await supabaseAdmin
+        .from('student_identities')
+        .update({ last_seen: new Date().toISOString() })
+        .eq('provider', 'google')
+        .eq('provider_sub', presentedSub)
+      return sid
+    }
+  }
+
+  // 2) Match by verified email, then link the presented sub to that student.
   const e = (email ?? '').trim()
-  if (!e) return presentedSub
+  if (!e) return null
 
   const { data: student } = await supabaseAdmin
     .from('students')
-    .select('id, google_user_id')
+    .select('id')
     .ilike('email', e)
     .maybeSingle()
 
-  // No roster row yet (e.g. a race before ensureStudentRecord): the presented
-  // sub becomes this person's canonical id when their row is created.
-  if (!student?.google_user_id) return presentedSub
+  const studentId = (student as { id?: string } | null)?.id
+  if (!studentId) return null // 3) brand-new — created in ensureStudentRecord.
 
-  // Record the sub this device presented, linked to the canonical student, so a
-  // future login on a drifted sub resolves back here instead of forking.
-  if (presentedSub && presentedSub !== student.google_user_id) {
-    await supabaseAdmin
-      .from('student_identities')
-      .upsert(
-        {
-          student_id: student.id,
-          provider: 'google',
-          provider_sub: presentedSub,
-          email_at_link: e,
-          last_seen: new Date().toISOString(),
-        },
-        { onConflict: 'provider,provider_sub' },
-      )
-  }
-
-  return student.google_user_id
+  await linkPresentedSub(studentId, presentedSub, e)
+  return studentId
 }
 
 /**

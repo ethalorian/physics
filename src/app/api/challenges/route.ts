@@ -45,7 +45,7 @@ async function resolveIfDue(c: Challenge): Promise<Challenge> {
   const winnerScore = winner === c.challenger_user_id ? cScore : oScore
   if (winner && winnerScore > 0) {
     try {
-      const { data: w } = await supabaseAdmin.from('students').select('email').eq('google_user_id', winner).limit(1).single()
+      const { data: w } = await supabaseAdmin.from('students').select('email').eq('id', winner).limit(1).single()
       await supabaseAdmin.from('economy_point_grants').upsert(
         { user_id: winner, user_email: w?.email ?? null, source: 'duel-win', reference: c.id, points: WINNER_PRIZE, note: 'Won a duel', dedupe_key: `duel-win:${c.id}` },
         { onConflict: 'dedupe_key' },
@@ -83,10 +83,10 @@ export const GET = withAuth(async (_req, ctx) => {
   // names (alias preferred, never email)
   const ids = new Set<string>()
   for (const c of scored) { ids.add(c.challenger_user_id); ids.add(c.opponent_user_id) }
-  const { data: studs } = await supabaseAdmin.from('students').select('google_user_id, alias, name').in('google_user_id', [...ids])
+  const { data: studs } = await supabaseAdmin.from('students').select('id, alias, name').in('id', [...ids])
   const nameByUser = new Map<string, string>()
-  for (const s of (studs ?? []) as { google_user_id: string | null; alias: string | null; name: string | null }[]) {
-    if (s.google_user_id) nameByUser.set(s.google_user_id, s.alias || s.name || 'Student')
+  for (const s of (studs ?? []) as { id: string | null; alias: string | null; name: string | null }[]) {
+    if (s.id) nameByUser.set(s.id, s.alias || s.name || 'Student')
   }
 
   const shape = (c: Challenge) => {
@@ -120,7 +120,7 @@ export const POST = withAuth(async (req, ctx) => {
   if (!opponent || opponent === me) return NextResponse.json({ error: 'Pick a classmate to duel.' }, { status: 400 })
 
   // opponent must be a real student
-  const { data: opp } = await supabaseAdmin.from('students').select('google_user_id').eq('google_user_id', opponent).limit(1)
+  const { data: opp } = await supabaseAdmin.from('students').select('id').eq('id', opponent).limit(1)
   if (!opp || opp.length === 0) return NextResponse.json({ error: 'Unknown opponent.' }, { status: 400 })
 
   // no existing open duel between us (compare in JS; only `me` is interpolated)

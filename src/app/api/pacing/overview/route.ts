@@ -9,7 +9,6 @@ import { Block, blockMeetingsElapsed } from '@/lib/rotation'
 
 type CourseRow = { id: string; name: string | null; section: string | null; teacher_email: string | null }
 type CsRow = { course_id: string; student_id: string }
-type StudentRow = { id: string; google_user_id: string | null }
 type BrRow = { user_id: string; lesson_id: string }
 type SchedRow = { course_id: string; start_date: string | null; meeting_days: number[] | null; no_school_dates: string[] | null; block: string | null }
 type PacingRow = { course_id: string; current_lesson_id: string | null; current_unit_order: number | null; source: 'auto' | 'confirmed' }
@@ -19,10 +18,9 @@ export const GET = withAuth(async (_request, ctx) => {
 
     const items = await loadPlanItems()
 
-    const [coursesRes, csRes, studentsRes, schedRes, pacingRes] = await Promise.all([
+    const [coursesRes, csRes, schedRes, pacingRes] = await Promise.all([
       supabaseAdmin.from('courses').select('id, name, section, teacher_email').order('teacher_email', { ascending: true }),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
-      supabaseAdmin.from('students').select('id, google_user_id'),
       supabaseAdmin.from('section_schedules').select('course_id, start_date, meeting_days, no_school_dates, block'),
       supabaseAdmin.from('section_pacing').select('course_id, current_lesson_id, current_unit_order, source'),
     ])
@@ -31,17 +29,13 @@ export const GET = withAuth(async (_request, ctx) => {
 
     const courses = (coursesRes.data ?? []) as CourseRow[]
     const courseStudents = (csRes.data ?? []) as CsRow[]
-    const students = (studentsRes.data ?? []) as StudentRow[]
     const scheds = (schedRes.data ?? []) as SchedRow[]
     const pacings = (pacingRes.data ?? []) as PacingRow[]
 
-    const gidByUuid = new Map<string, string>()
-    for (const s of students) if (s.google_user_id) gidByUuid.set(s.id, s.google_user_id)
-
-    // courseId -> gids
+    // courseId -> student ids (course_students.student_id IS the work-table user_id)
     const gidsByCourse = new Map<string, Set<string>>()
     for (const cs of courseStudents) {
-      const gid = gidByUuid.get(cs.student_id)
+      const gid = cs.student_id
       if (!gid) continue
       const set = gidsByCourse.get(cs.course_id) ?? new Set<string>()
       set.add(gid)

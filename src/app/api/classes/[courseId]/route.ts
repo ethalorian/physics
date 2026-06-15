@@ -9,7 +9,7 @@ import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 // summary. Admins can open any class; a teacher can only open a class they own.
 
 type CourseRow = { id: string; name: string; section: string | null; teacher_email: string | null; math_translation_enabled: boolean | null }
-type StudentRow = { google_user_id: string | null; name: string; first_name: string | null; last_name: string | null; last_login: string | null }
+type StudentRow = { id: string | null; name: string; first_name: string | null; last_name: string | null; last_login: string | null }
 type RecRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
 export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
@@ -38,8 +38,8 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
     if (gids.length > 0) {
       const { data: srRaw } = await supabaseAdmin
         .from('students')
-        .select('google_user_id, name, first_name, last_name, last_login')
-        .in('google_user_id', gids)
+        .select('id, name, first_name, last_name, last_login')
+        .in('id', gids)
 
       // Most recent activity per student (so "last seen" has data even for students
       // who signed in before login recording started).
@@ -54,9 +54,9 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
       }
 
       students = ((srRaw ?? []) as StudentRow[])
-        .filter((s) => s.google_user_id)
+        .filter((s) => s.id)
         .map((s) => {
-          const gid = s.google_user_id as string
+          const gid = s.id as string
           const login = s.last_login ? new Date(s.last_login).getTime() : 0
           const seen = Math.max(login, lastActByGid.get(gid) ?? 0)
           return { id: gid, name: s.name, firstName: s.first_name, lastName: s.last_name, lastLoginAt: s.last_login ?? null, lastSeenAt: seen ? new Date(seen).toISOString() : null }

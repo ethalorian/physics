@@ -33,11 +33,9 @@ export async function loadPlanItems(): Promise<PlanItem[]> {
 }
 
 export async function getCourseStudentGids(courseId: string): Promise<string[]> {
+  // course_students.student_id IS students.id, which is the work-table user_id.
   const { data: cs } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', courseId)
-  const uuids = [...new Set(((cs ?? []) as { student_id: string }[]).map((r) => r.student_id))]
-  if (uuids.length === 0) return []
-  const { data: s } = await supabaseAdmin.from('students').select('google_user_id').in('id', uuids)
-  return [...new Set(((s ?? []) as { google_user_id: string | null }[]).map((x) => x.google_user_id).filter((g): g is string => Boolean(g)))]
+  return [...new Set(((cs ?? []) as { student_id: string | null }[]).map((r) => r.student_id).filter((g): g is string => Boolean(g)))]
 }
 
 // Furthest plan item (by sequence index) that has student block activity.

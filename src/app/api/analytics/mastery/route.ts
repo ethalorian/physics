@@ -9,13 +9,13 @@ import { withAuth } from '@/lib/api-auth'
 // domain (K/R/S/P), individual target, and time — plus the current rolled value
 // per (student, target) and a compact record list for weekly trends.
 //
-// Keys: mastery_records.user_id === students.google_user_id === session.user.id.
-// course_students.student_id references students.id (UUID), so we bridge
-// UUID -> google_user_id to attach class membership to the analytics students.
+// Keys: mastery_records.user_id === students.id === session.user.id.
+// course_students.student_id also references students.id, so class membership
+// attaches directly with no id bridge.
 
 // NOTE: the students table has NO teacher_email column — a student's teacher is
 // derived from the course(s) they're enrolled in (courses.teacher_email).
-type StudentRow = { id: string; google_user_id: string | null; name: string | null }
+type StudentRow = { id: string; name: string | null }
 type TargetRow = { id: string; statement: string; domain: string; unit_id: string; order_index: number }
 type UnitRow = { id: string; name: string; order_index: number }
 type CourseRow = { id: string; name: string | null; section: string | null; teacher_email: string | null }
@@ -30,7 +30,7 @@ export const GET = withAuth(async (_request, ctx) => {
     const [unitsRes, targetsRes, studentsRes, coursesRes, csRes] = await Promise.all([
       supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true }),
       supabaseAdmin.from('learning_targets').select('id, statement, domain, unit_id, order_index').order('order_index', { ascending: true }),
-      supabaseAdmin.from('students').select('id, google_user_id, name'),
+      supabaseAdmin.from('students').select('id, name'),
       supabaseAdmin.from('courses').select('id, name, section, teacher_email'),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
     ])
@@ -43,20 +43,17 @@ export const GET = withAuth(async (_request, ctx) => {
     const courseRows = (coursesRes.data ?? []) as CourseRow[]
     const courseStudents = (csRes.data ?? []) as CourseStudentRow[]
 
-    // student UUID -> google_user_id (the analytics key)
-    const gidByUuid = new Map<string, string>()
-    for (const s of studentRows) if (s.google_user_id) gidByUuid.set(s.id, s.google_user_id)
-
-    // class membership: courseId -> [google_user_id]
+    // class membership: courseId -> [students.id]. course_students.student_id IS
+    // students.id (the analytics key), so no id bridge is needed.
     const classMembers = new Map<string, string[]>()
     for (const cs of courseStudents) {
-      const gid = gidByUuid.get(cs.student_id)
+      const gid = cs.student_id
       if (!gid) continue
       const arr = classMembers.get(cs.course_id) ?? []
       arr.push(gid)
       classMembers.set(cs.course_id, arr)
     }
-    // google_user_id -> [courseId], and google_user_id -> teacher (first course wins)
+    // students.id -> [courseId], and students.id -> teacher (first course wins)
     const teacherByCourse = new Map<string, string | null>()
     for (const c of courseRows) teacherByCourse.set(c.id, c.teacher_email)
     const classIdsByStudent = new Map<string, string[]>()
@@ -80,9 +77,8 @@ export const GET = withAuth(async (_request, ctx) => {
     }))
 
     const students = studentRows
-      .filter((s) => s.google_user_id)
       .map((s) => {
-        const gid = s.google_user_id as string
+        const gid = s.id
         return {
           id: gid,
           name: s.name ?? 'Student',

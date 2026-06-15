@@ -6,7 +6,7 @@ import { resolveRosterScope } from '@/lib/teacher-scope'
 // GET /api/math-spine/warmup-queue[?class=<courseId>]
 // The math review queue: every roster student with PENDING warm-up submissions,
 // most urgent first (oldest waiting). Mirrors /api/mastery/queue's shape.
-type StudentRow = { google_user_id: string | null; name: string | null }
+type StudentRow = { id: string | null; name: string | null }
 const HOUR = 60 * 60 * 1000
 
 export const GET = withAuth(async (request, ctx) => {
@@ -14,12 +14,12 @@ export const GET = withAuth(async (request, ctx) => {
   if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   const classId = new URL(request.url).searchParams.get('class')
 
-  let sQuery = supabaseAdmin.from('students').select('google_user_id, name').order('name', { ascending: true })
+  let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
   const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
-  if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
+  if (scope.gids) sQuery = sQuery.in('id', scope.gids)
   const { data: sr } = await sQuery
-  const students = ((sr ?? []) as StudentRow[]).filter((s) => s.google_user_id)
-  const nameById = new Map<string, string>(students.map((s): [string, string] => [s.google_user_id as string, s.name ?? 'Student']))
+  const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id)
+  const nameById = new Map<string, string>(students.map((s): [string, string] => [s.id as string, s.name ?? 'Student']))
   const studentIds = [...nameById.keys()]
   if (studentIds.length === 0) return NextResponse.json({ queue: [] })
 

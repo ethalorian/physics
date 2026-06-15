@@ -27,7 +27,7 @@ export const POST = withAuth(async (request, ctx) => {
     const { data: student } = await supabaseAdmin
       .from('students')
       .select('alias, name')
-      .eq('google_user_id', ctx.userId)
+      .eq('id', ctx.userId)
       .maybeSingle()
     const s = student as { alias: string | null; name: string | null } | null
     const name = s?.alias || s?.name || ctx.session.user?.name || `Player ${players.length + 1}`

@@ -42,16 +42,16 @@ export const POST = withAuth(async (request, ctx) => {
       if (aliasUpdate !== null) {
         const { data: clash } = await supabaseAdmin
           .from('students')
-          .select('google_user_id, alias')
+          .select('id, alias')
           .ilike('alias', aliasUpdate)
-          .neq('google_user_id', userId)
+          .neq('id', userId)
           .maybeSingle()
         if (clash) return NextResponse.json({ error: 'That alias is taken. Try another.' }, { status: 409 })
       }
       const { error: stuErr } = await supabaseAdmin
         .from('students')
         .update({ alias: aliasUpdate })
-        .eq('google_user_id', userId)
+        .eq('id', userId)
       if (stuErr) return NextResponse.json({ error: stuErr.message }, { status: 500 })
     }
 

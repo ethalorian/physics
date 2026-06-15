@@ -10,7 +10,6 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 export interface OrphanRow {
   id: string                   // students.id (uuid)
-  google_user_id: string | null
   email: string | null
   name: string | null
   first_name: string | null
@@ -34,7 +33,7 @@ export const GET = withRole('admin', async () => {
     const [{ data: allStudents }, { data: enrolled }, { data: courseRows }] = await Promise.all([
       supabaseAdmin
         .from('students')
-        .select('id, google_user_id, email, name, first_name, last_name, created_at, last_synced_at, is_active')
+        .select('id, email, name, first_name, last_name, created_at, last_synced_at, is_active')
         .order('created_at', { ascending: false }),
       supabaseAdmin
         .from('course_students')

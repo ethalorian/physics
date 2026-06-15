@@ -10,7 +10,7 @@ import { resolveRosterScope } from '@/lib/teacher-scope'
 // Aging matters — 48h+ is flagged top priority; a student self-rating "Not yet"
 // (marzano = 1) is flagged for help. Most urgent surfaces first.
 
-type StudentRow = { google_user_id: string | null; name: string | null }
+type StudentRow = { id: string | null; name: string | null }
 type UnitRow = { id: string; name: string }
 type LessonRow = { id: string }
 type TargetRow = { id: string }
@@ -42,11 +42,11 @@ export const GET = withAuth(async (request, ctx) => {
     const targetIds = ((tr ?? []) as TargetRow[]).map((t) => t.id)
 
     // roster (same scoping as /api/mastery/roster)
-    let sQuery = supabaseAdmin.from('students').select('google_user_id, name').order('name', { ascending: true })
+    let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
     const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
-    if (scope.gids) sQuery = sQuery.in('google_user_id', scope.gids)
+    if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: sr } = await sQuery
-    const students = ((sr ?? []) as StudentRow[]).filter((s) => s.google_user_id).map((s) => ({ id: s.google_user_id as string, name: s.name ?? 'Student' }))
+    const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id).map((s) => ({ id: s.id as string, name: s.name ?? 'Student' }))
     const studentIds = students.map((s) => s.id)
 
     if (studentIds.length === 0 || lessonIds.length === 0) {
