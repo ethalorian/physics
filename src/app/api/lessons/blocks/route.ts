@@ -3,6 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
+import { getStudentTrack } from '@/lib/student-enrollment'
+import { isBlockVisible, type Viewer } from '@/lib/track-visibility'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
 // Body: { lesson_id, block_id, block_type, response }
@@ -44,7 +46,13 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         .eq('id', body.lesson_id)
         .single()
       const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
-      const captureBlocks = blocks.filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type))
+      // Only count capture blocks this student's track can actually see — otherwise
+      // honors capture blocks would hold a CPA student's completion below 100%
+      // (and a CPA-only block would do the same to an honors student). Staff see all.
+      const viewer: Viewer = ctx.realRole === 'student'
+        ? { role: 'student', track: await getStudentTrack(ctx.userId) }
+        : { role: 'admin' }
+      const captureBlocks = blocks.filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type) && isBlockVisible(b, viewer))
       const captureIds = captureBlocks.map((b) => b.id)
       const typeById = new Map(captureBlocks.map((b) => [b.id, b.type]))
 
