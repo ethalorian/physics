@@ -29,7 +29,7 @@ export default function Home() {
 
   const handleGetStarted = () => {
     if (session) {
-      // Students → student hub; teachers → their dashboard; admins → command center.
+      // Students → student hub; teachers → teacher home; admins → command center.
       // Prefer the session-baked role (honors DB teacher grants).
       const role = session.user?.role ?? getUserRole(session.user?.email);
       router.push(role === "student" ? "/home" : role === "teacher" ? "/admin/teacher" : "/admin/home");

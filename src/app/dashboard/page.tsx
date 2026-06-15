@@ -24,15 +24,18 @@ export default function StudentDashboard() {
   const { data: session } = useSession()
   const { userRole } = usePermissions()
   const { viewMode, toggleViewMode } = useViewMode()
-  const { isAuthenticated, canAccessAdmin } = useViewAwarePermissions(viewMode)
+  const { isAuthenticated } = useViewAwarePermissions(viewMode)
   const router = useRouter()
 
+  // Staff land on their role home — admins on the command center (/admin/home),
+  // teachers on the teacher home (/admin/teacher) — never the student dashboard,
+  // unless an admin is previewing the app as a student.
+  const isStaff = userRole === 'admin' || userRole === 'teacher'
   useEffect(() => {
-    // Only redirect if user is an admin AND not in student view mode
-    if (isAuthenticated && canAccessAdmin && viewMode !== 'student') {
-      router.replace('/admin/dashboard')
+    if (isAuthenticated && isStaff && viewMode !== 'student') {
+      router.replace(userRole === 'teacher' ? '/admin/teacher' : '/admin/home')
     }
-  }, [isAuthenticated, canAccessAdmin, viewMode, router])
+  }, [isAuthenticated, isStaff, userRole, viewMode, router])
 
   if (!isAuthenticated) {
     return (
@@ -45,13 +48,13 @@ export default function StudentDashboard() {
     )
   }
 
-  // If admin and not in student view mode, show loading while redirect happens
-  if (canAccessAdmin && viewMode !== 'student') {
+  // If staff and not in student view mode, show loading while redirect happens
+  if (isStaff && viewMode !== 'student') {
     return (
       <div className="max-w-md mx-auto mt-16 text-center">
         <div className="apple-card p-8">
           <h2 className="text-2xl font-bold text-foreground mb-4">Redirecting...</h2>
-          <p className="text-muted-foreground">Taking you to the admin dashboard.</p>
+          <p className="text-muted-foreground">Taking you to your home.</p>
         </div>
       </div>
     )

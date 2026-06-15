@@ -89,8 +89,8 @@ export default function AdminHomePage() {
   const { role } = useViewAs()
   const router = useRouter()
   const isAdmin = role === 'admin'
-  // The command center is the ADMIN home. Teacher-role users have their own
-  // dashboard — send them there (also covers the staff nav "Home" link).
+  // The command center is the ADMIN home. Teachers have their own home — send
+  // them there if they land here directly.
   useEffect(() => {
     if (role === 'teacher') router.replace('/admin/teacher')
   }, [role, router])
