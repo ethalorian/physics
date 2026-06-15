@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { BlockDocument, type ContentBlock } from '@/data/content-blocks'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
-import { filterDocumentForViewer, type Viewer } from '@/lib/track-visibility'
 import PhysicsDiagram from '@/components/blocks/PhysicsDiagram'
 import FigureGraph from '@/components/blocks/FigureGraph'
 import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, MCAS_SYMBOLS } from '@/data/physics-reference'
@@ -158,22 +157,35 @@ export default function LessonBlockBuilder({
   const [removingId, setRemovingId] = useState<string | null>(null)
   const flash = (id: string) => { setFlashId(id); window.setTimeout(() => setFlashId((c) => (c === id ? null : c)), 850) }
 
-  // ── Play preview: render the live blocks interactively, with throwaway state ──
-  const [previewOpen, setPreviewOpen] = useState(false)
+  // ── Canvas: each block renders live & interactive; play state is throwaway ──
   const [viewAs, setViewAs] = useState<'author' | 'cpa' | 'honors'>('author')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [play, setPlay] = useState<BlockResponseMap>({})
   const playSave = (id: string, _type: string, value: unknown) =>
     setPlay((m) => ({ ...m, [id]: { response: value, created_at: new Date().toISOString() } }))
 
-  const liveBlocks = useMemo<ContentBlock[]>(() => blocks.map((b) => {
+  // ── Drag-to-reorder + clickable outline ──
+  const [dragId, setDragId] = useState<string | null>(null)
+  const [overId, setOverId] = useState<string | null>(null)
+  const reorder = (srcId: string, destId: string) => setBlocks((prev) => {
+    const from = prev.findIndex((b) => b.id === srcId); const to = prev.findIndex((b) => b.id === destId)
+    if (from < 0 || to < 0 || from === to) return prev
+    const next = prev.slice(); const [moved] = next.splice(from, 1); next.splice(to, 0, moved); return next
+  })
+  const jumpTo = (id: string) => { document.querySelector(`[data-bid="${id}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }); flash(id) }
+  const snippetOf = (d: Record<string, unknown>): string => {
+    const raw = (d.title ?? d.statement ?? d.prompt ?? (typeof d.markdown === 'string' ? (d.markdown as string).replace(/[#*_`>]/g, '') : '')) as string
+    return raw ? raw.trim().slice(0, 30) : ''
+  }
+
+  const liveOf = (b: BlockState): ContentBlock => {
     const def = DEF_BY_TYPE.get(b.type)
     return { id: b.id, type: b.type, ...(def?.capture ? { capture: true } : {}), ...b.data } as unknown as ContentBlock
-  }), [blocks])
-  const shownBlocks = useMemo<ContentBlock[]>(() => {
-    if (viewAs === 'author') return liveBlocks
-    const viewer: Viewer = { role: 'student', track: viewAs }
-    return filterDocumentForViewer({ schemaVersion: 1, blocks: liveBlocks }, viewer).blocks
-  }, [liveBlocks, viewAs])
+  }
+  const seesBlock = (track: 'cpa' | 'honors', b: BlockState) => {
+    const g = b.data.visibilityTrack as string | undefined
+    return !g || g === track
+  }
 
   useEffect(() => {
     fetch('/api/simulations')
@@ -194,21 +206,11 @@ export default function LessonBlockBuilder({
   const removeBlock = (id: string) => {
     // Play the collapse-out, then actually drop it from state.
     setRemovingId(id)
+    setSelectedId((c) => (c === id ? null : c))
     window.setTimeout(() => {
       setBlocks((prev) => prev.filter((b) => b.id !== id))
       setRemovingId((c) => (c === id ? null : c))
     }, 260)
-  }
-  const moveBlock = (id: string, dir: -1 | 1) => {
-    setBlocks((prev) => {
-      const i = prev.findIndex((b) => b.id === id)
-      const j = i + dir
-      if (i < 0 || j < 0 || j >= prev.length) return prev
-      const next = prev.slice()
-      ;[next[i], next[j]] = [next[j], next[i]]
-      return next
-    })
-    flash(id)
   }
   const setField = (id: string, key: string, value: unknown) =>
     setBlocks((prev) => prev.map((b) => (b.id === id ? { ...b, data: { ...b.data, [key]: value } } : b)))
@@ -232,7 +234,7 @@ export default function LessonBlockBuilder({
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+    <div className="max-w-7xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       <style>{`
         @keyframes bbFlash { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 70%, transparent); background: color-mix(in oklch, var(--primary) 9%, var(--card)); } 100% { box-shadow: 0 0 0 12px transparent; background: var(--card); } }
         @keyframes bbOut { from { opacity: 1; max-height: 1200px; } to { opacity: 0; transform: translateX(12px); max-height: 0; margin-top: -12px; padding-top: 0; padding-bottom: 0; } }
@@ -249,72 +251,95 @@ export default function LessonBlockBuilder({
           <select value={dayType} onChange={(e) => setDayType(e.target.value)} className="rounded-lg border px-3 py-2 text-sm" style={inputStyle}>
             {DAY_TYPES.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
-          <button onClick={() => setPreviewOpen((v) => !v)} className="rounded-lg border px-3 py-2 text-sm font-semibold"
-            style={{ borderColor: previewOpen ? 'var(--primary)' : 'var(--border)', color: previewOpen ? 'var(--primary)' : 'var(--foreground)', background: previewOpen ? 'color-mix(in oklch, var(--primary) 10%, transparent)' : 'transparent' }}>
-            {previewOpen ? '▣ Playing' : '▷ Play'}
-          </button>
+          <div className="flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Preview the canvas as a student of this track">
+            {(['author', 'cpa', 'honors'] as const).map((v) => {
+              const on = viewAs === v
+              return (
+                <button key={v} onClick={() => setViewAs(v)} className="text-xs font-semibold px-2.5 py-2"
+                  style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>
+                  {v === 'author' ? 'Author' : v === 'cpa' ? 'CPA' : 'Honors'}
+                </button>
+              )
+            })}
+          </div>
+          <button onClick={() => setPlay({})} className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }} title="Clear your play answers">Reset play</button>
           <Link href={`/lessons/${lessonSlug}`} target="_blank" className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Open ↗</Link>
           <button onClick={save} disabled={saving} className="rounded-lg px-4 py-2 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>{saving ? 'Saving…' : 'Save lesson'}</button>
           {msg && <span className="text-sm" style={{ color: msg.includes('✓') ? 'var(--success)' : 'var(--destructive)' }}>{msg}</span>}
         </div>
       </div>
-      <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>Add blocks, fill them in, reorder, and save. Saving writes the lesson — no deploy needed.</p>
+      <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Your lesson is the canvas. Click a block to edit it in the panel; the edit you make appears instantly. Saving writes the lesson — no deploy needed.</p>
 
-      <div className="grid gap-5" style={{ gridTemplateColumns: previewOpen ? 'minmax(0,1fr) 188px minmax(320px,1fr)' : 'minmax(0,1fr) 220px' }}>
-        {/* block list */}
-        <div className="flex flex-col gap-3 order-2 md:order-1">
-          {blocks.length === 0 && <p className="text-sm rounded-xl border p-6 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No blocks yet — add one from the palette.</p>}
-          {blocks.map((b, i) => {
-            const def = DEF_BY_TYPE.get(b.type)
+      <div className="grid gap-5 items-start" style={{ gridTemplateColumns: selectedId ? 'minmax(0,1fr) 196px 360px' : 'minmax(0,1fr) 196px' }}>
+        {/* CANVAS — the lesson as students see it, the star */}
+        <div className="flex flex-col gap-3">
+          {blocks.length === 0 && <p className="text-sm rounded-xl border p-10 text-center" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No blocks yet — add one from the palette on the right.</p>}
+          {blocks.map((b) => {
             const removing = removingId === b.id
             const flashing = flashId === b.id
+            const sel = selectedId === b.id
+            const hidden = viewAs !== 'author' && !seesBlock(viewAs, b)
             return (
-              <div key={b.id} data-bid={b.id} className="rounded-xl border p-4" style={{
-                borderColor: 'var(--border)', background: 'var(--card)',
-                overflow: removing ? 'hidden' : undefined,
-                animation: removing ? 'bbOut 0.26s ease forwards' : flashing ? 'bbFlash 0.85s ease' : undefined,
-              }}>
-                <div className="flex items-center justify-between gap-2 mb-3">
-                  <span className="text-sm font-bold">{def?.label ?? b.type}{def?.capture ? <span className="ml-2 text-xs font-semibold" style={{ color: 'var(--reward-foreground)' }}>captures work</span> : null}</span>
-                  <div className="flex items-center gap-1.5">
-                    {/* Per-block visibility: All tracks / CPA only / Honors only */}
-                    <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Who sees this block">
-                      {([['All', undefined], ['CPA', 'cpa'], ['Honors', 'honors']] as const).map(([lbl, val]) => {
-                        const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
-                        return (
-                          <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)}
-                            className="text-[10px] font-semibold px-1.5 py-0.5"
-                            style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
-                        )
-                      })}
-                    </div>
-                    <button onClick={() => moveBlock(b.id, -1)} disabled={i === 0} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move up">↑</button>
-                    <button onClick={() => moveBlock(b.id, 1)} disabled={i === blocks.length - 1} className="bb-btn text-sm px-2 py-1 rounded disabled:opacity-30" style={{ border: '1px solid var(--border)' }} aria-label="move down">↓</button>
-                    <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-2 py-1 rounded" style={{ border: '1px solid var(--border)', color: 'var(--destructive)' }} aria-label="remove">✕</button>
+              <div key={b.id} data-bid={b.id} className="group relative rounded-xl"
+                onClick={() => setSelectedId(b.id)}
+                onDragOver={(e) => { if (dragId && dragId !== b.id) { e.preventDefault(); if (overId !== b.id) setOverId(b.id) } }}
+                onDrop={(e) => { e.preventDefault(); if (dragId) reorder(dragId, b.id); setDragId(null); setOverId(null) }}
+                style={{
+                  border: `1px solid ${sel || overId === b.id ? 'var(--primary)' : 'transparent'}`,
+                  boxShadow: sel ? '0 0 0 1px var(--primary)' : overId === b.id ? '0 -3px 0 0 var(--primary)' : undefined,
+                  opacity: dragId === b.id ? 0.4 : hidden ? 0.42 : 1,
+                  background: 'var(--card)', padding: 12, cursor: 'pointer',
+                  overflow: removing ? 'hidden' : undefined,
+                  animation: removing ? 'bbOut 0.26s ease forwards' : flashing ? 'bbFlash 0.85s ease' : undefined,
+                }}>
+                {/* hover / selected chrome */}
+                <div className={`absolute right-2 top-2 z-10 flex items-center gap-1 rounded-lg border px-1 py-0.5 transition-opacity ${sel ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                  style={{ borderColor: 'var(--border)', background: 'var(--card)' }} onClick={(e) => e.stopPropagation()}>
+                  <button draggable
+                    onDragStart={(e) => { setDragId(b.id); const card = e.currentTarget.closest('[data-bid]') as HTMLElement | null; if (card) e.dataTransfer.setDragImage(card, 16, 16); e.dataTransfer.effectAllowed = 'move' }}
+                    onDragEnd={() => { setDragId(null); setOverId(null) }}
+                    title="Drag to reorder" aria-label="drag to reorder"
+                    className="bb-btn text-base px-1 leading-none" style={{ cursor: 'grab', color: 'var(--muted-foreground)', border: 'none', background: 'none' }}>⠿</button>
+                  <div className="flex rounded border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Who sees this block">
+                    {([['All', undefined], ['CPA', 'cpa'], ['Honors', 'honors']] as const).map(([lbl, val]) => {
+                      const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
+                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-[10px] font-semibold px-1.5 py-0.5" style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
+                    })}
                   </div>
+                  <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-1.5 rounded" style={{ border: 'none', background: 'none', color: 'var(--destructive)' }} aria-label="remove">✕</button>
                 </div>
-                <div className="flex flex-col gap-3">
-                  {(def?.fields ?? []).map((f) => (
-                    <FieldEditor
-                      key={f.key}
-                      field={f}
-                      value={b.data[f.key]}
-                      sims={sims}
-                      blockType={b.type}
-                      blockData={b.data}
-                      onChange={(v) => setField(b.id, f.key, v)}
-                      onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))}
-                    />
-                  ))}
-                </div>
+                <BlockRenderer blocks={[liveOf(b)]} lessonId={`play:${lessonId}`} responses={play} save={playSave} />
+                {hidden && <div className="absolute left-2 top-2 z-10 text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>hidden for {viewAs}</div>}
               </div>
             )
           })}
         </div>
 
-        {/* palette */}
-        <div className="order-1 md:order-2">
-          <div className="rounded-xl border p-3 sticky top-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        {/* RIGHT RAIL — outline + palette */}
+        <div className="sticky top-4 flex flex-col gap-3" style={{ maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
+          <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Outline · {blocks.length}</div>
+            {blocks.length === 0
+              ? <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No blocks yet.</p>
+              : <ol className="flex flex-col gap-0.5">
+                  {blocks.map((b, i) => {
+                    const def = DEF_BY_TYPE.get(b.type); const snip = snippetOf(b.data); const ht = b.data.visibilityTrack as string | undefined
+                    const sel = selectedId === b.id
+                    return (
+                      <li key={b.id}>
+                        <button onClick={() => { setSelectedId(b.id); jumpTo(b.id) }} className="w-full text-left text-xs rounded px-1.5 py-1 flex items-center gap-1.5"
+                          style={{ background: sel ? 'color-mix(in oklch, var(--primary) 16%, transparent)' : flashId === b.id ? 'color-mix(in oklch, var(--primary) 10%, transparent)' : 'transparent', border: 'none', cursor: 'pointer', color: 'var(--foreground)' }}>
+                          <span style={{ color: 'var(--muted-foreground)', minWidth: 14 }}>{i + 1}</span>
+                          <span className="truncate flex-1"><span style={{ fontWeight: 600 }}>{def?.label ?? b.type}</span>{snip && <span style={{ color: 'var(--muted-foreground)' }}> · {snip}</span>}</span>
+                          {ht === 'honors' && <span title="Honors only" style={{ color: 'var(--primary)', fontWeight: 700 }}>H</span>}
+                          {ht === 'cpa' && <span title="CPA only" style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>C</span>}
+                        </button>
+                      </li>
+                    )
+                  })}
+                </ol>}
+          </div>
+          <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
             <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Add a block</div>
             {(['Teach', 'Practice'] as const).map((group) => (
               <div key={group} className="mb-3">
@@ -329,35 +354,39 @@ export default function LessonBlockBuilder({
           </div>
         </div>
 
-        {/* live, interactive play preview */}
-        {previewOpen && (
-          <div className="order-3">
-            <div className="rounded-xl border sticky top-4" style={{ borderColor: 'var(--border)', background: 'var(--card)', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
+        {/* SIDE PANEL — edit the selected block */}
+        {selectedId && (() => {
+          const b = blocks.find((x) => x.id === selectedId)
+          if (!b) return null
+          const def = DEF_BY_TYPE.get(b.type)
+          return (
+            <div className="sticky top-4 rounded-xl border" style={{ borderColor: 'var(--primary)', background: 'var(--card)', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
               <div className="flex items-center justify-between gap-2 p-3 border-b" style={{ borderColor: 'var(--border)' }}>
-                <div className="flex items-center gap-1">
-                  {(['author', 'cpa', 'honors'] as const).map((v) => {
-                    const on = viewAs === v
-                    return (
-                      <button key={v} onClick={() => setViewAs(v)} className="text-xs font-semibold rounded-full px-2.5 py-1"
-                        style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: `1px solid ${on ? 'transparent' : 'var(--border)'}` }}>
-                        {v === 'author' ? 'Author' : v === 'cpa' ? 'CPA' : 'Honors'}
-                      </button>
-                    )
-                  })}
+                <span className="text-sm font-bold truncate">Edit · {def?.label ?? b.type}{def?.capture ? <span className="ml-1.5 text-xs font-semibold" style={{ color: 'var(--reward-foreground)' }}>captures work</span> : null}</span>
+                <button onClick={() => setSelectedId(null)} className="bb-btn text-sm px-2 rounded" style={{ border: '1px solid var(--border)', color: 'var(--muted-foreground)' }} aria-label="close editor">✕</button>
+              </div>
+              <div className="p-3 flex flex-col gap-3">
+                <div>
+                  <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Who sees this block</div>
+                  <div className="flex rounded-md border overflow-hidden w-max" style={{ borderColor: 'var(--border)' }}>
+                    {([['All tracks', undefined], ['CPA only', 'cpa'], ['Honors only', 'honors']] as const).map(([lbl, val]) => {
+                      const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
+                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-xs font-semibold px-2.5 py-1" style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
+                    })}
+                  </div>
                 </div>
-                <button onClick={() => setPlay({})} className="text-xs" style={{ color: 'var(--muted-foreground)', background: 'none', border: 'none', cursor: 'pointer' }} title="Clear your play responses">reset</button>
-              </div>
-              <div className="px-3 pt-2 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-                Play mode — solve, rate, and type into blocks to feel the student view. Nothing here is saved. {viewAs !== 'author' && <>Viewing as a <strong>{viewAs.toUpperCase()}</strong> student: honors-gated blocks {viewAs === 'honors' ? 'show' : 'hide'}.</>}
-              </div>
-              <div className="p-3">
-                {shownBlocks.length === 0
-                  ? <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{liveBlocks.length === 0 ? 'Add a block to play with it.' : `Nothing visible to a ${viewAs} student here.`}</p>
-                  : <BlockRenderer blocks={shownBlocks} lessonId={`play:${lessonId}`} responses={play} save={playSave} />}
+                {(def?.fields ?? []).length === 0
+                  ? <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>This block has no editable fields.</p>
+                  : (def?.fields ?? []).map((f) => (
+                      <FieldEditor key={f.key} field={f} value={b.data[f.key]} sims={sims} blockType={b.type} blockData={b.data}
+                        onChange={(v) => setField(b.id, f.key, v)}
+                        onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))} />
+                    ))}
+                <button onClick={() => removeBlock(b.id)} className="mt-1 text-xs font-semibold rounded-lg border px-3 py-2 self-start" style={{ borderColor: 'color-mix(in oklch, var(--destructive) 40%, var(--border))', color: 'var(--destructive)', background: 'transparent' }}>Delete block</button>
               </div>
             </div>
-          </div>
-        )}
+          )
+        })()}
       </div>
     </div>
   )

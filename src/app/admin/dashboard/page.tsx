@@ -4,8 +4,8 @@ import { canEditArea } from '@/lib/content-access'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
 import Link from 'next/link'
-import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import ManageUnits, { type ManageUnit, type ManageLesson } from '@/components/admin/ManageUnits'
+import LessonAccessSnapshot from '@/components/admin/LessonAccessSnapshot'
 
 // Manage hub — the real application: author lessons as content blocks, per unit.
 // (The launcher lives at /admin/home; this is where content gets built.)
@@ -51,11 +51,19 @@ export default async function AdminManagePage() {
   const lessons = (lessonRows ?? []) as LessonRow[]
   lessons.sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
 
-  const { count: studentCount } = await supabaseAdmin.from('students').select('*', { count: 'exact', head: true })
-
   const authored = lessons.filter((l) => blockCount(l) > 0).length
   const needBlocks = lessons.filter((l) => blockCount(l) === 0).length
   const draftCount = lessons.filter((l) => !l.published).length
+
+  // Block-type usage across every lesson — a content-authoring metric.
+  const blockUsage: Record<string, number> = {}
+  for (const l of lessons) {
+    for (const b of ((l.content_blocks?.blocks ?? []) as { type?: string }[])) {
+      if (b?.type) blockUsage[b.type] = (blockUsage[b.type] ?? 0) + 1
+    }
+  }
+  const blockUsageSorted = Object.entries(blockUsage).sort((a, b) => b[1] - a[1])
+  const totalBlocks = blockUsageSorted.reduce((s, [, n]) => s + n, 0)
 
   // Shape units (+ an "Other" bucket for orphan lessons) for the client list.
   const manageUnits: ManageUnit[] = units
@@ -86,19 +94,31 @@ export default async function AdminManagePage() {
         {tile(lessons.length, 'Lessons', 'var(--primary)')}
         {tile(authored, 'Authored as blocks', 'var(--success)')}
         {tile(needBlocks, 'Still need blocks', needBlocks > 0 ? 'var(--destructive)' : 'var(--muted-foreground)')}
-        {tile(studentCount ?? 0, 'Enrolled students', 'var(--reward-foreground)')}
+        {tile(totalBlocks, 'Blocks total', 'var(--reward-foreground)')}
       </div>
+
+      {totalBlocks > 0 && (
+        <section className="rounded-2xl border p-4 mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="flex items-baseline justify-between mb-3">
+            <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Block usage</h2>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{totalBlocks.toLocaleString()} blocks · {blockUsageSorted.length} types</span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {blockUsageSorted.map(([type, n]) => (
+              <span key={type} className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs" style={{ borderColor: 'var(--border)' }}>
+                <span style={{ color: 'var(--foreground)' }}>{type.replace(/_/g, ' ')}</span>
+                <span className="font-bold" style={{ color: 'var(--primary)' }}>{n}</span>
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* NEEDS YOU NOW — one unified band of the day's actionable work, so the
           top of the page IS the to-do list. Units below are the library. */}
       <section className="rounded-2xl border mb-6" style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))', overflow: 'hidden' }}>
         <div className="px-4 pt-3 pb-2 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
           Needs you now
-        </div>
-
-        {/* daily math fluency rating */}
-        <div className="px-4 pb-3">
-          <TeacherDailyMathTask />
         </div>
 
         {/* authoring to-dos, only when there's something to do */}
@@ -123,14 +143,15 @@ export default async function AdminManagePage() {
         )}
       </section>
 
+      <LessonAccessSnapshot />
+
       <div className="flex items-center justify-between mb-1">
         <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your units</h2>
       </div>
       <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
         {role === 'admin'
-          ? <><strong>Publish</strong> marks a lesson as ready in the catalog (super-admin only). </>
-          : <>Lessons are published by your administrator. </>}
-        To choose which classes see a lesson and when, use the <Link href="/admin/lesson-access" className="underline" style={{ color: 'var(--primary)' }}>Lesson access</Link> board.
+          ? <><strong>Publish</strong> marks a lesson as ready in the catalog (super-admin only).</>
+          : <>Lessons are published by your administrator.</>}
       </p>
 
       {lessons.length === 0

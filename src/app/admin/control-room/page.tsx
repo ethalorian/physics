@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'r
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
 import MathControlRoom from '@/components/math-spine/MathControlRoom'
+import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 
 // ---------------------------------------------------------------------------
@@ -576,6 +577,8 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      {/* daily math-fluency rating — moved here from the authoring dashboard */}
+      <div className="mb-4"><TeacherDailyMathTask /></div>
       {/* class-scope banner (when opened from a specific class) */}
       {classId && (
         <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-4 py-2.5 mb-3"
