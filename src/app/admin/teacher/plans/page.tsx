@@ -173,24 +173,16 @@ export default function TeacherPlansPage() {
                     >
                       <FileText size={13} /> PDF
                     </a>
-                    {honorsDays.includes(current.day) && (
-                      <a
-                        href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
-                        style={{
-                          border: '1px solid color-mix(in oklch, var(--primary) 55%, var(--border))',
-                          background: 'color-mix(in oklch, var(--primary) 16%, var(--card))',
-                          color: 'var(--primary)',
-                        }}
-                        title="Honors Extension for this day — open a print view, then 'Save as PDF'"
-                      >
-                        <GraduationCap size={13} /> Honors Extension
-                      </a>
-                    )}
                   </div>
                 </div>
+                {honorsDays.includes(current.day) && (
+                  <div className="flex items-center flex-wrap gap-2 mb-3 rounded-lg border px-3 py-2" style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 7%, var(--card))' }}>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}><GraduationCap size={14} /> Honors Extension</span>
+                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors-docx`} download className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Download the Honors Extension as a Word document"><Download size={13} /> Word</a>
+                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Open a print view of the Honors Extension, then 'Save as PDF'"><FileText size={13} /> PDF</a>
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Differentiation for honors classes — the honors thread for this day.</span>
+                  </div>
+                )}
                 <div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
               </>
             ) : (
