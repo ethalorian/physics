@@ -9,6 +9,7 @@ import unit5Cpa from '@/data/unit5-cpa-lesson-plans.json'
 import unit6Cpa from '@/data/unit6-cpa-lesson-plans.json'
 import unit7Cpa from '@/data/unit7-cpa-lesson-plans.json'
 import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
+import { honorsDaysFor } from '@/lib/honors-extension-export'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the teacher's selected
 // class type (curriculum track). Plans are versioned curriculum data in the
@@ -67,5 +68,5 @@ export const GET = withAuth(async (request, ctx) => {
       return (Number.isFinite(na) && Number.isFinite(nb)) ? na - nb : a.localeCompare(b)
     })
 
-    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days, availableUnits })
+    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days, availableUnits, honorsDays: honorsDaysFor(unitId) })
 })

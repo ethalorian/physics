@@ -1,0 +1,754 @@
+{
+ "unit-1": [
+  {
+   "day": 1,
+   "title": "Day 1 · Phase 1 — Setting up the question",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — the obstacle",
+     "markdown": "The year opens on the thing standing in our way. Watch the demo, and **bet before you see it.**"
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## The string that breaks where you don't expect\n\nA heavy mass hangs from a thin string; an identical string hangs from its underside with a handle.\n\n- Pull the bottom **slowly** → which string breaks?\n- Pull the bottom with a sharp **jerk** → which string breaks?\n\nSame rig, opposite results — decided only by *how* you pull.\n\n*Safety: your teacher runs this in a bounded, padded zone. Do not rebuild it unsupervised.*"
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "Slow pull: the ___ string breaks. Sharp jerk: the ___ string breaks, because ___.",
+     "prompt": "PREDICT BEFORE THE PULL. For the slow pull and for the sharp jerk, which string breaks — and WHY? Commit before you see it."
+    },
+    {
+     "id": "h4",
+     "type": "prose",
+     "markdown": "## Build the model\n\nSlow pull → the **top** string breaks (it carries your pull *plus* the weight). Sharp jerk → the **bottom** breaks: the mass's **inertia** won't let it accelerate fast enough to pass the sudden force up to the top string.\n\n**Inertia = a mass's resistance to a change in its motion** — not just 'how much stuff.' That resistance is the obstacle this whole year is up against."
+    },
+    {
+     "id": "h5",
+     "type": "vocab",
+     "terms": [
+      {
+       "term": "inertia",
+       "definition": "an object's resistance to any change in its motion; greater mass means greater inertia",
+       "cognate": "inercia / inércia"
+      }
+     ]
+    },
+    {
+     "id": "h6",
+     "type": "exit_ticket",
+     "frame": "The same rig gave opposite results because ___. 'The bottom string was just weaker' is wrong because ___.",
+     "prompt": "JUSTIFY (homework): Explain, using inertia, why the same rig breaks differently depending on how you pull — and why 'the bottom string was weaker' is not an available answer."
+    },
+    {
+     "id": "h7",
+     "type": "exit_ticket",
+     "frame": "2026-XJ's mass (~3.5×10^11 kg) makes it hard to deflect because ___. The unit that will answer 'how big a push?' is ___.",
+     "prompt": "TRANSFER (homework): Asteroid 2026-XJ has a mass around 3.5×10^11 kg. Using what 'inertia' meant today, explain why that mass is the obstacle to deflecting it — and name the unit you think will answer 'how big a push?'"
+    },
+    {
+     "id": "h8",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Connect forward",
+     "markdown": "That heavy mass that refused to move is the asteroid. We're the jerk on the string. Every unit from here asks one question: **can we move it anyway?**"
+    },
+    {
+     "id": "h9",
+     "type": "marzano",
+     "targetId": "u1.d01-inertia-obstacle"
+    }
+   ]
+  },
+  {
+   "day": 2,
+   "title": "Day 2 · Phase 1 — Setting up the question",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — finish the string",
+     "markdown": "Yesterday the two-string demo broke the room's prediction. Today we close the loop on it — not by re-watching, but by making the **assumptions** in your inertia explanation explicit. A model that can't say *when it would break* isn't finished."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## State your assumptions (and when they'd break)\n\nYour Day 1 explanation — *the jerk loads the bottom string faster than the mass's inertia lets it accelerate, so the force never reaches the top* — quietly assumes things. Good physicists name them.\n\nWhat the explanation assumes:\n- The strings are **identical** (same breaking strength). If the top string were secretly weaker, the result could flip — and it would no longer be an inertia story at all.\n- The pull on a **jerk** rises to the breaking force *faster* than the mass can begin moving. Pull slowly enough and the mass has time to accelerate, passing the load up — the **top** breaks instead.\n- The mass is **rigid** and the string **massless** — all the resistance comes from the hanging mass's inertia, not from stretch in the string.\n\n*A claim with no stated limits is just a guess that got lucky.*"
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "warning",
+     "title": "When the model breaks",
+     "markdown": "If you pulled the bottom string **slowly** but still saw it snap, your inertia explanation would be in trouble. Naming that failure condition *in advance* is what separates a defended claim from a memorized one."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "The same rig breaks differently because of inertia — the mass resists ___. This explanation depends on the assumption that ___, and it would FAIL if ___.",
+     "prompt": "JUSTIFY: Explain why the two-string rig breaks differently depending on how you pull, using inertia. Then name ONE assumption your explanation depends on and describe the observation that would prove the explanation wrong."
+    },
+    {
+     "id": "h5",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Connect forward",
+     "markdown": "**Mass resists change in motion.** That single sentence is the obstacle the whole year fights. 2026-XJ has an enormous mass, so it has enormous inertia — it will not be nudged easily. Every unit from here is one long attempt to move it anyway."
+    }
+   ]
+  },
+  {
+   "day": 3,
+   "title": "Day 3 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — graphs are claims",
+     "markdown": "In Match-the-Graph you'll line up a motion to its position-time graph. CPA reads the graph. Honors reads it as a **claim about the world** — something that could be true or false — not just a picture to match."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Read graphs as CLAIMS\n\nA position-time graph isn't decoration. It *asserts* specific things:\n\n- A **straight, rising line** claims: *this object moves at constant velocity, never speeding up or slowing down, over this whole interval.*\n- A **horizontal line** claims: *the object is at rest — its position does not change.*\n- A **curving** line claims: *the velocity itself is changing.*\n\nBecause each is a claim, each can be **falsified**. If you can describe a real motion the graph says is impossible — and then make that motion happen — you've proven the graph wrong. That's the honors move: don't just match the graph, *interrogate* what it forbids."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "This graph claims that ___. A motion that would make this graph FALSE is ___, because ___.",
+     "prompt": "JUSTIFY: Pick one position-time graph from today. State the claim it makes about the motion. Then describe a specific motion that would make that graph FALSE — and explain how that motion contradicts what the graph asserts."
+    }
+   ]
+  },
+  {
+   "day": 4,
+   "title": "Day 4 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — name the hidden assumption",
+     "markdown": "When you compute velocity as $v = \\Delta x / \\Delta t$, you get *average* velocity over the interval. Treating that one number as 'the velocity' smuggles in an assumption. Honors names it."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## The constant-velocity assumption\n\nSuppose 2026-XJ covers $1.2 \\times 10^6$ km in 140 seconds, so $v = \\Delta x / \\Delta t \\approx 8{,}570$ m/s. It's tempting to say 'the asteroid moves at 8,570 m/s.'\n\nBut $\\Delta x / \\Delta t$ only gives the **average** over that interval. Calling it *the* velocity assumes the object moved at the **same speed the entire time** — that it never sped up or slowed down. If anything pulled on it mid-interval, the average is still correct but it no longer describes any single moment.\n\nThe assumption is invisible until you say it out loud: *I am treating this velocity as constant across the interval.*"
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "When I use $v = \\Delta x/\\Delta t$ I'm assuming ___. This assumption is safe when ___, but it would fail if ___.",
+     "prompt": "NAME THE ASSUMPTION + JUSTIFY: You computed an average velocity today. State the assumption you make when you treat that average as 'the' velocity. Give one situation where the assumption is fine, and one where it would mislead you — and explain why."
+    }
+   ]
+  },
+  {
+   "day": 5,
+   "title": "Day 5 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — justify the decomposition",
+     "markdown": "CPA breaks a vector into components using sine and cosine. Honors does the same — then defends **why** that trig is the right trig, instead of guessing which function goes where."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Why sine, why cosine?\n\nFor a vector of magnitude $R$ at angle $\\theta$ measured from the **+x axis**:\n\n- $R_x = R\\cos\\theta$ — the **adjacent** side of the right triangle the vector forms.\n- $R_y = R\\sin\\theta$ — the **opposite** side.\n\nThe choice isn't a rule to memorize; it follows from *where you measured the angle from*. Measure $\\theta$ from the y-axis instead and sine and cosine swap. So before decomposing, the honors question is always: **what is my angle measured from, and which leg of the triangle is that?**\n\nThe components must also rebuild the original: $R = \\sqrt{R_x^2 + R_y^2}$. If they don't, the decomposition is wrong — a built-in check."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "I used $R_x = R\\cos\\theta$ and $R_y = R\\sin\\theta$ because my angle $\\theta$ was measured from ___, which makes the x-component the ___ side of the triangle. If the angle were measured from ___ instead, I would ___.",
+     "prompt": "JUSTIFY: For 2026-XJ's velocity at an angle, you split it into components. Explain WHY you assigned cosine to one axis and sine to the other — tie it to where the angle is measured from and which side of the right triangle each component is."
+    },
+    {
+     "id": "h4",
+     "type": "callout",
+     "variant": "warning",
+     "title": "State the assumption",
+     "markdown": "Decomposing into perpendicular x and y components assumes those two axes are **independent** — motion along x doesn't affect motion along y. That independence is what lets us treat a 2-D problem as two separate 1-D problems. It's a powerful assumption; name it, because later (projectiles, forces on the asteroid) it's exactly the assumption that does the heavy lifting."
+    }
+   ]
+  },
+  {
+   "day": 6,
+   "title": "Day 6 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — what does the slope MEAN?",
+     "markdown": "On a velocity-time graph, the slope is the acceleration. CPA reads off the number. Honors defends what that number *is* — and refuses the common slip that confuses a high velocity with a high acceleration."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Reading an a-t story from a v-t graph\n\nThe slope of a velocity-time graph is $a = \\Delta v / \\Delta t$ — **how fast the velocity is changing**, not how fast the object is going.\n\n- A **steep** v-t line claims large acceleration: velocity changing quickly.\n- A **flat (horizontal)** v-t line claims **zero** acceleration — even if the object is moving fast. Constant velocity means no change, means no acceleration.\n- A **negative** slope claims the object is slowing (or speeding up in the negative direction).\n\nThe honors trap to avoid: *'it's moving fast, so it's accelerating fast.'* Wrong. A spacecraft cruising at 10,000 m/s with a flat v-t line has **zero** acceleration. Speed lives on the axis; acceleration lives in the slope."
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "misconception",
+     "title": "Common slip",
+     "markdown": "*'High velocity means high acceleration.'* No. A high, **flat** v-t line is fast but unaccelerated. Acceleration is the *change*, the slope — not the height of the line."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "On this v-t graph the slope is ___, which means the acceleration is ___. A classmate who says the fast-moving object 'must be accelerating a lot' is wrong because ___.",
+     "prompt": "JUSTIFY: Point to a segment of today's velocity-time graph and state what its slope means physically. Then refute a classmate who claims a fast-moving object on a flat v-t line is accelerating — explain what the flat slope actually tells you."
+    }
+   ]
+  },
+  {
+   "day": 7,
+   "title": "Day 7 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — justify WHICH equation",
+     "markdown": "There are several kinematic equations and they all look plausible. CPA plugs into the one that works. Honors chooses on purpose — and can say why the others don't apply."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Pick the equation by what's missing\n\nThe constant-acceleration equations each leave out exactly one variable:\n\n- $v = v_0 + at$ — no displacement $\\Delta x$.\n- $\\Delta x = v_0 t + \\tfrac{1}{2}at^2$ — no final velocity $v$.\n- $v^2 = v_0^2 + 2a\\,\\Delta x$ — no time $t$.\n\nSo the honest selection rule is: **list your knowns, identify your unknown, and pick the equation that contains your unknown and none of the variables you don't have.** You're not hunting for a formula that 'works' — you're matching the equation to the information you actually possess.\n\nAnd every one of them rests on one assumption: **acceleration is constant** over the interval. If $a$ changes, none of these apply."
+    },
+    {
+     "id": "h3",
+     "type": "gewa",
+     "prompt": "A probe starts at $v_0 = 200$ m/s and accelerates uniformly at $a = 12$ m/s² over a displacement of $\\Delta x = 5{,}000$ m. Find its final velocity. In your work, FIRST state which kinematic equation you chose and WHY the other two don't fit this problem.",
+     "givenHint": "You have v0, a, and Δx — and you are NOT given time t.",
+     "equationHint": "Choose the equation that contains your unknown (v) and does NOT require the variable you're missing (t).",
+     "equationOptions": [
+      "v = v₀ + at",
+      "Δx = v₀t + ½at²",
+      "v² = v₀² + 2aΔx"
+     ]
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "I chose $v^2 = v_0^2 + 2a\\Delta x$ because my knowns were ___ and my unknown was ___, and the other equations failed because ___. All of these assume ___.",
+     "prompt": "JUSTIFY: Explain how you decided WHICH kinematic equation to use for the probe problem — name the variable that was missing and how that ruled the others out. Then name the assumption all three equations share."
+    }
+   ]
+  },
+  {
+   "day": 8,
+   "title": "Day 8 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — carry the model to the asteroid",
+     "markdown": "You can now solve a constant-acceleration problem. The honors demand isn't another plug-in — it's dropping that model onto a problem you haven't seen, the one the whole year is about."
+    },
+    {
+     "id": "h2",
+     "type": "asteroid_thread",
+     "whatWeKnow": "We have the kinematic equations for constant acceleration and we can choose the right one and defend the choice.",
+     "connection": "A deflection plan would give 2026-XJ a small, steady push — a constant acceleration — over a long time. Today you reason about whether that's even enough to matter, using only Unit 1's tools, and you name what those tools still can't answer."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "Using $\\Delta x = v_0 t + \\tfrac{1}{2}at^2$, a tiny steady acceleration over a long time produces ___, which is why ___. But Unit 1 alone cannot tell me ___, because ___.",
+     "prompt": "TRANSFER: Suppose a thruster could give 2026-XJ a tiny but constant sideways acceleration for the entire year before arrival. Using constant-acceleration reasoning (not a memorized number), explain why even a small acceleration applied over a very long time can build into a meaningful sideways displacement. Then name ONE thing Unit 1's kinematics still CANNOT answer about this deflection — and which later idea (force? mass thrown off? energy?) would be needed to answer it."
+    },
+    {
+     "id": "h4",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Close forward",
+     "markdown": "Kinematics tells us *what a motion does* if we already know the acceleration. It never tells us **what causes** that acceleration, or how big a push it takes to produce it. That 'how big a push?' question is the door into the next unit — Newton's laws and $F = ma$. The deflection story is just getting started."
+    },
+    {
+     "id": "h5",
+     "type": "marzano",
+     "targetId": "u1.d08-kinematics-transfer"
+    }
+   ]
+  },
+  {
+   "day": 9,
+   "title": "Day 9 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — spiral the toolkit",
+     "markdown": "Today's CPA practice mixes the kinematics moves you've built — position, velocity, acceleration, the equations of motion. The honors demand isn't to get more answers. It's to **say why your chosen equation was the right one**, and to make every hidden assumption stand in the open."
+    },
+    {
+     "id": "h2",
+     "type": "callout",
+     "variant": "warning",
+     "title": "Name the assumption",
+     "markdown": "Almost every kinematics equation you reach for carries a silent claim: **constant acceleration over the interval.** $v = v_0 + at$ and $\\Delta x = v_0 t + \\tfrac12 a t^2$ are only true if $a$ doesn't change while the clock runs.\n\nBefore you plug in, ask: *is $a$ actually constant here, or am I assuming it?* On a problem where it isn't (a car that brakes, then coasts, then accelerates), one equation across the whole trip is a lie. You'd have to break the motion into intervals where the assumption holds."
+    },
+    {
+     "id": "h3",
+     "type": "prose",
+     "markdown": "## Solve, then name what you assumed\n\nWork the CPA problem set as written. But for **each** problem, before you trust the number, write one line in the margin: *the assumption I made to use this equation is ___.* Constant acceleration? A clean start from rest? Motion in a straight line so I can treat position as a single signed number? Most kinematics errors aren't arithmetic — they're an assumption that didn't actually hold."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "I chose the equation ___ for this problem. It was the right choice because the givens were ___ and the unknown was ___. The assumption it rests on is ___, and I know that assumption holds here because ___.",
+     "prompt": "JUSTIFY (homework): Pick the hardest problem from today's set. Don't just show the work — defend the *choice* of equation. Why that one and not another? What assumption does it carry, and how do you know that assumption is safe for this particular problem?"
+    },
+    {
+     "id": "h5",
+     "type": "exit_ticket",
+     "frame": "If I had to predict 2026-XJ's position from its current velocity, the kinematics assumption I'd be leaning on is ___. It could fail because ___.",
+     "prompt": "TRANSFER (homework): Soon you'll predict where 2026-XJ is at graduation from its velocity today. Which kinematics assumption would that prediction rest on — and name one reason it might quietly break over a year-long flight."
+    }
+   ]
+  },
+  {
+   "day": 10,
+   "title": "Day 10 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — three views, one motion",
+     "markdown": "You've now built three ways to describe the same moving thing: a **graph** (position or velocity vs. time), an **equation** (the kinematics relations), and a **vector** (magnitude plus direction). The honors move today is to prove to yourself they're not three topics — they're one idea in three costumes."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Connect backward — tie the three together\n\nLook back across the last week and make the seams explicit:\n\n- The **slope** of a position–time graph *is* the velocity in your equations *is* the magnitude-and-sign of your velocity vector. Same number, three faces.\n- The **slope** of a velocity–time graph *is* the $a$ in $v = v_0 + at$ *is* how the velocity vector is changing.\n- The **area** under a velocity–time graph *is* the $\\Delta x$ that $\\Delta x = v_0 t + \\tfrac12 a t^2$ computes.\n\nIf you can read a value off the graph, you can find it from the equation, and you can point it as a vector. A motion you can only handle one way you don't really own yet — you've memorized a procedure, not understood the motion."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "On a velocity–time graph, the slope tells me ___ and the area tells me ___. The same two facts show up in my equations as ___ and ___, and as a vector they look like ___.",
+     "prompt": "JUSTIFY (homework): Take one velocity–time graph from today. Read its slope and its area. Then show that the *same* two quantities fall out of the kinematics equations, and describe what each one is as a vector. Make the case that the graph, the equation, and the vector are telling one story — not three."
+    },
+    {
+     "id": "h4",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Close forward",
+     "markdown": "You can now fully describe *how* something moves. What you still can't say is *why* it moves that way — what makes the velocity change at all. That 'why' has a name, and it's the next thing we build: **force.** Hold onto the question."
+    }
+   ]
+  },
+  {
+   "day": 11,
+   "title": "Day 11 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — build the equation, don't receive it",
+     "markdown": "CPA varies mass (Inv 1.2), varies force (Inv 1.3), and sees that $F = ma$ falls out of the data. Today you do that **and then refuse to stop there.** You're going to derive the joint law yourself, and find the assumption hiding inside it."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Derive $F = ma$ from two single-variable experiments\n\nFrom the lab you hold two separate, one-variable claims:\n\n- **Inv 1.3 (vary force, mass fixed):** doubling the force doubled the acceleration. So at constant mass, $a \\propto F$.\n- **Inv 1.2 (vary mass, force fixed):** doubling the mass halved the acceleration. So at constant force, $a \\propto \\dfrac{1}{m}$.\n\nNow the honors step CPA skips. Each experiment only changed *one* variable. To put them together into one law, $a \\propto \\dfrac{F}{m}$, you have to make a claim neither experiment tested directly: that **force and mass act on acceleration independently** — that changing one doesn't secretly change how the other behaves. The combined law is the *simplest* relationship consistent with both lines, not a forced logical deduction. Write it as an equality and you get $a = k\\,\\dfrac{F}{m}$."
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Setting the constant to 1 *defines* the newton",
+     "markdown": "That $k$ isn't handed to you by nature — **you choose it.** Physicists set $k = 1$, which collapses the law to $F = ma$. But that choice isn't free: once $k = 1$, the force that gives a 1 kg mass an acceleration of 1 m/s² *must* equal exactly 1 force-unit. That force-unit is what we name the **newton**. You didn't just build the equation — by picking the constant, you defined the unit it's measured in."
+    },
+    {
+     "id": "h4",
+     "type": "vocab",
+     "terms": [
+      {
+       "term": "newton",
+       "definition": "the SI unit of force; 1 N is the force that gives a 1 kg mass an acceleration of 1 m/s², the unit fixed by choosing k = 1 in F = ma",
+       "cognate": "newton"
+      },
+      {
+       "term": "proportionality constant",
+       "definition": "the multiplier k that turns a proportionality (a ∝ F/m) into an equation (a = kF/m); its value is a unit choice, not a law of nature",
+       "cognate": "constante de proporcionalidad / constante de proporcionalidade"
+      }
+     ]
+    },
+    {
+     "id": "h5",
+     "type": "exit_ticket",
+     "frame": "My a-vs-F line and my a-vs-(1/m) line don't have the same slope, but they're both evidence for F = ma because ___. The independence assumption is ___, and I know force and mass act independently because ___.",
+     "prompt": "JUSTIFY (homework): Your a-vs-F line and your a-vs-(1/m) line have different slopes. Explain why two single-variable lines can still justify one joint law, F = ma. Then a classmate objects: 'you just *assumed* force and mass act independently — how do you actually know they do?' Answer them honestly. What in the data, or in further experiment, would let you defend that independence?"
+    }
+   ]
+  },
+  {
+   "day": 12,
+   "title": "Day 12 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — interrogate what you built",
+     "markdown": "Yesterday you derived $F = ma$ and defined the newton. A model you can't attack you don't really trust. Today you go after your own equation: where does the experiment lie, and what does the equation quietly assume?"
+    },
+    {
+     "id": "h2",
+     "type": "callout",
+     "variant": "misconception",
+     "title": "Your 'constant force' wasn't constant",
+     "markdown": "The force in the vary-force lab came from a **hanging mass** pulling the cart. But here's the flaw: that hanging mass is *accelerating downward too* — it's part of the moving system, so the tension pulling your cart is **less than** the hanging weight, and it isn't truly fixed as you change the cart's load.\n\nSo the 'constant force' label on your data is an approximation, not a fact. Think about which way that flaw would bend your $a$-vs-$F$ line — and why CPA can use the data anyway while honors has to name the error."
+    },
+    {
+     "id": "h3",
+     "type": "prose",
+     "markdown": "## Where else does the equation strain?\n\nTwo more cracks worth seeing before you walk away trusting $F = ma$:\n\n- **Friction and the track** ate some of your force, so the *net* force on the cart was a little less than what you applied — a systematic offset, not random scatter.\n- **$F = ma$ assumes the mass is fixed.** It's silent about what happens if the moving thing *throws mass off* while it accelerates. Nothing in your derivation covers that case — the law simply doesn't apply when $m$ changes mid-motion."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "F = ma assumes the mass stays fixed. A real asteroid deflection works by ___, which throws mass off — so F = ma alone can't handle it. The later unit that does is ___, because ___.",
+     "prompt": "TRANSFER (homework): $F = ma$ assumes a fixed mass. But a real deflection mission moves an asteroid by *throwing mass off* it — ejecting material so the rest recoils. That breaks the fixed-mass assumption you found today. Name the later unit that has to handle changing-mass problems, and explain why $F = ma$ by itself can't."
+    },
+    {
+     "id": "h5",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Close forward",
+     "markdown": "You now own the most important equation of the year — *and* you've located the two assumptions hiding inside it: fixed mass, and a clean isolated force. Units 3 and 4 exist to attack exactly those two assumptions. You already know where they'll strike."
+    },
+    {
+     "id": "h6",
+     "type": "marzano",
+     "targetId": "u1.d12-fma-limits"
+    }
+   ]
+  },
+  {
+   "day": 13,
+   "title": "Day 13 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — the cancellation trap",
+     "markdown": "Newton's third law says forces come in equal-and-opposite pairs. Every student's first instinct is the same wrong one: *if they're equal and opposite, they cancel — so nothing should ever move.* The honors demand today is to defend, in prose, exactly why that reasoning fails."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Why the pair doesn't cancel\n\nHere's the key the CPA packet states and honors must *defend*: the two forces in a third-law pair **act on different objects.** When you push a wall, you push the wall and the wall pushes you. Those forces are equal and opposite — but one acts on the wall and one acts on you.\n\nForces only cancel when they act on the **same** object — that's what 'net force' means. A third-law pair never acts on the same object, so it *can't* cancel. To find whether *you* accelerate, you add up only the forces on *you* (the wall's push, friction, your weight) — the force you exert on the wall isn't in that sum at all, because it isn't acting on you. Confusing 'equal and opposite' (third law, two objects) with 'balanced' (net force, one object) is the single most common dynamics error."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "The two forces in a Newton's-third-law pair don't cancel because ___. Forces only cancel when ___, but a third-law pair always ___. So 'equal and opposite means it can't move' is wrong because ___.",
+     "prompt": "JUSTIFY (homework): A classmate insists: 'Newton's third law forces are equal and opposite, so they cancel — nothing should ever be able to accelerate.' Take a concrete example (a rocket, a swimmer, you pushing off a wall) and defend in a paragraph why the equal-and-opposite pair does NOT cancel, and how something still accelerates. Be precise about *which object* each force acts on."
+    }
+   ]
+  },
+  {
+   "day": 14,
+   "title": "Day 14 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — a diagram is an argument",
+     "markdown": "A free-body diagram isn't decoration — it's a claim about *which* forces are real and *why*. CPA draws the arrows correctly. Honors has to **justify every arrow on the page**: name the source of each force, and name what you assumed away by leaving other things off."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Justify each force you draw\n\nFor every arrow on your free-body diagram, you should be able to answer two questions:\n\n1. **What object is pushing or pulling here?** Every force has a source. Weight comes from Earth's gravity. The normal force comes from the surface. Tension comes from the string. Friction comes from the surface resisting sliding. If you can't name the *other object* exerting it, the arrow doesn't belong.\n2. **Is this force acting on *my* object?** The FBD shows only the forces *on* the body — never the forces the body exerts on other things (those live on *their* diagrams).\n\nAn arrow you can't source is a guess. A missing arrow is a force you forgot. Both are arguments you'd lose."
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "warning",
+     "title": "State your assumptions",
+     "markdown": "Every clean free-body diagram is built on idealizations you should say out loud:\n\n- **Massless string** — so tension is the same all along it, and the string adds no weight of its own.\n- **Frictionless surface** — drawn only when you've *decided* friction is small enough to ignore (a modeling choice, not a fact).\n- **Point particle** — the object is treated as a dot with all forces acting at one point, so you can ignore rotation and how the object is shaped.\n\nThese assumptions make the diagram solvable. They also make it *wrong* in situations where they don't hold. An honors FBD names them; it doesn't smuggle them in."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "On my free-body diagram I drew the forces ___. Each one is justified because its source is ___. I left off ___ because I assumed ___, which is safe here since ___.",
+     "prompt": "JUSTIFY (homework): Draw the free-body diagram for one scenario from today (a box on an incline, a hanging sign, a cart pulled by a string). Then write a paragraph defending it: name the *source* of every arrow you drew, and name every idealization you assumed (massless string, frictionless, point particle) and why each is reasonable here."
+    }
+   ]
+  },
+  {
+   "day": 15,
+   "title": "Day 15 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — friction is a choice you make",
+     "markdown": "Back on Day 1 you learned a model is a claim that can have limits. Friction is where that idea pays off. CPA computes friction forces. Honors treats friction as a **modeling decision**: sometimes you include it, sometimes you neglect it — and you must be able to defend which, and when."
+    },
+    {
+     "id": "h2",
+     "type": "callout",
+     "variant": "warning",
+     "title": "Neglecting friction is a modeling choice, not a fact",
+     "markdown": "Every time you wrote 'frictionless' on a diagram, you made a **choice** — you decided friction was small enough next to the other forces to throw away. That choice is sometimes brilliant and sometimes a lie.\n\n- **Appropriate** when friction is genuinely tiny compared to what's driving the motion: a puck on fresh ice, a spacecraft coasting through near-vacuum, a cart on a low-friction track over a short run.\n- **A lie** when friction is doing real work in the answer: a car braking to a stop (friction *is* the stopping force), a box that won't slide until you push hard enough, anything reaching terminal velocity.\n\nThe honest move isn't 'always include friction' or 'always ignore it.' It's: *estimate how big friction is relative to everything else, then decide — and say you decided.*"
+    },
+    {
+     "id": "h3",
+     "type": "prose",
+     "markdown": "## When does the simplification lie?\n\nThe test for whether neglecting friction is safe isn't a rule — it's a comparison. Ask: **is the friction force small compared to the other forces in the problem, AND is friction not the very thing the question is about?** If friction is small *and* peripheral, drop it and gain a clean, solvable model. If friction is large, or if it's the answer the problem is hunting (how far does the car skid? will the box slip?), then 'frictionless' deletes the physics that matters and your answer is confidently wrong."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "Neglecting friction is appropriate when ___, because ___. It lies when ___, because ___. The test I use to decide is ___.",
+     "prompt": "JUSTIFY (homework): Give one situation where neglecting friction is a smart, defensible modeling choice, and one where it badly distorts the answer. For each, explain *why* using the size of friction relative to the other forces and whether friction is central to the question. Then state the general test you'd use to decide before solving any new problem."
+    }
+   ]
+  },
+  {
+   "day": 16,
+   "title": "Day 16 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — equilibrium is a claim, not a coincidence",
+     "markdown": "CPA writes ΣF = 0 when an object is at rest or moving at constant velocity. Honors treats that equation as a **claim you have to defend**: *I assert the forces sum to zero, here is the evidence, here is the reasoning.* A balanced free-body diagram is the beginning of an argument, not the end of one."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## What equilibrium actually asserts\n\nWhen $\\Sigma \\vec{F} = 0$, the acceleration is zero — *and that is the whole statement.* It does **not** say the object is at rest. A crate sliding across a floor at a steady 4 m/s is in equilibrium just as much as a crate sitting still: in both, velocity isn't changing, so the net force is zero.\n\nThis is where intuition fights you. The naive model says *'moving means there's a leftover force pushing it along.'* Equilibrium says the opposite: a thing can move forever at constant velocity with **zero** net force. The friction backward exactly cancels the push forward. To claim equilibrium, you must show **every component** sums to zero — not just the ones you happened to notice."
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "warning",
+     "title": "State your assumptions",
+     "markdown": "An equilibrium claim is only as good as the model under it. Before you write ΣF = 0, name what you're assuming: that you've drawn **every** force (no hidden ones), that the object is a **point** (no rotation/torque to worry about), and that the surface, string, or support is **rigid** and not accelerating. If any of those breaks, your tidy ΣF = 0 breaks with it."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "This object IS / IS NOT in equilibrium. My evidence is ___. The assumption my claim depends on most is ___, and it would break if ___.",
+     "prompt": "JUSTIFY: A sign hangs motionless from two angled cables. A classmate says 'it's not moving, so there are no forces on it.' Defend the correct equilibrium claim instead: explain what ΣF = 0 really asserts here, cite the forces that cancel, and name the one assumption your claim leans on hardest."
+    },
+    {
+     "id": "h5",
+     "type": "marzano",
+     "targetId": "u1.d16-equilibrium"
+    }
+   ]
+  },
+  {
+   "day": 17,
+   "title": "Day 17 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — choosing axes is a decision you defend",
+     "markdown": "On an incline, CPA tilts the axes so x runs along the slope and resolves gravity into components. Honors does the same calculation — and then **justifies why that choice was the smart one.** Picking axes isn't a rule handed to you; it's a modeling decision, and a strong analyst can say out loud why it pays off."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Why tilt the axes?\n\nYou *could* keep x horizontal and y vertical. The physics would still be correct. But then **two** forces — the normal force and the slide — would each have x and y parts, and the motion would mix both axes. Messy.\n\nTilt the axes to match the slope and something clean happens: the object only accelerates **along** the incline, so the whole problem collapses onto one axis. The normal force points straight along the new y (no component to chase), and only **gravity** has to be decomposed:\n\n$$F_{\\parallel} = mg\\sin\\theta \\qquad F_{\\perp} = mg\\cos\\theta$$\n\nThe decomposition choice isn't about getting a different answer — it's about choosing the frame where the answer is **easiest to defend**. That is the honors move: not just *do* it, but be able to say *why this frame and not the other.*"
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "warning",
+     "title": "State your assumptions",
+     "markdown": "Your incline result $F_\\parallel = mg\\sin\\theta$ quietly assumes several things: the ramp is **frictionless** (or you've added friction as its own term), the incline is **rigid** and doesn't deform, the angle $\\theta$ is measured from the **horizontal**, and the object is a **point** sliding without tipping or rolling. Name these before you trust the number — a stated assumption is a checkable one."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "I chose to tilt my axes along the slope because ___. With horizontal/vertical axes instead, the problem would be harder because ___. One assumption my decomposition rests on is ___.",
+     "prompt": "JUSTIFY: For a block on a frictionless ramp, explain why you decomposed gravity along tilted (slope-aligned) axes rather than horizontal/vertical ones. Argue what specifically gets easier, and name one assumption your decomposition depends on."
+    },
+    {
+     "id": "h5",
+     "type": "marzano",
+     "targetId": "u1.d17-incline-components"
+    }
+   ]
+  },
+  {
+   "day": 18,
+   "title": "Day 18 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — one structure, not two units",
+     "markdown": "Today the force tools come together. The honors move is to see that **kinematics and forces are not two separate subjects** — they're the front and back of a single machine. Force decides acceleration; acceleration decides how the motion unfolds. Connect the arc out loud."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Connect the arc — forces and kinematics are one structure\n\nTrace the chain you've built since Day 1:\n\n1. **Kinematics** gave you the language of *how* things move: position, velocity, acceleration — and the equations that link them.\n2. **Newton's laws** answered the *why*: $\\Sigma\\vec{F} = m\\vec{a}$ says the net force **sets** the acceleration.\n3. A **free-body diagram** is the bridge: it turns a physical situation into the one number — net force — that feeds $a = \\Sigma F / m$.\n\nSo the structure runs **one direction**: *forces → net force → acceleration → (back into kinematics) → the whole future motion.* Friction, the normal force, weight, tension — every contact force you've studied is just an input to that single pipeline. There was never a 'kinematics chapter' and a 'forces chapter.' There's one chain, and today you can finally see both ends of it at once. That is what it means to **own** Unit 1 rather than to have covered it."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "Forces connect to kinematics through ___. If I knew every force on the asteroid, the step that turns that into its future position is ___, because ___.",
+     "prompt": "JUSTIFY: Explain, as a single connected chain, how a free-body diagram leads all the way to a prediction of an object's future position. Name each link (net force → acceleration → motion) and defend why you can't skip the middle step."
+    },
+    {
+     "id": "h4",
+     "type": "marzano",
+     "targetId": "u1.d18-forces-synthesis"
+    }
+   ]
+  },
+  {
+   "day": 19,
+   "title": "Day 19 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — rehearse the peer defense",
+     "markdown": "On the transfer task you'll defend your reasoning **aloud** to a partner. Today is the dress rehearsal for that. While CPA closes practice gaps, honors also rehearses the AP1 move that the transfer task actually scores: defending a claim out loud, on the spot."
+    },
+    {
+     "id": "h2",
+     "type": "callout",
+     "variant": "tip",
+     "title": "The claim–evidence–reasoning defense",
+     "markdown": "An AP1 defense has three parts, in order:\n\n- **Claim** — the one sentence you're asserting (e.g. *'the sign is in equilibrium'*).\n- **Evidence** — the specific facts that support it (the forces, the numbers, the diagram).\n- **Reasoning** — the *why* that links evidence to claim, **including the assumptions** it rests on and where they'd break.\n\nMost answers stop at evidence. The honors bar lives in the **reasoning** step — that's the part a fast, correct student skips, and the part a partner will probe. Practice saying all three without notes."
+    },
+    {
+     "id": "h3",
+     "type": "marzano",
+     "targetId": "u1.d19-defend-aloud"
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "My weakest reasoning move is ___ (stating assumptions / linking evidence to claim / naming where a model breaks). To strengthen it before the transfer task I will ___.",
+     "prompt": "PLAN: Of the three defense steps — claim, evidence, reasoning — which is your weakest when you have to do it ALOUD with no notes? Name the specific reasoning move you fumble most, and write a concrete plan to drill it before the transfer task."
+    }
+   ]
+  },
+  {
+   "day": 20,
+   "title": "Day 20 · Phase 2 — Building the tools",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — dress rehearsal for the transfer task",
+     "markdown": "CPA runs one integrated analysis of 2026-XJ today. Honors runs that **and** rehearses the two moves the transfer-task rubric scores hardest: *stating your assumptions* and *locating this unit in the arc.* Treat today as the full-dress run-through, not just review."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Rehearse the two honors moves\n\nAs you walk through the asteroid analysis, narrate two things CPA doesn't have to:\n\n**1. State every assumption — and when it breaks.** Your constant-velocity prediction quietly assumes: velocity stays constant, no forces act over this leg, the asteroid is a point particle, and the motion stays in a plane. For each, say the condition that would break it. An unstated assumption is the most common way an honors '4' collapses to a '3'.\n\n**2. Locate Unit 1 in the year.** Be honest about the **edge** of what you've built. Unit 1's tools predict a *straight-line* position from constant velocity. They **cannot** tell you why the path will eventually **curve** (that's gravity, a later unit) or what an **impact** would do (that's momentum, later still). Naming that edge is the connect move — an analysis that pretends to answer everything is island-bound, and island answers cap Transfer at 3."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "One thing Unit 1 CANNOT yet answer about 2026-XJ is ___. The unit that will have to answer it is ___, because ___.",
+     "prompt": "JUSTIFY: Name one specific question about 2026-XJ that Unit 1's physics genuinely CANNOT answer — and say which later unit will have to pick it up, and why our current tools fall short. Be precise about the edge of what you've built."
+    },
+    {
+     "id": "h4",
+     "type": "marzano",
+     "targetId": "u1.d20-locate-the-arc"
+    }
+   ]
+  },
+  {
+   "day": 21,
+   "title": "Day 21 · Phase 3 — Transfer task",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors transfer task — same numbers, higher bar",
+     "markdown": "You get the **same scenario and the same data** as CPA: 2026-XJ at 1.2×10⁸ km, 8,500 m/s at 15° toward Earth. The calculation isn't harder. What's raised is the **demand**: state your assumptions and their limits, defend the model in writing, and locate this task in the year's arc. The bar moves, not the numbers."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Part B — Justify (the honors raise)\n\nAfter the Part-A calculation (position, velocity components, uncertainty window, position-vs-time graph), you owe three things in writing:\n\n- **State every assumption** your prediction rests on — you have at least four (constant velocity, negligible force over this leg, point particle, motion confined to a plane) — and for **each**, the physical condition under which it would break.\n- **Defend the constant-velocity model** against the classmate who says *'acceleration is negligible, so it's a perfectly straight line we can pinpoint exactly.'* Their arithmetic is fine; the reasoning is not. Find the flaw.\n- **Translate the math into physics:** what the 15° angle means for whether it hits us, and why the uncertainty window *grows* over six months instead of staying fixed."
+    },
+    {
+     "id": "h3",
+     "type": "exit_ticket",
+     "frame": "Assumption: ___. It would break when ___.  (Repeat for each of your four.)",
+     "prompt": "STATE EVERY ASSUMPTION AND WHEN IT BREAKS: List every assumption your six-month prediction rests on (at least four). For EACH one, pair it with the specific physical condition under which it would fail. A bare list of assumptions without breaking conditions caps your Reasoning at 3."
+    },
+    {
+     "id": "h4",
+     "type": "exit_ticket",
+     "frame": "The classmate's MODEL error is ___. Their DATA error is ___. These are different because a model error comes from ___ while a data error comes from ___.",
+     "prompt": "REBUTTAL — model error vs data error: Your classmate's numbers are right but their claim ('a perfectly straight line we can pinpoint exactly') is wrong for TWO separate reasons. Name both: the model error (the constant-velocity assumption) AND the data error (the ± measurement uncertainties). Explain why missing either one is an incomplete rebuttal."
+    }
+   ]
+  },
+  {
+   "day": 22,
+   "title": "Day 22 · Phase 3 — Transfer task",
+   "blocks": [
+    {
+     "id": "h1",
+     "type": "callout",
+     "variant": "note",
+     "title": "Honors — the peer defense (90 seconds)",
+     "markdown": "Today your reasoning gets tested by a partner, not a worksheet. **Protocol:** pair up. Each analyst defends their **assumptions list and rebuttal paragraph aloud for 90 seconds** while the partner does ONE job — hunt for an *unstated assumption* or an *unaddressed flaw.* Then swap. The defense, not the paper, is where it becomes clear who actually owns the reasoning. State the claim, give the evidence, walk the reasoning — and survive the probe."
+    },
+    {
+     "id": "h2",
+     "type": "prose",
+     "markdown": "## Part C — Locate it in the year (the connect beat)\n\nClose with the **public briefing**: *what we know, what we don't, and what we cannot yet answer.* Name at least one thing Unit 1's physics **cannot** tell us about 2026-XJ — and which later question of the year has to. (Hint: what would bend that straight line?)\n\nA briefing that treats this prediction as the whole story is **island-bound** — it caps your Transfer score at 3, however polished it reads. Treat your prediction as *one link in a chain*: this is what we can say now, this is the edge of our reach, and this is who picks it up next."
+    },
+    {
+     "id": "h3",
+     "type": "callout",
+     "variant": "tip",
+     "title": "Why 4-3-4-3 is NOT 4-4-4-4",
+     "markdown": "Your work is scored on **four independent dimensions**, letter grade set by the lowest:\n\n1. **Science** — is the physics correct? (and do your sig figs respect the ±uncertainty?)\n2. **Reasoning** — assumptions stated *with* breaking conditions; rebuttal catches *both* model error and data error.\n3. **Communication** — a peer could check your reasoning, not just your answer.\n4. **Transfer-to-asteroid** — you locate Unit 1 in the arc and name what it *can't* yet do.\n\nA fast, correct student who computes the position and writes a tidy paragraph lands at **4-3-4-3**: Science and Communication are fine, but Reasoning drops to 3 without assumptions-and-limits, and Transfer drops to 3 if the briefing is island-bound. The two 3s are not careless errors — they're the exact spots where speed substitutes for the honors moves. Closing them is what makes it 4-4-4-4."
+    },
+    {
+     "id": "h4",
+     "type": "marzano",
+     "targetId": "u1.d22-honors-transfer"
+    }
+   ]
+  }
+ ]
+}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarRange, BookOpen, Download, FileText } from 'lucide-react'
+import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap } from 'lucide-react'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
@@ -24,6 +24,7 @@ export default function TeacherPlansPage() {
   const [track, setTrack] = useState<string>('cpa')
   const [unit, setUnit] = useState<string>('unit-1')
   const [availableUnits, setAvailableUnits] = useState<string[]>(['unit-1'])
+  const [honorsDays, setHonorsDays] = useState<number[]>([])
   const [sel, setSel] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -31,10 +32,11 @@ export default function TeacherPlansPage() {
     setLoading(true)
     fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}`)
       .then((r) => r.json())
-      .then((d: { days?: DayPlan[]; track?: string; availableUnits?: string[] }) => {
+      .then((d: { days?: DayPlan[]; track?: string; availableUnits?: string[]; honorsDays?: number[] }) => {
         setDays(d.days ?? [])
         if (d.track) setTrack(d.track)
         if (d.availableUnits?.length) setAvailableUnits(d.availableUnits)
+        setHonorsDays(d.honorsDays ?? [])
         setSel((d.days ?? []).length ? d.days![0].day : null)
         setLoading(false)
       })
@@ -171,6 +173,22 @@ export default function TeacherPlansPage() {
                     >
                       <FileText size={13} /> PDF
                     </a>
+                    {honorsDays.includes(current.day) && (
+                      <a
+                        href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
+                        style={{
+                          border: '1px solid color-mix(in oklch, var(--primary) 55%, var(--border))',
+                          background: 'color-mix(in oklch, var(--primary) 16%, var(--card))',
+                          color: 'var(--primary)',
+                        }}
+                        title="Honors Extension for this day — open a print view, then 'Save as PDF'"
+                      >
+                        <GraduationCap size={13} /> Honors Extension
+                      </a>
+                    )}
                   </div>
                 </div>
                 <div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
