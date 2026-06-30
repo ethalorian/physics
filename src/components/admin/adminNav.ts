@@ -1,0 +1,79 @@
+import {
+  LayoutGrid, Gift, Microscope, Gamepad2, Joystick,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, BarChart3, CalendarClock, Smile, Trophy, GraduationCap,
+  type LucideIcon,
+} from 'lucide-react'
+
+/**
+ * The admin/teacher navigation model — the single source of truth for both the
+ * persistent sidebar (admin/layout) and the command palette. Previously this
+ * lived inside admin/home; it was lifted here so the launcher could move into
+ * the nav without duplicating the data.
+ */
+export type Tool = {
+  href: string
+  label: string
+  desc: string
+  icon: LucideIcon
+  accent: string
+  adminOnly?: boolean
+}
+
+export type ToolGroup = { title: string; tools: Tool[] }
+
+export const GROUPS: ToolGroup[] = [
+  {
+    title: 'Teach & grade',
+    tools: [
+      { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
+      { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },
+      { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters and see performance', icon: GraduationCap, accent: 'var(--primary)' },
+      { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', icon: Gift, accent: 'var(--reward)' },
+    ],
+  },
+  {
+    title: 'Plan & build',
+    tools: [
+      { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
+      { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
+      { href: '/admin/collaborators', label: 'Collaborators', desc: 'Grant per-area curriculum edit rights to specific people', icon: Users, accent: 'var(--primary)', adminOnly: true },
+    ],
+  },
+  {
+    title: 'Insights',
+    tools: [
+      { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
+      { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
+      { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)', adminOnly: true },
+    ],
+  },
+  {
+    title: 'Content library',
+    tools: [
+      { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
+      { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
+      { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },
+      { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
+    ],
+  },
+  {
+    title: 'Preview',
+    tools: [
+      { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
+    ],
+  },
+]
+
+/** Role-gate the groups: drop admin-only tools for non-admins, then drop empties. */
+export function gateGroups(groups: ToolGroup[], isAdmin: boolean): ToolGroup[] {
+  return groups
+    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
+    .filter((g) => g.tools.length > 0)
+}
+
+/** Flattened, role-gated tool list (for the command palette index). */
+export function flatTools(isAdmin: boolean): Tool[] {
+  return gateGroups(GROUPS, isAdmin).flatMap((g) => g.tools)
+}

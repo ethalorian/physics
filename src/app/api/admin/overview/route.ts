@@ -12,6 +12,7 @@ export const GET = withRole('admin', async () => {
       students: 0,
       colleagues: 0,
       publishedLessons: 0,
+      unpublishedLessons: 0,
       masteryRatings: 0,
       pendingRewards: 0,
       activeStudents7d: 0,
@@ -37,6 +38,13 @@ export const GET = withRole('admin', async () => {
       .select('*', { count: 'exact', head: true })
       .eq('published', true)
     overview.publishedLessons = lessonCount ?? 0
+
+    // Unpublished lessons = drafts awaiting publish (the actionable "needs you" count)
+    const { count: draftCount } = await supabaseAdmin
+      .from('lessons')
+      .select('*', { count: 'exact', head: true })
+      .eq('published', false)
+    overview.unpublishedLessons = draftCount ?? 0
 
     // Mastery ratings logged (all-time)
     const { count: masteryCount } = await supabaseAdmin

@@ -3,7 +3,6 @@ import { getEffectiveContext } from '@/lib/effective-context'
 import { canEditArea } from '@/lib/content-access'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
-import Link from 'next/link'
 import ManageUnits, { type ManageUnit, type ManageLesson } from '@/components/admin/ManageUnits'
 import LessonAccessSnapshot from '@/components/admin/LessonAccessSnapshot'
 
@@ -82,12 +81,9 @@ export default async function AdminManagePage() {
 
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Manage</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Author your curriculum lessons as content blocks, unit by unit.</p>
-        </div>
-        <Link href="/admin/home" className="text-sm font-semibold rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>← Command center</Link>
+      <div className="mb-1">
+        <h1 className="text-2xl font-semibold tracking-tight">Manage</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Author your curriculum lessons as content blocks, unit by unit.</p>
       </div>
 
       <div className="grid gap-3 my-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>

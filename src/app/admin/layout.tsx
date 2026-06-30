@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import AdminShell from '@/components/admin/AdminShell'
 
 /**
  * Admin/teacher layout.
@@ -9,7 +10,15 @@ import type { ReactNode } from 'react'
  * treatment on these screens only — finer hairline borders, softer shadows —
  * while inheriting the same palette, type scale, and components. One system,
  * one refined sub-surface; no second design language.
+ *
+ * `AdminShell` adds the persistent grouped sidebar + global search so the suite
+ * holds context across its ~25 destinations instead of bouncing through a
+ * launcher and back-links.
  */
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  return <div className="surface-refined">{children}</div>
+  return (
+    <div className="surface-refined">
+      <AdminShell>{children}</AdminShell>
+    </div>
+  )
 }

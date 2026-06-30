@@ -6,15 +6,15 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import {
-  LayoutGrid, Gift, TrendingUp, Microscope, Gamepad2, Joystick,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, Award, Sparkles, GraduationCap, BarChart3, CalendarClock, Smile, Trophy,
-  type LucideIcon,
+  Gift, TrendingUp, Users, Activity, BookOpen, Award, Sparkles, FileText,
+  CheckCircle2, ArrowRight, type LucideIcon,
 } from 'lucide-react'
 
 interface Overview {
   students: number
   colleagues: number
   publishedLessons: number
+  unpublishedLessons: number
   masteryRatings: number
   pendingRewards: number
   activeStudents7d: number
@@ -22,64 +22,19 @@ interface Overview {
 
 type Icon = LucideIcon
 
-type Tool = { href: string; label: string; desc: string; icon: Icon; accent: string; adminOnly?: boolean }
+// A single actionable item in the "Needs you today" strip.
+type WorkItem = { key: string; count: number; label: string; href: string; accent: string; icon: Icon }
 
-// Grouped so the command center reads as a hierarchy, not a wall of cards.
-// Daily teaching tools first; admin-only insight/build surfaces gated by role.
-const GROUPS: { title: string; tools: Tool[] }[] = [
-  {
-    title: 'Teach & grade',
-    tools: [
-      { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
-      { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
-      { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },
-      { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters and see performance', icon: GraduationCap, accent: 'var(--primary)' },
-      { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', icon: Gift, accent: 'var(--reward)' },
-    ],
-  },
-  {
-    title: 'Plan & build',
-    tools: [
-      { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
-      { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
-      { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
-      { href: '/admin/collaborators', label: 'Collaborators', desc: 'Grant per-area curriculum edit rights to specific people', icon: Users, accent: 'var(--primary)', adminOnly: true },
-    ],
-  },
-  {
-    title: 'Insights',
-    tools: [
-      { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
-      { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
-      { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)', adminOnly: true },
-    ],
-  },
-  {
-    title: 'Content library',
-    tools: [
-      { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
-      { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
-      { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },
-      { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
-    ],
-  },
-  {
-    title: 'Preview',
-    tools: [
-      { href: '/home', label: 'View as student', desc: 'See the student home experience', icon: Eye, accent: 'var(--muted-foreground)' },
-    ],
-  },
-]
-
-function StatTile({ icon: Ico, value, label, accent }: { icon: Icon; value: number | string; label: string; accent: string }) {
+function StatTile({ icon: Ico, value, label }: { icon: Icon; value: number | string; label: string }) {
+  // Demoted: vanity numbers are context, not a call to action — quiet, compact,
+  // no accent bar. The day's real work lives in the "Needs you today" strip.
   return (
-    <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-      <div className="flex items-center justify-between">
-        <div className="text-2xl font-bold tracking-tight">{value}</div>
-        <Ico size={18} className="opacity-70" />
+    <div className="rounded-xl border px-3 py-2.5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+      <div className="flex items-center gap-2">
+        <Ico size={14} style={{ color: 'var(--muted-foreground)' }} />
+        <div className="text-lg font-semibold tracking-tight" style={{ color: 'var(--foreground)' }}>{value}</div>
       </div>
-      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
-      <div style={{ height: 3, borderRadius: 2, marginTop: 8, background: accent, opacity: 0.85 }} />
+      <div className="text-[11px] mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
     </div>
   )
 }
@@ -94,10 +49,7 @@ export default function AdminHomePage() {
   useEffect(() => {
     if (role === 'teacher') router.replace('/admin/teacher')
   }, [role, router])
-  // Drop admin-only tools for teachers, then drop any group left empty.
-  const groups = GROUPS
-    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
-    .filter((g) => g.tools.length > 0)
+
   const [ov, setOv] = useState<Overview | null>(null)
   const [reqs, setReqs] = useState<{ email: string; name: string | null; note: string | null }[]>([])
   const [orphanCount, setOrphanCount] = useState<number>(0)
@@ -133,8 +85,20 @@ export default function AdminHomePage() {
 
   const firstName = (session?.user?.name ?? 'there').split(' ')[0]
 
+  // The day's actionable work, promoted above the vanity stats. Each item links
+  // to where the work gets done; only non-zero items render.
+  const work: WorkItem[] = [
+    { key: 'requests', count: reqs.length, label: reqs.length === 1 ? 'teacher-access request' : 'teacher-access requests', href: '#teacher-requests', accent: 'var(--destructive)', icon: Award },
+    { key: 'rewards', count: ov?.pendingRewards ?? 0, label: 'rewards to fulfil', href: '/admin/store', accent: 'var(--reward)', icon: Gift },
+    { key: 'orphans', count: orphanCount, label: orphanCount === 1 ? 'student not in a class' : 'students not in a class', href: '/admin/orphans', accent: 'var(--destructive)', icon: Users },
+    { key: 'drafts', count: ov?.unpublishedLessons ?? 0, label: ov?.unpublishedLessons === 1 ? 'unpublished draft' : 'unpublished drafts', href: '/admin/dashboard', accent: 'var(--primary)', icon: FileText },
+  ].filter((w) => w.count > 0)
+
+  const loaded = ov !== null
+  const allCaughtUp = isAdmin && loaded && work.length === 0
+
   return (
-    <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+    <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       {/* header */}
       <div
         className="rounded-2xl p-6 mb-6"
@@ -150,13 +114,53 @@ export default function AdminHomePage() {
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">Welcome back, {firstName}.</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-          Everything across the application, in one place — your classes, your colleagues, and the whole student body.
+          What needs you today is up top. Everything else is one click away in the sidebar.
         </p>
       </div>
 
+      {/* NEEDS YOU TODAY — the actionable worklist, promoted above the vanity stats */}
+      {isAdmin && (
+        <section className="mb-7">
+          <div className="text-overline mb-2" style={{ color: 'var(--muted-foreground)' }}>Needs you today</div>
+          {work.length > 0 ? (
+            <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+              {work.map((w) => {
+                const Ico = w.icon
+                return (
+                  <Link
+                    key={w.key}
+                    href={w.href}
+                    className="flex items-center gap-3 rounded-2xl border p-3.5"
+                    style={{ borderColor: `color-mix(in oklch, ${w.accent} 38%, var(--border))`, background: `color-mix(in oklch, ${w.accent} 7%, var(--card))` }}
+                  >
+                    <span className="grid place-items-center shrink-0" style={{ width: 38, height: 38, borderRadius: 11, background: `color-mix(in oklch, ${w.accent} 16%, transparent)`, color: w.accent }}>
+                      <Ico size={19} />
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-xl font-bold tracking-tight" style={{ color: w.accent }}>{w.count}</span>
+                        <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>{w.label}</span>
+                      </div>
+                    </div>
+                    <ArrowRight size={16} style={{ color: w.accent }} />
+                  </Link>
+                )
+              })}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 rounded-2xl border p-3.5" style={{ borderColor: 'color-mix(in oklch, var(--success) 40%, var(--border))', background: 'color-mix(in oklch, var(--success) 7%, var(--card))' }}>
+              <CheckCircle2 size={18} style={{ color: 'var(--success)' }} />
+              <span className="text-sm" style={{ color: 'var(--foreground)' }}>
+                {allCaughtUp ? 'All caught up — nothing waiting on you right now.' : 'Loading the day’s worklist…'}
+              </span>
+            </div>
+          )}
+        </section>
+      )}
+
       {/* teacher-access requests — alert + approve/deny (admin only) */}
       {isAdmin && reqs.length > 0 && (
-        <div className="rounded-2xl border p-5 mb-7" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 10%, var(--card))' }}>
+        <div id="teacher-requests" className="rounded-2xl border p-5 mb-7" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 10%, var(--card))', scrollMarginTop: 80 }}>
           <div className="flex items-center gap-2 mb-3">
             <Award size={16} style={{ color: 'var(--reward-foreground)' }} />
             <span className="text-sm font-bold">Teacher access {reqs.length === 1 ? 'request' : 'requests'} ({reqs.length})</span>
@@ -178,70 +182,19 @@ export default function AdminHomePage() {
         </div>
       )}
 
-      {/* orphan students alert (signed in but not in any class) */}
-      {isAdmin && orphanCount > 0 && (
-        <Link
-          href="/admin/orphans"
-          className="block rounded-2xl border p-4 mb-7"
-          style={{ borderColor: 'color-mix(in oklch, var(--destructive) 35%, var(--border))', background: 'color-mix(in oklch, var(--destructive) 7%, var(--card))' }}
-        >
-          <div className="flex items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-3">
-              <div className="grid place-items-center" style={{ width: 36, height: 36, borderRadius: 10, background: 'color-mix(in oklch, var(--destructive) 18%, transparent)', color: 'var(--destructive)' }}>
-                <Users size={18} />
-              </div>
-              <div>
-                <div className="text-sm font-semibold">{orphanCount} {orphanCount === 1 ? 'student isn’t' : 'students aren’t'} in a class yet</div>
-                <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>They&rsquo;re signed in but no teacher has rostered them.</div>
-              </div>
-            </div>
-            <span className="text-xs font-semibold" style={{ color: 'var(--destructive)' }}>Review →</span>
-          </div>
-        </Link>
-      )}
-
-      {/* stats — app-wide numbers, admin only */}
+      {/* stats — app-wide numbers, admin only, demoted to a quiet context row */}
       {isAdmin && (
-        <div className="grid gap-3 mb-7" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-          <StatTile icon={Users} value={ov ? ov.students : '—'} label="Enrolled students" accent="var(--primary)" />
-          <StatTile icon={Award} value={ov ? ov.colleagues : '—'} label="Teachers onboarded" accent="var(--reward)" />
-          <StatTile icon={Activity} value={ov ? ov.activeStudents7d : '—'} label="Active this week" accent="var(--success)" />
-          <StatTile icon={BookOpen} value={ov ? ov.publishedLessons : '—'} label="Published lessons" accent="var(--primary)" />
-          <StatTile icon={TrendingUp} value={ov ? ov.masteryRatings : '—'} label="Mastery ratings logged" accent="var(--success)" />
-          <StatTile icon={Gift} value={ov ? ov.pendingRewards : '—'} label="Rewards to fulfil" accent="var(--reward)" />
-        </div>
-      )}
-
-      {/* tool cards, grouped */}
-      {groups.map((g) => (
-        <section key={g.title} className="mb-7">
-          <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>{g.title}</div>
-          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-            {g.tools.map((t) => {
-              const Ico = t.icon
-              return (
-                <Link key={t.href} href={t.href}>
-                  <div
-                    className="rounded-2xl border p-5 h-full transition-transform"
-                    style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = t.accent }}
-                    onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}
-                  >
-                    <div
-                      className="grid place-items-center mb-3"
-                      style={{ width: 44, height: 44, borderRadius: 12, background: `color-mix(in oklch, ${t.accent} 16%, transparent)`, color: t.accent }}
-                    >
-                      <Ico size={22} />
-                    </div>
-                    <div className="font-bold" style={{ fontSize: 16 }}>{t.label}</div>
-                    <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>{t.desc}</div>
-                  </div>
-                </Link>
-              )
-            })}
+        <section>
+          <div className="text-overline mb-2" style={{ color: 'var(--muted-foreground)' }}>At a glance</div>
+          <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}>
+            <StatTile icon={Users} value={ov ? ov.students : '—'} label="Enrolled students" />
+            <StatTile icon={Award} value={ov ? ov.colleagues : '—'} label="Teachers onboarded" />
+            <StatTile icon={Activity} value={ov ? ov.activeStudents7d : '—'} label="Active this week" />
+            <StatTile icon={BookOpen} value={ov ? ov.publishedLessons : '—'} label="Published lessons" />
+            <StatTile icon={TrendingUp} value={ov ? ov.masteryRatings : '—'} label="Mastery ratings logged" />
           </div>
         </section>
-      ))}
+      )}
     </div>
   )
 }

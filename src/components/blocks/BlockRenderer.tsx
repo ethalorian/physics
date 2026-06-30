@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import MathMarkdown from '@/components/MathMarkdown'
+import MathMarkdown, { type GlossaryEntry } from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, isBlockComplete, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import DoodleCanvas, { Stroke } from './DoodleCanvas'
 import PaintPad from './PaintPad'
@@ -443,7 +443,7 @@ function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketc
   )
 }
 
-function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string) {
+function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[]) {
   switch (b.type) {
     case 'target':
       return <div className="text-base font-medium" style={{ color: C.indigo }}>{b.statement}</div>
@@ -455,7 +455,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
         </>
       )
     case 'prose':
-      return <div className="markdown-content"><MathMarkdown content={b.markdown} /></div>
+      return <div className="markdown-content prose-block"><MathMarkdown content={b.markdown} glossary={glossary} /></div>
     case 'callout': {
       const tone = b.variant === 'warning' || b.variant === 'misconception' ? 'var(--viz-down)' : C.lavender
       return (
@@ -603,8 +603,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
   }
 }
 
-function RenderedBlock({ b, saved, save, lessonId }: { b: ContentBlock; saved: unknown; save: SaveFn; lessonId: string }) {
-  const body = renderBody(b, saved, save, lessonId)
+function RenderedBlock({ b, saved, save, lessonId, glossary }: { b: ContentBlock; saved: unknown; save: SaveFn; lessonId: string; glossary?: GlossaryEntry[] }) {
+  const body = renderBody(b, saved, save, lessonId, glossary)
   if (body === null) return null
   const meta = BLOCK_META[b.type]
   if (!meta || BARE.has(b.type)) return <>{body}</>
@@ -631,12 +631,13 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, lessonId, responses: extResponses, save: extSave,
+  blocks, lessonId, responses: extResponses, save: extSave, glossary,
 }: {
   blocks: ContentBlock[]
   lessonId: string
   responses?: BlockResponseMap
   save?: SaveFn
+  glossary?: GlossaryEntry[]
 }) {
   // Internal store is the fallback for callers that don't lift response state
   // (e.g. standalone previews). When the viewer passes responses+save down, the
@@ -649,7 +650,7 @@ export default function BlockRenderer({
       {blocks.map((b) => (
         <div key={b.id}>
           <BlockBoundary label={b.type}>
-            <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} />
+            <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} />
           </BlockBoundary>
         </div>
       ))}

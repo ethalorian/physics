@@ -1653,3 +1653,34 @@
   box-shadow: 0 1px 3px rgba(0,0,0,0.22), 0 10px 34px rgba(0,0,0,0.15);
 }
 
+
+/* ============================================= */
+/* Key-equation blocks (lesson reading screen)    */
+/* ============================================= */
+/* Promote display equations in lesson PROSE from a flat centered line into a
+   labelled, numbered key-equation block: a --primary left rule + a "KEY
+   EQUATION · N" overline. Scoped to `.lesson-reading .prose-block` so authored
+   prose math is promoted while worked-example / GEWA math is left alone. Pure
+   CSS (a counter) — no JS, no schema change, static under reduced-motion. */
+.lesson-reading { counter-reset: keyeq; }
+.lesson-reading .prose-block .katex-display {
+  counter-increment: keyeq;
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1.6rem 1rem 1rem 1.25rem;
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-md);
+  background: color-mix(in oklch, var(--primary) 5%, var(--card));
+  overflow-x: auto;
+}
+.lesson-reading .prose-block .katex-display::before {
+  content: "KEY EQUATION · " counter(keyeq);
+  position: absolute;
+  top: 0.5rem;
+  left: 1.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
