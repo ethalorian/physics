@@ -46,6 +46,9 @@ function cellStyle(b: 0 | 1 | 2 | 3): CSSProperties {
   return { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
 }
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
+// Colorblind-safe shape encoding of the band, so color is never the only signal.
+// ●=Got it(3) · ◐=Almost(2) · ○=Not yet(1) · –=not rated(0).
+const bandGlyph = (b: 0 | 1 | 2 | 3) => (b === 3 ? '●' : b === 2 ? '◐' : b === 1 ? '○' : '–')
 
 // Flatten a captured block response to a short text blob for the AI assist.
 function workToText(r: unknown): string {
@@ -91,7 +94,7 @@ type StrokeShape = { color?: string; points?: { x: number; y: number }[] }
 function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string }) {
   if (!strokes || strokes.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>[empty drawing]</p>
   return (
-    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 420, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label={label}>
+    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: '100%', height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label={label}>
       <StrokeShapes strokes={strokes as Stroke[]} />
     </svg>
   )
@@ -556,7 +559,6 @@ export default function ControlRoomPage() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [nextStudentGate, openPendingCell])
 
   const copyToClipboard = (text: string, what: string) => {
@@ -575,10 +577,20 @@ export default function ControlRoomPage() {
     copyToClipboard(lines.join('\n'), kind)
   }
 
+  // The queue is demoted to a collapsed "Priority" strip: only the truly urgent
+  // (aged 48h+ or self-flagged "Not yet"). Everything else is walked by the one
+  // "Grade pending" CTA, so the queue is no longer a competing second door.
+  const priorityQueue = queue.filter((q) => q.aged || q.needsHelp)
+
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      {/* daily math-fluency rating — moved here from the authoring dashboard */}
-      <div className="mb-4"><TeacherDailyMathTask /></div>
+      {/* daily math-fluency rating — collapsed so the grid is first paint */}
+      <details className="mb-3 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>
+          Daily math-fluency rating
+        </summary>
+        <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
+      </details>
       {/* class-scope banner (when opened from a specific class) */}
       {classId && (
         <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-4 py-2.5 mb-3"
@@ -591,12 +603,7 @@ export default function ControlRoomPage() {
       )}
       {/* header */}
       <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
-        <div>
-          <h1 className="text-xl font-semibold tracking-tight">Class mastery</h1>
-          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-            Tap any cell to open that student&apos;s work and rate it. These scores drive each student&apos;s Retry lane.
-          </p>
-        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Class mastery</h1>
         <div className="flex items-center gap-2">
           <input
             value={nameFilter}
@@ -683,12 +690,15 @@ export default function ControlRoomPage() {
         </div>
       )}
 
-      {/* grading queue — most urgent first */}
-      {view === 'mastery' && queue.length > 0 && (
-        <div className="rounded-xl border mt-4 p-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
-          <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Needs grading · {queue.length}</div>
-          <div className="flex flex-col gap-1.5">
-            {queue.map((q) => (
+      {/* Priority strip — demoted + collapsed; only aged 48h+ or self-flagged
+          "Not yet". The full pending set is walked by "Grade pending" above. */}
+      {view === 'mastery' && priorityQueue.length > 0 && (
+        <details className="rounded-xl border mt-4" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
+          <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted-foreground)' }}>
+            Priority · {priorityQueue.length} aged or flagged
+          </summary>
+          <div className="flex flex-col gap-1.5" style={{ padding: '0 14px 14px' }}>
+            {priorityQueue.map((q) => (
               <div key={q.studentId} className="flex items-center gap-3 flex-wrap rounded-lg px-3 py-2" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                 <span className="text-sm font-semibold flex-1" style={{ minWidth: '8rem' }}>{q.name}</span>
                 {q.aged && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--destructive) 16%, transparent)', color: 'var(--destructive)' }}>48h+ waiting</span>}
@@ -705,7 +715,7 @@ export default function ControlRoomPage() {
               </div>
             ))}
           </div>
-        </div>
+        </details>
       )}
 
       {error && <div className="text-sm rounded-md px-3 py-2 my-3" style={{ background: 'var(--secondary)', color: 'var(--destructive)' }}>{error}</div>}
@@ -739,11 +749,12 @@ export default function ControlRoomPage() {
                       <td key={t.id} style={{ padding: 0 }}>
                         <button
                           onClick={() => openCell(s.id, t.id)}
-                          title={`${s.name} · ${t.statement}`}
+                          title={`${s.name} · ${t.statement}${b ? ` · ${levelWord(b)} (${b})` : ' · not rated'}`}
+                          aria-label={`${s.name}, ${t.statement}: ${b ? `${levelWord(b)} (${b})` : 'not rated'}`}
                           className="grid place-items-center font-bold"
-                          style={{ width: 40, height: 38, borderRadius: 9, fontSize: 13, cursor: 'pointer', ...cellStyle(b) }}
+                          style={{ width: 40, height: 38, borderRadius: 9, fontSize: 15, cursor: 'pointer', ...cellStyle(b) }}
                         >
-                          {b === 0 ? '–' : b}
+                          {bandGlyph(b)}
                         </button>
                       </td>
                     )
@@ -757,11 +768,11 @@ export default function ControlRoomPage() {
 
       {view === 'mastery' && !loading && grid && (
         <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-          <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(3) }} /> Got it (3)</span>
-          <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(2) }} /> Almost (2)</span>
-          <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(1) }} /> Not yet (1)</span>
-          <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, ...cellStyle(0) }} /> Not rated</span>
-          <span style={{ marginLeft: 'auto' }}>Columns are learning targets — hover a header for the full statement.</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(3) }}>{bandGlyph(3)}</span> Got it (3)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(2) }}>{bandGlyph(2)}</span> Almost (2)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(1) }}>{bandGlyph(1)}</span> Not yet (1)</span>
+          <span className="inline-flex items-center gap-1.5"><span className="grid place-items-center" style={{ width: 16, height: 16, borderRadius: 4, fontSize: 11, fontWeight: 700, ...cellStyle(0) }}>{bandGlyph(0)}</span> Not rated</span>
+          <span style={{ marginLeft: 'auto' }}>Cells show shape + color — hover a cell for the level, a header for the target.</span>
         </div>
       )}
 
@@ -924,18 +935,31 @@ export default function ControlRoomPage() {
               <div className="font-bold" style={{ fontSize: 18 }}>{selStudent?.name ?? lessonGrid?.students.find((s) => s.id === sel?.studentId)?.name}</div>
               <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{sel?.lesson ? `Day ${sel.lesson.number} — ${sel.lesson.title}` : selTarget?.statement}</div>
               <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: sel?.lesson ? 'none' : 'capitalize' }}>{sel?.lesson ? 'Gradebook score · completion' : selTarget?.domain}</div>
-              {sel && (
-                <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 8, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  <span><b style={{ color: 'var(--foreground)' }}>{studentPendingCount(sel.studentId)}</b> left for this student</span>
-                  <span>·</span>
-                  <span><b style={{ color: 'var(--foreground)' }}>{pendingStudents.length}</b> student{pendingStudents.length === 1 ? '' : 's'} with work left</span>
-                </div>
-              )}
+              {/* Progress lives in the roster rail (and the between-students gate) — no
+                  redundant header counts. */}
             </div>
 
             <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1 }}>
-              {/* this student vs. the class on this lesson (same decaying-avg rollup as the grid) */}
-              {!sel.lesson && comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (() => {
+              {/* submitted work — first, right under the header (the thing being judged) */}
+              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
+              {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
+              {!workLoading && work && work.work.length === 0 && (
+                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
+              )}
+              {!workLoading && work && work.work.map((w) => (
+                <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
+                  <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
+                    {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
+                  </div>
+                  <ResponseView response={w.response} />
+                </div>
+              ))}
+
+              {/* this student vs. the class — collapsed below the work */}
+              {!sel.lesson && comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (
+                <details className="mb-5">
+                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>This lesson · mastery vs. class</summary>
+                  {(() => {
                 const s = comparison.studentAvg, g = comparison.globalAvg
                 const bar = (v: number | null) => `${v === null ? 0 : Math.max(4, (v / 3) * 100)}%`
                 const delta = s !== null && g !== null ? s - g : null
@@ -959,10 +983,15 @@ export default function ControlRoomPage() {
                     <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Decaying-average rollup on a 1–3 scale, across this lesson&apos;s targets.</p>
                   </div>
                 )
-              })()}
+                  })()}
+                </details>
+              )}
 
-              {/* gradebook analytics (completion mode) */}
-              {sel.lesson && gbStats && (() => {
+              {/* gradebook analytics (completion mode) — collapsed below the work */}
+              {sel.lesson && gbStats && (
+                <details className="mb-5">
+                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>Gradebook · this day vs unit</summary>
+                  {(() => {
                 const pctStr = (v: number | null) => (v == null ? '—' : `${Math.round(v)}%`)
                 const bar = (v: number | null) => `${v == null ? 0 : Math.max(4, Math.min(100, v))}%`
                 const dayDelta = gbStats.studentLessonPct != null && gbStats.classDayAvg != null ? gbStats.studentLessonPct - gbStats.classDayAvg : null
@@ -1000,12 +1029,16 @@ export default function ControlRoomPage() {
                     <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>Gradebook % toward the letter grade — class figures use the selected class/section.</p>
                   </div>
                 )
-              })()}
+                  })()}
+                </details>
+              )}
 
-              {/* rating history (mastery only) */}
-              {!sel.lesson && <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Rating history</div>}
-              {!sel.lesson && (selHistory.length > 0 ? (
-                <div className="flex flex-col gap-1.5 mb-5">
+              {/* rating history (mastery only) — collapsed below the work */}
+              {!sel.lesson && (
+                <details className="mb-5">
+                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>Rating history</summary>
+                  {selHistory.length > 0 ? (
+                    <div className="flex flex-col gap-1.5">
                   {selHistory.map((r, i) => (
                     <div key={i} className="flex items-center justify-between gap-2 text-sm rounded-md px-3 py-1.5" style={{ background: 'var(--secondary)' }}>
                       <span className="flex items-center gap-2 min-w-0">
@@ -1019,39 +1052,29 @@ export default function ControlRoomPage() {
                       <span className="shrink-0" style={{ fontWeight: 700 }}>{levelWord(r.level)} ({r.level})</span>
                     </div>
                   ))}
-                </div>
-              ) : (
-                <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>No prior ratings on this target.</p>
-              ))}
-
-              {/* submitted work */}
-              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
-              {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
-              {!workLoading && work && work.work.length === 0 && (
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
+                    </div>
+                  ) : (
+                    <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No prior ratings on this target.</p>
+                  )}
+                </details>
               )}
-              {!workLoading && work && work.work.map((w) => (
-                <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
-                  <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
-                    {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
-                  </div>
-                  <ResponseView response={w.response} />
-                </div>
-              ))}
             </div>
 
             {/* rater */}
             <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
               {!sel.lesson && (<>
-              <div className="text-sm font-semibold mb-2">Your mastery rating</div>
-              <button
-                onClick={suggestRating}
-                disabled={suggesting || !work || work.work.length === 0}
-                className="w-full mb-2 rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-50"
-                style={{ borderColor: 'color-mix(in oklch, var(--primary) 40%, var(--border))', color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}
-              >
-                {suggesting ? 'Asking Claude…' : '✨ Suggest a rating (Claude)'}
-              </button>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <span className="text-sm font-semibold">Your mastery rating</span>
+                <button
+                  onClick={suggestRating}
+                  disabled={suggesting || !work || work.work.length === 0}
+                  className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold disabled:opacity-50"
+                  style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', color: 'var(--primary)', background: 'transparent', cursor: 'pointer' }}
+                  title="Ask Claude to suggest a rating"
+                >
+                  {suggesting ? 'Asking…' : '✨ Suggest'}
+                </button>
+              </div>
               {suggestion && (
                 <div className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
                   {suggestion.level >= 1 && suggestion.level <= 3 ? (
@@ -1099,15 +1122,18 @@ export default function ControlRoomPage() {
               </>)}
 
               {sel.lesson && (<>
-                <div className="text-sm font-semibold mb-2">Gradebook score</div>
-                <button
-                  onClick={suggestGradebook}
-                  disabled={gbBusy || !work || work.work.length === 0}
-                  className="w-full mb-2 rounded-lg border px-3 py-2 text-sm font-semibold disabled:opacity-50"
-                  style={{ borderColor: 'color-mix(in oklch, var(--primary) 40%, var(--border))', color: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}
-                >
-                  {gbBusy ? 'Asking Claude…' : '✨ Suggest a % (Claude)'}
-                </button>
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-sm font-semibold">Gradebook score</span>
+                  <button
+                    onClick={suggestGradebook}
+                    disabled={gbBusy || !work || work.work.length === 0}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold disabled:opacity-50"
+                    style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', color: 'var(--primary)', background: 'transparent', cursor: 'pointer' }}
+                    title="Ask Claude to suggest a %"
+                  >
+                    {gbBusy ? 'Asking…' : '✨ Suggest'}
+                  </button>
+                </div>
                 {gbSuggestion && (
                   <div className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
                     {gbSuggestion.percent >= 0 ? (<><b>Claude suggests: {gbSuggestion.percent}%</b> — {gbSuggestion.rationale}<div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — adjust and save.</div></>) : (<span style={{ color: 'var(--muted-foreground)' }}>{gbSuggestion.rationale}</span>)}
