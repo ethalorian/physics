@@ -12,6 +12,7 @@ import type { ConceptValue } from './ConceptExercise'
 import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
+import DeckPresentCard from './DeckPresentCard'
 import { useBlockResponses, type BlockResponseMap } from './useBlockResponses'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
@@ -94,7 +95,8 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   concept_exercise: { label: 'Read & practice', domain: 'R', Icon: BookOpen },
 }
 // Blocks that read best as clean editorial content — no colored shell.
-const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure'])
+// `deck` draws its own presenter card (teacher-only; students never receive it).
+const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure', 'deck'])
 
 function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: boolean; capture?: boolean; children: ReactNode }) {
   const accent = ACCENT[meta.domain]
@@ -517,6 +519,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     case 'sim_embed':
       return <SimEmbed slug={b.simulationSlug} />
+    case 'deck':
+      return <DeckPresentCard src={b.src} title={b.title} />
     case 'animation_3d':
       return <Animation3DView slug={b.animationSlug} caption={b.caption} />
     case 'equation_visualizer':

@@ -65,6 +65,9 @@ export function viewerCanSeeGate(
 
 /** Should this block be shown to this viewer? */
 export function isBlockVisible(block: ContentBlock, viewer: Viewer): boolean {
+  // Presenter-only blocks: the day's slide deck is a teacher tool (launch card
+  // for the projector), never part of the student-facing lesson document.
+  if (block.type === 'deck' && viewer.role === 'student') return false;
   return viewerCanSeeGate(viewer, block.visibilityTrack);
 }
 

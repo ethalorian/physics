@@ -104,6 +104,19 @@ export interface SimEmbedBlock extends BaseBlock {
 }
 
 /**
+ * DECK — the day's classroom slide deck (a self-contained HTML bundle under
+ * /public/decks/<unit>/, see docs/Deck-Integration-Handoff.md). TEACHER-FACING:
+ * renders as a "Present" launch card that opens the deck in a second window
+ * (projector). Students never receive this block — it is stripped server-side
+ * in src/lib/track-visibility.ts, alongside the track gates. Display-only.
+ */
+export interface DeckBlock extends BaseBlock {
+  type: 'deck';
+  src: string;                // static asset path, e.g. '/decks/unit-1/Day 5 - Predicting Position.dc.html'
+  title: string;              // e.g. 'Day 5 — Predicting Position'
+}
+
+/**
  * ANIMATION_3D — a scripted instructional Three.js animation with ONE knob.
  * Pedagogically distinct from sim_embed: students WATCH a scripted sequence
  * (play/pause/scrub + step captions) and may re-run it after changing a single
@@ -368,7 +381,7 @@ export interface ConceptExerciseBlock extends BaseBlock {
 
 export type ContentBlock =
   | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
-  | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
+  | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | DeckBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
   | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
