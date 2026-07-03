@@ -19,6 +19,11 @@
 import { useRef, useState } from 'react'
 import { MonitorPlay, Presentation, Timer, Keyboard } from 'lucide-react'
 
+// Platform-aware browser-fullscreen hint: F11 is a Windows/Linux idiom; macOS
+// uses ⌃⌘F (or the green traffic-light button). SSR-safe: default to the Mac
+// string only when navigator says so at render time (client component).
+const isMac = () => typeof navigator !== 'undefined' && /Mac|iP(hone|ad|od)/.test(navigator.platform)
+
 interface ScreenDetailed {
   isPrimary: boolean
   availLeft: number
@@ -45,10 +50,13 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
         const details = await w.getScreenDetails()
         const external = details.screens.find((s) => !s.isPrimary)
         if (external) {
+          // `fullscreen` in the features string is Chrome's "fullscreen popup"
+          // (allowed once window-management permission is granted): the deck
+          // arrives on the projector ALREADY fullscreen — no F11/⌃⌘F needed.
           deckWin.current = window.open(
             url,
             'deck-presenter',
-            `left=${external.availLeft},top=${external.availTop},width=${external.availWidth},height=${external.availHeight}`,
+            `popup,fullscreen,left=${external.availLeft},top=${external.availTop},width=${external.availWidth},height=${external.availHeight}`,
           )
           setOpened(Boolean(deckWin.current))
           return
@@ -98,7 +106,8 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
           </div>
           {opened && (
             <div className="text-[11px] mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
-              If the deck opened on this screen: drag it to the projector, then press F11.
+              If the deck opened on this screen: drag it to the projector, then{' '}
+              {isMac() ? <>press <strong>⌃⌘F</strong> (or the green window button)</> : <>press <strong>F11</strong></>} for fullscreen.
               Display mode must be <strong>Extend</strong>, not Mirror.
             </div>
           )}
