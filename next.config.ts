@@ -109,6 +109,34 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Presenter decks (self-contained HTML bundles, docs/Deck-Integration-Handoff.md).
+        // Their runtime unpacks all inlined assets (fonts, sims, the deck shell)
+        // into blob: URLs and loads React/ReactDOM/Babel from unpkg — the app's
+        // strict global CSP blocks all of that (dead sims, fallback fonts).
+        // This later, more specific entry OVERRIDES the global CSP for /decks/*
+        // only; everything else keeps the strict policy. Decks open in their own
+        // top-level window, never inside app pages, so app pages stay covered.
+        source: '/decks/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://unpkg.com",
+              "style-src 'self' 'unsafe-inline' blob:",
+              "font-src 'self' blob: data:",
+              "img-src 'self' data: blob:",
+              "media-src 'self' blob: data:",
+              "connect-src 'self' blob: data:",
+              "worker-src 'self' blob:",
+              "object-src 'none'",
+              "base-uri 'self'",
+              "form-action 'self'",
+            ].join('; '),
+          },
+        ],
+      },
     ];
   },
 };
