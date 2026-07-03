@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap } from 'lucide-react'
+import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap, MonitorPlay } from 'lucide-react'
+import { deckForDay } from '@/data/lesson-decks'
+import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
@@ -45,6 +47,17 @@ export default function TeacherPlansPage() {
 
   const current = days.find((d) => d.day === sel) ?? null
   const unitTitle = (UNIT_LABEL[unit] ?? unit).replace(/^Unit \d+ · /, '')
+
+  // The day's classroom slide deck (self-contained HTML in /public/decks/…).
+  // Opens in a presenter window on the projector — see src/lib/present-deck.ts.
+  const deck = current ? deckForDay(unit, current.day) : null
+  const [deckOpened, setDeckOpened] = useState(false)
+  useEffect(() => { setDeckOpened(false) }, [sel, unit])
+  const presentDeck = async () => {
+    if (!deck) return
+    const w = await openPresenterWindow(deck.src)
+    setDeckOpened(Boolean(w))
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -146,6 +159,16 @@ export default function TeacherPlansPage() {
                   <BookOpen size={16} style={{ color: 'var(--primary)', marginTop: 3 }} />
                   <h2 className="text-lg font-semibold tracking-tight flex-1 min-w-0">{current.title}</h2>
                   <div className="flex items-center gap-1.5">
+                    {deck && (
+                      <button
+                        onClick={presentDeck}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
+                        style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
+                        title={`Open “${deck.title}” in a presenter window — arrows navigate, T opens the class timer`}
+                      >
+                        <MonitorPlay size={13} /> Present deck
+                      </button>
+                    )}
                     <a
                       href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx`}
                       download
@@ -175,6 +198,12 @@ export default function TeacherPlansPage() {
                     </a>
                   </div>
                 </div>
+                {deckOpened && (
+                  <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
+                    Deck opened. If it landed on this screen: drag it to the projector, then press{' '}
+                    <strong>{fullscreenKeyHint()}</strong> for fullscreen. Display mode must be <strong>Extend</strong>, not Mirror.
+                  </p>
+                )}
                 {honorsDays.includes(current.day) && (
                   <div className="flex items-center flex-wrap gap-2 mb-3 rounded-lg border px-3 py-2" style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 7%, var(--card))' }}>
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}><GraduationCap size={14} /> Honors Extension</span>

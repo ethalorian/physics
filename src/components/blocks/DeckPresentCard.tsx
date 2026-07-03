@@ -18,21 +18,7 @@
 
 import { useRef, useState } from 'react'
 import { MonitorPlay, Presentation, Timer, Keyboard } from 'lucide-react'
-
-// Platform-aware browser-fullscreen hint: F11 is a Windows/Linux idiom; macOS
-// uses ⌃⌘F (or the green traffic-light button). SSR-safe: default to the Mac
-// string only when navigator says so at render time (client component).
-const isMac = () => typeof navigator !== 'undefined' && /Mac|iP(hone|ad|od)/.test(navigator.platform)
-
-interface ScreenDetailed {
-  isPrimary: boolean
-  availLeft: number
-  availTop: number
-  availWidth: number
-  availHeight: number
-}
-interface ScreenDetails { screens: ScreenDetailed[] }
-type WindowWithScreens = Window & { getScreenDetails?: () => Promise<ScreenDetails> }
+import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 
 export default function DeckPresentCard({ src, title }: { src: string; title: string }) {
   // Handle to the presenter window — Phase 2 (speaker-notes side panel) will
@@ -41,33 +27,7 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
   const [opened, setOpened] = useState(false)
 
   const present = async () => {
-    const url = encodeURI(src)
-
-    // Preferred: place the deck straight onto the external display (Chrome/Edge).
-    try {
-      const w = window as WindowWithScreens
-      if (typeof w.getScreenDetails === 'function') {
-        const details = await w.getScreenDetails()
-        const external = details.screens.find((s) => !s.isPrimary)
-        if (external) {
-          // `fullscreen` in the features string is Chrome's "fullscreen popup"
-          // (allowed once window-management permission is granted): the deck
-          // arrives on the projector ALREADY fullscreen — no F11/⌃⌘F needed.
-          deckWin.current = window.open(
-            url,
-            'deck-presenter',
-            `popup,fullscreen,left=${external.availLeft},top=${external.availTop},width=${external.availWidth},height=${external.availHeight}`,
-          )
-          setOpened(Boolean(deckWin.current))
-          return
-        }
-      }
-    } catch {
-      // Permission denied or API unavailable — fall through to the plain open.
-    }
-
-    // Fallback: normal tab/window; teacher drags to the projector + F11.
-    deckWin.current = window.open(url, 'deck-presenter')
+    deckWin.current = await openPresenterWindow(src)
     setOpened(Boolean(deckWin.current))
   }
 
@@ -106,8 +66,8 @@ export default function DeckPresentCard({ src, title }: { src: string; title: st
           </div>
           {opened && (
             <div className="text-[11px] mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
-              If the deck opened on this screen: drag it to the projector, then{' '}
-              {isMac() ? <>press <strong>⌃⌘F</strong> (or the green window button)</> : <>press <strong>F11</strong></>} for fullscreen.
+              If the deck opened on this screen: drag it to the projector, then press{' '}
+              <strong>{fullscreenKeyHint()}</strong> for fullscreen.
               Display mode must be <strong>Extend</strong>, not Mirror.
             </div>
           )}
