@@ -1,6 +1,6 @@
 import {
   LayoutGrid, Gift, Microscope, Gamepad2, Joystick,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, BarChart3, CalendarClock, Smile, Trophy, GraduationCap,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -37,6 +37,7 @@ export const GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
+      { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Day-by-day teacher plans per unit — Word/PDF downloads and the Present deck launch', icon: CalendarRange, accent: 'var(--primary)' },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
       { href: '/admin/collaborators', label: 'Collaborators', desc: 'Grant per-area curriculum edit rights to specific people', icon: Users, accent: 'var(--primary)', adminOnly: true },
     ],
