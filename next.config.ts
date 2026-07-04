@@ -74,8 +74,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Apply these headers to all routes
-        source: '/(.*)',
+        // Apply these headers to all routes EXCEPT the presenter decks.
+        // The decks (/decks/*) are self-contained foreign artifacts
+        // (docs/Deck-Integration-Handoff.md): their runtime unpacks inlined
+        // assets to blob: URLs and loads React/Babel from unpkg, all of which
+        // this app CSP forbids (symptom: an unstyled vertical scroll with dead
+        // sims). Excluding them here means a served deck carries NO security
+        // headers — byte-for-byte the same experience as opening the file
+        // directly. Decks open in their own top-level window, never inside app
+        // pages, so every app page keeps the strict policy below.
+        source: '/((?!decks/).*)',
         headers: [
           {
             key: 'Content-Security-Policy',
@@ -106,34 +114,6 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
-          },
-        ],
-      },
-      {
-        // Presenter decks (self-contained HTML bundles, docs/Deck-Integration-Handoff.md).
-        // Their runtime unpacks all inlined assets (fonts, sims, the deck shell)
-        // into blob: URLs and loads React/ReactDOM/Babel from unpkg — the app's
-        // strict global CSP blocks all of that (dead sims, fallback fonts).
-        // This later, more specific entry OVERRIDES the global CSP for /decks/*
-        // only; everything else keeps the strict policy. Decks open in their own
-        // top-level window, never inside app pages, so app pages stay covered.
-        source: '/decks/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://unpkg.com",
-              "style-src 'self' 'unsafe-inline' blob:",
-              "font-src 'self' blob: data:",
-              "img-src 'self' data: blob:",
-              "media-src 'self' blob: data:",
-              "connect-src 'self' blob: data:",
-              "worker-src 'self' blob:",
-              "object-src 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-            ].join('; '),
           },
         ],
       },
