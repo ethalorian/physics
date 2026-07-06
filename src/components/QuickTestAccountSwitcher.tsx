@@ -144,13 +144,13 @@ export function QuickTestAccountSwitcher() {
         if (account.role === 'admin' || account.role === 'teacher') {
           router.push('/admin/dashboard')
         } else {
-          router.push('/dashboard')
+          router.push('/home')
         }
         router.refresh()
       } else {
         console.error('Sign in failed:', result?.error)
         // For Google OAuth fallback
-        signIn('google', { callbackUrl: '/dashboard' })
+        signIn('google', { callbackUrl: '/home' })
       }
     } catch (error) {
       console.error('Switch account error:', error)

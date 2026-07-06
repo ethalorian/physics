@@ -25,7 +25,7 @@ export default function EquationVisualizerPage() {
 
     const userRole = getUserRole(session?.user?.email)
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      router.push('/dashboard')
+      router.push('/home')
       return
     }
   }, [session, status, router])

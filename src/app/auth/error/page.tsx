@@ -56,7 +56,7 @@ function AuthErrorContent() {
     try {
       // Force account selection to allow choosing a different account
       await signIn("google", { 
-        callbackUrl: "/dashboard",
+        callbackUrl: "/home",
         prompt: "select_account"
       })
     } catch (error) {

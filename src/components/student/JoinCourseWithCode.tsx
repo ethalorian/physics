@@ -100,7 +100,7 @@ export default function JoinCourseWithCode({ onSuccess }: JoinCourseWithCodeProp
 
       // Force a full page reload to completely refresh enrollment status
       setTimeout(() => {
-        window.location.href = '/dashboard'
+        window.location.href = '/home'
       }, 1500)
 
     } catch (error) {

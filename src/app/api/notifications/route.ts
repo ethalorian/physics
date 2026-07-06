@@ -48,7 +48,7 @@ export const GET = withAuth(async (_req, ctx) => {
     const { data } = await supabaseAdmin.from('submissions').select('id, score, max_score, graded_at').eq('user_id', me).eq('status', 'graded').order('graded_at', { ascending: false }).limit(8)
     for (const r of (data ?? []) as { id: string; score: number | null; max_score: number | null; graded_at: string | null }[]) {
       if (!r.graded_at) continue
-      items.push({ id: `grade:${r.id}`, type: 'grade', title: 'Assignment graded', detail: r.max_score ? `${r.score ?? 0} / ${r.max_score}` : `${r.score ?? 0} pts`, at: r.graded_at, href: '/dashboard', unread: isUnread(r.graded_at) })
+      items.push({ id: `grade:${r.id}`, type: 'grade', title: 'Assignment graded', detail: r.max_score ? `${r.score ?? 0} / ${r.max_score}` : `${r.score ?? 0} pts`, at: r.graded_at, href: '/home', unread: isUnread(r.graded_at) })
     }
   } catch { /* ignore */ }
 
@@ -119,7 +119,7 @@ export const GET = withAuth(async (_req, ctx) => {
         const days = Math.max(0, Math.round((due - now) / 86400000))
         items.push({
           id: `due:${r.id}`, type: 'due', title: 'Due soon', detail: `${a.title ?? 'Assignment'} · due ${days === 0 ? 'today' : days === 1 ? 'tomorrow' : `in ${days} days`}`,
-          at: a.due_date, href: '/dashboard', unread: now >= new Date(soonThreshold).getTime() && isUnread(soonThreshold),
+          at: a.due_date, href: '/home', unread: now >= new Date(soonThreshold).getTime() && isUnread(soonThreshold),
         })
       }
     } catch { /* ignore */ }

@@ -531,7 +531,7 @@ export default function DistanceDisplacementAssignmentPage() {
             </div>
             
             <div className="flex gap-4">
-              <Button onClick={() => router.push('/dashboard')} className="flex-1">
+              <Button onClick={() => router.push('/home')} className="flex-1">
                 Back to Dashboard
               </Button>
               <Button onClick={() => window.location.reload()} variant="outline" className="flex-1">

@@ -87,7 +87,7 @@ export default function SimulationAssignmentsPage() {
   // Check permissions
   useEffect(() => {
     if (userRole === 'student') {
-      router.push('/dashboard')
+      router.push('/home')
     }
   }, [userRole, router])
 

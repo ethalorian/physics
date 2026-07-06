@@ -127,7 +127,7 @@ export default function AdminSimulationsPage() {
     }
 
     if (userRole !== 'admin' && userRole !== 'teacher') {
-      router.push('/dashboard')
+      router.push('/home')
     }
   }, [session, status, userRole, router])
 

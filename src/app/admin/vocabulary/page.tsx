@@ -25,7 +25,7 @@ export default function VocabularyManagementPage() {
   // Check if user has admin access
   const userRole = getUserRole(session?.user?.email)
   if (userRole !== 'admin' && userRole !== 'teacher') {
-    redirect('/dashboard')
+    redirect('/home')
   }
 
   return (
