@@ -146,7 +146,7 @@ export default function LeaderboardPage() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Leaderboard</h1>
           <p className="text-sm text-muted-foreground">
-            Compete with your classmates and earn points
+            Compete with your classmates and earn XP
           </p>
         </div>
       </div>
@@ -191,7 +191,7 @@ export default function LeaderboardPage() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-sm text-muted-foreground">Total Points</p>
+                <p className="text-sm text-muted-foreground">Total XP</p>
                 <p className="text-2xl font-bold">{currentUserEntry.total_points.toLocaleString()}</p>
               </div>
             </div>
@@ -301,10 +301,10 @@ export default function LeaderboardPage() {
                         </div>
                       </div>
 
-                      {/* Points */}
+                      {/* XP */}
                       <div className="text-right">
                         <div className="font-bold text-lg">{entry.total_points.toLocaleString()}</div>
-                        <div className="text-xs text-muted-foreground">points</div>
+                        <div className="text-xs text-muted-foreground">XP</div>
                       </div>
                     </div>
                   ))}
@@ -325,12 +325,12 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      {/* How to Earn Points */}
+      {/* How to earn XP */}
       <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
-            How to Earn Points
+            How to earn XP
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -350,7 +350,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h4 className="font-semibold text-sm">Complete Lessons</h4>
-                <p className="text-xs text-muted-foreground">1 point per % progress + video question bonus</p>
+                <p className="text-xs text-muted-foreground">XP for reading progress + video question bonus</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
@@ -359,7 +359,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h4 className="font-semibold text-sm">Submit Assignments</h4>
-                <p className="text-xs text-muted-foreground">Graded work earns points (up to 40 each)</p>
+                <p className="text-xs text-muted-foreground">Graded work earns XP (up to 40 each)</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
@@ -368,7 +368,7 @@ export default function LeaderboardPage() {
               </div>
               <div>
                 <h4 className="font-semibold text-sm">Daily Challenges</h4>
-                <p className="text-xs text-muted-foreground">Complete challenges for bonus points</p>
+                <p className="text-xs text-muted-foreground">Complete challenges for bonus XP</p>
               </div>
             </div>
           </div>

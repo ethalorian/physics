@@ -68,10 +68,10 @@ export default function StorePage() {
   return (
     <EnrollmentGate>
     <div className="max-w-3xl mx-auto p-4" style={{ color: C.indigo }}>
-      <h1 className="text-xl font-medium mb-3">Points store</h1>
+      <h1 className="text-xl font-medium mb-3">XP store</h1>
 
       <div className="rounded-xl border p-4 mb-4" style={{ background: C.tint, borderColor: C.hairline }}>
-        <div className="text-xs" style={{ color: C.muted }}>Points to spend</div>
+        <div className="text-xs" style={{ color: C.muted }}>XP to spend</div>
         <div className="text-3xl font-medium" style={{ color: C.reward }}>{bal}</div>
         {balance && (
           <div className="text-xs mt-1" style={{ color: C.muted }}>
@@ -91,7 +91,7 @@ export default function StorePage() {
             <span className="text-xs" style={{ color: C.muted }}>{earnedCount} of {carParts.length} parts earned</span>
           </div>
           <p className="text-xs mb-3" style={{ color: C.muted }}>
-            Pass each build day (score 60 or higher) to earn the materials you need for the next day. No points needed —
+            Pass each build day (score 60 or higher) to earn the materials you need for the next day. No XP needed —
             once a part says <strong>Earned</strong>, your teacher will hand it to you in class.
           </p>
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
@@ -127,7 +127,7 @@ export default function StorePage() {
       {/* Priced rewards (if any are active) */}
       {shopRewards.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Spend your points</h2>
+          <h2 className="text-sm font-medium mb-2" style={{ color: 'var(--secondary-foreground)' }}>Spend your XP</h2>
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
             {shopRewards.map((r) => {
               const afford = bal >= r.cost_points
@@ -136,7 +136,7 @@ export default function StorePage() {
                   <div className="font-medium" style={{ color: C.indigo }}>{r.name}</div>
                   {r.description && <div className="text-sm mt-1 flex-1" style={{ color: C.muted }}>{r.description}</div>}
                   <div className="flex items-center justify-between mt-3">
-                    <span className="text-sm font-medium" style={{ color: C.reward }}>{r.cost_points} pts</span>
+                    <span className="text-sm font-medium" style={{ color: C.reward }}>{r.cost_points} XP</span>
                     <button
                       onClick={() => redeem(r)}
                       disabled={!afford || busy === r.id}
@@ -161,7 +161,7 @@ export default function StorePage() {
           {shopRedemptions.map((r, i) => (
             <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
               <span className="flex-1 text-sm">{r.reward_name}</span>
-              <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} pts</span>
+              <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} XP</span>
               <span className="text-xs rounded px-2 py-0.5" style={{ background: 'var(--card)', border: `1px solid ${STATUS_COLOR[r.status] ?? C.hairline}`, color: STATUS_COLOR[r.status] ?? C.muted }}>{r.status}</span>
             </div>
           ))}
