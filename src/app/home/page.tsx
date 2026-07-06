@@ -47,7 +47,8 @@ const STYLES = `
       radial-gradient(60% 50% at 82% -6%, color-mix(in oklch, var(--secondary) 75%, transparent), transparent 70%),
       radial-gradient(52% 42% at 8% 2%, color-mix(in oklch, var(--primary) 20%, transparent), transparent 62%),
       var(--background); }
-  .hub-stars { position: fixed; inset: 0; z-index: -1; opacity: .55; animation: hubTw 7s ease-in-out infinite alternate;
+  /* Static by default (Surface 16: no idle motion) — the twinkle loop is gone. */
+  .hub-stars { position: fixed; inset: 0; z-index: -1; opacity: .55;
     background-image:
       radial-gradient(1.4px 1.4px at 14% 16%, var(--foreground), transparent),
       radial-gradient(1.2px 1.2px at 32% 44%, var(--foreground), transparent),
@@ -58,10 +59,12 @@ const STYLES = `
       radial-gradient(1.3px 1.3px at 38% 70%, var(--foreground), transparent),
       radial-gradient(1.1px 1.1px at 73% 78%, var(--foreground), transparent),
       radial-gradient(1.5px 1.5px at 20% 86%, var(--foreground), transparent); }
-  @keyframes hubTw { from { opacity: .3 } to { opacity: .65 } }
-  @keyframes hubSpin { to { transform: rotate(360deg) } }
   @keyframes hubPulse { 0%,100% { box-shadow: 0 0 0 5px color-mix(in oklch, var(--reward) 28%, transparent), 0 0 16px var(--reward) }
     50% { box-shadow: 0 0 0 9px color-mix(in oklch, var(--reward) 16%, transparent), 0 0 28px var(--reward) } }
+  /* Current-waypoint pulse is guarded: a static ring under reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .hub-current-waypoint { animation: none !important; box-shadow: 0 0 0 5px color-mix(in oklch, var(--reward) 28%, transparent); }
+  }
   @keyframes onbGlow {
     0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent); transform: scale(1); }
     50% { box-shadow: 0 0 18px 2px color-mix(in oklch, var(--primary) 50%, transparent); transform: scale(1.015); }
@@ -178,6 +181,21 @@ export default function HomePage() {
     [data, domain],
   )
 
+  // Compact climb summary for the header row (Surface 16): current weighted
+  // band for the selected domain + direction of the latest rating.
+  const climbSummary = useMemo(() => {
+    const pts = [...climbForDomain].sort((a, b) => a.observedAt.localeCompare(b.observedAt))
+    if (pts.length === 0) return null
+    const levels = pts.map((p) => p.level)
+    const now = decayingAverage(levels)
+    if (now === null) return null
+    const band = now >= 2.5 ? 'Got it' : now >= 1.5 ? 'Almost' : 'Not yet'
+    const before = levels.length > 1 ? decayingAverage(levels.slice(0, -1)) : null
+    const arrow = before === null ? '' : now > before ? ' ↑' : now < before ? ' ↓' : ''
+    const label = DOMAINS.find((d) => d.key === domain)?.label ?? domain
+    return `${label} · ${band}${arrow}`
+  }, [climbForDomain, domain])
+
   return (
     <EnrollmentGate>
     <>
@@ -210,17 +228,21 @@ export default function HomePage() {
               Here&rsquo;s your path for today — a quick warm-up, then your next lesson.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <StatPill tone="reward"><Coins size={13} /> {loading ? '—' : data?.points?.xp ?? 0} XP</StatPill>
             {!loading && (data?.streak?.current ?? 0) > 0 && (
               <StatPill tone="muted">
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 8px var(--success)' }} /> {data!.streak.current}-day streak
               </StatPill>
             )}
+            {/* compact climb summary — the point of the page, lifted up top */}
+            {!loading && climbSummary && (
+              <StatPill tone="muted">⛰ {climbSummary}</StatPill>
+            )}
           </div>
         </div>
 
-        {loading && <p className="text-sm mt-8" style={{ color: 'var(--muted-foreground)' }}>Loading your launch pad…</p>}
+        {loading && <p className="text-sm mt-8" style={{ color: 'var(--muted-foreground)' }}>Loading your home…</p>}
 
         {!loading && data && (
           <>
@@ -296,7 +318,7 @@ export default function HomePage() {
                         <div key={s.slug} className="flex items-center">
                           <div className="flex flex-col items-center gap-1.5" style={{ minWidth: 96 }}>
                             <div
-                              className="grid place-items-center font-bold"
+                              className={`grid place-items-center font-bold ${s.status === 'current' ? 'hub-current-waypoint' : ''}`}
                               style={{
                                 width: s.status === 'current' ? 36 : 30,
                                 height: s.status === 'current' ? 36 : 30,
@@ -404,8 +426,9 @@ export default function HomePage() {
               <ClimbChart points={climbForDomain} />
             </Glass>
 
-            {/* SIDE QUEST */}
-            <SectionLabel accent="var(--success)">Side quest — optional, still earns XP</SectionLabel>
+            {/* EXTRA PRACTICE — one metaphor (the climb); "side quest" retired.
+                One vocabulary entry, not two (Surface 16 de-dupe). */}
+            <SectionLabel accent="var(--success)">Extra practice — optional, still earns XP</SectionLabel>
             <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
               {data.sideQuest.sim && (
                 <Link href={`/simulations/${data.sideQuest.sim.slug}`}>
@@ -419,29 +442,24 @@ export default function HomePage() {
                   </Glass>
                 </Link>
               )}
-              <Link href="/vocabulary">
+              <Link href="/simulations">
                 <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Game</div>
-                  <div className="font-bold mt-1" style={{ fontSize: 16 }}>Vocabulary games</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Simulations</div>
+                  <div className="font-semibold mt-1" style={{ fontSize: 16 }}>Explore all labs</div>
                   <div className="flex items-center justify-between mt-3">
-                    <span className="rounded-full text-xs font-bold" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}>★ +10 XP</span>
-                    <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Play →</span>
+                    <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>Grouped by unit</span>
+                    <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Browse →</span>
                   </div>
                 </Glass>
               </Link>
-            </div>
-
-            <div className="grid gap-4 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-              <Link href="/simulations">
-                <Glass style={{ padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', background: 'linear-gradient(110deg, color-mix(in oklch, var(--primary) 14%, var(--card)), color-mix(in oklch, var(--card) 80%, transparent))' }}>
-                  <span className="flex-1"><b style={{ fontSize: 15 }}>Explore all simulations</b><br /><small style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>Labs, grouped by unit</small></span>
-                  <span style={{ fontSize: 18, color: 'var(--primary)', fontWeight: 700 }}>→</span>
-                </Glass>
-              </Link>
-              <Link href="/vocabulary">
-                <Glass style={{ padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', background: 'linear-gradient(110deg, color-mix(in oklch, var(--reward) 14%, var(--card)), color-mix(in oklch, var(--card) 80%, transparent))' }}>
-                  <span className="flex-1"><b style={{ fontSize: 15 }}>All games</b><br /><small style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>Ways to drill vocab &amp; concepts</small></span>
-                  <span style={{ fontSize: 18, color: 'var(--primary)', fontWeight: 700 }}>→</span>
+              <Link href="/arcade">
+                <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Games</div>
+                  <div className="font-bold mt-1" style={{ fontSize: 16 }}>The arcade</div>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="rounded-full text-xs font-bold inline-flex items-center gap-1" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}><Coins size={11} /> Earns XP</span>
+                    <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Play →</span>
+                  </div>
                 </Glass>
               </Link>
             </div>
