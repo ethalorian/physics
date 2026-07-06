@@ -86,7 +86,6 @@ export default function ReviewPage() {
   }, [targetId])
 
   const total = review?.questions.length ?? 0
-  const answered = Object.keys(answers).length
   const correct = review ? review.questions.filter((q, i) => answers[i] === q.answerIndex).length : 0
 
   // Bank the effort XP exactly once, when the last answer lands.
