@@ -11,15 +11,37 @@ import type { AvatarTraits, EquippedItems, AvatarItem } from '@/lib/avatar/types
 
 interface AvatarBundle { alias: string; traits: AvatarTraits; equipped: EquippedItems }
 interface GroupMate extends AvatarBundle { completed: boolean; isMe: boolean; role?: string; idx?: number }
+interface RoomMate { alias: string; isMe: boolean }
 interface Role { label: string; blurb: string; stem: string }
 
 interface State {
   session_id: string; status: string; task_type: string; prompt: string | null
   joined: boolean; grouped: boolean; word: string | null
   phraseLength: number; enteredWords: string[]; completed: boolean; submitted: boolean
-  self?: AvatarBundle; group?: GroupMate[]; avatarItems?: AvatarItem[]
+  self?: AvatarBundle; group?: GroupMate[]; room?: RoomMate[]; avatarItems?: AvatarItem[]
   myRole?: Role | null; talkMoves?: string[]
   myPiece?: string | null; jigsawCount?: number
+}
+
+// "MG"-style initials for the who's-in-the-room chips.
+function initialsOf(alias: string): string {
+  const parts = alias.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return '?'
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}
+
+// One join/leave line derived by diffing successive poll results.
+function presenceDiff(prev: string[], next: string[]): string | null {
+  const joined = next.filter((n) => !prev.includes(n))
+  const left = prev.filter((n) => !next.includes(n))
+  if (joined.length > 0) {
+    return joined.length === 1 ? `${joined[0]} joined` : `${joined[0]} and ${joined.length - 1} other${joined.length > 2 ? 's' : ''} joined`
+  }
+  if (left.length > 0) {
+    return left.length === 1 ? `${left[0]} left` : `${left[0]} and ${left.length - 1} other${left.length > 2 ? 's' : ''} left`
+  }
+  return null
 }
 
 export default function LobbyActivityPage() {
@@ -34,6 +56,14 @@ export default function LobbyActivityPage() {
   const [missing, setMissing] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
   const sessionId = useRef<string | null>(null)
+  // Liveness: `tick` bumps once per successful poll (drives the one-shot pulse),
+  // `conn` flips to reconnecting when a poll fails so the wait never goes silent.
+  const [tick, setTick] = useState(0)
+  const [conn, setConn] = useState<'connecting' | 'live' | 'reconnecting'>('connecting')
+  // Presence events, derived by diffing successive poll rosters client-side.
+  const [presenceMsg, setPresenceMsg] = useState<string | null>(null)
+  const prevRoom = useRef<string[] | null>(null)
+  const presenceTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const poll = useCallback(() => {
     fetch(`/api/lobby/join?code=${code}`).then((r) => r.json()).then((d: State) => {
@@ -41,11 +71,32 @@ export default function LobbyActivityPage() {
         setSt(d)
         sessionId.current = d.session_id
         setCollected((prev) => Array.from(new Set([...prev, ...(d.enteredWords ?? [])])))
+        setConn('live')
+        setTick((t) => t + 1) // data arrived — pulse once
+        const names = (d.room ?? []).map((m) => m.alias)
+        if (prevRoom.current) {
+          const msg = presenceDiff(prevRoom.current, names)
+          if (msg) {
+            setPresenceMsg(msg)
+            if (presenceTimer.current) clearTimeout(presenceTimer.current)
+            presenceTimer.current = setTimeout(() => setPresenceMsg(null), 4000)
+          }
+        }
+        prevRoom.current = names
+      } else {
+        setConn('reconnecting')
       }
-    }).catch(() => {})
+    }).catch(() => setConn('reconnecting'))
   }, [code])
 
-  useEffect(() => { poll(); const t = setInterval(poll, 3000); return () => clearInterval(t) }, [poll])
+  useEffect(() => {
+    poll()
+    const t = setInterval(poll, 3000)
+    return () => {
+      clearInterval(t)
+      if (presenceTimer.current) clearTimeout(presenceTimer.current)
+    }
+  }, [poll])
 
   const addWord = async () => {
     const w = wordInput.trim().toLowerCase()
@@ -79,11 +130,38 @@ export default function LobbyActivityPage() {
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }
   const wrap = (inner: React.ReactNode) => (
     <div className="max-w-md mx-auto p-5 mt-8" style={{ color: 'var(--foreground)' }}>
+      {/* One-shot animations only — the pulse re-runs per poll tick (keyed), never
+          idles, and the global prefers-reduced-motion rule collapses both. */}
+      <style>{`
+        @keyframes lobby-pulse { 0% { transform: scale(0.6); box-shadow: 0 0 0 0 color-mix(in oklch, var(--success) 45%, transparent); } 100% { transform: scale(1); box-shadow: 0 0 0 6px transparent; } }
+        @keyframes lobby-fade-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
+      `}</style>
       <div className="rounded-2xl border p-6" style={card}>{inner}</div>
     </div>
   )
   const renderAv = (b: { traits: AvatarTraits; equipped: EquippedItems }, size = 44) => (
     <Avatar traits={b.traits} equipped={b.equipped} items={st?.avatarItems} size={size} crop="head" />
+  )
+  // Connected pulse: the dot re-mounts on every successful poll (key={tick}),
+  // firing one ≤300ms pulse per data arrival. Amber when the poll stalls.
+  const liveStatus = (
+    <div className="flex items-center justify-center gap-1.5 mb-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+      <span
+        key={tick}
+        aria-hidden
+        style={{
+          width: 7, height: 7, borderRadius: 999, flexShrink: 0,
+          background: conn === 'live' ? 'var(--success)' : 'var(--reward)',
+          animation: conn === 'live' && tick > 0 ? 'lobby-pulse 300ms cubic-bezier(0.16, 1, 0.3, 1)' : undefined,
+        }}
+      />
+      <span>{conn === 'live' ? 'Live · connected' : conn === 'reconnecting' ? 'Reconnecting…' : 'Connecting…'}</span>
+      {presenceMsg && (
+        <span style={{ color: 'var(--foreground)', fontWeight: 500, animation: 'lobby-fade-in 240ms cubic-bezier(0.16, 1, 0.3, 1)' }}>
+          · {presenceMsg}
+        </span>
+      )}
+    </div>
   )
   const selfHeader = st?.self && (
     <div className="flex items-center justify-center gap-2 mb-3">
@@ -115,11 +193,45 @@ export default function LobbyActivityPage() {
 
   if (!st.grouped) return wrap(
     <div className="text-center">
+      {liveStatus}
       {selfHeader}
       {taskCallout}
       <Hourglass size={36} style={{ color: 'var(--primary)' }} className="mx-auto mb-2" />
       <h1 className="text-lg font-semibold">You&apos;re in the lobby</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Waiting for your teacher to make groups…</p>
+      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
+        Waiting for your teacher to make groups — you&apos;ll be moved automatically.
+      </p>
+      {st.room && st.room.length > 0 && (
+        <div className="mt-5">
+          <div className="text-xs font-medium mb-2" style={{ color: 'var(--muted-foreground)' }}>
+            {st.room.length} in the room
+          </div>
+          <div className="flex flex-wrap justify-center gap-1.5">
+            {st.room.slice(0, 24).map((m, i) => (
+              <span
+                key={`${m.alias}-${i}`}
+                className="inline-flex items-center gap-1.5 rounded-full border px-2 py-1 text-xs"
+                style={{
+                  borderColor: m.isMe ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)',
+                  background: 'var(--card)', color: 'var(--foreground)',
+                }}
+              >
+                <span
+                  aria-hidden
+                  className="grid place-items-center rounded-full font-semibold"
+                  style={{ width: 18, height: 18, fontSize: 10, background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}
+                >
+                  {initialsOf(m.alias)}
+                </span>
+                <span>{m.alias}{m.isMe ? ' (you)' : ''}</span>
+              </span>
+            ))}
+            {st.room.length > 24 && (
+              <span className="text-xs px-2 py-1" style={{ color: 'var(--muted-foreground)' }}>+{st.room.length - 24} more</span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 
@@ -134,6 +246,7 @@ export default function LobbyActivityPage() {
 
   return wrap(
     <div>
+      {liveStatus}
       {taskCallout}
 
       {st.myRole && (

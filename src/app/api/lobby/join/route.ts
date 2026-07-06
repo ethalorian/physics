@@ -67,10 +67,24 @@ export const GET = withAuth(async (request, ctx) => {
     groupMates = (gm ?? []) as { user_id: string; phrase_completed_at: string | null }[]
   }
 
-  // alias + avatar for self and every groupmate
+  // Everyone in the room, in join order — powers the waiting-room "who's in
+  // the room" cluster + count and the client-side join/leave diffing. Aliases
+  // only; capped so a huge lobby can't bloat the 3s poll payload.
+  const { data: roomRows } = await supabaseAdmin
+    .from('lobby_members')
+    .select('user_id')
+    .eq('session_id', session.id)
+    .order('joined_at')
+    .limit(60)
+  const roomIds = ((roomRows ?? []) as { user_id: string | null }[])
+    .map((r) => r.user_id)
+    .filter((id): id is string => Boolean(id))
+
+  // alias + avatar for self and every groupmate (aliases also for the room)
   const gids = Array.from(new Set([ctx.userId, ...groupMates.map((x) => x.user_id)]))
+  const aliasIds = Array.from(new Set([...gids, ...roomIds]))
   const [{ data: studs }, avatars] = await Promise.all([
-    supabaseAdmin.from('students').select('id, alias, name').in('id', gids),
+    supabaseAdmin.from('students').select('id, alias, name').in('id', aliasIds),
     getAvatarData(gids),
   ])
   const aliasByGid = new Map<string, string>()
@@ -115,6 +129,7 @@ export const GET = withAuth(async (request, ctx) => {
     submitted: !!existing,
     self: bundle(ctx.userId),
     group,
+    room: roomIds.map((id) => ({ alias: aliasByGid.get(id) ?? 'Student', isMe: id === ctx.userId })),
     myRole,
     talkMoves: TALK_MOVES,
     avatarItems: avatars.items,

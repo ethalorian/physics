@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
+import { useClassScope } from '@/lib/use-class-scope'
 import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
 import MonthCalendar, { type CalSection } from '@/components/pacing/MonthCalendar'
 
@@ -55,6 +56,9 @@ interface CalData { sections: CalSection[]; calendar: RotationCalendar }
 export default function PacingPage() {
   const { role } = useViewAs()
   const isAdmin = role === 'admin'
+  // Class scope is shared across the power-tools (Control Room, analytics,
+  // roster) via localStorage — picking a class here carries to the other tools.
+  const { classId: scopeClassId, setClassScope } = useClassScope()
   const [courses, setCourses] = useState<Course[] | null>(null)
   const [cal, setCal] = useState<CalData | null>(null)
   const [refreshKey, setRefreshKey] = useState(0)
@@ -81,12 +85,32 @@ export default function PacingPage() {
   }, [])
   useEffect(() => { loadCal() }, [loadCal])
 
+  // The effective class scope: only applied while it matches one of this
+  // teacher's synced sections — otherwise show everything without clobbering
+  // the stored scope (it still applies on the other tools).
+  const scopedCourse = (courses ?? []).find((c) => c.id === scopeClassId) ?? null
+  const coursesInView = scopedCourse ? [scopedCourse] : (courses ?? [])
+
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <div className="flex items-center justify-between mb-4">
-        <Link href="/admin/home" className="inline-flex items-center gap-1 text-sm" style={{ color: 'var(--muted-foreground)' }}>
-          <ArrowLeft size={15} /> Command center
-        </Link>
+      <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        {/* Shared class scope — the same selection drives the Control Room, analytics, and roster. */}
+        <select
+          value={scopedCourse?.id ?? ''}
+          onChange={(e) => {
+            const id = e.target.value
+            const c = (courses ?? []).find((x) => x.id === id)
+            setClassScope(id || null, c ? `${c.name}${c.section ? ' · ' + c.section : ''}` : null)
+          }}
+          title="Scope to one class/section — carries across the Control Room, analytics, and roster"
+          className="text-sm rounded-lg border px-2.5 py-1.5"
+          style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+        >
+          <option value="">All classes</option>
+          {(courses ?? []).map((c) => (
+            <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>
+          ))}
+        </select>
         {isAdmin && (
           <Link href="/admin/pacing/overview" className="text-sm font-medium" style={{ color: 'var(--primary)' }}>
             All sections overview →
@@ -121,7 +145,7 @@ export default function PacingPage() {
             </div>
             <LongLegend />
           </div>
-          <MonthCalendar sections={cal.sections} calendar={cal.calendar} />
+          <MonthCalendar sections={cal.sections} calendar={cal.calendar} filterCourseId={scopedCourse?.id} />
         </div>
       )}
 
@@ -133,7 +157,7 @@ export default function PacingPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {courses.map((c) => <SectionCard key={c.id} course={c} cal={cal} onChanged={refresh} refreshKey={refreshKey} />)}
+          {coursesInView.map((c) => <SectionCard key={c.id} course={c} cal={cal} onChanged={refresh} refreshKey={refreshKey} />)}
         </div>
       )}
     </div>

@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useSession, signIn } from 'next-auth/react'
-import { RefreshCw, Users, Link2, CheckCircle2, AlertCircle, ArrowLeft, GraduationCap } from 'lucide-react'
+import { RefreshCw, Users, Link2, CheckCircle2, AlertCircle, GraduationCap } from 'lucide-react'
 import { getInitialScopes, getClassroomScopes } from '@/lib/oauth-scopes'
+import { useClassScope } from '@/lib/use-class-scope'
 
 // Rosters-only scopes: courses.readonly + rosters.readonly + profile.emails.
 // Deliberately NOT requesting coursework/assignment scopes — connecting Google
@@ -36,11 +37,13 @@ interface GridData {
   cells: Record<string, Record<string, Cell>>
 }
 
+// Mastery bands use the same trio as the Control Room's grading cells:
+// Got it (3) = --success, Almost (2) = --reward, Not yet (1) = --destructive.
 function band(v: number | null): { label: string; color: string } {
   if (v == null) return { label: '—', color: 'var(--muted-foreground)' }
   if (v >= 2.45) return { label: v.toFixed(1), color: 'var(--success)' }
   if (v >= 1.7) return { label: v.toFixed(1), color: 'var(--reward)' }
-  return { label: v.toFixed(1), color: 'var(--viz-down)' }
+  return { label: v.toFixed(1), color: 'var(--destructive)' }
 }
 
 function avgOf(row: Record<string, Cell> | undefined): number | null {
@@ -53,6 +56,9 @@ function avgOf(row: Record<string, Cell> | undefined): number | null {
 export default function RosterPage() {
   const { data: session } = useSession()
   const hasClassroom = Boolean(session?.accessToken)
+  // Class scope is shared across the power-tools (Control Room, analytics,
+  // pacing) via localStorage — picking a class here carries to the other tools.
+  const { classId: scopeClassId, ready: scopeReady, setClassScope } = useClassScope()
 
   const [courses, setCourses] = useState<GClassCourse[] | null>(null)
   const [coursesError, setCoursesError] = useState<string | null>(null)
@@ -78,11 +84,12 @@ export default function RosterPage() {
   }, [])
 
   const loadGrid = useCallback((uid: string) => {
-    fetch(`/api/mastery/grid?unit_id=${uid}`)
+    const classQuery = scopeClassId ? `&class=${encodeURIComponent(scopeClassId)}` : ''
+    fetch(`/api/mastery/grid?unit_id=${uid}${classQuery}`)
       .then((r) => r.json())
       .then((d: GridData) => setGrid(d))
       .catch(() => {})
-  }, [])
+  }, [scopeClassId])
 
   const loadCourses = useCallback(() => {
     if (!session?.accessToken) return
@@ -113,7 +120,8 @@ export default function RosterPage() {
   }, [])
 
   useEffect(() => { loadImported() }, [loadImported])
-  useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
+  // Wait until the shared scope has been read so the grid loads once, scoped.
+  useEffect(() => { if (scopeReady) loadGrid(unitId) }, [unitId, loadGrid, scopeReady])
   useEffect(() => { if (hasClassroom) loadCourses() }, [hasClassroom, loadCourses])
   useEffect(() => { loadRoster() }, [loadRoster])
 
@@ -200,10 +208,6 @@ export default function RosterPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/home" className="inline-flex items-center gap-1 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Command center
-      </Link>
-
       {/* header */}
       <div
         className="rounded-2xl p-6 mb-6"
@@ -356,6 +360,26 @@ export default function RosterPage() {
             <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Rolled-up mastery per learning target. Tap a row to grade in the Control Room.</div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Shared class scope — the same selection drives the Control Room, analytics, and pacing. */}
+            <select
+              value={scopeClassId ?? ''}
+              onChange={(e) => {
+                const id = e.target.value
+                const c = imported.find((x) => x.id === id)
+                setClassScope(id || null, c ? `${c.name}${c.section ? ' · ' + c.section : ''}` : null)
+              }}
+              title="Scope to one class/section — carries across the Control Room, analytics, and pacing"
+              className="text-sm rounded-lg border px-2.5 py-1.5"
+              style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+            >
+              <option value="">All classes</option>
+              {imported.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>
+              ))}
+              {scopeClassId && !imported.some((c) => c.id === scopeClassId) && (
+                <option value={scopeClassId}>Selected class</option>
+              )}
+            </select>
             {grid?.units && grid.units.length > 0 && (
               <select
                 value={unitId}

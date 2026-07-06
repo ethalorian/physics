@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { ArrowLeft, CalendarClock, AlertTriangle } from 'lucide-react'
+import { CalendarClock, AlertTriangle } from 'lucide-react'
 
 interface Row {
   courseId: string
@@ -51,10 +50,6 @@ export default function PacingOverviewPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/home" className="inline-flex items-center gap-1 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Command center
-      </Link>
-
       <div className="rounded-2xl p-6 mb-6" style={{
         border: '1px solid color-mix(in oklch, var(--primary) 30%, var(--border))',
         background: 'radial-gradient(90% 140% at 92% -20%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 55%), var(--card)',

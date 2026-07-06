@@ -6,10 +6,11 @@ import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
 } from 'recharts'
 import {
-  ArrowLeft, BarChart3, Sparkles, Users, BookOpen, AlertTriangle,
+  BarChart3, Sparkles, Users, BookOpen, AlertTriangle,
   Lightbulb, GitCompare, ClipboardList, Loader2,
 } from 'lucide-react'
 import { decayingAverage } from '@/data/curriculum-types'
+import { useClassScope } from '@/lib/use-class-scope'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/analytics/mastery)
@@ -39,11 +40,13 @@ const DOMAINS = [
 ]
 const DOMAIN_LABEL: Record<string, string> = { knowledge: 'Knowledge', reasoning: 'Reasoning', skill: 'Skill', product: 'Product' }
 
+// Mastery bands use the same trio as the Control Room's grading cells:
+// Got it (3) = --success, Almost (2) = --reward, Not yet (1) = --destructive.
 function bandColor(v: number | null): string {
   if (v == null) return 'var(--muted-foreground)'
   if (v >= 2.45) return 'var(--success)'
   if (v >= 1.7) return 'var(--reward)'
-  return 'var(--viz-down)'
+  return 'var(--destructive)'
 }
 function mean(xs: number[]): number | null {
   if (xs.length === 0) return null
@@ -78,7 +81,9 @@ export default function AnalyticsPage() {
   const [mounted, setMounted] = useState(false)
 
   const [teacher, setTeacher] = useState('all')
-  const [klass, setKlass] = useState('all')
+  // Class scope is shared across the power-tools (Control Room, roster, pacing)
+  // via localStorage — picking a class here carries to the other tools.
+  const { classId: scopeClassId, setClassScope } = useClassScope()
   const [unit, setUnit] = useState('all')
   const [domain, setDomain] = useState('all')
 
@@ -104,10 +109,18 @@ export default function AnalyticsPage() {
     return data.classes.filter((c) => teacher === 'all' || c.teacher === teacher)
   }, [data, teacher])
 
-  // reset class filter if it falls outside the teacher filter
-  useEffect(() => {
-    if (klass !== 'all' && !classOptions.some((c) => c.id === klass)) setKlass('all')
-  }, [classOptions, klass])
+  // The effective class filter: the shared scope, but only while it exists in
+  // the current teacher slice — otherwise fall back to "all" without clobbering
+  // the stored scope (so it still applies on the other tools).
+  const klass = useMemo(
+    () => (scopeClassId && classOptions.some((c) => c.id === scopeClassId) ? scopeClassId : 'all'),
+    [scopeClassId, classOptions],
+  )
+  const pickClass = (id: string) => {
+    if (id === 'all') { setClassScope(null); return }
+    const c = data?.classes.find((x) => x.id === id)
+    setClassScope(id, c ? `${c.name}${c.section ? ' · ' + c.section : ''}` : null)
+  }
 
   // ---- filtered slice -----------------------------------------------------
   const slice = useMemo(() => {
@@ -269,10 +282,6 @@ export default function AnalyticsPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/home" className="inline-flex items-center gap-1 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Command center
-      </Link>
-
       <div className="rounded-2xl p-6 mb-6" style={{
         border: '1px solid color-mix(in oklch, var(--primary) 30%, var(--border))',
         background: 'radial-gradient(90% 140% at 92% -20%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 55%), var(--card)',
@@ -304,7 +313,7 @@ export default function AnalyticsPage() {
         </label>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Class / section</div>
-          <select value={klass} onChange={(e) => setKlass(e.target.value)} className="text-sm rounded-lg border px-2.5 py-1.5" style={selStyle}>
+          <select value={klass} onChange={(e) => pickClass(e.target.value)} className="text-sm rounded-lg border px-2.5 py-1.5" style={selStyle}>
             <option value="all">All classes</option>
             {classOptions.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
           </select>
@@ -331,7 +340,7 @@ export default function AnalyticsPage() {
         <Tile icon={<Users size={18} />} value={slice ? String(slice.studentsInView) : '—'} label="Students in view" accent="var(--primary)" />
         <Tile icon={<BookOpen size={18} />} value={slice ? String(slice.classesInView) : '—'} label="Classes in view" accent="var(--reward)" />
         <Tile icon={<BarChart3 size={18} />} value={fmt(slice?.overall ?? null)} label="Avg mastery (1–3)" accent={bandColor(slice?.overall ?? null)} />
-        <Tile icon={<AlertTriangle size={18} />} value={slice ? String(slice.interventions.length) : '—'} label="Students to watch" accent="var(--viz-down)" />
+        <Tile icon={<AlertTriangle size={18} />} value={slice ? String(slice.interventions.length) : '—'} label="Students to watch" accent="var(--destructive)" />
       </div>
 
       {/* domain breakdown */}
@@ -414,7 +423,7 @@ export default function AnalyticsPage() {
                     <td className="py-2 px-2 text-center text-xs" style={{ color: 'var(--muted-foreground)' }}>{DOMAIN_LABEL[t.domain] ?? t.domain}</td>
                     <td className="py-2 px-2 text-center font-bold" style={{ color: bandColor(t.avg) }}>{fmt(t.avg)}</td>
                     <td className="py-2 px-2 text-center" style={{ color: 'var(--muted-foreground)' }}>{t.rated}</td>
-                    <td className="py-2 px-2 text-center" style={{ color: t.notYet > 0 ? 'var(--viz-down)' : 'var(--muted-foreground)' }}>{t.notYet}</td>
+                    <td className="py-2 px-2 text-center" style={{ color: t.notYet > 0 ? 'var(--destructive)' : 'var(--muted-foreground)' }}>{t.notYet}</td>
                   </tr>
                 ))}
               </tbody>
@@ -472,7 +481,7 @@ export default function AnalyticsPage() {
           <div className="mt-5 grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
             <InsightCard icon={<Lightbulb size={15} />} title="Patterns & insights" items={insights.patterns} accent="var(--primary)" />
             <InsightCard icon={<ClipboardList size={15} />} title="Reteach recommendations" items={insights.reteach} accent="var(--success)" />
-            <InsightCard icon={<AlertTriangle size={15} />} title="Intervention list" items={insights.interventions} accent="var(--viz-down)" />
+            <InsightCard icon={<AlertTriangle size={15} />} title="Intervention list" items={insights.interventions} accent="var(--destructive)" />
             <InsightCard icon={<GitCompare size={15} />} title="Cross-class comparison" items={insights.comparison} accent="var(--reward)" />
           </div>
         )}
