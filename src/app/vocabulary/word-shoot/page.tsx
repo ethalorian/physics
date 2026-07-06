@@ -1,16 +1,24 @@
 "use client"
-import { useState, useEffect, Suspense } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import VocabPlaySource, { type ResolvedPlay } from '@/components/vocabulary/arcade/VocabPlaySource'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import VocabGameShell, { VocabEmptyBoard, VocabLoadingBoard } from '@/components/vocabulary/arcade/VocabGameShell'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Zap, BookOpen, Target, Heart } from 'lucide-react'
-import Link from 'next/link'
+import { Zap } from 'lucide-react'
 import VocabularyWordShootGame from '@/components/vocabulary/games/VocabularyWordShootGame'
 import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
+
+// One-tap play: the page opens straight into the board. Lesson deep links
+// (?lesson_id=) preload that lesson's vocab; otherwise VocabPlaySource
+// resolves a smart default (last-used, else first lesson). Setup lives in
+// the shell's collapsed Options panel, rules behind the "?" toggle.
+
+const PREFS_KEY = 'vocab:prefs:word-shoot'
+const MIN_WORDS = 3
+
+type Difficulty = 'easy' | 'medium' | 'hard'
 
 export default function StudentVocabularyWordShootPage() {
   return (
@@ -24,40 +32,30 @@ function WordShootInner() {
   const { data: session, status } = useSession()
   // Deep link from a lesson preselects that lesson's vocab in the picker.
   const lessonIdParam = useSearchParams().get('lesson_id') ?? undefined
-  const [play, setPlay] = useState<ResolvedPlay>({ terms: [], scoreSetId: null, label: '' })
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
+  // null = the play source is still resolving its smart default / deep link
+  const [play, setPlay] = useState<ResolvedPlay | null>(null)
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium')
   const [gameLength, setGameLength] = useState<number>(20)
-  const [gameStarted, setGameStarted] = useState(false)
   const [gameResults, setGameResults] = useState<{
     score: number
     totalQuestions: number
     timeSpent: number
   } | null>(null)
-  // Deep links from a lesson go STRAIGHT into the game — no setup screen. We
-  // resolve the lesson's terms here (not via the picker) and auto-start once.
-  // `autoDone` guards so "Back to Setup" doesn't relaunch the game.
-  const [autoDone, setAutoDone] = useState(!lessonIdParam)
+  const [replay, setReplay] = useState(0)
 
+  // Last-used settings survive between visits (smart defaults).
   useEffect(() => {
-    if (!lessonIdParam || autoDone) return
-    let alive = true
-    fetch(`/api/vocab/play?lesson_id=${encodeURIComponent(lessonIdParam)}&tier=all`)
-      .then((r) => r.json())
-      .then((d: ResolvedPlay) => {
-        if (!alive) return
-        setAutoDone(true)
-        const n = d.terms?.length ?? 0
-        if (n >= 3) {
-          // Enough for a question + distractors: launch immediately, sized to fit.
-          setPlay(d)
-          setGameLength(Math.min(20, n))
-          setGameStarted(true)
-        }
-        // Fewer than 3 terms: fall back to the setup screen (picker preselected).
-      })
-      .catch(() => { if (alive) setAutoDone(true) })
-    return () => { alive = false }
-  }, [lessonIdParam, autoDone])
+    try {
+      const raw = localStorage.getItem(PREFS_KEY)
+      if (!raw) return
+      const p = JSON.parse(raw) as { difficulty?: Difficulty; gameLength?: number }
+      if (p.difficulty === 'easy' || p.difficulty === 'medium' || p.difficulty === 'hard') setDifficulty(p.difficulty)
+      if (typeof p.gameLength === 'number' && [10, 15, 20, 25].includes(p.gameLength)) setGameLength(p.gameLength)
+    } catch { /* ignore */ }
+  }, [])
+  useEffect(() => {
+    try { localStorage.setItem(PREFS_KEY, JSON.stringify({ difficulty, gameLength })) } catch { /* ignore */ }
+  }, [difficulty, gameLength])
 
   if (status === 'loading') {
     return (
@@ -82,32 +80,14 @@ function WordShootInner() {
     )
   }
 
-  const availableTerms = play.terms
+  const terms = play?.terms ?? []
+  // Fewer words than the chosen length? Play what we have instead of blocking.
+  const effLength = Math.min(gameLength, terms.length)
+  const canPlay = terms.length >= MIN_WORDS
 
   // Score saving is centralized in ArcadeEndScreen (the one uniform save path).
   const handleGameComplete = (score: number, totalQuestions: number, timeSpent: number) => {
     setGameResults({ score, totalQuestions, timeSpent })
-    setGameStarted(false)
-  }
-
-  const resetGame = () => {
-    setGameStarted(false)
-    setGameResults(null)
-    // Auto-launch may have used a length that isn't a picker option (e.g. 5);
-    // snap back to a valid choice so the setup screen renders sensibly.
-    setGameLength((g) => ([10, 15, 20, 25].includes(g) ? g : 20))
-  }
-
-  // Still resolving a lesson deep link — hold a blank loading frame, never the setup screen.
-  if (!autoDone && !gameStarted && !gameResults) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center justify-center min-h-[400px] gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <p className="text-sm text-muted-foreground">Loading Word Shoot…</p>
-        </div>
-      </div>
-    )
   }
 
   if (gameResults) {
@@ -116,224 +96,91 @@ function WordShootInner() {
         <ArcadeEndScreen
           gameType="word-shoot"
           gameTitle="Word shoot"
-          vocabularySetId={play.scoreSetId}
+          vocabularySetId={play?.scoreSetId}
           score={gameResults.score}
           maxScore={gameResults.totalQuestions * 15}
           detail={`${gameResults.totalQuestions} questions`}
-          onPlayAgain={() => { setGameResults(null); setGameStarted(true) }}
+          onPlayAgain={() => { setGameResults(null); setReplay((n) => n + 1) }}
         />
       </div>
     )
   }
 
-  if (gameStarted && availableTerms.length >= gameLength) {
-    return (
-      <div className="container mx-auto px-4 py-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-6">
-            <Button
-              variant="outline"
-              onClick={resetGame}
-              className="mb-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Setup
-            </Button>
-          </div>
-          
-          <VocabularyWordShootGame
-            vocabularyTerms={availableTerms}
-            difficulty={difficulty}
-            gameLength={gameLength}
-            onGameComplete={handleGameComplete}
-          />
+  const options = (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground">What to play</label>
+        <VocabPlaySource onResolved={setPlay} initialLessonId={lessonIdParam} />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground">Difficulty</label>
+          <Select value={difficulty} onValueChange={(value: Difficulty) => setDifficulty(value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="easy">Easy (more time, more lives)</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="hard">Hard (faster, fewer lives)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground">Game length</label>
+          <Select value={gameLength.toString()} onValueChange={(value) => setGameLength(parseInt(value))}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10 questions (Quick)</SelectItem>
+              <SelectItem value="15">15 questions (Medium)</SelectItem>
+              <SelectItem value="20">20 questions (Long)</SelectItem>
+              <SelectItem value="25">25 questions (Marathon)</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
-    )
-  }
+      {canPlay && effLength < gameLength && (
+        <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+          This selection has {terms.length} terms, so the game runs {effLength} questions.
+        </p>
+      )}
+    </>
+  )
+
+  const help = (
+    <ul className="list-disc pl-4 space-y-1">
+      <li>A definition appears at the top — click the matching word as it falls.</li>
+      <li>Quick, correct shots earn up to +15 points; speed increases over time.</li>
+      <li>Do not let wrong answers reach you — you have 3 lives.</li>
+      <li>Read fast, look for key words, and keep your aim steady.</li>
+    </ul>
+  )
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Link href="/vocabulary">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Games
-            </Button>
-          </Link>
-          <div className="flex items-center space-x-3">
-            <Zap className="h-8 w-8 text-purple-500" />
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                Word Shoot
-              </h1>
-              <p className="text-muted-foreground">
-                Fast-paced shooting game with physics vocabulary
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Game Results */}
-      {/* Game Setup */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BookOpen className="h-5 w-5" />
-              <span>Game Setup</span>
-            </CardTitle>
-            <CardDescription>
-              Configure your word shooting game
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                What to play
-              </label>
-              <VocabPlaySource onResolved={setPlay} initialLessonId={lessonIdParam} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Difficulty Level
-              </label>
-              <Select value={difficulty} onValueChange={(value: 'easy' | 'medium' | 'hard') => setDifficulty(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Easy (more time, more lives)</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard (faster, fewer lives)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Game Length
-              </label>
-              <Select value={gameLength.toString()} onValueChange={(value) => setGameLength(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="10">10 questions (Quick)</SelectItem>
-                  <SelectItem value="15">15 questions (Medium)</SelectItem>
-                  <SelectItem value="20">20 questions (Long)</SelectItem>
-                  <SelectItem value="25">25 questions (Marathon)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {availableTerms.length > 0 && availableTerms.length < gameLength && (
-              <div className="p-3 bg-muted rounded-lg">
-                <div className="text-sm text-orange-600 dark:text-orange-400">
-                  Not enough terms for {gameLength} questions (need {gameLength}, have {availableTerms.length})
-                </div>
-              </div>
-            )}
-
-            <Button
-              onClick={() => setGameStarted(true)}
-              disabled={availableTerms.length < gameLength}
-              className="w-full"
-              size="lg"
-            >
-              <Zap className="h-4 w-4 mr-2" />
-              Start Word Shoot
-            </Button>
-
-          </CardContent>
-        </Card>
-
-        {/* Game Instructions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>How to Play</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">1</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Read Definition</div>
-                  <div className="text-sm text-muted-foreground">
-                    A physics term definition appears at the top
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">2</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Aim & Shoot</div>
-                  <div className="text-sm text-muted-foreground">
-                    Click on the correct word as it falls from the top
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">3</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Stay Alive</div>
-                  <div className="text-sm text-muted-foreground">
-                    Don&apos;t let wrong answers hit you - you have limited lives
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">4</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Score High</div>
-                  <div className="text-sm text-muted-foreground">
-                    Quick correct answers earn more points
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-              <div className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">
-                🎯 Pro Tip
-              </div>
-              <div className="text-sm text-purple-700 dark:text-purple-300">
-                Read the definition quickly and look for key words. Speed and accuracy both matter for your final score!
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded">
-                <Target className="h-4 w-4 mx-auto mb-1 text-green-600" />
-                <div className="font-medium text-green-800 dark:text-green-300">Quick Shot</div>
-                <div className="text-green-600 dark:text-green-400">+15 points</div>
-              </div>
-              <div className="text-center p-2 bg-red-50 dark:bg-red-900/20 rounded">
-                <Heart className="h-4 w-4 mx-auto mb-1 text-red-600" />
-                <div className="font-medium text-red-800 dark:text-red-300">Lives</div>
-                <div className="text-red-600 dark:text-red-400">3 total</div>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="text-sm font-medium text-foreground">Game Controls:</div>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Click words to shoot them</li>
-                <li>• Move mouse to aim</li>
-                <li>• Speed increases over time</li>
-                <li>• Watch your lives counter</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <VocabGameShell
+      icon={Zap}
+      title="Word Shoot"
+      hint="Shoot the falling word that matches the definition."
+      help={help}
+      options={options}
+      forceOptionsOpen={play !== null && !canPlay}
+      sourceLabel={play ? (play.label ? `${play.label} · ${terms.length} terms` : null) : 'loading words…'}
+    >
+      {play === null ? (
+        <VocabLoadingBoard label="Loading Word Shoot…" />
+      ) : canPlay ? (
+        <VocabularyWordShootGame
+          key={`${play.scoreSetId ?? 'none'}-${difficulty}-${effLength}-${replay}`}
+          vocabularyTerms={terms}
+          difficulty={difficulty}
+          gameLength={effLength}
+          onGameComplete={handleGameComplete}
+        />
+      ) : (
+        <VocabEmptyBoard message={`Pick a lesson or unit with at least ${MIN_WORDS} terms in Options to start shooting.`} />
+      )}
+    </VocabGameShell>
   )
 }

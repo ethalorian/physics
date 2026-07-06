@@ -6,10 +6,19 @@ import type { VocabularyTerm } from '@/types/assignment'
 // Shared "what do you want to play?" selector for the arcade: pick a unit OR a
 // single lesson, plus a tier filter. Resolves to terms + a score-attribution set
 // id via /api/vocab/play and reports them up through onResolved.
+//
+// One-tap play: when nothing steers the picker (no deep link), it resolves a
+// smart default on its own — the last-used selection (localStorage), else the
+// first lesson with vocab — so every game opens with words already loaded.
+// Once sources are known it ALWAYS eventually calls onResolved (possibly with
+// zero terms), so pages can treat "no callback yet" as a loading state.
 
 interface SourceUnit { id: string; name: string }
 interface SourceLesson { id: string; title: string; unit: string }
 export interface ResolvedPlay { terms: VocabularyTerm[]; scoreSetId: string | null; label: string }
+
+const LAST_PLAY_KEY = 'vocab:lastPlay'
+const TIERS = ['all', '1', '2', '3']
 
 export default function VocabPlaySource({ onResolved, initialLessonId }: { onResolved: (r: ResolvedPlay) => void; initialLessonId?: string }) {
   const [units, setUnits] = useState<SourceUnit[]>([])
@@ -60,11 +69,37 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
 
   const resolve = useCallback((nextScope: 'lesson' | 'unit', id: string, t: string) => {
     if (!id) { setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }); return }
+    // Remember the pick so the next game (or visit) opens straight into it.
+    try { localStorage.setItem(LAST_PLAY_KEY, JSON.stringify({ scope: nextScope, id, tier: t })) } catch { /* ignore */ }
     const qs = nextScope === 'lesson' ? `lesson_id=${id}` : `unit_id=${id}`
     fetch(`/api/vocab/play?${qs}&tier=${t}`).then((r) => r.json())
       .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
       .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
   }, [onResolved])
+
+  // Smart default (one-tap play): no deep link and nothing picked yet →
+  // restore the last-used selection if it still exists, else fall back to the
+  // first lesson (then first unit) with vocab. If there is nothing at all to
+  // play, settle with an empty resolve so callers can leave loading state.
+  useEffect(() => {
+    if (loading || initialLessonId) return
+    const sp = new URLSearchParams(window.location.search)
+    if (sp.get('lesson_id') || sp.get('unit_id')) return
+    if (lessonId || unitId) return
+    let stored: { scope?: string; id?: string; tier?: string } | null = null
+    try { stored = JSON.parse(localStorage.getItem(LAST_PLAY_KEY) ?? 'null') } catch { /* ignore */ }
+    const t = stored?.tier && TIERS.includes(stored.tier) ? stored.tier : 'all'
+    if (stored?.scope === 'lesson' && stored.id && lessons.some((l) => l.id === stored?.id)) {
+      setScope('lesson'); setLessonId(stored.id); setTier(t); resolve('lesson', stored.id, t); return
+    }
+    if (stored?.scope === 'unit' && stored.id && units.some((u) => u.id === stored?.id)) {
+      setScope('unit'); setUnitId(stored.id); setTier(t); resolve('unit', stored.id, t); return
+    }
+    if (lessons.length > 0) { setScope('lesson'); setLessonId(lessons[0].id); resolve('lesson', lessons[0].id, 'all'); return }
+    if (units.length > 0) { setScope('unit'); setUnitId(units[0].id); resolve('unit', units[0].id, 'all'); return }
+    onResolved({ terms: [], scoreSetId: null, label: '' })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading])
 
   const sel = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
 
@@ -105,7 +140,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
       </div>
 
       {count !== null && (
-        <div className="text-xs" style={{ color: count > 0 ? 'var(--muted-foreground)' : '#C08B8B' }}>
+        <div className="text-xs" style={{ color: count > 0 ? 'var(--muted-foreground)' : 'var(--destructive)' }}>
           {count > 0 ? `${count} terms ready` : 'No terms for this selection'}
         </div>
       )}

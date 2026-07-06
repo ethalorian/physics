@@ -1,28 +1,50 @@
 "use client"
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import VocabPlaySource, { type ResolvedPlay } from '@/components/vocabulary/arcade/VocabPlaySource'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import VocabGameShell, { VocabEmptyBoard, VocabLoadingBoard } from '@/components/vocabulary/arcade/VocabGameShell'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Users, Trophy, BookOpen, Target } from 'lucide-react'
-import Link from 'next/link'
+import { Users } from 'lucide-react'
 import VocabularyMatchingGameWrapper from '@/components/vocabulary/games/VocabularyMatchingGameWrapper'
 import ArcadeEndScreen from '@/components/vocabulary/arcade/ArcadeEndScreen'
 
+// One-tap play: the page opens straight into the board with smart defaults
+// (last-used words + settings via VocabPlaySource/localStorage). Setup lives
+// in the shell's collapsed Options panel; rules live behind the "?" toggle.
+
+const PREFS_KEY = 'vocab:prefs:matching'
+const MIN_MATCHES = 4
+
+type Difficulty = 'easy' | 'medium' | 'hard'
+
 export default function StudentVocabularyMatchingPage() {
   const { data: session, status } = useSession()
-  const [play, setPlay] = useState<ResolvedPlay>({ terms: [], scoreSetId: null, label: '' })
-  const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium')
+  // null = the play source is still resolving its smart default
+  const [play, setPlay] = useState<ResolvedPlay | null>(null)
+  const [difficulty, setDifficulty] = useState<Difficulty>('medium')
   const [maxMatches, setMaxMatches] = useState<number>(8)
-  const [gameStarted, setGameStarted] = useState(false)
   const [gameResults, setGameResults] = useState<{
     score: number
     totalMatches: number
     timeSpent: number
   } | null>(null)
-  
+  const [replay, setReplay] = useState(0)
+
+  // Last-used settings survive between visits (smart defaults).
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PREFS_KEY)
+      if (!raw) return
+      const p = JSON.parse(raw) as { difficulty?: Difficulty; maxMatches?: number }
+      if (p.difficulty === 'easy' || p.difficulty === 'medium' || p.difficulty === 'hard') setDifficulty(p.difficulty)
+      if (typeof p.maxMatches === 'number' && [4, 6, 8, 10].includes(p.maxMatches)) setMaxMatches(p.maxMatches)
+    } catch { /* ignore */ }
+  }, [])
+  useEffect(() => {
+    try { localStorage.setItem(PREFS_KEY, JSON.stringify({ difficulty, maxMatches })) } catch { /* ignore */ }
+  }, [difficulty, maxMatches])
+
   if (status === 'loading') {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -46,17 +68,14 @@ export default function StudentVocabularyMatchingPage() {
     )
   }
 
-  const availableTerms = play.terms
+  const terms = play?.terms ?? []
+  // Board too big for the loaded words? Shrink to fit instead of blocking play.
+  const effMatches = Math.max(MIN_MATCHES, Math.min(maxMatches, terms.length))
+  const canPlay = terms.length >= MIN_MATCHES
 
   // Score saving is centralized in ArcadeEndScreen (the one uniform save path).
   const handleGameComplete = (score: number, totalMatches: number, timeSpent: number) => {
     setGameResults({ score, totalMatches, timeSpent })
-    setGameStarted(false)
-  }
-
-  const resetGame = () => {
-    setGameStarted(false)
-    setGameResults(null)
   }
 
   if (gameResults) {
@@ -65,215 +84,91 @@ export default function StudentVocabularyMatchingPage() {
         <ArcadeEndScreen
           gameType="matching"
           gameTitle="Matching"
-          vocabularySetId={play.scoreSetId}
+          vocabularySetId={play?.scoreSetId}
           score={gameResults.score}
           maxScore={gameResults.totalMatches * 10}
           detail={`${gameResults.totalMatches} matches · ${Math.round(gameResults.timeSpent / 1000)}s`}
-          onPlayAgain={() => { setGameResults(null); setGameStarted(true) }}
+          onPlayAgain={() => { setGameResults(null); setReplay((n) => n + 1) }}
         />
       </div>
     )
   }
 
-  if (gameStarted && availableTerms.length >= maxMatches) {
-    return (
-      <div className="container mx-auto px-4 py-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-6">
-            <Button
-              variant="outline"
-              onClick={resetGame}
-              className="mb-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Setup
-            </Button>
-          </div>
-          
-          <VocabularyMatchingGameWrapper
-            vocabularyTerms={availableTerms}
-            difficulty={difficulty}
-            maxMatches={maxMatches}
-            onGameComplete={handleGameComplete}
-          />
+  const options = (
+    <>
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-foreground">What to play</label>
+        <VocabPlaySource onResolved={setPlay} />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground">Difficulty</label>
+          <Select value={difficulty} onValueChange={(value: Difficulty) => setDifficulty(value)}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="easy">Easy (more time)</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="hard">Hard (faster)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground">Matches</label>
+          <Select value={maxMatches.toString()} onValueChange={(value) => setMaxMatches(parseInt(value))}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="4">4 matches</SelectItem>
+              <SelectItem value="6">6 matches</SelectItem>
+              <SelectItem value="8">8 matches</SelectItem>
+              <SelectItem value="10">10 matches</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
-    )
-  }
+      {canPlay && effMatches < maxMatches && (
+        <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+          This selection has {terms.length} terms, so the board plays {effMatches} matches.
+        </p>
+      )}
+    </>
+  )
+
+  const help = (
+    <ul className="list-disc pl-4 space-y-1">
+      <li>Click cards to reveal physics terms and definitions.</li>
+      <li>Match each term with its correct definition — a quick match earns +10 points.</li>
+      <li>Remember the positions of cards you have seen; careful attention pays.</li>
+      <li>Find every pair to finish the board and bank a perfect-game bonus.</li>
+    </ul>
+  )
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Link href="/vocabulary">
-            <Button variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Games
-            </Button>
-          </Link>
-          <div className="flex items-center space-x-3">
-            <Users className="h-8 w-8 text-blue-500" />
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-                Matching Game
-              </h1>
-              <p className="text-muted-foreground">
-                Match physics terms with their definitions
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Game Results */}
-      {/* Game Setup */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <BookOpen className="h-5 w-5" />
-              <span>Game Setup</span>
-            </CardTitle>
-            <CardDescription>
-              Configure your matching game settings
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                What to play
-              </label>
-              <VocabPlaySource onResolved={setPlay} />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Difficulty Level
-              </label>
-              <Select value={difficulty} onValueChange={(value: 'easy' | 'medium' | 'hard') => setDifficulty(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="easy">Easy (more time)</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="hard">Hard (faster)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Number of Matches
-              </label>
-              <Select value={maxMatches.toString()} onValueChange={(value) => setMaxMatches(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="4">4 matches (Easy)</SelectItem>
-                  <SelectItem value="6">6 matches (Medium)</SelectItem>
-                  <SelectItem value="8">8 matches (Hard)</SelectItem>
-                  <SelectItem value="10">10 matches (Expert)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {availableTerms.length > 0 && availableTerms.length < maxMatches && (
-              <div className="p-3 bg-muted rounded-lg">
-                <div className="text-sm text-orange-600 dark:text-orange-400">
-                  Not enough terms for {maxMatches} matches (need {maxMatches}, have {availableTerms.length})
-                </div>
-              </div>
-            )}
-
-            <Button
-              onClick={() => setGameStarted(true)}
-              disabled={availableTerms.length < maxMatches}
-              className="w-full"
-              size="lg"
-            >
-              <Users className="h-4 w-4 mr-2" />
-              Start Matching Game
-            </Button>
-
-          </CardContent>
-        </Card>
-
-        {/* Game Instructions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>How to Play</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">1</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Set Up Game</div>
-                  <div className="text-sm text-muted-foreground">
-                    Choose vocabulary set, difficulty, and number of matches
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">2</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Find Pairs</div>
-                  <div className="text-sm text-muted-foreground">
-                    Click cards to reveal terms and definitions
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">3</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Make Matches</div>
-                  <div className="text-sm text-muted-foreground">
-                    Match each physics term with its correct definition
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-3">
-                <Badge variant="secondary" className="mt-0.5">4</Badge>
-                <div>
-                  <div className="font-medium text-foreground">Complete Board</div>
-                  <div className="text-sm text-muted-foreground">
-                    Find all matches to complete the game and earn points
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-                💡 Pro Tip
-              </div>
-              <div className="text-sm text-blue-700 dark:text-blue-300">
-                Try to remember the positions of cards you&apos;ve seen. This memory game rewards careful attention!
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="text-center p-2 bg-green-50 dark:bg-green-900/20 rounded">
-                <Target className="h-4 w-4 mx-auto mb-1 text-green-600" />
-                <div className="font-medium text-green-800 dark:text-green-300">Quick Match</div>
-                <div className="text-green-600 dark:text-green-400">+10 points</div>
-              </div>
-              <div className="text-center p-2 bg-orange-50 dark:bg-orange-900/20 rounded">
-                <Trophy className="h-4 w-4 mx-auto mb-1 text-orange-600" />
-                <div className="font-medium text-orange-800 dark:text-orange-300">Perfect Game</div>
-                <div className="text-orange-600 dark:text-orange-400">Bonus points</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-    </div>
+    <VocabGameShell
+      icon={Users}
+      title="Matching"
+      hint="Pair each physics term with its definition."
+      help={help}
+      options={options}
+      forceOptionsOpen={play !== null && !canPlay}
+      sourceLabel={play ? (play.label ? `${play.label} · ${terms.length} terms` : null) : 'loading words…'}
+    >
+      {play === null ? (
+        <VocabLoadingBoard />
+      ) : canPlay ? (
+        <VocabularyMatchingGameWrapper
+          key={`${play.scoreSetId ?? 'none'}-${difficulty}-${effMatches}-${replay}`}
+          vocabularyTerms={terms}
+          difficulty={difficulty}
+          maxMatches={effMatches}
+          onGameComplete={handleGameComplete}
+        />
+      ) : (
+        <VocabEmptyBoard message={`Pick a lesson or unit with at least ${MIN_MATCHES} terms in Options to start matching.`} />
+      )}
+    </VocabGameShell>
   )
 }

@@ -30,7 +30,13 @@ function fireConfetti() {
   document.body.appendChild(canvas)
   const ctx = canvas.getContext('2d')
   if (!ctx) { canvas.remove(); return }
-  const colors = ['#8b7fd4', '#7bbf9e', '#e3b341', '#C08B8B', '#6E93A8']
+  // Confetti in the app palette: read the OKLCH tokens off :root (canvas can't
+  // use var() directly, but modern Chrome parses oklch() as a fillStyle).
+  const rootStyle = getComputedStyle(document.documentElement)
+  const colors = ['--primary', '--success', '--reward', '--destructive', '--muted-foreground']
+    .map((t) => rootStyle.getPropertyValue(t).trim())
+    .filter(Boolean)
+  if (colors.length === 0) colors.push('#8b7fd4')
   const parts = Array.from({ length: 140 }, () => ({
     x: canvas.width / 2 + (Math.random() - 0.5) * 200,
     y: canvas.height / 3,
@@ -133,7 +139,7 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
         <button onClick={onPlayAgain} className="inline-flex items-center gap-1.5 text-sm rounded-lg px-4 py-2 font-medium" style={{ background: accent, color: 'var(--primary-foreground, white)' }}>
           <RotateCcw size={15} /> Play again
         </button>
-        <Link href="/vocabulary" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
+        <Link href="/arcade" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
           <ArrowLeft size={15} /> Arcade
         </Link>
       </div>
