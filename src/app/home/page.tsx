@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from
 import EnrollmentGate from '@/components/EnrollmentGate'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import Link from 'next/link'
+import { Coins, Zap, ChevronDown } from 'lucide-react'
 import { decayingAverage } from '@/data/curriculum-types'
 import { SectionLabel, StatPill } from '@/components/ds'
 
@@ -206,11 +207,11 @@ export default function HomePage() {
               </Link>
             )}
             <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-              Your mission for today is ready. Where do you want to go?
+              Here&rsquo;s your path for today — a quick warm-up, then your next lesson.
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <StatPill tone="reward">★ {loading ? '—' : data?.points?.xp ?? 0} XP</StatPill>
+            <StatPill tone="reward"><Coins size={13} /> {loading ? '—' : data?.points?.xp ?? 0} XP</StatPill>
             {!loading && (data?.streak?.current ?? 0) > 0 && (
               <StatPill tone="muted">
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 8px var(--success)' }} /> {data!.streak.current}-day streak
@@ -223,14 +224,32 @@ export default function HomePage() {
 
         {!loading && data && (
           <>
-            {/* MATH WARM-UP — the spine's daily to-do, where students land */}
-            <SectionLabel accent="var(--secondary)">Today&apos;s math warm-up</SectionLabel>
-            <div className="mb-6">
-              <DailyMathTask />
-            </div>
-
-            {/* CONTINUE */}
+            {/* CONTINUE — the single primary path. The daily math warm-up is
+                folded in as a compact "2-min first" step rather than opening
+                the page as an obligation (Surface 16: lead with the path). */}
             <SectionLabel accent="var(--primary)">Continue your journey</SectionLabel>
+
+            <details
+              className="mb-3 rounded-2xl overflow-hidden"
+              style={{
+                border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))',
+                background: 'color-mix(in oklch, var(--reward) 8%, var(--card))',
+              }}
+            >
+              <summary
+                className="flex items-center gap-2 px-4 py-3 text-sm font-semibold"
+                style={{ cursor: 'pointer', listStyle: 'none', color: 'var(--foreground)' }}
+              >
+                <span className="grid place-items-center shrink-0" style={{ width: 26, height: 26, borderRadius: 8, background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
+                  <Zap size={14} />
+                </span>
+                Step 1 · 2-minute math warm-up
+                <ChevronDown size={15} className="ml-auto" style={{ color: 'var(--muted-foreground)' }} />
+              </summary>
+              <div className="px-4 pb-4">
+                <DailyMathTask />
+              </div>
+            </details>
             {data.continue && data.continue.lesson ? (
               <Glass
                 style={{
