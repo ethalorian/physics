@@ -6,6 +6,7 @@ import { toLatex } from '@/components/blocks/EquationSandbox'
 import MathControlRoom from '@/components/math-spine/MathControlRoom'
 import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
+import { useClassScope } from '@/lib/use-class-scope'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -238,16 +239,17 @@ export default function ControlRoomPage() {
   const [copyLessonId, setCopyLessonId] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
   // Class/section scope. Aspen's gradebook is partitioned by section, so the
-  // grade copy must be filterable to one class. Seeded from the per-class
-  // deep-link (?class=&label=) and switchable here via the picker.
-  const [classId, setClassId] = useState<string | null>(null)
-  const [classLabel, setClassLabel] = useState<string | null>(null)
+  // grade copy must be filterable to one class. The scope is SHARED with
+  // analytics, roster, and pacing via localStorage (use-class-scope) — pick a
+  // class in any of them and it carries here. The per-class deep-link
+  // (?class=&label=) still wins and updates the shared scope.
+  const { classId, classLabel, setClassScope } = useClassScope()
   const [classes, setClasses] = useState<{ id: string; label: string }[]>([])
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
-    setClassId(sp.get('class'))
-    setClassLabel(sp.get('label'))
-  }, [])
+    const deepLinked = sp.get('class')
+    if (deepLinked) setClassScope(deepLinked, sp.get('label'))
+  }, [setClassScope])
   useEffect(() => {
     fetch('/api/courses')
       .then((r) => r.json())
@@ -258,8 +260,7 @@ export default function ControlRoomPage() {
   }, [])
   const classQuery = classId ? `&class=${encodeURIComponent(classId)}` : ''
   const pickClass = (id: string) => {
-    setClassId(id || null)
-    setClassLabel(id ? (classes.find((c) => c.id === id)?.label ?? null) : null)
+    setClassScope(id || null, id ? (classes.find((c) => c.id === id)?.label ?? null) : null)
   }
 
   const loadGrid = useCallback((unit: string) => {
@@ -584,64 +585,14 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      {/* daily math-fluency rating — collapsed so the grid is first paint */}
-      <details className="mb-3 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-        <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>
-          Daily math-fluency rating
-        </summary>
-        <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
-      </details>
-      {/* class-scope banner (when opened from a specific class) */}
-      {classId && (
-        <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border px-4 py-2.5 mb-3"
-          style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 10%, var(--card))' }}>
-          <span className="text-sm font-medium">
-            Scoped to <strong>{classLabel || 'one class'}</strong> — grades you copy match this Aspen section.
-          </span>
-          <button onClick={() => pickClass('')} className="text-sm font-semibold" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}>View all my students</button>
-        </div>
-      )}
-      {/* header */}
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-1">
-        <h1 className="text-xl font-semibold tracking-tight">Class mastery</h1>
-        <div className="flex items-center gap-2">
-          <input
-            value={nameFilter}
-            onChange={(e) => setNameFilter(e.target.value)}
-            placeholder="Filter students…"
-            className="rounded-lg text-sm px-3 py-2"
-            style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 160 }}
-          />
-          {classes.length > 0 && (
-            <select
-              value={classId ?? ''}
-              onChange={(e) => pickClass(e.target.value)}
-              title="Scope to one class/section — Aspen partitions the gradebook by section"
-              className="rounded-lg text-sm px-3 py-2"
-              style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
-            >
-              <option value="">All my students</option>
-              {classes.map((c) => (
-                <option key={c.id} value={c.id}>{c.label}</option>
-              ))}
-            </select>
-          )}
-          <select
-            value={unitId}
-            onChange={(e) => setUnitId(e.target.value)}
-            className="rounded-lg text-sm px-3 py-2"
-            style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
-          >
-            {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
-              <option key={u.id} value={u.id}>{u.name}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* tabs: mastery (targets) vs lessons (completion) */}
-      <div className="flex gap-2 mt-4">
-        {([['mastery', 'Mastery (targets)'], ['lessons', 'Lessons (completion)'], ['math', 'Math (spine)']] as const).map(([v, label]) => {
+      {/* toolbar — title · tabs · scope · unit · filter · one CTA on a single
+          compact line, so the grid is the first paint on a laptop */}
+      <div className="flex items-center gap-2 flex-wrap mb-1">
+        <h1 className="text-xl font-semibold tracking-tight" style={{ marginRight: 4 }}>Class mastery</h1>
+        {/* tabs: mastery (targets) vs lessons (completion) vs math (spine); the
+            active tab carries its keyboard contract so the scheme is visible
+            before the drawer opens */}
+        {([['mastery', 'Mastery (targets)', 'keys 1·2·3 rate'], ['lessons', 'Lessons (completion)', '0–9 sets tens digit'], ['math', 'Math (spine)', '']] as const).map(([v, label, hint]) => {
           const active = view === v
           const toGrade = v === 'lessons' && lessonGrid
             ? Object.values(lessonGrid.cells).reduce((sum, row) => sum + Object.values(row).filter((c) => c.needsGrading).length, 0)
@@ -659,33 +610,75 @@ export default function ControlRoomPage() {
                   {toGrade}
                 </span>
               )}
+              {active && hint && (
+                <span style={{ fontSize: 10, fontWeight: 600, opacity: 0.85, paddingLeft: 8, borderLeft: '1px solid color-mix(in oklch, var(--primary-foreground) 35%, transparent)', whiteSpace: 'nowrap' }}>
+                  {hint}
+                </span>
+              )}
             </button>
           )
         })}
-      </div>
-
-      {/* student-first grading launcher */}
-      {view !== 'math' && (
-        <div className="flex items-center gap-3 mt-3 flex-wrap">
+        <span className="flex-1" style={{ minWidth: 4 }} />
+        <input
+          value={nameFilter}
+          onChange={(e) => setNameFilter(e.target.value)}
+          placeholder="Filter students…"
+          className="rounded-lg text-sm px-3 py-2"
+          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 150 }}
+        />
+        {classes.length > 0 && (
+          <select
+            value={classId ?? ''}
+            onChange={(e) => pickClass(e.target.value)}
+            title={classId
+              ? `Scoped to ${classLabel || 'one class'} — grades you copy match this Aspen section`
+              : 'Scope to one class/section — Aspen partitions the gradebook by section'}
+            className="rounded-lg text-sm px-3 py-2"
+            style={{ border: `1px solid ${classId ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)' }}
+          >
+            <option value="">All my students</option>
+            {classes.map((c) => (
+              <option key={c.id} value={c.id}>{c.label}</option>
+            ))}
+          </select>
+        )}
+        <select
+          value={unitId}
+          onChange={(e) => setUnitId(e.target.value)}
+          className="rounded-lg text-sm px-3 py-2"
+          style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
+        >
+          {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
+            <option key={u.id} value={u.id}>{u.name}</option>
+          ))}
+        </select>
+        {/* the single launcher — every pending cell is walked from here */}
+        {view !== 'math' && (
           <button
             onClick={startGradingPending}
             disabled={totalPendingInView === 0}
+            title={totalPendingInView
+              ? `${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with work to grade — all of one student, then the next.`
+              : 'Nothing pending to grade in this view.'}
             className="inline-flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-bold disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: totalPendingInView ? 'pointer' : 'default' }}
           >
-            Grade pending{totalPendingInView ? ` · ${totalPendingInView}` : ''}
+            {totalPendingInView ? `Grade ${totalPendingInView} pending` : 'Grade pending'}
           </button>
-          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-            {totalPendingInView
-              ? `${pendingStudents.length} student${pendingStudents.length === 1 ? '' : 's'} with work to grade — all of one student, then the next.`
-              : 'Nothing pending to grade in this view.'}
-          </span>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* math spine — cross-cutting competencies + warm-up review */}
+      {/* math spine — cross-cutting competencies + warm-up review. The daily
+          math-fluency rating lives here (its own tab, not the top stack) so the
+          mastery/lessons grids stay first paint. */}
       {view === 'math' && (
         <div className="mt-4">
+          <details className="mb-3 rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+            <summary style={{ cursor: 'pointer', listStyle: 'none', padding: '10px 14px', fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>
+              Daily math-fluency rating
+            </summary>
+            <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
+          </details>
           <MathControlRoom classId={classId} />
         </div>
       )}
