@@ -37,9 +37,12 @@ export const GET = withAuth(async (request, ctx) => {
       .select('statement, domain, unit_id')
       .eq('id', targetId)
       .maybeSingle()
-    const tInfo = tRow as { statement?: string; unit_id?: string } | null
+    const tInfo = tRow as { statement?: string; domain?: string; unit_id?: string } | null
     const statement = tInfo?.statement
     if (!statement) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
+    // Sent with every review so the page can name the skill being practiced
+    // (Surface 6: "name the skill + why you're here").
+    const target = { statement, domain: tInfo?.domain ?? null }
 
     // 1. Approved variant (shared) — rotate by picking a random one.
     const { data: approved } = await supabaseAdmin
@@ -50,7 +53,7 @@ export const GET = withAuth(async (request, ctx) => {
     const approvedList = (approved ?? []) as Review[]
     if (approvedList.length > 0) {
       const pick = approvedList[Math.floor(Math.random() * approvedList.length)]
-      return NextResponse.json({ review: { ...pick, shared: true } })
+      return NextResponse.json({ review: { ...pick, shared: true }, target })
     }
 
     // 2. This student's own pending generation.
@@ -63,7 +66,7 @@ export const GET = withAuth(async (request, ctx) => {
       .order('created_at', { ascending: false })
       .limit(1)
       .maybeSingle()
-    if (mine) return NextResponse.json({ review: { ...(mine as Review), shared: false } })
+    if (mine) return NextResponse.json({ review: { ...(mine as Review), shared: false }, target })
 
     // 3. Generate a fresh review with Claude (with the unit's sim catalog), store pending.
     const sims = await loadSimCatalog(tInfo?.unit_id)
@@ -77,5 +80,5 @@ export const GET = withAuth(async (request, ctx) => {
       .single()
     if (error || !inserted) return NextResponse.json({ error: 'Could not save the review.' }, { status: 500 })
 
-    return NextResponse.json({ review: { ...(inserted as Review), shared: false } })
+    return NextResponse.json({ review: { ...(inserted as Review), shared: false }, target })
 })
