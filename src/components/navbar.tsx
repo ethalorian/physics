@@ -99,6 +99,14 @@ export default function Navbar() {
 
   const navigationItems = getNavigationItems()
 
+  // Prefix-match active state (Surface 15): a lesson page lights the Lessons
+  // tab, a lobby room lights Lobby. Boundary-safe so /store never matches
+  // /storefront-style siblings.
+  const isActivePath = (href: string) => pathname === href || pathname?.startsWith(href + '/')
+
+  // Signed-in users' logo goes home — their home, not the marketing splash.
+  const logoHref = isAuthenticated ? (isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
+
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
   if (pathname?.startsWith('/embed')) return null
 
@@ -121,7 +129,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center max-w-7xl mx-auto">
           {/* Brand Logo - Apple-style clean typography with earth tones */}
           <div className="flex items-center gap-3 sm:gap-4">
-            <Link href="/" className="group flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors duration-200">
+            <Link href={logoHref} className="group flex items-center gap-2 font-semibold text-foreground hover:text-primary transition-colors duration-200">
               <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25">
                 <span className="text-primary-foreground text-sm font-bold">φ</span>
               </div>
@@ -141,19 +149,20 @@ export default function Navbar() {
             <div className="hidden md:flex items-center gap-1">
               {navigationItems.map((item) => {
                 const Icon = item.icon
-                const isActive = pathname === item.href
+                const isActive = isActivePath(item.href)
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-1.5 px-2.5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    className={`flex items-center gap-1.5 px-2 lg:px-2.5 py-2 text-xs lg:text-sm font-medium rounded-lg transition-colors ${
                       isActive
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
-                    <span className="hidden lg:inline">{item.label}</span>
+                    {/* labels always on — bare glyphs were unreadable on Chromebook widths */}
+                    <span>{item.label}</span>
                   </Link>
                 )
               })}
@@ -177,7 +186,7 @@ export default function Navbar() {
                   <div className="flex flex-col py-3">
                     {navigationItems.map((item) => {
                       const Icon = item.icon
-                      const isActive = pathname === item.href
+                      const isActive = isActivePath(item.href)
                       return (
                         <SheetClose asChild key={item.href}>
                           <Link
