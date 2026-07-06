@@ -167,6 +167,15 @@ export interface SimDefinition {
     objectives?: string[]
     concepts?: string[]
     tryThis?: string[]
+    /** One-line task shown at the top of the shell. Optional — the shell falls
+     *  back to objectives[0] so existing defs get the task banner for free. */
+    goal?: string
+    /** Optional interpretation prompts rendered beside the readouts
+     *  ("watch how v changes sign at the peak"). Omit to skip the card. */
+    whatToNotice?: string[]
+    /** Message for the success banner once completion lands. Optional —
+     *  a graceful default is used when omitted. */
+    successMessage?: string
   }
 }
 

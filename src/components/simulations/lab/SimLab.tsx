@@ -10,6 +10,7 @@ import { getSimulationCriteria } from '@/config/simulationCompletionCriteria'
 import type { SimulationInteraction, SimulationResult } from '@/types/interactive-content'
 import {
   ArrowLeft, Play, Pause, RotateCcw, Download, Info, CheckCircle2, Sparkles,
+  Target, Eye, Hand,
 } from 'lucide-react'
 import {
   SimDefinition, SimEngine, ParamValues, defaultParamValues, SimData, SensorSample,
@@ -30,6 +31,17 @@ const LEVEL_TINT: Record<string, string> = {
 // Fixed-substep integration constants (module scope = stable across renders).
 const FIXED_DT = 1 / 120
 const MAX_SUBSTEPS = 10
+
+// localStorage set of visited sim slugs — the library's "tried" fallback when
+// no server-side activity record is reachable.
+const VISITED_KEY = 'physics:sim-visited'
+
+// Entrance-only motion (≤300ms, the app easing); stilled under reduced motion.
+const SHELL_CSS = `
+  @keyframes simFadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+  .sim-fade-in { animation: simFadeIn 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+  @media (prefers-reduced-motion: reduce) { .sim-fade-in { animation: none; } }
+`
 
 export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId?: string }) {
   const router = useRouter()
@@ -54,6 +66,9 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const [data, setData] = useState<SimData | null>(null)
   const [sensorTrace, setSensorTrace] = useState<SensorSample[]>([])
   const [running, setRunning] = useState(false)
+  // First-interaction cue: an affordance chip on the canvas until the student
+  // touches anything (canvas drag, control change, or Run).
+  const [hasInteracted, setHasInteracted] = useState(false)
 
   // Mock-sensor channels: a sim may offer several switchable series (a picker
   // appears in the sensor panel). `sensor` is the single-channel shorthand.
@@ -118,6 +133,15 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     }
     // createEngine identity is stable per definition; re-run only if the sim changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [def.slug])
+
+  // ---- remember "tried" locally (library tried-state fallback) ------------
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(VISITED_KEY)
+      const arr: string[] = raw ? (JSON.parse(raw) as string[]) : []
+      if (!arr.includes(def.slug)) localStorage.setItem(VISITED_KEY, JSON.stringify([...arr, def.slug]))
+    } catch { /* storage unavailable — server activity record still covers it */ }
   }, [def.slug])
 
   // ---- one-time activity registration ------------------------------------
@@ -194,6 +218,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
 
   // ---- control handlers ---------------------------------------------------
   const handleParam = useCallback((key: string, value: number | string | boolean) => {
+    setHasInteracted(true)
     setValues((prev) => {
       const next = { ...prev, [key]: value }
       engineRef.current?.setParams(next)
@@ -208,6 +233,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   }, [trackInteraction, pullState, recordInteraction])
 
   const handlePlayPause = useCallback(() => {
+    setHasInteracted(true)
     if (running) { stopLoop(); return }
     engineRef.current?.start?.(values)
     trackInteraction('play', {})
@@ -255,9 +281,19 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const accent = LEVEL_TINT[def.level] ?? 'var(--primary)'
   const canvasH = def.canvasHeight ?? 420
 
+  // Lead with the task: goal falls back to the first objective, so every lab
+  // that already declares learning content gets the banner with no def change.
+  const goal = def.learning?.goal ?? def.learning?.objectives?.[0]
+  const tryFirst = def.learning?.tryThis?.[0]
+  const whatToNotice = def.learning?.whatToNotice ?? []
+  const successMessage = def.learning?.successMessage ?? 'You hit this lab’s goal — try pushing a parameter further and see if the pattern holds.'
+  const taskDone = !!completionConfig && completion.isCompleted
+  const hasLockable = def.params.some((p) => !p.live)
+
   // ---- render -------------------------------------------------------------
   return (
     <div ref={rootRef} className={embedded ? 'p-3' : 'container mx-auto px-4 py-6 max-w-6xl'} style={{ color: 'var(--foreground)' }}>
+      <style>{SHELL_CSS}</style>
       {!embedded && (
         <div className="mb-5">
           <button onClick={() => router.push('/simulations')} className="inline-flex items-center gap-1 text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
@@ -275,11 +311,61 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
         </div>
       )}
 
+      {/* the task, first — flips to a success banner when completion lands */}
+      {(goal || tryFirst || taskDone) && (
+        <div
+          key={taskDone ? 'sim-task-done' : 'sim-task'}
+          className="sim-fade-in rounded-2xl px-4 py-3 mb-4"
+          style={{
+            border: `0.5px solid color-mix(in oklch, ${taskDone ? 'var(--success)' : 'var(--primary)'} 35%, var(--border))`,
+            background: `color-mix(in oklch, ${taskDone ? 'var(--success)' : 'var(--primary)'} 8%, var(--card))`,
+          }}
+          role={taskDone ? 'status' : undefined}
+        >
+          {taskDone ? (
+            <div className="flex items-start gap-2.5">
+              <CheckCircle2 size={18} className="mt-0.5 shrink-0" style={{ color: 'var(--success)' }} />
+              <div>
+                <div className="text-sm font-semibold" style={{ color: 'var(--success)' }}>Goal reached — nice work</div>
+                <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{successMessage}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-start gap-2.5">
+              <Target size={18} className="mt-0.5 shrink-0" style={{ color: 'var(--primary)' }} />
+              <div className="space-y-0.5">
+                {goal && (
+                  <>
+                    <div className="text-[11px] font-bold uppercase tracking-wider" style={{ color: 'var(--primary)' }}>Your task</div>
+                    <div className="text-sm font-medium">{goal}</div>
+                  </>
+                )}
+                {tryFirst && (
+                  <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+                    <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Try this:</span> {tryFirst}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       <div className={embedded ? 'flex flex-col gap-4' : 'grid grid-cols-1 lg:grid-cols-3 gap-5'}>
         {/* visualization */}
         <div className={embedded ? '' : 'lg:col-span-2 space-y-4'}>
-          <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+          <div className="relative rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }} onPointerDown={() => setHasInteracted(true)}>
             <canvas ref={canvasRef} className="w-full block" style={{ height: canvasH }} />
+            {/* affordance cue until the first touch */}
+            {!hasInteracted && (
+              <div
+                className="sim-fade-in pointer-events-none absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+                style={{ background: 'color-mix(in oklch, var(--card) 90%, transparent)', border: '0.5px solid var(--border)', color: 'var(--muted-foreground)', backdropFilter: 'blur(4px)' }}
+                aria-hidden="true"
+              >
+                <Hand size={13} /> Drag or adjust a control to explore
+              </div>
+            )}
           </div>
 
           {/* readouts */}
@@ -297,6 +383,16 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                   </div>
                 )
               })}
+            </div>
+          )}
+
+          {/* "what to notice" — optional interpretation prompts beside the numbers */}
+          {whatToNotice.length > 0 && (
+            <div className="rounded-2xl px-4 py-3 text-sm" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+              <div className="flex items-center gap-1.5 font-semibold mb-1"><Eye size={15} style={{ color: 'var(--primary)' }} /> What to notice</div>
+              <ul className="space-y-1 list-disc list-inside" style={{ color: 'var(--muted-foreground)' }}>
+                {whatToNotice.map((w, i) => <li key={i}>{w}</li>)}
+              </ul>
             </div>
           )}
 
@@ -362,6 +458,13 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
               </div>
               )
             })}
+
+            {/* why a slider stopped responding — say it, don't let it fail silently */}
+            {running && hasLockable && (
+              <div className="sim-fade-in flex items-start gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                <Info size={13} className="mt-0.5 shrink-0" /> Some controls lock while the sim runs — pause to adjust them.
+              </div>
+            )}
 
             <div className="flex flex-col gap-2 pt-1">
               {showPlay && (
