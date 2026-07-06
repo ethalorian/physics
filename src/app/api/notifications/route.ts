@@ -28,13 +28,6 @@ export const GET = withAuth(async (_req, ctx) => {
   const seenAt = readRow?.seen_at ? new Date(readRow.seen_at) : new Date(Date.now() - 3 * 86400000)
   const isUnread = (iso: string | null) => !!iso && new Date(iso) > seenAt
 
-  // student email for the assignment tables (they key by email)
-  let email: string | null = null
-  try {
-    const { data: s } = await supabaseAdmin.from('students').select('email').eq('id', me).maybeSingle()
-    email = s?.email ?? null
-  } catch { /* ignore */ }
-
   // 1. Mastery ratings
   try {
     const { data } = await supabaseAdmin.from('mastery_records').select('id, level, observed_at').eq('user_id', me).order('observed_at', { ascending: false }).limit(8)
@@ -98,32 +91,9 @@ export const GET = withAuth(async (_req, ctx) => {
     }
   } catch { /* ignore */ }
 
-  // 6. Due soon (assignments not finished, due within 3 days). Becomes "unread"
-  //    when it enters the 2-day window — so it nags until the bell is opened.
-  if (email) {
-    try {
-      const { data } = await supabaseAdmin
-        .from('student_assignment_progress')
-        .select('id, status, assignment:unified_assignments(title, due_date, published)')
-        .eq('student_email', email)
-        .in('status', ['not_started', 'in_progress', 'assigned'])
-        .limit(30)
-      const now = Date.now()
-      type AInfo = { title: string | null; due_date: string | null; published: boolean | null }
-      for (const r of (data ?? []) as { id: string; status: string; assignment: AInfo | AInfo[] | null }[]) {
-        const a = Array.isArray(r.assignment) ? r.assignment[0] : r.assignment
-        if (!a?.due_date || a.published === false) continue
-        const due = new Date(a.due_date).getTime()
-        if (due < now || due - now > 3 * 86400000) continue // only the next 3 days
-        const soonThreshold = new Date(due - 2 * 86400000).toISOString()
-        const days = Math.max(0, Math.round((due - now) / 86400000))
-        items.push({
-          id: `due:${r.id}`, type: 'due', title: 'Due soon', detail: `${a.title ?? 'Assignment'} · due ${days === 0 ? 'today' : days === 1 ? 'tomorrow' : `in ${days} days`}`,
-          at: a.due_date, href: '/home', unread: now >= new Date(soonThreshold).getTime() && isUnread(soonThreshold),
-        })
-      }
-    } catch { /* ignore */ }
-  }
+  // 6. (Retired) "Due soon" assignment reminders. The unified-assignments
+  //    feature is no longer live student-facing (2026-07), so the bell no
+  //    longer queries student_assignment_progress / unified_assignments.
 
   // 7. Teacher access requests (ADMIN only) — a colleague tried to sign in and is
   //    waiting for approval. Links to the oversight page where you approve them.

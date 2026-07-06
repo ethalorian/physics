@@ -5,7 +5,6 @@ import EnrollmentGate from '@/components/EnrollmentGate'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import Link from 'next/link'
 import { Coins, Zap, ChevronDown } from 'lucide-react'
-import AssignmentsPanel from '@/components/home/AssignmentsPanel'
 import { decayingAverage } from '@/data/curriculum-types'
 import { SectionLabel, StatPill } from '@/components/ds'
 
@@ -376,12 +375,6 @@ export default function HomePage() {
                 <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Nothing to retry right now — you&apos;re on top of every target your teacher has checked. Keep climbing.</p>
               </Glass>
             )}
-
-            {/* ASSIGNMENTS — relocated from the retired /dashboard; renders
-                only when the class actually publishes assignments */}
-            <div className="mt-6">
-              <AssignmentsPanel />
-            </div>
 
             {/* MASTERY CLIMB */}
             <SectionLabel accent="var(--reward)">Your mastery climb</SectionLabel>

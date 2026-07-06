@@ -10,7 +10,6 @@ import AuthProvider from '@/components/auth-provider'
 import AccessGate from '@/components/AccessGate'
 import Navbar from '@/components/navbar'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
-import { ConsolidatedAssignmentProvider } from '@/contexts/ConsolidatedAssignmentContext'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
@@ -65,15 +64,13 @@ export default function RootLayout({
                 <VocabularyProvider>
                   <SimulationProvider>
                     <StudentActivityProvider>
-                      <ConsolidatedAssignmentProvider>
-                        <AccessGate>
-                          <Navbar />
-                          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-                            {children}
-                          </main>
-                        </AccessGate>
-                        <QuickTestAccountSwitcher />
-                      </ConsolidatedAssignmentProvider>
+                      <AccessGate>
+                        <Navbar />
+                        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
+                          {children}
+                        </main>
+                      </AccessGate>
+                      <QuickTestAccountSwitcher />
                     </StudentActivityProvider>
                   </SimulationProvider>
                 </VocabularyProvider>
