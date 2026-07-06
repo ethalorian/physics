@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import { useSession } from 'next-auth/react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -88,18 +88,28 @@ export default function LeaderboardPage() {
   const currentUserEntry = leaderboard.find(entry => entry.is_current_user)
   const currentUserRank = currentUserEntry?.rank
 
+  // Rank tiers: gold is the only reward accent (#1); #2 and #3 stay on the neutral tokens.
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Crown className="h-5 w-5 text-yellow-500" />
-    if (rank === 2) return <Medal className="h-5 w-5 text-gray-400" />
-    if (rank === 3) return <Medal className="h-5 w-5 text-amber-600" />
+    if (rank === 1) return <Crown className="h-5 w-5" style={{ color: 'var(--reward)' }} />
+    if (rank === 2) return <Medal className="h-5 w-5" style={{ color: 'var(--muted-foreground)' }} />
+    if (rank === 3) return <Medal className="h-5 w-5" style={{ color: 'color-mix(in oklch, var(--muted-foreground) 60%, var(--border))' }} />
     return <span className="text-muted-foreground font-bold">#{rank}</span>
   }
 
-  const getRankStyle = (rank: number) => {
-    if (rank === 1) return 'bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border-yellow-500/30'
-    if (rank === 2) return 'bg-gradient-to-r from-gray-400/20 to-slate-400/20 border-gray-400/30'
-    if (rank === 3) return 'bg-gradient-to-r from-amber-600/20 to-orange-600/20 border-amber-600/30'
-    return ''
+  const getRankStyle = (rank: number): CSSProperties | undefined => {
+    if (rank === 1) return {
+      background: 'color-mix(in oklch, var(--reward) 10%, var(--card))',
+      borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))',
+    }
+    if (rank === 2) return {
+      background: 'color-mix(in oklch, var(--muted-foreground) 6%, var(--card))',
+      borderColor: 'var(--border)',
+    }
+    if (rank === 3) return {
+      background: 'color-mix(in oklch, var(--muted-foreground) 3%, var(--card))',
+      borderColor: 'var(--border)',
+    }
+    return undefined
   }
 
   if (status === 'loading') {
@@ -117,12 +127,12 @@ export default function LeaderboardPage() {
       <div className="container mx-auto px-4 py-8 max-w-md">
         <Card>
           <CardHeader className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary flex items-center justify-center">
               <Trophy className="h-8 w-8 text-primary-foreground" />
             </div>
-            <CardTitle>Sign In to View Leaderboard</CardTitle>
+            <CardTitle>Sign in to see the leaderboard</CardTitle>
             <CardDescription>
-              See where you rank among your classmates!
+              See where you rank among your classmates.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
@@ -179,14 +189,14 @@ export default function LeaderboardPage() {
 
       {/* Current User Stats Banner */}
       {currentUserEntry && (
-        <Card className="max-w-lg bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+        <Card className="max-w-lg bg-primary/5 border-primary/20">
           <CardContent className="py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <LeaderboardAvatar entry={currentUserEntry} size={48} />
 
                 <div className="text-left">
-                  <p className="font-semibold">Your Rank</p>
+                  <p className="font-semibold">Your rank</p>
                   <p className="text-2xl font-bold text-primary">#{currentUserRank}</p>
                 </div>
               </div>
@@ -207,8 +217,8 @@ export default function LeaderboardPage() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Star className="h-5 w-5 text-yellow-500" />
-                  Top Performers
+                  <Star className="h-5 w-5" style={{ color: 'var(--reward)' }} />
+                  Top performers
                 </CardTitle>
                 <div className="flex gap-2">
                   <Button
@@ -230,7 +240,7 @@ export default function LeaderboardPage() {
                     size="sm"
                     onClick={() => setPeriod('all-time')}
                   >
-                    All Time
+                    All time
                   </Button>
                 </div>
               </div>
@@ -248,8 +258,8 @@ export default function LeaderboardPage() {
               ) : leaderboard.length === 0 ? (
                 <div className="text-center py-12 text-muted-foreground">
                   <Trophy className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p className="font-medium mb-2">No data yet</p>
-                  <p className="text-sm">Start playing games and completing lessons to appear on the leaderboard!</p>
+                  <p className="font-medium mb-2">No rankings yet</p>
+                  <p className="text-sm">Play games and complete lessons to earn XP — you&apos;ll show up here.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -258,7 +268,8 @@ export default function LeaderboardPage() {
                       key={entry.user_id}
                       className={`flex items-center gap-4 p-3 rounded-lg border transition-colors hover:bg-muted/50 ${
                         entry.is_current_user ? 'bg-primary/5 border-primary/20' : ''
-                      } ${getRankStyle(entry.rank)}`}
+                      }`}
+                      style={getRankStyle(entry.rank)}
                     >
                       {/* Rank */}
                       <div className="w-10 flex justify-center">
@@ -325,8 +336,8 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      {/* How to earn XP */}
-      <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
+      {/* How to earn XP — flat tokenized tiles: indigo for learning, sage for graded work, gold for bonus reward */}
+      <Card className="border-primary/20">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
@@ -336,39 +347,39 @@ export default function LeaderboardPage() {
         <CardContent>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
-              <div className="p-2 bg-purple-500/10 rounded-lg">
-                <Gamepad2 className="h-5 w-5 text-purple-600" />
+              <div className="p-2 rounded-lg" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)' }}>
+                <Gamepad2 className="h-5 w-5" style={{ color: 'var(--primary)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Vocabulary Games</h4>
+                <h4 className="font-semibold text-sm">Play vocabulary games</h4>
                 <p className="text-xs text-muted-foreground">Games earn a small capped bonus — learning pays the most</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
-              <div className="p-2 bg-blue-500/10 rounded-lg">
-                <BookOpen className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg" style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)' }}>
+                <BookOpen className="h-5 w-5" style={{ color: 'var(--primary)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Complete Lessons</h4>
-                <p className="text-xs text-muted-foreground">XP for reading progress + video question bonus</p>
+                <h4 className="font-semibold text-sm">Complete lessons</h4>
+                <p className="text-xs text-muted-foreground">You earn XP as you read, plus a bonus for video questions</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
-              <div className="p-2 bg-green-500/10 rounded-lg">
-                <FileText className="h-5 w-5 text-green-600" />
+              <div className="p-2 rounded-lg" style={{ background: 'color-mix(in oklch, var(--success) 12%, transparent)' }}>
+                <FileText className="h-5 w-5" style={{ color: 'var(--success)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Submit Assignments</h4>
+                <h4 className="font-semibold text-sm">Submit assignments</h4>
                 <p className="text-xs text-muted-foreground">Graded work earns XP (up to 40 each)</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
-              <div className="p-2 bg-orange-500/10 rounded-lg">
-                <Target className="h-5 w-5 text-orange-600" />
+              <div className="p-2 rounded-lg" style={{ background: 'color-mix(in oklch, var(--reward) 14%, transparent)' }}>
+                <Target className="h-5 w-5" style={{ color: 'var(--reward)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Daily Challenges</h4>
-                <p className="text-xs text-muted-foreground">Complete challenges for bonus XP</p>
+                <h4 className="font-semibold text-sm">Finish daily challenges</h4>
+                <p className="text-xs text-muted-foreground">Each challenge you finish pays bonus XP</p>
               </div>
             </div>
           </div>

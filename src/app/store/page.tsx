@@ -19,6 +19,15 @@ const C = {
 
 const STATUS_COLOR: Record<string, string> = { pending: C.lavender, approved: C.muted, fulfilled: C.sage, denied: 'var(--destructive)' }
 
+// Human labels: every reward is a request your teacher fulfills in class, so each
+// status says what happens next instead of the raw database word.
+const STATUS_LABEL: Record<string, string> = {
+  pending: 'Waiting for your teacher',
+  approved: 'Approved — pick it up in class',
+  fulfilled: 'Received',
+  denied: 'Not approved — ask your teacher',
+}
+
 export default function StorePage() {
   const [balance, setBalance] = useState<Balance | null>(null)
   const [rewards, setRewards] = useState<Reward[]>([])
@@ -46,7 +55,7 @@ export default function StorePage() {
       const res = await fetch('/api/rewards/redeem', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reward_id: r.id }) })
       const d = await res.json()
       if (!res.ok) setMsg(d.error || 'Could not redeem')
-      else { setMsg(`Requested: ${r.name}. Your teacher will fulfill it.`); load() }
+      else { setMsg(`Requested: ${r.name}. Your teacher approves this, then hands it to you in class — usually within a day or two.`); load() }
     } catch { setMsg('Could not redeem') } finally { setBusy(null) }
   }
 
@@ -68,7 +77,10 @@ export default function StorePage() {
   return (
     <EnrollmentGate>
     <div className="max-w-3xl mx-auto p-4" style={{ color: C.indigo }}>
-      <h1 className="text-xl font-medium mb-3">XP store</h1>
+      <h1 className="text-xl font-medium mb-1">XP store</h1>
+      <p className="text-sm mb-3" style={{ color: C.muted }}>
+        Spend the XP you earn. Every reward is a request — your teacher approves it, then hands it to you in class.
+      </p>
 
       <div className="rounded-xl border p-4 mb-4" style={{ background: C.tint, borderColor: C.hairline }}>
         <div className="text-xs" style={{ color: C.muted }}>XP to spend</div>
@@ -104,8 +116,8 @@ export default function StorePage() {
                   key={p.id}
                   className="rounded-lg border p-4 flex flex-col"
                   style={{
-                    borderColor: received ? C.sage : waiting ? 'color-mix(in srgb, var(--reward) 55%, var(--border))' : C.hairline,
-                    background: received ? 'color-mix(in srgb, var(--success) 8%, var(--card))' : waiting ? 'color-mix(in srgb, var(--reward) 7%, var(--card))' : 'var(--card)',
+                    borderColor: received ? C.sage : waiting ? 'color-mix(in oklch, var(--reward) 55%, var(--border))' : C.hairline,
+                    background: received ? 'color-mix(in oklch, var(--success) 8%, var(--card))' : waiting ? 'color-mix(in oklch, var(--reward) 7%, var(--card))' : 'var(--card)',
                     opacity: received || waiting ? 1 : 0.85,
                   }}
                 >
@@ -141,7 +153,7 @@ export default function StorePage() {
                       onClick={() => redeem(r)}
                       disabled={!afford || busy === r.id}
                       className="text-sm rounded-md border px-3 py-1 disabled:opacity-50"
-                      style={{ borderColor: C.hairline, background: afford ? C.sage : 'var(--card)', color: afford ? '#fff' : C.muted }}
+                      style={{ borderColor: C.hairline, background: afford ? C.sage : 'var(--card)', color: afford ? 'var(--primary-foreground)' : C.muted }}
                     >
                       {busy === r.id ? '…' : afford ? 'Redeem' : 'Need more'}
                     </button>
@@ -162,7 +174,7 @@ export default function StorePage() {
             <div key={r.id} className="flex items-center gap-3 py-2.5" style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--border)' }}>
               <span className="flex-1 text-sm">{r.reward_name}</span>
               <span className="text-sm" style={{ color: C.muted }}>{r.cost_points} XP</span>
-              <span className="text-xs rounded px-2 py-0.5" style={{ background: 'var(--card)', border: `1px solid ${STATUS_COLOR[r.status] ?? C.hairline}`, color: STATUS_COLOR[r.status] ?? C.muted }}>{r.status}</span>
+              <span className="text-xs rounded px-2 py-0.5" style={{ background: 'var(--card)', border: `1px solid ${STATUS_COLOR[r.status] ?? C.hairline}`, color: STATUS_COLOR[r.status] ?? C.muted }}>{STATUS_LABEL[r.status] ?? r.status}</span>
             </div>
           ))}
         </div>
