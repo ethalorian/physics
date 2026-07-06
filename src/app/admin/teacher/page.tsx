@@ -212,6 +212,30 @@ export default function TeacherDashboard() {
       {/* tools */}
       <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Your tools</div>
       <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+        {/* Class setup — persistent (Surface 9): setup doesn't evaporate once the
+            checklist clears. Re-type a class, revisit pacing, or replay the tour
+            any time, without hunting for the onboarding flow. */}
+        <div
+          className="rounded-2xl border p-5 h-full"
+          style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))' }}
+        >
+          <div className="grid place-items-center mb-3" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
+            <Compass size={22} />
+          </div>
+          <div className="font-bold" style={{ fontSize: 16 }}>Class setup</div>
+          <div className="text-sm mt-1 mb-3" style={{ color: 'var(--muted-foreground)' }}>Re-type your classes, adjust pacing, or replay the tour.</div>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={openTracks} className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}>
+              Class types
+            </button>
+            <Link href="/admin/pacing" className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+              Pacing
+            </Link>
+            <button onClick={() => { setTourIdx(0); setShowTour(true) }} className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}>
+              Replay tour
+            </button>
+          </div>
+        </div>
         {TILES.map((t) => {
           const Ico = t.Icon
           const needsSetup = t.needs ? !(steps?.[t.needs] ?? false) : false
