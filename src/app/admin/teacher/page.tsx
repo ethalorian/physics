@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import {
   LayoutGrid, GraduationCap, CalendarClock, Gift, Eye, Sparkles,
-  BookOpen, Compass, Check, ArrowRight, DoorOpen, type LucideIcon,
+  BookOpen, Compass, Check, ArrowRight, DoorOpen, Lock, type LucideIcon,
 } from 'lucide-react'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
@@ -143,22 +143,42 @@ export default function TeacherDashboard() {
               <span className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>{status.doneCount} of {status.total}</span>
             </div>
           </div>
+          {/* ordered path: each step unlocks the next. This is honest about the
+              real dependency chain (typing classes NEEDS an imported roster;
+              pacing needs typed classes) instead of a flat grid that lets a
+              teacher click step 2 and dead-end in an empty picker. */}
           <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-            {STEPS.map((s) => {
+            {STEPS.map((s, i) => {
               const done = steps?.[s.key] ?? false
+              // Locked until every earlier step is done.
+              const locked = !done && STEPS.slice(0, i).some((prev) => !(steps?.[prev.key] ?? false))
+              const prevLabel = i > 0 ? STEPS[i - 1].label : ''
               const Ico = s.Icon
               return (
-                <div key={s.key} className="rounded-xl border p-4 flex flex-col" style={{ borderColor: done ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'var(--border)', background: done ? 'color-mix(in oklch, var(--success) 8%, var(--card))' : 'var(--card)' }}>
+                <div
+                  key={s.key}
+                  className="rounded-xl border p-4 flex flex-col"
+                  style={{
+                    borderColor: done ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'var(--border)',
+                    background: done ? 'color-mix(in oklch, var(--success) 8%, var(--card))' : 'var(--card)',
+                    opacity: locked ? 0.62 : 1,
+                  }}
+                >
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="grid place-items-center" style={{ width: 30, height: 30, borderRadius: 8, background: done ? 'var(--success)' : `color-mix(in oklch, var(--primary) 14%, transparent)`, color: done ? 'var(--card)' : 'var(--primary)' }}>
-                      {done ? <Check size={17} /> : <Ico size={17} />}
+                    <span className="grid place-items-center shrink-0" style={{ width: 30, height: 30, borderRadius: 8, background: done ? 'var(--success)' : locked ? 'var(--secondary)' : `color-mix(in oklch, var(--primary) 14%, transparent)`, color: done ? 'var(--card)' : locked ? 'var(--muted-foreground)' : 'var(--primary)' }}>
+                      {done ? <Check size={17} /> : locked ? <Lock size={15} /> : <Ico size={17} />}
                     </span>
+                    <span className="text-[11px] font-bold" style={{ color: 'var(--muted-foreground)' }}>{i + 1}</span>
                     <span className="font-semibold text-sm">{s.label}</span>
                   </div>
                   <p className="text-xs mb-3 flex-1" style={{ color: 'var(--muted-foreground)' }}>{s.desc}</p>
                   {done ? (
                     <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>
                       {s.key === 'curriculum' ? 'Classes typed ✓' : 'Done'}
+                    </span>
+                  ) : locked ? (
+                    <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
+                      <Lock size={11} /> Unlocks after &ldquo;{prevLabel}&rdquo;
                     </span>
                   ) : (
                     <div className="flex items-center gap-2">
@@ -226,7 +246,13 @@ export default function TeacherDashboard() {
             <div className="text-lg font-semibold tracking-tight mb-1">Assign a class type to each course</div>
             <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Set the course type for each imported class. Only CPA Physics is available now — more types are coming.</p>
             {courses.length === 0 ? (
-              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No imported courses yet. Connect Google Classroom first, then come back to type each class.</p>
+              // Not a dead-end: hand the teacher the actual next action.
+              <div>
+                <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>No imported courses yet — class types attach to imported classes, so the roster comes first.</p>
+                <Link href="/admin/roster" className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+                  <GraduationCap size={15} /> Connect Google Classroom <ArrowRight size={14} />
+                </Link>
+              </div>
             ) : (
               <div className="flex flex-col gap-3">
                 {courses.map((c) => (
