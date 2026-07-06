@@ -10,7 +10,7 @@ import { useSectionProgress } from '@/components/lessons/useSectionProgress'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
 import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual } from '@/data/content-blocks'
-import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, CheckCircle2, Pencil, PencilRuler, Eye, Compass, type LucideIcon } from 'lucide-react'
+import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, CheckCircle2, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
 
@@ -141,6 +141,17 @@ export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProp
                 {minsLeft > 0 && (
                   <span className="inline-flex items-center gap-1">· <Clock size={12} /> ~{minsLeft} min left</span>
                 )}
+                {/* quick-peek at the reference sheet without losing your place */}
+                <a
+                  href="/reference"
+                  target="_blank"
+                  rel="noopener"
+                  title="Open the reference sheet in a new tab"
+                  className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold"
+                  style={{ border: '1px solid var(--border)', color: 'var(--primary)', background: 'var(--card)' }}
+                >
+                  <Sigma size={11} /> Reference
+                </a>
               </div>
             </div>
 

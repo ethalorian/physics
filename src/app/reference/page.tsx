@@ -1,5 +1,7 @@
 "use client"
 
+import { useMemo, useState } from 'react'
+import { Search } from 'lucide-react'
 import { InlineMath } from '@/components/MathMarkdown'
 import {
   PHYSICS_FORMULAS,
@@ -33,6 +35,24 @@ function Sym({ symbol }: { symbol: string }) {
 }
 
 export default function ReferenceSheetPage() {
+  // Exam-cram filter (Surface 20): one search box narrows formulas and
+  // variables by name, symbol, or category. Empty query = the full sheet.
+  const [q, setQ] = useState('')
+  const needle = q.trim().toLowerCase()
+  const matchedFormulas = useMemo(
+    () => (needle
+      ? PHYSICS_FORMULAS.filter((f) => f.name.toLowerCase().includes(needle) || f.category.toLowerCase().includes(needle) || f.latex.toLowerCase().includes(needle))
+      : PHYSICS_FORMULAS),
+    [needle],
+  )
+  const matchedVariables = useMemo(
+    () => (needle
+      ? PHYSICS_VARIABLES.filter((v) => v.name.toLowerCase().includes(needle) || v.symbol.toLowerCase().includes(needle))
+      : PHYSICS_VARIABLES),
+    [needle],
+  )
+  const visibleCategories = FORMULA_CATEGORIES.filter((cat) => matchedFormulas.some((f) => f.category === cat))
+
   return (
     <div className="max-w-5xl mx-auto">
       {/* header */}
@@ -46,17 +66,36 @@ export default function ReferenceSheetPage() {
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
           The same formulas, variables, and constants you may use on the exam — and the exact notation we use throughout these lessons.
         </p>
+
+        {/* filter/search */}
+        <div className="mt-4 flex items-center gap-2 rounded-xl px-3 py-2" style={{ border: '1px solid var(--border)', background: 'var(--card)', maxWidth: 380 }}>
+          <Search size={15} style={{ color: 'var(--muted-foreground)' }} />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Find a formula or variable…"
+            aria-label="Filter the reference sheet"
+            className="w-full text-sm bg-transparent outline-none"
+            style={{ color: 'var(--foreground)' }}
+          />
+          {q && (
+            <button onClick={() => setQ('')} className="text-xs font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Clear</button>
+          )}
+        </div>
       </div>
 
       {/* FORMULAS — grouped by category, typeset */}
       <section className="mb-8">
         <SectionHeading>Formulas</SectionHeading>
+        {visibleCategories.length === 0 && (
+          <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>No formulas match &ldquo;{q}&rdquo; — try the variable name (like &ldquo;velocity&rdquo;) or a topic (like &ldquo;waves&rdquo;).</p>
+        )}
         <div className="grid gap-4 sm:grid-cols-2">
-          {FORMULA_CATEGORIES.map((cat) => (
+          {visibleCategories.map((cat) => (
             <div key={cat} className="rounded-2xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
               <div className="text-[11px] font-semibold uppercase tracking-widest mb-3" style={{ color: 'var(--primary)' }}>{cat}</div>
               <ul className="space-y-3">
-                {PHYSICS_FORMULAS.filter((f) => f.category === cat).map((f) => (
+                {matchedFormulas.filter((f) => f.category === cat).map((f) => (
                   <li key={f.id} className="flex items-baseline justify-between gap-3">
                     <span style={{ fontSize: 18, color: 'var(--foreground)' }}><InlineMath math={f.latex} /></span>
                     <span className="text-xs text-right shrink-0" style={{ color: 'var(--muted-foreground)' }}>{f.name}</span>
@@ -72,8 +111,11 @@ export default function ReferenceSheetPage() {
       <section className="mb-8">
         <SectionHeading>Variables</SectionHeading>
         <div className="rounded-2xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
+          {matchedVariables.length === 0 && (
+            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No variables match &ldquo;{q}&rdquo;.</p>
+          )}
           <dl className="grid gap-x-6 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
-            {PHYSICS_VARIABLES.map((v) => (
+            {matchedVariables.map((v) => (
               <div key={v.symbol} className="flex items-baseline gap-2 text-sm">
                 <dt className="font-semibold shrink-0" style={{ minWidth: 42, color: 'var(--foreground)' }}>
                   <Sym symbol={v.symbol} />
