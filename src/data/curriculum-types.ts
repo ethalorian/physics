@@ -14,8 +14,41 @@
 /** Top of the clean tree: a "kind of thinking" (Stiggins/Chappuis target types). */
 export type Domain = "knowledge" | "reasoning" | "skill" | "product";
 
-/** Optional secondary tag for filtering the dashboard by physics topic. */
-export type ContentStrand = "motion-kinematics" | "forces-dynamics";
+/**
+ * Optional secondary tag for filtering the dashboard by topic.
+ *
+ * REGISTRY, not a guess. This list is the union of every value actually present
+ * in learning_targets.content_strand — the column is plain `text` in Postgres,
+ * so nothing but this type stops it drifting. If you add a strand in the DB,
+ * add it here in the same commit or the type is lying again.
+ *
+ *   select distinct content_strand from learning_targets order by 1;
+ */
+export const CONTENT_STRANDS = [
+  // --- physics course (program = 'physics')
+  "motion-kinematics",
+  "forces-dynamics",
+  "forces",
+  "circuits-energy",
+  "mechanical-advantage",
+  "alignment-friction",
+  "aesthetic-execution",
+  "transfer",
+  "transfer-reasoning",
+  "metacognition",
+  // --- trades course (program = 'trades')
+  "metrology",       // reading it, and knowing how far off you are
+  "plan-reading",    // making a drawing somebody else can build from
+  "trade-math",      // fractions, proportion, estimating before you measure
+  "physics-model",   // why the shop does what it tells you to do
+] as const;
+
+export type ContentStrand = (typeof CONTENT_STRANDS)[number];
+
+/** Runtime guard — the DB column is untyped text, so validate on the way in. */
+export function isContentStrand(v: string | null | undefined): v is ContentStrand {
+  return typeof v === "string" && (CONTENT_STRANDS as readonly string[]).includes(v);
+}
 
 /**
  * The hinge of the whole model. One "I can…" statement.

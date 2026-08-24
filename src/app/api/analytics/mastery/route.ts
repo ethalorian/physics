@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 import { withAuth } from '@/lib/api-auth'
 
-// GET /api/analytics/mastery
+// GET /api/analytics/mastery?program=physics
 // App-wide mastery analytics dataset (ADMIN ONLY). Returns the structural maps
 // needed to disaggregate performance by teacher, class/section, learning-target
 // domain (K/R/S/P), individual target, and time — plus the current rolled value
@@ -12,6 +12,12 @@ import { withAuth } from '@/lib/api-auth'
 // Keys: mastery_records.user_id === students.id === session.user.id.
 // course_students.student_id also references students.id, so class membership
 // attaches directly with no id bridge.
+//
+// SCOPED BY PROGRAM. units / learning_targets / mastery_tasks hold more than one
+// course (see supabase/migrations/add_program_to_curriculum.sql). Pulling them
+// unfiltered would mix Trades Physics targets into the physics K/R/S/P rollup
+// and would add a null column per trades target to every physics student's row.
+// Default stays 'physics' so this endpoint behaves exactly as it always has.
 
 // NOTE: the students table has NO teacher_email column — a student's teacher is
 // derived from the course(s) they're enrolled in (courses.teacher_email).
@@ -22,14 +28,27 @@ type CourseRow = { id: string; name: string | null; section: string | null; teac
 type CourseStudentRow = { course_id: string; student_id: string }
 type RecordRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
-export const GET = withAuth(async (_request, ctx) => {
+const PROGRAMS = ['physics', 'trades'] as const
+type Program = (typeof PROGRAMS)[number]
+const DEFAULT_PROGRAM: Program = 'physics'
+
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin') {
       return NextResponse.json({ error: 'App-wide analytics is admin only' }, { status: 403 })
     }
 
+    const requested = new URL(request.url).searchParams.get('program')
+    if (requested && !PROGRAMS.includes(requested as Program)) {
+      return NextResponse.json(
+        { error: `Unknown program "${requested}". Expected one of: ${PROGRAMS.join(', ')}` },
+        { status: 400 },
+      )
+    }
+    const program: Program = (requested as Program) ?? DEFAULT_PROGRAM
+
     const [unitsRes, targetsRes, studentsRes, coursesRes, csRes] = await Promise.all([
-      supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true }),
-      supabaseAdmin.from('learning_targets').select('id, statement, domain, unit_id, order_index').order('order_index', { ascending: true }),
+      supabaseAdmin.from('units').select('id, name, order_index').eq('program', program).order('order_index', { ascending: true }),
+      supabaseAdmin.from('learning_targets').select('id, statement, domain, unit_id, order_index').eq('program', program).order('order_index', { ascending: true }),
       supabaseAdmin.from('students').select('id, name'),
       supabaseAdmin.from('courses').select('id, name, section, teacher_email'),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
@@ -92,7 +111,9 @@ export const GET = withAuth(async (_request, ctx) => {
     for (const c of courseRows) if (c.teacher_email) teacherSet.add(c.teacher_email)
     const teachers = [...teacherSet].sort()
 
-    // all mastery records (compact) + per-cell rolled values
+    // all mastery records (compact) + per-cell rolled values.
+    // targetIds is already program-scoped, so records for the other course are
+    // never fetched and never land in a cell.
     const studentIds = students.map((s) => s.id)
     const targetIds = targets.map((t) => t.id)
     let recordRows: RecordRow[] = []
@@ -131,5 +152,5 @@ export const GET = withAuth(async (_request, ctx) => {
     // compact records for trend (u = student gid, t = target, l = level, d = date)
     const records = recordRows.map((r) => ({ u: r.user_id, t: r.target_id, l: r.level, d: r.observed_at }))
 
-    return NextResponse.json({ units, targets, teachers, classes, students, cells, records })
+    return NextResponse.json({ program, units, targets, teachers, classes, students, cells, records })
 })
