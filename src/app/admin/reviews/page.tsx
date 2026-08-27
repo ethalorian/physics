@@ -13,7 +13,7 @@ const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'),
 
 interface Q { q: string; choices: string[]; answerIndex: number; explanation: string }
 interface Review { id: string; target_id: string; targetStatement: string; reteach: string; blocks: ContentBlock[] | null; questions: Q[]; created_by: string | null; created_at: string }
-interface UnitOpt { id: string; name: string }
+interface UnitOpt { id: string; name: string; label?: string; program?: string }
 // API groups carry blocks/questions as `unknown`; the page narrows them once here.
 type Group = Omit<ReviewTargetGroup, 'pending'> & { pending: Review[] }
 interface TargetOpt { id: string; statement: string; domain: string }
@@ -241,7 +241,7 @@ export default function ReviewQueuePage() {
             className="text-sm rounded-lg px-3 py-1.5"
             style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}
           >
-            {units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+            {units.map((u) => <option key={u.id} value={u.id}>{u.label ?? u.name}</option>)}
           </select>
           <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
             {targets.length} skill{targets.length === 1 ? '' : 's'}

@@ -43,7 +43,7 @@ interface RosterStudent { id: string; name: string; first_name: string | null; l
 interface GridTarget { id: string; statement: string; domain: string }
 interface Cell { value: number | null; count: number }
 interface GridData {
-  units: { id: string; name: string }[]
+  units: { id: string; name: string; label?: string; program?: string }[]
   targets: GridTarget[]
   students: GridStudent[]
   cells: Record<string, Record<string, Cell>>
@@ -403,7 +403,7 @@ export default function RosterPage() {
                 className="text-sm rounded-lg border px-2.5 py-1.5"
                 style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
               >
-                {grid.units.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+                {grid.units.map((u) => <option key={u.id} value={u.id}>{u.label ?? u.name}</option>)}
               </select>
             )}
           </div>

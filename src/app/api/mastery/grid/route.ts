@@ -12,7 +12,7 @@ import { resolveRosterScope } from '@/lib/teacher-scope'
 type StudentRow = { id: string | null; name: string; email: string }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { user_id: string; target_id: string; level: number; observed_at: string }
-type UnitRow = { id: string; name: string; order_index: number }
+type UnitRow = { id: string; name: string; order_index: number; program: string | null }
 
 export const GET = withAuth(async (request, ctx) => {
     const role = ctx.role
@@ -27,9 +27,14 @@ export const GET = withAuth(async (request, ctx) => {
     // Units (for the switcher)
     const { data: unitRowsRaw } = await supabaseAdmin
       .from('units')
-      .select('id, name, order_index')
+      .select('id, name, order_index, program')
+      .order('program', { ascending: true })
       .order('order_index', { ascending: true })
-    const units = ((unitRowsRaw ?? []) as UnitRow[]).map((u) => ({ id: u.id, name: u.name }))
+    // Both programs are listed (staff see everything); `label` carries the
+    // program tag so pickers make Trades units unmistakable.
+    const units = ((unitRowsRaw ?? []) as UnitRow[])
+      .sort((a, b) => ((a.program ?? 'physics') === 'physics' ? 0 : 1) - ((b.program ?? 'physics') === 'physics' ? 0 : 1) || a.order_index - b.order_index)
+      .map((u) => ({ id: u.id, name: u.name, program: u.program ?? 'physics', label: `${(u.program ?? 'physics') === 'trades' ? 'Trades' : 'Physics'} · ${u.name}` }))
 
     // Targets for the unit
     const { data: targetRowsRaw } = await supabaseAdmin

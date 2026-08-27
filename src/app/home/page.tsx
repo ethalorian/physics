@@ -431,43 +431,6 @@ export default function HomePage() {
               <ClimbChart points={climbForDomain} />
             </Glass>
 
-            {/* EXTRA PRACTICE — one metaphor (the climb); "side quest" retired.
-                One vocabulary entry, not two (Surface 16 de-dupe). */}
-            <SectionLabel accent="var(--success)">Extra practice — optional, still earns XP</SectionLabel>
-            <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-              {data.sideQuest.sim && (
-                <Link href={`/simulations/${data.sideQuest.sim.slug}`}>
-                  <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Picked for you · Simulation</div>
-                    <div className="font-semibold mt-1" style={{ fontSize: 16 }}>{data.sideQuest.sim.title}</div>
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>Optional · just for fun</span>
-                      <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Launch →</span>
-                    </div>
-                  </Glass>
-                </Link>
-              )}
-              <Link href="/simulations">
-                <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Simulations</div>
-                  <div className="font-semibold mt-1" style={{ fontSize: 16 }}>Explore all labs</div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>Grouped by unit</span>
-                    <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Browse →</span>
-                  </div>
-                </Glass>
-              </Link>
-              <Link href="/arcade">
-                <Glass className="h-full" style={{ padding: 18, cursor: 'pointer' }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--primary)' }}>Games</div>
-                  <div className="font-bold mt-1" style={{ fontSize: 16 }}>The arcade</div>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="rounded-full text-xs font-bold inline-flex items-center gap-1" style={{ padding: '4px 11px', background: 'var(--reward)', color: 'var(--reward-foreground)' }}><Coins size={11} /> Earns XP</span>
-                    <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>Play →</span>
-                  </div>
-                </Glass>
-              </Link>
-            </div>
           </>
         )}
       </div>

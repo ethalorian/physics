@@ -19,6 +19,7 @@ import { useViewAs } from '@/lib/use-view-as'
 import { setViewAs, clearViewAs, setStudentView, clearStudentView } from '@/lib/view-as-shared'
 import { useViewMode } from '@/contexts/ViewModeContext'
 import UserContextSheet from '@/components/UserContextSheet'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useRouter } from 'next/navigation'
 
 // Module-level cache so a hard navigation between pages doesn't refetch the
@@ -155,6 +156,12 @@ export default function AccountMenu() {
               Exit student view
             </DropdownMenuItem>
           )}
+          <DropdownMenuSeparator />
+          {/* Appearance — moved out of the top bar to declutter it. */}
+          <div className="flex items-center justify-between px-2 py-1.5 text-sm" onClick={(e) => e.stopPropagation()}>
+            <span className="text-muted-foreground">Appearance</span>
+            <ThemeToggle />
+          </div>
           <DropdownMenuSeparator />
           <DropdownMenuItem onSelect={handleSignOut} className="text-destructive focus:text-destructive">
             <LogOut className="h-4 w-4 mr-2" />

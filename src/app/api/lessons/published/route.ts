@@ -74,19 +74,18 @@ export const GET = withAuth(async (request, ctx) => {
       )
     }
 
-    // Per-class release windows. A student sees every lesson their class has a
-    // window for — open (with close date), scheduled (locked, with open date),
-    // or closed (locked, with closed date) — so the grid shows "what's coming"
-    // and "what's due" at a glance. Lessons with NO window stay invisible
-    // (never released = no spoilers). Only the OPEN ones are clickable; the
-    // lesson page enforces the same gate server-side, so locked cards can't be
-    // bypassed by URL. Staff are ungated so they can preview/build.
+    // Per-class release windows. A student sees a lesson only once a teacher
+    // has OPENED it for their class — open now, or open-then-closed (so their
+    // own history stays visible). Never-released AND scheduled-but-not-yet-open
+    // lessons stay invisible: no spoilers, nothing to stumble on. The lesson
+    // page enforces the same gate server-side, so nothing can be reached by
+    // URL either. Staff are ungated so they can preview/build.
     let visibleLessons = lessons ?? []
     const windowStatuses: Record<string, LessonWindowStatus> = {}
     if (!isAdmin && userId && visibleLessons.length > 0) {
       const statuses = await getStudentLessonWindowStatuses(userId)
       Object.assign(windowStatuses, statuses)
-      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined)
+      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled')
     }
 
     // Fetch user progress if available

@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
 import { getEnrollment, getStudentTrack } from '@/lib/student-enrollment'
+import { getStudentProgram, getUnitProgramMap } from '@/lib/program'
 import { filterDocumentForViewer, type Viewer } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
@@ -123,6 +124,11 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
         return <EnrollmentGateScreen firstName={firstName} />
       }
       viewer = { role: 'student', track: await getStudentTrack(sess.user.id) }
+      // Program gate: a CPA/Honors student never sees a trades session, and
+      // vice versa — not in lists, and not by URL. Off-program = not found.
+      const [program, unitProgram] = await Promise.all([getStudentProgram(sess.user.id), getUnitProgramMap()])
+      const lessonProgram = lesson.unit_id ? (unitProgram.get(lesson.unit_id) ?? 'physics') : 'physics'
+      if (lessonProgram !== program) notFound()
     } else {
       viewer = { role: 'admin' } // staff: full preview, nothing hidden
     }

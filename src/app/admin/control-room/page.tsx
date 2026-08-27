@@ -16,7 +16,7 @@ interface Student { id: string; name: string; email: string; firstName?: string 
 interface Cell { value: number | null; count: number }
 interface GridData {
   unitId: string
-  units: { id: string; name: string }[]
+  units: { id: string; name: string; label?: string; program?: string }[]
   targets: Target[]
   students: Student[]
   cells: Record<string, Record<string, Cell>>
@@ -649,7 +649,7 @@ export default function ControlRoomPage() {
           style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
         >
           {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
-            <option key={u.id} value={u.id}>{u.name}</option>
+            <option key={u.id} value={u.id}>{u.label ?? u.name}</option>
           ))}
         </select>
         {/* the single launcher — every pending cell is walked from here */}

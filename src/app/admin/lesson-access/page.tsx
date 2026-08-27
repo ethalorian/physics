@@ -30,7 +30,7 @@ const STATUS_STYLE: Record<Status, { bg: string; color: string; border: string }
 const toInput = (iso: string | null) => (iso ? new Date(iso).toISOString().slice(0, 16) : '')
 const fromInput = (v: string) => (v ? new Date(v).toISOString() : null)
 const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '')
-const unitShort = (u: string | null) => { const m = u?.match(/Unit\s*(\d+)/i); return m ? `U${m[1]}` : (u ?? '—') }
+const unitShort = (u: string | null, program?: string) => { const m = u?.match(/Unit\s*(\d+)/i); return m ? `${program === 'trades' ? 'T' : 'U'}${m[1]}` : (u ?? '—') }
 const lessonLabel = (l: LessonRow) => `${l.lesson_number ? `D${l.lesson_number} · ` : ''}${l.title}`
 
 function TrackBadge({ track, program }: { track: string | null; program?: string | null }) {
@@ -231,7 +231,7 @@ export default function LessonAccessPage() {
                   <button key={u} onClick={() => setUnitFilter(u)}
                     className="rounded-full px-2.5 py-1 text-xs font-semibold"
                     style={{ background: on ? 'var(--primary)' : 'var(--card)', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: `1px solid ${on ? 'transparent' : 'var(--border)'}`, cursor: 'pointer' }}>
-                    {u === 'all' ? 'All units' : unitShort(u)}
+                    {u === 'all' ? 'All units' : unitShort(u, data?.lessons.find((l) => (l.unit ?? '—') === u)?.program)}
                   </button>
                 )
               })}
@@ -282,7 +282,7 @@ export default function LessonAccessPage() {
                   if (unitLessons.length === 0) return null
                   const isCollapsed = filtering ? false : collapsed[u]
                   return (
-                    <UnitGroup key={u} unit={u} count={unitLessons.length} collapsed={!!isCollapsed} colSpan={data.classes.length + 2}
+                    <UnitGroup key={u} unit={u} program={unitLessons[0]?.program} count={unitLessons.length} collapsed={!!isCollapsed} colSpan={data.classes.length + 2}
                       onToggle={() => setCollapsed((m) => ({ ...m, [u]: !m[u] }))}>
                       {!isCollapsed && unitLessons.map((l) => (
                         <tr key={l.id} style={{ borderTop: '1px solid var(--border)' }}>
@@ -359,8 +359,8 @@ export default function LessonAccessPage() {
   )
 }
 
-function UnitGroup({ unit, count, collapsed, colSpan, onToggle, children }: {
-  unit: string; count: number; collapsed: boolean; colSpan: number; onToggle: () => void; children: React.ReactNode
+function UnitGroup({ unit, program, count, collapsed, colSpan, onToggle, children }: {
+  unit: string; program?: string; count: number; collapsed: boolean; colSpan: number; onToggle: () => void; children: React.ReactNode
 }) {
   return (
     <>
@@ -368,7 +368,7 @@ function UnitGroup({ unit, count, collapsed, colSpan, onToggle, children }: {
         <td colSpan={colSpan} className="px-3 py-2" style={{ background: 'color-mix(in oklch, var(--secondary) 35%, var(--card))', borderTop: '1px solid var(--border)', cursor: 'pointer' }} onClick={onToggle}>
           <div className="flex items-center gap-2">
             {collapsed ? <ChevronRight size={15} style={{ color: 'var(--muted-foreground)' }} /> : <ChevronDown size={15} style={{ color: 'var(--muted-foreground)' }} />}
-            <span className="font-semibold text-sm">{unit}</span>
+            <span className="font-semibold text-sm">{program === 'trades' && <span className="mr-1.5 rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide align-middle" style={{ background: 'color-mix(in oklch, var(--reward) 22%, transparent)', color: 'var(--reward-foreground)' }}>Trades</span>}{unit}</span>
             <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>· {count} {count === 1 ? 'lesson' : 'lessons'}</span>
           </div>
         </td>
