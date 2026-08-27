@@ -27,6 +27,10 @@ export interface GoogleClassroomStudent {
       familyName: string
       fullName: string
     }
+    // Not requested today (the roster call asks for name only, so no email
+    // scope is needed); present here so an import that DOES receive it can
+    // key the student on their real address.
+    emailAddress?: string
   }
   studentWorkFolder?: {
     id: string

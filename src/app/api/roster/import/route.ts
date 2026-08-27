@@ -106,8 +106,28 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         const nameParts = fullName.trim().split(/\s+/)
         const firstName = student.profile?.name?.givenName || nameParts[0] || fullName
         const lastName = student.profile?.name?.familyName || (nameParts.length > 1 ? nameParts.slice(1).join(' ') : '')
-        // Generate a unique identifier based on Google User ID for internal use
-        const internalEmail = `${googleUserId}@classroom.local`
+        // Which students row does this roster entry belong to? In order:
+        //   1. the real address, when Classroom returns one;
+        //   2. an existing signed-in account with exactly this name (students
+        //      often sign in BEFORE the roster is imported — without this, the
+        //      import made a placeholder twin and the real account stayed
+        //      un-enrolled, showing the class-code gate);
+        //   3. a placeholder `<google_sub>@classroom.local` for a student who
+        //      hasn't signed in yet (ensureStudentRecord reclaims it by name
+        //      at their first sign-in).
+        let internalEmail = student.profile?.emailAddress?.trim().toLowerCase() || ''
+        if (!internalEmail) {
+          const { data: byName } = await supabaseAdmin
+            .from('students')
+            .select('id, email')
+            .ilike('name', fullName)
+            .not('email', 'like', '%@classroom.local')
+          if (byName && byName.length === 1) {
+            internalEmail = (byName[0] as { email: string }).email
+            console.log(`  🔗 Matched roster entry to existing account by name: ${fullName} → ${internalEmail}`)
+          }
+        }
+        if (!internalEmail) internalEmail = `${googleUserId}@classroom.local`
 
         console.log(`  📝 Syncing student: ${fullName} (Google ID: ${googleUserId}) to section: ${sectionName}`)
 
