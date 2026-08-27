@@ -243,8 +243,11 @@ export default function Navbar() {
               </div>
             ) : isAuthenticated && session ? (
               <>
-                {/* Theme toggle lives in the avatar menu (Appearance) — the bar
-                    keeps only things a student touches daily. */}
+                {/* Theme toggle — always in the bar on desktop (the mobile
+                    sheet and the avatar menu carry it too). */}
+                <div className="hidden md:block">
+                  <ThemeToggle />
+                </div>
 
                 {/* Notifications — new ratings, grades, math, duels, due work */}
                 <NotificationBell />
