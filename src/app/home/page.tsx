@@ -152,6 +152,10 @@ export default function HomePage() {
   // name the first time they sign in. Null = haven't checked yet, so we don't
   // flash the banner on initial render.
   const [needsProfileSetup, setNeedsProfileSetup] = useState<boolean | null>(null)
+  // The warm-up disclosure starts OPEN so a first-time student actually sees
+  // today's problem; it folds itself once today's rep is submitted (or when
+  // there's nothing to do), keeping "Continue" as the primary path after that.
+  const [warmupOpen, setWarmupOpen] = useState(true)
 
   useEffect(() => {
     fetch('/api/home')
@@ -253,6 +257,8 @@ export default function HomePage() {
             <SectionLabel accent="var(--primary)">Continue your journey</SectionLabel>
 
             <details
+              open={warmupOpen}
+              onToggle={(e) => setWarmupOpen((e.currentTarget as HTMLDetailsElement).open)}
               className="mb-3 rounded-2xl overflow-hidden"
               style={{
                 border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))',
@@ -270,7 +276,7 @@ export default function HomePage() {
                 <ChevronDown size={15} className="ml-auto" style={{ color: 'var(--muted-foreground)' }} />
               </summary>
               <div className="px-4 pb-4">
-                <DailyMathTask />
+                <DailyMathTask onStatus={(s) => setWarmupOpen(s.hasItem && !s.submitted)} />
               </div>
             </details>
             {data.continue && data.continue.lesson ? (

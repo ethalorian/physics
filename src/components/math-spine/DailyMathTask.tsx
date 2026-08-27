@@ -28,7 +28,12 @@ interface DailySnapshot {
   total: number
 }
 
-export default function DailyMathTask() {
+export interface DailyMathStatus {
+  hasItem: boolean
+  submitted: boolean
+}
+
+export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathStatus) => void } = {}) {
   const [item, setItem] = useState<DailyItem | null>(null)
   const [snapshot, setSnapshot] = useState<DailySnapshot | null>(null)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
@@ -44,6 +49,9 @@ export default function DailyMathTask() {
         setSnapshot(d.snapshot ?? null)
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
         setLoading(false)
+        // Let the host page decide how prominent to make the card (e.g. the
+        // home hub keeps its disclosure open until today's rep is submitted).
+        onStatus?.({ hasItem: Boolean(d.item), submitted: Boolean(d.alreadySubmitted) })
       })
       .catch(() => {
         if (active) setLoading(false)
@@ -51,6 +59,7 @@ export default function DailyMathTask() {
     return () => {
       active = false
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch once on mount; onStatus is a notification, not an input
   }, [])
 
   if (loading || !snapshot) return null
