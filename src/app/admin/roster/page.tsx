@@ -289,16 +289,19 @@ export default function RosterPage() {
         {hasClassroom && courses && courses.length > 0 && (
           <div className="mt-4">
             <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>From Google Classroom</div>
-            <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))' }}>
+            <div className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
               {courses.map((c) => {
                 const already = imported.some((i) => i.google_course_id === c.id)
+                // Name on its own row; the type picker + action share the row
+                // below and wrap if the card gets narrow. Keeping both on one
+                // row crushed the name to zero width and spilled the button.
                 return (
-                  <div key={c.id} className="rounded-xl border p-3 flex items-center justify-between gap-3" style={{ borderColor: 'var(--border)' }}>
+                  <div key={c.id} className="rounded-xl border p-3 flex flex-col gap-2.5 min-w-0" style={{ borderColor: 'var(--border)' }}>
                     <div className="min-w-0">
-                      <div className="font-medium truncate" style={{ fontSize: 14 }}>{c.name}</div>
+                      <div className="font-medium truncate" style={{ fontSize: 14 }} title={c.name}>{c.name}</div>
                       {c.section && <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
                       {/* Class type, chosen at import: CPA / Honors (physics) or Trades (its own curriculum). */}
                       <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Choose the class type. CPA and Honors follow the physics curriculum; Trades follows the trades curriculum.">
                         {CLASS_TYPES.map((t) => {
