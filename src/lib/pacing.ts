@@ -18,7 +18,7 @@
 // programs reuse 1..N.
 
 export interface UnitRow { id: string; order_index: number; name: string; allotted_days: number | null }
-export interface LessonRow { id: string; title: string; unit_id: string | null; lesson_number: number | null; planned_days: number | null }
+export interface LessonRow { id: string; title: string; unit_id: string | null; lesson_number: number | null; planned_days: number | null; transfer_core?: boolean | null }
 
 export interface PlanItem {
   kind: 'lesson' | 'unit'
@@ -30,6 +30,7 @@ export interface PlanItem {
   lessonNumber: number | null
   plannedDays: number    // share of the unit window (window × weight / Σweights)
   plannedWeight: number  // the authored lessons.planned_days (default 1) — what the pace editor edits
+  core: boolean          // lessons.transfer_core — false = flex day, first to cut when behind
   index: number     // 0-based position in the sequence
   cumStart: number  // cumulative plan-days before this item
 }
@@ -78,12 +79,12 @@ export function buildPlan(units: UnitRow[], lessons: LessonRow[]): PlanItem[] {
       const scale = window > 0 && weightSum > 0 ? window / weightSum : 1
       ls.forEach((l, k) => {
         const pd = Math.round(weights[k] * scale * 100) / 100
-        items.push({ kind: 'lesson', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: l.id, title: l.title, lessonNumber: l.lesson_number, plannedDays: pd, plannedWeight: weights[k], index: idx, cumStart: cum })
+        items.push({ kind: 'lesson', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: l.id, title: l.title, lessonNumber: l.lesson_number, plannedDays: pd, plannedWeight: weights[k], core: l.transfer_core !== false, index: idx, cumStart: cum })
         cum += pd; idx++
       })
     } else {
       const pd = Number(u.allotted_days ?? 0) || 0
-      items.push({ kind: 'unit', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: null, title: u.name, lessonNumber: null, plannedDays: pd, plannedWeight: pd, index: idx, cumStart: cum })
+      items.push({ kind: 'unit', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: null, title: u.name, lessonNumber: null, plannedDays: pd, plannedWeight: pd, core: true, index: idx, cumStart: cum })
       cum += pd; idx++
     }
   }
@@ -166,6 +167,23 @@ export function computeFromElapsed(
     actualIndex: actual.item?.index ?? null, actualTitle: actual.item?.title ?? null,
     actualSource: actual.source, deltaDays, status,
   }
+}
+
+// When a section is BEHIND inside its unit, the flex lessons still ahead of it
+// are the candidates to cut. Walk forward from the current position and take
+// flex lessons until their planned days cover the deficit (or run out).
+export function suggestCuts(unitItems: PlanItem[], actualIndex: number | null, deficitDays: number): PlanItem[] {
+  if (deficitDays <= 0) return []
+  const from = actualIndex ?? -1
+  const out: PlanItem[] = []
+  let covered = 0
+  for (const it of unitItems) {
+    if (it.index <= from || it.kind !== 'lesson' || it.core) continue
+    out.push(it)
+    covered += it.plannedDays
+    if (covered >= deficitDays) break
+  }
+  return out
 }
 
 // Weekday path (fallback when no rotation block is tagged).

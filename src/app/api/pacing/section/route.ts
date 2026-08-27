@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { computeFromElapsed, unitItems, totalPlanDays, elapsedInstructionalDays, PlanItem } from '@/lib/pacing'
+import { computeFromElapsed, unitItems, totalPlanDays, elapsedInstructionalDays, suggestCuts, PlanItem } from '@/lib/pacing'
 import { loadPlanItems, loadUnits, loadCourseProgram, getCourseStudentGids, autoSuggestItem, loadRotationCalendar, isRotationConfigured, asProgram, PROGRAMS } from '@/lib/pacing-server'
 import { Block, blockMeetingsElapsed, upcomingMeetings } from '@/lib/rotation'
 
@@ -76,6 +76,10 @@ export const GET = withAuth(async (request, ctx) => {
       }
     }
 
+    // Behind? Name the flex days ahead that would close the gap.
+    const deficitDays = unitResult && unitResult.status === 'behind' ? Math.abs(unitResult.deltaDays) : 0
+    const cuts = deficitDays > 0 ? suggestCuts(ui, actual.item?.index ?? null, deficitDays) : []
+
     // Lessons lined up against the next class meetings (rotation only), from
     // wherever the class actually is in the unit.
     let lineup: { date: string; long: boolean; title: string; index: number }[] = []
@@ -91,7 +95,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     return NextResponse.json({
       program,
-      items: items.map((i) => ({ index: i.index, title: i.title, lessonId: i.lessonId, unitId: i.unitId, unitOrder: i.unitOrder, kind: i.kind, plannedDays: i.plannedDays, lessonNumber: i.lessonNumber })),
+      items: items.map((i) => ({ index: i.index, title: i.title, lessonId: i.lessonId, unitId: i.unitId, unitOrder: i.unitOrder, kind: i.kind, plannedDays: i.plannedDays, lessonNumber: i.lessonNumber, core: i.core })),
       units: units.map((u) => ({ id: u.id, name: u.name, allottedDays: u.allotted_days, defaultStartDate: u.default_start_date })),
       block,
       rotationConfigured: isRotationConfigured(cal),
@@ -107,6 +111,10 @@ export const GET = withAuth(async (request, ctx) => {
       autoLessonId: auto?.lessonId ?? null,
       autoUnitId: auto?.unitId ?? null,
       autoTitle: auto?.title ?? null,
+      // Flex lessons ahead of the current position that would cover the deficit.
+      deficitDays,
+      suggestedCuts: cuts.map((c) => ({ lessonId: c.lessonId, title: c.title, lessonNumber: c.lessonNumber, plannedDays: c.plannedDays })),
+      flexAhead: ui.filter((i) => i.kind === 'lesson' && !i.core && i.index > (actual.item?.index ?? -1)).length,
     })
 })
 

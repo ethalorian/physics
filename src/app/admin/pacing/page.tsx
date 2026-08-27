@@ -18,7 +18,8 @@ function LongLegend() {
 }
 
 interface Course { id: string; name: string; section: string | null; google_course_id: string | null; program?: 'physics' | 'trades' }
-interface PlanItem { index: number; title: string; lessonId: string | null; unitId: string; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; plannedWeight?: number; lessonNumber: number | null }
+interface PlanItem { index: number; title: string; lessonId: string | null; unitId: string; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; plannedWeight?: number; lessonNumber: number | null; core?: boolean }
+interface CutItem { lessonId: string | null; title: string; lessonNumber: number | null; plannedDays: number }
 type Program = 'physics' | 'trades'
 const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades' }
 interface PacingResult {
@@ -36,6 +37,7 @@ interface SectionData {
   units: UnitOpt[]; unitResult: PacingResult | null; unitName: string | null; unitTotalDays: number
   currentUnitId: string | null; unitStartDate: string | null; currentLessonId: string | null
   autoLessonId: string | null; autoUnitId: string | null; autoTitle: string | null
+  deficitDays: number; suggestedCuts: CutItem[]; flexAhead: number
 }
 const BLOCKS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
@@ -344,7 +346,7 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
             </span>
           </div>
           <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-            Each unit&apos;s <b>window</b> is its span on the school calendar (lessons + lab overrun, reassessment and revision). Lessons share the window in proportion to their <b>weight</b> — a 2-day lab gets weight 2. &ldquo;On pace&rdquo; already includes the buffer.
+            Each unit&apos;s <b>window</b> is its span on the school calendar (lessons + lab overrun, reassessment and revision). Lessons share the window in proportion to their <b>weight</b> — a 2-day lab gets weight 2. &ldquo;On pace&rdquo; already includes the buffer. <b>FLEX</b> lessons are the ones no transfer task depends on — they&apos;re what a behind section is told to cut first.
           </p>
           {items === null ? (
             <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</div>
@@ -366,7 +368,7 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
                     {lessons.length === 0 && <div className="text-xs px-2 py-1" style={{ color: 'var(--muted-foreground)' }}><em>No lessons yet — the window is one placeholder item.</em></div>}
                     {lessons.map((it) => (
                       <div key={it.index} className="flex items-center gap-3 text-sm pl-4 pr-2">
-                        <span className="flex-1 truncate">{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}</span>
+                        <span className="flex-1 truncate" style={{ color: it.core === false ? 'var(--muted-foreground)' : 'var(--foreground)' }}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}{it.core === false && <span className="ml-1.5 text-[9px] font-semibold rounded px-1 align-middle" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}</span>
                         <span className="text-xs tabular-nums" style={{ color: 'var(--muted-foreground)' }}>≈ {it.plannedDays.toFixed(1)}d</span>
                         <input type="number" min={0} step={0.5} defaultValue={it.plannedWeight ?? 1}
                           onChange={(e) => setEdits((p) => ({ ...p, [it.lessonId as string]: Number(e.target.value) }))}
@@ -488,6 +490,28 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           ) : (
             <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Pick a unit, its start date, and your lesson below to see pacing.</div>
           )}
+          {ur && ur.status === 'behind' && data && (
+            <div className="mt-2 rounded-xl px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--viz-down) 10%, transparent)', border: '1px solid color-mix(in oklch, var(--viz-down) 30%, var(--border))' }}>
+              {data.suggestedCuts.length > 0 ? (
+                <>
+                  <span style={{ color: 'var(--viz-down)' }} className="font-semibold">Behind by {deltaLabel(ur.deltaDays, ur.status).replace(' behind', '')}.</span>{' '}
+                  To get back on the window without touching anything the transfer task needs, cut:{' '}
+                  {data.suggestedCuts.map((c, k) => (
+                    <span key={c.lessonId ?? k}>
+                      {k > 0 ? ', ' : ''}<b>{c.lessonNumber ? `D${c.lessonNumber}` : c.title}</b>
+                      <span style={{ color: 'var(--muted-foreground)' }}> {c.lessonNumber ? c.title.replace(/^Day \d+ — /, '') : ''}</span>
+                    </span>
+                  ))}
+                  {data.flexAhead > data.suggestedCuts.length && <span style={{ color: 'var(--muted-foreground)' }}> ({data.flexAhead - data.suggestedCuts.length} more flex day{data.flexAhead - data.suggestedCuts.length === 1 ? '' : 's'} left in the unit)</span>}
+                </>
+              ) : (
+                <>
+                  <span style={{ color: 'var(--viz-down)' }} className="font-semibold">Behind by {deltaLabel(ur.deltaDays, ur.status).replace(' behind', '')}</span>{' '}
+                  and no flex days remain ahead in this unit — every remaining lesson feeds the transfer task. The choice is now which core lesson to compress, or to let the unit run into the next window.
+                </>
+              )}
+            </div>
+          )}
           <Link href={`/admin/classes/${course.id}`} className="inline-flex items-center gap-1 text-xs font-semibold mt-1.5" style={{ color: 'var(--primary)' }}>
             Open this class — roster &amp; details →
           </Link>
@@ -530,7 +554,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Your lesson right now</div>
           <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={!unitId} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
             <option value="">{!unitId ? '— choose a unit first —' : '— select lesson —'}</option>
-            {unitLessons.map((it) => <option key={it.lessonId ?? it.index} value={it.lessonId ?? ''}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}</option>)}
+            {unitLessons.map((it) => <option key={it.lessonId ?? it.index} value={it.lessonId ?? ''}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}{it.core === false ? ' · flex' : ''}</option>)}
           </select>
         </label>
       </div>

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { blockMeetsOnDate, blockMeetingsElapsed, type Block, type RotationCalendar } from '@/lib/rotation'
 
-export interface CalItem { index: number; cumStart: number; plannedDays: number; lessonId: string | null; title: string; unitName: string; kind: 'lesson' | 'unit' }
+export interface CalItem { index: number; cumStart: number; plannedDays: number; lessonId: string | null; title: string; unitName: string; kind: 'lesson' | 'unit'; core?: boolean }
 export interface CalSection { courseId: string; name: string; section: string | null; block: string | null; startDate: string | null; items: CalItem[] }
 interface Props {
   sections: CalSection[]
@@ -26,7 +26,7 @@ function isoOf(y: number, m: number, d: number): string {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
 }
 
-interface Meeting { courseId: string; section: string | null; block: string; long: boolean; lessonId: string | null; title: string }
+interface Meeting { courseId: string; section: string | null; block: string; long: boolean; lessonId: string | null; title: string; core: boolean }
 
 export default function MonthCalendar({ sections, calendar, filterCourseId, compact }: Props) {
   const router = useRouter()
@@ -60,7 +60,7 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
               if (item) {
                 const iso = isoOf(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
                 const arr = map.get(iso) ?? []
-                arr.push({ courseId: s.courseId, section: s.section, block, long, lessonId: item.lessonId, title: item.title })
+                arr.push({ courseId: s.courseId, section: s.section, block, long, lessonId: item.lessonId, title: item.title, core: item.core !== false })
                 map.set(iso, arr)
               }
             }
@@ -154,7 +154,7 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
                     <button
                       key={j}
                       onClick={() => router.push(`/admin/lessons/${m.lessonId}/build`)}
-                      title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''} — open builder`}
+                      title={`${m.block} block · ${m.title}${m.long ? ' · LONG block' : ''}${m.core ? '' : ' · flex day (cut first if behind)'} — open builder`}
                       className="text-left rounded-md px-1.5 py-1 w-full transition-transform hover:translate-x-0.5"
                       style={{
                         minWidth: 0,
@@ -166,8 +166,9 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
                       <div className="flex items-center gap-1">
                         <span className="text-[10px] font-bold" style={{ color }}>{label}</span>
                         {m.long && <span className="text-[9px] font-bold rounded px-1" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>LONG</span>}
+                        {!m.core && <span className="text-[9px] font-semibold rounded px-1" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>FLEX</span>}
                       </div>
-                      <div className="text-[11px] leading-tight truncate" style={{ color: 'var(--foreground)' }}>{m.title}</div>
+                      <div className="text-[11px] leading-tight truncate" style={{ color: m.core ? 'var(--foreground)' : 'var(--muted-foreground)', fontStyle: m.core ? 'normal' : 'italic' }}>{m.title}</div>
                     </button>
                   )
                 })}

@@ -46,7 +46,7 @@ export async function loadPlanItems(program: Program): Promise<PlanItem[]> {
   if (units.length === 0) return []
   const { data: lessons } = await supabaseAdmin
     .from('lessons')
-    .select('id, title, unit_id, lesson_number, planned_days')
+    .select('id, title, unit_id, lesson_number, planned_days, transfer_core')
     .in('unit_id', units.map((u) => u.id))
   return buildPlan(units, (lessons ?? []) as LessonRow[])
 }

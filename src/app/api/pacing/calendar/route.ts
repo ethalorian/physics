@@ -51,7 +51,7 @@ export const GET = withAuth(async (_request, ctx) => {
       const items = unitId && unitStart
         ? unitItems(planItems, unitId).map((i) => ({
             index: i.index, cumStart: i.cumStart, plannedDays: i.plannedDays,
-            lessonId: i.lessonId, title: i.title, unitName: i.unitName, kind: i.kind,
+            lessonId: i.lessonId, title: i.title, unitName: i.unitName, kind: i.kind, core: i.core,
           }))
         : []
       return {
