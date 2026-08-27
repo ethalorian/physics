@@ -7,7 +7,7 @@
 import type { ReactNode } from 'react'
 import type { AvatarTraits, AvatarItem, EquippedItems, SkinTone, FaceShape, HairStyle, HairColor, EyeShape, EyeColor, EyeSpacing, EyeScale, EyeTilt, BrowStyle, BrowHeight, MouthStyle, MouthWidth, NoseStyle, Freckles, CheekBlush } from '@/lib/avatar/types'
 import { withDefaults } from '@/lib/avatar/types'
-import { SKIN, HAIR, EYE, DEFAULT_SHIRT, FACE_GEO } from '@/lib/avatar/palette'
+import { SKIN, HAIR, EYE, SHIRT, FACE_GEO } from '@/lib/avatar/palette'
 
 // Knob steps → geometry. Middle step is always the identity so avatars saved
 // before the knobs existed render pixel-identical through withDefaults.
@@ -94,7 +94,7 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
       aria-label="Student avatar"
     >
       {itemBySlot.background && <RawLayer svg={itemBySlot.background.svg_layer} />}
-      {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body />}
+      {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body color={SHIRT[t.shirt_color]} />}
       <Neck skin={t.skin} face={t.face} />
       <g transform={hairTransform}><HairBack style={t.hair_style} color={t.hair_color} /></g>
       <Ears skin={t.skin} face={t.face} />
@@ -151,11 +151,13 @@ function RawLayer({ svg }: { svg: string }) {
 // Trait layers (identity)
 // ---------------------------------------------------------------------------
 
-function Body() {
+// Default shirt — colour is the `shirt_color` trait ("favourite colour").
+// Replaced wholesale by a body-slot item when one is equipped.
+function Body({ color }: { color: string }) {
   return (
     <g>
-      <ellipse cx="0" cy="90" rx="40" ry="22" fill={DEFAULT_SHIRT} />
-      <rect x="-32" y="78" width="64" height="34" rx="6" fill={DEFAULT_SHIRT} />
+      <ellipse cx="0" cy="90" rx="40" ry="22" fill={color} />
+      <rect x="-32" y="78" width="64" height="34" rx="6" fill={color} />
     </g>
   )
 }
@@ -229,6 +231,39 @@ function HairBack({ style, color }: { style: HairStyle; color: HairColor }) {
         <circle cx="48" cy="18" r="12" fill={c} />
         <circle cx="-22" cy="-62" r="12" fill={c} />
         <circle cx="22" cy="-62" r="12" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'high_pony') {
+    // Tail sweeps from the crown knot, out past the right ear, to the shoulder.
+    return <path d="M 12,-56 Q 52,-50 54,0 Q 56,26 42,40 Q 40,18 40,-4 Q 36,-40 8,-48 Z" fill={c} />
+  }
+  if (style === 'bangs') {
+    // Same shoulder-length curtains as 'long'; the fringe is in HairFront.
+    return (
+      <g>
+        <path d="M -44,-10 Q -50,12 -46,40 L -32,46 Q -34,18 -32,-4 Z" fill={c} />
+        <path d="M 44,-10 Q 50,12 46,40 L 32,46 Q 34,18 32,-4 Z" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'wavy') {
+    // Curtains with a scalloped outer edge — wider and bumpier than 'long'
+    // so the two read differently even as a 40px bubble.
+    return (
+      <g>
+        <path d="M -44,-12 Q -58,6 -48,22 Q -60,38 -48,54 Q -40,58 -30,52 Q -36,30 -32,-4 Z" fill={c} />
+        <path d="M 44,-12 Q 58,6 48,22 Q 60,38 48,54 Q 40,58 30,52 Q 36,30 32,-4 Z" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'bob') {
+    // Volume panels behind the head, cut flat at the jaw (y=26). The strips
+    // that cover the ears live in HairFront.
+    return (
+      <g>
+        <path d="M -30,-12 Q -52,-14 -50,26 L -30,26 Z" fill={c} />
+        <path d="M 30,-12 Q 52,-14 50,26 L 30,26 Z" fill={c} />
       </g>
     )
   }
@@ -337,6 +372,124 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
         fill={c}
         d="M -50,-2 Q -52,-58 0,-62 Q 52,-58 50,-2 Q 48,28 28,40 L 24,72 L -24,72 L -28,40 Q -48,28 -50,-2 Z M -40,2 Q -44,-46 0,-48 Q 44,-46 40,2 Q 34,30 0,38 Q -34,30 -40,2 Z"
       />
+    )
+  }
+  if (style === 'buzz') {
+    // Tight to the skull — no volume past the head outline, low hairline.
+    // Silhouette matches bald on purpose; the coloured crown is the tell.
+    return <path d="M -45,-12 Q -48,-49 0,-50 Q 48,-49 45,-12 Q 34,-26 0,-28 Q -34,-26 -45,-12 Z" fill={c} />
+  }
+  if (style === 'fade') {
+    // Skin fade: translucent temples under a fuller, slightly boxy top.
+    return (
+      <g>
+        <path d="M -41,-12 Q -42,-2 -39,8 L -34,7 Q -36,-2 -35,-14 Z" fill={c} opacity="0.45" />
+        <path d="M 41,-12 Q 42,-2 39,8 L 34,7 Q 36,-2 35,-14 Z" fill={c} opacity="0.45" />
+        <path d="M -40,-14 Q -44,-56 0,-58 Q 44,-56 40,-14 Q 32,-28 0,-30 Q -32,-28 -40,-14 Z" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'spiky') {
+    return (
+      <g>
+        <path d="M -44,-12 Q -48,-50 0,-52 Q 48,-50 44,-12 Q 36,-26 0,-30 Q -36,-26 -44,-12 Z" fill={c} />
+        <polygon points="-40,-30 -34,-66 -22,-40" fill={c} />
+        <polygon points="-24,-40 -16,-74 -6,-46" fill={c} />
+        <polygon points="-8,-46 2,-78 12,-46" fill={c} />
+        <polygon points="10,-44 22,-72 30,-40" fill={c} />
+        <polygon points="26,-36 38,-64 42,-28" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'side_part') {
+    // Fringe swept from a right-side part down toward the left temple.
+    return (
+      <g>
+        <path d="M -44,-10 Q -50,-56 0,-58 Q 50,-56 44,-14 Q 40,-32 22,-36 Q -2,-38 -22,-26 Q -34,-16 -44,-10 Z" fill={c} />
+        <path d="M 20,-38 Q 24,-48 22,-56" fill="none" stroke={d} strokeWidth="1" strokeLinecap="round" />
+      </g>
+    )
+  }
+  if (style === 'mohawk') {
+    // Shaved sides, one crest. Kept under y=-60 so it survives the 'head'
+    // (top -61) and 'medium' (top -64) crops instead of clipping to a block.
+    return (
+      <g>
+        <path d="M -11,-24 Q -12,-44 -8,-52 L 8,-52 Q 12,-44 11,-24 Q 0,-28 -11,-24 Z" fill={c} />
+        <polygon points="-11,-44 -20,-60 -2,-50" fill={c} />
+        <polygon points="-6,-48 0,-64 6,-48" fill={c} />
+        <polygon points="2,-50 20,-60 11,-44" fill={c} />
+        <polygon points="-14,-34 -26,-44 -8,-38" fill={c} />
+        <polygon points="8,-38 26,-44 14,-34" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'twists') {
+    // Short two-strand twists: a cap plus a starburst of pills radiating
+    // from the crown. Inner radius (26) sits inside the cap so every twist
+    // is rooted; outer radius (46) pokes past the head edge.
+    const angles = [-170, -150, -130, -110, -90, -70, -50, -30, -10]
+    return (
+      <g>
+        <path d="M -44,-14 Q -50,-56 0,-58 Q 50,-56 44,-14 Q 34,-30 0,-32 Q -34,-30 -44,-14 Z" fill={c} />
+        {angles.map((a) => (
+          <g key={a} transform={`translate(0, -30) rotate(${a})`}>
+            <rect x="26" y="-3.5" width="20" height="7" rx="3.5" fill={c} />
+          </g>
+        ))}
+      </g>
+    )
+  }
+  if (style === 'high_pony') {
+    return (
+      <g>
+        <path d="M -44,-12 Q -48,-54 0,-58 Q 48,-54 44,-12 Q 36,-26 0,-30 Q -36,-26 -44,-12 Z" fill={c} />
+        {/* knot + band on top; the tail itself hangs in HairBack */}
+        <circle cx="12" cy="-56" r="9" fill={c} />
+        <rect x="6" y="-52" width="12" height="4" rx="2" transform="rotate(-20 12 -50)" fill={d} />
+      </g>
+    )
+  }
+  if (style === 'bob') {
+    // Cap + ear-covering strips; the jaw-level volume is in HairBack.
+    return (
+      <g>
+        <path d="M -44,-12 Q -48,-54 0,-58 Q 48,-54 44,-12 Q 36,-26 0,-30 Q -36,-26 -44,-12 Z" fill={c} />
+        <path d="M -44,-14 Q -52,0 -50,26 L -42,26 Q -44,6 -40,-8 Z" fill={c} />
+        <path d="M 44,-14 Q 52,0 50,26 L 42,26 Q 44,6 40,-8 Z" fill={c} />
+      </g>
+    )
+  }
+  if (style === 'bangs') {
+    // Straight fringe cut just above the brows (brow top is y=-19).
+    return (
+      <path d="M -44,-10 Q -48,-54 0,-58 Q 48,-54 44,-10 L 38,-22 L 24,-23 L 12,-22 L 0,-23 L -12,-22 L -24,-23 L -38,-22 Z" fill={c} />
+    )
+  }
+  if (style === 'wavy') {
+    // Centre-parted cap; the wavy curtains are in HairBack.
+    return (
+      <path d="M -42,-6 Q -50,-58 0,-58 Q 50,-58 42,-6 Q 38,-24 20,-28 Q 8,-30 0,-24 Q -8,-30 -20,-28 Q -38,-24 -42,-6 Z" fill={c} />
+    )
+  }
+  if (style === 'twin_braids') {
+    // Centre-parted cap with a plait hanging in front of each shoulder.
+    const rows = [-2, 8, 18, 28, 38, 48]
+    return (
+      <g>
+        <path d="M -44,-12 Q -48,-54 0,-58 Q 48,-54 44,-12 Q 36,-26 0,-30 Q -36,-26 -44,-12 Z" fill={c} />
+        <path d="M 0,-56 L 0,-31" stroke={d} strokeWidth="1" strokeLinecap="round" />
+        {([-1, 1] as const).map((side) => (
+          <g key={side} transform={`translate(${side * 49}, 0)`}>
+            <circle cx={-side * 3} cy="-16" r="6" fill={c} />
+            <rect x="-4" y="-16" width="8" height="72" rx="4" fill={c} />
+            {rows.map((y) => <ellipse key={y} cx="0" cy={y} rx="5" ry="3.4" fill={c} />)}
+            {rows.map((y) => <path key={`l${y}`} d={`M -3.5,${y + 4} Q 0,${y + 7} 3.5,${y + 4}`} fill="none" stroke={d} strokeWidth="0.9" />)}
+            <rect x="-4.5" y="54" width="9" height="3" rx="1.5" fill={d} />
+            <path d="M -3,57 L -4,64 M 0,57 L 0,65 M 3,57 L 4,64" fill="none" stroke={c} strokeWidth="2" strokeLinecap="round" />
+          </g>
+        ))}
+      </g>
     )
   }
   // long — top cap. Side curtains live in HairBack so the ears poke through.

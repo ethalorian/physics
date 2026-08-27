@@ -10,6 +10,8 @@ import unit5Cpa from '@/data/unit5-cpa-lesson-plans.json'
 import unit6Cpa from '@/data/unit6-cpa-lesson-plans.json'
 import unit7Cpa from '@/data/unit7-cpa-lesson-plans.json'
 import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
+import tradesUnit1 from '@/data/trades-unit1-lesson-plans.json'
+import tradesUnit2 from '@/data/trades-unit2-lesson-plans.json'
 
 export interface DayPlan { day: number; title: string; bodyHtml: string }
 
@@ -23,6 +25,10 @@ export const PLANS: Record<string, Record<string, DayPlan[]>> = {
     'unit-6': unit6Cpa as DayPlan[],
     'unit-7': unit7Cpa as DayPlan[],
     'unit-8': unit8Cpa as DayPlan[],
+  },
+  trades: {
+    'trades-1': tradesUnit1 as DayPlan[],
+    'trades-2': tradesUnit2 as DayPlan[],
   },
 }
 
@@ -94,6 +100,8 @@ export function buildLessonPlanHtml(unitId: string, day: DayPlan, opts: BuildOpt
 export async function resolveTracks(opts: { role: string; scopeEmail: string }): Promise<string[]> {
   if (opts.role === 'admin') return Object.keys(PLANS)
   const { supabaseAdmin } = await import('@/lib/supabase')
-  const { data } = await supabaseAdmin.from('courses').select('track').eq('teacher_email', opts.scopeEmail)
-  return [...new Set(((data ?? []) as { track: string | null }[]).map((c) => c.track).filter((t): t is string => Boolean(t)))]
+  const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', opts.scopeEmail)
+  const rows = (data ?? []) as { track: string | null; program: string | null }[]
+  // A trades class contributes the 'trades' plan set instead of its (physics) track.
+  return [...new Set(rows.map((c) => (c.program === 'trades' ? 'trades' : c.track)).filter((t): t is string => Boolean(t)))]
 }

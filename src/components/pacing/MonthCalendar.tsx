@@ -3,10 +3,17 @@
 import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { blockMeetsOnDate, blockMeetingsElapsed, type Block, type RotationCalendar } from '@/lib/rotation'
+import { sectionStepsOnDate, sectionMeetingsElapsed, isOnWeek, type Block, type RotationCalendar, type MeetingPattern, type WeekPattern, type CountMode } from '@/lib/rotation'
 
 export interface CalItem { index: number; cumStart: number; plannedDays: number; lessonId: string | null; title: string; unitName: string; kind: 'lesson' | 'unit'; core?: boolean }
-export interface CalSection { courseId: string; name: string; section: string | null; block: string | null; startDate: string | null; items: CalItem[] }
+export interface CalSection { courseId: string; name: string; section: string | null; block: string | null; blocks?: string[]; weekPattern?: WeekPattern; onWeekAnchor?: string | null; countMode?: CountMode; startDate: string | null; items: CalItem[] }
+// A section's meeting pattern; falls back to the legacy single block.
+const patternOf = (s: CalSection): MeetingPattern => ({
+  blocks: ((s.blocks && s.blocks.length > 0) ? s.blocks : (s.block ? [s.block] : [])) as Block[],
+  weekPattern: s.weekPattern ?? 'every',
+  onWeekAnchor: s.onWeekAnchor ?? null,
+  countMode: s.countMode ?? 'meetings',
+})
 interface Props {
   sections: CalSection[]
   calendar: RotationCalendar
@@ -18,6 +25,7 @@ interface Props {
 const BLOCK_COLOR: Record<string, string> = {
   A: 'var(--primary)', B: 'var(--success)', C: 'var(--reward)',
   D: 'var(--viz-down)', E: 'var(--chart-4)', F: 'var(--primary)', G: 'var(--muted-foreground)',
+  'B+C': 'var(--success)',
 }
 const WD = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -35,7 +43,7 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
   const [month, setMonth] = useState(now.getUTCMonth())
 
   const activeSections = useMemo(
-    () => sections.filter((s) => s.block && s.startDate && (!filterCourseId || s.courseId === filterCourseId)),
+    () => sections.filter((s) => patternOf(s).blocks.length > 0 && s.startDate && (!filterCourseId || s.courseId === filterCourseId)),
     [sections, filterCourseId],
   )
 
@@ -45,25 +53,30 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
     const first = new Date(Date.UTC(year, month, 1))
     const last = new Date(Date.UTC(year, month + 1, 0))
     for (const s of activeSections) {
-      const block = s.block as Block
+      const pattern = patternOf(s)
       const start = s.startDate as string
       const d = new Date(first)
       while (d <= last) {
         const dow = d.getUTCDay()
         if (dow >= 1 && dow <= 5 && isoOf(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) >= start) {
-          const { meets, long } = blockMeetsOnDate(calendar, block, d)
-          if (meets) {
-            const idx = blockMeetingsElapsed(calendar, block, start, d) - 1
-            if (idx >= 0) {
+          // A day may hold 0, 1 or 2 meetings (MVP: B and C). Each meeting is
+          // one step through the unit's lessons, so B and C on the same day
+          // can land on two different lessons.
+          const todays = sectionStepsOnDate(calendar, pattern, d)
+          if (todays.length > 0) {
+            const before = sectionMeetingsElapsed(calendar, pattern, start, d) - todays.length
+            todays.forEach((m, k) => {
+              const idx = before + k
+              if (idx < 0) return
               // Use THIS section's current-unit lessons; nothing past the unit's end.
               const item = s.items.find((i) => idx >= i.cumStart && idx < i.cumStart + i.plannedDays)
               if (item) {
                 const iso = isoOf(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
                 const arr = map.get(iso) ?? []
-                arr.push({ courseId: s.courseId, section: s.section, block, long, lessonId: item.lessonId, title: item.title, core: item.core !== false })
+                arr.push({ courseId: s.courseId, section: s.section, block: m.block, long: m.long, lessonId: item.lessonId, title: item.title, core: item.core !== false })
                 map.set(iso, arr)
               }
-            }
+            })
           }
         }
         d.setUTCDate(d.getUTCDate() + 1)
@@ -98,6 +111,8 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
 
   const todayIso = isoOf(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
   const noSchool = new Set(calendar.no_school_dates)
+  // When exactly one alternating section is in view, shade its off-weeks.
+  const altSection = activeSections.length === 1 && patternOf(activeSections[0]).weekPattern === 'alternate' ? activeSections[0] : null
 
   const prev = () => { if (month === 0) { setYear((y) => y - 1); setMonth(11) } else setMonth((m) => m - 1) }
   const next = () => { if (month === 11) { setYear((y) => y + 1); setMonth(0) } else setMonth((m) => m + 1) }
@@ -118,6 +133,7 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
           const iso = isoOf(cell.y, cell.m, cell.d)
           const isToday = iso === todayIso
           const off = noSchool.has(iso)
+          const offWeek = altSection ? !isOnWeek(calendar, patternOf(altSection), new Date(Date.UTC(cell.y, cell.m, cell.d))) : false
           const meetings = meetingsByIso.get(iso) ?? []
           return (
             <div key={i} className="rounded-lg border p-1.5 flex flex-col overflow-hidden"
@@ -126,12 +142,13 @@ export default function MonthCalendar({ sections, calendar, filterCourseId, comp
                 minHeight: compact ? 64 : 104,
                 borderColor: isToday ? 'var(--primary)' : 'var(--border)',
                 boxShadow: isToday ? '0 0 0 1px var(--primary)' : 'none',
-                background: cell.inMonth ? (off ? 'color-mix(in oklch, var(--muted-foreground) 7%, transparent)' : 'var(--card)') : 'transparent',
-                opacity: cell.inMonth ? 1 : 0.4,
+                background: cell.inMonth ? (off || offWeek ? 'color-mix(in oklch, var(--muted-foreground) 7%, transparent)' : 'var(--card)') : 'transparent',
+                opacity: cell.inMonth ? (offWeek ? 0.7 : 1) : 0.4,
               }}>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-medium" style={{ color: isToday ? 'var(--primary)' : 'var(--muted-foreground)' }}>{cell.d}</span>
                 {off && cell.inMonth && <span className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>no school</span>}
+                {!off && offWeek && cell.inMonth && <span className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>shop week</span>}
               </div>
               <div className="flex flex-col gap-1 mt-1 min-w-0">
                 {meetings.map((m, j) => {

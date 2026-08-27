@@ -13,7 +13,9 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     // Class type chosen at import. Only honors is acted on here (cpa is the default);
     // an invalid value is ignored rather than rejected.
     const track: string | null = body.track === 'honors' || body.track === 'cpa' ? body.track : null
-    console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)')
+    // Which curriculum the class follows (physics | trades). Invalid → ignored.
+    const program: string | null = body.program === 'physics' || body.program === 'trades' ? body.program : null
+    console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)', 'program:', program ?? '(default physics)')
 
     if (!courseId || !accessToken) {
       console.log('❌ Missing required fields')
@@ -62,13 +64,16 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
     // Apply the class type chosen at import. Matched by google_course_id (stable),
     // so it works whether this is a first import or a re-sync.
-    if (track) {
+    if (track || program) {
+      const typed: Record<string, string> = {}
+      if (track) typed.track = track
+      if (program) typed.program = program
       const { error: trackError } = await supabaseAdmin
         .from('courses')
-        .update({ track })
+        .update(typed)
         .eq('google_course_id', course.id)
-      if (trackError) console.error('⚠️ Could not set course track:', trackError.message)
-      else console.log('🏷️ Course typed as:', track)
+      if (trackError) console.error('⚠️ Could not set course type:', trackError.message)
+      else console.log('🏷️ Course typed as:', typed)
     }
 
     // Fetch students from Google Classroom

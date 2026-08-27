@@ -4,8 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, DoorOpen, Lock, Clock, Check, CalendarClock, Search, ChevronDown, ChevronRight, PlayCircle, GraduationCap } from 'lucide-react'
 
-interface ClassRow { id: string; name: string; section: string | null; track: string | null }
-interface LessonRow { id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean }
+interface ClassRow { id: string; name: string; section: string | null; track: string | null; program?: 'physics' | 'trades' }
+interface LessonRow { id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean; program?: 'physics' | 'trades' }
+// A lesson applies to a class only when they follow the same curriculum.
+const applies = (l: LessonRow, c: ClassRow) => (l.program ?? 'physics') === (c.program ?? 'physics')
 interface Win { open_at: string | null; close_at: string | null }
 interface Data { classes: ClassRow[]; lessons: LessonRow[]; windows: Record<string, Win> }
 
@@ -31,7 +33,13 @@ const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(unde
 const unitShort = (u: string | null) => { const m = u?.match(/Unit\s*(\d+)/i); return m ? `U${m[1]}` : (u ?? '—') }
 const lessonLabel = (l: LessonRow) => `${l.lesson_number ? `D${l.lesson_number} · ` : ''}${l.title}`
 
-function TrackBadge({ track }: { track: string | null }) {
+function TrackBadge({ track, program }: { track: string | null; program?: string | null }) {
+  if (program === 'trades') return (
+    <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide"
+      style={{ background: 'color-mix(in oklch, var(--reward) 22%, transparent)', color: 'var(--reward-foreground)' }}>
+      Trades
+    </span>
+  )
   if (track === 'honors') return (
     <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide"
       style={{ background: 'color-mix(in oklch, var(--primary) 18%, transparent)', color: 'var(--primary)' }}>
@@ -115,7 +123,8 @@ export default function LessonAccessPage() {
   const bulkClass = async (courseId: string, action: 'open' | 'close') => {
     if (!data) return
     setBusy(`col:${courseId}`)
-    for (const l of data.lessons.filter((x) => x.published)) {
+    const cls = data.classes.find((c) => c.id === courseId)
+    for (const l of data.lessons.filter((x) => x.published && (!cls || applies(x, cls)))) {
       const win = action === 'open' ? { open_at: new Date().toISOString(), close_at: null } : { open_at: null, close_at: null }
       await fetch(`/api/classes/${encodeURIComponent(courseId)}/windows`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -257,7 +266,7 @@ export default function LessonAccessPage() {
                   <th className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5" style={{ color: 'var(--muted-foreground)', position: 'sticky', left: 0, background: 'var(--card)', zIndex: 2 }}>Lesson</th>
                   {data.classes.map((c) => (
                     <th key={c.id} className="px-2 py-2 text-center" style={{ minWidth: 104 }}>
-                      <div className="flex items-center justify-center gap-1"><span className="text-xs font-bold">{className(c)}</span><TrackBadge track={c.track} /></div>
+                      <div className="flex items-center justify-center gap-1"><span className="text-xs font-bold">{className(c)}</span><TrackBadge track={c.track} program={c.program} /></div>
                       <div className="flex items-center justify-center gap-1 mt-1">
                         <button onClick={() => bulkClass(c.id, 'open')} disabled={busy === `col:${c.id}`} title="Open all lessons for this class" className="grid place-items-center rounded p-0.5" style={{ color: 'var(--primary)', background: 'none', border: 'none', cursor: 'pointer' }}><DoorOpen size={13} /></button>
                         <button onClick={() => bulkClass(c.id, 'close')} disabled={busy === `col:${c.id}`} title="Close all lessons for this class" className="grid place-items-center rounded p-0.5" style={{ color: 'var(--muted-foreground)', background: 'none', border: 'none', cursor: 'pointer' }}><Lock size={12} /></button>
@@ -282,6 +291,11 @@ export default function LessonAccessPage() {
                           </td>
                           {data.classes.map((c) => {
                             const key = `${c.id}|${l.id}`
+                            if (!applies(l, c)) return (
+                              <td key={c.id} className="px-2 py-2 text-center" title={`Not in this class's curriculum (${c.program === 'trades' ? 'Trades' : 'Physics'})`}>
+                                <span className="text-[11px]" style={{ color: 'var(--muted-foreground)', opacity: 0.5 }}>—</span>
+                              </td>
+                            )
                             const w = data.windows[key]; const st = statusOf(w); const s = STATUS_STYLE[st]
                             return (
                               <td key={c.id} className="px-2 py-2">

@@ -10,7 +10,7 @@ import {
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
 interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number; untracked?: number }
-interface Course { id: string; name: string; section: string | null; track: string | null }
+interface Course { id: string; name: string; section: string | null; track: string | null; program?: string | null }
 
 // The four onboarding steps. `action` says how the CTA behaves:
 //  - 'link'   → go to `href` (optionally with a "Mark done" for no-signal steps)
@@ -27,11 +27,14 @@ const STEPS: { key: StepKey; label: string; desc: string; href?: string; cta: st
 // Curriculum tracks. CPA and Honors are live; AP and Project-Based come later
 // (shown but disabled). A class typed 'honors' unlocks the honors thread —
 // honors-only lessons and blocks become visible for that class.
-const TRACKS: { id: string; label: string; desc: string; enabled: boolean }[] = [
-  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the base curriculum.', enabled: true },
-  { id: 'honors', label: 'Honors Physics', desc: 'Extends CPA with the honors thread — deeper demand, same scope.', enabled: true },
-  { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false },
-  { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false },
+// Class types. `track` is the level gate for physics content; `program` picks the
+// curriculum (units/targets/lessons). Trades is its own curriculum, not a level.
+const TRACKS: { id: string; label: string; desc: string; enabled: boolean; track: string; program: 'physics' | 'trades' }[] = [
+  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the base curriculum.', enabled: true, track: 'cpa', program: 'physics' },
+  { id: 'honors', label: 'Honors Physics', desc: 'Extends CPA with the honors thread — deeper demand, same scope.', enabled: true, track: 'honors', program: 'physics' },
+  { id: 'trades', label: 'Trades Physics', desc: 'The fieldhouse curriculum — length & tolerance, plumb/level/square, load, pressure, heat, electrical.', enabled: true, track: 'cpa', program: 'trades' },
+  { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false, track: 'ap', program: 'physics' },
+  { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false, track: 'pbl', program: 'physics' },
 ]
 
 // Short guided-tour slides.
@@ -86,10 +89,12 @@ export default function TeacherDashboard() {
   }
 
   // Assign a class type to ONE course; re-derives the curriculum step.
-  const assignTrack = async (courseId: string, track: string) => {
+  const assignTrack = async (courseId: string, typeId: string) => {
+    const t = TRACKS.find((x) => x.id === typeId)
+    if (!t) return
     await fetch('/api/teacher/courses', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course_id: courseId, track }),
+      body: JSON.stringify({ course_id: courseId, track: t.track, program: t.program }),
     }).catch(() => {})
     loadCourses()
     load()
@@ -268,7 +273,7 @@ export default function TeacherDashboard() {
         <div onClick={() => setShowTracks(false)} style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
           <div onClick={(e) => e.stopPropagation()} className="rounded-2xl border p-6 w-full" style={{ maxWidth: 520, maxHeight: '85vh', overflowY: 'auto', background: 'var(--card)', borderColor: 'var(--border)' }}>
             <div className="text-lg font-semibold tracking-tight mb-1">Assign a class type to each course</div>
-            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Set the course type for each imported class. Only CPA Physics is available now — more types are coming.</p>
+            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Set the course type for each imported class. CPA and Honors follow the physics curriculum; Trades follows its own.</p>
             {courses.length === 0 ? (
               // Not a dead-end: hand the teacher the actual next action.
               <div>
@@ -287,7 +292,7 @@ export default function TeacherDashboard() {
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       {TRACKS.map((tr) => {
-                        const selected = c.track === tr.id
+                        const selected = c.program === 'trades' ? tr.id === 'trades' : (c.track === tr.id && tr.program === 'physics')
                         return (
                           <button
                             key={tr.id}

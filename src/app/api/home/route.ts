@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
+import { getStudentProgram } from '@/lib/program'
 import { targetValue, MasteryRecord, Domain } from '@/data/curriculum-types'
 
 // GET /api/home
@@ -25,10 +26,14 @@ export const GET = withAuth(async (request, ctx) => {
     const userId = ctx.userId
     const name = ctx.session.user.name ?? 'there'
 
+    // --- Program (physics | trades) — decides which units/lessons exist for this student
+    const program = await getStudentProgram(userId)
+
     // --- Units (ordered) -----------------------------------------------------
     const { data: unitRowsRaw } = await supabaseAdmin
       .from('units')
       .select('id, name, order_index')
+      .eq('program', program)
       .order('order_index', { ascending: true })
     const units = (unitRowsRaw ?? []) as UnitRow[]
     const unitIdByName = new Map<string, string>(units.map((u): [string, string] => [u.name, u.id]))
@@ -39,6 +44,7 @@ export const GET = withAuth(async (request, ctx) => {
       .from('lessons')
       .select('id, slug, title, unit, lesson_number')
       .eq('published', true)
+      .in('unit_id', units.map((u) => u.id))
     // Per-class release gate: hide lessons the student's class hasn't opened yet
     // (or has closed). Published-and-no-window = open by default.
     const lessonGate = await getStudentLessonGate(userId)
@@ -188,6 +194,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     return NextResponse.json({
       student: { name },
+      program,
       points: { xp: bal.lifetimeEarned, balance: bal.balance },
       streak: { current: streak },
       continue: continueData,

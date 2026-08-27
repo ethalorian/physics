@@ -3,8 +3,13 @@
 
 export type SkinTone = 'pale' | 'light' | 'tan' | 'olive' | 'brown' | 'deep' | 'dark'
 export type FaceShape = 'round' | 'egg' | 'square' | 'heart'
-export type HairStyle = 'short' | 'ponytail' | 'curls' | 'bald' | 'afro' | 'locs' | 'braids' | 'bun' | 'hijab' | 'long'
-export type HairColor = 'black' | 'brown' | 'blonde' | 'red' | 'gray' | 'white' | 'teal'
+export type HairStyle =
+  | 'short' | 'ponytail' | 'curls' | 'bald' | 'afro' | 'locs' | 'braids' | 'bun' | 'hijab' | 'long'
+  // Second wave — silhouette-distinct stock variants (see HairFront/HairBack).
+  | 'buzz' | 'fade' | 'spiky' | 'side_part' | 'mohawk' | 'twists' | 'high_pony' | 'bob' | 'bangs' | 'wavy' | 'twin_braids'
+export type HairColor =
+  | 'black' | 'dark_brown' | 'brown' | 'auburn' | 'red' | 'sandy' | 'blonde' | 'gray' | 'white'
+  | 'teal' | 'blue' | 'purple' | 'pink' | 'green'
 export type EyeShape = 'small' | 'big' | 'narrow' | 'wide'
 export type BrowStyle = 'straight' | 'arched' | 'bushy' | 'thin'
 export type MouthStyle = 'smile' | 'grin' | 'neutral' | 'smirk'
@@ -12,6 +17,10 @@ export type NoseStyle = 'button' | 'broad' | 'narrow' | 'hook'
 export type Freckles = 'none' | 'light' | 'heavy'
 export type CheekBlush = 'none' | 'pink' | 'warm'
 export type EyeColor = 'black' | 'brown' | 'hazel' | 'green' | 'blue' | 'gray' | 'violet'
+// Shirt colour — Nintendo's "favourite colour". Identity, not economy: it is
+// the single most salient block at thumbnail size, so it differentiates two
+// Miis that share a face. A `body` slot item (coat, jacket) still overrides it.
+export type ShirtColor = 'lavender' | 'red' | 'orange' | 'yellow' | 'green' | 'teal' | 'blue' | 'navy' | 'purple' | 'pink' | 'charcoal'
 
 // Parametric "knobs" — Nintendo-Mii-style quantized adjustments that multiply
 // variance across every shape variant. Discrete steps (not numbers) so they
@@ -41,6 +50,7 @@ export interface AvatarTraits {
   nose: NoseStyle
   freckles: Freckles
   cheek_blush: CheekBlush
+  shirt_color: ShirtColor
 }
 
 // The geometry knobs live in a separate "Fine-tune" tab so the guided
@@ -83,6 +93,7 @@ export const DEFAULT_TRAITS: AvatarTraits = {
   nose: 'button',
   freckles: 'none',
   cheek_blush: 'none',
+  shirt_color: 'lavender',
 }
 
 export function withDefaults(partial: Partial<AvatarTraits> | null | undefined): AvatarTraits {
@@ -107,13 +118,17 @@ export const TRAIT_LABELS: Record<keyof AvatarTraits, string> = {
   nose: 'Nose',
   freckles: 'Freckles',
   cheek_blush: 'Cheek blush',
+  shirt_color: 'Shirt colour',
 }
 
 export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
   skin: ['pale', 'light', 'tan', 'olive', 'brown', 'deep', 'dark'],
   face: ['round', 'egg', 'square', 'heart'],
-  hair_style: ['short', 'ponytail', 'curls', 'bald', 'afro', 'locs', 'braids', 'bun', 'hijab', 'long'],
-  hair_color: ['black', 'brown', 'blonde', 'red', 'gray', 'white', 'teal'],
+  hair_style: [
+    'short', 'buzz', 'fade', 'spiky', 'side_part', 'mohawk', 'curls', 'twists', 'afro', 'locs', 'braids',
+    'bun', 'high_pony', 'ponytail', 'bob', 'bangs', 'long', 'wavy', 'twin_braids', 'hijab', 'bald',
+  ],
+  hair_color: ['black', 'dark_brown', 'brown', 'auburn', 'red', 'sandy', 'blonde', 'gray', 'white', 'teal', 'blue', 'purple', 'pink', 'green'],
   eyes: ['small', 'big', 'narrow', 'wide'],
   eye_color: ['black', 'brown', 'hazel', 'green', 'blue', 'gray', 'violet'],
   eye_spacing: ['close', 'normal', 'wide'],
@@ -126,4 +141,5 @@ export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
   nose: ['button', 'broad', 'narrow', 'hook'],
   freckles: ['none', 'light', 'heavy'],
   cheek_blush: ['none', 'pink', 'warm'],
+  shirt_color: ['lavender', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'navy', 'purple', 'pink', 'charcoal'],
 }

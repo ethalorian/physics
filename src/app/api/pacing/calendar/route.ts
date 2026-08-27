@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { loadPlanItems, loadRotationCalendar, asProgram, type Program } from '@/lib/pacing-server'
+import { loadPlanItems, loadRotationCalendar, asProgram, patternFromRow, type Program } from '@/lib/pacing-server'
 import { unitItems, type PlanItem } from '@/lib/pacing'
 
 // GET /api/pacing/calendar
@@ -12,7 +12,7 @@ import { unitItems, type PlanItem } from '@/lib/pacing'
 // lessons using src/lib/rotation.ts.
 
 type CourseRow = { id: string; name: string | null; section: string | null; program: string | null }
-type SchedRow = { course_id: string; block: string | null }
+type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null }
 type PacingRow = { course_id: string; current_unit_id: string | null; unit_start_date: string | null }
 
 export const GET = withAuth(async (_request, ctx) => {
@@ -26,14 +26,14 @@ export const GET = withAuth(async (_request, ctx) => {
     const courses = (courseRows ?? []) as CourseRow[]
     const courseIds = courses.map((c) => c.id)
 
-    const blockByCourse = new Map<string, string | null>()
+    const schedByCourse = new Map<string, SchedRow>()
     const pacingByCourse = new Map<string, PacingRow>()
     if (courseIds.length > 0) {
       const [{ data: schedRows }, { data: pacingRows }] = await Promise.all([
-        supabaseAdmin.from('section_schedules').select('course_id, block').in('course_id', courseIds),
+        supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor').in('course_id', courseIds),
         supabaseAdmin.from('section_pacing').select('course_id, current_unit_id, unit_start_date').in('course_id', courseIds),
       ])
-      for (const s of (schedRows ?? []) as SchedRow[]) blockByCourse.set(s.course_id, s.block)
+      for (const s of (schedRows ?? []) as SchedRow[]) schedByCourse.set(s.course_id, s)
       for (const p of (pacingRows ?? []) as PacingRow[]) pacingByCourse.set(p.course_id, p)
     }
 
@@ -42,7 +42,7 @@ export const GET = withAuth(async (_request, ctx) => {
     for (const p of new Set(courses.map((c) => asProgram(c.program)))) planByProgram.set(p, await loadPlanItems(p))
 
     const sections = courses.map((c) => {
-      const block = blockByCourse.get(c.id) ?? null
+      const pattern = patternFromRow(schedByCourse.get(c.id), asProgram(c.program))
       const p = pacingByCourse.get(c.id)
       const unitId = p?.current_unit_id ?? null
       const unitStart = p?.unit_start_date ?? null
@@ -58,7 +58,11 @@ export const GET = withAuth(async (_request, ctx) => {
         courseId: c.id,
         name: c.name ?? 'Class',
         section: c.section,
-        block,
+        block: pattern.blocks[0] ?? null,
+        blocks: pattern.blocks,
+        weekPattern: pattern.weekPattern,
+        onWeekAnchor: pattern.onWeekAnchor ?? null,
+        countMode: pattern.countMode ?? 'meetings',
         startDate: unitStart, // anchor the unit's lessons here
         items,
       }

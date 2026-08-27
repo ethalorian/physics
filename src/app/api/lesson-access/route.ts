@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getUnitProgramMap, asProgram, type Program } from '@/lib/program'
 
 // GET /api/lesson-access
 // Everything the unified Lesson-access board needs in one shot: the teacher's
@@ -9,25 +10,30 @@ import { supabaseAdmin } from '@/lib/supabase'
 // global `published` flag (admin-only) is reflected here read-only.
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   const { data: owned } = await supabaseAdmin
-    .from('courses').select('id, name, section, track').eq('teacher_email', ctx.scopeEmail).order('section')
-  let classes = (owned ?? []) as { id: string; name: string; section: string | null; track: string | null }[]
-  if (classes.length === 0 && ctx.role === 'admin') {
-    const { data: all } = await supabaseAdmin.from('courses').select('id, name, section, track').order('section')
-    classes = (all ?? []) as { id: string; name: string; section: string | null; track: string | null }[]
+    .from('courses').select('id, name, section, track, program').eq('teacher_email', ctx.scopeEmail).order('section')
+  type ClassRow = { id: string; name: string; section: string | null; track: string | null; program: string | null }
+  let classRows = (owned ?? []) as ClassRow[]
+  if (classRows.length === 0 && ctx.role === 'admin') {
+    const { data: all } = await supabaseAdmin.from('courses').select('id, name, section, track, program').order('section')
+    classRows = (all ?? []) as ClassRow[]
   }
+  const classes = classRows.map((c) => ({ ...c, program: asProgram(c.program) as Program }))
   const courseIds = classes.map((c) => c.id)
 
   // Teachers can only release what a super-admin has GLOBALLY PUBLISHED, so the
   // board only ever lists published lessons. Drafts never reach this view.
   const { data: lessonRows } = await supabaseAdmin
     .from('lessons')
-    .select('id, title, slug, unit, lesson_number, published')
+    .select('id, title, slug, unit, unit_id, lesson_number, published')
     .eq('published', true)
     .order('unit', { ascending: true })
     .order('lesson_number', { ascending: true })
-  const lessons = (lessonRows ?? []) as {
-    id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean
-  }[]
+  // Tag each lesson with its program so the board only offers a class the
+  // lessons of its own curriculum.
+  const unitProgram = await getUnitProgramMap()
+  const lessons = ((lessonRows ?? []) as {
+    id: string; title: string; slug: string; unit: string | null; unit_id: string | null; lesson_number: number | null; published: boolean
+  }[]).map((l) => ({ ...l, program: l.unit_id ? (unitProgram.get(l.unit_id) ?? 'physics') : 'physics' }))
 
   const windows: Record<string, { open_at: string | null; close_at: string | null }> = {}
   if (courseIds.length > 0) {

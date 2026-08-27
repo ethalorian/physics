@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { computeFromElapsed, unitItems, totalPlanDays, elapsedInstructionalDays, PlanItem } from '@/lib/pacing'
-import { loadPlanItems, furthestActiveItem, loadRotationCalendar, isRotationConfigured, asProgram, type Program } from '@/lib/pacing-server'
-import { Block, blockMeetingsElapsed } from '@/lib/rotation'
+import { loadPlanItems, furthestActiveItem, loadRotationCalendar, isRotationConfigured, asProgram, patternFromRow, type Program } from '@/lib/pacing-server'
+import { isOnWeek, sectionMeetingsElapsed } from '@/lib/rotation'
 
 // GET /api/pacing/overview (ADMIN) — every section inside its CURRENT UNIT, in
 // one pass. Same unit-level model as /api/pacing/section: a section with no
@@ -12,7 +12,7 @@ import { Block, blockMeetingsElapsed } from '@/lib/rotation'
 type CourseRow = { id: string; name: string | null; section: string | null; teacher_email: string | null; program: string | null }
 type CsRow = { course_id: string; student_id: string }
 type BrRow = { user_id: string; lesson_id: string }
-type SchedRow = { course_id: string; block: string | null }
+type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null }
 type PacingRow = { course_id: string; current_lesson_id: string | null; current_unit_id: string | null; unit_start_date: string | null; source: 'auto' | 'confirmed' }
 
 export const GET = withAuth(async (_request, ctx) => {
@@ -21,7 +21,7 @@ export const GET = withAuth(async (_request, ctx) => {
     const [coursesRes, csRes, schedRes, pacingRes, cal] = await Promise.all([
       supabaseAdmin.from('courses').select('id, name, section, teacher_email, program').order('teacher_email', { ascending: true }),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
-      supabaseAdmin.from('section_schedules').select('course_id, block'),
+      supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor'),
       supabaseAdmin.from('section_pacing').select('course_id, current_lesson_id, current_unit_id, unit_start_date, source'),
       loadRotationCalendar(),
     ])
@@ -66,7 +66,7 @@ export const GET = withAuth(async (_request, ctx) => {
       const program = asProgram(c.program)
       const items = planByProgram.get(program) ?? []
       const pr = pacingByCourse.get(c.id) ?? null
-      const block = (schedByCourse.get(c.id)?.block as Block | null) ?? null
+      const pattern = patternFromRow(schedByCourse.get(c.id), program)
       const unitId = pr?.current_unit_id ?? null
       const unitStart = pr?.unit_start_date ?? null
 
@@ -82,9 +82,9 @@ export const GET = withAuth(async (_request, ctx) => {
       const started = Boolean(unitStart) && today >= new Date(unitStart + 'T00:00:00Z')
       let elapsed = 0
       if (started && unitStart) {
-        elapsed = rotationOn && block
-          ? blockMeetingsElapsed(cal, block, unitStart, today)
-          : elapsedInstructionalDays({ start_date: unitStart, meeting_days: [1, 2, 3, 4, 5], no_school_dates: cal.no_school_dates }, today)
+        elapsed = rotationOn && pattern.blocks.length > 0
+          ? sectionMeetingsElapsed(cal, pattern, unitStart, today)
+          : elapsedInstructionalDays({ start_date: unitStart, meeting_days: [1, 2, 3, 4, 5], no_school_dates: cal.no_school_dates }, today, (d) => isOnWeek(cal, pattern, d))
       }
       const result = ui.length > 0 ? computeFromElapsed(ui, elapsed, started, actual) : computeFromElapsed([], 0, false, actual)
 
@@ -94,7 +94,8 @@ export const GET = withAuth(async (_request, ctx) => {
         section: c.section,
         teacher: c.teacher_email,
         program,
-        block,
+        block: pattern.blocks.join('+') || null,
+        weekPattern: pattern.weekPattern,
         unitName: ui[0]?.unitName ?? null,
         unitStartDate: unitStart,
         unitTotalDays: totalPlanDays(ui),

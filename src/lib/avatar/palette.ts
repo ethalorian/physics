@@ -1,4 +1,4 @@
-import type { SkinTone, HairColor, FaceShape, EyeColor } from './types'
+import type { SkinTone, HairColor, FaceShape, EyeColor, ShirtColor } from './types'
 
 // Face geometry — extents of each face silhouette + a per-shape feature
 // y-offset so the feature group (brows / eyes / nose / mouth / blush /
@@ -67,14 +67,23 @@ export const SKIN: Record<SkinTone, { color: string; shadow: string }> = {
 // Hair: `main` is the visible hair fill, `dark` is used for the eyebrows so
 // brow tone tracks hair tone naturally. White and gray have lighter darks so
 // brows stay visible on pale skin without looking smeared.
+// Natural ladder runs black → blonde; the tail is dyed tones. Each `dark`
+// is ~35% darker than `main` so brows and braid/part lines read on it.
 export const HAIR: Record<HairColor, { main: string; dark: string }> = {
-  black:  { main: '#1F1812', dark: '#0E0907' },
-  brown:  { main: '#5B3A28', dark: '#3A2618' },
-  blonde: { main: '#E0BC5C', dark: '#A78A2E' },
-  red:    { main: '#C24A2A', dark: '#7E2A12' },
-  gray:   { main: '#8E8B86', dark: '#5F5C58' },
-  white:  { main: '#E8E5DE', dark: '#A8A5A0' },
-  teal:   { main: '#3FA59B', dark: '#1E7570' },
+  black:      { main: '#1F1812', dark: '#0E0907' },
+  dark_brown: { main: '#3B2418', dark: '#22130B' },
+  brown:      { main: '#5B3A28', dark: '#3A2618' },
+  auburn:     { main: '#8B3A1E', dark: '#5A2210' },
+  red:        { main: '#C24A2A', dark: '#7E2A12' },
+  sandy:      { main: '#C9A86A', dark: '#8F7238' },
+  blonde:     { main: '#E0BC5C', dark: '#A78A2E' },
+  gray:       { main: '#8E8B86', dark: '#5F5C58' },
+  white:      { main: '#E8E5DE', dark: '#A8A5A0' },
+  teal:       { main: '#3FA59B', dark: '#1E7570' },
+  blue:       { main: '#3F6FD8', dark: '#24449A' },
+  purple:     { main: '#8A4FC7', dark: '#5A2E8C' },
+  pink:       { main: '#E77CB1', dark: '#B0457F' },
+  green:      { main: '#4FA35C', dark: '#2E6E38' },
 }
 
 // Eye colour. For the dot-style eye shapes (small/big/narrow) this fills the
@@ -91,5 +100,23 @@ export const EYE: Record<EyeColor, string> = {
   violet: '#6B4FA0',
 }
 
-// Default shirt tone — overridden when a body slot item is equipped.
-export const DEFAULT_SHIRT = '#7B6BCB'  // app's lavender primary
+// Shirt colour (trait). 'lavender' is the app primary and the legacy default,
+// so avatars saved before the trait existed render unchanged. All tones are
+// mid-value so a chest pin (gold/silver) reads on every one; no white/cream
+// because the shirt has no outline and would vanish on a light card.
+export const SHIRT: Record<ShirtColor, string> = {
+  lavender: '#7B6BCB',
+  red:      '#D94848',
+  orange:   '#E8823A',
+  yellow:   '#E2BE3A',
+  green:    '#4FA35C',
+  teal:     '#3FA59B',
+  blue:     '#3F6FD8',
+  navy:     '#2A3F7A',
+  purple:   '#8A4FC7',
+  pink:     '#E77CB1',
+  charcoal: '#33333A',
+}
+
+// Default shirt tone — kept for callers that predate the shirt_color trait.
+export const DEFAULT_SHIRT = SHIRT.lavender

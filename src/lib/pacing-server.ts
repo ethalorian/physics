@@ -1,19 +1,20 @@
 import { supabaseAdmin } from '@/lib/supabase'
 import { buildPlan, PlanItem, UnitRow, LessonRow } from '@/lib/pacing'
-import { RotationCalendar } from '@/lib/rotation'
+import { RotationCalendar, isBlock, type MeetingPattern, type Block } from '@/lib/rotation'
 
 export async function loadRotationCalendar(): Promise<RotationCalendar> {
   const { data } = await supabaseAdmin
     .from('rotation_calendar')
-    .select('anchor_date, anchor_p1_block, no_school_dates, cycle_offset')
+    .select('anchor_date, anchor_p1_block, no_school_dates, cycle_offset, alt_week_anchor')
     .eq('id', 'default')
     .maybeSingle()
-  const row = data as { anchor_date: string | null; anchor_p1_block: string | null; no_school_dates: string[] | null; cycle_offset: number | null } | null
+  const row = data as { anchor_date: string | null; anchor_p1_block: string | null; no_school_dates: string[] | null; cycle_offset: number | null; alt_week_anchor: string | null } | null
   return {
     anchor_date: row?.anchor_date ?? null,
     anchor_p1_block: row?.anchor_p1_block ?? null,
     no_school_dates: row?.no_school_dates ?? [],
     cycle_offset: row?.cycle_offset ?? 0,
+    alt_week_anchor: row?.alt_week_anchor ?? null,
   }
 }
 
@@ -24,9 +25,8 @@ export function isRotationConfigured(cal: RotationCalendar): boolean {
 // Server-side data loaders for pacing. Kept out of pacing.ts so that module stays
 // pure/testable.
 
-export type Program = 'physics' | 'trades'
-export const PROGRAMS: Program[] = ['physics', 'trades']
-export function asProgram(p: string | null | undefined): Program { return p === 'trades' ? 'trades' : 'physics' }
+import { asProgram, type Program } from '@/lib/program'
+export { asProgram, PROGRAMS, type Program } from '@/lib/program'
 
 export interface UnitMeta extends UnitRow { default_start_date: string | null }
 
@@ -77,4 +77,22 @@ export async function autoSuggestItem(items: PlanItem[], gids: string[]): Promis
   const { data: br } = await supabaseAdmin.from('block_responses').select('lesson_id').in('user_id', gids)
   const active = new Set(((br ?? []) as { lesson_id: string }[]).map((r) => r.lesson_id))
   return furthestActiveItem(items, active)
+}
+
+// A section's meeting pattern from its section_schedules row. `blocks` is the
+// source of truth; the legacy single `block` column is honoured if blocks is empty.
+// Trades units are written as sessions (one per school day); physics lessons
+// are one per block-period. So the counting mode follows the program.
+export function patternFromRow(
+  row: { blocks?: string[] | null; block?: string | null; week_pattern?: string | null; on_week_anchor?: string | null } | null | undefined,
+  program: Program = 'physics',
+): MeetingPattern {
+  const fromArray = (row?.blocks ?? []).filter(isBlock)
+  const blocks: Block[] = fromArray.length > 0 ? fromArray : (isBlock(row?.block) ? [row!.block as Block] : [])
+  return {
+    blocks,
+    weekPattern: row?.week_pattern === 'alternate' ? 'alternate' : 'every',
+    onWeekAnchor: row?.on_week_anchor ?? null,
+    countMode: program === 'trades' ? 'sessions' : 'meetings',
+  }
 }

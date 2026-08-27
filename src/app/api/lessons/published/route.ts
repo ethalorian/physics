@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getStudentLessonWindowStatuses, type LessonWindowStatus } from '@/lib/lesson-windows'
 import { withAuth } from '@/lib/api-auth'
+import { getStudentProgram, getProgramUnitIds } from '@/lib/program'
 
 /**
  * GET /api/lessons/published
@@ -29,9 +30,13 @@ export const GET = withAuth(async (request, ctx) => {
       .from('lessons')
       .select('*')
 
-    // Students only see published lessons
+    // Students only see published lessons — and only their class's curriculum
+    // (physics vs trades). Staff browse everything.
     if (!isAdmin) {
       query = query.eq('published', true)
+      const program = await getStudentProgram(userId)
+      const unitIds = await getProgramUnitIds(program)
+      query = query.in('unit_id', unitIds.length > 0 ? unitIds : ['__none__'])
     }
 
     // Apply filters

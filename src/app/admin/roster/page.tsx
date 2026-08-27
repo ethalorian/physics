@@ -25,7 +25,19 @@ interface ImportedCourse {
   section: string | null
   student_count: number
   track: string | null
+  program?: string | null
 }
+// Class type as the teacher sees it: one choice that sets BOTH the curriculum
+// track (level) and the program (which curriculum). Trades is a curriculum, not
+// a level — there is no honors trades — so it maps to program='trades'.
+type ClassType = 'cpa' | 'honors' | 'trades'
+const CLASS_TYPES: { id: ClassType; label: string; track: 'cpa' | 'honors'; program: 'physics' | 'trades'; hint: string }[] = [
+  { id: 'cpa', label: 'CPA', track: 'cpa', program: 'physics', hint: 'CPA Physics — the asteroid curriculum' },
+  { id: 'honors', label: 'Honors', track: 'honors', program: 'physics', hint: 'Honors Physics — unlocks the honors thread' },
+  { id: 'trades', label: 'Trades', track: 'cpa', program: 'trades', hint: 'Trades Physics — the fieldhouse curriculum (units, targets, mastery tasks)' },
+]
+const classTypeOf = (track: string | null | undefined, program: string | null | undefined): ClassType =>
+  program === 'trades' ? 'trades' : track === 'honors' ? 'honors' : 'cpa'
 interface GridStudent { id: string; name: string; email: string }
 interface RosterStudent { id: string; name: string; first_name: string | null; last_name: string | null }
 interface GridTarget { id: string; statement: string; domain: string }
@@ -67,8 +79,7 @@ export default function RosterPage() {
   const [unitId, setUnitId] = useState('unit-1')
   const [importing, setImporting] = useState<string | null>(null)
   // Class type chosen at import, per Google Classroom course (defaults to CPA).
-  // Honors unlocks the honors thread for that class.
-  const [trackFor, setTrackFor] = useState<Record<string, 'cpa' | 'honors'>>({})
+  const [typeFor, setTypeFor] = useState<Record<string, ClassType>>({})
   const [status, setStatus] = useState<string | null>(null)
   // Name editor (fixes how a student's name splits for the Aspen sort)
   const [roster, setRoster] = useState<RosterStudent[]>([])
@@ -159,23 +170,27 @@ export default function RosterPage() {
     )
   }
 
-  // The track shown/used for a course: a fresh local choice wins, else the saved
-  // track on the imported course, else CPA.
-  const trackOf = (gid: string): 'cpa' | 'honors' =>
-    trackFor[gid] ?? ((imported.find((i) => i.google_course_id === gid)?.track === 'honors') ? 'honors' : 'cpa')
+  // The class type shown/used for a course: a fresh local choice wins, else
+  // what's saved on the imported course, else CPA.
+  const typeOf = (gid: string): ClassType => {
+    if (typeFor[gid]) return typeFor[gid]
+    const imp = imported.find((i) => i.google_course_id === gid)
+    return classTypeOf(imp?.track, imp?.program)
+  }
 
   // Change a course's class type. For an already-imported course, persist it
   // immediately (so it survives a reload); otherwise hold it for import time.
-  const setCourseTrack = async (gid: string, t: 'cpa' | 'honors') => {
-    setTrackFor((m) => ({ ...m, [gid]: t }))
+  const setCourseType = async (gid: string, t: ClassType) => {
+    setTypeFor((m) => ({ ...m, [gid]: t }))
+    const def = CLASS_TYPES.find((x) => x.id === t)!
     const imp = imported.find((i) => i.google_course_id === gid)
     if (!imp) return
-    setImported((list) => list.map((i) => (i.id === imp.id ? { ...i, track: t } : i)))
+    setImported((list) => list.map((i) => (i.id === imp.id ? { ...i, track: def.track, program: def.program } : i)))
     try {
       await fetch('/api/teacher/courses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_id: imp.id, track: t }),
+        body: JSON.stringify({ course_id: imp.id, track: def.track, program: def.program }),
       })
     } catch { /* UI already updated; will reconcile on next load */ }
   }
@@ -185,11 +200,11 @@ export default function RosterPage() {
     setImporting(course.id)
     setStatus(null)
     try {
-      const track = trackOf(course.id)
+      const def = CLASS_TYPES.find((x) => x.id === typeOf(course.id))!
       const res = await fetch('/api/roster/import', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ courseId: course.id, accessToken: session.accessToken, track }),
+        body: JSON.stringify({ courseId: course.id, accessToken: session.accessToken, track: def.track, program: def.program }),
       })
       const d = await res.json()
       if (!res.ok) throw new Error(d?.details || d?.error || 'Import failed')
@@ -284,19 +299,20 @@ export default function RosterPage() {
                       {c.section && <div className="text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{c.section}</div>}
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      {/* Class type, chosen at import. Honors unlocks the honors thread for this class. */}
-                      <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Choose the class type. Honors unlocks the honors thread for this class.">
-                        {(['cpa', 'honors'] as const).map((t) => {
-                          const on = trackOf(c.id) === t
+                      {/* Class type, chosen at import: CPA / Honors (physics) or Trades (its own curriculum). */}
+                      <div className="flex rounded-md border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Choose the class type. CPA and Honors follow the physics curriculum; Trades follows the trades curriculum.">
+                        {CLASS_TYPES.map((t) => {
+                          const on = typeOf(c.id) === t.id
                           return (
                             <button
-                              key={t}
+                              key={t.id}
                               type="button"
-                              onClick={() => setCourseTrack(c.id, t)}
+                              onClick={() => setCourseType(c.id, t.id)}
+                              title={t.hint}
                               className="text-[11px] font-semibold px-2 py-1"
-                              style={{ background: on ? 'var(--primary)' : 'var(--card)', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}
+                              style={{ background: on ? (t.id === 'trades' ? 'var(--reward)' : 'var(--primary)') : 'var(--card)', color: on ? (t.id === 'trades' ? 'var(--reward-foreground)' : 'var(--primary-foreground)') : 'var(--muted-foreground)' }}
                             >
-                              {t === 'cpa' ? 'CPA' : 'Honors'}
+                              {t.label}
                             </button>
                           )
                         })}

@@ -9,12 +9,15 @@ import unit5Cpa from '@/data/unit5-cpa-lesson-plans.json'
 import unit6Cpa from '@/data/unit6-cpa-lesson-plans.json'
 import unit7Cpa from '@/data/unit7-cpa-lesson-plans.json'
 import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
+import tradesUnit1 from '@/data/trades-unit1-lesson-plans.json'
+import tradesUnit2 from '@/data/trades-unit2-lesson-plans.json'
 import { honorsDaysFor } from '@/lib/honors-extension-export'
 
-// Teacher day-by-day lesson plans, READ-ONLY, scoped to the teacher's selected
-// class type (curriculum track). Plans are versioned curriculum data in the
-// repo (src/data/*-lesson-plans.json), served here by track + unit. Only the
-// CPA Unit 1 plans exist today; other tracks/units return empty until authored.
+// Teacher day-by-day lesson plans, READ-ONLY, scoped to the class types the
+// teacher teaches. Plans are versioned curriculum data in the repo
+// (src/data/*-lesson-plans.json), keyed by CLASS TYPE + unit: 'cpa' / 'honors'
+// are physics tracks; 'trades' is the Trades Physics program (one plan per
+// SESSION, 15 per unit, generated from the MVP lesson-plan documents).
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
 
@@ -30,6 +33,10 @@ const PLANS: Record<string, Record<string, DayPlan[]>> = {
     'unit-7': unit7Cpa as DayPlan[],
     'unit-8': unit8Cpa as DayPlan[],
   },
+  trades: {
+    'trades-1': tradesUnit1 as DayPlan[],
+    'trades-2': tradesUnit2 as DayPlan[],
+  },
 }
 
 export const GET = withAuth(async (request, ctx) => {
@@ -38,13 +45,15 @@ export const GET = withAuth(async (request, ctx) => {
     const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
 
     // Class types the teacher actually teaches = the distinct tracks across
-    // their courses. Admins (no courses) see every available track.
+    // their physics courses, plus 'trades' if any course follows that program.
+    // Admins (no courses) see every available class type.
     let tracks: string[]
     if (ctx.role === 'admin') {
       tracks = Object.keys(PLANS)
     } else {
-      const { data } = await supabaseAdmin.from('courses').select('track').eq('teacher_email', ctx.scopeEmail)
-      tracks = [...new Set(((data ?? []) as { track: string | null }[]).map((c) => c.track).filter((t): t is string => Boolean(t)))]
+      const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', ctx.scopeEmail)
+      const rows = (data ?? []) as { track: string | null; program: string | null }[]
+      tracks = [...new Set(rows.map((c) => (c.program === 'trades' ? 'trades' : c.track)).filter((t): t is string => Boolean(t)))]
     }
 
     // Union the plans across the teacher's tracks (only CPA exists today).

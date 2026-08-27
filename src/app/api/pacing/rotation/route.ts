@@ -7,7 +7,7 @@ import { ROTATING_BLOCKS } from '@/lib/rotation'
 // The school-wide rotation calendar (singleton). Any staff can read it; only the
 // admin can set the anchor + no-school dates.
 // GET /api/pacing/rotation
-// PUT /api/pacing/rotation  { anchor_date, anchor_p1_block, no_school_dates }
+// PUT /api/pacing/rotation  { anchor_date, anchor_p1_block, no_school_dates, cycle_offset, alt_week_anchor }
 
 export const GET = withRole(['admin', 'teacher'], async () => {
     return NextResponse.json({ calendar: await loadRotationCalendar() })
@@ -16,7 +16,7 @@ export const GET = withRole(['admin', 'teacher'], async () => {
 export const PUT = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin') return NextResponse.json({ error: 'Only the admin can set the rotation calendar' }, { status: 403 })
 
-    const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[]; cycle_offset?: number }
+    const body = (await request.json()) as { anchor_date?: string | null; anchor_p1_block?: string | null; no_school_dates?: string[]; cycle_offset?: number; alt_week_anchor?: string | null }
     const p1 = body.anchor_p1_block ? body.anchor_p1_block.toUpperCase() : null
     if (p1 && !ROTATING_BLOCKS.includes(p1 as typeof ROTATING_BLOCKS[number])) {
       return NextResponse.json({ error: 'Period-1 block must be A–F (G is fixed at period 2)' }, { status: 400 })
@@ -28,6 +28,8 @@ export const PUT = withAuth(async (request, ctx) => {
       anchor_p1_block: p1,
       no_school_dates: Array.isArray(body.no_school_dates) ? body.no_school_dates : [],
       cycle_offset: Number.isInteger(body.cycle_offset) ? body.cycle_offset : 0,
+      // MVP alternating weeks: any date inside an on-week (school-wide).
+      alt_week_anchor: body.alt_week_anchor || null,
       updated_at: new Date().toISOString(),
     }
     const { error } = await supabaseAdmin.from('rotation_calendar').upsert(row, { onConflict: 'id' })

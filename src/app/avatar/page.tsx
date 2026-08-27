@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles, Heart, Star, Trophy } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, KNOB_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
-import { SKIN, HAIR, EYE } from '@/lib/avatar/palette'
+import { SKIN, HAIR, EYE, SHIRT } from '@/lib/avatar/palette'
 import type { CatalogState } from '@/app/api/avatar/route'
 
 type CatalogEntry = AvatarItem & { state: CatalogState; unlock_progress?: number }
@@ -240,14 +240,14 @@ export default function AvatarPage() {
               </div>
               {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).filter((k) => !KNOB_TRAITS.includes(k)).map((key) => {
                 const value = (previewTraits[key] as string) ?? DEFAULT_TRAITS[key]
-                if (key === 'skin' || key === 'hair_color' || key === 'eye_color') {
+                if (key === 'skin' || key === 'hair_color' || key === 'eye_color' || key === 'shirt_color') {
                   return (
                     <SwatchRow
                       key={key}
                       label={TRAIT_LABELS[key]}
                       options={TRAIT_OPTIONS[key]}
                       value={value}
-                      colorFor={(opt) => (key === 'skin' ? SKIN[opt as keyof typeof SKIN].color : key === 'hair_color' ? HAIR[opt as keyof typeof HAIR].main : EYE[opt as keyof typeof EYE])}
+                      colorFor={(opt) => (key === 'skin' ? SKIN[opt as keyof typeof SKIN].color : key === 'hair_color' ? HAIR[opt as keyof typeof HAIR].main : key === 'shirt_color' ? SHIRT[opt as keyof typeof SHIRT] : EYE[opt as keyof typeof EYE])}
                       onChange={(v) => saveTrait(key, v)}
                     />
                   )
@@ -356,7 +356,8 @@ function WizardPanel({ previewTraits, equipped, catalog, onChoose, onFinish, ini
               className="rounded-xl border p-1.5 flex flex-col items-center transition-transform hover:-translate-y-0.5"
               style={{ borderColor: selected ? 'var(--primary)' : 'var(--border)', background: selected ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', cursor: 'pointer' }}>
               <div className="relative">
-                <Avatar traits={tileTraits} equipped={equipped} items={catalog} size={70} crop="head" />
+                {/* The shirt sits below the head crop, so its step previews head + shoulders. */}
+                <Avatar traits={tileTraits} equipped={equipped} items={catalog} size={70} crop={key === 'shirt_color' ? 'medium' : 'head'} />
                 {selected && <span className="absolute -top-1 -right-1 grid place-items-center rounded-full" style={{ width: 18, height: 18, background: 'var(--primary)', color: 'var(--primary-foreground)' }}><Check size={11} /></span>}
               </div>
               <span className="text-[11px] mt-1 capitalize" style={{ color: selected ? 'var(--primary)' : 'var(--foreground)' }}>{o.replace('_', ' ')}</span>

@@ -110,7 +110,8 @@ function utc(dateStr: string): Date { return new Date(dateStr + 'T00:00:00Z') }
 
 // Instructional days that have occurred from start_date through `today` (today
 // counts if it's a meeting day). Excludes non-meeting weekdays and no-school dates.
-export function elapsedInstructionalDays(sch: Schedule, today: Date): number {
+// `dayOn` lets a caller exclude whole days (e.g. an alternating section's off-weeks).
+export function elapsedInstructionalDays(sch: Schedule, today: Date, dayOn?: (d: Date) => boolean): number {
   if (!sch.start_date) return 0
   const start = utc(sch.start_date)
   if (today < start) return 0
@@ -120,7 +121,7 @@ export function elapsedInstructionalDays(sch: Schedule, today: Date): number {
   const d = new Date(start)
   while (d <= today) {
     const iso = d.toISOString().slice(0, 10)
-    if (meet.has(d.getUTCDay()) && !noSchool.has(iso)) count++
+    if (meet.has(d.getUTCDay()) && !noSchool.has(iso) && (!dayOn || dayOn(d))) count++
     d.setUTCDate(d.getUTCDate() + 1)
   }
   return count

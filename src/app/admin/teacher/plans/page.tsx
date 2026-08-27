@@ -7,7 +7,7 @@ import { deckForDay } from '@/data/lesson-decks'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
-const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics' }
+const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics', trades: 'Trades Physics' }
 const UNIT_LABEL: Record<string, string> = {
   'unit-1': 'Unit 1 · Motion & Forces',
   'unit-2': 'Unit 2 · Gravitation & Fields',
@@ -17,6 +17,8 @@ const UNIT_LABEL: Record<string, string> = {
   'unit-6': 'Unit 6 · Waves, Sound & Light',
   'unit-7': 'Unit 7 · Electricity & Magnetism',
   'unit-8': 'Unit 8 · Car Project',
+  'trades-1': 'Trades 1 · Length & Tolerance — The Fieldhouse Wall',
+  'trades-2': 'Trades 2 · Plumb, Level, Square, Slope',
 }
 // Units that have a student packet file in /public/student-packets.
 const PACKET_UNITS = new Set(['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7'])
@@ -144,7 +146,7 @@ export default function TeacherPlansPage() {
                     color: 'var(--foreground)', cursor: 'pointer',
                   }}
                 >
-                  <span className="font-semibold">Day {d.day}</span>
+                  <span className="font-semibold">{unit.startsWith('trades-') ? `Session ${Math.floor((d.day - 1) / 5) + 1}.${((d.day - 1) % 5) + 1}` : `Day ${d.day}`}</span>
                   <span className="block text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{d.title.replace(/^Day \d+ ·\s*/, '')}</span>
                 </button>
               )
