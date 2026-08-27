@@ -10,7 +10,6 @@ import type { AvatarItem, AvatarTraits, EquippedItems } from '@/lib/avatar/types
 // enough to call from every signed-in page.
 
 export interface MeBundle {
-  use_custom_avatar: boolean
   alias: string | null
   setup_completed: boolean
   traits: AvatarTraits | null
@@ -24,7 +23,7 @@ export const GET = withAuth(async (request, ctx) => {
     const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
       supabaseAdmin
         .from('student_avatars')
-        .select('traits, equipped, setup_completed, use_custom_avatar')
+        .select('traits, equipped, setup_completed')
         .eq('user_id', userId)
         .maybeSingle(),
       supabaseAdmin
@@ -48,7 +47,6 @@ export const GET = withAuth(async (request, ctx) => {
     }
 
     const bundle: MeBundle = {
-      use_custom_avatar: !!avatarRow?.use_custom_avatar,
       alias: (studentRow as { alias?: string | null } | null)?.alias ?? null,
       setup_completed: !!avatarRow?.setup_completed,
       traits,

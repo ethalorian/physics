@@ -5,8 +5,8 @@ import { supabase, supabaseAdmin } from '@/lib/supabase'
 /**
  * GET /api/courses - Fetch courses for the current teacher/admin
  *
- * Returns Google Classroom courses that have been imported
- * or mock data for development/testing
+ * Returns courses from the database. If there are none, the list is empty —
+ * there is intentionally no mock/demo fallback.
  */
 export const GET = withAuth(async (request, ctx) => {
     const userRole = ctx.role
@@ -18,11 +18,9 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: 'Invalid user role' }, { status: 403 })
     }
 
-    // Try to fetch from database first.
     // Staff read with the service-role client: this route already enforces role
     // server-side, and the courses table has RLS keyed to Supabase auth (which
-    // we don't use — auth is NextAuth), so the anon client returns nothing and
-    // would silently fall back to mock data.
+    // we don't use — auth is NextAuth), so the anon client would return nothing.
     const dbClient = userRole === 'student' ? supabase : supabaseAdmin
     try {
       let query = dbClient
@@ -58,43 +56,39 @@ export const GET = withAuth(async (request, ctx) => {
         throw error
       }
 
-      if (courses && courses.length > 0) {
-        // courses.student_count is unreliable (the count RPC is a no-op), so for
-        // staff compute live enrollment counts from course_students.
-        const countByCourse = new Map<string, number>()
-        if (userRole !== 'student') {
-          const { data: cs } = await supabaseAdmin
-            .from('course_students')
-            .select('course_id')
-            .in('course_id', courses.map((c) => c.id))
-          for (const row of (cs ?? []) as { course_id: string }[]) {
-            countByCourse.set(row.course_id, (countByCourse.get(row.course_id) ?? 0) + 1)
-          }
+      // courses.student_count is unreliable (the count RPC is a no-op), so for
+      // staff compute live enrollment counts from course_students.
+      const countByCourse = new Map<string, number>()
+      if (userRole !== 'student' && courses && courses.length > 0) {
+        const { data: cs } = await supabaseAdmin
+          .from('course_students')
+          .select('course_id')
+          .in('course_id', courses.map((c) => c.id))
+        for (const row of (cs ?? []) as { course_id: string }[]) {
+          countByCourse.set(row.course_id, (countByCourse.get(row.course_id) ?? 0) + 1)
         }
-
-        // Transform to consistent format
-        const formattedCourses = courses.map(course => ({
-          id: course.id || course.google_course_id,
-          google_course_id: course.google_course_id,
-          name: course.name,
-          section: course.section,
-          description: course.description,
-          student_count: countByCourse.get(course.id) ?? course.student_count ?? 0,
-          teacher_email: course.teacher_email,
-          track: course.track ?? null,
-          created_at: course.created_at,
-          updated_at: course.updated_at
-        }))
-
-        return NextResponse.json({ courses: formattedCourses })
       }
-    } catch {
-      console.log('Database not available or no courses found, using mock data')
-    }
 
-    // Fallback to mock data for development/demo
-    const mockCourses = getMockCourses(userRole)
-    return NextResponse.json({ courses: mockCourses })
+      // Transform to consistent format. An empty table yields an empty list.
+      const formattedCourses = (courses ?? []).map(course => ({
+        id: course.id || course.google_course_id,
+        google_course_id: course.google_course_id,
+        name: course.name,
+        section: course.section,
+        description: course.description,
+        student_count: countByCourse.get(course.id) ?? course.student_count ?? 0,
+        teacher_email: course.teacher_email,
+        track: course.track ?? null,
+        created_at: course.created_at,
+        updated_at: course.updated_at
+      }))
+
+      return NextResponse.json({ courses: formattedCourses })
+    } catch (err) {
+      // A real database failure is an error, not "no classes".
+      console.error('Failed to fetch courses:', err)
+      return NextResponse.json({ error: 'Failed to fetch courses' }, { status: 500 })
+    }
 })
 
 /**
@@ -148,72 +142,6 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
     return NextResponse.json({ course }, { status: 201 })
 })
-
-/**
- * Mock data for development/testing
- */
-function getMockCourses(role: string | null) {
-  const allMockCourses = [
-    {
-      id: 'physics-101-p1',
-      google_course_id: null,
-      name: 'Physics 101',
-      section: 'Period 1',
-      description: 'Introduction to Physics - Morning class',
-      student_count: 25,
-      teacher_email: 'teacher@school.edu',
-      created_at: new Date('2024-09-01').toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'physics-101-p2',
-      google_course_id: null,
-      name: 'Physics 101',
-      section: 'Period 2',
-      description: 'Introduction to Physics - Afternoon class',
-      student_count: 28,
-      teacher_email: 'teacher@school.edu',
-      created_at: new Date('2024-09-01').toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'ap-physics',
-      google_course_id: null,
-      name: 'AP Physics',
-      section: null,
-      description: 'Advanced Placement Physics C: Mechanics',
-      student_count: 18,
-      teacher_email: 'teacher@school.edu',
-      created_at: new Date('2024-09-01').toISOString(),
-      updated_at: new Date().toISOString()
-    },
-    {
-      id: 'physics-honors',
-      google_course_id: null,
-      name: 'Honors Physics',
-      section: null,
-      description: 'Accelerated physics course for advanced students',
-      student_count: 22,
-      teacher_email: 'teacher@school.edu',
-      created_at: new Date('2024-09-01').toISOString(),
-      updated_at: new Date().toISOString()
-    }
-  ]
-
-  // Filter based on role
-  if (role === 'student') {
-    // Students see first two courses
-    return allMockCourses.slice(0, 2)
-  } else if (role === 'teacher') {
-    // Teachers see all their courses
-    return allMockCourses.filter(c => c.teacher_email === 'teacher@school.edu')
-  } else if (role === 'admin') {
-    // Admins see everything
-    return allMockCourses
-  }
-
-  return []
-}
 
 /**
  * PUT /api/courses/:id - Update a course

@@ -25,16 +25,16 @@ export const GET = withAuth(async (request, ctx) => {
     // doesn't change the user's own avatar economics.
     const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
 
-    // 1) Avatar row (traits + equipped) + alias (separate column on students).
+    // 1) Avatar row (traits + equipped) + alias/name (columns on students).
     const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
       supabaseAdmin
         .from('student_avatars')
-        .select('traits, equipped, setup_completed, use_custom_avatar')
+        .select('traits, equipped, setup_completed')
         .eq('user_id', userId)
         .maybeSingle(),
       supabaseAdmin
         .from('students')
-        .select('alias')
+        .select('alias, name')
         .eq('id', userId)
         .maybeSingle(),
     ])
@@ -42,8 +42,9 @@ export const GET = withAuth(async (request, ctx) => {
     const traits = avatarRow?.setup_completed ? (avatarRow.traits as Record<string, string>) : null
     const equipped = (avatarRow?.equipped ?? {}) as EquippedItems
     const setup_completed = !!avatarRow?.setup_completed
-    const use_custom_avatar = !!avatarRow?.use_custom_avatar
     const alias = (studentRow as { alias?: string | null } | null)?.alias ?? null
+    // Roster (Google) name — what the leaderboard shows when no alias is set.
+    const name = (studentRow as { name?: string | null } | null)?.name ?? null
 
     // 2) Catalog + ownership in parallel. Skip XP balance for staff — they
     //    don't have an economy and items are free for them.
@@ -107,7 +108,7 @@ export const GET = withAuth(async (request, ctx) => {
       lifetimeEarned: balance.lifetimeEarned,
       isStaff,
       alias,
-      use_custom_avatar,
+      name,
     })
 })
 

@@ -52,21 +52,21 @@ export const GET = withAuth(async (request, ctx) => {
     // (It equals the work-table user_id now, but we keep the map for the
     // student_row_id field below.)
     const studentRowIdByUser = new Map<string, string>()
-    // Carry use_custom_avatar + traits + equipped per user for the client.
-    const avatarByUser = new Map<string, { use_custom_avatar: boolean; traits: Record<string, string> | null; equipped: Record<string, string> }>()
+    // Carry has_mii + traits + equipped per user for the client. A finished
+    // Mii IS the student's site-wide avatar — there is no separate opt-in.
+    const avatarByUser = new Map<string, { has_mii: boolean; traits: Record<string, string> | null; equipped: Record<string, string> }>()
 
     if (userIds.length > 0) {
       const { data: students } = await supabaseAdmin
         .from('students')
-        .select('id, name, alias, email, profile_image')
+        .select('id, name, alias, email')
         .in('id', userIds)
 
-      students?.forEach((student: { id: string; name: string | null; alias: string | null; email: string | null; profile_image: string | null }) => {
+      students?.forEach((student: { id: string; name: string | null; alias: string | null; email: string | null }) => {
         const userData = userDataMap.get(student.id)
         if (userData) {
           // Prefer alias for the peer-facing leaderboard; fall back to real name.
           userData.name = student.alias || student.name || undefined
-          userData.image = student.profile_image
           studentRowIdByUser.set(student.id, student.id)
         }
       })
@@ -74,11 +74,11 @@ export const GET = withAuth(async (request, ctx) => {
       // Avatar bundles keyed by students.id (student_avatars.user_id).
       const { data: avs } = await supabaseAdmin
         .from('student_avatars')
-        .select('user_id, traits, equipped, use_custom_avatar, setup_completed')
+        .select('user_id, traits, equipped, setup_completed')
         .in('user_id', userIds)
-      for (const a of (avs ?? []) as { user_id: string; traits: Record<string, string> | null; equipped: Record<string, string> | null; use_custom_avatar: boolean; setup_completed: boolean }[]) {
+      for (const a of (avs ?? []) as { user_id: string; traits: Record<string, string> | null; equipped: Record<string, string> | null; setup_completed: boolean }[]) {
         avatarByUser.set(a.user_id, {
-          use_custom_avatar: !!a.use_custom_avatar && !!a.setup_completed,
+          has_mii: !!a.setup_completed,
           traits: a.traits ?? null,
           equipped: (a.equipped ?? {}) as Record<string, string>,
         })
@@ -126,7 +126,7 @@ export const GET = withAuth(async (request, ctx) => {
           streak_total: userId === ctx.userId ? meStreak.total : 0,
           activities: data.activities,
           is_current_user: userId === ctx.userId,
-          use_custom_avatar: av?.use_custom_avatar ?? false,
+          has_mii: av?.has_mii ?? false,
           avatar_traits: av?.traits ?? null,
           avatar_equipped: av?.equipped ?? {},
           avatar_items: equippedItems,

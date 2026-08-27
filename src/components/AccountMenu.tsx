@@ -81,7 +81,7 @@ export default function AccountMenu() {
             variant="ghost"
             className={`relative h-9 w-9 sm:h-10 sm:w-10 rounded-full p-0 overflow-hidden transition-all duration-200 hover:ring-2 hover:ring-primary/30 hover:ring-offset-2 hover:ring-offset-background${needsSetup ? ' avatar-nudge-glow' : ''}`}
           >
-            {me?.use_custom_avatar && me?.setup_completed ? (
+            {me?.setup_completed && me?.traits ? (
               // Custom Mii — head-only crop so the face fills the bubble.
               // The square viewBox + size=40 matches the sm:h-10 sm:w-10
               // trigger; the rounded-full button clips the corners into a

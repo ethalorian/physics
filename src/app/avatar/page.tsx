@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles, Heart, Star } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { ArrowLeft, Check, ChevronLeft, ChevronRight, Lock, Sparkles, Heart, Star, Trophy } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
 import { TRAIT_LABELS, TRAIT_OPTIONS, DEFAULT_TRAITS, KNOB_TRAITS, type AvatarTraits, type ItemSlot, type EquippedItems, type AvatarItem } from '@/lib/avatar/types'
 import { SKIN, HAIR, EYE } from '@/lib/avatar/palette'
@@ -20,7 +21,7 @@ interface Bundle {
   lifetimeEarned: number
   isStaff?: boolean
   alias: string | null
-  use_custom_avatar: boolean
+  name: string | null
 }
 
 type Tab = 'face' | 'fine' | 'items' | 'gallery'
@@ -42,7 +43,11 @@ interface GalleryAvatar {
 export default function AvatarPage() {
   const [bundle, setBundle] = useState<Bundle | null>(null)
   const [tab, setTab] = useState<Tab>('face')
-  const [mode, setMode] = useState<'wizard' | 'quick'>('quick')
+  // wizard → finish → quick. 'finish' is the identity capstone: see your Mii
+  // the way classmates will, confirm your leaderboard name, save, leave.
+  const [mode, setMode] = useState<'wizard' | 'finish' | 'quick'>('quick')
+  const [wizardStart, setWizardStart] = useState(0)
+  const router = useRouter()
   const [busy, setBusy] = useState<string | null>(null)
   const [flash, setFlash] = useState<string | null>(null)
 
@@ -89,6 +94,23 @@ export default function AvatarPage() {
     // what caused the tab to snap away mid-edit. Still nudge the chrome to
     // refresh its cached Mii so the dropdown avatar tracks the carousel.
     if (typeof window !== 'undefined') window.dispatchEvent(new Event('avatar-updated'))
+  }
+
+  // Leaderboard name. Returns an error string or null. Sending the roster
+  // name (or blank) clears the alias server-side so roster edits propagate.
+  const saveAlias = async (value: string): Promise<string | null> => {
+    const trimmed = value.trim()
+    if (trimmed === (bundle?.alias ?? '')) return null
+    const res = await fetch('/api/avatar/profile', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ alias: trimmed === '' ? null : trimmed }),
+    }).catch(() => null)
+    if (!res?.ok) {
+      const body = await res?.json().catch(() => null) as { error?: string } | null
+      return body?.error ?? 'Could not save'
+    }
+    load()
+    return null
   }
 
   const equip = async (slot: ItemSlot, slug: string | null) => {
@@ -139,6 +161,11 @@ export default function AvatarPage() {
           <div className="flex justify-center">
             <Avatar traits={previewTraits} equipped={bundle.equipped} items={bundle.catalog} size={220} />
           </div>
+          {mode === 'quick' && bundle.setup_completed && (
+            <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--border)' }}>
+              <NameField alias={bundle.alias} rosterName={bundle.name} onSave={saveAlias} compact />
+            </div>
+          )}
           <div className="mt-4 pt-4 text-center" style={{ borderTop: '1px solid var(--border)' }}>
             {bundle.isStaff ? (
               <>
@@ -162,37 +189,55 @@ export default function AvatarPage() {
 
         {/* Right: tabs */}
         <div>
-          {!bundle.setup_completed && mode === 'wizard' && (
+          {mode === 'wizard' && (
             <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>
               <strong>Let&apos;s build your Mii.</strong> Pick one feature at a time — tap a face to try it on, then hit Next.
             </div>
           )}
 
-          <div className="flex items-center gap-2 mb-4">
-            <TabButton active={tab === 'face'} onClick={() => setTab('face')}>{bundle.setup_completed ? 'Edit my face' : 'Build my Mii'}</TabButton>
-            <TabButton active={tab === 'fine'} onClick={() => setTab('fine')} disabled={!bundle.setup_completed}>Fine-tune</TabButton>
-            <TabButton active={tab === 'items'} onClick={() => setTab('items')} disabled={!bundle.setup_completed}>Items</TabButton>
-            <TabButton active={tab === 'gallery'} onClick={() => setTab('gallery')}>Gallery</TabButton>
-          </div>
+          {/* The guided builder and its finish step are a focused flow — no
+              tab bar until the student has saved and (usually) left. */}
+          {mode === 'quick' && (
+            <div className="flex items-center gap-2 mb-4">
+              <TabButton active={tab === 'face'} onClick={() => setTab('face')}>Edit my face</TabButton>
+              <TabButton active={tab === 'fine'} onClick={() => setTab('fine')}>Fine-tune</TabButton>
+              <TabButton active={tab === 'items'} onClick={() => setTab('items')}>Items</TabButton>
+              <TabButton active={tab === 'gallery'} onClick={() => setTab('gallery')}>Gallery</TabButton>
+            </div>
+          )}
 
-          {tab === 'face' && mode === 'wizard' && (
+          {mode === 'wizard' && (
             <WizardPanel
               previewTraits={previewTraits}
               equipped={bundle.equipped}
               catalog={bundle.catalog}
               onChoose={saveTrait}
-              onFinish={() => { setMode('quick'); setTab('fine'); setFlash('Your Mii is ready — now make it yours in Fine-tune!'); setTimeout(() => setFlash(null), 2600) }}
+              onFinish={() => setMode('finish')}
+              initialStep={wizardStart}
             />
           )}
 
-          {tab === 'face' && mode === 'quick' && (
+          {mode === 'finish' && (
+            <FinishPanel
+              previewTraits={previewTraits}
+              equipped={bundle.equipped}
+              catalog={bundle.catalog}
+              alias={bundle.alias}
+              rosterName={bundle.name}
+              xp={bundle.balance}
+              onSave={saveAlias}
+              onBack={() => { setWizardStart(WIZARD_ORDER.length - 1); setMode('wizard') }}
+              onDone={() => router.push('/home')}
+            />
+          )}
+
+          {mode === 'quick' && tab === 'face' && (
             <div className="flex flex-col gap-3">
               <div className="flex justify-end">
-                <button onClick={() => setMode('wizard')} className="inline-flex items-center gap-1.5 text-xs rounded-lg px-3 py-1.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--primary)', cursor: 'pointer' }}>
+                <button onClick={() => { setWizardStart(0); setMode('wizard'); setTab('face') }} className="inline-flex items-center gap-1.5 text-xs rounded-lg px-3 py-1.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--primary)', cursor: 'pointer' }}>
                   <Sparkles size={13} /> Guided builder
                 </button>
               </div>
-              <AccountSection alias={bundle.alias} useCustomAvatar={bundle.use_custom_avatar} onSaved={load} />
               {(Object.keys(TRAIT_OPTIONS) as (keyof AvatarTraits)[]).filter((k) => !KNOB_TRAITS.includes(k)).map((key) => {
                 const value = (previewTraits[key] as string) ?? DEFAULT_TRAITS[key]
                 if (key === 'skin' || key === 'hair_color' || key === 'eye_color') {
@@ -220,7 +265,7 @@ export default function AvatarPage() {
             </div>
           )}
 
-          {tab === 'fine' && (
+          {mode === 'quick' && tab === 'fine' && (
             <div className="flex flex-col gap-3">
               <div className="rounded-xl px-4 py-3 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>
                 <strong>Make it yours.</strong> Small adjustments, big difference — nudge each one and watch the preview.
@@ -237,9 +282,9 @@ export default function AvatarPage() {
             </div>
           )}
 
-          {tab === 'gallery' && <GalleryPanel />}
+          {mode === 'quick' && tab === 'gallery' && <GalleryPanel />}
 
-          {tab === 'items' && (
+          {mode === 'quick' && tab === 'items' && (
             <div className="flex flex-col gap-5">
               {Object.entries(bySlot).map(([slot, items]) => (
                 <div key={slot}>
@@ -275,14 +320,15 @@ export default function AvatarPage() {
 
 // Guided one-trait-at-a-time builder. Each option is a LIVE mini-Mii showing
 // the change, so students "try it on" before committing, then advance.
-function WizardPanel({ previewTraits, equipped, catalog, onChoose, onFinish }: {
+function WizardPanel({ previewTraits, equipped, catalog, onChoose, onFinish, initialStep = 0 }: {
   previewTraits: Partial<AvatarTraits>
   equipped: EquippedItems
   catalog: CatalogEntry[]
   onChoose: (key: keyof AvatarTraits, value: string) => void
   onFinish: () => void
+  initialStep?: number
 }) {
-  const [step, setStep] = useState(0)
+  const [step, setStep] = useState(initialStep)
   const key = WIZARD_ORDER[step]
   const options = TRAIT_OPTIONS[key]
   const current = (previewTraits[key] as string) ?? options[0]
@@ -395,97 +441,148 @@ function AvatarCard({ a, items, onLike, busy }: { a: GalleryAvatar; items: Avata
   )
 }
 
-function AccountSection({ alias, useCustomAvatar, onSaved }: { alias: string | null; useCustomAvatar: boolean; onSaved: () => void }) {
-  const [draft, setDraft] = useState<string>(alias ?? '')
+// One field, two homes: compact under the preview for returning students
+// (saves on blur), and full-size inside the finish step (the parent owns the
+// draft via onDraftChange and saves it from its button). Blank or roster-name
+// → alias cleared.
+function NameField({ alias, rosterName, onSave, compact, onDraftChange }: {
+  alias: string | null
+  rosterName: string | null
+  onSave: (v: string) => Promise<string | null>
+  compact?: boolean
+  onDraftChange?: (v: string) => void
+}) {
+  const [draft, setDraft] = useState<string>(alias ?? rosterName ?? '')
   const [err, setErr] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
-  const [savedFlash, setSavedFlash] = useState(false)
-  // Re-sync the input when the server gives us a fresh alias (e.g. after first load
-  // or after another tab updates it). Without this, the input stays empty even when
-  // the server already has a saved alias.
-  useEffect(() => { setDraft(alias ?? '') }, [alias])
+  const [saved, setSaved] = useState(false)
+  useEffect(() => { setDraft(alias ?? rosterName ?? '') }, [alias, rosterName])
+  useEffect(() => { onDraftChange?.(draft) }, [draft, onDraftChange])
 
-  const saveAlias = async () => {
-    const trimmed = draft.trim()
-    // No change? skip the round-trip.
-    if (trimmed === (alias ?? '')) return
+  const commit = async () => {
+    if (!compact) return
     setSaving(true); setErr(null)
-    const res = await fetch('/api/avatar/profile', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ alias: trimmed === '' ? null : trimmed }),
-    }).catch(() => null)
+    const e = await onSave(draft)
     setSaving(false)
-    if (!res?.ok) {
-      const body = await res?.json().catch(() => null) as { error?: string } | null
-      setErr(body?.error ?? 'Could not save')
-      return
-    }
-    setSavedFlash(true)
-    setTimeout(() => setSavedFlash(false), 1500)
-    onSaved()
+    if (e) { setErr(e); return }
+    setSaved(true); setTimeout(() => setSaved(false), 1500)
   }
+  const usingRoster = draft.trim() === '' || draft.trim().toLowerCase() === (rosterName ?? '').trim().toLowerCase()
 
-  const togglePref = async () => {
-    await fetch('/api/avatar/profile', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ use_custom_avatar: !useCustomAvatar }),
-    }).catch(() => {})
-    onSaved()
+  return (
+    <label className="block">
+      <span className={compact ? 'text-[11px] uppercase tracking-widest font-semibold' : 'text-sm font-semibold'} style={{ color: compact ? 'var(--muted-foreground)' : 'var(--foreground)' }}>
+        {compact ? 'Leaderboard name' : 'Your name on the leaderboard'}
+      </span>
+      <input
+        type="text"
+        value={draft}
+        maxLength={32}
+        placeholder={rosterName ?? 'Your name'}
+        onChange={(e) => { setDraft(e.target.value); setErr(null) }}
+        onBlur={commit}
+        onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
+        className={`mt-1 w-full rounded-md px-3 ${compact ? 'text-sm py-1.5' : 'text-base py-2.5 font-semibold'}`}
+        style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid ' + (err ? 'var(--destructive)' : 'var(--border)') }}
+      />
+      <div className="flex items-center justify-between mt-1 gap-2">
+        <span className="text-[11px]" style={{ color: err ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
+          {err ?? (usingRoster ? 'Using your school name. Type something else to pick a nickname.' : `${draft.trim().length}/32 — letters, digits, spaces, . _ -`)}
+        </span>
+        {compact && (saving || saved) && (
+          <span className="text-[11px] shrink-0" style={{ color: saved ? 'var(--success)' : 'var(--muted-foreground)' }}>{saving ? 'Saving…' : 'Saved'}</span>
+        )}
+      </div>
+    </label>
+  )
+}
+
+// Step 13 — the identity capstone. Shows the Mii exactly where classmates will
+// meet it (nav bubble, leaderboard row), confirms the name, then one button
+// saves and leaves. Ends on identity, not sliders.
+function FinishPanel({ previewTraits, equipped, catalog, alias, rosterName, xp, onSave, onBack, onDone }: {
+  previewTraits: Partial<AvatarTraits>
+  equipped: EquippedItems
+  catalog: CatalogEntry[]
+  alias: string | null
+  rosterName: string | null
+  xp: number
+  onSave: (v: string) => Promise<string | null>
+  onBack: () => void
+  onDone: () => void
+}) {
+  const [draft, setDraft] = useState<string>(alias ?? rosterName ?? '')
+  const onDraftChange = useCallback((v: string) => setDraft(v), [])
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+  // The mock leaderboard row tracks the field as they type.
+  const liveName = draft.trim() || rosterName || 'You'
+
+  const finish = async () => {
+    setSaving(true); setErr(null)
+    const e = await onSave(draft)
+    setSaving(false)
+    if (e) { setErr(e); return }
+    onDone()
   }
 
   return (
-    <div
-      className="rounded-xl border p-3 mb-1"
-      style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
-    >
-      <div className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Account</div>
+    <div>
+      <div className="flex items-center gap-1 mb-3">
+        {WIZARD_ORDER.map((k) => <span key={k} style={{ height: 6, flex: 1, borderRadius: 3, background: 'var(--primary)' }} />)}
+        <span style={{ height: 6, flex: 1, borderRadius: 3, background: 'var(--primary)' }} />
+      </div>
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Last step</span>
+        <span className="text-sm font-semibold">This is you</span>
+      </div>
 
-      {/* Alias */}
-      <label className="block mb-2">
-        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Leaderboard name (shown to classmates only)</span>
-        <input
-          type="text"
-          value={draft}
-          maxLength={32}
-          placeholder="Pick a fun name"
-          onChange={(e) => setDraft(e.target.value)}
-          onBlur={saveAlias}
-          onKeyDown={(e) => { if (e.key === 'Enter') (e.currentTarget as HTMLInputElement).blur() }}
-          className="mt-1 w-full text-sm rounded-md px-2 py-1.5"
-          style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}
-        />
-        <div className="flex items-center justify-between mt-1">
-          <span className="text-[11px]" style={{ color: err ? 'var(--destructive)' : 'var(--muted-foreground)' }}>
-            {err ?? `${draft.length}/32 — letters, digits, spaces, . _ -`}
-          </span>
-          {(saving || savedFlash) && (
-            <span className="text-[11px]" style={{ color: savedFlash ? 'var(--success)' : 'var(--muted-foreground)' }}>
-              {saving ? 'Saving…' : 'Saved'}
-            </span>
-          )}
+      <div className="rounded-xl px-4 py-3 mb-4 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>
+        <strong>Your Mii is your face on the whole site.</strong> Here&apos;s how classmates will see you — in the corner of every page, and on the leaderboard.
+      </div>
+
+      {/* Nav bubble + leaderboard row, rendered with the real Avatar component at real sizes */}
+      <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: 'auto 1fr' }}>
+        <div className="rounded-xl border p-3 flex flex-col items-center gap-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="rounded-full overflow-hidden" style={{ width: 40, height: 40, background: 'var(--secondary)' }}>
+            <Avatar traits={previewTraits} equipped={equipped} items={catalog} size={40} crop="head" />
+          </div>
+          <span className="text-[10px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Every page</span>
         </div>
-      </label>
+        <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+          <div className="text-[10px] uppercase tracking-widest mb-2 inline-flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}><Trophy size={11} /> Leaderboard</div>
+          <div className="flex items-center gap-3 rounded-lg px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 6%, var(--card))', border: '1px solid color-mix(in oklch, var(--primary) 25%, var(--border))' }}>
+            <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--muted-foreground)', minWidth: 22 }}>#?</span>
+            <div className="rounded-full overflow-hidden shrink-0" style={{ width: 40, height: 40, background: 'var(--secondary)' }}>
+              <Avatar traits={previewTraits} equipped={equipped} items={catalog} size={40} crop="head" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="font-semibold truncate" style={{ color: 'var(--primary)' }}>{liveName}</div>
+              <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>0 games · 0 lessons</div>
+            </div>
+            <div className="text-sm font-bold tabular-nums" style={{ color: 'var(--reward-foreground)' }}>{xp.toLocaleString()} XP</div>
+          </div>
+        </div>
+      </div>
 
-      {/* Avatar preference */}
-      <button
-        type="button"
-        onClick={togglePref}
-        className="w-full flex items-center justify-between rounded-md px-2 py-1.5 mt-2"
-        style={{ background: 'transparent', border: '1px solid var(--border)', cursor: 'pointer' }}
-      >
-        <span className="text-xs text-left" style={{ color: 'var(--foreground)' }}>
-          Show my Mii instead of my Google photo
-        </span>
-        <span
-          className="text-[11px] font-semibold rounded-full px-2 py-0.5"
-          style={{
-            background: useCustomAvatar ? 'var(--success)' : 'var(--secondary)',
-            color: useCustomAvatar ? 'var(--card)' : 'var(--muted-foreground)',
-          }}
-        >
-          {useCustomAvatar ? 'ON' : 'OFF'}
-        </span>
-      </button>
+      <div className="rounded-xl border p-4 mb-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <NameField alias={alias} rosterName={rosterName} onSave={onSave} onDraftChange={onDraftChange} />
+      </div>
+
+      <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
+        You can come back any time to fine-tune your face. Hats, glasses and coats unlock as you earn XP.
+      </p>
+
+      {err && <div className="text-xs mb-3" style={{ color: 'var(--destructive)' }}>{err}</div>}
+
+      <div className="flex items-center justify-between">
+        <button onClick={onBack} className="inline-flex items-center gap-1 text-sm rounded-lg px-3 py-2" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}>
+          <ChevronLeft size={15} /> Back
+        </button>
+        <button onClick={finish} disabled={saving} className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-5 py-2.5 disabled:opacity-60" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', cursor: 'pointer' }}>
+          <Check size={15} /> {saving ? 'Saving…' : 'Save and go home'}
+        </button>
+      </div>
     </div>
   )
 }

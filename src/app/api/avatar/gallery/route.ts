@@ -4,8 +4,8 @@ import { supabaseAdmin } from '@/lib/supabase'
 import type { AvatarItem } from '@/lib/avatar/types'
 
 // GET /api/avatar/gallery
-// The whole-school "avatar wall": every student who has completed their Mii AND
-// opted to show it (use_custom_avatar). Aliases only. Returns a shared item
+// The whole-school "avatar wall": every student who has completed their Mii.
+// Aliases only. Returns a shared item
 // catalog (so the client can render equipped items), per-avatar like counts +
 // whether the viewer liked it, and a "featured" set (most-liked first).
 export interface GalleryAvatar {
@@ -21,8 +21,7 @@ export interface GalleryAvatar {
 export const GET = withAuth(async (_request, ctx) => {
   const { data: avs } = await supabaseAdmin
     .from('student_avatars')
-    .select('user_id, traits, equipped, use_custom_avatar, setup_completed')
-    .eq('use_custom_avatar', true)
+    .select('user_id, traits, equipped, setup_completed')
     .eq('setup_completed', true)
   const rows = (avs ?? []) as { user_id: string; traits: Record<string, string> | null; equipped: Record<string, string> | null }[]
   if (rows.length === 0) return NextResponse.json({ items: [], avatars: [], featured: [] })

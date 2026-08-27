@@ -34,7 +34,7 @@ export const POST = withAuth(async (request, ctx) => {
 
     const { error } = await supabaseAdmin
       .from('student_avatars')
-      .upsert({ user_id: userId, traits: merged, setup_completed: true, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
+      .upsert({ user_id: userId, traits: merged, setup_completed: true, use_custom_avatar: true, updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ ok: true, traits: merged })
 })

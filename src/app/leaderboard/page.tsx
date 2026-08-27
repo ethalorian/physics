@@ -46,7 +46,7 @@ interface LeaderboardEntry {
   streak?: number
   streak_longest?: number
   streak_total?: number
-  use_custom_avatar?: boolean
+  has_mii?: boolean
   avatar_traits?: AvatarTraits | null
   avatar_equipped?: EquippedItems
   avatar_items?: AvatarItem[]
@@ -397,7 +397,7 @@ export default function LeaderboardPage() {
 // (2) their Google profile photo,
 // (3) a User icon fallback.
 function LeaderboardAvatar({ entry, size }: { entry: LeaderboardEntry; size: number }) {
-  const showMii = entry.use_custom_avatar && entry.avatar_traits
+  const showMii = entry.has_mii && entry.avatar_traits
   return (
     <div
       className="rounded-full bg-muted flex items-center justify-center overflow-hidden flex-shrink-0"
