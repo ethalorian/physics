@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight } from 'lucide-react'
+import { CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight, Wand2 } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
 import { useClassScope } from '@/lib/use-class-scope'
 import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, type RotationCalendar } from '@/lib/rotation'
@@ -17,9 +17,10 @@ function LongLegend() {
   )
 }
 
-interface Course { id: string; name: string; section: string | null; google_course_id: string | null }
-interface PlanItem { index: number; title: string; lessonId: string | null; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; lessonNumber: number | null }
-interface Schedule { start_date: string | null; meeting_days: number[]; no_school_dates: string[] }
+interface Course { id: string; name: string; section: string | null; google_course_id: string | null; program?: 'physics' | 'trades' }
+interface PlanItem { index: number; title: string; lessonId: string | null; unitId: string; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; plannedWeight?: number; lessonNumber: number | null }
+type Program = 'physics' | 'trades'
+const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades' }
 interface PacingResult {
   notStarted: boolean; elapsed: number; totalDays: number
   plannedIndex: number | null; plannedTitle: string | null
@@ -27,13 +28,14 @@ interface PacingResult {
   actualSource: 'auto' | 'confirmed' | 'none'; deltaDays: number
   status: 'on' | 'ahead' | 'behind' | 'unknown'
 }
-interface UnitOpt { order: number; name: string }
+interface UnitOpt { id: string; name: string; allottedDays: number | null; defaultStartDate: string | null }
 interface LineupEntry { date: string; long: boolean; title: string; index: number }
 interface SectionData {
-  result: PacingResult; items: PlanItem[]; autoIndex: number | null; confirmed: boolean; schedule: Schedule
+  program: Program; items: PlanItem[]; confirmed: boolean
   block: string | null; rotationConfigured: boolean; lineup: LineupEntry[]
   units: UnitOpt[]; unitResult: PacingResult | null; unitName: string | null; unitTotalDays: number
-  currentUnitOrder: number | null; unitStartDate: string | null; currentLessonId: string | null
+  currentUnitId: string | null; unitStartDate: string | null; currentLessonId: string | null
+  autoLessonId: string | null; autoUnitId: string | null; autoTitle: string | null
 }
 const BLOCKS = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
@@ -295,27 +297,32 @@ function RotationEditor({ onSaved }: { onSaved?: () => void }) {
 // ---------------------------------------------------------------------------
 function GuideEditor({ onSaved }: { onSaved?: () => void }) {
   const [open, setOpen] = useState(false)
+  const [program, setProgram] = useState<Program>('physics')
   const [items, setItems] = useState<PlanItem[] | null>(null)
-  const [units, setUnits] = useState<{ order_index: number; name: string; allotted_days: number | null }[]>([])
-  const [edits, setEdits] = useState<Record<string, number>>({}) // lessonId -> days
-  const [unitEdits, setUnitEdits] = useState<Record<number, number>>({})
+  const [units, setUnits] = useState<{ id: string; order_index: number; name: string; allotted_days: number | null; default_start_date: string | null }[]>([])
+  const [edits, setEdits] = useState<Record<string, number>>({}) // lessonId -> weight (planned_days)
+  const [unitEdits, setUnitEdits] = useState<Record<string, number>>({}) // unitId -> window days
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
-    if (!open || items) return
-    fetch('/api/pacing/plan').then((r) => r.json()).then((d) => { setItems(d.items); setUnits(d.units ?? []) }).catch(() => {})
-  }, [open, items])
+  const loadPlan = useCallback((p: Program) => {
+    setItems(null)
+    fetch(`/api/pacing/plan?program=${p}`).then((r) => r.json()).then((d) => { setItems(d.items ?? []); setUnits(d.units ?? []) }).catch(() => setItems([]))
+  }, [])
+  useEffect(() => { if (open) loadPlan(program) }, [open, program, loadPlan])
 
   const save = async () => {
     setSaving(true); setSaved(false)
     try {
       const lessons = Object.entries(edits).map(([id, planned_days]) => ({ id, planned_days }))
-      const unitsBody = Object.entries(unitEdits).map(([order_index, allotted_days]) => ({ order_index: Number(order_index), allotted_days }))
-      const res = await fetch('/api/pacing/plan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lessons, units: unitsBody }) })
-      if (res.ok) { const d = await res.json(); setItems(d.items); setEdits({}); setUnitEdits({}); setSaved(true); onSaved?.() }
+      const unitsBody = Object.entries(unitEdits).map(([id, allotted_days]) => ({ id, allotted_days }))
+      const res = await fetch('/api/pacing/plan', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ program, lessons, units: unitsBody }) })
+      if (res.ok) { const d = await res.json(); setItems(d.items); setUnits(d.units ?? []); setEdits({}); setUnitEdits({}); setSaved(true); onSaved?.() }
     } finally { setSaving(false) }
   }
+  // Group items by unit so each unit's window sits above its lessons.
+  const byUnit = new Map<string, PlanItem[]>()
+  for (const it of items ?? []) { const arr = byUnit.get(it.unitId) ?? []; arr.push(it); byUnit.set(it.unitId, arr) }
 
   const dirty = Object.keys(edits).length > 0 || Object.keys(unitEdits).length > 0
 
@@ -327,31 +334,49 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
       </button>
       {open && (
         <div className="px-4 pb-4">
+          <div className="flex items-center gap-2 mb-2">
+            <select value={program} onChange={(e) => { setProgram(e.target.value as Program); setEdits({}); setUnitEdits({}) }}
+              className="text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+              {(Object.keys(PROGRAM_LABEL) as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
+            </select>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+              {items ? `${units.reduce((n, u) => n + (u.allotted_days ?? 0), 0)} window days · ${items.filter((i) => i.kind === 'lesson').length} lessons` : ''}
+            </span>
+          </div>
           <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-            Auto-distributed from unit allotted days. Adjust per lesson as you learn how long things really take; units without lessons yet use their unit total.
+            Each unit&apos;s <b>window</b> is its span on the school calendar (lessons + lab overrun, reassessment and revision). Lessons share the window in proportion to their <b>weight</b> — a 2-day lab gets weight 2. &ldquo;On pace&rdquo; already includes the buffer.
           </p>
           {items === null ? (
             <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</div>
           ) : (
-            <div className="space-y-1.5 max-h-[360px] overflow-y-auto pr-1">
-              {items.map((it) => it.kind === 'lesson' ? (
-                <div key={it.index} className="flex items-center gap-3 text-sm">
-                  <span className="flex-1 truncate">{it.title}</span>
-                  <input type="number" min={0} step={0.5} defaultValue={it.plannedDays}
-                    onChange={(e) => setEdits((p) => ({ ...p, [it.lessonId as string]: Number(e.target.value) }))}
-                    className="w-20 rounded-md border px-2 py-1 text-right" style={{ borderColor: 'var(--border)', background: 'var(--card)' }} />
-                  <span className="text-xs w-10" style={{ color: 'var(--muted-foreground)' }}>days</span>
-                </div>
-              ) : (
-                <div key={it.index} className="flex items-center gap-3 text-sm">
-                  <span className="flex-1 truncate" style={{ color: 'var(--muted-foreground)' }}>{it.title} <em>(no lessons yet)</em></span>
-                  <input type="number" min={0} step={1}
-                    defaultValue={units.find((u) => u.order_index === it.unitOrder)?.allotted_days ?? it.plannedDays}
-                    onChange={(e) => setUnitEdits((p) => ({ ...p, [it.unitOrder]: Number(e.target.value) }))}
-                    className="w-20 rounded-md border px-2 py-1 text-right" style={{ borderColor: 'var(--border)', background: 'var(--card)' }} />
-                  <span className="text-xs w-10" style={{ color: 'var(--muted-foreground)' }}>days</span>
-                </div>
-              ))}
+            <div className="space-y-1.5 max-h-[420px] overflow-y-auto pr-1">
+              {units.map((u) => {
+                const its = byUnit.get(u.id) ?? []
+                const lessons = its.filter((i) => i.kind === 'lesson')
+                return (
+                  <div key={u.id} className="mb-2">
+                    <div className="flex items-center gap-3 text-sm rounded-lg px-2 py-1.5" style={{ background: 'color-mix(in oklch, var(--primary) 8%, transparent)' }}>
+                      <span className="flex-1 truncate font-semibold">{u.name}</span>
+                      {u.default_start_date && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>starts {u.default_start_date}</span>}
+                      <input type="number" min={0} step={1} defaultValue={u.allotted_days ?? 0}
+                        onChange={(e) => setUnitEdits((p) => ({ ...p, [u.id]: Number(e.target.value) }))}
+                        className="w-20 rounded-md border px-2 py-1 text-right" style={{ borderColor: 'var(--border)', background: 'var(--card)' }} />
+                      <span className="text-xs w-14" style={{ color: 'var(--muted-foreground)' }}>window</span>
+                    </div>
+                    {lessons.length === 0 && <div className="text-xs px-2 py-1" style={{ color: 'var(--muted-foreground)' }}><em>No lessons yet — the window is one placeholder item.</em></div>}
+                    {lessons.map((it) => (
+                      <div key={it.index} className="flex items-center gap-3 text-sm pl-4 pr-2">
+                        <span className="flex-1 truncate">{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}</span>
+                        <span className="text-xs tabular-nums" style={{ color: 'var(--muted-foreground)' }}>≈ {it.plannedDays.toFixed(1)}d</span>
+                        <input type="number" min={0} step={0.5} defaultValue={it.plannedWeight ?? 1}
+                          onChange={(e) => setEdits((p) => ({ ...p, [it.lessonId as string]: Number(e.target.value) }))}
+                          className="w-20 rounded-md border px-2 py-1 text-right" style={{ borderColor: 'var(--border)', background: 'var(--card)' }} />
+                        <span className="text-xs w-14" style={{ color: 'var(--muted-foreground)' }}>weight</span>
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
             </div>
           )}
           <div className="flex items-center gap-2 mt-3">
@@ -372,19 +397,22 @@ function GuideEditor({ onSaved }: { onSaved?: () => void }) {
 // ---------------------------------------------------------------------------
 function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; cal: CalData | null; onChanged: () => void; refreshKey: number }) {
   const [data, setData] = useState<SectionData | null>(null)
+  const [program, setProgram] = useState<Program>('physics')
   const [block, setBlock] = useState('')
-  const [unitOrder, setUnitOrder] = useState<number | ''>('')
+  const [unitId, setUnitId] = useState('')
   const [unitStart, setUnitStart] = useState('')
   const [lessonId, setLessonId] = useState('')
   const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
   const [showCal, setShowCal] = useState(false)
 
   const load = useCallback(() => {
     fetch(`/api/pacing/section?course_id=${course.id}`).then((r) => r.json()).then((d: SectionData) => {
       if (!d || !Array.isArray(d.items)) return
       setData(d)
+      setProgram(d.program ?? 'physics')
       setBlock(d.block ?? '')
-      setUnitOrder(d.currentUnitOrder ?? '')
+      setUnitId(d.currentUnitId ?? '')
       setUnitStart(d.unitStartDate ?? '')
       setLessonId(d.currentLessonId ?? '')
     }).catch(() => {})
@@ -392,28 +420,54 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
 
   useEffect(() => { load() }, [load, refreshKey])
 
+  // Changing the program empties the unit fields — the old unit no longer
+  // exists in the new plan. The server re-sends the right unit list.
+  const changeProgram = async (p: Program) => {
+    setProgram(p); setUnitId(''); setLessonId(''); setUnitStart('')
+    await fetch('/api/pacing/section', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ course_id: course.id, program: p, current_unit_id: null, current_lesson_id: null, unit_start_date: null }),
+    }).catch(() => {})
+    load(); onChanged()
+  }
+
+  // Picking a unit pre-fills its planned start from the school calendar; the
+  // teacher can override.
+  const pickUnit = (id: string) => {
+    setUnitId(id); setLessonId('')
+    const u = data?.units.find((x) => x.id === id)
+    if (u?.defaultStartDate) setUnitStart(u.defaultStartDate)
+    else if (!id) setUnitStart('')
+  }
+
   const save = async () => {
-    setSaving(true)
+    setSaving(true); setErr(null)
     try {
-      await fetch('/api/pacing/section', {
+      const res = await fetch('/api/pacing/section', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           course_id: course.id,
           block: block || null,
-          current_unit_order: unitOrder === '' ? null : Number(unitOrder),
+          current_unit_id: unitId || null,
           unit_start_date: unitStart || null,
           current_lesson_id: lessonId || null,
         }),
       })
+      if (!res.ok) { const b = await res.json().catch(() => null) as { error?: string } | null; setErr(b?.error ?? 'Could not save') }
       load(); onChanged()
     } finally { setSaving(false) }
   }
 
   const ur = data?.unitResult ?? null
   const st = ur ? STATUS[ur.status] : STATUS.unknown
-  const unitLessons = data && unitOrder !== ''
-    ? data.items.filter((i) => i.unitOrder === Number(unitOrder) && i.kind === 'lesson')
+  const unitLessons = data && unitId
+    ? data.items.filter((i) => i.unitId === unitId && i.kind === 'lesson')
     : []
+  const unitOpt = data?.units.find((u) => u.id === unitId) ?? null
+  // Student work points at a lesson in this unit that isn't the one confirmed.
+  const suggestion = data && data.autoLessonId && data.autoUnitId === unitId && data.autoLessonId !== lessonId
+    ? unitLessons.find((i) => i.lessonId === data.autoLessonId) ?? null
+    : null
   const fieldStyle: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
 
   return (
@@ -423,12 +477,13 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           <div className="font-bold" style={{ fontSize: 16 }}>
             {course.name}{course.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {course.section}</span> : null}
             {data?.block && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>{data.block} block</span>}
+            {data && <span className="ml-2 text-xs rounded-md px-1.5 py-0.5 align-middle" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{PROGRAM_LABEL[data.program]}</span>}
           </div>
           {ur && data?.unitName ? (
             <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
               {ur.notStarted
-                ? <>Unit hasn&apos;t started yet</>
-                : <><b style={{ color: 'var(--foreground)' }}>Day {ur.elapsed} of {data.unitTotalDays}</b> in {data.unitName} — should be on <b style={{ color: 'var(--foreground)' }}>{ur.plannedTitle ?? '—'}</b>, you&apos;re on <b style={{ color: 'var(--foreground)' }}>{ur.actualTitle ?? '—'}</b></>}
+                ? <>{data.unitName} starts {data.unitStartDate ?? '—'} · {data.unitTotalDays}-day window</>
+                : <><b style={{ color: 'var(--foreground)' }}>Day {ur.elapsed} of {data.unitTotalDays}</b> in {data.unitName} — should be on <b style={{ color: 'var(--foreground)' }}>{ur.plannedTitle ?? '—'}</b>, you&apos;re on <b style={{ color: 'var(--foreground)' }}>{ur.actualTitle ?? '—'}</b>{ur.actualSource === 'auto' && ur.actualTitle ? <span> (from student work — confirm below)</span> : null}</>}
             </div>
           ) : (
             <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Pick a unit, its start date, and your lesson below to see pacing.</div>
@@ -448,6 +503,12 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
       {/* Unit-centric pacing inputs */}
       <div className="mt-4 grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
         <label className="text-sm">
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Program</div>
+          <select value={program} onChange={(e) => changeProgram(e.target.value as Program)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
+            {(Object.keys(PROGRAM_LABEL) as Program[]).map((p) => <option key={p} value={p}>{PROGRAM_LABEL[p]}</option>)}
+          </select>
+        </label>
+        <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Block</div>
           <select value={block} onChange={(e) => setBlock(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
             <option value="">— tag a block —</option>
@@ -456,19 +517,19 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
         </label>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Current unit</div>
-          <select value={unitOrder} onChange={(e) => { setUnitOrder(e.target.value === '' ? '' : Number(e.target.value)); setLessonId('') }} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
+          <select value={unitId} onChange={(e) => pickUnit(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
             <option value="">— choose unit —</option>
-            {(data?.units ?? []).map((u) => <option key={u.order} value={u.order}>{u.name}</option>)}
+            {(data?.units ?? []).map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
           </select>
         </label>
         <label className="text-sm">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Unit start date</div>
+          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Unit start date{unitOpt?.defaultStartDate && unitStart !== unitOpt.defaultStartDate ? <span> · planned {unitOpt.defaultStartDate}</span> : null}</div>
           <input type="date" value={unitStart} onChange={(e) => setUnitStart(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle} />
         </label>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Your lesson right now</div>
-          <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={unitOrder === ''} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
-            <option value="">{unitOrder === '' ? '— choose a unit first —' : '— select lesson —'}</option>
+          <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} disabled={!unitId} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
+            <option value="">{!unitId ? '— choose a unit first —' : '— select lesson —'}</option>
             {unitLessons.map((it) => <option key={it.lessonId ?? it.index} value={it.lessonId ?? ''}>{it.lessonNumber ? `D${it.lessonNumber} · ` : ''}{it.title}</option>)}
           </select>
         </label>
@@ -479,6 +540,12 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           className="inline-flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
           <Check size={14} /> {saving ? 'Saving…' : 'Confirm pacing'}
         </button>
+        {suggestion && (
+          <button onClick={() => setLessonId(suggestion.lessonId ?? '')} className="inline-flex items-center gap-1.5 text-xs rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--primary)' }} title="Student work in this section has reached this lesson">
+            <Wand2 size={13} /> Student work says {suggestion.lessonNumber ? `D${suggestion.lessonNumber}` : suggestion.title} — use it
+          </button>
+        )}
+        {err && <span className="text-xs" style={{ color: 'var(--destructive)' }}>{err}</span>}
         {data && !data.rotationConfigured && (
           <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Tip: set the school rotation above to count this block&apos;s meeting days; otherwise weekdays are used.</span>
         )}

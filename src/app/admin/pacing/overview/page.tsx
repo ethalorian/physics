@@ -8,7 +8,12 @@ interface Row {
   name: string
   section: string | null
   teacher: string | null
-  hasSchedule: boolean
+  program: 'physics' | 'trades'
+  block: string | null
+  unitName: string | null
+  unitStartDate: string | null
+  unitTotalDays: number
+  hasUnit: boolean
   students: number
   notStarted: boolean
   elapsed: number
@@ -46,7 +51,7 @@ export default function PacingOverviewPage() {
   }, [])
 
   const behind = (rows ?? []).filter((r) => r.status === 'behind').length
-  const unscheduled = (rows ?? []).filter((r) => !r.hasSchedule).length
+  const unplaced = (rows ?? []).filter((r) => !r.hasUnit).length
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
@@ -60,7 +65,7 @@ export default function PacingOverviewPage() {
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">Every section against the pace</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-          Where each class is right now relative to the master pacing guide. Behind-pace sections surface first.
+          Where each class is inside its current unit, against that unit&apos;s calendar window. Behind-pace sections surface first.
         </p>
       </div>
 
@@ -70,7 +75,7 @@ export default function PacingOverviewPage() {
         <div className="flex items-center gap-2 text-sm rounded-xl p-3 mb-4" style={{ background: 'color-mix(in oklch, var(--viz-down) 14%, transparent)' }}>
           <AlertTriangle size={16} style={{ color: 'var(--viz-down)' }} />
           <span>{behind} section{behind === 1 ? '' : 's'} behind pace.</span>
-          {unscheduled > 0 && <span style={{ color: 'var(--muted-foreground)' }}>· {unscheduled} without a calendar set yet.</span>}
+          {unplaced > 0 && <span style={{ color: 'var(--muted-foreground)' }}>· {unplaced} without a unit and start date yet.</span>}
         </div>
       )}
 
@@ -81,6 +86,7 @@ export default function PacingOverviewPage() {
               <tr style={{ background: 'color-mix(in oklch, var(--muted-foreground) 8%, transparent)' }}>
                 <th className="text-left font-medium py-2.5 px-4" style={{ color: 'var(--muted-foreground)' }}>Class</th>
                 <th className="text-left font-medium py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>Teacher</th>
+                <th className="text-left font-medium py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>Unit</th>
                 <th className="text-left font-medium py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>Should be on</th>
                 <th className="text-left font-medium py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>Actually on</th>
                 <th className="text-center font-medium py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>Gap</th>
@@ -89,18 +95,26 @@ export default function PacingOverviewPage() {
             </thead>
             <tbody>
               {rows === null ? (
-                <tr><td colSpan={6} className="py-10 text-center" style={{ color: 'var(--muted-foreground)' }}>Loading…</td></tr>
+                <tr><td colSpan={7} className="py-10 text-center" style={{ color: 'var(--muted-foreground)' }}>Loading…</td></tr>
               ) : rows.length === 0 ? (
-                <tr><td colSpan={6} className="py-10 text-center" style={{ color: 'var(--muted-foreground)' }}>No sections yet. Sync a roster first.</td></tr>
+                <tr><td colSpan={7} className="py-10 text-center" style={{ color: 'var(--muted-foreground)' }}>No sections yet. Sync a roster first.</td></tr>
               ) : rows.map((r) => {
                 const st = STATUS[r.status]
                 return (
                   <tr key={r.courseId} className="border-t" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-2.5 px-4">
                       <div className="font-medium">{r.name}{r.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {r.section}</span> : null}</div>
-                      <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{r.students} students{!r.hasSchedule ? ' · no calendar set' : ''}</div>
+                      <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{r.students} students{r.block ? ` · ${r.block} block` : ''}{r.program === 'trades' ? ' · trades' : ''}{!r.hasUnit ? ' · no unit set' : ''}</div>
                     </td>
                     <td className="py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>{r.teacher ?? '—'}</td>
+                    <td className="py-2.5 px-3">
+                      {r.unitName ? (
+                        <>
+                          <div className="truncate" style={{ maxWidth: 220 }} title={r.unitName}>{r.unitName}</div>
+                          <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{r.notStarted ? `starts ${r.unitStartDate ?? '—'}` : `day ${r.elapsed} of ${r.unitTotalDays}`}</div>
+                        </>
+                      ) : <span style={{ color: 'var(--muted-foreground)' }}>—</span>}
+                    </td>
                     <td className="py-2.5 px-3">{r.notStarted ? <span style={{ color: 'var(--muted-foreground)' }}>not started</span> : (r.plannedTitle ?? '—')}</td>
                     <td className="py-2.5 px-3">
                       {r.actualTitle ?? <span style={{ color: 'var(--muted-foreground)' }}>—</span>}
@@ -122,7 +136,7 @@ export default function PacingOverviewPage() {
       </div>
 
       <p className="text-xs mt-4" style={{ color: 'var(--muted-foreground)' }}>
-        Position is auto-detected from student activity unless a teacher has confirmed it. Sections without a calendar can&apos;t be placed against dates yet.
+        Position is auto-detected from student activity unless a teacher has confirmed it. Sections without a unit and start date can&apos;t be placed against dates yet.
       </p>
     </div>
   )

@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server'
 import { withAuth, withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { loadPlanItems } from '@/lib/pacing-server'
+import { loadPlanItems, loadUnits, asProgram } from '@/lib/pacing-server'
 
-// GET  /api/pacing/plan — the master suggested pace (ordered items + unit days)
-// PUT  /api/pacing/plan — admin edits planned days per lesson / allotted days per unit
+// GET  /api/pacing/plan?program=physics|trades — one program's master pace (ordered items + unit windows)
+// PUT  /api/pacing/plan — admin edits planned-day weights per lesson / window days per unit (by unit id)
 
-export const GET = withRole(['admin', 'teacher'], async () => {
-    const items = await loadPlanItems()
-    const { data: unitRows } = await supabaseAdmin.from('units').select('order_index, name, allotted_days').order('order_index', { ascending: true })
-    return NextResponse.json({ items, units: unitRows ?? [] })
+export const GET = withRole(['admin', 'teacher'], async (request) => {
+    const program = asProgram(new URL(request.url).searchParams.get('program'))
+    const [items, units] = await Promise.all([loadPlanItems(program), loadUnits(program)])
+    return NextResponse.json({ program, items, units })
 })
 
 export const PUT = withAuth(async (request, ctx) => {
@@ -17,7 +17,8 @@ export const PUT = withAuth(async (request, ctx) => {
 
     const body = (await request.json()) as {
       lessons?: { id: string; planned_days: number }[]
-      units?: { order_index: number; allotted_days: number }[]
+      units?: { id: string; allotted_days: number }[]
+      program?: string
     }
 
     for (const l of body.lessons ?? []) {
@@ -25,10 +26,11 @@ export const PUT = withAuth(async (request, ctx) => {
       await supabaseAdmin.from('lessons').update({ planned_days: l.planned_days }).eq('id', l.id)
     }
     for (const u of body.units ?? []) {
-      if (!Number.isFinite(u.order_index) || !Number.isFinite(u.allotted_days)) continue
-      await supabaseAdmin.from('units').update({ allotted_days: u.allotted_days }).eq('order_index', u.order_index)
+      if (!u.id || !Number.isFinite(u.allotted_days)) continue
+      await supabaseAdmin.from('units').update({ allotted_days: u.allotted_days }).eq('id', u.id)
     }
 
-    const items = await loadPlanItems()
-    return NextResponse.json({ ok: true, items })
+    const program = asProgram(body.program)
+    const [items, units] = await Promise.all([loadPlanItems(program), loadUnits(program)])
+    return NextResponse.json({ ok: true, program, items, units })
 })

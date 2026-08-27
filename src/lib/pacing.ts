@@ -5,18 +5,31 @@
 // each lesson is an item carrying its planned day-span; where a unit has no
 // lessons yet, the unit itself is a single placeholder item carrying its allotted
 // days. Cumulative day-spans map plan position to a section's real calendar.
+//
+// UNIT WINDOWS. `units.allotted_days` is the unit's calendar WINDOW (from the
+// school-year calendar), which is wider than its lesson count — the difference
+// is lab overrun, reassessment and revision time. Lessons are spread
+// proportionally across the window: a 22-lesson unit with a 34-day window gives
+// each lesson ~1.55 days, so "on pace" already includes the buffer. Authored
+// `planned_days` act as relative weights inside that spread.
+//
+// Plans are built PER PROGRAM (physics / trades). Callers must pass one
+// program's units; units are keyed by id, never by order_index, because
+// programs reuse 1..N.
 
-export interface UnitRow { order_index: number; name: string; allotted_days: number | null }
-export interface LessonRow { id: string; title: string; unit: string; lesson_number: number | null; planned_days: number | null }
+export interface UnitRow { id: string; order_index: number; name: string; allotted_days: number | null }
+export interface LessonRow { id: string; title: string; unit_id: string | null; lesson_number: number | null; planned_days: number | null }
 
 export interface PlanItem {
   kind: 'lesson' | 'unit'
+  unitId: string
   unitOrder: number
   unitName: string
   lessonId: string | null
   title: string
   lessonNumber: number | null
-  plannedDays: number
+  plannedDays: number    // share of the unit window (window × weight / Σweights)
+  plannedWeight: number  // the authored lessons.planned_days (default 1) — what the pace editor edits
   index: number     // 0-based position in the sequence
   cumStart: number  // cumulative plan-days before this item
 }
@@ -47,24 +60,30 @@ const ON_PACE_TOLERANCE = 1.5 // days within which a section is "on pace"
 export function buildPlan(units: UnitRow[], lessons: LessonRow[]): PlanItem[] {
   const byUnit = new Map<string, LessonRow[]>()
   for (const l of lessons) {
-    const arr = byUnit.get(l.unit) ?? []
+    if (!l.unit_id) continue
+    const arr = byUnit.get(l.unit_id) ?? []
     arr.push(l)
-    byUnit.set(l.unit, arr)
+    byUnit.set(l.unit_id, arr)
   }
   const items: PlanItem[] = []
   let cum = 0
   let idx = 0
   for (const u of [...units].sort((a, b) => a.order_index - b.order_index)) {
-    const ls = (byUnit.get(u.name) ?? []).sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
+    const ls = (byUnit.get(u.id) ?? []).sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
     if (ls.length > 0) {
-      for (const l of ls) {
-        const pd = Number(l.planned_days ?? 1) || 1
-        items.push({ kind: 'lesson', unitOrder: u.order_index, unitName: u.name, lessonId: l.id, title: l.title, lessonNumber: l.lesson_number, plannedDays: pd, index: idx, cumStart: cum })
+      // Spread the unit's window across its lessons, weighted by planned_days.
+      const weights = ls.map((l) => Number(l.planned_days ?? 1) || 1)
+      const weightSum = weights.reduce((a, b) => a + b, 0)
+      const window = Number(u.allotted_days ?? 0) || 0
+      const scale = window > 0 && weightSum > 0 ? window / weightSum : 1
+      ls.forEach((l, k) => {
+        const pd = Math.round(weights[k] * scale * 100) / 100
+        items.push({ kind: 'lesson', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: l.id, title: l.title, lessonNumber: l.lesson_number, plannedDays: pd, plannedWeight: weights[k], index: idx, cumStart: cum })
         cum += pd; idx++
-      }
+      })
     } else {
       const pd = Number(u.allotted_days ?? 0) || 0
-      items.push({ kind: 'unit', unitOrder: u.order_index, unitName: u.name, lessonId: null, title: u.name, lessonNumber: null, plannedDays: pd, index: idx, cumStart: cum })
+      items.push({ kind: 'unit', unitId: u.id, unitOrder: u.order_index, unitName: u.name, lessonId: null, title: u.name, lessonNumber: null, plannedDays: pd, plannedWeight: pd, index: idx, cumStart: cum })
       cum += pd; idx++
     }
   }
@@ -78,8 +97,8 @@ export function totalPlanDays(items: PlanItem[]): number {
 // Re-scope the plan to a single unit: keep only that unit's items and rebase
 // their cumStart/index so the unit's first item starts at day 0. The same pacing
 // math then compares against the UNIT's length instead of the whole course.
-export function unitItems(items: PlanItem[], unitOrder: number): PlanItem[] {
-  const inUnit = items.filter((i) => i.unitOrder === unitOrder)
+export function unitItems(items: PlanItem[], unitId: string): PlanItem[] {
+  const inUnit = items.filter((i) => i.unitId === unitId)
   if (inUnit.length === 0) return []
   const base = inUnit[0].cumStart
   return inUnit.map((i, k) => ({ ...i, cumStart: i.cumStart - base, index: k }))

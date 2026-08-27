@@ -24,12 +24,37 @@ export function isRotationConfigured(cal: RotationCalendar): boolean {
 // Server-side data loaders for pacing. Kept out of pacing.ts so that module stays
 // pure/testable.
 
-export async function loadPlanItems(): Promise<PlanItem[]> {
-  const [uRes, lRes] = await Promise.all([
-    supabaseAdmin.from('units').select('order_index, name, allotted_days'),
-    supabaseAdmin.from('lessons').select('id, title, unit, lesson_number, planned_days'),
-  ])
-  return buildPlan((uRes.data ?? []) as UnitRow[], (lRes.data ?? []) as LessonRow[])
+export type Program = 'physics' | 'trades'
+export const PROGRAMS: Program[] = ['physics', 'trades']
+export function asProgram(p: string | null | undefined): Program { return p === 'trades' ? 'trades' : 'physics' }
+
+export interface UnitMeta extends UnitRow { default_start_date: string | null }
+
+// One program's units, in curriculum order.
+export async function loadUnits(program: Program): Promise<UnitMeta[]> {
+  const { data } = await supabaseAdmin
+    .from('units')
+    .select('id, order_index, name, allotted_days, default_start_date')
+    .eq('program', program)
+    .order('order_index', { ascending: true })
+  return (data ?? []) as UnitMeta[]
+}
+
+// The plan for ONE program. Lessons are matched to units by unit_id.
+export async function loadPlanItems(program: Program): Promise<PlanItem[]> {
+  const units = await loadUnits(program)
+  if (units.length === 0) return []
+  const { data: lessons } = await supabaseAdmin
+    .from('lessons')
+    .select('id, title, unit_id, lesson_number, planned_days')
+    .in('unit_id', units.map((u) => u.id))
+  return buildPlan(units, (lessons ?? []) as LessonRow[])
+}
+
+// Which program a course follows (courses.program, default physics).
+export async function loadCourseProgram(courseId: string): Promise<Program> {
+  const { data } = await supabaseAdmin.from('courses').select('program').eq('id', courseId).maybeSingle()
+  return asProgram((data as { program?: string | null } | null)?.program)
 }
 
 export async function getCourseStudentGids(courseId: string): Promise<string[]> {
