@@ -6,9 +6,10 @@ import { withAuth } from '@/lib/api-auth'
 // GET /api/reviews/serve?target_id=
 // Serve a targeted review for a learning target the student is weak on:
 //  1. an APPROVED variant exists → serve one (shared across students);
-//  2. else this student's OWN pending generation → reserve it (unvetted, only
-//     the generator sees their own pending until a teacher approves it);
-//  3. else Claude-generate a fresh review, store it as 'pending', and serve it.
+//  2. else this student's OWN pending generation → serve it again;
+//  3. else, if the target is CAPPED (learning_targets.reviews_capped), serve a
+//     random existing pending draft from anyone — no new generation;
+//  4. else Claude-generate a fresh review, store it as 'pending', and serve it.
 // Approved reviews are the shared library; pending ones await teacher approval.
 
 type Review = { id: string; reteach: string; blocks: ReteachBlock[] | null; questions: ReviewQ[]; status: string; shared: boolean }
@@ -34,10 +35,10 @@ export const GET = withAuth(async (request, ctx) => {
 
     const { data: tRow } = await supabaseAdmin
       .from('learning_targets')
-      .select('statement, domain, unit_id')
+      .select('statement, domain, unit_id, reviews_capped')
       .eq('id', targetId)
       .maybeSingle()
-    const tInfo = tRow as { statement?: string; domain?: string; unit_id?: string } | null
+    const tInfo = tRow as { statement?: string; domain?: string; unit_id?: string; reviews_capped?: boolean } | null
     const statement = tInfo?.statement
     if (!statement) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
     // Sent with every review so the page can name the skill being practiced
@@ -68,7 +69,22 @@ export const GET = withAuth(async (request, ctx) => {
       .maybeSingle()
     if (mine) return NextResponse.json({ review: { ...(mine as Review), shared: false }, target })
 
-    // 3. Generate a fresh review with Claude (with the unit's sim catalog), store pending.
+    // 3. Capped target: reuse an existing draft rather than generating another.
+    if (tInfo?.reviews_capped) {
+      const { data: drafts } = await supabaseAdmin
+        .from('target_reviews')
+        .select('id, reteach, blocks, questions, status')
+        .eq('target_id', targetId)
+        .eq('status', 'pending')
+      const draftList = (drafts ?? []) as Review[]
+      if (draftList.length > 0) {
+        const pick = draftList[Math.floor(Math.random() * draftList.length)]
+        return NextResponse.json({ review: { ...pick, shared: false }, target })
+      }
+      // No drafts at all — fall through and generate the one this target will reuse.
+    }
+
+    // 4. Generate a fresh review with Claude (with the unit's sim catalog), store pending.
     const sims = await loadSimCatalog(tInfo?.unit_id)
     const gen = await generateTargetReview(statement, sims)
     if (gen.error || !gen.review) return NextResponse.json({ error: gen.error ?? 'Could not generate a review.' }, { status: 502 })

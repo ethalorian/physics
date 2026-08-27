@@ -5,7 +5,8 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useViewAs } from '@/lib/use-view-as'
-import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2, ArrowUp, ArrowDown, Trash2, Edit3 } from 'lucide-react'
+import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2, ArrowUp, ArrowDown, Trash2, Edit3, ChevronDown, ChevronRight, Lock, Unlock } from 'lucide-react'
+import type { ReviewTargetGroup } from '@/app/api/admin/reviews/route'
 import type { ContentBlock } from '@/data/content-blocks'
 
 const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'), { ssr: false, loading: () => null })
@@ -13,6 +14,8 @@ const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'),
 interface Q { q: string; choices: string[]; answerIndex: number; explanation: string }
 interface Review { id: string; target_id: string; targetStatement: string; reteach: string; blocks: ContentBlock[] | null; questions: Q[]; created_by: string | null; created_at: string }
 interface UnitOpt { id: string; name: string }
+// API groups carry blocks/questions as `unknown`; the page narrows them once here.
+type Group = Omit<ReviewTargetGroup, 'pending'> & { pending: Review[] }
 interface TargetOpt { id: string; statement: string; domain: string }
 
 export default function ReviewQueuePage() {
@@ -25,8 +28,14 @@ export default function ReviewQueuePage() {
     if (role && role !== 'admin') router.replace('/admin/teacher')
   }, [role, router])
 
-  const [pending, setPending] = useState<Review[]>([])
+  // Queue, grouped by target (see /api/admin/reviews).
+  const [groups, setGroups] = useState<Group[]>([])
   const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState<Set<string>>(new Set())
+  const [filterUnit, setFilterUnit] = useState<string>('')
+  const [pendingOnly, setPendingOnly] = useState(true)
+  const [sortBy, setSortBy] = useState<'curriculum' | 'pending'>('curriculum')
+  const [capBusy, setCapBusy] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   // Per-review edited block arrays. Populated lazily the first time the admin
   // touches a block (move / remove / edit). On approve, the edited array is
@@ -47,9 +56,24 @@ export default function ReviewQueuePage() {
   const load = useCallback(() => {
     fetch('/api/admin/reviews')
       .then((r) => r.json())
-      .then((d: { pending?: Review[] }) => { setPending(d.pending ?? []); setLoading(false) })
+      .then((d: { targets?: ReviewTargetGroup[] }) => { setGroups((d.targets ?? []) as unknown as Group[]); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
+
+  const toggleExpanded = (id: string) => setExpanded((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
+
+  // Per-target cap: reuse an existing draft instead of generating one per student.
+  const setCap = async (g: Group, capped: boolean) => {
+    setCapBusy(g.target_id)
+    // Optimistic — the row flips immediately; reload confirms.
+    setGroups((gs) => gs.map((x) => (x.target_id === g.target_id ? { ...x, reviews_capped: capped } : x)))
+    await fetch('/api/admin/reviews', {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_id: g.target_id, reviews_capped: capped }),
+    }).catch(() => {})
+    setCapBusy(null)
+    load()
+  }
   useEffect(() => { if (isAdmin) load() }, [load, isAdmin])
 
   // Pull the unit list + first unit's targets from the mastery grid (it already
@@ -174,6 +198,13 @@ export default function ReviewQueuePage() {
     load()
   }
 
+  const visible = groups
+    .filter((g) => (!filterUnit || g.unit_id === filterUnit) && (!pendingOnly || g.counts.pending > 0))
+    .sort((a, b) => (sortBy === 'pending' ? b.counts.pending - a.counts.pending : 0))
+  const totalPending = groups.reduce((n, g) => n + g.counts.pending, 0)
+  const totalCapped = groups.filter((g) => g.reviews_capped).length
+  const unitOpts = [...new Map(groups.filter((g) => g.unit_id).map((g) => [g.unit_id as string, g.unit_name ?? g.unit_id as string])).entries()]
+
   // Non-admins are being redirected; render nothing meaningful in the meantime.
   if (role && role !== 'admin') {
     return <div className="max-w-3xl mx-auto p-5 text-sm" style={{ color: 'var(--muted-foreground)' }}>Redirecting…</div>
@@ -190,7 +221,7 @@ export default function ReviewQueuePage() {
       </div>
       <h1 className="text-2xl font-semibold tracking-tight">Approve generated skill reviews</h1>
       <p className="text-sm mt-1 mb-5" style={{ color: 'var(--muted-foreground)' }}>
-        When a student is weak on a skill, the app generates a re-teach + practice review. Approve the good ones — approved reviews are shared with every student who needs that skill.
+        When a student is weak on a skill, the app generates a re-teach + practice review. Approve the good ones — approved reviews are shared with every student who needs that skill. Until a skill has an approved review, each student gets their own draft; <strong>Cap</strong> a skill to hand out an existing draft instead of generating more.
       </p>
 
       {/* Seed panel — generate a starter batch so the library isn't empty on day one. */}
@@ -263,16 +294,75 @@ export default function ReviewQueuePage() {
         )}
       </div>
 
-      {loading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading the queue…</p>}
-      {!loading && pending.length === 0 && (
-        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Nothing waiting for approval. Generated reviews will appear here.</p>
+      {/* Queue header: totals + filters. One row per target below. */}
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <div className="text-sm font-semibold mr-auto">
+          {loading ? 'Loading the queue…' : (
+            <>
+              {totalPending} draft{totalPending === 1 ? '' : 's'} waiting across {groups.filter((g) => g.counts.pending > 0).length} skill{groups.filter((g) => g.counts.pending > 0).length === 1 ? '' : 's'}
+              {totalCapped > 0 && <span className="font-normal" style={{ color: 'var(--muted-foreground)' }}> · {totalCapped} capped</span>}
+            </>
+          )}
+        </div>
+        <select value={filterUnit} onChange={(e) => setFilterUnit(e.target.value)} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
+          <option value="">All units</option>
+          {unitOpts.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
+        </select>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'curriculum' | 'pending')} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
+          <option value="curriculum">Curriculum order</option>
+          <option value="pending">Most drafts first</option>
+        </select>
+        <label className="inline-flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+          <input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} /> Waiting only
+        </label>
+      </div>
+
+      {!loading && visible.length === 0 && (
+        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+          {groups.length === 0 ? 'Nothing waiting for approval. Generated reviews will appear here.' : 'No skills match these filters.'}
+        </p>
       )}
 
-      <div className="flex flex-col gap-4">
-        {pending.map((rv) => (
-          <div key={rv.id} className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>SKILL</div>
-            <div className="font-semibold text-sm mb-3">{rv.targetStatement}</div>
+      <div className="flex flex-col gap-2">
+        {visible.map((g) => {
+          const open = expanded.has(g.target_id)
+          return (
+          <div key={g.target_id} className="rounded-2xl border" style={{ borderColor: g.counts.pending > 0 ? 'var(--border)' : 'color-mix(in oklch, var(--border) 60%, transparent)', background: 'var(--card)' }}>
+            {/* Target row: statement, counts, cap toggle, expand */}
+            <div className="flex items-center gap-3 px-4 py-3">
+              <button onClick={() => toggleExpanded(g.target_id)} aria-expanded={open} className="flex items-center gap-2 flex-1 min-w-0 text-left" style={{ background: 'transparent', border: 'none', color: 'var(--foreground)', cursor: 'pointer', padding: 0 }}>
+                {open ? <ChevronDown size={15} style={{ color: 'var(--muted-foreground)' }} /> : <ChevronRight size={15} style={{ color: 'var(--muted-foreground)' }} />}
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold truncate" title={g.statement}>{g.statement}</div>
+                  <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+                    {[g.unit_name, g.domain].filter(Boolean).join(' · ')}
+                  </div>
+                </div>
+              </button>
+              <div className="flex items-center gap-1.5 shrink-0 text-[11px] font-semibold tabular-nums">
+                <span className="rounded-full px-2 py-0.5" style={{ background: g.counts.pending > 0 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'var(--secondary)', color: g.counts.pending > 0 ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }} title="Drafts waiting for approval">{g.counts.pending} waiting</span>
+                <span className="rounded-full px-2 py-0.5" style={{ background: g.counts.approved > 0 ? 'color-mix(in oklch, var(--success) 18%, transparent)' : 'var(--secondary)', color: g.counts.approved > 0 ? 'var(--success)' : 'var(--muted-foreground)' }} title="Approved and shared">{g.counts.approved} approved</span>
+                {g.counts.rejected > 0 && <span className="rounded-full px-2 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }} title="Rejected">{g.counts.rejected} rejected</span>}
+              </div>
+              <button
+                onClick={() => setCap(g, !g.reviews_capped)}
+                disabled={capBusy === g.target_id}
+                title={g.reviews_capped ? 'Capped: students reuse an existing draft for this skill. Click to allow new generations.' : 'Uncapped: each student without an approved review gets a fresh draft. Click to cap.'}
+                className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-lg px-2 py-1 shrink-0 disabled:opacity-50"
+                style={{ background: g.reviews_capped ? 'var(--primary)' : 'transparent', color: g.reviews_capped ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: '1px solid ' + (g.reviews_capped ? 'var(--primary)' : 'var(--border)'), cursor: 'pointer' }}
+              >
+                {g.reviews_capped ? <Lock size={11} /> : <Unlock size={11} />} {g.reviews_capped ? 'Capped' : 'Cap'}
+              </button>
+            </div>
+
+            {open && g.counts.pending === 0 && (
+              <p className="text-xs px-4 pb-3" style={{ color: 'var(--muted-foreground)' }}>No drafts waiting for this skill.</p>
+            )}
+
+            {open && g.pending.length > 0 && (
+            <div className="flex flex-col gap-4 px-4 pb-4">
+            {g.pending.map((rv) => (
+          <div key={rv.id} className="rounded-2xl border p-5" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 25%, var(--card))' }}>
 
             {/* Re-teach: a rich ordered block array (prose, callout, diagram,
                 graph, sim). Per-block toolbar (reorder / remove / edit text)
@@ -360,10 +450,15 @@ export default function ReviewQueuePage() {
                 style={{ background: 'transparent', color: 'var(--muted-foreground)', border: '1px solid var(--border)', cursor: 'pointer' }}>
                 <X size={15} /> Reject
               </button>
-              {rv.created_by && <span className="text-xs ml-auto" style={{ color: 'var(--muted-foreground)' }}>from {rv.created_by}</span>}
+              {rv.created_by && <span className="text-xs ml-auto" style={{ color: 'var(--muted-foreground)' }}>from {rv.created_by} · {new Date(rv.created_at).toLocaleDateString()}</span>}
             </div>
           </div>
-        ))}
+            ))}
+            </div>
+            )}
+          </div>
+          )
+        })}
       </div>
     </div>
   )

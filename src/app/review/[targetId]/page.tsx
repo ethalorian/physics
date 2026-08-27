@@ -190,12 +190,6 @@ export default function ReviewPage() {
                 </div>
               )}
 
-              {!review.shared && (
-                <p className="text-xs mb-4 rounded-lg px-3 py-2" style={{ color: 'var(--reward-foreground)', background: 'color-mix(in oklch, var(--reward) 16%, transparent)' }}>
-                  This review was just generated for you — your teacher reviews it before classmates see it.
-                </p>
-              )}
-
               {total > 0 && (
                 <div className="flex justify-center">
                   <button
