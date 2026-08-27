@@ -43,3 +43,6 @@ credentials/*.json
 
 # RISC configuration
 .risc-config
+
+# Scratch that must never reach a build
+_to_delete/
