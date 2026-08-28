@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import MasteryGrowth, { MasteryGrowthProps } from '@/components/mastery/MasteryGrowth'
+import MathSpineGrowth, { MathSpineGrowthProps } from '@/components/math-spine/MathSpineGrowth'
 
 const UNIT_ID = 'unit-1'
 const UNIT_NAME = 'Unit 1 — Motion & Forces (Asteroid 2026-XJ)'
@@ -10,6 +11,10 @@ const UNIT_NAME = 'Unit 1 — Motion & Forces (Asteroid 2026-XJ)'
 export default function GrowthPage() {
   const { data: session } = useSession()
   const [data, setData] = useState<MasteryGrowthProps | null>(null)
+  // Math fluency lives on the SAME growth page: one place answers "how am I
+  // doing?" for both physics mastery and the math spine. Loaded independently —
+  // a math-spine hiccup never blanks the mastery chart.
+  const [mathData, setMathData] = useState<MathSpineGrowthProps | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -39,6 +44,19 @@ export default function GrowthPage() {
         setError(e instanceof Error ? e.message : 'Could not load growth')
         setLoading(false)
       })
+    fetch('/api/math-spine/dashboard')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!active || !d) return
+        setMathData({
+          studentName: session?.user?.name ?? undefined,
+          competencies: d.competencies ?? [],
+          records: d.records ?? [],
+          grants: d.grants ?? [],
+          mathPointsEarned: d.mathPointsEarned ?? 0,
+        })
+      })
+      .catch(() => {})
     return () => {
       active = false
     }
@@ -49,6 +67,11 @@ export default function GrowthPage() {
       {loading && <p className="text-sm text-muted-foreground">Loading your growth…</p>}
       {error && <p className="text-sm text-red-600">Could not load your growth: {error}</p>}
       {data && <MasteryGrowth {...data} />}
+      {mathData && (
+        <div className="mt-4">
+          <MathSpineGrowth {...mathData} />
+        </div>
+      )}
     </div>
   )
 }
