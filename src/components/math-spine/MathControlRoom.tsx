@@ -18,8 +18,14 @@ import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
 interface Student { id: string; name: string; email: string }
-interface Cell { value: number | null; count: number; pending: number }
-interface GridData { competencies: Competency[]; students: Student[]; cells: Record<string, Record<string, Cell>> }
+type RungState = 'not-yet' | 'almost' | 'got-it' | 'refresh'
+interface Cell { value: number | null; count: number; pending: number; state?: RungState | null }
+interface GridData {
+  competencies: Competency[]
+  students: Student[]
+  cells: Record<string, Record<string, Cell>>
+  currentRung?: Record<string, { competencyId: string; kind: string } | null>
+}
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean }
 
 interface StrokePoint { x: number; y: number }
@@ -99,24 +105,29 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
   )
 }
 
-function band(v: number | null): 0 | 1 | 2 | 3 {
-  if (v == null) return 0
-  if (v >= 2.5) return 3
-  if (v >= 1.5) return 2
-  return 1
+// Snapshot cells speak the picker's four-state vocabulary (the same words
+// students see), not raw colour bands. Never colour-only: each state pairs a
+// colour with a glyph/value so the grid survives colour-blindness and print.
+const STATE_META: Record<RungState, { word: string; glyph: string; style: CSSProperties }> = {
+  'got-it':  { word: 'Got it',          glyph: '',  style: { background: 'color-mix(in oklch, var(--success) 78%, transparent)', color: '#fff' } },
+  'almost':  { word: 'Almost',          glyph: '',  style: { background: 'color-mix(in oklch, var(--reward) 75%, transparent)', color: 'var(--reward-foreground)' } },
+  'not-yet': { word: 'Not yet',         glyph: '',  style: { background: 'color-mix(in oklch, var(--destructive) 70%, transparent)', color: '#fff' } },
+  'refresh': { word: 'Needs a refresh', glyph: '↻', style: { background: 'color-mix(in oklch, var(--primary) 65%, transparent)', color: '#fff' } },
 }
-function cellStyle(b: 0 | 1 | 2 | 3): CSSProperties {
-  if (b === 3) return { background: 'color-mix(in oklch, var(--success) 80%, transparent)', color: '#fff' }
-  if (b === 2) return { background: 'color-mix(in oklch, var(--reward) 75%, transparent)', color: 'var(--reward-foreground)' }
-  if (b === 1) return { background: 'color-mix(in oklch, var(--destructive) 72%, transparent)', color: '#fff' }
-  return { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
+const EMPTY_CELL: CSSProperties = { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
+function stateOf(cell: Cell): RungState | null {
+  if (cell.state) return cell.state
+  if (cell.value == null) return null
+  return cell.value >= 2.5 ? 'got-it' : cell.value >= 1.5 ? 'almost' : 'not-yet'
 }
+type SnapshotSort = 'name' | 'progress' | 'needs-me'
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
 export default function MathControlRoom({ classId }: { classId?: string | null }) {
   const classQuery = classId ? `?class=${encodeURIComponent(classId)}` : ''
   const [grid, setGrid] = useState<GridData | null>(null)
+  const [snapshotSort, setSnapshotSort] = useState<SnapshotSort>('name')
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [loading, setLoading] = useState(true)
   const [sel, setSel] = useState<{ studentId: string; name: string } | null>(null)
@@ -282,47 +293,158 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
         )}
       </div>
 
-      {/* Read-only class snapshot. */}
-      <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Class snapshot</div>
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ borderCollapse: 'separate', borderSpacing: 2 }}>
-          <thead>
-            <tr>
-              <th style={{ position: 'sticky', left: 0, background: 'var(--background)', textAlign: 'left', padding: '4px 8px', fontSize: 12 }}>Student</th>
-              {grid.competencies.map((c) => (
-                <th key={c.id} title={c.statement} style={{ padding: '4px 6px', fontSize: 11, color: 'var(--muted-foreground)', fontWeight: 600 }}>{c.code}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {grid.students.map((s) => (
-              <tr key={s.id}>
-                <td style={{ position: 'sticky', left: 0, background: 'var(--background)', padding: '4px 8px', fontSize: 13, whiteSpace: 'nowrap' }}>{s.name}</td>
-                {grid.competencies.map((c) => {
-                  const cell = grid.cells[s.id]?.[c.id] ?? { value: null, count: 0, pending: 0 }
-                  const b = band(cell.value)
+      {/* Read-only class snapshot — reads in LADDER order with the picker's
+          own four-state vocabulary. Three layers of summary so the grid is
+          scannable even when it's mostly empty (start of year):
+          1. a class ladder strip (how many students sit in each state, per rung)
+          2. a per-student summary (today's rung + fluent count)
+          3. the cells themselves (value + state colour + ↻ glyph, never colour-only) */}
+      <div className="flex items-center justify-between gap-2 flex-wrap mb-2">
+        <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Class snapshot</div>
+        <div className="flex items-center gap-1" role="group" aria-label="Sort students">
+          {([['name', 'A–Z'], ['progress', 'Most progress'], ['needs-me', 'Needs me first']] as [SnapshotSort, string][]).map(([v, label]) => (
+            <button key={v} onClick={() => setSnapshotSort(v)}
+              className="text-[11px] font-semibold rounded-md px-2 py-1"
+              aria-pressed={snapshotSort === v}
+              style={{ border: '1px solid var(--border)', cursor: 'pointer', background: snapshotSort === v ? 'var(--primary)' : 'var(--card)', color: snapshotSort === v ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {(() => {
+        const comps = grid.competencies
+        // Per-competency class tallies (the ladder strip + column footers).
+        const tally = comps.map((c) => {
+          const t = { 'got-it': 0, 'almost': 0, 'not-yet': 0, 'refresh': 0, none: 0 }
+          for (const st of grid.students) {
+            const state = stateOf(grid.cells[st.id]?.[c.id] ?? { value: null, count: 0, pending: 0 })
+            if (state) t[state]++
+            else t.none++
+          }
+          return t
+        })
+        const n = grid.students.length
+        // Per-student rollups for sorting + the summary column.
+        const rollup = new Map(grid.students.map((st) => {
+          let fluent = 0, needs = 0, evidence = 0
+          for (const c of comps) {
+            const state = stateOf(grid.cells[st.id]?.[c.id] ?? { value: null, count: 0, pending: 0 })
+            if (state) evidence++
+            if (state === 'got-it') fluent++
+            if (state === 'not-yet' || state === 'refresh') needs++
+          }
+          return [st.id, { fluent, needs, evidence }] as const
+        }))
+        const students = [...grid.students].sort((a, b) => {
+          if (snapshotSort === 'progress') return (rollup.get(b.id)!.fluent - rollup.get(a.id)!.fluent) || a.name.localeCompare(b.name)
+          if (snapshotSort === 'needs-me') return (rollup.get(b.id)!.needs - rollup.get(a.id)!.needs) || (rollup.get(b.id)!.evidence - rollup.get(a.id)!.evidence) || a.name.localeCompare(b.name)
+          return a.name.localeCompare(b.name)
+        })
+        const compByIdLocal = new Map(comps.map((c) => [c.id, c]))
+        return (
+          <>
+            {/* 1 — class ladder strip */}
+            <div className="rounded-xl border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <div className="text-[11px] font-semibold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Where the class is on the ladder</div>
+              <div style={{ display: 'grid', gridTemplateColumns: `repeat(${comps.length}, minmax(44px, 1fr))`, gap: 6 }}>
+                {comps.map((c, i) => {
+                  const t = tally[i]
+                  const seg = (count: number, color: string) => count > 0 ? <div style={{ height: Math.max(3, Math.round((count / Math.max(1, n)) * 44)), background: color, borderRadius: 2 }} /> : null
                   return (
-                    <td key={c.id} style={{ padding: 0 }}>
-                      <div
-                        style={{ ...cellStyle(b), position: 'relative', width: 40, height: 30, borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                        title={`${c.code} · ${cell.value === null ? 'not rated' : cell.value.toFixed(1)}${cell.pending ? ` · ${cell.pending} to review` : ''}`}
-                      >
-                        {cell.value === null ? '·' : cell.value.toFixed(1)}
-                        {cell.pending > 0 && (
-                          <span style={{ position: 'absolute', top: 2, right: 3, width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)' }} />
-                        )}
+                    <div key={c.id} title={`${c.code} — ${c.statement}\nGot it ${t['got-it']} · Almost ${t.almost} · Not yet ${t['not-yet']} · Refresh ${t.refresh} · No evidence ${t.none}`}
+                      style={{ textAlign: 'center' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: 1, height: 48, justifyContent: 'flex-start' }}>
+                        {seg(t['got-it'], 'color-mix(in oklch, var(--success) 80%, transparent)')}
+                        {seg(t.almost, 'color-mix(in oklch, var(--reward) 75%, transparent)')}
+                        {seg(t['not-yet'], 'color-mix(in oklch, var(--destructive) 70%, transparent)')}
+                        {seg(t.refresh, 'color-mix(in oklch, var(--primary) 65%, transparent)')}
+                        {seg(t.none, 'var(--muted)')}
                       </div>
-                    </td>
+                      <div className="text-[10px] font-bold mt-1" style={{ color: 'var(--muted-foreground)' }}>{c.code}</div>
+                      <div className="text-[10px] tabular-nums" style={{ color: t['got-it'] > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{t['got-it']}/{n}</div>
+                    </div>
                   )
                 })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-        Read-only overview. Rate from the review queue above — only the competencies a warm-up tests.
-      </p>
+              </div>
+            </div>
+
+            {/* 2+3 — the grid, with a per-student summary column */}
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ borderCollapse: 'separate', borderSpacing: 2 }}>
+                <thead>
+                  <tr>
+                    <th style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', textAlign: 'left', padding: '4px 8px', fontSize: 12 }}>Student</th>
+                    <th style={{ padding: '4px 8px', fontSize: 11, color: 'var(--muted-foreground)', fontWeight: 600, textAlign: 'left', whiteSpace: 'nowrap' }}>Today&apos;s rung</th>
+                    {comps.map((c) => (
+                      <th key={c.id} title={c.statement} scope="col" style={{ padding: '4px 6px', fontSize: 11, color: 'var(--muted-foreground)', fontWeight: 600 }}>{c.code}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {students.map((st) => {
+                    const roll = rollup.get(st.id)!
+                    const rung = grid.currentRung?.[st.id] ?? null
+                    const rungComp = rung ? compByIdLocal.get(rung.competencyId) : null
+                    const rungWord = rung?.kind === 'refresh' ? 'refresh' : rung?.kind === 'recheck' ? 're-check' : rung?.kind === 'maintenance' ? 'stretch' : 'climb'
+                    return (
+                      <tr key={st.id}>
+                        <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--background)', padding: '4px 8px', fontSize: 13, whiteSpace: 'nowrap' }}>
+                          {st.name}
+                          <span className="tabular-nums" style={{ marginLeft: 6, fontSize: 11, color: roll.fluent > 0 ? 'var(--success)' : 'var(--muted-foreground)' }}>{roll.fluent}/{comps.length}</span>
+                        </td>
+                        <td style={{ padding: '2px 8px 2px 4px', whiteSpace: 'nowrap' }}>
+                          {roll.evidence === 0 ? (
+                            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>No evidence yet · starts at {rungComp?.code ?? comps[0]?.code}</span>
+                          ) : rungComp ? (
+                            <span className="text-[11px] font-semibold rounded-md px-1.5 py-0.5" title={rungComp.statement}
+                              style={{ background: 'color-mix(in oklch, var(--primary) 12%, transparent)', color: 'var(--primary)' }}>
+                              {rungComp.code} · {rungWord}
+                            </span>
+                          ) : null}
+                        </td>
+                        {comps.map((c) => {
+                          const cell = grid.cells[st.id]?.[c.id] ?? { value: null, count: 0, pending: 0 }
+                          const state = stateOf(cell)
+                          const meta = state ? STATE_META[state] : null
+                          const label = `${st.name} · ${c.code}: ${state ? STATE_META[state].word : 'no evidence yet'}${cell.value != null ? ` (${cell.value.toFixed(1)})` : ''}${cell.pending ? ` · ${cell.pending} to review` : ''}`
+                          return (
+                            <td key={c.id} style={{ padding: 0 }}>
+                              <div role="img" aria-label={label} title={label}
+                                style={{ ...(meta ? meta.style : EMPTY_CELL), position: 'relative', width: 40, height: 30, borderRadius: 6, fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+                                {cell.value === null ? '·' : cell.value.toFixed(1)}
+                                {meta?.glyph && <span aria-hidden style={{ fontSize: 11 }}>{meta.glyph}</span>}
+                                {cell.pending > 0 && (
+                                  <span style={{ position: 'absolute', top: 2, right: 3, width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)' }} />
+                                )}
+                              </div>
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+            {/* legend — the same four words students see, plus the empty state */}
+            <div className="flex items-center gap-3 flex-wrap mt-2 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
+              {(['got-it', 'almost', 'not-yet', 'refresh'] as RungState[]).map((k) => (
+                <span key={k} className="inline-flex items-center gap-1.5">
+                  <span style={{ ...STATE_META[k].style, width: 14, height: 14, borderRadius: 4, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 9 }}>{STATE_META[k].glyph}</span>
+                  {STATE_META[k].word}
+                </span>
+              ))}
+              <span className="inline-flex items-center gap-1.5"><span style={{ ...EMPTY_CELL, width: 14, height: 14, borderRadius: 4, display: 'inline-block' }} /> No evidence yet</span>
+              <span className="inline-flex items-center gap-1.5"><span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)', display: 'inline-block' }} /> Warm-up waiting</span>
+            </div>
+            <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
+              Read-only overview in ladder order. Rate from the review queue above — only the competencies a warm-up tests.
+            </p>
+          </>
+        )
+      })()}
 
       {/* Review drawer */}
       {sel && (
@@ -399,7 +521,7 @@ export default function MathControlRoom({ classId }: { classId?: string | null }
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs" style={{ color: 'var(--muted-foreground)', minWidth: 92 }}>
-                          {cur === null ? 'not yet rated' : `now ${cur.toFixed(1)} (${levelWord(band(cur))})`}
+                          {cur === null ? 'not yet rated' : `now ${cur.toFixed(1)} (${cur >= 2.5 ? 'Got it' : cur >= 1.5 ? 'Almost' : 'Not yet'})`}
                         </span>
                         {rated ? (
                           <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>✓ rated</span>

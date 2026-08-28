@@ -25,8 +25,25 @@ import {
   FileText,
   User,
   Heart,
-  Swords
+  Swords,
+  Joystick,
+  Sigma,
+  Dices,
+  Gift
 } from 'lucide-react'
+
+// XP sources, in the order they appear on a row. Zero-XP sources are hidden,
+// so a row reads "Arcade 150 · Spin 20" instead of three zero counters.
+type XpSource = 'arcade' | 'math' | 'lessons' | 'games' | 'graded' | 'spin' | 'other'
+const XP_SOURCES: { key: XpSource; label: string; Icon: typeof Zap }[] = [
+  { key: 'arcade', label: 'Arcade', Icon: Joystick },
+  { key: 'math', label: 'Math', Icon: Sigma },
+  { key: 'lessons', label: 'Lessons', Icon: BookOpen },
+  { key: 'games', label: 'Games', Icon: Gamepad2 },
+  { key: 'graded', label: 'Graded work', Icon: FileText },
+  { key: 'spin', label: 'Spin', Icon: Dices },
+  { key: 'other', label: 'Bonus', Icon: Gift },
+]
 import Link from 'next/link'
 import StreakTracker from '@/components/gamification/StreakTracker'
 
@@ -41,7 +58,12 @@ interface LeaderboardEntry {
     games: number
     lessons: number
     assignments: number
+    arcade_runs?: number
+    spins?: number
+    math_grants?: number
   }
+  /** XP contributed by each source — what the total is actually made of. */
+  xp_by_source?: Partial<Record<XpSource, number>>
   is_current_user: boolean
   streak?: number
   streak_longest?: number
@@ -290,19 +312,16 @@ export default function LeaderboardPage() {
                             <Badge variant="outline" className="text-xs">You</Badge>
                           )}
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
-                          <span className="flex items-center gap-1">
-                            <Gamepad2 className="h-3 w-3" />
-                            {entry.activities.games} games
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <BookOpen className="h-3 w-3" />
-                            {entry.activities.lessons} lessons
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <FileText className="h-3 w-3" />
-                            {entry.activities.assignments} assignments
-                          </span>
+                        <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-xs text-muted-foreground mt-1">
+                          {XP_SOURCES.filter((s) => (entry.xp_by_source?.[s.key] ?? 0) > 0).map((s) => (
+                            <span key={s.key} className="flex items-center gap-1" title={`${s.label}: ${entry.xp_by_source?.[s.key]} XP`}>
+                              <s.Icon className="h-3 w-3" />
+                              {s.label} <span className="tabular-nums font-medium text-foreground/80">{entry.xp_by_source?.[s.key]}</span>
+                            </span>
+                          ))}
+                          {XP_SOURCES.every((s) => (entry.xp_by_source?.[s.key] ?? 0) <= 0) && (
+                            <span>No XP yet</span>
+                          )}
                           {(entry.streak ?? 0) > 0 && (
                             <span className="flex items-center gap-1 text-reward font-medium">
                               <Flame className="h-3 w-3" />
@@ -366,11 +385,11 @@ export default function LeaderboardPage() {
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
               <div className="p-2 rounded-lg" style={{ background: 'color-mix(in oklch, var(--success) 12%, transparent)' }}>
-                <FileText className="h-5 w-5" style={{ color: 'var(--success)' }} />
+                <Joystick className="h-5 w-5" style={{ color: 'var(--success)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Submit assignments</h4>
-                <p className="text-xs text-muted-foreground">Graded work earns XP (up to 40 each)</p>
+                <h4 className="font-semibold text-sm">Math gym &amp; warm-ups</h4>
+                <p className="text-xs text-muted-foreground">Arcade runs pay up to 25 XP each (75/day); mastery milestones pay more</p>
               </div>
             </div>
             <div className="flex items-start gap-3 p-3 rounded-lg bg-background border">
@@ -378,8 +397,8 @@ export default function LeaderboardPage() {
                 <Target className="h-5 w-5" style={{ color: 'var(--reward)' }} />
               </div>
               <div>
-                <h4 className="font-semibold text-sm">Finish daily challenges</h4>
-                <p className="text-xs text-muted-foreground">Each challenge you finish pays bonus XP</p>
+                <h4 className="font-semibold text-sm">Daily spin &amp; challenges</h4>
+                <p className="text-xs text-muted-foreground">One spin a day, plus bonus XP for duels, reviews, and escape rooms</p>
               </div>
             </div>
           </div>

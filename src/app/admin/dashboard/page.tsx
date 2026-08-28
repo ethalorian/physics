@@ -18,7 +18,7 @@ type LessonRow = {
   published: boolean
   content_blocks: { blocks?: unknown[] } | null
 }
-type UnitRow = { id: string; name: string; order_index: number }
+type UnitRow = { id: string; name: string; order_index: number; program: string | null }
 
 function blockCount(l: LessonRow): number {
   return Array.isArray(l.content_blocks?.blocks) ? l.content_blocks!.blocks!.length : 0
@@ -41,7 +41,7 @@ export default async function AdminManagePage() {
   }
   const role = ec.realRole // drives publish (super-admin only)
 
-  const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
+  const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index, program').order('order_index', { ascending: true })
   const units = (unitRows ?? []) as UnitRow[]
 
   const { data: lessonRows } = await supabaseAdmin
@@ -66,7 +66,7 @@ export default async function AdminManagePage() {
 
   // Shape units (+ an "Other" bucket for orphan lessons) for the client list.
   const manageUnits: ManageUnit[] = units
-    .map((u) => ({ id: u.id, name: u.name, lessons: lessons.filter((l) => l.unit === u.name).map(toManageLesson) }))
+    .map((u) => ({ id: u.id, name: u.name, program: u.program, lessons: lessons.filter((l) => l.unit === u.name).map(toManageLesson) }))
     .filter((u) => u.lessons.length > 0)
   const orphans: ManageLesson[] = lessons.filter((l) => !units.some((u) => u.name === l.unit)).map(toManageLesson)
 

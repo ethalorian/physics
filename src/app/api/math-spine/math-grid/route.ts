@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { resolveRosterScope } from '@/lib/teacher-scope'
 import { decayingAverage, MathStrand } from '@/data/curriculum-types'
+import { rungState, pickTargetRung, type RungState, type RungInput } from '@/lib/math-spine-picker'
 
 // GET /api/math-spine/math-grid[?class=<courseId>]
 // The control-room "Math" view: every roster student x every active competency,
@@ -17,18 +18,20 @@ export const GET = withAuth(async (request, ctx) => {
   }
   const classId = new URL(request.url).searchParams.get('class')
 
-  // Competencies (active), ordered for a stable column layout.
+  // Competencies (active) in LADDER order (sequence_order) — the snapshot
+  // should read left→right the way students climb, not strand-alphabetically.
   const { data: compRows } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, code, statement, strand, order_index')
+    .select('id, code, statement, strand, order_index, sequence_order')
     .eq('is_active', true)
-    .order('strand', { ascending: true })
+    .order('sequence_order', { ascending: true, nullsFirst: false })
     .order('order_index', { ascending: true })
-  const competencies = (compRows ?? []).map((c) => ({
+  const competencies = (compRows ?? []).map((c, i) => ({
     id: c.id,
     code: c.code,
     statement: c.statement,
     strand: c.strand as MathStrand,
+    sequence: (c.sequence_order ?? 900 + i) * 1000 + c.order_index,
   }))
   const competencyIds = competencies.map((c) => c.id)
 
@@ -42,8 +45,11 @@ export const GET = withAuth(async (request, ctx) => {
     .map((s) => ({ id: s.id as string, name: s.name, email: s.email }))
   const studentIds = students.map((s) => s.id)
 
-  const cells: Record<string, Record<string, { value: number | null; count: number; pending: number }>> = {}
+  const cells: Record<string, Record<string, { value: number | null; count: number; pending: number; state: RungState | null }>> = {}
   for (const s of students) cells[s.id] = {}
+  // The rung the daily picker would hand each student today — the row-level
+  // "where this student IS" summary the grid alone can't show.
+  const currentRung: Record<string, { competencyId: string; kind: string } | null> = {}
 
   if (studentIds.length > 0 && competencyIds.length > 0) {
     // Records → decaying value per (student, competency).
@@ -74,7 +80,12 @@ export const GET = withAuth(async (request, ctx) => {
       pendingByKey.set(key, (pendingByKey.get(key) ?? 0) + 1)
     }
 
+    // Latest observation per key, for the picker's staleness logic.
+    const latestByKey = new Map<string, string>()
+    for (const r of recRows ?? []) latestByKey.set(`${r.user_id}|${r.competency_id}`, r.observed_at)
+
     for (const s of students) {
+      const rungs: RungInput[] = []
       for (const c of competencies) {
         const key = `${s.id}|${c.id}`
         const levels = levelsByKey.get(key) ?? []
@@ -82,10 +93,14 @@ export const GET = withAuth(async (request, ctx) => {
           value: levels.length ? decayingAverage(levels) : null,
           count: levels.length,
           pending: pendingByKey.get(key) ?? 0,
+          state: levels.length ? rungState(levels) : null,
         }
+        rungs.push({ id: c.id, sequence: c.sequence, levels, latestObservedAt: latestByKey.get(key) ?? null })
       }
+      const pick = pickTargetRung(rungs)
+      currentRung[s.id] = pick ? { competencyId: pick.id, kind: pick.kind } : null
     }
   }
 
-  return NextResponse.json({ competencies, students, cells })
+  return NextResponse.json({ competencies, students, cells, currentRung })
 })

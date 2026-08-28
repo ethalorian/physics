@@ -20,7 +20,19 @@ export interface ManageLesson {
 export interface ManageUnit {
   id: string
   name: string
+  /** 'physics' | 'trades' — which course this unit belongs to (units.program). */
+  program?: string | null
   lessons: ManageLesson[]
+}
+
+// Both courses number their units from 1, so "Unit 1" alone is ambiguous.
+// The list is grouped by program and every card carries a program chip.
+const PROGRAMS: { id: string; label: string; color: string; fg: string }[] = [
+  { id: 'physics', label: 'Physics', color: 'var(--primary)', fg: 'var(--primary)' },
+  { id: 'trades', label: 'Trades', color: 'var(--reward)', fg: 'var(--reward-foreground)' },
+]
+function programMeta(id: string | null | undefined) {
+  return PROGRAMS.find((p) => p.id === id) ?? { id: id ?? 'other', label: id ? id[0].toUpperCase() + id.slice(1) : 'Other', color: 'var(--muted-foreground)', fg: 'var(--muted-foreground)' }
 }
 
 function unitStats(u: ManageUnit) {
@@ -109,6 +121,9 @@ function UnitCard({ u, canPublish }: { u: ManageUnit; canPublish: boolean }) {
         <ChevronRight size={18} style={{ color: 'var(--muted-foreground)', transition: 'transform .15s', transform: open ? 'rotate(90deg)' : 'none', flexShrink: 0 }} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
+            {u.id !== '__orphans__' && (() => { const pm = programMeta(u.program); return (
+              <span className="text-[10px] font-bold uppercase tracking-widest rounded-md px-1.5 py-0.5" style={{ background: `color-mix(in oklch, ${pm.color} 16%, transparent)`, color: pm.fg }}>{pm.label}</span>
+            ) })()}
             <span className="text-sm font-bold truncate">{u.name}</span>
             {complete ? (
               <span className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--success) 14%, transparent)', color: 'var(--success)' }}>
@@ -148,9 +163,26 @@ function UnitCard({ u, canPublish }: { u: ManageUnit; canPublish: boolean }) {
 }
 
 export default function ManageUnits({ units, orphans, canPublish }: { units: ManageUnit[]; orphans: ManageLesson[]; canPublish: boolean }) {
+  // Group by program in a fixed order (physics, trades, then anything else),
+  // preserving the server's order_index sort inside each group.
+  const groups: { meta: ReturnType<typeof programMeta>; units: ManageUnit[] }[] = []
+  const known = PROGRAMS.map((p) => p.id)
+  for (const id of [...known, ...Array.from(new Set(units.map((u) => u.program ?? 'other'))).filter((id) => !known.includes(id))]) {
+    const inGroup = units.filter((u) => (u.program ?? 'other') === id)
+    if (inGroup.length > 0) groups.push({ meta: programMeta(id), units: inGroup })
+  }
   return (
     <div>
-      {units.map((u) => <UnitCard key={u.id} u={u} canPublish={canPublish} />)}
+      {groups.map((g) => (
+        <section key={g.meta.id} className="mb-5">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-block rounded-full" style={{ width: 8, height: 8, background: g.meta.color }} />
+            <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: g.meta.fg }}>{g.meta.label}</h3>
+            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{g.units.length} unit{g.units.length === 1 ? '' : 's'}</span>
+          </div>
+          {g.units.map((u) => <UnitCard key={u.id} u={u} canPublish={canPublish} />)}
+        </section>
+      ))}
       {orphans.length > 0 && <UnitCard u={{ id: '__orphans__', name: 'Other lessons', lessons: orphans }} canPublish={canPublish} />}
     </div>
   )

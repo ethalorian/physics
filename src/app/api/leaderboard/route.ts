@@ -23,7 +23,7 @@ export const GET = withAuth(async (request, ctx) => {
     // supabase/migrations/optimize_leaderboard_aggregation.sql) and mirrors
     // src/lib/points.ts. This replaces the previous approach of loading the
     // entire game/lesson/submission tables into JS on every request.
-    const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: any; image?: string | null }>()
+    const userDataMap = new Map<string, { name?: string; email: string; totalPoints: number; activities: Record<string, number>; xp_by_source: Record<string, number>; image?: string | null }>()
 
     const { data: aggregated, error: aggError } = await supabaseAdmin.rpc('get_leaderboard', {
       p_since: dateFilter,
@@ -35,11 +35,32 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 
-    for (const row of (aggregated ?? []) as { user_id: string; user_email: string; total_points: number; games: number; lessons: number; assignments: number }[]) {
+    // Per-source XP so the row can say WHERE the points came from — a student
+    // whose 170 XP is all math-gym arcade used to read "0 games · 0 lessons".
+    type AggRow = {
+      user_id: string; user_email: string; total_points: number
+      games: number; lessons: number; assignments: number
+      games_pts: number; lessons_pts: number; graded_pts: number; math_pts: number
+      arcade_pts: number; spin_pts: number; other_pts: number
+      arcade_runs: number; spins: number; math_grants: number
+    }
+    for (const row of (aggregated ?? []) as AggRow[]) {
       userDataMap.set(row.user_id, {
         email: row.user_email || '',
-        totalPoints: row.total_points || 0,
-        activities: { games: row.games || 0, lessons: row.lessons || 0, assignments: row.assignments || 0 },
+        totalPoints: Number(row.total_points) || 0,
+        activities: {
+          games: row.games || 0, lessons: row.lessons || 0, assignments: row.assignments || 0,
+          arcade_runs: row.arcade_runs || 0, spins: row.spins || 0, math_grants: row.math_grants || 0,
+        },
+        xp_by_source: {
+          arcade: Number(row.arcade_pts) || 0,
+          math: Number(row.math_pts) || 0,
+          lessons: Number(row.lessons_pts) || 0,
+          games: Number(row.games_pts) || 0,
+          graded: Number(row.graded_pts) || 0,
+          spin: Number(row.spin_pts) || 0,
+          other: Number(row.other_pts) || 0,
+        },
         image: null,
       })
     }
@@ -125,6 +146,7 @@ export const GET = withAuth(async (request, ctx) => {
           streak_longest: userId === ctx.userId ? meStreak.longest : 0,
           streak_total: userId === ctx.userId ? meStreak.total : 0,
           activities: data.activities,
+          xp_by_source: data.xp_by_source,
           is_current_user: userId === ctx.userId,
           has_mii: av?.has_mii ?? false,
           avatar_traits: av?.traits ?? null,
