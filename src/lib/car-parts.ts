@@ -5,16 +5,20 @@ import { supabaseAdmin } from '@/lib/supabase'
  * set) is awarded automatically the first time the student PASSES its tied build
  * lesson at or above the part's `grant_min_score` percent (default 60).
  *
- * Lesson grades live in `gradebook_entries` (item_type='lesson', item_id=lesson_id,
- * percentage / score / max_score), written by the control room when a teacher grades
- * a day. The grant is a free `reward_redemption` (cost 0) created as PENDING — the
- * part is earned, but the teacher physically releases it by hitting Fulfill in the
- * admin store queue. The XP for the work flows through the normal economy.
+ * The app asserts no grades — the pass signal is the teacher's MASTERY rating on
+ * the build lesson's learning target(s): the student's best rating maps to a
+ * percent (1 → 40, 2 → 70, 3 → 100) against `grant_min_score`, so the default 60
+ * means "rated Almost (2) or better", and a part demanding ≥85 means "Got it (3)".
+ * Legacy `gradebook_entries` lesson scores (from the retired grading flow) still
+ * count, so parts earned under the old system stay earned. The grant is a free
+ * `reward_redemption` (cost 0) created as PENDING — the part is earned, but the
+ * teacher physically releases it by hitting Fulfill in the admin store queue.
  *
- * Reconcile model: idempotent, safe to call on every store load. It never grants the
- * same part twice (checks existing redemptions), and it reads the student's BEST
- * graded percent per lesson — so failing first and passing on a retry still unlocks.
+ * Reconcile model: idempotent, safe to call on every store load. It never grants
+ * the same part twice, and it reads the student's BEST signal per lesson — so
+ * failing first and passing on a retry still unlocks.
  */
+const LEVEL_PCT: Record<number, number> = { 1: 40, 2: 70, 3: 100 }
 export async function grantEarnedCarParts(userId: string): Promise<void> {
   const { data: parts } = await supabaseAdmin
     .from('rewards')
@@ -23,15 +27,36 @@ export async function grantEarnedCarParts(userId: string): Promise<void> {
     .not('grant_lesson_id', 'is', null)
   if (!parts || parts.length === 0) return
 
-  // Best graded percent per lesson, straight from the control-room gradebook.
+  const bestPctByLesson = new Map<string, number>()
+
+  // Mastery ratings on the build lessons' targets — the live pass signal.
+  const buildLessonIds = [...new Set(parts.map((p) => p.grant_lesson_id).filter((id): id is string => Boolean(id)))]
+  const { data: targetRows } = await supabaseAdmin
+    .from('learning_targets')
+    .select('id, lesson_id')
+    .in('lesson_id', buildLessonIds)
+  const lessonByTarget = new Map((targetRows ?? []).map((t) => [t.id, t.lesson_id as string]))
+  if (lessonByTarget.size > 0) {
+    const { data: recs } = await supabaseAdmin
+      .from('mastery_records')
+      .select('target_id, level')
+      .eq('user_id', userId)
+      .in('target_id', [...lessonByTarget.keys()])
+    for (const r of (recs ?? []) as { target_id: string; level: number }[]) {
+      const lessonId = lessonByTarget.get(r.target_id)
+      if (!lessonId) continue
+      const pct = LEVEL_PCT[r.level] ?? 0
+      bestPctByLesson.set(lessonId, Math.max(bestPctByLesson.get(lessonId) ?? 0, pct))
+    }
+  }
+
+  // Legacy gradebook lesson scores (retired flow) — old earnings stay earned.
   const { data: grades } = await supabaseAdmin
     .from('gradebook_entries')
     .select('item_id, score, max_score, percentage')
     .eq('user_id', userId)
     .eq('item_type', 'lesson')
     .eq('status', 'graded')
-
-  const bestPctByLesson = new Map<string, number>()
   for (const g of (grades ?? []) as { item_id: string | null; score: number | null; max_score: number | null; percentage: number | null }[]) {
     if (!g.item_id) continue
     const pct = g.percentage != null ? g.percentage : g.max_score ? ((g.score ?? 0) / g.max_score) * 100 : (g.score ?? 0)

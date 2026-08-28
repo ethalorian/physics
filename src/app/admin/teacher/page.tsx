@@ -41,7 +41,7 @@ const TRACKS: { id: string; label: string; desc: string; enabled: boolean; track
 const TOUR: { title: string; body: string }[] = [
   { title: 'Welcome to your dashboard', body: 'This is home base. The tiles below are your tools; the setup checklist clears as you finish each step.' },
   { title: 'The Control Room', body: 'Mission control for grading. Tap any cell to open a student’s work and rate it, or grade lesson completion as a percentage.' },
-  { title: 'Grades → Aspen', body: 'On the Control Room’s Lessons tab, pick a class/section and “Copy grades” gives you a column to paste straight into your Aspen gradebook.' },
+  { title: 'Mastery, not grades', body: 'The app records mastery ratings (1·2·3 per target) and math fluency — it never asserts a grade. Term grades are your professional judgment, made from the mastery and fluency evidence.' },
   { title: 'Roster, classes & pacing', body: 'Roster syncs your Google Classroom. Open a class to see its students and set lesson open/close dates. Pacing keeps your sections on the calendar.' },
 ]
 

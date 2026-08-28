@@ -68,7 +68,6 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
     // grid), then the class mean. Plus how many lesson scores are in the gradebook.
     let classMasteryAvg: number | null = null
     let ratingsLogged = 0
-    let lessonsGraded = 0
     if (gids.length > 0) {
       const { data: recRaw } = await supabaseAdmin
         .from('mastery_records')
@@ -87,13 +86,6 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
       const cellValues = [...byKey.values()].map((arr) => targetValue(arr)).filter((v): v is number => v != null)
       if (cellValues.length > 0) classMasteryAvg = cellValues.reduce((a, b) => a + b, 0) / cellValues.length
 
-      const { count } = await supabaseAdmin
-        .from('gradebook_entries')
-        .select('id', { count: 'exact', head: true })
-        .eq('item_type', 'lesson')
-        .eq('status', 'graded')
-        .in('user_id', gids)
-      lessonsGraded = count ?? 0
     }
 
     // Published lessons (ordered) so the per-class scheduler can list them with
@@ -116,7 +108,6 @@ export const GET = withAuth<{ courseId: string }>(async (request, ctx) => {
         studentCount: students.length,
         classMasteryAvg,
         ratingsLogged,
-        lessonsGraded,
       },
     })
 })

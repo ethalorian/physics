@@ -10,7 +10,7 @@ interface ClassData {
   course: { id: string; name: string; section: string | null; teacherEmail: string | null; mathTranslationEnabled?: boolean }
   students: { id: string; name: string; firstName: string | null; lastName: string | null; lastLoginAt: string | null; lastSeenAt: string | null }[]
   lessons: Lesson[]
-  summary: { studentCount: number; classMasteryAvg: number | null; ratingsLogged: number; lessonsGraded: number }
+  summary: { studentCount: number; classMasteryAvg: number | null; ratingsLogged: number }
   error?: string
 }
 
@@ -116,7 +116,6 @@ export default function ClassPage() {
               <Tile value={s.studentCount} label="Students" />
               <Tile value={s.classMasteryAvg != null ? s.classMasteryAvg.toFixed(1) : '—'} label="Class mastery (1–3)" />
               <Tile value={s.ratingsLogged} label="Mastery ratings logged" />
-              <Tile value={s.lessonsGraded} label="Lesson scores in gradebook" />
             </div>
           )}
 

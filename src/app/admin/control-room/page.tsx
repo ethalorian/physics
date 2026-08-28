@@ -27,9 +27,6 @@ interface RecordItem { target_id: string; level: number; observed_at: string; ev
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
-interface LessonCol { id: string; slug: string; title: string; lessonNumber: number; targetId: string | null }
-interface LessonCell { status: string; pct: number; needsGrading: boolean; gradePct: number | null }
-interface LessonGridData { unitId: string; lessons: LessonCol[]; students: Student[]; cells: Record<string, Record<string, LessonCell>> }
 
 const EVIDENCE = ['observation', 'exit ticket', 'lab', 'conversation', 'quiz']
 
@@ -214,11 +211,7 @@ export default function ControlRoomPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const [sel, setSel] = useState<{ studentId: string; targetId: string; lesson?: { id: string; title: string; number: number } } | null>(null)
-  const [gbPercent, setGbPercent] = useState('')
-  const [gbSuggestion, setGbSuggestion] = useState<{ percent: number; rationale: string } | null>(null)
-  const [gbBusy, setGbBusy] = useState(false)
-  const [gbStats, setGbStats] = useState<{ studentLessonPct: number | null; studentUnitAvg: number | null; classDayAvg: number | null; classUnitAvg: number | null; completionPct: number | null; unitLessons: number; studentGraded: number } | null>(null)
+  const [sel, setSel] = useState<{ studentId: string; targetId: string } | null>(null)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
   const [evidence, setEvidence] = useState('observation')
@@ -228,16 +221,14 @@ export default function ControlRoomPage() {
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
   const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
-  const [view, setView] = useState<'mastery' | 'lessons' | 'math'>('mastery')
+  // Lesson completion grading (the old Aspen gradebook flow) is retired —
+  // lessons are engagement, mastery is the grade. Views: targets + math spine.
+  const [view, setView] = useState<'mastery' | 'math'>('mastery')
   // Student-first grading: keys we've graded this session (so the queue and
   // roster shrink immediately, before the server refresh lands).
   const [gradedKeys, setGradedKeys] = useState<Set<string>>(new Set())
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextStudentGate, setNextStudentGate] = useState<{ id: string; name: string } | null>(null)
-  const [lessonGrid, setLessonGrid] = useState<LessonGridData | null>(null)
-  const [sortMode, setSortMode] = useState<'last' | 'first'>('last') // Aspen sorts by last name
-  const [copyLessonId, setCopyLessonId] = useState('')
-  const [copied, setCopied] = useState<string | null>(null)
   // Class/section scope. Aspen's gradebook is partitioned by section, so the
   // grade copy must be filterable to one class. The scope is SHARED with
   // analytics, roster, and pacing via localStorage (use-class-scope) — pick a
@@ -293,14 +284,6 @@ export default function ControlRoomPage() {
   }, [classQuery])
   useEffect(() => { loadQueue(unitId) }, [unitId, loadQueue])
 
-  const loadLessonGrid = useCallback((unit: string) => {
-    fetch(`/api/mastery/lesson-grid?unit_id=${encodeURIComponent(unit)}${classQuery}`)
-      .then((r) => r.json())
-      .then((d: LessonGridData & { error?: string }) => { if (!d.error) setLessonGrid(d) })
-      .catch(() => {})
-  }, [classQuery])
-  useEffect(() => { loadLessonGrid(unitId) }, [unitId, loadLessonGrid])
-
   // Per-student "last signed in" for the roster (so each student shows when they
   // were last active, right in the grids).
   const [presence, setPresence] = useState<Map<string, { lastLoginAt: string | null; lastSeenAt: string | null }>>(new Map())
@@ -321,35 +304,23 @@ export default function ControlRoomPage() {
     return <span style={{ fontSize: 10, fontWeight: 600, marginLeft: 6, color: lastSeenColor(iso) }} title={iso ? `Last signed in ${new Date(iso).toLocaleString()}` : 'No recorded sign-in yet'}>{lastSeenLabel(iso)}</span>
   }
 
-  const openCell = useCallback((studentId: string, targetId: string, lesson?: { id: string; title: string; number: number }) => {
-    setSel({ studentId, targetId, lesson })
+  const openCell = useCallback((studentId: string, targetId: string) => {
+    setSel({ studentId, targetId })
     setWork(null)
     setSuggestion(null)
     setComparison(null)
-    setGbSuggestion(null)
-    setGbStats(null)
-    setGbPercent(lesson ? String(lessonGrid?.cells?.[studentId]?.[lesson.id]?.gradePct ?? '') : '')
     setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
       .then((r) => r.json())
       .then((d: WorkData) => { setWork(d); setWorkLoading(false) })
       .catch(() => setWorkLoading(false))
-    if (lesson) {
-      // Gradebook-mode analytics: this student's lesson %, unit avg, and the
-      // class averages (scoped to the active class/section).
-      fetch(`/api/gradebook/drawer-stats?user_id=${encodeURIComponent(studentId)}&lesson_id=${encodeURIComponent(lesson.id)}&unit_id=${encodeURIComponent(unitId)}${classQuery}`)
-        .then((r) => r.json())
-        .then((d) => { if (!d.error) setGbStats(d) })
-        .catch(() => {})
-    } else {
-      fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
-        .then((r) => r.json())
-        .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
-        .catch(() => {})
-    }
-  }, [unitId, lessonGrid, classQuery])
+    fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
+      .then((r) => r.json())
+      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
+      .catch(() => {})
+  }, [unitId])
 
-  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setGbSuggestion(null); setGbStats(null); setGbPercent(''); setNextStudentGate(null) }
+  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
@@ -386,7 +357,6 @@ export default function ControlRoomPage() {
       // Refresh the grid + queue so the cell and queue reflect the new rating.
       loadGrid(unitId)
       loadQueue(unitId)
-      loadLessonGrid(unitId)
       // Student-first: clear this student's pending work before the next student.
       const gradedKey = `m:${sel.studentId}:${sel.targetId}`
       setGradedKeys((prev) => new Set(prev).add(gradedKey))
@@ -398,94 +368,27 @@ export default function ControlRoomPage() {
     }
   }
 
-  // --- gradebook (completion tab): suggest + save a percentage ----------------
-  const suggestGradebook = async () => {
-    if (!work || !sel?.lesson) return
-    setGbBusy(true)
-    const workText = work.work.map((w) => `${w.blockType ? `(${w.blockType}) ` : ''}${workToText(w.response)}`).join('\n')
-    const completionPct = lessonGrid?.cells?.[sel.studentId]?.[sel.lesson.id]?.pct ?? null
-    try {
-      const res = await fetch('/api/gradebook/suggest', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lessonTitle: sel.lesson.title, completionPct, work: workText }),
-      })
-      const d = await res.json()
-      if (res.ok) { setGbSuggestion({ percent: d.percent, rationale: d.rationale }); setGbPercent(String(d.percent)) }
-      else setGbSuggestion({ percent: -1, rationale: d.error ?? 'Could not suggest a score' })
-    } catch { setGbSuggestion({ percent: -1, rationale: 'Could not reach the AI assist' }) }
-    finally { setGbBusy(false) }
-  }
-
-  const saveGradebook = async (override?: number) => {
-    if (!sel?.lesson || !lessonGrid) return
-    const raw = override ?? Number(gbPercent)
-    const pct = Math.max(0, Math.min(100, Math.round(raw)))
-    if (!Number.isFinite(pct)) return
-    const student = lessonGrid.students.find((s) => s.id === sel.studentId)
-    setGbBusy(true)
-    try {
-      await fetch('/api/gradebook', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: sel.studentId, user_email: student?.email ?? null, student_name: student?.name ?? null,
-          item_type: 'lesson', item_id: sel.lesson.id, item_title: sel.lesson.title, score: pct, max_score: 100, status: 'graded', graded_at: new Date().toISOString() }),
-      })
-      loadLessonGrid(unitId)
-      // Student-first: clear this student's pending lessons before the next student.
-      const gradedKey = `l:${sel.studentId}:${sel.lesson.id}`
-      setGradedKeys((prev) => new Set(prev).add(gradedKey))
-      advanceStudentFirst(sel.studentId, gradedKey)
-    } catch { setError('Could not save the score') }
-    finally { setGbBusy(false) }
-  }
-
   const selStudent = grid && sel ? grid.students.find((s) => s.id === sel.studentId) : null
   const selTarget = grid && sel ? grid.targets.find((t) => t.id === sel.targetId) : null
   const selHistory = work && sel ? work.records.filter((r) => r.target_id === sel.targetId) : []
 
-  // --- Aspen X2 ordering: Aspen lists students by LAST name, so the grid + copy
-  // must match that order for column paste to line up row-for-row. Prefer the
-  // stored last_name/first_name (set authoritatively on each Classroom import);
-  // fall back to splitting the full name only when those are missing.
-  const sortKey = (s: Student) => {
-    const parts = s.name.trim().split(/\s+/)
-    // Fallback: first token = first name, the rest = surname (Aspen files
-    // compound surnames under the first surname). Prefer stored values.
-    const last = (s.lastName || parts.slice(1).join(' ') || s.name).toLowerCase()
-    const first = (s.firstName || parts[0] || s.name).toLowerCase()
-    return sortMode === 'last' ? `${last} ${first}` : `${first} ${last}`
-  }
-  const sortedStudents = useMemo(() => {
-    if (!lessonGrid) return []
-    const visible = lessonGrid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase()))
-    return [...visible].sort((a, b) => sortKey(a).localeCompare(sortKey(b)))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonGrid, nameFilter, sortMode])
-
   // ---- student-first grading flow ------------------------------------------
-  // Visible students in the active view's display order (mastery uses roster
-  // order + name filter; lessons uses the last/first-name sort).
+  // Visible students in display order (roster order + name filter).
   const masteryStudents = useMemo(
     () => (grid ? grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())) : []),
     [grid, nameFilter]
   )
-  const rosterForView = view === 'lessons' ? sortedStudents : masteryStudents
+  const rosterForView = masteryStudents
 
-  type PendingCell = { targetId: string; lesson?: { id: string; title: string; number: number } }
-  // A student's still-pending cells in the active view, newest grades excluded.
+  type PendingCell = { targetId: string }
+  // A student's still-pending target cells, newest grades excluded.
   const pendingCellsFor = useCallback((sid: string, exclude?: string): PendingCell[] => {
-    if (view === 'lessons') {
-      if (!lessonGrid) return []
-      return lessonGrid.lessons
-        .filter((l) => l.targetId && lessonGrid.cells?.[sid]?.[l.id]?.needsGrading
-          && `l:${sid}:${l.id}` !== exclude && !gradedKeys.has(`l:${sid}:${l.id}`))
-        .map((l) => ({ targetId: l.targetId as string, lesson: { id: l.id, title: l.title, number: l.lessonNumber } }))
-    }
     if (!grid) return []
     return grid.targets
       .filter((t) => grid.pending?.[sid]?.[t.id]
         && `m:${sid}:${t.id}` !== exclude && !gradedKeys.has(`m:${sid}:${t.id}`))
       .map((t) => ({ targetId: t.id }))
-  }, [view, grid, lessonGrid, gradedKeys])
+  }, [grid, gradedKeys])
 
   const studentPendingCount = useCallback((sid: string) => pendingCellsFor(sid).length, [pendingCellsFor])
 
@@ -501,7 +404,7 @@ export default function ControlRoomPage() {
   const openPendingCell = useCallback((sid: string, exclude?: string) => {
     const cells = pendingCellsFor(sid, exclude)
     if (cells.length === 0) return false
-    openCell(sid, cells[0].targetId, cells[0].lesson)
+    openCell(sid, cells[0].targetId)
     return true
   }, [pendingCellsFor, openCell])
 
@@ -522,11 +425,11 @@ export default function ControlRoomPage() {
   const startGradingPending = useCallback(() => {
     setGradedKeys(new Set())
     const first = pendingStudents[0]
-    if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId, pendingCellsFor(first.id)[0]?.lesson)
+    if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId)
   }, [pendingStudents, pendingCellsFor, openCell])
 
-  // Keyboard-first grading: 1/2/3 rate (mastery); 1–6 set presets + Enter saves
-  // (lessons); Esc closes. Number keys are ignored while typing in a field.
+  // Keyboard-first grading: 1/2/3 rate (mastery); Esc closes. Number keys are
+  // ignored while typing in a field.
   useEffect(() => {
     if (!sel) return
     const onKey = (e: KeyboardEvent) => {
@@ -534,26 +437,13 @@ export default function ControlRoomPage() {
       const el = document.activeElement
       const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
       if (e.key === 'Escape') { closeDrawer(); return }
-      if (!sel.lesson) {
-        if (typing) return
-        if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
-        return
-      }
-      // Enter saves whatever's typed in the box (for odd values like 85).
-      if (e.key === 'Enter') { if (gbPercent !== '' && !gbBusy) { e.preventDefault(); saveGradebook() } return }
-      // One numpad press grades and advances: tens digit, 0 → 100 (full credit).
-      if (!typing && !gbBusy && /^[0-9]$/.test(e.key)) {
-        e.preventDefault()
-        const n = Number(e.key)
-        const pct = n === 0 ? 100 : n * 10
-        setGbPercent(String(pct))
-        saveGradebook(pct)
-      }
+      if (typing) return
+      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, gbPercent, nextStudentGate, gbBusy])
+  }, [sel, nextStudentGate])
 
   // Inter-student gate: any key (or Continue) advances to the next student;
   // Esc closes instead. One keystroke per student, giving your eyes a beat.
@@ -570,22 +460,6 @@ export default function ControlRoomPage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [nextStudentGate, openPendingCell])
 
-  const copyToClipboard = (text: string, what: string) => {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(what)
-      setTimeout(() => setCopied(null), 1800)
-    }).catch(() => setError('Could not copy to clipboard'))
-  }
-  const copyColumn = (kind: 'grades' | 'names') => {
-    if (!lessonGrid) return
-    const lines = sortedStudents.map((s) => {
-      if (kind === 'names') return s.name
-      const pct = lessonGrid.cells[s.id]?.[copyLessonId]?.gradePct
-      return pct != null ? String(pct) : ''
-    })
-    copyToClipboard(lines.join('\n'), kind)
-  }
-
   // The queue is demoted to a collapsed "Priority" strip: only the truly urgent
   // (aged 48h+ or self-flagged "Not yet"). Everything else is walked by the one
   // "Grade pending" CTA, so the queue is no longer a competing second door.
@@ -600,11 +474,9 @@ export default function ControlRoomPage() {
         {/* tabs: mastery (targets) vs lessons (completion) vs math (spine); the
             active tab carries its keyboard contract so the scheme is visible
             before the drawer opens */}
-        {([['mastery', 'Mastery (targets)', 'keys 1·2·3 rate'], ['lessons', 'Lessons (completion)', '0–9 sets tens digit'], ['math', 'Math (spine)', '']] as const).map(([v, label, hint]) => {
+        {([['mastery', 'Mastery (targets)', 'keys 1·2·3 rate'], ['math', 'Math (spine)', '']] as const).map(([v, label, hint]) => {
           const active = view === v
-          const toGrade = v === 'lessons' && lessonGrid
-            ? Object.values(lessonGrid.cells).reduce((sum, row) => sum + Object.values(row).filter((c) => c.needsGrading).length, 0)
-            : 0
+          const toGrade = 0
           return (
             <button key={v} onClick={() => setView(v)}
               className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-semibold"
@@ -658,8 +530,8 @@ export default function ControlRoomPage() {
             value={classId ?? ''}
             onChange={(e) => pickClass(e.target.value)}
             title={classId
-              ? `Scoped to ${classLabel || 'one class'} — grades you copy match this Aspen section`
-              : 'Scope to one class/section — Aspen partitions the gradebook by section'}
+              ? `Scoped to ${classLabel || 'one class'}`
+              : 'Scope to one class/section'}
             className="rounded-lg text-sm px-3 py-2"
             style={{ border: `1px solid ${classId ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)' }}
           >
@@ -804,111 +676,7 @@ export default function ControlRoomPage() {
         </div>
       )}
 
-      {/* LESSONS (completion) tab */}
-      {view === 'lessons' && lessonGrid && lessonGrid.students.length > 0 && (
-        <>
-          {/* Copy to Aspen X2 — paste a whole column of grades into the gradebook */}
-          <div className="rounded-xl border mt-4 p-3 flex items-center gap-3 flex-wrap" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <span className="text-sm font-semibold">Copy to Aspen X2</span>
-            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Sort</span>
-            <div className="inline-flex rounded-lg overflow-hidden" style={{ border: '1px solid var(--border)' }}>
-              {(['last', 'first'] as const).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setSortMode(m)}
-                  className="text-xs px-2.5 py-1.5 font-medium"
-                  style={{ background: sortMode === m ? 'var(--primary)' : 'transparent', color: sortMode === m ? 'var(--primary-foreground)' : 'var(--foreground)', border: 'none', cursor: 'pointer' }}
-                >
-                  {m === 'last' ? 'Last name' : 'First name'}
-                </button>
-              ))}
-            </div>
-            <select
-              value={copyLessonId}
-              onChange={(e) => setCopyLessonId(e.target.value)}
-              className="rounded-lg text-sm px-3 py-2"
-              style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
-            >
-              <option value="">Choose a day…</option>
-              {lessonGrid.lessons.map((l) => (
-                <option key={l.id} value={l.id}>{`D${l.lessonNumber} — ${l.title}`}</option>
-              ))}
-            </select>
-            <button
-              onClick={() => copyColumn('grades')}
-              disabled={!copyLessonId}
-              className="text-sm font-semibold px-3 py-2 rounded-lg"
-              style={{ background: copyLessonId ? 'var(--primary)' : 'var(--secondary)', color: copyLessonId ? 'var(--primary-foreground)' : 'var(--muted-foreground)', border: 'none', cursor: copyLessonId ? 'pointer' : 'default' }}
-            >
-              {copied === 'grades' ? 'Copied ✓' : 'Copy grades'}
-            </button>
-            <button
-              onClick={() => copyColumn('names')}
-              className="text-sm font-medium px-3 py-2 rounded-lg"
-              style={{ background: 'transparent', color: 'var(--foreground)', border: '1px solid var(--border)', cursor: 'pointer' }}
-            >
-              {copied === 'names' ? 'Copied ✓' : 'Copy names'}
-            </button>
-            <span className="text-xs" style={{ color: 'var(--muted-foreground)', flexBasis: '100%' }}>
-              Rows are in <strong>{sortMode === 'last' ? 'last-name' : 'first-name'}</strong> order to match your Aspen roster — paste straight down the column. Ungraded days come through as a blank cell. Use <em>Copy names</em> first to confirm the rows line up.
-            </span>
-          </div>
-          <div className="rounded-xl border mt-4 overflow-x-auto" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <table style={{ borderCollapse: 'separate', borderSpacing: 6, padding: 8 }}>
-              <thead>
-                <tr>
-                  <th style={{ position: 'sticky', left: 0, zIndex: 2, background: 'var(--card)', textAlign: 'left', padding: '4px 10px', fontSize: 12, color: 'var(--muted-foreground)' }}>Student</th>
-                  {lessonGrid.lessons.map((l) => (
-                    <th key={l.id} title={l.title} style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted-foreground)', padding: '4px 2px', minWidth: 40 }}>
-                      D{l.lessonNumber}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {sortedStudents.map((s) => (
-                  <tr key={s.id}>
-                    <td style={{ position: 'sticky', left: 0, zIndex: 1, background: 'var(--card)', fontSize: 13, fontWeight: 500, padding: '4px 10px', whiteSpace: 'nowrap' }}>{s.name}{seenTag(s.id)}</td>
-                    {lessonGrid.lessons.map((l) => {
-                      const c = lessonGrid.cells[s.id]?.[l.id]
-                      const st = c?.status ?? 'not_started'
-                      const bg = st === 'completed' ? 'color-mix(in oklch, var(--success) 22%, var(--card))'
-                        : st === 'in_progress' ? 'color-mix(in oklch, var(--reward) 22%, var(--card))'
-                        : 'var(--secondary)'
-                      const mark = c?.gradePct != null ? `${c.gradePct}` : st === 'completed' ? '✓' : st === 'in_progress' ? '·' : ''
-                      const clickable = !!l.targetId
-                      return (
-                        <td key={l.id} style={{ padding: 0 }}>
-                          <button
-                            onClick={() => { if (l.targetId) openCell(s.id, l.targetId, { id: l.id, title: l.title, number: l.lessonNumber }) }}
-                            disabled={!clickable}
-                            title={`${s.name} · D${l.lessonNumber} ${l.title}${c?.needsGrading ? ' · work to grade' : ''}`}
-                            className="grid place-items-center font-bold"
-                            style={{ position: 'relative', width: 38, height: 36, borderRadius: 9, fontSize: 14, color: 'var(--foreground)', background: bg, border: '0.5px solid var(--border)', cursor: clickable ? 'pointer' : 'default' }}
-                          >
-                            {mark}
-                            {c?.needsGrading && <span style={{ position: 'absolute', top: 3, right: 4, width: 7, height: 7, borderRadius: '50%', background: 'var(--destructive)' }} />}
-                          </button>
-                        </td>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex gap-4 flex-wrap mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'color-mix(in oklch, var(--success) 22%, var(--card))', border: '0.5px solid var(--border)' }} /> Done</span>
-            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'color-mix(in oklch, var(--reward) 22%, var(--card))', border: '0.5px solid var(--border)' }} /> In progress</span>
-            <span className="inline-flex items-center gap-1.5"><span style={{ width: 13, height: 13, borderRadius: 4, background: 'var(--secondary)', border: '0.5px solid var(--border)' }} /> Not started</span>
-            <span className="inline-flex items-center gap-1.5"><span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--destructive)' }} /> Work to grade</span>
-            <span style={{ marginLeft: 'auto' }}>Columns are day-lessons — tap a cell to open that student&apos;s work and grade it.</span>
-          </div>
-        </>
-      )}
-      {view === 'lessons' && lessonGrid && lessonGrid.students.length === 0 && (
-        <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No students on your roster yet.</p>
-      )}
+      {/* Lesson-completion gradebook removed — lessons are engagement, mastery is the grade. */}
 
       {/* scrim + drawer */}
       {sel && (
@@ -960,9 +728,9 @@ export default function ControlRoomPage() {
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, position: 'relative' }}>
             <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)' }}>
               <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
-              <div className="font-bold" style={{ fontSize: 18 }}>{selStudent?.name ?? lessonGrid?.students.find((s) => s.id === sel?.studentId)?.name}</div>
-              <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{sel?.lesson ? `Day ${sel.lesson.number} — ${sel.lesson.title}` : selTarget?.statement}</div>
-              <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: sel?.lesson ? 'none' : 'capitalize' }}>{sel?.lesson ? 'Gradebook score · completion' : selTarget?.domain}</div>
+              <div className="font-bold" style={{ fontSize: 18 }}>{selStudent?.name}</div>
+              <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{selTarget?.statement}</div>
+              <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: 'capitalize' }}>{selTarget?.domain}</div>
               {/* Progress lives in the roster rail (and the between-students gate) — no
                   redundant header counts. */}
             </div>
@@ -984,7 +752,7 @@ export default function ControlRoomPage() {
               ))}
 
               {/* this student vs. the class — collapsed below the work */}
-              {!sel.lesson && comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (
+              {comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (
                 <details className="mb-5">
                   <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>This lesson · mastery vs. class</summary>
                   {(() => {
@@ -1015,55 +783,8 @@ export default function ControlRoomPage() {
                 </details>
               )}
 
-              {/* gradebook analytics (completion mode) — collapsed below the work */}
-              {sel.lesson && gbStats && (
-                <details className="mb-5">
-                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>Gradebook · this day vs unit</summary>
-                  {(() => {
-                const pctStr = (v: number | null) => (v == null ? '—' : `${Math.round(v)}%`)
-                const bar = (v: number | null) => `${v == null ? 0 : Math.max(4, Math.min(100, v))}%`
-                const dayDelta = gbStats.studentLessonPct != null && gbStats.classDayAvg != null ? gbStats.studentLessonPct - gbStats.classDayAvg : null
-                const deltaColor = dayDelta == null ? 'var(--muted-foreground)' : dayDelta >= 1 ? 'var(--success)' : dayDelta <= -1 ? 'oklch(0.62 0.16 25)' : 'var(--muted-foreground)'
-                const deltaText = dayDelta == null ? '' : Math.abs(dayDelta) < 1 ? 'at class avg' : `${dayDelta > 0 ? '+' : ''}${Math.round(dayDelta)} vs class`
-                const rows: { label: string; v: number | null; c: string }[] = [
-                  { label: 'This day · student', v: gbStats.studentLessonPct, c: 'var(--primary)' },
-                  { label: 'This day · class', v: gbStats.classDayAvg, c: 'var(--muted-foreground)' },
-                  { label: 'Unit avg · student', v: gbStats.studentUnitAvg, c: 'var(--primary)' },
-                  { label: 'Unit avg · class', v: gbStats.classUnitAvg, c: 'var(--muted-foreground)' },
-                ]
-                return (
-                  <div className="rounded-lg px-3 py-2.5 mb-5" style={{ background: 'var(--secondary)' }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>Gradebook · this day vs unit</span>
-                      {dayDelta != null && <span className="text-xs font-bold" style={{ color: deltaColor }}>{deltaText}</span>}
-                    </div>
-                    {rows.map((row) => (
-                      <div key={row.label} className="flex items-center gap-2 mb-1.5">
-                        <span className="text-xs shrink-0" style={{ width: 110, color: 'var(--foreground)' }}>{row.label}</span>
-                        <span className="flex-1 rounded-full" style={{ height: 8, background: 'var(--card)', overflow: 'hidden' }}>
-                          <span style={{ display: 'block', height: '100%', width: bar(row.v), background: row.c, borderRadius: 9999 }} />
-                        </span>
-                        <span className="text-sm font-bold shrink-0" style={{ width: 42, textAlign: 'right', color: 'var(--foreground)' }}>{pctStr(row.v)}</span>
-                      </div>
-                    ))}
-                    <div className="flex gap-2 flex-wrap mt-2">
-                      <span className="text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
-                        Lesson completion {pctStr(gbStats.completionPct)}
-                      </span>
-                      <span className="text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
-                        {gbStats.studentGraded}/{gbStats.unitLessons} days graded
-                      </span>
-                    </div>
-                    <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>Gradebook % toward the letter grade — class figures use the selected class/section.</p>
-                  </div>
-                )
-                  })()}
-                </details>
-              )}
-
-              {/* rating history (mastery only) — collapsed below the work */}
-              {!sel.lesson && (
-                <details className="mb-5">
+              {/* rating history — collapsed below the work */}
+              <details className="mb-5">
                   <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>Rating history</summary>
                   {selHistory.length > 0 ? (
                     <div className="flex flex-col gap-1.5">
@@ -1085,12 +806,10 @@ export default function ControlRoomPage() {
                     <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No prior ratings on this target.</p>
                   )}
                 </details>
-              )}
             </div>
 
             {/* rater */}
             <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
-              {!sel.lesson && (<>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-sm font-semibold">Your mastery rating</span>
                 <button
@@ -1147,54 +866,10 @@ export default function ControlRoomPage() {
               <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
                 Keys <b>1 · 2 · 3</b> rate and advance. Finishes this student&apos;s pending work, then moves to the next student.
               </p>
-              </>)}
-
-              {sel.lesson && (<>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-sm font-semibold">Gradebook score</span>
-                  <button
-                    onClick={suggestGradebook}
-                    disabled={gbBusy || !work || work.work.length === 0}
-                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold disabled:opacity-50"
-                    style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', color: 'var(--primary)', background: 'transparent', cursor: 'pointer' }}
-                    title="Ask Claude to suggest a %"
-                  >
-                    {gbBusy ? 'Asking…' : '✨ Suggest'}
-                  </button>
-                </div>
-                {gbSuggestion && (
-                  <div className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
-                    {gbSuggestion.percent >= 0 ? (<><b>Claude suggests: {gbSuggestion.percent}%</b> — {gbSuggestion.rationale}<div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — adjust and save.</div></>) : (<span style={{ color: 'var(--muted-foreground)' }}>{gbSuggestion.rationale}</span>)}
-                  </div>
-                )}
-                <div className="flex gap-1.5 mb-2 flex-wrap">
-                  {[100, 90, 80, 70, 60, 50, 40, 30, 20, 10].map((p) => {
-                    const key = p === 100 ? '0' : String(p / 10)
-                    return (
-                      <button key={p} onClick={() => { setGbPercent(String(p)); if (!gbBusy) saveGradebook(p) }}
-                        title={`Key ${key} → ${p}%`}
-                        className="rounded-lg border px-2.5 py-1 text-xs font-semibold"
-                        style={{ borderColor: 'var(--border)', background: gbPercent === String(p) ? 'var(--primary)' : 'var(--card)', color: gbPercent === String(p) ? 'var(--primary-foreground)' : 'var(--foreground)' }}>{p}</button>
-                    )
-                  })}
-                </div>
-                <div className="flex items-center gap-2">
-                  <input type="number" min={0} max={100} value={gbPercent} onChange={(e) => setGbPercent(e.target.value)}
-                    placeholder="0–100" className="rounded-lg border px-3 py-2 text-sm" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 90 }} />
-                  <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>%</span>
-                  <button onClick={() => saveGradebook()} disabled={gbBusy || gbPercent === ''}
-                    className="flex-1 rounded-xl font-bold disabled:opacity-50" style={{ padding: '10px 0', fontSize: 13, background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-                    Save score
-                  </button>
-                </div>
-                <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                  Numpad grades and advances — the key is the tens digit (<b>9</b>=90, <b>8</b>=80 … <b>1</b>=10), <b>0</b>=100. Type an odd value (e.g. 85) in the box + <b>Enter</b>. Finishes this student&apos;s pending work, then moves to the next student.
-                </p>
-              </>)}
             </div>
             {nextStudentGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--card) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {selStudent?.name ?? lessonGrid?.students.find((s) => s.id === sel?.studentId)?.name ?? 'Student'} — all done</div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {selStudent?.name ?? 'Student'} — all done</div>
                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextStudentGate.name}</div>
                 <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
                   {studentPendingCount(nextStudentGate.id)} to grade · {pendingStudents.length} student{pendingStudents.length === 1 ? '' : 's'} left

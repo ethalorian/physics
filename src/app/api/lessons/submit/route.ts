@@ -6,9 +6,12 @@ import { supabaseAdmin } from '@/lib/supabase'
 // puts the student in the teacher's grading queue.
 //
 // LOCKED UNTIL GRADED: once a student submits, the lesson is locked — they can't
-// re-submit until the teacher has graded it (a rating on the lesson's target, or
-// a gradebook score, dated after the submission). This stops re-submit spam and
-// keeps the queue honest.
+// re-submit until the teacher has acted on it (a mastery rating on the lesson's
+// target, dated after the submission). This stops re-submit spam and keeps the
+// queue honest. The app asserts no grades — mastery ratings are the only
+// teacher act it recognizes; legacy gradebook scores still count for old work.
+// A lesson with NO mapped target (e.g. transfer-task days, scored on paper)
+// never locks — there is nothing in-app for the teacher to rate.
 //
 //   GET  ?lesson_id=… → { submittedAt, locked }
 //   POST { lesson_id } → record a submission (409 if a pending one is locked)
@@ -21,6 +24,7 @@ async function gradedSince(userId: string, lessonId: string, sinceISO: string): 
     .select('id')
     .eq('lesson_id', lessonId)
   const targetIds = (targets ?? []).map((t) => t.id)
+  if (targetIds.length === 0) return true // nothing rateable in-app — never lock
   if (targetIds.length > 0) {
     const { data: recs } = await supabaseAdmin
       .from('mastery_records')
