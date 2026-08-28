@@ -345,6 +345,9 @@ export default function ControlRoomPage() {
   }
 
   const saveRating = async (level: 1 | 2 | 3) => {
+    // In-flight guard: key auto-repeat or a fast double-tap must never write
+    // two records for one intended rating.
+    if (saving) return
     if (!sel || !grid) return
     const student = grid.students.find((s) => s.id === sel.studentId)
     setSaving(true)
@@ -438,18 +441,25 @@ export default function ControlRoomPage() {
       const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
       if (e.key === 'Escape') { closeDrawer(); return }
       if (typing) return
+      // e.repeat = the key is being HELD (OS auto-repeat) — one press, one rating.
+      if (e.repeat || saving) return
       if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, nextStudentGate])
+  }, [sel, nextStudentGate, saving])
 
   // Inter-student gate: any key (or Continue) advances to the next student;
   // Esc closes instead. One keystroke per student, giving your eyes a beat.
+  // GRACE PERIOD: saves land async, so the gate can appear mid-keystroke — a
+  // 1/2/3 aimed at the previous student must not silently advance (or close)
+  // the gate. Ignore held-key repeats and anything in the first 400ms.
   useEffect(() => {
     if (!nextStudentGate) return
+    const armedAt = Date.now()
     const onKey = (e: KeyboardEvent) => {
+      if (e.repeat || Date.now() - armedAt < 400) return
       e.preventDefault()
       if (e.key === 'Escape') { setNextStudentGate(null); closeDrawer(); return }
       const g = nextStudentGate

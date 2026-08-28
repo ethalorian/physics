@@ -183,7 +183,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     const onKey = (e: KeyboardEvent) => {
       if (nextGate) return // gate owns the keyboard while it's up
       if (e.key === 'Escape') { closeDrawer(); return }
-      if (savingKey) return
+      if (savingKey || e.repeat) return
       const active = subs.find((s) => s.status === 'pending')
       if (!active) return
       const cid = active.tested_competency_ids.find((c) => !active.rated_competency_ids.includes(c))
@@ -196,9 +196,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   }, [sel, subs, savingKey, nextGate])
 
   // Inter-student gate: any key (or Continue) advances; Esc closes instead.
+  // Grace period: a rating keystroke in flight when the gate appears must not
+  // silently advance it (see the control-room gate for the same rationale).
   useEffect(() => {
     if (!nextGate) return
+    const armedAt = Date.now()
     const onKey = (e: KeyboardEvent) => {
+      if (e.repeat || Date.now() - armedAt < 400) return
       e.preventDefault()
       if (e.key === 'Escape') { setNextGate(null); closeDrawer(); return }
       const g = nextGate
