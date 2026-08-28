@@ -15,6 +15,8 @@ import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpe
 interface NavLink { slug: string; title: string }
 
 interface BlockLessonViewerProps {
+  /** Staff preview: badge CPA-only / Honors-only blocks. Students never get this. */
+  staffView?: boolean
   lesson: {
     id: string
     title: string
@@ -36,7 +38,7 @@ const DAY_META: Record<string, { label: string; Icon: LucideIcon }> = {
   TRANSFER: { label: 'Transfer', Icon: Rocket },
 }
 
-export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProps) {
+export default function BlockLessonViewer({ lesson, nav, staffView = false }: BlockLessonViewerProps) {
   const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
@@ -231,7 +233,7 @@ export default function BlockLessonViewer({ lesson, nav }: BlockLessonViewerProp
               `lesson-reading` scopes the key-equation styling (see globals.css). */}
           <div className="mt-4 lesson-reading">
             {page ? (
-              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} />
+              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}

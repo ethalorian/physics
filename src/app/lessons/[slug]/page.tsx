@@ -163,7 +163,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
 
   return (
     <LessonActivityTracker lessonId={lesson.id}>
-      <BlockLessonViewer lesson={lessonForView} nav={nav} />
+      <BlockLessonViewer lesson={lessonForView} nav={nav} staffView={viewer.role === 'admin'} />
     </LessonActivityTracker>
   )
 }

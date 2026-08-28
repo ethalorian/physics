@@ -186,6 +186,16 @@ export default function LessonBlockBuilder({
     const g = b.data.visibilityTrack as string | undefined
     return !g || g === track
   }
+  // Track identity colors — used on the card rail, the corner badge, the
+  // outline chips, and the toggle buttons, so CPA vs Honors reads at a glance.
+  const TRACK_UI: Record<'cpa' | 'honors', { label: string; color: string; fg: string }> = {
+    cpa: { label: 'CPA only', color: 'var(--success)', fg: 'var(--success)' },
+    honors: { label: 'Honors only', color: 'var(--reward)', fg: 'var(--reward-foreground)' },
+  }
+  const trackOf = (b: BlockState): 'cpa' | 'honors' | undefined => {
+    const g = b.data.visibilityTrack as string | undefined
+    return g === 'cpa' || g === 'honors' ? g : undefined
+  }
 
   useEffect(() => {
     fetch('/api/simulations')
@@ -251,6 +261,11 @@ export default function LessonBlockBuilder({
           <select value={dayType} onChange={(e) => setDayType(e.target.value)} className="rounded-lg border px-3 py-2 text-sm" style={inputStyle}>
             {DAY_TYPES.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
+          <span className="text-xs tabular-nums rounded-lg border px-2.5 py-2" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }} title="Blocks every track shares · CPA-only · Honors-only">
+            {blocks.filter((b) => !trackOf(b)).length} shared
+            <span style={{ color: 'var(--success)' }}> · {blocks.filter((b) => trackOf(b) === 'cpa').length} CPA</span>
+            <span style={{ color: 'var(--reward-foreground)' }}> · {blocks.filter((b) => trackOf(b) === 'honors').length} Honors</span>
+          </span>
           <div className="flex rounded-lg border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Preview the canvas as a student of this track">
             {(['author', 'cpa', 'honors'] as const).map((v) => {
               const on = viewAs === v
@@ -285,10 +300,11 @@ export default function LessonBlockBuilder({
                 onDragOver={(e) => { if (dragId && dragId !== b.id) { e.preventDefault(); if (overId !== b.id) setOverId(b.id) } }}
                 onDrop={(e) => { e.preventDefault(); if (dragId) reorder(dragId, b.id); setDragId(null); setOverId(null) }}
                 style={{
-                  border: `1px solid ${sel || overId === b.id ? 'var(--primary)' : 'transparent'}`,
+                  border: `1px solid ${sel || overId === b.id ? 'var(--primary)' : trackOf(b) ? `color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 45%, transparent)` : 'transparent'}`,
+                  borderLeft: trackOf(b) ? `4px solid ${TRACK_UI[trackOf(b)!].color}` : undefined,
                   boxShadow: sel ? '0 0 0 1px var(--primary)' : overId === b.id ? '0 -3px 0 0 var(--primary)' : undefined,
                   opacity: dragId === b.id ? 0.4 : hidden ? 0.42 : 1,
-                  background: 'var(--card)', padding: 12, cursor: 'pointer',
+                  background: trackOf(b) ? `color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 4%, var(--card))` : 'var(--card)', padding: 12, cursor: 'pointer',
                   overflow: removing ? 'hidden' : undefined,
                   animation: removing ? 'bbOut 0.26s ease forwards' : flashing ? 'bbFlash 0.85s ease' : undefined,
                 }}>
@@ -303,13 +319,21 @@ export default function LessonBlockBuilder({
                   <div className="flex rounded border overflow-hidden" style={{ borderColor: 'var(--border)' }} title="Who sees this block">
                     {([['All', undefined], ['CPA', 'cpa'], ['Honors', 'honors']] as const).map(([lbl, val]) => {
                       const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
-                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-[10px] font-semibold px-1.5 py-0.5" style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
+                      const onBg = val === 'cpa' ? 'var(--success)' : val === 'honors' ? 'var(--reward)' : 'var(--primary)'
+                      const onFg = val === 'honors' ? 'var(--reward-foreground)' : '#fff'
+                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-[10px] font-semibold px-1.5 py-0.5" style={{ background: on ? onBg : 'transparent', color: on ? onFg : 'var(--muted-foreground)' }}>{lbl}</button>
                     })}
                   </div>
                   <button onClick={() => removeBlock(b.id)} className="bb-btn text-sm px-1.5 rounded" style={{ border: 'none', background: 'none', color: 'var(--destructive)' }} aria-label="remove">✕</button>
                 </div>
                 <BlockRenderer blocks={[liveOf(b)]} lessonId={`play:${lessonId}`} responses={play} save={playSave} />
                 {hidden && <div className="absolute left-2 top-2 z-10 text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '1px solid var(--border)' }}>hidden for {viewAs}</div>}
+                {!hidden && trackOf(b) && (
+                  <div className="absolute left-2 top-2 z-10 text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
+                    style={{ background: `color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 18%, var(--card))`, color: TRACK_UI[trackOf(b)!].fg, border: `1px solid color-mix(in oklch, ${TRACK_UI[trackOf(b)!].color} 50%, transparent)` }}>
+                    {TRACK_UI[trackOf(b)!].label}
+                  </div>
+                )}
               </div>
             )
           })}
@@ -331,8 +355,8 @@ export default function LessonBlockBuilder({
                           style={{ background: sel ? 'color-mix(in oklch, var(--primary) 16%, transparent)' : flashId === b.id ? 'color-mix(in oklch, var(--primary) 10%, transparent)' : 'transparent', border: 'none', cursor: 'pointer', color: 'var(--foreground)' }}>
                           <span style={{ color: 'var(--muted-foreground)', minWidth: 14 }}>{i + 1}</span>
                           <span className="truncate flex-1"><span style={{ fontWeight: 600 }}>{def?.label ?? b.type}</span>{snip && <span style={{ color: 'var(--muted-foreground)' }}> · {snip}</span>}</span>
-                          {ht === 'honors' && <span title="Honors only" style={{ color: 'var(--primary)', fontWeight: 700 }}>H</span>}
-                          {ht === 'cpa' && <span title="CPA only" style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>C</span>}
+                          {ht === 'honors' && <span title="Honors only" className="rounded px-1" style={{ background: 'color-mix(in oklch, var(--reward) 22%, transparent)', color: 'var(--reward-foreground)', fontWeight: 700 }}>H</span>}
+                          {ht === 'cpa' && <span title="CPA only" className="rounded px-1" style={{ background: 'color-mix(in oklch, var(--success) 22%, transparent)', color: 'var(--success)', fontWeight: 700 }}>C</span>}
                         </button>
                       </li>
                     )
@@ -371,7 +395,9 @@ export default function LessonBlockBuilder({
                   <div className="flex rounded-md border overflow-hidden w-max" style={{ borderColor: 'var(--border)' }}>
                     {([['All tracks', undefined], ['CPA only', 'cpa'], ['Honors only', 'honors']] as const).map(([lbl, val]) => {
                       const on = ((b.data.visibilityTrack as string | undefined) ?? undefined) === val
-                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-xs font-semibold px-2.5 py-1" style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{lbl}</button>
+                      const onBg = val === 'cpa' ? 'var(--success)' : val === 'honors' ? 'var(--reward)' : 'var(--primary)'
+                      const onFg = val === 'honors' ? 'var(--reward-foreground)' : '#fff'
+                      return <button key={lbl} type="button" onClick={() => setField(b.id, 'visibilityTrack', val)} className="text-xs font-semibold px-2.5 py-1" style={{ background: on ? onBg : 'transparent', color: on ? onFg : 'var(--muted-foreground)' }}>{lbl}</button>
                     })}
                   </div>
                 </div>

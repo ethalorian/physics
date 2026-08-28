@@ -635,13 +635,15 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, lessonId, responses: extResponses, save: extSave, glossary,
+  blocks, lessonId, responses: extResponses, save: extSave, glossary, trackBadges = false,
 }: {
   blocks: ContentBlock[]
   lessonId: string
   responses?: BlockResponseMap
   save?: SaveFn
   glossary?: GlossaryEntry[]
+  /** Staff view: mark CPA-only / Honors-only blocks with a rail + label. Students never see this. */
+  trackBadges?: boolean
 }) {
   // Internal store is the fallback for callers that don't lift response state
   // (e.g. standalone previews). When the viewer passes responses+save down, the
@@ -651,13 +653,24 @@ export default function BlockRenderer({
   const save = extSave ?? internal.save
   return (
     <div className="space-y-4">
-      {blocks.map((b) => (
-        <div key={b.id}>
-          <BlockBoundary label={b.type}>
-            <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} />
-          </BlockBoundary>
-        </div>
-      ))}
+      {blocks.map((b) => {
+        const gate = trackBadges && (b.visibilityTrack === 'cpa' || b.visibilityTrack === 'honors') ? b.visibilityTrack : null
+        const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
+        const gateFg = gate === 'honors' ? 'var(--reward-foreground)' : 'var(--success)'
+        return (
+          <div key={b.id} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
+            {gate && (
+              <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
+                style={{ background: `color-mix(in oklch, ${gateColor} 18%, var(--card))`, color: gateFg, border: `1px solid color-mix(in oklch, ${gateColor} 50%, transparent)` }}>
+                {gate === 'honors' ? 'Honors only' : 'CPA only'}
+              </span>
+            )}
+            <BlockBoundary label={b.type}>
+              <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} />
+            </BlockBoundary>
+          </div>
+        )
+      })}
     </div>
   )
 }
