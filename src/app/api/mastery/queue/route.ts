@@ -43,7 +43,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     // roster (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
-    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: qp.get('teacher') })
     if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: sr } = await sQuery
     const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id).map((s) => ({ id: s.id as string, name: s.name ?? 'Student' }))

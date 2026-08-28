@@ -58,7 +58,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     // roster (same scoping as the mastery grid)
     let sQuery = supabaseAdmin.from('students').select('id, name, email, first_name, last_name').order('name', { ascending: true })
-    const scope = await resolveRosterScope({ classId, role: ctx.role, scopeEmail: ctx.scopeEmail })
+    const scope = await resolveRosterScope({ classId, role: ctx.role, scopeEmail: ctx.scopeEmail, teacherEmail: lgParams.get('teacher') })
     if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: srRaw } = await sQuery
     const students = ((srRaw ?? []) as StudentRow[]).filter((s) => s.id).map((s) => ({ id: s.id as string, name: s.name, email: s.email, firstName: s.first_name, lastName: s.last_name }))

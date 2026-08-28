@@ -50,7 +50,7 @@ export const GET = withAuth(async (request, ctx) => {
       .from('students')
       .select('id, name, email')
       .order('name', { ascending: true })
-    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: searchParams.get('teacher') })
     if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: studentRowsRaw } = await sQuery
     const students = ((studentRowsRaw ?? []) as StudentRow[])

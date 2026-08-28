@@ -16,7 +16,8 @@ export const GET = withAuth(async (request, ctx) => {
   if (role !== 'admin' && role !== 'teacher') {
     return NextResponse.json({ error: 'Only teachers can view the grid' }, { status: 403 })
   }
-  const classId = new URL(request.url).searchParams.get('class')
+  const { searchParams } = new URL(request.url)
+  const classId = searchParams.get('class')
 
   // Competencies (active) in LADDER order (sequence_order) — the snapshot
   // should read left→right the way students climb, not strand-alphabetically.
@@ -37,7 +38,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   // Students (same scoping as the rest of the control room).
   let sQuery = supabaseAdmin.from('students').select('id, name, email').order('name', { ascending: true })
-  const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+  const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: searchParams.get('teacher') })
   if (scope.gids) sQuery = sQuery.in('id', scope.gids)
   const { data: sr } = await sQuery
   const students = ((sr ?? []) as StudentRow[])

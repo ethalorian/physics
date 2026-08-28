@@ -126,12 +126,16 @@ export async function resolveTargetStudent(opts: {
 //                   a teacher asking for someone else's class gets [] = no rows)
 //  - no class, teacher → all of that teacher's students
 //  - no class, admin   → null = "no filter, show everyone"
+//  - no class, admin + teacherEmail → that teacher's students (the admin
+//    "monitor one teacher" filter). Ignored for teachers: their scope is
+//    always their own roster, so the param can't widen what they see.
 export async function resolveRosterScope(opts: {
   classId: string | null
   role: 'admin' | 'teacher'
   scopeEmail: string
+  teacherEmail?: string | null
 }): Promise<{ gids: string[] | null }> {
-  const { classId, role, scopeEmail } = opts
+  const { classId, role, scopeEmail, teacherEmail } = opts
   if (classId) {
     if (role === 'teacher') {
       const owner = await getCourseOwnerEmail(classId)
@@ -140,5 +144,6 @@ export async function resolveRosterScope(opts: {
     return { gids: await getCourseStudentGids(classId) }
   }
   if (role === 'teacher') return { gids: await getTeacherStudentGids(scopeEmail) }
+  if (teacherEmail) return { gids: await getTeacherStudentGids(teacherEmail) }
   return { gids: null }
 }

@@ -12,10 +12,11 @@ const HOUR = 60 * 60 * 1000
 export const GET = withAuth(async (request, ctx) => {
   const role = ctx.role
   if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const classId = new URL(request.url).searchParams.get('class')
+  const { searchParams } = new URL(request.url)
+  const classId = searchParams.get('class')
 
   let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
-  const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail })
+  const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: searchParams.get('teacher') })
   if (scope.gids) sQuery = sQuery.in('id', scope.gids)
   const { data: sr } = await sQuery
   const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id)

@@ -244,7 +244,10 @@ export default function ControlRoomPage() {
   // class in any of them and it carries here. The per-class deep-link
   // (?class=&label=) still wins and updates the shared scope.
   const { classId, classLabel, setClassScope } = useClassScope()
-  const [classes, setClasses] = useState<{ id: string; label: string }[]>([])
+  const [classes, setClasses] = useState<{ id: string; label: string; teacher: string | null }[]>([])
+  // Admin-only teacher filter: '' = all teachers. Teachers never see the
+  // dropdown (their /api/courses only returns their own classes).
+  const [teacherFilter, setTeacherFilter] = useState('')
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
     const deepLinked = sp.get('class')
@@ -253,12 +256,17 @@ export default function ControlRoomPage() {
   useEffect(() => {
     fetch('/api/courses')
       .then((r) => r.json())
-      .then((d: { courses?: { id: string; name: string; section: string | null }[] }) => {
-        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name })))
+      .then((d: { courses?: { id: string; name: string; section: string | null; teacher_email?: string | null }[] }) => {
+        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null })))
       })
       .catch(() => {})
   }, [])
-  const classQuery = classId ? `&class=${encodeURIComponent(classId)}` : ''
+  // The teacher param only matters with no class picked (the server ignores it
+  // otherwise), but sending both keeps the URL an honest mirror of the UI.
+  const classQuery = (classId ? `&class=${encodeURIComponent(classId)}` : '') + (teacherFilter ? `&teacher=${encodeURIComponent(teacherFilter)}` : '')
+  const teachers = [...new Set(classes.map((c) => c.teacher).filter((t): t is string => Boolean(t)))].sort()
+  const visibleClasses = teacherFilter ? classes.filter((c) => c.teacher === teacherFilter) : classes
+  const teacherName = (email: string) => email.split('@')[0].replace(/[._]/g, ' ')
   const pickClass = (id: string) => {
     setClassScope(id || null, id ? (classes.find((c) => c.id === id)?.label ?? null) : null)
   }
@@ -626,6 +634,25 @@ export default function ControlRoomPage() {
           className="rounded-lg text-sm px-3 py-2"
           style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', width: 150 }}
         />
+        {teachers.length > 1 && (
+          <select
+            value={teacherFilter}
+            onChange={(e) => {
+              const t = e.target.value
+              setTeacherFilter(t)
+              // A class belonging to another teacher can't stay scoped.
+              if (t && classId && classes.find((c) => c.id === classId)?.teacher !== t) pickClass('')
+            }}
+            title="Monitor one teacher's classes (admin)"
+            className="rounded-lg text-sm px-3 py-2"
+            style={{ border: `1px solid ${teacherFilter ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)', textTransform: 'capitalize' }}
+          >
+            <option value="">All teachers</option>
+            {teachers.map((t) => (
+              <option key={t} value={t}>{teacherName(t)}</option>
+            ))}
+          </select>
+        )}
         {classes.length > 0 && (
           <select
             value={classId ?? ''}
@@ -636,10 +663,18 @@ export default function ControlRoomPage() {
             className="rounded-lg text-sm px-3 py-2"
             style={{ border: `1px solid ${classId ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`, background: 'var(--card)', color: 'var(--foreground)' }}
           >
-            <option value="">All my students</option>
-            {classes.map((c) => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
+            <option value="">{teacherFilter ? `All of ${teacherName(teacherFilter)}’s students` : teachers.length > 1 ? 'All students' : 'All my students'}</option>
+            {teachers.length > 1 && !teacherFilter
+              ? teachers.map((t) => (
+                  <optgroup key={t} label={teacherName(t)}>
+                    {classes.filter((c) => c.teacher === t).map((c) => (
+                      <option key={c.id} value={c.id}>{c.label}</option>
+                    ))}
+                  </optgroup>
+                ))
+              : visibleClasses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
+                ))}
           </select>
         )}
         <select
@@ -679,7 +714,7 @@ export default function ControlRoomPage() {
             </summary>
             <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
           </details>
-          <MathControlRoom classId={classId} />
+          <MathControlRoom classId={classId} teacher={teacherFilter || null} />
         </div>
       )}
 

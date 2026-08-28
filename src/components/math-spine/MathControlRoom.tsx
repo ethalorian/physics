@@ -124,8 +124,12 @@ type SnapshotSort = 'name' | 'progress' | 'needs-me'
 const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Got it')
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
-export default function MathControlRoom({ classId }: { classId?: string | null }) {
-  const classQuery = classId ? `?class=${encodeURIComponent(classId)}` : ''
+export default function MathControlRoom({ classId, teacher }: { classId?: string | null; teacher?: string | null }) {
+  // class + (admin-only) teacher scope, as one query string.
+  const scopeParams = new URLSearchParams()
+  if (classId) scopeParams.set('class', classId)
+  if (teacher) scopeParams.set('teacher', teacher)
+  const classQuery = scopeParams.size > 0 ? `?${scopeParams.toString()}` : ''
   const [grid, setGrid] = useState<GridData | null>(null)
   const [snapshotSort, setSnapshotSort] = useState<SnapshotSort>('name')
   const [queue, setQueue] = useState<QueueItem[]>([])

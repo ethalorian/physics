@@ -8,8 +8,9 @@ import { resolveRosterScope } from '@/lib/teacher-scope'
 // control room can show when each student was last active. lastSeen = the more
 // recent of the recorded login and their latest activity.
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
-  const classId = new URL(request.url).searchParams.get('class')
-  const scope = await resolveRosterScope({ classId, role: ctx.role as 'admin' | 'teacher', scopeEmail: ctx.scopeEmail })
+  const sp = new URL(request.url).searchParams
+  const classId = sp.get('class')
+  const scope = await resolveRosterScope({ classId, role: ctx.role as 'admin' | 'teacher', scopeEmail: ctx.scopeEmail, teacherEmail: sp.get('teacher') })
 
   let q = supabaseAdmin.from('students').select('id, last_login')
   if (scope.gids) q = q.in('id', scope.gids.length ? scope.gids : ['__none__'])
