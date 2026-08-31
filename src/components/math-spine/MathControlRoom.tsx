@@ -176,10 +176,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   }, [])
 
   const openStudent = useCallback((studentId: string, name: string) => {
+    // The grading drawer is YOUR roster only — admin included. Other teachers'
+    // students stay visible in the snapshot grid, but never open here.
+    if (grid?.students.find((st) => st.id === studentId)?.ratable === false) return
     setSel({ studentId, name })
     setSubs([])
     loadStudent(studentId)
-  }, [loadStudent])
+  }, [loadStudent, grid])
 
   const closeDrawer = () => { setSel(null); setSubs([]); setNextGate(null) }
 
@@ -520,7 +523,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                 {queue.length > 0 ? `${queue.length} to review` : 'All caught up'}
               </div>
               <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
-                {grid.students.map((st) => {
+                {grid.students.filter((st) => st.ratable !== false).map((st) => {
                   const qc = queue.find((q) => q.studentId === st.id)?.count ?? 0
                   const done = qc === 0
                   const active = sel.studentId === st.id

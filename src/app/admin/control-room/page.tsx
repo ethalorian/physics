@@ -311,6 +311,8 @@ export default function ControlRoomPage() {
   }
 
   const openCell = useCallback((studentId: string, targetId: string) => {
+    // The grading drawer is YOUR roster only — admin included.
+    if (grid?.students.find((s) => s.id === studentId)?.ratable === false) return
     setSel({ studentId, targetId })
     setWork(null)
     setSuggestion(null)
@@ -324,7 +326,7 @@ export default function ControlRoomPage() {
       .then((r) => r.json())
       .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
       .catch(() => {})
-  }, [unitId])
+  }, [unitId, grid])
 
   const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
   // A feedback draft belongs to one student — never carry it to the next.
@@ -421,7 +423,9 @@ export default function ControlRoomPage() {
   // ---- student-first grading flow ------------------------------------------
   // Visible students in display order (roster order + name filter).
   const masteryStudents = useMemo(
-    () => (grid ? grid.students.filter((s) => s.name.toLowerCase().includes(nameFilter.toLowerCase())) : []),
+    // Your own roster only — admin included. Other teachers' students stay in
+    // the mastery grid (the data view), but never enter the grading drawer.
+    () => (grid ? grid.students.filter((s) => s.ratable !== false && s.name.toLowerCase().includes(nameFilter.toLowerCase())) : []),
     [grid, nameFilter]
   )
   const rosterForView = masteryStudents
