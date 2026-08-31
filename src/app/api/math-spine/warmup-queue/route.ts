@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { resolveRosterScope } from '@/lib/teacher-scope'
+import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/math-spine/warmup-queue[?class=<courseId>]
 // The math review queue: every roster student with PENDING warm-up submissions,
@@ -16,7 +16,10 @@ export const GET = withAuth(async (request, ctx) => {
   const classId = searchParams.get('class')
 
   let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
+  // To-do list: always the actor's own roster (admin included) — see mastery/queue.
   const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: searchParams.get('teacher') })
+  const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
+  scope.gids = scope.gids ? scope.gids.filter((g) => own.has(g)) : [...own]
   if (scope.gids) sQuery = sQuery.in('id', scope.gids)
   const { data: sr } = await sQuery
   const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id)

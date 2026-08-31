@@ -17,7 +17,7 @@ import { useCallback, useEffect, useState, type CSSProperties } from 'react'
 import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
-interface Student { id: string; name: string; email: string }
+interface Student { id: string; name: string; email: string; ratable?: boolean }
 type RungState = 'not-yet' | 'almost' | 'got-it' | 'refresh'
 interface Cell { value: number | null; count: number; pending: number; state?: RungState | null }
 interface GridData {
@@ -184,6 +184,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       if (nextGate) return // gate owns the keyboard while it's up
       if (e.key === 'Escape') { closeDrawer(); return }
       if (savingKey || e.repeat) return
+      if (sel && isViewOnly(sel.studentId)) return // another teacher's student
       const active = subs.find((s) => s.status === 'pending')
       if (!active) return
       const cid = active.tested_competency_ids.find((c) => !active.rated_competency_ids.includes(c))
@@ -214,6 +215,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   }, [nextGate, openStudent])
 
   const compById = (id: string) => grid?.competencies.find((c) => c.id === id)
+  // View-only = not on YOUR roster (admin monitor mode). The queue never
+  // contains these students, but the snapshot grid can open their drawer.
+  const isViewOnly = (sid: string) => grid?.students.find((s) => s.id === sid)?.ratable === false
   const currentValue = (studentId: string, competencyId: string) =>
     grid?.cells[studentId]?.[competencyId]?.value ?? null
 
@@ -457,8 +461,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       {/* Review drawer */}
       {sel && (
         <>
-          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(640px, 96vw)', zIndex: 41, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
+          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(640px, 96vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
             {/* roster rail — students with warm-ups to review; greyed when done */}
             <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
@@ -533,6 +537,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                         </span>
                         {rated ? (
                           <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>✓ rated</span>
+                        ) : sel && isViewOnly(sel.studentId) ? (
+                          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>view only — their teacher rates this</span>
                         ) : (
                           [1, 2, 3].map((lv) => {
                             const key = `${activeSub.id}:${cid}:${lv}`

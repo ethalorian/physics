@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
-import { resolveRosterScope } from '@/lib/teacher-scope'
+import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/grid?unit_id=unit-1
 // Class mastery grid: every student (the teacher's roster) x every learning target
@@ -53,9 +53,11 @@ export const GET = withAuth(async (request, ctx) => {
     const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: searchParams.get('teacher') })
     if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: studentRowsRaw } = await sQuery
+    // ratable = on the ACTOR'S own roster. Everyone else is view-only data.
+    const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
     const students = ((studentRowsRaw ?? []) as StudentRow[])
       .filter((s) => s.id)
-      .map((s) => ({ id: s.id as string, name: s.name, email: s.email }))
+      .map((s) => ({ id: s.id as string, name: s.name, email: s.email, ratable: own.has(s.id as string) }))
     const studentIds = students.map((s) => s.id)
 
     // All records for those students on those targets

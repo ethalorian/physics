@@ -24,9 +24,11 @@ export const POST = withAuth(async (request, ctx) => {
       )
     }
 
-    // A teacher may only rate a student on their own roster (admins unrestricted).
-    if (role === 'teacher' && !(await teacherCanAccessStudent(ctx.scopeEmail, user_id))) {
-      return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+    // Ratings come only from the teacher of record: the student must be on the
+    // ACTOR'S own roster (courses they imported). This applies to admins too —
+    // admin widens what you can SEE, never whose students you can rate.
+    if (!(await teacherCanAccessStudent(ctx.scopeEmail, user_id))) {
+      return NextResponse.json({ error: 'Forbidden - student not on your own roster' }, { status: 403 })
     }
 
     const row = {

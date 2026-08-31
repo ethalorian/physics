@@ -12,7 +12,7 @@ import { useClassScope } from '@/lib/use-class-scope'
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
 // ---------------------------------------------------------------------------
 interface Target { id: string; statement: string; domain: string }
-interface Student { id: string; name: string; email: string; firstName?: string | null; lastName?: string | null }
+interface Student { id: string; name: string; email: string; firstName?: string | null; lastName?: string | null; ratable?: boolean }
 interface Cell { value: number | null; count: number }
 interface GridData {
   unitId: string
@@ -387,6 +387,8 @@ export default function ControlRoomPage() {
   // A student's still-pending target cells, newest grades excluded.
   const pendingCellsFor = useCallback((sid: string, exclude?: string): PendingCell[] => {
     if (!grid) return []
+    // View-only students (not on YOUR roster) never enter the grading walk.
+    if (grid.students.find((s) => s.id === sid)?.ratable === false) return []
     return grid.targets
       .filter((t) => grid.pending?.[sid]?.[t.id]
         && `m:${sid}:${t.id}` !== exclude && !gradedKeys.has(`m:${sid}:${t.id}`))
@@ -443,6 +445,7 @@ export default function ControlRoomPage() {
       if (typing) return
       // e.repeat = the key is being HELD (OS auto-repeat) — one press, one rating.
       if (e.repeat || saving) return
+      if (selStudent?.ratable === false) return // view-only (another teacher's student)
       if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
     }
     window.addEventListener('keydown', onKey)
@@ -691,10 +694,10 @@ export default function ControlRoomPage() {
       {/* scrim + drawer */}
       {sel && (
         <>
-          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 40, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
+          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
           <aside
             style={{
-              position: 'fixed', top: 0, right: 0, bottom: 0, width: 600, maxWidth: '96vw', zIndex: 50,
+              position: 'fixed', top: 0, right: 0, bottom: 0, width: 600, maxWidth: '96vw', zIndex: 100,
               background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row',
               boxShadow: '-20px 0 50px -20px color-mix(in oklch, var(--foreground) 40%, transparent)',
             }}
@@ -818,8 +821,15 @@ export default function ControlRoomPage() {
                 </details>
             </div>
 
-            {/* rater */}
+            {/* rater — or a view-only note when this student is on another
+                teacher's roster (admin monitor mode: see everything, rate only
+                your own). */}
             <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
+              {selStudent?.ratable === false ? (
+                <p className="text-sm rounded-lg px-3 py-2.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
+                  View only — this student is on another teacher&apos;s roster. Their teacher records the ratings.
+                </p>
+              ) : (<>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-sm font-semibold">Your mastery rating</span>
                 <button
@@ -876,6 +886,7 @@ export default function ControlRoomPage() {
               <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
                 Keys <b>1 · 2 · 3</b> rate and advance. Finishes this student&apos;s pending work, then moves to the next student.
               </p>
+              </>)}
             </div>
             {nextStudentGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--card) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>

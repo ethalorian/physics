@@ -34,9 +34,11 @@ export const POST = withAuth(async (request, ctx) => {
     return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
   }
 
-  // A teacher may only review a warm-up from a student on their own roster.
-  if (role === 'teacher' && !(await teacherCanAccessStudent(ctx.scopeEmail, sub.user_id))) {
-    return NextResponse.json({ error: 'Forbidden - student not in your roster' }, { status: 403 })
+  // Reviews come only from the teacher of record: the student must be on the
+  // ACTOR'S own roster — admin included (admin is a read-everything role, not
+  // a rate-everyone role).
+  if (!(await teacherCanAccessStudent(ctx.scopeEmail, sub.user_id))) {
+    return NextResponse.json({ error: 'Forbidden - student not on your own roster' }, { status: 403 })
   }
 
   const tested: string[] = sub.tested_competency_ids ?? []

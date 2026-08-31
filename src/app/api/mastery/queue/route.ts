@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { resolveRosterScope } from '@/lib/teacher-scope'
+import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 
 // GET /api/mastery/queue?unit_id=unit-1
 // The grading queue: every roster student who has SUBMITTED a lesson in the unit
@@ -43,7 +43,13 @@ export const GET = withAuth(async (request, ctx) => {
 
     // roster (same scoping as /api/mastery/roster)
     let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
+    // The queue is a to-do list, and only the teacher of record can act on its
+    // items — so it is always scoped to the ACTOR'S own roster (admin included),
+    // intersected with any class filter. Monitoring other classes stays in the
+    // grid, which is view-only there.
     const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: qp.get('teacher') })
+    const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
+    scope.gids = scope.gids ? scope.gids.filter((g) => own.has(g)) : [...own]
     if (scope.gids) sQuery = sQuery.in('id', scope.gids)
     const { data: sr } = await sQuery
     const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id).map((s) => ({ id: s.id as string, name: s.name ?? 'Student' }))
