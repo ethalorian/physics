@@ -9,7 +9,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 
 interface Notif {
   id: string
-  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part' | 'access'
+  type: 'mastery' | 'grade' | 'math' | 'duel' | 'due' | 'part' | 'access' | 'feedback'
   title: string
   detail: string
   at: string        // ISO — drives sort + unread
@@ -33,6 +33,15 @@ export const GET = withAuth(async (_req, ctx) => {
     const { data } = await supabaseAdmin.from('mastery_records').select('id, level, observed_at').eq('user_id', me).order('observed_at', { ascending: false }).limit(8)
     for (const r of (data ?? []) as { id: string; level: number; observed_at: string }[]) {
       items.push({ id: `mastery:${r.id}`, type: 'mastery', title: 'New mastery rating', detail: LEVEL_WORD(r.level), at: r.observed_at, href: '/dashboard/growth', unread: isUnread(r.observed_at) })
+    }
+  } catch { /* ignore */ }
+
+  // 1b. Written teacher feedback (one-way notes from the grading drawers).
+  try {
+    const { data } = await supabaseAdmin.from('teacher_feedback').select('id, message, target_id, competency_id, created_at').eq('user_id', me).order('created_at', { ascending: false }).limit(8)
+    for (const r of (data ?? []) as { id: string; message: string; target_id: string | null; competency_id: string | null; created_at: string }[]) {
+      // All notes render in full on the Growth page ("Notes from your teacher").
+      items.push({ id: `feedback:${r.id}`, type: 'feedback', title: 'Note from your teacher', detail: r.message.length > 140 ? r.message.slice(0, 140) + '…' : r.message, at: r.created_at, href: '/dashboard/growth', unread: isUnread(r.created_at) })
     }
   } catch { /* ignore */ }
 

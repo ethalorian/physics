@@ -13,7 +13,7 @@
  * Self-contained so the main control-room file only gains a view toggle. Scoped
  * to the control room's active class via `classId`.
  */
-import { useCallback, useEffect, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
@@ -138,6 +138,11 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const [subs, setSubs] = useState<Submission[]>([])
   const [drawerLoading, setDrawerLoading] = useState(false)
   const [savingKey, setSavingKey] = useState<string | null>(null)
+  // Written feedback (one-way note to the student, lands in their bell + growth page)
+  const [fbText, setFbText] = useState('')
+  const [fbGeneral, setFbGeneral] = useState(false)
+  const [fbSending, setFbSending] = useState(false)
+  const [fbSent, setFbSent] = useState(false)
   const [flash, setFlash] = useState<string | null>(null)
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
@@ -177,12 +182,49 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
 
   const closeDrawer = () => { setSel(null); setSubs([]); setNextGate(null) }
 
+  // A feedback draft belongs to one student — never carry it to the next.
+  const fbStudentRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (sel?.studentId !== fbStudentRef.current) {
+      fbStudentRef.current = sel?.studentId ?? null
+      setFbText(''); setFbGeneral(false); setFbSent(false)
+    }
+  }, [sel?.studentId])
+
+  const sendFeedback = async (competencyId: string | null) => {
+    const msg = fbText.trim()
+    if (!msg || !sel || fbSending) return
+    setFbSending(true)
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: sel.studentId, message: msg, competency_id: fbGeneral ? null : competencyId }),
+      })
+      if (!res.ok) throw new Error('send failed')
+      setFbText('')
+      setFbSent(true)
+      setTimeout(() => setFbSent(false), 2500)
+    } catch {
+      setFlash('Could not send the feedback')
+    } finally {
+      setFbSending(false)
+    }
+  }
+
   // Keyboard-first review: 1/2/3 rate the first unrated tested competency.
   useEffect(() => {
     if (!sel) return
     const onKey = (e: KeyboardEvent) => {
       if (nextGate) return // gate owns the keyboard while it's up
-      if (e.key === 'Escape') { closeDrawer(); return }
+      const el = document.activeElement
+      const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
+      if (e.key === 'Escape') {
+        // Mid-draft Escape must not close the drawer and eat the feedback text.
+        if (typing && el.tagName === 'TEXTAREA') { (el as HTMLElement).blur(); return }
+        closeDrawer(); return
+      }
+      if (typing) return
       if (savingKey || e.repeat) return
       if (sel && isViewOnly(sel.studentId)) return // another teacher's student
       const active = subs.find((s) => s.status === 'pending')
@@ -462,7 +504,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       {sel && (
         <>
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(640px, 96vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 94vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
             {/* roster rail — students with warm-ups to review; greyed when done */}
             <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
@@ -517,6 +559,48 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}><b>Prompt:</b> {activeSub.prompt}</p>
                 )}
                 <div className="mb-3"><WarmupAnswer sub={activeSub} /></div>
+
+                {/* Written feedback — one-way note to the student, anchored to
+                    the tested competency unless marked general. */}
+                {!isViewOnly(sel.studentId) && (
+                  <details className="mb-3 rounded-lg" style={{ border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 35%, transparent)' }}>
+                    <summary className="text-xs font-semibold px-3 py-2" style={{ cursor: 'pointer', color: 'var(--secondary-foreground)' }}>
+                      ✎ Written feedback {fbSent && <span style={{ color: 'var(--success)' }}>· Sent ✓</span>}
+                    </summary>
+                    <div className="px-3 pb-3">
+                      <div className="flex gap-1.5 mb-1.5">
+                        {['Strength: ', 'Next step: '].map((stem) => (
+                          <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
+                            className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                            + {stem.replace(': ', '')}
+                          </button>
+                        ))}
+                        <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                          <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
+                        </label>
+                      </div>
+                      <textarea
+                        value={fbText}
+                        onChange={(e) => setFbText(e.target.value)}
+                        rows={3}
+                        maxLength={2000}
+                        placeholder={fbGeneral ? `A note to ${sel.name.split(' ')[0]}…` : `Feedback on ${compById(activeSub.tested_competency_ids[0])?.code ?? 'this competency'}…`}
+                        className="w-full text-sm rounded-md px-2.5 py-2"
+                        style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
+                      />
+                      <div className="flex items-center justify-between mt-1.5">
+                        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                          {fbGeneral ? 'Not tied to a competency' : 'Attached to this competency'} · lands in their bell + growth page
+                        </span>
+                        <button type="button" onClick={() => sendFeedback(activeSub.tested_competency_ids[0] ?? null)} disabled={fbSending || !fbText.trim()}
+                          className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                          {fbSending ? 'Sending…' : 'Send'}
+                        </button>
+                      </div>
+                    </div>
+                  </details>
+                )}
 
                 <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>
                   Rate the tested competenc{activeSub.tested_competency_ids.length === 1 ? 'y' : 'ies'}

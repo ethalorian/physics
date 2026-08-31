@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import MasteryGrowth, { MasteryGrowthProps } from '@/components/mastery/MasteryGrowth'
 import MathSpineGrowth, { MathSpineGrowthProps } from '@/components/math-spine/MathSpineGrowth'
+import TeacherFeedbackCard from '@/components/feedback/TeacherFeedbackCard'
 
 const UNIT_ID = 'unit-1'
 const UNIT_NAME = 'Unit 1 — Motion & Forces (Asteroid 2026-XJ)'
@@ -67,6 +68,7 @@ export default function GrowthPage() {
       {loading && <p className="text-sm text-muted-foreground">Loading your growth…</p>}
       {error && <p className="text-sm text-red-600">Could not load your growth: {error}</p>}
       {data && <MasteryGrowth {...data} />}
+      <TeacherFeedbackCard />
       {mathData && (
         <div className="mt-4">
           <MathSpineGrowth {...mathData} />

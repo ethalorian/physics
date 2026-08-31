@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
 import MathControlRoom from '@/components/math-spine/MathControlRoom'
@@ -216,6 +216,11 @@ export default function ControlRoomPage() {
   const [workLoading, setWorkLoading] = useState(false)
   const [evidence, setEvidence] = useState('observation')
   const [saving, setSaving] = useState(false)
+  // Written feedback (one-way note to the student, lands in their bell + growth page)
+  const [fbText, setFbText] = useState('')
+  const [fbGeneral, setFbGeneral] = useState(false)
+  const [fbSending, setFbSending] = useState(false)
+  const [fbSent, setFbSent] = useState(false)
   const [suggestion, setSuggestion] = useState<{ level: number; rationale: string } | null>(null)
   const [suggesting, setSuggesting] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
@@ -321,6 +326,14 @@ export default function ControlRoomPage() {
   }, [unitId])
 
   const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
+  // A feedback draft belongs to one student — never carry it to the next.
+  const fbStudentRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (sel?.studentId !== fbStudentRef.current) {
+      fbStudentRef.current = sel?.studentId ?? null
+      setFbText(''); setFbGeneral(false); setFbSent(false)
+    }
+  }, [sel?.studentId])
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
@@ -368,6 +381,27 @@ export default function ControlRoomPage() {
       setError('Could not save the rating')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const sendFeedback = async () => {
+    const msg = fbText.trim()
+    if (!msg || !sel || fbSending) return
+    setFbSending(true)
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: sel.studentId, message: msg, target_id: fbGeneral ? null : sel.targetId }),
+      })
+      if (!res.ok) throw new Error('send failed')
+      setFbText('')
+      setFbSent(true)
+      setTimeout(() => setFbSent(false), 2500)
+    } catch {
+      setError('Could not send the feedback')
+    } finally {
+      setFbSending(false)
     }
   }
 
@@ -441,7 +475,11 @@ export default function ControlRoomPage() {
       if (nextStudentGate) return // gate owns the keyboard while it's up
       const el = document.activeElement
       const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
-      if (e.key === 'Escape') { closeDrawer(); return }
+      if (e.key === 'Escape') {
+        // Mid-draft Escape must not close the drawer and eat the feedback text.
+        if (typing && el.tagName === 'TEXTAREA') { (el as HTMLElement).blur(); return }
+        closeDrawer(); return
+      }
       if (typing) return
       // e.repeat = the key is being HELD (OS auto-repeat) — one press, one rating.
       if (e.repeat || saving) return
@@ -697,7 +735,7 @@ export default function ControlRoomPage() {
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
           <aside
             style={{
-              position: 'fixed', top: 0, right: 0, bottom: 0, width: 600, maxWidth: '96vw', zIndex: 100,
+              position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 94vw)', zIndex: 100,
               background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row',
               boxShadow: '-20px 0 50px -20px color-mix(in oklch, var(--foreground) 40%, transparent)',
             }}
@@ -830,6 +868,46 @@ export default function ControlRoomPage() {
                   View only — this student is on another teacher&apos;s roster. Their teacher records the ratings.
                 </p>
               ) : (<>
+              {/* Written feedback — one-way note to the student (Stiggins: name a
+                  strength against the target, then the next step). Sends on its
+                  own; rating keys stay untouched while typing. */}
+              <details className="mb-3 rounded-lg" style={{ border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 35%, transparent)' }}>
+                <summary className="text-xs font-semibold px-3 py-2" style={{ cursor: 'pointer', color: 'var(--secondary-foreground)' }}>
+                  ✎ Written feedback {fbSent && <span style={{ color: 'var(--success)' }}>· Sent ✓</span>}
+                </summary>
+                <div className="px-3 pb-3">
+                  <div className="flex gap-1.5 mb-1.5">
+                    {['Strength: ', 'Next step: '].map((stem) => (
+                      <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
+                        className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                        + {stem.replace(': ', '')}
+                      </button>
+                    ))}
+                    <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                      <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
+                    </label>
+                  </div>
+                  <textarea
+                    value={fbText}
+                    onChange={(e) => setFbText(e.target.value)}
+                    rows={3}
+                    maxLength={2000}
+                    placeholder={fbGeneral ? `A note to ${selStudent?.name?.split(' ')[0] ?? 'this student'}…` : `Feedback on “${selTarget?.statement?.slice(0, 60) ?? 'this target'}…”`}
+                    className="w-full text-sm rounded-md px-2.5 py-2"
+                    style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
+                  />
+                  <div className="flex items-center justify-between mt-1.5">
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                      {fbGeneral ? 'Not tied to a target' : 'Attached to this target'} · lands in their bell + growth page
+                    </span>
+                    <button type="button" onClick={sendFeedback} disabled={fbSending || !fbText.trim()}
+                      className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                      style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                      {fbSending ? 'Sending…' : 'Send'}
+                    </button>
+                  </div>
+                </div>
+              </details>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-sm font-semibold">Your mastery rating</span>
                 <button
