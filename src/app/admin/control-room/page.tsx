@@ -221,6 +221,7 @@ export default function ControlRoomPage() {
   const [fbGeneral, setFbGeneral] = useState(false)
   const [fbSending, setFbSending] = useState(false)
   const [fbSent, setFbSent] = useState(false)
+  const [fbHistory, setFbHistory] = useState<{ id: string; message: string; created_at: string }[]>([])
   const [suggestion, setSuggestion] = useState<{ level: number; rationale: string } | null>(null)
   const [suggesting, setSuggesting] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
@@ -331,7 +332,15 @@ export default function ControlRoomPage() {
   useEffect(() => {
     if (sel?.studentId !== fbStudentRef.current) {
       fbStudentRef.current = sel?.studentId ?? null
-      setFbText(''); setFbGeneral(false); setFbSent(false)
+      setFbText(''); setFbGeneral(false); setFbSent(false); setFbHistory([])
+      if (sel?.studentId) {
+      // Timely feedback builds on what you last said — pull this student's
+      // recent notes so the next one continues the conversation.
+      fetch(`/api/feedback?user_id=${sel.studentId}`)
+        .then((r) => (r.ok ? r.json() : null))
+        .then((d) => { if (d?.feedback) setFbHistory(d.feedback.slice(0, 3)) })
+        .catch(() => setFbHistory([]))
+      }
     }
   }, [sel?.studentId])
 
@@ -786,7 +795,10 @@ export default function ControlRoomPage() {
                   redundant header counts. */}
             </div>
 
-            <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1 }}>
+            {/* two columns: evidence on the left; grading + written feedback —
+                the teacher's two acts — always in view on the right. */}
+            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0 }}>
+            <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1, minWidth: 0, borderRight: '1px solid var(--border)' }}>
               {/* submitted work — first, right under the header (the thing being judged) */}
               <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
               {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
@@ -859,55 +871,14 @@ export default function ControlRoomPage() {
                 </details>
             </div>
 
-            {/* rater — or a view-only note when this student is on another
-                teacher's roster (admin monitor mode: see everything, rate only
-                your own). */}
-            <div style={{ padding: '16px 20px', borderTop: '1px solid var(--border)' }}>
+            {/* action column — rate, then say something useful about it.
+                View-only when this student is on another teacher's roster. */}
+            <div style={{ width: 380, flexShrink: 0, padding: '16px 20px', overflowY: 'auto', background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
               {selStudent?.ratable === false ? (
                 <p className="text-sm rounded-lg px-3 py-2.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
                   View only — this student is on another teacher&apos;s roster. Their teacher records the ratings.
                 </p>
               ) : (<>
-              {/* Written feedback — one-way note to the student (Stiggins: name a
-                  strength against the target, then the next step). Sends on its
-                  own; rating keys stay untouched while typing. */}
-              <details className="mb-3 rounded-lg" style={{ border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 35%, transparent)' }}>
-                <summary className="text-xs font-semibold px-3 py-2" style={{ cursor: 'pointer', color: 'var(--secondary-foreground)' }}>
-                  ✎ Written feedback {fbSent && <span style={{ color: 'var(--success)' }}>· Sent ✓</span>}
-                </summary>
-                <div className="px-3 pb-3">
-                  <div className="flex gap-1.5 mb-1.5">
-                    {['Strength: ', 'Next step: '].map((stem) => (
-                      <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                        className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-                        + {stem.replace(': ', '')}
-                      </button>
-                    ))}
-                    <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-                      <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
-                    </label>
-                  </div>
-                  <textarea
-                    value={fbText}
-                    onChange={(e) => setFbText(e.target.value)}
-                    rows={3}
-                    maxLength={2000}
-                    placeholder={fbGeneral ? `A note to ${selStudent?.name?.split(' ')[0] ?? 'this student'}…` : `Feedback on “${selTarget?.statement?.slice(0, 60) ?? 'this target'}…”`}
-                    className="w-full text-sm rounded-md px-2.5 py-2"
-                    style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
-                  />
-                  <div className="flex items-center justify-between mt-1.5">
-                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                      {fbGeneral ? 'Not tied to a target' : 'Attached to this target'} · lands in their bell + growth page
-                    </span>
-                    <button type="button" onClick={sendFeedback} disabled={fbSending || !fbText.trim()}
-                      className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
-                      style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
-                      {fbSending ? 'Sending…' : 'Send'}
-                    </button>
-                  </div>
-                </div>
-              </details>
               <div className="flex items-center justify-between gap-2 mb-2">
                 <span className="text-sm font-semibold">Your mastery rating</span>
                 <button
@@ -964,7 +935,59 @@ export default function ControlRoomPage() {
               <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
                 Keys <b>1 · 2 · 3</b> rate and advance. Finishes this student&apos;s pending work, then moves to the next student.
               </p>
+              {/* Written feedback — one-way note to the student (Stiggins: name a
+                  strength against the target, then the next step). Sends on its
+                  own; rating keys stay untouched while typing. */}
+              <div className="mt-4 rounded-lg" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+                <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: '0.5px solid var(--border)' }}>
+                  <span className="text-sm font-semibold">✎ Written feedback</span>
+                  {fbSent && <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
+                </div>
+                <div className="px-3 pb-3 pt-2">
+                  <div className="flex gap-1.5 mb-1.5">
+                    {['Strength: ', 'Next step: '].map((stem) => (
+                      <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
+                        className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                        + {stem.replace(': ', '')}
+                      </button>
+                    ))}
+                    <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                      <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
+                    </label>
+                  </div>
+                  <textarea
+                    value={fbText}
+                    onChange={(e) => setFbText(e.target.value)}
+                    rows={3}
+                    maxLength={2000}
+                    placeholder={fbGeneral ? `A note to ${selStudent?.name?.split(' ')[0] ?? 'this student'}…` : `Feedback on “${selTarget?.statement?.slice(0, 60) ?? 'this target'}…”`}
+                    className="w-full text-sm rounded-md px-2.5 py-2"
+                    style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
+                  />
+                  <div className="flex items-center justify-between mt-1.5">
+                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                      {fbGeneral ? 'Not tied to a target' : 'Attached to this target'} · lands in their bell + growth page
+                    </span>
+                    <button type="button" onClick={sendFeedback} disabled={fbSending || !fbText.trim()}
+                      className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                      style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+                      {fbSending ? 'Sending…' : 'Send'}
+                    </button>
+                  </div>
+                  {fbHistory.length > 0 && (
+                    <div className="mt-3">
+                      <div className="text-xs font-bold uppercase tracking-wide mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Your recent notes to them</div>
+                      {fbHistory.map((f) => (
+                        <div key={f.id} className="text-xs rounded-md px-2.5 py-1.5 mb-1.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
+                          <span style={{ whiteSpace: 'pre-wrap' }}>{f.message.length > 160 ? f.message.slice(0, 160) + '…' : f.message}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
               </>)}
+            </div>
             </div>
             {nextStudentGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--card) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
