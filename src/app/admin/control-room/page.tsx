@@ -940,18 +940,18 @@ export default function ControlRoomPage() {
                   own; rating keys stay untouched while typing. */}
               <div className="mt-4 rounded-lg" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
                 <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: '0.5px solid var(--border)' }}>
-                  <span className="text-sm font-semibold">✎ Written feedback</span>
-                  {fbSent && <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
+                  <span className="text-base font-bold">✎ Written feedback</span>
+                  {fbSent && <span className="text-sm font-bold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
                 </div>
                 <div className="px-3 pb-3 pt-2">
                   <div className="flex gap-1.5 mb-1.5">
                     {['Strength: ', 'Next step: '].map((stem) => (
                       <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                        className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                        className="rounded-full px-3 py-1.5 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
                         + {stem.replace(': ', '')}
                       </button>
                     ))}
-                    <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                    <label className="ml-auto flex items-center gap-1.5 text-sm" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
                       <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
                     </label>
                   </div>
@@ -961,15 +961,15 @@ export default function ControlRoomPage() {
                     rows={3}
                     maxLength={2000}
                     placeholder={fbGeneral ? `A note to ${selStudent?.name?.split(' ')[0] ?? 'this student'}…` : `Feedback on “${selTarget?.statement?.slice(0, 60) ?? 'this target'}…”`}
-                    className="w-full text-sm rounded-md px-2.5 py-2"
-                    style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
+                    className="w-full rounded-lg px-3 py-2.5" 
+                    style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', resize: 'vertical', fontSize: 15, lineHeight: 1.5 }}
                   />
                   <div className="flex items-center justify-between mt-1.5">
                     <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                      {fbGeneral ? 'Not tied to a target' : 'Attached to this target'} · lands in their bell + growth page
+                      {fbGeneral ? 'General note' : 'On this target'} · lands in their bell + growth page
                     </span>
                     <button type="button" onClick={sendFeedback} disabled={fbSending || !fbText.trim()}
-                      className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                      className="rounded-lg px-5 py-2.5 text-sm font-bold disabled:opacity-50"
                       style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
                       {fbSending ? 'Sending…' : 'Send'}
                     </button>

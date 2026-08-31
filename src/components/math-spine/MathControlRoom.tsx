@@ -72,11 +72,11 @@ function BoardSvg({ strokes, texts }: { strokes?: Stroke[]; texts?: BoardText[] 
 function WarmupAnswer({ sub }: { sub: Submission }) {
   const rj = sub.response_json
   if (!rj) {
-    return <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{sub.response}</p>
+    return <p className="text-base" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{sub.response}</p>
   }
   const field = (label: string, val?: string) =>
     val && String(val).trim() ? (
-      <div className="text-sm" style={{ marginBottom: 3 }}>
+      <div className="text-base" style={{ marginBottom: 5 }}>
         <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(val)}
       </div>
     ) : null
@@ -87,14 +87,14 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
       {field('Given', rj.given)}
       {field('Equation', rj.equation)}
       {eqnLines.length > 0 && (
-        <div className="text-sm" style={{ marginBottom: 3 }}>
+        <div className="text-base" style={{ marginBottom: 5 }}>
           <b style={{ color: 'var(--secondary-foreground)' }}>Equation work:</b> {eqnLines.join('  |  ')}
         </div>
       )}
       {field('Answer', rj.answer)}
       {hasBoard && (
         <div className="mt-2">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Work board (typed + drawn)</div>
+          <div className="text-sm mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Work board (typed + drawn)</div>
           <BoardSvg strokes={rj.workStrokes} texts={rj.workTexts} />
         </div>
       )}
@@ -515,7 +515,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
           <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 94vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
             {/* roster rail — students with warm-ups to review; greyed when done */}
-            <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <div style={{ width: 210, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
                 {queue.length > 0 ? `${queue.length} to review` : 'All caught up'}
               </div>
@@ -530,9 +530,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                       onClick={() => { if (!done) openStudent(st.id, st.name) }}
                       disabled={done}
                       title={st.name}
-                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '7px 12px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
                     >
-                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}</span>
+                      <span style={{ flex: 1, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}</span>
                       {done ? <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
                         : <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
                     </button>
@@ -543,8 +543,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             {/* content column */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
             <div style={{ padding: '16px 20px 10px', borderBottom: '1px solid var(--border)' }}>
-              <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
+              <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
+              <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests. Keys <b>1·2·3</b> rate; finishing a student jumps to the next.</p>
             </div>
 
@@ -558,7 +558,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
               {/* left: the work being judged */}
               <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: 20, borderRight: '1px solid var(--border)' }}>
-                <div className="flex items-center gap-2 text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>
+                <div className="flex items-center gap-2 text-sm mb-2" style={{ color: 'var(--muted-foreground)' }}>
                   <span>Submitted {fmtDate(activeSub.submitted_at)}</span>
                   {/* Instant self-check triage chip: the machine's verdict on the ANSWER only */}
                   {activeSub.self_check === 'match' && (
@@ -569,16 +569,16 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   )}
                 </div>
                 {activeSub.prompt && (
-                  <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}><b>Prompt:</b> {activeSub.prompt}</p>
+                  <p className="text-base mb-3" style={{ color: 'var(--foreground)' }}><b style={{ color: 'var(--muted-foreground)' }}>Prompt:</b> {activeSub.prompt}</p>
                 )}
                 <WarmupAnswer sub={activeSub} />
               </div>
 
               {/* right: the teacher's two acts — rate it, then say something
                   useful about it. Always in view. */}
-              <div style={{ width: 380, flexShrink: 0, overflowY: 'auto', padding: 16, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
+              <div style={{ width: 440, flexShrink: 0, overflowY: 'auto', padding: 20, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
 
-                <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>
+                <div className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>
                   Rate the tested competenc{activeSub.tested_competency_ids.length === 1 ? 'y' : 'ies'}
                 </div>
                 {activeSub.tested_competency_ids.map((cid) => {
@@ -586,74 +586,81 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   const rated = activeSub.rated_competency_ids.includes(cid)
                   const cur = currentValue(sel.studentId, cid)
                   return (
-                    <div key={cid} className="py-2.5" style={{ borderTop: '0.5px solid var(--border)' }}>
-                      <div className="flex items-center gap-2 mb-1.5">
-                        <span className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums" style={{ background: 'var(--muted)', color: 'var(--muted-foreground)' }}>{comp?.code ?? '?'}</span>
-                        <span className="text-[13px]" style={{ color: 'var(--foreground)' }}>{comp?.statement ?? cid}</span>
+                    <div key={cid} className="rounded-xl p-4 mb-3" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+                      <div className="flex items-start gap-2.5 mb-2">
+                        <span className="text-sm font-bold rounded-md px-2.5 py-1 tabular-nums shrink-0" style={{ background: 'var(--muted)', color: 'var(--foreground)' }}>{comp?.code ?? '?'}</span>
+                        <span className="text-[15px]" style={{ color: 'var(--foreground)', lineHeight: 1.45 }}>{comp?.statement ?? cid}</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs" style={{ color: 'var(--muted-foreground)', minWidth: 92 }}>
-                          {cur === null ? 'not yet rated' : `now ${cur.toFixed(1)} (${cur >= 2.5 ? 'Got it' : cur >= 1.5 ? 'Almost' : 'Not yet'})`}
-                        </span>
-                        {rated ? (
-                          <span className="text-xs font-medium" style={{ color: 'var(--success)' }}>✓ rated</span>
-                        ) : sel && isViewOnly(sel.studentId) ? (
-                          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>view only — their teacher rates this</span>
-                        ) : (
-                          [1, 2, 3].map((lv) => {
+                      <div className="text-sm mb-2.5" style={{ color: 'var(--muted-foreground)' }}>
+                        {cur === null ? 'Not yet rated' : `Currently ${cur.toFixed(1)} · ${cur >= 2.5 ? 'Got it' : cur >= 1.5 ? 'Almost' : 'Not yet'}`}
+                      </div>
+                      {rated ? (
+                        <div className="text-base font-bold rounded-lg py-3 text-center" style={{ background: 'color-mix(in oklch, var(--success) 12%, transparent)', color: 'var(--success)' }}>✓ Rated</div>
+                      ) : sel && isViewOnly(sel.studentId) ? (
+                        <div className="text-sm rounded-lg py-2.5 px-3" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>View only — their teacher rates this</div>
+                      ) : (
+                        <div className="flex gap-2">
+                          {[1, 2, 3].map((lv) => {
                             const key = `${activeSub.id}:${cid}:${lv}`
                             return (
                               <button
                                 key={lv}
                                 disabled={savingKey !== null}
                                 onClick={() => rate(activeSub, cid, lv as 1 | 2 | 3)}
-                                className="text-xs rounded-md border px-2.5 py-1 disabled:opacity-50"
-                                style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
+                                className="flex-1 rounded-xl font-bold disabled:opacity-50"
+                                style={{
+                                  padding: '14px 0', fontSize: 15, cursor: 'pointer', border: '1.5px solid var(--border)',
+                                  background: lv === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lv === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
+                                  color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)',
+                                }}
                               >
                                 {savingKey === key ? '…' : `${lv} · ${levelWord(lv)}`}
                               </button>
                             )
-                          })
-                        )}
-                      </div>
+                          })}
+                        </div>
+                      )}
                     </div>
                   )
                 })}
+                {!isViewOnly(sel.studentId) && (
+                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Keys <b>1 · 2 · 3</b> rate the first unrated competency.</p>
+                )}
                 {/* Written feedback — one-way note, anchored to the tested
                     competency unless marked general. */}
                 {!isViewOnly(sel.studentId) && (
                   <div className="mt-4 rounded-lg" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
                     <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: '0.5px solid var(--border)' }}>
-                      <span className="text-sm font-semibold">✎ Written feedback</span>
-                      {fbSent && <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
+                      <span className="text-base font-bold">✎ Written feedback</span>
+                      {fbSent && <span className="text-sm font-bold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
                     </div>
                     <div className="px-3 pb-3 pt-2">
                       <div className="flex gap-1.5 mb-1.5">
                         {['Strength: ', 'Next step: '].map((stem) => (
                           <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                            className="rounded-full px-2 py-0.5 text-xs" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                            className="rounded-full px-3 py-1.5 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
                             + {stem.replace(': ', '')}
                           </button>
                         ))}
-                        <label className="ml-auto flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
+                        <label className="ml-auto flex items-center gap-1.5 text-sm" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
                           <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
                         </label>
                       </div>
                       <textarea
                         value={fbText}
                         onChange={(e) => setFbText(e.target.value)}
-                        rows={3}
+                        rows={4}
                         maxLength={2000}
                         placeholder={fbGeneral ? `A note to ${sel.name.split(' ')[0]}…` : `Feedback on ${compById(activeSub.tested_competency_ids[0])?.code ?? 'this competency'}…`}
-                        className="w-full text-sm rounded-md px-2.5 py-2"
-                        style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', resize: 'vertical' }}
+                        className="w-full rounded-lg px-3 py-2.5" 
+                        style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', resize: 'vertical', fontSize: 15, lineHeight: 1.5 }}
                       />
                       <div className="flex items-center justify-between mt-1.5">
                         <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                          {fbGeneral ? 'Not tied to a competency' : 'Attached to this competency'} · lands in their bell + growth page
+                          {fbGeneral ? 'General note' : 'On this competency'} · lands in their bell + growth page
                         </span>
                         <button type="button" onClick={() => sendFeedback(activeSub.tested_competency_ids[0] ?? null)} disabled={fbSending || !fbText.trim()}
-                          className="rounded-md px-3 py-1.5 text-xs font-bold disabled:opacity-50"
+                          className="rounded-lg px-5 py-2.5 text-sm font-bold disabled:opacity-50"
                           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
                           {fbSending ? 'Sending…' : 'Send'}
                         </button>
