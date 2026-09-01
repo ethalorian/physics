@@ -86,6 +86,12 @@ export function parseQuantity(raw: string): ParsedQuantity | null {
   if (!s) return null
   // Strip explanatory tails authors add to keys: "24 m (area = 6 x 4)."
   s = s.replace(/\s*\([^()]*\)\s*[.!]?\s*$/, '').replace(/[.!\s]+$/, '').trim()
+  // …and em/en-dash explanation tails: "$0.10 — a third OF the value".
+  s = s.replace(/\s*[\u2014\u2013]\s.*$/, '').trim()
+  // Currency prefix: "$.10", "$0.30" — the symbol becomes the unit.
+  let currency = ''
+  const cur = s.match(/^([$€£])\s*(.+)$/)
+  if (cur) { currency = cur[1]; s = cur[2].trim() }
   // Strip approximation lead-ins: "about 40 m/s", "≈ 5440 m/s", "~2200"
   s = s.replace(/^(?:about|approx(?:imately)?|roughly|around|~|≈)\s*/i, '')
   // Strip lead-ins students type: "v = 3.5 m/s", "answer: 42"
@@ -136,7 +142,7 @@ export function parseQuantity(raw: string): ParsedQuantity | null {
     }
     const unit = normalizeUnit(rawUnit)
     if (unit === '%') return { value: v / 100, unit: '' } // percentage → proportion, unitless
-    return { value: v, unit }
+    return { value: v, unit: unit || currency }
   }
   return null
 }
@@ -266,13 +272,16 @@ export function checkAnswer(studentAnswer: string | null | undefined, answerKey:
   const key = (answerKey ?? '').trim()
   if (!student || !key) return 'unknown'
 
-  // Multi-part keys first: if the cleaned key holds 2+ DIFFERENT quantities
-  // ("horizontal ≈ 5440; vertical ≈ 2540"), the student must supply them all.
-  // Equal quantities ("1/4 and 0.25") are alternative spellings, not parts —
-  // they fall through to the forms logic below.
+  // Multi-part read: if the cleaned key holds 2+ DIFFERENT quantities
+  // ("horizontal ≈ 5440; vertical ≈ 2540"), try requiring them all. But a key
+  // can ALSO be a list of alternative forms with different numbers in them
+  // ("$0.10 | 10 cents | a third of 30 cents"), so a failed multipart read is
+  // never final — each form still gets its own shot below.
+  let multipart: SelfCheck | null = null
   const keyValues = findQuantities(cleanKeyForScan(key))
   if (keyValues.length >= 2 && keyValues.some((v) => !numbersMatch(v, keyValues[0]))) {
-    return checkMultipart(findQuantities(student), keyValues)
+    multipart = checkMultipart(findQuantities(student), keyValues)
+    if (multipart === 'match') return 'match'
   }
 
   const forms = key
@@ -287,5 +296,6 @@ export function checkAnswer(studentAnswer: string | null | undefined, answerKey:
     if (r === 'match') return 'match'
     if (r === 'mismatch') sawMismatch = true
   }
-  return sawMismatch ? 'mismatch' : 'unknown'
+  if (sawMismatch || multipart === 'mismatch') return 'mismatch'
+  return 'unknown'
 }

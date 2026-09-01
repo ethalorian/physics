@@ -16,7 +16,8 @@
     "test:secret-manager": "tsx scripts/test-secret-manager.ts",
     "sim:render": "node scripts/sim-render/render.mjs",
     "sim:render:update": "node scripts/sim-render/render.mjs update",
-    "sim:check": "node scripts/sim-render/render.mjs check"
+    "sim:check": "node scripts/sim-render/render.mjs check",
+    "test:answer-check": "tsx --test src/lib/math-answer-check.test.ts"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",
