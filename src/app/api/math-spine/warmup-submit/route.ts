@@ -74,18 +74,22 @@ export const POST = withAuth(async (request, ctx) => {
   // Instant self-check, computed server-side from the item's answer key.
   // 'unknown' when: no item, no parseable key, or no work shown (the ✓ must be
   // earned with work, so an answer-only submission gets no machine verdict).
-  let selfCheck: SelfCheck = 'unknown'
+  let selfCheck: SelfCheck | null = 'unknown'
   let workShown = false
   if (body.spiral_item_id) {
     workShown = hasShownWork(responseJson)
     if (workShown) {
       const { data: itemRow } = await supabaseAdmin
         .from('math_spiral_items')
-        .select('prompt, answer_key, template')
+        .select('prompt, answer_key, template, check_mode')
         .eq('id', body.spiral_item_id)
         .maybeSingle()
       const studentAnswer = responseJson?.answer ?? responseText
-      if (itemRow?.template) {
+      if (itemRow?.check_mode === 'teacher-only') {
+        // Prose/explain prompt: the machine never judges — the teacher reads
+        // it. selfCheck stays null so the drawer shows no verdict chip.
+        selfCheck = null
+      } else if (itemRow?.template) {
         // Templated item: recompute the per-student key from the same
         // user+item+day seed the daily route used. A submission straddling
         // midnight checks yesterday's numbers too, so the verdict can't flip

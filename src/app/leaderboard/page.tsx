@@ -46,9 +46,26 @@ const XP_SOURCES: { key: XpSource; label: string; Icon: typeof Zap }[] = [
 ]
 import Link from 'next/link'
 import StreakTracker from '@/components/gamification/StreakTracker'
+import XpGoalRing from '@/components/gamification/XpGoalRing'
+
+// Stacked-bar colors per XP source — theme tokens so light/dark both work.
+const SOURCE_COLOR: Record<XpSource, string> = {
+  arcade: 'var(--primary)',
+  math: 'var(--success)',
+  lessons: 'var(--reward)',
+  games: 'color-mix(in oklch, var(--primary) 55%, var(--success))',
+  graded: 'color-mix(in oklch, var(--muted-foreground) 70%, var(--border))',
+  spin: 'color-mix(in oklch, var(--reward) 55%, var(--primary))',
+  other: 'var(--border)',
+}
+
+interface ClassStats { weeklyXp: number; activeStudents: number; mathXp: number; arcadeRuns: number; streaksAlive: number }
+interface Spotlight { key: string; label: string; name: string; user_id: string; value: number; unit: string }
 
 interface LeaderboardEntry {
   rank: number
+  rank_delta?: number | null
+  weekly_gain?: number
   user_id: string
   name: string
   email: string
@@ -77,6 +94,9 @@ interface LeaderboardEntry {
 export default function LeaderboardPage() {
   const { data: session, status } = useSession()
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [classStats, setClassStats] = useState<ClassStats | null>(null)
+  const [spotlights, setSpotlights] = useState<Spotlight[]>([])
+  const [expanded, setExpanded] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [period, setPeriod] = useState<'all-time' | 'week' | 'month'>('all-time')
   const [error, setError] = useState<string | null>(null)
@@ -91,7 +111,14 @@ export default function LeaderboardPage() {
         const response = await fetch(`/api/leaderboard?period=${period}&limit=50`)
         if (response.ok) {
           const data = await response.json()
-          setLeaderboard(data)
+          // Enriched shape { entries, classStats, spotlights }; tolerate the
+          // old bare-array shape during rollout.
+          if (Array.isArray(data)) setLeaderboard(data)
+          else {
+            setLeaderboard(data.entries ?? [])
+            setClassStats(data.classStats ?? null)
+            setSpotlights(data.spotlights ?? [])
+          }
         } else {
           setError('Failed to load leaderboard')
         }
@@ -209,6 +236,57 @@ export default function LeaderboardPage() {
       ) : (
       <>
 
+      {/* Class stat band — the whole class's week. Every student contributed
+          to at least one of these numbers, so everyone has a reason to look. */}
+      {classStats && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {[
+            { label: 'Class XP this week', value: classStats.weeklyXp.toLocaleString(), Icon: Zap, tint: 'var(--primary)' },
+            { label: 'Students active', value: String(classStats.activeStudents), Icon: User, tint: 'var(--success)' },
+            { label: 'Streaks alive', value: String(classStats.streaksAlive), Icon: Flame, tint: 'var(--reward)' },
+            { label: 'Math XP this week', value: classStats.mathXp.toLocaleString(), Icon: Sigma, tint: 'var(--success)' },
+            { label: 'Arcade runs', value: classStats.arcadeRuns.toLocaleString(), Icon: Joystick, tint: 'var(--primary)' },
+          ].map((t) => (
+            <div key={t.label} className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+              <div className="flex items-center gap-2 mb-1">
+                <t.Icon className="h-4 w-4" style={{ color: t.tint }} />
+                <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>{t.label}</span>
+              </div>
+              <div className="text-3xl font-bold tabular-nums" style={{ color: 'var(--foreground)' }}>{t.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Weekly spotlights — growth-based recognition, recomputed every week,
+          so the same top-XP names don't win every category. */}
+      {spotlights.length > 0 && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {spotlights.map((sp) => {
+            const entry = leaderboard.find((e) => e.user_id === sp.user_id)
+            const meta: Record<string, { Icon: typeof Zap; tint: string }> = {
+              climber: { Icon: TrendingUp, tint: 'var(--success)' },
+              math: { Icon: Sigma, tint: 'var(--primary)' },
+              arcade: { Icon: Joystick, tint: 'var(--primary)' },
+              streak: { Icon: Flame, tint: 'var(--reward)' },
+            }
+            const m = meta[sp.key] ?? { Icon: Star, tint: 'var(--reward)' }
+            return (
+              <div key={sp.key} className="rounded-xl border p-4 flex items-center gap-3" style={{ borderColor: `color-mix(in oklch, ${m.tint} 30%, var(--border))`, background: `color-mix(in oklch, ${m.tint} 6%, var(--card))` }}>
+                {entry ? <LeaderboardAvatar entry={entry} size={44} /> : <m.Icon className="h-8 w-8" style={{ color: m.tint }} />}
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide" style={{ color: m.tint }}>
+                    <m.Icon className="h-3.5 w-3.5" /> {sp.label}
+                  </div>
+                  <div className="font-bold truncate" style={{ color: 'var(--foreground)' }}>{sp.name}</div>
+                  <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}><b className="tabular-nums">{sp.value.toLocaleString()}</b> {sp.unit}</div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
       {/* Current User Stats Banner */}
       {currentUserEntry && (
         <Card className="max-w-lg bg-primary/5 border-primary/20">
@@ -285,24 +363,34 @@ export default function LeaderboardPage() {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {leaderboard.map((entry) => (
+                  {leaderboard.map((entry) => {
+                    const isOpen = expanded === entry.user_id
+                    const total = Math.max(1, XP_SOURCES.reduce((a, src) => a + (entry.xp_by_source?.[src.key] ?? 0), 0))
+                    return (
+                    <div key={entry.user_id} className="rounded-lg border overflow-hidden" style={getRankStyle(entry.rank) ?? { borderColor: 'var(--border)' }}>
                     <div
-                      key={entry.user_id}
-                      className={`flex items-center gap-4 p-3 rounded-lg border transition-colors hover:bg-muted/50 ${
-                        entry.is_current_user ? 'bg-primary/5 border-primary/20' : ''
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => setExpanded(isOpen ? null : entry.user_id)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setExpanded(isOpen ? null : entry.user_id) } }}
+                      className={`flex items-center gap-4 p-3 transition-colors hover:bg-muted/50 cursor-pointer ${
+                        entry.is_current_user ? 'bg-primary/5' : ''
                       }`}
-                      style={getRankStyle(entry.rank)}
                     >
-                      {/* Rank */}
-                      <div className="w-10 flex justify-center">
+                      {/* Rank + movement */}
+                      <div className="w-10 flex flex-col items-center gap-0.5">
                         {getRankIcon(entry.rank)}
+                        {typeof entry.rank_delta === 'number' && entry.rank_delta !== 0 && (
+                          <span className="text-[11px] font-bold tabular-nums" style={{ color: entry.rank_delta > 0 ? 'var(--success)' : 'var(--destructive)' }}>
+                            {entry.rank_delta > 0 ? `▲${entry.rank_delta}` : `▼${Math.abs(entry.rank_delta)}`}
+                          </span>
+                        )}
                       </div>
 
                       {/* Avatar */}
                       <LeaderboardAvatar entry={entry} size={40} />
 
-
-                      {/* Name & Activities */}
+                      {/* Name + XP-source bar */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className={`font-semibold truncate ${entry.is_current_user ? 'text-primary' : ''}`}>
@@ -311,33 +399,58 @@ export default function LeaderboardPage() {
                           {entry.is_current_user && (
                             <Badge variant="outline" className="text-xs">You</Badge>
                           )}
-                        </div>
-                        <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-xs text-muted-foreground mt-1">
-                          {XP_SOURCES.filter((s) => (entry.xp_by_source?.[s.key] ?? 0) > 0).map((s) => (
-                            <span key={s.key} className="flex items-center gap-1" title={`${s.label}: ${entry.xp_by_source?.[s.key]} XP`}>
-                              <s.Icon className="h-3 w-3" />
-                              {s.label} <span className="tabular-nums font-medium text-foreground/80">{entry.xp_by_source?.[s.key]}</span>
+                          {(entry.weekly_gain ?? 0) > 0 && (
+                            <span className="text-xs font-semibold tabular-nums rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--success) 12%, transparent)', color: 'var(--success)' }}>
+                              +{entry.weekly_gain} this wk
                             </span>
-                          ))}
-                          {XP_SOURCES.every((s) => (entry.xp_by_source?.[s.key] ?? 0) <= 0) && (
-                            <span>No XP yet</span>
                           )}
                           {(entry.streak ?? 0) > 0 && (
-                            <span className="flex items-center gap-1 text-reward font-medium">
-                              <Flame className="h-3 w-3" />
-                              {entry.streak}-day streak
+                            <span className="flex items-center gap-0.5 text-xs font-medium" style={{ color: 'var(--reward)' }}>
+                              <Flame className="h-3 w-3" />{entry.streak}
                             </span>
                           )}
+                        </div>
+                        {/* where the XP comes from, at a glance */}
+                        <div className="flex rounded-full overflow-hidden mt-1.5" style={{ height: 7, background: 'var(--secondary)' }} title="Tap for the breakdown">
+                          {XP_SOURCES.filter((src) => (entry.xp_by_source?.[src.key] ?? 0) > 0).map((src) => (
+                            <span key={src.key} style={{ width: `${((entry.xp_by_source?.[src.key] ?? 0) / total) * 100}%`, background: SOURCE_COLOR[src.key] }} />
+                          ))}
                         </div>
                       </div>
 
                       {/* XP */}
                       <div className="text-right">
-                        <div className="font-bold text-lg">{entry.total_points.toLocaleString()}</div>
+                        <div className="font-bold text-lg tabular-nums">{entry.total_points.toLocaleString()}</div>
                         <div className="text-xs text-muted-foreground">XP</div>
                       </div>
                     </div>
-                  ))}
+
+                    {/* Expanded detail — the fun part: where it all came from */}
+                    {isOpen && (
+                      <div className="px-4 pb-4 pt-1" style={{ borderTop: '0.5px solid var(--border)', background: 'color-mix(in oklch, var(--secondary) 25%, transparent)' }}>
+                        <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 mt-3">
+                          {XP_SOURCES.filter((src) => (entry.xp_by_source?.[src.key] ?? 0) > 0).map((src) => (
+                            <div key={src.key} className="flex items-center gap-2 text-sm">
+                              <span className="rounded-full shrink-0" style={{ width: 10, height: 10, background: SOURCE_COLOR[src.key] }} />
+                              <src.Icon className="h-3.5 w-3.5" style={{ color: 'var(--muted-foreground)' }} />
+                              <span style={{ color: 'var(--foreground)' }}>{src.label}</span>
+                              <span className="ml-auto font-bold tabular-nums" style={{ color: 'var(--foreground)' }}>{entry.xp_by_source?.[src.key]}</span>
+                              <span className="text-xs tabular-nums w-10 text-right" style={{ color: 'var(--muted-foreground)' }}>{Math.round(((entry.xp_by_source?.[src.key] ?? 0) / total) * 100)}%</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                          {(entry.activities.arcade_runs ?? 0) > 0 && <span>🕹 {entry.activities.arcade_runs} arcade runs</span>}
+                          {(entry.activities.math_grants ?? 0) > 0 && <span>Σ {entry.activities.math_grants} math awards</span>}
+                          {entry.activities.lessons > 0 && <span>📖 {entry.activities.lessons} lessons</span>}
+                          {entry.activities.games > 0 && <span>🎮 {entry.activities.games} game plays</span>}
+                          {(entry.activities.spins ?? 0) > 0 && <span>🎰 {entry.activities.spins} spins</span>}
+                          {(entry.streak ?? 0) > 0 && <span>🔥 {entry.streak}-day streak</span>}
+                        </div>
+                      </div>
+                    )}
+                    </div>
+                  )})}
                 </div>
               )}
             </CardContent>
@@ -346,6 +459,8 @@ export default function LeaderboardPage() {
 
         {/* Sidebar */}
         <div className="space-y-6">
+          {/* Today's XP goal — set by this student's teacher */}
+          <XpGoalRing />
           {/* Streak Tracker — real data for the current student */}
           <StreakTracker
             currentStreak={currentUserEntry?.streak ?? 0}

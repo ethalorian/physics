@@ -35,6 +35,15 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
     }
 
+    // Always ALSO pull the last-7-days window (independent of the selected
+    // period): it powers the class stat band, weekly gains, rank movement,
+    // and the rotating spotlights.
+    const weekStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    const { data: weeklyAgg } = await supabaseAdmin.rpc('get_leaderboard', {
+      p_since: weekStart,
+      p_limit: 500,
+    })
+
     // Per-source XP so the row can say WHERE the points came from — a student
     // whose 170 XP is all math-gym arcade used to read "0 games · 0 lessons".
     type AggRow = {
@@ -65,14 +74,39 @@ export const GET = withAuth(async (request, ctx) => {
       })
     }
 
+    const weeklyBy = new Map<string, AggRow>()
+    for (const row of (weeklyAgg ?? []) as AggRow[]) weeklyBy.set(row.user_id, row)
+
+    // Rank movement (all-time view only): today's order vs the order with this
+    // week's points removed — "where were you before this week happened?"
+    const prevRankBy = new Map<string, number>()
+    if (period === 'all-time') {
+      const prev = Array.from(userDataMap.entries())
+        .map(([uid, d]) => ({ uid, pts: d.totalPoints - Number(weeklyBy.get(uid)?.total_points ?? 0) }))
+        .sort((a, b) => b.pts - a.pts)
+      prev.forEach((r, i) => prevRankBy.set(r.uid, i + 1))
+    }
+
+    // Class-wide stat band — the whole class's week, so every student sees
+    // something they contributed to.
+    const weeklyRows = (weeklyAgg ?? []) as AggRow[]
+    const classStats = {
+      weeklyXp: Math.round(weeklyRows.reduce((a, r) => a + Number(r.total_points || 0), 0)),
+      activeStudents: weeklyRows.filter((r) => Number(r.total_points) > 0).length,
+      mathXp: Math.round(weeklyRows.reduce((a, r) => a + Number(r.math_pts || 0), 0)),
+      arcadeRuns: weeklyRows.reduce((a, r) => a + Number(r.arcade_runs || 0), 0),
+      streaksAlive: 0, // filled in below once streaks are loaded
+    }
+
     // Get student names + aliases + images + avatar bundles from the roster.
     // Lookup is by `id` because the work tables (game_scores, lesson_progress,
     // submissions) key by session.user.id, which IS students.id (uuid).
-    const userIds = Array.from(userDataMap.keys())
+    const userIds = Array.from(new Set([...userDataMap.keys(), ...weeklyBy.keys()]))
     // Carry the students.id (uuid) per user so we can resolve avatar rows below.
     // (It equals the work-table user_id now, but we keep the map for the
     // student_row_id field below.)
     const studentRowIdByUser = new Map<string, string>()
+    const nameBy = new Map<string, string>()
     // Carry has_mii + traits + equipped per user for the client. A finished
     // Mii IS the student's site-wide avatar — there is no separate opt-in.
     const avatarByUser = new Map<string, { has_mii: boolean; traits: Record<string, string> | null; equipped: Record<string, string> }>()
@@ -84,6 +118,7 @@ export const GET = withAuth(async (request, ctx) => {
         .in('id', userIds)
 
       students?.forEach((student: { id: string; name: string | null; alias: string | null; email: string | null }) => {
+        nameBy.set(student.id, student.alias || student.name || (student.email ?? '').split('@')[0] || 'Student')
         const userData = userDataMap.get(student.id)
         if (userData) {
           // Prefer alias for the peer-facing leaderboard; fall back to real name.
@@ -127,6 +162,26 @@ export const GET = withAuth(async (request, ctx) => {
     // user's full detail (longest + total) for the sidebar streak widget.
     const streaks = await getStreaksForUsers(userIds)
     const meStreak = await getStreakDetail(ctx.userId)
+    classStats.streaksAlive = [...streaks.values()].filter((v) => v > 0).length
+
+    // Rotating spotlights — growth-based recognition so the same top-XP names
+    // don't win every category. All computed on the LAST 7 DAYS.
+    const topBy = (metric: (r: AggRow) => number) => {
+      let best: AggRow | null = null
+      for (const r of weeklyRows) if (metric(r) > (best ? metric(best) : 0)) best = r
+      return best
+    }
+    let bestStreakId: string | null = null
+    for (const [uid, v] of streaks) if (v > 0 && (bestStreakId === null || v > (streaks.get(bestStreakId) ?? 0))) bestStreakId = uid
+    const climber = topBy((r) => Number(r.total_points))
+    const mathTop = topBy((r) => Number(r.math_pts))
+    const arcadeTop = topBy((r) => Number(r.arcade_pts))
+    const spotlights = [
+      climber && { key: 'climber', label: 'Biggest climber', name: nameBy.get(climber.user_id) ?? 'Student', user_id: climber.user_id, value: Math.round(Number(climber.total_points)), unit: 'XP this week' },
+      mathTop && Number(mathTop.math_pts) > 0 && { key: 'math', label: 'Math machine', name: nameBy.get(mathTop.user_id) ?? 'Student', user_id: mathTop.user_id, value: Math.round(Number(mathTop.math_pts)), unit: 'math XP this week' },
+      arcadeTop && Number(arcadeTop.arcade_pts) > 0 && { key: 'arcade', label: 'Arcade legend', name: nameBy.get(arcadeTop.user_id) ?? 'Student', user_id: arcadeTop.user_id, value: Math.round(Number(arcadeTop.arcade_pts)), unit: 'arcade XP this week' },
+      bestStreakId && { key: 'streak', label: 'Streak keeper', name: nameBy.get(bestStreakId) ?? 'Student', user_id: bestStreakId, value: streaks.get(bestStreakId) ?? 0, unit: 'days in a row' },
+    ].filter(Boolean)
 
     // Convert to array and sort by points
     const leaderboard = Array.from(userDataMap.entries())
@@ -138,6 +193,7 @@ export const GET = withAuth(async (request, ctx) => {
         return {
           user_id: userId,
           student_row_id: studentRowIdByUser.get(userId) ?? null,
+          weekly_gain: Math.round(Number(weeklyBy.get(userId)?.total_points ?? 0)),
           name: data.name || data.email.split('@')[0],
           email: data.email,
           image: data.image || null,
@@ -158,8 +214,12 @@ export const GET = withAuth(async (request, ctx) => {
       .slice(0, limit)
       .map((entry, index) => ({
         ...entry,
-        rank: index + 1
+        rank: index + 1,
+        // + = climbed since last week, − = slipped, 0/undefined = held or n/a
+        rank_delta: period === 'all-time' && prevRankBy.has(entry.user_id)
+          ? (prevRankBy.get(entry.user_id) as number) - (index + 1)
+          : null,
       }))
 
-    return NextResponse.json(leaderboard)
+    return NextResponse.json({ entries: leaderboard, classStats, spotlights })
 })

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from 'react'
 import EnrollmentGate from '@/components/EnrollmentGate'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
+import XpGoalRing from '@/components/gamification/XpGoalRing'
 import Link from 'next/link'
 import { Coins, Zap, ChevronDown } from 'lucide-react'
 import { decayingAverage } from '@/data/curriculum-types'
@@ -255,6 +256,9 @@ export default function HomePage() {
                 folded in as a compact "2-min first" step rather than opening
                 the page as an obligation (Surface 16: lead with the path). */}
             <SectionLabel accent="var(--primary)">Continue your journey</SectionLabel>
+
+            {/* Today's XP goal — set by this student's teacher */}
+            <div className="mb-3"><XpGoalRing compact /></div>
 
             <details
               open={warmupOpen}

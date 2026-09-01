@@ -71,7 +71,7 @@ export const GET = withAuth(async (request, ctx) => {
   // and maintenance leans harder (stretch) when difficulty is tagged.
   const { data: itemRows } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations, is_spaced, template')
+    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations, is_spaced, template, check_mode')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
   let pool = itemRows ?? []
@@ -93,6 +93,7 @@ export const GET = withAuth(async (request, ctx) => {
     prompt: string
     difficulty?: string
     needsGraph?: boolean
+    checkMode?: 'numeric' | 'short-answer' | 'teacher-only'
     needsEquationBuilder?: boolean
     competencyValue: number | null
     miniLessonTiers?: unknown
@@ -134,6 +135,7 @@ export const GET = withAuth(async (request, ctx) => {
       // server-side and students shouldn't find the key in the network tab.
       difficulty: chosen.difficulty ?? undefined,
       needsGraph: chosen.needs_graph ?? false,
+      checkMode: chosen.check_mode ?? 'numeric',
       needsEquationBuilder: chosen.needs_equation_builder ?? false,
       competencyValue: valueOf(target.id),
       miniLessonTiers: tiersFromDb,

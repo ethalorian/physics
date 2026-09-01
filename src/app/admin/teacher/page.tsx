@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
+import XpGoalSettings from '@/components/admin/XpGoalSettings'
 import {
   LayoutGrid, GraduationCap, CalendarClock, Gift, Eye, Sparkles,
   BookOpen, Compass, Check, ArrowRight, DoorOpen, Lock, type LucideIcon,
@@ -56,6 +57,7 @@ const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; acce
   { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', Icon: Gift, accent: 'var(--reward)' },
   { href: '/home', label: 'View as student', desc: 'See what your students see', Icon: Eye, accent: 'var(--muted-foreground)' },
 ]
+
 
 export default function TeacherDashboard() {
   const { data: session } = useSession()
@@ -217,6 +219,8 @@ export default function TeacherDashboard() {
       {/* tools */}
       <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Your tools</div>
       <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
+        {/* Daily XP goals — this teacher's own config (never global) */}
+        <XpGoalSettings />
         {/* Class setup — persistent (Surface 9): setup doesn't evaporate once the
             checklist clears. Re-type a class, revisit pacing, or replay the tour
             any time, without hunting for the onboarding flow. */}

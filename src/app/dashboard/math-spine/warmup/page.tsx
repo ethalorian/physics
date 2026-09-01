@@ -36,6 +36,7 @@ interface DailyItem {
   prompt: string
   difficulty?: string
   needsGraph?: boolean
+  checkMode?: 'numeric' | 'short-answer' | 'teacher-only'
   needsEquationBuilder?: boolean
   competencyValue?: number | null
   miniLessonTiers?: MiniLesson[] | null
@@ -88,6 +89,8 @@ export default function WarmupPage() {
   const [submitted, setSubmitted] = useState(false)
   const [selfCheck, setSelfCheck] = useState<SelfCheck | null>(null)
   const [error, setError] = useState<string | null>(null)
+  // One-time nudge when submitting with an empty answer box (work-only).
+  const [nudged, setNudged] = useState(false)
   const [translationEnabled, setTranslationEnabled] = useState(false)
   const [lang, setLang] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('mathLang') || '' : ''))
   const [translated, setTranslated] = useState(false)
@@ -119,6 +122,12 @@ export default function WarmupPage() {
 
   async function submit() {
     if (!item || !hasWork) return
+    // Board work with an empty answer box is the #1 cause of "can't check":
+    // nudge once, then let them submit anyway (the work still reaches you).
+    if (!(ans?.answer && ans.answer.trim()) && !nudged) {
+      setNudged(true)
+      return
+    }
     setSubmitting(true)
     setError(null)
     try {
@@ -288,15 +297,25 @@ export default function WarmupPage() {
                   strand={strandForCode(item.competencyCode)}
                   needsGraph={item.needsGraph}
                   needsEquationBuilder={item.needsEquationBuilder}
-                  onChange={setAns}
+                  checkMode={item.checkMode ?? 'numeric'}
+                  onChange={(v) => { setAns(v); if (v.answer && v.answer.trim()) setNudged(false) }}
                   lang={activeLang}
                 />
                 <div className="flex items-center gap-2 pt-2 border-t border-border flex-wrap">
                   <Button disabled={submitting || !hasWork} onClick={submit} className="rounded-full">
-                    {submitting ? t('Submitting…') : t('Submit — instant check')}
+                    {submitting ? t('Submitting…')
+                      : nudged ? t('Submit anyway')
+                      : item.checkMode === 'teacher-only' ? t('Submit for your teacher')
+                      : t('Submit — instant check')}
                   </Button>
                   {!hasWork && <span className="text-xs text-muted-foreground">{t('Show your work or enter an answer first.')}</span>}
-                  {hasWork && <span className="text-xs text-muted-foreground">{t('Show your work to get the instant answer check.')}</span>}
+                  {hasWork && nudged && (
+                    <span className="text-xs font-semibold" style={{ color: 'var(--reward)' }}>
+                      {t('No answer typed yet — add one in the green box so it can be checked, or submit anyway.')}
+                    </span>
+                  )}
+                  {hasWork && !nudged && item.checkMode !== 'teacher-only' && <span className="text-xs text-muted-foreground">{t('Your answer gets checked the moment you submit.')}</span>}
+                  {hasWork && !nudged && item.checkMode === 'teacher-only' && <span className="text-xs text-muted-foreground">{t('Your teacher reads and rates this one.')}</span>}
                   {error && <span className="text-xs text-red-600">{error}</span>}
                 </div>
               </CardContent>
