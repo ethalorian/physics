@@ -44,6 +44,15 @@ const UNIT_SYNONYMS: Record<string, string> = {
   'ohms': 'ohm', 'Ω': 'ohm',
 }
 
+/** "7 thousand" means 7000 — treat number-word multipliers as multipliers,
+    not units. Students (and place-value answer keys) use these constantly. */
+const WORD_MULTIPLIER: Record<string, number> = {
+  hundred: 100, hundreds: 100,
+  thousand: 1e3, thousands: 1e3,
+  million: 1e6, millions: 1e6,
+  billion: 1e9, billions: 1e9,
+}
+
 const SUPERSCRIPT: Record<string, string> = {
   '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '⁺': '+',
 }
@@ -119,6 +128,12 @@ export function parseQuantity(raw: string): ParsedQuantity | null {
     // Reject "units" that are really more math (digits or =) — but exponents
     // inside a unit are legitimate ("m/s^2"), so ignore ^n before testing.
     if (/[\d=]/.test(rawUnit.replace(/\^[-+]?\d+/g, ''))) return null
+    // "7 thousand" / "3 million m" — multiplier word scales the value.
+    const multM = rawUnit.match(/^(hundreds?|thousands?|millions?|billions?)\b\s*(.*)$/i)
+    if (multM) {
+      const mult = WORD_MULTIPLIER[multM[1].toLowerCase()]
+      return { value: v * mult, unit: normalizeUnit(multM[2] ?? '') }
+    }
     const unit = normalizeUnit(rawUnit)
     if (unit === '%') return { value: v / 100, unit: '' } // percentage → proportion, unitless
     return { value: v, unit }
@@ -156,6 +171,12 @@ export function findQuantities(raw: string): number[] {
       v = parseFloat(m[4].replace(/,/g, ''))
       if (m[5] && m[6] !== undefined) v *= Math.pow(10, parseInt(m[6], 10))
       if (m[7]) v /= 100
+      // "7 thousand" — multiplier word directly after the number scales it
+      const tail = s.slice(re.lastIndex).match(/^\s*(hundreds?|thousands?|millions?|billions?)\b/i)
+      if (tail) {
+        v *= WORD_MULTIPLIER[tail[1].toLowerCase()]
+        re.lastIndex += tail[0].length
+      }
     } else {
       continue
     }

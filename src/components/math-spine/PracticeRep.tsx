@@ -125,12 +125,19 @@ export default function PracticeRep() {
             {verdict === 'unknown' && (
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
                 <HelpCircle className="h-4 w-4" />
-                Can&apos;t auto-check that one — try another.
+                Couldn&apos;t read that format — try writing it as a plain number (like 7000), with units if it has them.
               </p>
             )}
-            <Button variant="ghost" size="sm" className="rounded-full -ml-2 text-muted-foreground" onClick={load}>
-              Next problem →
-            </Button>
+            <div className="flex items-center gap-1">
+              {verdict !== 'match' && (
+                <Button variant="ghost" size="sm" className="rounded-full -ml-2" onClick={() => { setVerdict(null) }}>
+                  ↺ Try again
+                </Button>
+              )}
+              <Button variant="ghost" size="sm" className="rounded-full -ml-2 text-muted-foreground" onClick={load}>
+                Next problem →
+              </Button>
+            </div>
           </div>
         )}
       </CardContent>

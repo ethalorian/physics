@@ -81,6 +81,9 @@ export const GET = withAuth(async (_request, ctx) => {
     .from('math_spiral_items')
     .select('id, prompt, difficulty, needs_graph, needs_equation_builder, translations, template')
     .eq('competency_id', target.id)
+    // Practice is the instant-check loop — prose/explain items can never be
+    // machine-judged, so they stay in warm-ups (where the teacher reads them).
+    .neq('check_mode', 'teacher-only')
   const pool = itemRows ?? []
   if (pool.length === 0) return NextResponse.json({ item: null })
   const chosen = pool[Math.floor(Math.random() * pool.length)]
