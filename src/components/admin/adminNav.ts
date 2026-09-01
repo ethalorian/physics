@@ -28,6 +28,7 @@ export const GROUPS: ToolGroup[] = [
       { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
       { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
       { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },
+      { href: '/admin/challenges', label: 'XP challenges', desc: 'Daily game challenges with bonus XP — assign to classes or student slices', icon: Trophy, accent: 'var(--reward)' },
       { href: '/admin/roster', label: 'Roster & classes', desc: 'Sync Google Classroom rosters and see performance', icon: GraduationCap, accent: 'var(--primary)' },
       { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', icon: Gift, accent: 'var(--reward)' },
     ],
@@ -47,7 +48,7 @@ export const GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
-      { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)', adminOnly: true },
+      { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)' },
     ],
   },
   {

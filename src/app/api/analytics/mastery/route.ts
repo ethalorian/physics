@@ -33,7 +33,7 @@ type Program = (typeof PROGRAMS)[number]
 const DEFAULT_PROGRAM: Program = 'physics'
 
 export const GET = withAuth(async (request, ctx) => {
-    if (ctx.role !== 'admin') {
+    if (ctx.role !== 'admin' && ctx.role !== 'observer') {
       return NextResponse.json({ error: 'App-wide analytics is admin only' }, { status: 403 })
     }
 

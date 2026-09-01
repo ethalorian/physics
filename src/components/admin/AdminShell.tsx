@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import { GROUPS, gateGroups, flatTools } from './adminNav'
-import { BarChart3, BookOpen } from 'lucide-react'
+import { BookOpen } from 'lucide-react'
 import AdminCommand from './AdminCommand'
 import { Menu, X, FlaskConical } from 'lucide-react'
 
@@ -23,14 +23,18 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
-  // Observer: a two-item read-only sidebar — analytics and lesson plans.
-  const observerGroups: typeof GROUPS = [{
-    title: 'Observe',
-    tools: [
-      { href: '/admin/oversight', label: 'Analytics', desc: 'Global engagement and progress', icon: BarChart3, accent: 'var(--primary)' },
-      { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Every class type, read-only', icon: BookOpen, accent: 'var(--primary)' },
-    ],
-  }]
+  // Observer: read-only sidebar — the FULL Insights group (mastery analytics,
+  // app oversight, leaderboard) plus lesson plans. adminOnly flags don't apply;
+  // the observer role is itself the gate, and every destination is read-only.
+  const observerGroups: typeof GROUPS = [
+    GROUPS.find((g) => g.title === 'Insights') ?? { title: 'Insights', tools: [] },
+    {
+      title: 'Plan',
+      tools: [
+        { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Every class type, read-only', icon: BookOpen, accent: 'var(--primary)' },
+      ],
+    },
+  ]
   const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin)
   const tools = flatTools(isAdmin)
   const [mobileOpen, setMobileOpen] = useState(false)

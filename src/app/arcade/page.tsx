@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, Sigma } from 'lucide-react'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
+import ChallengeCard from '@/components/gamification/ChallengeCard'
 
 /**
  * THE ARCADE — one unified hub for the whole economy loop.
@@ -155,6 +156,10 @@ export default function ArcadePage() {
           </div>
         )}
       </div>
+
+      {/* Teacher-set challenges — shown where the game choice happens, so the
+          challenge steers what gets played. */}
+      <div className="mt-4"><ChallengeCard /></div>
 
       {err && <p className="text-sm mt-3" style={{ color: 'var(--destructive)' }}>{err}</p>}
       {!data && !err && <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)' }}>Powering on the cabinets…</p>}

@@ -71,7 +71,9 @@ export default function Navbar() {
     // plans. No control room, no admin tools, no student journey.
     if (role === 'observer') {
       return [
-        { href: "/admin/oversight", label: "Analytics", icon: LayoutGrid },
+        { href: "/admin/analytics", label: "Mastery", icon: LayoutGrid },
+        { href: "/admin/oversight", label: "Oversight", icon: Settings },
+        { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
         { href: "/admin/teacher/plans", label: "Lesson plans", icon: BookOpen },
       ]
     }

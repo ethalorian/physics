@@ -31,7 +31,7 @@ interface InsightPayload {
 }
 
 export const POST = withAuth(async (request, ctx) => {
-    if (ctx.role !== 'admin') {
+    if (ctx.role !== 'admin' && ctx.role !== 'observer') {
       return NextResponse.json({ error: 'Admin only' }, { status: 403 })
     }
     if (!process.env.ANTHROPIC_API_KEY) {

@@ -1,169 +1,106 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getLifetimeEarned } from '@/lib/points'
 
-// Head-to-head "duels". A duel is opt-in (challenge → the other student accepts).
-// On accept we snapshot both players' lifetime XP; the winner is whoever EARNED
-// more during the window (snapshots make it tamper-proof). The winner takes a
-// fixed XP bounty — but only if they actually earned XP during the window, so
-// the prize rewards real work, not idle collusion. The loser keeps everything
-// they earned; nothing is taken from them.
-const WINDOW_DAYS = 3
-const WINNER_PRIZE = 30   // XP awarded to a duel winner (tunable)
+// GET /api/challenges — the signed-in student's ACTIVE challenges for today:
+// definition, live progress since local midnight, and the bonus state. The
+// daily target resets each day of the challenge's range; hitting it awards the
+// bonus once per day (economy grant deduped by challenge:id:user:date).
 
-interface Challenge {
-  id: string
-  challenger_user_id: string
-  opponent_user_id: string
-  status: 'pending' | 'active' | 'declined' | 'cancelled' | 'complete'
-  starts_at: string | null
-  ends_at: string | null
-  challenger_start: number | null
-  opponent_start: number | null
-  challenger_score: number | null
-  opponent_score: number | null
-  winner_user_id: string | null
+const TZ = 'America/New_York'
+
+function localToday(): { dateStr: string; startIso: string } {
+  const now = new Date()
+  const fmt = (t: number) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t))
+  const dateStr = fmt(now.getTime())
+  let probe = now.getTime()
+  while (fmt(probe - 15 * 60000) === dateStr) probe -= 15 * 60000
+  while (fmt(probe - 60000) === dateStr) probe -= 60000
+  return { dateStr, startIso: new Date(probe).toISOString() }
 }
 
-async function resolveIfDue(c: Challenge): Promise<Challenge> {
-  if (c.status !== 'active' || !c.ends_at || new Date(c.ends_at) > new Date()) return c
-  const [cNow, oNow] = await Promise.all([
-    getLifetimeEarned(c.challenger_user_id),
-    getLifetimeEarned(c.opponent_user_id),
-  ])
-  const cScore = Math.max(0, cNow - (c.challenger_start ?? cNow))
-  const oScore = Math.max(0, oNow - (c.opponent_start ?? oNow))
-  const winner = cScore === oScore ? null : cScore > oScore ? c.challenger_user_id : c.opponent_user_id
-  await supabaseAdmin.from('challenges')
-    .update({ status: 'complete', challenger_score: cScore, opponent_score: oScore, winner_user_id: winner })
-    .eq('id', c.id)
-
-  // Winner's prize — a fixed XP bounty, paid once (idempotent via the unique
-  // dedupe_key). Only if they actually earned during the window, so the prize
-  // tracks real learning and can't be farmed by both players idling.
-  const winnerScore = winner === c.challenger_user_id ? cScore : oScore
-  if (winner && winnerScore > 0) {
-    try {
-      const { data: w } = await supabaseAdmin.from('students').select('email').eq('id', winner).limit(1).single()
-      await supabaseAdmin.from('economy_point_grants').upsert(
-        { user_id: winner, user_email: w?.email ?? null, source: 'duel-win', reference: c.id, points: WINNER_PRIZE, note: 'Won a duel', dedupe_key: `duel-win:${c.id}` },
-        { onConflict: 'dedupe_key' },
-      )
-    } catch { /* prize is best-effort; never block resolution */ }
-  }
-  return { ...c, status: 'complete', challenger_score: cScore, opponent_score: oScore, winner_user_id: winner }
+interface Challenge {
+  id: string; title: string; kind: string; game_slug: string | null
+  metric: string; target: number; bonus_xp: number
 }
 
 export const GET = withAuth(async (_req, ctx) => {
-  const me = ctx.userId
-  const { data } = await supabaseAdmin.from('challenges')
-    .select('*')
-    .or(`challenger_user_id.eq.${me},opponent_user_id.eq.${me}`)
-    .in('status', ['pending', 'active', 'complete'])
-    .order('created_at', { ascending: false })
+  const uid = ctx.userId
+  const { dateStr, startIso } = localToday()
 
-  let rows = (data ?? []) as Challenge[]
-  rows = await Promise.all(rows.map(resolveIfDue))
+  // Which challenges apply to me: my active enrollments' courses + direct picks.
+  const { data: enrolls } = await supabaseAdmin
+    .from('course_students').select('course_id').eq('student_id', uid).eq('enrollment_state', 'active')
+  const courseIds = (enrolls ?? []).map((e) => e.course_id)
 
-  // live (in-progress) scores for active duels
-  const scored = await Promise.all(rows.map(async (c) => {
-    if (c.status !== 'active') return c
-    const [cNow, oNow] = await Promise.all([
-      getLifetimeEarned(c.challenger_user_id),
-      getLifetimeEarned(c.opponent_user_id),
-    ])
-    return {
-      ...c,
-      challenger_score: Math.max(0, cNow - (c.challenger_start ?? cNow)),
-      opponent_score: Math.max(0, oNow - (c.opponent_start ?? oNow)),
+  const orParts = [`student_id.eq.${uid}`]
+  if (courseIds.length > 0) orParts.push(`course_id.in.(${courseIds.join(',')})`)
+  const { data: assigns } = await supabaseAdmin
+    .from('xp_challenge_assignments').select('challenge_id').or(orParts.join(','))
+  const chIds = [...new Set((assigns ?? []).map((a) => a.challenge_id))]
+  if (chIds.length === 0) return NextResponse.json({ challenges: [] })
+
+  const { data: chRows } = await supabaseAdmin
+    .from('xp_challenges')
+    .select('id, title, kind, game_slug, metric, target, bonus_xp')
+    .in('id', chIds).eq('active', true)
+    .lte('starts_on', dateStr).gte('ends_on', dateStr)
+  const challenges = (chRows ?? []) as Challenge[]
+  if (challenges.length === 0) return NextResponse.json({ challenges: [] })
+
+  // ---- today's raw activity, fetched once and sliced per challenge ----------
+  const [{ data: arcadeGrants }, { data: plays }, { data: vocab }, { data: mathGrants }] = await Promise.all([
+    supabaseAdmin.from('economy_point_grants').select('points, reference').eq('user_id', uid).eq('source', 'arcade-payout').gte('awarded_at', startIso),
+    supabaseAdmin.from('arcade_plays').select('game_slug').eq('user_id', uid).gte('created_at', startIso),
+    supabaseAdmin.from('vocabulary_game_scores').select('score').eq('user_id', uid).gte('completed_at', startIso),
+    supabaseAdmin.from('math_spine_point_grants').select('points').eq('user_id', uid).gte('awarded_at', startIso),
+  ])
+
+  const progressFor = (c: Challenge): number => {
+    if (c.kind === 'arcade-any' || c.kind === 'arcade-game') {
+      const slug = c.kind === 'arcade-game' ? c.game_slug : null
+      if (c.metric === 'plays') {
+        return (plays ?? []).filter((p) => !slug || p.game_slug === slug).length
+      }
+      return Math.round((arcadeGrants ?? []).filter((g) => !slug || g.reference === slug).reduce((a, g) => a + (g.points ?? 0), 0))
     }
-  }))
-
-  // names (alias preferred, never email)
-  const ids = new Set<string>()
-  for (const c of scored) { ids.add(c.challenger_user_id); ids.add(c.opponent_user_id) }
-  const { data: studs } = await supabaseAdmin.from('students').select('id, alias, name').in('id', [...ids])
-  const nameByUser = new Map<string, string>()
-  for (const s of (studs ?? []) as { id: string | null; alias: string | null; name: string | null }[]) {
-    if (s.id) nameByUser.set(s.id, s.alias || s.name || 'Student')
-  }
-
-  const shape = (c: Challenge) => {
-    const iAmChallenger = c.challenger_user_id === me
-    const themId = iAmChallenger ? c.opponent_user_id : c.challenger_user_id
-    return {
-      id: c.id,
-      status: c.status,
-      ends_at: c.ends_at,
-      them_name: nameByUser.get(themId) ?? 'Student',
-      me_score: iAmChallenger ? c.challenger_score ?? 0 : c.opponent_score ?? 0,
-      them_score: iAmChallenger ? c.opponent_score ?? 0 : c.challenger_score ?? 0,
-      won: !!c.winner_user_id && c.winner_user_id === me,
-      lost: !!c.winner_user_id && c.winner_user_id !== me,
-      tie: c.status === 'complete' && !c.winner_user_id,
+    if (c.kind === 'vocab-games') {
+      if (c.metric === 'plays') return (vocab ?? []).length
+      // mirrors the leaderboard formula's per-play cap
+      return (vocab ?? []).reduce((a, v) => a + Math.min(25, Math.round((v.score ?? 0) / 10)), 0)
     }
+    // math: XP earned in the math spine today (metric is always 'xp' here)
+    return Math.round((mathGrants ?? []).reduce((a, g) => a + (g.points ?? 0), 0))
   }
 
-  return NextResponse.json({
-    incoming: scored.filter((c) => c.status === 'pending' && c.opponent_user_id === me).map(shape),
-    outgoing: scored.filter((c) => c.status === 'pending' && c.challenger_user_id === me).map(shape),
-    active: scored.filter((c) => c.status === 'active').map(shape),
-    done: scored.filter((c) => c.status === 'complete').slice(0, 8).map(shape),
-  })
-})
+  // Existing bonuses for today (so progress can exclude them and UI shows state).
+  const keys = challenges.map((c) => `challenge:${c.id}:${uid}:${dateStr}`)
+  const { data: paid } = await supabaseAdmin
+    .from('economy_point_grants').select('dedupe_key').in('dedupe_key', keys)
+  const paidSet = new Set((paid ?? []).map((p) => p.dedupe_key))
 
-export const POST = withAuth(async (req, ctx) => {
-  const me = ctx.userId
-  const body = await req.json().catch(() => ({}))
-  const opponent = String(body.opponent_user_id || '')
-  if (!opponent || opponent === me) return NextResponse.json({ error: 'Pick a classmate to duel.' }, { status: 400 })
-
-  // opponent must be a real student
-  const { data: opp } = await supabaseAdmin.from('students').select('id').eq('id', opponent).limit(1)
-  if (!opp || opp.length === 0) return NextResponse.json({ error: 'Unknown opponent.' }, { status: 400 })
-
-  // no existing open duel between us (compare in JS; only `me` is interpolated)
-  const { data: mine } = await supabaseAdmin.from('challenges')
-    .select('challenger_user_id, opponent_user_id')
-    .in('status', ['pending', 'active'])
-    .or(`challenger_user_id.eq.${me},opponent_user_id.eq.${me}`)
-  const dup = (mine ?? []).some((c) => c.challenger_user_id === opponent || c.opponent_user_id === opponent)
-  if (dup) return NextResponse.json({ error: 'You already have a duel going with them.' }, { status: 409 })
-
-  const { data, error } = await supabaseAdmin.from('challenges')
-    .insert({ challenger_user_id: me, opponent_user_id: opponent, status: 'pending', metric: 'xp' })
-    .select('id').single()
-  if (error) return NextResponse.json({ error: 'Could not start the duel.' }, { status: 500 })
-  return NextResponse.json({ id: data.id })
-})
-
-export const PATCH = withAuth(async (req, ctx) => {
-  const me = ctx.userId
-  const body = await req.json().catch(() => ({}))
-  const { id, action } = body as { id?: string; action?: string }
-  if (!id || !action) return NextResponse.json({ error: 'Bad request' }, { status: 400 })
-
-  const { data } = await supabaseAdmin.from('challenges').select('*').eq('id', id).single()
-  const c = data as Challenge | null
-  if (!c) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-
-  if (action === 'accept') {
-    if (c.opponent_user_id !== me || c.status !== 'pending') return NextResponse.json({ error: 'Cannot accept' }, { status: 400 })
-    const [cs, os] = await Promise.all([getLifetimeEarned(c.challenger_user_id), getLifetimeEarned(c.opponent_user_id)])
-    const now = new Date()
-    const ends = new Date(now.getTime() + WINDOW_DAYS * 86400000)
-    await supabaseAdmin.from('challenges')
-      .update({ status: 'active', starts_at: now.toISOString(), ends_at: ends.toISOString(), challenger_start: cs, opponent_start: os })
-      .eq('id', id)
-  } else if (action === 'decline') {
-    if (c.opponent_user_id !== me || c.status !== 'pending') return NextResponse.json({ error: 'Cannot decline' }, { status: 400 })
-    await supabaseAdmin.from('challenges').update({ status: 'declined' }).eq('id', id)
-  } else if (action === 'cancel') {
-    if (c.challenger_user_id !== me || c.status !== 'pending') return NextResponse.json({ error: 'Cannot cancel' }, { status: 400 })
-    await supabaseAdmin.from('challenges').update({ status: 'cancelled' }).eq('id', id)
-  } else {
-    return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
+  const out = []
+  for (const c of challenges) {
+    const progress = progressFor(c)
+    let bonusAwarded = paidSet.has(`challenge:${c.id}:${uid}:${dateStr}`)
+    if (!bonusAwarded && c.bonus_xp > 0 && progress >= c.target) {
+      const { error } = await supabaseAdmin.from('economy_point_grants').insert({
+        user_id: uid,
+        user_email: ctx.email,
+        source: 'challenge-bonus',
+        points: c.bonus_xp,
+        reference: c.id,
+        note: `Challenge hit — ${c.title}`,
+        dedupe_key: `challenge:${c.id}:${uid}:${dateStr}`,
+      })
+      if (!error || error.code === '23505') bonusAwarded = true
+    }
+    out.push({
+      id: c.id, title: c.title, kind: c.kind, gameSlug: c.game_slug,
+      metric: c.metric, target: c.target, bonusXp: c.bonus_xp,
+      progress, done: progress >= c.target, bonusAwarded,
+    })
   }
-  return NextResponse.json({ ok: true })
+  return NextResponse.json({ challenges: out })
 })

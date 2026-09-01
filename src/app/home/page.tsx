@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from
 import EnrollmentGate from '@/components/EnrollmentGate'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import XpGoalRing from '@/components/gamification/XpGoalRing'
+import ChallengeCard from '@/components/gamification/ChallengeCard'
 import Link from 'next/link'
 import { Coins, Zap, ChevronDown } from 'lucide-react'
 import { decayingAverage } from '@/data/curriculum-types'
@@ -259,6 +260,8 @@ export default function HomePage() {
 
             {/* Today's XP goal — set by this student's teacher */}
             <div className="mb-3"><XpGoalRing compact /></div>
+            {/* Teacher-set daily challenges */}
+            <div className="mb-3"><ChallengeCard compact /></div>
 
             <details
               open={warmupOpen}
