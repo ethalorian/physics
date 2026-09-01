@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 interface ClassRow { id: string; name: string; section: string | null; teacher_email: string | null; student_count: number }
 interface Pulse { students: number; colleagues: number; activeStudents7d: number; masteryRatings: number; publishedLessons: number; pendingRewards: number; loginsTrend: number[] }
-interface TeacherEng { email: string; role: string; classes: number; students: number; lessonsGraded: number; masteryRatings: number; rewardsFulfilled: number; assignments: number; mathReviews: number; storeItems: number; actions: number; lastActiveAt: string | null; lastLoginAt: string | null; activeNow: boolean; status: 'active' | 'ramping' | 'dormant' }
+interface TeacherEng { email: string; role: string; classes: number; students: number; feedback: number; masteryRatings: number; rewardsFulfilled: number; mathReviews: number; storeItems: number; actions: number; lastActiveAt: string | null; lastLoginAt: string | null; activeNow: boolean; status: 'active' | 'ramping' | 'dormant' }
 interface Engagement { active7d: number; idle: number; atRisk: number; total: number }
 interface Feature { key: string; label: string; count: number }
 interface Oversight { pulse: Pulse; teacherEngagement: TeacherEng[]; teacherTools: Feature[]; engagement: Engagement; features: Feature[]; you: string }
@@ -177,14 +177,14 @@ export default function OversightPage() {
             <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 820 }}>
               <thead>
                 <tr style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)' }}>
-                  {['Teacher', 'Classes', 'Students', 'Lessons graded', 'Mastery', 'Rewards filled', 'Assignments', 'Math', 'Store', 'Last login', 'Status'].map((h) => (
+                  {['Teacher', 'Classes', 'Students', 'Mastery', 'Feedback', 'Math', 'Rewards filled', 'Store', 'Last login', 'Status'].map((h) => (
                     <th key={h} className="text-left text-xs font-bold uppercase tracking-wide px-3 py-2.5 whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {d.teacherEngagement.length === 0 && (
-                  <tr><td colSpan={11} className="px-4 py-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>No teachers yet.</td></tr>
+                  <tr><td colSpan={10} className="px-4 py-4 text-sm" style={{ color: 'var(--muted-foreground)' }}>No teachers yet.</td></tr>
                 )}
                 {d.teacherEngagement.map((t) => {
                   const st = STATUS[t.status] ?? STATUS.dormant
@@ -202,7 +202,7 @@ export default function OversightPage() {
                         {t.email === d.you && <span className="ml-2 text-xs font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)', border: '1px solid color-mix(in oklch, var(--primary) 50%, var(--border))' }}>YOU</span>}
                         {t.role === 'admin' && t.email !== d.you && <span className="ml-2 text-[10px] font-bold px-1.5 py-0.5 rounded" style={{ color: 'var(--primary)' }}>ADMIN</span>}
                       </td>
-                      {num(t.classes)}{num(t.students)}{num(t.lessonsGraded)}{num(t.masteryRatings)}{num(t.rewardsFulfilled)}{num(t.assignments)}{num(t.mathReviews)}{num(t.storeItems)}
+                      {num(t.classes)}{num(t.students)}{num(t.masteryRatings)}{num(t.feedback)}{num(t.mathReviews)}{num(t.rewardsFulfilled)}{num(t.storeItems)}
                       <td className="px-3 py-3 text-sm whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{fmtDateTime(t.lastLoginAt)}</td>
                       <td className="px-3 py-3"><span className="text-xs font-bold px-2.5 py-1 rounded-full whitespace-nowrap" style={{ color: st.color, background: st.bg }}>{st.label}</span></td>
                     </tr>

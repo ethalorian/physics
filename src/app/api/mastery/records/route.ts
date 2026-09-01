@@ -34,6 +34,7 @@ export const POST = withAuth(async (request, ctx) => {
     const row = {
       user_id,
       user_email: body.user_email ?? null,
+      rated_by: ctx.scopeEmail,
       target_id,
       level,
       evidence_source: body.evidence_source ?? null,

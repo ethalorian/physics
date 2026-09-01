@@ -57,7 +57,13 @@ export const POST = withAuth(async (request, ctx) => {
         user_email: ctx.email,
         reward_name: `Arcade credit — ${g.name}`,
         cost_points: g.cost_xp,
-        status: 'approved', // committed immediately: a coin is spent, not pending
+        // 'fulfilled', not 'approved': a coin is a self-serve digital good,
+        // consumed the moment the run starts — there is nothing for a teacher
+        // to hand out, so it must never enter the fulfillment queue. Any
+        // non-denied status counts as committed spend (see getCommittedSpend).
+        status: 'fulfilled',
+        fulfilled_at: new Date().toISOString(),
+        fulfilled_by: 'system',
         note: `arcade:${g.slug}`,
       })
       .select('id')

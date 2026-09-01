@@ -58,7 +58,8 @@ export const POST = withAuth(async (request, ctx) => {
         reward_id: null,
         reward_name: `Avatar item: ${item.name}`,
         cost_points: item.cost_xp,
-        status: 'approved',
+        // Self-serve digital good — delivered instantly, never queued.
+        status: 'fulfilled',
         fulfilled_at: new Date().toISOString(),
         fulfilled_by: 'system',
         note: `avatar:${slug}`,

@@ -47,15 +47,17 @@ export const GET = withRole('admin', async (_request, ctx) => {
     }
 
     // ---- per-teacher aggregate ----------------------------------------------
-    interface Agg { email: string; role: string; classes: number; students: number; lessonsGraded: number; masteryRatings: number; rewardsFulfilled: number; assignments: number; mathReviews: number; storeItems: number; lastActiveAt: number }
+    interface Agg { email: string; role: string; classes: number; students: number; feedback: number; masteryRatings: number; rewardsFulfilled: number; mathReviews: number; storeItems: number; lastActiveAt: number }
     const agg = new Map<string, Agg>()
     const ensure = (email: string): Agg => {
       let a = agg.get(email)
-      if (!a) { a = { email, role: 'teacher', classes: 0, students: 0, lessonsGraded: 0, masteryRatings: 0, rewardsFulfilled: 0, assignments: 0, mathReviews: 0, storeItems: 0, lastActiveAt: 0 }; agg.set(email, a) }
+      if (!a) { a = { email, role: 'teacher', classes: 0, students: 0, feedback: 0, masteryRatings: 0, rewardsFulfilled: 0, mathReviews: 0, storeItems: 0, lastActiveAt: 0 }; agg.set(email, a) }
       return a
     }
     const bump = (email: string | null | undefined, key: keyof Agg, ts?: number) => {
-      if (!email) return
+      // Only humans: 'system' (auto-fulfilled digital goods) and other
+      // non-email actors are not teachers and must not grow rows here.
+      if (!email || !email.includes('@')) return
       const a = ensure(email)
       ;(a[key] as number)++
       if (ts && ts > a.lastActiveAt) a.lastActiveAt = ts
@@ -67,22 +69,23 @@ export const GET = withRole('admin', async (_request, ctx) => {
     const grants = await safe(async () => (await supabaseAdmin.from('user_roles').select('email, role')).data ?? [], [] as { email: string; role: string }[])
     for (const g of grants) { const a = ensure(g.email); if (g.role) a.role = g.role }
 
-    // lessons graded (gradebook entries are keyed by the graded STUDENT, not course
-    // — the control room leaves course_id null — so attribute via the roster)
-    const gb = await safe(async () => (await supabaseAdmin.from('gradebook_entries').select('user_id, graded_at, status').eq('status', 'graded').limit(50000)).data ?? [], [] as { user_id: string | null; graded_at: string | null; status: string | null }[])
-    for (const r of gb) { const tes = r.user_id ? teachersByGid.get(r.user_id) : undefined; if (!tes) continue; for (const te of tes) bump(te, 'lessonsGraded', t(r.graded_at)) }
+    // mastery ratings — credited to WHO RATED (rated_by); roster inference is
+    // only the fallback for legacy rows without an actor.
+    const mastery = await safe(async () => (await supabaseAdmin.from('mastery_records').select('user_id, observed_at, rated_by').limit(50000)).data ?? [], [] as { user_id: string | null; observed_at: string | null; rated_by: string | null }[])
+    for (const m of mastery) {
+      if (m.rated_by) { bump(m.rated_by, 'masteryRatings', t(m.observed_at)); continue }
+      const tes = m.user_id ? teachersByGid.get(m.user_id) : undefined
+      if (!tes) continue
+      for (const te of tes) bump(te, 'masteryRatings', t(m.observed_at))
+    }
 
-    // mastery ratings (attributed to the rated student's teacher(s))
-    const mastery = await safe(async () => (await supabaseAdmin.from('mastery_records').select('user_id, observed_at').limit(50000)).data ?? [], [] as { user_id: string | null; observed_at: string | null }[])
-    for (const m of mastery) { const tes = m.user_id ? teachersByGid.get(m.user_id) : undefined; if (!tes) continue; for (const te of tes) bump(te, 'masteryRatings', t(m.observed_at)) }
+    // written feedback — the other half of the teacher's core work
+    const fb = await safe(async () => (await supabaseAdmin.from('teacher_feedback').select('teacher_email, created_at').limit(50000)).data ?? [], [] as { teacher_email: string | null; created_at: string | null }[])
+    for (const r of fb) bump(r.teacher_email, 'feedback', t(r.created_at))
 
     // rewards fulfilled
     const fulfilled = await safe(async () => (await supabaseAdmin.from('reward_redemptions').select('fulfilled_by, fulfilled_at').eq('status', 'fulfilled').limit(50000)).data ?? [], [] as { fulfilled_by: string | null; fulfilled_at: string | null }[])
     for (const r of fulfilled) bump(r.fulfilled_by, 'rewardsFulfilled', t(r.fulfilled_at))
-
-    // assignments created
-    const ua = await safe(async () => (await supabaseAdmin.from('unified_assignments').select('assigned_by, created_at').limit(50000)).data ?? [], [] as { assigned_by: string | null; created_at: string | null }[])
-    for (const r of ua) bump(r.assigned_by, 'assignments', t(r.created_at))
 
     // math reviews + spotlights
     const warm = await safe(async () => (await supabaseAdmin.from('math_warmup_submissions').select('reviewed_by, reviewed_at').not('reviewed_by', 'is', null).limit(50000)).data ?? [], [] as { reviewed_by: string | null; reviewed_at: string | null }[])
@@ -110,7 +113,7 @@ export const GET = withRole('admin', async (_request, ctx) => {
           lastActiveAt: a.lastActiveAt ? new Date(a.lastActiveAt).toISOString() : null,
           lastLoginAt: pres?.last_login ?? null,
           activeNow: !!lastSeen && now - lastSeen < ACTIVE_WINDOW,
-          actions: a.lessonsGraded + a.masteryRatings + a.rewardsFulfilled + a.assignments + a.mathReviews + a.storeItems,
+          actions: a.feedback + a.masteryRatings + a.rewardsFulfilled + a.mathReviews + a.storeItems,
           status: a.lastActiveAt && now - a.lastActiveAt < 7 * DAY ? 'active'
             : a.lastActiveAt && now - a.lastActiveAt < 30 * DAY ? 'ramping'
             : 'dormant',
@@ -120,9 +123,8 @@ export const GET = withRole('admin', async (_request, ctx) => {
 
     // ---- "what teachers use most" — raw totals (no double-count) -------------
     const teacherTools = [
-      { key: 'graded', label: 'Lessons graded', count: gb.length },
+      { key: 'feedback', label: 'Written feedback sent', count: fb.length },
       { key: 'mastery', label: 'Mastery ratings', count: mastery.length },
-      { key: 'assignments', label: 'Assignments created', count: ua.length },
       { key: 'rewards', label: 'Rewards fulfilled', count: fulfilled.length },
       { key: 'math', label: 'Math reviews', count: warm.length + spot.length },
       { key: 'store', label: 'Store items placed', count: ownRewards.length + placements.length },
