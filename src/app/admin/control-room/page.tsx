@@ -651,6 +651,10 @@ export default function ControlRoomPage() {
             <div style={{ padding: '0 14px 14px' }}><TeacherDailyMathTask /></div>
           </details>
           <MathControlRoom classId={classId} teacher={teacherFilter || null} />
+          {/* Check Lab — repair bench for the instant answer checker (admin) */}
+          <a href="/admin/check-lab" className="inline-flex items-center gap-1.5 mt-3 text-sm font-semibold" style={{ color: 'var(--primary)' }}>
+            🧪 Check Lab — answers the instant checker missed →
+          </a>
         </div>
       )}
 

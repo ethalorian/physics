@@ -149,6 +149,15 @@ export const POST = withAuth(async (request, ctx) => {
   }
   const result = checkAnswer(answer, key)
 
+  // Feed the Check Lab: practice misses are the richest source of real
+  // phrasings, since students retry freely here.
+  if (result === 'unknown' || result === 'mismatch') {
+    supabaseAdmin.from('math_check_misses').insert({
+      item_id: spiral_item_id, user_id: ctx.userId, answer: answer.trim().slice(0, 500),
+      verdict: result, source: 'practice',
+    }).then(() => {}, () => {}) // best-effort
+  }
+
   // Token point on a confident match only, capped per day. The dedupe_key slot
   // (user:practice-rep:date:n) makes the cap idempotent under retries.
   let pointsAwarded = 0

@@ -113,6 +113,15 @@ export const POST = withAuth(async (request, ctx) => {
     }
   }
 
+  // Feed the Check Lab: any non-empty answer the checker didn't confirm.
+  const missAnswer = (responseJson?.answer ?? responseText ?? '').trim()
+  if (body.spiral_item_id && missAnswer && (selfCheck === 'unknown' || selfCheck === 'mismatch')) {
+    supabaseAdmin.from('math_check_misses').insert({
+      item_id: body.spiral_item_id, user_id: ctx.userId, answer: missAnswer.slice(0, 500),
+      verdict: selfCheck, source: 'warmup',
+    }).then(() => {}, () => {}) // best-effort — never blocks the submit
+  }
+
   const { data, error } = await supabaseAdmin
     .from('math_warmup_submissions')
     .insert({
