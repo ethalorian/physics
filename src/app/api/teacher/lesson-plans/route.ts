@@ -40,7 +40,7 @@ const PLANS: Record<string, Record<string, DayPlan[]>> = {
 }
 
 export const GET = withAuth(async (request, ctx) => {
-    if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (ctx.role !== 'admin' && ctx.role !== 'teacher' && ctx.role !== 'observer') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const unitId = new URL(request.url).searchParams.get('unit_id') ?? 'unit-1'
 
@@ -48,7 +48,7 @@ export const GET = withAuth(async (request, ctx) => {
     // their physics courses, plus 'trades' if any course follows that program.
     // Admins (no courses) see every available class type.
     let tracks: string[]
-    if (ctx.role === 'admin') {
+    if (ctx.role === 'admin' || ctx.role === 'observer') {
       tracks = Object.keys(PLANS)
     } else {
       const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', ctx.scopeEmail)

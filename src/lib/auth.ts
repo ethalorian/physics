@@ -25,7 +25,7 @@ declare module "next-auth" {
       name?: string | null
       email?: string | null
       image?: string | null
-      role?: 'admin' | 'teacher' | 'student'
+      role?: 'admin' | 'teacher' | 'observer' | 'student'
     }
     accessToken?: string
     tokenError?: string
@@ -37,7 +37,7 @@ declare module "next-auth" {
 // stays admin), then a DB grant can raise a student → teacher (earned via an
 // admin approval or Classroom). Mirrors getEffectiveContext on the server so the
 // client UI and routing agree with what the APIs enforce.
-async function resolveUserRole(email?: string | null): Promise<'admin' | 'teacher' | 'student'> {
+async function resolveUserRole(email?: string | null): Promise<'admin' | 'teacher' | 'observer' | 'student'> {
   if (!email) return 'student'
   const base = getUserRole(email)
   if (base !== 'student') return base
@@ -179,7 +179,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     session: async ({ session, token }) => {
       if (session?.user && token.sub) {
         session.user.id = token.sub;
-        session.user.role = (token.role as 'admin' | 'teacher' | 'student') ?? 'student';
+        session.user.role = (token.role as 'admin' | 'teacher' | 'observer' | 'student') ?? 'student';
         // Include the avatar image from the token
         if (token.picture) {
           session.user.image = token.picture as string;

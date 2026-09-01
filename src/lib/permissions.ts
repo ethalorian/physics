@@ -1,5 +1,5 @@
 // User roles and permissions system
-export type UserRole = 'student' | 'teacher' | 'admin'
+export type UserRole = 'student' | 'teacher' | 'admin' | 'observer'
 
 export interface UserPermissions {
   canViewLessons: boolean
@@ -96,6 +96,18 @@ export function getUserPermissions(role: UserRole): UserPermissions {
         canCreateLessons: false,
       }
     
+    // Observer: read-only district/coach view — global analytics + lesson
+    // plans, no roster, no grading, no editing anywhere.
+    case 'observer':
+      return {
+        canViewLessons: true,
+        canViewAssignments: false,
+        canCreateAssignments: false,
+        canManageAssignments: false,
+        canAccessAdmin: false,
+        canCreateLessons: false,
+      }
+
     case 'student':
     default:
       return {

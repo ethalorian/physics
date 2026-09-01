@@ -17,7 +17,8 @@ const DAY = 24 * 60 * 60 * 1000
 const dayKey = (ms: number) => new Date(ms).toISOString().slice(0, 10)
 const t = (iso: string | null | undefined) => (iso ? new Date(iso).getTime() : 0)
 
-export const GET = withRole('admin', async (_request, ctx) => {
+// Observers get the same READ — this endpoint only aggregates; it never writes.
+export const GET = withRole(['admin', 'observer'], async (_request, ctx) => {
     const now = Date.now()
     const safe = async <T>(fn: () => Promise<T>, fallback: T): Promise<T> => { try { return await fn() } catch { return fallback } }
 

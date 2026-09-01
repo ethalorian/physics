@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useViewAs } from '@/lib/use-view-as'
 
 interface ClassRow { id: string; name: string; section: string | null; teacher_email: string | null; student_count: number }
 interface Pulse { students: number; colleagues: number; activeStudents7d: number; masteryRatings: number; publishedLessons: number; pendingRewards: number; loginsTrend: number[] }
@@ -79,6 +80,25 @@ export default function OversightPage() {
     loadGrants()
   }
 
+  // Observers see the analytics read-only; access management stays admin-only.
+  const { realRole } = useViewAs()
+  const isAdminViewer = realRole === 'admin'
+  const [newObserver, setNewObserver] = useState('')
+  const [grantErr, setGrantErr] = useState<string | null>(null)
+
+  const addObserver = async () => {
+    const email = newObserver.trim().toLowerCase()
+    if (!email) return
+    setGrantErr(null)
+    const res = await fetch('/api/admin/teacher-access', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, action: 'grant-observer' }),
+    }).catch(() => null)
+    const d = await res?.json().catch(() => ({}))
+    if (!res?.ok) { setGrantErr(d?.error ?? 'Could not grant observer access'); return }
+    setNewObserver('')
+    loadGrants()
+  }
+
   const revoke = async (email: string) => {
     if (!confirm(`Remove teacher access for ${email}?`)) return
     await fetch('/api/admin/teacher-access', {
@@ -106,7 +126,7 @@ export default function OversightPage() {
       {loading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading the overview…</p>}
 
       {/* TEACHER ACCESS REQUESTS — colleagues waiting for you to approve sign-in */}
-      {requests.length > 0 && (
+      {isAdminViewer && requests.length > 0 && (
         <div className="rounded-2xl border mb-6 p-4" style={{ borderColor: 'color-mix(in oklch, var(--primary) 38%, var(--border))', background: 'color-mix(in oklch, var(--primary) 8%, var(--card))' }}>
           <h2 className="text-sm font-bold mb-1">Teacher access requests · {requests.length}</h2>
           <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>Staff who tried to sign in and are waiting for approval. Approving gives them teacher access.</p>
@@ -124,7 +144,9 @@ export default function OversightPage() {
         </div>
       )}
 
-      {/* TEACHERS & ACCESS — who currently has staff access, with revoke */}
+      {/* TEACHERS & ACCESS — who currently has staff access, with revoke.
+          Admin-only: observers see the numbers, never the levers. */}
+      {isAdminViewer && (
       <div className="rounded-2xl border mb-6 p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
         <h2 className="text-sm font-bold mb-1">Teachers &amp; access</h2>
         <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>Everyone who can sign in as staff. Revoking returns a teacher to student access.</p>
@@ -148,13 +170,35 @@ export default function OversightPage() {
                     </span>
                   )}
                 </span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 16%, transparent)' }}>{g.role === 'admin' ? 'Admin' : 'Teacher'}</span>
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{
+                  color: g.role === 'observer' ? 'var(--primary)' : 'var(--success)',
+                  background: g.role === 'observer' ? 'color-mix(in oklch, var(--primary) 14%, transparent)' : 'color-mix(in oklch, var(--success) 16%, transparent)',
+                }}>{g.role === 'admin' ? 'Admin' : g.role === 'observer' ? 'Observer' : 'Teacher'}</span>
                 <button onClick={() => revoke(g.email)} className="text-xs rounded-md px-3 py-1.5 border" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--destructive)', cursor: 'pointer' }}>Revoke</button>
               </div>
             ))}
           </div>
         )}
+        {/* Grant read-only observer access (principal / coach / district):
+            global analytics + lesson plans, no classes, no editing. */}
+        <div className="flex flex-wrap items-center gap-2 mt-3 pt-3" style={{ borderTop: '0.5px solid var(--border)' }}>
+          <input
+            value={newObserver}
+            onChange={(e) => setNewObserver(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') addObserver() }}
+            placeholder="email@fitchburg.k12.ma.us"
+            className="flex-1 min-w-[220px] rounded-lg px-3 py-1.5 text-sm"
+            style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}
+          />
+          <button onClick={addObserver} disabled={!newObserver.trim()} className="text-xs font-semibold rounded-md px-3 py-1.5 disabled:opacity-50" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
+            Add observer
+          </button>
+          <span className="text-xs w-full" style={{ color: 'var(--muted-foreground)' }}>
+            Observer = read-only: global analytics + lesson plans. No classes, no grading, no editing.{grantErr && <span style={{ color: 'var(--destructive)' }}> · {grantErr}</span>}
+          </span>
+        </div>
       </div>
+      )}
 
       {!loading && d && (
         <>

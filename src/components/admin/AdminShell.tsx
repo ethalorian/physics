@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import { GROUPS, gateGroups, flatTools } from './adminNav'
+import { BarChart3, BookOpen } from 'lucide-react'
 import AdminCommand from './AdminCommand'
 import { Menu, X, FlaskConical } from 'lucide-react'
 
@@ -22,7 +23,15 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
-  const groups = gateGroups(GROUPS, isAdmin)
+  // Observer: a two-item read-only sidebar — analytics and lesson plans.
+  const observerGroups: typeof GROUPS = [{
+    title: 'Observe',
+    tools: [
+      { href: '/admin/oversight', label: 'Analytics', desc: 'Global engagement and progress', icon: BarChart3, accent: 'var(--primary)' },
+      { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Every class type, read-only', icon: BookOpen, accent: 'var(--primary)' },
+    ],
+  }]
+  const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin)
   const tools = flatTools(isAdmin)
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -32,7 +41,7 @@ export default function AdminShell({ children }: { children: ReactNode }) {
   const isActive = (href: string) =>
     href === '/home' ? pathname === '/home' : pathname === href || pathname.startsWith(href + '/')
 
-  const roleLabel = isAdmin ? 'Admin' : 'Teacher'
+  const roleLabel = isAdmin ? 'Admin' : role === 'observer' ? 'Observer' : 'Teacher'
 
   const NavBody = (
     <div className="flex flex-col h-full" style={{ background: 'var(--card)' }}>

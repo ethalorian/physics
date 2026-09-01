@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // resolution is additive: a grant can only raise a student to teacher, never
 // remove an admin.
 
-export type GrantedRole = 'teacher' | 'admin'
+export type GrantedRole = 'teacher' | 'admin' | 'observer'
 
 export async function getGrantedRole(email: string): Promise<GrantedRole | null> {
   if (!email) return null
@@ -16,7 +16,7 @@ export async function getGrantedRole(email: string): Promise<GrantedRole | null>
     .eq('email', email)
     .maybeSingle()
   const r = (data as { role?: string } | null)?.role
-  return r === 'teacher' || r === 'admin' ? r : null
+  return r === 'teacher' || r === 'admin' || r === 'observer' ? r : null
 }
 
 // Record a pending teacher-access request (a district staff member tried to sign
@@ -47,6 +47,18 @@ export async function grantTeacher(
   // Surface failures loudly — a silently-failed grant marks a request "approved"
   // while granting nothing (the exact bug this replaced).
   if (error) throw new Error(`grantTeacher failed for ${email}: ${error.message}`)
+}
+
+// Read-only observer (principal / coach / district): sees global analytics and
+// lesson plans, teaches no classes, can edit nothing.
+export async function grantObserver(email: string, grantedBy: string | null): Promise<void> {
+  const { error } = await supabaseAdmin
+    .from('user_roles')
+    .upsert(
+      { email: email.trim().toLowerCase(), role: 'observer', source: 'admin_approval', granted_by: grantedBy, granted_at: new Date().toISOString() },
+      { onConflict: 'email' },
+    )
+  if (error) throw new Error(`grantObserver failed for ${email}: ${error.message}`)
 }
 
 export interface RoleGrant { email: string; role: string; source: string | null; granted_by: string | null; granted_at: string | null }

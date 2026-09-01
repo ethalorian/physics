@@ -67,6 +67,15 @@ export default function Navbar() {
   const getNavigationItems = () => {
     if (!isAuthenticated) return []
     
+    // Observer (principal / coach): read-only — global analytics + lesson
+    // plans. No control room, no admin tools, no student journey.
+    if (role === 'observer') {
+      return [
+        { href: "/admin/oversight", label: "Analytics", icon: LayoutGrid },
+        { href: "/admin/teacher/plans", label: "Lesson plans", icon: BookOpen },
+      ]
+    }
+
     // Staff get a focused tool bar (the Admin Home launches everything else);
     // students get their own journey. "View as student" sends staff to the
     // student nav below so they can preview it.
@@ -105,7 +114,7 @@ export default function Navbar() {
   const isActivePath = (href: string) => pathname === href || pathname?.startsWith(href + '/')
 
   // Signed-in users' logo goes home — their home, not the marketing splash.
-  const logoHref = isAuthenticated ? (isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
+  const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
 
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
   if (pathname?.startsWith('/embed')) return null
