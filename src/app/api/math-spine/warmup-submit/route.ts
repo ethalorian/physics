@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { checkAnswerWithMode, type SelfCheck } from '@/lib/math-answer-check'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
+import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptions'
 
 // POST /api/math-spine/warmup-submit
 // A student submits their daily warm-up answer as EVIDENCE. It lands in the
@@ -81,16 +82,23 @@ export const POST = withAuth(async (request, ctx) => {
   //   unparsed  → couldn't read the answer or key confidently
   let selfCheckReason: 'no-work' | 'no-answer' | 'unparsed' | null = null
   let workShown = false
+  // On a ✗, which predicted slip (if any) the answer matched — descriptive
+  // feedback for the student, a tag for the teacher's dashboard.
+  let feedback: SlipFeedback | null = null
+  let templateValues: Record<string, number> | null = null
+  type ItemRowT = { prompt: string; answer_key: string | null; template: unknown; check_mode: string | null; misconceptions: unknown; competency: { misconception_fallback: string | null } | null }
+  let itemRow: ItemRowT | null = null
   if (body.spiral_item_id) {
     workShown = hasShownWork(responseJson)
     if (!workShown) selfCheckReason = 'no-work'
     else if (!String(responseJson?.answer ?? responseText ?? '').trim()) selfCheckReason = 'no-answer'
     if (workShown) {
-      const { data: itemRow } = await supabaseAdmin
+      const { data: row } = await supabaseAdmin
         .from('math_spiral_items')
-        .select('prompt, answer_key, template, check_mode')
+        .select('prompt, answer_key, template, check_mode, misconceptions, competency:math_competencies(misconception_fallback)')
         .eq('id', body.spiral_item_id)
         .maybeSingle()
+      itemRow = (row as unknown as ItemRowT | null) ?? null
       const studentAnswer = responseJson?.answer ?? responseText
       if (itemRow?.check_mode === 'teacher-only') {
         // Prose/explain prompt: the machine never judges — the teacher reads
@@ -106,7 +114,7 @@ export const POST = withAuth(async (request, ctx) => {
           try {
             const inst = instantiateTemplate(itemRow.prompt, itemRow.template as ItemTemplate, `${ctx.userId}:${body.spiral_item_id}:${dn}`)
             const verdict = checkAnswerWithMode(studentAnswer, inst.answerKey, itemRow.check_mode)
-            if (dn === dayNum || verdict === 'match') selfCheck = verdict
+            if (dn === dayNum || verdict === 'match') { selfCheck = verdict; templateValues = inst.values }
             if (selfCheck === 'match') break
           } catch {
             // malformed template — fall back to the static key below
@@ -122,6 +130,18 @@ export const POST = withAuth(async (request, ctx) => {
 
   if (selfCheck === 'unknown' && selfCheckReason === null) selfCheckReason = 'unparsed'
   if (selfCheck !== 'unknown') selfCheckReason = null
+
+  if (selfCheck === 'mismatch' && itemRow) {
+    const slips = Array.isArray(itemRow.misconceptions) ? (itemRow.misconceptions as Slip[]) : null
+    feedback = matchSlip(
+      String(responseJson?.answer ?? responseText ?? ''),
+      slips,
+      (itemRow.template as ItemTemplate | null) ?? null,
+      templateValues,
+      itemRow.check_mode,
+      (Array.isArray(itemRow.competency) ? itemRow.competency[0] : itemRow.competency)?.misconception_fallback ?? null,
+    )
+  }
 
   // Feed the Check Lab: any non-empty answer the checker didn't confirm.
   const missAnswer = (responseJson?.answer ?? responseText ?? '').trim()
@@ -147,6 +167,7 @@ export const POST = withAuth(async (request, ctx) => {
       tested_competency_ids: [competency_id],
       rated_competency_ids: [],
       self_check: selfCheck,
+      misconception_tag: feedback?.tag ?? null,
     })
     .select()
     .single()
@@ -155,5 +176,5 @@ export const POST = withAuth(async (request, ctx) => {
     console.error('Error submitting warm-up:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-  return NextResponse.json({ ...data, selfCheck, selfCheckReason, workShown }, { status: 201 })
+  return NextResponse.json({ ...data, selfCheck, selfCheckReason, workShown, feedback }, { status: 201 })
 })

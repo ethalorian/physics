@@ -24,7 +24,7 @@ const STATE_STYLE: Record<RungState, { bg: string; fg: string; icon: string }> =
   'got-it': { bg: 'var(--viz-up-surface)', fg: 'var(--viz-up)', icon: '★' },
   'almost': { bg: 'color-mix(in oklch, var(--primary) 12%, transparent)', fg: 'var(--primary)', icon: '◐' },
   'not-yet': { bg: 'var(--muted)', fg: 'var(--muted-foreground)', icon: '○' },
-  'refresh': { bg: 'color-mix(in oklch, #f59e0b 14%, transparent)', fg: '#b45309', icon: '↻' },
+  'refresh': { bg: 'color-mix(in oklch, var(--reward) 30%, transparent)', fg: 'var(--reward-foreground)', icon: '↻' },
 }
 
 export default function MathLadder({

@@ -6,6 +6,7 @@ import { POINT_VALUES } from '@/lib/math-spine'
 import { checkAnswerWithMode } from '@/lib/math-answer-check'
 import { pickTargetRung, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
+import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptions'
 
 // Math-spine PRACTICE mode (redesign decisions 7–8): unlimited self-checked
 // reps on the student's current rung. Practice NEVER writes
@@ -131,7 +132,7 @@ export const POST = withAuth(async (request, ctx) => {
 
   const { data: itemRow } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, competency_id, template, check_mode')
+    .select('id, prompt, answer_key, competency_id, template, check_mode, misconceptions, competency:math_competencies(misconception_fallback)')
     .eq('id', spiral_item_id)
     .maybeSingle()
   if (!itemRow) return NextResponse.json({ error: 'Item not found' }, { status: 404 })
@@ -139,15 +140,32 @@ export const POST = withAuth(async (request, ctx) => {
   // Templated rep: recompute the key from the echoed seed. A student tampering
   // with the seed only changes which numbers they must solve — never a shortcut.
   let key: string | null | undefined = itemRow.answer_key
+  let templateValues: Record<string, number> | null = null
   const templateSeed = typeof body.template_seed === 'string' ? body.template_seed : null
   if (itemRow.template && templateSeed) {
     try {
-      key = instantiateTemplate(itemRow.prompt, itemRow.template as ItemTemplate, templateSeed).answerKey
+      const inst = instantiateTemplate(itemRow.prompt, itemRow.template as ItemTemplate, templateSeed)
+      key = inst.answerKey
+      templateValues = inst.values
     } catch {
       key = itemRow.answer_key
     }
   }
   const result = checkAnswerWithMode(answer, key, itemRow.check_mode)
+
+  // On a ✗, the same descriptive feedback the daily rep gives.
+  let feedback: SlipFeedback | null = null
+  if (result === 'mismatch') {
+    const comp = itemRow.competency as { misconception_fallback: string | null } | { misconception_fallback: string | null }[] | null
+    feedback = matchSlip(
+      answer,
+      Array.isArray(itemRow.misconceptions) ? (itemRow.misconceptions as Slip[]) : null,
+      (itemRow.template as ItemTemplate | null) ?? null,
+      templateValues,
+      itemRow.check_mode,
+      (Array.isArray(comp) ? comp[0] : comp)?.misconception_fallback ?? null,
+    )
+  }
 
   // Feed the Check Lab: practice misses are the richest source of real
   // phrasings, since students retry freely here.
@@ -186,6 +204,7 @@ export const POST = withAuth(async (request, ctx) => {
 
   return NextResponse.json({
     result, // 'match' | 'mismatch' | 'unknown'
+    feedback,
     pointsAwarded,
     pointsToday,
     dailyCap: PRACTICE_DAILY_CAP,

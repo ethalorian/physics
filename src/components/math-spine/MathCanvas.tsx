@@ -15,8 +15,8 @@ import type { PointerEvent as RPointerEvent } from 'react'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import { paintStrokes } from '@/lib/draw/strokes'
 import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
-import PaintToolbar from '@/components/draw/PaintToolbar'
-import { Type } from 'lucide-react'
+import { PAINT_PALETTE } from '@/components/draw/PaintToolbar'
+import { Type, Pen, Slash, MoveUpRight, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2, LocateFixed } from 'lucide-react'
 import { useTranslator } from '@/lib/math-translate-store'
 
 export interface CanvasText { x: number; y: number; text: string; size?: number }
@@ -26,10 +26,21 @@ const W = 640
 const H = 360
 const TEXT_SIZE = 26
 
-// The drawing tools plus a 'text' tool unique to this surface.
-type Tool = EditorTool | 'text'
+// The drawing tools plus a 'text' tool unique to this surface, and a 'plot'
+// tool that appears only on graph paper (snaps a dot to a grid intersection).
+type Tool = EditorTool | 'text' | 'plot'
+const GRID = 32
 
-export default function MathCanvas({ value, onChange, gridded = false, lang = '' }: { value?: MathCanvasValue; onChange: (v: MathCanvasValue) => void; gridded?: boolean; lang?: string }) {
+export default function MathCanvas({ value, onChange, gridded = false, lang = '', readOnly = false, stamp }: {
+  value?: MathCanvasValue
+  onChange: (v: MathCanvasValue) => void
+  gridded?: boolean
+  lang?: string
+  /** Frozen board (post-submit): no tools, no pointer input. */
+  readOnly?: boolean
+  /** Small verdict stamp painted in the corner of a frozen board. */
+  stamp?: { text: string; tone: 'up' | 'down' | 'neutral' } | null
+}) {
   const t = useTranslator(lang)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const strokesRef = useRef<Stroke[]>((value?.strokes ?? []).map((s) => ({ ...s, points: s.points.slice() })))
@@ -59,7 +70,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H)
     // optional graph paper (light grid + center axes) for graphing items
     if (gridded) {
-      const step = 32
+      const step = GRID
       ctx.lineWidth = 1
       ctx.strokeStyle = '#E3E8F0'
       for (let x = step; x < W; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
@@ -77,6 +88,16 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     }
     // …strokes on top, so annotations mark up the text
     paintStrokes(ctx, strokesRef.current)
+    // verdict stamp on a frozen board — the teacher's review drawer paints the
+    // same strokes+texts, so student and teacher look at one artifact
+    if (readOnly && stamp) {
+      ctx.font = '600 13px ui-sans-serif, system-ui, sans-serif'
+      const w = ctx.measureText(stamp.text).width + 18
+      ctx.fillStyle = stamp.tone === 'up' ? '#DCEBDD' : stamp.tone === 'down' ? '#F1DEDA' : '#E6E8EE'
+      ctx.fillRect(W - w - 10, 10, w, 24)
+      ctx.fillStyle = stamp.tone === 'up' ? '#2F6B3A' : stamp.tone === 'down' ? '#8A4A3F' : '#4A4E5C'
+      ctx.fillText(stamp.text, W - w - 1, 27)
+    }
   }
   useEffect(() => { redraw() }) // redraw whenever state changes
 
@@ -95,13 +116,23 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
   }
 
   // Drawing tools are handled by the shared engine; the text tool is bespoke.
-  const drawTool: EditorTool = tool === 'text' ? 'pen' : tool
+  const drawTool: EditorTool = tool === 'text' || tool === 'plot' ? 'pen' : tool
   const handlers = makeStrokeHandlers({
     canvas: canvasRef.current, W, H, strokesRef, redoRef, drawingRef,
     tool: drawTool, color, size: width, fillShapes, objectErase: true, repaint: redraw, emit, bump,
   })
 
   const onPointerDown = (e: RPointerEvent<HTMLCanvasElement>) => {
+    if (readOnly) return
+    if (tool === 'plot') {
+      const p = toPoint(e)
+      const x = Math.round(p.x / GRID) * GRID
+      const y = Math.round(p.y / GRID) * GRID
+      strokesRef.current.push({ color, width: 2, tool: 'ellipse', fill: true, points: [{ x: x - 5, y: y - 5 }, { x: x + 5, y: y + 5 }] })
+      redoRef.current = []
+      redraw(); emit(); bump()
+      return
+    }
     if (tool === 'text') {
       const p = toPoint(e)
       const hit = hitText(p)
@@ -111,8 +142,8 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     }
     handlers.onDown(e)
   }
-  const onPointerMove = (e: RPointerEvent<HTMLCanvasElement>) => { if (tool !== 'text') handlers.onMove(e) }
-  const onPointerUp = () => { if (tool !== 'text') handlers.onUp() }
+  const onPointerMove = (e: RPointerEvent<HTMLCanvasElement>) => { if (!readOnly && tool !== 'text' && tool !== 'plot') handlers.onMove(e) }
+  const onPointerUp = () => { if (!readOnly && tool !== 'text' && tool !== 'plot') handlers.onUp() }
 
   const commitEditor = () => {
     if (!editor) return
@@ -136,33 +167,73 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
   const redo = () => { const s = redoRef.current.pop(); if (s) { strokesRef.current.push(s); redraw(); emit(); bump() } }
   const clearAll = () => { strokesRef.current = []; redoRef.current = []; textsRef.current = []; setEditor(null); redraw(); emit(); bump() }
 
+  // Toolbar: every tool at a 40px target, grouped by job — draw · shapes ·
+  // ink · history. The four most-used sit first; nothing hides in a menu.
   const tb = (active: boolean) => ({
     borderColor: active ? 'var(--primary)' : 'var(--border)',
     background: active ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)',
     color: active ? 'var(--primary)' : 'var(--muted-foreground)',
   })
+  const TB = ({ id, label, Icon, text }: { id: Tool; label: string; Icon: typeof Pen; text?: string }) => (
+    <button type="button" onClick={() => setTool(id)} aria-label={label} title={label} aria-pressed={tool === id}
+      className="rounded-lg border inline-flex items-center justify-center gap-1.5 text-xs font-semibold"
+      style={{ ...tb(tool === id), height: 40, minWidth: 40, padding: text ? '0 12px' : 0 }}>
+      <Icon size={17} />{text && <span>{text}</span>}
+    </button>
+  )
+  const HB = ({ onClick, label, Icon, disabled }: { onClick: () => void; label: string; Icon: typeof Pen; disabled?: boolean }) => (
+    <button type="button" onClick={onClick} disabled={disabled} aria-label={label} title={label}
+      className="rounded-lg border grid place-items-center disabled:opacity-40"
+      style={{ ...tb(false), height: 40, width: 40 }}>
+      <Icon size={17} />
+    </button>
+  )
+  const Sep = () => <span aria-hidden className="mx-1" style={{ width: 1, height: 28, background: 'var(--border)' }} />
+  const showFill = tool === 'rect' || tool === 'ellipse'
+  const hint = tool === 'text' ? t('Tap the board to type a number or equation; tap existing text to edit it.')
+    : tool === 'plot' ? t('Tap a grid intersection to plot a point — it snaps to the grid.')
+    : tool === 'eraser' ? t('Drag over a drawn mark to erase it.')
+    : t('Draw on the board — your marks go on top of the text.')
 
   return (
     <div>
-      <div className="flex items-center gap-1.5 mb-2">
-        <button onClick={() => setTool('text')} aria-label="type" title="Type text"
-          className="rounded-md border h-7 px-2 inline-flex items-center gap-1 text-xs font-semibold" style={tb(tool === 'text')}>
-          <Type size={14} /> {t('Text')}
-        </button>
-        <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{t('or draw with the tools below')}</span>
-      </div>
+      {!readOnly && (
+        <div className="flex items-center gap-1.5 mb-2 flex-wrap" role="toolbar" aria-label="board tools">
+          {gridded && <TB id="plot" label="Plot point" Icon={LocateFixed} text={t('Plot')} />}
+          <TB id="text" label="Type text" Icon={Type} text={t('Type')} />
+          <TB id="pen" label="Pen" Icon={Pen} text={t('Pen')} />
+          <TB id="line" label="Line" Icon={Slash} text={t('Line')} />
+          <TB id="eraser" label="Eraser" Icon={Eraser} text={t('Erase')} />
+          <Sep />
+          <TB id="arrow" label="Arrow (for vectors & forces)" Icon={MoveUpRight} />
+          <TB id="rect" label="Rectangle" Icon={Square} />
+          <TB id="ellipse" label="Ellipse" Icon={Circle} />
+          <TB id="spray" label="Spray paint" Icon={SprayCan} />
+          {!gridded && <TB id="fill" label="Fill background" Icon={PaintBucket} />}
+          {showFill && (
+            <label className="text-xs inline-flex items-center gap-1 cursor-pointer px-1" style={{ color: 'var(--muted-foreground)', height: 40 }}>
+              <input type="checkbox" checked={fillShapes} onChange={(e) => setFillShapes(e.target.checked)} /> {t('Fill')}
+            </label>
+          )}
+          <Sep />
+          <div className="inline-flex items-center gap-1 flex-wrap" aria-label="ink color" style={{ maxWidth: 150 }}>
+            {PAINT_PALETTE.slice(0, 8).map((c) => (
+              <button key={c} type="button" onClick={() => { setColor(c); if (tool === 'eraser' || tool === 'fill' || tool === 'text') setTool('pen') }} aria-label={`color ${c}`}
+                className="rounded-full" style={{ width: 18, height: 18, background: c, border: color === c ? '3px solid var(--foreground)' : '1px solid var(--border)' }} />
+            ))}
+          </div>
+          <div className="inline-flex items-center gap-1.5" title="Thickness">
+            <span style={{ display: 'inline-block', width: Math.min(18, width + 2), height: Math.min(18, width + 2), borderRadius: 999, background: 'var(--foreground)' }} />
+            <input type="range" min={1} max={24} step={1} value={width} onChange={(e) => setWidth(Number(e.target.value))} style={{ width: 70 }} aria-label="thickness" />
+          </div>
+          <Sep />
+          <HB onClick={undo} label="Undo" Icon={Undo2} disabled={strokesRef.current.length === 0} />
+          <HB onClick={redo} label="Redo" Icon={Redo2} disabled={redoRef.current.length === 0} />
+          <HB onClick={clearAll} label="Clear board" Icon={Trash2} />
+        </div>
+      )}
 
-      <PaintToolbar
-        tool={tool} setTool={(t) => setTool(t)} color={color} setColor={setColor}
-        size={width} setSize={setWidth} fillShapes={fillShapes} setFillShapes={setFillShapes}
-        onUndo={undo} onRedo={redo} onClear={clearAll}
-        canUndo={strokesRef.current.length > 0} canRedo={redoRef.current.length > 0}
-        hideFill
-      />
-
-      <p className="text-[11px] mb-1" style={{ color: 'var(--muted-foreground)' }}>
-        {tool === 'text' ? t('Tap the board to type a number or equation; tap existing text to edit it.') : tool === 'eraser' ? t('Drag over a drawn mark to erase it.') : t('Draw on the board — your marks go on top of the text.')}
-      </p>
+      {!readOnly && <p className="text-[11px] mb-1" style={{ color: 'var(--muted-foreground)' }}>{hint}</p>}
 
       <div style={{ position: 'relative', width: '100%' }}>
         <canvas
@@ -173,9 +244,10 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
-          style={{ width: '100%', height: 'auto', touchAction: 'none', border: '1px solid var(--primary)', borderRadius: 8, background: '#fff', cursor: tool === 'text' ? 'text' : tool === 'eraser' ? 'cell' : 'crosshair' }}
+          aria-readonly={readOnly || undefined}
+          style={{ width: '100%', height: 'auto', touchAction: 'none', border: `1px solid ${readOnly ? 'var(--border)' : 'var(--primary)'}`, borderRadius: 8, background: '#fff', cursor: readOnly ? 'default' : tool === 'text' ? 'text' : tool === 'eraser' ? 'cell' : 'crosshair' }}
         />
-        {editor && (
+        {editor && !readOnly && (
           <div
             style={{
               position: 'absolute',

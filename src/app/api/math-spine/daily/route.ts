@@ -173,6 +173,33 @@ export const GET = withAuth(async (request, ctx) => {
     alreadySubmitted = (pend ?? []).length > 0
   }
 
+  // Day count + streak for the warm-up ribbon. A streak counts consecutive
+  // SCHOOL days (Mon–Fri) with a submission, ending today or the last school
+  // day — a weekend never breaks it, a missed Tuesday does.
+  let dayCount = 0
+  let streak = 0
+  {
+    const { data: subs } = await supabaseAdmin
+      .from('math_warmup_submissions')
+      .select('submitted_at')
+      .eq('user_id', targetUserId)
+      .order('submitted_at', { ascending: false })
+      .limit(400)
+    const days = new Set((subs ?? []).map((r) => new Date(r.submitted_at).toDateString()))
+    dayCount = days.size
+    const d = new Date(); d.setHours(0, 0, 0, 0)
+    // Start from today if submitted today, else from the most recent school day.
+    if (!days.has(d.toDateString())) {
+      d.setDate(d.getDate() - 1)
+      while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1)
+    }
+    while (days.has(d.toDateString())) {
+      streak += 1
+      d.setDate(d.getDate() - 1)
+      while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1)
+    }
+  }
+
   // Snapshot for the card framing + the ladder strip on the warm-up page.
   const fluentCount = competencies.filter((c) => (valueOf(c.id) ?? 0) >= FLUENT_THRESHOLD).length
   const { data: grantRows } = await supabaseAdmin
@@ -201,6 +228,8 @@ export const GET = withAuth(async (request, ctx) => {
     ladder,
     alreadySubmitted,
     translationEnabled,
+    dayCount,
+    streak,
     snapshot: { mathPointsEarned, fluentCount, total: competencies.length },
   })
 })
