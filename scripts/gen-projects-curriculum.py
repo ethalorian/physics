@@ -461,6 +461,11 @@ XREF_OVERRIDE = {
  "pp.w04.redesign-data": "unit-3", "pp.w00.predict-lock": "unit-1", "pp.w00.timeline": "unit-8",
 }
 
+# Language objectives (SEI access layer — see claude/Project-Physics-SEI-Access-Layer.md).
+# (WIDA domain, Level 1 form, Level 3+ form, student line in Spanish). Posted with the
+# content targets on every week-page; tracked on the walk-around, never in the physics grade.
+LANG = {'pp-w00': ('Writing', 'Copy and complete "I predict: ____" with a word or number.', 'Write a prediction with a because.', 'Escribo una predicción con una palabra o un número.'), 'pp-w01': ('Speaking', 'Answer "faster / slower / stopped?" about a graph.', "Describe a graph's motion in two sentences.", 'Digo si va más rápido, más lento o parado.'), 'pp-w02': ('Writing', 'Label a data table with angle and acceleration from the word bank.', 'Write the prediction of run-out with a reason.', 'Etiqueto la tabla con ángulo y aceleración.'), 'pp-w03': ('Writing', 'Label a free-body diagram with thrust, friction, weight from the word bank.', 'Write a claim with one comparison as evidence.', 'Etiqueto el diagrama con empuje, fricción, peso.'), 'pp-w04': ('Speaking', 'Name what goes down and what goes up (water / rocket).', 'Explain the launch as momentum in a sentence.', 'Nombro lo que baja y lo que sube.'), 'pp-w05': ('Reading', 'Match tension / compression to the pull / push icons.', "Read the template's steps and label the truss.", 'Relaciono tensión y compresión con jalar y empujar.'), 'pp-w06': ('Listening', 'Follow a three-question interview with a picture card.', 'Interview a partner and record constraints.', 'Sigo una entrevista con tarjetas.'), 'pp-w07': ('Writing', 'Fill "Predicted load: ____ N. Actual: ____ N. Bigger / smaller."', 'Write the gap explanation naming the member.', 'Escribo la carga predicha y la real.'), 'pp-w08': ('Speaking', 'Point to the artifact that proves a target and say "this one."', 'Explain the evidence for a self-rating.', 'Señalo la evidencia y digo "esta".'), 'pp-w09': ('Reading', 'Read heights off the track diagram and match high = potential.', 'Read the energy graph and explain the loop minimum.', 'Leo alturas en el diagrama.'), 'pp-w10': ('Listening', 'Follow one-step framing directions with a gesture.', 'Follow the framing plan without a demonstration.', 'Sigo instrucciones de un paso.'), 'pp-w11': ('Writing', 'Complete "Energy in: ____ J. Energy out: ____ J."', 'Write efficiency with where the rest went.', 'Escribo energía de entrada y de salida.'), 'pp-w12': ('Speaking', 'Say "small pushes big" with the syringes in hand.', 'Explain force multiplication and the distance cost.', 'Digo "pequeño empuja grande" con las jeringas.'), 'pp-w13': ('Reading', 'Match loud / quiet and high / low to wave traces.', 'Read a trace and name amplitude and frequency.', 'Relaciono fuerte/suave y agudo/grave con las ondas.'), 'pp-w14': ('Speaking', 'Say "left" or "right" as a prediction, then "yes" or "no."', 'Explain the direction rule.', 'Digo "izquierda" o "derecha" antes de girar.'), 'pp-w15': ('Writing', 'Draw the chain with arrows and label it from the word bank.', 'Write the chain, one link per sentence.', 'Dibujo la cadena con flechas y etiquetas.'), 'pp-w16': ('Writing', 'Complete "V = ____, I = ____, P = ____."', 'Write efficiency with the estimate of power in.', 'Completo V, I y P.'), 'pp-w17': ('Speaking', 'Say which build and point to the number that decided it.', 'Explain the choice from the data.', 'Digo cuál construcción y señalo el número.'), 'pp-w18': ('Speaking', 'Give the defense in Spanish with the bridge translating; answer yes/no questions in English.', 'Defend in English from the artifacts.', 'Defiendo en español; respondo sí o no en inglés.'), 'pp-w19': ('Reading', 'Find the target on the rating strip and the artifact that matches.', 'Re-rate with evidence and write the growth page.', 'Encuentro la meta y el artefacto que la prueba.')}
+
 STANDARDS = {
  "motion-graphs": ["HS-PS2-1"], "forces-dynamics": ["HS-PS2-1", "HS-PS2-2"], "structures": ["HS-PS2-1", "HS-ETS1-3"],
  "energy-transfer": ["HS-PS3-1", "HS-PS3-3"], "fluids-pressure": ["HS-PS2-1", "HS-ETS1-3"], "waves-sound": ["HS-PS4-1"],
@@ -503,6 +508,13 @@ def arr(xs):
     return "array[" + ", ".join(q(x) for x in xs) + "]::text[]" if xs else "null"
 
 
+def lang_block(slug):
+    dom, l1, l3, es = LANG[slug]
+    return {"id": "l1", "type": "callout", "variant": "tip",
+            "title": f"Language objective / Objetivo de lenguaje · {dom}",
+            "markdown": f"**Level 1 (Entering):** {l1}\n\n**Level 3+:** {l3}\n\n*{es}*\n\nTracked on the walk-around, never in the physics score. Spanish evidence is full evidence. / La evidencia en español cuenta completamente."}
+
+
 def lesson_blocks(w, idx):
     rows = "| Day | Hands (first) | On the packet page |\n|---|---|---|\n" + "\n".join(
         f"| {d} | {h} | {p} |" for d, h, p in w["plan"])
@@ -515,6 +527,7 @@ def lesson_blocks(w, idx):
     )
     blocks = [{"id": f"t{i+1}", "type": "target", "statement": f"{t[1]} / {t[2]}"} for i, t in enumerate(w["targets"])]
     blocks.append({"id": "a1", "type": "asteroid_thread", "whatWeKnow": w["know"], "connection": w["conn"]})
+    blocks.append(lang_block(w["slug"]))
     blocks.append({"id": "c1", "type": "callout", "variant": "note",
                    "title": f"Academic week of {w['mon']} · {w['days']} days · B and C",
                    "markdown": "**Predict. Build. Measure. Explain.** Your packet page is on paper, Spanish and English side by side — do the work there. This page is the plan and the targets. / Tu página del paquete está en papel, español e inglés lado a lado — haz el trabajo ahí."})
@@ -534,7 +547,8 @@ out.append("""-- ===============================================================
 --   2. section_schedules.on_week_dates — explicit academic weeks, so the MVP
 --      alternation can shift at a vacation instead of being strict parity
 --   3. learning_targets.statement_es (bilingual) and xref_unit_id (cross-reference to the asteroid course unit)
---   4. 4 term units, 20 week-lessons, 72 targets, 4 mastery tasks (program = 'projects')
+--   4. 4 term units, 20 week-lessons, 72 targets, 4 mastery tasks (program = 'projects');
+--      every week-page carries an asteroid_thread block and a language-objective callout (SEI layer)
 -- Idempotent: every row is upserted by id / slug.
 -- ============================================================================
 
