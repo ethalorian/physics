@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { checkAnswer } from '@/lib/math-answer-check'
+import { checkAnswer, checkAnswerWithMode } from '@/lib/math-answer-check'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 
 // Check Lab data. GET replays every logged miss through the CURRENT parser
@@ -50,13 +50,13 @@ export const GET = withAuth(async (_req, ctx) => {
     if (it.check_mode === 'teacher-only') continue // never machine-judged — not actionable
     let stillFails = true
     if (!it.template) {
-      stillFails = checkAnswer(r.answer, it.answer_key) !== 'match'
+      stillFails = checkAnswerWithMode(r.answer, it.answer_key, it.check_mode) !== 'match'
     } else {
       // best-effort: some template keys are static enough to clear misses
       try {
         const inst = instantiateTemplate(it.prompt, it.template, 'lab-probe')
-        stillFails = checkAnswer(r.answer, inst.answerKey) !== 'match' && checkAnswer(r.answer, it.answer_key) !== 'match'
-      } catch { stillFails = checkAnswer(r.answer, it.answer_key) !== 'match' }
+        stillFails = checkAnswerWithMode(r.answer, inst.answerKey, it.check_mode) !== 'match' && checkAnswerWithMode(r.answer, it.answer_key, it.check_mode) !== 'match'
+      } catch { stillFails = checkAnswerWithMode(r.answer, it.answer_key, it.check_mode) !== 'match' }
     }
     if (!stillFails) continue
 

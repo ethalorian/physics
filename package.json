@@ -17,7 +17,8 @@
     "sim:render": "node scripts/sim-render/render.mjs",
     "sim:render:update": "node scripts/sim-render/render.mjs update",
     "sim:check": "node scripts/sim-render/render.mjs check",
-    "test:answer-check": "tsx --test src/lib/math-answer-check.test.ts"
+    "test:answer-check": "tsx --test src/lib/math-answer-check.test.ts",
+    "textbook:upload": "tsx scripts/upload-textbook.ts"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",

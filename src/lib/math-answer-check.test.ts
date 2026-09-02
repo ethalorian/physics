@@ -9,7 +9,7 @@
  */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { checkAnswer, parseQuantity } from './math-answer-check'
+import { checkAnswer, checkAnswerWithMode, parseQuantity, writtenDigits } from './math-answer-check'
 
 const is = (student: string, key: string, want: 'match' | 'mismatch' | 'unknown') =>
   assert.equal(checkAnswer(student, key), want, `${JSON.stringify(student)} vs ${JSON.stringify(key)}`)
@@ -106,4 +106,42 @@ test('parseQuantity unit handling', () => {
   assert.deepEqual(parseQuantity('7 thousand'), { value: 7000, unit: '' })
   assert.deepEqual(parseQuantity('3.5 m/s'), { value: 3.5, unit: 'm/s' })
   assert.equal(parseQuantity('quite a lot'), null)
+})
+
+test('exact-form: sig figs as written', () => {
+  const ex = (s: string, k: string, want: 'match' | 'mismatch' | 'unknown') =>
+    assert.equal(checkAnswerWithMode(s, k, 'exact-form'), want, `${JSON.stringify(s)} vs ${JSON.stringify(k)}`)
+  ex('12.0 cm', '12.0 cm (3 sig figs)', 'match')
+  ex('12 cm', '12.0 cm (3 sig figs)', 'mismatch')   // value equal, precision claimed differs
+  ex('12.00 cm', '12.0 cm', 'mismatch')
+  ex('3.14', '3.14', 'match')
+  ex('3.142', '3.14', 'mismatch')                    // 1% checker would say match
+  ex('0.082', '0.082', 'match')
+  ex('0.0816', '0.082', 'mismatch')
+  ex('1.50 x 10^3', '1.50 × 10^3', 'match')
+  ex('1500', '1.50 × 10^3', 'mismatch')
+  ex('1.5e3', '1.50 × 10^3', 'mismatch')
+  ex('8.6', '8.6 (2 sig figs)', 'match')
+  ex('8.55', '8.6 (2 sig figs)', 'mismatch')
+  ex('3', '3', 'match')                              // "how many sig figs" count
+  ex('12 km', '12.0 cm', 'unknown')                  // unit clash stays a teacher call
+  ex('12.0 centimeters', '12.0 cm', 'match')
+  assert.equal(writtenDigits('0.00450'), '450')
+  assert.equal(writtenDigits('1,500'), '1500')
+  assert.equal(writtenDigits('2.39 kg (3 significant figures).'), '239')
+})
+
+test('estimate: order-of-magnitude tolerance', () => {
+  const es = (s: string, k: string, want: 'match' | 'mismatch' | 'unknown') =>
+    assert.equal(checkAnswerWithMode(s, k, 'estimate'), want, `${JSON.stringify(s)} vs ${JSON.stringify(k)}`)
+  es('730', '~2 per day × 365 ≈ 700 (10^3-ish). Any reasoned 300–1500 is fine.', 'match')
+  es('2190', '≈$2,000 (6 × 365 = 2,190)', 'match')
+  es('525600', '≈5 × 10^5 — closest to 10^6 side of 10^5 (525,600).', 'match')
+  es('10^6', '10^6', 'match')
+  es('10^7', '10^6', 'mismatch')
+  es('8000', 'about 8,000', 'match')
+  es('80000', 'about 8,000', 'mismatch')
+  es('500', 'Backpack ~30 L; ball ~40 mL with packing → ~500. Accept 200–1000.', 'match')
+  es('50', 'Backpack ~30 L; ball ~40 mL with packing → ~500. Accept 200–1000.', 'mismatch')
+  es('about a thousand', 'about 8,000', 'unknown')   // no number → not the machine's call
 })

@@ -33,7 +33,7 @@ interface Props {
   needsGraph?: boolean
   needsEquationBuilder?: boolean
   /** How this item is checked — sizes and words the answer field to match. */
-  checkMode?: 'numeric' | 'short-answer' | 'teacher-only'
+  checkMode?: 'numeric' | 'short-answer' | 'teacher-only' | 'exact-form' | 'estimate'
   value?: WarmupAnswerValue
   onChange: (v: WarmupAnswerValue) => void
   lang?: string

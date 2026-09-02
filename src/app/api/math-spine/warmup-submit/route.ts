@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { checkAnswer, type SelfCheck } from '@/lib/math-answer-check'
+import { checkAnswerWithMode, type SelfCheck } from '@/lib/math-answer-check'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 
 // POST /api/math-spine/warmup-submit
@@ -75,9 +75,16 @@ export const POST = withAuth(async (request, ctx) => {
   // 'unknown' when: no item, no parseable key, or no work shown (the ✓ must be
   // earned with work, so an answer-only submission gets no machine verdict).
   let selfCheck: SelfCheck | null = 'unknown'
+  // Why the machine abstained, so the UI can say it in student language:
+  //   no-work   → answer without board work (the ✓ must be earned with work)
+  //   no-answer → board work but an empty answer box
+  //   unparsed  → couldn't read the answer or key confidently
+  let selfCheckReason: 'no-work' | 'no-answer' | 'unparsed' | null = null
   let workShown = false
   if (body.spiral_item_id) {
     workShown = hasShownWork(responseJson)
+    if (!workShown) selfCheckReason = 'no-work'
+    else if (!String(responseJson?.answer ?? responseText ?? '').trim()) selfCheckReason = 'no-answer'
     if (workShown) {
       const { data: itemRow } = await supabaseAdmin
         .from('math_spiral_items')
@@ -98,20 +105,23 @@ export const POST = withAuth(async (request, ctx) => {
         for (const dn of [dayNum, dayNum - 1]) {
           try {
             const inst = instantiateTemplate(itemRow.prompt, itemRow.template as ItemTemplate, `${ctx.userId}:${body.spiral_item_id}:${dn}`)
-            const verdict = checkAnswer(studentAnswer, inst.answerKey)
+            const verdict = checkAnswerWithMode(studentAnswer, inst.answerKey, itemRow.check_mode)
             if (dn === dayNum || verdict === 'match') selfCheck = verdict
             if (selfCheck === 'match') break
           } catch {
             // malformed template — fall back to the static key below
-            selfCheck = checkAnswer(studentAnswer, itemRow?.answer_key)
+            selfCheck = checkAnswerWithMode(studentAnswer, itemRow?.answer_key, itemRow?.check_mode)
             break
           }
         }
       } else {
-        selfCheck = checkAnswer(studentAnswer, itemRow?.answer_key)
+        selfCheck = checkAnswerWithMode(studentAnswer, itemRow?.answer_key, itemRow?.check_mode)
       }
     }
   }
+
+  if (selfCheck === 'unknown' && selfCheckReason === null) selfCheckReason = 'unparsed'
+  if (selfCheck !== 'unknown') selfCheckReason = null
 
   // Feed the Check Lab: any non-empty answer the checker didn't confirm.
   const missAnswer = (responseJson?.answer ?? responseText ?? '').trim()
@@ -145,5 +155,5 @@ export const POST = withAuth(async (request, ctx) => {
     console.error('Error submitting warm-up:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-  return NextResponse.json({ ...data, selfCheck, workShown }, { status: 201 })
+  return NextResponse.json({ ...data, selfCheck, selfCheckReason, workShown }, { status: 201 })
 })

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation"
 
 // External package imports
 import { useSession, signIn } from "next-auth/react"
-import { Menu, BookOpen, Settings, Home, Trophy, Gift, LayoutGrid, Users, Sigma, Joystick } from "lucide-react"
+import { Menu, BookOpen, BookText, Settings, Home, Trophy, Gift, LayoutGrid, Users, Sigma, Joystick } from "lucide-react"
 
 // Internal imports
 import { Button } from "@/components/ui/button"
@@ -89,6 +89,7 @@ export default function Navbar() {
         { href: isTeacherOnly ? "/admin/classes" : "/admin/home", label: "Home", icon: Home },
         { href: "/admin/classes", label: "Classes", icon: BookOpen },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
+        { href: "/textbook", label: "Textbook", icon: BookText }, // same reader students see
         { href: "/arcade", label: "Arcade", icon: Joystick }, // staff runs are free + unranked
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
@@ -107,6 +108,7 @@ export default function Navbar() {
       { href: "/home", label: "Home", icon: Home },
       { href: "/lessons", label: "Lessons", icon: BookOpen },
       { href: "/reference", label: "Reference", icon: Sigma },
+      { href: "/textbook", label: "Textbook", icon: BookText },   // Conceptual Physics, session-gated PDF reader
       { href: "/lobby", label: "Lobby", icon: Users },
       { href: "/arcade", label: "Arcade", icon: Joystick },      // ONE arcade: earn upstairs (vocab), spend downstairs (ranked)
       { href: "/leaderboard", label: "Leaderboard", icon: Trophy },

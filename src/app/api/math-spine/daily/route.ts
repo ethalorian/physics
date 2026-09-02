@@ -93,7 +93,7 @@ export const GET = withAuth(async (request, ctx) => {
     prompt: string
     difficulty?: string
     needsGraph?: boolean
-    checkMode?: 'numeric' | 'short-answer' | 'teacher-only'
+    checkMode?: 'numeric' | 'short-answer' | 'teacher-only' | 'exact-form' | 'estimate'
     needsEquationBuilder?: boolean
     competencyValue: number | null
     miniLessonTiers?: unknown

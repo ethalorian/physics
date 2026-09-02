@@ -299,3 +299,84 @@ export function checkAnswer(studentAnswer: string | null | undefined, answerKey:
   if (sawMismatch || multipart === 'mismatch') return 'mismatch'
   return 'unknown'
 }
+
+// ---------------------------------------------------------------------------
+// Check modes beyond the numeric default (2026-09-02).
+//   exact-form → sig-fig / precision items: the VALUE must match tightly AND the
+//                digits as written must match ("12.0 cm" ≠ "12 cm"; "1.50 x 10^3"
+//                ≠ "1500"). The 1% tolerance would otherwise wave every
+//                rounding slip through.
+//   estimate   → Fermi / order-of-magnitude items: match within a factor of ~3
+//                (|log10 ratio| ≤ 0.5) — a reasoned 730 against a key of
+//                "about 700" is a match, and 10^6 vs 10^7 is not.
+// Anything the mode can't judge falls through to the default checker's
+// 'unknown' rules — still never a false ✗.
+// ---------------------------------------------------------------------------
+
+export type CheckMode = 'numeric' | 'short-answer' | 'teacher-only' | 'exact-form' | 'estimate'
+
+const EXACT_REL_TOLERANCE = 1e-6
+const ESTIMATE_LOG10_TOLERANCE = 0.5
+
+/** Significant digits exactly as written: "12.0" → "120", "0.00450" → "450",
+    "1.50 x 10^3" → "150", "1,500" → "1500". Null when no number is present. */
+export function writtenDigits(raw: string): string | null {
+  let s = normalizeText(raw)
+  s = s.replace(/\s*\([^()]*\)\s*[.!]?\s*$/, '').replace(/\s*[\u2014\u2013]\s.*$/, '').trim()
+  const eq = s.match(/(?:=|:)\s*([^=:]+)$/)
+  if (eq) s = eq[1].trim()
+  s = s.replace(/^(?:about|approx(?:imately)?|roughly|around|~|≈)\s*/i, '').replace(/^[$€£]\s*/, '')
+  const m = s.match(/^[-+]?(\d[\d,]*)?(?:\.(\d+))?/)
+  if (!m || (!m[1] && !m[2])) return null
+  const intPart = (m[1] ?? '').replace(/,/g, '')
+  const frac = m[2] ?? ''
+  let digits = intPart + frac
+  digits = digits.replace(/^0+/, '')
+  return digits === '' ? '0' : digits
+}
+
+function checkExactForm(student: string, key: string): SelfCheck {
+  const kq = parseQuantity(key)
+  const sq = parseQuantity(student)
+  if (!kq || !sq) return checkAnswer(student, key) === 'match' ? 'match' : 'unknown'
+  if (kq.unit && sq.unit && kq.unit !== sq.unit) return 'unknown'
+  const scale = Math.max(Math.abs(kq.value), Math.abs(sq.value))
+  const valueMatch = scale === 0 ? true : Math.abs(kq.value - sq.value) / scale <= EXACT_REL_TOLERANCE
+  if (!valueMatch) return 'mismatch'
+  const kd = writtenDigits(key)
+  const sd = writtenDigits(student)
+  if (!kd || !sd) return 'unknown'
+  return kd === sd ? 'match' : 'mismatch'
+}
+
+function checkEstimate(student: string, key: string): SelfCheck {
+  // Headline figure(s) only: drop "Accept …"/"Any reasoned …" tails and the
+  // assumptions before the last ≈ / = / →, so "~30 L; ball ~40 mL → ~500"
+  // compares against 500, not 30 or 40.
+  let k = key.replace(/\([^()]*\)/g, ' ').replace(/\b(?:accept|any reasoned)\b.*$/i, ' ')
+  const cut = Math.max(k.lastIndexOf('≈'), k.lastIndexOf('='), k.lastIndexOf('→'))
+  if (cut >= 0) k = k.slice(cut + 1)
+  const keyVals = findQuantities(k).filter((v) => v > 0)
+  const stuVals = findQuantities(student).filter((v) => v > 0)
+  if (keyVals.length === 0 || stuVals.length === 0) return checkAnswer(student, key)
+  const s = stuVals[stuVals.length - 1]
+  const within = keyVals.some((kv) => Math.abs(Math.log10(s / kv)) <= ESTIMATE_LOG10_TOLERANCE)
+  return within ? 'match' : 'mismatch'
+}
+
+/** Mode-aware entry point. Callers that know the item's check_mode use this. */
+export function checkAnswerWithMode(
+  studentAnswer: string | null | undefined,
+  answerKey: string | null | undefined,
+  mode: CheckMode | string | null | undefined,
+): SelfCheck {
+  const student = (studentAnswer ?? '').trim()
+  const key = (answerKey ?? '').trim()
+  if (!student || !key) return 'unknown'
+  switch (mode) {
+    case 'exact-form': return checkExactForm(student, key)
+    case 'estimate': return checkEstimate(student, key)
+    case 'teacher-only': return 'unknown'
+    default: return checkAnswer(student, key)
+  }
+}

@@ -602,3 +602,16 @@ Admins and teachers can toggle between:
 
 *Last updated: October 8, 2024*
 
+---
+
+## 📖 Textbook (Conceptual Physics)
+
+**Route:** `/textbook` (`?ch=NN` deep-links a chapter)  
+**Component:** `src/app/textbook/page.tsx`  
+**Access:** Any signed-in user (students, teachers, admins) — a top-level nav tab for both the student rail and the staff bar.
+
+- Chapter TOC (grouped by the book's parts) on the left, native PDF viewer on the right; the last-read chapter is remembered per device.
+- PDFs live in the **private** Supabase bucket `textbook` (`chNN.pdf`) and are streamed only through `GET /api/textbook/[chapter]` (`withAuth`). No storage URL reaches the browser.
+- Fallback: chapters not yet in `textbook` are proxied from the public `lesson-media` copy referenced by `concept_exercises.text_pdf_url`.
+- Upload / replace chapters: `npm run textbook:upload -- "<folder of cpteNN.pdf>"` (needs the service-role key in `.env.local`).
+- Chapter list & titles: `src/data/textbook.ts`.

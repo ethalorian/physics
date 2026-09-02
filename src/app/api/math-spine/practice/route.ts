@@ -3,7 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
 import { decayingAverage } from '@/data/curriculum-types'
 import { POINT_VALUES } from '@/lib/math-spine'
-import { checkAnswer } from '@/lib/math-answer-check'
+import { checkAnswerWithMode } from '@/lib/math-answer-check'
 import { pickTargetRung, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 
@@ -131,7 +131,7 @@ export const POST = withAuth(async (request, ctx) => {
 
   const { data: itemRow } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, competency_id, template')
+    .select('id, prompt, answer_key, competency_id, template, check_mode')
     .eq('id', spiral_item_id)
     .maybeSingle()
   if (!itemRow) return NextResponse.json({ error: 'Item not found' }, { status: 404 })
@@ -147,7 +147,7 @@ export const POST = withAuth(async (request, ctx) => {
       key = itemRow.answer_key
     }
   }
-  const result = checkAnswer(answer, key)
+  const result = checkAnswerWithMode(answer, key, itemRow.check_mode)
 
   // Feed the Check Lab: practice misses are the richest source of real
   // phrasings, since students retry freely here.
