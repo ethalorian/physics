@@ -33,3 +33,6 @@ CREATE INDEX IF NOT EXISTS xp_challenge_assign_course_idx ON xp_challenge_assign
 
 ALTER TABLE xp_challenges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE xp_challenge_assignments ENABLE ROW LEVEL SECURITY;
+
+-- Admin-created global challenges apply to every student automatically.
+ALTER TABLE xp_challenges ADD COLUMN IF NOT EXISTS is_global boolean NOT NULL DEFAULT false;

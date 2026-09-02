@@ -16,7 +16,7 @@ export default function ChallengeCard({ compact = false }: { compact?: boolean }
   const [items, setItems] = useState<Ch[]>([])
 
   useEffect(() => {
-    fetch('/api/challenges')
+    fetch('/api/xp-challenges')
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (d?.challenges) setItems(d.challenges) })
       .catch(() => {})

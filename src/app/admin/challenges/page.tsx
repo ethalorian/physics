@@ -9,6 +9,7 @@ import { Swords, Plus, Trash2, Pause, Play } from 'lucide-react'
 
 interface Assignment { course_id: string | null; student_id: string | null; label: string }
 interface Challenge {
+  is_global?: boolean
   id: string; title: string; kind: string; game_slug: string | null; metric: string
   target: number; bonus_xp: number; starts_on: string; ends_on: string; active: boolean
   assignments: Assignment[]; completedToday: number
@@ -42,20 +43,26 @@ export default function ChallengesPage() {
   const [endsOn, setEndsOn] = useState(todayStr())
   const [pickedCourses, setPickedCourses] = useState<Set<string>>(new Set())
   const [studentEmails, setStudentEmails] = useState('')
+  const [isGlobal, setIsGlobal] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
 
   const load = useCallback(() => {
     fetch('/api/teacher/challenges')
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d) setChallenges(d.challenges ?? []); setLoading(false) })
+      .then((d) => {
+        if (d) {
+          setChallenges(d.challenges ?? [])
+          // Only YOUR classes are assignable — the server enforces the same.
+          setCourses(d.myCourses ?? [])
+          setIsAdmin(!!d.isAdmin)
+        }
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [])
 
   useEffect(() => {
     load()
-    fetch('/api/courses').then((r) => r.json())
-      .then((d: { courses?: { id: string; name: string; section: string | null }[] }) =>
-        setCourses((d.courses ?? []).map((c) => ({ id: c.id, label: [c.name, c.section].filter(Boolean).join(' · ') }))))
-      .catch(() => {})
     fetch('/api/arcade/cabinet').then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (d?.games) setGames(d.games.map((g: { slug: string; name: string }) => ({ slug: g.slug, name: g.name ?? g.slug }))) })
       .catch(() => {})
@@ -76,8 +83,9 @@ export default function ChallengesPage() {
           kind, game_slug: kind === 'arcade-game' ? gameSlug : undefined,
           metric: kind === 'math' ? 'xp' : metric, target, bonus_xp: bonus,
           starts_on: startsOn, ends_on: endsOn,
-          course_ids: [...pickedCourses],
-          student_emails: studentEmails.split(/[\s,;]+/).filter(Boolean),
+          is_global: isAdmin && isGlobal,
+          course_ids: isGlobal ? [] : [...pickedCourses],
+          student_emails: isGlobal ? [] : studentEmails.split(/[\s,;]+/).filter(Boolean),
         }),
       })
       const d = await res.json().catch(() => ({}))
@@ -164,6 +172,14 @@ export default function ChallengesPage() {
         </label>
 
         <div className="text-xs font-semibold mt-3 mb-1.5" style={{ color: 'var(--secondary-foreground)' }}>Assign to</div>
+        {isAdmin && (
+          <label className="flex items-center gap-2 text-sm mb-2" style={{ cursor: 'pointer' }}>
+            <input type="checkbox" checked={isGlobal} onChange={(e) => setIsGlobal(e.target.checked)} />
+            <span className="font-semibold">Global challenge</span>
+            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>— shows automatically for every student in the app</span>
+          </label>
+        )}
+        {!isGlobal && (<>
         <div className="flex flex-wrap gap-2 mb-2">
           {courses.map((c) => {
             const on = pickedCourses.has(c.id)
@@ -179,9 +195,10 @@ export default function ChallengesPage() {
           {courses.length === 0 && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No classes found.</span>}
         </div>
         <input value={studentEmails} onChange={(e) => setStudentEmails(e.target.value)} placeholder="…and/or specific students: emails, comma-separated" className={`${inputCls} w-full`} style={inputStyle} />
+        </>)}
 
         <div className="flex items-center gap-3 mt-3">
-          <button onClick={create} disabled={saving || (kind === 'arcade-game' && !gameSlug) || (pickedCourses.size === 0 && !studentEmails.trim())}
+          <button onClick={create} disabled={saving || (kind === 'arcade-game' && !gameSlug) || (!isGlobal && pickedCourses.size === 0 && !studentEmails.trim())}
             className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
             <Plus size={15} /> {saving ? 'Creating…' : 'Create challenge'}
@@ -223,7 +240,9 @@ export default function ChallengesPage() {
               {' · '}<b style={{ color: 'var(--foreground)' }}>{c.completedToday}</b> hit it today
             </div>
             <div className="flex flex-wrap gap-1.5 mt-2">
-              {c.assignments.map((a, i) => (
+              {c.is_global ? (
+                <span className="text-xs font-bold rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--reward) 18%, transparent)', color: 'var(--reward-foreground)' }}>🌐 Global — every student</span>
+              ) : c.assignments.map((a, i) => (
                 <span key={i} className="text-xs rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)', color: 'var(--primary)' }}>{a.label}</span>
               ))}
             </div>
