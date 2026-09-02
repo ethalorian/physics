@@ -37,6 +37,7 @@ export const GROUPS: ToolGroup[] = [
   {
     title: 'Plan & build',
     tools: [
+      { href: '/admin/workshop', label: 'Workshop', desc: 'Curriculum studio — units, lessons, review coverage, target workbench', icon: BookOpenCheck, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Author lesson blocks, unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Day-by-day teacher plans per unit — Word/PDF downloads and the Present deck launch', icon: CalendarRange, accent: 'var(--primary)' },
