@@ -82,16 +82,22 @@ export default function Navbar() {
     // students get their own journey. "View as student" sends staff to the
     // student nav below so they can preview it.
     if (isStaff && !studentViewActive) {
+      // Teachers land in the Class Cockpit; the admin home stays the OWNER's
+      // console (access requests, drafts, app-wide stats) — admin only.
+      const isTeacherOnly = role === 'teacher'
       const staff = [
-        { href: "/admin/home", label: "Home", icon: Home },
+        { href: isTeacherOnly ? "/admin/classes" : "/admin/home", label: "Home", icon: Home },
+        { href: "/admin/classes", label: "Classes", icon: BookOpen },
         { href: "/admin/control-room", label: "Control Room", icon: LayoutGrid },
         { href: "/arcade", label: "Arcade", icon: Joystick }, // staff runs are free + unranked
         { href: "/admin/store", label: "Rewards", icon: Gift },
         { href: "/admin/dashboard", label: "Admin", icon: Settings },
       ]
       // The global Admin tab is admin-only; it's also hidden while an admin is
-      // previewing the teacher experience.
-      return canAccessAdmin && !viewingAs ? staff : staff.filter((i) => i.href !== "/admin/dashboard")
+      // previewing the teacher experience. Teachers whose Home IS the cockpit
+      // don't need the duplicate Classes entry.
+      const deduped = isTeacherOnly ? staff.filter((i) => i.label !== "Classes") : staff
+      return canAccessAdmin && !viewingAs ? deduped : deduped.filter((i) => i.href !== "/admin/dashboard")
     }
 
     // Student nav: orient → work → play → compete → spend. Simulations are
@@ -116,7 +122,7 @@ export default function Navbar() {
   const isActivePath = (href: string) => pathname === href || pathname?.startsWith(href + '/')
 
   // Signed-in users' logo goes home — their home, not the marketing splash.
-  const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
+  const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : role === 'teacher' && !studentViewActive ? '/admin/classes' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
 
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
   if (pathname?.startsWith('/embed')) return null
