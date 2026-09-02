@@ -27,7 +27,14 @@ export const GET = withAuth(async (request, ctx) => {
   const { data: enrolls } = await supabaseAdmin
     .from('course_students').select('student_id').eq('course_id', classId).eq('enrollment_state', 'active')
   const gids = (enrolls ?? []).map((e) => e.student_id)
-  if (gids.length === 0) return NextResponse.json({ students: [], targets: [] })
+  // An empty class still needs the full shape — the cockpit reads
+  // roster.summary.* on the Overview tab and crashes on undefined.
+  if (gids.length === 0) {
+    return NextResponse.json({
+      students: [], targets: [],
+      summary: { classAvg: null, fluent: 0, total: 0, activeThisWeek: 0, weakestTarget: null },
+    })
+  }
 
   const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString()
   const [{ data: studs }, { data: targets }, { data: records }, { data: activity }, { data: lessons }, { data: xp }, { data: pending }] = await Promise.all([

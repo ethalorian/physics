@@ -71,7 +71,15 @@ function ClassCockpit() {
     fetch('/api/teacher/cockpit').then((r) => (r.ok ? r.json() : null)).then((d) => { if (d) setCockpit(d) }).catch(() => {})
   }, [])
   const loadRoster = useCallback(() => {
-    fetch(`/api/teacher/cockpit/roster?class=${courseId}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (d) setRoster(d) }).catch(() => {})
+    fetch(`/api/teacher/cockpit/roster?class=${courseId}`).then((r) => (r.ok ? r.json() : null)).then((d) => {
+      if (!d) return
+      // Defensive: never trust summary/targets to exist (an empty class used to omit them).
+      setRoster({
+        targets: d.targets ?? [],
+        students: d.students ?? [],
+        summary: d.summary ?? { classAvg: null, fluent: 0, total: 0, activeThisWeek: 0, weakestTarget: null },
+      })
+    }).catch(() => {})
   }, [courseId])
   useEffect(() => { loadRoster() }, [loadRoster])
   useEffect(() => {
@@ -94,7 +102,7 @@ function ClassCockpit() {
   }
 
   const attention = (roster?.students ?? []).filter((s) => (s.idleDays ?? 0) >= 3 || (s.unitAvg !== null && s.unitAvg < 2.0)).slice(0, 4)
-  const steady = roster ? roster.summary.total - attention.length : 0
+  const steady = roster?.summary ? roster.summary.total - attention.length : 0
   const shownRows = roster ? (showAll ? roster.students : roster.students.slice(0, 8)) : []
 
   return (
