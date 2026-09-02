@@ -28,7 +28,7 @@ interface RetryItem { targetId: string; statement: string; domain: Domain; level
 interface ClimbPoint { observedAt: string; level: number; domain: Domain }
 interface HomeData {
   student: { name: string }
-  program?: 'physics' | 'trades'
+  program?: 'physics' | 'trades' | 'projects'
   points: { xp: number; balance: number }
   streak: { current: number }
   continue: ContinueData | null
@@ -379,7 +379,9 @@ export default function HomePage() {
                 <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
                   {data.program === 'trades'
                     ? 'Your Trades Physics lessons aren\u2019t published yet — your targets and mastery tasks are live, and lessons will show up here as your teacher releases them.'
-                    : 'No lessons are published yet — check back soon.'}
+                    : data.program === 'projects'
+                      ? 'Your project weeks aren\u2019t published yet — your targets are live, and each week\u2019s page will show up here as your teacher releases it. · Tus semanas de proyecto todavía no están publicadas.'
+                      : 'No lessons are published yet — check back soon.'}
                 </p>
               </Glass>
             )}

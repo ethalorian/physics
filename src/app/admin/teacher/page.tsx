@@ -30,12 +30,12 @@ const STEPS: { key: StepKey; label: string; desc: string; href?: string; cta: st
 // honors-only lessons and blocks become visible for that class.
 // Class types. `track` is the level gate for physics content; `program` picks the
 // curriculum (units/targets/lessons). Trades is its own curriculum, not a level.
-const TRACKS: { id: string; label: string; desc: string; enabled: boolean; track: string; program: 'physics' | 'trades' }[] = [
+const TRACKS: { id: string; label: string; desc: string; enabled: boolean; track: string; program: 'physics' | 'trades' | 'projects' }[] = [
   { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the base curriculum.', enabled: true, track: 'cpa', program: 'physics' },
   { id: 'honors', label: 'Honors Physics', desc: 'Extends CPA with the honors thread — deeper demand, same scope.', enabled: true, track: 'honors', program: 'physics' },
   { id: 'trades', label: 'Trades Physics', desc: 'The fieldhouse curriculum — length & tolerance, plumb/level/square, load, pressure, heat, electrical.', enabled: true, track: 'cpa', program: 'trades' },
   { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false, track: 'ap', program: 'physics' },
-  { id: 'pbl', label: 'Project-Based Physics', desc: 'Coming soon.', enabled: false, track: 'pbl', program: 'physics' },
+  { id: 'projects', label: 'Project Physics', desc: 'The MVP section — one build per academic week, physics pulled in as each build demands it. Bilingual packets.', enabled: true, track: 'cpa', program: 'projects' },
 ]
 
 // Short guided-tour slides.
@@ -296,7 +296,7 @@ export default function TeacherDashboard() {
                     </div>
                     <div className="flex gap-2 flex-wrap">
                       {TRACKS.map((tr) => {
-                        const selected = c.program === 'trades' ? tr.id === 'trades' : (c.track === tr.id && tr.program === 'physics')
+                        const selected = c.program === 'trades' || c.program === 'projects' ? tr.id === c.program : (c.track === tr.id && tr.program === 'physics')
                         return (
                           <button
                             key={tr.id}

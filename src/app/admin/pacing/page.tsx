@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { CalendarClock, Check, ChevronDown, ChevronUp, Sliders, ChevronLeft, ChevronRight, Wand2 } from 'lucide-react'
 import { useViewAs } from '@/lib/use-view-as'
 import { useClassScope } from '@/lib/use-class-scope'
-import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, ALL_BLOCKS, type RotationCalendar, type WeekPattern, type CountMode } from '@/lib/rotation'
+import { cycleDayForDate, isSchoolDay, ROTATING_BLOCKS, droppedBlock, ALL_BLOCKS, type RotationCalendar, type WeekPattern, type CountMode, parityOnWeekMondays } from '@/lib/rotation'
 import MonthCalendar, { type CalSection } from '@/components/pacing/MonthCalendar'
 
 function LongLegend() {
@@ -17,11 +17,11 @@ function LongLegend() {
   )
 }
 
-interface Course { id: string; name: string; section: string | null; google_course_id: string | null; program?: 'physics' | 'trades' }
+interface Course { id: string; name: string; section: string | null; google_course_id: string | null; program?: 'physics' | 'trades' | 'projects' }
 interface PlanItem { index: number; title: string; lessonId: string | null; unitId: string; unitOrder: number; kind: 'lesson' | 'unit'; plannedDays: number; plannedWeight?: number; lessonNumber: number | null; core?: boolean }
 interface CutItem { lessonId: string | null; title: string; lessonNumber: number | null; plannedDays: number }
-type Program = 'physics' | 'trades'
-const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades' }
+type Program = 'physics' | 'trades' | 'projects'
+const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades', projects: 'Projects' }
 interface PacingResult {
   notStarted: boolean; elapsed: number; totalDays: number
   plannedIndex: number | null; plannedTitle: string | null
@@ -33,7 +33,7 @@ interface UnitOpt { id: string; name: string; allottedDays: number | null; defau
 interface LineupEntry { date: string; block?: string; long: boolean; title: string; index: number }
 interface SectionData {
   program: Program; items: PlanItem[]; confirmed: boolean
-  block: string | null; blocks: string[]; weekPattern: WeekPattern; onWeekAnchor: string | null; countMode: CountMode; nextOnWeek: string | null; thisWeekOn: boolean
+  block: string | null; blocks: string[]; weekPattern: WeekPattern; onWeekAnchor: string | null; onWeekDates: string[]; countMode: CountMode; nextOnWeek: string | null; thisWeekOn: boolean
   rotationConfigured: boolean; lineup: LineupEntry[]
   units: UnitOpt[]; unitResult: PacingResult | null; unitName: string | null; unitTotalDays: number
   currentUnitId: string | null; unitStartDate: string | null; currentLessonId: string | null
@@ -403,6 +403,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
   const [blocks, setBlocks] = useState<string[]>([])
   const [weekPattern, setWeekPattern] = useState<WeekPattern>('every')
   const [onWeekAnchor, setOnWeekAnchor] = useState('')
+  const [onWeekDates, setOnWeekDates] = useState('')
   const [unitId, setUnitId] = useState('')
   const [unitStart, setUnitStart] = useState('')
   const [lessonId, setLessonId] = useState('')
@@ -418,6 +419,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
       setBlocks(d.blocks ?? (d.block ? [d.block] : []))
       setWeekPattern(d.weekPattern ?? 'every')
       setOnWeekAnchor(d.onWeekAnchor ?? '')
+      setOnWeekDates((d.onWeekDates ?? []).join('\n'))
       setUnitId(d.currentUnitId ?? '')
       setUnitStart(d.unitStartDate ?? '')
       setLessonId(d.currentLessonId ?? '')
@@ -456,6 +458,7 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           blocks,
           week_pattern: weekPattern,
           on_week_anchor: weekPattern === 'alternate' ? (onWeekAnchor || null) : null,
+          on_week_dates: weekPattern === 'alternate' ? onWeekDates.split(/[\s,]+/).filter(Boolean) : [],
           current_unit_id: unitId || null,
           unit_start_date: unitStart || null,
           current_lesson_id: lessonId || null,
@@ -567,6 +570,18 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
             <input type="date" value={onWeekAnchor} onChange={(e) => setOnWeekAnchor(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle} />
           </label>
         )}
+        {weekPattern === 'alternate' && (
+          <label className="text-sm">
+            <div className="text-xs mb-1 flex items-center justify-between" style={{ color: 'var(--muted-foreground)' }}>
+              <span>Academic weeks (Mondays) — leave empty to alternate strictly from the first week</span>
+              {onWeekAnchor && (
+                <button type="button" className="text-[11px] underline" onClick={() => setOnWeekDates(parityOnWeekMondays(onWeekAnchor, '2026-08-24', '2027-06-11').join('\n'))}>fill from first week</button>
+              )}
+            </div>
+            <textarea value={onWeekDates} onChange={(e) => setOnWeekDates(e.target.value)} rows={3} placeholder={'2026-08-31\n2026-09-14\n…'} className="w-full rounded-lg border px-2.5 py-1.5 text-xs font-mono" style={fieldStyle} />
+            <div className="text-[11px] mt-1" style={{ color: 'var(--muted-foreground)' }}>If the school shifts the alternation at a vacation, edit this list — it overrides the strict every-other-week count.</div>
+          </label>
+        )}
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Current unit</div>
           <select value={unitId} onChange={(e) => pickUnit(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={fieldStyle}>
@@ -598,10 +613,10 @@ function SectionCard({ course, cal, onChanged, refreshKey }: { course: Course; c
           </button>
         )}
         {err && <span className="text-xs" style={{ color: 'var(--destructive)' }}>{err}</span>}
-        {data && data.weekPattern === 'alternate' && !data.onWeekAnchor && (
+        {data && data.weekPattern === 'alternate' && !data.onWeekAnchor && data.onWeekDates.length === 0 && (
           <span className="text-xs" style={{ color: 'var(--reward-foreground)' }}>Alternating weeks needs this section&apos;s first academic week — until it&apos;s set, every week counts.</span>
         )}
-        {data && data.weekPattern === 'alternate' && data.onWeekAnchor && (
+        {data && data.weekPattern === 'alternate' && (data.onWeekAnchor || data.onWeekDates.length > 0) && (
           <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>This week is {data.thisWeekOn ? 'an academic week' : 'a shop week'}{data.nextOnWeek && !data.thisWeekOn ? ` · back ${data.nextOnWeek}` : ''} · counting {data.countMode === 'sessions' ? 'sessions (one per day; B+C = a long session)' : 'meetings (each block is a lesson)'}.</span>
         )}
         {data && !data.rotationConfigured && (

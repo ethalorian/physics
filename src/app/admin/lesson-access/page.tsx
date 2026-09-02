@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, DoorOpen, Lock, Clock, Check, CalendarClock, Search, ChevronDown, ChevronRight, PlayCircle, GraduationCap } from 'lucide-react'
 
-interface ClassRow { id: string; name: string; section: string | null; track: string | null; program?: 'physics' | 'trades' }
-interface LessonRow { id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean; program?: 'physics' | 'trades' }
+interface ClassRow { id: string; name: string; section: string | null; track: string | null; program?: 'physics' | 'trades' | 'projects' }
+interface LessonRow { id: string; title: string; slug: string; unit: string | null; lesson_number: number | null; published: boolean; program?: 'physics' | 'trades' | 'projects' }
 // A lesson applies to a class only when they follow the same curriculum.
 const applies = (l: LessonRow, c: ClassRow) => (l.program ?? 'physics') === (c.program ?? 'physics')
 interface Win { open_at: string | null; close_at: string | null }
@@ -30,7 +30,7 @@ const STATUS_STYLE: Record<Status, { bg: string; color: string; border: string }
 const toInput = (iso: string | null) => (iso ? new Date(iso).toISOString().slice(0, 16) : '')
 const fromInput = (v: string) => (v ? new Date(v).toISOString() : null)
 const fmt = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '')
-const unitShort = (u: string | null, program?: string) => { const m = u?.match(/Unit\s*(\d+)/i); return m ? `${program === 'trades' ? 'T' : 'U'}${m[1]}` : (u ?? '—') }
+const unitShort = (u: string | null, program?: string) => { const m = u?.match(/Unit\s*(\d+)/i); return m ? `${program === 'trades' ? 'T' : program === 'projects' ? 'P' : 'U'}${m[1]}` : (u ?? '—') }
 const lessonLabel = (l: LessonRow) => `${l.lesson_number ? `D${l.lesson_number} · ` : ''}${l.title}`
 
 function TrackBadge({ track, program }: { track: string | null; program?: string | null }) {
@@ -38,6 +38,12 @@ function TrackBadge({ track, program }: { track: string | null; program?: string
     <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide"
       style={{ background: 'color-mix(in oklch, var(--reward) 22%, transparent)', color: 'var(--reward-foreground)' }}>
       Trades
+    </span>
+  )
+  if (program === 'projects') return (
+    <span className="inline-flex items-center gap-0.5 rounded px-1 py-0.5 text-[9px] font-bold uppercase tracking-wide"
+      style={{ background: 'color-mix(in oklch, var(--success) 18%, transparent)', color: 'var(--success)' }}>
+      Projects
     </span>
   )
   if (track === 'honors') return (
@@ -292,7 +298,7 @@ export default function LessonAccessPage() {
                           {data.classes.map((c) => {
                             const key = `${c.id}|${l.id}`
                             if (!applies(l, c)) return (
-                              <td key={c.id} className="px-2 py-2 text-center" title={`Not in this class's curriculum (${c.program === 'trades' ? 'Trades' : 'Physics'})`}>
+                              <td key={c.id} className="px-2 py-2 text-center" title={`Not in this class's curriculum (${c.program === 'trades' ? 'Trades' : c.program === 'projects' ? 'Project Physics' : 'Physics'})`}>
                                 <span className="text-[11px]" style={{ color: 'var(--muted-foreground)', opacity: 0.5 }}>—</span>
                               </td>
                             )

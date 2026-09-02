@@ -41,6 +41,14 @@ export const CONTENT_STRANDS = [
   "plan-reading",    // making a drawing somebody else can build from
   "trade-math",      // fractions, proportion, estimating before you measure
   "physics-model",   // why the shop does what it tells you to do
+  // --- project physics (program = 'projects') — the MVP CPA section, one build per academic week
+  "motion-graphs",       // reading and making records of motion
+  "structures",          // equilibrium, tension/compression, load paths
+  "energy-transfer",     // PE/KE, work, power, efficiency
+  "fluids-pressure",     // pressure, Pascal, hydraulics
+  "waves-sound",         // vibration, waves, resonance
+  "electromagnetism",    // current, field, force, induction
+  "engineering-design",  // predict → build → measure → explain → redesign
 ] as const;
 
 export type ContentStrand = (typeof CONTENT_STRANDS)[number];

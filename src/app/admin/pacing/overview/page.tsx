@@ -8,7 +8,7 @@ interface Row {
   name: string
   section: string | null
   teacher: string | null
-  program: 'physics' | 'trades'
+  program: 'physics' | 'trades' | 'projects'
   block: string | null
   unitName: string | null
   unitStartDate: string | null
@@ -104,7 +104,7 @@ export default function PacingOverviewPage() {
                   <tr key={r.courseId} className="border-t" style={{ borderColor: 'var(--border)' }}>
                     <td className="py-2.5 px-4">
                       <div className="font-medium">{r.name}{r.section ? <span style={{ color: 'var(--muted-foreground)' }}> · {r.section}</span> : null}</div>
-                      <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{r.students} students{r.block ? ` · ${r.block} block` : ''}{r.program === 'trades' ? ' · trades' : ''}{!r.hasUnit ? ' · no unit set' : ''}</div>
+                      <div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{r.students} students{r.block ? ` · ${r.block} block` : ''}{r.program === 'trades' ? ' · trades' : r.program === 'projects' ? ' · projects' : ''}{!r.hasUnit ? ' · no unit set' : ''}</div>
                     </td>
                     <td className="py-2.5 px-3" style={{ color: 'var(--muted-foreground)' }}>{r.teacher ?? '—'}</td>
                     <td className="py-2.5 px-3">

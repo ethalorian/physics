@@ -8,7 +8,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // that's what re-prompts the teacher.
 
 const VALID_TRACKS = ['cpa', 'honors'] // CPA + Honors are live; ap/pbl come later
-const VALID_PROGRAMS = ['physics', 'trades'] // which curriculum (units/targets) the class follows
+const VALID_PROGRAMS = ['physics', 'trades', 'projects'] // which curriculum (units/targets) the class follows
 
 type CourseRow = { id: string; name: string; section: string | null; track: string | null; program: string | null }
 

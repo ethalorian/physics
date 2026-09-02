@@ -41,6 +41,8 @@ export interface MeetingPattern {
   blocks: Block[]
   weekPattern: WeekPattern
   onWeekAnchor?: string | null   // 'YYYY-MM-DD' inside one of this section's on-weeks
+  onWeekDates?: string[] | null  // explicit on-week dates (any day in each week). When non-empty this
+                                 // REPLACES parity-from-anchor, so the alternation can shift at a vacation.
   countMode?: CountMode          // default 'meetings'
 }
 export const ALL_BLOCKS: Block[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
@@ -61,6 +63,11 @@ function mondayOf(d: Date): Date {
 // than silently showing nothing).
 export function isOnWeek(cal: RotationCalendar, pattern: MeetingPattern, date: Date): boolean {
   if (pattern.weekPattern !== 'alternate') return true
+  const explicit = (pattern.onWeekDates ?? []).filter(Boolean)
+  if (explicit.length > 0) {
+    const w = mondayOf(date).getTime()
+    return explicit.some((d) => mondayOf(utc(d)).getTime() === w)
+  }
   const anchor = pattern.onWeekAnchor ?? cal.alt_week_anchor
   if (!anchor) return true
   const a = mondayOf(utc(anchor))
@@ -125,9 +132,10 @@ export function upcomingSectionMeetings(cal: RotationCalendar, pattern: MeetingP
 
 // Next Monday (from `fromDate`) that starts an on-week — for the readout.
 export function nextOnWeekMonday(cal: RotationCalendar, pattern: MeetingPattern, fromDate: Date): string | null {
-  if (pattern.weekPattern !== 'alternate' || !(pattern.onWeekAnchor ?? cal.alt_week_anchor)) return null
+  if (pattern.weekPattern !== 'alternate') return null
+  if (!(pattern.onWeekAnchor ?? cal.alt_week_anchor) && (pattern.onWeekDates ?? []).length === 0) return null
   const d = mondayOf(fromDate)
-  for (let k = 0; k < 4; k++) {
+  for (let k = 0; k < 8; k++) {
     if (isOnWeek(cal, pattern, d)) return iso(d)
     d.setUTCDate(d.getUTCDate() + 7)
   }
@@ -235,6 +243,21 @@ export function upcomingMeetings(cal: RotationCalendar, block: Block, fromDate: 
       if (cd !== null && blockMeetsOnCycleDay(block, cd)) out.push({ date: iso(d), long: isLongBlock(block, cd) })
     }
     d.setUTCDate(d.getUTCDate() + 1)
+  }
+  return out
+}
+
+// The on-week Mondays an anchor implies by strict parity between two dates —
+// the pacing card's starting point before a teacher shifts weeks at a vacation.
+export function parityOnWeekMondays(anchor: string, from: string, to: string): string[] {
+  const out: string[] = []
+  const a = mondayOf(utc(anchor))
+  const d = mondayOf(utc(from))
+  const end = utc(to)
+  while (d <= end) {
+    const weeks = Math.round((d.getTime() - a.getTime()) / (7 * 24 * 3600 * 1000))
+    if (((weeks % 2) + 2) % 2 === 0) out.push(iso(d))
+    d.setUTCDate(d.getUTCDate() + 7)
   }
   return out
 }

@@ -34,7 +34,7 @@ export const GET = withAuth(async (request, ctx) => {
     // program tag so pickers make Trades units unmistakable.
     const units = ((unitRowsRaw ?? []) as UnitRow[])
       .sort((a, b) => ((a.program ?? 'physics') === 'physics' ? 0 : 1) - ((b.program ?? 'physics') === 'physics' ? 0 : 1) || a.order_index - b.order_index)
-      .map((u) => ({ id: u.id, name: u.name, program: u.program ?? 'physics', label: `${(u.program ?? 'physics') === 'trades' ? 'Trades' : 'Physics'} · ${u.name}` }))
+      .map((u) => ({ id: u.id, name: u.name, program: u.program ?? 'physics', label: `${(u.program ?? 'physics') === 'trades' ? 'Trades' : (u.program ?? 'physics') === 'projects' ? 'Projects' : 'Physics'} · ${u.name}` }))
 
     // Targets for the unit
     const { data: targetRowsRaw } = await supabaseAdmin

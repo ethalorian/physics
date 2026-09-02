@@ -21,9 +21,10 @@ interface Cockpit {
 }
 
 const trackBadge = (c: ClassCard) => {
-  const t = (c.program === 'trades' ? 'trades' : c.track) ?? ''
+  const t = (c.program === 'trades' ? 'trades' : c.program === 'projects' ? 'projects' : c.track) ?? ''
   if (t === 'honors') return { label: 'Honors', color: 'var(--primary)', bg: 'color-mix(in oklch, var(--primary) 12%, transparent)' }
   if (t === 'trades') return { label: 'Trades', color: 'var(--success)', bg: 'color-mix(in oklch, var(--success) 13%, transparent)' }
+  if (t === 'projects') return { label: 'Projects', color: 'var(--reward-foreground)', bg: 'color-mix(in oklch, var(--reward) 18%, transparent)' }
   if (t === 'cpa') return { label: 'CPA', color: 'var(--muted-foreground)', bg: 'var(--secondary)' }
   return { label: 'Untyped', color: 'var(--muted-foreground)', bg: 'var(--secondary)' }
 }

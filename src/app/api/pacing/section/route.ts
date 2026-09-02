@@ -15,7 +15,7 @@ import { isBlock, isOnWeek, sectionMeetingsElapsed, upcomingSectionMeetings, nex
 // the alternating-week anchor come from the school-wide rotation calendar.
 
 type CourseRow = { id: string; teacher_email: string | null }
-type ScheduleRow = { block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null }
+type ScheduleRow = { block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null; on_week_dates: string[] | null }
 type PacingRow = { current_lesson_id: string | null; current_unit_id: string | null; source: 'auto' | 'confirmed'; unit_start_date: string | null }
 
 async function canAccessCourse(courseId: string, email: string, role: string): Promise<boolean> {
@@ -35,7 +35,7 @@ export const GET = withAuth(async (request, ctx) => {
     const [items, units, { data: schedRow }, { data: pacingRow }, gids, cal] = await Promise.all([
       loadPlanItems(program),
       loadUnits(program),
-      supabaseAdmin.from('section_schedules').select('block, blocks, week_pattern, on_week_anchor').eq('course_id', courseId).maybeSingle(),
+      supabaseAdmin.from('section_schedules').select('block, blocks, week_pattern, on_week_anchor, on_week_dates').eq('course_id', courseId).maybeSingle(),
       supabaseAdmin.from('section_pacing').select('current_lesson_id, current_unit_id, source, unit_start_date').eq('course_id', courseId).maybeSingle(),
       getCourseStudentGids(courseId),
       loadRotationCalendar(),
@@ -103,6 +103,7 @@ export const GET = withAuth(async (request, ctx) => {
       blocks: pattern.blocks,
       weekPattern: pattern.weekPattern,
       onWeekAnchor: pattern.onWeekAnchor ?? null,
+      onWeekDates: pattern.onWeekDates ?? [],
       countMode: pattern.countMode ?? 'meetings',
       nextOnWeek: nextOnWeekMonday(cal, pattern, today),
       thisWeekOn: isOnWeek(cal, pattern, today),
@@ -136,6 +137,7 @@ export const POST = withAuth(async (request, ctx) => {
       blocks?: string[] | null
       week_pattern?: string | null
       on_week_anchor?: string | null
+      on_week_dates?: string[] | null
       current_unit_id?: string | null
       current_lesson_id?: string | null
       unit_start_date?: string | null
@@ -146,7 +148,7 @@ export const POST = withAuth(async (request, ctx) => {
     // Program change first — it decides which units are valid below.
     if (body.program !== undefined && body.program !== null) {
       if (!PROGRAMS.includes(asProgram(body.program)) || asProgram(body.program) !== body.program) {
-        return NextResponse.json({ error: 'program must be physics or trades' }, { status: 400 })
+        return NextResponse.json({ error: 'program must be physics, trades or projects' }, { status: 400 })
       }
       const { error } = await supabaseAdmin.from('courses').update({ program: body.program }).eq('id', body.course_id)
       if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -172,14 +174,18 @@ export const POST = withAuth(async (request, ctx) => {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
     // The meeting pattern lives on section_schedules (needed to count meetings).
-    if (body.blocks !== undefined || body.block !== undefined || body.week_pattern !== undefined || body.on_week_anchor !== undefined) {
+    if (body.blocks !== undefined || body.block !== undefined || body.week_pattern !== undefined || body.on_week_anchor !== undefined || body.on_week_dates !== undefined) {
       const raw = body.blocks !== undefined ? (body.blocks ?? []) : (body.block ? [body.block] : [])
       const blocks = [...new Set(raw.map((b) => String(b).toUpperCase()))]
       if (!blocks.every(isBlock)) return NextResponse.json({ error: 'Blocks must be A–G' }, { status: 400 })
       const weekPattern = body.week_pattern === 'alternate' ? 'alternate' : 'every'
       const onWeekAnchor = body.on_week_anchor && /^\d{4}-\d{2}-\d{2}$/.test(body.on_week_anchor) ? body.on_week_anchor : null
+      // Explicit on-weeks (any day in each) — only meaningful for alternating sections.
+      const onWeekDates = weekPattern === 'alternate'
+        ? [...new Set((body.on_week_dates ?? []).map((d) => String(d).trim()).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort()
+        : []
       const { error: sErr } = await supabaseAdmin.from('section_schedules')
-        .upsert({ course_id: body.course_id, block: blocks[0] ?? null, blocks, week_pattern: weekPattern, on_week_anchor: onWeekAnchor, updated_at: new Date().toISOString() }, { onConflict: 'course_id' })
+        .upsert({ course_id: body.course_id, block: blocks[0] ?? null, blocks, week_pattern: weekPattern, on_week_anchor: onWeekAnchor, on_week_dates: onWeekDates, updated_at: new Date().toISOString() }, { onConflict: 'course_id' })
       if (sErr) return NextResponse.json({ error: sErr.message }, { status: 500 })
     }
 

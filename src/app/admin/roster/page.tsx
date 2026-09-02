@@ -30,14 +30,15 @@ interface ImportedCourse {
 // Class type as the teacher sees it: one choice that sets BOTH the curriculum
 // track (level) and the program (which curriculum). Trades is a curriculum, not
 // a level — there is no honors trades — so it maps to program='trades'.
-type ClassType = 'cpa' | 'honors' | 'trades'
-const CLASS_TYPES: { id: ClassType; label: string; track: 'cpa' | 'honors'; program: 'physics' | 'trades'; hint: string }[] = [
+type ClassType = 'cpa' | 'honors' | 'trades' | 'projects'
+const CLASS_TYPES: { id: ClassType; label: string; track: 'cpa' | 'honors'; program: 'physics' | 'trades' | 'projects'; hint: string }[] = [
   { id: 'cpa', label: 'CPA', track: 'cpa', program: 'physics', hint: 'CPA Physics — the asteroid curriculum' },
   { id: 'honors', label: 'Honors', track: 'honors', program: 'physics', hint: 'Honors Physics — unlocks the honors thread' },
   { id: 'trades', label: 'Trades', track: 'cpa', program: 'trades', hint: 'Trades Physics — the fieldhouse curriculum (units, targets, mastery tasks)' },
+  { id: 'projects', label: 'Projects', track: 'cpa', program: 'projects', hint: 'Project Physics — the MVP CPA section, one build per academic week' },
 ]
 const classTypeOf = (track: string | null | undefined, program: string | null | undefined): ClassType =>
-  program === 'trades' ? 'trades' : track === 'honors' ? 'honors' : 'cpa'
+  program === 'trades' ? 'trades' : program === 'projects' ? 'projects' : track === 'honors' ? 'honors' : 'cpa'
 interface GridStudent { id: string; name: string; email: string }
 interface RosterStudent { id: string; name: string; first_name: string | null; last_name: string | null }
 interface GridTarget { id: string; statement: string; domain: string }

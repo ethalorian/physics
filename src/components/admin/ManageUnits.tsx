@@ -20,7 +20,7 @@ export interface ManageLesson {
 export interface ManageUnit {
   id: string
   name: string
-  /** 'physics' | 'trades' — which course this unit belongs to (units.program). */
+  /** 'physics' | 'trades' | 'projects' — which course this unit belongs to (units.program). */
   program?: string | null
   lessons: ManageLesson[]
 }
@@ -30,6 +30,7 @@ export interface ManageUnit {
 const PROGRAMS: { id: string; label: string; color: string; fg: string }[] = [
   { id: 'physics', label: 'Physics', color: 'var(--primary)', fg: 'var(--primary)' },
   { id: 'trades', label: 'Trades', color: 'var(--reward)', fg: 'var(--reward-foreground)' },
+  { id: 'projects', label: 'Projects', color: 'var(--success)', fg: 'var(--success)' },
 ]
 function programMeta(id: string | null | undefined) {
   return PROGRAMS.find((p) => p.id === id) ?? { id: id ?? 'other', label: id ? id[0].toUpperCase() + id.slice(1) : 'Other', color: 'var(--muted-foreground)', fg: 'var(--muted-foreground)' }

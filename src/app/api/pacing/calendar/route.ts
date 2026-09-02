@@ -12,7 +12,7 @@ import { unitItems, type PlanItem } from '@/lib/pacing'
 // lessons using src/lib/rotation.ts.
 
 type CourseRow = { id: string; name: string | null; section: string | null; program: string | null }
-type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null }
+type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null; on_week_dates: string[] | null }
 type PacingRow = { course_id: string; current_unit_id: string | null; unit_start_date: string | null }
 
 export const GET = withAuth(async (_request, ctx) => {
@@ -30,7 +30,7 @@ export const GET = withAuth(async (_request, ctx) => {
     const pacingByCourse = new Map<string, PacingRow>()
     if (courseIds.length > 0) {
       const [{ data: schedRows }, { data: pacingRows }] = await Promise.all([
-        supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor').in('course_id', courseIds),
+        supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor, on_week_dates').in('course_id', courseIds),
         supabaseAdmin.from('section_pacing').select('course_id, current_unit_id, unit_start_date').in('course_id', courseIds),
       ])
       for (const s of (schedRows ?? []) as SchedRow[]) schedByCourse.set(s.course_id, s)
@@ -62,6 +62,7 @@ export const GET = withAuth(async (_request, ctx) => {
         blocks: pattern.blocks,
         weekPattern: pattern.weekPattern,
         onWeekAnchor: pattern.onWeekAnchor ?? null,
+        onWeekDates: pattern.onWeekDates ?? [],
         countMode: pattern.countMode ?? 'meetings',
         startDate: unitStart, // anchor the unit's lessons here
         items,

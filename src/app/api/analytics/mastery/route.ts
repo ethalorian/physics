@@ -28,7 +28,7 @@ type CourseRow = { id: string; name: string | null; section: string | null; teac
 type CourseStudentRow = { course_id: string; student_id: string }
 type RecordRow = { user_id: string; target_id: string; level: number; observed_at: string }
 
-const PROGRAMS = ['physics', 'trades'] as const
+const PROGRAMS = ['physics', 'trades', 'projects'] as const
 type Program = (typeof PROGRAMS)[number]
 const DEFAULT_PROGRAM: Program = 'physics'
 

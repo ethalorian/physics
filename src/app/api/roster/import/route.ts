@@ -13,8 +13,8 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     // Class type chosen at import. Only honors is acted on here (cpa is the default);
     // an invalid value is ignored rather than rejected.
     const track: string | null = body.track === 'honors' || body.track === 'cpa' ? body.track : null
-    // Which curriculum the class follows (physics | trades). Invalid → ignored.
-    const program: string | null = body.program === 'physics' || body.program === 'trades' ? body.program : null
+    // Which curriculum the class follows (physics | trades | projects). Invalid → ignored.
+    const program: string | null = body.program === 'physics' || body.program === 'trades' || body.program === 'projects' ? body.program : null
     console.log('📋 Import request for course:', courseId, 'track:', track ?? '(default cpa)', 'program:', program ?? '(default physics)')
 
     if (!courseId || !accessToken) {

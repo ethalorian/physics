@@ -6,15 +6,19 @@ import { supabaseAdmin } from '@/lib/supabase'
 // fieldhouse curriculum. Lives on courses.program; units/learning_targets
 // carry the same key.
 
-export type Program = 'physics' | 'trades'
-export const PROGRAMS: Program[] = ['physics', 'trades']
-export function asProgram(p: string | null | undefined): Program { return p === 'trades' ? 'trades' : 'physics' }
+// projects = Project Physics: the MVP CPA section re-sequenced around builds
+// (see claude/MVP-CPA-Physics-Project-Year-Map.md). Same level as CPA physics,
+// its own units/targets/lessons, counts meetings like physics.
+export type Program = 'physics' | 'trades' | 'projects'
+export const PROGRAMS: Program[] = ['physics', 'trades', 'projects']
+export function asProgram(p: string | null | undefined): Program { return p === 'trades' ? 'trades' : p === 'projects' ? 'projects' : 'physics' }
 
-export const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades Physics' }
+export const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trades: 'Trades Physics', projects: 'Project Physics' }
 
-// A student's program: trades if ANY enrolled course is trades, else physics.
-// (A student in both would be unusual; trades wins so the trades class isn't
-// silently shown the asteroid curriculum.)
+// A student's program: trades if ANY enrolled course is trades, else projects
+// if any is projects, else physics. (A student in two would be unusual; the
+// non-default program wins so that class isn't silently shown the asteroid
+// curriculum.)
 export async function getStudentProgram(userId: string): Promise<Program> {
   if (!userId) return 'physics'
   const { data } = await supabaseAdmin
@@ -24,7 +28,7 @@ export async function getStudentProgram(userId: string): Promise<Program> {
   const programs = ((data ?? []) as Array<{ courses: { program: string | null } | { program: string | null }[] | null }>)
     .flatMap((r) => (Array.isArray(r.courses) ? r.courses : r.courses ? [r.courses] : []))
     .map((c) => asProgram(c.program))
-  return programs.includes('trades') ? 'trades' : 'physics'
+  return programs.includes('trades') ? 'trades' : programs.includes('projects') ? 'projects' : 'physics'
 }
 
 // The unit ids that belong to a program — the key every lesson/target query

@@ -12,7 +12,7 @@ import { isOnWeek, sectionMeetingsElapsed } from '@/lib/rotation'
 type CourseRow = { id: string; name: string | null; section: string | null; teacher_email: string | null; program: string | null }
 type CsRow = { course_id: string; student_id: string }
 type BrRow = { user_id: string; lesson_id: string }
-type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null }
+type SchedRow = { course_id: string; block: string | null; blocks: string[] | null; week_pattern: string | null; on_week_anchor: string | null; on_week_dates: string[] | null }
 type PacingRow = { course_id: string; current_lesson_id: string | null; current_unit_id: string | null; unit_start_date: string | null; source: 'auto' | 'confirmed' }
 
 export const GET = withAuth(async (_request, ctx) => {
@@ -21,7 +21,7 @@ export const GET = withAuth(async (_request, ctx) => {
     const [coursesRes, csRes, schedRes, pacingRes, cal] = await Promise.all([
       supabaseAdmin.from('courses').select('id, name, section, teacher_email, program').order('teacher_email', { ascending: true }),
       supabaseAdmin.from('course_students').select('course_id, student_id'),
-      supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor'),
+      supabaseAdmin.from('section_schedules').select('course_id, block, blocks, week_pattern, on_week_anchor, on_week_dates'),
       supabaseAdmin.from('section_pacing').select('course_id, current_lesson_id, current_unit_id, unit_start_date, source'),
       loadRotationCalendar(),
     ])

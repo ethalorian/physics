@@ -84,7 +84,7 @@ export async function autoSuggestItem(items: PlanItem[], gids: string[]): Promis
 // Trades units are written as sessions (one per school day); physics lessons
 // are one per block-period. So the counting mode follows the program.
 export function patternFromRow(
-  row: { blocks?: string[] | null; block?: string | null; week_pattern?: string | null; on_week_anchor?: string | null } | null | undefined,
+  row: { blocks?: string[] | null; block?: string | null; week_pattern?: string | null; on_week_anchor?: string | null; on_week_dates?: string[] | null } | null | undefined,
   program: Program = 'physics',
 ): MeetingPattern {
   const fromArray = (row?.blocks ?? []).filter(isBlock)
@@ -93,6 +93,7 @@ export function patternFromRow(
     blocks,
     weekPattern: row?.week_pattern === 'alternate' ? 'alternate' : 'every',
     onWeekAnchor: row?.on_week_anchor ?? null,
+    onWeekDates: (row?.on_week_dates ?? []).map((d) => String(d).slice(0, 10)),
     countMode: program === 'trades' ? 'sessions' : 'meetings',
   }
 }
