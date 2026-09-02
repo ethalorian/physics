@@ -1,6 +1,6 @@
 // Conceptual Physics (Hewitt) — chapter map for the /textbook reader.
 //
-// Chapter files live in the PRIVATE `textbook` Supabase bucket as chNN.pdf and
+// Chapter files live in the PRIVATE `textbook` Supabase bucket as cpNN.pdf and
 // are served only through /api/textbook/[chapter] (session-gated). Titles were
 // read off the chapter openers; part groupings follow the book's own table of
 // contents so the sidebar reads like the printed TOC. Chapter 1 ("About
@@ -100,7 +100,9 @@ export function textbookChapter(n: number): TextbookChapter | undefined {
   return TEXTBOOK_CHAPTERS.find((c) => c.n === n)
 }
 
-/** Object key inside the `textbook` bucket for a chapter. */
+/** Object key inside the `textbook` bucket for a chapter. Matches the file
+ *  names produced by scripts/strip-teacher-column.py (cpNN.pdf) so the
+ *  student-edition folder can be dragged into the bucket as-is. */
 export function textbookObjectPath(n: number): string {
-  return `ch${String(n).padStart(2, '0')}.pdf`
+  return `cp${String(n).padStart(2, '0')}.pdf`
 }

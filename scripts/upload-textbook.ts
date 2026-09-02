@@ -6,7 +6,7 @@
  *
  * Expects files named cpNN.pdf (student edition, teacher column stripped by
  * scripts/strip-teacher-column.py) or cpteNN.pdf (raw teacher edition) and
- * stores them as chNN.pdf. Point it at the student-edition folder — the raw
+ * stores them as cpNN.pdf. Point it at the student-edition folder — the raw
  * TE files carry the answer column.
  * Needs the real SUPABASE_SERVICE_ROLE_KEY in .env.local (Supabase dashboard →
  * Project Settings → API Keys → service_role). Re-running upserts, so it is safe
