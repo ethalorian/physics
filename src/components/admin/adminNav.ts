@@ -1,6 +1,6 @@
 import {
   LayoutGrid, Gift, Microscope, Gamepad2, Joystick,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, BookText, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -56,6 +56,7 @@ export const GROUPS: ToolGroup[] = [
   {
     title: 'Content library',
     tools: [
+      { href: '/admin/textbook', label: 'Textbook chapters', desc: 'Upload Conceptual Physics chapter PDFs to the private bucket and see what students can open', icon: BookText, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
       { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
       { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },

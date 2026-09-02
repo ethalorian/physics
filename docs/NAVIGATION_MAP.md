@@ -614,4 +614,5 @@ Admins and teachers can toggle between:
 - PDFs live in the **private** Supabase bucket `textbook` (`cpNN.pdf`) and are streamed only through `GET /api/textbook/[chapter]` (`withAuth`). No storage URL reaches the browser.
 - Fallback: chapters not yet in `textbook` are proxied from the public `lesson-media` copy referenced by `concept_exercises.text_pdf_url`.
 - The served files are the **student edition**: `scripts/strip-teacher-column.py` redacts + crops the 189-pt teacher column off the TE PDFs (cpteNN → cpNN). Upload / replace chapters: `npm run textbook:upload -- "<folder of cpNN.pdf>"` (needs the service-role key in `.env.local`).
+- Admin: `/admin/textbook` (Content library) shows per-chapter status and uploads PDFs browser→Storage via signed URLs from `/api/textbook/admin`.
 - Chapter list & titles: `src/data/textbook.ts`.
