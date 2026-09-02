@@ -5,7 +5,7 @@
 // Roster & analytics / Engagement / Pacing / Plans. Everything the class owns
 // lives here; Control Room stays the deep grading surface this links into.
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
@@ -44,7 +44,17 @@ const ago = (iso: string | null) => {
   return d <= 0 ? 'Today' : d === 1 ? 'Yesterday' : new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
-export default function ClassCockpit() {
+// useSearchParams needs a Suspense boundary in production — without one the
+// page dies with a client-side exception during hydration (Next 15 CSR bailout).
+export default function ClassCockpitPage() {
+  return (
+    <Suspense fallback={<div className="max-w-6xl mx-auto p-5 text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading the cockpit…</div>}>
+      <ClassCockpit />
+    </Suspense>
+  )
+}
+
+function ClassCockpit() {
   const params = useParams<{ courseId: string }>()
   const search = useSearchParams()
   const router = useRouter()
