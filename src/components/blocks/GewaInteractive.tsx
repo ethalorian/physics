@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
   PHYSICS_FORMULAS, type FormulaCategory, MCAS_SYMBOLS, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
   convertToMcas, variableBySymbol,
@@ -8,6 +8,7 @@ import {
 import {
   FORMULA_AST, type Equation, type Term, type Factor,
   moveTerm, moveFactor, isIsolated, solveValue, symbolsInSide,
+  symbolsInEquation, termOccurrences,
 } from './gewa/algebra'
 
 // GEWA "Solve it" — one substitution-first flow, MCAS notation throughout, driven
@@ -26,6 +27,9 @@ export interface GewaValue {
   answer?: string
   equation?: string   // legacy display string, kept for the teacher control room
   work?: string       // legacy substitution summary
+  steps?: string[]        // the algebra trail — one line per rearrange move
+  conversions?: string[]  // unit conversions applied while substituting
+  autoCheck?: 'match' | 'mismatch' | 'unknown' // silent answer check at save time
 }
 
 interface Chip { sym: string; val: string; unit: string }
@@ -53,12 +57,24 @@ const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderC
 const num = (n: number) => (Number.isInteger(n) ? n.toLocaleString('en-US') : parseFloat(n.toFixed(4)).toLocaleString('en-US'))
 const coeffStr = (c: number) => (Math.abs(c) === 1 ? '' : Math.abs(c) === 0.5 ? '½' : num(Math.abs(c)))
 
+// Robust student-number parsing: commas ("47,062"), scientific notation
+// ("3e8", "3E8", "3x10^8", "3×10^8", "10^-4"), plain decimals. Whole-string
+// only (Number, not parseFloat) so "47,062" can never silently become 47.
+export function parseNum(s: string): number | null {
+  if (!s) return null
+  let t = s.trim().replace(/,/g, '').replace(/\s+/g, '')
+  t = t.replace(/[×xX*]10\^?/, 'e').replace(/^10\^/, '1e')
+  const n = Number(t)
+  return Number.isFinite(n) ? n : null
+}
+
 function parseGiven(s?: string): Chip[] {
   if (!s) return [{ sym: '', val: '', unit: '' }]
   const parts = s.split(';').map((p) => p.trim()).filter(Boolean)
   if (!parts.length) return [{ sym: '', val: '', unit: '' }]
   return parts.map((piece): Chip => {
-    const m = piece.match(/^(\S+)\s*=\s*([\d.\-]+)\s*(.*)$/)
+    // value = one token (survives 3e8 / 47,062 round-trips), unit = the rest
+    const m = piece.match(/^(\S+)\s*=\s*(\S+)\s*(.*)$/)
     return m ? { sym: m[1], val: m[2], unit: (m[3] || '').trim() } : { sym: '', val: piece, unit: '' }
   })
 }
@@ -106,7 +122,11 @@ export default function GewaInteractive({
   const initAns = (value?.answer ?? '').match(/^(-?\d*\.?\d+)\s*(.*)$/)
   const [answerVal, setAnswerVal] = useState(initAns ? initAns[1] : '')
   const [answerUnit, setAnswerUnit] = useState(initAns ? (initAns[2] || '').trim() : '')
-  const [opHistory, setOpHistory] = useState<string[]>([])
+  const [opHistory, setOpHistory] = useState<string[]>(value?.steps ?? [])
+  const [convLog, setConvLog] = useState<string[]>(value?.conversions ?? [])
+  const [pendingFormula, setPendingFormula] = useState<string | null>(null)
+  const [armed, setArmed] = useState<Drag | null>(null)
+  const [autoSaved, setAutoSaved] = useState(false)
   const [feedback, setFeedback] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
   const answer = answerVal ? `${answerVal}${answerUnit ? ' ' + answerUnit : ''}` : ''
@@ -119,6 +139,10 @@ export default function GewaInteractive({
   const formula = formulaId ? PHYSICS_FORMULAS.find((f) => f.id === formulaId) : null
   const unknown = solveFor || formula?.lhs || ''
   const isolatedOn = eq && unknown ? isIsolated(eq, unknown) : null
+  // The unknown appearing in >1 term (Δt in Δx = v_iΔt + ½aΔt²) is a genuine
+  // quadratic — no sequence of drags can isolate it. Say so instead of letting
+  // the student sit at "rearrange until it's by itself" forever.
+  const dragSolvable = !eq || !unknown || termOccurrences(eq, unknown) <= 1
   const sourceSide = eq && isolatedOn ? (isolatedOn === 'lhs' ? eq.rhs : eq.lhs) : null
 
   // Bank shown to the student — keep it short and unit-relevant. Precedence:
@@ -143,26 +167,45 @@ export default function GewaInteractive({
   const givenString = () => chips.filter((c) => c.sym || c.val).map((c) => `${c.sym}${c.sym ? ' = ' : ''}${c.val}${c.unit ? ' ' + c.unit : ''}`.trim()).join('; ')
 
   const pickFormula = (id: string) => {
+    // Switching equations wipes rearrange + substitution work — ask for a
+    // second tap instead of losing it to a stray touch.
+    if (formulaId && id !== formulaId && pendingFormula !== id && (opHistory.length > 0 || Object.keys(subs || {}).length > 0)) {
+      setPendingFormula(id); return
+    }
+    setPendingFormula(null); setArmed(null)
     const defUnit = variableBySymbol(solveFor || PHYSICS_FORMULAS.find((f) => f.id === id)?.lhs || '')?.unit ?? ''
-    setFormulaId(id); setEq(JSON.parse(JSON.stringify(FORMULA_AST[id]))); setSubs({}); setConvNote(null)
+    setFormulaId(id); setEq(JSON.parse(JSON.stringify(FORMULA_AST[id]))); setSubs({}); setConvNote(null); setConvLog([])
     setAnswerVal(''); setAnswerUnit(defUnit); setOpHistory([]); setFeedback([]); setSaved(false)
   }
-  const resetEquation = () => { if (formulaId) { setEq(JSON.parse(JSON.stringify(FORMULA_AST[formulaId]))); setSubs({}); setConvNote(null); setOpHistory([]) } }
+  const resetEquation = () => { if (formulaId) { setEq(JSON.parse(JSON.stringify(FORMULA_AST[formulaId]))); setSubs({}); setConvNote(null); setConvLog([]); setOpHistory([]); setArmed(null) } }
 
   const fillSlot = (chip: Chip) => {
-    const raw = parseFloat(chip.val)
-    if (Number.isNaN(raw)) return
+    const raw = parseNum(chip.val)
+    if (raw === null) { setConvNote(`Couldn't read "${chip.val}" as a number — write it like 47062, 0.5, 3e8, or 3x10^8.`); return }
     const conv = convertToMcas(raw, chip.unit)
     const entry = conv
       ? { raw, rawUnit: chip.unit, value: conv.value, unit: conv.unit, rule: conv.rule }
       : { raw, rawUnit: chip.unit, value: raw, unit: chip.unit }
     setSubs((p) => ({ ...(p || {}), [chip.sym]: entry })); setSaved(false)
-    setConvNote(conv ? `${chip.sym} = ${num(raw)} ${chip.unit} → ${num(conv.value)} ${conv.unit}  ·  ${conv.rule}` : null)
+    if (conv) {
+      const line = `${chip.sym} = ${num(raw)} ${chip.unit} → ${num(conv.value)} ${conv.unit}  ·  ${conv.rule}`
+      setConvNote(line); setConvLog((l) => (l.includes(line) ? l : [...l, line]))
+    } else setConvNote(null)
+  }
+
+  // One place that performs a rearrange move (used by drop AND tap-to-place).
+  const applyMove = (d: Drag) => {
+    if (!eq || d.type !== 'move') return
+    setOpHistory((h) => [...h, describeMove(eq, d)])
+    setEq(d.kind === 'term' ? moveTerm(eq, d.which, d.index) : moveFactor(eq, d.which, d.pos, d.index))
+    setArmed(null); setSaved(false)
   }
 
   // ---- drag-and-drop engine (pointer events: mouse + touch) ---------------
+  const dragStartPt = useRef<{ x: number; y: number } | null>(null)
   const startDrag = (e: React.PointerEvent, d: Drag) => {
     e.preventDefault()
+    dragStartPt.current = { x: e.clientX, y: e.clientY }
     setPt({ x: e.clientX, y: e.clientY }); setDrag(d); setHover(null)
   }
   useEffect(() => {
@@ -175,19 +218,23 @@ export default function GewaInteractive({
     const onMove = (e: PointerEvent) => { setPt({ x: e.clientX, y: e.clientY }); setHover(dropUnder(e.clientX, e.clientY)) }
     const onUp = (e: PointerEvent) => {
       const drop = dropUnder(e.clientX, e.clientY)
+      let acted = false
       if (drop && eq) {
         if (drag.type === 'move') {
           const target = drop.startsWith('side:') ? drop.slice(5) : null
-          if ((target === 'lhs' || target === 'rhs') && target !== drag.which) {
-            setOpHistory((h) => [...h, describeMove(eq, drag)])
-            setEq(drag.kind === 'term' ? moveTerm(eq, drag.which, drag.index) : moveFactor(eq, drag.which, drag.pos, drag.index))
-            setSaved(false)
-          }
+          if ((target === 'lhs' || target === 'rhs') && target !== drag.which) { applyMove(drag); acted = true }
         } else if (drag.type === 'given') {
           const base = drop.startsWith('slot:') ? drop.slice(5) : null
-          if (base && base === drag.chip.sym) fillSlot(drag.chip)
+          if (base && base === drag.chip.sym) { fillSlot(drag.chip); acted = true }
         }
       }
+      // A tap (no real movement, nothing dropped) arms the chip for
+      // tap-to-place — the no-drag alternative for iPads and keyboards' friends.
+      const sp = dragStartPt.current
+      const dist = sp ? Math.hypot(e.clientX - sp.x, e.clientY - sp.y) : 99
+      if (!acted && dist < 8) {
+        setArmed((prev) => (prev && JSON.stringify(prev) === JSON.stringify(drag) ? null : drag))
+      } else if (acted) setArmed(null)
       setDrag(null); setHover(null)
     }
     window.addEventListener('pointermove', onMove)
@@ -208,24 +255,41 @@ export default function GewaInteractive({
   const fillableSlots = slots.filter((s) => CONST_VALUES[s] === undefined)
   const allFilled = fillableSlots.every((s) => subs && subs[s] !== undefined)
 
+  const computeAutoCheck = (): 'match' | 'mismatch' | 'unknown' => {
+    const studentNum = parseNum(answerVal)
+    if (studentNum === null || !eq || !allFilled) return 'unknown'
+    const expected = solveValue(eq, unknown, env)
+    if (expected === null) return 'unknown'
+    const tol = Math.max(Math.abs(expected) * 0.02, 1e-9)
+    return Math.abs(studentNum - expected) <= tol ? 'match' : 'mismatch'
+  }
+
   const check = () => {
     const fb: { ok: boolean; msg: string }[] = []
-    const filledCount = chips.filter((c) => c.sym && c.val).length
-    fb.push(filledCount >= 1 ? { ok: true, msg: `You listed ${filledCount} known${filledCount > 1 ? 's' : ''}.` } : { ok: false, msg: 'List the knowns the problem gives you.' })
-    fb.push(formulaId ? { ok: true, msg: `Equation: ${formula?.display}.` } : { ok: false, msg: 'Pick the equation that fits.' })
-    fb.push(isolatedOn ? { ok: true, msg: `Solved for ${unknown}.` } : { ok: false, msg: `Rearrange until ${unknown} is by itself.` })
-    fb.push(allFilled ? { ok: true, msg: 'All knowns substituted.' } : { ok: false, msg: 'Drag each known onto its slot.' })
-    const studentNum = parseFloat((answer.match(/-?\d*\.?\d+/) || [''])[0])
-    if (!Number.isNaN(studentNum) && eq && allFilled) {
-      const expected = solveValue(eq, unknown, env)
-      if (expected === null) fb.push({ ok: true, msg: 'Answer recorded — your teacher checks the value on this one.' })
-      else {
-        const tol = Math.max(Math.abs(expected) * 0.02, 1e-9)
-        fb.push(Math.abs(studentNum - expected) <= tol
-          ? { ok: true, msg: 'That matches the math. Box it with its unit.' }
-          : { ok: false, msg: 'That doesn’t match what the equation gives — recheck your arithmetic and units.' })
-      }
-    } else if (answer.trim()) fb.push({ ok: true, msg: 'Answer recorded.' })
+    const listed = chips.filter((c) => c.sym && c.val)
+    const badVals = listed.filter((c) => parseNum(c.val) === null)
+    if (badVals.length) fb.push({ ok: false, msg: `Couldn't read ${badVals.map((c) => `"${c.val}"`).join(', ')} as a number — write values like 47062, 0.5, or 3e8.` })
+    fb.push(listed.length >= 1 ? { ok: true, msg: `You listed ${listed.length} known${listed.length > 1 ? 's' : ''}.` } : { ok: false, msg: 'List the knowns the problem gives you.' })
+    // Honest equation feedback: does the chosen formula fit the knowns listed?
+    if (!formulaId) fb.push({ ok: false, msg: 'Pick the equation that fits.' })
+    else {
+      const needed = symbolsInEquation(FORMULA_AST[formulaId] ?? { lhs: { terms: [] }, rhs: { terms: [] } })
+        .filter((b) => b !== unknown && CONST_VALUES[b] === undefined)
+      const have = new Set(listed.map((c) => c.sym))
+      const missing = needed.filter((b) => !have.has(b))
+      fb.push(missing.length === 0
+        ? { ok: true, msg: `Equation: ${formula?.display} — your knowns fit it.` }
+        : { ok: false, msg: `${formula?.display} needs ${missing.join(', ')} and you haven't listed ${missing.length > 1 ? 'those' : 'that'} — missing given, or wrong equation?` })
+    }
+    if (!dragSolvable) fb.push({ ok: true, msg: `${unknown} can't be isolated by dragging in this equation — show your algebra on paper; your teacher reviews it.` })
+    else {
+      fb.push(isolatedOn ? { ok: true, msg: `Solved for ${unknown}.` } : { ok: false, msg: `Rearrange until ${unknown} is by itself.` })
+      fb.push(allFilled ? { ok: true, msg: 'All knowns substituted.' } : { ok: false, msg: 'Drag (or tap) each known onto its slot.' })
+    }
+    const verdict = computeAutoCheck()
+    if (verdict === 'match') fb.push({ ok: true, msg: 'That matches the math. Box it with its unit.' })
+    else if (verdict === 'mismatch') fb.push({ ok: false, msg: 'That doesn’t match what the equation gives — recheck your arithmetic and units.' })
+    else if (answer.trim()) fb.push({ ok: true, msg: 'Answer recorded — your teacher checks the value on this one.' })
     const expUnit = variableBySymbol(unknown)?.unit
     if (answerVal && expUnit) fb.push(answerUnit === expUnit
       ? { ok: true, msg: `Unit ${answerUnit} matches.` }
@@ -233,20 +297,38 @@ export default function GewaInteractive({
     setFeedback(fb)
   }
 
-  const handleSave = () => {
+  const buildValue = (): GewaValue => {
     const workStr = Object.entries(subs || {}).map(([k, v]) => `${k} = ${num(v.value)} ${v.unit}`).join('; ')
-    onSave({
+    return {
       given: givenString(), equationId: formulaId || undefined, solveFor: unknown || undefined,
       rearranged: eq || undefined, substitutions: subs, answer,
       equation: formula?.display, work: workStr || undefined,
-    })
-    setSaved(true); check()
+      steps: opHistory.length ? opHistory : undefined,
+      conversions: convLog.length ? convLog : undefined,
+      autoCheck: computeAutoCheck(),
+    }
   }
+  const handleSave = () => { onSave(buildValue()); setSaved(true); setAutoSaved(false); check() }
+
+  // Autosave: two quiet seconds after any meaningful change, persist — so a
+  // student who never presses Save still hands their teacher the work.
+  const mountedRef = useRef(false)
+  useEffect(() => {
+    if (!mountedRef.current) { mountedRef.current = true; return }
+    if (!formulaId && !chips.some((c) => c.sym || c.val)) return
+    const t = setTimeout(() => { onSave(buildValue()); setAutoSaved(true) }, 2000)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chips, formulaId, eq, subs, answerVal, answerUnit, opHistory])
 
   // ---- draggable chip + fraction rendering --------------------------------
+  const isArmed = (d: Drag) => armed !== null && JSON.stringify(armed) === JSON.stringify(d)
   const dragChip = (d: Drag, children: ReactNode, key: string | number) => (
-    <span key={key} onPointerDown={(e) => startDrag(e, d)} title="drag across the ="
-      style={{ ...dragHandleStyle, display: 'inline-flex', alignItems: 'center', padding: '2px 8px', border: '1.5px solid var(--primary)', background: 'color-mix(in oklch, var(--primary) 10%, var(--card))', color: 'var(--foreground)', borderRadius: 8, lineHeight: 1.4 }}>
+    <span key={key} onPointerDown={(e) => startDrag(e, d)} title="drag across the = — or tap, then tap the other side"
+      style={{ ...dragHandleStyle, display: 'inline-flex', alignItems: 'center', padding: '2px 8px',
+        border: `1.5px solid ${isArmed(d) ? 'var(--success)' : 'var(--primary)'}`,
+        background: isArmed(d) ? 'color-mix(in oklch, var(--success) 18%, var(--card))' : 'color-mix(in oklch, var(--primary) 10%, var(--card))',
+        color: 'var(--foreground)', borderRadius: 8, lineHeight: 1.4 }}>
       {children}
     </span>
   )
@@ -264,9 +346,10 @@ export default function GewaInteractive({
   const renderSide = (which: 'lhs' | 'rhs') => {
     if (!eq) return null
     const s = eq[which]
-    const validTarget = drag?.type === 'move' && drag.which !== which
+    const validTarget = (drag?.type === 'move' && drag.which !== which) || (armed?.type === 'move' && armed.which !== which)
     return (
       <span data-drop={`side:${which}`}
+        onClick={() => { if (armed?.type === 'move' && armed.which !== which) applyMove(armed) }}
         style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 10px', borderRadius: 10, minHeight: 44,
           border: validTarget ? `2px dashed ${hover === `side:${which}` ? 'var(--success)' : 'color-mix(in oklch, var(--primary) 45%, var(--border))'}` : '2px dashed transparent',
           background: validTarget && hover === `side:${which}` ? 'color-mix(in oklch, var(--success) 10%, transparent)' : 'transparent' }}>
@@ -300,8 +383,10 @@ export default function GewaInteractive({
       const s = subs?.[x.base]; const cval = CONST_VALUES[x.base]
       if (s) return <span key={k} style={{ color: 'var(--foreground)' }}>{num(s.value)}{x.exp !== 1 ? <sup>{x.exp}</sup> : null}</span>
       if (cval !== undefined) return <span key={k} style={{ color: 'var(--foreground)' }}>{num(cval)}{x.exp !== 1 ? <sup>{x.exp}</sup> : null}</span>
-      const isHover = hover === `slot:${x.base}` && drag?.type === 'given' && drag.chip.sym === x.base
-      return <span key={k} data-drop={`slot:${x.base}`} style={{ padding: '2px 9px', border: `1.5px dashed ${isHover ? 'var(--success)' : 'var(--border)'}`, borderRadius: 7, color: 'var(--muted-foreground)', background: isHover ? 'color-mix(in oklch, var(--success) 12%, transparent)' : 'transparent' }}><FactorView x={x} /></span>
+      const isHover = (hover === `slot:${x.base}` && drag?.type === 'given' && drag.chip.sym === x.base) || (armed?.type === 'given' && armed.chip.sym === x.base)
+      return <span key={k} data-drop={`slot:${x.base}`}
+        onClick={() => { if (armed?.type === 'given' && armed.chip.sym === x.base) { fillSlot(armed.chip); setArmed(null) } }}
+        style={{ padding: '2px 9px', border: `1.5px dashed ${isHover ? 'var(--success)' : 'var(--border)'}`, borderRadius: 7, color: 'var(--muted-foreground)', background: isHover ? 'color-mix(in oklch, var(--success) 12%, transparent)' : 'transparent', cursor: armed?.type === 'given' && armed.chip.sym === x.base ? 'pointer' : 'default' }}><FactorView x={x} /></span>
     }
     const termSub = (t: Term, i: number, first: boolean) => (
       <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
@@ -354,25 +439,39 @@ export default function GewaInteractive({
         <div className="flex flex-wrap gap-1.5">
           {bank.map((fm) => (
             <button key={fm.id} onClick={() => pickFormula(fm.id)} title={fm.name} className="rounded-md px-2.5 py-1.5 text-sm"
-              style={{ border: `1.5px solid ${formulaId === fm.id ? 'var(--primary)' : 'color-mix(in oklch, var(--primary) 30%, var(--border))'}`, background: formulaId === fm.id ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontFamily: 'Georgia, serif' }}>
+              style={{ border: `1.5px solid ${formulaId === fm.id ? 'var(--primary)' : pendingFormula === fm.id ? 'var(--reward)' : 'color-mix(in oklch, var(--primary) 30%, var(--border))'}`, background: formulaId === fm.id ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : pendingFormula === fm.id ? 'color-mix(in oklch, var(--reward) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontFamily: 'Georgia, serif' }}>
               {fm.display}
             </button>
           ))}
         </div>
+        {pendingFormula && (
+          <p className="text-xs mt-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward-foreground)' }}>
+            Switching equations clears your rearrange and substitution work — tap it again to switch, or keep going with {formula?.display}.
+          </p>
+        )}
       </div>
 
       {/* REARRANGE — drag terms/factors across the = */}
       {eq && unknown && (
         <div>
-          {stepHead('R', 'oklch(0.58 0.10 255)', `Rearrange — get ${unknown} by itself`, 'white')}
-          {isolatedOn
-            ? <p className="text-xs mb-2" style={{ color: 'var(--success)' }}>✓ Solved for {unknown}. Now drag your knowns in below.</p>
-            : <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Drag a term or factor onto the other side of the = — the operation flips automatically.</p>}
+          {stepHead('W', 'oklch(0.58 0.10 255)', `Work · rearrange — get ${unknown} by itself`, 'white')}
+          {!dragSolvable
+            ? <p className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward-foreground)' }}>
+                ⚠ {unknown} appears in more than one term here — no amount of dragging can isolate it. Show your algebra on paper, then enter your number in the Answer step below. Your teacher reviews this one.
+              </p>
+            : isolatedOn
+            ? <p className="text-xs mb-2" style={{ color: 'var(--success)' }}>✓ Solved for {unknown}. Now drag (or tap) your knowns in below.</p>
+            : <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Drag a term or factor onto the other side of the = — or tap it, then tap the other side. The operation flips automatically.</p>}
           <div className="rounded-xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)', fontSize: 22 }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
               {renderSide('lhs')}<span style={{ color: 'var(--muted-foreground)' }}>=</span>{renderSide('rhs')}
             </span>
           </div>
+          {armed && armed.type === 'move' && (
+            <p className="mt-2 text-sm rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--success) 14%, transparent)', color: 'var(--success)', fontWeight: 600 }}>
+              Selected — now tap the other side of the = to move it. Tap it again to deselect.
+            </p>
+          )}
           {/* live: what THIS drag will do to both sides */}
           {dragOpHint && (
             <p className="mt-2 text-sm rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, oklch(0.58 0.10 255) 14%, transparent)', color: 'oklch(0.42 0.12 255)', fontWeight: 600 }}>
@@ -397,7 +496,7 @@ export default function GewaInteractive({
       {/* SUBSTITUTE — drag a known onto its variable */}
       {isolatedOn && sourceSide && (
         <div>
-          {stepHead('S', 'var(--reward)', 'Substitute — drag a known onto its variable', 'var(--reward-foreground)')}
+          {stepHead('W', 'var(--reward)', 'Work · substitute — drag (or tap) a known onto its variable', 'var(--reward-foreground)')}
           <div className="flex flex-wrap gap-1.5 mb-3">
             {chips.filter((c) => c.sym && c.val).map((c, i) => {
               const used = subs && subs[c.sym] !== undefined
@@ -414,7 +513,12 @@ export default function GewaInteractive({
               )
             })}
           </div>
-          {convNote && <p className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward-foreground)' }}><b>Converted to MCAS units:</b> {convNote}</p>}
+          {armed && armed.type === 'given' && (
+            <p className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--success) 14%, transparent)', color: 'var(--success)', fontWeight: 600 }}>
+              Selected {armed.chip.sym} = {armed.chip.val} {armed.chip.unit} — now tap the dashed {armed.chip.sym} slot in the equation.
+            </p>
+          )}
+          {convNote && <p className="text-xs mb-2 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 16%, transparent)', color: 'var(--reward-foreground)' }}><b>{convNote.startsWith("Couldn't read") ? 'Check that value:' : 'Converted to MCAS units:'}</b> {convNote}</p>}
           {constantSlots.length > 0 && <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>Constant{constantSlots.length > 1 ? 's' : ''} filled for you: {constantSlots.join(', ')}.</p>}
           <div className="rounded-xl p-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)', fontSize: 22 }}>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
@@ -424,8 +528,8 @@ export default function GewaInteractive({
         </div>
       )}
 
-      {/* ANSWER */}
-      {isolatedOn && (
+      {/* ANSWER — also open when the equation genuinely can't be drag-solved */}
+      {(isolatedOn || !dragSolvable) && (
         <div>
           {stepHead('A', 'var(--success)', 'Answer — compute it and box it', 'white')}
           <div className="flex items-center gap-2 flex-wrap">
@@ -434,7 +538,6 @@ export default function GewaInteractive({
               <option value="">unit</option>
               {answerUnitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
-            {unknownUnit && <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>expected: {unknownUnit}</span>}
           </div>
         </div>
       )}
@@ -443,7 +546,8 @@ export default function GewaInteractive({
       <div className="flex items-center gap-2">
         <button onClick={check} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Check my work</button>
         <button onClick={handleSave} className="rounded-lg px-3 py-2 text-sm font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Save work</button>
-        {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
+        {saved ? <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>
+          : autoSaved ? <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Autosaved ✓</span> : null}
       </div>
 
       {feedback.length > 0 && (

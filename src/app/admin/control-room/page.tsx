@@ -113,10 +113,37 @@ function ResponseView({ response }: { response: unknown }) {
       const sandbox = o.sandbox && typeof o.sandbox === 'object' ? (o.sandbox as { lines?: unknown[]; answerIndex?: number }) : null
       const sandboxLines = sandbox && Array.isArray(sandbox.lines) ? sandbox.lines.map(String).filter((l) => l.trim()) : []
       const ansI = sandbox && typeof sandbox.answerIndex === 'number' ? sandbox.answerIndex : -1
+      const steps = Array.isArray(o.steps) ? (o.steps as unknown[]).map(String).filter(Boolean) : []
+      const convs = Array.isArray(o.conversions) ? (o.conversions as unknown[]).map(String).filter(Boolean) : []
+      const verdict = o.autoCheck === 'match' ? 'match' : o.autoCheck === 'mismatch' ? 'mismatch' : o.autoCheck === 'unknown' ? 'unknown' : null
       return (
         <div>
+          {verdict && (
+            <span className="inline-flex items-center gap-1 text-xs font-bold rounded-full px-2.5 py-1 mb-2" style={{
+              background: verdict === 'match' ? 'color-mix(in oklch, var(--success) 15%, transparent)' : verdict === 'mismatch' ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : 'var(--secondary)',
+              color: verdict === 'match' ? 'var(--success)' : verdict === 'mismatch' ? 'var(--destructive)' : 'var(--muted-foreground)',
+            }}>
+              {verdict === 'match' ? '✓ answer matches the equation' : verdict === 'mismatch' ? '✗ answer doesn\u2019t match the equation' : '— not auto-checkable (teacher judges)'}
+            </span>
+          )}
           {field('given', 'Given')}
           {field('equation', 'Equation')}
+          {steps.length > 0 && (
+            <div className="text-sm" style={{ marginBottom: 4 }}>
+              <b style={{ color: 'var(--secondary-foreground)' }}>Algebra trail ({steps.length} move{steps.length > 1 ? 's' : ''}):</b>
+              <ol style={{ margin: '2px 0 0', paddingLeft: 18 }}>
+                {steps.map((st, i) => <li key={i} className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{st}</li>)}
+              </ol>
+            </div>
+          )}
+          {convs.length > 0 && (
+            <div className="text-sm" style={{ marginBottom: 4 }}>
+              <b style={{ color: 'var(--secondary-foreground)' }}>Unit conversions:</b>
+              <ul style={{ margin: '2px 0 0', paddingLeft: 18 }}>
+                {convs.map((cv, i) => <li key={i} className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{cv}</li>)}
+              </ul>
+            </div>
+          )}
           {field('work', 'Work')}
           {field('answer', 'Answer')}
           {sandboxLines.length > 0 && (
