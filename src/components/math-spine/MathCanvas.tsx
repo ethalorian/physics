@@ -18,6 +18,7 @@ import { makeStrokeHandlers, type EditorTool } from '@/lib/draw/input'
 import { PAINT_PALETTE } from '@/components/draw/PaintToolbar'
 import { Type, Pen, Slash, MoveUpRight, Square, Circle, SprayCan, PaintBucket, Eraser, Undo2, Redo2, Trash2, LocateFixed } from 'lucide-react'
 import { useTranslator } from '@/lib/math-translate-store'
+import { wrapBoardText, textBox, textWidth, LINE_H } from '@/lib/draw/board-text'
 
 export interface CanvasText { x: number; y: number; text: string; size?: number }
 export interface MathCanvasValue { strokes: Stroke[]; texts: CanvasText[] }
@@ -82,9 +83,11 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     // typed text first…
     ctx.textBaseline = 'alphabetic'
     for (const t of textsRef.current) {
-      ctx.font = `${t.size ?? TEXT_SIZE}px ui-sans-serif, system-ui, sans-serif`
+      const size = t.size ?? TEXT_SIZE
+      ctx.font = `${size}px ui-sans-serif, system-ui, sans-serif`
       ctx.fillStyle = '#1A1730'
-      ctx.fillText(t.text, t.x, t.y)
+      // wrapped to the board's right edge so nothing runs off the canvas
+      wrapBoardText(t.text, t.x, size).forEach((line, i) => ctx.fillText(line, t.x, t.y + i * size * LINE_H))
     }
     // …strokes on top, so annotations mark up the text
     paintStrokes(ctx, strokesRef.current)
@@ -108,9 +111,8 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
   const hitText = (p: { x: number; y: number }): number => {
     for (let i = textsRef.current.length - 1; i >= 0; i--) {
       const t = textsRef.current[i]
-      const size = t.size ?? TEXT_SIZE
-      const w = Math.max(20, t.text.length * size * 0.55)
-      if (p.x >= t.x - 4 && p.x <= t.x + w && p.y >= t.y - size && p.y <= t.y + 6) return i
+      const b = textBox(t.text, t.x, t.y, t.size ?? TEXT_SIZE)
+      if (p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h) return i
     }
     return -1
   }
@@ -149,7 +151,11 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     if (!editor) return
     const text = editor.value.trim()
     if (editor.index === null) {
-      if (text) textsRef.current.push({ x: editor.x, y: editor.y, text, size: TEXT_SIZE })
+      // Placed near the right edge? Slide the block left so a readable width
+      // (up to 240px) fits before wrapping kicks in.
+      const want = Math.min(240, textWidth(text, TEXT_SIZE) + 8)
+      const x = Math.max(4, Math.min(editor.x, W - 8 - want))
+      if (text) textsRef.current.push({ x, y: editor.y, text, size: TEXT_SIZE })
     } else if (text) {
       textsRef.current[editor.index] = { ...textsRef.current[editor.index], text }
     } else {
@@ -258,14 +264,18 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
               boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
             }}
           >
-            <input
+            <textarea
               autoFocus
+              rows={Math.min(4, Math.max(1, editor.value.split('\n').length))}
               value={editor.value}
               onChange={(e) => setEditor({ ...editor, value: e.target.value })}
-              onKeyDown={(e) => { if (e.key === 'Enter') commitEditor(); if (e.key === 'Escape') setEditor(null) }}
-              placeholder={t('type a number or equation…')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitEditor() }
+                if (e.key === 'Escape') setEditor(null)
+              }}
+              placeholder={t('type a number or equation… (Shift+Enter for a new line)')}
               className="rounded border px-1.5 py-1 text-sm"
-              style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 150 }}
+              style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 220, maxWidth: 360, resize: 'none', lineHeight: 1.3 }}
             />
             <button onMouseDown={(e) => { e.preventDefault(); commitEditor() }} onTouchStart={(e) => { e.preventDefault(); commitEditor() }}
               aria-label="add to board" className="rounded-md grid place-items-center"

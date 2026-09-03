@@ -14,6 +14,7 @@
  * to the control room's active class via `classId`.
  */
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
+import { wrapBoardText, LINE_H } from '@/lib/draw/board-text'
 import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
@@ -62,7 +63,11 @@ function BoardSvg({ strokes, texts }: { strokes?: Stroke[]; texts?: BoardText[] 
     <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 400, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="student work">
       {/* typed text under the strokes, matching the student's board */}
       {(texts ?? []).map((t, i) => (
-        <text key={`t${i}`} x={t.x} y={t.y} fontSize={t.size ?? 26} fill="#1A1730" fontFamily="ui-sans-serif, system-ui, sans-serif">{t.text}</text>
+        <text key={`t${i}`} x={t.x} y={t.y} fontSize={t.size ?? 26} fill="#1A1730" fontFamily="ui-sans-serif, system-ui, sans-serif">
+          {wrapBoardText(t.text, t.x, t.size ?? 26).map((line, j) => (
+            <tspan key={j} x={t.x} dy={j === 0 ? 0 : (t.size ?? 26) * LINE_H}>{line}</tspan>
+          ))}
+        </text>
       ))}
       <StrokeShapes strokes={(strokes ?? []) as DrawStroke[]} />
     </svg>
