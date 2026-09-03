@@ -7,7 +7,7 @@ import BlockRenderer from '@/components/blocks/BlockRenderer'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 import PhysicsDiagram from '@/components/blocks/PhysicsDiagram'
 import FigureGraph from '@/components/blocks/FigureGraph'
-import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, MCAS_SYMBOLS } from '@/data/physics-reference'
+import { PHYSICS_FORMULAS, FORMULA_CATEGORIES, PHYSICS_VARIABLES } from '@/data/physics-reference'
 
 // ---------------------------------------------------------------------------
 // Field schema — drives a generic editor for each block type
@@ -518,7 +518,7 @@ function FieldEditor({ field, value, onChange, sims, blockType, blockData, onPat
       <div>{label}
         <select value={String(value ?? '')} onChange={(e) => onChange(e.target.value || undefined)} className="w-full rounded-lg border p-2 text-sm" style={inputStyle}>
           <option value="">(auto — the formula&apos;s own subject)</option>
-          {MCAS_SYMBOLS.map((s) => <option key={s} value={s}>{s}</option>)}
+          {PHYSICS_VARIABLES.map((v) => <option key={v.symbol} value={v.symbol}>{v.symbol} — {v.name}{v.unit ? ` (${v.unit})` : ''}</option>)}
         </select>
       </div>
     )

@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
-  PHYSICS_FORMULAS, type FormulaCategory, MCAS_SYMBOLS, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
+  PHYSICS_FORMULAS, type FormulaCategory, PHYSICS_VARIABLES, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
   convertToMcas, variableBySymbol,
 } from '@/data/physics-reference'
+import { InlineMath } from '@/components/MathMarkdown'
 import {
   FORMULA_AST, type Equation, type Term, type Factor,
   moveTerm, moveFactor, isIsolated, solveValue, symbolsInSide,
@@ -415,9 +416,9 @@ export default function GewaInteractive({
         <div className="flex flex-col gap-2">
           {chips.map((c, i) => (
             <div key={i} className="flex items-center gap-2 flex-wrap">
-              <select value={c.sym} onChange={(e) => setChip(i, { sym: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 90, fontWeight: 700 }}>
-                <option value="">sym</option>
-                {MCAS_SYMBOLS.map((s) => <option key={s} value={s}>{s}</option>)}
+              <select value={c.sym} onChange={(e) => setChip(i, { sym: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 230, fontWeight: 700 }}>
+                <option value="">symbol…</option>
+                {PHYSICS_VARIABLES.map((v) => <option key={v.symbol} value={v.symbol}>{v.symbol} — {v.name}{v.unit ? ` (${v.unit})` : ''}</option>)}
               </select>
               <span style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>=</span>
               <input value={c.val} onChange={(e) => setChip(i, { val: e.target.value })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 96 }} />
@@ -439,8 +440,8 @@ export default function GewaInteractive({
         <div className="flex flex-wrap gap-1.5">
           {bank.map((fm) => (
             <button key={fm.id} onClick={() => pickFormula(fm.id)} title={fm.name} className="rounded-md px-2.5 py-1.5 text-sm"
-              style={{ border: `1.5px solid ${formulaId === fm.id ? 'var(--primary)' : pendingFormula === fm.id ? 'var(--reward)' : 'color-mix(in oklch, var(--primary) 30%, var(--border))'}`, background: formulaId === fm.id ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : pendingFormula === fm.id ? 'color-mix(in oklch, var(--reward) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontFamily: 'Georgia, serif' }}>
-              {fm.display}
+              style={{ border: `1.5px solid ${formulaId === fm.id ? 'var(--primary)' : pendingFormula === fm.id ? 'var(--reward)' : 'color-mix(in oklch, var(--primary) 30%, var(--border))'}`, background: formulaId === fm.id ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : pendingFormula === fm.id ? 'color-mix(in oklch, var(--reward) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)' }}>
+              <InlineMath math={fm.latex} />
             </button>
           ))}
         </div>
