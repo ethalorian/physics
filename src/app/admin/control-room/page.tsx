@@ -7,6 +7,7 @@ import MathControlRoom from '@/components/math-spine/MathControlRoom'
 import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 import { useClassScope } from '@/lib/use-class-scope'
+import { EVIDENCE_LABEL, EVIDENCE_SOURCES, type EvidenceSource } from '@/lib/evidence'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -22,7 +23,7 @@ interface GridData {
   cells: Record<string, Record<string, Cell>>
   pending?: Record<string, Record<string, boolean>>
 }
-interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[] }
+interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[]; evidenceSource?: string | null; confidence?: string | null; role?: string | null }
 interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
@@ -253,6 +254,8 @@ export default function ControlRoomPage() {
   const [sel, setSel] = useState<{ studentId: string; targetId: string } | null>(null)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
+  // M-3 · evidence_source filter on the drawer ('' = all)
+  const [sourceFilter, setSourceFilter] = useState<'' | EvidenceSource>('')
   const [evidence, setEvidence] = useState('observation')
   const [saving, setSaving] = useState(false)
   // Written feedback (one-way note to the student, lands in their bell + growth page)
@@ -848,16 +851,30 @@ export default function ControlRoomPage() {
             <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1, minWidth: 0, borderRight: '1px solid var(--border)' }}>
               {/* submitted work — first, right under the header (the thing being judged) */}
               <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
+              {/* M-3 · filter by evidence source; only sources present in this student's work are offered */}
+              {work && work.work.some((w) => w.evidenceSource) && (
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {(['', ...EVIDENCE_SOURCES.filter((s) => work.work.some((w) => w.evidenceSource === s))] as ('' | EvidenceSource)[]).map((s) => (
+                    <button key={s || 'all'} onClick={() => setSourceFilter(s)} className="text-[11px] rounded-full border px-2 py-0.5"
+                      style={{ borderColor: sourceFilter === s ? 'var(--primary)' : 'var(--border)', background: sourceFilter === s ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontWeight: sourceFilter === s ? 700 : 500 }}>
+                      {s ? EVIDENCE_LABEL[s] : 'All'}
+                    </button>
+                  ))}
+                </div>
+              )}
               {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
               {!workLoading && work && work.work.length === 0 && (
                 <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
               )}
-              {!workLoading && work && work.work.map((w) => (
+              {!workLoading && work && work.work.filter((w) => !sourceFilter || w.evidenceSource === sourceFilter).map((w) => (
                 <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
                   <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
                     {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
                     {(w.responseMode || (w.scaffoldsUsed && w.scaffoldsUsed.length > 0)) && (
                       <span className="ml-2 inline-flex flex-wrap gap-1 align-middle" title="SEI context: how they answered and which scaffolds were on. Read the work in context — rate the physics only.">
+                        {w.evidenceSource && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}>{EVIDENCE_LABEL[w.evidenceSource as EvidenceSource] ?? w.evidenceSource}</span>}
+                        {w.confidence && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" title="MC-5: the student's own confidence. Wrong + sure = misconception flag." style={{ background: w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? 'color-mix(in oklch, var(--destructive) 14%, transparent)' : 'var(--secondary)', color: w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? 'var(--destructive)' : 'var(--muted-foreground)' }}>{w.confidence === 'sure' ? 'sure' : 'not sure'}{w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? ' · wrong' : ''}</span>}
+                        {w.role && <span className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{w.role}</span>}
                         {w.responseMode && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>{w.responseMode}</span>}
                         {(w.scaffoldsUsed ?? []).filter((s) => !s.startsWith('mode:')).map((s) => <span key={s} className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{s}</span>)}
                       </span>
