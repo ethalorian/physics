@@ -68,12 +68,29 @@ export const POST = withAuth(async (request, ctx) => {
     .single()
   const cap = game?.max_plausible_score ?? 100000
 
-  const newScore = Math.max(play.score, Math.min(cap, Math.max(0, Math.round(score))))
+  let newScore = Math.max(play.score, Math.min(cap, Math.max(0, Math.round(score))))
   const cleanStats = safeStats(stats)
+
+  // Spam-guard: a run whose own stats say it was mostly rapid wrong guessing
+  // (30+ attempts, under 35% right) cannot place — its score is clamped low
+  // regardless of what the client reported. Legit struggling players score
+  // low anyway; this only bites the click-until-it-sticks pattern.
+  let spamGuard = false
+  if (cleanStats) {
+    const right = Number(cleanStats.right) || 0
+    const wrong = Number(cleanStats.wrong) || 0
+    const attempts = right + wrong
+    if (attempts >= 30 && right / attempts < 0.35) {
+      spamGuard = true
+      newScore = Math.min(newScore, 2000)
+    }
+  }
+
   const meta = {
     ...(play.meta ?? {}),
     ...(typeof act === 'number' ? { act } : {}),
     ...(cleanStats ? { stats: cleanStats } : {}),
+    ...(spamGuard ? { spam_guard: true } : {}),
   }
 
   const { error } = await supabaseAdmin

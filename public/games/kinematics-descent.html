@@ -636,7 +636,7 @@ function answer(i){
   $('#explain').style.display='block';
   $('#contBtn').style.display='inline-block';
   if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
-  else{beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
+  else{score=Math.max(0,score-250);beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
 }
 

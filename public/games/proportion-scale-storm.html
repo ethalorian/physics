@@ -700,6 +700,11 @@ if (typeof document !== "undefined") (function(){
       }
     }else{
       S.wrong++; S.streak=0;
+      /* Anti-spam: wrong costs points, locks input, and reshuffles the chips —
+         rapid guessing is slower and net-negative (right pays 10·level). */
+      S.score = Math.max(0, S.score - 15*S.level);
+      locked = true;
+      setTimeout(()=>{ if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
       btn.classList.add("bad"); sBad(); shake();
       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
       S.y += Math.max(20,(landY()-S.y)*0.28); place();
