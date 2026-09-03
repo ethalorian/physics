@@ -7,7 +7,7 @@ import { getStudentTrack } from '@/lib/student-enrollment'
 import { isBlockVisible, type Viewer } from '@/lib/track-visibility'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
-// Body: { lesson_id, block_id, block_type, response }
+// Body: { lesson_id, block_id, block_type, response, response_mode?, scaffolds_used? }
 export const POST = withEnrolledStudent(async (request, ctx) => {
     const body = await request.json()
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
@@ -22,6 +22,9 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         block_id: body.block_id,
         block_type: body.block_type ?? null,
         response: body.response,
+        // SEI context (design "SEI in Blocks"): how they answered + which scaffolds were on. Never a score.
+        response_mode: ['text', 'sketch', 'audio', 'label', 'choice'].includes(body.response_mode) ? body.response_mode : null,
+        scaffolds_used: Array.isArray(body.scaffolds_used) ? body.scaffolds_used.filter((s: unknown) => typeof s === 'string').slice(0, 24) : [],
       })
       .select()
       .single()

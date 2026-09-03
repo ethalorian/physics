@@ -6,6 +6,10 @@ interface GlossaryTermProps {
   term: string
   definition: string
   cognate?: string
+  /** SEI tier (2 = academic, 3 = physics) — popover shows it so the student learns which words are "school words". */
+  tier?: number
+  partOfSpeech?: string
+  example?: string
   /** the exact surface text matched in the prose (preserves the author's casing) */
   children: string
 }
@@ -17,7 +21,7 @@ interface GlossaryTermProps {
  * stays inside the app's one design language rather than pulling in a second
  * popover primitive.
  */
-export default function GlossaryTerm({ term, definition, cognate, children }: GlossaryTermProps) {
+export default function GlossaryTerm({ term, definition, cognate, tier, partOfSpeech, example, children }: GlossaryTermProps) {
   const [open, setOpen] = useState(false)
   const wrapRef = useRef<HTMLSpanElement>(null)
   const id = useId()
@@ -83,11 +87,18 @@ export default function GlossaryTerm({ term, definition, cognate, children }: Gl
             whiteSpace: 'normal',
           }}
         >
-          <span className="block text-overline" style={{ color: 'var(--primary)' }}>{term}</span>
+          <span className="block text-overline" style={{ color: 'var(--primary)' }}>
+            {term}
+            {tier && <span className="ml-1.5 rounded px-1 py-0.5 text-[9px] font-bold" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>Tier {tier}</span>}
+            {partOfSpeech && <span className="ml-1 text-[10px] font-normal italic" style={{ color: 'var(--muted-foreground)' }}>{partOfSpeech}</span>}
+          </span>
           {cognate && (
             <span className="block text-[12px] italic" style={{ color: 'var(--muted-foreground)' }}>{cognate}</span>
           )}
           <span className="block text-[13px] mt-0.5" style={{ color: 'var(--foreground)', lineHeight: 1.4 }}>{definition}</span>
+          {example && (
+            <span className="block text-[12px] mt-1" style={{ color: 'var(--muted-foreground)', lineHeight: 1.4 }}>“{example}”</span>
+          )}
         </span>
       )}
     </span>

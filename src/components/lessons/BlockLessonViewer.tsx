@@ -9,6 +9,7 @@ import { buildSections, minutesLeft } from '@/components/lessons/lesson-sections
 import { useSectionProgress } from '@/components/lessons/useSectionProgress'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
+import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
 import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, CheckCircle2, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
@@ -38,7 +39,12 @@ const DAY_META: Record<string, { label: string; Icon: LucideIcon }> = {
   TRANSFER: { label: 'Transfer', Icon: Rocket },
 }
 
-export default function BlockLessonViewer({ lesson, nav, staffView = false }: BlockLessonViewerProps) {
+export default function BlockLessonViewer(props: BlockLessonViewerProps) {
+  // The language profile + scaffold dial are shared by every block on the page.
+  return <LanguageProfileProvider><BlockLessonViewerInner {...props} /></LanguageProfileProvider>
+}
+
+function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonViewerProps) {
   const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
@@ -46,10 +52,25 @@ export default function BlockLessonViewer({ lesson, nav, staffView = false }: Bl
 
   // Key terms feed the hover-def popovers in prose. Guard the shape so a
   // malformed JSON column can never break the reader.
-  const glossary = useMemo<GlossaryEntry[]>(
+  const keyTerms = useMemo<GlossaryEntry[]>(
     () => (Array.isArray(lesson.key_terms) ? lesson.key_terms.filter((t) => t && t.term && t.definition) : []),
     [lesson.key_terms],
   )
+  // SEI principle 2: the Tier 2 academic words are the hidden barrier, so the
+  // glossary reads the lesson's tiered vocab set (Tier 2 + 3) as well as key_terms.
+  const [vocabTerms, setVocabTerms] = useState<GlossaryEntry[]>([])
+  useEffect(() => {
+    let active = true
+    fetch(`/api/lessons/${lesson.id}/vocab`).then((r) => (r.ok ? r.json() : { terms: [] })).then((d: { terms?: { term: string; definition: string; tier?: number | null; cognate?: string | null; part_of_speech?: string | null; example?: string | null }[] }) => {
+      if (!active) return
+      setVocabTerms((d.terms ?? []).filter((t) => t.term && t.definition && (t.tier ?? 3) >= 2).map((t) => ({ term: t.term, definition: t.definition, cognate: t.cognate ?? undefined, tier: t.tier ?? undefined, partOfSpeech: t.part_of_speech ?? undefined, example: t.example ?? undefined })))
+    }).catch(() => {})
+    return () => { active = false }
+  }, [lesson.id])
+  const glossary = useMemo<GlossaryEntry[]>(() => {
+    const seen = new Set(keyTerms.map((t) => t.term.toLowerCase()))
+    return [...keyTerms, ...vocabTerms.filter((t) => !seen.has(t.term.toLowerCase()))]
+  }, [keyTerms, vocabTerms])
 
   // One source of truth for responses, shared with the renderer so progress
   // fills as the student saves interactive blocks.
@@ -156,6 +177,9 @@ export default function BlockLessonViewer({ lesson, nav, staffView = false }: Bl
                 </a>
               </div>
             </div>
+
+            {/* SEI level dial — visible to the student (principle 7) */}
+            <div className="mt-2"><LanguageDial /></div>
 
             {/* segmented progress — one segment per section */}
             <div className="mt-2 flex items-center gap-1" aria-hidden>

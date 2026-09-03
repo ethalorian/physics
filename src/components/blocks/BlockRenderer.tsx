@@ -13,7 +13,10 @@ import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import DeckPresentCard from './DeckPresentCard'
-import { useBlockResponses, type BlockResponseMap } from './useBlockResponses'
+import { useBlockResponses, type BlockResponseMap, type SaveMeta } from './useBlockResponses'
+import { SeiTextCapture, SeiPrompt, SeiVisual, SeiFrameBox, SeiFairnessNote, useSei } from './SeiLayer'
+import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
+import type { InlineQuestion, SeiFrame } from '@/data/content-blocks'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
@@ -43,7 +46,7 @@ const C = {
   tint: 'var(--secondary)',
 }
 
-type SaveFn = (blockId: string, blockType: string, response: unknown) => void
+type SaveFn = (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => void
 
 // ---------------------------------------------------------------------------
 // Block identity: each block belongs to a "kind of thinking" (K/R/S/P) and
@@ -183,44 +186,6 @@ function MarzanoInput({ value, onSave }: { value?: number; onSave: (n: number) =
   )
 }
 
-function TextCapture({
-  prompt, frame, placeholder, value, onSave,
-}: { prompt: string; frame?: string; placeholder?: string; value?: string; onSave: (t: string) => void }) {
-  const [text, setText] = useState(value ?? '')
-  const [saved, setSaved] = useState(false)
-  const [touched, setTouched] = useState(false)
-  // Re-sync when the saved value loads/changes (responses fetch resolves after
-  // mount), but never clobber text the student has started typing.
-  useEffect(() => { if (!touched) setText(value ?? '') }, [value, touched])
-  const canSave = text.trim().length > 0
-  return (
-    <div>
-      <p className="text-sm mb-1" style={{ color: C.indigo }}>{prompt}</p>
-      {frame && <p className="text-sm italic mb-1" style={{ color: C.muted }}>{frame}</p>}
-      <textarea
-        value={text}
-        onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }}
-        placeholder={placeholder}
-        rows={4}
-        className="w-full rounded-md border p-2 text-sm"
-        style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }}
-      />
-      <div className="flex items-center gap-2 mt-1">
-        {/* Only persist real content — an empty save would create a blank
-            "completed" card and a hollow grading record. */}
-        <button
-          onClick={() => { if (!canSave) return; onSave(text.trim()); setSaved(true); setTouched(false) }}
-          disabled={!canSave}
-          className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
-          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}
-        >
-          Save
-        </button>
-        {saved && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
-      </div>
-    </div>
-  )
-}
 
 // Render the simulation inside an IFRAME pointing at a chrome-free embed route.
 // The iframe is a hard layout boundary (the sim's elements can't escape into the
@@ -424,6 +389,9 @@ function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketc
   return (
     <div>
       <p className="text-sm mb-2" style={{ color: C.indigo }}>{b.instruction}</p>
+      {(b.labelBank ?? b.sei?.labelBank) && (b.labelBank ?? b.sei?.labelBank)!.length > 0 && (
+        <p className="text-xs mb-2" style={{ color: C.muted }}>Labels · Etiquetas: {(b.labelBank ?? b.sei?.labelBank)!.join(' · ')}</p>
+      )}
       {b.prompts && b.prompts.length > 0 && (
         <ul className="text-sm mb-2" style={{ color: C.muted, paddingLeft: 18, listStyle: 'disc' }}>
           {b.prompts.map((p, i) => <li key={i}>{p}</li>)}
@@ -441,6 +409,76 @@ function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketc
         </button>
         {savedFlag && <span className="text-xs" style={{ color: C.sage }}>Saved ✓</span>}
       </div>
+    </div>
+  )
+}
+
+/** Display-only sentence frame, tiered by the student's level (principle 4 + 7). */
+function SentenceFrameView({ frame, frames, wordBank, sei }: { frame: string; frames?: SeiFrame[]; wordBank?: string[]; sei?: ContentBlock['sei'] }) {
+  const state = useSei({ ...(sei ?? {}), frames, wordBank }, { fallbackFrame: frame, wordBank })
+  const shown = state.frame?.text ?? frame
+  return (
+    <>
+      <p className="text-sm italic" style={{ color: C.indigo }}>{shown}</p>
+      {state.wordBank.length > 0 && (
+        <p className="text-xs mt-1" style={{ color: C.muted }}>Word bank · Banco de palabras: {state.wordBank.join(' · ')}</p>
+      )}
+    </>
+  )
+}
+
+/**
+ * The inline question block (design "SEI in Blocks", section B): a prompt with
+ * its L1 line, a visual that carries the meaning, picture options, then an
+ * explain step with a frame + word bank. Saves { optionId, explain, mode }.
+ */
+function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn }) {
+  const q = (b.question && typeof b.question === 'object' && 'prompt' in (b.question as object) ? (b.question as InlineQuestion) : null)
+  const prev = (saved as { optionId?: string; explain?: string } | undefined) ?? {}
+  const [optionId, setOptionId] = useState<string | undefined>(prev.optionId)
+  const [explain, setExplain] = useState(prev.explain ?? '')
+  const [savedFlag, setSavedFlag] = useState(false)
+  const state = useSei(b.sei, { defaultMode: q?.options?.length ? 'choice' : 'text' })
+  const { showL1, profile } = useLanguageProfile()
+  if (!q) return <p className="text-sm" style={{ color: C.muted }}>This question isn&apos;t set up yet.</p>
+  const hasOptions = Boolean(q.options?.length)
+  const canSave = hasOptions ? Boolean(optionId) : explain.trim().length > 0
+  return (
+    <div>
+      <SeiPrompt prompt={q.prompt} l1Text={state.l1Text} />
+      <SeiVisual visual={b.sei?.visual} />
+      {hasOptions && (
+        <div className="grid gap-2 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
+          {q.options!.map((o) => {
+            const on = optionId === o.id
+            const l1 = showL1 && profile?.homeLang ? o.text_l1?.[profile.homeLang] : undefined
+            return (
+              <button key={o.id} type="button" onClick={() => { setOptionId(o.id); setSavedFlag(false) }}
+                className="rounded-lg border p-2 text-left text-sm flex items-center gap-2"
+                style={{ borderColor: on ? C.lavender : C.hairline, background: on ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', color: C.indigo }}>
+                {o.icon && <span aria-hidden className="text-lg" style={{ width: 28, textAlign: 'center' }}>{o.icon}</span>}
+                <span>{o.text}{l1 && <span className="block text-xs" style={{ color: C.muted }}>{l1}</span>}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+      {(q.explain || !hasOptions) && (
+        <>
+          <p className="text-sm mb-1" style={{ color: C.indigo }}>{q.explain ?? 'Explain your thinking.'}</p>
+          <SeiFrameBox state={state} onUseFrame={(f) => { if (!explain.trim()) setExplain(f) }} />
+          <textarea value={explain} onChange={(e) => { setExplain(e.target.value); setSavedFlag(false) }} rows={3}
+            className="w-full rounded-md border p-2 text-sm" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />
+        </>
+      )}
+      <div className="flex items-center gap-2 mt-1">
+        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds }); setSavedFlag(true) }}
+          disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
+          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
+          {savedFlag ? 'Saved ✓' : 'Save'}
+        </button>
+      </div>
+      <SeiFairnessNote />
     </div>
   )
 }
@@ -509,14 +547,10 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     }
     case 'sentence_frame':
-      return (
-        <>
-          <p className="text-sm italic" style={{ color: C.indigo }}>{b.frame}</p>
-          {b.wordBank && b.wordBank.length > 0 && (
-            <p className="text-xs mt-1" style={{ color: C.muted }}>Word bank: {b.wordBank.join(' · ')}</p>
-          )}
-        </>
-      )
+      if (b.capture) {
+        return <SeiTextCapture sei={{ ...(b.sei ?? {}), frames: b.sei?.frames ?? b.frames, wordBank: b.sei?.wordBank ?? b.wordBank, modes: b.sei?.modes ?? b.modes }} prompt={b.frame} value={saved} onSave={(r, scaffolds, mode) => save(b.id, 'sentence_frame', r, { response_mode: mode, scaffolds_used: scaffolds })} />
+      }
+      return <SentenceFrameView frame={b.frame} frames={b.frames ?? b.sei?.frames} wordBank={b.wordBank ?? b.sei?.wordBank} sei={b.sei} />
     case 'sim_embed':
       return <SimEmbed slug={b.simulationSlug} />
     case 'deck':
@@ -534,21 +568,26 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'marzano':
       return <MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n)} />
     case 'exit_ticket':
-      return <TextCapture prompt={b.prompt} frame={b.frame} value={saved as string | undefined} onSave={(t) => save(b.id, 'exit_ticket', t)} />
+      return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds })} />
     case 'gewa':
       return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} />
     case 'equation_sandbox':
       return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
       return <DataBlockInteractive columns={b.columns} rows={b.rows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onSave={(v) => save(b.id, 'data_table', v)} />
-    case 'observation':
+    case 'observation': {
+      const prev = (saved as { pattern?: string; interpret?: string } | undefined) ?? {}
+      const patternSei = { ...(b.sei ?? {}), frames: b.sei?.frames ?? (b.patternFrame ? [{ level: 1 as const, text: b.patternFrame }] : undefined), wordBank: b.sei?.wordBank ?? b.comparatives, modes: ['text' as const] }
       return (
         <>
-          <TextCapture prompt={b.patternPrompt} frame={b.frame} value={(saved as { pattern?: string })?.pattern} onSave={(t) => save(b.id, 'observation', { ...(saved as object), pattern: t })} />
+          <SeiTextCapture sei={patternSei} prompt={b.patternPrompt} fallbackFrame={b.frame} value={prev.pattern} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, pattern: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
           <div className="h-3" />
-          <TextCapture prompt={b.interpretPrompt} value={(saved as { interpret?: string })?.interpret} onSave={(t) => save(b.id, 'observation', { ...(saved as object), interpret: t })} />
+          <SeiTextCapture sei={{ ...(b.sei ?? {}), visual: undefined, modes: ['text' as const] }} prompt={b.interpretPrompt} value={prev.interpret} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, interpret: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
         </>
       )
+    }
+    case 'question':
+      return <InlineQuestionView b={b} saved={saved} save={save} />
     case 'figure': {
       if (!b.src) return null
       const full = b.align === 'full'

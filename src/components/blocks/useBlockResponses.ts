@@ -6,6 +6,9 @@ export interface StoredResponse {
   response: unknown
   created_at: string
 }
+/** SEI context logged with a save (never a score): how they answered and which
+ *  scaffolds were on. See src/lib/sei.ts. */
+export interface SaveMeta { response_mode?: string; scaffolds_used?: string[] }
 export type BlockResponseMap = Record<string, StoredResponse>
 
 /**
@@ -34,13 +37,13 @@ export function useBlockResponses(lessonId: string) {
   }, [lessonId])
 
   const save = useCallback(
-    async (blockId: string, blockType: string, response: unknown) => {
+    async (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => {
       setResponses((prev) => ({ ...prev, [blockId]: { response, created_at: new Date().toISOString() } }))
       try {
         await fetch('/api/lessons/blocks', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ lesson_id: lessonId, block_id: blockId, block_type: blockType, response }),
+          body: JSON.stringify({ lesson_id: lessonId, block_id: blockId, block_type: blockType, response, ...(meta ?? {}) }),
         })
       } catch {
         // optimistic; surface a retry later if needed

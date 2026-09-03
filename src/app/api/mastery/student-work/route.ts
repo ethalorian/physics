@@ -9,7 +9,7 @@ import { resolveTargetStudent } from '@/lib/teacher-scope'
 
 type UnitRow = { id: string; name: string }
 type LessonRow = { id: string; title: string; lesson_number: number }
-type BlockRow = { lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string }
+type BlockRow = { lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string; response_mode?: string | null; scaffolds_used?: string[] | null }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string; evidence_source: string | null }
 
@@ -65,11 +65,11 @@ export const GET = withAuth(async (request, ctx) => {
     }
 
     // The student's block work for those lessons — latest per (lesson, block)
-    const work: { lessonTitle: string; lessonId: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }[] = []
+    const work: { lessonTitle: string; lessonId: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode: string | null; scaffoldsUsed: string[] }[] = []
     if (scopeLessonIds.length > 0) {
       const { data: blockRows } = await supabaseAdmin
         .from('block_responses')
-        .select('lesson_id, block_id, block_type, response, created_at')
+        .select('lesson_id, block_id, block_type, response, created_at, response_mode, scaffolds_used')
         .eq('user_id', userId)
         .in('lesson_id', scopeLessonIds)
         .order('created_at', { ascending: false })
@@ -85,6 +85,8 @@ export const GET = withAuth(async (request, ctx) => {
           blockId: b.block_id,
           response: b.response,
           createdAt: b.created_at,
+          responseMode: b.response_mode ?? null,
+          scaffoldsUsed: b.scaffolds_used ?? [],
         })
       }
     }

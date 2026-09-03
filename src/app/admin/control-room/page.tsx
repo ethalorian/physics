@@ -22,7 +22,7 @@ interface GridData {
   cells: Record<string, Record<string, Cell>>
   pending?: Record<string, Record<string, boolean>>
 }
-interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string }
+interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[] }
 interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
@@ -59,6 +59,8 @@ function workToText(r: unknown): string {
       if (Array.isArray(o.workStrokes) && o.workStrokes.length > 0) parts.push('work & answer: [handwritten — see drawing]')
       return parts.join('; ')
     }
+    if ('text' in o && typeof o.text === 'string') return o.text
+    if ('optionId' in o || 'explain' in o) return [o.optionId ? `chose: ${o.optionId}` : '', o.explain ? `explain: ${o.explain}` : ''].filter(Boolean).join('; ')
     if ('pattern' in o || 'interpret' in o) {
       return [o.pattern ? `pattern: ${o.pattern}` : '', o.interpret ? `interpret: ${o.interpret}` : ''].filter(Boolean).join('; ')
     }
@@ -101,6 +103,16 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
 function ResponseView({ response }: { response: unknown }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
+    // SEI captures: { text | strokes, mode } and the inline question { optionId, explain }.
+    if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{o.text}</p>
+    if (('optionId' in o || 'explain' in o) && !('given' in o)) {
+      return (
+        <div className="text-sm">
+          {o.optionId ? <div><b style={{ color: 'var(--secondary-foreground)' }}>Chose:</b> {String(o.optionId)}</div> : null}
+          {o.explain ? <div style={{ whiteSpace: 'pre-wrap' }}><b style={{ color: 'var(--secondary-foreground)' }}>Explain:</b> {String(o.explain)}</div> : null}
+        </div>
+      )
+    }
     const isGewa = 'given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o || 'sandbox' in o
     if (isGewa) {
       const field = (k: string, label: string) =>
@@ -844,6 +856,12 @@ export default function ControlRoomPage() {
                 <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
                   <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
                     {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
+                    {(w.responseMode || (w.scaffoldsUsed && w.scaffoldsUsed.length > 0)) && (
+                      <span className="ml-2 inline-flex flex-wrap gap-1 align-middle" title="SEI context: how they answered and which scaffolds were on. Read the work in context — rate the physics only.">
+                        {w.responseMode && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>{w.responseMode}</span>}
+                        {(w.scaffoldsUsed ?? []).filter((s) => !s.startsWith('mode:')).map((s) => <span key={s} className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{s}</span>)}
+                      </span>
+                    )}
                   </div>
                   <ResponseView response={w.response} />
                 </div>

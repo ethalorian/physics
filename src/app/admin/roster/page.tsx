@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useState } from 'react'
+import LanguageProfileCell from '@/components/admin/LanguageProfileCell'
 import Link from 'next/link'
 import { useSession, signIn } from 'next-auth/react'
 import { RefreshCw, Users, Link2, CheckCircle2, AlertCircle, GraduationCap } from 'lucide-react'
@@ -480,6 +481,7 @@ export default function RosterPage() {
                   <th className="text-left font-medium py-2 pr-3" style={{ color: 'var(--muted-foreground)' }}>Classroom name</th>
                   <th className="text-left font-medium py-2 px-2" style={{ color: 'var(--muted-foreground)' }}>First name</th>
                   <th className="text-left font-medium py-2 px-2" style={{ color: 'var(--muted-foreground)' }}>Last name (sorts on this)</th>
+                  <th className="text-left font-medium py-2 px-2" style={{ color: 'var(--muted-foreground)' }} title="Language profile: sets the SEI scaffold level (WIDA 1–2 full · 3–4 some · 5–6 just the prompt). Never read by mastery.">Language</th>
                   <th className="font-medium py-2 px-2" />
                 </tr>
               </thead>
@@ -514,6 +516,7 @@ export default function RosterPage() {
                             style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)', minWidth: 140 }}
                           />
                         </td>
+                        <td className="py-2 px-2"><LanguageProfileCell userId={s.id} /></td>
                         <td className="py-2 px-2 text-right" style={{ whiteSpace: 'nowrap' }}>
                           <button
                             onClick={() => saveName(s.id)}

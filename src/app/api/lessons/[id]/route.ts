@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
+import { seiLint } from '@/lib/sei'
+import type { ContentBlock } from '@/data/content-blocks'
 
 /**
  * GET /api/lessons/[id]
@@ -55,7 +57,40 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
           { status: 422 },
         )
       }
+
+      // SEI authoring rule (design "SEI in Blocks"): a capture block with no
+      // visual, no frame, or Tier 2 terms missing from the lesson's vocab set
+      // does not publish for program `projects`; other programs get warnings
+      // back (the asteroid course predates the rule). Blocks come from the body
+      // when the save carries them, else from the stored row.
+      const { data: cur } = await supabaseAdmin.from('lessons').select('unit_id, content_blocks').eq('id', params.id).maybeSingle()
+      const curRow = cur as { unit_id: string | null; content_blocks: { blocks?: ContentBlock[] } | null } | null
+      const doc = (updateData.content_blocks as { blocks?: ContentBlock[] } | undefined) ?? curRow?.content_blocks ?? null
+      const blocks = Array.isArray(doc?.blocks) ? doc!.blocks! : []
+      if (blocks.length > 0) {
+        const [{ data: unitRow }, { data: setRow }] = await Promise.all([
+          curRow?.unit_id ? supabaseAdmin.from('units').select('program').eq('id', curRow.unit_id).maybeSingle() : Promise.resolve({ data: null }),
+          supabaseAdmin.from('vocabulary_sets').select('id').eq('lesson_id', params.id).maybeSingle(),
+        ])
+        let vocab: string[] = []
+        const setId = (setRow as { id: string } | null)?.id
+        if (setId) {
+          const { data: terms } = await supabaseAdmin.from('vocabulary_terms').select('term').eq('vocabulary_set_id', setId)
+          vocab = ((terms ?? []) as { term: string }[]).map((t) => t.term)
+        }
+        const issues = seiLint(blocks, vocab)
+        const program = (unitRow as { program?: string } | null)?.program ?? 'physics'
+        if (issues.length > 0 && program === 'projects') {
+          return NextResponse.json(
+            { error: `Cannot publish: ${issues.length} capture block${issues.length === 1 ? '' : 's'} fail the SEI rule (every capture block needs a visual and a frame, and its Tier 2 terms must be in the lesson vocab). Fix them in the builder or add sei{} to the block.`, sei_issues: issues },
+            { status: 422 },
+          )
+        }
+        if (issues.length > 0) updateData.__sei_warnings = issues
+      }
     }
+    const seiWarnings = updateData.__sei_warnings as unknown[] | undefined
+    delete updateData.__sei_warnings
 
     const { data, error } = await supabaseAdmin
       .from('lessons')
@@ -73,7 +108,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
       return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ lesson: data })
+    return NextResponse.json(seiWarnings && seiWarnings.length > 0 ? { lesson: data, sei_warnings: seiWarnings } : { lesson: data })
 })
 
 /**

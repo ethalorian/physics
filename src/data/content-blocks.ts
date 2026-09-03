@@ -24,10 +24,49 @@ export type DayType =
  *  honors thread that extends it. ap/pbl reserved. */
 export type TrackId = 'cpa' | 'honors' | 'ap' | 'pbl';
 
+// ---------------------------------------------------------------------------
+// SEI (Sheltered English Immersion) — language support that lives INSIDE the
+// block as data, rendered at the student's WIDA level, faded as they grow, and
+// never confused with the physics being assessed. See src/lib/sei.ts for the
+// level logic and claude/Project-Physics-SEI-Access-Layer.md for the rules.
+// Every field is optional and additive: a block without `sei` renders as before.
+// ---------------------------------------------------------------------------
+
+export type LangCode = 'es' | 'pt' | 'ht' | 'ar' | 'zh' | 'vi' | 'fr';
+/** How a student may answer a capture block. All modes rate on the same rubric. */
+export type ResponseMode = 'text' | 'sketch' | 'audio' | 'label' | 'choice';
+/** Sentence frames by scaffold tier: 1 = forced-choice / word bank, 2 = open with a
+ *  "because" clause, 3 = a starter only (offered on request). */
+export interface SeiFrame { level: 1 | 2 | 3; text: string; text_l1?: Partial<Record<LangCode, string>> }
+
+export interface SeiScaffold {
+  /** Principle 1 — a visual that carries the meaning on its own. A DiagramScene
+   *  (drawn) or an image. A capture block for program `projects` will not publish
+   *  without one (or a figure/diagram/sim/graph block immediately before it). */
+  visual?: DiagramScene | { src: string; alt: string };
+  /** Principle 3 — the prompt in the student's home language. English stays primary. */
+  prompt_l1?: Partial<Record<LangCode, string>>;
+  /** Principle 4 — frames for output, by tier. */
+  frames?: SeiFrame[];
+  wordBank?: string[];
+  /** For sketch / label responses: the labels a student places on the drawing. */
+  labelBank?: string[];
+  /** Principle 5 — 60 s oral rehearsal with a partner before the box opens. */
+  talkFirst?: boolean;
+  /** Principle 6 — alternate response modes offered beside the default. */
+  modes?: ResponseMode[];
+  /** Principle 2 — Tier 2 academic words in this prompt that should get the glossary popover. */
+  tier2Terms?: string[];
+  /** Principle 7 — teacher override of the level-driven default for this block. */
+  override?: 'full' | 'partial' | 'bare';
+}
+
 interface BaseBlock {
   id: BlockId;
   /** Optional teacher/author note; never shown to students. */
   note?: string;
+  /** Language scaffold carried by the block as data (see SeiScaffold). */
+  sei?: SeiScaffold;
   /**
    * Curriculum-track gate. If set (e.g. 'honors'), this block is shown ONLY to
    * classes of that track; CPA classes never see it. Undefined = visible to all
@@ -44,6 +83,8 @@ export interface TargetBlock extends BaseBlock {
   type: 'target';
   statement: string;          // the "I can…" text
   targetId?: string;          // links to learning_targets.slug
+  statementStudent?: string;  // rewritten in student language, Tier 3 word bolded
+  statementL1?: Partial<Record<LangCode, string>>;
 }
 
 export interface AsteroidThreadBlock extends BaseBlock {
@@ -81,8 +122,13 @@ export interface CalloutBlock extends BaseBlock {
 
 export interface SentenceFrameBlock extends BaseBlock {
   type: 'sentence_frame';
-  frame: string;              // e.g. "The slope tells me ___ because ___"
+  frame: string;              // e.g. "The slope tells me ___ because ___" (the default / tier 2)
   wordBank?: string[];
+  /** Tiered frames (forced-choice → open + because → starter only); falls back to `frame`. */
+  frames?: SeiFrame[];
+  /** Whether the student writes into the frame (capture) or it is a display scaffold (default). */
+  capture?: boolean;
+  modes?: ResponseMode[];
 }
 
 /** A lab-notebook capture block: an annotatable sketch area + labeled
@@ -181,6 +227,7 @@ export interface ExitTicketBlock extends BaseBlock {
   capture: true;
   prompt: string;
   frame?: string;             // optional sentence frame; response is an OPEN BOX
+  talkFirst?: boolean;        // "say it first": 60 s partner rehearsal before the box opens
 }
 
 export interface MarzanoBlock extends BaseBlock {
@@ -206,13 +253,23 @@ export interface SketchBlock extends BaseBlock {
   quadrants?: 1 | 4;          // 1 = first-quadrant axes (default), 4 = full x/y cross
   backgroundDiagram?: DiagramScene; // optional physics figure to annotate on top of
   scaffoldSvg?: string;       // optional raw SVG scaffold to draw on top of
+  labelBank?: string[];       // labels to place on the drawing — the drawing IS the answer at WIDA 1–3
 }
 
+/** Inline question (the SEI "block anatomy" question): a prompt, optional picture
+ *  options, and an optional explain step that takes a frame + word bank. */
+export interface InlineQuestionOption { id: string; text: string; icon?: string; text_l1?: Partial<Record<LangCode, string>> }
+export interface InlineQuestion {
+  prompt: string;
+  options?: InlineQuestionOption[];   // omit for open response
+  explain?: string;                   // the explain / justify prompt shown after a choice
+  correctOptionId?: string;           // never shown to students; used by the teacher drawer
+}
 export interface QuestionBlock extends BaseBlock {
   type: 'question';
   capture: true;
   questionBankId?: string;    // reuse question_bank, OR inline:
-  question?: unknown;         // a Question object (MC / numerical / open-response)
+  question?: InlineQuestion | unknown; // inline question; legacy shapes tolerated
 }
 
 export interface DataTableBlock extends BaseBlock {
@@ -232,6 +289,8 @@ export interface ObservationBlock extends BaseBlock {
   patternPrompt: string;      // "What pattern do you see?"
   interpretPrompt: string;    // "What does it mean?"
   frame?: string;             // responses are OPEN BOXES
+  patternFrame?: string;      // e.g. "As ___ increases, ___ ___"
+  comparatives?: string[];    // more · less · doubles · stays the same
 }
 
 export interface SelfAssessmentBlock extends BaseBlock {
@@ -401,6 +460,7 @@ export const CAPTURE_BLOCK_TYPES: BlockType[] = [
 ];
 
 export function isCaptureBlock(b: ContentBlock): boolean {
+  if (b.type === 'sentence_frame') return b.capture === true; // SEI: a frame the student writes INTO
   return (CAPTURE_BLOCK_TYPES as string[]).includes(b.type);
 }
 

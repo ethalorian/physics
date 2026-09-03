@@ -11,6 +11,10 @@ export interface GlossaryEntry {
   term: string
   definition: string
   cognate?: string
+  /** SEI tier (1 everyday · 2 academic · 3 physics) — shown in the popover. */
+  tier?: number
+  partOfSpeech?: string
+  example?: string
 }
 
 interface MathMarkdownProps {
@@ -54,7 +58,7 @@ function buildGlossaryComponents(glossary: GlossaryEntry[]): Components | undefi
         used.add(lower)
         if (m.index > last) out.push(text.slice(last, m.index))
         out.push(
-          <GlossaryTerm key={`${keyBase}-${n}`} term={entry.term} definition={entry.definition} cognate={entry.cognate}>
+          <GlossaryTerm key={`${keyBase}-${n}`} term={entry.term} definition={entry.definition} cognate={entry.cognate} tier={entry.tier} partOfSpeech={entry.partOfSpeech} example={entry.example}>
             {matched}
           </GlossaryTerm>,
         )
