@@ -18,6 +18,8 @@ export type BlockResponseMap = Record<string, StoredResponse>
 export function useBlockResponses(lessonId: string) {
   const [responses, setResponses] = useState<BlockResponseMap>({})
   const [loaded, setLoaded] = useState(false)
+  /** XP awarded during this session (B-4). */
+  const [xpEarned, setXpEarned] = useState(0)
 
   useEffect(() => {
     let active = true
@@ -40,11 +42,18 @@ export function useBlockResponses(lessonId: string) {
     async (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => {
       setResponses((prev) => ({ ...prev, [blockId]: { response, created_at: new Date().toISOString() } }))
       try {
-        await fetch('/api/lessons/blocks', {
+        const r = await fetch('/api/lessons/blocks', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ lesson_id: lessonId, block_id: blockId, block_type: blockType, response, ...(meta ?? {}) }),
         })
+        // The server may augment the response (E-3 autoCheck) and award XP (B-4);
+        // reflect both so gates and the Done screen read the same truth.
+        if (r.ok) {
+          const d = (await r.json().catch(() => null)) as { response?: unknown; xp_awarded?: number } | null
+          if (d && d.response !== undefined) setResponses((prev) => ({ ...prev, [blockId]: { response: d.response, created_at: new Date().toISOString() } }))
+          if (d && typeof d.xp_awarded === 'number' && d.xp_awarded > 0) setXpEarned((x) => x + d.xp_awarded!)
+        }
       } catch {
         // optimistic; surface a retry later if needed
       }
@@ -52,5 +61,5 @@ export function useBlockResponses(lessonId: string) {
     [lessonId],
   )
 
-  return { responses, save, loaded }
+  return { responses, save, loaded, xpEarned }
 }

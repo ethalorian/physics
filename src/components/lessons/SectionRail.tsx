@@ -7,6 +7,8 @@ interface SectionRailProps {
   sections: LessonSection[]
   currentIndex: number
   isComplete: (index: number) => boolean
+  /** S-2 · locked = a gated block earlier is incomplete (stepped reader). */
+  isLocked?: (index: number) => boolean
   onJump: (index: number) => void
 }
 
@@ -27,13 +29,14 @@ function stateFor(index: number, currentIndex: number, done: boolean): DotState 
  * section via the viewer's paginated `goTo`. Hidden under `lg` — narrow screens
  * get the segmented bar in the header instead.
  */
-export default function SectionRail({ sections, currentIndex, isComplete, onJump }: SectionRailProps) {
+export default function SectionRail({ sections, currentIndex, isComplete, isLocked, onJump }: SectionRailProps) {
   return (
     <nav aria-label="Lesson sections" className="hidden lg:block">
       <div className="text-overline mb-3" style={{ color: 'var(--muted-foreground)' }}>Sections</div>
       <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {sections.map((sec, i) => {
           const done = isComplete(i)
+          const locked = isLocked ? isLocked(i) : false
           const state = stateFor(i, currentIndex, done)
           const isLast = i === sections.length - 1
           return (
@@ -49,11 +52,13 @@ export default function SectionRail({ sections, currentIndex, isComplete, onJump
                 />
               )}
               <button
-                onClick={() => onJump(i)}
+                onClick={() => { if (!locked) onJump(i) }}
+                disabled={locked}
                 aria-current={state === 'current' ? 'step' : undefined}
-                aria-label={`Section ${i + 1} of ${sections.length}: ${sec.title}${state === 'done' ? ' (done)' : state === 'current' ? ' (current)' : ''}`}
+                aria-label={`Section ${i + 1} of ${sections.length}: ${sec.title}${state === 'done' ? ' (done)' : state === 'current' ? ' (current)' : locked ? ' (locked)' : ''}`}
+                title={locked ? 'Finish the checkpoint before this section to unlock it' : undefined}
                 className="group flex items-start gap-3 w-full text-left rounded-lg px-1.5 py-1.5"
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', cursor: locked ? 'not-allowed' : 'pointer', opacity: locked ? 0.45 : 1 }}
               >
                 <span
                   className="grid place-items-center shrink-0"

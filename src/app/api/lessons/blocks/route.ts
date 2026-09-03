@@ -14,10 +14,32 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
       return NextResponse.json({ error: 'Missing lesson_id, block_id, or response' }, { status: 400 })
     }
+    // The lesson's blocks: needed for the auto-check (E-3), the XP award (B-4)
+    // and the progress recompute below. One fetch.
+    const { data: lessonRow } = await supabaseAdmin
+      .from('lessons')
+      .select('slug, content_blocks')
+      .eq('id', body.lesson_id)
+      .single()
+    const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
+    const block = blocks.find((b) => b.id === body.block_id)
+
+    // E-3 · self-check for an inline question with an answer key: feedback and a
+    // sort key on the response (autoCheck), never a mastery record. The key itself
+    // never reaches the student (stripped server-side by the lesson page).
+    let response: unknown = body.response
+    if (block?.type === 'question' && response && typeof response === 'object') {
+      const q = (block as { question?: { correctOptionId?: string; options?: { id: string }[] } }).question
+      const picked = (response as { optionId?: string }).optionId
+      if (q?.correctOptionId && picked) response = { ...(response as object), autoCheck: picked === q.correctOptionId ? 'match' : 'mismatch' }
+    }
+    // The block's own targetId is the default tag when the client sends none (B-2).
+    const targetRef = typeof body.target_id === 'string' && body.target_id.trim() ? body.target_id.trim() : (block?.targetId ?? null)
+
     // E-1 · target: the block's targetId is a learning_targets slug (or id); resolve to the uuid.
     let targetId: string | null = null
-    if (typeof body.target_id === 'string' && body.target_id.trim()) {
-      const t = body.target_id.trim()
+    if (targetRef) {
+      const t = targetRef
       const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t)
       const { data: tr } = await supabaseAdmin.from('learning_targets').select('id').eq(isUuid ? 'id' : 'slug', t).maybeSingle()
       targetId = (tr as { id: string } | null)?.id ?? null
@@ -34,7 +56,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         lesson_id: body.lesson_id,
         block_id: body.block_id,
         block_type: body.block_type ?? null,
-        response: body.response,
+        response,
         // SEI context (design "SEI in Blocks"): how they answered + which scaffolds were on. Never a score.
         response_mode: ['text', 'sketch', 'audio', 'label', 'choice'].includes(body.response_mode) ? body.response_mode : null,
         scaffolds_used: Array.isArray(body.scaffolds_used) ? body.scaffolds_used.filter((s: unknown) => typeof s === 'string').slice(0, 24) : [],
@@ -44,6 +66,21 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     if (error) {
       console.error('Error saving block response:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    // B-4 · XP once per student per block, on the first COMPLETE save. The dedupe
+    // key makes re-saves and re-submits no-ops; the existing grants table is the
+    // one XP path.
+    let xpAwarded = 0
+    const blockXp = typeof block?.xp === 'number' && block.xp > 0 ? Math.round(block.xp) : 0
+    if (blockXp > 0 && isResponseComplete(block?.type ?? '', response) && (response as { autoCheck?: string })?.autoCheck !== 'mismatch') {
+      try {
+        const { data: grant } = await supabaseAdmin.from('economy_point_grants').upsert(
+          { user_id: ctx.userId, user_email: ctx.email, source: 'lesson-block', reference: `${body.lesson_id}:${body.block_id}`, points: blockXp, note: `Lesson block ${body.block_id}`, dedupe_key: `block-xp:${body.lesson_id}:${body.block_id}:${ctx.userId}` },
+          { onConflict: 'dedupe_key', ignoreDuplicates: true },
+        ).select('id')
+        if (Array.isArray(grant) && grant.length > 0) xpAwarded = blockXp
+      } catch { /* XP is best-effort; never block the save */ }
     }
 
     // Earning loop (best-effort): log activity + recompute lesson engagement so the
@@ -56,12 +93,6 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         lesson_id: body.lesson_id,
       })
 
-      const { data: lessonRow } = await supabaseAdmin
-        .from('lessons')
-        .select('slug, content_blocks')
-        .eq('id', body.lesson_id)
-        .single()
-      const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
       // Only count capture blocks this student's track can actually see — otherwise
       // honors capture blocks would hold a CPA student's completion below 100%
       // (and a CPA-only block would do the same to an honors student). Staff see all.
@@ -108,7 +139,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       console.error('block save side-effects failed:', e)
     }
 
-    return NextResponse.json(data, { status: 201 })
+    return NextResponse.json({ ...(data as object), response, xp_awarded: xpAwarded }, { status: 201 })
 })
 
 // GET /api/lessons/blocks?lesson_id=...  — latest response per block for the current student.

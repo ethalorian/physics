@@ -434,10 +434,15 @@ function SentenceFrameView({ frame, frames, wordBank, sei }: { frame: string; fr
  */
 function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn }) {
   const q = (b.question && typeof b.question === 'object' && 'prompt' in (b.question as object) ? (b.question as InlineQuestion) : null)
-  const prev = (saved as { optionId?: string; explain?: string } | undefined) ?? {}
+  const prev = (saved as { optionId?: string; explain?: string; autoCheck?: 'match' | 'mismatch' } | undefined) ?? {}
   const [optionId, setOptionId] = useState<string | undefined>(prev.optionId)
   const [explain, setExplain] = useState(prev.explain ?? '')
   const [savedFlag, setSavedFlag] = useState(false)
+  // MC-5 · one-tap confidence on every checkpoint (wrong + sure is the misconception flag).
+  const [confidence, setConfidence] = useState<'sure' | 'unsure' | undefined>(undefined)
+  // E-3 / B-5 · the server's self-check on the LAST SAVED answer, and that option's feedback.
+  const verdict = savedFlag || prev.autoCheck ? prev.autoCheck : undefined
+  const pickedSaved = q?.options?.find((o) => o.id === prev.optionId)
   const state = useSei(b.sei, { defaultMode: q?.options?.length ? 'choice' : 'text' })
   const { showL1, profile } = useLanguageProfile()
   if (!q) return <p className="text-sm" style={{ color: C.muted }}>This question isn&apos;t set up yet.</p>
@@ -463,6 +468,22 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
           })}
         </div>
       )}
+      {hasOptions && verdict && (
+        <div className="rounded-md border p-2 mb-3 text-sm" style={{ borderColor: verdict === 'match' ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'color-mix(in oklch, var(--viz-down, var(--destructive)) 45%, var(--border))', background: verdict === 'match' ? 'color-mix(in oklch, var(--success) 10%, var(--card))' : 'color-mix(in oklch, var(--viz-down, var(--destructive)) 8%, var(--card))', color: C.indigo }}>
+          <b>{verdict === 'match' ? 'That’s it.' : 'Not yet.'}</b> {pickedSaved?.feedback ?? (verdict === 'match' ? '' : 'Look at the visual again and try another answer.')}
+        </div>
+      )}
+      {hasOptions && (
+        <div className="flex items-center gap-2 mb-3 text-xs" style={{ color: C.muted }}>
+          <span>How sure are you? · ¿Qué tan seguro estás?</span>
+          {(['sure', 'unsure'] as const).map((c) => (
+            <button key={c} type="button" onClick={() => setConfidence(c)} className="rounded-full border px-2.5 py-1"
+              style={{ borderColor: confidence === c ? C.lavender : C.hairline, background: confidence === c ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: C.indigo, fontWeight: confidence === c ? 700 : 500 }}>
+              {c === 'sure' ? 'Sure · Seguro' : 'Not sure · No seguro'}
+            </button>
+          ))}
+        </div>
+      )}
       {(q.explain || !hasOptions) && (
         <>
           <p className="text-sm mb-1" style={{ color: C.indigo }}>{q.explain ?? 'Explain your thinking.'}</p>
@@ -472,7 +493,7 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
         </>
       )}
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: 'lesson_checkpoint' }); setSavedFlag(true) }}
+        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: 'lesson_checkpoint', confidence }); setSavedFlag(true) }}
           disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
           style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
           {savedFlag ? 'Saved ✓' : 'Save'}

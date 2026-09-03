@@ -89,7 +89,16 @@ export function filterDocumentForViewer(
   viewer: Viewer,
 ): BlockDocument {
   if (viewer.role === 'admin') return doc; // global view: nothing hidden
-  return { ...doc, blocks: doc.blocks.filter((b) => isBlockVisible(b, viewer)) };
+  // A-4 / E-3: the answer key of an inline question never reaches a student; the
+  // self-check happens server-side on save. Per-option feedback stays (B-5).
+  return { ...doc, blocks: doc.blocks.filter((b) => isBlockVisible(b, viewer)).map(stripAnswerKey) };
+}
+
+function stripAnswerKey(b: ContentBlock): ContentBlock {
+  if (b.type !== 'question' || !b.question || typeof b.question !== 'object' || !('correctOptionId' in (b.question as object))) return b;
+  const { correctOptionId: _omit, ...rest } = b.question as { correctOptionId?: string } & Record<string, unknown>;
+  void _omit;
+  return { ...b, question: rest };
 }
 
 // --- Convenience for the common student/teacher-by-track call sites ----------

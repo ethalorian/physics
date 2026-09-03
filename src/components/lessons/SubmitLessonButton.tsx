@@ -11,7 +11,7 @@
 import { useEffect, useState } from 'react'
 import { Send, CheckCircle2, Clock, PartyPopper } from 'lucide-react'
 
-export default function SubmitLessonButton({ lessonId, complete = false }: { lessonId: string; complete?: boolean }) {
+export default function SubmitLessonButton({ lessonId, complete = false, onChange }: { lessonId: string; complete?: boolean; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean }) => void }) {
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -21,9 +21,10 @@ export default function SubmitLessonButton({ lessonId, complete = false }: { les
     let active = true
     fetch(`/api/lessons/submit?lesson_id=${encodeURIComponent(lessonId)}`)
       .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (active && d) { setSubmittedAt(d.submittedAt ?? null); setLocked(Boolean(d.locked)) } })
+      .then((d) => { if (active && d) { setSubmittedAt(d.submittedAt ?? null); setLocked(Boolean(d.locked)); onChange?.({ submittedAt: d.submittedAt ?? null, locked: Boolean(d.locked) }) } })
       .catch(() => {})
     return () => { active = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonId])
 
   async function submit() {
@@ -37,11 +38,13 @@ export default function SubmitLessonButton({ lessonId, complete = false }: { les
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) {
-        if (res.status === 409) { setSubmittedAt(d.submittedAt ?? new Date().toISOString()); setLocked(true); return }
+        if (res.status === 409) { const at = d.submittedAt ?? new Date().toISOString(); setSubmittedAt(at); setLocked(true); onChange?.({ submittedAt: at, locked: true }); return }
         throw new Error(d.error || 'Submit failed')
       }
-      setSubmittedAt(d.submittedAt ?? new Date().toISOString())
+      const at = d.submittedAt ?? new Date().toISOString()
+      setSubmittedAt(at)
       setLocked(true)
+      onChange?.({ submittedAt: at, locked: true })
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Submit failed')
     } finally {

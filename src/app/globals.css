@@ -1684,3 +1684,6 @@
   text-transform: uppercase;
   color: var(--primary);
 }
+
+/* A-7 · serif display is permitted for lesson headlines only; UI stays Inter. */
+.lesson-headline { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; font-weight: 700; }
