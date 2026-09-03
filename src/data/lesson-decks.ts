@@ -20,7 +20,7 @@ export interface DeckRef {
 const U1 = '/decks/unit-1'
 
 const UNIT1_DECKS: Record<number, DeckRef> = {
-  1: { src: `${U1}/Day 1-2 - Inertia Anchor.dc.html`, title: 'Day 1–2 — Inertia Anchor' },
+  1: { src: `${U1}/U1 Day 1 - The Briefing.html`, title: 'Day 1 — The Briefing: Something Is Coming' },
   2: { src: `${U1}/Day 2 - Motion Vocabulary.dc.html`, title: 'Day 2 — Motion Vocabulary' },
   3: { src: `${U1}/Day 3 - Graphs as Claims.dc.html`, title: 'Day 3 — Graphs as Claims' },
   4: { src: `${U1}/Day 4 - Velocity-Time and Vectors.dc.html`, title: 'Day 4 — Velocity-Time and Vectors' },

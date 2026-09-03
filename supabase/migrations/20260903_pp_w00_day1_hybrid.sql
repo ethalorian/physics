@@ -37,8 +37,10 @@ update public.lessons set content_blocks = jsonb_set(content_blocks, '{blocks}',
 where slug = 'pp-w00';
 
 -- Unit 1 (program physics): the authored deck for each day, first in the document.
+-- Day 1 is the "Something Is Coming" briefing deck (self-hosted from the design source),
+-- not the older Inertia Anchor bundle (decided with Craig 2026-09-03).
 with m(slug, src, title) as (values
- ('u1-d01', $$/decks/unit-1/Day 1-2 - Inertia Anchor.dc.html$$, 'Day 1–2 — Inertia Anchor'),
+ ('u1-d01', $$/decks/unit-1/U1 Day 1 - The Briefing.html$$, 'Day 1 — The Briefing: Something Is Coming'),
  ('u1-d02', $$/decks/unit-1/Day 2 - Motion Vocabulary.dc.html$$, 'Day 2 — Motion Vocabulary'),
  ('u1-d03', $$/decks/unit-1/Day 3 - Graphs as Claims.dc.html$$, 'Day 3 — Graphs as Claims'),
  ('u1-d04', $$/decks/unit-1/Day 4 - Velocity-Time and Vectors.dc.html$$, 'Day 4 — Velocity-Time and Vectors'),
