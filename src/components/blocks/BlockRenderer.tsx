@@ -13,6 +13,7 @@ import GewaInteractive, { type GewaValue } from './GewaInteractive'
 import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import DeckPresentCard from './DeckPresentCard'
+import { usePresentLive } from '@/components/lessons/PresentLiveProvider'
 import { useBlockResponses, type BlockResponseMap, type SaveMeta } from './useBlockResponses'
 import { SeiTextCapture, SeiPrompt, SeiVisual, SeiFrameBox, SeiFairnessNote, useSei } from './SeiLayer'
 import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
@@ -445,11 +446,23 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
   const pickedSaved = q?.options?.find((o) => o.id === prev.optionId)
   const state = useSei(b.sei, { defaultMode: q?.options?.length ? 'choice' : 'text' })
   const { showL1, profile } = useLanguageProfile()
+  // P-5 · when the teacher has this block open as a live poll, the answer is
+  // quick-rate evidence (evidence_source 'live_poll'); lock freezes new answers,
+  // reveal shows the key. The block itself is unchanged — same document (A-1).
+  const live = usePresentLive()
+  const isPoll = Boolean(live.session && live.session.pollBlockId === b.id)
+  const pollLocked = isPoll && live.session!.pollLocked
+  const pollRevealed = isPoll && live.session!.pollRevealed
   if (!q) return <p className="text-sm" style={{ color: C.muted }}>This question isn&apos;t set up yet.</p>
   const hasOptions = Boolean(q.options?.length)
-  const canSave = hasOptions ? Boolean(optionId) : explain.trim().length > 0
+  const canSave = (hasOptions ? Boolean(optionId) : explain.trim().length > 0) && !pollLocked
   return (
     <div>
+      {isPoll && (
+        <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 mb-2 text-[11px] font-semibold" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', color: 'var(--reward-foreground)', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))' }}>
+          <span aria-hidden>●</span> Live poll{pollLocked ? ' · answers locked' : ' · answer now'}
+        </div>
+      )}
       <SeiPrompt prompt={q.prompt} l1Text={state.l1Text} />
       <SeiVisual visual={b.sei?.visual} />
       {hasOptions && (
@@ -457,10 +470,11 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
           {q.options!.map((o) => {
             const on = optionId === o.id
             const l1 = showL1 && profile?.homeLang ? o.text_l1?.[profile.homeLang] : undefined
+            const key = pollRevealed && q.correctOptionId === o.id
             return (
-              <button key={o.id} type="button" onClick={() => { setOptionId(o.id); setSavedFlag(false) }}
-                className="rounded-lg border p-2 text-left text-sm flex items-center gap-2"
-                style={{ borderColor: on ? C.lavender : C.hairline, background: on ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', color: C.indigo }}>
+              <button key={o.id} type="button" disabled={pollLocked} onClick={() => { setOptionId(o.id); setSavedFlag(false) }}
+                className="rounded-lg border p-2 text-left text-sm flex items-center gap-2 disabled:opacity-70"
+                style={{ borderColor: key ? 'var(--success)' : on ? C.lavender : C.hairline, background: key ? 'color-mix(in oklch, var(--success) 12%, var(--card))' : on ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', color: C.indigo, boxShadow: key ? '0 0 0 2px color-mix(in oklch, var(--success) 40%, transparent)' : undefined }}>
                 {o.icon && <span aria-hidden className="text-lg" style={{ width: 28, textAlign: 'center' }}>{o.icon}</span>}
                 <span>{o.text}{l1 && <span className="block text-xs" style={{ color: C.muted }}>{l1}</span>}</span>
               </button>
@@ -493,7 +507,7 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
         </>
       )}
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: 'lesson_checkpoint', confidence }); setSavedFlag(true) }}
+        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence }); setSavedFlag(true) }}
           disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
           style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
           {savedFlag ? 'Saved ✓' : 'Save'}

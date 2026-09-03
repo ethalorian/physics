@@ -10,9 +10,12 @@ import { useSectionProgress } from '@/components/lessons/useSectionProgress'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { useBlockResponses } from '@/components/blocks/useBlockResponses'
 import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
+import { PresentLiveProvider, usePresentLive, useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
+import PresentLiveLayer from '@/components/present/PresentLiveLayer'
+import { Radio, Timer } from 'lucide-react'
 import { calibrationCopy, doneTallies, firstLockedIndex, gateNote, pageBlockedBy, sectionTarget, splitHelpRuns } from '@/components/lessons/stepped'
 import { Lock, Lightbulb } from 'lucide-react'
-import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual } from '@/data/content-blocks'
+import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual, type DeckBlock } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, CheckCircle2, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
@@ -43,7 +46,14 @@ const DAY_META: Record<string, { label: string; Icon: LucideIcon }> = {
 
 export default function BlockLessonViewer(props: BlockLessonViewerProps) {
   // The language profile + scaffold dial are shared by every block on the page.
-  return <LanguageProfileProvider><BlockLessonViewerInner {...props} /></LanguageProfileProvider>
+  // P-4/P-5 · students poll the live presentation (follow mode + open polls); staff drive it.
+  return (
+    <LanguageProfileProvider>
+      <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView}>
+        <BlockLessonViewerInner {...props} />
+      </PresentLiveProvider>
+    </LanguageProfileProvider>
+  )
 }
 
 function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonViewerProps) {
@@ -79,7 +89,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   const { responses, save, xpEarned: xpSession } = useBlockResponses(lesson.id)
 
   // A-5 · the class's reader flags + S-4 mastery + S-6 calibration, one fetch.
-  const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number } | null>(null)
+  const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean; presentLive?: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number } | null>(null)
   useEffect(() => {
     let active = true
     fetch(`/api/lessons/experience?lesson_id=${lesson.id}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (active && d?.flags) setExp(d) }).catch(() => {})
@@ -87,6 +97,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   }, [lesson.id])
   const stepped = (exp?.flags.experience ?? 'stepped') === 'stepped'
   const gating = stepped && (exp?.flags.gateCheckpoints ?? true)
+  const presentLive = exp?.flags.presentLive ?? true
 
   // Split the lesson into pages: each save-required block rides with the
   // reference blocks that set it up. Each page is one "section".
@@ -115,6 +126,22 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
     try { localStorage.setItem(storageKey, String(clamped)) } catch { /* ignore */ }
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
+
+  // P-4 · follow mode: a student device moves to the projector's section while
+  // following; tapping the rail (or Prev/Next) breaks away. Gates still apply —
+  // a locked section shows the catch-up note instead of jumping.
+  const live = usePresentLive()
+  const liveSection = live.session?.currentSection ?? null
+  const timerLeft = useTimerLeft(live.session?.timerEndsAt)
+  useEffect(() => {
+    if (staffView || !presentLive || !live.session || !live.follow || liveSection === null) return
+    if (liveSection === pageIdx || isLocked(liveSection)) return
+    setPageIdx(Math.max(0, Math.min(pageCount - 1, liveSection)))
+    try { localStorage.setItem(storageKey, String(liveSection)) } catch { /* ignore */ }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [liveSection, live.follow, live.session?.id, lockedFrom])
+  const breakAway = (i: number) => { if (live.session && i !== liveSection) live.setFollow(false); goTo(i) }
+  const deckBlock = useMemo(() => (blocks.find((b) => b.type === 'deck') as DeckBlock | undefined) ?? null, [blocks])
 
   // Per-section completion (the honest progress thread): explicit "Got it"
   // checkpoints, persisted per lesson. A section also reads done once passed.
@@ -148,7 +175,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
         {/* sticky section rail — the lesson's wayfinding spine (desktop only) */}
         <aside className="hidden lg:block">
           <div className="sticky" style={{ top: 96 }}>
-            <SectionRail sections={sections} currentIndex={pageIdx} isComplete={sectionDone} isLocked={isLocked} onJump={goTo} />
+            <SectionRail sections={sections} currentIndex={pageIdx} isComplete={sectionDone} isLocked={isLocked} onJump={breakAway} />
           </div>
         </aside>
 
@@ -192,11 +219,34 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 >
                   <Sigma size={11} /> Reference
                 </a>
+                {staffView && presentLive && (
+                  <PresentLiveLayer lessonId={lesson.id} lessonTitle={lesson.title} pages={pages} sections={sections} deck={deckBlock} onSectionChange={(i) => { if (!isLocked(i)) setPageIdx(i) }} />
+                )}
               </div>
             </div>
 
             {/* SEI level dial — visible to the student (principle 7) */}
             <div className="mt-2"><LanguageDial /></div>
+
+            {/* P-4 · live class: follow chip + class timer */}
+            {!staffView && live.session && (
+              <div className="mt-2 flex items-center gap-2 flex-wrap text-xs">
+                {live.follow ? (
+                  <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', color: 'var(--reward-foreground)', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))', minHeight: 28 }}>
+                    <Radio size={12} /> Following your teacher{liveSection !== null && isLocked(liveSection) ? ` · finish this checkpoint to catch up to section ${liveSection + 1}` : ''}
+                  </span>
+                ) : (
+                  <button type="button" onClick={() => { live.setFollow(true); if (liveSection !== null) goTo(liveSection) }} className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold" style={{ background: 'var(--card)', color: 'var(--primary)', border: '1px solid var(--border)', minHeight: 28 }}>
+                    <Radio size={12} /> Follow teacher{liveSection !== null ? ` · section ${liveSection + 1}` : ''}
+                  </button>
+                )}
+                {timerLeft !== null && (
+                  <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-bold tabular-nums" style={{ background: 'var(--card)', border: '1px solid var(--border)', color: timerLeft === 0 ? 'var(--destructive)' : 'var(--foreground)', minHeight: 28 }}>
+                    <Timer size={12} /> {fmtTimer(timerLeft)}
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* segmented progress — one segment per section */}
             <div className="mt-2 flex items-center gap-1" aria-hidden>
@@ -333,7 +383,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 </span>
               ) : (
                 <button
-                  onClick={() => { markComplete(pageIdx); if (!isLast) goTo(pageIdx + 1) }}
+                  onClick={() => { markComplete(pageIdx); if (!isLast) breakAway(pageIdx + 1) }}
                   className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold"
                   style={{ color: 'var(--success)', background: 'transparent', border: '1.5px solid color-mix(in oklch, var(--success) 55%, var(--border))', cursor: 'pointer' }}
                 >
@@ -395,7 +445,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
           <div className={stepped ? 'mt-6 pt-3 pb-3 flex items-center justify-between gap-3 sticky bottom-0 z-20 -mx-4 px-4' : 'mt-6 pt-5 flex items-center justify-between gap-3'}
             style={stepped ? { borderTop: '1px solid var(--border)', background: 'color-mix(in oklch, var(--background) 94%, transparent)', backdropFilter: 'blur(8px)' } : { borderTop: '1px solid var(--border)' }}>
             <button
-              onClick={() => goTo(pageIdx - 1)}
+              onClick={() => breakAway(pageIdx - 1)}
               disabled={pageIdx === 0}
               className="inline-flex items-center gap-1.5 rounded-2xl px-4 py-2.5 text-sm font-semibold disabled:opacity-40"
               style={{ border: '1px solid var(--border)', color: 'var(--foreground)', background: 'var(--card)', cursor: pageIdx === 0 ? 'default' : 'pointer' }}
@@ -439,7 +489,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                   <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Lock size={12} /> {gateNote(pageBlockedBy(page, responses))}</span>
                 )}
                 <button
-                  onClick={() => goTo(pageIdx + 1)}
+                  onClick={() => breakAway(pageIdx + 1)}
                   disabled={isLocked(pageIdx + 1)}
                   className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold disabled:opacity-40"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)', border: 'none', cursor: isLocked(pageIdx + 1) ? 'not-allowed' : 'pointer' }}

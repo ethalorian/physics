@@ -23,7 +23,7 @@ export const EVIDENCE_LABEL: Record<EvidenceSource, string> = {
   lesson_checkpoint: 'Checkpoint',
   exit_ticket: 'Exit ticket',
   lobby: 'Lobby',
-  live_poll: 'Live poll',
+  live_poll: 'Quick rate (live poll)',
   warmup: 'Warm-up',
   practice: 'Practice',
   transfer: 'Transfer',
