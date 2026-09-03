@@ -14,6 +14,7 @@
  *   ← → slides · B blackout · L lock poll · R reveal · Esc close panel
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { MonitorPlay, X, ChevronLeft, ChevronRight, Moon, Lock, Unlock, Eye, Timer, Radio, Square, BarChart3, StickyNote } from 'lucide-react'
 import type { ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
 import type { LessonSection } from '@/components/lessons/lesson-sections'
@@ -163,7 +164,9 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
         <MonitorPlay size={12} /> {live ? 'Live' : 'Present'}
       </button>
 
-      {open && (
+      {/* Portaled to <body>: the lesson header's backdrop-filter would otherwise become the
+          containing block for this fixed panel and clip it against the header. */}
+      {open && typeof document !== 'undefined' && createPortal(
         <div role="dialog" aria-label="Present controls"
           className="fixed z-40 flex flex-col"
           style={{ right: 12, bottom: 12, width: 380, maxWidth: 'calc(100vw - 24px)', maxHeight: 'calc(100vh - 24px)', background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 18, boxShadow: '0 24px 60px -24px rgba(0,0,0,.5)', overflow: 'hidden' }}>
@@ -288,7 +291,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
             )}
             <div className="text-[10px]" style={{ color: 'var(--muted-foreground)' }}>← → slides · B blackout · L lock · R reveal · Esc</div>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   )
