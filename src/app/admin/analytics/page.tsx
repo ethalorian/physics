@@ -9,6 +9,7 @@ import {
   BarChart3, Sparkles, Users, BookOpen, AlertTriangle,
   Lightbulb, GitCompare, ClipboardList, Loader2,
 } from 'lucide-react'
+import LessonSystemSignals from '@/components/admin/LessonSystemSignals'
 import { decayingAverage } from '@/data/curriculum-types'
 import { useClassScope } from '@/lib/use-class-scope'
 
@@ -454,6 +455,9 @@ export default function AnalyticsPage() {
           </div>
         </Section>
       )}
+
+      {/* O-1 · lesson-system signals (read-only for everyone — nothing here is an action) */}
+      <LessonSystemSignals unit={unit} />
 
       {/* Ask Claude */}
       <div className="rounded-2xl border p-5 mt-6" style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'var(--card)' }}>
