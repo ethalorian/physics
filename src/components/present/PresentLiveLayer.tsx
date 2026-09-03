@@ -52,6 +52,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
   const [snap, setSnap] = useState<DeckSnapshot | null>(null)
   const [tally, setTally] = useState<Tally | null>(null)
   const [deckOpen, setDeckOpen] = useState(false)
+  const [popupBlocked, setPopupBlocked] = useState(false)
   const deckWin = useRef<Window | null>(null)
   const timerLeft = useTimerLeft(session?.timer_ends_at)
 
@@ -87,6 +88,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
   const openDeck = async () => {
     deckWin.current = await openPresenterWindow(deckSrc)
     setDeckOpen(Boolean(deckWin.current))
+    setPopupBlocked(!deckWin.current)
     window.setTimeout(() => deckPresenting(deckWin.current, true), 1500)
   }
   // Watch the deck; push slide → section to the session (P-4) and the preview.
@@ -196,6 +198,9 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                 <button type="button" onClick={end} style={{ ...btn(), marginLeft: 'auto', color: 'var(--destructive)' }}><Square size={14} /> End</button>
               </div>
             )}
+            {live && popupBlocked && (
+              <div className="text-[11px]" style={{ color: 'var(--destructive)' }}>The browser blocked the slides window. Allow pop-ups for this site, then click Open slides again.</div>
+            )}
             {live && deckOpen && (
               <div className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
                 If the deck opened on this screen: drag it to the projector, then <strong>{fullscreenKeyHint()}</strong>. Display mode must be Extend.
@@ -208,7 +213,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                 <div className="flex items-center gap-2">
                   <button type="button" onClick={() => deckPrev(deckWin.current)} disabled={!deckOpen} style={btn()} aria-label="Previous slide"><ChevronLeft size={16} /></button>
                   <div className="flex-1 min-w-0 text-center">
-                    <div className="text-sm font-semibold truncate">{snap ? `Slide ${snap.index + 1} of ${snap.total}` : 'Slides not open'}</div>
+                    <div className="text-sm font-semibold truncate">{snap ? `Slide ${snap.index + 1} of ${snap.total}` : deckOpen ? 'Loading slides…' : 'Slides not open'}</div>
                     <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{snap?.slides[snap.index]?.label || (sections[currentSection]?.title ?? '')}</div>
                   </div>
                   <button type="button" onClick={() => deckNext(deckWin.current)} disabled={!deckOpen} style={btn()} aria-label="Next slide"><ChevronRight size={16} /></button>

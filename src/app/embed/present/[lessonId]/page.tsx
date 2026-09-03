@@ -75,7 +75,11 @@ export default function AutoDeckPage() {
   const stageRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
-    fetch(`/api/lessons/${lessonId}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (d) setLesson({ title: d.title, content_blocks: d.content_blocks ?? null }) }).catch(() => {})
+    // /api/lessons/[id] answers { lesson: row }.
+    fetch(`/api/lessons/${lessonId}`).then((r) => (r.ok ? r.json() : null)).then((d: { lesson?: { title?: string; content_blocks?: BlockDocument | null } } | null) => {
+      const l = d?.lesson
+      if (l) setLesson({ title: l.title ?? 'Lesson', content_blocks: l.content_blocks ?? null })
+    }).catch(() => {})
   }, [lessonId])
   const slides = useMemo(() => (lesson ? buildSlides(lesson.title, lesson.content_blocks) : []), [lesson])
   const total = slides.length
