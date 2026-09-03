@@ -79,10 +79,11 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
           vocab = ((terms ?? []) as { term: string }[]).map((t) => t.term)
         }
         const issues = seiLint(blocks, vocab)
-        const program = (unitRow as { program?: string } | null)?.program ?? 'physics'
-        if (issues.length > 0 && program === 'projects') {
+        void unitRow
+        const errors = issues.filter((i) => i.severity === 'error')
+        if (errors.length > 0) {
           return NextResponse.json(
-            { error: `Cannot publish: ${issues.length} capture block${issues.length === 1 ? '' : 's'} fail the SEI rule (every capture block needs a visual and a frame, and its Tier 2 terms must be in the lesson vocab). Fix them in the builder or add sei{} to the block.`, sei_issues: issues },
+            { error: `Cannot publish: ${errors.length} rule${errors.length === 1 ? '' : 's'} fail (SEI-2 / C-1: every capture block needs a visual and a frame; gated questions need per-option feedback; the lesson ends with an exit ticket or transfer prompt). Fix them in the builder or add sei{} to the block.`, sei_issues: issues },
             { status: 422 },
           )
         }

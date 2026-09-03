@@ -67,6 +67,14 @@ interface BaseBlock {
   note?: string;
   /** Language scaffold carried by the block as data (see SeiScaffold). */
   sei?: SeiScaffold;
+  /** B-1/B-2 — the learning target (slug) this block's evidence is tagged with. Capture blocks SHOULD carry one. */
+  targetId?: string;
+  /** B-4 — XP awarded once per student on first complete save. */
+  xp?: number;
+  /** B-3 — the section cannot advance until this block is complete (and correct if auto-checkable); honoured only when the class's gate_checkpoints is on. */
+  gate?: boolean;
+  /** B-6 — renders well at group scale (one artifact per group). Defaults by type in lobbyReadyDefault(). */
+  lobbyReady?: boolean;
   /**
    * Curriculum-track gate. If set (e.g. 'honors'), this block is shown ONLY to
    * classes of that track; CPA classes never see it. Undefined = visible to all
@@ -160,6 +168,8 @@ export interface DeckBlock extends BaseBlock {
   type: 'deck';
   src: string;                // static asset path, e.g. '/decks/unit-1/Day 5 - Predicting Position.dc.html'
   title: string;              // e.g. 'Day 5 — Predicting Position'
+  /** P-1 — the only curation override: which deck slide belongs to which section. Never changes the deck file. */
+  slideMap?: { slide: number; section: number }[];
 }
 
 /**
@@ -258,7 +268,7 @@ export interface SketchBlock extends BaseBlock {
 
 /** Inline question (the SEI "block anatomy" question): a prompt, optional picture
  *  options, and an optional explain step that takes a frame + word bank. */
-export interface InlineQuestionOption { id: string; text: string; icon?: string; text_l1?: Partial<Record<LangCode, string>> }
+export interface InlineQuestionOption { id: string; text: string; icon?: string; text_l1?: Partial<Record<LangCode, string>>; /** B-5 — per-wrong-option feedback that names the misconception. */ feedback?: string }
 export interface InlineQuestion {
   prompt: string;
   options?: InlineQuestionOption[];   // omit for open response
@@ -458,6 +468,12 @@ export const CAPTURE_BLOCK_TYPES: BlockType[] = [
   'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
   'lab_notebook', 'sketch',
 ];
+
+/** B-6 default: which block types render well at group scale. */
+export function lobbyReadyDefault(b: ContentBlock): boolean {
+  if (typeof b.lobbyReady === 'boolean') return b.lobbyReady;
+  return ['gewa', 'sketch', 'sentence_frame', 'data_table', 'observation', 'question', 'transfer_prompt', 'concept_exercise'].includes(b.type);
+}
 
 export function isCaptureBlock(b: ContentBlock): boolean {
   if (b.type === 'sentence_frame') return b.capture === true; // SEI: a frame the student writes INTO

@@ -2,21 +2,34 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
+import { evidenceSourceFor, isConfidence, isEvidenceSource } from '@/lib/evidence'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
 import { getStudentTrack } from '@/lib/student-enrollment'
 import { isBlockVisible, type Viewer } from '@/lib/track-visibility'
 
 // POST /api/lessons/blocks  — save a student's response to a capture block (append-only).
-// Body: { lesson_id, block_id, block_type, response, response_mode?, scaffolds_used? }
+// Body: { lesson_id, block_id, block_type, response, response_mode?, scaffolds_used?, target_id?, evidence_source?, confidence?, role? }
 export const POST = withEnrolledStudent(async (request, ctx) => {
     const body = await request.json()
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
       return NextResponse.json({ error: 'Missing lesson_id, block_id, or response' }, { status: 400 })
     }
+    // E-1 · target: the block's targetId is a learning_targets slug (or id); resolve to the uuid.
+    let targetId: string | null = null
+    if (typeof body.target_id === 'string' && body.target_id.trim()) {
+      const t = body.target_id.trim()
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(t)
+      const { data: tr } = await supabaseAdmin.from('learning_targets').select('id').eq(isUuid ? 'id' : 'slug', t).maybeSingle()
+      targetId = (tr as { id: string } | null)?.id ?? null
+    }
     const { data, error } = await supabaseAdmin
       .from('block_responses')
       .insert({
         user_id: ctx.userId,
+        target_id: targetId,
+        evidence_source: isEvidenceSource(body.evidence_source) ? body.evidence_source : evidenceSourceFor(String(body.block_type ?? '')),
+        confidence: isConfidence(body.confidence) ? body.confidence : null,
+        role: typeof body.role === 'string' ? body.role.slice(0, 40) : null,
         user_email: ctx.email,
         lesson_id: body.lesson_id,
         block_id: body.block_id,

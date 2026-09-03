@@ -84,15 +84,16 @@ export function scaffoldsOn(opts: { level: ScaffoldLevel; l1: boolean; frame: Se
 }
 
 // ---------------------------------------------------------------------------
-// Publish lint — "the builder won't publish a capture block that has no visual,
-// no frame, or Tier 3 terms not in the lesson vocab set." Hard for program
-// `projects`; warnings for everything else (the asteroid course predates the rule).
+// Publish lint — SEI-2 / C-1: "the builder won't publish a capture block that has
+// no visual, no frame, or Tier 2 terms not in the lesson vocab set." Hard for every
+// program (decided 2026-09-03: the design is in effect for all classes). `severity`
+// separates the hard rules (visual, frame, exit) from the warnings (target, vocab).
 // ---------------------------------------------------------------------------
 
 const CAPTURE_TEXT: ReadonlySet<string> = new Set(['question', 'exit_ticket', 'observation', 'sentence_frame'])
 const VISUAL_TYPES: ReadonlySet<string> = new Set(['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch', 'lab_notebook'])
 
-export interface SeiLintIssue { blockId: string; blockType: string; rule: 'visual' | 'frame' | 'vocab'; message: string }
+export interface SeiLintIssue { blockId: string; blockType: string; rule: 'visual' | 'frame' | 'vocab' | 'target' | 'exit' | 'feedback'; severity: 'error' | 'warning'; message: string }
 
 /** Lint a block list. `vocabTerms` = the lesson's vocabulary set (lowercased). */
 export function seiLint(blocks: ContentBlock[], vocabTerms: string[] = []): SeiLintIssue[] {
@@ -104,13 +105,24 @@ export function seiLint(blocks: ContentBlock[], vocabTerms: string[] = []): SeiL
     const sei = b.sei
     const prev = blocks[i - 1]
     const hasVisual = Boolean(sei?.visual) || Boolean(prev && VISUAL_TYPES.has(prev.type))
-    if (!hasVisual) issues.push({ blockId: b.id, blockType: b.type, rule: 'visual', message: 'No visual carries the meaning: add sei.visual or put a figure/diagram/sim/graph block right before it.' })
+    if (!hasVisual) issues.push({ blockId: b.id, blockType: b.type, rule: 'visual', severity: 'error', message: 'No visual carries the meaning: add sei.visual or put a figure/diagram/sim/graph block right before it.' })
     const ownFrame = (b as { frame?: string; patternFrame?: string }).frame || (b as { patternFrame?: string }).patternFrame
     const hasFrame = Boolean(sei?.frames?.length) || Boolean(ownFrame) || (b.type === 'question' && Boolean((b as { question?: { options?: unknown[] } }).question?.options?.length))
-    if (!hasFrame) issues.push({ blockId: b.id, blockType: b.type, rule: 'frame', message: 'No frame for output: add sei.frames (tier 1 forced-choice at least) or a frame on the block.' })
+    if (!hasFrame) issues.push({ blockId: b.id, blockType: b.type, rule: 'frame', severity: 'error', message: 'No frame for output: add sei.frames (tier 1 forced-choice at least) or a frame on the block.' })
     if (vocab.size > 0 && sei?.tier2Terms) {
-      for (const t of sei.tier2Terms) if (!vocab.has(t.toLowerCase())) issues.push({ blockId: b.id, blockType: b.type, rule: 'vocab', message: `"${t}" is not in this lesson's vocabulary set — add it so the glossary and the wall agree.` })
+      for (const t of sei.tier2Terms) if (!vocab.has(t.toLowerCase())) issues.push({ blockId: b.id, blockType: b.type, rule: 'vocab', severity: 'warning', message: `"${t}" is not in this lesson's vocabulary set — add it so the glossary and the wall agree.` })
+    }
+    // B-2 · capture blocks should carry a target (warning); B-5 · gated questions need per-option feedback.
+    if (!b.targetId) issues.push({ blockId: b.id, blockType: b.type, rule: 'target', severity: 'warning', message: 'No targetId: this evidence will land in the Control Room\'s "untargeted" bucket.' })
+    if (b.type === 'question' && b.gate) {
+      const opts = (b as { question?: { options?: { feedback?: string }[] } }).question?.options ?? []
+      if (opts.length > 0 && opts.some((o) => !o.feedback)) issues.push({ blockId: b.id, blockType: b.type, rule: 'feedback', severity: 'error', message: 'A gated question needs feedback on every option that names the misconception (B-5).' })
     }
   })
+  // C-1 · every lesson ends with an exit ticket or a transfer prompt.
+  const hasCapture = blocks.some((b) => CAPTURE_TEXT.has(b.type) || ['gewa', 'sketch', 'data_table', 'marzano', 'lab_notebook', 'concept_exercise', 'equation_sandbox'].includes(b.type))
+  if (hasCapture && !blocks.some((b) => b.type === 'exit_ticket' || b.type === 'transfer_prompt')) {
+    issues.push({ blockId: '', blockType: 'lesson', rule: 'exit', severity: 'error', message: 'Every lesson with student work ends with an exit_ticket or a transfer_prompt (C-1).' })
+  }
   return issues
 }
