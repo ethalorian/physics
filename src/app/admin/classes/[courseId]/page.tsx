@@ -24,6 +24,8 @@ interface RosterData {
   targets: { id: string; slug: string; statement: string }[]
   students: RosterRow[]
   summary: { classAvg: number | null; fluent: number; total: number; activeThisWeek: number; weakestTarget: { slug: string; almost: number } | null }
+  /** MC-4 · null until at least one (student, target) pair has both a self- and a teacher rating. */
+  calibration: { pairs: number; calibrated: number; over: number; under: number; overTarget: { slug: string; count: number } | null; move: string } | null
 }
 interface Challenge { id: string; title: string; target: number; bonus_xp: number; metric: string; ends_on: string; active: boolean; completedToday: number; assignments: { course_id: string | null; label: string }[]; is_global?: boolean }
 interface Redemption { id: string; user_email?: string; reward_name: string; cost_points: number; status: string }
@@ -78,6 +80,7 @@ function ClassCockpit() {
         targets: d.targets ?? [],
         students: d.students ?? [],
         summary: d.summary ?? { classAvg: null, fluent: 0, total: 0, activeThisWeek: 0, weakestTarget: null },
+        calibration: d.calibration ?? null,
       })
     }).catch(() => {})
   }, [courseId])
@@ -287,6 +290,21 @@ function ClassCockpit() {
                     </div>
                   )}
                 </div>
+                {/* MC-4 · class calibration row */}
+                {roster.calibration && (
+                  <div className="rounded-xl px-4 py-3 flex items-start gap-3 flex-wrap" style={{ border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--primary) 6%, var(--card))' }}>
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Calibration · self-rating vs your rating</div>
+                      <div className="text-sm mt-0.5 tabular-nums">
+                        <b style={{ color: 'var(--success)' }}>{Math.round((roster.calibration.calibrated / roster.calibration.pairs) * 100)}% calibrated</b>
+                        {' · '}<b style={{ color: 'var(--reward-foreground)' }}>{Math.round((roster.calibration.over / roster.calibration.pairs) * 100)}% over</b>
+                        {' · '}<b style={{ color: 'var(--primary)' }}>{Math.round((roster.calibration.under / roster.calibration.pairs) * 100)}% under</b>
+                        <span style={{ color: 'var(--muted-foreground)' }}> · {roster.calibration.pairs} rated pairs{roster.calibration.overTarget ? ` · over-rating clusters on ${roster.calibration.overTarget.slug}` : ''}</span>
+                      </div>
+                      <div className="text-xs mt-1" style={{ color: 'var(--foreground)' }}>{roster.calibration.move}</div>
+                    </div>
+                  </div>
+                )}
                 <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
                   Bands match the Control Room: <b style={{ color: 'var(--success)' }}>≥2.45 got it</b> · <b style={{ color: 'var(--reward-foreground)' }}>1.7–2.4 almost</b> · <b style={{ color: 'var(--destructive)' }}>&lt;1.7 not yet</b>. The app records mastery evidence — term grades stay your judgment.
                 </p>

@@ -89,7 +89,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   const { responses, save, xpEarned: xpSession } = useBlockResponses(lesson.id)
 
   // A-5 · the class's reader flags + S-4 mastery + S-6 calibration, one fetch.
-  const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean; presentLive?: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number } | null>(null)
+  const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean; presentLive?: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number; lobbyToday?: boolean } | null>(null)
   useEffect(() => {
     let active = true
     fetch(`/api/lessons/experience?lesson_id=${lesson.id}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (active && d?.flags) setExp(d) }).catch(() => {})
@@ -153,6 +153,11 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   const totalTasks = interactive.length
   const doneTasks = interactive.filter((b) => isBlockComplete(b, responses[b.id]?.response)).length
   const allTasksDone = totalTasks > 0 && doneTasks === totalTasks
+  // MC-6 · lobby day: self-rating opens only after the individual exit ticket is saved.
+  const exitPending = blocks.filter((b) => b.type === 'exit_ticket').some((b) => !isBlockComplete(b, responses[b.id]?.response))
+  const selfRatingHold = !staffView && exp?.lobbyToday && exitPending
+    ? 'Your group worked on this today. Save your own exit ticket first — then rate yourself on what YOU can do. · Primero guarda tu boleto de salida, luego califícate.'
+    : null
 
   const page = pages[pageIdx]
   const isLast = pageIdx === pageCount - 1
@@ -336,7 +341,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
           <div className="mt-4 lesson-reading">
             {page && stepped ? (
               splitHelpRuns(page.blocks).map((run, ri) => {
-                if (!run.help) return <BlockRenderer key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} />
+                if (!run.help) return <BlockRenderer key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
                 // S-4 · help drawer: open by default unless the student already rates Almost / Got it on the section's target.
                 const t = sectionTarget(page)
                 const level = t ? exp?.mastery[t] : undefined
@@ -347,12 +352,12 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                       <Lightbulb size={15} /> {openDefault ? 'Help & worked example' : 'Need a refresher? Help & worked example'}
                       <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>{openDefault ? '' : `· you’re rated ${level === 3 ? 'Got it' : 'Almost'} on this target`}</span>
                     </summary>
-                    <div className="px-4 pb-3"><BlockRenderer blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} /></div>
+                    <div className="px-4 pb-3"><BlockRenderer blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
                   </details>
                 )
               })
             ) : page ? (
-              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} />
+              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}

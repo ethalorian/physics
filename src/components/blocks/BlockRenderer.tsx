@@ -681,10 +681,20 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
   }
 }
 
-function RenderedBlock({ b, saved, save, lessonId, glossary }: { b: ContentBlock; saved: unknown; save: SaveFn; lessonId: string; glossary?: GlossaryEntry[] }) {
+function RenderedBlock({ b, saved, save, lessonId, glossary, selfRatingHold }: { b: ContentBlock; saved: unknown; save: SaveFn; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null }) {
+  const meta = BLOCK_META[b.type]
+  // MC-6 · on a lobby day the self-rating waits for the individual exit ticket
+  // (the group got it right ≠ I got it). The hold is a note, never a lost block.
+  if (selfRatingHold && (b.type === 'marzano' || b.type === 'self_assessment') && !isBlockComplete(b, saved)) {
+    const held = (
+      <div className="rounded-lg border p-3 text-sm flex items-center gap-2" style={{ borderColor: C.hairline, background: 'color-mix(in oklch, var(--reward) 10%, var(--card))', color: C.indigo }}>
+        <span aria-hidden>⏳</span> <span>{selfRatingHold}</span>
+      </div>
+    )
+    return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture>{held}</BlockShell> : held
+  }
   const body = renderBody(b, saved, save, lessonId, glossary)
   if (body === null) return null
-  const meta = BLOCK_META[b.type]
   if (!meta || BARE.has(b.type)) return <>{body}</>
   const capture = isCaptureBlock(b)
   const done = isBlockComplete(b, saved)
@@ -709,7 +719,7 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, lessonId, responses: extResponses, save: extSave, glossary, trackBadges = false,
+  blocks, lessonId, responses: extResponses, save: extSave, glossary, trackBadges = false, selfRatingHold = null,
 }: {
   blocks: ContentBlock[]
   lessonId: string
@@ -718,6 +728,8 @@ export default function BlockRenderer({
   glossary?: GlossaryEntry[]
   /** Staff view: mark CPA-only / Honors-only blocks with a rail + label. Students never see this. */
   trackBadges?: boolean
+  /** MC-6 · when set, unsaved self-ratings render this note instead of the input. */
+  selfRatingHold?: string | null
 }) {
   // Internal store is the fallback for callers that don't lift response state
   // (e.g. standalone previews). When the viewer passes responses+save down, the
@@ -740,7 +752,7 @@ export default function BlockRenderer({
               </span>
             )}
             <BlockBoundary label={b.type}>
-              <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} />
+              <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
             </BlockBoundary>
           </div>
         )

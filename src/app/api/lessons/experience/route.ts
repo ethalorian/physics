@@ -8,6 +8,7 @@ import type { ContentBlock } from '@/data/content-blocks'
 //   flags        — the student's class flags (lesson_experience, gate_checkpoints, …)
 //   mastery      — latest TEACHER rating per target slug used by this lesson (S-4 drawer default)
 //   calibration  — self vs teacher per lesson target, from the mastery_calibration view (MC-2/MC-3)
+//   lobbyToday   — MC-6: a lobby ran for this lesson today with this student → self-rating waits for the exit ticket
 //   xpEarned     — XP already granted for this lesson's blocks (B-4), so the Done screen is honest on reload
 // Staff get the stepped experience with gates on (preview = what a student sees by default).
 
@@ -74,5 +75,17 @@ export const GET = withAuth(async (request, ctx) => {
       .eq('user_id', ctx.userId).eq('source', 'lesson-block').like('reference', `${lessonId}:%`)
     const xpEarned = ((grants ?? []) as { points: number }[]).reduce((a, g) => a + (g.points ?? 0), 0)
 
-    return NextResponse.json({ flags, mastery, calibration, xpEarned })
+    // MC-6 · did a lobby run for this lesson today with this student in it?
+    let lobbyToday = false
+    {
+      const dayStart = new Date(); dayStart.setHours(0, 0, 0, 0)
+      const { data: ls } = await supabaseAdmin.from('lobby_sessions').select('id').eq('lesson_id', lessonId).gte('created_at', dayStart.toISOString())
+      const ids = ((ls ?? []) as { id: string }[]).map((l) => l.id)
+      if (ids.length > 0) {
+        const { count } = await supabaseAdmin.from('lobby_members').select('user_id', { count: 'exact', head: true }).in('session_id', ids).eq('user_id', ctx.userId)
+        lobbyToday = (count ?? 0) > 0
+      }
+    }
+
+    return NextResponse.json({ flags, mastery, calibration, xpEarned, lobbyToday })
 })

@@ -33,6 +33,7 @@ export const GET = withAuth(async (request, ctx) => {
     return NextResponse.json({
       students: [], targets: [],
       summary: { classAvg: null, fluent: 0, total: 0, activeThisWeek: 0, weakestTarget: null },
+      calibration: null,
     })
   }
 
@@ -115,9 +116,38 @@ export const GET = withAuth(async (request, ctx) => {
     }
   }
 
+  // MC-4 · class calibration: latest self-rating vs latest teacher rating per
+  // (student, target) from the mastery_calibration view (MC-2). Pairs without a
+  // teacher rating don't count — calibration is only knowable after you rate.
+  const { data: cal } = await supabaseAdmin.from('mastery_calibration')
+    .select('user_id, target_id, delta').in('user_id', gids).in('target_id', targetList.map((t) => t.id)).not('delta', 'is', null)
+  const calRows = (cal ?? []) as { user_id: string; target_id: string; delta: number }[]
+  const overByTarget = new Map<string, number>()
+  for (const c of calRows) if (c.delta > 0) overByTarget.set(c.target_id, (overByTarget.get(c.target_id) ?? 0) + 1)
+  let overTarget: { slug: string; count: number } | null = null
+  for (const [tid, n] of overByTarget) {
+    const t = targetList.find((x) => x.id === tid)
+    if (t && (!overTarget || n > overTarget.count)) overTarget = { slug: t.slug, count: n }
+  }
+  const nCal = calRows.length
+  const calibration = nCal === 0 ? null : {
+    pairs: nCal,
+    calibrated: calRows.filter((c) => c.delta === 0).length,
+    over: calRows.filter((c) => c.delta > 0).length,
+    under: calRows.filter((c) => c.delta < 0).length,
+    overTarget,
+    // One sequencing move, chosen from the shape of the drift — coaching, not judgment.
+    move: overTarget && overTarget.count >= 3
+      ? `Over-rating clusters on ${overTarget.slug}: open the next lesson with a cold checkpoint on it BEFORE the self-rating, then let students re-rate.`
+      : calRows.filter((c) => c.delta < 0).length > calRows.filter((c) => c.delta > 0).length
+        ? 'More under- than over-rating: show the class two rated exemplars side by side so "Got it" has a picture.'
+        : 'Calibration is holding: keep the self-rating after the exit ticket, not before.',
+  }
+
   return NextResponse.json({
     targets: targetList,
     students: rows,
+    calibration,
     summary: {
       classAvg,
       fluent: rows.filter((r) => (r.unitAvg ?? 0) >= 2.45).length,
