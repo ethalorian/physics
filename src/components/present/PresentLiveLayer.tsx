@@ -19,7 +19,7 @@ import { MonitorPlay, X, ChevronLeft, ChevronRight, Moon, Lock, Unlock, Eye, Tim
 import type { ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
 import type { LessonSection } from '@/components/lessons/lesson-sections'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
-import { watchDeck, deckNext, deckPrev, deckGo, deckBlackout, deckPresenting, sectionForSlide, type DeckSnapshot } from '@/lib/present-bridge'
+import { watchDeck, deckNext, deckPrev, deckGo, deckBlackout, deckPresenting, sectionForSlideProportional, type DeckSnapshot } from '@/lib/present-bridge'
 import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
 
 type Session = {
@@ -98,7 +98,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
     if (!deckOpen) return
     const stop = watchDeck(deckWin.current, (s) => {
       setSnap(s)
-      const section = sectionForSlide(s.index, sectionCount, deck?.slideMap)
+      const section = sectionForSlideProportional(s.index, s.total, sectionCount, deck?.slideMap)
       onSectionChange?.(section)
       if (lastPushed.current !== s.index) {
         lastPushed.current = s.index
@@ -111,7 +111,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
   }, [deckOpen, sectionCount, deck?.slideMap, session?.id])
 
   // Live poll candidates: `question` blocks with options in the current section.
-  const currentSection = session?.current_section ?? (snap ? sectionForSlide(snap.index, sectionCount, deck?.slideMap) : 0)
+  const currentSection = session?.current_section ?? (snap ? sectionForSlideProportional(snap.index, snap.total, sectionCount, deck?.slideMap) : 0)
   const pollable = useMemo(() => {
     const page = pages[currentSection]
     return (page?.blocks ?? []).filter((b): b is Extract<ContentBlock, { type: 'question' }> => b.type === 'question' && Boolean((b as { question?: InlineQuestion }).question?.options?.length))

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" font-family="system-ui, sans-serif">
+  <rect width="960" height="440" fill="#FAF9FC"/>
+  <rect x="40" y="30" width="420" height="380" rx="10" fill="#F1F7F3" stroke="#7FA68B" stroke-width="4"/>
+  <rect x="500" y="30" width="420" height="380" rx="10" fill="#F4F1FA" stroke="#9B8EC4" stroke-width="4"/>
+  <text x="250" y="76" text-anchor="middle" font-size="24" font-weight="700" fill="#17142E">PHYSICS CAN</text>
+  <text x="250" y="104" text-anchor="middle" font-size="18" fill="#4A4661">LA FÍSICA PUEDE</text>
+  <text x="250" y="132" text-anchor="middle" font-size="16" fill="#5E8B6E">measure · model · predict</text>
+  <text x="70" y="185" font-size="19" fill="#2B2840">📏 Where will it be? · ¿Dónde estará?</text>
+  <text x="70" y="225" font-size="19" fill="#2B2840">⏱ How fast? · ¿Qué tan rápido?</text>
+  <text x="70" y="265" font-size="19" fill="#2B2840">💥 How big a push? · ¿Cuánto empuje?</text>
+  <text x="70" y="305" font-size="19" fill="#2B2840">± How sure? · ¿Qué tan seguros?</text>
+  <text x="250" y="380" text-anchor="middle" font-size="15" fill="#5E8B6E" font-weight="700">TEST: can you MEASURE it + apply a LAW?</text>
+  <text x="710" y="76" text-anchor="middle" font-size="24" font-weight="700" fill="#17142E">PEOPLE DECIDE</text>
+  <text x="710" y="104" text-anchor="middle" font-size="18" fill="#4A4661">LO DECIDEN LAS PERSONAS</text>
+  <text x="710" y="132" text-anchor="middle" font-size="16" fill="#6B5FA8">physics is the input · la física es el insumo</text>
+  <text x="530" y="185" font-size="19" fill="#2B2840">📣 Tell the public? · ¿Informar?</text>
+  <text x="530" y="225" font-size="19" fill="#2B2840">💰 Who pays? · ¿Quién paga?</text>
+  <text x="530" y="265" font-size="19" fill="#2B2840">⚖ Is 1-in-100 worth it? · ¿Vale la pena?</text>
+  <text x="530" y="305" font-size="19" fill="#2B2840">🌍 Whose cities? · ¿Qué ciudades?</text>
+  <text x="710" y="380" text-anchor="middle" font-size="15" fill="#6B5FA8" font-weight="700">the decision is yours as a citizen</text>
+</svg>

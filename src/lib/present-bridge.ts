@@ -89,7 +89,9 @@ export function watchDeck(win: Window | null, onChange: (snap: DeckSnapshot) => 
   return () => { stopped = true; window.clearInterval(id); try { bound?.removeEventListener('slidechange', handler) } catch { /* closed */ } }
 }
 
-/** P-1 · slide → section. slideMap wins; otherwise 1:1 clamped to the section count. */
+/** P-1 · slide → section. slideMap wins (sparse maps carry forward: the last entry at or
+ *  before the slide applies). Without a map the deck is spread proportionally over the
+ *  sections, so a 24-slide deck over 6 sections moves one section every 4 slides. */
 export function sectionForSlide(slide: number, sectionCount: number, slideMap?: { slide: number; section: number }[]): number {
   if (slideMap?.length) {
     const exact = slideMap.find((m) => m.slide === slide)
@@ -99,4 +101,10 @@ export function sectionForSlide(slide: number, sectionCount: number, slideMap?: 
     return 0
   }
   return Math.max(0, Math.min(sectionCount - 1, slide))
+}
+
+/** Proportional fallback needs the deck length; the layer calls this when it knows it. */
+export function sectionForSlideProportional(slide: number, total: number, sectionCount: number, slideMap?: { slide: number; section: number }[]): number {
+  if (slideMap?.length || total <= 0 || sectionCount <= 0) return sectionForSlide(slide, sectionCount, slideMap)
+  return Math.max(0, Math.min(sectionCount - 1, Math.floor((slide / total) * sectionCount)))
 }

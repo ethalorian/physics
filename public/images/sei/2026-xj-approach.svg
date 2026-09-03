@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="system-ui, sans-serif">
+  <rect width="960" height="420" fill="#14112A"/>
+  <circle cx="240" cy="220" r="150" fill="none" stroke="#2E2950" stroke-width="2"/>
+  <circle cx="240" cy="220" r="100" fill="none" stroke="#2E2950" stroke-width="2"/>
+  <circle cx="240" cy="220" r="50" fill="none" stroke="#4A4478" stroke-width="2"/>
+  <circle cx="240" cy="220" r="16" fill="#7FA68B"/>
+  <text x="240" y="268" text-anchor="middle" font-size="18" fill="#7FA68B" font-weight="700">EARTH · TIERRA</text>
+  <circle cx="820" cy="110" r="12" fill="#E0A93D"/>
+  <text x="820" y="80" text-anchor="middle" font-size="20" fill="#E0A93D" font-weight="700">2026-XJ</text>
+  <line x1="806" y1="118" x2="300" y2="205" stroke="#E0A93D" stroke-width="4" stroke-dasharray="4 12"/>
+  <polygon points="300,205 326,190 322,214" fill="#E0A93D"/>
+  <text x="560" y="140" text-anchor="middle" font-size="22" fill="#FAF9FC">distance · distancia ≈ 1.2 × 10⁸ km</text>
+  <text x="560" y="170" text-anchor="middle" font-size="22" fill="#FAF9FC">velocity · velocidad ≈ 8,500 m/s</text>
+  <text x="560" y="330" text-anchor="middle" font-size="20" fill="#B8B3D1">mass · masa ≈ 3.5 × 10¹¹ kg — estimated · estimada</text>
+  <text x="560" y="362" text-anchor="middle" font-size="18" fill="#8B87A6">? composition · composición   ? rotation · rotación   ? hit or miss · impacta o no</text>
+  <text x="920" y="400" text-anchor="end" font-size="14" fill="#8B87A6">fiction · ficción — the physics is real · la física es real</text>
+</svg>
