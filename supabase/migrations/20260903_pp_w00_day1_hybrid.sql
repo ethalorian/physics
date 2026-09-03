@@ -79,7 +79,7 @@ from m where l.slug = m.slug;
 update public.lessons set content_blocks = jsonb_set(content_blocks, '{blocks}', (
  with b as (select b, o from jsonb_array_elements(content_blocks->'blocks') with ordinality as x(b,o))
  select
-   (select jsonb_build_array(b || '{"slideMap":[{"slide":0,"section":0},{"slide":3,"section":1},{"slide":4,"section":2},{"slide":5,"section":3},{"slide":6,"section":5},{"slide":7,"section":5}],"note":"Title/target/two-correct-answers → warm-up section; vocab board → vocabulary; walk-it sim → the track sketch; asteroid thread → the direction checkpoint; honors hinge + exit slide → exit ticket. Solve it (GEWA) is not on the deck — students reach it on their own."}'::jsonb) from b where b->>'id'='deck-u1-d02')
+   (select jsonb_build_array(b || '{"slideMap":[{"slide":0,"section":0},{"slide":3,"section":1},{"slide":4,"section":2},{"slide":5,"section":3},{"slide":6,"section":5}],"note":"7 slides. Title/target/two-correct-answers → warm-up; vocab board → vocabulary; walk-it sim → the track sketch; asteroid thread → the direction checkpoint; exit slide → exit ticket. Solve it (GEWA) is not on the deck."}'::jsonb) from b where b->>'id'='deck-u1-d02')
  || (select jsonb_build_array(b) from b where b->>'id'='b1')
  || $$[
  {"id":"d2-fig-warm","type":"figure","src":"/images/sei/door-desk-door.svg","alt":"A walk from the door to the desk and back: the yellow path there and back is the distance walked; the start and end are the same point, so the displacement is zero.","caption":"Warm-up: walk to your desk and back. · Camina a tu escritorio y regresa.","align":"full"},
