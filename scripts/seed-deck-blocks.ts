@@ -9,7 +9,7 @@
  *
  * Multi-day decks are shared: d11+d12 → "Day 11-12 - Derive F=ma",
  * d21+d22 → "Day 21-22 - Transfer Task". Day 1's anchor deck is
- * "Day 1-2 - Inertia Anchor"; Day 2 has its own vocabulary deck.
+ * "U1 Day 1 - The Briefing" (Something Is Coming — the self-hosted design export); Day 2 has its own vocabulary deck.
  *
  * IDEMPOTENT: any existing blocks with type === 'deck' are stripped from the
  * lesson before the fresh block is prepended, so re-running replaces rather
@@ -45,7 +45,7 @@ interface Doc { schemaVersion?: number; dayType?: string; blocks?: Block[] }
 
 /** slug → deck file (in public/decks/unit-1/) + presenter-card title. */
 const DECKS: Record<string, { file: string; title: string }> = {
-  'u1-d01': { file: 'Day 1-2 - Inertia Anchor.dc.html', title: 'Day 1–2 — Inertia Anchor' },
+  'u1-d01': { file: 'U1 Day 1 - The Briefing.html', title: 'Day 1 — The Briefing: Something Is Coming' },
   'u1-d02': { file: 'Day 2 - Motion Vocabulary.dc.html', title: 'Day 2 — Motion Vocabulary' },
   'u1-d03': { file: 'Day 3 - Graphs as Claims.dc.html', title: 'Day 3 — Graphs as Claims' },
   'u1-d04': { file: 'Day 4 - Velocity-Time and Vectors.dc.html', title: 'Day 4 — Velocity-Time and Vectors' },

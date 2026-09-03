@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" font-family="system-ui, sans-serif">
+  <rect width="960" height="340" fill="#14112A"/>
+  <circle cx="480" cy="170" r="40" fill="#7FA68B"/>
+  <text x="480" y="240" text-anchor="middle" font-size="18" fill="#7FA68B" font-weight="700">EARTH · TIERRA</text>
+  <circle cx="200" cy="90" r="10" fill="#E0A93D"/>
+  <line x1="215" y1="98" x2="420" y2="150" stroke="#E0A93D" stroke-width="5"/>
+  <polygon points="420,150 396,150 404,130" fill="#E0A93D"/>
+  <text x="290" y="60" text-anchor="middle" font-size="20" fill="#FAF9FC">1,000,000 km TOWARD · hacia</text>
+  <circle cx="760" cy="90" r="10" fill="#E0A93D"/>
+  <line x1="745" y1="98" x2="560" y2="140" stroke="#C05A5A" stroke-width="5" stroke-dasharray="10 8"/>
+  <polygon points="760,90 782,72 786,96" fill="#C05A5A"/>
+  <text x="700" y="60" text-anchor="middle" font-size="20" fill="#FAF9FC">1,000,000 km AWAY · alejándose</text>
+  <text x="480" y="300" text-anchor="middle" font-size="22" fill="#E0A93D" font-weight="700">Same distance · misma distancia — opposite displacement · desplazamiento opuesto</text>
+  <text x="480" y="328" text-anchor="middle" font-size="16" fill="#B8B3D1">direction matters · la dirección importa</text>
+</svg>

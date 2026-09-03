@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" font-family="system-ui, sans-serif">
+  <rect width="960" height="300" fill="#FAF9FC"/>
+  <rect x="60" y="80" width="70" height="140" rx="6" fill="#E5E2F0" stroke="#9B8EC4" stroke-width="3"/>
+  <text x="95" y="250" text-anchor="middle" font-size="18" fill="#4A4661">DOOR · puerta</text>
+  <rect x="780" y="120" width="120" height="60" rx="6" fill="#E5E2F0" stroke="#7FA68B" stroke-width="3"/>
+  <text x="840" y="215" text-anchor="middle" font-size="18" fill="#4A4661">DESK · escritorio</text>
+  <path d="M140 130 C 400 60, 600 60, 770 130" fill="none" stroke="#E0A93D" stroke-width="5"/>
+  <polygon points="770,130 748,118 752,140" fill="#E0A93D"/>
+  <path d="M770 170 C 600 240, 400 240, 140 170" fill="none" stroke="#E0A93D" stroke-width="5"/>
+  <polygon points="140,170 162,158 158,182" fill="#E0A93D"/>
+  <text x="455" y="60" text-anchor="middle" font-size="20" fill="#C08F2E" font-weight="700">DISTANCE walked · distancia = there + back</text>
+  <circle cx="95" cy="150" r="10" fill="#C05A5A"/>
+  <text x="455" y="285" text-anchor="middle" font-size="20" fill="#C05A5A" font-weight="700">DISPLACEMENT · desplazamiento = start → end = 0</text>
+</svg>
