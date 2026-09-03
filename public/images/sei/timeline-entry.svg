@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" font-family="system-ui, sans-serif">
+  <rect width="960" height="300" fill="#FAF9FC"/>
+  <text x="480" y="40" text-anchor="middle" font-size="18" fill="#8B87A6" font-weight="700">ENGINEERING TIMELINE · LÍNEA DE TIEMPO DE INGENIERÍA</text>
+  <rect x="40" y="70" width="270" height="180" rx="12" fill="#F1F7F3" stroke="#7FA68B" stroke-width="4"/>
+  <text x="175" y="110" text-anchor="middle" font-size="24" font-weight="700" fill="#17142E">PLANNED</text>
+  <text x="175" y="138" text-anchor="middle" font-size="18" fill="#4A4661">PLANEADO</text>
+  <text x="175" y="200" text-anchor="middle" font-size="18" fill="#5E8B6E">“We planned ___.”</text>
+  <polygon points="325,160 365,160 365,145 395,165 365,185 365,170 325,170" fill="#9B8EC4"/>
+  <rect x="405" y="70" width="270" height="180" rx="12" fill="#FFF7E8" stroke="#E0A93D" stroke-width="4"/>
+  <text x="540" y="110" text-anchor="middle" font-size="24" font-weight="700" fill="#17142E">ACTUAL</text>
+  <text x="540" y="138" text-anchor="middle" font-size="18" fill="#4A4661">REAL</text>
+  <text x="540" y="200" text-anchor="middle" font-size="18" fill="#C08F2E">“Actually ___.”</text>
+  <polygon points="690,160 730,160 730,145 760,165 730,185 730,170 690,170" fill="#9B8EC4"/>
+  <rect x="770" y="70" width="170" height="180" rx="12" fill="#FBEFEF" stroke="#C05A5A" stroke-width="4"/>
+  <text x="855" y="110" text-anchor="middle" font-size="24" font-weight="700" fill="#17142E">WHY?</text>
+  <text x="855" y="138" text-anchor="middle" font-size="18" fill="#4A4661">¿POR QUÉ?</text>
+  <text x="855" y="200" text-anchor="middle" font-size="18" fill="#C05A5A">“because ___”</text>
+  <text x="480" y="285" text-anchor="middle" font-size="15" fill="#8B87A6">the gap is the learning · la diferencia es el aprendizaje</text>
+</svg>
