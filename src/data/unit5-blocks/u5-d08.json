@@ -119,6 +119,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.r1-second-law"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Which way does heat flow on its own?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.4",
+        "24.6",
+        "24.7"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        43,
+        44
+      ],
+      "focus": "Second law, disorder, entropy — why 'thermal pollution' is a relative term."
     }
   ]
 }

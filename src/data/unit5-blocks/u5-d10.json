@@ -52,10 +52,22 @@
       "type": "diagram",
       "kind": "energy_chain",
       "links": [
-        { "label": "Kinetic energy", "sublabel": "½mv² of the incoming rock at ~15 km/s" },
-        { "label": "Drag does negative work", "sublabel": "air resistance strips KE during entry" },
-        { "label": "Heat at the surface", "sublabel": "surface reaches ~2000 °C — the glow" },
-        { "label": "Ablation / vaporization", "sublabel": "outer layer vaporizes, carrying heat away; high A/m → ALL of it goes" }
+        {
+          "label": "Kinetic energy",
+          "sublabel": "½mv² of the incoming rock at ~15 km/s"
+        },
+        {
+          "label": "Drag does negative work",
+          "sublabel": "air resistance strips KE during entry"
+        },
+        {
+          "label": "Heat at the surface",
+          "sublabel": "surface reaches ~2000 °C — the glow"
+        },
+        {
+          "label": "Ablation / vaporization",
+          "sublabel": "outer layer vaporizes, carrying heat away; high A/m → ALL of it goes"
+        }
       ]
     },
     {
@@ -92,7 +104,10 @@
       "prompt": "WOULD A 10-KG ROCK SURVIVE? A 10-kg rock at v = 15 km/s. Compute KE, E_vap, and the ratio. Will it reach the ground intact? Why?",
       "givenHint": "m = 10 kg · v = 1.5 × 10⁴ m/s · E_vap per kg ≈ 8.6 × 10⁶ J/kg",
       "equationHint": "KE = ½mv² and E_vap = m · 8.6 × 10⁶ J/kg. Compare the ratio — then think about A/m: is a 10-kg rock closer to the pebble or the asteroid?",
-      "equationIds": ["kinetic-energy", "heat"]
+      "equationIds": [
+        "kinetic-energy",
+        "heat"
+      ]
     },
     {
       "id": "b11",
@@ -106,6 +121,20 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.r3-atmospheric-entry"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 22,
+      "sectionIds": [
+        "22.4",
+        "22.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        44
+      ],
+      "focus": "Atmospheric entry: a meteor is a radiator. What decides how bright?"
     }
   ]
 }

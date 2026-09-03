@@ -102,6 +102,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k3-gpe-mgh"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Name three examples of potential energy."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        47,
+        51
+      ],
+      "focus": "PE = mgh — but h relative to WHAT? Problem 51 makes you choose."
     }
   ]
 }

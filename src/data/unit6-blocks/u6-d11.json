@@ -128,6 +128,43 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r3-doppler"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.9"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Describe the Doppler effect for a passing siren."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.9",
+        "25.10",
+        "25.11"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Doppler → bow waves → shock waves: the same idea at three speeds."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 26,
+      "sectionIds": [
+        "26.5",
+        "26.10"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        51,
+        52
+      ],
+      "focus": "Loudness and beats."
     }
   ]
 }

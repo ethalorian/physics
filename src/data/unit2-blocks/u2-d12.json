@@ -45,8 +45,16 @@
       "caption": "v points along the tangent (where the ball would go if released). F_c points inward along the string. If the string cuts, the ball follows v — straight out along the tangent.",
       "genPrompt": "A ball in circular motion: velocity vector tangent to the circle, centripetal force vector pointing toward the center, 90 degrees apart.",
       "vectors": [
-        { "label": "v (tangent)", "angle": 0, "mag": 80 },
-        { "label": "F_c (toward center)", "angle": 90, "mag": 60 }
+        {
+          "label": "v (tangent)",
+          "angle": 0,
+          "mag": 80
+        },
+        {
+          "label": "F_c (toward center)",
+          "angle": 90,
+          "mag": 60
+        }
       ],
       "showResultant": false
     },
@@ -66,7 +74,12 @@
       "prompt": "A 0.2 kg ball moves in a horizontal circle at 4 m/s on a 1 m string. What is the centripetal force? What provides it?",
       "givenHint": "m = 0.2 kg, v = 4 m/s, r = 1 m. Name the force playing the centripetal role in your Answer.",
       "equationHint": "F_c = m·v²/r.",
-      "equationOptions": ["F_c = m·v²/r", "a_c = v²/r", "F = m·g", "F = G·m₁·m₂/r²"]
+      "equationOptions": [
+        "F_c = m·v²/r",
+        "a_c = v²/r",
+        "F = m·g",
+        "F = G·m₁·m₂/r²"
+      ]
     },
     {
       "id": "b9",
@@ -88,13 +101,47 @@
       "capture": true,
       "chapter": 10,
       "title": "Circular Motion — read & practice",
-      "sectionIds": ["10.1", "10.2", "10.3", "10.4", "10.5"]
+      "sectionIds": [
+        "10.1",
+        "10.2",
+        "10.3",
+        "10.4",
+        "10.5"
+      ]
     },
     {
       "id": "b10",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.s3-centripetal-calc"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 10,
+      "sectionIds": [
+        "10.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is centripetal force — and what supplies it for a car on a curve?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 10,
+      "sectionIds": [
+        "10.1",
+        "10.2",
+        "10.3",
+        "10.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        49,
+        53,
+        54
+      ],
+      "focus": "Centrifugal 'force' is the one that isn't there. Be ready to explain why."
     }
   ]
 }

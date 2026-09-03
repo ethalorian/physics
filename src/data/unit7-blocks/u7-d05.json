@@ -129,6 +129,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k4-current"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Define current and its unit."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.1",
+        "34.2",
+        "34.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        59,
+        60
+      ],
+      "focus": "Current needs a potential difference — what provides it?"
     }
   ]
 }

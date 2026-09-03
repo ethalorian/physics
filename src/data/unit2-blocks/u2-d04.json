@@ -50,10 +50,25 @@
       "capture": true,
       "prompt": "Explore F = G·m₁·m₂/r². Start with reasonable asteroid numbers, then test: what happens to F when you double r? Triple it? Double one of the masses? Write what you find.",
       "variables": [
-        { "symbol": "G", "value": "6.67e-11", "unit": "N·m²/kg²" },
-        { "symbol": "m₁", "value": "5.97e24", "unit": "kg" },
-        { "symbol": "m₂", "value": "3.5e11", "unit": "kg" },
-        { "symbol": "r", "unit": "m" }
+        {
+          "symbol": "G",
+          "value": "6.67e-11",
+          "unit": "N·m²/kg²"
+        },
+        {
+          "symbol": "m₁",
+          "value": "5.97e24",
+          "unit": "kg"
+        },
+        {
+          "symbol": "m₂",
+          "value": "3.5e11",
+          "unit": "kg"
+        },
+        {
+          "symbol": "r",
+          "unit": "m"
+        }
       ]
     },
     {
@@ -76,13 +91,45 @@
       "capture": true,
       "chapter": 13,
       "title": "Universal Gravitation — read & practice",
-      "sectionIds": ["13.1", "13.2", "13.3", "13.4"]
+      "sectionIds": [
+        "13.1",
+        "13.2",
+        "13.3",
+        "13.4"
+      ]
     },
     {
       "id": "b9",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.k1-universal-gravitation"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Write the law of universal gravitation and name each symbol."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.1",
+        "13.2",
+        "13.3",
+        "13.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        57,
+        60
+      ],
+      "focus": "Newton's reasoning, then the equation it produced."
     }
   ]
 }

@@ -111,6 +111,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k7-power"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Power is work per time — find the unit named after James Watt."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.2",
+        "9.8",
+        "9.9"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        48,
+        53
+      ],
+      "focus": "Power, machines, efficiency: nothing is 100%. Where does the rest go?"
     }
   ]
 }

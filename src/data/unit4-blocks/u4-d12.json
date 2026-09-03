@@ -80,7 +80,10 @@
       "prompt": "COASTER BOTTOM FROM 40 M. A coaster cart starts from rest at the top of a 40-m hill. Frictionless. What's its speed at the bottom?",
       "givenHint": "v_i = 0 · h = 40 m · frictionless.",
       "equationHint": "mgh = ½mv² → v = √(2gh).",
-      "equationIds": ["potential-energy", "kinetic-energy"]
+      "equationIds": [
+        "potential-energy",
+        "kinetic-energy"
+      ]
     },
     {
       "id": "b11",
@@ -94,6 +97,40 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r3-coaster-pendulum"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.7"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Re-read: where is PE largest on a roller coaster? Where is KE largest?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "The pendulum is a conservation problem AND a timekeeper."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.7"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        52,
+        54
+      ],
+      "focus": "Coaster + pendulum: height in, speed out."
     }
   ]
 }

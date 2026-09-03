@@ -130,6 +130,33 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k3-reflection"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "State the law of reflection."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.1",
+        "29.2",
+        "29.3",
+        "29.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        49,
+        50
+      ],
+      "focus": "Problem 50 is a radar echo off an asteroid — our Day 15 in miniature."
     }
   ]
 }

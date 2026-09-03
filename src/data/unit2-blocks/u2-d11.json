@@ -46,7 +46,12 @@
       "prompt": "Same launch speed (20 m/s), but now θ = 60°. Predict first: will the range be bigger, smaller, or the same as 30°? Then compute it.",
       "givenHint": "v = 20 m/s, θ = 60°, level ground. Write your prediction in the Given box too.",
       "equationHint": "Same four-equation chain as the worked example: components → flight time → range.",
-      "equationOptions": ["vₓ = v·cos θ", "v_y = v·sin θ", "t = 2·v_y/g", "x = vₓ·t"]
+      "equationOptions": [
+        "vₓ = v·cos θ",
+        "v_y = v·sin θ",
+        "t = 2·v_y/g",
+        "x = vₓ·t"
+      ]
     },
     {
       "id": "b7",
@@ -60,6 +65,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.r2-predict-landing"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 5,
+      "sectionIds": [
+        "5.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "At what angle does a projectile go farthest?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 5,
+      "sectionIds": [
+        "5.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        44,
+        45,
+        49
+      ],
+      "focus": "Angled launches: components in, components out."
     }
   ]
 }

@@ -76,6 +76,17 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.anchor-why-bend"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.1",
+        "13.2"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "The apple and the moon are the same problem."
     }
   ]
 }

@@ -38,9 +38,21 @@
       "caption": "Before: the cue ball carries all the momentum east. After: the cue ball goes 30° north of east, so the struck ball MUST go south of east — the y-components have to cancel.",
       "genPrompt": "Cue ball initial velocity east, cue ball final at +30 degrees, struck ball final at about -24 degrees, showing y-components canceling.",
       "vectors": [
-        { "label": "p_cue before (east)", "angle": 0, "mag": 90 },
-        { "label": "p_cue after (30° N of E)", "angle": 30, "mag": 45 },
-        { "label": "p_ball2 after (≈24° S of E)", "angle": -24, "mag": 55 }
+        {
+          "label": "p_cue before (east)",
+          "angle": 0,
+          "mag": 90
+        },
+        {
+          "label": "p_cue after (30° N of E)",
+          "angle": 30,
+          "mag": 45
+        },
+        {
+          "label": "p_ball2 after (≈24° S of E)",
+          "angle": -24,
+          "mag": 55
+        }
       ],
       "showResultant": false
     },
@@ -67,7 +79,12 @@
       "prompt": "Same setup, but now the cue ball goes 1.5 m/s at 45° north of east after impact. Find the second ball's speed and direction.",
       "givenHint": "Equal masses (cancel). v_cue_i = 2 m/s east; v_cue_f = 1.5 m/s @ 45°.",
       "equationHint": "Balance x: v₂cosθ = 2 − 1.5·cos45°. Balance y: v₂sinθ = 1.5·sin45°. Then tan θ and v₂.",
-      "equationOptions": ["Σp_x: before = after", "Σp_y: before = after", "vₓ = v·cos θ", "v_y = v·sin θ"]
+      "equationOptions": [
+        "Σp_x: before = after",
+        "Σp_y: before = after",
+        "vₓ = v·cos θ",
+        "v_y = v·sin θ"
+      ]
     },
     {
       "id": "b9",
@@ -81,6 +98,26 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.r2-2d-components"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Momentum is a vector — what does that change for a glancing collision?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.6"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Momentum vectors add tip-to-tail like every other vector you've met."
     }
   ]
 }

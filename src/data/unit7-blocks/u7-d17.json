@@ -26,9 +26,21 @@
       "title": "The Car Project circuit — one series loop",
       "caption": "Battery → switch → motor → back. This is the exact circuit you will build on Day 1 of Unit 8. Everything you verified in the Day 10 lab applies to it directly.",
       "components": [
-        { "kind": "battery", "side": "left", "label": "9V battery" },
-        { "kind": "switch", "side": "top", "label": "switch (ON/OFF)" },
-        { "kind": "motor", "side": "right", "label": "DC motor, R ≈ 3-5 Ω" }
+        {
+          "kind": "battery",
+          "side": "left",
+          "label": "9V battery"
+        },
+        {
+          "kind": "switch",
+          "side": "top",
+          "label": "switch (ON/OFF)"
+        },
+        {
+          "kind": "motor",
+          "side": "right",
+          "label": "DC motor, R ≈ 3-5 Ω"
+        }
       ]
     },
     {
@@ -86,6 +98,20 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.bridge-car-project"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 37,
+      "sectionIds": [
+        "37.5",
+        "37.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        59
+      ],
+      "focus": "Transformers and power transmission — why the grid runs at high voltage."
     }
   ]
 }

@@ -54,10 +54,22 @@
       "title": "From core dynamo to a living planet",
       "caption": "The same physics chain as the Car motor — current makes field, field exerts force — running continuously at planetary scale for billions of years.",
       "links": [
-        { "label": "Molten iron flows", "sublabel": "outer-core dynamo = current" },
-        { "label": "Earth's B-field", "sublabel": "≈ 25–65 μT at the surface" },
-        { "label": "Solar wind deflected", "sublabel": "≈ 127 GW turned aside, continuously" },
-        { "label": "Atmosphere survives", "sublabel": "→ life on Earth" }
+        {
+          "label": "Molten iron flows",
+          "sublabel": "outer-core dynamo = current"
+        },
+        {
+          "label": "Earth's B-field",
+          "sublabel": "≈ 25–65 μT at the surface"
+        },
+        {
+          "label": "Solar wind deflected",
+          "sublabel": "≈ 127 GW turned aside, continuously"
+        },
+        {
+          "label": "Atmosphere survives",
+          "sublabel": "→ life on Earth"
+        }
       ]
     },
     {
@@ -87,7 +99,12 @@
       "prompt": "MAGNETOSPHERE DISTURBANCE SCENARIO — A 2026-XJ-sized impact generates an EMP. If the pulse induces 10 V/m in the atmosphere over a 10-meter-long power line, what voltage spike is delivered to a transformer at its end? (V = E · L for a uniform field.)",
       "givenHint": "E = 10 V/m · L = 10 m.",
       "equationHint": "For a uniform field along the line: V = E · L.",
-      "equationOptions": ["V = E · L", "V = I · R", "E = F / q", "P = V · I"]
+      "equationOptions": [
+        "V = E · L",
+        "V = I · R",
+        "E = F / q",
+        "P = V · I"
+      ]
     },
     {
       "id": "b10",
@@ -108,6 +125,17 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.r3-magnetosphere-emp"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.9",
+        "36.6"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Earth's field deflects moving charges — that is the magnetosphere."
     }
   ]
 }

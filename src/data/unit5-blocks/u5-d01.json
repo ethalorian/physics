@@ -120,6 +120,29 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.anchor-heat-vs-temp"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What does a thermometer actually measure?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.1",
+        "21.2",
+        "21.3",
+        "21.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Temperature, heat, thermal equilibrium, internal energy — four ideas, keep them apart."
     }
   ]
 }

@@ -76,6 +76,16 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.anchor-two-questions"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Momentum is inertia in motion — what two things does it depend on?"
     }
   ]
 }

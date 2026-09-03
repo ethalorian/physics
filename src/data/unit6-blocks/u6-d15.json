@@ -26,11 +26,26 @@
       "type": "diagram",
       "kind": "energy_chain",
       "links": [
-        { "label": "Transmit", "sublabel": "Goldstone dish sends a 2.4 GHz pulse (f_T) toward 2026-XJ" },
-        { "label": "Echo returns", "sublabel": "Pulse reflects off the asteroid; intensity falls as 1/r⁴ (out AND back)" },
-        { "label": "Time Δt → DISTANCE", "sublabel": "d = c·Δt/2 — precise to meters" },
-        { "label": "Shift Δf → VELOCITY", "sublabel": "v = (Δf/f_T)·c — higher echo f = approaching; precise to mm/s" },
-        { "label": "Strength → SIZE", "sublabel": "Radar cross-section + assumed albedo/density → size + mass, with the biggest uncertainty" }
+        {
+          "label": "Transmit",
+          "sublabel": "Goldstone dish sends a 2.4 GHz pulse (f_T) toward 2026-XJ"
+        },
+        {
+          "label": "Echo returns",
+          "sublabel": "Pulse reflects off the asteroid; intensity falls as 1/r⁴ (out AND back)"
+        },
+        {
+          "label": "Time Δt → DISTANCE",
+          "sublabel": "d = c·Δt/2 — precise to meters"
+        },
+        {
+          "label": "Shift Δf → VELOCITY",
+          "sublabel": "v = (Δf/f_T)·c — higher echo f = approaching; precise to mm/s"
+        },
+        {
+          "label": "Strength → SIZE",
+          "sublabel": "Radar cross-section + assumed albedo/density → size + mass, with the biggest uncertainty"
+        }
       ]
     },
     {
@@ -90,6 +105,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r5-radar-chain"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        50
+      ],
+      "focus": "Reflection of sound is radar's grandfather."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 27,
+      "sectionIds": [
+        "27.2"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        64
+      ],
+      "focus": "Problem 64: a laser pulse to the moon and back — the radar timing calculation."
     }
   ]
 }

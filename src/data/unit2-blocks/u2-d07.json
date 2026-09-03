@@ -29,7 +29,52 @@
       "series": [
         {
           "label": "g(r) = G·M/r²",
-          "points": [[0, 9.81], [400, 8.7], [1000, 7.33], [2000, 5.68], [3000, 4.53], [5000, 3.08], [8000, 1.93], [10000, 1.49], [15000, 0.87], [20000, 0.57], [35786, 0.22]]
+          "points": [
+            [
+              0,
+              9.81
+            ],
+            [
+              400,
+              8.7
+            ],
+            [
+              1000,
+              7.33
+            ],
+            [
+              2000,
+              5.68
+            ],
+            [
+              3000,
+              4.53
+            ],
+            [
+              5000,
+              3.08
+            ],
+            [
+              8000,
+              1.93
+            ],
+            [
+              10000,
+              1.49
+            ],
+            [
+              15000,
+              0.87
+            ],
+            [
+              20000,
+              0.57
+            ],
+            [
+              35786,
+              0.22
+            ]
+          ]
         }
       ]
     },
@@ -60,7 +105,12 @@
       "prompt": "Find the altitude above Earth's surface where g = 4.9 m/s² (half of surface g). Hint: solve g = G·M/r² for r. Then subtract R_Earth.",
       "givenHint": "g = 4.9 m/s², G, M_Earth = 5.97 × 10²⁴ kg, R_Earth = 6.37 × 10⁶ m.",
       "equationHint": "Rearrange: r = √(G·M/g). Don't forget to subtract R_Earth at the end — the question asks for ALTITUDE.",
-      "equationOptions": ["g(r) = G·M/r²", "r = √(G·M/g)", "F = m·g", "F = G·m₁·m₂/r²"]
+      "equationOptions": [
+        "g(r) = G·M/r²",
+        "r = √(G·M/g)",
+        "F = m·g",
+        "F = G·m₁·m₂/r²"
+      ]
     },
     {
       "id": "b8",
@@ -74,6 +124,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.r3-compare-g"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.8"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        56,
+        63,
+        64
+      ],
+      "focus": "Weight changes with altitude; problem 64 kills the 'above gravity' myth."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Preview: what turns falling into orbiting?"
     }
   ]
 }

@@ -64,7 +64,12 @@
       "prompt": "Compute g at the ISS (altitude 400 km, so r = R_Earth + 400 km = 6.77 × 10⁶ m). Then explain in one sentence why astronauts float anyway.",
       "givenHint": "G, M_Earth = 5.97 × 10²⁴ kg, and r = 6.77 × 10⁶ m (center-to-center!).",
       "equationHint": "Field strength: g(r) = G·M/r².",
-      "equationOptions": ["g(r) = G·M/r²", "F = G·m₁·m₂/r²", "F = m·g", "v = √(G·M/r)"]
+      "equationOptions": [
+        "g(r) = G·M/r²",
+        "F = G·m₁·m₂/r²",
+        "F = m·g",
+        "v = √(G·M/r)"
+      ]
     },
     {
       "id": "b9",
@@ -78,6 +83,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.k2-field-strength"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is a gravitational field? One sentence."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.6",
+        "13.7"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        53,
+        55
+      ],
+      "focus": "Problem 53 derives g from G — do that one carefully."
     }
   ]
 }

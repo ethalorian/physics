@@ -213,6 +213,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k1-wave-anatomy"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Define wavelength, amplitude, frequency, period."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.2",
+        "25.5",
+        "25.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        61,
+        62
+      ],
+      "focus": "Transverse vs. longitudinal — which way does the medium move in each?"
     }
   ]
 }

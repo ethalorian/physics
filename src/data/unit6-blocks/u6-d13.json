@@ -124,6 +124,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k8-mirrors"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Where is the image in a plane mirror, and is it real?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        49,
+        51
+      ],
+      "focus": "Virtual images — problem 51 (spider in the mirror) is the classic."
     }
   ]
 }

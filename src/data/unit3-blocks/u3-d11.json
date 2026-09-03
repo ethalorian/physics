@@ -46,7 +46,12 @@
       "prompt": "2026-XJ has mass M ≈ 1 × 10⁹ kg and will pass Earth in 6 months (t ≈ 1.5 × 10⁷ s). We need to shift its position by R_Earth ≈ 6.4 × 10⁶ m to miss us. What Δv does it need? Then: would a DART-scale strike (600 kg at 6 km/s) deliver it?",
       "givenHint": "Required: Δv = shift / time. Available from one DART: Δv = m·v / M with M = 10⁹ kg.",
       "equationHint": "Compute the NEEDED Δv first, then the DELIVERED Δv, then compare.",
-      "equationOptions": ["Δv = shift / time", "Δv ≈ m·v / M", "p = m·v", "J = F·Δt"]
+      "equationOptions": [
+        "Δv = shift / time",
+        "Δv ≈ m·v / M",
+        "p = m·v",
+        "J = F·Δt"
+      ]
     },
     {
       "id": "b7",
@@ -67,6 +72,19 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.r3-deflection"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        64
+      ],
+      "focus": "DART was an impulse delivered to an asteroid. Re-read conservation with that in mind."
     }
   ]
 }

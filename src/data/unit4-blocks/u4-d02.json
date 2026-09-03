@@ -109,6 +109,27 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k1-work"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "When is NO work done, even though you push?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.1",
+        "9.2"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Work, then power — the second is just the first divided by time."
     }
   ]
 }

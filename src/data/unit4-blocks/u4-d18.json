@@ -122,6 +122,28 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r5-heat-bridge"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Heat is energy that moves — from what to what?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.1",
+        "21.2",
+        "21.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Temperature vs. heat vs. internal energy — three different things."
     }
   ]
 }

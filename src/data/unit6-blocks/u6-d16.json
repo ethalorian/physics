@@ -102,6 +102,26 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r6-wiens-law"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 27,
+      "sectionIds": [
+        "27.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Color is frequency."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 22,
+      "sectionIds": [
+        "22.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Hotter emitters peak at higher frequency — Wien's law in words."
     }
   ]
 }

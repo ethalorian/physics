@@ -47,7 +47,40 @@
       "series": [
         {
           "label": "F = Δp / Δt",
-          "points": [[0.05, 14400], [0.1, 7200], [0.2, 3600], [0.3, 2400], [0.4, 1800], [0.5, 1440], [0.75, 960], [1.0, 720]]
+          "points": [
+            [
+              0.05,
+              14400
+            ],
+            [
+              0.1,
+              7200
+            ],
+            [
+              0.2,
+              3600
+            ],
+            [
+              0.3,
+              2400
+            ],
+            [
+              0.4,
+              1800
+            ],
+            [
+              0.5,
+              1440
+            ],
+            [
+              0.75,
+              960
+            ],
+            [
+              1.0,
+              720
+            ]
+          ]
         }
       ]
     },
@@ -67,7 +100,10 @@
       "prompt": "Pick one: airbag, helmet, boxing glove, gymnastics mat, parkour roll, or follow-through on a tennis swing. Explain how it uses LONGER Δt to reduce F for the SAME Δp (or, for follow-through, longer Δt to deliver MORE Δp). Be specific about what physically extends the contact time.",
       "givenHint": "Name your case and what the Δp is (what stops, or what speeds up).",
       "equationHint": "J = F·Δt = Δp — argue with the equation, not just words.",
-      "equationIds": ["impulse", "momentum"]
+      "equationIds": [
+        "impulse",
+        "momentum"
+      ]
     },
     {
       "id": "b9",
@@ -81,6 +117,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.r1-extend-time"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Why does a longer stopping time mean a smaller force?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        60,
+        62
+      ],
+      "focus": "Airbags, egg on a sheet, follow-through — same equation, three stories."
     }
   ]
 }

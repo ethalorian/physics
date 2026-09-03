@@ -44,9 +44,18 @@
       "title": "A spring launch, in energy language",
       "caption": "The stored ½kx² spends as motion — and if the launch is vertical, the motion spends as height. Same Joules, three accounts.",
       "links": [
-        { "label": "Spring PE", "sublabel": "U = ½kx² — stored in the compression" },
-        { "label": "Kinetic energy", "sublabel": "½mv² — the cart leaves the spring" },
-        { "label": "Gravitational PE", "sublabel": "mgh — if launched upward, KE buys height" }
+        {
+          "label": "Spring PE",
+          "sublabel": "U = ½kx² — stored in the compression"
+        },
+        {
+          "label": "Kinetic energy",
+          "sublabel": "½mv² — the cart leaves the spring"
+        },
+        {
+          "label": "Gravitational PE",
+          "sublabel": "mgh — if launched upward, KE buys height"
+        }
       ]
     },
     {
@@ -65,7 +74,12 @@
       "prompt": "VERTICAL LAUNCH. A spring with k = 800 N/m is compressed 5 cm (0.05 m). It launches a 0.1-kg ball straight up (friction-free). How high does the ball go?",
       "givenHint": "k = 800 N/m · x = 0.05 m · m = 0.1 kg.",
       "equationHint": "All the spring PE becomes gravitational PE at the top: ½kx² = mgh → solve for h.",
-      "equationOptions": ["½·k·x² = m·g·h", "½·k·x² = ½·m·v²", "F_spring = −k·x", "P = W / t"]
+      "equationOptions": [
+        "½·k·x² = m·g·h",
+        "½·k·x² = ½·m·v²",
+        "F_spring = −k·x",
+        "P = W / t"
+      ]
     },
     {
       "id": "b9",
@@ -79,6 +93,16 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.s5-spring-pe"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 18,
+      "sectionIds": [
+        "18.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Re-read with ½kx² in mind: why is spring PE proportional to x squared?"
     }
   ]
 }

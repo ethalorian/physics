@@ -163,6 +163,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k5-ohms-law"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "State Ohm's law and rearrange it for I."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.4",
+        "34.5",
+        "34.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        61,
+        67
+      ],
+      "focus": "Resistance, Ohm's law, and why a shock is about current not voltage."
     }
   ]
 }

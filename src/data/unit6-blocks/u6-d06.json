@@ -115,6 +115,27 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k5-diffraction"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 31,
+      "sectionIds": [
+        "31.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "When does diffraction matter most — big or small openings?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 31,
+      "sectionIds": [
+        "31.1",
+        "31.2"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Huygens' principle first; diffraction follows from it."
     }
   ]
 }

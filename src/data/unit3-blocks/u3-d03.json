@@ -65,7 +65,11 @@
       "prompt": "DART hit Dimorphos for about 0.05 s with an average force of about 8 × 10⁵ N. What change in asteroid momentum did it deliver?",
       "givenHint": "F = 8 × 10⁵ N and Δt = 0.05 s.",
       "equationHint": "J = F·Δt = Δp.",
-      "equationIds": ["impulse", "momentum", "newton-2nd"]
+      "equationIds": [
+        "impulse",
+        "momentum",
+        "newton-2nd"
+      ]
     },
     {
       "id": "b10",
@@ -100,13 +104,41 @@
       "capture": true,
       "chapter": 8,
       "title": "Momentum — read & practice",
-      "sectionIds": ["8.2"]
+      "sectionIds": [
+        "8.2"
+      ]
     },
     {
       "id": "b13",
       "type": "marzano",
       "capture": true,
       "targetId": "u3.s1-compute-impulse"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "How does a force applied for a TIME change momentum?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.2",
+        "8.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        56,
+        60,
+        61
+      ],
+      "focus": "Impulse = change in momentum. Bouncing doubles it — why?"
     }
   ]
 }

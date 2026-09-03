@@ -83,6 +83,16 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.anchor-damage-energy"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Work needs a force AND a distance in its direction."
     }
   ]
 }

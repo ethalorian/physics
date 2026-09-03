@@ -35,7 +35,13 @@
       "prompt": "Find F between Earth (m₁ = 5.97 × 10²⁴ kg) and 2026-XJ (m₂ = 3.5 × 10¹¹ kg) at r = 1.0 × 10¹⁰ m (about 26 lunar distances).",
       "givenHint": "Both masses, the distance r, and G = 6.67 × 10⁻¹¹.",
       "equationHint": "Newton's universal gravitation — same recipe as the worked example.",
-      "equationIds": ["gravitation", "weight", "newton-2nd", "avg-speed", "displacement"]
+      "equationIds": [
+        "gravitation",
+        "weight",
+        "newton-2nd",
+        "avg-speed",
+        "displacement"
+      ]
     },
     {
       "id": "b6",
@@ -44,7 +50,9 @@
       "prompt": "If 2026-XJ moves to r = 5.0 × 10⁹ m (HALF the previous distance), what is F now? You can SCALE rather than recompute: F_new = F_old × (factor).",
       "givenHint": "Your previous answer for F, and the fact that r was cut in half.",
       "equationHint": "r × ½ → F × 4. Scale your previous answer.",
-      "equationIds": ["gravitation"]
+      "equationIds": [
+        "gravitation"
+      ]
     },
     {
       "id": "b7",
@@ -72,13 +80,47 @@
       "capture": true,
       "chapter": 13,
       "title": "Universal Gravitation — read & practice",
-      "sectionIds": ["13.5", "13.6", "13.7", "13.8", "13.9", "13.10", "13.11"]
+      "sectionIds": [
+        "13.5",
+        "13.6",
+        "13.7",
+        "13.8",
+        "13.9",
+        "13.10",
+        "13.11"
+      ]
     },
     {
       "id": "b9",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.r1-scale-f"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Double the distance — what happens to the force?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        58,
+        59,
+        61,
+        62
+      ],
+      "focus": "Inverse-square practice: predict the factor BEFORE computing."
     }
   ]
 }

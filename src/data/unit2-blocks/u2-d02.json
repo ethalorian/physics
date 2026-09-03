@@ -46,7 +46,36 @@
       "series": [
         {
           "label": "Falling from rest",
-          "points": [[0, 0], [0.5, 4.9], [1, 9.8], [1.5, 14.7], [2, 19.6], [2.5, 24.5], [3, 29.4]]
+          "points": [
+            [
+              0,
+              0
+            ],
+            [
+              0.5,
+              4.9
+            ],
+            [
+              1,
+              9.8
+            ],
+            [
+              1.5,
+              14.7
+            ],
+            [
+              2,
+              19.6
+            ],
+            [
+              2.5,
+              24.5
+            ],
+            [
+              3,
+              29.4
+            ]
+          ]
         }
       ]
     },
@@ -78,7 +107,12 @@
       "prompt": "A pebble is dropped from a 100 m bridge. How long until it hits the water? Show your work.",
       "givenHint": "The fall height, the starting velocity (it's dropped), and g.",
       "equationHint": "The fall-distance equation: y = ½·g·t². Solve it for t.",
-      "equationOptions": ["y = ½·g·t²", "v = g·t", "x = vₓ·t", "F = G·m₁·m₂/r²"]
+      "equationOptions": [
+        "y = ½·g·t²",
+        "v = g·t",
+        "x = vₓ·t",
+        "F = G·m₁·m₂/r²"
+      ]
     },
     {
       "id": "b11",
@@ -92,6 +126,42 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.free-fall-g"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 4,
+      "sectionIds": [
+        "4.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "How fast is a falling object going after 1 s, 2 s, 3 s?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 4,
+      "sectionIds": [
+        "4.5",
+        "4.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        52,
+        53,
+        56
+      ],
+      "focus": "How fast vs. how far — keep the two tables separate."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 6,
+      "sectionIds": [
+        "6.6"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Why does everything fall at the same g? Newton's second law explains it."
     }
   ]
 }

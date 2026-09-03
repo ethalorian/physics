@@ -41,7 +41,12 @@
       "id": "b6",
       "type": "data_table",
       "capture": true,
-      "columns": ["Trial", "Altitude (km)", "Launch v (m/s)", "Result (crash / oval / circle / escape)"],
+      "columns": [
+        "Trial",
+        "Altitude (km)",
+        "Launch v (m/s)",
+        "Result (crash / oval / circle / escape)"
+      ],
       "rows": 5,
       "plot": false,
       "patternPrompt": "What pattern connects launch speed to the shape of the path?"
@@ -94,13 +99,41 @@
       "capture": true,
       "chapter": 14,
       "title": "Satellite Motion — read & practice",
-      "sectionIds": ["14.1", "14.2"]
+      "sectionIds": [
+        "14.1",
+        "14.2"
+      ]
     },
     {
       "id": "b11",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.k5-orbit-free-fall"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Why does a satellite keep missing Earth?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.1",
+        "14.2"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        41,
+        42
+      ],
+      "focus": "Newton's cannon → circular orbit speed. Problem 42 is the moon."
     }
   ]
 }

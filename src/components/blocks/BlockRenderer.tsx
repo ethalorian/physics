@@ -19,10 +19,12 @@ import { SeiTextCapture, SeiPrompt, SeiVisual, SeiFrameBox, SeiFairnessNote, use
 import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
 import type { InlineQuestion, SeiFrame } from '@/data/content-blocks'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
+import { textbookChapter } from '@/data/textbook'
+import { TEXTBOOK_SECTIONS, sectionPageRange } from '@/data/textbook-sections'
 import {
   Target, Orbit, BookA, Calculator, MessageSquareQuote, FlaskConical, Sigma,
   Pencil, Gauge, Ticket, PencilRuler, Table, Eye, HelpCircle, ClipboardCheck,
-  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, Zap, Wrench, type LucideIcon,
+  Rocket, Check, Shapes, LineChart as LineChartIcon, BookOpen, BookText, Zap, Wrench, type LucideIcon,
 } from 'lucide-react'
 
 // Heavy, self-contained interactive component — rendered natively (no iframe),
@@ -97,6 +99,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   diagram: { label: 'Diagram', domain: 'R', Icon: Shapes },
   graph: { label: 'Read the graph', domain: 'R', Icon: LineChartIcon },
   concept_exercise: { label: 'Read & practice', domain: 'R', Icon: BookOpen },
+  reading: { label: 'Tonight\'s reading', domain: 'K', Icon: BookText },
 }
 // Blocks that read best as clean editorial content — no colored shell.
 // `deck` draws its own presenter card (teacher-only; students never receive it).
@@ -676,6 +679,46 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     }
     case 'concept_exercise':
       return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
+    case 'reading': {
+      // Homework reading from Conceptual Physics. Everything but the ids is
+      // looked up, so a typo in a section id simply drops that row.
+      const chap = textbookChapter(b.chapter)
+      const index = TEXTBOOK_SECTIONS[b.chapter]
+      const secs = (b.sectionIds ?? []).map((id) => index?.sections.find((s) => s.id === id)).filter((s): s is NonNullable<typeof s> => !!s)
+      const range = sectionPageRange(secs.map((s) => s.id))
+      const checks = secs.filter((s) => s.conceptCheck)
+      return (
+        <div>
+          <div className="text-sm" style={{ color: C.muted }}>
+            <span style={{ fontStyle: 'italic' }}>Conceptual Physics</span>{chap ? <> · Chapter {b.chapter}: <span style={{ color: C.indigo, fontWeight: 500 }}>{chap.title}</span></> : null}
+            {range && <> · pp. {range.from}{range.to > range.from ? `–${range.to}` : ''}</>}
+          </div>
+          {b.focus && <p className="text-sm mt-1.5" style={{ color: C.indigo }}>{b.focus}</p>}
+          {secs.length > 0 && (
+            <ul className="mt-2 space-y-0.5 text-sm" style={{ color: C.indigo }}>
+              {secs.map((s) => <li key={s.id}><span className="tabular-nums font-medium">{s.id}</span> {s.title} <span style={{ color: C.muted }}>· p. {s.page}</span></li>)}
+            </ul>
+          )}
+          <Link href={`/textbook?ch=${b.chapter}`} className="inline-flex items-center gap-1.5 mt-3 rounded-full px-3 py-1.5 text-xs font-bold"
+            style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
+            <BookText className="h-3.5 w-3.5" /> Open Chapter {b.chapter} in the Textbook
+          </Link>
+          {checks.length > 0 && (
+            <div className="rounded-lg p-3 mt-3" style={{ background: C.tint }}>
+              <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: C.muted }}>Concept Check — answer in your notebook (not collected)</div>
+              <ol className="mt-1.5 space-y-1 text-sm list-decimal pl-5" style={{ color: C.indigo }}>
+                {checks.map((s) => <li key={s.id}><span style={{ color: C.muted }}>{s.id} · </span>{s.conceptCheck}</li>)}
+              </ol>
+            </div>
+          )}
+          {b.thinkAndSolve && b.thinkAndSolve.length > 0 && (
+            <p className="text-sm mt-2" style={{ color: C.indigo }}>
+              <span className="font-medium">Think and Solve</span> (end of chapter): problems {b.thinkAndSolve.join(', ')}. Show GIVEN / EQUATION / WORK / ANSWER.
+            </p>
+          )}
+        </div>
+      )
+    }
     default:
       return null
   }

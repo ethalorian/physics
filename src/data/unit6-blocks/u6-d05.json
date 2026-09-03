@@ -127,6 +127,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k4-refraction"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Why does a wave bend when it enters a new medium?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 29,
+      "sectionIds": [
+        "29.6",
+        "29.7",
+        "29.8",
+        "29.9"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        52
+      ],
+      "focus": "Refraction of sound AND light — same cause, speed change."
     }
   ]
 }

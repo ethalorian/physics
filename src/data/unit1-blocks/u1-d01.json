@@ -2,26 +2,142 @@
   "schemaVersion": 1,
   "dayType": "ANCHOR",
   "blocks": [
-    { "id": "b1", "type": "target", "statement": "I can describe what we currently know and don't know about asteroid 2026-XJ, and name the physics tools I would need to learn more.", "targetId": "u1.anchor-know-unknow" },
-    { "id": "b2", "type": "asteroid_thread", "whatWeKnow": "Day 1: NASA's briefing arrives. A 300–500 m object, 2026-XJ, is on a trajectory that reaches Earth around graduation. The trajectory is still uncertain.", "connection": "To say anything about what's coming, we first need the language of motion — position, velocity, acceleration, force. Today the year begins." },
-    { "id": "b3", "type": "prose", "markdown": "## The briefing\n\nYou are an apprentice analyst at NASA's Planetary Defense Coordination Office. An object is coming, and we have a year. Before we can predict where it goes or whether we can move it, we have to be able to *describe motion* precisely.\n\n**Notice & wonder:** look at the briefing data. Write down two things you *notice* and two things you *wonder*." },
-    { "id": "b4", "type": "vocab", "terms": [
-      { "term": "position", "definition": "where an object is, relative to a chosen reference point", "cognate": "posición / posição" },
-      { "term": "velocity", "definition": "how fast position changes, and in what direction (a vector)", "cognate": "velocidad / velocidade" },
-      { "term": "acceleration", "definition": "how fast velocity changes", "cognate": "aceleración / aceleração" }
-    ] },
-    { "id": "b5", "type": "exit_ticket", "capture": true, "frame": "I notice ___. I wonder ___.", "prompt": "From the briefing: what do you notice, and what do you wonder about 2026-XJ?" },
-
-    { "id": "h1", "type": "callout", "visibilityTrack": "honors", "variant": "note", "title": "Honors — the obstacle", "markdown": "The year opens on the thing standing in our way. Watch the demo, and **bet before you see it.**" },
-    { "id": "h2", "type": "prose", "visibilityTrack": "honors", "markdown": "## The string that breaks where you don't expect\n\nA heavy mass hangs from a thin string; an identical string hangs from its underside with a handle.\n\n- Pull the bottom **slowly** → which string breaks?\n- Pull the bottom with a sharp **jerk** → which string breaks?\n\nSame rig, opposite results — decided only by *how* you pull.\n\n*Safety: your teacher runs this in a bounded, padded zone. Do not rebuild it unsupervised.*" },
-    { "id": "h3", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "Slow pull: the ___ string breaks. Sharp jerk: the ___ string breaks, because ___.", "prompt": "PREDICT BEFORE THE PULL. For the slow pull and for the sharp jerk, which string breaks — and WHY? Commit before you see it." },
-    { "id": "h4", "type": "prose", "visibilityTrack": "honors", "markdown": "## Build the model\n\nSlow pull → the **top** string breaks (it carries your pull *plus* the weight). Sharp jerk → the **bottom** breaks: the mass's **inertia** won't let it accelerate fast enough to pass the sudden force up to the top string.\n\n**Inertia = a mass's resistance to a change in its motion** — not just 'how much stuff.' That resistance is the obstacle this whole year is up against." },
-    { "id": "h5", "type": "vocab", "visibilityTrack": "honors", "terms": [
-      { "term": "inertia", "definition": "an object's resistance to any change in its motion; greater mass means greater inertia", "cognate": "inercia / inércia" }
-    ] },
-    { "id": "h6", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "The same rig gave opposite results because ___. 'The bottom string was just weaker' is wrong because ___.", "prompt": "JUSTIFY (homework): Explain, using inertia, why the same rig breaks differently depending on how you pull — and why 'the bottom string was weaker' is not an available answer." },
-    { "id": "h7", "type": "exit_ticket", "visibilityTrack": "honors", "capture": true, "frame": "2026-XJ's mass (~3.5×10^11 kg) makes it hard to deflect because ___. The unit that will answer 'how big a push?' is ___.", "prompt": "TRANSFER (homework): Asteroid 2026-XJ has a mass around 3.5×10^11 kg. Using what 'inertia' meant today, explain why that mass is the obstacle to deflecting it — and name the unit you think will answer 'how big a push?'" },
-    { "id": "h8", "type": "callout", "visibilityTrack": "honors", "variant": "tip", "title": "Connect forward", "markdown": "That heavy mass that refused to move is the asteroid. We're the jerk on the string. Every unit from here asks one question: **can we move it anyway?**" },
-    { "id": "h9", "type": "marzano", "visibilityTrack": "honors", "capture": true, "targetId": "u1.d01-inertia-obstacle" }
+    {
+      "id": "b1",
+      "type": "target",
+      "statement": "I can describe what we currently know and don't know about asteroid 2026-XJ, and name the physics tools I would need to learn more.",
+      "targetId": "u1.anchor-know-unknow"
+    },
+    {
+      "id": "b2",
+      "type": "asteroid_thread",
+      "whatWeKnow": "Day 1: NASA's briefing arrives. A 300–500 m object, 2026-XJ, is on a trajectory that reaches Earth around graduation. The trajectory is still uncertain.",
+      "connection": "To say anything about what's coming, we first need the language of motion — position, velocity, acceleration, force. Today the year begins."
+    },
+    {
+      "id": "b3",
+      "type": "prose",
+      "markdown": "## The briefing\n\nYou are an apprentice analyst at NASA's Planetary Defense Coordination Office. An object is coming, and we have a year. Before we can predict where it goes or whether we can move it, we have to be able to *describe motion* precisely.\n\n**Notice & wonder:** look at the briefing data. Write down two things you *notice* and two things you *wonder*."
+    },
+    {
+      "id": "b4",
+      "type": "vocab",
+      "terms": [
+        {
+          "term": "position",
+          "definition": "where an object is, relative to a chosen reference point",
+          "cognate": "posición / posição"
+        },
+        {
+          "term": "velocity",
+          "definition": "how fast position changes, and in what direction (a vector)",
+          "cognate": "velocidad / velocidade"
+        },
+        {
+          "term": "acceleration",
+          "definition": "how fast velocity changes",
+          "cognate": "aceleración / aceleração"
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "type": "exit_ticket",
+      "capture": true,
+      "frame": "I notice ___. I wonder ___.",
+      "prompt": "From the briefing: what do you notice, and what do you wonder about 2026-XJ?"
+    },
+    {
+      "id": "h1",
+      "type": "callout",
+      "visibilityTrack": "honors",
+      "variant": "note",
+      "title": "Honors — the obstacle",
+      "markdown": "The year opens on the thing standing in our way. Watch the demo, and **bet before you see it.**"
+    },
+    {
+      "id": "h2",
+      "type": "prose",
+      "visibilityTrack": "honors",
+      "markdown": "## The string that breaks where you don't expect\n\nA heavy mass hangs from a thin string; an identical string hangs from its underside with a handle.\n\n- Pull the bottom **slowly** → which string breaks?\n- Pull the bottom with a sharp **jerk** → which string breaks?\n\nSame rig, opposite results — decided only by *how* you pull.\n\n*Safety: your teacher runs this in a bounded, padded zone. Do not rebuild it unsupervised.*"
+    },
+    {
+      "id": "h3",
+      "type": "exit_ticket",
+      "visibilityTrack": "honors",
+      "capture": true,
+      "frame": "Slow pull: the ___ string breaks. Sharp jerk: the ___ string breaks, because ___.",
+      "prompt": "PREDICT BEFORE THE PULL. For the slow pull and for the sharp jerk, which string breaks — and WHY? Commit before you see it."
+    },
+    {
+      "id": "h4",
+      "type": "prose",
+      "visibilityTrack": "honors",
+      "markdown": "## Build the model\n\nSlow pull → the **top** string breaks (it carries your pull *plus* the weight). Sharp jerk → the **bottom** breaks: the mass's **inertia** won't let it accelerate fast enough to pass the sudden force up to the top string.\n\n**Inertia = a mass's resistance to a change in its motion** — not just 'how much stuff.' That resistance is the obstacle this whole year is up against."
+    },
+    {
+      "id": "h5",
+      "type": "vocab",
+      "visibilityTrack": "honors",
+      "terms": [
+        {
+          "term": "inertia",
+          "definition": "an object's resistance to any change in its motion; greater mass means greater inertia",
+          "cognate": "inercia / inércia"
+        }
+      ]
+    },
+    {
+      "id": "h6",
+      "type": "exit_ticket",
+      "visibilityTrack": "honors",
+      "capture": true,
+      "frame": "The same rig gave opposite results because ___. 'The bottom string was just weaker' is wrong because ___.",
+      "prompt": "JUSTIFY (homework): Explain, using inertia, why the same rig breaks differently depending on how you pull — and why 'the bottom string was weaker' is not an available answer."
+    },
+    {
+      "id": "h7",
+      "type": "exit_ticket",
+      "visibilityTrack": "honors",
+      "capture": true,
+      "frame": "2026-XJ's mass (~3.5×10^11 kg) makes it hard to deflect because ___. The unit that will answer 'how big a push?' is ___.",
+      "prompt": "TRANSFER (homework): Asteroid 2026-XJ has a mass around 3.5×10^11 kg. Using what 'inertia' meant today, explain why that mass is the obstacle to deflecting it — and name the unit you think will answer 'how big a push?'"
+    },
+    {
+      "id": "h8",
+      "type": "callout",
+      "visibilityTrack": "honors",
+      "variant": "tip",
+      "title": "Connect forward",
+      "markdown": "That heavy mass that refused to move is the asteroid. We're the jerk on the string. Every unit from here asks one question: **can we move it anyway?**"
+    },
+    {
+      "id": "h9",
+      "type": "marzano",
+      "visibilityTrack": "honors",
+      "capture": true,
+      "targetId": "u1.d01-inertia-obstacle"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 4,
+      "sectionIds": [
+        "4.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "How can you tell something is moving at all?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 4,
+      "sectionIds": [
+        "4.1",
+        "4.2"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "What does 'relative' buy us when we describe 2026-XJ?"
+    }
   ]
 }

@@ -445,6 +445,28 @@ export interface ConceptExerciseBlock extends BaseBlock {
 }
 
 // ---------------------------------------------------------------------------
+// READING (homework reading from Conceptual Physics — the class textbook)
+// A display block, usually the LAST block of a day. Renders the assigned
+// sections with book pages, a one-click link into /textbook?ch=N, the sections'
+// own CONCEPT CHECK questions as a notebook self-check (Chappuis: practice, not
+// evidence — nothing is captured or scored), and optional Think and Solve
+// problem numbers. Section titles / pages / questions come from
+// src/data/textbook-sections.ts, so authoring is just ids. Differentiate by
+// track with `visibilityTrack` ('cpa' light, 'honors' full) — two blocks per day.
+// ---------------------------------------------------------------------------
+
+export interface ReadingBlock extends BaseBlock {
+  type: 'reading';
+  chapter: number;
+  /** Section ids in this chapter, e.g. ["4.2","4.3"]. */
+  sectionIds: string[];
+  /** Think and Solve problem numbers from the chapter's Assess pages (honors, usually). */
+  thinkAndSolve?: number[];
+  /** One line of purpose: what to read FOR. */
+  focus?: string;
+}
+
+// ---------------------------------------------------------------------------
 // UNION + DOCUMENT
 // ---------------------------------------------------------------------------
 
@@ -453,7 +475,7 @@ export type ContentBlock =
   | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | DeckBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock
-  | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock;
+  | FigureBlock | DiagramBlock | GraphBlock | ConceptExerciseBlock | ReadingBlock;
 
 export type BlockType = ContentBlock['type'];
 

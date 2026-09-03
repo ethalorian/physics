@@ -69,7 +69,12 @@
       "prompt": "SPRING-LAUNCHED BALL — A 0.5-kg ball is fired from a spring that does 8 J of work on it. The ball starts at rest. What's its speed leaving the spring?",
       "givenHint": "m = 0.5 kg · v_i = 0 (so KE_i = 0) · W_net = 8 J",
       "equationHint": "All 8 J becomes KE_f. Set ½m·v_f² = 8 and solve for v_f.",
-      "equationOptions": ["W_net = ΔKE = ½m·v_f² − ½m·v_i²", "KE = ½ · m · v²", "W = F · d", "p = m · v"]
+      "equationOptions": [
+        "W_net = ΔKE = ½m·v_f² − ½m·v_i²",
+        "KE = ½ · m · v²",
+        "W = F · d",
+        "p = m · v"
+      ]
     },
     {
       "id": "b10",
@@ -83,6 +88,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.s1-work-energy-theorem"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "State the work-energy theorem in one line."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        50,
+        54
+      ],
+      "focus": "Problem 54 (skid distance) is the work-energy theorem in disguise."
     }
   ]
 }

@@ -123,6 +123,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.k5-first-law"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "State the first law of thermodynamics."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.1",
+        "24.2",
+        "24.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        50
+      ],
+      "focus": "First law is energy conservation with heat included. Adiabatic = no heat in or out."
     }
   ]
 }

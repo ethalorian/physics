@@ -138,6 +138,41 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.r2-motors-generators"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 37,
+      "sectionIds": [
+        "37.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "A motor and a generator are the same device run backward — how?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.8"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Meters to motors."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 37,
+      "sectionIds": [
+        "37.3",
+        "37.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        52,
+        53
+      ],
+      "focus": "Generators, AC, and the motor/generator comparison."
     }
   ]
 }

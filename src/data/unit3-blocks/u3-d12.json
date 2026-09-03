@@ -62,7 +62,11 @@
       "prompt": "Compute 2026-XJ's momentum at impact, then the average force if it stops in 0.1 s. Finally: how many 'Hoover Dams' of force is that? (Hoover Dam weighs ≈ 6 × 10⁹ N.)",
       "givenHint": "m = 10⁹ kg, v = 3 × 10⁴ m/s, Δt = 0.1 s, Hoover Dam = 6 × 10⁹ N.",
       "equationHint": "p = m·v, then F = p/Δt, then divide F by the dam's weight.",
-      "equationIds": ["momentum", "impulse", "newton-2nd"]
+      "equationIds": [
+        "momentum",
+        "impulse",
+        "newton-2nd"
+      ]
     },
     {
       "id": "b9",
@@ -76,6 +80,20 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.r4-impact-analysis"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.2"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        55,
+        56
+      ],
+      "focus": "Impact damage is impulse over a very short time."
     }
   ]
 }

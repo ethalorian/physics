@@ -141,6 +141,34 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.k2-transfer-modes"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 22,
+      "sectionIds": [
+        "22.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Conduction: which materials do it well, and why?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 22,
+      "sectionIds": [
+        "22.1",
+        "22.2",
+        "22.3",
+        "22.4",
+        "22.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        40,
+        43
+      ],
+      "focus": "Three modes of transfer, then what makes a good emitter and absorber."
     }
   ]
 }

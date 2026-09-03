@@ -121,6 +121,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k7-magnetism"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is a magnetic field, and how do you see one?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.1",
+        "36.2",
+        "36.3",
+        "36.4",
+        "36.9"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Poles, fields, domains — and Earth's field, which the magnetosphere day needs."
     }
   ]
 }

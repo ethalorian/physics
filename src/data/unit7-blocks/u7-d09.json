@@ -143,6 +143,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.s3-combination-circuits"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 35,
+      "sectionIds": [
+        "35.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "How do you reduce a combination circuit step by step?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 35,
+      "sectionIds": [
+        "35.5",
+        "35.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        54,
+        58
+      ],
+      "focus": "Schematics, then compound circuits. Problem 58 derives the parallel rule."
     }
   ]
 }

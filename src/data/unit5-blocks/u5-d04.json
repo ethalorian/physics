@@ -167,6 +167,35 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.k3-latent-heat"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 23,
+      "sectionIds": [
+        "23.8"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Why does temperature stop changing during a phase change?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 23,
+      "sectionIds": [
+        "23.1",
+        "23.2",
+        "23.3",
+        "23.4",
+        "23.8"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        57,
+        58,
+        61
+      ],
+      "focus": "Problem 61 is the full ice → steam staircase. Do it last."
     }
   ]
 }

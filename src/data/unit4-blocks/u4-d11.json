@@ -44,7 +44,11 @@
       "id": "b7",
       "type": "data_table",
       "capture": true,
-      "columns": ["Station", "Δh (m)", "v (m/s)"],
+      "columns": [
+        "Station",
+        "Δh (m)",
+        "v (m/s)"
+      ],
       "rows": 4,
       "plot": false,
       "patternPrompt": "Fill in as you rotate: pendulum (Δh = 0.6), slide (Δh = 2.0), coaster (Δh = 30 − 18 = 12), free fall (Δh = 7). What do all four solutions have in common?"
@@ -68,6 +72,16 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.s3-conservation-solve"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 12,
+      "sectionIds": [
+        "12.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Rolling vs. sliding: some energy goes into rotation."
     }
   ]
 }

@@ -120,6 +120,27 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.r1-faraday"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 37,
+      "sectionIds": [
+        "37.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What has to CHANGE to induce a voltage?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 37,
+      "sectionIds": [
+        "37.1",
+        "37.2"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Faraday's law in words: more loops, faster change, bigger voltage."
     }
   ]
 }

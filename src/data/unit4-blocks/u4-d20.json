@@ -65,7 +65,12 @@
       "prompt": "MARS ESCAPE VELOCITY. Compute v_esc at Mars's surface. M_Mars = 6.4×10²³ kg, r_Mars = 3.39×10⁶ m.",
       "givenHint": "G = 6.67×10⁻¹¹ · M = 6.4×10²³ kg · r = 3.39×10⁶ m.",
       "equationHint": "Same recipe as Earth: plug into √(2GM/r).",
-      "equationOptions": ["v_esc = √(2·G·M / r)", "U = −G·M·m / r", "KE = ½·m·v²", "g = G·M / r²"]
+      "equationOptions": [
+        "v_esc = √(2·G·M / r)",
+        "U = −G·M·m / r",
+        "KE = ½·m·v²",
+        "g = G·M / r²"
+      ]
     },
     {
       "id": "b10",
@@ -74,7 +79,12 @@
       "prompt": "MOON ESCAPE VELOCITY. Compute v_esc at the Moon's surface. M_Moon = 7.35×10²² kg, r_Moon = 1.74×10⁶ m. (This explains why Apollo astronauts could leave the Moon with a small ascent stage.)",
       "givenHint": "G = 6.67×10⁻¹¹ · M = 7.35×10²² kg · r = 1.74×10⁶ m.",
       "equationHint": "√(2GM/r) again — expect a much smaller answer than Earth's 11.2 km/s.",
-      "equationOptions": ["v_esc = √(2·G·M / r)", "U = −G·M·m / r", "KE = ½·m·v²", "g = G·M / r²"]
+      "equationOptions": [
+        "v_esc = √(2·G·M / r)",
+        "U = −G·M·m / r",
+        "KE = ½·m·v²",
+        "g = G·M / r²"
+      ]
     },
     {
       "id": "b11",
@@ -88,6 +98,30 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r7-escape-velocity"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is escape speed, and what is Earth's?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        40,
+        41
+      ],
+      "focus": "Escape speed comes straight from energy conservation. Derive it before class."
     }
   ]
 }

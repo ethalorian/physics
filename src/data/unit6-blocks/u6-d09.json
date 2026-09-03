@@ -125,6 +125,34 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r2-resonance"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 26,
+      "sectionIds": [
+        "26.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is the speed of sound in air, and what changes it?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 26,
+      "sectionIds": [
+        "26.4",
+        "26.6",
+        "26.7",
+        "26.8"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        45,
+        47,
+        48
+      ],
+      "focus": "Echo problems, then natural frequency and resonance."
     }
   ]
 }

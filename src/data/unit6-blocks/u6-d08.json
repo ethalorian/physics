@@ -132,6 +132,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k6-sound-longitudinal"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 26,
+      "sectionIds": [
+        "26.2"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is actually vibrating when sound travels through air?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 26,
+      "sectionIds": [
+        "26.1",
+        "26.2",
+        "26.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        44,
+        49
+      ],
+      "focus": "Sound is longitudinal. Problem 49 is middle C."
     }
   ]
 }

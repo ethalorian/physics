@@ -126,6 +126,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k6-electric-power"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.11"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Write the electric power equation and its unit."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 34,
+      "sectionIds": [
+        "34.11"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        68,
+        69,
+        74
+      ],
+      "focus": "P = IV, then the two other forms via Ohm's law."
     }
   ]
 }

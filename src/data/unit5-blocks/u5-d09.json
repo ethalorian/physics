@@ -147,6 +147,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.r2-heat-engines"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What limits how efficient a heat engine can be?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        51,
+        55,
+        57
+      ],
+      "focus": "Ideal efficiency from the temperatures alone — problem 55 checks a real engine."
     }
   ]
 }

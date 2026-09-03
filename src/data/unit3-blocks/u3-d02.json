@@ -41,7 +41,12 @@
       "id": "b6",
       "type": "data_table",
       "capture": true,
-      "columns": ["Object", "m (kg)", "v (m/s)", "p = m·v (kg·m/s)"],
+      "columns": [
+        "Object",
+        "m (kg)",
+        "v (m/s)",
+        "p = m·v (kg·m/s)"
+      ],
       "rows": 5,
       "plot": false,
       "patternPrompt": "Compute p for each object you choose (try: bullet, sprinter, car, loaded truck, cruise ship). Rank biggest to smallest. What surprised you about the spread?"
@@ -62,7 +67,12 @@
       "prompt": "2026-XJ has mass m = 1.0 × 10⁹ kg and approaches at v = 3.0 × 10⁴ m/s toward Earth. Find its momentum.",
       "givenHint": "The asteroid's mass and speed (toward Earth).",
       "equationHint": "p = m·v — keep the powers of ten organized.",
-      "equationIds": ["momentum", "impulse", "newton-2nd", "avg-speed"]
+      "equationIds": [
+        "momentum",
+        "impulse",
+        "newton-2nd",
+        "avg-speed"
+      ]
     },
     {
       "id": "b9",
@@ -71,7 +81,10 @@
       "prompt": "A 0.15-kg baseball moves east at 40 m/s, meets the bat, and bounces back west at 50 m/s. What is the CHANGE in its momentum, Δp = p_f − p_i? (Hint: pick east = positive, so v_f = −50.)",
       "givenHint": "m = 0.15 kg, v_i = +40 m/s, v_f = −50 m/s. Write the sign convention first.",
       "equationHint": "Δp = m·(v_f − v_i) — with SIGNED velocities.",
-      "equationIds": ["momentum", "impulse"]
+      "equationIds": [
+        "momentum",
+        "impulse"
+      ]
     },
     {
       "id": "b10",
@@ -100,13 +113,38 @@
       "capture": true,
       "chapter": 8,
       "title": "Momentum — read & practice",
-      "sectionIds": ["8.1"]
+      "sectionIds": [
+        "8.1"
+      ]
     },
     {
       "id": "b12",
       "type": "marzano",
       "capture": true,
       "targetId": "u3.k1-momentum-vector"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Write p = mv and give the units."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.1"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        54
+      ],
+      "focus": "Problem 54: show kg·m/s and N·s are the same unit."
     }
   ]
 }

@@ -124,6 +124,28 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.anchor-charge"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 32,
+      "sectionIds": [
+        "32.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Like charges ___, unlike charges ___."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 32,
+      "sectionIds": [
+        "32.1",
+        "32.2",
+        "32.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Charge is conserved; conductors vs. insulators."
     }
   ]
 }

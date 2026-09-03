@@ -114,6 +114,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k2-kinetic-energy"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Write the kinetic energy equation. Double the speed — what happens to KE?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.3",
+        "9.4",
+        "9.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        46,
+        52
+      ],
+      "focus": "Two kinds of mechanical energy; problem 46 asks whose frame of reference."
     }
   ]
 }

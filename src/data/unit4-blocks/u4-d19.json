@@ -37,9 +37,18 @@
       "title": "From impact KE to a TNT number",
       "caption": "The impact is perfectly inelastic, so ALL the kinetic energy converts to damage — and dividing by 4.184 × 10⁹ J/ton puts it in the units NASA reports.",
       "links": [
-        { "label": "Asteroid KE at impact", "sublabel": "½·(10⁹ kg)·(3×10⁴ m/s)² = 4.5 × 10¹⁷ J" },
-        { "label": "Heat, blast, light, seismic waves", "sublabel": "perfectly inelastic — ALL of it converts" },
-        { "label": "TNT-equivalent yield", "sublabel": "÷ 4.184 × 10⁹ J/ton ≈ 108 megatons" }
+        {
+          "label": "Asteroid KE at impact",
+          "sublabel": "½·(10⁹ kg)·(3×10⁴ m/s)² = 4.5 × 10¹⁷ J"
+        },
+        {
+          "label": "Heat, blast, light, seismic waves",
+          "sublabel": "perfectly inelastic — ALL of it converts"
+        },
+        {
+          "label": "TNT-equivalent yield",
+          "sublabel": "÷ 4.184 × 10⁹ J/ton ≈ 108 megatons"
+        }
       ]
     },
     {
@@ -97,6 +106,19 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r6-tnt-yield"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        52
+      ],
+      "focus": "KE scales with v² — problem 52 shows what that does to impact energy."
     }
   ]
 }

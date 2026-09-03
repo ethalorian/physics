@@ -132,6 +132,33 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.k1-specific-heat"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.6"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What does specific heat capacity tell you about a material?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.5",
+        "21.6",
+        "21.7"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        54,
+        57,
+        61
+      ],
+      "focus": "Q = mcΔT practice; problem 61 mixes iron and water."
     }
   ]
 }

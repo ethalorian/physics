@@ -89,6 +89,8 @@ function blockTitle(b: ContentBlock): string | null {
       return 'Solve it'
     case 'exit_ticket':
       return 'Exit ticket'
+    case 'reading':
+      return 'Tonight\'s reading'
     default:
       return null
   }

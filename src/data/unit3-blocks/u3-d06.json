@@ -97,13 +97,41 @@
       "capture": true,
       "chapter": 8,
       "title": "Momentum — read & practice",
-      "sectionIds": ["8.5", "8.6"]
+      "sectionIds": [
+        "8.5",
+        "8.6"
+      ]
     },
     {
       "id": "b11",
       "type": "marzano",
       "capture": true,
       "targetId": "u3.k4-collision-types"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Name the three kinds of collision."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        57,
+        58,
+        65
+      ],
+      "focus": "Elastic vs. inelastic: which conserves KE? Momentum is conserved in both."
     }
   ]
 }

@@ -40,7 +40,44 @@
       "series": [
         {
           "label": "g(r) = G·M / r²",
-          "points": [[6.4, 9.81], [10, 3.98], [15, 1.77], [20, 1.0], [30, 0.44], [40, 0.25], [60, 0.11], [80, 0.06], [100, 0.04]]
+          "points": [
+            [
+              6.4,
+              9.81
+            ],
+            [
+              10,
+              3.98
+            ],
+            [
+              15,
+              1.77
+            ],
+            [
+              20,
+              1.0
+            ],
+            [
+              30,
+              0.44
+            ],
+            [
+              40,
+              0.25
+            ],
+            [
+              60,
+              0.11
+            ],
+            [
+              80,
+              0.06
+            ],
+            [
+              100,
+              0.04
+            ]
+          ]
         }
       ]
     },
@@ -83,6 +120,26 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r2-mgh-limits"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.5"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "If g falls off with 1/r², mgh can't be the whole story."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Energy conservation for satellites — the fix for mgh at altitude."
     }
   ]
 }

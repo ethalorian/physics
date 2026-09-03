@@ -65,7 +65,12 @@
       "prompt": "You push a 30-N box 4 m across the floor at constant speed against 12 N of friction. (a) What work did YOU do? (b) What work did friction do? (c) What's the NET work?",
       "givenHint": "F_you = 30 N at θ = 0° · F_fric = 12 N at θ = 180° · d = 4 m",
       "equationHint": "Compute each force's work with its own angle, then add them (signs and all).",
-      "equationOptions": ["W = F · d · cos θ", "W = F · d", "KE = ½ · m · v²", "F = m · a"]
+      "equationOptions": [
+        "W = F · d · cos θ",
+        "W = F · d",
+        "KE = ½ · m · v²",
+        "F = m · a"
+      ]
     },
     {
       "id": "b9",
@@ -79,6 +84,26 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r1-work-angle"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Re-read with angles in mind: only the component along the motion counts."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 5,
+      "sectionIds": [
+        "5.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Components again — the tool for work at an angle."
     }
   ]
 }

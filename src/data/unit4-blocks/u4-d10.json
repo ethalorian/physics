@@ -120,6 +120,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k5-conservation"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.7"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Find the law of conservation of energy and copy it word for word."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 9,
+      "sectionIds": [
+        "9.7"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        50,
+        51,
+        52
+      ],
+      "focus": "Three conservation problems: pick your zero for PE and stick with it."
     }
   ]
 }

@@ -56,7 +56,12 @@
       "prompt": "STEP 3 — Does it cross Earth's orbit? WHEN? Since 2026-XJ's perihelion is 0.98 AU and Earth's orbit is 1.00 AU, the asteroid CROSSES Earth's orbit twice per pass — once going in, once going out. Use your period (≈ 1.69 yr) to estimate WHEN it next reaches perihelion. (Use any reasonable assumption about its current position in the orbit; show your reasoning.)",
       "givenHint": "T ≈ 1.69 yr, r_peri ≈ 0.98 AU, current distance ≈ 1.18 AU and closing. State your assumption about where it is in its orbit.",
       "equationHint": "Reason with fractions of the period — e.g., if it's partway from aphelion to perihelion, what fraction of T remains?",
-      "equationOptions": ["T² = a³", "r_peri = a(1−e)", "r_apo = a(1+e)", "v = √(G·M/r)"]
+      "equationOptions": [
+        "T² = a³",
+        "r_peri = a(1−e)",
+        "r_apo = a(1+e)",
+        "v = √(G·M/r)"
+      ]
     },
     {
       "id": "b9",
@@ -77,6 +82,21 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.r4-closest-approach"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.4",
+        "14.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        40,
+        50
+      ],
+      "focus": "Escape speed and orbital period — the two numbers that date 2026-XJ's arrival."
     }
   ]
 }

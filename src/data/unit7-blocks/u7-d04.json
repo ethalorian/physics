@@ -129,6 +129,33 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k3-voltage"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 33,
+      "sectionIds": [
+        "33.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Voltage is energy per ___."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 33,
+      "sectionIds": [
+        "33.4",
+        "33.5",
+        "33.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        35,
+        39,
+        40
+      ],
+      "focus": "Electric PE, then potential, then capacitors."
     }
   ]
 }

@@ -60,7 +60,12 @@
       "prompt": "A 0.2-kg superball moving east at 5 m/s strikes a 0.2-kg superball at rest, elastically. Use the equal-mass result to predict v₁f and v₂f.",
       "givenHint": "m₁ = m₂ = 0.2 kg; v₁ᵢ = +5 m/s; ball 2 at rest.",
       "equationHint": "Equal masses: the mover stops, the resting ball takes the full velocity.",
-      "equationOptions": ["v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ", "v₂f = (2m₁/(m₁+m₂))·v₁ᵢ", "m₁v₁ + m₂v₂ = (m₁+m₂)·v_f", "p = m·v"]
+      "equationOptions": [
+        "v₁f = ((m₁−m₂)/(m₁+m₂))·v₁ᵢ",
+        "v₂f = (2m₁/(m₁+m₂))·v₁ᵢ",
+        "m₁v₁ + m₂v₂ = (m₁+m₂)·v_f",
+        "p = m·v"
+      ]
     },
     {
       "id": "b9",
@@ -74,6 +79,19 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.s3-elastic-solve"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        59
+      ],
+      "focus": "Bounce-apart: momentum in equals momentum out, but now two unknowns."
     }
   ]
 }

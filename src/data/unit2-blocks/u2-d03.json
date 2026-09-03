@@ -55,7 +55,11 @@
       "id": "b7",
       "type": "data_table",
       "capture": true,
-      "columns": ["World", "g (m/s²)", "My weight F = m·g (N)"],
+      "columns": [
+        "World",
+        "g (m/s²)",
+        "My weight F = m·g (N)"
+      ],
       "rows": 4,
       "plot": false,
       "patternPrompt": "Pick your own mass (be honest). Fill in your weight on Earth, the Moon, Mars, and one world of your choice. What pattern connects g and your weight?"
@@ -67,7 +71,13 @@
       "prompt": "If you weigh 600 N on Earth, find your mass first. Then calculate your weight on Mars (g_Mars = 3.71 m/s²).",
       "givenHint": "Earth weight (600 N), g_Earth = 9.81 m/s², g_Mars = 3.71 m/s².",
       "equationHint": "Use F_w = m·g twice: once backwards to get m, once forwards on Mars.",
-      "equationIds": ["weight", "gravitation", "newton-2nd", "avg-speed", "displacement"]
+      "equationIds": [
+        "weight",
+        "gravitation",
+        "newton-2nd",
+        "avg-speed",
+        "displacement"
+      ]
     },
     {
       "id": "b9",
@@ -81,6 +91,40 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u2.mass-vs-weight"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 3,
+      "sectionIds": [
+        "3.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Mass and weight are not the same — find the difference."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 3,
+      "sectionIds": [
+        "3.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        51,
+        53
+      ],
+      "focus": "Mass is inertia; weight is a force. Compute both for yourself."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 13,
+      "sectionIds": [
+        "13.8"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "What would 'weightless' actually mean?"
     }
   ]
 }

@@ -106,6 +106,28 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.anchor-energy-not-matter"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What moves along a wave — the medium, or the energy?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.1",
+        "25.2",
+        "25.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Vibration → wave. Find the definition of period and of frequency."
     }
   ]
 }

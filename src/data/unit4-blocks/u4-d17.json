@@ -85,7 +85,10 @@
       "prompt": "CLAY ONTO STATIONARY BLOCK. A 0.5-kg ball at 10 m/s strikes a 1.5-kg stationary block; they stick. How much KE was lost?",
       "givenHint": "m₁ = 0.5 kg · v₁ = 10 m/s · m₂ = 1.5 kg · v₂ = 0 · they stick.",
       "equationHint": "First v_f from momentum conservation, then KE_before − KE_after.",
-      "equationIds": ["momentum", "kinetic-energy"]
+      "equationIds": [
+        "momentum",
+        "kinetic-energy"
+      ]
     },
     {
       "id": "b12",
@@ -99,6 +102,19 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.r4-ke-collisions"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        59
+      ],
+      "focus": "Re-read collisions with ENERGY in mind: which kind keeps KE?"
     }
   ]
 }

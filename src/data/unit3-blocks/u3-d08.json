@@ -69,7 +69,12 @@
       "prompt": "A 1000-kg car going east at 20 m/s rear-ends a 2000-kg stalled truck. They lock together. Find the final velocity.",
       "givenHint": "m₁ = 1000 kg at +20 m/s; m₂ = 2000 kg at 0 (stalled).",
       "equationHint": "m₁v₁ + m₂v₂ = (m₁+m₂)·v_f — one unknown.",
-      "equationOptions": ["m₁v₁ + m₂v₂ = (m₁+m₂)·v_f", "p = m·v", "J = F·Δt", "Σp_x = Σp_x'"]
+      "equationOptions": [
+        "m₁v₁ + m₂v₂ = (m₁+m₂)·v_f",
+        "p = m·v",
+        "J = F·Δt",
+        "Σp_x = Σp_x'"
+      ]
     },
     {
       "id": "b10",
@@ -83,6 +88,21 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u3.s2-inelastic-solve"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 8,
+      "sectionIds": [
+        "8.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        63,
+        65,
+        57
+      ],
+      "focus": "Stick-together problems: one final velocity for the combined mass."
     }
   ]
 }

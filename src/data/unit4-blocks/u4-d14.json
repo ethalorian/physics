@@ -76,7 +76,12 @@
       "prompt": "SPRING UNDER COMPRESSION. A spring with k = 200 N/m is compressed 0.08 m. What force does it exert? Which direction?",
       "givenHint": "k = 200 N/m · x = 0.08 m (compression).",
       "equationHint": "Magnitude k·|x|; direction OPPOSES the displacement (pushes back out).",
-      "equationOptions": ["F_spring = −k·x", "U_spring = ½·k·x²", "W = F·d", "F = m·a"]
+      "equationOptions": [
+        "F_spring = −k·x",
+        "U_spring = ½·k·x²",
+        "W = F·d",
+        "F = m·a"
+      ]
     },
     {
       "id": "b10",
@@ -90,6 +95,26 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k6-hookes-law"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 18,
+      "sectionIds": [
+        "18.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What does Hooke's law say about a spring?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 18,
+      "sectionIds": [
+        "18.3"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Elasticity, elastic limit, Hooke's law — find all three."
     }
   ]
 }

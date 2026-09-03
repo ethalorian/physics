@@ -151,6 +151,38 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r1-interference"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.7"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What happens when two waves meet crest-to-crest? Crest-to-trough?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.7",
+        "25.8"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Interference, then standing waves as interference with itself."
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 31,
+      "sectionIds": [
+        "31.3",
+        "31.4"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Young's experiment: the proof that light is a wave."
     }
   ]
 }

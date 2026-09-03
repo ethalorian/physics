@@ -126,6 +126,31 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k2-wave-equation"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Write the wave-speed equation and give the units of each term."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        63,
+        64,
+        67
+      ],
+      "focus": "v = fλ three ways; problem 67 is a radio wave."
     }
   ]
 }

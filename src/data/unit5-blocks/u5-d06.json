@@ -74,7 +74,12 @@
       "prompt": "If you double the Kelvin temperature (300 K → 600 K), what happens to the average molecular KE? What happens to the average molecular SPEED? (Hint: KE = ½mv².)",
       "givenHint": "T doubles: 300 K → 600 K. KE_avg ∝ T. Speed hides inside KE = ½mv².",
       "equationHint": "KE_avg = (3/2)·k·T says KE doubles. Then KE = ½·m·v² — if KE doubles, v grows by √2 ≈ 1.41×, not 2×.",
-      "equationOptions": ["KE_avg = (3/2) · k · T", "KE = ½ · m · v²", "Q = m · c · ΔT", "p = m · v"]
+      "equationOptions": [
+        "KE_avg = (3/2) · k · T",
+        "KE = ½ · m · v²",
+        "Q = m · c · ΔT",
+        "p = m · v"
+      ]
     },
     {
       "id": "b9",
@@ -95,6 +100,40 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.k4-kinetic-theory"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Re-read: temperature is average molecular kinetic energy — find that sentence."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 21,
+      "sectionIds": [
+        "21.1"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        62,
+        63
+      ],
+      "focus": "Kinetic theory: what is temperature a measure OF?"
+    },
+    {
+      "id": "rd-honors-2",
+      "type": "reading",
+      "chapter": 24,
+      "sectionIds": [
+        "24.1"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Absolute zero — what stops there?"
     }
   ]
 }

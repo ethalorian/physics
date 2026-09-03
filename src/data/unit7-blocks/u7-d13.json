@@ -120,6 +120,28 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k8-oersted"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What did Oersted discover?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 36,
+      "sectionIds": [
+        "36.5",
+        "36.6",
+        "36.7"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Currents make fields; fields push on moving charges and on wires."
     }
   ]
 }

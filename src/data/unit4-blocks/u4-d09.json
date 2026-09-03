@@ -60,7 +60,12 @@
       "prompt": "KE GAINED FROM INFINITY — A 500-kg meteorite falls from infinity to Earth's surface (no air friction). How much KE does it gain?",
       "givenHint": "m = 500 kg · r_start = ∞ (so U_start = 0) · r_end = 6.37 × 10⁶ m · G = 6.67×10⁻¹¹ · M = 5.97 × 10²⁴ kg",
       "equationHint": "KE gained = −ΔU = U_start − U_end = 0 − (−GMm/r_surface).",
-      "equationOptions": ["U = − G·M·m / r", "U = m·g·h", "KE = ½ · m · v²", "F = G·M·m / r²"]
+      "equationOptions": [
+        "U = − G·M·m / r",
+        "U = m·g·h",
+        "KE = ½ · m · v²",
+        "F = G·M·m / r²"
+      ]
     },
     {
       "id": "b9",
@@ -74,6 +79,19 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u4.k4-universal-pe"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        43
+      ],
+      "focus": "Problem 43: PE and KE trade places along an elliptical orbit."
     }
   ]
 }

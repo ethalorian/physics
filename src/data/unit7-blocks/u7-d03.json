@@ -128,6 +128,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.k2-electric-field"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 33,
+      "sectionIds": [
+        "33.1"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "What is an electric field, and how do you draw one?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 33,
+      "sectionIds": [
+        "33.1",
+        "33.2",
+        "33.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        36,
+        38
+      ],
+      "focus": "Field = force per charge. Shielding follows."
     }
   ]
 }

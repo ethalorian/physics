@@ -45,10 +45,22 @@
       "type": "diagram",
       "kind": "energy_chain",
       "links": [
-        { "label": "Ocean impact", "sublabel": "2026-XJ displaces a column of water — impact KE becomes wave energy" },
-        { "label": "Deep ocean (d ≈ 4 km)", "sublabel": "v = √(g·d) ≈ 200 m/s — fast, but only ~1 m tall" },
-        { "label": "Shallowing shelf", "sublabel": "d drops → v drops; energy conservation forces amplitude UP" },
-        { "label": "Coastline", "sublabel": "Slow + tall — catastrophic run-up where people live" }
+        {
+          "label": "Ocean impact",
+          "sublabel": "2026-XJ displaces a column of water — impact KE becomes wave energy"
+        },
+        {
+          "label": "Deep ocean (d ≈ 4 km)",
+          "sublabel": "v = √(g·d) ≈ 200 m/s — fast, but only ~1 m tall"
+        },
+        {
+          "label": "Shallowing shelf",
+          "sublabel": "d drops → v drops; energy conservation forces amplitude UP"
+        },
+        {
+          "label": "Coastline",
+          "sublabel": "Slow + tall — catastrophic run-up where people live"
+        }
       ]
     },
     {
@@ -127,6 +139,20 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.r7-tsunami"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 25,
+      "sectionIds": [
+        "25.5",
+        "25.6"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        55
+      ],
+      "focus": "Earthquakes send both wave types; problem 55 uses the lag between them."
     }
   ]
 }

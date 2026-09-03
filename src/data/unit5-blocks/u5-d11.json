@@ -45,10 +45,22 @@
       "type": "diagram",
       "kind": "energy_chain",
       "links": [
-        { "label": "Impact KE", "sublabel": "4.5 × 10¹⁷ J ≈ 108 megatons (Unit 4 yield)" },
-        { "label": "Vaporized rock (~30%)", "sublabel": "1.35 × 10¹⁷ J → R1 ≈ 140 m crater core" },
-        { "label": "Shockwave (~30%)", "sublabel": "1.35 × 10¹⁷ J → R2 ≈ 5 km structures flattened" },
-        { "label": "Thermal radiation (~30%)", "sublabel": "1.35 × 10¹⁷ J → R3 ≈ 800 km wildfire ring — the longest reach" }
+        {
+          "label": "Impact KE",
+          "sublabel": "4.5 × 10¹⁷ J ≈ 108 megatons (Unit 4 yield)"
+        },
+        {
+          "label": "Vaporized rock (~30%)",
+          "sublabel": "1.35 × 10¹⁷ J → R1 ≈ 140 m crater core"
+        },
+        {
+          "label": "Shockwave (~30%)",
+          "sublabel": "1.35 × 10¹⁷ J → R2 ≈ 5 km structures flattened"
+        },
+        {
+          "label": "Thermal radiation (~30%)",
+          "sublabel": "1.35 × 10¹⁷ J → R3 ≈ 800 km wildfire ring — the longest reach"
+        }
       ]
     },
     {
@@ -127,6 +139,17 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u5.r4-thermal-damage"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 22,
+      "sectionIds": [
+        "22.6",
+        "22.7"
+      ],
+      "visibilityTrack": "honors",
+      "focus": "Newton's law of cooling and the greenhouse effect — both about radiation out."
     }
   ]
 }

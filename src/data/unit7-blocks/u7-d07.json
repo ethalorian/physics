@@ -148,6 +148,32 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u7.s1-series-circuits"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 35,
+      "sectionIds": [
+        "35.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "In a series circuit, what is the same at every point?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 35,
+      "sectionIds": [
+        "35.1",
+        "35.2",
+        "35.3"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        48,
+        49
+      ],
+      "focus": "Series: one path, current shared, voltages add."
     }
   ]
 }

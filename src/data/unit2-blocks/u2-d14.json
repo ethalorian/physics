@@ -69,7 +69,12 @@
       "prompt": "2026-XJ has a = 1.42 AU. Find its period in years. (This number tells us how often it could return to its current location.)",
       "givenHint": "a = 1.42 AU. Sun-orbit, so T² = a³ works directly with T in years.",
       "equationHint": "Cube a, then square-root: T = √(a³).",
-      "equationOptions": ["T² = a³", "v = √(G·M/r)", "F = G·m₁·m₂/r²", "F_c = m·v²/r"]
+      "equationOptions": [
+        "T² = a³",
+        "v = √(G·M/r)",
+        "F = G·m₁·m₂/r²",
+        "F_c = m·v²/r"
+      ]
     },
     {
       "id": "b9",
@@ -91,13 +96,44 @@
       "capture": true,
       "chapter": 14,
       "title": "Satellite Motion — read & practice",
-      "sectionIds": ["14.3", "14.4", "14.5", "14.6"]
+      "sectionIds": [
+        "14.3",
+        "14.4",
+        "14.5",
+        "14.6"
+      ]
     },
     {
       "id": "b10",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.k4-keplers-laws"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.5"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "State Kepler's three laws — one phrase each."
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 14,
+      "sectionIds": [
+        "14.3",
+        "14.4",
+        "14.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        47,
+        48
+      ],
+      "focus": "Elliptical orbits and energy conservation are the same story told twice."
     }
   ]
 }

@@ -120,6 +120,12 @@ const BLOCK_DEFS: BlockDef[] = [
   { type: 'marzano', label: 'Marzano self-check', group: 'Practice', capture: true, fields: [
     { key: 'targetId', label: 'Target ID', kind: 'text' },
   ] },
+  { type: 'reading', label: 'Reading (homework from the textbook)', group: 'Teach', fields: [
+    { key: 'chapter', label: 'Chapter number', kind: 'number' },
+    { key: 'sectionIds', label: 'Section ids (one per line, e.g. 4.2)', kind: 'stringlist' },
+    { key: 'thinkAndSolve', label: 'Think and Solve problem numbers (one per line, optional)', kind: 'stringlist' },
+    { key: 'focus', label: 'Read for… (one line, optional)', kind: 'text' },
+  ] },
   { type: 'concept_exercise', label: 'Read & practice (textbook + exercise)', group: 'Practice', capture: true, fields: [
     { key: 'chapter', label: 'Chapter number (must be loaded in concept_exercises)', kind: 'number' },
     { key: 'title', label: 'Title (optional override)', kind: 'text' },

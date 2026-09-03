@@ -80,13 +80,43 @@
       "capture": true,
       "chapter": 5,
       "title": "Projectile Motion — read & practice",
-      "sectionIds": ["5.1", "5.2", "5.3", "5.4"]
+      "sectionIds": [
+        "5.1",
+        "5.2",
+        "5.3",
+        "5.4"
+      ]
     },
     {
       "id": "b10",
       "type": "marzano",
       "capture": true,
       "targetId": "u2.k3-projectile-independence"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 5,
+      "sectionIds": [
+        "5.4"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Two motions at once — which one does gravity change?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 5,
+      "sectionIds": [
+        "5.4",
+        "5.5"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        40,
+        46
+      ],
+      "focus": "Independence of horizontal and vertical motion — find the figure that proves it."
     }
   ]
 }

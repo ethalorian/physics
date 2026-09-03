@@ -119,6 +119,34 @@
       "type": "marzano",
       "capture": true,
       "targetId": "u6.k7-em-spectrum"
+    },
+    {
+      "id": "rd-cpa",
+      "type": "reading",
+      "chapter": 27,
+      "sectionIds": [
+        "27.3"
+      ],
+      "visibilityTrack": "cpa",
+      "focus": "Light is an electromagnetic wave — what is waving?"
+    },
+    {
+      "id": "rd-honors",
+      "type": "reading",
+      "chapter": 27,
+      "sectionIds": [
+        "27.1",
+        "27.2",
+        "27.3",
+        "27.4"
+      ],
+      "visibilityTrack": "honors",
+      "thinkAndSolve": [
+        57,
+        58,
+        59
+      ],
+      "focus": "Speed of light, then c = fλ practice."
     }
   ]
 }
