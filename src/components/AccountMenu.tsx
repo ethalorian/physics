@@ -132,6 +132,15 @@ export default function AccountMenu() {
             <Smile className="h-4 w-4 mr-2" />
             My avatar
           </DropdownMenuItem>
+          {/* A colleague who signed in on the staff domain but has no staff role
+              yet — the only path to /teacher-access, which was otherwise
+              unreachable except by typed URL. Students never see this. */}
+          {realRole === 'student' && !!session?.user?.email && !session.user.email.includes('@student.') && (
+            <DropdownMenuItem onSelect={() => router.push('/teacher-access')}>
+              <GraduationCap className="h-4 w-4 mr-2" />
+              Request teacher access
+            </DropdownMenuItem>
+          )}
           {realRole === 'admin' && !viewingAs && !studentViewActive && (
             <DropdownMenuItem onSelect={() => { if (session?.user?.email) { clearStudentView(); setViewAs(session.user.email); window.location.reload() } }}>
               <Eye className="h-4 w-4 mr-2" />

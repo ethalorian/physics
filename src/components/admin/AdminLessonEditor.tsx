@@ -36,6 +36,8 @@ import LessonVideoManager from './LessonVideoManager'
 
 interface AdminLessonEditorProps {
   lesson: Lesson
+  /** Learning targets attached to this lesson — the server won't publish at 0. */
+  targetCount?: number
 }
 
 // The lessons row carries more than the shared Lesson type declares. These
@@ -47,7 +49,7 @@ type LessonRow = Lesson & {
   hero_image?: string | null
 }
 
-export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
+export default function AdminLessonEditor({ lesson, targetCount = 0 }: AdminLessonEditorProps) {
   const router = useRouter()
   const raw = lesson as LessonRow
   const [saving, setSaving] = useState(false)
@@ -121,6 +123,7 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
     const issues: string[] = []
     if (!formData.title.trim()) issues.push('Give the lesson a title')
     if (blocks.length === 0) issues.push('Add at least one content block (open the block builder)')
+    if (targetCount === 0) issues.push('Attach at least one learning target — the server refuses to publish without one, and the control room can\'t grade the work')
     if (!keyTermsParse.ok) issues.push('Key terms must be valid JSON (an array of term/definition objects)')
     if (!formData.estimated_time || Number.isNaN(formData.estimated_time) || formData.estimated_time < 1) {
       issues.push('Set an estimated time in minutes')
@@ -294,13 +297,20 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
               <Badge variant="outline" className="text-muted-foreground border-border">
                 {formData.unit}
               </Badge>
+              {/* The badge reports the SAVED state (what students can actually reach);
+                  an unsaved toggle shows as intent, never as fact. */}
               <Badge
                 variant="outline"
-                style={formData.published
+                style={lesson.published
                   ? { color: 'var(--success)', borderColor: 'color-mix(in oklch, var(--success) 55%, var(--border))', background: 'color-mix(in oklch, var(--success) 10%, transparent)' }
                   : { color: 'var(--muted-foreground)', borderColor: 'var(--border)' }}
               >
-                {formData.published ? 'Published' : 'Draft'}
+                {lesson.published ? 'Published' : 'Draft'}
+                {formData.published !== !!lesson.published && (
+                  <span className="ml-1.5 font-normal" style={{ color: 'var(--reward-foreground)' }}>
+                    → {formData.published ? 'publish' : 'unpublish'} on save
+                  </span>
+                )}
               </Badge>
             </div>
 
@@ -321,20 +331,19 @@ export default function AdminLessonEditor({ lesson }: AdminLessonEditorProps) {
                 <BookOpen className="h-4 w-4 mr-2" />
                 Build blocks
               </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                asChild
-              >
-                <a
-                  href={`/lessons/${formData.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+              {lesson.published ? (
+                <Button variant="outline" size="sm" asChild>
+                  <a href={`/lessons/${lesson.slug}`} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Open lesson
+                  </a>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled title="Students can only reach published lessons. Use the preview on the right, or publish first.">
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Open lesson
-                </a>
-              </Button>
+                  Open lesson · draft
+                </Button>
+              )}
               <Button
                 variant="destructive"
                 size="sm"
@@ -708,7 +717,7 @@ Example: \\[ F = ma \\]"
                     </button>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    The status applies when you save. The server also requires at least one learning target before a lesson can be published.
+                    The status applies when you save. This lesson has {targetCount} learning target{targetCount === 1 ? '' : 's'} attached; the server requires at least one to publish.
                   </p>
 
                   {publishIssues && publishIssues.length > 0 && (

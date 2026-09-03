@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
+import { textbookChapter } from '@/data/textbook'
 
 // GET /api/concept-exercises/[chapter]
 // Serves a chapter's reader + exercise payload to the client — WITHOUT the
@@ -23,7 +24,11 @@ export const GET = withAuth<{ chapter: string }>(async (_req, ctx) => {
     return NextResponse.json({
       chapter: data.chapter,
       title: data.title,
-      textPdfUrl: data.text_pdf_url,
+      // Reader PDF: the session-gated STUDENT edition served by /api/textbook
+      // (teacher column stripped — same page count, so page_offset still holds).
+      // The stored text_pdf_url (public teacher-edition copy) is only used for a
+      // chapter the textbook map doesn't know about.
+      textPdfUrl: textbookChapter(data.chapter) ? `/api/textbook/${data.chapter}` : data.text_pdf_url,
       pageOffset: data.page_offset ?? 0,
       sections: data.sections ?? [],
     })

@@ -180,7 +180,7 @@ export const GET = withAuth(async (request, ctx) => {
       climber && { key: 'climber', label: 'Biggest climber', name: nameBy.get(climber.user_id) ?? 'Student', user_id: climber.user_id, value: Math.round(Number(climber.total_points)), unit: 'XP this week' },
       mathTop && Number(mathTop.math_pts) > 0 && { key: 'math', label: 'Math machine', name: nameBy.get(mathTop.user_id) ?? 'Student', user_id: mathTop.user_id, value: Math.round(Number(mathTop.math_pts)), unit: 'math XP this week' },
       arcadeTop && Number(arcadeTop.arcade_pts) > 0 && { key: 'arcade', label: 'Arcade legend', name: nameBy.get(arcadeTop.user_id) ?? 'Student', user_id: arcadeTop.user_id, value: Math.round(Number(arcadeTop.arcade_pts)), unit: 'arcade XP this week' },
-      bestStreakId && { key: 'streak', label: 'Streak keeper', name: nameBy.get(bestStreakId) ?? 'Student', user_id: bestStreakId, value: streaks.get(bestStreakId) ?? 0, unit: 'days in a row' },
+      bestStreakId && { key: 'streak', label: 'Streak keeper', name: nameBy.get(bestStreakId) ?? 'Student', user_id: bestStreakId, value: streaks.get(bestStreakId) ?? 0, unit: (streaks.get(bestStreakId) ?? 0) === 1 ? 'day in a row' : 'days in a row' },
     ].filter(Boolean)
 
     // Convert to array and sort by points

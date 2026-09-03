@@ -28,7 +28,7 @@ export const GET = withAuth<{ chapter: string }>(async (_req, ctx) => {
   const headers = {
     'Content-Type': 'application/pdf',
     'Content-Disposition': `inline; filename="${filename}"`,
-    'Cache-Control': 'private, max-age=86400',
+    'Cache-Control': 'private, max-age=0, must-revalidate',
     'X-Content-Type-Options': 'nosniff',
   }
 

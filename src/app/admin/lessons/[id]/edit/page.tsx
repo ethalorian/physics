@@ -61,7 +61,14 @@ export default async function LessonEditPage({
     notFound()
   }
 
-  return <AdminLessonEditor lesson={lesson} />
+  // The server refuses to publish a targetless lesson (PUT /api/lessons/[id]);
+  // hand the count to the editor so its pre-flight can say so BEFORE save.
+  const { count } = await supabaseAdmin
+    .from('learning_targets')
+    .select('id', { count: 'exact', head: true })
+    .eq('lesson_id', id)
+
+  return <AdminLessonEditor lesson={lesson} targetCount={count ?? 0} />
 }
 
 

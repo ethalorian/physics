@@ -31,7 +31,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // Which challenges apply to me: my active enrollments' courses + direct picks.
   const { data: enrolls } = await supabaseAdmin
-    .from('course_students').select('course_id').eq('student_id', uid).eq('enrollment_state', 'active')
+    .from('course_students').select('course_id').eq('student_id', uid).eq('enrollment_state', 'ACTIVE')
   const courseIds = (enrolls ?? []).map((e) => e.course_id)
 
   const orParts = [`student_id.eq.${uid}`]

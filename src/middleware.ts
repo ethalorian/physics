@@ -5,10 +5,11 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
-  // Redirect old assignment system page to unified assignment hub
+  // The assignment system was retired (2026-07); its hub no longer exists.
+  // Land old bookmarks somewhere real instead of a 404.
   if (pathname === '/admin/assignments-system') {
     const url = request.nextUrl.clone()
-    url.pathname = '/admin/assignments'
+    url.pathname = '/admin/home'
     return NextResponse.redirect(url)
   }
   

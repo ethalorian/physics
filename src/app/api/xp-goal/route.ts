@@ -32,7 +32,7 @@ export const GET = withAuth(async (_req, ctx) => {
     .from('course_students')
     .select('course:courses(teacher_email)')
     .eq('student_id', uid)
-    .eq('enrollment_state', 'active')
+    .eq('enrollment_state', 'ACTIVE')
     .limit(1)
     .maybeSingle()
   // PostgREST types the embed as object-or-array depending on FK inference.

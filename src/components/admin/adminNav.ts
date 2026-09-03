@@ -1,6 +1,6 @@
 import {
   LayoutGrid, Gift, Microscope, Gamepad2, Joystick,
-  Eye, Users, Activity, BookOpen, BookOpenCheck, BookText, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap,
+  Eye, Users, Activity, BookOpen, BookOpenCheck, BookText, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap, Image as ImageIcon,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -50,6 +50,7 @@ export const GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/analytics', label: 'Mastery analytics', desc: 'Disaggregate app-wide performance and ask Claude', icon: BarChart3, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/oversight', label: 'App Oversight', desc: 'Colleague adoption, engagement and feature usage', icon: Activity, accent: 'var(--success)', adminOnly: true },
+      { href: '/admin/duplicates', label: 'Duplicate students', desc: 'Safety net — student rows that look like the same person twice', icon: Users, accent: 'var(--success)', adminOnly: true },
       { href: '/leaderboard', label: 'Leaderboard', desc: 'Top earners across the whole app — monitor the engagement loop', icon: Trophy, accent: 'var(--reward)' },
     ],
   },
@@ -59,6 +60,7 @@ export const GROUPS: ToolGroup[] = [
       { href: '/admin/textbook', label: 'Textbook chapters', desc: 'Upload Conceptual Physics chapter PDFs to the private bucket and see what students can open', icon: BookText, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
       { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
+      { href: '/admin/media', label: 'Media upload', desc: 'Drop a PDF or image, get a URL to paste into any lesson block', icon: ImageIcon, accent: 'var(--primary)' },
       { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },
       { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
     ],

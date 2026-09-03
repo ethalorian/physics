@@ -25,7 +25,7 @@ export const GET = withAuth(async (request, ctx) => {
   }
 
   const { data: enrolls } = await supabaseAdmin
-    .from('course_students').select('student_id').eq('course_id', classId).eq('enrollment_state', 'active')
+    .from('course_students').select('student_id').eq('course_id', classId).eq('enrollment_state', 'ACTIVE')
   const gids = (enrolls ?? []).map((e) => e.student_id)
   // An empty class still needs the full shape — the cockpit reads
   // roster.summary.* on the Overview tab and crashes on undefined.

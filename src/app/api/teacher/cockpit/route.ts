@@ -49,7 +49,7 @@ export const GET = withAuth(async (_req, ctx) => {
 
   // enrollment map (per-class student sets)
   const { data: enrolls } = courseIds.length
-    ? await supabaseAdmin.from('course_students').select('course_id, student_id').in('course_id', courseIds).eq('enrollment_state', 'active')
+    ? await supabaseAdmin.from('course_students').select('course_id, student_id').in('course_id', courseIds).eq('enrollment_state', 'ACTIVE')
     : { data: [] as { course_id: string; student_id: string }[] }
   const studentsByCourse = new Map<string, Set<string>>()
   for (const e of enrolls ?? []) {
@@ -78,7 +78,7 @@ export const GET = withAuth(async (_req, ctx) => {
     ctx.role === 'admin'
       ? Promise.all([
           supabaseAdmin.from('students').select('id'),
-          supabaseAdmin.from('course_students').select('student_id').eq('enrollment_state', 'active'),
+          supabaseAdmin.from('course_students').select('student_id').eq('enrollment_state', 'ACTIVE'),
         ]).then(([all, en]) => {
           const enrolled = new Set(((en.data ?? []) as { student_id: string }[]).map((r) => r.student_id))
           return { data: ((all.data ?? []) as { id: string }[]).filter((s) => !enrolled.has(s.id)).length }

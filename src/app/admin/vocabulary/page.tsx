@@ -38,13 +38,21 @@ export default function VocabularyManagementPage() {
             Create and manage vocabulary sets for use in vocabulary games and assignments.
           </p>
         </div>
-        <Link href="/vocabulary">
-          <Button className="flex items-center gap-2">
-            <Gamepad2 className="h-4 w-4" />
-            Play Games
-            <ExternalLink className="h-3 w-3" />
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/vocabulary/equation-visualizer">
+            <Button variant="outline" className="flex items-center gap-2">
+              Equation visualizer
+              <ExternalLink className="h-3 w-3" />
+            </Button>
+          </Link>
+          <Link href="/vocabulary">
+            <Button className="flex items-center gap-2">
+              <Gamepad2 className="h-4 w-4" />
+              Play Games
+              <ExternalLink className="h-3 w-3" />
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Quick Info Card */}

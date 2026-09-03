@@ -7,7 +7,7 @@ import QuestionBankBrowser from '@/components/question-bank/QuestionBankBrowser'
 import QuestionBankQuestionEditor from '@/components/question-bank/QuestionEditor'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { BookOpen, Download, Upload, Plus, Edit } from 'lucide-react'
+import { BookOpen, Download, Upload, Edit } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 export default function QuestionBankPage() {
@@ -92,13 +92,6 @@ export default function QuestionBankPage() {
             >
               <Edit className="h-4 w-4 mr-2" />
               Create Question
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => router.push('/admin/assignments/create')}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Create Assignment
             </Button>
             <Button
               variant="outline"

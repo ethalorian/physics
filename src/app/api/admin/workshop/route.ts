@@ -158,7 +158,7 @@ export const GET = withRole('admin', async (request) => {
   if (!t) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
   const [{ data: recs }, { data: enrolls }] = await Promise.all([
     supabaseAdmin.from('mastery_records').select('user_id, level, observed_at').eq('target_id', t.id).order('observed_at'),
-    supabaseAdmin.from('course_students').select('course_id, student_id').eq('enrollment_state', 'active'),
+    supabaseAdmin.from('course_students').select('course_id, student_id').eq('enrollment_state', 'ACTIVE'),
   ])
   const classOf = new Map<string, string>()
   for (const e of (enrolls ?? [])) if (!classOf.has(e.student_id)) classOf.set(e.student_id, e.course_id)

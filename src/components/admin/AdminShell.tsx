@@ -3,7 +3,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useSession, signIn } from 'next-auth/react'
 import { useViewAs } from '@/lib/use-view-as'
 import { GROUPS, gateGroups, flatTools } from './adminNav'
 import { BookOpen } from 'lucide-react'
@@ -20,7 +20,7 @@ import { Menu, X, FlaskConical } from 'lucide-react'
  */
 export default function AdminShell({ children }: { children: ReactNode }) {
   const { role } = useViewAs()
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
   // Observer: read-only sidebar — the FULL Insights group (mastery analytics,
@@ -41,6 +41,20 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   // Close the mobile drawer whenever the route changes.
   useEffect(() => { setMobileOpen(false) }, [pathname])
+
+  // Signed-out visitors to any staff page get bounced to Google sign-in instead
+  // of a shell full of failed fetches ("Could not load..." with no way forward).
+  useEffect(() => {
+    if (status === 'unauthenticated') signIn(undefined, { callbackUrl: pathname ?? '/admin/home' })
+  }, [status, pathname])
+
+  if (status === 'unauthenticated') {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh] text-sm" style={{ color: 'var(--muted-foreground)' }}>
+        Redirecting to sign-in&hellip;
+      </div>
+    )
+  }
 
   const isActive = (href: string) =>
     href === '/home' ? pathname === '/home' : pathname === href || pathname.startsWith(href + '/')
