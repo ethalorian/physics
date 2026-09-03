@@ -25,12 +25,12 @@ export const GET = withRole('admin', async (request) => {
 
   // ---------- shared rollups ----------
   const [{ data: units }, { data: lessons }, { data: targets }, { data: reviews }, { data: pacing }, { data: courses }] = await Promise.all([
-    supabaseAdmin.from('units').select('id, name, order_index, allotted_days, default_start_date').order('order_index'),
+    supabaseAdmin.from('units').select('id, name, order_index, allotted_days, default_start_date, program').order('order_index'),
     supabaseAdmin.from('lessons').select('id, title, unit_id, lesson_number, published, visibility_track, content_blocks'),
     supabaseAdmin.from('learning_targets').select('id, slug, statement, unit_id, order_index').eq('exclude_from_growth', false).order('order_index'),
     supabaseAdmin.from('target_reviews').select('id, target_id, status, questions, reteach, created_at'),
     supabaseAdmin.from('section_pacing').select('course_id, current_unit_id'),
-    supabaseAdmin.from('courses').select('id, name, section, teacher_email').is('archived_at', null),
+    supabaseAdmin.from('courses').select('id, name, section, teacher_email, program').is('archived_at', null),
   ])
 
   const courseLabel = new Map((courses ?? []).map((c) => [c.id, [c.name, c.section].filter(Boolean).join(' · ')]))
@@ -69,6 +69,7 @@ export const GET = withRole('admin', async (request) => {
       drafts: ls.filter((l) => !l.published).length,
       targets: ts.length, covered, pending, questions,
       teachingSections: teaching,
+      program: u.program ?? 'physics',
       status: teaching.length > 0 ? 'teaching' : ls.length === 0 ? 'outline' : ls.every((l) => l.published) && ts.length > 0 ? 'complete' : 'building',
     }
   })
@@ -85,8 +86,14 @@ export const GET = withRole('admin', async (request) => {
   const gap = shelfRows.slice(Math.max(0, teachingIdx)).find((r) => r.targets > 0 && r.published < r.targets && r.status !== 'complete') ?? null
 
   if (!unitParam && !targetParam) {
+    // Course list for the shelf's class filter — label + program so the client
+    // can show one course's curriculum sequence (its program's units).
+    const courseList = (courses ?? [])
+      .map((c) => ({ id: c.id, label: [c.name, c.section].filter(Boolean).join(' \u00b7 '), program: c.program ?? 'physics' }))
+      .sort((a, b) => a.label.localeCompare(b.label))
     return NextResponse.json({
       shelf: shelfRows,
+      courses: courseList,
       gap: gap ? { unitId: gap.id, unitName: gap.name, missing: gap.targets - gap.published } : null,
       desk: pendingTotal,
       year: { published: totalPublished, lessons: totalLessons, covered: totalCovered, targets: totalTargets },

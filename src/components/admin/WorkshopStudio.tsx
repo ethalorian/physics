@@ -7,12 +7,12 @@
 // created by the seed scripts (scripts/seed-*.ts), never from inside the app. The server gate
 // lives in app/admin/workshop/page.tsx (same pattern as /admin/collaborators).
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { FlaskConical, Hammer, ArrowRight, Check } from 'lucide-react'
 
-interface ShelfRow { id: string; name: string; published: number; drafts: number; targets: number; covered: number; pending: number; questions: number; teachingSections: string[]; status: string }
-interface ShelfData { shelf: ShelfRow[]; gap: { unitId: string; unitName: string; missing: number } | null; desk: number; year: { published: number; lessons: number; covered: number; targets: number } }
+interface ShelfRow { id: string; name: string; published: number; drafts: number; targets: number; covered: number; pending: number; questions: number; teachingSections: string[]; status: string; program: string }
+interface ShelfData { shelf: ShelfRow[]; courses: { id: string; label: string; program: string }[]; gap: { unitId: string; unitName: string; missing: number } | null; desk: number; year: { published: number; lessons: number; covered: number; targets: number } }
 interface UnitLesson { id: string; number: number | null; title: string; published: boolean; blockCount: number; exitTickets: number; honorsBlocks: number; track: string | null; openIn: string[] }
 interface UnitTarget { id: string; slug: string; statement: string; approved: boolean; pending: number; avg: number | null; rated: number }
 interface UnitData { unit: { id: string; name: string } | null; teachingSections: string[]; lessons: UnitLesson[]; targets: UnitTarget[] }
@@ -31,6 +31,7 @@ export default function WorkshopStudio() {
   const [target, setTarget] = useState<TargetData | null>(null)
   const [view, setView] = useState<'shelf' | 'unit' | 'target'>('shelf')
   const [flash, setFlash] = useState<string | null>(null)
+  const [courseId, setCourseId] = useState('all')
   const [busy, setBusy] = useState(false)
 
   const toast = (m: string) => { setFlash(m); setTimeout(() => setFlash(null), 3000) }
@@ -64,6 +65,28 @@ export default function WorkshopStudio() {
     if (res?.ok) { toast('Generated — awaiting your approval below'); openTarget(target.target.id) }
     else toast('Generation failed — try again')
   }
+
+  // ---- class filter: one course's curriculum = its program's units ----
+  const selCourse = useMemo(
+    () => (courseId === 'all' ? null : shelf?.courses.find((c) => c.id === courseId) ?? null),
+    [courseId, shelf],
+  )
+  const shelfRows = useMemo(() => {
+    if (!shelf) return []
+    return selCourse ? shelf.shelf.filter((r) => r.program === selCourse.program) : shelf.shelf
+  }, [shelf, selCourse])
+  // "Teaching now" and the next-gap banner re-anchor to the selected course.
+  const isTeachingRow = useCallback(
+    (r: ShelfRow) => (selCourse ? r.teachingSections.includes(selCourse.label) : r.status === 'teaching'),
+    [selCourse],
+  )
+  const gap = useMemo(() => {
+    if (!shelf) return null
+    if (!selCourse) return shelf.gap
+    const ti = shelfRows.findIndex((r) => isTeachingRow(r))
+    const g = shelfRows.slice(Math.max(0, ti)).find((r) => r.targets > 0 && r.published < r.targets && r.status !== 'complete') ?? null
+    return g ? { unitId: g.id, unitName: g.name, missing: g.targets - g.published } : null
+  }, [shelf, selCourse, shelfRows, isTeachingRow])
 
   const covBar = (covered: number, total: number, pending: number) => {
     const pct = total ? (covered / total) * 100 : 0
@@ -101,18 +124,40 @@ export default function WorkshopStudio() {
       {/* ============ SHELF ============ */}
       {view === 'shelf' && (
         <div className="flex flex-col gap-2.5">
-          {shelf?.gap && (
+          {(shelf?.courses.length ?? 0) > 0 && (
+            <div className="flex items-center gap-2">
+              <label htmlFor="wsClassFilter" className="text-[10.5px] font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Class</label>
+              <select
+                id="wsClassFilter"
+                value={courseId}
+                onChange={(e) => setCourseId(e.target.value)}
+                className="text-sm rounded-lg px-3 py-1.5"
+                style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}
+              >
+                <option value="all">All classes — every program</option>
+                {shelf?.courses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.label}</option>
+                ))}
+              </select>
+              {selCourse && (
+                <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+                  {shelfRows.length} unit{shelfRows.length === 1 ? '' : 's'} in this course&apos;s sequence
+                </span>
+              )}
+            </div>
+          )}
+          {gap && (
             <div className="flex items-center gap-3 rounded-xl px-4 py-3" style={{ border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 7%, transparent)' }}>
-              <span className="text-sm flex-1"><b>Next gap:</b> {shelf.gap.unitName} has fewer published lessons than targets — {shelf.gap.missing} short. Lessons are seeded from the scripts, then shaped here — seed before your fastest section arrives.</span>
-              <button onClick={() => openUnit(shelf.gap!.unitId)} className="text-xs font-bold rounded-lg px-3.5 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>Open {shelf.gap.unitName.split('·')[0].trim()} →</button>
+              <span className="text-sm flex-1"><b>Next gap:</b> {gap.unitName} has fewer published lessons than targets — {gap.missing} short. Lessons are seeded from the scripts, then shaped here — seed before your fastest section arrives.</span>
+              <button onClick={() => openUnit(gap.unitId)} className="text-xs font-bold rounded-lg px-3.5 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>Open {gap.unitName.split('·')[0].trim()} →</button>
             </div>
           )}
           <div className="grid gap-3.5 px-4 pt-1 text-[10.5px] font-bold uppercase tracking-widest" style={{ gridTemplateColumns: '1.5fr 1fr 1.3fr 0.7fr auto', color: 'var(--muted-foreground)' }}>
             <span>Unit</span><span>Lessons</span><span>Review coverage</span><span>Questions</span><span></span>
           </div>
           {!shelf && <p className="text-sm px-4" style={{ color: 'var(--muted-foreground)' }}>Loading the shelf…</p>}
-          {shelf?.shelf.map((u) => {
-            const teaching = u.status === 'teaching'
+          {shelfRows.map((u) => {
+            const teaching = isTeachingRow(u)
             return (
               <button key={u.id} onClick={() => openUnit(u.id)} className="grid gap-3.5 items-center rounded-xl border px-4 py-3 text-left"
                 style={{
@@ -125,7 +170,7 @@ export default function WorkshopStudio() {
                 <div>
                   <div className="text-sm font-bold">{u.name}</div>
                   <div className="text-[11.5px] font-semibold mt-0.5" style={{ color: teaching ? 'var(--primary)' : u.status === 'complete' ? 'var(--success)' : u.status === 'building' ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>
-                    {teaching ? `● teaching now · ${u.teachingSections.join(' · ')}` : u.status === 'complete' ? '✓ complete' : u.status === 'building' ? `◐ ${Math.max(0, u.targets - u.published)} lessons short` : '○ outline'}
+                    {teaching ? `● teaching now${selCourse ? '' : ' · ' + u.teachingSections.join(' · ')}` : u.status === 'complete' ? '✓ complete' : u.status === 'building' ? `◐ ${Math.max(0, u.targets - u.published)} lessons short` : '○ outline'}
                   </div>
                 </div>
                 <span className="text-sm" style={{ color: 'var(--foreground)' }}>{u.published} published{u.drafts ? <span style={{ color: 'var(--reward-foreground)', fontWeight: 600 }}> · {u.drafts} draft{u.drafts > 1 ? 's' : ''}</span> : ''}</span>
