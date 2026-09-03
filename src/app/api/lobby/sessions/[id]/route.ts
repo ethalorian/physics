@@ -148,7 +148,25 @@ export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
     .update({ status, ...stamp })
     .eq('id', id)
   if (error) return NextResponse.json({ error: 'Failed to update' }, { status: 500 })
-  return NextResponse.json({ ok: true, status })
+
+  // L-5 · Collect: closing the lobby awards role XP to every member who submitted
+  // an artifact (+5, once per session — dedupe_key), and nothing else. Evidence
+  // was written at submit (E-4); mastery is untouched (M-1).
+  let collected = 0
+  if (status === 'closed') {
+    const { data: subs } = await supabaseAdmin.from('block_responses').select('user_id, user_email').eq('session_id', id)
+    const seen = new Set<string>()
+    for (const r of (subs ?? []) as { user_id: string; user_email: string | null }[]) {
+      if (seen.has(r.user_id)) continue
+      seen.add(r.user_id)
+      const { data: g } = await supabaseAdmin.from('economy_point_grants').upsert(
+        { user_id: r.user_id, user_email: r.user_email, source: 'lobby-role', reference: id, points: 5, note: 'Lobby role · submitted with the group', dedupe_key: `lobby-role:${id}:${r.user_id}` },
+        { onConflict: 'dedupe_key', ignoreDuplicates: true },
+      ).select('id')
+      if (Array.isArray(g) && g.length > 0) collected++
+    }
+  }
+  return NextResponse.json({ ok: true, status, collected })
 })
 
 // DELETE /api/lobby/sessions/[id] — remove a session entirely. The FK cascades

@@ -47,6 +47,13 @@ export interface BuildGroupsOptions {
   seed?: number
   /** Override the default word pool (mainly for tests). */
   words?: string[]
+  /**
+   * L-2 · balance by language profile: a per-student band (e.g. WIDA 1–6). When
+   * set, students are snake-dealt across groups in band order so every group
+   * gets a spread — one bridge per group for a language-heavy task. Applied
+   * after the mode's own ordering; unknown bands sort last.
+   */
+  spread?: Map<string, number>
 }
 
 /** Small, unambiguous word pool. No homophones, no near-duplicates. */
@@ -201,7 +208,25 @@ export function buildGroups(
   // Determine chunk sizes. For near-peer, size each pool independently so groups
   // stay within a half.
   let chunks: RosterStudent[][]
-  if (poolBoundary == null) {
+  if (opts.spread && opts.spread.size > 0) {
+    // L-2 · snake-deal in band order so each group gets a spread of language
+    // profiles (a bridge per group). Replaces the mode's chunking; the mode's
+    // shuffle still decides ties inside a band.
+    const band = (s: RosterStudent) => opts.spread!.get(s.userId) ?? Number.POSITIVE_INFINITY
+    const byBand = [...ordered].sort((a, b) => band(a) - band(b))
+    const sizes = computeGroupSizes(byBand.length, groupSize)
+    const buckets: RosterStudent[][] = sizes.map(() => [])
+    let gi = 0, dir = 1
+    for (const s of byBand) {
+      // find the next bucket with room, snaking
+      let tries = 0
+      while (buckets[gi].length >= sizes[gi] && tries < sizes.length) { gi += dir; if (gi >= sizes.length || gi < 0) { dir = -dir; gi += dir }; tries++ }
+      buckets[gi].push(s)
+      gi += dir
+      if (gi >= sizes.length || gi < 0) { dir = -dir; gi += dir }
+    }
+    chunks = buckets.filter((c) => c.length > 0)
+  } else if (poolBoundary == null) {
     chunks = chunk(ordered, computeGroupSizes(ordered.length, groupSize))
   } else {
     const lower = ordered.slice(0, poolBoundary)

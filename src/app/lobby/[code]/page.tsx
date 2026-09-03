@@ -55,6 +55,8 @@ export default function LobbyActivityPage() {
   const [buildNote, setBuildNote] = useState('')
   const [missing, setMissing] = useState<number | null>(null)
   const [busy, setBusy] = useState(false)
+  // MC-5 · one-tap role reflection on the Submitted screen (+5 XP once per session).
+  const [reflect, setReflect] = useState<{ done: boolean; xp: number; note: string; busy: boolean }>({ done: false, xp: 0, note: '', busy: false })
   const sessionId = useRef<string | null>(null)
   // Liveness: `tick` bumps once per successful poll (drives the one-shot pulse),
   // `conn` flips to reconnecting when a poll fails so the wait never goes silent.
@@ -183,11 +185,47 @@ export default function LobbyActivityPage() {
   if (!st) return wrap(<p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>)
   if (st.status === 'closed' && !st.submitted) return wrap(<p className="text-sm">This lobby is closed.</p>)
 
+  const sendReflection = async () => {
+    if (reflect.busy || reflect.done) return
+    setReflect((r) => ({ ...r, busy: true }))
+    try {
+      const res = await fetch('/api/lobby/reflect', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: st.session_id, note: reflect.note }) })
+      const j = (await res.json().catch(() => ({}))) as { xp?: number }
+      setReflect((r) => ({ ...r, done: res.ok, xp: j.xp ?? 0, busy: false }))
+    } catch {
+      setReflect((r) => ({ ...r, busy: false }))
+    }
+  }
+
   if (st.submitted) return wrap(
     <div className="text-center">
       <CheckCircle2 size={40} style={{ color: 'var(--success)' }} className="mx-auto mb-2" />
       <h1 className="text-lg font-semibold">Submitted!</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Your work is in. You can close this page.</p>
+      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Your work is in.</p>
+      {st.myRole ? (
+        <div className="mt-4 rounded-xl p-4 text-left" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+          <div className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--muted-foreground)' }}>One tap · your role</div>
+          {reflect.done ? (
+            <p className="text-sm">Logged: you were the <strong>{st.myRole.label}</strong>.{reflect.xp > 0 ? ` +${reflect.xp} XP` : ''}</p>
+          ) : (
+            <>
+              <p className="text-sm mb-2">You were the <strong>{st.myRole.label}</strong>. Where did your role move the group? (optional)</p>
+              <input
+                value={reflect.note}
+                onChange={(e) => setReflect((r) => ({ ...r, note: e.target.value }))}
+                placeholder="e.g. I asked for the number before we agreed"
+                className="w-full text-sm rounded-lg px-3 py-2 mb-2"
+                style={{ background: 'var(--background)', border: '1px solid var(--border)' }}
+                maxLength={400}
+              />
+              <button type="button" onClick={sendReflection} disabled={reflect.busy} className="text-sm font-semibold rounded-lg px-3 py-2 w-full" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', opacity: reflect.busy ? 0.6 : 1 }}>
+                I pushed for evidence · +5 XP
+              </button>
+            </>
+          )}
+        </div>
+      ) : null}
+      <p className="text-xs mt-3" style={{ color: 'var(--muted-foreground)' }}>You can close this page.</p>
     </div>
   )
 

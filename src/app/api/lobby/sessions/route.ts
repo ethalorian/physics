@@ -32,6 +32,13 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     jigsaw_pieces = null,
     room_id = null,
     prize = null,
+    // L-1 · launched from a lesson: which lesson / block / target the artifact is evidence for
+    lesson_id = null,
+    block_id = null,
+    target_slug = null,
+    language_balance = false,
+    debrief = null,
+    then = null,
   } = body as Record<string, unknown>
 
   if (!course_id || typeof course_id !== 'string') {
@@ -74,6 +81,21 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     taskPrompt = encodeEscapeConfig({ roomId: room.id, prize: chosenPrize })
   }
 
+  // L-1 · resolve the target: explicit id, else the block's slug, else the lesson's first target.
+  let targetId: string | null = typeof target_id === 'string' && target_id ? target_id : null
+  if (!targetId && typeof target_slug === 'string' && target_slug) {
+    const { data: t } = await supabaseAdmin.from('learning_targets').select('id').eq('slug', target_slug).maybeSingle()
+    targetId = (t as { id: string } | null)?.id ?? null
+  }
+  if (!targetId && typeof lesson_id === 'string' && lesson_id) {
+    const { data: t } = await supabaseAdmin.from('learning_targets').select('id').eq('lesson_id', lesson_id).order('order_index', { ascending: true }).limit(1).maybeSingle()
+    targetId = (t as { id: string } | null)?.id ?? null
+  }
+  // Debrief question + teacher's next move ride along for the projector (L-5, L-6).
+  const debriefMeta = (typeof debrief === 'string' && debrief) || (typeof then === 'string' && then)
+    ? { debrief: typeof debrief === 'string' ? debrief : null, then: typeof then === 'string' ? then : null }
+    : null
+
   // Mint a code, retrying on the (rare) unique collision.
   let created: { id: string; code: string } | null = null
   for (let attempt = 0; attempt < 6 && !created; attempt++) {
@@ -87,10 +109,14 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
         task_type,
         grouping_mode,
         group_size: size,
-        target_id: target_id || null,
+        target_id: targetId,
         task_prompt: taskPrompt,
         jigsaw_pieces: task_type === 'jigsaw' ? pieces : null,
         status: 'lobby',
+        lesson_id: typeof lesson_id === 'string' && lesson_id ? lesson_id : null,
+        block_id: typeof block_id === 'string' && block_id ? block_id : null,
+        language_balance: language_balance === true,
+        debrief_meta: debriefMeta,
       })
       .select('id, code')
       .single()

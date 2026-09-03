@@ -12,12 +12,12 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   const { data: session } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, created_by, grouping_mode, group_size, target_id, jigsaw_pieces')
+    .select('id, created_by, grouping_mode, group_size, target_id, jigsaw_pieces, language_balance')
     .eq('id', id)
     .maybeSingle()
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const s = session as {
-    id: string; created_by: string; grouping_mode: string; group_size: number; target_id: string | null; jigsaw_pieces: string[] | null
+    id: string; created_by: string; grouping_mode: string; group_size: number; target_id: string | null; jigsaw_pieces: string[] | null; language_balance?: boolean | null
   }
   const pieceCount = Array.isArray(s.jigsaw_pieces) ? s.jigsaw_pieces.length : 0
   if (ctx.role !== 'admin' && s.created_by !== ctx.userId) {
@@ -60,10 +60,18 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const mode: GroupMode = (['random', 'near_peer', 'matched'].includes(s.grouping_mode)
     ? s.grouping_mode
     : 'random') as GroupMode
+  // L-2 · balance by language profile: WIDA band per student (no profile = 6, English-dominant).
+  let spread: Map<string, number> | undefined
+  if (s.language_balance) {
+    const { data: lp } = await supabaseAdmin.from('language_profile').select('user_id, wida').in('user_id', gids)
+    spread = new Map(gids.map((g) => [g, 6]))
+    for (const r of (lp ?? []) as { user_id: string; wida: number | null }[]) if (typeof r.wida === 'number') spread.set(r.user_id, r.wida)
+  }
   const groups = buildGroups(roster, {
     mode,
     groupSize: s.group_size,
     seed: body.seed ?? Math.floor(Math.random() * 1e9),
+    spread,
   })
 
   // Replace any prior grouping.

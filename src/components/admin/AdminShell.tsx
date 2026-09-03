@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, type ReactNode } from 'react'
+import LobbyLauncher from '@/components/admin/LobbyLauncher'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signIn } from 'next-auth/react'
@@ -110,6 +111,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="lg:grid lg:items-start" style={{ gridTemplateColumns: '248px minmax(0, 1fr)' }}>
+      {/* L-1 · the lobby launcher rides on every staff surface (press L) */}
+      <LobbyLauncher />
       {/* desktop sidebar */}
       <aside className="hidden lg:block sticky top-0" style={{ height: '100vh', borderRight: '1px solid var(--border)' }}>
         {NavBody}
