@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 320" font-family="system-ui, sans-serif">
+  <rect width="960" height="320" fill="#FAF9FC"/>
+  <text x="90" y="60" font-size="20" font-weight="700" fill="#17142E">FITCHBURG</text>
+  <text x="790" y="60" font-size="20" font-weight="700" fill="#17142E">WORCESTER</text>
+  <line x1="120" y1="130" x2="820" y2="130" stroke="#9B8EC4" stroke-width="6"/>
+  <polygon points="820,130 796,116 796,144" fill="#9B8EC4"/>
+  <text x="470" y="112" text-anchor="middle" font-size="20" fill="#4A4661">🚗 Car A · 1 hour · 1 hora</text>
+  <line x1="120" y1="230" x2="820" y2="230" stroke="#7FA68B" stroke-width="6"/>
+  <polygon points="820,230 796,216 796,244" fill="#7FA68B"/>
+  <text x="470" y="212" text-anchor="middle" font-size="20" fill="#4A4661">🚙 Car B · 2 hours · 2 horas</text>
+  <text x="470" y="290" text-anchor="middle" font-size="20" fill="#C08F2E" font-weight="700">Same displacement · mismo desplazamiento — same velocity? · ¿misma velocidad?</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="system-ui, sans-serif">
+  <rect width="960" height="400" fill="#FAF9FC"/>
+  <line x1="100" y1="330" x2="900" y2="330" stroke="#4A4661" stroke-width="3"/>
+  <line x1="100" y1="330" x2="100" y2="40" stroke="#4A4661" stroke-width="3"/>
+  <text x="900" y="365" text-anchor="end" font-size="20" fill="#4A4661">time · tiempo (s)</text>
+  <text x="40" y="60" font-size="20" fill="#4A4661">x (m)</text>
+  <polyline points="100,330 380,110 620,110 880,300" fill="none" stroke="#9B8EC4" stroke-width="7"/>
+  <text x="200" y="240" font-size="20" fill="#5E8B6E" font-weight="700">① walking away · se aleja</text>
+  <text x="500" y="90" text-anchor="middle" font-size="22" fill="#C05A5A" font-weight="700">② FLAT · plano — ?</text>
+  <text x="780" y="230" font-size="20" fill="#C08F2E" font-weight="700">③ coming back · regresa</text>
+  <text x="480" y="30" text-anchor="middle" font-size="16" fill="#8B87A6">the slope IS the velocity · la pendiente ES la velocidad</text>
+</svg>
