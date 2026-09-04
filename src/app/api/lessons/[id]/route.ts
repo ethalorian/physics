@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
 import { seiLint } from '@/lib/sei'
+import { targetIdsForLesson, targetSlugsInBlocks } from '@/lib/lesson-targets'
 import type { ContentBlock } from '@/data/content-blocks'
 
 /**
@@ -47,10 +48,11 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     // dead and the drawer can't resolve the work), so a published-but-targetless
     // lesson silently strands student work — and, in Unit 8, blocks car-part grants.
     if (updateData.published === true) {
-      const { count } = await supabaseAdmin
-        .from('learning_targets')
-        .select('id', { count: 'exact', head: true })
-        .eq('lesson_id', params.id)
+      // A target counts if this lesson owns it OR its blocks capture against it —
+      // MVP day lessons share their week's targets (lib/lesson-targets).
+      const owned = await targetIdsForLesson(params.id)
+      const bodySlugs = targetSlugsInBlocks(updateData.content_blocks as { blocks?: unknown[] } | undefined)
+      const count = owned.length || bodySlugs.length
       if (!count) {
         return NextResponse.json(
           { error: 'Cannot publish: this lesson has no learning target. Add at least one learning target first — without it, students’ work can’t be opened or graded in the control room.' },

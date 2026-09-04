@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { targetIdsForLesson } from '@/lib/lesson-targets'
 import { generateLobbyCode } from '@/lib/lobby/passphrase'
 import { getRoom, encodeEscapeConfig, type EscapePrize, type EscapePrizeTier } from '@/lib/lobby/escape'
 
@@ -90,6 +91,7 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   if (!targetId && typeof lesson_id === 'string' && lesson_id) {
     const { data: t } = await supabaseAdmin.from('learning_targets').select('id').eq('lesson_id', lesson_id).order('order_index', { ascending: true }).limit(1).maybeSingle()
     targetId = (t as { id: string } | null)?.id ?? null
+    if (!targetId) targetId = (await targetIdsForLesson(lesson_id))[0] ?? null // a day lesson that only references its week's targets
   }
   // Debrief question + teacher's next move ride along for the projector (L-5, L-6).
   const debriefMeta = (typeof debrief === 'string' && debrief) || (typeof then === 'string' && then)

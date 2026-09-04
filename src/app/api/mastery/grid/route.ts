@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { lessonsByTarget } from '@/lib/lesson-targets'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
 
@@ -94,17 +95,21 @@ export const GET = withAuth(async (request, ctx) => {
     // Per-target "needs grading": the student has submitted work on the target's
     // lesson that's newer than the teacher's latest rating on that target. Mirrors
     // the lessons grid's needsGrading so the control room can grade student-first.
-    const targetLesson = new Map<string, string>()
+    // A target's work can live on several lessons (MVP day lessons share their
+    // week's targets), so map target → every carrier (lib/lesson-targets).
+    let targetLessons = new Map<string, string[]>()
     {
       const { data: tl } = await supabaseAdmin
         .from('learning_targets')
-        .select('id, lesson_id')
+        .select('id, slug, lesson_id')
         .eq('unit_id', unitId)
-      for (const t of (tl ?? []) as { id: string; lesson_id: string | null }[]) {
-        if (t.lesson_id) targetLesson.set(t.id, t.lesson_id)
-      }
+      const { data: ul } = await supabaseAdmin.from('lessons').select('id, content_blocks').eq('unit_id', unitId)
+      targetLessons = lessonsByTarget(
+        (ul ?? []) as { id: string; content_blocks?: { blocks?: unknown[] } | null }[],
+        (tl ?? []) as { id: string; slug: string; lesson_id: string | null }[],
+      )
     }
-    const lessonIdsForPending = [...new Set(targetLesson.values())]
+    const lessonIdsForPending = [...new Set([...targetLessons.values()].flat())]
     const latestRespByKey = new Map<string, number>() // student|lesson -> ts
     if (lessonIdsForPending.length > 0 && studentIds.length > 0) {
       const { data: rr } = await supabaseAdmin
@@ -127,9 +132,9 @@ export const GET = withAuth(async (request, ctx) => {
     const pending: Record<string, Record<string, boolean>> = {}
     for (const s of students) {
       for (const t of targets) {
-        const lid = targetLesson.get(t.id)
-        if (!lid) continue
-        const submittedAt = latestRespByKey.get(`${s.id}|${lid}`)
+        const lids = targetLessons.get(t.id) ?? []
+        if (lids.length === 0) continue
+        const submittedAt = Math.max(0, ...lids.map((lid) => latestRespByKey.get(`${s.id}|${lid}`) ?? 0))
         if (!submittedAt) continue
         const ratedAt = lastRatedByKey.get(`${s.id}|${t.id}`) ?? 0
         if (submittedAt > ratedAt) (pending[s.id] ??= {})[t.id] = true

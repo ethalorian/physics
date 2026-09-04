@@ -15,6 +15,11 @@ block. Spanish evidence is full evidence.
 Emits idempotent SQL: blocks whose id starts with the week's day prefix (w00d2- …) are
 stripped and re-appended, so re-running replaces rather than duplicates.
 
+The week row is the authoring shell only. Students open one lesson per DAY: after the
+blocks land, split_mvp_week(slug) (migration 20260904_mvp_days_split.sql) cuts the week
+at each "Day K" callout (id wNNdK) into pp-wNN-dK lessons and unpublishes the week row.
+The emitted SQL ends with that call, so one migration does both.
+
   python3 gen_mvp_weeks.py > ../supabase/migrations/20260903_mvp_week_inputs.sql
 """
 import json
@@ -287,6 +292,7 @@ def sql():
      where (b->>'id') not like '{prefix}d%' and (b->>'id') not like '{prefix}-%')
   || $${js}$$::jsonb), updated_at = now()
 where slug = '{slug}';
+select public.split_mvp_week('{slug}');  -- one lesson per day for students (2026-09-04)
 """)
     return '\n'.join(out)
 

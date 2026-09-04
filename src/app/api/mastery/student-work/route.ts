@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
+import { lessonsByTarget } from '@/lib/lesson-targets'
 import { withAuth } from '@/lib/api-auth'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
 
@@ -8,7 +9,7 @@ import { resolveTargetStudent } from '@/lib/teacher-scope'
 // unit's lessons (latest per block) + their mastery rating history per target.
 
 type UnitRow = { id: string; name: string }
-type LessonRow = { id: string; title: string; lesson_number: number }
+type LessonRow = { id: string; title: string; lesson_number: number; content_blocks?: { blocks?: unknown[] } | null }
 type BlockRow = { lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string; response_mode?: string | null; scaffolds_used?: string[] | null; evidence_source?: string | null; confidence?: string | null; role?: string | null }
 type TargetRow = { id: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string; evidence_source: string | null }
@@ -48,7 +49,7 @@ export const GET = withAuth(async (request, ctx) => {
     if (unitName) {
       const { data: lessonRows } = await supabaseAdmin
         .from('lessons')
-        .select('id, title, lesson_number')
+        .select('id, title, lesson_number, content_blocks')
         .eq('unit', unitName)
         .order('lesson_number', { ascending: true })
       lessons = (lessonRows ?? []) as LessonRow[]
@@ -56,12 +57,15 @@ export const GET = withAuth(async (request, ctx) => {
     const titleByLesson = new Map<string, string>(lessons.map((l): [string, string] => [l.id, l.title]))
     const lessonIds = lessons.map((l) => l.id)
 
-    // If a target was clicked, narrow the lessons to just that target's lesson.
+    // If a target was clicked, narrow to the lessons that carry that target's work:
+    // the owner plus every lesson whose blocks capture against it (MVP days share
+    // their week's targets — lib/lesson-targets).
     let scopeLessonIds = lessonIds
     if (targetId) {
-      const { data: tRow } = await supabaseAdmin.from('learning_targets').select('lesson_id').eq('id', targetId).maybeSingle()
-      const lid = (tRow as { lesson_id: string | null } | null)?.lesson_id ?? null
-      scopeLessonIds = lid && lessonIds.includes(lid) ? [lid] : []
+      const { data: tRow } = await supabaseAdmin.from('learning_targets').select('id, slug, lesson_id').eq('id', targetId).maybeSingle()
+      const t = tRow as { id: string; slug: string; lesson_id: string | null } | null
+      const carriers = t ? (lessonsByTarget(lessons, [t]).get(t.id) ?? []) : []
+      scopeLessonIds = carriers.filter((id) => lessonIds.includes(id))
     }
 
     // The student's block work for those lessons — latest per (lesson, block)

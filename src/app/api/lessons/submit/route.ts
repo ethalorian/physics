@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { targetIdsForLesson } from '@/lib/lesson-targets'
 
 // Lesson turn-in. Block saves are drafts; submitting is the explicit act that
 // puts the student in the teacher's grading queue.
@@ -19,11 +20,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 // Has the teacher acted on this lesson since `sinceISO`? (rating on a mapped
 // target, or a gradebook score for the lesson.)
 async function gradedSince(userId: string, lessonId: string, sinceISO: string): Promise<boolean> {
-  const { data: targets } = await supabaseAdmin
-    .from('learning_targets')
-    .select('id')
-    .eq('lesson_id', lessonId)
-  const targetIds = (targets ?? []).map((t) => t.id)
+  const targetIds = await targetIdsForLesson(lessonId) // owned ∪ referenced in blocks
   if (targetIds.length === 0) return true // nothing rateable in-app — never lock
   if (targetIds.length > 0) {
     const { data: recs } = await supabaseAdmin
