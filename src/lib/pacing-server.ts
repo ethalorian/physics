@@ -97,3 +97,15 @@ export function patternFromRow(
     countMode: program === 'trades' ? 'sessions' : 'meetings',
   }
 }
+
+// The unit a class is working in RIGHT NOW: the unit of the furthest plan item
+// its students have touched, else the program's first unit. This is what every
+// teacher surface should open on when a class is picked — a Trades or Project
+// Physics class must never land on physics unit-1 (decision 2026-09-04).
+export async function currentUnitForCourse(courseId: string): Promise<{ program: Program; unitId: string | null }> {
+  const program = await loadCourseProgram(courseId)
+  const [items, gids] = await Promise.all([loadPlanItems(program), getCourseStudentGids(courseId)])
+  const hit = await autoSuggestItem(items, gids)
+  const first = items.find((it) => it.kind === 'unit') ?? items[0] ?? null
+  return { program, unitId: hit?.unitId ?? first?.unitId ?? null }
+}

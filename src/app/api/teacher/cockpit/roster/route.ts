@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { currentUnitForCourse } from '@/lib/pacing-server'
 import { decayingAverage } from '@/data/curriculum-types'
 
 // GET /api/teacher/cockpit/roster?class=<courseId>&unit=<unitId>
@@ -15,8 +16,9 @@ export const GET = withAuth(async (request, ctx) => {
   }
   const url = new URL(request.url)
   const classId = url.searchParams.get('class')
-  const unitId = url.searchParams.get('unit') ?? 'unit-1'
   if (!classId) return NextResponse.json({ error: 'class required' }, { status: 400 })
+  // No unit given → the unit THIS class is working in (its own program's).
+  const unitId = url.searchParams.get('unit') ?? (await currentUnitForCourse(classId)).unitId ?? 'unit-1'
 
   // The class must be the caller's own.
   const { data: course } = await supabaseAdmin.from('courses').select('id, teacher_email').eq('id', classId).maybeSingle()
@@ -31,7 +33,7 @@ export const GET = withAuth(async (request, ctx) => {
   // roster.summary.* on the Overview tab and crashes on undefined.
   if (gids.length === 0) {
     return NextResponse.json({
-      students: [], targets: [],
+      unitId, students: [], targets: [],
       summary: { classAvg: null, fluent: 0, total: 0, activeThisWeek: 0, weakestTarget: null },
       calibration: null,
     })
@@ -145,6 +147,7 @@ export const GET = withAuth(async (request, ctx) => {
   }
 
   return NextResponse.json({
+    unitId,
     targets: targetList,
     students: rows,
     calibration,

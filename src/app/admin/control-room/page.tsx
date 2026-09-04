@@ -17,6 +17,7 @@ interface Student { id: string; name: string; email: string; firstName?: string 
 interface Cell { value: number | null; count: number }
 interface GridData {
   unitId: string
+  program?: string | null
   units: { id: string; name: string; label?: string; program?: string }[]
   targets: Target[]
   students: Student[]
@@ -283,7 +284,7 @@ export default function ControlRoomPage() {
   // class in any of them and it carries here. The per-class deep-link
   // (?class=&label=) still wins and updates the shared scope.
   const { classId, classLabel, setClassScope } = useClassScope()
-  const [classes, setClasses] = useState<{ id: string; label: string; teacher: string | null }[]>([])
+  const [classes, setClasses] = useState<{ id: string; label: string; teacher: string | null; program: string }[]>([])
   // Admin-only teacher filter: '' = all teachers. Teachers never see the
   // dropdown (their /api/courses only returns their own classes).
   const [teacherFilter, setTeacherFilter] = useState('')
@@ -295,8 +296,8 @@ export default function ControlRoomPage() {
   useEffect(() => {
     fetch('/api/courses')
       .then((r) => r.json())
-      .then((d: { courses?: { id: string; name: string; section: string | null; teacher_email?: string | null }[] }) => {
-        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null })))
+      .then((d: { courses?: { id: string; name: string; section: string | null; teacher_email?: string | null; program?: string | null }[] }) => {
+        setClasses((d.courses ?? []).map((c) => ({ id: c.id, label: c.section ? `${c.name} · ${c.section}` : c.name, teacher: c.teacher_email ?? null, program: c.program ?? 'physics' })))
       })
       .catch(() => {})
   }, [])
@@ -316,13 +317,26 @@ export default function ControlRoomPage() {
       .then((r) => r.json())
       .then((d: GridData & { error?: string }) => {
         if (d.error) setError(d.error)
-        else setGrid(d)
+        else {
+          setGrid(d)
+          // unit_id=auto resolved server-side to the unit this class is in.
+          if (d.unitId && d.unitId !== unit) setUnitId(d.unitId)
+        }
         setLoading(false)
       })
       .catch(() => { setError('Could not load the grid'); setLoading(false) })
   }, [classQuery])
 
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
+  // Picking a class moves the unit to the one THAT class is working in — a Trades
+  // or Project Physics class never sits on physics unit-1 (its program's units only).
+  const classProgram = classId ? (classes.find((c) => c.id === classId)?.program ?? null) : null
+  useEffect(() => {
+    if (!classId) return
+    const unitProgram = grid?.units.find((u) => u.id === unitId)?.program
+    if (classProgram && unitProgram && unitProgram !== classProgram) setUnitId('auto')
+    else if (classProgram && !unitProgram && unitId !== 'auto') setUnitId('auto')
+  }, [classId, classProgram]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadQueue = useCallback((unit: string) => {
     fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unit)}${classQuery}`)
@@ -661,9 +675,20 @@ export default function ControlRoomPage() {
           className="rounded-lg text-sm px-3 py-2"
           style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
         >
-          {(grid?.units ?? [{ id: 'unit-1', name: 'Unit 1' }]).map((u) => (
-            <option key={u.id} value={u.id}>{u.label ?? u.name}</option>
-          ))}
+          {unitId === 'auto' && <option value="auto">Finding this class’s unit…</option>}
+          {(() => {
+            const all = grid?.units ?? [{ id: 'unit-1', name: 'Unit 1', program: 'physics' }]
+            // A scoped class sees only its program's units; unscoped, group by program.
+            const list = classProgram ? all.filter((u) => (u.program ?? 'physics') === classProgram) : all
+            const programs = [...new Set(list.map((u) => u.program ?? 'physics'))]
+            const label = (p: string) => (p === 'trades' ? 'Trades Physics' : p === 'projects' ? 'Project Physics (MVP)' : 'Physics')
+            if (programs.length <= 1) return list.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)
+            return programs.map((p) => (
+              <optgroup key={p} label={label(p)}>
+                {list.filter((u) => (u.program ?? 'physics') === p).map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+              </optgroup>
+            ))
+          })()}
         </select>
         {/* the single launcher — every pending cell is walked from here */}
         {view !== 'math' && (

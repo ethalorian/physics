@@ -4,6 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { lessonsByTarget } from '@/lib/lesson-targets'
 import { targetValue, MasteryRecord } from '@/data/curriculum-types'
 import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
+import { currentUnitForCourse } from '@/lib/pacing-server'
 
 // GET /api/mastery/grid?unit_id=unit-1
 // Class mastery grid: every student (the teacher's roster) x every learning target
@@ -22,8 +23,16 @@ export const GET = withAuth(async (request, ctx) => {
     }
 
     const { searchParams } = new URL(request.url)
-    const unitId = searchParams.get('unit_id') ?? 'unit-1'
     const classId = searchParams.get('class')
+    // unit_id=auto → the unit the picked class is working in (its program's, never
+    // physics unit-1 for a Trades / Project Physics class). Echoed back as `unitId`.
+    let unitId = searchParams.get('unit_id') ?? 'unit-1'
+    let program: string | null = null
+    if (classId) {
+      const cur = await currentUnitForCourse(classId)
+      program = cur.program
+      if (unitId === 'auto' || !unitId) unitId = cur.unitId ?? 'unit-1'
+    } else if (unitId === 'auto') unitId = 'unit-1'
 
     // Units (for the switcher)
     const { data: unitRowsRaw } = await supabaseAdmin
@@ -143,6 +152,7 @@ export const GET = withAuth(async (request, ctx) => {
 
     return NextResponse.json({
       unitId,
+      program,
       units,
       targets: targets.map((t) => ({ id: t.id, statement: t.statement, domain: t.domain })),
       students,
