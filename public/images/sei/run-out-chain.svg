@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="system-ui, sans-serif">
+  <rect width="960" height="400" fill="#FAF9FC"/>
+  <text x="480" y="32" text-anchor="middle" font-size="22" font-weight="700" fill="#4A4661">The angle does not stop the cart. The FLOOR does.</text>
+  <text x="480" y="56" text-anchor="middle" font-size="18" fill="#8B87A6">El &#225;ngulo no detiene el carrito. El PISO s&#237;.</text>
+
+  <rect x="50" y="92" width="190" height="112" rx="12" fill="#FFFFFF" stroke="#4A4661" stroke-width="3"/>
+  <text x="145" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#4A4661">angle</text>
+  <text x="145" y="166" text-anchor="middle" font-size="18" fill="#8B87A6">&#225;ngulo</text>
+  <text x="145" y="190" text-anchor="middle" font-size="15" fill="#C08F2E">you set it</text>
+
+  <rect x="270" y="92" width="190" height="112" rx="12" fill="#FFFFFF" stroke="#4A4661" stroke-width="3"/>
+  <text x="365" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#4A4661">acceleration</text>
+  <text x="365" y="166" text-anchor="middle" font-size="18" fill="#8B87A6">aceleraci&#243;n</text>
+  <text x="365" y="190" text-anchor="middle" font-size="15" fill="#C08F2E">from the graph</text>
+
+  <rect x="490" y="92" width="190" height="112" rx="12" fill="#FFFFFF" stroke="#4A4661" stroke-width="3"/>
+  <text x="585" y="132" text-anchor="middle" font-size="20" font-weight="700" fill="#4A4661">speed at the</text>
+  <text x="585" y="156" text-anchor="middle" font-size="20" font-weight="700" fill="#4A4661">bottom</text>
+  <text x="585" y="184" text-anchor="middle" font-size="18" fill="#8B87A6">rapidez al final</text>
+
+  <rect x="710" y="92" width="200" height="112" rx="12" fill="#FFFFFF" stroke="#5E8B6E" stroke-width="4"/>
+  <text x="810" y="140" text-anchor="middle" font-size="20" font-weight="700" fill="#5E8B6E">run-out</text>
+  <text x="810" y="166" text-anchor="middle" font-size="18" fill="#8B87A6">recorrido</text>
+  <text x="810" y="190" text-anchor="middle" font-size="15" fill="#C08F2E">you measure it</text>
+
+  <polygon points="264,148 240,138 240,158" fill="#4A4661"/>
+  <polygon points="484,148 460,138 460,158" fill="#4A4661"/>
+  <polygon points="704,148 680,138 680,158" fill="#4A4661"/>
+
+  <line x1="810" y1="208" x2="810" y2="242" stroke="#C05A5A" stroke-width="4"/>
+  <polygon points="810,252 800,232 820,232" fill="#C05A5A"/>
+  <text x="480" y="292" text-anchor="middle" font-size="20" font-weight="700" fill="#C05A5A">FRICTION acts HERE &#8212; the floor, the wheels</text>
+  <text x="480" y="316" text-anchor="middle" font-size="18" fill="#C05A5A">La FRICCI&#211;N act&#250;a AQU&#205; &#8212; el piso, las ruedas</text>
+
+  <text x="480" y="358" text-anchor="middle" font-size="19" font-weight="700" fill="#4A4661">Same angle + different floor = different run-out</text>
+  <text x="480" y="380" text-anchor="middle" font-size="17" fill="#8B87A6">Mismo &#225;ngulo + piso distinto = recorrido distinto</text>
+</svg>

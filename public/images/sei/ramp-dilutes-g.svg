@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="system-ui, sans-serif">
+  <rect width="960" height="400" fill="#FAF9FC"/>
+  <text x="480" y="32" text-anchor="middle" font-size="22" font-weight="700" fill="#4A4661">The ramp gives only PART of gravity</text>
+  <text x="480" y="56" text-anchor="middle" font-size="18" fill="#8B87A6">La rampa da solo PARTE de la gravedad</text>
+
+  <text x="80" y="112" font-size="19" fill="#5E8B6E" font-weight="700">a = the part along the ramp</text>
+  <text x="80" y="134" font-size="17" fill="#5E8B6E">la parte a lo largo de la rampa</text>
+
+  <line x1="70" y1="320" x2="500" y2="320" stroke="#4A4661" stroke-width="3"/>
+  <line x1="70" y1="320" x2="470" y2="150" stroke="#4A4661" stroke-width="4"/>
+  <path d="M 152 320 A 82 82 0 0 0 145 288" fill="none" stroke="#C08F2E" stroke-width="3"/>
+  <text x="162" y="313" font-size="18" fill="#C08F2E" font-weight="700">angle</text>
+
+  <g transform="rotate(-23 300 222)">
+    <rect x="272" y="190" width="56" height="30" rx="5" fill="#9B8EC4"/>
+    <circle cx="284" cy="226" r="7" fill="#4A4661"/>
+    <circle cx="316" cy="226" r="7" fill="#4A4661"/>
+  </g>
+
+  <line x1="284" y1="238" x2="212" y2="268" stroke="#5E8B6E" stroke-width="7"/>
+  <polygon points="196,275 216,254 222,276" fill="#5E8B6E"/>
+
+  <line x1="300" y1="222" x2="300" y2="348" stroke="#C05A5A" stroke-width="7"/>
+  <polygon points="300,364 290,342 310,342" fill="#C05A5A"/>
+  <text x="316" y="272" font-size="20" fill="#C05A5A" font-weight="700">g = 9.8</text>
+  <text x="316" y="294" font-size="17" fill="#C05A5A">down &#183; abajo</text>
+
+  <line x1="540" y1="86" x2="540" y2="360" stroke="#8B87A6" stroke-width="2" stroke-dasharray="8 8"/>
+
+  <text x="578" y="120" font-size="19" font-weight="700" fill="#4A4661">flat ramp &#183; rampa plana</text>
+  <text x="578" y="144" font-size="18" fill="#5E8B6E">a is small &#183; a es peque&#241;a</text>
+  <text x="578" y="192" font-size="19" font-weight="700" fill="#4A4661">steep ramp &#183; rampa empinada</text>
+  <text x="578" y="216" font-size="18" fill="#5E8B6E">a is bigger &#183; a es mayor</text>
+  <text x="578" y="264" font-size="19" font-weight="700" fill="#4A4661">straight up &#183; vertical (90&#176;)</text>
+  <text x="578" y="288" font-size="18" fill="#C05A5A">a = g = 9.8 &#8212; all of it</text>
+  <text x="578" y="336" font-size="19" font-weight="700" fill="#4A4661">steeper &#8594; closer to g</text>
+  <text x="578" y="358" font-size="17" fill="#8B87A6">m&#225;s empinada &#8594; m&#225;s cerca de g</text>
+</svg>

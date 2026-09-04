@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="system-ui, sans-serif">
+  <rect width="960" height="400" fill="#FAF9FC"/>
+  <text x="480" y="34" text-anchor="middle" font-size="22" font-weight="700" fill="#4A4661">Measure g yourself &#183; Mide g t&#250; mismo</text>
+
+  <rect x="250" y="80" width="24" height="268" fill="#8B87A6"/>
+  <rect x="206" y="344" width="120" height="16" rx="4" fill="#8B87A6"/>
+
+  <rect x="274" y="156" width="104" height="24" rx="4" fill="#4A4661"/>
+  <rect x="274" y="240" width="104" height="24" rx="4" fill="#4A4661"/>
+  <line x1="326" y1="180" x2="326" y2="240" stroke="#C05A5A" stroke-width="3" stroke-dasharray="6 5"/>
+  <text x="392" y="176" font-size="18" fill="#4A4661" font-weight="700">photogate</text>
+  <text x="392" y="196" font-size="16" fill="#8B87A6">fotopuerta</text>
+
+  <rect x="300" y="72" width="50" height="74" fill="#FFFFFF" stroke="#4A4661" stroke-width="3"/>
+  <rect x="300" y="72" width="50" height="13" fill="#4A4661"/>
+  <rect x="300" y="98" width="50" height="13" fill="#4A4661"/>
+  <rect x="300" y="124" width="50" height="13" fill="#4A4661"/>
+  <text x="364" y="96" font-size="18" fill="#4A4661" font-weight="700">picket fence</text>
+  <text x="364" y="116" font-size="16" fill="#8B87A6">barra de franjas</text>
+
+  <line x1="326" y1="272" x2="326" y2="306" stroke="#C05A5A" stroke-width="7"/>
+  <polygon points="326,322 316,300 336,300" fill="#C05A5A"/>
+  <text x="344" y="302" font-size="19" fill="#C05A5A" font-weight="700">falls &#183; cae</text>
+
+  <rect x="266" y="360" width="130" height="28" rx="13" fill="#9B8EC4"/>
+  <text x="331" y="380" text-anchor="middle" font-size="16" fill="#FAF9FC" font-weight="700">cushion &#183; coj&#237;n</text>
+
+  <text x="560" y="130" font-size="20" font-weight="700" fill="#4A4661">1. Gate straight up and down.</text>
+  <text x="560" y="154" font-size="17" fill="#8B87A6">La fotopuerta bien vertical.</text>
+  <text x="560" y="202" font-size="20" font-weight="700" fill="#4A4661">2. DROP it. Do not push.</text>
+  <text x="560" y="226" font-size="17" fill="#8B87A6">SU&#201;LTALA. No la empujes.</text>
+  <text x="560" y="274" font-size="20" font-weight="700" fill="#4A4661">3. Three drops. Write g.</text>
+  <text x="560" y="298" font-size="17" fill="#8B87A6">Tres ca&#237;das. Escribe g.</text>
+  <text x="560" y="348" font-size="24" font-weight="700" fill="#5E8B6E">g &#8776; 9.8 m/s&#178;</text>
+  <text x="560" y="376" font-size="17" fill="#5E8B6E">This is YOUR number &#183; TU n&#250;mero</text>
+</svg>
