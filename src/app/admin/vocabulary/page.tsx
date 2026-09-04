@@ -84,9 +84,9 @@ export default function VocabularyManagementPage() {
               <div className="pl-6">
                 <p className="font-medium mb-1">Assign (Optional)</p>
                 <p className="text-muted-foreground text-xs">
-                  <Link href="/admin/dashboard" className="text-primary hover:underline">
-                    Go to Assign tab
-                  </Link> to assign sets to specific courses
+                  <Link href="/admin/vocabulary/assign" className="text-primary hover:underline">
+                    Assign words · read competency
+                  </Link> — assign sets to a class and see word-by-word accuracy, with vs. without SEI supports
                 </p>
               </div>
             </div>

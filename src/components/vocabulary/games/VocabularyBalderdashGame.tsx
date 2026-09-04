@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Feather, Check, Copy, Crown, Eye, Users, Clock } from 'lucide-react'
 import { MAX_DEF_LEN } from '@/lib/balderdash'
@@ -14,6 +15,7 @@ import { MAX_DEF_LEN } from '@/lib/balderdash'
 interface RevealEntry { text: string; real: boolean; author: string | null; mine: boolean; voters: (string | null)[] }
 interface RoundView {
   term: string
+  termId?: string | null
   icon?: string | null
   cognate?: string | null
   wroteCount: number
@@ -46,6 +48,8 @@ const POLL_MS = 1500
 
 export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomId: string; onComplete: (v: BalView) => void }) {
   const sei = useVocabSei()
+  const attempts = useVocabAttempts(null, 'balderdash')
+  const recorded = useRef<Set<number>>(new Set())
   const [game, setGame] = useState<BalView | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -60,7 +64,13 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
   const apply = useCallback((v: BalView) => {
     clockOffset.current = v.serverNow - Date.now()
     setGame(v)
-  }, [])
+    // Per-word evidence: at reveal, did I spot the real definition? One record per round.
+    const rd = v.round
+    if (v.phase === 'reveal' && rd?.reveal && rd.termId && rd.myVote !== null && rd.myVote !== undefined && !recorded.current.has(v.currentRound)) {
+      recorded.current.add(v.currentRound)
+      attempts.record({ id: rd.termId }, Boolean(rd.reveal[rd.myVote]?.real))
+    }
+  }, [attempts])
 
   const poll = useCallback(async () => {
     try {

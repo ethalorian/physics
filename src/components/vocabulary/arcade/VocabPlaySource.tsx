@@ -15,6 +15,7 @@ import type { VocabularyTerm } from '@/types/assignment'
 
 interface SourceUnit { id: string; name: string }
 interface SourceLesson { id: string; title: string; unit: string }
+interface Assigned { setId: string; lessonId: string | null; unitId: string | null; dueOn: string | null; label: string }
 export interface ResolvedPlay { terms: VocabularyTerm[]; scoreSetId: string | null; label: string }
 
 const LAST_PLAY_KEY = 'vocab:lastPlay'
@@ -23,6 +24,7 @@ const TIERS = ['all', '1', '2', '3']
 export default function VocabPlaySource({ onResolved, initialLessonId }: { onResolved: (r: ResolvedPlay) => void; initialLessonId?: string }) {
   const [units, setUnits] = useState<SourceUnit[]>([])
   const [lessons, setLessons] = useState<SourceLesson[]>([])
+  const [assigned, setAssigned] = useState<Assigned[]>([])
   const [scope, setScope] = useState<'lesson' | 'unit'>('lesson')
   const [lessonId, setLessonId] = useState(initialLessonId ?? '')
   const [unitId, setUnitId] = useState('')
@@ -32,7 +34,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
 
   useEffect(() => {
     fetch('/api/vocab/sources').then((r) => r.json())
-      .then((d: { units?: SourceUnit[]; lessons?: SourceLesson[] }) => { setUnits(d.units ?? []); setLessons(d.lessons ?? []) })
+      .then((d: { units?: SourceUnit[]; lessons?: SourceLesson[]; assigned?: Assigned[] }) => { setUnits(d.units ?? []); setLessons(d.lessons ?? []); setAssigned(d.assigned ?? []) })
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
@@ -86,6 +88,9 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
     const sp = new URLSearchParams(window.location.search)
     if (sp.get('lesson_id') || sp.get('unit_id')) return
     if (lessonId || unitId) return
+    // The teacher's assignment beats memory: the newest assigned set with a lesson opens first.
+    const a = assigned.find((x) => x.lessonId && lessons.some((l) => l.id === x.lessonId))
+    if (a?.lessonId) { setScope('lesson'); setLessonId(a.lessonId); resolve('lesson', a.lessonId, 'all'); return }
     let stored: { scope?: string; id?: string; tier?: string } | null = null
     try { stored = JSON.parse(localStorage.getItem(LAST_PLAY_KEY) ?? 'null') } catch { /* ignore */ }
     const t = stored?.tier && TIERS.includes(stored.tier) ? stored.tier : 'all'
@@ -110,6 +115,16 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
 
   return (
     <div className="space-y-3">
+      {assigned.length > 0 && (
+        <div className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 12%, var(--card))' }}>
+          <span className="font-semibold">Assigned · Asignado:</span>{' '}
+          {assigned.map((a, i) => (
+            <button key={a.setId} type="button" className="underline mr-2" onClick={() => { if (a.lessonId) { setScope('lesson'); setLessonId(a.lessonId); resolve('lesson', a.lessonId, tier) } }}>
+              {a.label}{a.dueOn ? ` (due ${a.dueOn})` : ''}{i < assigned.length - 1 ? '' : ''}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex gap-1.5">
         {(['lesson', 'unit'] as const).map((s) => (
           <button key={s} onClick={() => { setScope(s); setLessonId(''); setUnitId(''); setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }) }}

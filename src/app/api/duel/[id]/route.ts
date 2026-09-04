@@ -171,9 +171,9 @@ function sanitize(rounds: DuelRound[], role: DuelRole, revealAll: boolean) {
   const opp: DuelRole = role === 'host' ? 'guest' : 'host'
   return rounds.map((r) => {
     if (r.winner !== undefined || revealAll) {
-      return { prompt: r.prompt, promptEs: r.promptEs ?? null, icon: r.icon ?? null, optionMeta: r.optionMeta, options: r.options, correct: r.correct, startedAt: r.startedAt, winner: r.winner, mine: r[role] ?? null, theirs: r[opp] ?? null }
+      return { prompt: r.prompt, termId: r.termId ?? null, promptEs: r.promptEs ?? null, icon: r.icon ?? null, optionMeta: r.optionMeta, options: r.options, correct: r.correct, startedAt: r.startedAt, winner: r.winner, mine: r[role] ?? null, theirs: r[opp] ?? null }
     }
-    return { prompt: r.prompt, promptEs: r.promptEs ?? null, icon: r.icon ?? null, optionMeta: r.optionMeta, options: r.options, startedAt: r.startedAt, mine: r[role] ?? null, theirsAnswered: r[opp] !== undefined }
+    return { prompt: r.prompt, termId: r.termId ?? null, promptEs: r.promptEs ?? null, icon: r.icon ?? null, optionMeta: r.optionMeta, options: r.options, startedAt: r.startedAt, mine: r[role] ?? null, theirsAnswered: r[opp] !== undefined }
   })
 }
 

@@ -113,6 +113,7 @@ function view(m: SessionRow, userId: string, now: number) {
   if (r && m.status !== 'waiting') {
     const base = {
       term: r.term,
+      termId: r.termId ?? null,
       icon: r.icon ?? null,
       cognate: r.cognate ?? null,
       wroteCount: Object.values(r.writings).filter((t) => t.trim()).length,

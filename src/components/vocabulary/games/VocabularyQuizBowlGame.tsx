@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { TermLabel, DefinitionLabel, useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -59,6 +60,7 @@ export default function VocabularyQuizBowlGame({
 }: VocabularyQuizBowlGameProps) {
   // SEI: the clock stretches for students on full / partial support (reading the clue twice is not being slower at physics).
   const sei = useVocabSei()
+  const attempts = useVocabAttempts(null, 'quiz-bowl')
   const timeLimit = Math.round(timeLimitProp * sei.timeScale)
   const [quizState, setQuizState] = useState<QuizState>({
     currentTerm: null,
@@ -185,6 +187,7 @@ export default function VocabularyQuizBowlGame({
     if (correct === undefined) {
       correct = userAnswer.toLowerCase() === quizState.currentTerm.term.toLowerCase()
     }
+    attempts.record(quizState.currentTerm, Boolean(correct), timeUsed * 1000)
 
     // Calculate points: (base + speed bonus) × combo multiplier
     const basePoints = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 20 : 30
@@ -248,7 +251,7 @@ export default function VocabularyQuizBowlGame({
         onGameComplete?.(quizState.score + points, Math.min(totalQuestions, gameTerms.length), totalTime)
       }
     }, 750)
-  }, [quizState, difficulty, timeLimit, totalQuestions, gameTerms, onGameComplete])
+  }, [quizState, difficulty, timeLimit, totalQuestions, gameTerms, onGameComplete, attempts])
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()

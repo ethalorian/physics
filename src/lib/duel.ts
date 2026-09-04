@@ -47,6 +47,8 @@ export interface DuelAnswer {
 
 export interface DuelRound {
   prompt: string // the definition shown to both players
+  /** vocabulary_terms.id of the target word (per-word evidence, vocab_attempts). */
+  termId?: string | null
   /** SEI — the Spanish definition and the term's picture, shown when the player has L1 / support on. */
   promptEs?: string | null
   icon?: string | null
@@ -61,6 +63,7 @@ export interface DuelRound {
 }
 
 export interface DuelTermInput {
+  id?: string
   term: string
   definition: string
   definitionEs?: string | null
@@ -95,7 +98,7 @@ export function generateRounds(terms: DuelTermInput[], total = TOTAL_ROUNDS): Du
     const picks = shuffle([target, ...distractors])
     const options = picks.map((p) => p.term)
     rounds.push({
-      prompt: target.definition, promptEs: target.definitionEs ?? null, icon: target.icon ?? null,
+      prompt: target.definition, termId: target.id ?? null, promptEs: target.definitionEs ?? null, icon: target.icon ?? null,
       optionMeta: picks.map((p) => ({ icon: p.icon ?? null, cognate: p.cognate ?? null })),
       options, correct: options.indexOf(target.term),
     })

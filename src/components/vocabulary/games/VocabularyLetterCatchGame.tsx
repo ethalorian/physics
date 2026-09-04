@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei, clueText } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { VocabularyTerm } from '@/types/assignment'
@@ -54,6 +55,8 @@ function fmtTime(ms: number): string { const s = Math.max(0, Math.ceil(ms / 1000
 export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameComplete, difficulty = 'medium', gameLength = 10 }: VocabularyLetterCatchGameProps) {
   // SEI: more time per letter for students on full / partial support; the clue can carry a picture + Spanish.
   const sei = useVocabSei()
+  const attempts = useVocabAttempts(null, 'letter-catch')
+  const termRef = useRef<{ id: string } | null>(null)
   const cfg = useMemo(() => ({ ...CONFIG[difficulty], msPerLetter: Math.round(CONFIG[difficulty].msPerLetter * sei.timeScale) }), [difficulty, sei.timeScale])
 
   const [phase, setPhase] = useState<Phase>('waiting')
@@ -137,6 +140,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     const term = terms[index]
     if (!term) return
     const word = lettersOf(term.term)
+    termRef.current = term
     targetRef.current = word; filledRef.current = 0; spawnAccRef.current = 0; answeredRef.current = false
     wordStartRef.current = Date.now()
     basketRef.current = (arenaRef.current?.clientWidth ?? 900) / 2
@@ -177,6 +181,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     answeredRef.current = true
     const word = targetRef.current
     const elapsed = Date.now() - wordStartRef.current
+    attempts.record(termRef.current, true, elapsed)
     const par = Math.max(1, word.length * cfg.parPerLetter)
     const speedFrac = Math.max(0, Math.min(1, 1 - elapsed / par))
     const pts = Math.round(cfg.base * multiplier * (1 + speedFrac) * (1 + word.length / 10))
@@ -186,7 +191,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     const ns = score + pts; setScore(ns)
     pushFloat((arenaRef.current?.clientWidth ?? 900) / 2, ARENA_H * 0.4, `+${pts}`, 'var(--success)')
     setTimeout(() => advance(qIndex + 1), 600)
-  }, [cfg.parPerLetter, cfg.base, multiplier, qIndex, score, advance, pushFloat])
+  }, [cfg.parPerLetter, cfg.base, multiplier, qIndex, score, advance, pushFloat, attempts])
 
   // catching the correct next letter (or a wild power): fill a slot, maybe finish
   const fillSlot = useCallback(() => {
@@ -222,9 +227,10 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
   const skipWord = useCallback(() => {
     if (answeredRef.current) return
     answeredRef.current = true; setStreak(0); streakRef.current = 0
+    attempts.record(termRef.current, false, Date.now() - wordStartRef.current)
     setPhase('feedback'); setFlash({ ok: false, answer: targetRef.current.join('') })
     setTimeout(() => advance(qIndex + 1), 850)
-  }, [qIndex, advance])
+  }, [qIndex, advance, attempts])
 
   // global clock
   useEffect(() => {

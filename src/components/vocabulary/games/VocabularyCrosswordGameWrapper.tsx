@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { VocabularyTerm, VocabularyCrosswordQuestion } from '@/types/assignment'
 import VocabularyCrosswordGame from './VocabularyCrosswordGame'
 
@@ -14,6 +15,7 @@ export default function VocabularyCrosswordGameWrapper({
   onGameComplete,
   difficulty = 'medium'
 }: VocabularyCrosswordGameWrapperProps) {
+  const attempts = useVocabAttempts(null, 'crossword')
   const [startTime] = useState(Date.now())
 
   // Convert vocabulary terms to crossword question format
@@ -33,6 +35,10 @@ export default function VocabularyCrosswordGameWrapper({
       const term = vocabularyTerms.find(t => t.id === termId)
       return term && answer.answers[termId].toLowerCase() === term.term.toLowerCase()
     })
+    for (const termId of Object.keys(answer.answers)) {
+      if (answer.answers[termId]?.trim()) attempts.record({ id: termId }, correctAnswers.includes(termId))
+    }
+    attempts.flush()
 
     const score = correctAnswers.length * 10
     const timeSpent = Math.floor((Date.now() - startTime) / 1000)

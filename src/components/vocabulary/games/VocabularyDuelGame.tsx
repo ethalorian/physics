@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Swords, Check, X, Clock, Wifi, WifiOff, Copy, Ghost } from 'lucide-react'
 import { ROUND_MS, type DuelMode, type DuelRole, type DuelStatus } from '@/lib/duel'
@@ -16,6 +17,7 @@ import { ROUND_MS, type DuelMode, type DuelRole, type DuelStatus } from '@/lib/d
 
 interface RoundView {
   prompt: string
+  termId?: string | null
   promptEs?: string | null
   icon?: string | null
   optionMeta?: { icon?: string | null; cognate?: string | null }[]
@@ -51,6 +53,10 @@ const POLL_MS = 1500
 
 export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: string; onComplete: (m: MatchView) => void }) {
   const sei = useVocabSei()
+  const attempts = useVocabAttempts(null, 'duel')
+  const attemptsRef = useRef(attempts)
+  attemptsRef.current = attempts
+  const recorded = useRef<Set<number>>(new Set())
   const [match, setMatch] = useState<MatchView | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [now, setNow] = useState(Date.now())
@@ -72,6 +78,12 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
       clockOffset.current = m.serverNow - Date.now()
       setError(null)
       setMatch(m)
+      // Per-word evidence: once a round is resolved and I answered it, record my result.
+      m.rounds.forEach((rd, i) => {
+        if (rd.correct === undefined || !rd.mine || !rd.termId || recorded.current.has(i)) return
+        recorded.current.add(i)
+        attemptsRef.current.record({ id: rd.termId }, rd.mine.answer === rd.correct, rd.mine.ms)
+      })
     } catch {
       /* transient network blip — next poll will recover */
     }

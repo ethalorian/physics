@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei, clueText } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { VocabularyTerm } from '@/types/assignment'
@@ -30,6 +31,7 @@ const ARENA_H = 540  // arena height (px) — matches the arena style below
 export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplete, difficulty = 'medium', gameLength = 20 }: VocabularyWordShootGameProps) {
   // SEI: same difficulty, longer clock for students on full / partial support; the clue can carry a picture + Spanish.
   const sei = useVocabSei()
+  const attempts = useVocabAttempts(null, 'word-shoot')
   const cfg = useMemo(() => ({ ...CONFIG[difficulty], time: Math.round(CONFIG[difficulty].time * sei.timeScale) }), [difficulty, sei.timeScale])
 
   const [phase, setPhase] = useState<Phase>('waiting')
@@ -146,6 +148,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
   const miss = useCallback((shownAnswer: string) => {
     if (answeredRef.current) return
     answeredRef.current = true
+    attempts.record(bubblesRef.current.find((b) => b.isCorrect)?.term, false, cfg.time - Math.max(0, deadlineRef.current - Date.now()))
     sfx.wrong()
     setShake(true); setTimeout(() => setShake(false), 450)
     setStreak(0)
@@ -154,12 +157,13 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     const nextLives = lives - 1
     setLives(nextLives)
     setTimeout(() => advance(qIndex + 1, score, nextLives), 850)
-  }, [lives, score, qIndex, advance])
+  }, [lives, score, qIndex, advance, attempts, cfg.time])
 
   const hit = useCallback((bubble: Bubble) => {
     if (answeredRef.current || phase !== 'playing') return
     if (!bubble.isCorrect) { miss(bubbles.find((b) => b.isCorrect)?.term.term ?? '') ; return }
     answeredRef.current = true
+    attempts.record(bubble.term, true, cfg.time - Math.max(0, timeLeft))
     const frac = Math.max(0, Math.min(1, timeLeft / cfg.time))
     const pts = Math.round(cfg.base * multiplier * (1 + frac))
     sfx.correct()
@@ -171,7 +175,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     const ns = score + pts
     setScore(ns)
     setTimeout(() => advance(qIndex + 1, ns, lives), 350)
-  }, [phase, bubbles, timeLeft, cfg.time, cfg.base, multiplier, streak, qIndex, lives, score, miss, advance])
+  }, [phase, bubbles, timeLeft, cfg.time, cfg.base, multiplier, streak, qIndex, lives, score, miss, advance, attempts])
 
   // countdown
   useEffect(() => {

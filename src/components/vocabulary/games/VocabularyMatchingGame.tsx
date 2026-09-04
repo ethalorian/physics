@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { VocabularyMatchingQuestion } from '@/types/assignment'
 import { Card, CardContent } from '@/components/ui/card'
@@ -37,6 +38,7 @@ export default function VocabularyMatchingGame({
   disabled = false,
   onMatchAttempt
 }: VocabularyMatchingGameProps) {
+  const attempts = useVocabAttempts(null, 'matching')
   const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([])
   const [matches, setMatches] = useState<Record<string, string>>(initialAnswer?.matches || {})
   const [cardStates, setCardStates] = useState<Record<string, CardState>>({})
@@ -120,6 +122,7 @@ export default function VocabularyMatchingGame({
     // A correct match is when the term ID matches the definition ID (same vocabulary item)
     const isCorrectMatch = termId === definitionId
     onMatchAttempt?.(isCorrectMatch)
+    attempts.record({ id: termId }, isCorrectMatch)
 
     if (isCorrectMatch) {
       // Correct match - flash green first, then stay in correct state

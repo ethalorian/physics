@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from 'react'
+import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -56,6 +57,7 @@ export default function VocabularyHangmanGame({
   showDefinitions = true,
   maxWrongGuesses = 6
 }: VocabularyHangmanGameProps) {
+  const attempts = useVocabAttempts(null, 'hangman')
   const [gameState, setGameState] = useState<GameState>({
     currentTerm: null,
     guessedLetters: new Set(),
@@ -186,6 +188,8 @@ export default function VocabularyHangmanGame({
       let newWordIndex = prev.currentWordIndex
       let newCurrentTerm = prev.currentTerm
       
+      if (wordComplete) attempts.record(prev.currentTerm, true)
+      else if (gameOver) attempts.record(prev.currentTerm, false)
       if (wordComplete) {
         // Calculate score based on difficulty and hints used
         const baseScore = difficulty === 'hard' ? 30 : difficulty === 'medium' ? 20 : 10
@@ -225,7 +229,7 @@ export default function VocabularyHangmanGame({
         currentWordIndex: newWordIndex
       }
     })
-  }, [gameState.currentTerm, gameState.guessedLetters, gameState.gameStatus, maxWrongGuesses, difficulty, gameWords])
+  }, [gameState.currentTerm, gameState.guessedLetters, gameState.gameStatus, maxWrongGuesses, difficulty, gameWords, attempts])
 
   const nextWord = useCallback(() => {
     if (gameState.currentWordIndex + 1 >= gameWords.length) {
