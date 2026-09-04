@@ -15,7 +15,7 @@ import { lobbyReadyDefault } from '@/data/content-blocks'
  * lesson_id / block_id / target_id, then opens the projector board.
  */
 
-type Course = { id: string; name: string; section: string | null; program: string }
+type Course = { id: string; name: string; section: string | null; program: string; teacher_email?: string | null; mine?: boolean }
 type Lesson = { id: string; title: string; slug: string; lesson_number: number | null; unit: string | null; unit_id: string | null; content_blocks?: { blocks?: ContentBlock[] } | null }
 type Moment = { kind: string; when: string; minutes: number; title: string; prompt: string; blocks: string[]; debrief: string; then: string; surface: string }
 type Choice = { key: string; label: string; kind: string; prompt: string; blockId: string | null; blockType: string | null; targetId: string | null; debrief?: string; then?: string }
@@ -44,6 +44,14 @@ export default function LobbyLauncher() {
   const [open, setOpen] = useState(false)
   const [courses, setCourses] = useState<Course[]>([])
   const [courseId, setCourseId] = useState('')
+  // Off by default: the drawer lists only the classes you own, so Launch can
+  // never come up pre-armed on a colleague's roster. On = you're covering.
+  const [showAll, setShowAll] = useState(false)
+  const [scopedTo, setScopedTo] = useState<string[]>([])
+  // Reaching past your own classes is an ADMIN affordance. A teacher owns what
+  // they own: the server refuses ?scope=all for them, so the toggle must not be
+  // offered either -- a control that silently does nothing is worse than none.
+  const [canSeeAll, setCanSeeAll] = useState(false)
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [lessonId, setLessonId] = useState('')
   const [choice, setChoice] = useState<string>('')
@@ -68,13 +76,17 @@ export default function LobbyLauncher() {
 
   useEffect(() => {
     if (!open) return
-    fetch('/api/teacher/courses').then((r) => (r.ok ? r.json() : { courses: [] })).then((d: { courses?: Course[] }) => {
+    fetch(`/api/teacher/courses${showAll ? '?scope=all' : ''}`).then((r) => (r.ok ? r.json() : { courses: [] })).then((d: { courses?: Course[]; scopedTo?: string[]; canSeeAll?: boolean }) => {
       const cs = d.courses ?? []
       setCourses(cs)
-      if (!courseId && cs[0]) setCourseId(cs[0].id)
+      setScopedTo(d.scopedTo ?? [])
+      setCanSeeAll(d.canSeeAll === true)
+      // Keep a still-valid pick; otherwise land on one of YOUR classes. The old
+      // `cs[0]` default was alphabetical across the whole district, which meant
+      // the drawer opened pointed at another teacher's section.
+      setCourseId((cur) => (cur && cs.some((c) => c.id === cur) ? cur : cs.find((c) => c.mine)?.id ?? cs[0]?.id ?? ''))
     }).catch(() => {})
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
+  }, [open, showAll])
 
   useEffect(() => {
     if (!open) return
@@ -104,6 +116,14 @@ export default function LobbyLauncher() {
 
   useEffect(() => { if (choices.length > 0 && !choices.some((c) => c.key === choice)) setChoice(choices[0].key) }, [choices, choice])
   const sel = choices.find((c) => c.key === choice) ?? null
+
+  // A course with `mine` undefined is treated as yours: an older API response
+  // that predates ownership tagging should not paint every class as a warning.
+  const course = courses.find((c) => c.id === courseId) ?? null
+  const ownerOf = (e?: string | null) => (e ?? '').split('@')[0] || 'another teacher'
+  const labelOf = (c: Course) => `${c.name}${c.section ? ` \u00b7 ${c.section}` : ''}`
+  const myCourses = courses.filter((c) => c.mine !== false)
+  const otherCourses = courses.filter((c) => c.mine === false)
 
   const launch = useCallback(async () => {
     if (!courseId || !sel) return
@@ -138,12 +158,41 @@ export default function LobbyLauncher() {
           <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-md p-1" style={{ color: 'var(--muted-foreground)' }}><X size={18} /></button>
         </div>
 
-        <label className="text-sm">
+        <div className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Class</div>
-          <select value={courseId} onChange={(e) => setCourseId(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={field}>
-            {courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
+          <select value={courseId} aria-label="Class" onChange={(e) => setCourseId(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={field}>
+            {otherCourses.length === 0
+              ? myCourses.map((c) => <option key={c.id} value={c.id}>{labelOf(c)}</option>)
+              : (
+                <>
+                  <optgroup label="Your classes">
+                    {myCourses.map((c) => <option key={c.id} value={c.id}>{labelOf(c)}</option>)}
+                  </optgroup>
+                  <optgroup label="Other teachers">
+                    {otherCourses.map((c) => <option key={c.id} value={c.id}>{labelOf(c)} — {ownerOf(c.teacher_email)}</option>)}
+                  </optgroup>
+                </>
+              )}
           </select>
-        </label>
+          {canSeeAll && (
+            <label className="mt-1.5 inline-flex items-center gap-2 text-xs" style={{ color: 'var(--muted-foreground)' }} title="Admin only. Covering someone else's block? Their classes stay one click away — but are never pre-selected.">
+              <input type="checkbox" checked={showAll} onChange={(e) => setShowAll(e.target.checked)} />
+              <span>Show all classes <span style={{ opacity: 0.8 }}>(admin · covering another teacher)</span></span>
+            </label>
+          )}
+          {course?.mine === false && (
+            <div className="mt-1.5 text-xs rounded-lg px-2 py-1.5" style={{ background: 'color-mix(in oklch, var(--destructive) 12%, transparent)', color: 'var(--destructive)' }}>
+              This is {ownerOf(course.teacher_email)}’s class — the lobby, its groups and every artifact land on their roster.
+            </div>
+          )}
+          {courses.length === 0 && (
+            <div className="mt-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+              {showAll
+                ? 'No classes found.'
+                : `No classes are owned by ${scopedTo.join(' or ') || 'this account'}.${canSeeAll ? ' Tick \u201cShow all classes\u201d to reach a colleague\u2019s section.' : ' Ask an admin to import or reassign your section.'}`}
+            </div>
+          )}
+        </div>
         <label className="text-sm">
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Lesson · day</div>
           <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={field}>

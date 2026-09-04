@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { ownerEmailsFor } from '@/lib/identity-aliases'
 
 // A teacher's imported courses + the class type (curriculum track) assigned to
 // each. The track is attached PER COURSE (a teacher may run CPA in one section
@@ -10,18 +11,45 @@ import { supabaseAdmin } from '@/lib/supabase'
 const VALID_TRACKS = ['cpa', 'honors'] // CPA + Honors are live; ap/pbl come later
 const VALID_PROGRAMS = ['physics', 'trades', 'projects'] // which curriculum (units/targets) the class follows
 
-type CourseRow = { id: string; name: string; section: string | null; track: string | null; program: string | null }
+type CourseRow = { id: string; name: string; section: string | null; track: string | null; program: string | null; teacher_email: string | null }
 
-export const GET = withAuth(async (_request, ctx) => {
+// Scoping rule: "mine" is the DEFAULT for every staff role, admins included.
+// It used to be teacher-only, which meant an admin got all 15 courses in the
+// district and any consumer that defaulted to `courses[0]` landed on whichever
+// class sorted first alphabetically — routinely a colleague's section. Seeing
+// the whole school is now something you must ask for (?scope=all), and only a
+// real admin who is not currently viewing-as gets it.
+export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
-    let q = supabaseAdmin.from('courses').select('id, name, section, track, program').order('name', { ascending: true })
-    if (ctx.role === 'teacher') q = q.eq('teacher_email', ctx.scopeEmail)
+    const canSeeAll = ctx.realRole === 'admin' && !ctx.viewingAsTeacher
+    const scope = request.nextUrl.searchParams.get('scope') === 'all' && canSeeAll ? 'all' : 'mine'
+
+    // One person can sign in under more than one address; ownership rows carry
+    // only whichever address did the Classroom import. See @/lib/identity-aliases.
+    const owners = ownerEmailsFor(ctx.scopeEmail)
+
+    let q = supabaseAdmin.from('courses').select('id, name, section, track, program, teacher_email').order('name', { ascending: true })
+    if (scope === 'mine') q = q.in('teacher_email', owners)
     const { data } = await q
-    const courses = ((data ?? []) as CourseRow[]).map((c) => ({ id: c.id, name: c.name, section: c.section, track: c.track, program: c.program ?? 'physics' }))
+
+    // `mine` is returned on every row so a client showing the wider list can mark
+    // (and refuse to default to) another teacher's class without re-deriving
+    // ownership in the browser.
+    const courses = ((data ?? []) as CourseRow[]).map((c) => ({
+      id: c.id,
+      name: c.name,
+      section: c.section,
+      track: c.track,
+      program: c.program ?? 'physics',
+      teacher_email: c.teacher_email,
+      mine: owners.includes((c.teacher_email ?? '').trim().toLowerCase()),
+    }))
     const untracked = courses.filter((c) => !c.track).length
 
-    return NextResponse.json({ courses, untracked })
+    // `scopedTo` lets a caller say WHICH account it filtered by, so an empty list
+    // reads as "wrong account" instead of "no classes exist".
+    return NextResponse.json({ courses, untracked, scope, scopedTo: owners, canSeeAll })
 })
 
 // POST { course_id, track?, program? } — assign a class type and/or program to one of the teacher's courses.
@@ -41,7 +69,7 @@ export const POST = withAuth(async (request, ctx) => {
     // Owner check: a teacher may only set tracks on their own courses.
     const { data: course } = await supabaseAdmin.from('courses').select('teacher_email').eq('id', courseId).maybeSingle()
     const owner = (course as { teacher_email?: string | null } | null)?.teacher_email
-    if (ctx.role === 'teacher' && owner !== ctx.scopeEmail) {
+    if (ctx.role === 'teacher' && !ownerEmailsFor(ctx.scopeEmail).includes((owner ?? '').trim().toLowerCase())) {
       return NextResponse.json({ error: 'Not your course' }, { status: 403 })
     }
 
