@@ -1,43 +1,19 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import unit1Cpa from '@/data/unit1-cpa-lesson-plans.json'
-import unit2Cpa from '@/data/unit2-cpa-lesson-plans.json'
-import unit3Cpa from '@/data/unit3-cpa-lesson-plans.json'
-import unit4Cpa from '@/data/unit4-cpa-lesson-plans.json'
-import unit5Cpa from '@/data/unit5-cpa-lesson-plans.json'
-import unit6Cpa from '@/data/unit6-cpa-lesson-plans.json'
-import unit7Cpa from '@/data/unit7-cpa-lesson-plans.json'
-import unit8Cpa from '@/data/unit8-cpa-lesson-plans.json'
-import tradesUnit1 from '@/data/trades-unit1-lesson-plans.json'
-import tradesUnit2 from '@/data/trades-unit2-lesson-plans.json'
+import { PLANS, trackForCourse, type DayPlan } from '@/lib/lesson-plan-export'
 import { honorsDaysFor } from '@/lib/honors-extension-export'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the class types the
 // teacher teaches. Plans are versioned curriculum data in the repo
 // (src/data/*-lesson-plans.json), keyed by CLASS TYPE + unit: 'cpa' / 'honors'
 // are physics tracks; 'trades' is the Trades Physics program (one plan per
-// SESSION, 15 per unit, generated from the MVP lesson-plan documents).
-
-interface DayPlan { day: number; title: string; bodyHtml: string }
-
-// track → unit_id → day plans
-const PLANS: Record<string, Record<string, DayPlan[]>> = {
-  cpa: {
-    'unit-1': unit1Cpa as DayPlan[],
-    'unit-2': unit2Cpa as DayPlan[],
-    'unit-3': unit3Cpa as DayPlan[],
-    'unit-4': unit4Cpa as DayPlan[],
-    'unit-5': unit5Cpa as DayPlan[],
-    'unit-6': unit6Cpa as DayPlan[],
-    'unit-7': unit7Cpa as DayPlan[],
-    'unit-8': unit8Cpa as DayPlan[],
-  },
-  trades: {
-    'trades-1': tradesUnit1 as DayPlan[],
-    'trades-2': tradesUnit2 as DayPlan[],
-  },
-}
+// SESSION, 15 per unit); 'projects' is Project Physics — the MVP CPA section —
+// where a unit is a mission phase and a plan is either a WEEK OVERVIEW
+// (day = week*10) or a day inside that week (day = week*10 + n).
+//
+// PLANS itself lives in @/lib/lesson-plan-export so the reader, the .docx and
+// the print view can never disagree about what a unit contains.
 
 export const GET = withAuth(async (request, ctx) => {
     if (ctx.role !== 'admin' && ctx.role !== 'teacher' && ctx.role !== 'observer') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -53,7 +29,7 @@ export const GET = withAuth(async (request, ctx) => {
     } else {
       const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', ctx.scopeEmail)
       const rows = (data ?? []) as { track: string | null; program: string | null }[]
-      tracks = [...new Set(rows.map((c) => (c.program === 'trades' ? 'trades' : c.track)).filter((t): t is string => Boolean(t)))]
+      tracks = [...new Set(rows.map(trackForCourse).filter((t): t is string => Boolean(t)))]
     }
 
     // Union the plans across the teacher's tracks (only CPA exists today).
@@ -72,9 +48,13 @@ export const GET = withAuth(async (request, ctx) => {
     for (const t of tracks) {
       for (const u of Object.keys(PLANS[t] ?? {})) unitSet.add(u)
     }
+    // Sort by prefix first (unit- / trades- / proj-), then numerically inside it,
+    // so an admin seeing every track gets contiguous groups rather than 'proj-1,
+    // trades-1, unit-1, unit-2…' interleaved.
+    const split = (u: string) => { const m = /^(.*?)-(\d+)$/.exec(u); return m ? [m[1], Number(m[2])] as const : [u, 0] as const }
     const availableUnits = [...unitSet].sort((a, b) => {
-      const na = Number(a.replace(/^unit-/, '')); const nb = Number(b.replace(/^unit-/, ''))
-      return (Number.isFinite(na) && Number.isFinite(nb)) ? na - nb : a.localeCompare(b)
+      const [pa, na] = split(a); const [pb, nb] = split(b)
+      return pa === pb ? na - nb : pa.localeCompare(pb)
     })
 
     return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days, availableUnits, honorsDays: honorsDaysFor(unitId) })

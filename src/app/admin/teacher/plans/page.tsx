@@ -7,7 +7,7 @@ import { deckForDay } from '@/data/lesson-decks'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 
 interface DayPlan { day: number; title: string; bodyHtml: string }
-const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics', trades: 'Trades Physics' }
+const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics', trades: 'Trades Physics', projects: 'Project Physics (MVP)' }
 const UNIT_LABEL: Record<string, string> = {
   'unit-1': 'Unit 1 · Motion & Forces',
   'unit-2': 'Unit 2 · Gravitation & Fields',
@@ -19,13 +19,40 @@ const UNIT_LABEL: Record<string, string> = {
   'unit-8': 'Unit 8 · Car Project',
   'trades-1': 'Trades 1 · Length & Tolerance — The Fieldhouse Wall',
   'trades-2': 'Trades 2 · Plumb, Level, Square, Slope',
+  'proj-1': 'Phase 1 · Track it',
+  'proj-2': 'Phase 2 · Move it',
+  'proj-3': 'Phase 3 · Sense it',
+  'proj-4': 'Phase 4 · Power it, prove it',
+}
+
+// Project Physics packs two grains into one `day` number: week*10 is that week's
+// overview, week*10 + n is day n inside it. Trades numbers sessions 1.1–3.5.
+function dayLabel(unit: string, day: number): string {
+  if (unit.startsWith('trades-')) return `Session ${Math.floor((day - 1) / 5) + 1}.${((day - 1) % 5) + 1}`
+  if (unit.startsWith('proj-')) {
+    const wk = Math.floor(day / 10)
+    return day % 10 === 0 ? `Week ${wk} · overview` : `Week ${wk} · Day ${day % 10}`
+  }
+  return `Day ${day}`
+}
+
+// The sidebar shows the label above, so strip whatever prefix the title repeats.
+const stripTitlePrefix = (t: string) => t.replace(/^(Day \d+|Week \d+ · (?:Day \d+|Overview))\s*[·—-]\s*/, '')
+
+// Which plan set a unit belongs to. A teacher who runs a Project Physics class
+// alongside CPA holds two sets at once, so the header label has to follow the
+// unit on screen — reading it off tracks[0] labels half the list wrongly.
+function planSetFor(unit: string, tracks: string[]): string {
+  if (unit.startsWith('proj-')) return 'projects'
+  if (unit.startsWith('trades-')) return 'trades'
+  return tracks.find((t) => t !== 'projects' && t !== 'trades') ?? tracks[0] ?? 'cpa'
 }
 // Units that have a student packet file in /public/student-packets.
 const PACKET_UNITS = new Set(['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6', 'unit-7'])
 
 export default function TeacherPlansPage() {
   const [days, setDays] = useState<DayPlan[]>([])
-  const [track, setTrack] = useState<string>('cpa')
+  const [tracks, setTracks] = useState<string[]>(['cpa'])
   const [unit, setUnit] = useState<string>('unit-1')
   const [availableUnits, setAvailableUnits] = useState<string[]>(['unit-1'])
   const [honorsDays, setHonorsDays] = useState<number[]>([])
@@ -36,9 +63,10 @@ export default function TeacherPlansPage() {
     setLoading(true)
     fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}`)
       .then((r) => r.json())
-      .then((d: { days?: DayPlan[]; track?: string; availableUnits?: string[]; honorsDays?: number[] }) => {
+      .then((d: { days?: DayPlan[]; track?: string; tracks?: string[]; availableUnits?: string[]; honorsDays?: number[] }) => {
         setDays(d.days ?? [])
-        if (d.track) setTrack(d.track)
+        if (d.tracks?.length) setTracks(d.tracks)
+        else if (d.track) setTracks([d.track])
         if (d.availableUnits?.length) setAvailableUnits(d.availableUnits)
         setHonorsDays(d.honorsDays ?? [])
         setSel((d.days ?? []).length ? d.days![0].day : null)
@@ -48,6 +76,7 @@ export default function TeacherPlansPage() {
   }, [unit])
 
   const current = days.find((d) => d.day === sel) ?? null
+  const track = planSetFor(unit, tracks)
   const unitTitle = (UNIT_LABEL[unit] ?? unit).replace(/^Unit \d+ · /, '')
 
   // The day's classroom slide deck (self-contained HTML in /public/decks/…).
@@ -71,9 +100,13 @@ export default function TeacherPlansPage() {
         <CalendarRange size={16} style={{ color: 'var(--primary)' }} />
         <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Lesson plans · {TRACK_LABEL[track] ?? track}</span>
       </div>
-      <h1 className="text-2xl font-semibold tracking-tight">{unit.replace('unit-', 'Unit ')} — day by day</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">
+        {unit.startsWith('proj-') ? UNIT_LABEL[unit] ?? unit : unit.replace('unit-', 'Unit ')} — {unit.startsWith('proj-') ? 'week by week' : 'day by day'}
+      </h1>
       <p className="text-sm mt-1 mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        Your teacher lesson plans for each day of {unitTitle}. Reference only — pick a day to see its full plan.
+        {unit.startsWith('proj-')
+          ? 'Every academic week has an overview; weeks that have been built out also have a plan for each day. Reference only — pick a week or a day.'
+          : `Your teacher lesson plans for each day of ${unitTitle}. Reference only — pick a day to see its full plan.`}
       </p>
 
       {availableUnits.length > 1 && (
@@ -120,6 +153,12 @@ export default function TeacherPlansPage() {
             </a>
           </div>
         </div>
+      ) : unit.startsWith('proj-') ? (
+        <p className="text-xs mb-5" style={{ color: 'var(--muted-foreground)' }}>
+          No paper packet for Project Physics — <strong>the app is the packet</strong>. Every capture block carries the prompt in English and Spanish,
+          the tiered frames, the word bank and a visual, so the WIDA-1 route exists on every block. These plans carry what the blocks cannot:
+          the clock and the materials, the Spanish to say, and the misconception to press.
+        </p>
       ) : (
         <p className="text-xs mb-5" style={{ color: 'var(--muted-foreground)' }}>No student packet on file for this unit yet.</p>
       )}
@@ -146,8 +185,8 @@ export default function TeacherPlansPage() {
                     color: 'var(--foreground)', cursor: 'pointer',
                   }}
                 >
-                  <span className="font-semibold">{unit.startsWith('trades-') ? `Session ${Math.floor((d.day - 1) / 5) + 1}.${((d.day - 1) % 5) + 1}` : `Day ${d.day}`}</span>
-                  <span className="block text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{d.title.replace(/^Day \d+ ·\s*/, '')}</span>
+                  <span className="font-semibold">{dayLabel(unit, d.day)}</span>
+                  <span className="block text-xs truncate" style={{ color: 'var(--muted-foreground)' }}>{stripTitlePrefix(d.title)}</span>
                 </button>
               )
             })}
