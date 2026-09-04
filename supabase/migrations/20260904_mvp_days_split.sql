@@ -160,3 +160,10 @@ comment on function public.split_mvp_week(text) is 'Materialise pp-wNN-dK day le
 
 -- every week row → its days (weeks with no day markers yet just get renumbered)
 select slug, public.split_mvp_week(slug) as days from public.lessons where slug ~ '^pp-w\d\d$' order by slug;
+
+-- 2026-09-04 (later): the self-rating closes each DAY on the targets that day captured
+-- (Craig: "self rate on the close of the day's target"). Week-end rate blocks
+-- w00-rate / w01-rate were replaced by wNNdK-rate on the week rows and the weeks
+-- re-split; gen_mvp_weeks.close_days() now emits them. Day 1 of Week 0 (the
+-- hybrid, seeded in 20260903_pp_w00_day1_hybrid.sql) had its marzano d1-rate
+-- widened to a self_assessment on both targets it captures.
