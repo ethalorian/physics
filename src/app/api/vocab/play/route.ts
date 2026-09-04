@@ -10,7 +10,7 @@ import { withAuth } from '@/lib/api-auth'
 // provenance — for a unit we use the first lesson's set).
 
 type SetRow = { id: string; lesson_id: string | null }
-type TermRow = { id: string; term: string; definition: string; tier: number | null }
+type TermRow = { id: string; term: string; definition: string; tier: number | null; cognate: string | null; definition_es: string | null; icon: string | null; example: string | null; part_of_speech: string | null }
 
 export const GET = withAuth(async (req) => {
     const sp = new URL(req.url).searchParams
@@ -47,11 +47,12 @@ export const GET = withAuth(async (req) => {
 
     let q = supabaseAdmin
       .from('vocabulary_terms')
-      .select('id, term, definition, tier')
+      .select('id, term, definition, tier, cognate, definition_es, icon, example, part_of_speech')
       .in('vocabulary_set_id', setIds)
     if (tier) q = q.eq('tier', tier)
     const { data: termsRaw } = await q
-    const terms = ((termsRaw ?? []) as TermRow[]).map((t) => ({ id: t.id, term: t.term, definition: t.definition, tier: t.tier }))
+    // SEI fields ride along so the arcade can show the picture + Spanish route (see VocabSei.tsx).
+    const terms = ((termsRaw ?? []) as TermRow[]).map((t) => ({ id: t.id, term: t.term, definition: t.definition, tier: t.tier, cognate: t.cognate, definitionEs: t.definition_es, icon: t.icon, example: t.example, partOfSpeech: t.part_of_speech }))
 
     return NextResponse.json({ terms, scoreSetId, label })
 })

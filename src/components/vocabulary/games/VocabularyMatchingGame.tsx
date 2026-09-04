@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
+import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { VocabularyMatchingQuestion } from '@/types/assignment'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -305,7 +306,7 @@ export default function VocabularyMatchingGame({
                   <CardContent className="p-3 sm:p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex-1 min-w-0 pr-2">
-                        <span className="font-semibold text-sm sm:text-base lg:text-lg block truncate">{term.term}</span>
+                        <TermLabel term={term} className="font-semibold text-sm sm:text-base lg:text-lg w-full" />
                         {term.category && (
                           <div className="text-xs text-muted-foreground mt-1 truncate">
                             {term.category}
@@ -344,7 +345,7 @@ export default function VocabularyMatchingGame({
                   <CardContent className="p-3 sm:p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0 pr-2">
-                        <span className="text-xs sm:text-sm leading-relaxed block break-words">{term.definition}</span>
+                        <DefinitionLabel term={term} className="text-xs sm:text-sm leading-relaxed break-words" />
                         {term.category && (
                           <div className="text-xs text-muted-foreground mt-2 truncate">
                             {term.category}
@@ -408,7 +409,7 @@ export default function VocabularyMatchingGame({
                     }
                   </div>
                   <div className="flex-1">
-                    <div className="font-semibold text-lg mb-1">{term?.term}</div>
+                    <div className="font-semibold text-lg mb-1">{term ? <TermLabel term={term} /> : null}</div>
                     <div className="text-sm opacity-90 mb-2">
                       <span className="font-medium">Your match:</span> {matchedDefinition?.definition}
                     </div>

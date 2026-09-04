@@ -47,6 +47,11 @@ export interface DuelAnswer {
 
 export interface DuelRound {
   prompt: string // the definition shown to both players
+  /** SEI — the Spanish definition and the term's picture, shown when the player has L1 / support on. */
+  promptEs?: string | null
+  icon?: string | null
+  /** SEI — per option: picture + Spanish equivalent (same order as options). */
+  optionMeta?: { icon?: string | null; cognate?: string | null }[]
   options: string[] // 4 candidate terms, shuffled
   correct: number // index of the right term (server-only until resolved)
   startedAt?: string // ISO; set when the round goes live
@@ -58,6 +63,9 @@ export interface DuelRound {
 export interface DuelTermInput {
   term: string
   definition: string
+  definitionEs?: string | null
+  icon?: string | null
+  cognate?: string | null
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -84,8 +92,13 @@ export function generateRounds(terms: DuelTermInput[], total = TOTAL_ROUNDS): Du
   for (let i = 0; i < total; i++) {
     const target = pool[i % pool.length]
     const distractors = shuffle(usable.filter((t) => t.term !== target.term)).slice(0, 3)
-    const options = shuffle([target.term, ...distractors.map((d) => d.term)])
-    rounds.push({ prompt: target.definition, options, correct: options.indexOf(target.term) })
+    const picks = shuffle([target, ...distractors])
+    const options = picks.map((p) => p.term)
+    rounds.push({
+      prompt: target.definition, promptEs: target.definitionEs ?? null, icon: target.icon ?? null,
+      optionMeta: picks.map((p) => ({ icon: p.icon ?? null, cognate: p.cognate ?? null })),
+      options, correct: options.indexOf(target.term),
+    })
   }
   return rounds
 }

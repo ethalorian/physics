@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useVocabSei, clueText } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { VocabularyTerm } from '@/types/assignment'
 import { ShoppingBasket, Flame, Crown, Zap, Clock, SkipForward, Star, Timer, Wand2, Eraser, Skull } from 'lucide-react'
@@ -51,7 +52,9 @@ function lettersOf(term: string): string[] { return term.toUpperCase().replace(/
 function fmtTime(ms: number): string { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` }
 
 export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameComplete, difficulty = 'medium', gameLength = 10 }: VocabularyLetterCatchGameProps) {
-  const cfg = CONFIG[difficulty]
+  // SEI: more time per letter for students on full / partial support; the clue can carry a picture + Spanish.
+  const sei = useVocabSei()
+  const cfg = useMemo(() => ({ ...CONFIG[difficulty], msPerLetter: Math.round(CONFIG[difficulty].msPerLetter * sei.timeScale) }), [difficulty, sei.timeScale])
 
   const [phase, setPhase] = useState<Phase>('waiting')
   const [terms, setTerms] = useState<VocabularyTerm[]>([])
@@ -148,8 +151,8 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     }
     tilesRef.current = seed
     setTarget(word); setScramble([...word].sort(() => Math.random() - 0.5)); setFilled(0); setTiles(seed)
-    setDefinition(term.definition || ''); setFlash(null); setPhase('playing')
-  }, [terms, makeTile])
+    setDefinition(clueText(term, sei.showL1)); setFlash(null); setPhase('playing')
+  }, [terms, makeTile, sei.showL1])
 
   const advance = useCallback((answered: number) => {
     if (answered >= total || Date.now() >= gameDeadlineRef.current) { endGame(score, answered); return }

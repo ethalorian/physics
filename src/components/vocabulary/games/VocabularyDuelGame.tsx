@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Swords, Check, X, Clock, Wifi, WifiOff, Copy, Ghost } from 'lucide-react'
 import { ROUND_MS, type DuelMode, type DuelRole, type DuelStatus } from '@/lib/duel'
 
@@ -15,6 +16,9 @@ import { ROUND_MS, type DuelMode, type DuelRole, type DuelStatus } from '@/lib/d
 
 interface RoundView {
   prompt: string
+  promptEs?: string | null
+  icon?: string | null
+  optionMeta?: { icon?: string | null; cognate?: string | null }[]
   options: string[]
   startedAt?: string
   correct?: number
@@ -46,6 +50,7 @@ export interface MatchView {
 const POLL_MS = 1500
 
 export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: string; onComplete: (m: MatchView) => void }) {
+  const sei = useVocabSei()
   const [match, setMatch] = useState<MatchView | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [now, setNow] = useState(Date.now())
@@ -225,7 +230,11 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
       <div className="flex items-center gap-2 text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>
         <Clock size={13} /> {Math.ceil(timeLeft / 1000)}s — {recording ? 'your time gets baked into the ghost' : 'first correct answer wins the round'}
       </div>
-      <div className="text-lg font-medium leading-snug mb-4">{round.prompt}</div>
+      <div className="text-lg font-medium leading-snug mb-4">
+        {round.icon && <span aria-hidden className="block text-4xl mb-1">{round.icon}</span>}
+        {round.prompt}
+        {sei.showL1 && round.promptEs && <span className="block text-sm opacity-75 mt-1">{round.promptEs}</span>}
+      </div>
       <div className="grid gap-2 sm:grid-cols-2">
         {round.options.map((opt, i) => {
           const mine = locked && round.mine!.answer === i
@@ -243,7 +252,8 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
                 cursor: locked ? 'default' : 'pointer',
               }}
             >
-              {opt}
+              {round.optionMeta?.[i]?.icon && <span aria-hidden className="mr-2">{round.optionMeta[i].icon}</span>}{opt}
+              {sei.showL1 && round.optionMeta?.[i]?.cognate && <span className="block text-xs opacity-70">{round.optionMeta[i].cognate}</span>}
             </button>
           )
         })}

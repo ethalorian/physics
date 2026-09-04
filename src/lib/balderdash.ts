@@ -42,6 +42,9 @@ export interface BalEntry {
 
 export interface BalRound {
   term: string
+  /** SEI — the term's picture and Spanish equivalent (shown on the term header when support is on). */
+  icon?: string | null
+  cognate?: string | null
   real: string
   startedAt?: string // writing phase opens
   votingAt?: string // voting phase opened (entries frozen + shuffled)
@@ -54,6 +57,8 @@ export interface BalRound {
 export interface BalTermInput {
   term: string
   definition: string
+  icon?: string | null
+  cognate?: string | null
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -71,6 +76,8 @@ export function pickRounds(terms: BalTermInput[], total = BAL_ROUNDS): BalRound[
   if (usable.length < total) return []
   return shuffle(usable).slice(0, total).map((t) => ({
     term: t.term,
+    icon: t.icon ?? null,
+    cognate: t.cognate ?? null,
     real: t.definition,
     writings: {},
     votes: {},

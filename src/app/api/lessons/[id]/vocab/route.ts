@@ -31,7 +31,7 @@ export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
 
     const { data: terms } = await supabaseAdmin
       .from('vocabulary_terms')
-      .select('id, term, definition, tier, cognate, part_of_speech, example, image_url, order_index')
+      .select('id, term, definition, tier, cognate, part_of_speech, example, image_url, order_index, icon, definition_es')
       .eq('vocabulary_set_id', s.id)
       .order('tier', { ascending: true })
       .order('order_index', { ascending: true })

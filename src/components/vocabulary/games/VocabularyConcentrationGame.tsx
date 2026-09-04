@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -465,7 +466,8 @@ export default function VocabularyConcentrationGame({
                         {card.type === 'term' ? 'TERM' : 'DEFINITION'}
                       </div>
                       <div className={`text-sm font-medium leading-tight ${card.isMatched ? 'text-green-800' : 'text-gray-800'}`}>
-                        {card.content}
+                        {(() => { const t = gameTerms.find((g) => g.id === card.termId); if (!t) return card.content
+                          return card.type === 'term' ? <TermLabel term={t} className="justify-center" /> : <DefinitionLabel term={t} /> })()}
                       </div>
                     </div>
                   </div>

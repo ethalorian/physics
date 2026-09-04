@@ -1,5 +1,6 @@
 "use client"
 
+import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
 import { useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, HelpCircle, Settings2, X } from 'lucide-react'
@@ -46,7 +47,10 @@ export default function VocabGameShell({
   const [optionsOpen, setOptionsOpen] = useState(false)
   const showOptions = optionsOpen || forceOptionsOpen
 
+  // SEI: every cabinet shares the lesson reader's language profile + dial, so a
+  // WIDA-1 student who plays gets the picture + Spanish route without setup.
   return (
+    <LanguageProfileProvider>
     <div className="container mx-auto px-4 py-6 space-y-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Button variant="outline" size="sm" asChild>
@@ -120,8 +124,11 @@ export default function VocabGameShell({
         </div>
       ) : null}
 
+      <LanguageDial />
+
       {children}
     </div>
+    </LanguageProfileProvider>
   )
 }
 

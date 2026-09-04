@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback } from 'react'
+import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -397,7 +398,7 @@ export default function VocabularyHangmanGame({
               <Skull className="h-12 w-12 text-red-600 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-red-800 mb-2">Game Over!</h3>
               <p className="text-red-700 mb-2">
-                The word was: <span className="font-bold">{gameState.currentTerm?.term}</span>
+                The word was: <span className="font-bold">{gameState.currentTerm ? <TermLabel term={gameState.currentTerm} /> : null}</span>
               </p>
               <p className="text-sm text-red-600">
                 Final Score: {gameState.score} • Words Completed: {gameState.currentWordIndex}/{gameWords.length}
@@ -450,7 +451,8 @@ export default function VocabularyHangmanGame({
                 <div className="space-y-2">
                   <h4 className="font-medium text-sm sm:text-base">Definition:</h4>
                   <p className="text-xs sm:text-sm text-muted-foreground p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg border border-blue-200 dark:border-blue-700 break-words">
-                    {gameState.currentTerm.definition}
+                    {gameState.currentTerm.icon && <span aria-hidden className="block text-3xl mb-1">{gameState.currentTerm.icon}</span>}
+                    <DefinitionLabel term={gameState.currentTerm} />
                   </p>
                 </div>
               )}

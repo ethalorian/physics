@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from 'react'
+import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { VocabularyCrosswordQuestion } from '@/types/assignment'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -476,7 +477,7 @@ export default function VocabularyCrosswordGame({
                         <CardContent className="p-2 sm:p-3">
                           <div className="flex items-start gap-2 mb-2">
                             <span className="font-bold text-sm flex-shrink-0">{clue.number}.</span>
-                            <span className="text-xs sm:text-sm break-words flex-1">{clue.clue}</span>
+                            <span className="text-xs sm:text-sm break-words flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                             {showResults && status && (
                               <div className="flex-shrink-0">
                                 {status === 'correct' ? 
@@ -534,7 +535,7 @@ export default function VocabularyCrosswordGame({
                         <CardContent className="p-2 sm:p-3">
                           <div className="flex items-start gap-2 mb-2">
                             <span className="font-bold text-sm flex-shrink-0">{clue.number}.</span>
-                            <span className="text-xs sm:text-sm break-words flex-1">{clue.clue}</span>
+                            <span className="text-xs sm:text-sm break-words flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                             {showResults && status && (
                               <div className="flex-shrink-0">
                                 {status === 'correct' ? 
@@ -597,7 +598,7 @@ export default function VocabularyCrosswordGame({
                 )}>
                   {isCorrect ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />}
                   <span className="font-bold">{clue.number}{clue.direction === 'across' ? 'A' : 'D'}.</span>
-                  <span className="flex-1">{clue.clue}</span>
+                  <span className="flex-1"><ClueText clue={clue} terms={question.vocabularyTerms} /></span>
                   <span className="font-mono font-bold">
                     {userAnswer || '___'} 
                     {!isCorrect && ` → ${clue.answer}`}
@@ -609,5 +610,19 @@ export default function VocabularyCrosswordGame({
         </div>
       )}
     </div>
+  )
+}
+
+
+/** SEI: the crossword clue with the term's picture and, when L1 is on, its Spanish definition. */
+function ClueText({ clue, terms }: { clue: { clue: string; termId: string }; terms: { id: string; icon?: string | null; definitionEs?: string | null }[] }) {
+  const { showL1 } = useVocabSei()
+  const t = terms.find((x) => x.id === clue.termId)
+  return (
+    <>
+      {t?.icon && <span aria-hidden className="mr-1">{t.icon}</span>}
+      {clue.clue}
+      {showL1 && t?.definitionEs && <span className="block opacity-75">{t.definitionEs}</span>}
+    </>
   )
 }

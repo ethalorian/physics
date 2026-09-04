@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
 import Link from 'next/link'
 import { Zap } from 'lucide-react'
 
@@ -16,6 +17,9 @@ interface Term {
   part_of_speech: string | null
   example: string | null
   image_url: string | null
+  /** SEI — picture that carries the meaning, and the same definition in Spanish. */
+  icon?: string | null
+  definition_es?: string | null
 }
 
 const TIER_META: Record<number, { label: string; color: string }> = {
@@ -25,6 +29,8 @@ const TIER_META: Record<number, { label: string; color: string }> = {
 }
 
 export default function LessonVocabView({ lessonId }: { lessonId: string }) {
+  // SEI — the Spanish definition shows when the student has their home language on (lesson header dial).
+  const { showL1 } = useLanguageProfile()
   const [terms, setTerms] = useState<Term[] | null>(null)
 
   useEffect(() => {
@@ -61,6 +67,7 @@ export default function LessonVocabView({ lessonId }: { lessonId: string }) {
                 {terms.filter((x) => (x.tier ?? 3) === t).map((x) => (
                   <div key={x.id} className="rounded-md p-2.5" style={{ background: `color-mix(in oklch, ${meta.color} 8%, transparent)`, borderLeft: `3px solid ${meta.color}` }}>
                     <div className="flex items-start gap-3">
+                      {!x.image_url && x.icon && <span aria-hidden className="flex-shrink-0" style={{ fontSize: 30, lineHeight: '48px', width: 40, textAlign: 'center' }}>{x.icon}</span>}
                       {x.image_url && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={x.image_url} alt={x.term} className="rounded-md object-cover flex-shrink-0" style={{ width: 48, height: 48 }} referrerPolicy="no-referrer" />
@@ -72,6 +79,7 @@ export default function LessonVocabView({ lessonId }: { lessonId: string }) {
                           {x.cognate && <span className="ml-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>· {x.cognate}</span>}
                         </div>
                         <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{x.definition}</div>
+                        {showL1 && x.definition_es && <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{x.definition_es}</div>}
                         {x.example && <div className="text-xs italic mt-1" style={{ color: 'var(--muted-foreground)' }}>“{x.example}”</div>}
                       </div>
                     </div>

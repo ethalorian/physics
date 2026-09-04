@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { useVocabSei, clueText } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { VocabularyTerm } from '@/types/assignment'
 import { Target, Heart, Flame, Crown, Zap } from 'lucide-react'
@@ -27,7 +28,9 @@ const BUBBLE = 130   // bubble diameter (px)
 const ARENA_H = 540  // arena height (px) — matches the arena style below
 
 export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplete, difficulty = 'medium', gameLength = 20 }: VocabularyWordShootGameProps) {
-  const cfg = CONFIG[difficulty]
+  // SEI: same difficulty, longer clock for students on full / partial support; the clue can carry a picture + Spanish.
+  const sei = useVocabSei()
+  const cfg = useMemo(() => ({ ...CONFIG[difficulty], time: Math.round(CONFIG[difficulty].time * sei.timeScale) }), [difficulty, sei.timeScale])
 
   const [phase, setPhase] = useState<Phase>('waiting')
   const [terms, setTerms] = useState<VocabularyTerm[]>([])
@@ -118,12 +121,12 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     answeredRef.current = false
     bubblesRef.current = placed
     setBubbles(placed)
-    setDefinition(correct.definition || '')
+    setDefinition(clueText(correct, sei.showL1))
     setTimeLeft(cfg.time)
     deadlineRef.current = Date.now() + cfg.time
     setFlash(null)
     setPhase('playing')
-  }, [terms, cfg.distractors, cfg.time, cfg.speed])
+  }, [terms, cfg.distractors, cfg.time, cfg.speed, sei.showL1])
 
   const advance = useCallback((answered: number, nextScore: number, nextLives: number) => {
     if (answered >= total || nextLives <= 0) { endGame(nextScore, answered); return }
@@ -328,7 +331,11 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
                   background: popped ? 'color-mix(in oklch, var(--success) 25%, var(--card))' : 'var(--card)',
                   color: 'var(--foreground)', fontSize: 14, lineHeight: 1.1,
                 }}>
-                {b.term.term}
+                <span className="flex flex-col items-center gap-0.5">
+                  {b.term.icon && <span aria-hidden style={{ fontSize: 22, lineHeight: 1 }}>{b.term.icon}</span>}
+                  <span>{b.term.term}</span>
+                  {sei.showL1 && b.term.cognate && <span className="text-[10px] opacity-70">{b.term.cognate}</span>}
+                </span>
               </button>
             )
           })}

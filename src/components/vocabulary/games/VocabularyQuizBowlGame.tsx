@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { TermLabel, DefinitionLabel, useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -53,9 +54,12 @@ export default function VocabularyQuizBowlGame({
   vocabularyTerms,
   onGameComplete,
   difficulty = 'medium',
-  timeLimit = 10,
+  timeLimit: timeLimitProp = 10,
   totalQuestions = 20
 }: VocabularyQuizBowlGameProps) {
+  // SEI: the clock stretches for students on full / partial support (reading the clue twice is not being slower at physics).
+  const sei = useVocabSei()
+  const timeLimit = Math.round(timeLimitProp * sei.timeScale)
   const [quizState, setQuizState] = useState<QuizState>({
     currentTerm: null,
     currentAnswer: '',
@@ -425,7 +429,7 @@ export default function VocabularyQuizBowlGame({
               </div>
               {!lastResult.isCorrect && (
                 <p className="text-lg">
-                  Answer: <strong>{lastResult.term.term}</strong>
+                  Answer: <strong><TermLabel term={lastResult.term} /></strong>
                 </p>
               )}
             </div>
@@ -440,7 +444,8 @@ export default function VocabularyQuizBowlGame({
         <CardContent className="space-y-6">
           <div className="text-center p-6 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-lg text-blue-900 font-medium">
-              {quizState.currentTerm?.definition}
+              {quizState.currentTerm?.icon && <span aria-hidden className="block text-4xl mb-2">{quizState.currentTerm.icon}</span>}
+              {quizState.currentTerm ? <DefinitionLabel term={quizState.currentTerm} /> : null}
             </p>
           </div>
           

@@ -163,6 +163,16 @@ export interface VocabularyTerm {
   definition: string
   category?: string
   difficulty?: 'easy' | 'medium' | 'hard'
+  /** Beck tier 1/2/3 (vocabulary_terms.tier). */
+  tier?: number | null
+  /** SEI — the Spanish equivalent; "≈" marks a cognate, "≠" a false friend. */
+  cognate?: string | null
+  /** SEI — the same simple definition in Spanish (vocabulary_terms.definition_es). */
+  definitionEs?: string | null
+  /** SEI — an emoji that carries the meaning on its own (vocabulary_terms.icon). */
+  icon?: string | null
+  example?: string | null
+  partOfSpeech?: string | null
 }
 
 export interface VocabularyMatchingQuestion extends BaseQuestion {

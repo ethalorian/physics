@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Feather, Check, Copy, Crown, Eye, Users, Clock } from 'lucide-react'
 import { MAX_DEF_LEN } from '@/lib/balderdash'
 
@@ -13,6 +14,8 @@ import { MAX_DEF_LEN } from '@/lib/balderdash'
 interface RevealEntry { text: string; real: boolean; author: string | null; mine: boolean; voters: (string | null)[] }
 interface RoundView {
   term: string
+  icon?: string | null
+  cognate?: string | null
   wroteCount: number
   votedCount: number
   myText: string | null
@@ -42,6 +45,7 @@ export interface BalView {
 const POLL_MS = 1500
 
 export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomId: string; onComplete: (v: BalView) => void }) {
+  const sei = useVocabSei()
   const [game, setGame] = useState<BalView | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
@@ -194,7 +198,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
       <Panel wide>
         {header}
         <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>Forge a definition for</div>
-        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.term}</div>
+        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
         <div className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
           Write a fake definition convincing enough to fool your classmates. Sound like the textbook.
         </div>
@@ -231,7 +235,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
       <Panel wide>
         {header}
         <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>Which is the real definition of</div>
-        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.term}</div>
+        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
         <div className="grid gap-2">
           {(r.ballot ?? []).map((text, i) => {
             const mine = i === r.myEntryIndex
@@ -268,7 +272,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
     <Panel wide>
       {header}
       <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>The truth about</div>
-      <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.term}</div>
+      <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
       <div className="grid gap-2">
         {(r.reveal ?? []).map((e, i) => (
           <div key={i} className="rounded-xl border px-4 py-3 text-sm" style={{
