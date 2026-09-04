@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, type DragEvent as RDragEvent, type KeyboardEvent as RKeyboardEvent, type FocusEvent as RFocusEvent } from 'react'
+import { useDraft } from './useDraft'
 import { InlineMath } from '@/components/MathMarkdown'
 import { isMcasUnit } from '@/data/physics-reference'
 
@@ -21,6 +22,8 @@ interface EquationSandboxProps {
   value?: SandboxValue
   onChange?: (v: SandboxValue) => void
   onSave?: (v: SandboxValue) => void
+  /** as-you-type draft (autosave; never evidence) */
+  onDraft?: (v: SandboxValue) => void
   embedded?: boolean
 }
 
@@ -105,7 +108,7 @@ const lacksUnit = (line: string) => {
   return !unit || !isKnownUnit(unit)
 }
 
-export default function EquationSandbox({ prompt, variables, equationToken, value, onChange, onSave, embedded }: EquationSandboxProps) {
+export default function EquationSandbox({ prompt, variables, equationToken, value, onChange, onSave, onDraft, embedded }: EquationSandboxProps) {
   const [lines, setLines] = useState<string[]>(value?.lines?.length ? value.lines : [''])
   const [focus, setFocus] = useState(0)
   const [saved, setSaved] = useState(false)
@@ -121,6 +124,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
   const insert = (token: string) => { const t = focus >= 0 ? focus : lines.length - 1; setFocus(t); insertAt(t, token) }
   const dragToken = (e: RDragEvent, token: string) => e.dataTransfer.setData('text/plain', token)
   const save = () => { onSave?.(payload(lines)); setSaved(true) }
+  useDraft(onDraft ?? (() => {}), lines.some((l) => l.trim()) ? payload(lines) : undefined)
 
   const onKey = (e: RKeyboardEvent<HTMLInputElement>, i: number) => {
     if (e.key === 'Enter') {

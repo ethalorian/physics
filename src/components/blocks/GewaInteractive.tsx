@@ -45,6 +45,8 @@ interface GewaInteractiveProps {
   equationCategories?: FormulaCategory[]
   value?: GewaValue
   onSave: (v: GewaValue) => void
+  /** as-you-work draft (autosave). When given, the 2 s autosave goes here, not to onSave. */
+  onDraft?: (v: GewaValue) => void
 }
 
 // What's being dragged.
@@ -113,7 +115,7 @@ const stepHead = (l: string, color: string, title: string, fg?: string) => (
 )
 
 export default function GewaInteractive({
-  prompt, givenHint, equationHint, equationOptions, equationIds, solveFor, equationCategories, value, onSave,
+  prompt, givenHint, equationHint, equationOptions, equationIds, solveFor, equationCategories, value, onSave, onDraft,
 }: GewaInteractiveProps) {
   const [chips, setChips] = useState<Chip[]>(parseGiven(value?.given))
   const [formulaId, setFormulaId] = useState<string | null>(value?.equationId ?? null)
@@ -312,12 +314,14 @@ export default function GewaInteractive({
   const handleSave = () => { onSave(buildValue()); setSaved(true); setAutoSaved(false); check() }
 
   // Autosave: two quiet seconds after any meaningful change, persist — so a
-  // student who never presses Save still hands their teacher the work.
+  // student who never presses Save still hands their teacher the work. With an
+  // onDraft it is a draft (one upsert row, batched — decision 2026-09-04); without
+  // one it falls back to the old append-only save.
   const mountedRef = useRef(false)
   useEffect(() => {
     if (!mountedRef.current) { mountedRef.current = true; return }
     if (!formulaId && !chips.some((c) => c.sym || c.val)) return
-    const t = setTimeout(() => { onSave(buildValue()); setAutoSaved(true) }, 2000)
+    const t = setTimeout(() => { if (onDraft) onDraft(buildValue()); else { onSave(buildValue()); setAutoSaved(true) } }, 2000)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chips, formulaId, eq, subs, answerVal, answerUnit, opHistory])

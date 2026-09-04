@@ -67,6 +67,8 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       console.error('Error saving block response:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
+    // The explicit save is the record; the autosave draft for this block is now moot.
+    void supabaseAdmin.from('block_drafts').delete().match({ user_id: ctx.userId, lesson_id: body.lesson_id, block_id: body.block_id }).then(() => undefined, () => undefined)
 
     // B-4 · XP once per student per block, on the first COMPLETE save. The dedupe
     // key makes re-saves and re-submits no-ops; the existing grants table is the

@@ -86,7 +86,10 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
 
   // One source of truth for responses, shared with the renderer so progress
   // fills as the student saves interactive blocks.
-  const { responses, save, xpEarned: xpSession } = useBlockResponses(lesson.id)
+  const { responses, save, draft, draftState, loaded: responsesLoaded, xpEarned: xpSession } = useBlockResponses(lesson.id)
+  // Drafts are shown (the student sees what they typed) but never COUNT: gates,
+  // progress, tallies and the exit-ticket hold read only explicit saves.
+  const committed = useMemo(() => Object.fromEntries(Object.entries(responses).filter(([, v]) => !v.draft)), [responses])
 
   // A-5 · the class's reader flags + S-4 mastery + S-6 calibration, one fetch.
   const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean; presentLive?: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number; lobbyToday?: boolean } | null>(null)
@@ -117,7 +120,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lesson.id, pageCount])
   // S-2 / B-3 · sections after an unsatisfied gate are locked (readable when gating is off).
-  const lockedFrom = useMemo(() => firstLockedIndex(pages, responses, gating), [pages, responses, gating])
+  const lockedFrom = useMemo(() => firstLockedIndex(pages, committed, gating), [pages, committed, gating])
   const isLocked = (i: number) => i >= lockedFrom
   const goTo = (i: number) => {
     const clamped = Math.max(0, Math.min(pageCount - 1, i))
@@ -151,10 +154,10 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   // Whole-lesson task progress (the "tasks saved" bar).
   const interactive = useMemo(() => blocks.filter(isCaptureBlock), [blocks])
   const totalTasks = interactive.length
-  const doneTasks = interactive.filter((b) => isBlockComplete(b, responses[b.id]?.response)).length
+  const doneTasks = interactive.filter((b) => isBlockComplete(b, committed[b.id]?.response)).length
   const allTasksDone = totalTasks > 0 && doneTasks === totalTasks
   // MC-6 · lobby day: self-rating opens only after the individual exit ticket is saved.
-  const exitPending = blocks.filter((b) => b.type === 'exit_ticket').some((b) => !isBlockComplete(b, responses[b.id]?.response))
+  const exitPending = blocks.filter((b) => b.type === 'exit_ticket').some((b) => !isBlockComplete(b, committed[b.id]?.response))
   const selfRatingHold = !staffView && exp?.lobbyToday && exitPending
     ? 'Your group worked on this today. Save your own exit ticket first — then rate yourself on what YOU can do. · Primero guarda tu boleto de salida, luego califícate.'
     : null
@@ -168,7 +171,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   const StepIcon: LucideIcon = page?.hasCapture ? PencilRuler : isLast ? Rocket : pageIdx === 0 ? Compass : Eye
   const stepKind = page?.hasCapture ? 'Your task' : pageIdx === 0 ? 'Get oriented' : isLast ? 'Wrap up' : 'Read & think'
   // Soft-gate: an unsaved save-block on this page shows a nudge but never blocks Next.
-  const pageUnsaved = page ? page.captureBlocks.filter((b) => !isBlockComplete(b, responses[b.id]?.response)) : []
+  const pageUnsaved = page ? page.captureBlocks.filter((b) => !isBlockComplete(b, committed[b.id]?.response)) : []
 
   // Tasks bar fills by saved work.
   const taskPct = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0
@@ -212,6 +215,12 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 </span>
                 {minsLeft > 0 && (
                   <span className="inline-flex items-center gap-1">· <Clock size={12} /> ~{minsLeft} min left</span>
+                )}
+                {/* autosave status — drafts are kept as you type; Save is still the record */}
+                {!staffView && draftState !== 'idle' && (
+                  <span className="inline-flex items-center gap-1" title="Your typing is kept automatically. Press Save on a block to turn it in." style={{ color: draftState === 'offline' ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>
+                    · {draftState === 'dirty' || draftState === 'saving' ? 'Saving draft…' : draftState === 'saved' ? 'Draft kept' : 'Offline — kept on this device'}
+                  </span>
                 )}
                 {/* quick-peek at the reference sheet without losing your place */}
                 <a
@@ -341,7 +350,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
           <div className="mt-4 lesson-reading">
             {page && stepped ? (
               splitHelpRuns(page.blocks).map((run, ri) => {
-                if (!run.help) return <BlockRenderer key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+                if (!run.help) return <BlockRenderer key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
                 // S-4 · help drawer: open by default unless the student already rates Almost / Got it on the section's target.
                 const t = sectionTarget(page)
                 const level = t ? exp?.mastery[t] : undefined
@@ -352,12 +361,12 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                       <Lightbulb size={15} /> {openDefault ? 'Help & worked example' : 'Need a refresher? Help & worked example'}
                       <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>{openDefault ? '' : `· you’re rated ${level === 3 ? 'Got it' : 'Almost'} on this target`}</span>
                     </summary>
-                    <div className="px-4 pb-3"><BlockRenderer blocks={run.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
+                    <div className="px-4 pb-3"><BlockRenderer blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
                   </details>
                 )
               })
             ) : page ? (
-              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} save={save} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+              <BlockRenderer blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}
@@ -417,7 +426,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
 
           {/* S-6 · Done screen: what was auto-checked, what awaits rating, XP earned + pending, calibration read-back */}
           {isLast && stepped && submitted && (() => {
-            const t = doneTallies(blocks, responses)
+            const t = doneTallies(blocks, committed)
             const xpTotal = (exp?.xpEarned ?? 0) + xpSession
             const rated = (exp?.calibration ?? []).filter((c) => c.teacher !== null)
             return (
@@ -490,8 +499,8 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
               )
             ) : (
               <div className="flex items-center gap-3">
-                {stepped && page && gateNote(pageBlockedBy(page, responses)) && gating && (
-                  <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Lock size={12} /> {gateNote(pageBlockedBy(page, responses))}</span>
+                {stepped && page && gateNote(pageBlockedBy(page, committed)) && gating && (
+                  <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Lock size={12} /> {gateNote(pageBlockedBy(page, committed))}</span>
                 )}
                 <button
                   onClick={() => breakAway(pageIdx + 1)}

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useDraft } from './useDraft'
 import PaintPad from './PaintPad'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { Stroke } from './DoodleCanvas'
@@ -155,7 +156,7 @@ export function SeiSketchAnswer({ value, onChange, labelBank }: { value: Stroke[
 }
 
 /** Text answer with the whole SEI layer around it. Saves { text | strokes, mode }. */
-export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst, placeholder, value, onSave }: {
+export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst, placeholder, value, onSave, onDraft }: {
   sei?: SeiScaffold
   prompt: string
   fallbackFrame?: string
@@ -164,6 +165,8 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   placeholder?: string
   value?: unknown
   onSave: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }, scaffolds: string[], mode: ResponseMode) => void
+  /** as-you-type draft of the same shape onSave sends (autosave; never evidence) */
+  onDraft?: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }) => void
 }) {
   const state = useSei(sei, { fallbackFrame, wordBank, talkFirst, extraModes: [] })
   const prior = (typeof value === 'string' ? { text: value } : (value as { text?: string; strokes?: Stroke[] } | undefined)) ?? {}
@@ -172,6 +175,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   const [saved, setSaved] = useState(false)
   const [touched, setTouched] = useState(false)
   useEffect(() => { if (!touched) { setText(prior.text ?? ''); setStrokes(prior.strokes ?? []) } }, [prior.text, prior.strokes, touched])
+  useDraft(onDraft ?? (() => {}), touched ? (state.mode === 'sketch' ? { strokes, mode: 'sketch' as ResponseMode } : { text, mode: state.mode }) : undefined)
   const gated = state.talkFirst && !state.talkDone
   const canSave = !gated && (state.mode === 'sketch' ? strokes.length > 0 : text.trim().length > 0)
   return (

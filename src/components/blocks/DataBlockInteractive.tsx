@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react'
+import { useDraft } from './useDraft'
 
 export interface DataValue {
   rows?: string[][]
@@ -17,6 +18,8 @@ interface DataBlockProps {
   patternPrompt?: string
   value?: DataValue
   onSave: (v: DataValue) => void
+  /** as-you-type draft (autosave; never evidence) */
+  onDraft?: (v: DataValue) => void
 }
 
 const PATTERNS = ['Straight line (linear)', 'Curved', 'Flat (no change)']
@@ -27,7 +30,7 @@ function blankGrid(cols: number, rows: number): string[][] {
 
 const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
 
-export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, patternPrompt, value, onSave }: DataBlockProps) {
+export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
   const cols = columns && columns.length > 0 ? columns : ['x', 'y']
   const xi = xCol ?? 0
   const yi = yCol ?? 1
@@ -39,6 +42,7 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
   const [interpret, setInterpret] = useState(value?.interpret ?? '')
   const [nudges, setNudges] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
+  useDraft(onDraft ?? (() => {}), grid.some((r) => r.some((c) => c.trim())) || pattern.trim() || interpret.trim() ? { rows: grid, pattern, interpret } : undefined)
 
   const setCell = (r: number, c: number, v: string) => {
     setGrid((prev) => prev.map((row, ri) => (ri === r ? row.map((cell, ci) => (ci === c ? v : cell)) : row)))

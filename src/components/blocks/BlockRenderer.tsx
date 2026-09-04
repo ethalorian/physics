@@ -14,7 +14,8 @@ import EquationSandbox, { type SandboxValue } from './EquationSandbox'
 import DataBlockInteractive, { type DataValue } from './DataBlockInteractive'
 import DeckPresentCard from './DeckPresentCard'
 import { usePresentLive } from '@/components/lessons/PresentLiveProvider'
-import { useBlockResponses, type BlockResponseMap, type SaveMeta } from './useBlockResponses'
+import { useBlockResponses, type BlockResponseMap, type SaveMeta, type DraftFn } from './useBlockResponses'
+import { useDraft } from './useDraft'
 import { SeiTextCapture, SeiPrompt, SeiVisual, SeiFrameBox, SeiFairnessNote, useSei } from './SeiLayer'
 import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
 import type { InlineQuestion, SeiFrame } from '@/data/content-blocks'
@@ -50,6 +51,9 @@ const C = {
 }
 
 type SaveFn = (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => void
+/** Statements for the targets a self-assessment rates (from /api/lessons/experience). */
+type TargetInfo = { slug: string; statement: string }
+const NO_DRAFT: (v: unknown) => void = () => {}
 
 // ---------------------------------------------------------------------------
 // Block identity: each block belongs to a "kind of thinking" (K/R/S/P) and
@@ -191,6 +195,51 @@ function MarzanoInput({ value, onSave }: { value?: number; onSave: (n: number) =
 }
 
 
+// self_assessment · one 1-2-3 row per target the block names (MVP days close on
+// this — decision 2026-09-04). Saves { [slug]: level }, the shape the
+// mastery_calibration view reads. Each tap drafts; the button commits.
+function SelfAssessment({ b, saved, save, onDraft, targets }: { b: Extract<ContentBlock, { type: 'self_assessment' }>; saved: unknown; save: SaveFn; onDraft: (v: unknown) => void; targets?: TargetInfo[] }) {
+  const prev = (saved && typeof saved === 'object' ? (saved as Record<string, number>) : {})
+  const [ratings, setRatings] = useState<Record<string, number>>(prev)
+  const [savedFlag, setSavedFlag] = useState(false)
+  const [touched, setTouched] = useState(false)
+  useEffect(() => { if (!touched) setRatings(prev) }, [saved]) // eslint-disable-line react-hooks/exhaustive-deps
+  useDraft(onDraft, touched ? ratings : undefined)
+  const levels = [{ v: 1, label: 'Not yet' }, { v: 2, label: 'Almost' }, { v: 3, label: 'Got it' }]
+  const slugs = b.targetIds ?? []
+  const complete = slugs.length > 0 && slugs.every((sl) => typeof ratings[sl] === 'number')
+  return (
+    <div>
+      <div className="text-sm font-medium" style={{ color: 'var(--secondary-foreground)' }}>Rate yourself on today&apos;s targets · Evalúate en las metas de hoy</div>
+      {b.note && <p className="text-xs mt-0.5" style={{ color: C.muted }}>{b.note}</p>}
+      <div className="mt-2 space-y-2">
+        {slugs.map((sl) => (
+          <div key={sl} className="rounded-lg border p-2.5" style={{ borderColor: C.hairline, background: 'var(--card)' }}>
+            <div className="text-sm" style={{ color: C.indigo }}>{targets?.find((t) => t.slug === sl)?.statement ?? sl}</div>
+            <div className="flex flex-wrap gap-2 mt-1.5">
+              {levels.map((l) => (
+                <button key={l.v} onClick={() => { setRatings((r) => ({ ...r, [sl]: l.v })); setTouched(true); setSavedFlag(false) }}
+                  className="text-sm rounded-md border px-3 py-1.5"
+                  style={{ borderColor: C.hairline, background: ratings[sl] === l.v ? C.sage : 'var(--card)', color: ratings[sl] === l.v ? 'var(--card)' : C.indigo }}>
+                  {l.v} · {l.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-2 mt-2">
+        <button onClick={() => { if (!complete) return; save(b.id, 'self_assessment', ratings); setSavedFlag(true); setTouched(false) }} disabled={!complete}
+          className="text-xs rounded-md border px-3 py-1 disabled:opacity-50" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: complete ? 'pointer' : 'not-allowed' }}>
+          {savedFlag ? 'Saved ✓' : 'Save my ratings · Guardar'}
+        </button>
+        {!complete && <span className="text-xs" style={{ color: C.muted }}>Rate every target first. · Evalúa cada meta primero.</span>}
+      </div>
+      <p className="text-xs mt-1" style={{ color: C.muted }}>Your own check-in — separate from your teacher&apos;s mastery record.</p>
+    </div>
+  )
+}
+
 // Render the simulation inside an IFRAME pointing at a chrome-free embed route.
 // The iframe is a hard layout boundary (the sim's elements can't escape into the
 // lesson) and a separate document (a sim crash can't take down the lesson). The
@@ -307,12 +356,13 @@ function DiagramBackground({ scene }: { scene: DiagramScene }) {
 // the sketch's "Save drawing" or a reasoning box blur persists the WHOLE response
 // ({ strokes, fields }) so thinking and work are logged together.
 const LAB_DEFAULT_FIELDS = ['What I did', 'What I observed', 'What it means']
-function LabNotebook({ b, saved, save }: { b: LabNotebookBlock; saved: unknown; save: SaveFn }) {
+function LabNotebook({ b, saved, save, onDraft = NO_DRAFT }: { b: LabNotebookBlock; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
   const fields = b.fields && b.fields.length ? b.fields : LAB_DEFAULT_FIELDS
   const prev = (saved as { strokes?: Stroke[]; fields?: Record<string, string> } | undefined) ?? {}
   const strokesRef = useRef<Stroke[]>(prev.strokes ?? [])
   const [text, setText] = useState<Record<string, string>>(prev.fields ?? {})
   const [savedFlag, setSavedFlag] = useState(false)
+  useDraft(onDraft, Object.values(text).some((t) => t.trim()) ? { strokes: strokesRef.current, fields: text } : undefined)
   const persist = (strokes: Stroke[], t: Record<string, string>) => {
     save(b.id, 'lab_notebook', { strokes, fields: t })
     setSavedFlag(true)
@@ -376,10 +426,11 @@ function CoordinateGrid({ xLabel, yLabel, quadrants = 1 }: { xLabel?: string; yL
 
 // Sketch capture: the lobby PaintPad over an optional labeled grid / diagram.
 // Persists { strokes } and shows an explicit Saved state.
-function SketchPad({ b, saved, save }: { b: Extract<ContentBlock, { type: 'sketch' }>; saved: unknown; save: SaveFn }) {
+function SketchPad({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentBlock, { type: 'sketch' }>; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
   const initial = ((saved as { strokes?: Stroke[] })?.strokes) ?? []
   const [strokes, setStrokes] = useState<Stroke[]>(initial)
   const [savedFlag, setSavedFlag] = useState(false)
+  useDraft(onDraft, strokes.length > 0 && strokes !== initial ? { strokes } : undefined)
   // The template (grid / diagram / scaffold) is handed to PaintPad as a
   // background that sits BEHIND THE CANVAS ONLY — never behind the toolbar — so
   // the tools always stay on top with a clear buffer above the template.
@@ -436,12 +487,14 @@ function SentenceFrameView({ frame, frames, wordBank, sei }: { frame: string; fr
  * its L1 line, a visual that carries the meaning, picture options, then an
  * explain step with a frame + word bank. Saves { optionId, explain, mode }.
  */
-function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn }) {
+function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentBlock, { type: 'question' }>; saved: unknown; save: SaveFn; onDraft?: (v: unknown) => void }) {
   const q = (b.question && typeof b.question === 'object' && 'prompt' in (b.question as object) ? (b.question as InlineQuestion) : null)
   const prev = (saved as { optionId?: string; explain?: string; autoCheck?: 'match' | 'mismatch' } | undefined) ?? {}
   const [optionId, setOptionId] = useState<string | undefined>(prev.optionId)
   const [explain, setExplain] = useState(prev.explain ?? '')
   const [savedFlag, setSavedFlag] = useState(false)
+  // Drafts carry the pick + explanation only — never an autoCheck (that is the server's, on Save).
+  useDraft(onDraft, (optionId && optionId !== prev.optionId) || (explain && explain !== (prev.explain ?? '')) ? { optionId, explain, mode: q?.options?.length ? 'choice' : 'text' } : undefined)
   // MC-5 · one-tap confidence on every checkpoint (wrong + sure is the misconception flag).
   const [confidence, setConfidence] = useState<'sure' | 'unsure' | undefined>(undefined)
   // E-3 / B-5 · the server's self-check on the LAST SAVED answer, and that option's feedback.
@@ -521,7 +574,8 @@ function InlineQuestionView({ b, saved, save }: { b: Extract<ContentBlock, { typ
   )
 }
 
-function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[]) {
+function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: string, glossary?: GlossaryEntry[], draft: DraftFn = () => {}, targets?: TargetInfo[]) {
+  const onDraft = (v: unknown) => draft(b.id, b.type, v)
   switch (b.type) {
     case 'target':
       return <div className="text-base font-medium" style={{ color: C.indigo }}>{b.statement}</div>
@@ -586,7 +640,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     }
     case 'sentence_frame':
       if (b.capture) {
-        return <SeiTextCapture sei={{ ...(b.sei ?? {}), frames: b.sei?.frames ?? b.frames, wordBank: b.sei?.wordBank ?? b.wordBank, modes: b.sei?.modes ?? b.modes }} prompt={b.frame} value={saved} onSave={(r, scaffolds, mode) => save(b.id, 'sentence_frame', r, { response_mode: mode, scaffolds_used: scaffolds })} />
+        return <SeiTextCapture sei={{ ...(b.sei ?? {}), frames: b.sei?.frames ?? b.frames, wordBank: b.sei?.wordBank ?? b.wordBank, modes: b.sei?.modes ?? b.modes }} prompt={b.frame} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'sentence_frame', r, { response_mode: mode, scaffolds_used: scaffolds })} />
       }
       return <SentenceFrameView frame={b.frame} frames={b.frames ?? b.sei?.frames} wordBank={b.wordBank ?? b.sei?.wordBank} sei={b.sei} />
     case 'sim_embed':
@@ -600,32 +654,32 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'lesson_vocab':
       return <LessonVocabView lessonId={lessonId} />
     case 'lab_notebook':
-      return <LabNotebook b={b} saved={saved} save={save} />
+      return <LabNotebook b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'sketch':
-      return <SketchPad b={b} saved={saved} save={save} />
+      return <SketchPad b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'marzano':
       return <MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n, { target_id: b.targetId })} />
     case 'exit_ticket':
-      return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
+      return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
     case 'gewa':
-      return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onSave={(v) => save(b.id, 'gewa', v)} />
+      return <GewaInteractive prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'gewa', v)} />
     case 'equation_sandbox':
-      return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
+      return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
-      return <DataBlockInteractive columns={b.columns} rows={b.rows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onSave={(v) => save(b.id, 'data_table', v)} />
+      return <DataBlockInteractive columns={b.columns} rows={b.rows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'data_table', v)} />
     case 'observation': {
       const prev = (saved as { pattern?: string; interpret?: string } | undefined) ?? {}
       const patternSei = { ...(b.sei ?? {}), frames: b.sei?.frames ?? (b.patternFrame ? [{ level: 1 as const, text: b.patternFrame }] : undefined), wordBank: b.sei?.wordBank ?? b.comparatives, modes: ['text' as const] }
       return (
         <>
-          <SeiTextCapture sei={patternSei} prompt={b.patternPrompt} fallbackFrame={b.frame} value={prev.pattern} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, pattern: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
+          <SeiTextCapture sei={patternSei} prompt={b.patternPrompt} fallbackFrame={b.frame} value={prev.pattern} onDraft={(r) => onDraft({ ...prev, pattern: (r as { text?: string }).text ?? '' })} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, pattern: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
           <div className="h-3" />
-          <SeiTextCapture sei={{ ...(b.sei ?? {}), visual: undefined, modes: ['text' as const] }} prompt={b.interpretPrompt} value={prev.interpret} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, interpret: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
+          <SeiTextCapture sei={{ ...(b.sei ?? {}), visual: undefined, modes: ['text' as const] }} prompt={b.interpretPrompt} value={prev.interpret} onDraft={(r) => onDraft({ ...prev, interpret: (r as { text?: string }).text ?? '' })} onSave={(r, scaffolds, mode) => save(b.id, 'observation', { ...prev, interpret: r.text ?? '' }, { response_mode: mode, scaffolds_used: scaffolds })} />
         </>
       )
     }
     case 'question':
-      return <InlineQuestionView b={b} saved={saved} save={save} />
+      return <InlineQuestionView b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'figure': {
       if (!b.src) return null
       const full = b.align === 'full'
@@ -679,6 +733,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     }
     case 'concept_exercise':
       return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
+    case 'self_assessment':
+      return <SelfAssessment b={b} saved={saved} save={save} onDraft={onDraft} targets={targets} />
     case 'reading': {
       // Homework reading from Conceptual Physics. Everything but the ids is
       // looked up, so a typo in a section id simply drops that row.
@@ -724,7 +780,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
   }
 }
 
-function RenderedBlock({ b, saved, save, lessonId, glossary, selfRatingHold }: { b: ContentBlock; saved: unknown; save: SaveFn; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null }) {
+function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft }: { b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
   const meta = BLOCK_META[b.type]
   // MC-6 · on a lobby day the self-rating waits for the individual exit ticket
   // (the group got it right ≠ I got it). The hold is a note, never a lost block.
@@ -736,11 +792,12 @@ function RenderedBlock({ b, saved, save, lessonId, glossary, selfRatingHold }: {
     )
     return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture>{held}</BlockShell> : held
   }
-  const body = renderBody(b, saved, save, lessonId, glossary)
+  const body = renderBody(b, saved, save, lessonId, glossary, draft, targets)
   if (body === null) return null
   if (!meta || BARE.has(b.type)) return <>{body}</>
   const capture = isCaptureBlock(b)
-  const done = isBlockComplete(b, saved)
+  // A draft is shown but is not done — the student still has to Save.
+  const done = !isDraft && isBlockComplete(b, saved)
   return <BlockShell meta={meta} done={done} capture={capture}>{body}</BlockShell>
 }
 
@@ -762,12 +819,18 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, lessonId, responses: extResponses, save: extSave, glossary, trackBadges = false, selfRatingHold = null,
+  blocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, trackBadges = false, selfRatingHold = null,
 }: {
+  /** flips to true once saved responses + drafts have loaded; blocks remount so their local state picks them up */
+  hydrated?: boolean
   blocks: ContentBlock[]
   lessonId: string
   responses?: BlockResponseMap
   save?: SaveFn
+  /** as-you-type autosave (useBlockResponses.draft); omitted → drafts are not kept */
+  draft?: DraftFn
+  /** statements for self_assessment rows */
+  targets?: TargetInfo[]
   glossary?: GlossaryEntry[]
   /** Staff view: mark CPA-only / Honors-only blocks with a rail + label. Students never see this. */
   trackBadges?: boolean
@@ -780,6 +843,8 @@ export default function BlockRenderer({
   const internal = useBlockResponses(lessonId)
   const responses = extResponses ?? internal.responses
   const save = extSave ?? internal.save
+  const draft = extDraft ?? (extResponses ? undefined : internal.draft)
+  const hydratedKey = (hydrated ?? internal.loaded) ? 'h' : 'e'
   return (
     <div className="space-y-4">
       {blocks.map((b) => {
@@ -787,7 +852,7 @@ export default function BlockRenderer({
         const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
         const gateFg = gate === 'honors' ? 'var(--reward-foreground)' : 'var(--success)'
         return (
-          <div key={b.id} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
+          <div key={`${b.id}:${hydratedKey}`} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
             {gate && (
               <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
                 style={{ background: `color-mix(in oklch, ${gateColor} 18%, var(--card))`, color: gateFg, border: `1px solid color-mix(in oklch, ${gateColor} 50%, transparent)` }}>
@@ -795,7 +860,7 @@ export default function BlockRenderer({
               </span>
             )}
             <BlockBoundary label={b.type}>
-              <RenderedBlock b={b} saved={responses[b.id]?.response} save={save} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
+              <RenderedBlock b={b} saved={responses[b.id]?.response} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
             </BlockBoundary>
           </div>
         )
