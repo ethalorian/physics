@@ -152,6 +152,12 @@ W00 = [
 ]
 
 # ---------------------------------------------------------------- WEEK 1 · Describing motion
+# NOTE on w01d3-gewa1's numbers (changed 2026-09-04, do not "round" them back):
+# they were 0.5 m @ 1.0 s → 2.5 m @ 5.0 s, where Δx/Δt = 2.0/4.0 = 0.50 m/s and
+# the classic wrong move (last position ÷ last time) = 2.5/5.0 = 0.50 m/s — the
+# SAME answer, so the misconception was undetectable. 2.0 m @ 1.0 s → 3.0 m @
+# 5.0 s gives v = 0.25 m/s against a wrong-move 0.60 m/s, and the graph now ends
+# high while staying shallow, which is the day's misconception made visible.
 W01 = [
   day('w01d1', 1, 'Walk the graph', 'Camina la gráfica',
       'Motion detector + the graph-matching screen. Walk to match three graphs. Then the reverse: sketch the graph of a walk BEFORE the screen draws it.',
@@ -195,7 +201,7 @@ W01 = [
       'Primero la calculadora de pendiente: arrastra dos puntos en una gráfica x–t, lee la pendiente, di qué significa. Luego el área bajo una curva v–t. Estos son los dos movimientos que usará cada construcción este año.'),
   {'id': 'w01d3-sim1', 'type': 'sim_embed', 'simulationSlug': 'slope-calculator'},
   {'id': 'w01d3-gewa1', 'type': 'gewa', 'capture': True, 'targetId': 'pp.w01.v-from-slope', 'xp': 5,
-   'prompt': 'A cart is at 0.5 m at t = 1.0 s and at 2.5 m at t = 5.0 s. Use the slope of its position–time graph to find its velocity. · Un carrito está en 0.5 m en t = 1.0 s y en 2.5 m en t = 5.0 s. Usa la pendiente de su gráfica posición–tiempo para hallar su velocidad.',
+   'prompt': 'A cart is at 2.0 m at t = 1.0 s and at 3.0 m at t = 5.0 s. Use the slope of its position–time graph to find its velocity. · Un carrito está en 2.0 m en t = 1.0 s y en 3.0 m en t = 5.0 s. Usa la pendiente de su gráfica posición–tiempo para hallar su velocidad.',
    'givenHint': 'two positions and two times · dos posiciones y dos tiempos', 'equationHint': 'v = Δx / Δt  (rise over run · elevación sobre avance)', 'solveFor': 'v',
    'equationIds': ['avg-velocity', 'avg-speed', 'displacement', 'avg-acceleration'],
    'sei': {'prompt_l1': {ES: 'Halla la velocidad desde la pendiente: v = Δx / Δt.'}, 'tier2Terms': ['slope']}},
