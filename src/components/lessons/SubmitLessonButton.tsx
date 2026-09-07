@@ -11,7 +11,7 @@
 import { useEffect, useState } from 'react'
 import { Send, CheckCircle2, Clock, PartyPopper } from 'lucide-react'
 
-export default function SubmitLessonButton({ lessonId, complete = false, onChange }: { lessonId: string; complete?: boolean; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean }) => void }) {
+export default function SubmitLessonButton({ lessonId, complete = false, blocked = false, onChange }: { lessonId: string; complete?: boolean; blocked?: boolean; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean }) => void }) {
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -28,6 +28,7 @@ export default function SubmitLessonButton({ lessonId, complete = false, onChang
   }, [lessonId])
 
   async function submit() {
+    if (blocked || busy) return
     setBusy(true)
     setError(null)
     try {
@@ -69,12 +70,13 @@ export default function SubmitLessonButton({ lessonId, complete = false, onChang
         <span className="text-xs font-medium inline-flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}>
           <CheckCircle2 size={14} style={{ color: 'var(--success)' }} /> Reviewed by your teacher — you can revise and submit again.
         </span>
-        <button onClick={submit} disabled={busy}
+        <button onClick={submit} disabled={busy || blocked}
           className="inline-flex items-center justify-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold disabled:opacity-60"
           style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
           <Send size={16} /> {busy ? 'Submitting…' : 'Submit revision'}
         </button>
-        {error && <span className="text-xs text-red-600">{error}</span>}
+        {blocked && <span role="status" className="text-sm">Save your changed answers before submitting.</span>}
+        {error && <span role="alert" className="text-xs text-red-600">{error}</span>}
       </div>
     )
   }
@@ -88,7 +90,7 @@ export default function SubmitLessonButton({ lessonId, complete = false, onChang
           <PartyPopper size={16} /> You finished every step — don&apos;t forget to submit!
         </div>
       )}
-      <button onClick={submit} disabled={busy}
+      <button onClick={submit} disabled={busy || blocked}
         className="inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3.5 text-base font-extrabold disabled:opacity-60 w-full sm:w-auto"
         style={{ background: 'var(--success)', color: '#fff', boxShadow: '0 10px 26px -8px color-mix(in oklch, var(--success) 70%, transparent)' }}>
         <Send size={18} /> {busy ? 'Submitting…' : 'Submit lesson for review'}
@@ -96,7 +98,8 @@ export default function SubmitLessonButton({ lessonId, complete = false, onChang
       <span className="text-[11px] inline-flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
         <Clock size={12} /> Once you submit, it locks until your teacher reviews it.
       </span>
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {blocked && <span role="status" className="text-sm">Save your changed answers before submitting.</span>}
+        {error && <span role="alert" className="text-xs text-red-600">{error}</span>}
     </div>
   )
 }

@@ -149,6 +149,8 @@ function ClimbChart({ points }: { points: ClimbPoint[] }) {
 export default function HomePage() {
   const [data, setData] = useState<HomeData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState(false)
+  const [retry, setRetry] = useState(0)
   const [domain, setDomain] = useState<Domain>('reasoning')
   // Onboarding nudge: prompt the student to set up their face + leaderboard
   // name the first time they sign in. Null = haven't checked yet, so we don't
@@ -160,16 +162,18 @@ export default function HomePage() {
   const [warmupOpen, setWarmupOpen] = useState(true)
 
   useEffect(() => {
+    setLoading(true)
+    setLoadError(false)
     fetch('/api/home')
-      .then((r) => r.json())
+      .then((r) => { if (!r.ok) throw new Error('home'); return r.json() })
       .then((d: HomeData) => {
         setData(d)
         setLoading(false)
         const firstWithData = DOMAINS.find((dm) => d.climb?.some((c) => c.domain === dm.key))
         if (firstWithData) setDomain(firstWithData.key)
       })
-      .catch(() => setLoading(false))
-  }, [])
+      .catch(() => { setLoading(false); setLoadError(true) })
+  }, [retry])
 
   useEffect(() => {
     fetch('/api/avatar/me')
@@ -251,7 +255,10 @@ export default function HomePage() {
 
         {loading && <p className="text-sm mt-8" style={{ color: 'var(--muted-foreground)' }}>Loading your home…</p>}
 
-        {!loading && data && (
+        {loadError && <div role="alert" className="mt-6 rounded-xl border p-4 text-sm">
+          Couldn’t load your coursework. <button className="ml-2 underline font-semibold" onClick={() => setRetry((n) => n + 1)}>Retry</button>
+        </div>}
+        {!loading && !loadError && data && (
           <>
             {/* CONTINUE — the single primary path. The daily math warm-up is
                 folded in as a compact "2-min first" step rather than opening

@@ -17,9 +17,9 @@ interface DataBlockProps {
   yCol?: number
   patternPrompt?: string
   value?: DataValue
-  onSave: (v: DataValue) => void
+  onSave: (v: DataValue) => void | Promise<boolean>
   /** as-you-type draft (autosave; never evidence) */
-  onDraft?: (v: DataValue) => void
+  onDraft?: (v: DataValue) => void | Promise<boolean>
 }
 
 const PATTERNS = ['Straight line (linear)', 'Curved', 'Flat (no change)']
@@ -69,9 +69,9 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
     ]
     setNudges(n)
   }
-  const handleSave = () => {
-    onSave({ rows: grid, pattern, interpret })
-    setSaved(true)
+  const handleSave = async () => {
+    const ok = await onSave({ rows: grid, pattern, interpret })
+    setSaved(ok !== false)
     runCheck()
   }
 

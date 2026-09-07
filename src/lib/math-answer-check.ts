@@ -147,10 +147,50 @@ export function parseQuantity(raw: string): ParsedQuantity | null {
   return null
 }
 
+/** A percent attached to its own number: "45%", "45 percent", "45 pct". A '%'
+    loose in prose ("what % of the trials") is not a claim about this quantity. */
+const PERCENT_MARKER = /\d\s*(?:%|percent(?:age)?s?\b|pct\b)/i
+
 function numbersMatch(a: number, b: number): boolean {
   if (Math.abs(a - b) <= ABS_TOLERANCE) return true
   const scale = Math.max(Math.abs(a), Math.abs(b))
   return scale > 0 && Math.abs(a - b) / scale <= REL_TOLERANCE
+}
+
+/**
+ * Reconcile the factor-of-100 gap between a percent written as a percent and
+ * a percent written as a proportion. Templated percent items compute BARE
+ * NUMBER keys ("45", "125"), but parseQuantity turns a student's trailing %
+ * into a proportion — so 0.45 met a key of 45 and a correct answer got a ✗.
+ *
+ * Two tiers, because the two situations deserve different confidence:
+ *
+ *  1. an explicit percent marker on either side ("45%", "45 percent"). Someone
+ *     said percent out loud, so the percent reading is the intended one and we
+ *     can decide: student against the key, the key ×100 and the key ÷100, and a
+ *     verdict either way. This tier never issues a ✗ the old code wouldn't have.
+ *
+ *  2. no percent anywhere, values exactly a factor of 100 apart. That is not
+ *     enough to convict — the student may have answered in the other
+ *     convention — but it is also not enough to acquit: matching blindly across
+ *     ×100 would pass 5 as 500 on an item with nothing to do with percent, and
+ *     a false ✓ tells a student they are right when they are not, which is the
+ *     worse error of the two. So this tier returns 'unknown': "your teacher
+ *     will check" is the honest answer to a genuine ambiguity, and it is the
+ *     exact case this module's never-a-false-✗ invariant exists to cover.
+ */
+function reconcilePercentScale(
+  studentValue: number,
+  keyValue: number,
+  studentRaw: string,
+  keyRaw: string,
+): SelfCheck {
+  if (numbersMatch(studentValue, keyValue)) return 'match'
+  const offByHundred =
+    numbersMatch(studentValue, keyValue * 100) || numbersMatch(studentValue, keyValue / 100)
+  const percentIntended = PERCENT_MARKER.test(studentRaw) || PERCENT_MARKER.test(keyRaw)
+  if (percentIntended) return offByHundred ? 'match' : 'mismatch'
+  return offByHundred ? 'unknown' : 'mismatch'
 }
 
 /**
@@ -249,6 +289,9 @@ function normalizeLoose(s: string): string {
  *    (could be an unconverted km vs m — a teacher call, never an auto ✗).
  *  - key doesn't parse → exact-ish string compare; mismatch → 'unknown'
  *    (free-text keys are not the machine's to judge).
+ *  - percent vs proportion ("45%" against a bare-number key of 45) is settled by
+ *    reconcilePercentScale, so this is the one choke point both the plain
+ *    numeric path and the multi-form path ("45% or 0.45") go through.
  */
 function checkOne(student: string, key: string): SelfCheck {
   const kq = parseQuantity(key)
@@ -256,7 +299,7 @@ function checkOne(student: string, key: string): SelfCheck {
   if (kq) {
     if (!sq) return normalizeLoose(student) === normalizeLoose(key) ? 'match' : 'unknown'
     if (kq.unit && sq.unit && kq.unit !== sq.unit) return 'unknown'
-    return numbersMatch(sq.value, kq.value) ? 'match' : 'mismatch'
+    return reconcilePercentScale(sq.value, kq.value, student, key)
   }
   return normalizeLoose(student) === normalizeLoose(key) ? 'match' : 'unknown'
 }

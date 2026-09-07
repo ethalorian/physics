@@ -149,10 +149,11 @@ export default function Navbar() {
         Devices without hover (touch) always show labels — glyphs alone were
         unreadable on Chromebooks before. */}
     <style>{`
-      .nav-rail .nav-label{display:inline-block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:max-width .22s cubic-bezier(.16,1,.3,1),opacity .18s ease,margin .22s cubic-bezier(.16,1,.3,1);margin-left:0}
+      .nav-rail .nav-label{display:inline-block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:opacity .15s ease;margin-left:0}
       .nav-rail .nav-link[data-active="true"] .nav-label,
       .nav-rail:hover .nav-label,
       .nav-rail:focus-within .nav-label{max-width:9rem;opacity:1;margin-left:.375rem}
+      @media (min-width:1024px){.nav-rail .nav-label{max-width:9rem;margin-left:.375rem}}
       @media (hover:none){.nav-rail .nav-label{max-width:9rem;opacity:1;margin-left:.375rem}}
       @media (prefers-reduced-motion:reduce){.nav-rail .nav-label{transition:none}}
     `}</style>

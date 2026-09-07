@@ -50,7 +50,7 @@ export default function BlockLessonViewer(props: BlockLessonViewerProps) {
   return (
     <LanguageProfileProvider>
       <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView}>
-        <BlockLessonViewerInner {...props} />
+        <BlockLessonViewerInner key={props.lesson.id} {...props} />
       </PresentLiveProvider>
     </LanguageProfileProvider>
   )
@@ -149,7 +149,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   // Per-section completion (the honest progress thread): explicit "Got it"
   // checkpoints, persisted per lesson. A section also reads done once passed.
   const { markComplete, isComplete } = useSectionProgress(lesson.id, pageCount)
-  const sectionDone = (i: number) => isComplete(i) || i < pageIdx
+  const sectionDone = (i: number) => pages[i]?.hasCapture ? pages[i].captureBlocks.every((b) => isBlockComplete(b, committed[b.id]?.response)) : isComplete(i)
 
   // Whole-lesson task progress (the "tasks saved" bar).
   const interactive = useMemo(() => blocks.filter(isCaptureBlock), [blocks])
@@ -191,7 +191,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
         <div className="min-w-0" style={{ maxWidth: 760, marginInline: 'auto', width: '100%' }}>
           {/* compact sticky header: identity + section counter + progress */}
           <div
-            className="sticky top-0 z-20 -mx-4 px-4 pt-3 pb-3"
+            className="relative z-20 -mx-4 px-4 pt-3 pb-3"
             style={{ background: 'color-mix(in oklch, var(--background) 92%, transparent)', backdropFilter: 'blur(8px)', borderBottom: '1px solid var(--border)' }}
           >
             <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -201,7 +201,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 </Link>
                 <div className="flex items-center gap-2 mt-0.5">
                   {day && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
                       <day.Icon size={11} /> {day.label}
                     </span>
                   )}
@@ -218,8 +218,8 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 )}
                 {/* autosave status — drafts are kept as you type; Save is still the record */}
                 {!staffView && draftState !== 'idle' && (
-                  <span className="inline-flex items-center gap-1" title="Your typing is kept automatically. Press Save on a block to turn it in." style={{ color: draftState === 'offline' ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>
-                    · {draftState === 'dirty' || draftState === 'saving' ? 'Saving draft…' : draftState === 'saved' ? 'Draft kept' : 'Offline — kept on this device'}
+                  <span className="inline-flex items-center gap-1" title="Drafts are kept automatically. Save each answer, then submit the lesson for review." style={{ color: draftState === 'offline' ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>
+                    · {draftState === 'dirty' || draftState === 'saving' ? 'Saving draft…' : draftState === 'saved' ? 'Draft kept' : 'Draft sync failed — retry when connected'}
                   </span>
                 )}
                 {/* quick-peek at the reference sheet without losing your place */}
@@ -240,7 +240,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
             </div>
 
             {/* SEI level dial — visible to the student (principle 7) */}
-            <div className="mt-2"><LanguageDial /></div>
+            <details className="mt-2"><summary className="cursor-pointer text-sm font-semibold">Language support</summary><div className="mt-2"><LanguageDial /></div></details>
 
             {/* P-4 · live class: follow chip + class timer */}
             {!staffView && live.session && (
@@ -286,7 +286,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
                   <div className="h-full rounded-full transition-all" style={{ width: `${taskPct}%`, background: 'var(--reward)' }} />
                 </div>
-                <span className="text-[11px] font-medium whitespace-nowrap inline-flex items-center gap-1" style={{ color: allTasksDone ? 'var(--success)' : 'var(--muted-foreground)' }}>
+                <span className="text-xs font-medium whitespace-nowrap inline-flex items-center gap-1" style={{ color: allTasksDone ? 'var(--success)' : 'var(--muted-foreground)' }}>
                   {allTasksDone ? <Check size={12} /> : <Pencil size={11} />}
                   {doneTasks} of {totalTasks} tasks saved
                 </span>
@@ -295,7 +295,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
           </div>
 
           {/* visual step banner — guarantees a non-text element atop every page. */}
-          {page && (
+          {page && !stepped && (
             <div
               className="mt-4 rounded-2xl overflow-hidden"
               style={{ border: '1px solid var(--border)' }}
@@ -321,7 +321,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                   <StepIcon size={ownVisual ? 18 : 24} />
                 </span>
                 <div className="min-w-0">
-                  <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+                  <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
                     Section {pageIdx + 1} · {stepKind}
                   </div>
                   {!ownVisual && (
@@ -339,7 +339,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
           {/* S-3 · section header: eyebrow + serif headline + one context line */}
           {page && stepped && (
             <div className="mt-5 mb-1">
-              <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{stepKind} · section {pageIdx + 1} of {pageCount}</div>
+              <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{stepKind} · section {pageIdx + 1} of {pageCount}</div>
               <h2 className="lesson-headline mt-0.5" style={{ fontSize: 26, lineHeight: 1.15, letterSpacing: '-0.01em', color: 'var(--foreground)' }}>{sections[pageIdx]?.title}</h2>
               <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
                 {sections[pageIdx]?.minutes ? `~${sections[pageIdx].minutes} min · ` : ''}{page.hasCapture ? 'Read the setup, then save your work.' : 'Take this in before you move on.'}
@@ -393,7 +393,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                   className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold"
                   style={{ color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 12%, transparent)', border: '1px solid color-mix(in oklch, var(--success) 40%, var(--border))' }}
                 >
-                  <CheckCircle2 size={16} /> Section complete
+                  <CheckCircle2 size={16} /> Section viewed
                 </span>
               ) : (
                 <button
@@ -401,7 +401,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                   className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold"
                   style={{ color: 'var(--success)', background: 'transparent', border: '1.5px solid color-mix(in oklch, var(--success) 55%, var(--border))', cursor: 'pointer' }}
                 >
-                  <CheckCircle2 size={16} /> Got it{!isLast ? ' — next section' : ''}
+                  <CheckCircle2 size={16} /> Mark viewed{!isLast ? ' — next section' : ''}
                 </button>
               )}
             </div>
@@ -417,10 +417,10 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
               }}
             >
               <div className="text-sm max-w-sm" style={{ color: 'var(--muted-foreground)' }}>
-                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Saving keeps a draft.</span>{' '}
-                When you&apos;re done, submit so your teacher can review and rate your work.
+                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save each answer, then submit.</span>{' '}
+                Autosave protects your drafts. Use Save answer to record each response, then submit for your teacher’s review.
               </div>
-              <SubmitLessonButton lessonId={lesson.id} complete={allTasksDone} onChange={(st) => setSubmitted(Boolean(st.submittedAt))} />
+              <SubmitLessonButton lessonId={lesson.id} blocked={Object.values(responses).some((v) => v.draft)} complete={allTasksDone} onChange={(st) => setSubmitted(Boolean(st.submittedAt))} />
             </div>
           )}
 
@@ -431,7 +431,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
             const rated = (exp?.calibration ?? []).filter((c) => c.teacher !== null)
             return (
               <div className="mt-4 rounded-2xl border p-5" style={{ borderColor: 'color-mix(in oklch, var(--success) 45%, var(--border))', background: 'color-mix(in oklch, var(--success) 8%, var(--card))' }}>
-                <div className="text-[11px] font-bold uppercase tracking-widest" style={{ color: 'var(--success)' }}>Submitted</div>
+                <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--success)' }}>Submitted</div>
                 <h2 className="lesson-headline mt-0.5" style={{ fontSize: 22, color: 'var(--foreground)' }}>{lesson.title} is in.</h2>
                 <div className="mt-3 grid gap-2 text-sm" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
                   <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Auto-checked</div><div className="text-lg font-bold">{t.autoChecked > 0 ? `${t.autoRight} of ${t.autoChecked} right` : '—'}</div></div>
@@ -467,28 +467,20 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
               <ChevronLeft size={16} /> Back
             </button>
 
-            {/* page dots (mobile-friendly section jump; the rail covers desktop) */}
-            <div className="flex items-center gap-1.5 flex-wrap justify-center lg:hidden" style={{ maxWidth: 220 }}>
-              {pages.map((p, i) => {
-                const active = i === pageIdx
-                const pageDone = sectionDone(i)
-                return (
-                  <button
-                    key={i}
-                    onClick={() => goTo(i)}
-                    aria-label={`Go to section ${i + 1}`}
-                    style={{
-                      width: active ? 22 : 8, height: 8, borderRadius: 999, border: 'none', cursor: 'pointer', padding: 0,
-                      background: active ? 'var(--reward)' : pageDone ? 'var(--primary)' : 'var(--border)',
-                      transition: 'all .15s',
-                    }}
-                  />
-                )
-              })}
-            </div>
+            <label className="lg:hidden min-w-0 flex-1 text-sm">
+              <span className="sr-only">Lesson section</span>
+              <select aria-label="Lesson section" value={pageIdx} onChange={(e) => breakAway(Number(e.target.value))}
+                className="w-full min-h-11 rounded-lg border bg-background px-2">
+                {sections.map((section, i) => <option key={i} value={i} disabled={isLocked(i)}>
+                  {i + 1} of {pageCount}: {section.title}{isLocked(i) ? ' (locked)' : ''}
+                </option>)}
+              </select>
+            </label>
 
             {isLast ? (
-              nav?.next ? (
+              !submitted && !staffView ? (
+                <Link href="/home" className="text-sm underline">Leave without submitting</Link>
+              ) : nav?.next ? (
                 <Link href={`/lessons/${nav.next.slug}`} className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)' }}>
                   Next: {trim(nav.next.title)} <ChevronRight size={16} />
                 </Link>

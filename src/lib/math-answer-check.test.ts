@@ -45,6 +45,28 @@ test('fractions and percentages are the same number', () => {
   is('0.6', '60%', 'match')
 })
 
+test('percent vs proportion — templated keys compute bare numbers', () => {
+  // the 2026-09-02 false-✗ bug: percent items key "125"/"45", students type "125%"
+  is('125%', '125', 'match')
+  is('45%', '45', 'match')
+  is('45 percent', '45', 'match')
+  is('125', '125%', 'match')       // …and the mirror image, key written as a percent
+  is('0.45', '45%', 'match')
+  is('9/20', '45%', 'match')       // fraction of the same free-throw item
+  is('45%', '45% or 0.45', 'match')  // form lists benefit too
+  is('45', '45% or 0.45', 'match')
+  is('37%', '45', 'mismatch')      // a real wrong percent is still wrong
+})
+
+test('factor of 100 without a percent marker is a teacher call, not a ✗ or a ✓', () => {
+  is('0.45', '45', 'unknown')      // could be the other convention — never ✗
+  is('5', '500', 'unknown')        // and never ✓: the false-✓ guard
+  is('500', '5', 'unknown')
+  is('37', '45', 'mismatch')       // plainly wrong stays plainly wrong
+  is('40', '42', 'mismatch')       // near-miss outside tolerance unaffected
+  is('4.5 × 10^5', '4.5 × 10^6', 'mismatch')  // factor of 10 is not factor of 100
+})
+
 test('word multipliers — "7 thousand" means 7000', () => {
   const key = '7,000 | 7000 | 7 thousand | seven thousand | thousands | the thousands place | thousands place'
   for (const s of ['7000', '7,000', '7 thousand', 'seven thousand', 'thousands', 'the thousands place']) is(s, key, 'match')

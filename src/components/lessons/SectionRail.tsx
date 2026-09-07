@@ -16,7 +16,7 @@ type DotState = 'done' | 'current' | 'todo'
 
 function stateFor(index: number, currentIndex: number, done: boolean): DotState {
   if (index === currentIndex) return 'current'
-  if (done || index < currentIndex) return 'done'
+  if (done) return 'done'
   return 'todo'
 }
 

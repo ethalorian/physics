@@ -1,0 +1,41 @@
+const fs = require('node:fs');
+const root=require('node:path').resolve(__dirname, '..') + '/';
+const out=require('node:path').join(require('node:os').tmpdir(), 'physics-save-test-'+process.pid+'.cjs');
+const esbuild=require(root+'node_modules/esbuild');
+const assert=require('node:assert/strict');
+(async()=>{
+ await esbuild.build({entryPoints:[root+'src/components/blocks/useBlockResponses.ts'],bundle:true,platform:'node',format:'cjs',outfile:out,plugins:[{name:'hooks',setup(b){b.onResolve({filter:/^react$/},()=>({path:'hooks',namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},()=>({contents:`exports.useRef=(v)=>({current:v}); exports.useState=(v)=>[v,()=>{}]; exports.useCallback=(f)=>f; exports.useEffect=()=>{};`}))}}]});
+ const {useBlockResponses}=require(out);
+ let storage=new Map(), timers=[], calls=[];
+ global.localStorage={getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)};
+ global.window={setTimeout:f=>(timers.push(f),timers.length),clearTimeout:()=>{}};
+ const local=()=>JSON.parse(storage.get('lesson-drafts:test')??'{}');
+ const tick=()=>new Promise(r=>setImmediate(r));
+ const response=(ok=true,body={})=>({ok,json:async()=>body});
+ let resolveSave;
+ global.fetch=async(url,opts)=>{calls.push({url,body:JSON.parse(opts.body)});return new Promise(r=>resolveSave=r)};
+ const h=useBlockResponses('test');
+ const save=h.save('a','text','original'); await tick();
+ assert.equal(local().a.response,'original','save keeps local answer until acknowledged');
+ h.draft('a','text','newer'); resolveSave(response()); assert.equal(await save,true);
+ assert.equal(local().a.response,'newer','successful older save preserves newer edit');
+ global.fetch=async()=>response(false);
+ assert.equal(await h.save('b','text','failed'),false);assert.equal(local().b.response,'failed','failed explicit save preserved');
+ global.fetch=async()=>response(true); assert.equal(await h.save('b','text','retry'),true);assert.equal(local().b,undefined,'confirmed save clears matching draft');
+ // Draft flush in flight, then a new edit and explicit save: explicit waits.
+ storage=new Map();timers=[];calls=[];
+ const q=useBlockResponses('test');
+ let resolveDraft;
+ global.fetch=async(url,opts)=>{calls.push({url,body:JSON.parse(opts.body)});if(url.endsWith('drafts'))return new Promise(r=>resolveDraft=r);return response(true)};
+ q.draft('a','text','old');timers[0]();await tick();
+ const next=q.save('a','text','new');await tick();assert.equal(calls.length,1,'explicit save waits for draft write');
+ resolveDraft(response(true,{saved:1}));await next;
+ assert.equal(calls[1].body.response,'new');assert.equal(local().a,undefined);
+ // A failed older draft must leave the newest draft available for retry.
+ storage=new Map();timers=[];
+ const f=useBlockResponses('test');
+ global.fetch=async()=>new Promise(r=>resolveDraft=r);
+ f.draft('a','text','old');timers[0]();await tick();f.draft('a','text','latest');resolveDraft(response(false));await tick();
+ assert.equal(local().a.response,'latest');
+ console.log('Passed 8 save durability and request-order assertions.');
+})().catch(e=>{console.error(e);process.exit(1)});

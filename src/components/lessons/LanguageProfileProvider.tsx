@@ -96,7 +96,7 @@ export function LanguageDial() {
           const on = o.id === current
           const disabled = !canGoBelowBase && rank(o.id) < rank(base)
           return (
-            <button key={o.id} type="button" title={o.hint} disabled={disabled}
+            <button key={o.id} aria-pressed={on} type="button" title={o.hint} disabled={disabled}
               onClick={() => setDial(o.id === base ? null : o.id)}
               className="rounded-full px-2.5 py-1 disabled:opacity-40"
               style={{ background: on ? 'var(--primary)' : 'transparent', color: on ? 'var(--primary-foreground)' : 'var(--foreground)', fontWeight: on ? 700 : 500 }}>

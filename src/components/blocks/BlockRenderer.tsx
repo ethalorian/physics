@@ -50,7 +50,7 @@ const C = {
   tint: 'var(--secondary)',
 }
 
-type SaveFn = (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => void
+type SaveFn = (blockId: string, blockType: string, response: unknown, meta?: SaveMeta) => void | Promise<boolean>
 /** Statements for the targets a self-assessment rates (from /api/lessons/experience). */
 type TargetInfo = { slug: string; statement: string }
 const NO_DRAFT: (v: unknown) => void = () => {}
@@ -229,7 +229,7 @@ function SelfAssessment({ b, saved, save, onDraft, targets }: { b: Extract<Conte
         ))}
       </div>
       <div className="flex items-center gap-2 mt-2">
-        <button onClick={() => { if (!complete) return; save(b.id, 'self_assessment', ratings); setSavedFlag(true); setTouched(false) }} disabled={!complete}
+        <button onClick={async () => { if (!complete) return; const ok = await save(b.id, 'self_assessment', ratings); setSavedFlag(ok !== false); if (ok !== false) setTouched(false) }} disabled={!complete}
           className="text-xs rounded-md border px-3 py-1 disabled:opacity-50" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: complete ? 'pointer' : 'not-allowed' }}>
           {savedFlag ? 'Saved ✓' : 'Save my ratings · Guardar'}
         </button>
@@ -363,9 +363,9 @@ function LabNotebook({ b, saved, save, onDraft = NO_DRAFT }: { b: LabNotebookBlo
   const [text, setText] = useState<Record<string, string>>(prev.fields ?? {})
   const [savedFlag, setSavedFlag] = useState(false)
   useDraft(onDraft, Object.values(text).some((t) => t.trim()) ? { strokes: strokesRef.current, fields: text } : undefined)
-  const persist = (strokes: Stroke[], t: Record<string, string>) => {
-    save(b.id, 'lab_notebook', { strokes, fields: t })
-    setSavedFlag(true)
+  const persist = async (strokes: Stroke[], t: Record<string, string>) => {
+    const ok = await save(b.id, 'lab_notebook', { strokes, fields: t })
+    setSavedFlag(ok !== false)
   }
   return (
     <div className="rounded-xl border p-3 space-y-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
@@ -455,7 +455,7 @@ function SketchPad({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentB
       <PaintPad value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} background={background} />
       <div className="flex items-center gap-2 mt-1">
         <button
-          onClick={() => { if (strokes.length === 0) return; save(b.id, 'sketch', { strokes }); setSavedFlag(true) }}
+          onClick={async () => { if (strokes.length === 0) return; const ok = await save(b.id, 'sketch', { strokes }); setSavedFlag(ok !== false) }}
           disabled={strokes.length === 0}
           className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
           style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: strokes.length ? 'pointer' : 'not-allowed' }}
@@ -563,7 +563,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
         </>
       )}
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { if (!canSave) return; save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence }); setSavedFlag(true) }}
+        <button onClick={async () => { if (!canSave) return; const ok = await save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence }); setSavedFlag(ok !== false) }}
           disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
           style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
           {savedFlag ? 'Saved ✓' : 'Save'}
@@ -732,7 +732,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <FigureGraph title={b.title} xLabel={b.xLabel} yLabel={b.yLabel} series={series} />
     }
     case 'concept_exercise':
-      return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onSave={(v) => save(b.id, 'concept_exercise', v)} />
+      return <ConceptExercise chapter={b.chapter} sectionIds={b.sectionIds} value={saved as ConceptValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'concept_exercise', v)} />
     case 'self_assessment':
       return <SelfAssessment b={b} saved={saved} save={save} onDraft={onDraft} targets={targets} />
     case 'reading': {
@@ -782,6 +782,20 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
 
 function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft }: { b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
   const meta = BLOCK_META[b.type]
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
+  const lastAttempt = useRef<Parameters<SaveFn> | null>(null)
+  const busy = useRef(false)
+  const trackedSave: SaveFn = async (...args) => {
+    if (busy.current) return false
+    busy.current = true
+    lastAttempt.current = args
+    setSaveStatus('saving')
+    let ok = false
+    try { ok = (await save(...args)) !== false } catch { /* show retry below */ }
+    busy.current = false
+    setSaveStatus(ok ? 'saved' : 'error')
+    return ok
+  }
   // MC-6 · on a lobby day the self-rating waits for the individual exit ticket
   // (the group got it right ≠ I got it). The hold is a note, never a lost block.
   if (selfRatingHold && (b.type === 'marzano' || b.type === 'self_assessment') && !isBlockComplete(b, saved)) {
@@ -792,13 +806,19 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
     )
     return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture>{held}</BlockShell> : held
   }
-  const body = renderBody(b, saved, save, lessonId, glossary, draft, targets)
+  const body = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets)
   if (body === null) return null
   if (!meta || BARE.has(b.type)) return <>{body}</>
   const capture = isCaptureBlock(b)
   // A draft is shown but is not done — the student still has to Save.
   const done = !isDraft && isBlockComplete(b, saved)
-  return <BlockShell meta={meta} done={done} capture={capture}>{body}</BlockShell>
+  return <BlockShell meta={meta} done={done} capture={capture}>
+    <fieldset disabled={saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
+    {capture && saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-2 text-sm font-semibold">
+      {saveStatus === 'saving' ? 'Saving answer…' : saveStatus === 'error' ? 'Answer not saved. Please retry.' : isDraft ? 'Changes need saving.' : 'Answer saved ✓'}
+      {saveStatus === 'error' && <button type="button" className="ml-2 underline" onClick={() => { if (lastAttempt.current) void trackedSave(...lastAttempt.current) }}>Retry save</button>}
+    </p>}
+  </BlockShell>
 }
 
 // One block crashing must never take down the whole lesson — contain it.
@@ -840,11 +860,13 @@ export default function BlockRenderer({
   // Internal store is the fallback for callers that don't lift response state
   // (e.g. standalone previews). When the viewer passes responses+save down, the
   // header progress bar and the renderer share one source of truth.
-  const internal = useBlockResponses(lessonId)
+  const internal = useBlockResponses(lessonId, !extResponses)
   const responses = extResponses ?? internal.responses
   const save = extSave ?? internal.save
   const draft = extDraft ?? (extResponses ? undefined : internal.draft)
   const hydratedKey = (hydrated ?? internal.loaded) ? 'h' : 'e'
+  if (hydratedKey === 'e' && !extResponses) return <p role="status" className="text-sm">Loading your saved work…</p>
+  if (hydrated === false) return <p role="status" className="text-sm">Loading your saved work…</p>
   return (
     <div className="space-y-4">
       {blocks.map((b) => {

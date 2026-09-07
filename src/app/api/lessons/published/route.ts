@@ -2,7 +2,9 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getStudentLessonWindowStatuses, type LessonWindowStatus } from '@/lib/lesson-windows'
 import { withAuth } from '@/lib/api-auth'
-import { getStudentProgram, getProgramUnitIds } from '@/lib/program'
+import { getStudentProgram, getProgramUnitIds, asProgram, PROGRAM_LABEL, type Program } from '@/lib/program'
+import { filterDocumentForViewer, effectiveTrack } from '@/lib/track-visibility'
+import type { BlockDocument } from '@/data/content-blocks'
 
 /**
  * GET /api/lessons/published
@@ -21,6 +23,9 @@ export const GET = withAuth(async (request, ctx) => {
     const lessonType = searchParams.get('lesson_type')
     const difficulty = searchParams.get('difficulty')
     const search = searchParams.get('search')
+    // A-4: the client names a CLASS; the server resolves which curriculum that
+    // class may see. Never accept a program/track straight off the query string.
+    const courseId = searchParams.get('course_id')
 
     console.log('Fetching lessons for:', ctx.email, 'Role:', userRole, 'Filters:', { unit, lessonType, difficulty, search })
 
@@ -37,6 +42,35 @@ export const GET = withAuth(async (request, ctx) => {
       const program = await getStudentProgram(userId)
       const unitIds = await getProgramUnitIds(program)
       query = query.in('unit_id', unitIds.length > 0 ? unitIds : ['__none__'])
+    }
+
+    // Staff scoping BY CLASS. Without it this endpoint handed every staff
+    // surface all 190 lessons regardless of the class in hand, so the Lobby
+    // launcher would happily point a CPA section at a Project Physics (MVP) day.
+    // Two gates, matching the two grains in track-visibility.ts:
+    //   program (units.program)    -> which curriculum exists for this class at all
+    //   track   (visibility_track) -> the honors/CPA level gate on top of it
+    let classScope: { program: Program; programLabel: string; track: string } | null = null
+    if (courseId && isAdmin) {
+      const { data: course } = await supabaseAdmin
+        .from('courses')
+        .select('program, track')
+        .eq('id', courseId)
+        .maybeSingle()
+
+      // Fail loudly. Silently falling back to the unscoped list is precisely the
+      // bug being fixed -- a filter that quietly stops filtering is worse than none.
+      if (!course) return NextResponse.json({ error: 'Unknown course_id' }, { status: 400 })
+
+      const c = course as { program: string | null; track: string | null }
+      const program = asProgram(c.program)
+      const track = effectiveTrack(c.track) // an untyped class behaves as CPA
+      classScope = { program, programLabel: PROGRAM_LABEL[program], track }
+
+      const unitIds = await getProgramUnitIds(program)
+      query = query.in('unit_id', unitIds.length > 0 ? unitIds : ['__none__'])
+      // Whole-lesson gate: unset (null) is open to everyone; set must match.
+      query = query.or(`visibility_track.is.null,visibility_track.eq.${track}`)
     }
 
     // Apply filters
@@ -209,7 +243,13 @@ export const GET = withAuth(async (request, ctx) => {
         // Set default lesson_type if not present
         lesson_type: lesson.lesson_type || 'markdown',
         // Simulation data will be null if column doesn't exist yet
-        simulation: lesson.simulation || null
+        simulation: lesson.simulation || null,
+        // Block-level track gate (A-4). Asked for through a class, a lesson comes
+        // back as THAT CLASS sees it, so an honors-only block can never become a
+        // CPA section's lobby prompt. Unscoped callers are untouched.
+        content_blocks: classScope && lesson.content_blocks
+          ? filterDocumentForViewer(lesson.content_blocks as BlockDocument, { role: 'teacher', track: classScope.track })
+          : lesson.content_blocks,
       }
     })
 
@@ -219,6 +259,9 @@ export const GET = withAuth(async (request, ctx) => {
       lessons: enhancedLessons || [],
       progress,
       userRole,
-      isAdmin
+      isAdmin,
+      // Null when unscoped; otherwise names the curriculum the list was cut to,
+      // so a caller can SAY which one rather than just showing a shorter list.
+      scope: classScope
     })
 })

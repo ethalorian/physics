@@ -6,6 +6,7 @@ import { decayingAverage } from '@/data/curriculum-types'
 import { FLUENT_THRESHOLD } from '@/lib/math-spine'
 import { pickTargetRung, rungState, type PickKind, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
+import { schoolDayKey, schoolDayKeyFromNumber, schoolDayNumber, schoolDayStart, schoolDayWeekday } from '@/lib/school-day'
 
 // GET /api/math-spine/daily[?user_id=...]
 // The daily-dashboard "to-do": one warm-up problem, chosen by the shared picker
@@ -100,7 +101,9 @@ export const GET = withAuth(async (request, ctx) => {
     translations?: Record<string, string>
   } | null = null
   if (pool.length > 0) {
-    const dayNum = Math.floor(Date.now() / 86_400_000) // days since epoch
+    // Eastern calendar day, not UTC: a UTC day number rolled over at 8pm
+    // local and handed the 8:30pm homework crowd tomorrow's problem.
+    const dayNum = schoolDayNumber()
     const chosen = pool[dayNum % pool.length]
 
     // Shared prompt, varied numbers: a templated item keeps one problem
@@ -162,8 +165,7 @@ export const GET = withAuth(async (request, ctx) => {
   // can shift mid-day after a review — that must not grant a second rated rep).
   let alreadySubmitted = false
   {
-    const dayStart = new Date()
-    dayStart.setHours(0, 0, 0, 0)
+    const dayStart = schoolDayStart()
     const { data: pend } = await supabaseAdmin
       .from('math_warmup_submissions')
       .select('id')
@@ -185,18 +187,22 @@ export const GET = withAuth(async (request, ctx) => {
       .eq('user_id', targetUserId)
       .order('submitted_at', { ascending: false })
       .limit(400)
-    const days = new Set((subs ?? []).map((r) => new Date(r.submitted_at).toDateString()))
+    // Days are ET calendar days, and the walk steps ET day NUMBERS rather
+    // than mutating a local Date, so a DST changeover inside the streak
+    // neither doubles nor skips a day.
+    const days = new Set((subs ?? []).map((r) => schoolDayKey(new Date(r.submitted_at))))
     dayCount = days.size
-    const d = new Date(); d.setHours(0, 0, 0, 0)
+    let dn = schoolDayNumber()
+    const isWeekend = (n: number) => schoolDayWeekday(n) === 0 || schoolDayWeekday(n) === 6
     // Start from today if submitted today, else from the most recent school day.
-    if (!days.has(d.toDateString())) {
-      d.setDate(d.getDate() - 1)
-      while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1)
+    if (!days.has(schoolDayKeyFromNumber(dn))) {
+      dn -= 1
+      while (isWeekend(dn)) dn -= 1
     }
-    while (days.has(d.toDateString())) {
+    while (days.has(schoolDayKeyFromNumber(dn))) {
       streak += 1
-      d.setDate(d.getDate() - 1)
-      while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1)
+      dn -= 1
+      while (isWeekend(dn)) dn -= 1
     }
   }
 

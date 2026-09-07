@@ -61,10 +61,11 @@ export function useSei(sei: SeiScaffold | undefined, opts: { fallbackFrame?: str
 // ---------------------------------------------------------------- parts
 
 export function SeiPrompt({ prompt, l1Text, children }: { prompt: string; l1Text: string | null; children?: ReactNode }) {
+  const { profile } = useLanguageProfile()
   return (
     <div className="mb-2">
       <p className="text-sm" style={{ color: C.indigo }}>{prompt}{children}</p>
-      {l1Text && <p className="text-sm mt-0.5" style={{ color: C.muted }} lang="es">{l1Text}</p>}
+      {l1Text && <p className="text-sm mt-0.5" style={{ color: C.muted }} lang={profile?.homeLang ?? undefined}>{l1Text}</p>}
     </div>
   )
 }
@@ -110,7 +111,7 @@ export function SeiModeSwitch({ state }: { state: SeiState }) {
   return (
     <div className="flex flex-wrap gap-1 mb-2">
       {modes.map((m) => (
-        <button key={m} type="button" onClick={() => setMode(m)} className="text-xs rounded-full border px-2.5 py-1"
+        <button key={m} aria-pressed={mode === m} type="button" onClick={() => setMode(m)} className="text-xs rounded-full border px-2.5 py-1"
           style={{ borderColor: mode === m ? C.primary : C.hairline, background: mode === m ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: C.indigo, fontWeight: mode === m ? 700 : 500 }}>
           {label[m]}
         </button>
@@ -164,7 +165,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   talkFirst?: boolean
   placeholder?: string
   value?: unknown
-  onSave: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }, scaffolds: string[], mode: ResponseMode) => void
+  onSave: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }, scaffolds: string[], mode: ResponseMode) => void | Promise<boolean>
   /** as-you-type draft of the same shape onSave sends (autosave; never evidence) */
   onDraft?: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }) => void
 }) {
@@ -173,6 +174,8 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   const [text, setText] = useState(prior.text ?? '')
   const [strokes, setStrokes] = useState<Stroke[]>(prior.strokes ?? [])
   const [saved, setSaved] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState(false)
   const [touched, setTouched] = useState(false)
   useEffect(() => { if (!touched) { setText(prior.text ?? ''); setStrokes(prior.strokes ?? []) } }, [prior.text, prior.strokes, touched])
   useDraft(onDraft ?? (() => {}), touched ? (state.mode === 'sketch' ? { strokes, mode: 'sketch' as ResponseMode } : { text, mode: state.mode }) : undefined)
@@ -188,15 +191,25 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
       {state.mode === 'sketch' ? (
         <SeiSketchAnswer value={strokes} onChange={(s) => { setStrokes(s); setSaved(false); setTouched(true) }} labelBank={sei?.labelBank} />
       ) : (
-        <textarea value={text} onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }} placeholder={placeholder} rows={4} disabled={gated}
+        <textarea aria-label={prompt} value={text} onChange={(e) => { setText(e.target.value); setSaved(false); setTouched(true) }} placeholder={placeholder} rows={4} disabled={gated}
           className="w-full rounded-md border p-2 text-sm disabled:opacity-60" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />
       )}
       <div className="flex items-center gap-2 mt-1">
-        <button onClick={() => { if (!canSave) return; onSave(state.mode === 'sketch' ? { strokes, mode: 'sketch' } : { text: text.trim(), mode: state.mode }, state.scaffolds, state.mode); setSaved(true); setTouched(false) }}
-          disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
-          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
-          {saved ? 'Saved ✓' : 'Save'}
+        <button type="button" onClick={async () => {
+          if (!canSave || saving) return
+          setSaving(true); setSaveError(false)
+          try {
+            const ok = await onSave(state.mode === 'sketch' ? { strokes, mode: 'sketch' } : { text: text.trim(), mode: state.mode }, state.scaffolds, state.mode)
+            setSaved(ok !== false); setSaveError(ok === false)
+            if (ok !== false) setTouched(false)
+          } catch { setSaveError(true) } finally { setSaving(false) }
+        }} disabled={!canSave || saving} className="text-sm font-bold rounded-lg px-4 py-2.5 disabled:opacity-50"
+          style={{ color: 'var(--primary-foreground)', background: C.primary }}>
+          {saving ? 'Saving…' : saved ? 'Answer saved ✓' : saveError ? 'Retry save' : 'Save answer'}
         </button>
+        <span role="status" className="text-sm" style={{ color: C.muted }}>
+          {saveError ? 'Couldn’t save. Please retry.' : touched && !saved ? 'Changes need saving. Drafts are kept automatically.' : ''}
+        </span>
         {!canSave && !gated && <span className="text-xs" style={{ color: C.muted }}>Write, sketch or say something first.</span>}
       </div>
       <SeiFairnessNote />

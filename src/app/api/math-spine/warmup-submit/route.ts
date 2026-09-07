@@ -3,6 +3,7 @@ import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { checkAnswerWithMode, type SelfCheck } from '@/lib/math-answer-check'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
+import { schoolDayNumber } from '@/lib/school-day'
 import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptions'
 
 // POST /api/math-spine/warmup-submit
@@ -106,10 +107,13 @@ export const POST = withAuth(async (request, ctx) => {
         selfCheck = null
       } else if (itemRow?.template) {
         // Templated item: recompute the per-student key from the same
-        // user+item+day seed the daily route used. A submission straddling
-        // midnight checks yesterday's numbers too, so the verdict can't flip
-        // to a false ✗ at 12:00am.
-        const dayNum = Math.floor(Date.now() / 86_400_000)
+        // user+item+day seed the daily route used. The day is the EASTERN
+        // calendar day (see src/lib/school-day.ts) — it must match the daily
+        // route exactly or every templated verdict is checked against the
+        // wrong numbers. A submission straddling ET midnight checks
+        // yesterday's numbers too, so the verdict can't flip to a false
+        // ✗ at 12:00am.
+        const dayNum = schoolDayNumber()
         for (const dn of [dayNum, dayNum - 1]) {
           try {
             const inst = instantiateTemplate(itemRow.prompt, itemRow.template as ItemTemplate, `${ctx.userId}:${body.spiral_item_id}:${dn}`)

@@ -7,6 +7,7 @@ import { checkAnswerWithMode } from '@/lib/math-answer-check'
 import { pickTargetRung, type RungInput } from '@/lib/math-spine-picker'
 import { instantiateTemplate, type ItemTemplate } from '@/lib/math-item-template'
 import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptions'
+import { schoolDayKey } from '@/lib/school-day'
 
 // Math-spine PRACTICE mode (redesign decisions 7–8): unlimited self-checked
 // reps on the student's current rung. Practice NEVER writes
@@ -21,8 +22,11 @@ import { matchSlip, type Slip, type SlipFeedback } from '@/lib/math-misconceptio
 
 const PRACTICE_DAILY_CAP = 3
 
+// The cap is a per-SCHOOL-DAY cap, so the date key is the Eastern calendar
+// date. A UTC key reset the cap at 8pm local, handing evening students a
+// second full allotment (see src/lib/school-day.ts).
 function todayStamp(): string {
-  return new Date().toISOString().slice(0, 10) // YYYY-MM-DD (UTC)
+  return schoolDayKey() // YYYY-MM-DD in America/New_York
 }
 
 async function currentTargetCompetency(userId: string) {

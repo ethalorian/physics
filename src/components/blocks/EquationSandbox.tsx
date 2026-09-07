@@ -20,10 +20,10 @@ interface EquationSandboxProps {
   variables?: Variable[]
   equationToken?: string
   value?: SandboxValue
-  onChange?: (v: SandboxValue) => void
-  onSave?: (v: SandboxValue) => void
+  onChange?: (v: SandboxValue) => void | Promise<boolean>
+  onSave?: (v: SandboxValue) => void | Promise<boolean>
   /** as-you-type draft (autosave; never evidence) */
-  onDraft?: (v: SandboxValue) => void
+  onDraft?: (v: SandboxValue) => void | Promise<boolean>
   embedded?: boolean
 }
 
@@ -123,7 +123,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
   const insertAt = (i: number, token: string) => commit(lines.map((l, j) => (j === i ? `${l}${l && !l.endsWith(' ') ? ' ' : ''}${token} ` : l)))
   const insert = (token: string) => { const t = focus >= 0 ? focus : lines.length - 1; setFocus(t); insertAt(t, token) }
   const dragToken = (e: RDragEvent, token: string) => e.dataTransfer.setData('text/plain', token)
-  const save = () => { onSave?.(payload(lines)); setSaved(true) }
+  const save = async () => { const ok = await onSave?.(payload(lines)); setSaved(ok !== false) }
   useDraft(onDraft ?? (() => {}), lines.some((l) => l.trim()) ? payload(lines) : undefined)
 
   const onKey = (e: RKeyboardEvent<HTMLInputElement>, i: number) => {

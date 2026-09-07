@@ -44,9 +44,9 @@ interface GewaInteractiveProps {
   solveFor?: string
   equationCategories?: FormulaCategory[]
   value?: GewaValue
-  onSave: (v: GewaValue) => void
+  onSave: (v: GewaValue) => void | Promise<boolean>
   /** as-you-work draft (autosave). When given, the 2 s autosave goes here, not to onSave. */
-  onDraft?: (v: GewaValue) => void
+  onDraft?: (v: GewaValue) => void | Promise<boolean>
 }
 
 // What's being dragged.
@@ -311,7 +311,7 @@ export default function GewaInteractive({
       autoCheck: computeAutoCheck(),
     }
   }
-  const handleSave = () => { onSave(buildValue()); setSaved(true); setAutoSaved(false); check() }
+  const handleSave = async () => { const ok = await onSave(buildValue()); setSaved(ok !== false); setAutoSaved(false); check() }
 
   // Autosave: two quiet seconds after any meaningful change, persist — so a
   // student who never presses Save still hands their teacher the work. With an
@@ -321,7 +321,7 @@ export default function GewaInteractive({
   useEffect(() => {
     if (!mountedRef.current) { mountedRef.current = true; return }
     if (!formulaId && !chips.some((c) => c.sym || c.val)) return
-    const t = setTimeout(() => { if (onDraft) onDraft(buildValue()); else { onSave(buildValue()); setAutoSaved(true) } }, 2000)
+    const t = setTimeout(() => { if (onDraft) onDraft(buildValue()); else { void Promise.resolve(onSave(buildValue())).then((ok) => setAutoSaved(ok !== false)) } }, 2000)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chips, formulaId, eq, subs, answerVal, answerUnit, opHistory])

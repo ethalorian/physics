@@ -26,7 +26,7 @@ export interface ConceptValue {
 
 const C = { ink: 'var(--foreground)', mute: 'var(--muted-foreground)', hair: 'var(--border)', primary: 'var(--primary)', success: 'var(--success)', card: 'var(--card)' }
 
-export default function ConceptExercise({ chapter, sectionIds, value, onSave }: { chapter: number; sectionIds?: string[]; value?: ConceptValue; onSave: (v: ConceptValue) => void }) {
+export default function ConceptExercise({ chapter, sectionIds, value, onSave, onDraft }: { chapter: number; sectionIds?: string[]; value?: ConceptValue; onDraft?: (v: ConceptValue) => void; onSave: (v: ConceptValue) => void | Promise<boolean> }) {
   const [data, setData] = useState<ConceptChapter | null>(null)
   const [loadErr, setLoadErr] = useState<string | null>(null)
   const [numPages, setNumPages] = useState(0)
@@ -55,13 +55,13 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave }: 
   const rightRef = useRef<HTMLDivElement>(null)
   const pageEls = useRef<Map<number, HTMLDivElement>>(new Map())
   const sectionEls = useRef<Map<string, HTMLDivElement>>(new Map())
-  const onSaveRef = useRef(onSave); onSaveRef.current = onSave
+  const onSaveRef = useRef(onDraft); onSaveRef.current = onDraft
   const touched = useRef(false)
 
   // ---- save-and-resume: debounce-save draft answers so work isn't lost ----
   useEffect(() => {
     if (!touched.current || submitted) return
-    const t = setTimeout(() => onSaveRef.current({ answers, submitted: false }), 800)
+    const t = setTimeout(() => onSaveRef.current?.({ answers, submitted: false }), 800)
     return () => clearTimeout(t)
   }, [answers, submitted])
 
@@ -116,8 +116,8 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave }: 
       const j = await res.json()
       if (!res.ok) { setGrading(false); return }
       const sum = { autoCorrect: j.autoCorrect, autoTotal: j.autoTotal, reviewCount: j.reviewCount, answeredCount: j.answeredCount, itemCount: j.itemCount }
-      setResults(j.results); setSummary(sum); setSubmitted(true)
-      onSave({ answers, submitted: true, results: j.results, summary: sum })
+      const ok = await onSave({ answers, submitted: true, results: j.results, summary: sum })
+      if (ok !== false) { setResults(j.results); setSummary(sum); setSubmitted(true) }
     } catch { /* leave un-submitted */ } finally { setGrading(false) }
   }
 

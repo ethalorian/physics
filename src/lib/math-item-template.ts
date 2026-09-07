@@ -14,6 +14,8 @@
  * Pure functions, no IO — unit-testable in isolation.
  */
 
+import { checkAnswer } from './math-answer-check'
+
 export interface TemplateVar {
   min: number
   max: number
@@ -194,10 +196,22 @@ export function instantiateTemplate(
   const rnd = mulberry32(hashString(seed))
   const values: Record<string, number> = {}
   for (const name of names.sort()) values[name] = drawValue(template.vars[name], rnd)
-  const raw = evaluateExpression(template.answer, values)
-  const rounded = roundSig(raw, template.sigFigs ?? 3)
+  const composed = composeItem(prompt, template, values)
+  return { prompt: composed.prompt, answerKey: composed.answerKey, values: composed.values }
+}
+
+/** Prompt + key for one ALREADY-DRAWN set of values (the half of
+ *  instantiateTemplate that the grid walk reuses; also hands back the
+ *  unrounded value so a validator can compare key against exact). */
+function composeItem(
+  prompt: string,
+  template: ItemTemplate,
+  values: Record<string, number>,
+): InstantiatedItem & { exact: number; rounded: number } {
+  const exact = evaluateExpression(template.answer, values)
+  const rounded = roundSig(exact, template.sigFigs ?? 3)
   const answerKey = template.answerUnit ? `${fmt(rounded)} ${template.answerUnit}` : fmt(rounded)
-  return { prompt: fillSlots(prompt, values), answerKey, values }
+  return { prompt: fillSlots(prompt, values), answerKey, values, exact, rounded }
 }
 
 /** Validate an authored template; returns an error message or null if usable. */
@@ -220,4 +234,279 @@ export function validateTemplate(prompt: string, template: ItemTemplate): string
     return e instanceof Error ? `Answer expression: ${e.message}` : 'Answer expression failed.'
   }
   return null
+}
+
+
+// ---------------------------------------------------------------------------
+// Grid validation (2026-09-04 audit).
+//
+// validateTemplate proves ONE seed. A template defines a whole variable grid,
+// so it can pass on that seed and still hand a student an unanswerable item on
+// another roll: key = 0, key equal to a number already printed in the prompt,
+// or a key rounded so coarsely that the checker marks the exact answer wrong.
+// validateTemplateGrid walks the WHOLE grid (or a deterministic even sample of
+// it) and reports what the bank would actually produce.
+//
+// The tolerance question is answered by calling the real checker
+// (math-answer-check.checkAnswer) rather than by copying its constant here —
+// if REL_TOLERANCE ever moves, this validator moves with it.
+// ---------------------------------------------------------------------------
+
+export type TemplateIssueKind =
+  /** the answer expression produced NaN/Infinity or failed to evaluate */
+  | 'non-finite'
+  /** the published key rounds to exactly 0 — nothing to solve for */
+  | 'key-zero'
+  /** the key equals a value already printed in the prompt — typing a given back earns ✓ */
+  | 'key-equals-given'
+  /** the checker would not accept the exact answer against the published key */
+  | 'rounding-outside-tolerance'
+  /** the instantiated prompt still shows a {slot} */
+  | 'unfilled-slot'
+
+export interface TemplateIssueExample {
+  /** the drawn values that produced it */
+  values: Record<string, number>
+  /** the key as it would be published */
+  answerKey: string
+  /** the unrounded value, or null when evaluation failed */
+  exact: number | null
+  /** the instantiated prompt, or null when evaluation failed */
+  prompt: string | null
+  /** one line of human-readable why */
+  detail: string
+}
+
+export interface TemplateIssue {
+  kind: TemplateIssueKind
+  /** how many combinations in the walk hit this kind */
+  count: number
+  example: TemplateIssueExample
+}
+
+export interface GridValidationResult {
+  /** size of the full cartesian product of the variable grid */
+  total: number
+  /** combinations actually evaluated (=== total unless capped) */
+  sampled: number
+  /** true when sampled < total, i.e. the walk was an even sample */
+  truncated: boolean
+  /** the cap in force for this run */
+  cap: number
+  /** no issues and no structural error */
+  ok: boolean
+  /** aggregated by kind: a count and ONE concrete example each */
+  issues: TemplateIssue[]
+  /** structural problem from validateTemplate (authoring UI wording) */
+  error?: string
+}
+
+export interface GridValidationOptions {
+  /** walk at most this many combinations; beyond it, sample evenly (default 20000) */
+  maxCombinations?: number
+  /**
+   * Also require that an answer rounded to this many significant figures is
+   * accepted. OFF by default, because it asks a policy question rather than an
+   * authoring one: a 2-sig-fig answer can sit up to ~5% from the key, which no
+   * 3-sig-fig key can absorb at a 1% tolerance. Turn it on to size that
+   * exposure across the bank.
+   */
+  studentSigFigs?: number
+}
+
+export const DEFAULT_MAX_COMBINATIONS = 20000
+
+const ISSUE_ORDER: TemplateIssueKind[] = [
+  'non-finite',
+  'key-zero',
+  'key-equals-given',
+  'rounding-outside-tolerance',
+  'unfilled-slot',
+]
+
+const SLOT_RE = /\{\s*([a-zA-Z_][a-zA-Z_0-9]*)\s*\}/g
+
+function stepOf(spec: TemplateVar): number {
+  return spec.step && spec.step > 0 ? spec.step : 1
+}
+
+/** How many values a var's grid holds — the same arithmetic drawValue uses,
+ *  so the walk covers exactly the values a student can be dealt. */
+function gridCount(spec: TemplateVar): number {
+  return Math.max(1, Math.floor((spec.max - spec.min) / stepOf(spec) + 1e-9) + 1)
+}
+
+function gridValueAt(spec: TemplateVar, k: number): number {
+  return parseFloat((spec.min + k * stepOf(spec)).toPrecision(12))
+}
+
+/**
+ * Spread a budget of `cap` combinations over the dimensions: start every var at
+ * one value, then repeatedly give the next value to whichever var currently
+ * covers the smallest fraction of its range, while the product still fits.
+ * Deterministic (no Math.random) and balanced, so no var is starved.
+ */
+function allocate(counts: number[], cap: number): number[] {
+  const out = counts.map(() => 1)
+  const product = () => out.reduce((a, b) => a * b, 1)
+  for (;;) {
+    let best = -1
+    let bestRatio = Infinity
+    for (let i = 0; i < counts.length; i++) {
+      if (out[i] >= counts[i]) continue
+      const ratio = out[i] / counts[i]
+      if (ratio < bestRatio) { bestRatio = ratio; best = i }
+    }
+    if (best < 0) return out
+    if ((product() / out[best]) * (out[best] + 1) <= cap) { out[best]++; continue }
+    // the neediest var can't grow — try any other that still fits
+    let grew = false
+    for (let i = 0; i < counts.length; i++) {
+      if (out[i] >= counts[i]) continue
+      if ((product() / out[i]) * (out[i] + 1) <= cap) { out[i]++; grew = true; break }
+    }
+    if (!grew) return out
+  }
+}
+
+/** k evenly spaced indices out of n, endpoints always included (k >= 2). */
+function pickIndices(n: number, k: number): number[] {
+  if (k <= 1) return [0]
+  if (k >= n) return Array.from({ length: n }, (_, i) => i)
+  const out: number[] = []
+  for (let t = 0; t < k; t++) out.push(Math.round((t * (n - 1)) / (k - 1)))
+  return out
+}
+
+/** Significant digits a printed key actually shows. Trailing zeros of an
+ *  integer are ambiguous, so they don't count ("1050" → 3, "0.1" → 1). */
+function significantDigits(text: string): number {
+  const m = /^[-+]?(\d*)(?:\.(\d+))?/.exec(text.trim())
+  if (!m) return 0
+  const frac = m[2] ?? ''
+  let digits = ((m[1] ?? '') + frac).replace(/^0+/, '')
+  if (!frac) digits = digits.replace(/0+$/, '')
+  return digits.length
+}
+
+/** Would the checker accept `student` against the published key? */
+function checkerAccepts(student: string, answerKey: string): boolean {
+  return checkAnswer(student, answerKey) === 'match'
+}
+
+/**
+ * Walk the whole variable grid of a template and report every way it can go
+ * wrong. Aggregated by issue kind — a count plus one concrete example each,
+ * never one row per combination.
+ *
+ * Pure and deterministic: the same template always yields the same result,
+ * including which example is reported.
+ */
+export function validateTemplateGrid(
+  prompt: string,
+  template: ItemTemplate,
+  opts: GridValidationOptions = {},
+): GridValidationResult {
+  const cap = Math.max(1, Math.floor(opts.maxCombinations ?? DEFAULT_MAX_COMBINATIONS))
+  const structural = validateTemplate(prompt, template) ?? undefined
+  const names = Object.keys(template?.vars ?? {}).sort()
+  const bail = (error: string): GridValidationResult => ({
+    total: 0, sampled: 0, truncated: false, cap, ok: false, issues: [], error,
+  })
+  if (names.length === 0) return bail(structural ?? 'Add at least one variable.')
+  for (const name of names) {
+    const v = template.vars[name]
+    if (!v || !Number.isFinite(v.min) || !Number.isFinite(v.max) || v.max < v.min)
+      return bail(structural ?? `Variable "${name}" needs min ≤ max.`)
+    if (v.step !== undefined && !(v.step > 0))
+      return bail(structural ?? `Variable "${name}" step must be > 0.`)
+  }
+  if (!template.answer?.trim()) return bail(structural ?? 'Add an answer expression.')
+
+  // Only slots the prompt actually PRINTS can be typed back by a student.
+  const printed = new Set<string>()
+  for (const m of prompt.matchAll(SLOT_RE)) if (m[1] in template.vars) printed.add(m[1])
+
+  const specs = names.map((n) => template.vars[n])
+  const counts = specs.map(gridCount)
+  const total = counts.reduce((a, b) => a * b, 1)
+  const truncated = !Number.isFinite(total) || total > cap
+  const perVar = truncated ? allocate(counts, cap) : counts
+  const values = specs.map((spec, d) => pickIndices(counts[d], perVar[d]).map((k) => gridValueAt(spec, k)))
+  const sampled = values.reduce((a, v) => a * v.length, 1)
+
+  const found = new Map<TemplateIssueKind, TemplateIssue>()
+  const flag = (kind: TemplateIssueKind, example: TemplateIssueExample) => {
+    const seen = found.get(kind)
+    if (seen) seen.count++
+    else found.set(kind, { kind, count: 1, example })
+  }
+
+  const pos = names.map(() => 0)
+  for (let c = 0; c < sampled; c++) {
+    const drawn: Record<string, number> = {}
+    for (let d = 0; d < names.length; d++) drawn[names[d]] = values[d][pos[d]]
+
+    let item: ReturnType<typeof composeItem> | null = null
+    try {
+      item = composeItem(prompt, template, drawn)
+    } catch (e) {
+      flag('non-finite', {
+        values: drawn, answerKey: '', exact: null, prompt: null,
+        detail: e instanceof Error ? e.message : 'answer expression failed',
+      })
+    }
+
+    if (item) {
+      const base = { values: drawn, answerKey: item.answerKey, exact: item.exact, prompt: item.prompt }
+      if (item.rounded === 0) {
+        flag('key-zero', { ...base, detail: 'the key rounds to 0 — nothing left to solve for' })
+      }
+      for (const name of printed) {
+        if (checkerAccepts(fmt(drawn[name]), item.answerKey)) {
+          flag('key-equals-given', {
+            ...base,
+            detail: `the key matches {${name}} = ${fmt(drawn[name])}, already printed in the prompt`,
+          })
+          break
+        }
+      }
+      // (a) the exact answer judged against the published key
+      if (!checkerAccepts(fmt(item.exact), item.answerKey)) {
+        flag('rounding-outside-tolerance', {
+          ...base,
+          detail: `the exact answer ${fmt(item.exact)} is not accepted against the key ${item.answerKey}`,
+        })
+      } else {
+        // (b) the mirror: a correct answer rounded to the key's own precision,
+        // and (c) — only when asked — to a student's habitual precision.
+        const precisions = [significantDigits(fmt(item.rounded))]
+        if (opts.studentSigFigs && opts.studentSigFigs > 0) precisions.push(Math.floor(opts.studentSigFigs))
+        for (const digits of precisions) {
+          if (digits <= 0) continue
+          const asStudent = fmt(roundSig(item.exact, digits))
+          if (!checkerAccepts(asStudent, item.answerKey)) {
+            flag('rounding-outside-tolerance', {
+              ...base,
+              detail: `an answer rounded to ${digits} sig fig${digits === 1 ? '' : 's'} (${asStudent}) is not accepted against the key ${item.answerKey}`,
+            })
+            break
+          }
+        }
+      }
+      const leftover = item.prompt.match(SLOT_RE)
+      if (leftover) {
+        flag('unfilled-slot', { ...base, detail: `the prompt still shows ${leftover[0]}` })
+      }
+    }
+
+    // odometer
+    for (let d = names.length - 1; d >= 0; d--) {
+      if (++pos[d] < values[d].length) break
+      pos[d] = 0
+    }
+  }
+
+  const issues = ISSUE_ORDER.map((k) => found.get(k)).filter((i): i is TemplateIssue => !!i)
+  return { total, sampled, truncated, cap, ok: issues.length === 0 && !structural, issues, error: structural }
 }

@@ -90,6 +90,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   const [lessons, setLessons] = useState<Lesson[]>(initialLessons)
   const [progress, setProgress] = useState<Record<string, number>>(initialProgress)
   const [loading, setLoading] = useState(!initialLessons.length)
+  const [loadError, setLoadError] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterUnit, setFilterUnit] = useState('all')
   const [filterType, setFilterType] = useState('all')
@@ -105,6 +106,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
   const fetchLessons = async () => {
     try {
       setLoading(true)
+      setLoadError(false)
       const params = new URLSearchParams()
       if (filterUnit !== 'all') params.append('unit', filterUnit)
       if (filterType !== 'all') params.append('lesson_type', filterType)
@@ -119,7 +121,7 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
       setProgress(data.progress || {})
     } catch (error) {
       console.error('Error fetching lessons:', error)
-      setLessons([])
+      setLoadError(true)
     } finally {
       setLoading(false)
     }
@@ -282,6 +284,9 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
         </CardContent>
       </Card>
 
+      {loadError && <div role="alert" className="rounded-xl border p-4">
+        Couldn’t load lessons. <Button variant="outline" onClick={fetchLessons}>Retry</Button>
+      </div>}
       {/* Lessons by Unit */}
       <div className="space-y-8">
         {Object.keys(lessonsByUnit).sort().map(unitId => (
@@ -309,11 +314,11 @@ export default function LessonBrowser({ initialLessons = [], initialProgress = {
       </div>
 
       {/* No Results */}
-      {filteredLessons.length === 0 && (
+      {!loadError && filteredLessons.length === 0 && (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <Filter className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p>No lessons match your filters.</p>
+            <p>{searchTerm || filterUnit !== 'all' || filterType !== 'all' || filterDifficulty !== 'all' ? 'No lessons match your filters.' : 'No lessons are available yet.'}</p>
             <Button 
               variant="link" 
               onClick={() => {

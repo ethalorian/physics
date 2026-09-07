@@ -18,6 +18,9 @@
     "sim:render:update": "node scripts/sim-render/render.mjs update",
     "sim:check": "node scripts/sim-render/render.mjs check",
     "test:answer-check": "tsx --test src/lib/math-answer-check.test.ts",
+    "test:item-template": "tsx --test src/lib/math-item-template.test.ts",
+    "validate:templates": "tsx scripts/validate-math-templates.ts",
+    "test:school-day": "tsx --test src/lib/school-day.test.ts",
     "textbook:upload": "tsx scripts/upload-textbook.ts"
   },
   "dependencies": {

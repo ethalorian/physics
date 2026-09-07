@@ -54,6 +54,8 @@ export default function LobbyLauncher() {
   const [canSeeAll, setCanSeeAll] = useState(false)
   const [lessons, setLessons] = useState<Lesson[]>([])
   const [lessonId, setLessonId] = useState('')
+  // Which curriculum the lesson list was cut to -- named by the server, not guessed here.
+  const [lessonScope, setLessonScope] = useState<{ programLabel: string; track: string } | null>(null)
   const [choice, setChoice] = useState<string>('')
   const [mode, setMode] = useState('near_peer')
   const [size, setSize] = useState(4)
@@ -88,12 +90,24 @@ export default function LobbyLauncher() {
     }).catch(() => {})
   }, [open, showAll])
 
+  // The lesson list follows the CLASS, not the whole library: a CPA section must
+  // never be offered a Project Physics (MVP) day. We send the course id and let
+  // the server resolve program + track (A-4) -- if the client asserted its own
+  // program, any client could ask for any curriculum.
   useEffect(() => {
     if (!open) return
-    fetch('/api/lessons/published?limit=200').then((r) => (r.ok ? r.json() : { lessons: [] })).then((d: { lessons?: Lesson[] }) => {
-      setLessons((d.lessons ?? []).slice().sort((a, b) => (a.unit ?? '').localeCompare(b.unit ?? '') || (a.lesson_number ?? 0) - (b.lesson_number ?? 0)))
-    }).catch(() => {})
-  }, [open])
+    if (!courseId) { setLessons([]); setLessonScope(null); return }
+    fetch(`/api/lessons/published?course_id=${encodeURIComponent(courseId)}`)
+      .then((r) => (r.ok ? r.json() : { lessons: [] }))
+      .then((d: { lessons?: Lesson[]; scope?: { programLabel: string; track: string } | null }) => {
+        const ls = (d.lessons ?? []).slice().sort((a, b) => (a.unit ?? '').localeCompare(b.unit ?? '') || (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
+        setLessons(ls)
+        setLessonScope(d.scope ?? null)
+        // Switching class drops a lesson the new class's curriculum doesn't contain,
+        // rather than leaving a stale pick that would launch the wrong day.
+        setLessonId((cur) => (cur && ls.some((l) => l.id === cur) ? cur : ''))
+      }).catch(() => {})
+  }, [open, courseId])
 
   const lesson = lessons.find((l) => l.id === lessonId) ?? null
   const day = lesson?.lesson_number ?? null
@@ -194,11 +208,23 @@ export default function LobbyLauncher() {
           )}
         </div>
         <label className="text-sm">
-          <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>Lesson · day</div>
+          <div className="text-xs mb-1 flex items-baseline justify-between gap-2" style={{ color: 'var(--muted-foreground)' }}>
+            <span>Lesson · day</span>
+            {lessonScope && (
+              <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--primary)' }}>
+                {lessonScope.programLabel} · {lessonScope.track} · {lessons.length}
+              </span>
+            )}
+          </div>
           <select value={lessonId} onChange={(e) => setLessonId(e.target.value)} className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={field}>
             <option value="">— pick a lesson —</option>
             {lessons.map((l) => <option key={l.id} value={l.id}>{l.unit ? `${l.unit.replace(/^Unit\s*(\d+).*$/i, 'U$1')} · ` : ''}{l.lesson_number ? `Day ${l.lesson_number} · ` : ''}{l.title}</option>)}
           </select>
+          {courseId && lessons.length === 0 && (
+            <div className="mt-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
+              No published lessons in this class&rsquo;s curriculum yet.
+            </div>
+          )}
         </label>
 
         <div className="text-sm">
