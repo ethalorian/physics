@@ -7,7 +7,7 @@ const mocks={
  '@/lib/api-auth':`export const withRole=(_roles,handler)=>handler;export const withEnrolledStudent=handler=>handler;`,
  '@/lib/supabase':`export const supabaseAdmin={from:(table)=>globalThis.db(table),rpc:(name,args)=>globalThis.rpc(name,args)}`,
 };
-const build=async(file,name,extra={})=>{const all={...mocks,...extra};await esbuild.build({entryPoints:[path.join(repo,file)],bundle:true,platform:'node',format:'cjs',outfile:path.join(out,name),packages:'external',plugins:[{name:'mocks',setup(b){b.onResolve({filter:/^(next\/server|@\/lib\/(api-auth|supabase|presentation-tools-server))$/},a=>a.path in all?{path:a.path,namespace:'mock'}:undefined);b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:all[a.path],loader:'js'}))}}]});return require(path.join(out,name))};
+const build=async(file,name,extra={})=>{const all={...mocks,...extra};await esbuild.build({entryPoints:[path.join(repo,file)],bundle:true,platform:'node',format:'cjs',outfile:path.join(out,name),packages:'external',plugins:[{name:'mocks',setup(b){b.onResolve({filter:/^(next\/server|@\/lib\/(api-auth|supabase|presentation-tools-server|present-server))$/},a=>a.path in all?{path:a.path,namespace:'mock'}:undefined);b.onLoad({filter:/.*/,namespace:'mock'},a=>({contents:all[a.path],loader:'js'}))}}]});return require(path.join(out,name))};
 const server=await build('src/lib/presentation-tools-server.ts','server.cjs');
 let anonymous=true,calls=[];
 const pulse={id:'p',kind:'readiness',status:'open',created_at:''};
@@ -37,5 +37,12 @@ result=await respond.POST(request({action:'pulse',session_id:'s',pulse_id:'p',ch
 global.allowed=true;global.rpc=async(name,args)=>{rpcArgs=args;return {error:null}};
 result=await respond.POST(request({action:'pulse',session_id:'s',pulse_id:'p',choice:0,user_id:'spoofed'}),{userId:'a'});assert.equal(result.status,200);assert.equal(rpcArgs.p_user,'a');
 global.rpc=async()=>({error:{message:'closed'}});result=await respond.POST(request({action:'pulse',session_id:'s',pulse_id:'p',choice:0}),{userId:'a'});assert.equal(result.status,409);
+const sessions=await build('src/app/api/present/sessions/route.ts','sessions.cjs',{'@/lib/present-server':'export const classLesson=async()=>null;export const resolveClassLesson=async()=>({ok:false});'});
+let filters=[];
+global.db=table=>{assert.equal(table,'present_sessions');const chain=new Proxy({}, {get:(_,key)=>key==='then'?(resolve,reject)=>Promise.resolve({data:[session]}).then(resolve,reject):(...args)=>{filters.push([key,...args]);return chain}});return chain};
+result=await sessions.GET(new Request('http://test/api/present/sessions?active=1'),ctx);
+assert.equal(result.status,200);assert.equal(result.body.sessions[0].id,'s');
+assert.ok(filters.some(f=>f[0]==='eq'&&f[1]==='teacher_id'&&f[2]==='teacher'),'Active discovery stays scoped to the authenticated teacher');
+assert.ok(filters.some(f=>f[0]==='eq'&&f[1]==='status'&&f[2]==='live'),'Ended sessions are excluded');
 console.log('PASS actual server/API modules: anonymous aggregate-only queue, named help/missing queue, display privacy, foreign-session/student rejection, invalid pulse kinds, identity from authentication, late response rejection.');
 })().catch(e=>{console.error(e);process.exitCode=1});

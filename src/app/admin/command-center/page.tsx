@@ -26,6 +26,9 @@ export default function CommandCenterPage() {
   const staff = role === 'admin' || role === 'teacher'
   const [courses, setCourses] = useState<Course[]>([])
   const [courseId, setCourseId] = useState('')
+  const [activeSessions, setActiveSessions] = useState<{ id: string; lesson_id: string; course_id: string; current_slide: number }[]>([])
+  const requestedLesson = useRef('')
+  const [attachVersion, setAttachVersion] = useState(0)
   const [history, setHistory] = useState<{ id: string; created_at: string; lesson_id: string }[]>([])
   const [lessons, setLessons] = useState<LessonChoice[]>([])
   const [lessonId, setLessonId] = useState('')
@@ -64,9 +67,19 @@ export default function CommandCenterPage() {
     return () => controller.abort()
   }, [staff, retry])
   useEffect(() => {
+    if (!staff || live) return
+    const controller = new AbortController()
+    const refresh = () => commandRequest<{ sessions: typeof activeSessions }>('/api/present/sessions?active=1', { signal: controller.signal })
+      .then(d => { if (!controller.signal.aborted) setActiveSessions(d.sessions) })
+      .catch(e => { if (!controller.signal.aborted) setError(`Could not find live presentations. ${e.message}`) })
+    void refresh()
+    const timer = setInterval(refresh, 5000)
+    return () => { controller.abort(); clearInterval(timer) }
+  }, [staff, live, retry])
+  useEffect(() => {
     if (!courseId) return
     const controller = new AbortController()
-    setLessons([]); setLessonId(''); setPresentation(null); setLoading(true)
+    setLessons([]); setLessonId(requestedLesson.current); requestedLesson.current = ''; setPresentation(null); setLoading(true)
     commandRequest<{ lessons: LessonChoice[] }>(`/api/lessons/published?course_id=${encodeURIComponent(courseId)}`, { signal: controller.signal }).then(d => { if (!controller.signal.aborted) setLessons(d.lessons) }).catch(e => { if (!controller.signal.aborted) setError(e.message) }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
   }, [courseId, retry])
@@ -82,7 +95,7 @@ export default function CommandCenterPage() {
     setLoading(true); setError(''); setPresentation(null)
     commandRequest<PresentationData>(`/api/present/sessions?lesson_id=${encodeURIComponent(lessonId)}&course_id=${encodeURIComponent(courseId)}`, { signal: controller.signal }).then(d => { if (!controller.signal.aborted) setPresentation(d) }).catch(e => { if (!controller.signal.aborted) setError(e.message) }).finally(() => { if (!controller.signal.aborted) setLoading(false) })
     return () => controller.abort()
-  }, [courseId, lessonId])
+  }, [courseId, lessonId, attachVersion])
   useEffect(() => {
     if (!presentation?.lesson) { setSlides([]); return }
     const controller = new AbortController()
@@ -118,6 +131,7 @@ export default function CommandCenterPage() {
     {(error || connectionError) && <div role="alert" className="rounded-xl border border-destructive p-3 text-destructive">{error || connectionError}{!live && <Button className="ml-2 min-h-12" variant="outline" onClick={() => setRetry(n => n + 1)}>Reload</Button>}</div>}
     {teaching.error && <p role="alert" className="text-destructive">{teaching.error}</p>}
     {notice && <p role="status" className="break-words">{notice}</p>}
+    {!live && activeSessions.length > 0 && <Card className="gap-3 p-4"><h2 className="text-title-2">Presentations already running</h2><p className="text-caption text-muted-foreground">Take control of the session you started on your Mac. Keep its presentation page and projector window open.</p>{activeSessions.map(s => <div key={s.id} className="flex flex-wrap items-center justify-between gap-3"><span>{courses.find(c => c.id === s.course_id)?.name ?? 'Live presentation'} · {lessons.find(l => l.id === s.lesson_id)?.title ?? 'Presentation'} · Slide {s.current_slide + 1}</span><Button className="min-h-12" disabled={locked} onClick={() => { if (courseId !== s.course_id) { requestedLesson.current = s.lesson_id; setCourseId(s.course_id) } else setLessonId(s.lesson_id); setAttachVersion(n => n + 1) }}>Control this presentation</Button></div>)}</Card>}
     <Card className="gap-3 p-4"><fieldset disabled={locked || Boolean(presentation?.session)} className="grid min-w-0 gap-3 sm:grid-cols-2"><label className="min-w-0 text-caption">Class<select aria-label="Class" className={fieldClass} value={courseId} onChange={e => setCourseId(e.target.value)}><option value="">Choose class</option>{courses.map(c => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}</select></label><label className="min-w-0 text-caption">Lesson<select aria-label="Lesson" className={fieldClass} value={lessonId} onChange={e => setLessonId(e.target.value)}><option value="">Choose lesson</option>{lessons.map(l => <option key={l.id} value={l.id}>{l.title}</option>)}</select></label></fieldset>
       {!presentation?.session ? <><Button className="min-h-14" disabled={!courseId || !lessonId || locked || !presentation} onClick={start}>{loading ? 'Checking presentation…' : starting ? 'Starting…' : 'Start presentation'}</Button><p className="text-caption text-muted-foreground">An existing live presentation for this lesson and class reconnects automatically.</p></> : <div className="flex flex-wrap items-center gap-2"><span className="mr-auto text-caption">{live ? 'Live session connected' : state?.session.status === 'ended' ? 'Session ended' : 'Connecting…'}</span><Button className="min-h-12" variant="outline" onClick={copyLink}>Copy projector link</Button><Button asChild className="min-h-12" variant="outline"><Link href={projectorPath} target="_blank">Open projector connection</Link></Button></div>}
     </Card>

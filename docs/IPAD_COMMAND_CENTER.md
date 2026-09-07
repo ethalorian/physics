@@ -51,3 +51,16 @@ The new tables are RLS-enabled and accessible only through the service role; API
 - `node scripts/test-presentation-tools-browser.cjs`: separate fixture teacher, student, and projector contexts, including all six tools and the original live workflow. Set PLAYWRIGHT_PATH to a Playwright installation when outside the bundled runtime.
 
 Apply the migration before deploying the application changes. Local tests do not apply it to production or create real student records.
+
+### Start on a Mac, continue on an iPad
+
+1. On the Mac, open the lesson's Present controls, choose the class, click Go live, then Open deck (or Open slides).
+2. Keep the lesson page and projector window open on the Mac.
+3. Sign in to the same teaching account on the iPad and open Command Center from the site navigation.
+4. Under Presentations already running, tap Control this presentation. The same session and slide are preserved; no new deck is opened.
+
+The laptop panel and projector keyboard arrows send commands through the shared session. Slides, blackout, polls, lobbies, timers, and pulse checks follow the iPad.
+
+The classroom_command_tools migration was applied to the PhysicsAPP production database on September 7, 2026 to resolve missing-table server errors. All six tables were verified with RLS enabled, service-role access, and no anonymous read access.
+
+Run the laptop handoff browser regression with `LAPTOP_HANDOFF=1 node scripts/test-presentation-tools-browser.cjs`. It starts the legacy laptop presenter, joins from a separate iPad browser context, verifies the same session/window, and exercises the full teaching-tools flow.

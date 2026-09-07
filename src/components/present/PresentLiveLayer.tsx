@@ -16,11 +16,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MonitorPlay, X, ChevronLeft, ChevronRight, Moon, Lock, Unlock, Eye, Timer, Radio, Square, BarChart3, StickyNote } from 'lucide-react'
+import ProjectorConnection from '@/components/present/ProjectorConnection'
+import { useCommandSession } from '@/components/present/useCommandSession'
 import { paginateBlocks, type BlockDocument, type ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
 import { buildSections, type LessonSection } from '@/components/lessons/lesson-sections'
 import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
-import { watchDeck, deckNext, deckPrev, deckGo, deckBlackout, deckPresenting, sectionForSlideProportional, type DeckSnapshot } from '@/lib/present-bridge'
+import { watchDeck, deckPresenting, sectionForSlideProportional, type DeckSnapshot } from '@/lib/present-bridge'
 import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
 
 type Session = {
@@ -59,6 +61,10 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   const [courses, setCourses] = useState<Course[]>([])
   const [courseId, setCourseId] = useState<string>('')
   const [session, setSession] = useState<Session | null>(null)
+  const remote = useCommandSession(session?.id ?? null)
+  useEffect(() => {
+    if (remote.state) setSession(remote.state.session)
+  }, [remote.state])
   const [snap, setSnap] = useState<DeckSnapshot | null>(null)
   const [tally, setTally] = useState<Tally | null>(null)
   const [deckOpen, setDeckOpen] = useState(false)
@@ -77,19 +83,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
     fetch(`/api/present/sessions?lesson_id=${lessonId}`).then((r) => (r.ok ? r.json() : { session: null })).then((d: { session: Session | null; deck?: DeckBlock | null; lesson?: { content_blocks: BlockDocument }; answerKeys?: Record<string, string> }) => { if (d.session && d.lesson) { setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {}); setCourseId(d.session.course_id ?? '') } }).catch(() => {})
   }, [open, lessonId])
 
-  const patch = useCallback(async (body: Record<string, unknown>) => {
-    if (!session) return false
-    try {
-      const r = await fetch(`/api/present/sessions/${session.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      const d = await r.json() as { session?: Session; error?: string }
-      if (!r.ok || !d.session) throw new Error(d.error ?? 'Could not update the presentation. Please retry.')
-      setSession(d.session); setError(null)
-      return true
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Connection lost. Please retry the control.')
-      return false
-    }
-  }, [session])
+  const patch = remote.patch
 
   const start = async () => {
     if (!courseId || startPending.current) return
@@ -98,7 +92,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
       const r = await fetch('/api/present/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lesson_id: lessonId, course_id: courseId }) })
       const d = await r.json() as { session?: Session; deck?: DeckBlock | null; lesson?: { content_blocks: BlockDocument }; answerKeys?: Record<string, string>; error?: string }
       if (!r.ok || !d.session || !d.lesson) throw new Error(d.error ?? 'Could not start the presentation. Please retry.')
-      setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {}); lastPushed.current = -1
+      setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {})
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Could not connect. Please retry.')
     } finally { startPending.current = false; setStarting(false) }
@@ -106,8 +100,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   const end = async () => {
     const ended = await patch({ status: 'ended', poll_block_id: null, blackout: false, timer_seconds: null })
     if (!ended) return
-    deckBlackout(deckWin.current, false)
-    setSession(null); setTally(null)
+    setTally(null)
   }
 
   // P-2 · the deck window. Auto-generated deck when the lesson has no deck block (P-1).
@@ -118,9 +111,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
     setPopupBlocked(!deckWin.current)
     window.setTimeout(() => deckPresenting(deckWin.current, true), 1500)
   }
-  // Watch the deck; push slide → section to the session (P-4) and the preview.
+  // Watch the applied deck state for speaker notes and the local lesson preview.
   const sectionCount = sections.length
-  const lastPushed = useRef<number>(-1)
   useEffect(() => {
     if (!deckOpen) return
     const stop = watchDeck(deckWin.current, (s) => {
@@ -130,10 +122,6 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
       if (section >= 0) {
         const original = sectionIndexForAnchor(initialPages, sectionAnchor(pages[section]))
         if (original >= 0) onSectionChange?.(original)
-      }
-      if (lastPushed.current !== s.index) {
-        lastPushed.current = s.index
-        void patch({ current_slide: s.index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
       }
     })
     const closed = window.setInterval(() => { if (!deckWin.current || deckWin.current.closed) { setDeckOpen(false); setSnap(null) } }, 1000)
@@ -161,9 +149,15 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
     return () => { active = false; window.clearInterval(id) }
   }, [session?.id, session?.poll_block_id])
 
+  const go = useCallback((index: number) => {
+    if (!snap || index < 0 || index >= snap.total) return
+    const anchor = snap.slides[index]?.anchor
+    const section = anchor ? sectionIndexForAnchor(pages, anchor) : deck?.slideMap?.length ? sectionForSlideProportional(index, snap.total, sectionCount, deck.slideMap) : -1
+    void patch({ current_slide: index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
+  }, [snap, pages, deck, sectionCount, patch])
+
   const toggleBlackout = useCallback(() => {
     const on = !(session?.blackout ?? false)
-    deckBlackout(deckWin.current, on)
     void patch({ blackout: on })
   }, [session?.blackout, patch])
 
@@ -174,8 +168,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
       const t = e.target as HTMLElement | null
       if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return
       if (e.metaKey || e.ctrlKey || e.altKey) return
-      if (e.key === 'ArrowRight') { deckNext(deckWin.current); e.preventDefault() }
-      else if (e.key === 'ArrowLeft') { deckPrev(deckWin.current); e.preventDefault() }
+      if (e.key === 'ArrowRight') { go((session?.current_slide ?? 0) + 1); e.preventDefault() }
+      else if (e.key === 'ArrowLeft') { go((session?.current_slide ?? 0) - 1); e.preventDefault() }
       else if (e.key === 'b' || e.key === 'B') { toggleBlackout(); e.preventDefault() }
       else if ((e.key === 'l' || e.key === 'L') && session?.poll_block_id) { void patch({ poll_locked: !session.poll_locked }); e.preventDefault() }
       else if ((e.key === 'r' || e.key === 'R') && session?.poll_block_id) { void patch({ poll_revealed: !session.poll_revealed }); e.preventDefault() }
@@ -183,14 +177,15 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [open, session, patch, toggleBlackout])
+  }, [open, session, patch, toggleBlackout, go])
 
-  const live = Boolean(session)
+  const live = Boolean(session && remote.state?.session.status !== 'ended')
   const total = tally?.enrolled ?? 0
   const maxCount = Math.max(1, ...Object.values(tally?.tally ?? {}))
 
   return (
     <>
+      {session && <ProjectorConnection key={session.id} sessionId={session.id} existingWindow={deckOpen ? deckWin.current : null} />}
       <button type="button" onClick={() => setOpen((o) => !o)} title="Present (projector controls)"
         className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold"
         style={{ border: `1px solid ${live ? 'var(--reward)' : 'var(--border)'}`, background: live ? 'color-mix(in oklch, var(--reward) 18%, var(--card))' : 'var(--card)', color: live ? 'var(--reward-foreground)' : 'var(--primary)', minHeight: 28 }}>
@@ -240,21 +235,23 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
               </div>
             )}
 
+            {live && <p className="text-xs">On your iPad, sign in to the same account and open the <a className="underline" href="/admin/command-center" target="_blank" rel="noreferrer">Command Center</a>. Choose “Control this presentation.” Keep this laptop page and deck open.</p>}
+            {remote.error && <p role="alert" className="text-destructive text-xs">{remote.error}</p>}
             {/* Slide + section */}
             {live && (
               <div className="rounded-xl p-3" style={{ border: '1px solid var(--border)' }}>
                 <div className="flex items-center gap-2">
-                  <button type="button" onClick={() => deckPrev(deckWin.current)} disabled={!deckOpen} style={btn()} aria-label="Previous slide"><ChevronLeft size={16} /></button>
+                  <button type="button" onClick={() => go((session?.current_slide ?? 0) - 1)} disabled={!deckOpen || !snap || remote.busy} style={btn()} aria-label="Previous slide"><ChevronLeft size={16} /></button>
                   <div className="flex-1 min-w-0 text-center">
                     <div className="text-sm font-semibold truncate">{snap ? `Slide ${snap.index + 1} of ${snap.total}` : deckOpen ? 'Loading slides…' : 'Slides not open'}</div>
                     <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{snap?.slides[snap.index]?.label || (sections[currentSection]?.title ?? '')}</div>
                   </div>
-                  <button type="button" onClick={() => deckNext(deckWin.current)} disabled={!deckOpen} style={btn()} aria-label="Next slide"><ChevronRight size={16} /></button>
+                  <button type="button" onClick={() => go((session?.current_slide ?? 0) + 1)} disabled={!deckOpen || !snap || remote.busy} style={btn()} aria-label="Next slide"><ChevronRight size={16} /></button>
                 </div>
                 <div className="mt-2 text-[11px] flex items-center justify-between" style={{ color: 'var(--muted-foreground)' }}>
                   <span>Students follow → <strong style={{ color: 'var(--foreground)' }}>Section {currentSection + 1}</strong> · {sections[currentSection]?.title}</span>
                   {snap && snap.total > 1 && (
-                    <select value={snap.index} onChange={(e) => deckGo(deckWin.current, Number(e.target.value))} className="text-[11px] rounded px-1" style={{ border: '1px solid var(--border)', background: 'var(--background)' }} aria-label="Jump to slide">
+                    <select value={snap.index} onChange={(e) => go(Number(e.target.value))} className="text-[11px] rounded px-1" style={{ border: '1px solid var(--border)', background: 'var(--background)' }} aria-label="Jump to slide">
                       {snap.slides.map((s, i) => <option key={i} value={i}>{i + 1}. {s.label || `Slide ${i + 1}`}</option>)}
                     </select>
                   )}

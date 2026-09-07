@@ -4,17 +4,18 @@ import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
 import MathMarkdown from '@/components/MathMarkdown'
 import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
-import { deckGo, deckPresenting, readDeck } from '@/lib/present-bridge'
+import { deckGo, deckPresenting, readDeck, sectionForSlide } from '@/lib/present-bridge'
 import { openPresenterWindow } from '@/lib/present-deck'
 import { commandRequest, commandQuestion, type CommandLesson } from '@/lib/classroom-command'
-import type { DeckBlock } from '@/data/content-blocks'
+import { paginateBlocks, type DeckBlock } from '@/data/content-blocks'
+import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 import { useTeachingTools } from './useTeachingTools'
 import { projectorSignature, PULSE_OPTIONS } from '@/lib/presentation-tools'
 import { useCommandSession } from './useCommandSession'
 
 /** Run on the projector COMPUTER. The iPad writes session state; this bridge drives the second window. */
-export default function ProjectorConnection({ sessionId }: { sessionId: string }) {
-  const { state, error } = useCommandSession(sessionId)
+export default function ProjectorConnection({ sessionId, existingWindow }: { sessionId: string; existingWindow?: Window | null }) {
+  const { state, error, patch } = useCommandSession(sessionId)
   const teaching = useTeachingTools(sessionId, true)
   const teachingRef = useRef(teaching.state)
   teachingRef.current = teaching.state
@@ -25,6 +26,11 @@ export default function ProjectorConnection({ sessionId }: { sessionId: string }
   const [portal, setPortal] = useState<HTMLElement | null>(null)
   const [origin, setOrigin] = useState('')
   const deckWindow = useRef<Window | null>(null)
+  useEffect(() => {
+    if (existingWindow === undefined) return
+    deckWindow.current = existingWindow
+    setConnected(Boolean(existingWindow)); setPortal(null)
+  }, [existingWindow])
   const stateRef = useRef(state)
   stateRef.current = state
   const left = useTimerLeft(state?.session.timer_ends_at)
@@ -48,6 +54,22 @@ export default function ProjectorConnection({ sessionId }: { sessionId: string }
   }
   useEffect(() => {
     if (!connected) return
+    let keyboardDocument: Document | null = null
+    const onKey = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey || !documentData) return
+      const live = stateRef.current
+      const snapshot = readDeck(deckWindow.current)
+      if (!live || live.session.status !== 'live' || !snapshot) return
+      if (!['ArrowRight', 'ArrowLeft', 'b', 'B'].includes(event.key)) return
+      event.preventDefault(); event.stopImmediatePropagation()
+      if (event.key.toLowerCase() === 'b') { void patch({ blackout: !live.session.blackout }); return }
+      const index = live.session.current_slide + (event.key === 'ArrowRight' ? 1 : -1)
+      if (index < 0 || index >= snapshot.total) return
+      const pages = paginateBlocks(documentData.lesson.content_blocks.blocks)
+      const anchor = snapshot.slides[index]?.anchor
+      const section = anchor ? sectionIndexForAnchor(pages, anchor) : documentData.deck?.slideMap?.length ? sectionForSlide(index, pages.length, documentData.deck.slideMap) : -1
+      void patch({ current_slide: index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
+    }
     const tick = () => {
       const win = deckWindow.current
       if (!win || win.closed) { setConnected(false); setPortal(null); return }
@@ -57,14 +79,19 @@ export default function ProjectorConnection({ sessionId }: { sessionId: string }
       deckPresenting(win, true)
       if (snap.index !== live.session.current_slide) deckGo(win, live.session.current_slide)
       try {
+        if (keyboardDocument !== win.document) {
+          keyboardDocument?.removeEventListener('keydown', onKey, true)
+          keyboardDocument = win.document
+          keyboardDocument.addEventListener('keydown', onKey, true)
+        }
         let host = win.document.getElementById('classroom-command-overlay')
         if (!host) { host = win.document.createElement('div'); host.id = 'classroom-command-overlay'; win.document.body.appendChild(host) }
         setPortal(old => old === host ? old : host)
       } catch { setLoadError('The projector deck must be hosted on this site.') }
     }
     tick(); const timer = setInterval(tick, 300)
-    return () => clearInterval(timer)
-  }, [connected])
+    return () => { clearInterval(timer); keyboardDocument?.removeEventListener('keydown', onKey, true) }
+  }, [connected, documentData, patch])
   useEffect(() => () => { try { deckWindow.current?.document.getElementById('classroom-command-overlay')?.remove() } catch { /* window closed */ } }, [])
   useEffect(() => {
     const token = teaching.state?.tools?.reconnect_token ?? null
@@ -100,7 +127,7 @@ export default function ProjectorConnection({ sessionId }: { sessionId: string }
   const showLobby = Boolean(state?.lobby)
   const ended = state?.session.status === 'ended'
 
-  return <div className="mx-auto max-w-3xl space-y-5 p-6">
+  return <div className={existingWindow !== undefined ? 'hidden' : 'mx-auto max-w-3xl space-y-5 p-6'}>
     <h1 className="text-title-1">Connect the classroom screen</h1>
     <p>Keep this page open on the computer connected to your projector. Sign in with the same teaching account on your iPad.</p>
     <p className="text-title-3">{documentData?.lesson.title ?? 'Loading presentation…'}</p>

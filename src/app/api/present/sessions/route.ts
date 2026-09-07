@@ -31,6 +31,12 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const params = new URL(request.url).searchParams
   const lessonId = params.get('lesson_id')
   const courseId = params.get('course_id')
+  if (params.get('active') === '1') {
+    const result = await supabaseAdmin.from('present_sessions').select('id, lesson_id, course_id, current_slide, created_at')
+      .eq('teacher_id', ctx.userId).eq('status', 'live').order('created_at', { ascending: false }).limit(20)
+    if (result.error) throw result.error
+    return NextResponse.json({ sessions: result.data ?? [] })
+  }
   if (params.get('history') === '1' && courseId) {
     const result = await supabaseAdmin.from('present_sessions').select('id, created_at, lesson_id, status').eq('teacher_id', ctx.userId).eq('course_id', courseId).order('created_at', { ascending: false }).limit(20)
     if (result.error) throw result.error
