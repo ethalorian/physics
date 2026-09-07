@@ -1,5 +1,7 @@
 "use client"
 
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import LessonReviewQueue from '@/components/admin/LessonReviewQueue'
 import { InlineMath } from '@/components/MathMarkdown'
@@ -607,6 +609,7 @@ export default function ControlRoomPage() {
           compact line, so the grid is the first paint on a laptop */}
       <div className="flex items-center gap-2 flex-wrap mb-1">
         <h1 className="text-xl font-semibold tracking-tight" style={{ marginRight: 4 }}>Class mastery</h1>
+        <Button asChild variant="outline" className="min-h-12"><Link href="/admin/observe">Classroom observations</Link></Button>
         {/* tabs: mastery (targets) vs lessons (completion) vs math (spine); the
             active tab carries its keyboard contract so the scheme is visible
             before the drawer opens */}

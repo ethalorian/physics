@@ -1,100 +1,52 @@
-"use client"
-
-import { useEffect, useState } from 'react'
+'use client'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Heart } from 'lucide-react'
 import Avatar from '@/components/avatar/Avatar'
+import { Button } from '@/components/ui/button'
 import type { AvatarItem } from '@/lib/avatar/types'
-
-/**
- * The whole-class avatar wall. Hearts are appreciation, NOT a ranking — there
- * is deliberately no "most liked" board (a popularity contest is the wrong
- * thing to put in front of teenagers). Everyone is shown in neutral order; you
- * can heart anyone but yourself, and you see each avatar's total hearts.
- *
- * Reused on the avatar page and the leaderboard.
- */
-interface GalleryAvatar {
-  user_id: string
-  name: string
-  traits: Record<string, string>
-  equipped: Record<string, string>
-  likes: number
-  liked_by_me: boolean
-  is_me: boolean
-}
-
+import type { GalleryAvatar } from '@/app/api/avatar/gallery/route'
+interface Page { items: AvatarItem[]; avatars: GalleryAvatar[]; next_offset: number | null }
 export default function AvatarGallery() {
-  const [data, setData] = useState<{ items: AvatarItem[]; avatars: GalleryAvatar[] } | null>(null)
-  const [busy, setBusy] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('/api/avatar/gallery')
-      .then((r) => r.json())
-      .then((d) => setData({ items: d.items ?? [], avatars: d.avatars ?? [] }))
-      .catch(() => setData({ items: [], avatars: [] }))
+  const [data, setData] = useState<Page | null>(null)
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [pending, setPending] = useState<Set<string>>(new Set())
+  const locks = useRef(new Set<string>())
+  const mounted = useRef(true)
+  const load = useCallback(async (offset = 0) => {
+    setLoading(true); setError('')
+    try {
+      const r = await fetch(`/api/avatar/gallery?offset=${offset}`)
+      const d = await r.json()
+      if (!r.ok || !Array.isArray(d.avatars) || !Array.isArray(d.items)) throw new Error(d.error ?? 'Could not load the gallery.')
+      if (mounted.current) setData(p => offset && p ? { ...d, avatars: [...new Map([...p.avatars, ...d.avatars].map(a => [a.user_id, a])).values()], items: [...new Map([...p.items, ...d.items].map(i => [i.slug, i])).values()] } : d)
+    } catch (e) { if (mounted.current) setError(e instanceof Error ? e.message : 'Could not load the gallery.') }
+    finally { if (mounted.current) setLoading(false) }
   }, [])
-
+  useEffect(() => { mounted.current = true; void load(); return () => { mounted.current = false } }, [load])
   const like = async (a: GalleryAvatar) => {
-    if (a.is_me) return
-    setBusy(a.user_id)
-    const res = await fetch('/api/avatar/like', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ target_user_id: a.user_id }),
-    })
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null)
-    setBusy(null)
-    if (res && data) {
-      setData({
-        ...data,
-        avatars: data.avatars.map((x) =>
-          x.user_id === a.user_id ? { ...x, likes: res.count, liked_by_me: res.liked } : x,
-        ),
-      })
-    }
+    if (a.is_me || locks.current.has(a.user_id)) return
+    locks.current.add(a.user_id); setPending(new Set(locks.current)); setError('')
+    try {
+      const r = await fetch('/api/avatar/like', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target_user_id: a.user_id, liked: !a.liked_by_me }) })
+      const d = await r.json()
+      if (!r.ok || typeof d.liked !== 'boolean') throw new Error(d.error ?? 'Could not save appreciation.')
+      setData(p => p ? { ...p, avatars: p.avatars.map(x => x.user_id === a.user_id ? { ...x, liked_by_me: d.liked } : x) } : p)
+    } catch (e) { setError(e instanceof Error ? e.message : 'Please try again.') }
+    finally { locks.current.delete(a.user_id); setPending(new Set(locks.current)) }
   }
-
-  if (!data) {
-    return <div className="text-sm py-8 text-center text-muted-foreground">Loading the gallery…</div>
-  }
-  if (data.avatars.length === 0) {
-    return (
-      <div className="rounded-2xl border border-border p-8 text-center text-sm text-muted-foreground">
-        No avatars on the wall yet — build your Mii and turn on “Show my Mii” to be the first.
-      </div>
-    )
-  }
-
-  return (
-    <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(116px, 1fr))' }}>
-      {data.avatars.map((a) => (
-        <div
-          key={a.user_id}
-          className="rounded-xl border p-2 flex flex-col items-center bg-card"
-          style={{ borderColor: a.is_me ? 'var(--primary)' : 'var(--border)' }}
-        >
-          <Avatar traits={a.traits} equipped={a.equipped} items={data.items} size={104} crop="medium" />
-          <div className="text-xs font-semibold mt-1 text-center w-full truncate">
-            {a.name}{a.is_me ? ' (you)' : ''}
-          </div>
-          <button
-            onClick={() => like(a)}
-            disabled={a.is_me || busy === a.user_id}
-            aria-label={a.is_me ? 'Your avatar' : a.liked_by_me ? `Unlike ${a.name}` : `Like ${a.name}`}
-            className="mt-1 inline-flex items-center gap-1 text-xs rounded-full px-2.5 py-1 transition-transform active:scale-95"
-            style={{
-              border: '1px solid var(--border)',
-              background: a.liked_by_me ? 'color-mix(in oklch, var(--destructive) 14%, var(--card))' : 'var(--card)',
-              color: a.liked_by_me ? 'var(--destructive)' : 'var(--muted-foreground)',
-              cursor: a.is_me ? 'default' : 'pointer',
-              opacity: a.is_me ? 0.55 : 1,
-            }}
-          >
-            <Heart size={12} style={{ fill: a.liked_by_me ? 'currentColor' : 'none' }} /> {a.likes}
-          </button>
-        </div>
-      ))}
+  return <section aria-label="Class avatar gallery" className="space-y-4">
+    <p className="text-sm text-muted-foreground">Avatars shared with your classes. Only you see your appreciation total.</p>
+    {error && <div role="alert" className="rounded-xl border p-3 text-sm">{error} <Button variant="outline" onClick={() => load(data?.next_offset ?? 0)}>Retry</Button></div>}
+    {!data && loading && <p role="status">Loading the gallery…</p>}
+    {data?.avatars.length === 0 && <p className="rounded-xl border p-6 text-sm text-muted-foreground">No shared avatars yet. Use “Share in my class gallery” in your avatar settings to join.</p>}
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      {data?.avatars.map(a => <div key={a.user_id} className="flex flex-col items-center rounded-xl border bg-card p-3">
+        <Avatar traits={a.traits} equipped={a.equipped} items={data.items} size={104} crop="medium" decorative />
+        <p className="w-full truncate text-center text-sm font-semibold">{a.name}{a.is_me ? ' (you)' : ''}</p>
+        {a.is_me ? <p className="mt-2 text-xs text-muted-foreground">{a.likes ?? 0} appreciations · only you</p> : <Button variant="ghost" className="mt-1 min-h-11" disabled={pending.has(a.user_id)} aria-pressed={a.liked_by_me} aria-label={`${a.liked_by_me ? 'Remove appreciation for' : 'Appreciate'} ${a.name}`} onClick={() => like(a)}><Heart size={16} fill={a.liked_by_me ? 'currentColor' : 'none'} />{a.liked_by_me ? 'Appreciated' : 'Appreciate'}</Button>}
+      </div>)}
     </div>
-  )
+    {data?.next_offset != null && <Button variant="outline" disabled={loading} onClick={() => load(data.next_offset!)}>{loading ? 'Loading…' : 'Load more'}</Button>}
+  </section>
 }

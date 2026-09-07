@@ -4,7 +4,8 @@
 // Traits are authored here (identity); items come in from the DB catalog and
 // are rendered with their svg_layer strings.
 
-import type { ReactNode } from 'react'
+import React, { useId, type ReactNode } from 'react'
+import { safeSvgLayer } from '@/lib/avatar/svg'
 import type { AvatarTraits, AvatarItem, EquippedItems, SkinTone, FaceShape, HairStyle, HairColor, EyeShape, EyeColor, EyeSpacing, EyeScale, EyeTilt, BrowStyle, BrowHeight, MouthStyle, MouthWidth, NoseStyle, Freckles, CheekBlush } from '@/lib/avatar/types'
 import { withDefaults } from '@/lib/avatar/types'
 import { SKIN, HAIR, EYE, SHIRT, FACE_GEO } from '@/lib/avatar/palette'
@@ -32,24 +33,31 @@ interface Props {
    */
   crop?: 'full' | 'head' | 'medium'
   className?: string
+  decorative?: boolean
 }
 
-// Crops sized against the canonical layout. 'head' is a tight square framed on
-// the head's visual center (x=0, y≈-6) so the face fills the chrome bubble and
-// stays centered, with a touch of headroom (top at y=-61) so hats/helmets clear.
-// It still clips wide wing flares past x=±55 — the intended tradeoff for a
-// filled, centered bubble. 'medium' is wide enough at x=±68 to keep wing flares in frame and
-// tall enough at y=-64 to +104 to show the shirt collar and the pin row.
+// Full/medium portraits include the raised shoulders and the largest transformed
+// hair silhouette. Compact crops expand for voluminous hair so the menu circle
+// preserves the hairstyle rather than chopping its crown into a flat block.
 const VIEWBOXES = {
-  full:   { vb: '-72 -82 144 200', aspect: 200 / 144 },
-  head:   { vb: '-55 -61 110 110', aspect: 1 },
-  medium: { vb: '-68 -64 136 168', aspect: 168 / 136 },
+  full:   { vb: '-80 -102 160 220', aspect: 220 / 160 },
+  head:   { vb: '-65 -70 130 130', aspect: 1 },
+  medium: { vb: '-80 -102 160 220', aspect: 220 / 160 },
 } as const
 
-export default function Avatar({ traits, equipped, items, size = 140, crop = 'full', className }: Props) {
+export default function Avatar({ traits, equipped, items, size = 140, crop = 'full', className, decorative = false }: Props) {
   const t = withDefaults(traits)
   const itemBySlot = mapEquipped(equipped, items)
-  const { vb, aspect } = VIEWBOXES[crop]
+  const clipId = useId().replace(/:/g, '')
+  const headOptions = itemBySlot.head?.render_options
+  const hairMode = headOptions?.hair ?? 'preserve'
+  const hairStyle = hairMode === 'tuck' ? 'short' : t.hair_style
+  const largeHair = hairMode === 'preserve' && ['afro', 'spiky', 'twists', 'bun', 'high_pony'].includes(hairStyle)
+  const { aspect } = VIEWBOXES[crop]
+  const vb = crop === 'head' && (largeHair || itemBySlot.head?.slug === 'viking-helmet' || (headOptions?.fit_head && t.face === 'heart')) ? '-88 -106 176 176' : VIEWBOXES[crop].vb
+  const ink = t.skin === 'dark' || t.skin === 'deep' ? '#B98463' : '#1F1812'
+  const beardColor = HAIR[t.facial_hair_color === 'match' ? t.hair_color : t.facial_hair_color].main
+  const compact = crop === 'head' && size <= 70
   // Features ride a per-face vertical shift AND horizontal scale so the
   // eye/brow/mouth/cheek cluster sits balanced on each silhouette and its
   // spread tracks the face width — instead of clinging to round-face
@@ -90,16 +98,18 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
       viewBox={vb}
       xmlns="http://www.w3.org/2000/svg"
       className={className}
-      role="img"
-      aria-label="Student avatar"
+      role={decorative ? undefined : "img"}
+      aria-hidden={decorative || undefined}
+      aria-label={decorative ? undefined : "Student avatar"}
     >
+      <defs><clipPath id={clipId}><path d="M -39,-10 Q -43,-47 0,-49 Q 43,-47 39,-10 L 37,14 L -37,14 Z" /></clipPath></defs>
       {itemBySlot.background && <RawLayer svg={itemBySlot.background.svg_layer} />}
-      {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body color={SHIRT[t.shirt_color]} />}
-      <Neck skin={t.skin} face={t.face} />
-      <g transform={hairTransform}><HairBack style={t.hair_style} color={t.hair_color} /></g>
-      <Ears skin={t.skin} face={t.face} />
+      {itemBySlot.body ? <RawLayer svg={itemBySlot.body.svg_layer} /> : <Body color={SHIRT[t.shirt_color]} style={t.shirt_style} />}
+      {!headOptions?.covers_neck && <Neck skin={t.skin} face={t.face} />}
+      {hairMode === 'preserve' && <g transform={hairTransform}><HairBack style={hairStyle} color={t.hair_color} /></g>}
+      {!headOptions?.covers_ears && <Ears skin={t.skin} face={t.face} />}
       <Head skin={t.skin} face={t.face} />
-      <g transform={hairTransform}><HairFront style={t.hair_style} color={t.hair_color} /></g>
+      {hairMode !== 'hide' && <g clipPath={hairMode === 'tuck' ? `url(#${clipId})` : undefined}><g transform={hairMode === 'tuck' ? undefined : hairTransform}><HairFront style={hairStyle} color={t.hair_color} fabric={SHIRT[t.fabric_color]} /></g></g>}
       {/* Face features + face-anchored items — translated together by
           featureShift so they track the chin/forehead of the chosen face
           shape. Eyewear sits on the eyes and facial hair sits on the chin,
@@ -108,23 +118,23 @@ export default function Avatar({ traits, equipped, items, size = 140, crop = 'fu
           features, so they live outside this group. */}
       <g transform={featureTransform}>
         <g transform={BROW_DY[t.brow_height] !== 0 ? `translate(0, ${BROW_DY[t.brow_height]})` : undefined}>
-          <Brows style={t.brows} hairColor={t.hair_color} />
+          <Brows style={t.brows} hairColor={t.hair_color} ink={ink} />
         </g>
         <CheekBlushLayer style={t.cheek_blush} />
-        <FrecklesLayer density={t.freckles} skin={t.skin} />
-        <Eyes shape={t.eyes} color={t.eye_color} spacing={t.eye_spacing} scale={t.eye_scale} tilt={t.eye_tilt} />
+        {!compact && <FrecklesLayer density={t.freckles} skin={t.skin} />}
+        <Eyes shape={t.eyes} color={t.eye_color} spacing={t.eye_spacing} scale={t.eye_scale} tilt={t.eye_tilt} ink={ink} />
         <Nose style={t.nose} skin={t.skin} />
         {itemBySlot.facial_hair && (
           <g transform={beardTransform}>
-            <RawLayer svg={itemBySlot.facial_hair.svg_layer} />
+            <RawLayer svg={itemBySlot.facial_hair.svg_layer.replaceAll('#3A2618', beardColor)} />
           </g>
         )}
         <g transform={MOUTH_SX[t.mouth_width] !== 1 ? `scale(${MOUTH_SX[t.mouth_width]}, 1)` : undefined}>
-          <Mouth style={t.mouth} />
+          <Mouth style={t.mouth} ink={ink} />
         </g>
-        {itemBySlot.eyewear && <RawLayer svg={itemBySlot.eyewear.svg_layer} />}
+        {itemBySlot.eyewear && <g transform={itemBySlot.eyewear.render_options?.fit_eyes ? `scale(${(15 + EYE_SPACING_DX[t.eye_spacing]) / 15}, 1)` : undefined}><RawLayer svg={itemBySlot.eyewear.svg_layer} /></g>}
       </g>
-      {itemBySlot.head && <RawLayer svg={itemBySlot.head.svg_layer} />}
+      {itemBySlot.head && <g transform={headOptions?.fit_head ? hairTransform : undefined}><RawLayer svg={itemBySlot.head.svg_layer} /></g>}
       {itemBySlot.pin && <RawLayer svg={itemBySlot.pin.svg_layer} />}
     </svg>
   )
@@ -137,14 +147,14 @@ function mapEquipped(equipped: EquippedItems | undefined, items: AvatarItem[] | 
   for (const [slot, slug] of Object.entries(equipped)) {
     if (!slug) continue
     const item = bySlug.get(slug)
-    if (item) out[slot as keyof EquippedItems] = item
+    if (item && item.slot === slot) out[slot as keyof EquippedItems] = item
   }
   return out
 }
 
-// Trusted by definition — items table is admin-write-only.
+// Defense in depth: only the inert avatar SVG dialect reaches the DOM.
 function RawLayer({ svg }: { svg: string }) {
-  return <g dangerouslySetInnerHTML={{ __html: svg }} />
+  return <g dangerouslySetInnerHTML={{ __html: safeSvgLayer(svg) }} />
 }
 
 // ---------------------------------------------------------------------------
@@ -153,13 +163,16 @@ function RawLayer({ svg }: { svg: string }) {
 
 // Default shirt — colour is the `shirt_color` trait ("favourite colour").
 // Replaced wholesale by a body-slot item when one is equipped.
-function Body({ color }: { color: string }) {
-  return (
-    <g>
-      <ellipse cx="0" cy="90" rx="40" ry="22" fill={color} />
-      <rect x="-32" y="78" width="64" height="34" rx="6" fill={color} />
-    </g>
-  )
+function Body({ color, style }: { color: string; style: AvatarTraits['shirt_style'] }) {
+  const outline = '#514C65'
+  return <g>
+    <path d="M -9,59 Q -20,61 -34,68 Q -43,73 -42,89 L -34,93 L -33,113 L 33,113 L 34,93 L 42,89 Q 43,73 34,68 Q 20,61 9,59 Q 0,71 -9,59 Z" fill={color} stroke={outline} strokeWidth="1.3" />
+    <path d="M -9,60 Q 0,72 9,60" fill="none" stroke={outline} strokeWidth="2" />
+    {style === 'polo' && <><path d="M -9,60 L -15,70 L -3,74 L 0,65 L 3,74 L 15,70 L 9,60" fill="#F2EDDE" /><path d="M 0,67 L 0,88" stroke={outline} strokeWidth="2" /><circle cy="78" r="1.3" fill="#F2EDDE" /></>}
+    {style === 'hoodie' && <><path d="M -10,59 Q -28,53 -23,73 L -11,80 L 0,68 L 11,80 L 23,73 Q 28,53 10,59" fill={color} stroke={outline} strokeWidth="1.5" /><path d="M -9,75 L -9,92 M 9,75 L 9,92" stroke="#F2EDDE" strokeWidth="2" /><path d="M -16,96 L -20,107 L 20,107 L 16,96 Z" fill="none" stroke={outline} strokeWidth="1.5" /></>}
+    {style === 'striped' && <path d="M -32,84 L 32,84 M -32,97 L 32,97 M -31,110 L 31,110" stroke="#F2EDDE" strokeWidth="5" />}
+    {style === 'varsity' && <><path d="M -33,69 Q -42,73 -42,89 L -34,93 L -27,75 M 33,69 Q 42,73 42,89 L 34,93 L 27,75" fill="#F2EDDE" /><path d="M 0,69 L 0,113" stroke="#F2EDDE" strokeWidth="2" /><text x="13" y="87" fontSize="13" fontWeight="bold" fill="#F2EDDE">P</text></>}
+  </g>
 }
 
 function Neck({ skin, face }: { skin: SkinTone; face: FaceShape }) {
@@ -216,23 +229,10 @@ function HairBack({ style, color }: { style: HairStyle; color: HairColor }) {
     )
   }
   if (style === 'afro') {
-    // The afro's bulk is a big rounded mass BEHIND the head. The head (drawn on
-    // top) covers the centre, so this shows as an even halo that hugs the head
-    // outline with no gaps — on any face shape. Perimeter circles texture the
-    // edge. The front hairline is the cap in HairFront.
-    return (
-      <g>
-        <circle cx="0" cy="-14" r="55" fill={c} />
-        <circle cx="-46" cy="-46" r="13" fill={c} />
-        <circle cx="46" cy="-46" r="13" fill={c} />
-        <circle cx="-56" cy="-14" r="13" fill={c} />
-        <circle cx="56" cy="-14" r="13" fill={c} />
-        <circle cx="-48" cy="18" r="12" fill={c} />
-        <circle cx="48" cy="18" r="12" fill={c} />
-        <circle cx="-22" cy="-62" r="12" fill={c} />
-        <circle cx="22" cy="-62" r="12" fill={c} />
-      </g>
-    )
+    return <g>
+      <path d="M -46,28 Q -62,26 -59,12 Q -73,2 -64,-13 Q -73,-31 -57,-39 Q -62,-58 -43,-59 Q -39,-77 -21,-70 Q -6,-83 8,-72 Q 26,-80 37,-66 Q 58,-71 59,-51 Q 73,-42 63,-25 Q 76,-10 62,3 Q 66,22 49,27 Q 37,42 22,34 L -20,34 Q -33,43 -46,28 Z" fill={c} />
+      <path d="M -52,-37 Q -57,-48 -45,-52 M 30,-64 Q 40,-69 45,-58 M -53,13 Q -57,21 -46,25" fill="none" stroke={HAIR[color].dark} strokeWidth="2" strokeLinecap="round" />
+    </g>
   }
   if (style === 'high_pony') {
     // Tail sweeps from the crown knot, out past the right ear, to the shoulder.
@@ -270,7 +270,7 @@ function HairBack({ style, color }: { style: HairStyle; color: HairColor }) {
   return null
 }
 
-function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
+function HairFront({ style, color, fabric }: { style: HairStyle; color: HairColor; fabric: string }) {
   if (style === 'bald') return null
   const c = HAIR[color].main
   const d = HAIR[color].dark
@@ -302,20 +302,7 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
     )
   }
   if (style === 'afro') {
-    // Front hairline cap over the forehead/crown (hairline at ~-34 so the
-    // forehead shows). The afro's volume is the rounded halo in HairBack, which
-    // hugs the head outline; this cap just sets the front hairline + a little
-    // top texture so the two read as one mass.
-    return (
-      <g>
-        <path d="M -44,-14 Q -50,-58 0,-60 Q 50,-58 44,-14 Q 34,-32 0,-34 Q -34,-32 -44,-14 Z" fill={c} />
-        <circle cx="-36" cy="-48" r="11" fill={c} />
-        <circle cx="36" cy="-48" r="11" fill={c} />
-        <circle cx="-16" cy="-58" r="11" fill={c} />
-        <circle cx="16" cy="-58" r="11" fill={c} />
-        <circle cx="0" cy="-60" r="10" fill={c} />
-      </g>
-    )
+    return <path d="M -44,-14 Q -54,-38 -36,-53 Q -21,-68 0,-61 Q 22,-69 38,-50 Q 52,-38 44,-14 Q 34,-31 21,-32 Q 9,-37 0,-32 Q -10,-37 -22,-32 Q -35,-33 -44,-14 Z" fill={c} />
   }
   if (style === 'locs') {
     return (
@@ -336,21 +323,15 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
     )
   }
   if (style === 'braids') {
-    return (
-      <g>
-        {/* base cap */}
-        <path d="M -42,-12 Q -48,-54 0,-58 Q 48,-54 42,-12 Q 34,-22 0,-26 Q -34,-22 -42,-12 Z" fill={c} />
-        {/* braid lines across the cap */}
-        <path d="M -34,-30 Q -8,-42 16,-30" fill="none" stroke={d} strokeWidth="0.9" />
-        <path d="M -34,-22 Q -8,-32 16,-22" fill="none" stroke={d} strokeWidth="0.9" />
-        <path d="M -32,-16 Q -8,-24 18,-16" fill="none" stroke={d} strokeWidth="0.9" />
-        {/* side hanging braids w/ small bead at tip */}
-        <rect x="-46" y="-14" width="5" height="34" rx="2.5" fill={c} />
-        <circle cx="-43.5" cy="23" r="3.4" fill={c} />
-        <rect x="41" y="-14" width="5" height="34" rx="2.5" fill={c} />
-        <circle cx="43.5" cy="23" r="3.4" fill={c} />
-      </g>
-    )
+    return <g>
+      <path d="M -42,-12 Q -48,-54 0,-58 Q 48,-54 42,-12 Q 34,-22 0,-26 Q -34,-22 -42,-12 Z" fill={c} />
+      {[-30,-15,0,15,30].map(x => <path key={x} d={`M ${x * .7},-51 Q ${x},-39 ${x * 1.15},-22`} fill="none" stroke={d} strokeWidth="2.3" strokeLinecap="round" />)}
+      {[-1,1].map(side => <g key={side} transform={`translate(${side * 45},0)`}>
+        <path d="M -3,-17 L 3,-17 L 4,26 L -4,26 Z" fill={c} />
+        {[-11,-3,5,13,21].map(y => <g key={y}><ellipse cx="0" cy={y} rx="5.5" ry="5" fill={c} /><path d={`M -3,${y-2} L 3,${y+2}`} stroke={d} strokeWidth="1.4" /></g>)}
+        <rect x="-4" y="25" width="8" height="4" rx="2" fill="#D8A547" />
+      </g>)}
+    </g>
   }
   if (style === 'bun') {
     return (
@@ -367,11 +348,11 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
     // Cloth frames the face + drapes to the shoulders. evenodd fill rule
     // carves an opening for the face so eyes/nose/mouth remain visible.
     return (
-      <path
+      <g><path
         fillRule="evenodd"
-        fill={c}
+        fill={fabric}
         d="M -50,-2 Q -52,-58 0,-62 Q 52,-58 50,-2 Q 48,28 28,40 L 24,72 L -24,72 L -28,40 Q -48,28 -50,-2 Z M -40,2 Q -44,-46 0,-48 Q 44,-46 40,2 Q 34,30 0,38 Q -34,30 -40,2 Z"
-      />
+      /><path d="M -27,29 Q -14,47 17,59 M 24,40 L 12,66" fill="none" stroke="#FFFFFF" strokeOpacity="0.25" strokeWidth="2" /></g>
     )
   }
   if (style === 'buzz') {
@@ -425,20 +406,13 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
     )
   }
   if (style === 'twists') {
-    // Short two-strand twists: a cap plus a starburst of pills radiating
-    // from the crown. Inner radius (26) sits inside the cap so every twist
-    // is rooted; outer radius (46) pokes past the head edge.
-    const angles = [-170, -150, -130, -110, -90, -70, -50, -30, -10]
-    return (
-      <g>
-        <path d="M -44,-14 Q -50,-56 0,-58 Q 50,-56 44,-14 Q 34,-30 0,-32 Q -34,-30 -44,-14 Z" fill={c} />
-        {angles.map((a) => (
-          <g key={a} transform={`translate(0, -30) rotate(${a})`}>
-            <rect x="26" y="-3.5" width="20" height="7" rx="3.5" fill={c} />
-          </g>
-        ))}
-      </g>
-    )
+    return <g>
+      <path d="M -44,-14 Q -50,-56 0,-58 Q 50,-56 44,-14 Q 34,-30 0,-32 Q -34,-30 -44,-14 Z" fill={c} />
+      {[-36,-24,-12,0,12,24,36].map((x, i) => <g key={x} transform={`translate(${x}, ${-45 - (3 - Math.abs(i - 3)) * 4}) rotate(${x * .65})`}>
+        <path d="M -5,10 Q -8,-1 -3,-14 Q 1,-20 5,-14 Q 9,-7 3,0 L 4,10 Z" fill={c} />
+        <path d="M -2,-12 Q 4,-7 -1,-3 Q -5,1 1,5" fill="none" stroke={d} strokeWidth="1.4" strokeLinecap="round" />
+      </g>)}
+    </g>
   }
   if (style === 'high_pony') {
     return (
@@ -498,8 +472,8 @@ function HairFront({ style, color }: { style: HairStyle; color: HairColor }) {
   )
 }
 
-function Brows({ style, hairColor }: { style: BrowStyle; hairColor: HairColor }) {
-  const c = HAIR[hairColor].dark
+function Brows({ style, hairColor, ink }: { style: BrowStyle; hairColor: HairColor; ink: string }) {
+  const c = ink === '#1F1812' ? HAIR[hairColor].dark : ink
   if (style === 'straight') {
     return (
       <g>
@@ -538,8 +512,8 @@ function Brows({ style, hairColor }: { style: BrowStyle; hairColor: HairColor })
 // spacing, size, and tilt independent knobs (Mii-style) instead of baked-in
 // coordinates. `cy` is the shape's resting height on the face — small/narrow
 // sit at -4, big/wide at -2, exactly where the old hardcoded versions sat.
-function singleEye(shape: EyeShape, color: EyeColor): { node: ReactNode; cy: number } {
-  const c = EYE[color]
+function singleEye(shape: EyeShape, color: EyeColor, ink: string): { node: ReactNode; cy: number } {
+  const c = color === 'black' && ink !== '#1F1812' ? ink : EYE[color]
   if (shape === 'small') {
     return {
       cy: -4,
@@ -580,11 +554,11 @@ function singleEye(shape: EyeShape, color: EyeColor): { node: ReactNode; cy: num
   }
 }
 
-function Eyes({ shape, color, spacing, scale, tilt }: { shape: EyeShape; color: EyeColor; spacing: EyeSpacing; scale: EyeScale; tilt: EyeTilt }) {
+function Eyes({ shape, color, spacing, scale, tilt, ink }: { shape: EyeShape; color: EyeColor; spacing: EyeSpacing; scale: EyeScale; tilt: EyeTilt; ink: string }) {
   const x = 15 + EYE_SPACING_DX[spacing]
   const k = EYE_SCALE_K[scale]
   const deg = EYE_TILT_DEG[tilt]
-  const { node, cy } = singleEye(shape, color)
+  const { node, cy } = singleEye(shape, color, ink)
   // Tilt rotates each eye around its own center, mirrored so 'up' raises the
   // OUTER corners on both sides (left eye rotates +deg, right eye -deg).
   const tf = (side: -1 | 1) => {
@@ -610,18 +584,20 @@ function Nose({ style, skin }: { style: NoseStyle; skin: SkinTone }) {
   return <path d="M -1,5 Q -3,12 0,13 Q 3,12 1,5" fill="none" stroke={c} strokeWidth="1.8" strokeLinecap="round" />
 }
 
-function Mouth({ style }: { style: MouthStyle }) {
+function Mouth({ style, ink }: { style: MouthStyle; ink: string }) {
+  if (style === 'joy') return <g><path d="M -9,21 Q 0,40 9,21 Z" fill="#682C3C" stroke={ink} strokeWidth="1" /><path d="M -6,23 L 6,23" stroke="#FFFFFF" strokeWidth="3" /></g>
+  if (style === 'open') return <ellipse cx="0" cy="25" rx="4" ry="5" fill="#682C3C" stroke={ink} strokeWidth="1.5" />
   if (style === 'smile') {
-    return <path d="M -8,22 Q 0,30 8,22" fill="none" stroke="#1F1812" strokeWidth="2.2" strokeLinecap="round" />
+    return <path d="M -8,22 Q 0,30 8,22" fill="none" stroke={ink} strokeWidth="2.2" strokeLinecap="round" />
   }
   if (style === 'grin') {
     return <path d="M -8,22 Q 0,32 8,22 Q 0,28 -8,22 Z" fill="#9B3349" />
   }
   if (style === 'neutral') {
-    return <line x1="-6" y1="24" x2="6" y2="24" stroke="#1F1812" strokeWidth="2.2" strokeLinecap="round" />
+    return <line x1="-6" y1="24" x2="6" y2="24" stroke={ink} strokeWidth="2.2" strokeLinecap="round" />
   }
   // smirk — slight asymmetric curl on the right
-  return <path d="M -7,24 Q 0,24 4,22 Q 7,21 8,26" fill="none" stroke="#1F1812" strokeWidth="2.2" strokeLinecap="round" />
+  return <path d="M -7,24 Q 0,24 4,22 Q 7,21 8,26" fill="none" stroke={ink} strokeWidth="2.2" strokeLinecap="round" />
 }
 
 function FrecklesLayer({ density, skin }: { density: Freckles; skin: SkinTone }) {

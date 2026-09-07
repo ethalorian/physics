@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { ITEM_COLUMNS } from '@/lib/avatar/server'
+import { withDefaults } from '@/lib/avatar/types'
 import type { AvatarItem, AvatarTraits, EquippedItems } from '@/lib/avatar/types'
 
 // GET /api/avatar/me
@@ -20,7 +22,7 @@ export interface MeBundle {
 export const GET = withAuth(async (request, ctx) => {
     const userId = ctx.userId
 
-    const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
+    const [{ data: avatarRow, error: avatarError }, { data: studentRow, error: studentError }] = await Promise.all([
       supabaseAdmin
         .from('student_avatars')
         .select('traits, equipped, setup_completed')
@@ -33,16 +35,19 @@ export const GET = withAuth(async (request, ctx) => {
         .maybeSingle(),
     ])
 
-    const traits = avatarRow?.setup_completed ? (avatarRow.traits as AvatarTraits) : null
+    if (avatarError) throw avatarError
+    if (studentError) throw studentError
+    const traits = avatarRow?.setup_completed ? withDefaults(avatarRow.traits) : null
     const equipped = ((avatarRow?.equipped as EquippedItems) ?? {})
     const equippedSlugs = Object.values(equipped).filter((s): s is string => typeof s === 'string')
 
     let equipped_items: AvatarItem[] = []
     if (equippedSlugs.length > 0) {
-      const { data: items } = await supabaseAdmin
+      const { data: items, error: itemsError } = await supabaseAdmin
         .from('avatar_items')
-        .select('slug, slot, name, cost_xp, unlock_target_id, unlock_min_level, svg_layer, z_order')
+        .select(ITEM_COLUMNS)
         .in('slug', equippedSlugs)
+      if (itemsError) throw itemsError
       equipped_items = (items ?? []) as AvatarItem[]
     }
 

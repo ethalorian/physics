@@ -13,13 +13,16 @@ export const PATCH = withAuth(async (request, ctx) => {
   if (ctx.role !== 'admin' && ctx.role !== 'teacher') {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
-  const body = await request.json()
+  const body = await request.json().catch(() => null)
+  if (!body || typeof body !== 'object') return NextResponse.json({ error: 'Invalid lesson request' }, { status: 400 })
+  if (body.tiers !== null && (!Array.isArray(body.tiers) || body.tiers.length !== 3)) return NextResponse.json({ error: 'Provide three lesson tiers, or null to restore defaults.' }, { status: 400 })
   const { competency_id } = body
   if (!competency_id) return NextResponse.json({ error: 'competency_id is required' }, { status: 400 })
 
   let mini: { tiers: { title: string; steps: string[]; tip?: string }[] } | null = null
   if (Array.isArray(body.tiers)) {
     const tiers = (body.tiers as TierIn[]).map((t) => {
+      if (!t || typeof t !== 'object') return {title:'',steps:[]}
       const steps = Array.isArray(t.steps) ? t.steps.map(String).map((s) => s.trim()).filter(Boolean) : []
       const title = String(t.title ?? '').trim()
       const tip = t.tip && String(t.tip).trim() ? String(t.tip).trim() : undefined

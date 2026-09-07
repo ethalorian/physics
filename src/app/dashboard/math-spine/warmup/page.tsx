@@ -23,14 +23,14 @@ import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Languages, ChevronDown, Flame } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Languages, Flame } from 'lucide-react'
 import MathCanvas, { type CanvasText } from '@/components/math-spine/MathCanvas'
 import EquationSandbox, { type SandboxValue } from '@/components/blocks/EquationSandbox'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
-import MathSpineDiagram from '@/components/math-spine/MathSpineDiagram'
+import MathTutor from '@/components/math-spine/MathTutor'
 import type { LadderRung } from '@/components/math-spine/MathLadder'
 import PracticeRep from '@/components/math-spine/PracticeRep'
-import { tieredLessonsForCode, pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
+import { pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
 import { RUNG_STATE_LABEL, type PickKind } from '@/lib/math-spine-picker'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
 import { useTranslator } from '@/lib/math-translate-store'
@@ -66,8 +66,6 @@ interface WorkValue {
   sandbox: SandboxValue
 }
 
-/** One student vocabulary: the mini-lesson tier mirrors the student's level. */
-const LEVEL_WORDS = ['Not yet', 'Almost', 'Got it'] as const
 
 /** Why today's problem is THIS problem — the picker's reason, in student words. */
 const PICK_FRAMING: Record<PickKind, { label: string; explain: string }> = {
@@ -95,7 +93,6 @@ export default function WarmupPage() {
   const [checkReason, setCheckReason] = useState<string | null>(null)
   const [feedback, setFeedback] = useState<SlipFeedback | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [helpOpen, setHelpOpen] = useState<boolean | null>(null) // null = follow the tier
   const [translationEnabled, setTranslationEnabled] = useState(false)
   const [lang, setLang] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('mathLang') || '' : ''))
   const [translated, setTranslated] = useState(false)
@@ -167,9 +164,7 @@ export default function WarmupPage() {
     }
   }
 
-  const tiers: MiniLesson[] | null = item ? (item.miniLessonTiers ?? tieredLessonsForCode(item.competencyCode)) : null
   const tierIdx = pickTier(item?.competencyValue)
-  const lesson: MiniLesson | null = tiers ? (tiers[tierIdx] ?? tiers[0]) : null
   const done = submitted || alreadySubmitted
   const framing = PICK_FRAMING[pickKind]
 
@@ -182,7 +177,6 @@ export default function WarmupPage() {
   // Help drawer default follows the tier: open for "Not yet" and "Needs a
   // refresh", collapsed for re-checks and "Got it" — tiering governs disclosure.
   const helpDefaultOpen = tierIdx === 0 || pickKind === 'refresh'
-  const showHelp = helpOpen ?? helpDefaultOpen
 
   // Translation: only when the student's section has it enabled AND this question
   // carries translations. English stays primary; the student taps to swap.
@@ -266,32 +260,7 @@ export default function WarmupPage() {
               )}
             </section>
 
-            {lesson && (
-              <section className={card} style={cardStyle}>
-                <button type="button" onClick={() => { setHelpOpen(!showHelp) }} aria-expanded={showHelp}
-                  className="w-full flex items-center gap-2 p-4 text-left">
-                  <HelpCircle className="h-4 w-4 shrink-0" style={{ color: 'var(--primary)' }} />
-                  <span className="text-sm font-semibold text-foreground">{t('How to do it:')} {t(lesson.title)}</span>
-                  <span className="ml-auto text-[11px] text-muted-foreground whitespace-nowrap">
-                    {lesson.steps.length} {t('steps')} · {t(LEVEL_WORDS[tierIdx])}
-                  </span>
-                  <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform" style={{ transform: showHelp ? 'rotate(180deg)' : 'none' }} />
-                </button>
-                {showHelp && (
-                  <div className="px-4 pb-4">
-                    <MathSpineDiagram code={item.competencyCode} lang={activeLang} />
-                    <ol className="list-decimal pl-5 space-y-1.5 text-sm text-foreground mt-2">
-                      {lesson.steps.map((s, i) => <li key={i}>{t(s)}</li>)}
-                    </ol>
-                    {lesson.tip && (
-                      <p className="text-xs mt-3 rounded-md px-3 py-2" style={{ background: 'color-mix(in oklch, var(--primary) 8%, transparent)', color: 'var(--foreground)' }}>
-                        {t(lesson.tip)}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </section>
-            )}
+            <MathTutor key={item.instanceId ?? item.spiralItemId} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={activeLang} initiallyOpen={helpDefaultOpen} onReturnToWork={()=>document.getElementById('math-reasoning')?.focus()} />
           </div>
 
           {/* ---------------------------------------------------------- right: the board */}
@@ -406,22 +375,7 @@ export default function WarmupPage() {
                 <p className="mt-2 text-sm text-foreground">{t("Today's warm-up is in. One rated submission per day — practice below keeps the habit.")}</p>
               )}
 
-              {/* re-open the how-to right here, so "look at the mini-lesson" isn't a scroll away */}
-              {lesson && submitted && selfCheck !== 'match' && (
-                <div className="mt-3">
-                  <button type="button" onClick={() => setHelpOpen(!showHelp)} aria-expanded={showHelp} className="text-xs font-semibold inline-flex items-center gap-1" style={{ color: 'var(--primary)' }}>
-                    <HelpCircle className="h-3.5 w-3.5" /> {showHelp ? t('Hide how-to') : t('Re-open how-to')}
-                  </button>
-                  {showHelp && (
-                    <div className="mt-2 rounded-lg p-3" style={{ background: 'var(--muted)' }}>
-                      <MathSpineDiagram code={item.competencyCode} lang={activeLang} />
-                      <ol className="list-decimal pl-5 space-y-1 text-sm text-foreground mt-2">
-                        {lesson.steps.map((s, i) => <li key={i}>{t(s)}</li>)}
-                      </ol>
-                    </div>
-                  )}
-                </div>
-              )}
+              {submitted && selfCheck !== 'match' && <div className="mt-3"><MathTutor key={'review-help-'+(item.instanceId ?? item.spiralItemId)} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={activeLang} /></div>}
 
               {/* what happens next */}
               <div className="mt-4 pt-3" style={{ borderTop: '1px solid var(--border)' }}>

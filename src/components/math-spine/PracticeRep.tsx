@@ -13,6 +13,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle, HelpCircle, Dumbbell } from 'lucide-react'
 import WarmupAnswer from './WarmupAnswer'
+import MathTutor from './MathTutor'
 import MathWorkReview from './MathWorkReview'
 import type { MathResponse } from '@/lib/math-response'
 
@@ -22,6 +23,7 @@ interface PracticeItem {
   spiralItemId: string
   competencyCode: string
   competencyStatement: string
+  miniLessonTiers?: unknown
   prompt: string
   needsGraph?: boolean
   needsEquationBuilder?: boolean
@@ -116,6 +118,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
 
       <p className="mt-3 text-base font-semibold text-foreground leading-snug">{(lang && item.translations?.[lang]) || item.prompt}</p>
 
+      <div className="mt-3"><MathTutor key={'practice-help-'+boardKey} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={lang} /></div>
       <div className="mt-3">
         {verdict === null ? <WarmupAnswer key={boardKey} value={{ ...board, answer }} onChange={v => {setBoard(v);setAnswer(v.answer ?? '')}} needsGraph={gridded} needsEquationBuilder={item.needsEquationBuilder} checkMode={item.checkMode} lang={lang} /> : <MathWorkReview key={'review'+boardKey} value={{...board,answer,needsGraph:gridded}} />}
       </div>

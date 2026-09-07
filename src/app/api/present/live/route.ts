@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+import { currentPulse } from '@/lib/presentation-tools-server'
 import type { InlineQuestion } from '@/data/content-blocks'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
@@ -33,5 +35,17 @@ export const GET = withAuth(async (request, ctx) => {
   const lesson = s.course_id ? await classLesson(lessonId, s.course_id) : null
   const block = lesson?.original.blocks.find(b => b.id === s.poll_block_id && lesson.content_blocks.blocks.some(x => x.id === b.id))
   const reveal = s.poll_revealed && block?.type === 'question' ? { correctOptionId: (block.question as InlineQuestion).correctOptionId, feedback: Object.fromEntries(((block.question as InlineQuestion).options ?? []).map(o => [o.id, o.feedback ?? ''])) } : null
-  return NextResponse.json({ session: { currentAnchor: s.current_anchor, pollRunId: s.poll_run_id, reveal, id: s.id, currentSlide: s.current_slide, currentSection: s.current_section, pollBlockId: s.poll_block_id, pollLocked: s.poll_locked, pollRevealed: s.poll_revealed, blackout: s.blackout, timerEndsAt: s.timer_ends_at, updatedAt: s.updated_at } })
+  const pulse = await currentPulse(s.id)
+  let pulseChoice: number | null = null
+  if (pulse) {
+    const secret = await supabaseAdmin.from('present_pulses').select('salt').eq('id', pulse.id).single()
+    if (secret.error) throw secret.error
+    const key = createHash('md5').update(secret.data.salt + ctx.userId).digest('hex')
+    const answer = await supabaseAdmin.from('present_pulse_responses').select('choice').eq('pulse_id', pulse.id).eq('respondent_key', key).maybeSingle()
+    if (answer.error) throw answer.error
+    pulseChoice = answer.data?.choice ?? null
+  }
+  const help = await supabaseAdmin.from('present_help_requests').select('resolved_at').eq('session_id', s.id).eq('user_id', ctx.userId).maybeSingle()
+  if (help.error) throw help.error
+  return NextResponse.json({ session: { pulse, pulseChoice, helpRequested: Boolean(help.data && !help.data.resolved_at), currentAnchor: s.current_anchor, pollRunId: s.poll_run_id, reveal, id: s.id, currentSlide: s.current_slide, currentSection: s.current_section, pollBlockId: s.poll_block_id, pollLocked: s.poll_locked, pollRevealed: s.poll_revealed, blackout: s.blackout, timerEndsAt: s.timer_ends_at, updatedAt: s.updated_at } })
 })

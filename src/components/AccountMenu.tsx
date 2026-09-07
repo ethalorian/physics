@@ -25,7 +25,7 @@ import { useRouter } from 'next/navigation'
 // Module-level cache so a hard navigation between pages doesn't refetch the
 // avatar bundle every time the menu mounts. Wardrobe edits invalidate by
 // dispatching the 'avatar-updated' event below.
-let _meCache: MeBundle | null = null
+let _meCache: { userId: string; bundle: MeBundle } | null = null
 
 export default function AccountMenu() {
   const { data: session } = useSession()
@@ -40,28 +40,35 @@ export default function AccountMenu() {
   // sync — no half-switched chrome.
   const studentViewActive = canToggleView && viewMode === 'student'
   const displayRole = studentViewActive ? 'student' : role
-  const [me, setMe] = useState<MeBundle | null>(_meCache)
+  const [me, setMe] = useState<MeBundle | null>(null)
 
   useEffect(() => {
-    let cancelled = false
-    const load = () => {
-      fetch('/api/avatar/me')
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d: MeBundle | null) => {
-          if (cancelled || !d) return
-          _meCache = d
-          setMe(d)
-        })
-        .catch(() => {})
+    const userId = session?.user?.id
+    if (!userId) { setMe(null); _meCache = null; return }
+    const cached = _meCache?.userId === userId ? _meCache.bundle : null
+    setMe(cached)
+    let controller: AbortController | null = null
+    const load = async () => {
+      controller?.abort()
+      controller = new AbortController()
+      const signal = controller.signal
+      try {
+        const r = await fetch('/api/avatar/me', { signal })
+        if (!r.ok) return
+        const d = await r.json() as MeBundle
+        if (signal.aborted || !Array.isArray(d.equipped_items)) return
+        _meCache = { userId, bundle: d }; setMe(d)
+      } catch { /* Keep the last confirmed portrait during a transient failure. */ }
     }
-    if (!_meCache) load()
-    const onUpdate = () => load()
+    if (!cached) void load()
+    const onUpdate = () => { void load() }
     window.addEventListener('avatar-updated', onUpdate)
-    return () => { cancelled = true; window.removeEventListener('avatar-updated', onUpdate) }
-  }, [])
+    return () => { controller?.abort(); window.removeEventListener('avatar-updated', onUpdate) }
+  }, [session?.user?.id])
 
   const handleSignOut = async () => {
     try {
+      _meCache = null
       await signOut({ callbackUrl: '/' })
     } catch (error) {
       console.error('Sign out error:', error)

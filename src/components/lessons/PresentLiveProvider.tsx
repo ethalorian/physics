@@ -9,7 +9,11 @@
  */
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 
+import StudentLiveTools from './StudentLiveTools'
+import type { Pulse } from '@/lib/presentation-tools'
+
 export interface LiveSession {
+  pulse?: Pulse | null; pulseChoice?: number | null; helpRequested?: boolean
   currentAnchor: string | null; pollRunId: string | null; reveal: { correctOptionId?: string; feedback?: Record<string, string> } | null
   id: string; currentSlide: number; currentSection: number
   pollBlockId: string | null; pollLocked: boolean; pollRevealed: boolean
@@ -48,7 +52,7 @@ export function PresentLiveProvider({ lessonId, enabled, children }: { lessonId:
     return () => { active = false; window.clearInterval(id) }
   }, [lessonId, enabled])
 
-  return <PresentLiveContext.Provider value={{ session, follow, setFollow }}>{children}</PresentLiveContext.Provider>
+  return <PresentLiveContext.Provider value={{ session, follow, setFollow }}>{enabled && <StudentLiveTools session={session} />}{children}</PresentLiveContext.Provider>
 }
 
 /** Seconds left on the class timer, or null. */

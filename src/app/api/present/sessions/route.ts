@@ -28,11 +28,20 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
 // GET /api/present/sessions?lesson_id=… — this teacher's live session for a lesson (or null).
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
-  const lessonId = new URL(request.url).searchParams.get('lesson_id')
+  const params = new URL(request.url).searchParams
+  const lessonId = params.get('lesson_id')
+  const courseId = params.get('course_id')
+  if (params.get('history') === '1' && courseId) {
+    const result = await supabaseAdmin.from('present_sessions').select('id, created_at, lesson_id, status').eq('teacher_id', ctx.userId).eq('course_id', courseId).order('created_at', { ascending: false }).limit(20)
+    if (result.error) throw result.error
+    return NextResponse.json({ sessions: result.data ?? [] })
+  }
   if (!lessonId) return NextResponse.json({ error: 'lesson_id required' }, { status: 400 })
-  const { data } = await supabaseAdmin.from('present_sessions').select('*')
+  let query = supabaseAdmin.from('present_sessions').select('*')
     .eq('teacher_id', ctx.userId).eq('lesson_id', lessonId).eq('status', 'live')
-    .order('created_at', { ascending: false }).limit(1).maybeSingle()
+  if (courseId) query = query.eq('course_id', courseId)
+  const { data, error } = await query.order('created_at', { ascending: false }).limit(1).maybeSingle()
+  if (error) return NextResponse.json({ error: 'Could not check the live presentation' }, { status: 503 })
   const lesson = data?.course_id ? await classLesson(lessonId, data.course_id, ctx) : null
   return NextResponse.json({ session: lesson ? data : null, deck: lesson?.deck ?? null, lesson: lesson ? { id: lesson.id, title: lesson.title, content_blocks: lesson.content_blocks } : null, answerKeys: lesson ? Object.fromEntries(lesson.original.blocks.filter(b => b.type === 'question' && lesson.content_blocks.blocks.some(x => x.id === b.id)).map(b => [b.id, b.type === 'question' ? (b.question as InlineQuestion).correctOptionId : null])) : {} })
 })

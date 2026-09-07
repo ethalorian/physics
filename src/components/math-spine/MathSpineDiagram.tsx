@@ -76,7 +76,7 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
   ),
   QE1: (
     <Frame label="scientific notation">
-      <text x="20" y="55" fontSize="22" fill={FG} fontFamily="Georgia, serif">8500.</text>
+      <text x="20" y="55" fontSize="22" fill={FG} fontFamily="Georgia, serif">8500</text>
       <path d="M40 40 q40 -22 78 0" fill="none" stroke={ACCENT} strokeWidth="1.5" markerEnd="url(#arr)" />
       <text x="150" y="60" fontSize="22" fill={FG}>→</text>
       <text x="185" y="55" fontSize="22" fill={FG} fontFamily="Georgia, serif">8.5 × 10³</text>
@@ -105,7 +105,7 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
           <text x={40 + i * 90 - 12} y="84" fontSize="13" fill={MUTED}>{lbl}</text>
         </g>
       ))}
-      <circle cx="155" cy="60" r="6" fill={ACCENT} />
+      <circle cx="193" cy="60" r="6" fill={ACCENT} />
       <text x="120" y="40" fontSize="13" fill={ACCENT}>≈ 5 × 10¹⁹ J</text>
     </Frame>
   ),
@@ -114,7 +114,7 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
       <text x="40" y="58" fontSize="24" fill={FG} fontFamily="Georgia, serif">1.47</text>
       <text x="103" y="58" fontSize="24" fill={MUTED} textDecoration="line-through">32</text>
       <text x="150" y="58" fontSize="22" fill={FG}>→ 1.47 m/s</text>
-      <text x="40" y="92" fontSize="13" fill={MUTED}>{t('keep only the digits the data can be trusted to')}</text>
+      <text x="40" y="92" fontSize="13" fill={MUTED}>{t('example: round 1.4732 m/s to 3 significant figures')}</text>
     </Frame>
   ),
   SM1: (
@@ -136,7 +136,9 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
     </Frame>
   ),
   GV1: (
-    <Frame label="slope">
+    <Frame label="Position versus time: slope gives velocity">
+      <text x="43" y="32" fontSize="10" fill={MUTED}>{t('position (m)')}</text>
+      <text x="260" y="115" fontSize="10" fill={MUTED}>{t('time (s)')}</text>
       <line x1="40" y1="100" x2="40" y2="20" stroke={FG} strokeWidth="1.5" />
       <line x1="40" y1="100" x2="300" y2="100" stroke={FG} strokeWidth="1.5" />
       <line x1="50" y1="92" x2="250" y2="36" stroke={ACCENT} strokeWidth="2.5" />
@@ -144,7 +146,7 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
       <line x1="250" y1="64" x2="250" y2="36" stroke={MUTED} strokeWidth="1.5" strokeDasharray="3 3" />
       <text x="185" y="60" fontSize="12" fill={MUTED}>{t('run')}</text>
       <text x="255" y="54" fontSize="12" fill={MUTED}>{t('rise')}</text>
-      <text x="120" y="22" fontSize="13" fill={ACCENT}>{t('slope = rise/run = velocity')}</text>
+      <text x="120" y="22" fontSize="13" fill={ACCENT}>{t('position–time: slope = velocity')}</text>
     </Frame>
   ),
   GV2: (
@@ -161,7 +163,8 @@ const buildDiagrams = (t: T): Record<string, ReactElement> => ({
     </Frame>
   ),
   GV3: (
-    <Frame label="vector components">
+    <Frame label="Vector with angle measured from positive x toward positive y">
+      <text x="40" y="14" fontSize="11" fill={MUTED}>{t('θ from +x; right is +x, up is +y')}</text>
       <line x1="40" y1="100" x2="220" y2="30" stroke={ACCENT} strokeWidth="2.5" markerEnd="url(#arr3)" />
       <line x1="40" y1="100" x2="220" y2="100" stroke={MUTED} strokeWidth="1.5" strokeDasharray="4 3" />
       <line x1="220" y1="100" x2="220" y2="30" stroke={MUTED} strokeWidth="1.5" strokeDasharray="4 3" />

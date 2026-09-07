@@ -433,7 +433,7 @@ function LessonEditor({ comp, onSaved }: { comp: Comp; onSaved: () => void }) {
         </div>
         {open && (
           <div className="space-y-4 mt-3">
-            <p className="text-[11px] text-muted-foreground">Three tiers: students see the one matching their mastery (Start here for new/struggling, Fluent once they’re strong).</p>
+            <p className="text-[11px] text-muted-foreground">Three optional lesson notes: understand, work step by step, and extend. Students can open every level of support. The authored worked examples and practice checks remain available alongside these notes.</p>
             {tiers.map((t, i) => (
               <div key={i} className="space-y-2 rounded-lg border border-border p-3">
                 <div className="text-xs font-semibold text-foreground">{TIER_LABELS[i]} · tier {i + 1}</div>

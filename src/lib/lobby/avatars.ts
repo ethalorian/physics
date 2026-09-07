@@ -5,6 +5,7 @@
  * traits/equipped. Mirrors the data shape of /api/avatar/gallery.
  */
 import { supabaseAdmin } from '@/lib/supabase'
+import { ITEM_COLUMNS } from '@/lib/avatar/server'
 import type { AvatarItem } from '@/lib/avatar/types'
 
 export interface AvatarBundle {
@@ -17,10 +18,11 @@ export async function getAvatarData(
 ): Promise<{ items: AvatarItem[]; byUser: Record<string, AvatarBundle> }> {
   if (gids.length === 0) return { items: [], byUser: {} }
 
-  const { data: avs } = await supabaseAdmin
+  const { data: avs, error: avsError } = await supabaseAdmin
     .from('student_avatars')
     .select('user_id, traits, equipped')
     .in('user_id', gids)
+  if (avsError) throw avsError
 
   const byUser: Record<string, AvatarBundle> = {}
   const slugs = new Set<string>()
@@ -33,10 +35,11 @@ export async function getAvatarData(
 
   let items: AvatarItem[] = []
   if (slugs.size > 0) {
-    const { data: it } = await supabaseAdmin
+    const { data: it, error: itError } = await supabaseAdmin
       .from('avatar_items')
-      .select('slug, slot, name, cost_xp, unlock_target_id, unlock_min_level, svg_layer, z_order')
+      .select(ITEM_COLUMNS)
       .in('slug', [...slugs])
+    if (itError) throw itError
     items = (it ?? []) as AvatarItem[]
   }
 

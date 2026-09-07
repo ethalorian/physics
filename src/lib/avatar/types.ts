@@ -12,7 +12,7 @@ export type HairColor =
   | 'teal' | 'blue' | 'purple' | 'pink' | 'green'
 export type EyeShape = 'small' | 'big' | 'narrow' | 'wide'
 export type BrowStyle = 'straight' | 'arched' | 'bushy' | 'thin'
-export type MouthStyle = 'smile' | 'grin' | 'neutral' | 'smirk'
+export type MouthStyle = 'smile' | 'grin' | 'neutral' | 'smirk' | 'joy' | 'open'
 export type NoseStyle = 'button' | 'broad' | 'narrow' | 'hook'
 export type Freckles = 'none' | 'light' | 'heavy'
 export type CheekBlush = 'none' | 'pink' | 'warm'
@@ -51,6 +51,9 @@ export interface AvatarTraits {
   freckles: Freckles
   cheek_blush: CheekBlush
   shirt_color: ShirtColor
+  fabric_color: ShirtColor
+  facial_hair_color: HairColor | 'match'
+  shirt_style: 'tee' | 'polo' | 'hoodie' | 'striped' | 'varsity'
 }
 
 // The geometry knobs live in a separate "Fine-tune" tab so the guided
@@ -69,7 +72,10 @@ export interface AvatarItem {
   unlock_target_id: string | null
   unlock_min_level: number | null
   svg_layer: string                  // inner SVG markup (no <svg> wrapper)
-  z_order: number
+  z_order: number // legacy metadata; fixed slot order is authoritative
+  enabled?: boolean // false retires from sale; owned artwork still renders
+  render_options?: { hair?: 'preserve' | 'tuck' | 'hide'; fit_head?: boolean; covers_ears?: boolean; covers_neck?: boolean; fit_eyes?: boolean; hair_tint?: boolean }
+  target_statement?: string | null
 }
 
 export type EquippedItems = Partial<Record<ItemSlot, string>>  // slot → item slug
@@ -94,10 +100,19 @@ export const DEFAULT_TRAITS: AvatarTraits = {
   freckles: 'none',
   cheek_blush: 'none',
   shirt_color: 'lavender',
+  fabric_color: 'navy',
+  facial_hair_color: 'match',
+  shirt_style: 'tee',
 }
 
 export function withDefaults(partial: Partial<AvatarTraits> | null | undefined): AvatarTraits {
-  return { ...DEFAULT_TRAITS, ...(partial ?? {}) }
+  const out = { ...DEFAULT_TRAITS }
+  if (!partial || typeof partial !== 'object') return out
+  for (const key of Object.keys(DEFAULT_TRAITS) as (keyof AvatarTraits)[]) {
+    const value = partial[key]
+    if (typeof value === 'string' && TRAIT_OPTIONS[key].includes(value)) (out as Record<string, string>)[key] = value
+  }
+  return out
 }
 
 // Pretty labels — used by the trait-builder picker UI.
@@ -119,6 +134,9 @@ export const TRAIT_LABELS: Record<keyof AvatarTraits, string> = {
   freckles: 'Freckles',
   cheek_blush: 'Cheek blush',
   shirt_color: 'Shirt colour',
+  fabric_color: 'Headscarf colour',
+  facial_hair_color: 'Facial hair colour',
+  shirt_style: 'Shirt style',
 }
 
 export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
@@ -136,10 +154,33 @@ export const TRAIT_OPTIONS: Record<keyof AvatarTraits, string[]> = {
   eye_tilt: ['down', 'level', 'up'],
   brows: ['straight', 'arched', 'bushy', 'thin'],
   brow_height: ['low', 'normal', 'high'],
-  mouth: ['smile', 'grin', 'neutral', 'smirk'],
+  mouth: ['smile', 'grin', 'neutral', 'smirk', 'joy', 'open'],
   mouth_width: ['narrow', 'normal', 'wide'],
   nose: ['button', 'broad', 'narrow', 'hook'],
   freckles: ['none', 'light', 'heavy'],
   cheek_blush: ['none', 'pink', 'warm'],
+  fabric_color: ['navy', 'lavender', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'purple', 'pink', 'charcoal'],
+  facial_hair_color: ['match', 'black', 'dark_brown', 'brown', 'auburn', 'red', 'sandy', 'blonde', 'gray', 'white', 'teal', 'blue', 'purple', 'pink', 'green'],
+  shirt_style: ['tee', 'polo', 'hoodie', 'striped', 'varsity'],
   shirt_color: ['lavender', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'navy', 'purple', 'pink', 'charcoal'],
+}
+
+export const ITEM_SLOTS: ItemSlot[] = ['eyewear', 'head', 'body', 'pin', 'background', 'facial_hair']
+export const SLOT_LABELS: Record<ItemSlot, string> = { eyewear: 'Eyewear', head: 'Headwear', body: 'Outfits', pin: 'Pins & necklaces', background: 'Backgrounds', facial_hair: 'Facial hair' }
+export interface SavedLook { name: string; traits: AvatarTraits; equipped: EquippedItems }
+export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery' | 'staff_free'
+export interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }
+export interface AvatarBundle {
+  user_id: string; traits: AvatarTraits; equipped: EquippedItems; setup_completed: boolean
+  revision: number; gallery_visible: boolean; saved_looks: SavedLook[]
+  catalog: CatalogEntry[]; owned: string[]; balance: number; lifetimeEarned: number
+  isStaff: boolean; alias: string | null; name: string | null
+}
+export function validTraits(value: unknown): value is Partial<AvatarTraits> {
+  return !!value && typeof value === 'object' && !Array.isArray(value) && Object.entries(value).every(([k, v]) =>
+    Object.hasOwn(TRAIT_OPTIONS, k) && typeof v === 'string' && TRAIT_OPTIONS[k as keyof AvatarTraits].includes(v))
+}
+export function validEquipped(value: unknown): value is EquippedItems {
+  return !!value && typeof value === 'object' && !Array.isArray(value) && Object.entries(value).every(([k, v]) =>
+    ITEM_SLOTS.includes(k as ItemSlot) && typeof v === 'string' && /^[a-z0-9-]{1,80}$/.test(v))
 }

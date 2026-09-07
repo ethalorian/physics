@@ -21,7 +21,12 @@
     "test:item-template": "tsx --test src/lib/math-item-template.test.ts",
     "validate:templates": "tsx scripts/validate-math-templates.ts",
     "test:school-day": "tsx --test src/lib/school-day.test.ts",
-    "textbook:upload": "tsx scripts/upload-textbook.ts"
+    "textbook:upload": "tsx scripts/upload-textbook.ts",
+    "test:avatar": "tsx --test src/lib/avatar/avatar.test.tsx",
+    "avatar:render": "node scripts/render-avatars.cjs",
+    "test:avatar-db": "node scripts/test-avatar-integrity.cjs",
+    "test:avatar-browser": "node scripts/test-avatar-browser.cjs",
+    "avatar:catalog-check": "node scripts/avatar-catalog-sql.cjs"
   },
   "dependencies": {
     "@auth/supabase-adapter": "^1.10.0",

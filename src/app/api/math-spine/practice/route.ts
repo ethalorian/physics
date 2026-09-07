@@ -32,7 +32,7 @@ function todayStamp(): string {
 async function currentTargetCompetency(userId: string) {
   const { data: compRows } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, code, statement, order_index, sequence_order')
+    .select('id, code, statement, order_index, sequence_order, mini_lesson')
     .eq('is_active', true)
     .order('sequence_order', { ascending: true, nullsFirst: false })
   const competencies = compRows ?? []
@@ -115,6 +115,7 @@ export const GET = withAuth(async (_request, ctx) => {
       competencyId: target.id,
       competencyCode: target.code,
       competencyStatement: target.statement,
+      miniLessonTiers: (target.mini_lesson as { tiers?: unknown } | null)?.tiers ?? null,
       prompt,
       templateSeed,
       needsGraph: chosen.needs_graph ?? false,

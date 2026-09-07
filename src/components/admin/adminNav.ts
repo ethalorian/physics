@@ -27,6 +27,8 @@ export const GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/classes', label: 'Classes', desc: 'The cockpit — one card per class: plan, roster & analytics, engagement', icon: GraduationCap, accent: 'var(--primary)' },
       { href: '/admin/vocabulary/tasks', label: 'Vocabulary tasks', desc: 'Assign word goals and track each student’s accuracy and progress by target', icon: BookText, accent: 'var(--primary)' },
+      { href: '/admin/command-center', label: 'iPad Command Center', desc: 'Run slides, live polls, timers and group activities from your iPad', icon: LayoutGrid, accent: 'var(--primary)' },
+      { href: '/admin/observe', label: 'Classroom observations', desc: 'Walk the room: quick mastery ratings and feedback on iPad', icon: Eye, accent: 'var(--primary)' },
       { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
       { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
       { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },

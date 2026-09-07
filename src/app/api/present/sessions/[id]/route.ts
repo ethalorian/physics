@@ -13,7 +13,7 @@ import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 type Patch = {
   current_anchor?: string | null; current_slide?: number; current_section?: number; poll_block_id?: string | null
   poll_locked?: boolean; poll_revealed?: boolean; blackout?: boolean
-  timer_seconds?: number | null; status?: 'live' | 'ended'
+  timer_seconds?: number | null; status?: 'live' | 'ended'; discussion?: 'start' | 'revote'
 }
 
 export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
@@ -27,6 +27,7 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
   if (!lesson) return NextResponse.json({ error: 'Class lesson unavailable' }, { status: 403 })
   const pages = paginateBlocks(lesson.content_blocks.blocks)
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() }
+  if (body.timer_seconds != null && (!Number.isFinite(body.timer_seconds) || body.timer_seconds < 0 || body.timer_seconds > 3600)) return NextResponse.json({ error: 'Timer must be 0–3600 seconds' }, { status: 400 })
   if (typeof body.current_slide === 'number') update.current_slide = Math.max(0, Math.floor(body.current_slide))
   if ('current_anchor' in body) {
     const index = sectionIndexForAnchor(pages, body.current_anchor)
@@ -51,6 +52,26 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
   if ('timer_seconds' in body) update.timer_ends_at = body.timer_seconds ? new Date(Date.now() + body.timer_seconds * 1000).toISOString() : null
   if (body.status === 'ended') update.status = 'ended'
 
+  if (body.discussion) {
+    if (!s.poll_block_id || !s.poll_run_id || !['start', 'revote'].includes(body.discussion)) return NextResponse.json({ error: 'Open a lesson poll first' }, { status: 409 })
+    if (body.discussion === 'start') {
+      update.poll_locked = true; update.poll_revealed = false
+      update.timer_ends_at = new Date(Date.now() + 90000).toISOString()
+      const tools = await supabaseAdmin.from('present_session_tools').upsert({ session_id: id, discussion_block_id: s.poll_block_id, discussion_poll_run_id: s.poll_run_id, updated_at: new Date().toISOString() })
+      if (tools.error) throw tools.error
+    } else {
+      const tools = await supabaseAdmin.from('present_session_tools').select('discussion_block_id').eq('session_id', id).maybeSingle()
+      if (tools.error) throw tools.error
+      if (tools.data?.discussion_block_id !== s.poll_block_id) return NextResponse.json({ error: 'Start a discussion on this poll before re-voting' }, { status: 409 })
+      update.poll_run_id = randomUUID(); update.poll_locked = false; update.poll_revealed = false; update.timer_ends_at = null
+      const cleared = await supabaseAdmin.from('present_session_tools').update({ discussion_block_id: null, updated_at: new Date().toISOString() }).eq('session_id', id)
+      if (cleared.error) throw cleared.error
+    }
+  }
+  if (body.poll_block_id || body.status === 'ended') {
+    const pulse = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', id).eq('status', 'open')
+    if (pulse.error) throw pulse.error
+  }
   const { data, error } = await supabaseAdmin.from('present_sessions').update(update).eq('id', id).select('*').single()
   if (error) return NextResponse.json({ error: 'Could not update' }, { status: 500 })
   return NextResponse.json({ session: data })
@@ -61,11 +82,19 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
 export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const blockId = new URL(request.url).searchParams.get('block_id')
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, poll_block_id, poll_run_id').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, status, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const sess = s as { id: string; teacher_id: string; lesson_id: string; course_id: string | null; poll_block_id: string | null; poll_run_id: string | null }
   if (ctx.role !== 'admin' && sess.teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
+  // A lobby launched during this presentation temporarily takes the board.
+  // Read existing session relationships; no second presentation state store.
+  const { data: lobby, error: lobbyError } = await supabaseAdmin.from('lobby_sessions')
+    .select('id, code, status').eq('created_by', sess.teacher_id).eq('course_id', sess.course_id ?? '')
+    .eq('lesson_id', sess.lesson_id).gte('created_at', s.created_at)
+    .order('created_at', { ascending: false }).limit(1).maybeSingle()
+  if (lobbyError) return NextResponse.json({ error: 'Could not refresh live activity' }, { status: 503 })
+  const liveState = { session: s, lobby: lobby?.status === 'closed' ? null : lobby ?? null }
   const block = blockId ?? sess.poll_block_id
   if (block && block !== sess.poll_block_id) return NextResponse.json({ error: 'Poll not active' }, { status: 400 })
   let enrolled = 0
@@ -73,7 +102,7 @@ export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request
     const { count } = await supabaseAdmin.from('course_students').select('student_id', { count: 'exact', head: true }).eq('course_id', sess.course_id)
     enrolled = count ?? 0
   }
-  if (!block) return NextResponse.json({ block_id: null, enrolled, saved: 0, tally: {}, wrongSure: 0 })
+  if (!block) return NextResponse.json({ ...liveState, block_id: null, enrolled, saved: 0, tally: {}, wrongSure: 0 })
 
   const { data: rows } = await supabaseAdmin.from('block_responses')
     .select('user_id, response, confidence, created_at')
@@ -89,5 +118,5 @@ export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request
     if (v.optionId) tally[v.optionId] = (tally[v.optionId] ?? 0) + 1
     if (v.autoCheck === 'mismatch' && v.confidence === 'sure') wrongSure++
   }
-  return NextResponse.json({ block_id: block, enrolled, saved: latest.size, tally, wrongSure })
+  return NextResponse.json({ ...liveState, block_id: block, enrolled, saved: latest.size, tally, wrongSure })
 })

@@ -2,115 +2,37 @@ import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getBalance } from '@/lib/points'
-import { targetValue, type MasteryRecord } from '@/data/curriculum-types'
-import type { AvatarItem, EquippedItems, ItemSlot } from '@/lib/avatar/types'
-
-// GET /api/avatar
-// Returns the full avatar bundle for the signed-in student:
-//   - traits (null until trait-builder completed)
-//   - equipped items by slot
-//   - owned item slugs
-//   - the whole catalog with computed state per item
-//   - current XP balance (so the wardrobe can show what's affordable)
-
-export type CatalogState = 'owned' | 'affordable' | 'too_expensive' | 'unlock_available' | 'locked_until_mastery' | 'staff_free'
-
-interface CatalogEntry extends AvatarItem { state: CatalogState; unlock_progress?: number }
-
-export const GET = withAuth(async (request, ctx) => {
-    const userId = ctx.userId
-
-    // Staff (teacher + admin) get every item for free — they're not the
-    // customer earning XP from lesson engagement. Use REAL role so view-as
-    // doesn't change the user's own avatar economics.
-    const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
-
-    // 1) Avatar row (traits + equipped) + alias/name (columns on students).
-    const [{ data: avatarRow }, { data: studentRow }] = await Promise.all([
-      supabaseAdmin
-        .from('student_avatars')
-        .select('traits, equipped, setup_completed')
-        .eq('user_id', userId)
-        .maybeSingle(),
-      supabaseAdmin
-        .from('students')
-        .select('alias, name')
-        .eq('id', userId)
-        .maybeSingle(),
+import { ITEM_COLUMNS, saveAvatar } from '@/lib/avatar/server'
+import { withDefaults, type AvatarItem, type CatalogEntry } from '@/lib/avatar/types'
+export type { ItemSlot, CatalogState } from '@/lib/avatar/types'
+export const PATCH = withAuth(saveAvatar)
+export const GET = withAuth(async (_request, ctx) => {
+  const isStaff = ctx.realRole === 'admin' || ctx.realRole === 'teacher'
+  const [avatar, student, itemsResult, ownedResult, totals] = await Promise.all([
+    supabaseAdmin.from('student_avatars').select('traits, equipped, setup_completed, revision, gallery_visible, saved_looks').eq('user_id', ctx.userId).maybeSingle(),
+    supabaseAdmin.from('students').select('alias, name').eq('id', ctx.userId).maybeSingle(),
+    supabaseAdmin.from('avatar_items').select(ITEM_COLUMNS).order('sort_order').limit(1000),
+    supabaseAdmin.from('student_owned_items').select('item_slug').eq('user_id', ctx.userId).limit(1000),
+    isStaff ? Promise.resolve({ balance: 0, lifetimeEarned: 0, spent: 0 }) : getBalance(ctx.userId),
+  ])
+  for (const r of [avatar, student, itemsResult, ownedResult]) if (r.error) throw r.error
+  const owned = new Set((ownedResult.data ?? []).map(r => r.item_slug))
+  const items = (itemsResult.data as unknown as AvatarItem[]).filter(i => i.enabled || owned.has(i.slug))
+  const targets = [...new Set(items.flatMap(i => i.unlock_target_id ? [i.unlock_target_id] : []))]
+  const levels = new Map<string, number>(); const statements = new Map<string, string>()
+  if (targets.length) {
+    const [targetRows, ...rollups] = await Promise.all([
+      supabaseAdmin.from('learning_targets').select('id, statement').in('id', targets),
+      ...targets.map(id => supabaseAdmin.rpc('avatar_target_level', { p_user_id: ctx.userId, p_target_id: id })),
     ])
-
-    const traits = avatarRow?.setup_completed ? (avatarRow.traits as Record<string, string>) : null
-    const equipped = (avatarRow?.equipped ?? {}) as EquippedItems
-    const setup_completed = !!avatarRow?.setup_completed
-    const alias = (studentRow as { alias?: string | null } | null)?.alias ?? null
-    // Roster (Google) name — what the leaderboard shows when no alias is set.
-    const name = (studentRow as { name?: string | null } | null)?.name ?? null
-
-    // 2) Catalog + ownership in parallel. Skip XP balance for staff — they
-    //    don't have an economy and items are free for them.
-    const [{ data: itemsRaw }, { data: ownedRaw }, balance] = await Promise.all([
-      supabaseAdmin
-        .from('avatar_items')
-        .select('slug, slot, name, cost_xp, unlock_target_id, unlock_min_level, svg_layer, z_order')
-        .eq('enabled', true)
-        .order('sort_order', { ascending: true }),
-      supabaseAdmin.from('student_owned_items').select('item_slug').eq('user_id', userId),
-      isStaff ? Promise.resolve({ balance: 0, lifetimeEarned: 0, spent: 0 }) : getBalance(userId),
-    ])
-    const items = (itemsRaw ?? []) as AvatarItem[]
-    const owned = new Set((ownedRaw ?? []).map((r) => (r as { item_slug: string }).item_slug))
-
-    // 3) Mastery rollup for any unlock-gated items (students only — staff
-    //    bypass the gate).
-    const unlockTargetIds = isStaff ? [] : [...new Set(items.map((i) => i.unlock_target_id).filter(Boolean) as string[])]
-    const targetLevel = new Map<string, number | null>()
-    if (unlockTargetIds.length > 0) {
-      const { data: recs } = await supabaseAdmin
-        .from('mastery_records')
-        .select('user_id, target_id, level, observed_at')
-        .eq('user_id', userId)
-        .in('target_id', unlockTargetIds)
-        .order('observed_at', { ascending: true })
-      const byTarget = new Map<string, MasteryRecord[]>()
-      for (const r of (recs ?? []) as { target_id: string; level: number; observed_at: string }[]) {
-        const arr = byTarget.get(r.target_id) ?? []
-        arr.push({ studentId: userId, targetId: r.target_id, level: r.level as 1 | 2 | 3, observedAt: r.observed_at })
-        byTarget.set(r.target_id, arr)
-      }
-      for (const tid of unlockTargetIds) {
-        const arr = byTarget.get(tid) ?? []
-        targetLevel.set(tid, arr.length > 0 ? targetValue(arr) : null)
-      }
-    }
-
-    // 4) Compute per-item state. Staff path is uniform: owned or staff_free.
-    const catalog: CatalogEntry[] = items.map((item) => {
-      if (owned.has(item.slug)) return { ...item, state: 'owned' }
-      if (isStaff) return { ...item, state: 'staff_free' }
-      if (item.unlock_target_id) {
-        const level = targetLevel.get(item.unlock_target_id) ?? 0
-        const need = item.unlock_min_level ?? 2.5
-        if (level >= need) return { ...item, state: 'unlock_available', unlock_progress: level }
-        return { ...item, state: 'locked_until_mastery', unlock_progress: level }
-      }
-      if (item.cost_xp == null) return { ...item, state: 'locked_until_mastery' } // safety net
-      if (balance.balance >= item.cost_xp) return { ...item, state: 'affordable' }
-      return { ...item, state: 'too_expensive' }
-    })
-
-    return NextResponse.json({
-      traits,
-      setup_completed,
-      equipped,
-      owned: [...owned],
-      catalog,
-      balance: balance.balance,
-      lifetimeEarned: balance.lifetimeEarned,
-      isStaff,
-      alias,
-      name,
-    })
+    if (targetRows.error) throw targetRows.error
+    for (const t of targetRows.data ?? []) statements.set(t.id, t.statement)
+    rollups.forEach((r, index) => { if (r.error) throw r.error; levels.set(targets[index], Number(r.data)) })
+  }
+  const catalog: CatalogEntry[] = items.map(item => {
+    const level = item.unlock_target_id ? levels.get(item.unlock_target_id) ?? 0 : 0
+    const state = owned.has(item.slug) ? 'owned' : isStaff ? 'staff_free' : item.unlock_target_id ? (level >= Number(item.unlock_min_level ?? 2.5) ? 'unlock_available' : 'locked_until_mastery') : item.cost_xp == null ? 'locked_until_mastery' : totals.balance >= item.cost_xp ? 'affordable' : 'too_expensive'
+    return { ...item, unlock_min_level: item.unlock_min_level == null ? null : Number(item.unlock_min_level), state, unlock_progress: level, target_statement: item.unlock_target_id ? statements.get(item.unlock_target_id) ?? 'Learning target' : null }
+  })
+  return NextResponse.json({ user_id: ctx.userId, traits: withDefaults(avatar.data?.traits), equipped: avatar.data?.equipped ?? {}, setup_completed: !!avatar.data?.setup_completed, revision: avatar.data?.revision ?? 0, gallery_visible: avatar.data?.gallery_visible ?? false, saved_looks: avatar.data?.saved_looks ?? [], catalog, owned: [...owned], ...totals, isStaff, alias: student.data?.alias ?? null, name: student.data?.name ?? null })
 })
-
-// Re-export slot type so other routes can reuse it.
-export type { ItemSlot }

@@ -50,6 +50,8 @@ const TOUR: { title: string; body: string }[] = [
 // incomplete the tile wears a "Set up" badge.
 const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; accent: string; needs?: StepKey }[] = [
   { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Your day-by-day teacher plans for each unit', Icon: BookOpen, accent: 'var(--primary)', needs: 'curriculum' },
+  { href: '/admin/command-center', label: 'iPad Command Center', desc: 'Control the projector, polls, timers and group activities', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
+  { href: '/admin/observe', label: 'Classroom observations', desc: 'Quick mastery ratings and feedback while you walk the room', Icon: Eye, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/roster', label: 'Roster & classes', desc: 'Your synced classes and student performance', Icon: GraduationCap, accent: 'var(--primary)', needs: 'classroom' },
   { href: '/admin/pacing', label: 'Pacing', desc: 'Where each of your sections is on the calendar', Icon: CalendarClock, accent: 'var(--reward)', needs: 'pacing' },
