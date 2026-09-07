@@ -1,15 +1,16 @@
 "use client"
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { getUserRole } from '@/lib/permissions'
+import { usePermissions } from '@/hooks/usePermissions'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Gamepad2, ExternalLink, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import VocabularySetManager from '@/components/vocabulary/VocabularySetManager'
 
 export default function VocabularyManagementPage() {
-  const { data: session, status } = useSession()
+  const { status } = useSession()
+  const { userRole } = usePermissions()
   
   // Wait for session to load before checking permissions
   if (status === 'loading') {
@@ -23,7 +24,6 @@ export default function VocabularyManagementPage() {
   }
   
   // Check if user has admin access
-  const userRole = getUserRole(session?.user?.email)
   if (userRole !== 'admin' && userRole !== 'teacher') {
     redirect('/home')
   }
@@ -33,7 +33,7 @@ export default function VocabularyManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Vocabulary Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">Vocabulary word sets</h1>
           <p className="text-muted-foreground">
             Create and manage vocabulary sets for use in vocabulary games and assignments.
           </p>
@@ -55,6 +55,16 @@ export default function VocabularyManagementPage() {
         </div>
       </div>
 
+      <Card>
+        <CardHeader><CardTitle>Assign vocabulary and track learning</CardTitle></CardHeader>
+        <CardContent className="space-y-3">
+          <p>Choose a word set and your students. Each student receives a vocabulary task on Home, and their checks appear in your class tracker.</p>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild className="min-h-11"><Link href="/admin/vocabulary/assign">Assign vocabulary</Link></Button>
+            <Button asChild variant="outline" className="min-h-11"><Link href="/admin/vocabulary/tasks">Track student progress</Link></Button>
+          </div>
+        </CardContent>
+      </Card>
       {/* Quick Info Card */}
       <Card className="bg-gradient-to-r from-primary/5 to-secondary/5 border-primary/20">
         <CardHeader className="pb-3">
@@ -82,10 +92,10 @@ export default function VocabularyManagementPage() {
             <div className="relative">
               <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-bold">3</div>
               <div className="pl-6">
-                <p className="font-medium mb-1">Assign (Optional)</p>
+                <p className="font-medium mb-1">Assign a task</p>
                 <p className="text-muted-foreground text-xs">
                   <Link href="/admin/vocabulary/assign" className="text-primary hover:underline">
-                    Assign words · read competency
+                    Choose words and students
                   </Link> — assign sets to a class and see word-by-word accuracy, with vs. without SEI supports
                 </p>
               </div>
@@ -93,8 +103,8 @@ export default function VocabularyManagementPage() {
             <div className="relative">
               <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">✓</div>
               <div className="pl-6">
-                <p className="font-medium mb-1">Students Play</p>
-                <p className="text-muted-foreground text-xs">Students access games from the Vocabulary section</p>
+                <p className="font-medium mb-1">Students check their words</p>
+                <p className="text-muted-foreground text-xs">Students open their task on Home; saved checks update your tracker</p>
               </div>
             </div>
           </div>

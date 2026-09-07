@@ -4,7 +4,7 @@ Implemented September 6–7, 2026. Respects additive schema changes (A-2), teach
 
 ## Teacher workflow
 
-Open **Admin → Vocabulary → Assign vocabulary** (`/admin/vocabulary/assign`). Published sets and the teacher mastery-entry target list also have assignment links.
+Open **Teach & grade → Vocabulary tasks** (`/admin/vocabulary/tasks`). The default view is a class tracker with students as rows and tasks as columns. Choose **Assign vocabulary** to create a task; selecting a published word set selects its words and title automatically. Saving returns to the tracker with the new report selected. The word library also has prominent assignment and progress buttons. Direct assignment links remain at `/admin/vocabulary/assign`. Published sets and the teacher mastery-entry target list also have assignment links.
 
 1. Choose a target or set. Search/select everyday, academic, and physics words.
 2. Preview and edit tier, icon, example/frame, and authored translations. Existing Spanish fields are preserved; additional languages have a keyed translation map. Missing translations are not replaced with Spanish.
@@ -44,3 +44,9 @@ Historical game practice stays in the legacy grid and is not retroactively treat
 Application changes are in the local checkout; no production web deployment was performed. The database migration is applied. A live local walkthrough was blocked by this checkout's invalid Supabase API key. Disk exhaustion also interrupted the Next.js development build; temporary tool downloads and generated build output were removed. A production build and live end-to-end verification still need valid application credentials and adequate free disk space.
 
 Other concurrent lesson-system edits in the shared checkout were preserved and are outside this vocabulary change. Deploy the vocabulary application changes together with the applied migration.
+
+## Assignment usability follow-up
+
+The class tracker labels each assigned student/task as Not started, In progress, Goal met, or Review due, with words ready and accuracy. Unassigned cells remain separate from missing evidence. Teachers can filter by class, include archived tasks, and open the existing word-level report. Individual review preserves the original check requirements and directions. Respects M-1/M-4 and SEI-9; no new database changes.
+
+Verified with TypeScript, the 14 existing route checks, and a browser fixture walkthrough: choose a set (all three words selected), attach a target without losing the selection, assign a class, and automatically return to the new task report and progress grid. These follow-up website changes remain local and are not deployed.

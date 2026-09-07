@@ -26,6 +26,7 @@ export const GROUPS: ToolGroup[] = [
     title: 'Teach & grade',
     tools: [
       { href: '/admin/classes', label: 'Classes', desc: 'The cockpit — one card per class: plan, roster & analytics, engagement', icon: GraduationCap, accent: 'var(--primary)' },
+      { href: '/admin/vocabulary/tasks', label: 'Vocabulary tasks', desc: 'Assign word goals and track each student’s accuracy and progress by target', icon: BookText, accent: 'var(--primary)' },
       { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', icon: LayoutGrid, accent: 'var(--primary)' },
       { href: '/admin/lobby', label: 'Lobby sessions', desc: 'Code-gated group activities — sort students, split a passphrase, review every artifact live', icon: Users, accent: 'var(--primary)' },
       { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close lessons per class — the single release board', icon: CalendarClock, accent: 'var(--primary)' },
@@ -59,7 +60,7 @@ export const GROUPS: ToolGroup[] = [
     tools: [
       { href: '/admin/textbook', label: 'Textbook chapters', desc: 'Upload Conceptual Physics chapter PDFs to the private bucket and see what students can open', icon: BookText, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
-      { href: '/admin/vocabulary', label: 'Vocabulary', desc: 'Term sets and the review games', icon: Gamepad2, accent: 'var(--reward)' },
+      { href: '/admin/vocabulary', label: 'Vocabulary word sets', desc: 'Create and publish words for vocabulary tasks', icon: Gamepad2, accent: 'var(--reward)' },
       { href: '/admin/media', label: 'Media upload', desc: 'Drop a PDF or image, get a URL to paste into any lesson block', icon: ImageIcon, accent: 'var(--primary)' },
       { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },
       { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
