@@ -34,7 +34,9 @@ const fieldClass = 'min-h-12 w-full min-w-0 rounded-xl border bg-background px-3
 
 async function readJson<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, options)
-  const data = await response.json()
+  const data = await response.json().catch(() => {
+    throw new Error(`The server returned an unexpected response (${response.status}). Reload the page and try again.`)
+  })
   if (!response.ok) throw new Error(data.error || `Request failed (${response.status})`)
   return data as T
 }
@@ -53,6 +55,7 @@ export default function ObservationPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [coursesError, setCoursesError] = useState('')
   const [notice, setNotice] = useState('')
   const [reload, setReload] = useState(0)
   const inFlight = useRef(false)
@@ -69,9 +72,10 @@ export default function ObservationPage() {
   useEffect(() => {
     if (!staff) return
     const controller = new AbortController()
-    readJson<{ courses: Course[] }>('/api/classes', { signal: controller.signal })
+    setCoursesError('')
+    readJson<{ courses: Course[] }>('/api/teacher/courses', { signal: controller.signal })
       .then((data) => setCourses(data.courses ?? []))
-      .catch((e) => { if (!controller.signal.aborted) setError(e.message) })
+      .catch((e) => { if (!controller.signal.aborted) setCoursesError(`Could not load your classes. ${e.message}`) })
     return () => controller.abort()
   }, [staff, reload])
 
@@ -172,6 +176,7 @@ export default function ObservationPage() {
         <label className="min-w-0 space-y-1 text-caption">Class<select aria-label="Class" className={fieldClass} value={classId ?? ''} onChange={(e) => { const course = courses.find((c) => c.id === e.target.value); setUnit('auto'); setSearch(''); setNotice(''); setClassScope(e.target.value || null, course?.name) }}><option value="">All my students</option>{courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}</select></label>
         <label className="min-w-0 space-y-1 text-caption">Unit<select aria-label="Unit" disabled={loading} className={fieldClass} value={unit === 'auto' ? grid?.unitId ?? 'auto' : unit} onChange={(e) => { setUnit(e.target.value); setNotice('') }}>{!grid && <option value={unit}>Loading units…</option>}{grid?.units.map((u) => <option key={u.id} value={u.id}>{u.label ?? u.name}</option>)}</select></label>
       </fieldset>
+      {coursesError && <div role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{coursesError}<Button variant="outline" disabled={saving} className="ml-3 min-h-12" onClick={() => setReload((n) => n + 1)}>Retry loading classes</Button></div>}
       {error && <div role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{error}{!grid && <Button variant="outline" className="ml-3 min-h-12" onClick={() => setReload((n) => n + 1)}>Retry loading</Button>}</div>}
       <p role="status" className="text-caption min-h-5" style={{ color: 'var(--viz-up)' }}>{saving ? 'Saving… Keep this view open.' : notice}</p>
       {loading ? <p role="status">Loading your roster and mastery targets…</p> : grid && <>

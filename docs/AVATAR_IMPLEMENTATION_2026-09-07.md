@@ -1,6 +1,8 @@
 # Avatar implementation — September 7, 2026
 
-Implemented the audit fixes and an expanded customization system. Application changes and the migration are prepared locally; **production has not been migrated or deployed**. Unrelated concurrent workspace edits are outside this change.
+Implemented the audit fixes and an expanded customization system. **Production migration applied September 7, 2026**, after the deployed application reported missing-column errors. Unrelated concurrent workspace edits are outside this change.
+
+Production repair: Vercel logs identified missing `student_avatars.revision` and `avatar_items.render_options`. Applied the prepared avatar migration and requested a PostgREST schema reload. Verified all three avatar columns, 28 catalog entries, and successful economy calculations for all 289 student records. Security advisors reported only informational no-policy notices for the server-only avatar tables, with no warnings on the new functions. A direct REST smoke test using local environment credentials was unavailable because those credentials returned `Invalid API key`; this does not establish a production credential problem. Authenticated production UI verification remains pending.
 
 ## Behavior
 
