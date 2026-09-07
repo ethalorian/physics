@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 
 /**
  * Report a capture component's in-progress value as a draft whenever it changes.
- * Pass `undefined` while there is nothing worth keeping (untouched, empty). The
+ * Pass `undefined` while there is the component is untouched. Explicit empty objects/strings must be sent after clearing. The
  * first render never reports (hydration is not a change); equal values (by JSON)
  * are skipped so re-renders cost nothing. Debouncing and batching live in
  * useBlockResponses.draft — this hook only says "it changed".

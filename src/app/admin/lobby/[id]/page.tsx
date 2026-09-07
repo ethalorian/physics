@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, KeyRound, Shuffle, Play, Square, CheckCircle2, Clock, Trash2, Megaphone, Presentation } from 'lucide-react'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
+import type { ContentBlock } from '@/data/content-blocks'
 import Avatar from '@/components/avatar/Avatar'
 import EscapeDashboard from '@/components/lobby/EscapeDashboard'
 import { StrokesSvg, type Stroke } from '@/lib/draw/strokes'
@@ -20,7 +22,7 @@ interface Member {
   traits: AvatarTraits; equipped: EquippedItems
   artifact: { response: unknown; created_at: string } | null
 }
-interface Group { id: string; label: string; passphrase: string[] }
+interface Group { id: string; label: string; passphrase: string[]; sharedArtifact?: { response: unknown; updated_at: string } | null }
 interface SessionRow {
   id: string; code: string; status: string; task_type: string
   grouping_mode: string; group_size: number; prompt: string | null
@@ -95,6 +97,8 @@ function GroupTimeline({ group, members, card }: { group: Group; members: Member
 export default function LobbyDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const [block, setBlock] = useState<ContentBlock | null>(null)
+  const [referenceBlocks, setReferenceBlocks] = useState<ContentBlock[]>([])
   const [session, setSession] = useState<SessionRow | null>(null)
   const [groups, setGroups] = useState<Group[]>([])
   const [members, setMembers] = useState<Member[]>([])
@@ -110,7 +114,7 @@ export default function LobbyDetailPage() {
 
   const load = useCallback(() => {
     fetch(`/api/lobby/sessions/${id}`).then((r) => r.json()).then((d) => {
-      if (d.session) setSession(d.session)
+      if (d.session) setSession(d.session); setBlock(d.block ?? null); setReferenceBlocks(d.referenceBlocks ?? [])
       setGroups(d.groups ?? [])
       setMembers(d.members ?? [])
       setAvatarItems(d.avatarItems ?? [])
@@ -237,6 +241,7 @@ export default function LobbyDetailPage() {
                     style={{ border: '1px solid var(--border)', background: 'transparent', color: 'var(--primary)', cursor: 'pointer' }}>
                     <Megaphone size={12} /> Spotlight a reporter
                   </button>
+                  {g.sharedArtifact && <div className="my-3"><p className="text-xs font-semibold mb-2">Shared artifact · {gm.map(m => m.name).join(', ')}</p>{block ? <BlockRenderer referenceBlocks={referenceBlocks} blocks={[block]} lessonId={session.id} responses={{ [block.id]: { response: g.sharedArtifact.response, created_at: g.sharedArtifact.updated_at } }} hydrated readOnly /> : hasStrokes(g.sharedArtifact.response) ? <StrokesSvg strokes={g.sharedArtifact.response.strokes} /> : <p className="text-sm whitespace-pre-wrap">{artifactText(g.sharedArtifact.response)}</p>}</div>}
                   <div className="grid gap-1.5">
                     {gm.map((m) => (
                       <div key={m.user_id} className="flex items-start justify-between gap-2 text-sm border-t pt-1.5"
@@ -267,7 +272,7 @@ export default function LobbyDetailPage() {
                             </div>
                             {m.email && <div className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{m.email}</div>}
                             {m.piece && <div className="text-[11px] mt-0.5" style={{ color: 'var(--primary)' }}>piece: {m.piece}</div>}
-                            {m.artifact && (hasStrokes(m.artifact.response) ? (
+                            {!g.sharedArtifact && m.artifact && (hasStrokes(m.artifact.response) ? (
                               <div className="mt-1"><StrokesSvg strokes={m.artifact.response.strokes} /></div>
                             ) : artifactText(m.artifact.response) ? (
                               <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>“{artifactText(m.artifact.response).slice(0, 140)}”</div>

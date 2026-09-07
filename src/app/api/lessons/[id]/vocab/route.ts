@@ -1,3 +1,4 @@
+import { authorizeLesson } from '@/lib/lesson-access'
 import { saveVocabTerms } from '@/lib/vocab-terms'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -23,6 +24,8 @@ type LessonRow = { id: string; title: string | null; unit: string | null }
 
 export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
     const { id: lessonId } = await ctx.params
+    const access = await authorizeLesson(ctx, lessonId)
+    if (!access.ok) return access.response
 
     const { data: set } = await supabaseAdmin
       .from('vocabulary_sets')

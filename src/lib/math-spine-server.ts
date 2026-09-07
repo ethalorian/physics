@@ -29,24 +29,26 @@ export async function recordMathObservation(args: {
   unitId?: string | null
   evidenceSource?: string | null
   observedAt?: string
+  existingSubmissionId?: string
 }): Promise<RecordMathResult> {
   const { userId, userEmail, competencyId, level } = args
 
   // 1) Append the observation (append-only).
-  const { data: record, error: insertErr } = await supabaseAdmin
-    .from('math_competency_records')
-    .insert({
-      user_id: userId,
-      user_email: userEmail ?? null,
-      competency_id: competencyId,
-      level,
-      unit_id: args.unitId ?? null,
-      evidence_source: args.evidenceSource ?? null,
+  let record: unknown = null
+  if (args.existingSubmissionId) {
+    const result = await supabaseAdmin.from('math_competency_records').select('id').eq('submission_id', args.existingSubmissionId).maybeSingle()
+    if (result.error) return { record: null, awarded: [], error: result.error.message }
+    if (!result.data) return { record: null, awarded: [] }
+    record = result.data
+  } else {
+    const result = await supabaseAdmin.from('math_competency_records').insert({
+      user_id: userId, user_email: userEmail ?? null, competency_id: competencyId,
+      level, unit_id: args.unitId ?? null, evidence_source: args.evidenceSource ?? null,
       observed_at: args.observedAt ?? new Date().toISOString(),
-    })
-    .select()
-    .single()
-  if (insertErr) return { record: null, awarded: [], error: insertErr.message }
+    }).select().single()
+    if (result.error) return { record: null, awarded: [], error: result.error.message }
+    record = result.data
+  }
 
   // 2) Identify the competency (slug + strand).
   const { data: comp } = await supabaseAdmin
@@ -119,4 +121,24 @@ export async function recordMathObservation(args: {
   }
 
   return { record, awarded }
+}
+
+
+/** E-5: resolve authored math moves for the same atomic lesson-evidence insert.
+ * Teacher observations remain exclusively in recordMathObservation.
+ * No writes or ratings. Caller inserts the returned IDs with the saved response.
+ */
+export async function recordEvidence(args: {
+  competencySlugs: string[]
+  evidenceSource: 'lesson'
+}): Promise<{ competencyIds: string[]; error?: string }> {
+  const slugs = [...new Set(args.competencySlugs.map(s => s.trim()).filter(Boolean))]
+  if (!slugs.length) return { competencyIds: [] }
+  const { data: competencies, error } = await supabaseAdmin.from('math_competencies')
+    .select('id, slug').in('slug', slugs).eq('is_active', true)
+  if (error) return { competencyIds: [], error: error.message }
+  const found = new Map((competencies ?? []).map(c => [c.slug, c.id]))
+  if (slugs.some(slug => !found.has(slug))) return { competencyIds: [], error: 'Unknown or inactive authored math move' }
+  const competencyIds = slugs.map(slug => found.get(slug)!)
+  return { competencyIds }
 }

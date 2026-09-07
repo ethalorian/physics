@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Hourglass, Lock, Unlock, CheckCircle2, Send, Target } from 'lucide-react'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
+import type { ContentBlock } from '@/data/content-blocks'
+import { LanguageProfileProvider } from '@/components/lessons/LanguageProfileProvider'
 import PaintPad from '@/components/blocks/PaintPad'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import Avatar from '@/components/avatar/Avatar'
@@ -15,6 +18,7 @@ interface RoomMate { alias: string; isMe: boolean }
 interface Role { label: string; blurb: string; stem: string }
 
 interface State {
+  referenceBlocks?: ContentBlock[]; block?: ContentBlock | null; lesson_id?: string; sharedArtifact?: { response: unknown; updated_at: string } | null
   session_id: string; status: string; task_type: string; prompt: string | null
   joined: boolean; grouped: boolean; word: string | null
   phraseLength: number; enteredWords: string[]; completed: boolean; submitted: boolean
@@ -46,6 +50,7 @@ function presenceDiff(prev: string[], next: string[]): string | null {
 
 export default function LobbyActivityPage() {
   const { code } = useParams<{ code: string }>()
+  const [groupError, setGroupError] = useState<string | null>(null)
   const [st, setSt] = useState<State | null>(null)
   const [collected, setCollected] = useState<string[]>([])
   const [wordInput, setWordInput] = useState('')
@@ -131,7 +136,7 @@ export default function LobbyActivityPage() {
 
   const card: React.CSSProperties = { borderColor: 'var(--border)', background: 'var(--card)' }
   const wrap = (inner: React.ReactNode) => (
-    <div className="max-w-md mx-auto p-5 mt-8" style={{ color: 'var(--foreground)' }}>
+    <div className="max-w-3xl mx-auto p-5 mt-8" style={{ color: 'var(--foreground)' }}>
       {/* One-shot animations only — the pulse re-runs per poll tick (keyed), never
           idles, and the global prefers-reduced-motion rule collapses both. */}
       <style>{`
@@ -173,7 +178,7 @@ export default function LobbyActivityPage() {
     </div>
   )
   // Escape sessions store their room config (JSON) in `prompt`; never show it as a task.
-  const taskCallout = st?.prompt && st.task_type !== 'escape' ? (
+  const taskCallout = st?.prompt && !st.block && st.task_type !== 'escape' ? (
     <div className="mb-4 rounded-xl p-4 text-left" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
       <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ opacity: 0.85 }}>
         <Target size={13} /> Your task
@@ -201,7 +206,8 @@ export default function LobbyActivityPage() {
     <div className="text-center">
       <CheckCircle2 size={40} style={{ color: 'var(--success)' }} className="mx-auto mb-2" />
       <h1 className="text-lg font-semibold">Submitted!</h1>
-      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Your work is in.</p>
+      <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Your group artifact is saved for every member.</p>
+      {st.block && st.sharedArtifact && <BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={{ [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } }} hydrated readOnly />}
       {st.myRole ? (
         <div className="mt-4 rounded-xl p-4 text-left" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
           <div className="text-[11px] font-semibold uppercase tracking-wider mb-1" style={{ color: 'var(--muted-foreground)' }}>One tap · your role</div>
@@ -368,7 +374,11 @@ export default function LobbyActivityPage() {
           <div className="flex items-center gap-2 mb-3 text-sm font-medium" style={{ color: 'var(--success)' }}>
             <Unlock size={15} /> Passphrase complete — submit your work.
           </div>
-          {isDrawing ? (
+          {st.block ? <LanguageProfileProvider><BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={st.sharedArtifact ? { [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } } : {}} hydrated save={async (_id, _type, artifact) => {
+            const r = await fetch('/api/lobby/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: st.session_id, response: artifact }) })
+            if (!r.ok) { const d = await r.json(); setGroupError(d.error ?? 'Group work could not save'); return false }
+            setGroupError(null); poll(); return true
+          }} /></LanguageProfileProvider> : isDrawing ? (
             <PaintPad value={strokes} onChange={setStrokes} />
           ) : (
             <textarea value={response} onChange={(e) => setResponse(e.target.value)} rows={5}
@@ -376,7 +386,8 @@ export default function LobbyActivityPage() {
               className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }} />
           )}
 
-          <div className="mt-3 rounded-lg p-2.5" style={{ background: 'color-mix(in oklch, var(--reward) 8%, transparent)', border: '1px solid color-mix(in oklch, var(--reward) 30%, transparent)' }}>
+          {groupError && <p role="alert" className="text-destructive">{groupError}</p>}
+          {!st.block && <><div className="mt-3 rounded-lg p-2.5" style={{ background: 'color-mix(in oklch, var(--reward) 8%, transparent)', border: '1px solid color-mix(in oklch, var(--reward) 30%, transparent)' }}>
             <label className="block text-xs mb-1 font-medium">Build on a groupmate&apos;s idea (required):</label>
             <select value={buildWho} onChange={(e) => setBuildWho(e.target.value)}
               className="w-full rounded-lg border p-2 text-sm mb-2" style={{ borderColor: 'var(--border)', background: 'var(--background)', color: 'var(--foreground)' }}>
@@ -392,7 +403,7 @@ export default function LobbyActivityPage() {
             className="mt-3 w-full text-sm font-semibold rounded-lg px-4 py-2.5 inline-flex items-center justify-center gap-1.5 disabled:opacity-50"
             style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
             <Send size={15} /> {busy ? 'Submitting…' : 'Submit'}
-          </button>
+          </button></>}
         </>
       )}
     </div>

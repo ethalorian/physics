@@ -27,6 +27,13 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
   const [knob, setKnob] = useState(def.knob.initial)
   const [readout, setReadout] = useState<string | null>(null)
   const [failed, setFailed] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
+  useEffect(() => {
+    const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => { setReducedMotion(preference.matches); if (preference.matches) setPlaying(false) }
+    update(); preference.addEventListener('change', update)
+    return () => preference.removeEventListener('change', update)
+  }, [])
 
   // Refs mirror state so the rAF loop reads fresh values without re-binding.
   const tRef = useRef(t); tRef.current = t
@@ -105,7 +112,8 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
   if (failed) {
     return (
       <div className="text-sm rounded-lg border p-3" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)', background: 'var(--card)' }}>
-        This animation couldn&apos;t start on this device.
+        <p>This animation couldn&apos;t start on this device. Read the same sequence below.</p>
+        <ol className="list-decimal pl-5 mt-2 space-y-1">{def.steps.map((step, i) => <li key={i}>{step.label}</li>)}</ol>
       </div>
     )
   }
@@ -115,6 +123,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
 
   return (
     <div>
+      {reducedMotion && <p className="text-sm mb-2 text-muted-foreground">Motion is paused. Use Next step or the timeline to compare still frames; Play starts motion only when you choose it.</p>}
       {caption && <p className="text-sm mb-2" style={{ color: 'var(--foreground)' }}>{caption}</p>}
       <div ref={wrapRef} className="rounded-lg overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
         <canvas ref={canvasRef} style={{ display: 'block', width: '100%' }} aria-label={def.title} role="img" />
@@ -129,7 +138,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
           <button
             onClick={() => { if (atEnd) seek(0); setPlaying((p) => !p) }}
             className="grid place-items-center rounded-full"
-            style={{ width: 34, height: 34, background: 'var(--primary)', color: 'var(--primary-foreground)' }}
+            style={{ width: 44, height: 44, background: 'var(--primary)', color: 'var(--primary-foreground)' }}
             aria-label={playing ? 'Pause' : 'Play'}
           >
             {playing ? <Pause size={16} /> : <Play size={16} style={{ marginLeft: 2 }} />}
@@ -137,7 +146,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
           <button
             onClick={() => { setPlaying(false); seek(0) }}
             className="grid place-items-center rounded-full"
-            style={{ width: 30, height: 30, background: 'var(--secondary)', color: 'var(--foreground)' }}
+            style={{ width: 44, height: 44, background: 'var(--secondary)', color: 'var(--foreground)' }}
             aria-label="Restart"
           >
             <RotateCcw size={14} />
@@ -146,7 +155,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
             <button
               onClick={() => { setPlaying(false); seek(nextStepTime) }}
               className="grid place-items-center rounded-full"
-              style={{ width: 30, height: 30, background: 'var(--secondary)', color: 'var(--foreground)' }}
+              style={{ width: 44, height: 44, background: 'var(--secondary)', color: 'var(--foreground)' }}
               aria-label="Next step"
               title="Jump to next step"
             >
@@ -191,6 +200,7 @@ export default function AnimationStage({ def, caption }: { def: AnimDefinition; 
           </div>
         )}
       </div>
+      <details open={reducedMotion} className="mt-3 rounded-lg border p-3 text-sm"><summary className="cursor-pointer min-h-11">Read the animation sequence</summary><ol className="list-decimal pl-5 space-y-2">{def.steps.map((step, i) => <li key={i}>{step.label}</li>)}</ol></details>
       <p className="text-xs mt-1.5" style={{ color: 'var(--muted-foreground)' }}>
         Watch first. Then change <strong>{k.label.toLowerCase()}</strong>, predict what will differ, and replay.
       </p>

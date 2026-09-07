@@ -1,121 +1,75 @@
+import { evidenceWithLinks } from '@/lib/lesson-evidence-links'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { resolveRosterScope, getTeacherStudentGids } from '@/lib/teacher-scope'
+import { pendingLessonSubmissions, type LessonSubmission } from '@/lib/lesson-review'
+import { isEvidenceSource } from '@/lib/evidence'
 
-// GET /api/mastery/queue?unit_id=unit-1
-// The grading queue: every roster student who has SUBMITTED a lesson in the unit
-// since the teacher last rated them. Saving block work is a draft and does NOT
-// appear here — only an explicit lesson submission (lesson_submissions) does.
-// Aging matters — 48h+ is flagged top priority; a student self-rating "Not yet"
-// (marzano = 1) is flagged for help. Most urgent surfaces first.
-
-type StudentRow = { id: string | null; name: string | null }
-type UnitRow = { id: string; name: string }
-type LessonRow = { id: string }
-type TargetRow = { id: string }
-type SubRow = { user_id: string; submitted_at: string }
-type BlockRow = { user_id: string; created_at: string; block_type: string | null; response: unknown }
-type RecRow = { user_id: string; observed_at: string }
-
-const HOUR = 60 * 60 * 1000
-
+// Deliberate turn-in and low-stakes evidence are separate workflows. Neither a unit-wide
+// rating nor a rating of a shared target can dismiss a different submitted lesson.
 export const GET = withAuth(async (request, ctx) => {
-    const role = ctx.role
-    if (role !== 'admin' && role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-    const qp = new URL(request.url).searchParams
-    const unitId = qp.get('unit_id') ?? 'unit-1'
-    const classId = qp.get('class')
-
-    // unit name -> lessons -> lessonIds
-    const { data: unitRows } = await supabaseAdmin.from('units').select('id, name').eq('id', unitId)
-    const unitName = ((unitRows ?? []) as UnitRow[])[0]?.name ?? null
-    let lessonIds: string[] = []
-    if (unitName) {
-      const { data: lr } = await supabaseAdmin.from('lessons').select('id').eq('unit', unitName)
-      lessonIds = ((lr ?? []) as LessonRow[]).map((l) => l.id)
-    }
-
-    // unit targets (for "last rated" + the cell to open)
-    const { data: tr } = await supabaseAdmin.from('learning_targets').select('id').eq('unit_id', unitId).order('order_index', { ascending: true })
-    const targetIds = ((tr ?? []) as TargetRow[]).map((t) => t.id)
-
-    // roster (same scoping as /api/mastery/roster)
-    let sQuery = supabaseAdmin.from('students').select('id, name').order('name', { ascending: true })
-    // The queue is a to-do list, and only the teacher of record can act on its
-    // items — so it is always scoped to the ACTOR'S own roster (admin included),
-    // intersected with any class filter. Monitoring other classes stays in the
-    // grid, which is view-only there.
-    const scope = await resolveRosterScope({ classId, role, scopeEmail: ctx.scopeEmail, teacherEmail: qp.get('teacher') })
-    const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
-    scope.gids = scope.gids ? scope.gids.filter((g) => own.has(g)) : [...own]
-    if (scope.gids) sQuery = sQuery.in('id', scope.gids)
-    const { data: sr } = await sQuery
-    const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id).map((s) => ({ id: s.id as string, name: s.name ?? 'Student' }))
-    const studentIds = students.map((s) => s.id)
-
-    if (studentIds.length === 0 || lessonIds.length === 0) {
-      return NextResponse.json({ unitId, firstTargetId: targetIds[0] ?? null, queue: [] })
-    }
-
-    // last rating per student on this unit's targets
-    const lastRatedByUser = new Map<string, number>()
-    if (targetIds.length > 0) {
-      const { data: rr } = await supabaseAdmin.from('mastery_records').select('user_id, observed_at').in('user_id', studentIds).in('target_id', targetIds)
-      for (const r of (rr ?? []) as RecRow[]) {
-        const t = new Date(r.observed_at).getTime()
-        if (t > (lastRatedByUser.get(r.user_id) ?? 0)) lastRatedByUser.set(r.user_id, t)
-      }
-    }
-
-    // SUBMITTED lessons in the unit — the ONLY thing that puts a student in the queue.
-    const { data: subs } = await supabaseAdmin
-      .from('lesson_submissions')
-      .select('user_id, submitted_at')
-      .in('user_id', studentIds)
-      .in('lesson_id', lessonIds)
-
-    const now = Date.now()
-    const byUser = new Map<string, { count: number; oldest: number; needsHelp: boolean }>()
-    for (const s of (subs ?? []) as SubRow[]) {
-      const submittedAt = new Date(s.submitted_at).getTime()
-      const lastRated = lastRatedByUser.get(s.user_id) ?? 0
-      if (submittedAt <= lastRated) continue // already rated since this submission
-      const cur = byUser.get(s.user_id) ?? { count: 0, oldest: submittedAt, needsHelp: false }
-      cur.count++
-      if (submittedAt < cur.oldest) cur.oldest = submittedAt
-      byUser.set(s.user_id, cur)
-    }
-
-    // needs-help flag: a student self-rated "Not yet" (marzano=1) since last rating
-    if (byUser.size > 0) {
-      const { data: br } = await supabaseAdmin
-        .from('block_responses')
-        .select('user_id, created_at, block_type, response')
-        .in('user_id', [...byUser.keys()])
-        .in('lesson_id', lessonIds)
-        .eq('block_type', 'marzano')
-      for (const b of (br ?? []) as BlockRow[]) {
-        const cur = byUser.get(b.user_id)
-        if (!cur) continue
-        if (new Date(b.created_at).getTime() > (lastRatedByUser.get(b.user_id) ?? 0) && Number(b.response) === 1) cur.needsHelp = true
-      }
-    }
-
-    const nameById = new Map<string, string>(students.map((s): [string, string] => [s.id, s.name]))
-    interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
-    const queue: QueueItem[] = []
-    for (const [uid, v] of byUser) {
-      const ageHours = Math.round((now - v.oldest) / HOUR)
-      queue.push({ studentId: uid, name: nameById.get(uid) ?? 'Student', count: v.count, oldestAgeHours: ageHours, aged: ageHours >= 48, needsHelp: v.needsHelp })
-    }
-    queue.sort((a, b) => {
-      const ap = (a.aged || a.needsHelp) ? 1 : 0
-      const bp = (b.aged || b.needsHelp) ? 1 : 0
-      if (ap !== bp) return bp - ap
-      return b.oldestAgeHours - a.oldestAgeHours
-    })
-
-    return NextResponse.json({ unitId, firstTargetId: targetIds[0] ?? null, queue })
+  if (ctx.role !== 'admin' && ctx.role !== 'teacher') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const qp = new URL(request.url).searchParams
+  const unitId = qp.get('unit_id') ?? 'unit-1'
+  const source = qp.get('evidence_source')
+  if (source && source !== 'untagged' && !isEvidenceSource(source)) return NextResponse.json({ error: 'Invalid evidence source' }, { status: 400 })
+  const scope = await resolveRosterScope({ classId: qp.get('class'), role: ctx.role, scopeEmail: ctx.scopeEmail, teacherEmail: qp.get('teacher') })
+  const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
+  const gids = scope.gids ? scope.gids.filter((g) => own.has(g)) : [...own]
+  if (!gids.length) return NextResponse.json({ unitId, queue: [], submissions: [], evidence: [] })
+  const [{ data: students, error: studentError }, { data: lessons, error: lessonError }] = await Promise.all([
+    supabaseAdmin.from('students').select('id, name').in('id', gids),
+    supabaseAdmin.from('lessons').select('id, title').eq('unit_id', unitId),
+  ])
+  if (studentError) throw studentError
+  if (lessonError) throw lessonError
+  const names = new Map((students ?? []).map((s) => [s.id, s.name ?? 'Student']))
+  const titles = new Map((lessons ?? []).map((l) => [l.id, l.title]))
+  const lessonIds = [...titles.keys()]
+  let submissions: (LessonSubmission & { studentId: string; name: string; lessonTitle: string; oldestAgeHours: number })[] = []
+  if (lessonIds.length) {
+    const { data: rows, error } = await supabaseAdmin.from('lesson_submissions').select('id, user_id, lesson_id, submitted_at').in('user_id', gids).in('lesson_id', lessonIds)
+    if (error) throw error
+    const ids = (rows ?? []).map((r) => r.id)
+    const { data: reviews, error: reviewError } = ids.length ? await supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', ids) : { data: [], error: null }
+    if (reviewError) throw reviewError
+    submissions = pendingLessonSubmissions(rows ?? [], new Set((reviews ?? []).map((r) => r.submission_id))).map((s) => ({ ...s, studentId: s.user_id, name: names.get(s.user_id) ?? 'Student', lessonTitle: titles.get(s.lesson_id) ?? 'Lesson', oldestAgeHours: Math.floor((Date.now() - Date.parse(s.submitted_at)) / 3600000) }))
+    submissions.sort((a, b) => b.oldestAgeHours - a.oldestAgeHours)
+  }
+  const byUser = new Map<string, { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }>()
+  for (const s of submissions) {
+    const prev = byUser.get(s.user_id)
+    byUser.set(s.user_id, { studentId: s.user_id, name: s.name, count: (prev?.count ?? 0) + 1, oldestAgeHours: Math.max(prev?.oldestAgeHours ?? 0, s.oldestAgeHours), aged: s.oldestAgeHours >= 48 || Boolean(prev?.aged), needsHelp: false })
+  }
+  // Always include unlinked work: it cannot otherwise acquire a unit filter. Label it for repair.
+  let query = supabaseAdmin.from('block_responses').select('id, user_id, lesson_id, target_id, block_id, block_type, response, created_at, evidence_source, role, present_session_id, poll_run_id, session_id').in('user_id', gids).order('created_at', { ascending: false }).limit(1000)
+  if (source === 'untagged') query = query.is('evidence_source', null)
+  else if (source) query = query.eq('evidence_source', source)
+  const { data: raw, error: evidenceError } = await query
+  if (evidenceError) throw evidenceError
+  const linked = await evidenceWithLinks(raw ?? [])
+  const candidates = linked.filter((r) => (!r.lesson_id || titles.has(r.lesson_id)) && !(r.response && typeof r.response === 'object' && r.response.draft === true))
+  const pendingLessons = new Set(submissions.map((s) => `${s.user_id}:${s.lesson_id}`))
+  const latestSelf = new Set<string>()
+  for (const row of candidates) {
+    if (!pendingLessons.has(`${row.user_id}:${row.lesson_id}`) || !['marzano', 'self_assessment'].includes(row.block_type ?? '')) continue
+    const key = `${row.user_id}:${row.lesson_id}:${row.block_id}`
+    if (latestSelf.has(key)) continue
+    latestSelf.add(key)
+    const needsHelp = row.block_type === 'marzano' ? Number(row.response) === 1 : Boolean(row.response && typeof row.response === 'object' && Object.values(row.response).some((value) => value === 1))
+    if (needsHelp && byUser.has(row.user_id)) byUser.get(row.user_id)!.needsHelp = true
+  }
+  const ids = candidates.map((r) => r.id)
+  const { data: evidenceReviews, error: evidenceReviewError } = ids.length ? await supabaseAdmin.from('lesson_evidence_reviews').select('response_id').in('response_id', ids) : { data: [], error: null }
+  if (evidenceReviewError) throw evidenceReviewError
+  const reviewed = new Set((evidenceReviews ?? []).map((r) => r.response_id))
+  const seen = new Set<string>()
+  const evidence = candidates.filter((r) => {
+    const key = `${r.user_id}:${r.lesson_id}:${r.block_id}:${r.evidence_source}:${r.present_session_id ?? r.session_id ?? ''}:${r.poll_run_id ?? ''}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return !reviewed.has(r.id)
+  }).map((r) => ({ ...r, name: names.get(r.user_id) ?? 'Student', lessonTitle: r.lesson_id ? titles.get(r.lesson_id) ?? 'Lesson' : 'Unlinked group work', untargeted: !r.target_id, unlinked: !r.lesson_id }))
+  return NextResponse.json({ unitId, queue: [...byUser.values()], submissions, evidence, evidenceLimit: 1000, evidenceMayBeTruncated: (raw ?? []).length === 1000 })
 })

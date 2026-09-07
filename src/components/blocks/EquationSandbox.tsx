@@ -124,7 +124,7 @@ export default function EquationSandbox({ prompt, variables, equationToken, valu
   const insert = (token: string) => { const t = focus >= 0 ? focus : lines.length - 1; setFocus(t); insertAt(t, token) }
   const dragToken = (e: RDragEvent, token: string) => e.dataTransfer.setData('text/plain', token)
   const save = async () => { const ok = await onSave?.(payload(lines)); setSaved(ok !== false) }
-  useDraft(onDraft ?? (() => {}), lines.some((l) => l.trim()) ? payload(lines) : undefined)
+  useDraft(onDraft ?? (() => {}), payload(lines))
 
   const onKey = (e: RKeyboardEvent<HTMLInputElement>, i: number) => {
     if (e.key === 'Enter') {

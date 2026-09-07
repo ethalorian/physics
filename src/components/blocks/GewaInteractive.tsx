@@ -5,6 +5,9 @@ import {
   PHYSICS_FORMULAS, type FormulaCategory, PHYSICS_VARIABLES, GEWA_UNIT_OPTIONS, MCAS_UNIT_OPTIONS,
   convertToMcas, variableBySymbol,
 } from '@/data/physics-reference'
+import { useDraft } from './useDraft'
+import { SeiFrameBox, SeiPrompt, SeiVisual, useSei } from './SeiLayer'
+import type { SeiScaffold } from '@/data/content-blocks'
 import { InlineMath } from '@/components/MathMarkdown'
 import {
   FORMULA_AST, type Equation, type Term, type Factor,
@@ -27,7 +30,8 @@ export interface GewaValue {
   substitutions?: Record<string, { raw: number; rawUnit: string; value: number; unit: string; rule?: string }>
   answer?: string
   equation?: string   // legacy display string, kept for the teacher control room
-  work?: string       // legacy substitution summary
+  work?: string       // substitution summary + student explanation
+  workNotes?: string  // separate editable notes; avoids duplicating summary on resume
   steps?: string[]        // the algebra trail — one line per rearrange move
   conversions?: string[]  // unit conversions applied while substituting
   autoCheck?: 'match' | 'mismatch' | 'unknown' // silent answer check at save time
@@ -37,6 +41,7 @@ interface Chip { sym: string; val: string; unit: string }
 
 interface GewaInteractiveProps {
   prompt: string
+  sei?: SeiScaffold
   givenHint?: string
   equationHint?: string
   equationOptions?: string[]
@@ -44,7 +49,7 @@ interface GewaInteractiveProps {
   solveFor?: string
   equationCategories?: FormulaCategory[]
   value?: GewaValue
-  onSave: (v: GewaValue) => void | Promise<boolean>
+  onSave: (v: GewaValue, scaffolds?: string[]) => void | Promise<boolean>
   /** as-you-work draft (autosave). When given, the 2 s autosave goes here, not to onSave. */
   onDraft?: (v: GewaValue) => void | Promise<boolean>
 }
@@ -115,14 +120,16 @@ const stepHead = (l: string, color: string, title: string, fg?: string) => (
 )
 
 export default function GewaInteractive({
-  prompt, givenHint, equationHint, equationOptions, equationIds, solveFor, equationCategories, value, onSave, onDraft,
+  prompt, sei, givenHint, equationHint, equationOptions, equationIds, solveFor, equationCategories, value, onSave, onDraft,
 }: GewaInteractiveProps) {
+  const seiState = useSei(sei, { supportedModes: ['text'] })
   const [chips, setChips] = useState<Chip[]>(parseGiven(value?.given))
   const [formulaId, setFormulaId] = useState<string | null>(value?.equationId ?? null)
   const [eq, setEq] = useState<Equation | null>(value?.rearranged ?? (value?.equationId ? FORMULA_AST[value.equationId] : null))
   const [subs, setSubs] = useState<GewaValue['substitutions']>(value?.substitutions ?? {})
   const [convNote, setConvNote] = useState<string | null>(null)
-  const initAns = (value?.answer ?? '').match(/^(-?\d*\.?\d+)\s*(.*)$/)
+  const initAns = (value?.answer ?? '').match(/^([+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?)\s*(.*)$/i)
+  const [workNotes, setWorkNotes] = useState(value?.workNotes ?? (value?.substitutions ? '' : value?.work) ?? '')
   const [answerVal, setAnswerVal] = useState(initAns ? initAns[1] : '')
   const [answerUnit, setAnswerUnit] = useState(initAns ? (initAns[2] || '').trim() : '')
   const [opHistory, setOpHistory] = useState<string[]>(value?.steps ?? [])
@@ -305,26 +312,16 @@ export default function GewaInteractive({
     return {
       given: givenString(), equationId: formulaId || undefined, solveFor: unknown || undefined,
       rearranged: eq || undefined, substitutions: subs, answer,
-      equation: formula?.display, work: workStr || undefined,
+      equation: formula?.display, work: [workStr, workNotes.trim()].filter(Boolean).join('\n') || undefined, workNotes,
       steps: opHistory.length ? opHistory : undefined,
       conversions: convLog.length ? convLog : undefined,
       autoCheck: computeAutoCheck(),
     }
   }
-  const handleSave = async () => { const ok = await onSave(buildValue()); setSaved(ok !== false); setAutoSaved(false); check() }
+  const handleSave = async () => { const ok = await onSave(buildValue(), [...seiState.scaffolds, ...(givenHint ? ['given_hint'] : []), ...(equationHint ? ['equation_hint'] : [])]); setSaved(ok !== false); setAutoSaved(false); check() }
 
-  // Autosave: two quiet seconds after any meaningful change, persist — so a
-  // student who never presses Save still hands their teacher the work. With an
-  // onDraft it is a draft (one upsert row, batched — decision 2026-09-04); without
-  // one it falls back to the old append-only save.
-  const mountedRef = useRef(false)
-  useEffect(() => {
-    if (!mountedRef.current) { mountedRef.current = true; return }
-    if (!formulaId && !chips.some((c) => c.sym || c.val)) return
-    const t = setTimeout(() => { if (onDraft) onDraft(buildValue()); else { void Promise.resolve(onSave(buildValue())).then((ok) => setAutoSaved(ok !== false)) } }, 2000)
-    return () => clearTimeout(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chips, formulaId, eq, subs, answerVal, answerUnit, opHistory])
+  // Report immediately to the shared store; its durable batching owns debounce.
+  useDraft(onDraft ?? (() => {}), buildValue())
 
   // ---- draggable chip + fraction rendering --------------------------------
   const isArmed = (d: Drag) => armed !== null && JSON.stringify(armed) === JSON.stringify(d)
@@ -411,7 +408,7 @@ export default function GewaInteractive({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-sm" style={{ color: 'var(--foreground)' }}>{prompt}</p>
+      <SeiPrompt prompt={prompt} l1Text={seiState.l1Text} /><SeiVisual visual={sei?.visual} /><SeiFrameBox state={seiState} />
 
       {/* GIVEN */}
       <div>
@@ -420,13 +417,13 @@ export default function GewaInteractive({
         <div className="flex flex-col gap-2">
           {chips.map((c, i) => (
             <div key={i} className="flex items-center gap-2 flex-wrap">
-              <select value={c.sym} onChange={(e) => setChip(i, { sym: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 230, fontWeight: 700 }}>
+              <select aria-label={`Known ${i + 1} symbol`} value={c.sym} onChange={(e) => setChip(i, { sym: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 230, fontWeight: 700 }}>
                 <option value="">symbol…</option>
                 {PHYSICS_VARIABLES.map((v) => <option key={v.symbol} value={v.symbol}>{v.symbol} — {v.name}{v.unit ? ` (${v.unit})` : ''}</option>)}
               </select>
               <span style={{ color: 'var(--muted-foreground)', fontWeight: 700 }}>=</span>
-              <input value={c.val} onChange={(e) => setChip(i, { val: e.target.value })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 96 }} />
-              <select value={c.unit} onChange={(e) => setChip(i, { unit: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 92 }}>
+              <input aria-label={`Known ${i + 1} value`} value={c.val} onChange={(e) => setChip(i, { val: e.target.value })} placeholder="value" className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 96 }} />
+              <select aria-label={`Known ${i + 1} unit`} value={c.unit} onChange={(e) => setChip(i, { unit: e.target.value })} className="rounded-md border px-2 py-1.5 text-sm" style={{ ...fieldBg, width: 92 }}>
                 <option value="">unit</option>
                 {GEWA_UNIT_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
               </select>
@@ -534,12 +531,12 @@ export default function GewaInteractive({
       )}
 
       {/* ANSWER — also open when the equation genuinely can't be drag-solved */}
-      {(isolatedOn || !dragSolvable) && (
+      {formulaId && (
         <div>
           {stepHead('A', 'var(--success)', 'Answer — compute it and box it', 'white')}
           <div className="flex items-center gap-2 flex-wrap">
-            <input value={answerVal} onChange={(e) => { setAnswerVal(e.target.value); setSaved(false) }} inputMode="decimal" placeholder="your number" className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 150 }} />
-            <select value={answerUnit} onChange={(e) => { setAnswerUnit(e.target.value); setSaved(false) }} className="rounded-md border px-2 py-2 text-sm" style={{ ...fieldBg, width: 110 }}>
+            <input aria-label="Answer value" value={answerVal} onChange={(e) => { setAnswerVal(e.target.value); setSaved(false) }} inputMode="decimal" placeholder="your number" className="rounded-md border px-3 py-2 text-sm" style={{ ...fieldBg, width: 150 }} />
+            <select aria-label="Answer unit" value={answerUnit} onChange={(e) => { setAnswerUnit(e.target.value); setSaved(false) }} className="rounded-md border px-2 py-2 text-sm" style={{ ...fieldBg, width: 110 }}>
               <option value="">unit</option>
               {answerUnitOptions.map((u) => <option key={u} value={u}>{u}</option>)}
             </select>
@@ -547,6 +544,9 @@ export default function GewaInteractive({
         </div>
       )}
 
+      <label className="block text-sm">Work trail / keyboard alternative — show your substitutions, algebra, and reasoning.
+        <textarea aria-label="GEWA work trail" className="w-full rounded border p-2 bg-card mt-1" rows={3} value={workNotes} onChange={(e) => { setWorkNotes(e.target.value); setSaved(false) }} />
+      </label>
       {/* check + save */}
       <div className="flex items-center gap-2">
         <button onClick={check} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Check my work</button>

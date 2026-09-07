@@ -90,7 +90,7 @@ function renderSim(def, scene) {
   const cssH = def.canvasHeight ?? 400
 
   Math.random = seedRandom(0x9e3779b9) // deterministic before every render
-  globalThis.window = { devicePixelRatio: dpr } // the only browser global engines read
+  globalThis.window = { devicePixelRatio: dpr, addEventListener() {}, removeEventListener() {} }
 
   const canvas = createCanvas(Math.round(cssW * dpr), Math.round(cssH * dpr))
   canvas.addEventListener = () => {}
@@ -112,7 +112,9 @@ function renderSim(def, scene) {
   if (engine.start) engine.start(values)
   for (let i = 0; i < (scene.frames ?? 0); i++) if (engine.step) engine.step(1 / 120)
   engine.render()
-  return canvas.toBuffer('image/png')
+  const image = canvas.toBuffer('image/png')
+  engine.destroy()
+  return image
 }
 
 function pixelDelta(aBuf, bBuf) {
@@ -163,7 +165,7 @@ for (const slug of sims) {
 }
 
 console.log(`\n${mode}: ${sims.length - failures}/${sims.length} ok`)
-if (mode === 'check' && failures > 0) {
+if (failures > 0) {
   console.error(`${failures} sim(s) changed or failed — review out/ vs golden/`)
   process.exit(1)
 }

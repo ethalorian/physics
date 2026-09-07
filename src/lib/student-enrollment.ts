@@ -35,10 +35,11 @@ export async function getEnrollment(userId: string): Promise<EnrollmentInfo> {
  */
 export async function getStudentTrack(userId: string): Promise<string | null> {
   if (!userId) return null
-  const { data } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('course_students')
     .select('courses ( track )')
     .eq('student_id', userId)
+  if (error) throw error
   const tracks = ((data ?? []) as Array<{ courses: { track: string | null } | { track: string | null }[] | null }>)
     .flatMap((r) => (Array.isArray(r.courses) ? r.courses : r.courses ? [r.courses] : []))
     .map((c) => c.track)

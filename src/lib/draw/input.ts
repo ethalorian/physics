@@ -31,7 +31,9 @@ const ERASE_R = 14
 
 export function makeStrokeHandlers(o: StrokeHandlerOpts) {
   const toPoint = (e: RPointerEvent<HTMLCanvasElement>): Point => {
-    const r = (o.canvas as HTMLCanvasElement).getBoundingClientRect()
+    // The ref supplied during the first render is still null. Read the mounted
+    // event target so the first stroke works before any toolbar interaction.
+    const r = e.currentTarget.getBoundingClientRect()
     return { x: ((e.clientX - r.left) * o.W) / r.width, y: ((e.clientY - r.top) * o.H) / r.height }
   }
 

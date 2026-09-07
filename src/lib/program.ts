@@ -21,10 +21,11 @@ export const PROGRAM_LABEL: Record<Program, string> = { physics: 'Physics', trad
 // curriculum.)
 export async function getStudentProgram(userId: string): Promise<Program> {
   if (!userId) return 'physics'
-  const { data } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('course_students')
     .select('courses ( program )')
     .eq('student_id', userId)
+  if (error) throw error
   const programs = ((data ?? []) as Array<{ courses: { program: string | null } | { program: string | null }[] | null }>)
     .flatMap((r) => (Array.isArray(r.courses) ? r.courses : r.courses ? [r.courses] : []))
     .map((c) => asProgram(c.program))
@@ -40,6 +41,7 @@ export async function getProgramUnitIds(program: Program): Promise<string[]> {
 
 // unit id → program, for tagging rows that carry a unit_id.
 export async function getUnitProgramMap(): Promise<Map<string, Program>> {
-  const { data } = await supabaseAdmin.from('units').select('id, program')
+  const { data, error } = await supabaseAdmin.from('units').select('id, program')
+  if (error) throw error
   return new Map(((data ?? []) as { id: string; program: string | null }[]).map((u) => [u.id, asProgram(u.program)]))
 }

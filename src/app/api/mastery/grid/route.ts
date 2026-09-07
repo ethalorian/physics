@@ -1,3 +1,4 @@
+import { pendingLessonSubmissions } from '@/lib/lesson-review'
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
@@ -119,35 +120,18 @@ export const GET = withAuth(async (request, ctx) => {
       )
     }
     const lessonIdsForPending = [...new Set([...targetLessons.values()].flat())]
-    const latestRespByKey = new Map<string, number>() // student|lesson -> ts
-    if (lessonIdsForPending.length > 0 && studentIds.length > 0) {
-      const { data: rr } = await supabaseAdmin
-        .from('block_responses')
-        .select('user_id, lesson_id, created_at')
-        .in('user_id', studentIds)
-        .in('lesson_id', lessonIdsForPending)
-      for (const r of (rr ?? []) as { user_id: string; lesson_id: string; created_at: string }[]) {
-        const t = new Date(r.created_at).getTime()
-        const k = `${r.user_id}|${r.lesson_id}`
-        if (t > (latestRespByKey.get(k) ?? 0)) latestRespByKey.set(k, t)
-      }
-    }
-    const lastRatedByKey = new Map<string, number>() // student|target -> ts
-    for (const r of records) {
-      const k = `${r.user_id}|${r.target_id}`
-      const t = new Date(r.observed_at).getTime()
-      if (t > (lastRatedByKey.get(k) ?? 0)) lastRatedByKey.set(k, t)
+    const pendingKeys = new Set<string>()
+    if (lessonIdsForPending.length && studentIds.length) {
+      const { data: submissions, error } = await supabaseAdmin.from('lesson_submissions').select('id, user_id, lesson_id, submitted_at').in('user_id', studentIds).in('lesson_id', lessonIdsForPending)
+      if (error) throw error
+      const ids = (submissions ?? []).map((s) => s.id)
+      const { data: reviews, error: reviewError } = ids.length ? await supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', ids) : { data: [], error: null }
+      if (reviewError) throw reviewError
+      for (const sub of pendingLessonSubmissions(submissions ?? [], new Set((reviews ?? []).map((r) => r.submission_id)))) pendingKeys.add(`${sub.user_id}|${sub.lesson_id}`)
     }
     const pending: Record<string, Record<string, boolean>> = {}
-    for (const s of students) {
-      for (const t of targets) {
-        const lids = targetLessons.get(t.id) ?? []
-        if (lids.length === 0) continue
-        const submittedAt = Math.max(0, ...lids.map((lid) => latestRespByKey.get(`${s.id}|${lid}`) ?? 0))
-        if (!submittedAt) continue
-        const ratedAt = lastRatedByKey.get(`${s.id}|${t.id}`) ?? 0
-        if (submittedAt > ratedAt) (pending[s.id] ??= {})[t.id] = true
-      }
+    for (const s of students) for (const t of targets) {
+      if ((targetLessons.get(t.id) ?? []).some((id) => pendingKeys.has(`${s.id}|${id}`))) (pending[s.id] ??= {})[t.id] = true
     }
 
     return NextResponse.json({

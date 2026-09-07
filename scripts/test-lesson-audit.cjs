@@ -23,7 +23,8 @@ async function bundle(entry, name, plugins = []) {
     assert.equal(blocks.isResponseComplete('marzano',4),false);
     assert.equal(blocks.isResponseComplete('sketch',{strokes:[{points:[{x:1,y:1}]}]}),true);
     assert.equal(blocks.isResponseComplete('concept_exercise',{submitted:true,answers:{}}),false);
-    assert.equal(blocks.isResponseComplete('concept_exercise',{submitted:true,answers:{q:'A'}}),true);
+    assert.equal(blocks.isResponseComplete('concept_exercise',{submitted:true,answers:{q:'A'}}),false);
+    assert.equal(blocks.isResponseComplete('concept_exercise',{submitted:true,answers:{q:'A'},summary:{answeredCount:1,itemCount:1}}),true);
   });
   await check('question choice and explanation checked against authored block', () => {
     const b={id:'q',type:'question',capture:true,question:{prompt:'Why?',options:[{id:'a',text:'A'}],explain:'Explain'}};
@@ -36,6 +37,7 @@ async function bundle(entry, name, plugins = []) {
     const cases=[...source.matchAll(/case '([^']+)':/g)].map((m)=>m[1]);
     for(const type of cases) assert.ok(registry.DEF_BY_TYPE.has(type),type);
     for(const def of registry.BLOCK_DEFS) {
+      assert.ok(cases.includes(def.type), 'No reader for registered ' + def.type);
       const doc={schemaVersion:1,blocks:[registry.createBlock(def.type,'one')]};
       assert.deepEqual(registry.validateBlockDocument(doc),[],def.type);
     }

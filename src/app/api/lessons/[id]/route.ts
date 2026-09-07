@@ -1,3 +1,4 @@
+import { authorizeLesson, lessonForReader } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
@@ -11,23 +12,10 @@ import type { ContentBlock } from '@/data/content-blocks'
  * Get a single lesson by ID
  */
 export const GET = withAuth<{ id: string }>(async (request, ctx) => {
-  const params = await ctx.params
-    const { data, error } = await supabaseAdmin
-      .from('lessons')
-      .select('*')
-      .eq('id', params.id)
-      .single()
-
-    if (error) {
-      console.error('Error fetching lesson:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    if (!data) {
-      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
-    }
-
-    return NextResponse.json({ lesson: data })
+  const { id } = await ctx.params
+  const access = await authorizeLesson(ctx, id)
+  if (!access.ok) return access.response
+  return NextResponse.json({ lesson: access.viewer.role === 'admin' ? { ...access.lesson, content_blocks: access.document } : lessonForReader(access.lesson, access.document) })
 })
 
 /**
@@ -71,27 +59,22 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
         )
       }
 
-      // SEI authoring rule (design "SEI in Blocks"): a capture block with no
-      // visual, no frame, or Tier 2 terms missing from the lesson's vocab set
-      // does not publish for program `projects`; other programs get warnings
-      // back (the asteroid course predates the rule). Blocks come from the body
-      // when the save carries them, else from the stored row.
-      const curRow = { ...current, unit_id: updateData.unit_id ?? current.unit_id }
+      // SEI publishing rules apply to every program. Resolve the canonical
+      // vocabulary before validation; a failed lookup is not an empty set.
       const doc = effectiveDoc as { blocks?: ContentBlock[] } | null
       const blocks = Array.isArray(doc?.blocks) ? doc!.blocks! : []
       if (blocks.length > 0) {
-        const [{ data: unitRow }, { data: setRow }] = await Promise.all([
-          curRow?.unit_id ? supabaseAdmin.from('units').select('program').eq('id', curRow.unit_id).maybeSingle() : Promise.resolve({ data: null }),
-          supabaseAdmin.from('vocabulary_sets').select('id').eq('lesson_id', params.id).maybeSingle(),
-        ])
+        const { data: setRow, error: setError } = await supabaseAdmin.from('vocabulary_sets').select('id').eq('lesson_id', params.id).maybeSingle()
+        if (setError) return NextResponse.json({ error: 'Could not validate lesson vocabulary. Try saving again.' }, { status: 500 })
         let vocab: string[] = []
         const setId = (setRow as { id: string } | null)?.id
         if (setId) {
-          const { data: terms } = await supabaseAdmin.from('vocabulary_terms').select('term').eq('vocabulary_set_id', setId)
+          const { data: terms, error: termsError } = await supabaseAdmin.from('vocabulary_terms').select('term').eq('vocabulary_set_id', setId)
+          if (termsError) return NextResponse.json({ error: 'Could not validate vocabulary terms. Try saving again.' }, { status: 500 })
           vocab = ((terms ?? []) as { term: string }[]).map((t) => t.term)
         }
+        if (blocks.some((block) => block.type === 'lesson_vocab') && !vocab.length) return NextResponse.json({ error: 'Cannot publish: the lesson vocabulary block has no associated terms. Add terms to this lesson’s vocabulary set first.' }, { status: 422 })
         const issues = seiLint(blocks, vocab)
-        void unitRow
         const errors = issues.filter((i) => i.severity === 'error')
         if (errors.length > 0) {
           return NextResponse.json(
@@ -199,4 +182,3 @@ export const DELETE = withContentEditor<{ id: string }>('lessons', async (reques
       message: 'Lesson deleted successfully'
     })
 })
-

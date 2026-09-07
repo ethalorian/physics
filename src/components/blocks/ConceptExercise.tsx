@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
+import MathMarkdown from '@/components/MathMarkdown'
 import type { ConceptChapter, ExSection, ExItem } from '@/data/content-blocks'
 
 // Bundle the pdf.js worker locally (no CDN → no CSP headaches, version always matches).
@@ -39,6 +40,7 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave, on
   const [summary, setSummary] = useState<ConceptValue['summary']>(value?.summary)
   const [submitted, setSubmitted] = useState(!!value?.submitted)
   const [grading, setGrading] = useState(false)
+  const [gradeError, setGradeError] = useState<string | null>(null)
   const [expanded, setExpanded] = useState(false)
   const [forceIframe, setForceIframe] = useState(false)
   const [mobileTab, setMobileTab] = useState<'read' | 'work'>('read') // phone: show one pane at a time
@@ -61,8 +63,7 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave, on
   // ---- save-and-resume: debounce-save draft answers so work isn't lost ----
   useEffect(() => {
     if (!touched.current || submitted) return
-    const t = setTimeout(() => onSaveRef.current?.({ answers, submitted: false }), 800)
-    return () => clearTimeout(t)
+    onSaveRef.current?.({ answers, submitted: false })
   }, [answers, submitted])
 
   // ---- load chapter ------------------------------------------------------
@@ -105,20 +106,20 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave, on
     }
   }, [data, activeSection])
 
-  const setAnswer = (n: number, v: AnswerVal) => { touched.current = true; setAnswers((prev) => ({ ...prev, [String(n)]: v })) }
+  const setAnswer = (n: number, v: AnswerVal) => { touched.current = true; setSubmitted(false); setResults(undefined); setSummary(undefined); setAnswers((prev) => ({ ...prev, [String(n)]: v })) }
 
   const submit = async () => {
-    setGrading(true)
+    setGrading(true); setGradeError(null)
     try {
       const res = await fetch(`/api/concept-exercises/${chapter}/grade`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ answers, sectionIds }),
       })
       const j = await res.json()
-      if (!res.ok) { setGrading(false); return }
+      if (!res.ok) throw new Error(j.error || 'The check could not finish. Your answers are kept; please retry.')
       const sum = { autoCorrect: j.autoCorrect, autoTotal: j.autoTotal, reviewCount: j.reviewCount, answeredCount: j.answeredCount, itemCount: j.itemCount }
       const ok = await onSave({ answers, submitted: true, results: j.results, summary: sum })
-      if (ok !== false) { setResults(j.results); setSummary(sum); setSubmitted(true) }
-    } catch { /* leave un-submitted */ } finally { setGrading(false) }
+      if (ok !== false) { setResults(j.results); setSummary(sum); setSubmitted(true) } else setGradeError('Your checked work could not be saved. Please retry.')
+    } catch (error) { setGradeError(error instanceof Error ? error.message : 'The check could not finish. Your answers are kept; please retry.') } finally { setGrading(false) }
   }
 
   if (loadErr) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Couldn&apos;t load this chapter ({loadErr}).</p>
@@ -140,6 +141,7 @@ export default function ConceptExercise({ chapter, sectionIds, value, onSave, on
 
   return (
     <div style={wrapStyle}>
+      {gradeError && <p role="alert" className="mb-2 text-sm text-destructive">{gradeError}</p>}
       <div className="flex items-center justify-between gap-2 mb-2">
         <div className="text-sm font-semibold min-w-0 truncate" style={{ color: C.ink }}>Chapter {data.chapter}: {data.title}</div>
         <div className="flex items-center gap-2 shrink-0">
@@ -256,13 +258,13 @@ function ItemView({ item, value, result, disabled, onAnswer }: {
       <div className="flex items-start gap-2">
         <span className="text-sm font-semibold shrink-0" style={{ color: C.ink }}>{item.n}.</span>
         <div className="flex-1 min-w-0">
-          <div className="text-sm" style={{ color: C.ink }}>{item.prompt} {tag}</div>
+          <div className="text-sm" style={{ color: C.ink }}><MathMarkdown content={item.prompt} />{tag}</div>
           <div className="mt-1.5">
             {item.type === 'fill_in' && <FillIn item={item} value={value} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'true_false' && <TrueFalse n={item.n} value={value as string} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'multiple_choice' && <Choice item={item} value={value} disabled={disabled} onAnswer={onAnswer} />}
             {item.type === 'short_answer' && (
-              <textarea value={(value as string) ?? ''} disabled={disabled} onChange={(e) => onAnswer(item.n, e.target.value)} rows={3}
+              <textarea aria-label={`Question ${item.n}`} value={(value as string) ?? ''} disabled={disabled} onChange={(e) => onAnswer(item.n, e.target.value)} rows={3}
                 className="w-full rounded-lg border p-2 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.ink }} />
             )}
           </div>
@@ -278,7 +280,7 @@ function FillIn({ item, value, disabled, onAnswer }: { item: ExItem; value?: Ans
   return (
     <div className="flex flex-wrap gap-2">
       {Array.from({ length: n }, (_, i) => (
-        <input key={i} value={arr[i] ?? ''} disabled={disabled}
+        <input aria-label={`Answer blank ${i + 1}`} key={i} value={arr[i] ?? ''} disabled={disabled}
           onChange={(e) => { const next = [...arr]; next[i] = e.target.value; onAnswer(item.n, next) }}
           placeholder={n > 1 ? `blank ${i + 1}` : 'your answer'}
           className="rounded-lg border px-2 py-1 text-sm" style={{ borderColor: C.hair, background: C.card, color: C.ink, minWidth: 120 }} />

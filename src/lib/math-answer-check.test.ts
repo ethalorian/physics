@@ -28,7 +28,7 @@ test('units and synonyms', () => {
   is('3.5 mps', '3.5 m/s', 'match')
   is('9.8 m/s/s', '9.8 m/s^2', 'match')
   is('5 km', '5000 m', 'unknown')    // unconverted units = teacher call, never ✗
-  is('3.5', '3.5 m/s', 'match')      // unit omitted on one side → number decides
+  is('3.5', '3.5 m/s', 'unknown')      // unit omitted on one side → number decides
 })
 
 test('scientific notation in every spelling', () => {
@@ -89,15 +89,15 @@ test('student lead-ins and author noise', () => {
   is('answer: 42', '42', 'match')
   is('about 40 m/s', '40 m/s', 'match')
   is('≈ 5440', '5440', 'match')
-  is('24', '24 m (area = 6 x 4).', 'match')
+  is('24', '24 m (area = 6 x 4).', 'unknown')
 })
 
 test('multipart keys need every part', () => {
   const mp = 'horizontal = 6000·cos25° ≈ 5440 m/s; vertical ≈ 2540 m/s'
-  is('5440 and 2540', mp, 'match')
+  is('5440 and 2540', mp, 'unknown')
   is('horizontal 5440 m/s, vertical 2540 m/s', mp, 'match')
   is('5440', mp, 'unknown')          // partial → teacher call
-  is('100 and 200', mp, 'mismatch')
+  is('100 m/s and 200 m/s', mp, 'mismatch')
 })
 
 test('form lists with different numbers do NOT trip the multipart guard', () => {
@@ -166,4 +166,15 @@ test('estimate: order-of-magnitude tolerance', () => {
   es('500', 'Backpack ~30 L; ball ~40 mL with packing → ~500. Accept 200–1000.', 'match')
   es('50', 'Backpack ~30 L; ball ~40 mL with packing → ~500. Accept 200–1000.', 'mismatch')
   es('about a thousand', 'about 8,000', 'unknown')   // no number → not the machine's call
+})
+
+test('audit: percentages, required parts, dimensions and symbol case', () => {
+  is('50%', '0.5%', 'mismatch')
+  is('0.5%', '50%', 'mismatch')
+  is('3', '3; 4', 'unknown')
+  is('3; 4', '3; 4', 'match')
+  is('3; 5', '3; 4', 'mismatch')
+  is('horizontal 3 kg; vertical 4 s', 'horizontal 3 m/s; vertical 4 m/s', 'unknown')
+  is('f = ma', 'F = ma', 'unknown')
+  is('F = ma', 'F = ma', 'match')
 })

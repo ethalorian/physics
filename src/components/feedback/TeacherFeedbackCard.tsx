@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 
 interface FeedbackItem {
   id: string
+  submission_id?: string | null
   teacher_email: string
   message: string
   created_at: string
@@ -62,6 +63,7 @@ export default function TeacherFeedbackCard() {
               {!f.target?.slug && !f.competency?.code && <span>General note</span>}
               <span className="ml-auto">{when(f.created_at)}</span>
             </div>
+            {f.submission_id && <a className="block min-h-11 underline text-sm" href="/dashboard/math-spine#math-feedback">Open my work and respond</a>}
             <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{f.message}</p>
           </div>
         ))}

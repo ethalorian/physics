@@ -8,10 +8,13 @@
  * until the teacher has reviewed it. When the student has finished all steps, a
  * reminder nudges them to submit.
  */
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { Send, CheckCircle2, Clock, PartyPopper } from 'lucide-react'
 
 export default function SubmitLessonButton({ lessonId, complete = false, blocked = false, onChange }: { lessonId: string; complete?: boolean; blocked?: boolean; /** S-6: the stepped reader shows its Done screen from this. */ onChange?: (state: { submittedAt: string | null; locked: boolean }) => void }) {
+  const { data: session } = useSession()
+  const studentId = session?.user?.id
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
   const [locked, setLocked] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -19,13 +22,14 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
 
   useEffect(() => {
     let active = true
+    setSubmittedAt(null); setLocked(false); setError(null)
     fetch(`/api/lessons/submit?lesson_id=${encodeURIComponent(lessonId)}`)
       .then((r) => (r.ok ? r.json() : null))
       .then((d) => { if (active && d) { setSubmittedAt(d.submittedAt ?? null); setLocked(Boolean(d.locked)); onChange?.({ submittedAt: d.submittedAt ?? null, locked: Boolean(d.locked) }) } })
       .catch(() => {})
     return () => { active = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId])
+  }, [lessonId, studentId])
 
   async function submit() {
     if (blocked || busy) return
@@ -35,11 +39,11 @@ export default function SubmitLessonButton({ lessonId, complete = false, blocked
       const res = await fetch('/api/lessons/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lesson_id: lessonId }),
+        body: JSON.stringify({ lesson_id: lessonId, expected_user_id: studentId }),
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) {
-        if (res.status === 409) { const at = d.submittedAt ?? new Date().toISOString(); setSubmittedAt(at); setLocked(true); onChange?.({ submittedAt: at, locked: true }); return }
+        if (res.status === 409 && d.locked) { const at = d.submittedAt ?? new Date().toISOString(); setSubmittedAt(at); setLocked(true); onChange?.({ submittedAt: at, locked: true }); return }
         throw new Error(d.error || 'Submit failed')
       }
       const at = d.submittedAt ?? new Date().toISOString()

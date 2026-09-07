@@ -1,18 +1,18 @@
+import { stepFlight } from './physics'
 import type { SimEngine, ParamValues, SimData } from '@/components/simulations/lab/contract'
-import { PAL, clearField, grid as drawGrid, groundShadow, arrow as drawArrow, chip } from '@/components/simulations/lab/draw'
+import { PAL, clearField, groundShadow, arrow as drawArrow, chip } from '@/components/simulations/lab/draw'
 
 // Projectile-motion engine. Owns the canvas (drawing + target dragging). The
 // SimLab shell drives a FIXED-SUBSTEP loop (calls step/render) and sizing, so
 // this class holds NO rAF and NO window listeners — pointer listeners live on the
 // canvas and are removed in destroy().
 //
-// Physics: idealized (constant g, no air resistance) — conceptual-first for CPA.
+// Physics: constant g, optional linear air resistance — conceptual-first for CPA.
 // Graphics: game-like — predicted aim arc, landing marker, motion trail, glowing
 // ball + shadow, decomposed velocity-component vectors, apex flag, target bursts,
 // muzzle flash. Styled to the shared SimLab visual language (PAL + draw helpers);
 // scene sky/grass colors are scene-specific.
 
-const GRAVITY = 9.8
 
 // Scene tokens; structural/semantic tones come from the shared PAL so the sim
 // matches every other lab. sky/grass are scene-specific.
@@ -39,7 +39,7 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
   let height = Number(initial.height ?? 0)
   let drag = Number(initial.drag ?? 0) // linear drag coefficient (0 = ideal, no air resistance)
 
-  let x = 0, y = 0, vx = 0, vy = 0, t = 0
+  let x = 0, y = height, vx = 0, vy = 0, t = 0
   let flying = false
   let landed = false
   let hits = 0, misses = 0
@@ -56,29 +56,20 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     { x: 70, y: 0, width: 3, height: 10, hit: false, anim: -1 },
   ]
 
-  // Predicted flight path for a given linear drag coefficient k (k=0 → ideal
-  // parabola). Numerically integrated the same way step() advances, so the
-  // preview matches the real flight.
+  // Preview and experiment use the same exact motion and ground-contact solver.
   const predict = (k: number): { x: number; y: number }[] => {
-    const a = (angle * Math.PI) / 180
-    let pvx = speed * Math.cos(a)
-    let pvy = speed * Math.sin(a)
-    const pts: { x: number; y: number }[] = []
-    let px = 0, py = height, pt = 0
-    // Match the shell's fixed substep (1/120) so the dashed prediction lands
-    // exactly where the live flight does — with drag on, a coarser dt here made
-    // the predicted arc and the real flight diverge.
-    const dt = 1 / 120
-    while (py >= 0 && pt < 30) {
-      pts.push({ x: px, y: py })
-      pvx += -k * pvx * dt
-      pvy += (-GRAVITY - k * pvy) * dt
-      px += pvx * dt
-      py += pvy * dt
-      pt += dt
+    const a = angle * Math.PI / 180
+    let state = { x: 0, y: height, vx: speed * Math.cos(a), vy: speed * Math.sin(a) }
+    const pts = [{ x: 0, y: height }]
+    for (let i = 0; i < 900; i++) {
+      const next = stepFlight(state, 1 / 30, k)
+      state = next.state
+      pts.push({ x: state.x, y: state.y })
+      if (next.landed) break
     }
     return pts
   }
+  let viewPath = predict(0)
 
   const dims = () => {
     const dpr = window.devicePixelRatio || 1
@@ -86,11 +77,14 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
   }
   const scale = (extra: { x: number; y: number }[]) => {
     const { w, h } = dims()
-    const xs = [...trajectory.map((p) => p.x), ...extra.map((p) => p.x), x, ...targets.map((tg) => tg.x + tg.width), 50, 1]
-    const ys = [...trajectory.map((p) => p.y), ...extra.map((p) => p.y), y, ...targets.map((tg) => tg.height), 20, 1]
+    const xs = [...trajectory.map((p) => p.x), ...extra.map((p) => p.x), ...viewPath.map((p) => p.x), x, ...targets.map((tg) => tg.x + tg.width), 50, 1]
+    const ys = [...trajectory.map((p) => p.y), ...extra.map((p) => p.y), ...viewPath.map((p) => p.y), y, ...targets.map((tg) => tg.height), 20, 1]
     const maxX = Math.max(...xs)
     const maxY = Math.max(...ys)
-    return { w, h, maxX, maxY, sx: (w * 0.9) / maxX, sy: (h * 0.85) / maxY, ox: w * 0.06, oy: h * 0.08 }
+    // One meter has the same screen length on both axes, so launch angles
+    // and the direction of velocity agree with the visible trajectory.
+    const metersToPixels = Math.min((w * 0.88) / maxX, (h - 90) / maxY)
+    return { w, h, maxX, maxY, sx: metersToPixels, sy: metersToPixels, ox: Math.max(32, w * 0.06), oy: 34 }
   }
   type S = ReturnType<typeof scale>
   const toScreen = (s: S, wx: number, wy: number) => ({ X: s.ox + wx * s.sx, Y: s.h - s.oy - wy * s.sy })
@@ -99,15 +93,16 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     const s = scale(flying ? [] : predict(drag))
     return { x: (px - s.ox) / s.sx, y: (s.h - s.oy - py) / s.sy }
   }
-  const onDown = (e: MouseEvent) => {
+  const onDown = (e: PointerEvent) => {
     if (flying) return
     const rect = canvas.getBoundingClientRect()
     const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top)
     targets.forEach((tg, i) => {
       if (world.x >= tg.x - 1 && world.x <= tg.x + tg.width + 1 && world.y >= 0 && world.y <= tg.height + 1) draggingTarget = i
     })
+    if (draggingTarget !== null) canvas.setPointerCapture(e.pointerId)
   }
-  const onMove = (e: MouseEvent) => {
+  const onMove = (e: PointerEvent) => {
     if (draggingTarget === null || flying) return
     const rect = canvas.getBoundingClientRect()
     const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top)
@@ -117,10 +112,11 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     render()
   }
   const onUp = () => { draggingTarget = null }
-  canvas.addEventListener('mousedown', onDown)
-  canvas.addEventListener('mousemove', onMove)
-  canvas.addEventListener('mouseup', onUp)
-  canvas.addEventListener('mouseleave', onUp)
+  canvas.style.touchAction = 'none'
+  canvas.addEventListener('pointerdown', onDown)
+  canvas.addEventListener('pointermove', onMove)
+  canvas.addEventListener('pointerup', onUp)
+  canvas.addEventListener('pointercancel', onUp)
 
   function render() {
     const showPred = !flying && !landed
@@ -135,14 +131,30 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     sky.addColorStop(0, COL.skyTop); sky.addColorStop(1, COL.skyBot)
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h)
 
-    // grid (shared visual language), spanning the play field above the ground
-    drawGrid(ctx, w, h - s.oy, (w * 0.9) / 10, {
-      x0: s.ox, y0: s.oy, x1: w, y1: h - s.oy, originX: s.ox, originY: s.oy, color: COL.grid,
-    })
+    // World-coordinate grid with distance labels; spacing adapts on narrow screens.
+    const tick = Math.max(10, Math.ceil(55 / s.sx / 10) * 10)
+    ctx.font = '10px ui-sans-serif, system-ui, sans-serif'
+    ctx.strokeStyle = COL.grid; ctx.fillStyle = COL.textMute; ctx.lineWidth = 1
+    ctx.textAlign = 'center'
+    for (let m = tick; s.ox + m * s.sx < w - 12; m += tick) {
+      const px = s.ox + m * s.sx
+      ctx.beginPath(); ctx.moveTo(px, 58); ctx.lineTo(px, h - s.oy); ctx.stroke()
+    }
+    ctx.textAlign = 'right'
+    for (let m = tick; h - s.oy - m * s.sy > 60; m += tick) {
+      const py = h - s.oy - m * s.sy
+      ctx.beginPath(); ctx.moveTo(s.ox, py); ctx.lineTo(w - 12, py); ctx.stroke()
+      ctx.fillText(`${m} m`, s.ox - 6, py + 3)
+    }
 
     // ground
     ctx.fillStyle = COL.grass; ctx.fillRect(0, h - s.oy, w, s.oy)
     ctx.fillStyle = COL.grassDark; ctx.fillRect(0, h - s.oy, w, 3)
+
+    ctx.fillStyle = COL.text; ctx.textAlign = 'center'
+    for (let m = tick; s.ox + m * s.sx < w - 12; m += tick) {
+      ctx.fillText(`${m} m`, s.ox + m * s.sx, h - 12)
+    }
 
     // faint no-drag reference arc, so the drag slider visibly shortens/bends the path
     if (predIdeal.length > 1) {
@@ -182,10 +194,6 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
         const p = tg.anim / 0.5
         ctx.strokeStyle = `rgba(29,158,117,${1 - p})`; ctx.lineWidth = 3
         ctx.beginPath(); ctx.arc(cx, top.Y + th / 2, 8 + p * 28, 0, Math.PI * 2); ctx.stroke()
-      }
-      if (!flying && !tg.hit) {
-        ctx.fillStyle = COL.textMute; ctx.font = '10px ui-sans-serif, system-ui, sans-serif'; ctx.textAlign = 'center'
-        ctx.fillText('drag', cx, h - s.oy + 13)
       }
     })
 
@@ -251,6 +259,7 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       }
     }
 
+    chip(ctx, 'vx: orange   vy: blue   v: green', 8, 43, { align: 'left', size: 10, color: COL.textMute })
     // score badge (shared chip)
     chip(ctx, `Hits ${hits}   Misses ${misses}`, 8, 21, { align: 'left', size: 12, color: COL.text })
   }
@@ -261,25 +270,22 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       if (flash > 0) flash = Math.max(0, flash - dt)
       targets.forEach((tg) => { if (tg.hit && tg.anim >= 0) tg.anim += dt })
       if (!flying) return
-      // linear air drag: a = -k·v on each component (k=0 → ideal parabola)
-      vx += -drag * vx * dt
-      vy += (-GRAVITY - drag * vy) * dt
-      x += vx * dt
-      y += vy * dt
-      t += dt
+      const next = stepFlight({ x, y, vx, vy }, dt, drag)
+      ;({ x, y, vx, vy } = next.state)
+      t += next.elapsed
       if (!apex || y > apex.y) apex = { x, y }
       trail.push({ x, y })
       if (trail.length > 60) trail.shift()
       targets.forEach((tg) => {
         if (!tg.hit && x >= tg.x && x <= tg.x + tg.width && y <= tg.height && y >= 0) { tg.hit = true; tg.anim = 0; hits++ }
       })
-      if (y <= 0) {
-        y = 0; vy = 0; flying = false; landed = true
+      if (next.landed) {
+        y = 0; flying = false; landed = true
         trajectory.push({ x, y: 0 })
         if (!targets.some((tg) => tg.hit)) misses++
       }
       if (flying && t - lastTrajT >= 0.05) { trajectory.push({ x, y }); lastTrajT = t }
-      if (t - lastDataT >= 0.1) {
+      if (next.landed || t - lastDataT >= 0.1) {
         dataPoints.push({ time: t, x, y, vx, vy, speed: Math.sqrt(vx * vx + vy * vy) })
         lastDataT = t
       }
@@ -289,6 +295,7 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       angle = Number(values.angle ?? angle)
       height = Number(values.height ?? height)
       drag = Number(values.drag ?? drag)
+      if (!flying && !landed) { y = height; viewPath = predict(0) }
     },
     start(values: ParamValues) {
       this.setParams(values)
@@ -304,7 +311,8 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
       targets.forEach((tg) => { tg.hit = false; tg.anim = -1 })
     },
     reset() {
-      x = 0; y = 0; vx = 0; vy = 0; t = 0; flying = false; landed = false
+      x = 0; y = height; vx = 0; vy = 0; t = 0; flying = false; landed = false
+      viewPath = predict(0)
       trajectory = []; trail = []; dataPoints = []; apex = null; flash = 0
       targets.forEach((tg) => { tg.hit = false; tg.anim = -1 })
     },
@@ -328,10 +336,10 @@ export function createProjectileEngine(canvas: HTMLCanvasElement, ctx: CanvasRen
     },
     isComplete() { return landed },
     destroy() {
-      canvas.removeEventListener('mousedown', onDown)
-      canvas.removeEventListener('mousemove', onMove)
-      canvas.removeEventListener('mouseup', onUp)
-      canvas.removeEventListener('mouseleave', onUp)
+      canvas.removeEventListener('pointerdown', onDown)
+      canvas.removeEventListener('pointermove', onMove)
+      canvas.removeEventListener('pointerup', onUp)
+      canvas.removeEventListener('pointercancel', onUp)
     },
   }
   return engine

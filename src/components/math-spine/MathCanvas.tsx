@@ -23,14 +23,13 @@ import { wrapBoardText, textBox, textWidth, LINE_H } from '@/lib/draw/board-text
 export interface CanvasText { x: number; y: number; text: string; size?: number }
 export interface MathCanvasValue { strokes: Stroke[]; texts: CanvasText[] }
 
-const W = 640
-const H = 360
+import { BOARD_WIDTH as W, BOARD_HEIGHT as H, BOARD_GRID as GRID, snapBoardPoint } from '@/lib/math-board'
 const TEXT_SIZE = 26
 
 // The drawing tools plus a 'text' tool unique to this surface, and a 'plot'
 // tool that appears only on graph paper (snaps a dot to a grid intersection).
 type Tool = EditorTool | 'text' | 'plot'
-const GRID = 32
+
 
 export default function MathCanvas({ value, onChange, gridded = false, lang = '', readOnly = false, stamp }: {
   value?: MathCanvasValue
@@ -56,13 +55,19 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
   const [, force] = useState(0)
   const bump = () => force((n) => n + 1)
 
-  const emit = () => onChange({
-    strokes: strokesRef.current.map((s) => ({
-      color: s.color, width: s.width, tool: s.tool, fill: s.fill,
-      points: s.points.map((p) => ({ x: Math.round(p.x), y: Math.round(p.y) })),
-    })),
-    texts: textsRef.current.map((t) => ({ ...t })),
-  })
+  const clone = (v: MathCanvasValue): MathCanvasValue => JSON.parse(JSON.stringify(v))
+  const historyRef = useRef<MathCanvasValue[]>([clone({ strokes: value?.strokes ?? [], texts: value?.texts ?? [] })])
+  const historyIndex = useRef(0)
+  const emit = (remember = true) => {
+    const current = clone({ strokes: strokesRef.current, texts: textsRef.current })
+    if (remember && JSON.stringify(current) !== JSON.stringify(historyRef.current[historyIndex.current])) {
+      historyRef.current = historyRef.current.slice(0, historyIndex.current + 1)
+      historyRef.current.push(current)
+      if (historyRef.current.length > 50) historyRef.current.shift()
+      historyIndex.current = historyRef.current.length - 1
+    }
+    onChange(clone(current))
+  }
 
   const redraw = () => {
     const ctx = canvasRef.current?.getContext('2d')
@@ -75,7 +80,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
       ctx.lineWidth = 1
       ctx.strokeStyle = '#E3E8F0'
       for (let x = step; x < W; x += step) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke() }
-      for (let y = step; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
+      for (let y = H / 2 % step; y < H; y += step) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke() }
       ctx.strokeStyle = '#AEB7C7'; ctx.lineWidth = 1.5
       ctx.beginPath(); ctx.moveTo(0, H / 2); ctx.lineTo(W, H / 2); ctx.stroke()
       ctx.beginPath(); ctx.moveTo(W / 2, 0); ctx.lineTo(W / 2, H); ctx.stroke()
@@ -128,8 +133,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     if (readOnly) return
     if (tool === 'plot') {
       const p = toPoint(e)
-      const x = Math.round(p.x / GRID) * GRID
-      const y = Math.round(p.y / GRID) * GRID
+      const { x, y } = snapBoardPoint(p.x, p.y)
       strokesRef.current.push({ color, width: 2, tool: 'ellipse', fill: true, points: [{ x: x - 5, y: y - 5 }, { x: x + 5, y: y + 5 }] })
       redoRef.current = []
       redraw(); emit(); bump()
@@ -169,8 +173,14 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
     setEditor(null)
     redraw(); emit(); bump()
   }
-  const undo = () => { const s = strokesRef.current.pop(); if (s) { redoRef.current.push(s); redraw(); emit(); bump() } }
-  const redo = () => { const s = redoRef.current.pop(); if (s) { strokesRef.current.push(s); redraw(); emit(); bump() } }
+  const restore = (index: number) => {
+    const v = clone(historyRef.current[index])
+    historyIndex.current = index
+    strokesRef.current = v.strokes; textsRef.current = v.texts; redoRef.current = []
+    setEditor(null); redraw(); emit(false); bump()
+  }
+  const undo = () => { if (historyIndex.current > 0) restore(historyIndex.current - 1) }
+  const redo = () => { if (historyIndex.current < historyRef.current.length - 1) restore(historyIndex.current + 1) }
   const clearAll = () => { strokesRef.current = []; redoRef.current = []; textsRef.current = []; setEditor(null); redraw(); emit(); bump() }
 
   // Toolbar: every tool at a 40px target, grouped by job — draw · shapes ·
@@ -233,8 +243,8 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
             <input type="range" min={1} max={24} step={1} value={width} onChange={(e) => setWidth(Number(e.target.value))} style={{ width: 70 }} aria-label="thickness" />
           </div>
           <Sep />
-          <HB onClick={undo} label="Undo" Icon={Undo2} disabled={strokesRef.current.length === 0} />
-          <HB onClick={redo} label="Redo" Icon={Redo2} disabled={redoRef.current.length === 0} />
+          <HB onClick={undo} label="Undo" Icon={Undo2} disabled={historyIndex.current === 0} />
+          <HB onClick={redo} label="Redo" Icon={Redo2} disabled={historyIndex.current >= historyRef.current.length - 1} />
           <HB onClick={clearAll} label="Clear board" Icon={Trash2} />
         </div>
       )}
@@ -250,7 +260,7 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
           onPointerLeave={onPointerUp}
-          aria-readonly={readOnly || undefined}
+          role="img" aria-label={gridded ? "Graph work board with centered axes and grid" : "Drawing work board"}
           style={{ width: '100%', height: 'auto', touchAction: 'none', border: `1px solid ${readOnly ? 'var(--border)' : 'var(--primary)'}`, borderRadius: 8, background: '#fff', cursor: readOnly ? 'default' : tool === 'text' ? 'text' : tool === 'eraser' ? 'cell' : 'crosshair' }}
         />
         {editor && !readOnly && (
@@ -277,10 +287,10 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
               className="rounded border px-1.5 py-1 text-sm"
               style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 220, maxWidth: 360, resize: 'none', lineHeight: 1.3 }}
             />
-            <button onMouseDown={(e) => { e.preventDefault(); commitEditor() }} onTouchStart={(e) => { e.preventDefault(); commitEditor() }}
+            <button onClick={commitEditor}
               aria-label="add to board" className="rounded-md grid place-items-center"
               style={{ width: 30, height: 30, background: 'var(--primary)', color: 'var(--primary-foreground)', flexShrink: 0 }}>✓</button>
-            <button onMouseDown={(e) => { e.preventDefault(); if (editor.index !== null) { deleteEditing() } else { setEditor(null) } }}
+            <button onClick={() => { if (editor.index !== null) { deleteEditing() } else { setEditor(null) } }}
               aria-label="cancel" className="rounded-md border grid place-items-center"
               style={{ width: 30, height: 30, background: '#fff', color: 'var(--destructive)', flexShrink: 0 }}>×</button>
           </div>

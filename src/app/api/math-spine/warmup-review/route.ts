@@ -4,79 +4,19 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { recordMathObservation } from '@/lib/math-spine-server'
 import { teacherCanAccessStudent } from '@/lib/teacher-scope'
 
-// POST /api/math-spine/warmup-review
-// The teacher reviews a submitted warm-up and assigns a Marzano fluency level.
-// One action, two effects: it writes a normal math_competency_record
-// (evidence_source='warm-up', so milestones + points fire) and resolves the
-// submission (status='reviewed'). Teacher/admin only.
 export const POST = withAuth(async (request, ctx) => {
-  const role = ctx.role
-  if (role !== 'admin' && role !== 'teacher') {
-    return NextResponse.json({ error: 'Only teachers can review warm-ups' }, { status: 403 })
-  }
-
+  if (!['teacher', 'admin'].includes(ctx.role) || ctx.viewingAsTeacher) return NextResponse.json({ error: 'Only the teacher of record can review work' }, { status: 403 })
   const body = await request.json()
-  const { submission_id, competency_id, level } = body
-  if (!submission_id || !competency_id || ![1, 2, 3].includes(level)) {
-    return NextResponse.json(
-      { error: 'Missing or invalid fields: submission_id, competency_id, level (1, 2, or 3)' },
-      { status: 400 },
-    )
-  }
-
-  // Load the submission (student + which competencies it is evidence for).
-  const { data: sub, error: subErr } = await supabaseAdmin
-    .from('math_warmup_submissions')
-    .select('id, user_id, user_email, status, tested_competency_ids, rated_competency_ids')
-    .eq('id', submission_id)
-    .single()
-  if (subErr || !sub) {
-    return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
-  }
-
-  // Reviews come only from the teacher of record: the student must be on the
-  // ACTOR'S own roster — admin included (admin is a read-everything role, not
-  // a rate-everyone role).
-  if (!(await teacherCanAccessStudent(ctx.scopeEmail, sub.user_id))) {
-    return NextResponse.json({ error: 'Forbidden - student not on your own roster' }, { status: 403 })
-  }
-
-  const tested: string[] = sub.tested_competency_ids ?? []
-  if (tested.length > 0 && !tested.includes(competency_id)) {
-    return NextResponse.json({ error: 'That competency is not tested by this warm-up' }, { status: 400 })
-  }
-
-  // Write the observation for THIS competency (milestones + points fire here).
-  const result = await recordMathObservation({
-    userId: sub.user_id,
-    userEmail: sub.user_email,
-    competencyId: competency_id,
-    level,
-    evidenceSource: 'warm-up',
-  })
-  if (result.error) {
-    return NextResponse.json({ error: result.error }, { status: 500 })
-  }
-
-  // One competency per warm-up (redesign decision 12): a single rating fully
-  // resolves the submission. Legacy multi-competency submissions resolve on
-  // their first rating too — no half-rated 'pending' limbo.
-  const rated = new Set<string>(sub.rated_competency_ids ?? [])
-  rated.add(competency_id)
-
-  const { error: updErr } = await supabaseAdmin
-    .from('math_warmup_submissions')
-    .update({
-      rated_competency_ids: [...rated],
-      status: 'reviewed',
-      resulting_level: level,
-      reviewed_by: ctx.email,
-      reviewed_at: new Date().toISOString(),
-    })
-    .eq('id', submission_id)
-  if (updErr) {
-    console.error('Error updating warm-up submission:', updErr)
-  }
-
-  return NextResponse.json({ awarded: result.awarded, resolved: true }, { status: 201 })
+  const level = body.level ?? null
+  const message = typeof body.message === 'string' ? body.message.trim() : ''
+  const revision = body.request_revision === true
+  if (typeof body.submission_id !== 'string' || (level !== null && ![1, 2, 3].includes(level)) || (level === null && !revision) || (revision && !message) || message.length > 2000) return NextResponse.json({ error: 'Choose a rating, or request more evidence with a next step (2000 characters maximum).' }, { status: 400 })
+  const { data: sub, error } = await supabaseAdmin.from('math_warmup_submissions').select('id,user_id,user_email,competency_id').eq('id', body.submission_id).maybeSingle()
+  if (error) return NextResponse.json({ error: 'Could not load this submission' }, { status: 503 })
+  if (!sub) return NextResponse.json({ error: 'Submission not found' }, { status: 404 })
+  if (!(await teacherCanAccessStudent(ctx.scopeEmail, sub.user_id))) return NextResponse.json({ error: 'Student not on your roster' }, { status: 403 })
+  const saved = await supabaseAdmin.rpc('review_math_warmup', { p_submission: sub.id, p_teacher: ctx.email, p_level: level, p_message: message, p_revision: revision })
+  if (saved.error) return NextResponse.json({ error: 'Review was not saved. Your draft is safe; please retry.' }, { status: 503 })
+  const result = await recordMathObservation({ userId: sub.user_id, userEmail: sub.user_email, competencyId: sub.competency_id, level: level ?? 1, existingSubmissionId: sub.id })
+  return NextResponse.json({ ...saved.data, awarded: result.awarded })
 })

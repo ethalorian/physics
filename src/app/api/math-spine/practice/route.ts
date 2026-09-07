@@ -84,7 +84,7 @@ export const GET = withAuth(async (_request, ctx) => {
 
   const { data: itemRows } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, difficulty, needs_graph, needs_equation_builder, translations, template')
+    .select('id, prompt, difficulty, needs_graph, needs_equation_builder, translations, template, check_mode')
     .eq('competency_id', target.id)
     // Practice is the instant-check loop — prose/explain items can never be
     // machine-judged, so they stay in warm-ups (where the teacher reads them).
@@ -97,10 +97,12 @@ export const GET = withAuth(async (_request, ctx) => {
   // prompt now and is echoed back on POST so the check recomputes the same key.
   let prompt = chosen.prompt
   let templateSeed: string | null = null
+  let translations = (chosen.translations ?? {}) as Record<string,string>
   if (chosen.template) {
     try {
       templateSeed = `practice:${ctx.userId}:${Date.now()}:${Math.floor(Math.random() * 1e9)}`
       prompt = instantiateTemplate(chosen.prompt, chosen.template as ItemTemplate, templateSeed).prompt
+      translations = Object.fromEntries(Object.entries(translations).map(([code,text]) => [code, instantiateTemplate(text, chosen.template as ItemTemplate, templateSeed!).prompt]))
     } catch {
       templateSeed = null // malformed template — serve the static prompt/key
     }
@@ -116,9 +118,10 @@ export const GET = withAuth(async (_request, ctx) => {
       prompt,
       templateSeed,
       needsGraph: chosen.needs_graph ?? false,
+      checkMode: chosen.check_mode,
       needsEquationBuilder: chosen.needs_equation_builder ?? false,
       competencyValue: value,
-      translations: (chosen.translations ?? {}) as Record<string, string>,
+      translations,
     },
     pointsToday: repsToday,
     dailyCap: PRACTICE_DAILY_CAP,

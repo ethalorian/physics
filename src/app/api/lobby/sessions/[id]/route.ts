@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { classLesson } from '@/lib/present-server'
 import { getAvatarData } from '@/lib/lobby/avatars'
 import { roleForIndex } from '@/lib/lobby/discourse'
 
@@ -38,6 +39,7 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
     supabaseAdmin
       .from('block_responses')
       .select('user_id, response, created_at')
+      .neq('block_type', 'lobby_reflection')
       .eq('session_id', id)
       .order('created_at'),
   ])
@@ -115,7 +117,12 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
   }))
 
   const sessionOut = { ...(session as Record<string, unknown>), prompt: (session as { task_prompt?: string | null }).task_prompt ?? null }
-  return NextResponse.json({ session: sessionOut, groups: groups ?? [], members: enriched, avatarItems: avatars.items })
+  const linked = session as { lesson_id?: string | null; course_id: string; block_id?: string | null }
+  const lesson = linked.lesson_id ? await classLesson(linked.lesson_id, linked.course_id, ctx) : null
+  const block = lesson?.content_blocks.blocks.find(b => b.id === linked.block_id) ?? null
+  const { data: shared } = await supabaseAdmin.from('lobby_group_artifacts').select('group_id, response, updated_at').eq('session_id', id)
+  const groupRows = (groups ?? []).map(g => ({ ...g, sharedArtifact: (shared ?? []).find(a => a.group_id === g.id) ?? null }))
+  return NextResponse.json({ block, referenceBlocks: lesson?.content_blocks.blocks ?? [], session: sessionOut, groups: groupRows, members: enriched, avatarItems: avatars.items })
 })
 
 // PATCH /api/lobby/sessions/[id] — change status (lobby|grouped|open|closed).
@@ -154,7 +161,7 @@ export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
   // was written at submit (E-4); mastery is untouched (M-1).
   let collected = 0
   if (status === 'closed') {
-    const { data: subs } = await supabaseAdmin.from('block_responses').select('user_id, user_email').eq('session_id', id)
+    const { data: subs } = await supabaseAdmin.from('block_responses').select('user_id, user_email').eq('session_id', id).neq('block_type', 'lobby_reflection')
     const seen = new Set<string>()
     for (const r of (subs ?? []) as { user_id: string; user_email: string | null }[]) {
       if (seen.has(r.user_id)) continue

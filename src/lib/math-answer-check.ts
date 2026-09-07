@@ -188,6 +188,7 @@ function reconcilePercentScale(
   if (numbersMatch(studentValue, keyValue)) return 'match'
   const offByHundred =
     numbersMatch(studentValue, keyValue * 100) || numbersMatch(studentValue, keyValue / 100)
+  if (PERCENT_MARKER.test(studentRaw) && PERCENT_MARKER.test(keyRaw)) return 'mismatch'
   const percentIntended = PERCENT_MARKER.test(studentRaw) || PERCENT_MARKER.test(keyRaw)
   if (percentIntended) return offByHundred ? 'match' : 'mismatch'
   return offByHundred ? 'unknown' : 'mismatch'
@@ -255,31 +256,10 @@ function cleanKeyForScan(key: string): string {
  *  - student supplied enough numbers but parts are missing → 'mismatch'
  *  - student supplied fewer numbers than parts → 'unknown' (partial answer)
  */
-function checkMultipart(studentValues: number[], keyValues: number[]): SelfCheck {
-  if (studentValues.length === 0) return 'unknown'
-  // ordered subsequence
-  let i = 0
-  for (const sv of studentValues) {
-    if (i < keyValues.length && numbersMatch(sv, keyValues[i])) i++
-  }
-  if (i === keyValues.length) return 'match'
-  // unordered multiset
-  const pool = [...studentValues]
-  let found = 0
-  for (const kv of keyValues) {
-    const j = pool.findIndex((sv) => numbersMatch(sv, kv))
-    if (j >= 0) {
-      pool.splice(j, 1)
-      found++
-    }
-  }
-  if (found === keyValues.length) return 'unknown'
-  return studentValues.length >= keyValues.length ? 'mismatch' : 'unknown'
-}
-
 /** Last-resort comparison for non-numeric keys ("x = v/t", "slope"). */
 function normalizeLoose(s: string): string {
-  return normalizeText(s).toLowerCase().replace(/[\s.]+/g, '')
+  const normalized = normalizeText(s).replace(/[\s.]+/g, '')
+  return /[=+*/^]/.test(normalized) ? normalized : normalized.toLowerCase()
 }
 
 /**
@@ -298,7 +278,7 @@ function checkOne(student: string, key: string): SelfCheck {
   const sq = parseQuantity(student)
   if (kq) {
     if (!sq) return normalizeLoose(student) === normalizeLoose(key) ? 'match' : 'unknown'
-    if (kq.unit && sq.unit && kq.unit !== sq.unit) return 'unknown'
+    if (kq.unit && kq.unit !== sq.unit) return 'unknown'
     return reconcilePercentScale(sq.value, kq.value, student, key)
   }
   return normalizeLoose(student) === normalizeLoose(key) ? 'match' : 'unknown'
@@ -315,23 +295,21 @@ export function checkAnswer(studentAnswer: string | null | undefined, answerKey:
   const key = (answerKey ?? '').trim()
   if (!student || !key) return 'unknown'
 
-  // Multi-part read: if the cleaned key holds 2+ DIFFERENT quantities
-  // ("horizontal ≈ 5440; vertical ≈ 2540"), try requiring them all. But a key
-  // can ALSO be a list of alternative forms with different numbers in them
-  // ("$0.10 | 10 cents | a third of 30 cents"), so a failed multipart read is
-  // never final — each form still gets its own shot below.
-  let multipart: SelfCheck | null = null
-  const keyValues = findQuantities(cleanKeyForScan(key))
-  if (keyValues.length >= 2 && keyValues.some((v) => !numbersMatch(v, keyValues[0]))) {
-    multipart = checkMultipart(findQuantities(student), keyValues)
-    if (multipart === 'match') return 'match'
+  // Explicit alternatives use “or” or |; “and” and semicolons require all parts.
+  const alternatives = key.split(/\s*(?:\bor\b|\|)\s*/i).filter(Boolean)
+  if (alternatives.length > 1) {
+    const results = alternatives.map((form) => checkAnswer(student, form))
+    return results.includes('match') ? 'match' : results.includes('mismatch') ? 'mismatch' : 'unknown'
   }
-
-  const forms = key
-    .split(/\s*(?:\bor\b|\band\b|;|\|)\s*/i)
-    .map((f) => f.trim())
-    .filter(Boolean)
-  const candidates = forms.length > 0 ? forms : [key]
+  const parts = cleanKeyForScan(key).split(/\s*(?:;|\band\b)\s*/i).filter(Boolean)
+  if (parts.length > 1) {
+    const studentParts = student.split(/\s*(?:;|,\s+(?=[a-zA-Z])|\band\b)\s*/i).filter(Boolean)
+    const stripLabel = (part: string) => part.replace(/^[a-zA-Z]+\s+(?=[-+~≈\d])/, '')
+    if (studentParts.length !== parts.length) return 'unknown'
+    const results = parts.map((part, i) => checkOne(stripLabel(studentParts[i]), stripLabel(part)))
+    return results.every((r) => r === 'match') ? 'match' : results.includes('mismatch') ? 'mismatch' : 'unknown'
+  }
+  const candidates = [key]
 
   let sawMismatch = false
   for (const form of candidates) {
@@ -339,7 +317,7 @@ export function checkAnswer(studentAnswer: string | null | undefined, answerKey:
     if (r === 'match') return 'match'
     if (r === 'mismatch') sawMismatch = true
   }
-  if (sawMismatch || multipart === 'mismatch') return 'mismatch'
+  if (sawMismatch) return 'mismatch'
   return 'unknown'
 }
 
@@ -382,7 +360,7 @@ function checkExactForm(student: string, key: string): SelfCheck {
   const kq = parseQuantity(key)
   const sq = parseQuantity(student)
   if (!kq || !sq) return checkAnswer(student, key) === 'match' ? 'match' : 'unknown'
-  if (kq.unit && sq.unit && kq.unit !== sq.unit) return 'unknown'
+  if (kq.unit && kq.unit !== sq.unit) return 'unknown'
   const scale = Math.max(Math.abs(kq.value), Math.abs(sq.value))
   const valueMatch = scale === 0 ? true : Math.abs(kq.value - sq.value) / scale <= EXACT_REL_TOLERANCE
   if (!valueMatch) return 'mismatch'

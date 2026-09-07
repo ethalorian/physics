@@ -1,3 +1,6 @@
+import { paginateBlocks } from '@/data/content-blocks'
+import { documentRevision, sectionAnchor } from '@/lib/lesson-anchors'
+import { authorizeLesson } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
@@ -22,10 +25,13 @@ export const GET = withAuth(async (request, ctx) => {
   const lessonId = searchParams.get('lesson_id')
   if (!lessonId) return NextResponse.json({ error: 'Missing lesson_id' }, { status: 400 })
 
+  const access = await authorizeLesson(ctx, lessonId)
+  if (!access.ok) return access.response
+
   const resolved = await resolveTargetStudent({
     role: ctx.role,
     selfId: ctx.userId,
-    scopeEmail: ctx.email,
+    scopeEmail: ctx.scopeEmail,
     requestedUserId: searchParams.get('user_id'),
   })
   if (!resolved.ok) {
@@ -34,7 +40,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   const { data, error } = await supabaseAdmin
     .from('lesson_section_progress')
-    .select('completed_sections')
+    .select('completed_sections, completed_anchors, document_revision')
     .eq('lesson_id', lessonId)
     .eq('user_id', resolved.userId)
     .maybeSingle()
@@ -42,7 +48,7 @@ export const GET = withAuth(async (request, ctx) => {
     console.error('Error reading section progress:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-  return NextResponse.json({ completed: cleanIndices(data?.completed_sections) })
+  return NextResponse.json({ completed: cleanIndices(data?.completed_sections), completed_anchors: data?.completed_anchors ?? [], document_revision: data?.document_revision ?? null })
 })
 
 // POST /api/lessons/sections  — replace the completed set (idempotent).
@@ -52,7 +58,15 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
   if (!body.lesson_id || !Array.isArray(body.completed)) {
     return NextResponse.json({ error: 'Missing lesson_id or completed[]' }, { status: 400 })
   }
-  const completed = cleanIndices(body.completed)
+  const access = await authorizeLesson(ctx, body.lesson_id, true)
+  if (!access.ok) return access.response
+  const pages = paginateBlocks(access.document?.blocks ?? [])
+  const expectedRevision = documentRevision(pages)
+  if (body.document_revision !== expectedRevision) return NextResponse.json({ error: 'Lesson content changed. Reload before saving section progress.' }, { status: 409 })
+  const validAnchors = new Set(pages.map(sectionAnchor))
+  const completed = cleanIndices(body.completed).filter((n) => n < pages.length)
+  const anchors = Array.isArray(body.completed_anchors) ? [...new Set(body.completed_anchors.filter((a: unknown): a is string => typeof a === 'string' && a.length > 0 && a.length < 200 && validAnchors.has(a)))].slice(0, 1000) : []
+  const revision = typeof body.document_revision === 'string' && body.document_revision.length < 200 ? body.document_revision : null
   const { error } = await supabaseAdmin
     .from('lesson_section_progress')
     .upsert(
@@ -61,6 +75,8 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         user_email: ctx.email,
         lesson_id: body.lesson_id,
         completed_sections: completed,
+        completed_anchors: anchors,
+        document_revision: revision,
         updated_at: new Date().toISOString(),
       },
       { onConflict: 'user_id,lesson_id' },

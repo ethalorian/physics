@@ -9,6 +9,7 @@ import './globals.css'
 import AuthProvider from '@/components/auth-provider'
 import AccessGate from '@/components/AccessGate'
 import Navbar from '@/components/navbar'
+import SimulationLauncher from '@/components/simulations/SimulationLauncher'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
@@ -66,6 +67,7 @@ export default function RootLayout({
                     <StudentActivityProvider>
                       <AccessGate>
                         <Navbar />
+                        <SimulationLauncher />
                         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
                           {children}
                         </main>

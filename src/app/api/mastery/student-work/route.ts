@@ -1,3 +1,5 @@
+import { evidenceWithLinks } from '@/lib/lesson-evidence-links'
+import { authorizeLesson } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { lessonsByTarget } from '@/lib/lesson-targets'
@@ -10,13 +12,14 @@ import { resolveTargetStudent } from '@/lib/teacher-scope'
 
 type UnitRow = { id: string; name: string }
 type LessonRow = { id: string; title: string; lesson_number: number; content_blocks?: { blocks?: unknown[] } | null }
-type BlockRow = { lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string; response_mode?: string | null; scaffolds_used?: string[] | null; evidence_source?: string | null; confidence?: string | null; role?: string | null }
-type TargetRow = { id: string; statement: string; domain: string; order_index: number }
+type BlockRow = { present_session_id?: string | null; poll_run_id?: string | null; session_id?: string | null; lesson_id: string | null; block_id: string; block_type: string | null; response: unknown; created_at: string; response_mode?: string | null; scaffolds_used?: string[] | null; evidence_source?: string | null; confidence?: string | null; role?: string | null }
+type TargetRow = { id: string; slug: string; statement: string; domain: string; order_index: number }
 type RecordRow = { target_id: string; level: number; observed_at: string; evidence_source: string | null }
 
 export const GET = withAuth(async (request, ctx) => {
     const role = ctx.role
     const isStaff = role === 'admin' || role === 'teacher'
+    if (!isStaff && role !== 'student') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const { searchParams } = new URL(request.url)
     const unitId = searchParams.get('unit_id')
@@ -24,6 +27,9 @@ export const GET = withAuth(async (request, ctx) => {
     // When a specific target cell is opened, scope the returned work to just that
     // target's lesson — so the teacher sees only the evidence for what they clicked.
     const targetId = searchParams.get('target_id')
+    const requestedLesson = searchParams.get('lesson_id')
+    const requestedSubmission = searchParams.get('submission_id')
+    const evidenceMode = searchParams.get('mode') === 'evidence'
     if (!unitId) {
       return NextResponse.json({ error: 'Missing unit_id' }, { status: 400 })
     }
@@ -32,7 +38,7 @@ export const GET = withAuth(async (request, ctx) => {
     const resolved = await resolveTargetStudent({
       role,
       selfId: ctx.userId,
-      scopeEmail: ctx.email,
+      scopeEmail: ctx.scopeEmail,
       requestedUserId,
     })
     if (!resolved.ok) {
@@ -54,6 +60,14 @@ export const GET = withAuth(async (request, ctx) => {
         .order('lesson_number', { ascending: true })
       lessons = (lessonRows ?? []) as LessonRow[]
     }
+    if (!isStaff) {
+      const allowed: LessonRow[] = []
+      for (const lesson of lessons) {
+        const access = await authorizeLesson(ctx, lesson.id)
+        if (access.ok) allowed.push({ ...lesson, content_blocks: access.document })
+      }
+      lessons = allowed
+    }
     const titleByLesson = new Map<string, string>(lessons.map((l): [string, string] => [l.id, l.title]))
     const lessonIds = lessons.map((l) => l.id)
 
@@ -68,43 +82,63 @@ export const GET = withAuth(async (request, ctx) => {
       scopeLessonIds = carriers.filter((id) => lessonIds.includes(id))
     }
 
-    // The student's block work for those lessons — latest per (lesson, block)
-    const work: { lessonTitle: string; lessonId: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode: string | null; scaffoldsUsed: string[]; evidenceSource: string | null; confidence: string | null; role: string | null }[] = []
-    if (scopeLessonIds.length > 0) {
-      const { data: blockRows } = await supabaseAdmin
-        .from('block_responses')
-        .select('lesson_id, block_id, block_type, response, created_at, response_mode, scaffolds_used, evidence_source, confidence, role')
-        .eq('user_id', userId)
-        .in('lesson_id', scopeLessonIds)
-        .order('created_at', { ascending: false })
-      const seen = new Set<string>()
-      for (const b of (blockRows ?? []) as BlockRow[]) {
-        const key = `${b.lesson_id}|${b.block_id}`
-        if (seen.has(key)) continue
-        seen.add(key)
-        work.push({
-          lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Lesson',
-          lessonId: b.lesson_id,
-          blockType: b.block_type,
-          blockId: b.block_id,
-          response: b.response,
-          createdAt: b.created_at,
-          responseMode: b.response_mode ?? null,
-          scaffoldsUsed: b.scaffolds_used ?? [],
-          evidenceSource: b.evidence_source ?? null,
-          confidence: b.confidence ?? null,
-          role: b.role ?? null,
-        })
-      }
+    if (requestedLesson) scopeLessonIds = scopeLessonIds.filter((id) => id === requestedLesson)
+    // Submitted work always comes from its immutable snapshot. Legacy submissions are
+    // bounded by submitted_at; subsequent saves cannot change what the teacher sees.
+    let subQuery = supabaseAdmin.from('lesson_submissions').select('id, user_id, lesson_id, submitted_at, response_snapshot, content_snapshot').eq('user_id', userId).order('submitted_at', { ascending: false })
+    if (requestedSubmission) subQuery = subQuery.eq('id', requestedSubmission)
+    const { data: subRows, error: subError } = await subQuery
+    if (subError) throw subError
+    const submissions = (subRows ?? []).filter((s) => scopeLessonIds.includes(s.lesson_id))
+    if (requestedSubmission && !submissions.length) return NextResponse.json({ error: 'Submission not found in this scope' }, { status: 404 })
+    const latestSub = new Map<string, typeof submissions[number]>()
+    for (const sub of submissions) if (!latestSub.has(sub.lesson_id)) latestSub.set(sub.lesson_id, sub)
+    const { data: liveRows, error: liveError } = await supabaseAdmin.from('block_responses')
+      .select('id, lesson_id, target_id, block_id, block_type, response, created_at, response_mode, scaffolds_used, evidence_source, confidence, role, present_session_id, poll_run_id, session_id')
+      .eq('user_id', userId).order('created_at', { ascending: false }).limit(2000)
+    if (liveError) throw liveError
+    const linkedRows = await evidenceWithLinks(liveRows ?? [])
+    const scopeRows = linkedRows.filter((r) => r.lesson_id ? scopeLessonIds.includes(r.lesson_id) : isStaff && evidenceMode)
+    const rows: (BlockRow & { submission_id?: string; target_id?: string | null })[] = []
+    for (const lessonId of scopeLessonIds) {
+      const sub = latestSub.get(lessonId)
+      if (!evidenceMode && sub) {
+        const captured = Array.isArray(sub.response_snapshot) ? sub.response_snapshot as BlockRow[] : scopeRows.filter((r) => r.lesson_id === lessonId && r.created_at <= sub.submitted_at)
+        rows.push(...captured.map((r) => ({ ...r, submission_id: sub.id })))
+      } else rows.push(...scopeRows.filter((r) => r.lesson_id === lessonId))
     }
+    if (isStaff && evidenceMode) rows.push(...scopeRows.filter((r) => !r.lesson_id))
+    const work = []
+    const seen = new Set<string>()
+    for (const b of rows.sort((a, b) => b.created_at.localeCompare(a.created_at))) {
+      const key = `${b.lesson_id}|${b.block_id}|${evidenceMode ? `${b.evidence_source}:${b.present_session_id ?? b.session_id ?? ''}:${b.poll_run_id ?? ''}` : ''}`
+      if (seen.has(key)) continue
+      seen.add(key)
+      if (!isStaff) {
+        const lesson = lessons.find((l) => l.id === b.lesson_id)
+        if (!lesson?.content_blocks?.blocks?.some((block) => (block as { id: string }).id === b.block_id)) continue
+      }
+      work.push({
+        lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Unlinked group work', lessonId: b.lesson_id,
+        blockType: b.block_type, blockId: b.block_id, response: b.response, createdAt: b.created_at,
+        responseMode: b.response_mode ?? null, scaffoldsUsed: b.scaffolds_used ?? [], evidenceSource: b.evidence_source ?? null,
+        confidence: b.confidence ?? null, role: b.role ?? null, submissionId: b.submission_id ?? null,
+        untargeted: !b.target_id, unlinked: !b.lesson_id,
+      })
+    }
+    const reviewIds = [...latestSub.values()].map((s) => s.id)
+    const { data: reviews, error: reviewError } = reviewIds.length ? await supabaseAdmin.from('lesson_reviews').select('submission_id').in('submission_id', reviewIds) : { data: [], error: null }
+    if (reviewError) throw reviewError
+    const reviewedIds = new Set((reviews ?? []).map((r) => r.submission_id))
+    const submissionStates = [...latestSub.values()].map((s) => ({ id: s.id, lessonId: s.lesson_id, lessonTitle: titleByLesson.get(s.lesson_id), submittedAt: s.submitted_at, reviewed: reviewedIds.has(s.id), legacySnapshot: !Array.isArray(s.response_snapshot), ...(isStaff ? { contentSnapshot: s.content_snapshot } : {}) }))
 
     // Targets + this student's rating history for the unit
     const { data: targetRowsRaw } = await supabaseAdmin
       .from('learning_targets')
-      .select('id, statement, domain, order_index')
+      .select('id, slug, statement, domain, order_index')
       .eq('unit_id', unitId)
       .order('order_index', { ascending: true })
-    const targets = ((targetRowsRaw ?? []) as TargetRow[]).map((t) => ({ id: t.id, statement: t.statement, domain: t.domain }))
+    const targets = ((targetRowsRaw ?? []) as TargetRow[]).map((t) => ({ id: t.id, slug: t.slug, statement: t.statement, domain: t.domain }))
     const targetIds = targets.map((t) => t.id)
 
     let records: RecordRow[] = []
@@ -118,5 +152,5 @@ export const GET = withAuth(async (request, ctx) => {
       records = (recRaw ?? []) as RecordRow[]
     }
 
-    return NextResponse.json({ userId, unitId, targets, records, work })
+    return NextResponse.json({ userId, unitId, targets, records, work, submissions: submissionStates })
 })

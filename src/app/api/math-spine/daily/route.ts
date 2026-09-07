@@ -30,7 +30,7 @@ export const GET = withAuth(async (request, ctx) => {
   // Active competencies.
   const { data: compRows } = await supabaseAdmin
     .from('math_competencies')
-    .select('id, code, statement, strand, order_index, sequence_order, mini_lesson')
+    .select('id, code, statement, strand, order_index, sequence_order, mini_lesson, misconception_fallback')
     .eq('is_active', true)
     .order('sequence_order', { ascending: true, nullsFirst: false })
   const competencies = compRows ?? []
@@ -72,7 +72,7 @@ export const GET = withAuth(async (request, ctx) => {
   // and maintenance leans harder (stretch) when difficulty is tagged.
   const { data: itemRows } = await supabaseAdmin
     .from('math_spiral_items')
-    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations, is_spaced, template, check_mode')
+    .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations, is_spaced, template, check_mode, misconceptions')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
   let pool = itemRows ?? []
@@ -87,6 +87,7 @@ export const GET = withAuth(async (request, ctx) => {
 
   const tiersFromDb = (target.mini_lesson as { tiers?: unknown } | null)?.tiers ?? null
   let item: {
+    instanceId?: string
     spiralItemId: string
     competencyId: string
     competencyCode: string
@@ -111,12 +112,16 @@ export const GET = withAuth(async (request, ctx) => {
     // (seeded user+item+day — warmup-submit recomputes the same numbers when
     // it checks the answer). A malformed template falls back to the static
     // prompt rather than blocking the student.
+    let answerKey = chosen.answer_key
+    let templateValues: Record<string, number> | null = null
     let prompt = chosen.prompt
     let translations = (chosen.translations ?? {}) as Record<string, string>
     if (chosen.template) {
       try {
         const inst = instantiateTemplate(chosen.prompt, chosen.template as ItemTemplate, `${targetUserId}:${chosen.id}:${dayNum}`)
         prompt = inst.prompt
+        answerKey = inst.answerKey
+        templateValues = inst.values
         translations = Object.fromEntries(
           Object.entries(translations).map(([k, v]) => [
             k,
@@ -143,6 +148,18 @@ export const GET = withAuth(async (request, ctx) => {
       competencyValue: valueOf(target.id),
       miniLessonTiers: tiersFromDb,
       translations,
+    }
+    // One immutable task per student and school day. The server-only checking
+    // snapshot keeps the answer key out of all client payloads.
+    if (ctx.role === 'student') {
+      const inserted = await supabaseAdmin.from('math_warmup_instances').upsert({
+        user_id: targetUserId, school_day: schoolDayKey(), item,
+        checking: { key: answerKey, mode: chosen.check_mode, template: chosen.template, values: templateValues, slips: chosen.misconceptions, fallback: target.misconception_fallback },
+      }, { onConflict: 'user_id,school_day', ignoreDuplicates: true })
+      if (inserted.error) return NextResponse.json({ error: 'Could not prepare your task. Please retry.' }, { status: 503 })
+      const stored = await supabaseAdmin.from('math_warmup_instances').select('id,item').eq('user_id', targetUserId).eq('school_day', schoolDayKey()).single()
+      if (stored.error) return NextResponse.json({ error: 'Could not load your task. Please retry.' }, { status: 503 })
+      item = { ...stored.data.item, instanceId: stored.data.id }
     }
   }
 
@@ -223,7 +240,7 @@ export const GET = withAuth(async (request, ctx) => {
         statement: c.statement,
         sequence: r.sequence,
         state: rungState(r.levels),
-        isToday: r.id === target.id,
+        isToday: r.id === item?.competencyId,
       }
     })
     .sort((a, b) => a.sequence - b.sequence)

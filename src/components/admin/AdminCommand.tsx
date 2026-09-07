@@ -39,7 +39,7 @@ export default function AdminCommand({ tools }: { tools: Tool[] }) {
   // ⌘K / Ctrl+K toggles the palette anywhere in the shell.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if (!e.shiftKey && !e.altKey && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         setOpen((v) => !v)
       } else if (e.key === 'Escape') {

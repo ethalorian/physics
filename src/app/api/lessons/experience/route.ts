@@ -1,7 +1,8 @@
+import { authorizeLesson } from '@/lib/lesson-access'
+import { targetSlugsInBlocks } from '@/lib/lesson-targets'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
-import type { ContentBlock } from '@/data/content-blocks'
 
 // GET /api/lessons/experience?lesson_id=…
 // Everything the stepped reader needs beyond the document (A-5, S-4, S-6, MC-3):
@@ -19,9 +20,9 @@ export const GET = withAuth(async (request, ctx) => {
     const lessonId = new URL(request.url).searchParams.get('lesson_id')
     if (!lessonId) return NextResponse.json({ error: 'lesson_id required' }, { status: 400 })
 
-    const { data: lesson } = await supabaseAdmin.from('lessons').select('id, content_blocks').eq('id', lessonId).maybeSingle()
-    const blocks: ContentBlock[] = (lesson as { content_blocks?: { blocks?: ContentBlock[] } } | null)?.content_blocks?.blocks ?? []
-    const slugs = [...new Set(blocks.map((b) => b.targetId).filter((s): s is string => Boolean(s)))]
+    const access = await authorizeLesson(ctx, lessonId)
+    if (!access.ok) return access.response
+    const slugs = targetSlugsInBlocks(access.document)
 
     // Flags from the student's class (first enrolled course with a non-classic reader wins; a
     // student in one class simply gets that class's flags).
@@ -44,6 +45,12 @@ export const GET = withAuth(async (request, ctx) => {
     if (slugs.length > 0) {
       const { data: t } = await supabaseAdmin.from('learning_targets').select('id, slug, statement').in('slug', slugs)
       targets = (t ?? []) as { id: string; slug: string; statement: string }[]
+      const uuids = slugs.filter((s) => /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(s))
+      if (uuids.length) {
+        const { data: byId, error } = await supabaseAdmin.from('learning_targets').select('id, slug, statement').in('id', uuids)
+        if (error) throw error
+        targets = [...new Map([...targets, ...(byId ?? [])].map((target) => [target.id, target])).values()]
+      }
     }
     const idToSlug = new Map(targets.map((t) => [t.id, t.slug]))
 
@@ -57,7 +64,7 @@ export const GET = withAuth(async (request, ctx) => {
         .eq('user_id', ctx.userId).in('target_id', ids).order('observed_at', { ascending: false })
       for (const r of (recs ?? []) as { target_id: string; level: number }[]) {
         const slug = idToSlug.get(r.target_id)
-        if (slug && mastery[slug] === undefined) mastery[slug] = r.level
+        if (slug && mastery[slug] === undefined) { mastery[slug] = r.level; mastery[r.target_id] = r.level }
       }
       const { data: cal } = await supabaseAdmin
         .from('mastery_calibration').select('target_id, self_level, teacher_level, delta')
@@ -65,7 +72,9 @@ export const GET = withAuth(async (request, ctx) => {
       const byId = new Map(((cal ?? []) as { target_id: string; self_level: number | null; teacher_level: number | null; delta: number | null }[]).map((c) => [c.target_id, c]))
       for (const t of targets) {
         const c = byId.get(t.id)
-        calibration.push({ slug: t.slug, statement: t.statement, self: c?.self_level ?? null, teacher: c?.teacher_level ?? mastery[t.slug] ?? null, delta: c?.delta ?? null })
+        const entry = { slug: t.slug, statement: t.statement, self: c?.self_level ?? null, teacher: c?.teacher_level ?? mastery[t.slug] ?? null, delta: c?.delta ?? null }
+        calibration.push(entry)
+        if (slugs.includes(t.id)) calibration.push({ ...entry, slug: t.id })
       }
     }
 

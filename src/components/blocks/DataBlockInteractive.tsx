@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useDraft } from './useDraft'
+import { numericCell, axisRange, formatTick } from './data-plot'
 
 export interface DataValue {
   rows?: string[][]
@@ -12,6 +13,7 @@ export interface DataValue {
 interface DataBlockProps {
   columns: string[]
   rows: number
+  minRows?: number
   plot?: boolean
   xCol?: number
   yCol?: number
@@ -30,7 +32,8 @@ function blankGrid(cols: number, rows: number): string[][] {
 
 const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
 
-export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
+export default function DataBlockInteractive({ columns, rows, minRows = 1, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
+  const clipId = useId()
   const cols = columns && columns.length > 0 ? columns : ['x', 'y']
   const xi = xCol ?? 0
   const yi = yCol ?? 1
@@ -42,28 +45,28 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
   const [interpret, setInterpret] = useState(value?.interpret ?? '')
   const [nudges, setNudges] = useState<{ ok: boolean; msg: string }[]>([])
   const [saved, setSaved] = useState(false)
-  useDraft(onDraft ?? (() => {}), grid.some((r) => r.some((c) => c.trim())) || pattern.trim() || interpret.trim() ? { rows: grid, pattern, interpret } : undefined)
+  useDraft(onDraft ?? (() => {}), { rows: grid, pattern, interpret })
 
   const setCell = (r: number, c: number, v: string) => {
     setGrid((prev) => prev.map((row, ri) => (ri === r ? row.map((cell, ci) => (ci === c ? v : cell)) : row)))
     setSaved(false)
   }
-  const addRow = () => setGrid((prev) => [...prev, Array.from({ length: cols.length }, () => '')])
+  const addRow = () => { setSaved(false); setGrid((prev) => [...prev, Array.from({ length: cols.length }, () => '')]) }
 
   const points = (): { x: number; y: number }[] => {
     const out: { x: number; y: number }[] = []
     for (const row of grid) {
-      const x = parseFloat(row[xi])
-      const y = parseFloat(row[yi])
-      if (!isNaN(x) && !isNaN(y)) out.push({ x, y })
+      const x = numericCell(row[xi])
+      const y = numericCell(row[yi])
+      if (x !== null && y !== null) out.push({ x, y })
     }
     return out
   }
 
   const runCheck = () => {
-    const filled = points().length
+    const filled = grid.filter((row) => row.length >= cols.length && row.every((v) => v.trim()) && (!showPlot || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length
     const n: { ok: boolean; msg: string }[] = [
-      filled >= 3 ? { ok: true, msg: `You recorded ${filled} readings.` } : { ok: false, msg: 'Record at least 3 readings so a pattern can show.' },
+      filled >= minRows ? { ok: true, msg: `You recorded ${filled} readings.` } : { ok: false, msg: `Record at least ${minRows} complete readings${showPlot ? '; use numbers in the plotted columns' : ''}.` },
       pattern ? { ok: true, msg: `You named the pattern: ${pattern}.` } : { ok: false, msg: 'Choose what kind of relationship your data shows.' },
       interpret.trim().length > 3 ? { ok: true, msg: 'You explained what it means.' } : { ok: false, msg: 'Finish the sentence — what does this tell you?' },
     ]
@@ -78,12 +81,9 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
   // --- live plot geometry ---
   const pts = points()
   const L = 46, R = 410, T = 16, B = 200, Wd = 430, Hd = 232
-  const xMax = Math.max(1, ...pts.map((p) => p.x))
-  const yMaxRaw = Math.max(1, ...pts.map((p) => p.y))
-  const yMax = Math.ceil(yMaxRaw / 5) * 5 || 1
-  const tMax = Math.ceil(xMax) || 1
-  const sx = (x: number) => L + (x / tMax) * (R - L)
-  const sy = (y: number) => B - (y / yMax) * (B - T)
+  const xr = axisRange(pts.map((p) => p.x)), yr = axisRange(pts.map((p) => p.y))
+  const sx = (x: number) => L + ((x - xr.min) / (xr.max - xr.min)) * (R - L)
+  const sy = (y: number) => B - ((y - yr.min) / (yr.max - yr.min)) * (B - T)
   let trendLine: { x1: number; y1: number; x2: number; y2: number } | null = null
   if (trend && pts.length >= 2) {
     const n = pts.length
@@ -93,7 +93,7 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
     if (denom !== 0) {
       const slope = (n * sTY - sT * sY) / denom
       const inter = (sY - slope * sT) / n
-      trendLine = { x1: sx(0), y1: sy(inter), x2: sx(tMax), y2: sy(slope * tMax + inter) }
+      trendLine = { x1: sx(xr.min), y1: sy(slope * xr.min + inter), x2: sx(xr.max), y2: sy(slope * xr.max + inter) }
     }
   }
 
@@ -116,17 +116,18 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
                 <tr key={ri}>
                   {cols.map((_, ci) => (
                     <td key={ci} className="px-1 py-0.5">
-                      <input value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />
+                      <input aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />
                     </td>
                   ))}
                   <td className="px-1">
-                    {grid.length > 1 && <button onClick={() => setGrid((prev) => prev.filter((_, i) => i !== ri))} className="text-lg" style={{ color: 'var(--muted-foreground)' }} aria-label="remove row">×</button>}
+                    {grid.length > 1 && <button onClick={() => { setSaved(false); setGrid((prev) => prev.filter((_, i) => i !== ri)) }} className="text-lg" style={{ color: 'var(--muted-foreground)' }} aria-label="remove row">×</button>}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        {showPlot && <p className="text-xs text-muted-foreground mt-1">Enter numbers only in the plotted columns, including negative values or scientific notation. Units belong in the column headings.</p>}
         <button onClick={addRow} className="mt-2 rounded-lg border px-3 py-2 text-xs font-semibold" style={{ borderColor: 'var(--border)', color: 'var(--primary)', borderStyle: 'dashed' }}>+ Add a reading</button>
       </div>
 
@@ -139,11 +140,15 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
             <line x1={L} y1={B} x2={R} y2={B} style={{ stroke: 'var(--border)' }} strokeWidth={1.5} />
             <text x={(L + R) / 2} y={Hd - 2} textAnchor="middle" style={{ fill: 'var(--muted-foreground)' }} fontSize="11">{cols[xi]}</text>
             <text transform={`translate(11,${(T + B) / 2}) rotate(-90)`} textAnchor="middle" style={{ fill: 'var(--muted-foreground)' }} fontSize="11">{cols[yi]}</text>
-            <text x={L - 6} y={B + 4} textAnchor="end" style={{ fill: 'var(--muted-foreground)' }} fontSize="10">0</text>
-            <text x={L - 6} y={T + 8} textAnchor="end" style={{ fill: 'var(--muted-foreground)' }} fontSize="10">{yMax}</text>
-            <text x={R} y={B + 15} textAnchor="middle" style={{ fill: 'var(--muted-foreground)' }} fontSize="10">{tMax}</text>
-            {trendLine && <line x1={trendLine.x1} y1={trendLine.y1} x2={trendLine.x2} y2={trendLine.y2} style={{ stroke: 'var(--primary)', opacity: 0.7 }} strokeWidth={2.5} strokeDasharray="6 5" />}
-            {pts.map((p, i) => <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r={6} style={{ fill: 'var(--reward)' }} />)}
+            <defs><clipPath id={clipId}><rect x={L} y={T} width={R-L} height={B-T} /></clipPath></defs>
+            <line x1={sx(0)} y1={T} x2={sx(0)} y2={B} stroke="var(--muted-foreground)" strokeDasharray="3 3" />
+            <line x1={L} y1={sy(0)} x2={R} y2={sy(0)} stroke="var(--muted-foreground)" strokeDasharray="3 3" />
+            <text x={L - 6} y={B + 4} textAnchor="end" fill="var(--muted-foreground)" fontSize="10">{formatTick(yr.min)}</text>
+            <text x={L} y={B + 15} textAnchor="middle" fill="var(--muted-foreground)" fontSize="10">{formatTick(xr.min)}</text>
+            <text x={L - 6} y={T + 8} textAnchor="end" style={{ fill: 'var(--muted-foreground)' }} fontSize="10">{formatTick(yr.max)}</text>
+            <text x={R} y={B + 15} textAnchor="middle" style={{ fill: 'var(--muted-foreground)' }} fontSize="10">{formatTick(xr.max)}</text>
+            {trendLine && <line clipPath={`url(#${clipId})`} x1={trendLine.x1} y1={trendLine.y1} x2={trendLine.x2} y2={trendLine.y2} style={{ stroke: 'var(--primary)', opacity: 0.7 }} strokeWidth={2.5} strokeDasharray="6 5" />}
+            {pts.map((p, i) => <circle key={i} cx={sx(p.x)} cy={sy(p.y)} r={6} style={{ fill: 'var(--primary)' }} />)}
           </svg>
           <label className="flex items-center gap-2 mt-2 text-sm cursor-pointer" style={{ color: 'var(--muted-foreground)' }}>
             <input type="checkbox" checked={trend} onChange={(e) => setTrend(e.target.checked)} />
@@ -160,11 +165,11 @@ export default function DataBlockInteractive({ columns, rows, plot, xCol, yCol, 
           {PATTERNS.map((p) => {
             const sel = pattern === p
             return (
-              <button key={p} onClick={() => { setPattern(p); setSaved(false) }} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: sel ? 'var(--success)' : 'var(--border)', background: sel ? 'color-mix(in oklch, var(--success) 14%, transparent)' : 'var(--card)', color: sel ? 'var(--success)' : 'var(--foreground)' }}>{p}</button>
+              <button key={p} aria-pressed={sel} onClick={() => { setPattern(sel ? '' : p); setSaved(false) }} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: sel ? 'var(--success)' : 'var(--border)', background: sel ? 'color-mix(in oklch, var(--success) 14%, transparent)' : 'var(--card)', color: sel ? 'var(--success)' : 'var(--foreground)' }}>{p}</button>
             )
           })}
         </div>
-        <textarea value={interpret} onChange={(e) => { setInterpret(e.target.value); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
+        <textarea aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onChange={(e) => { setInterpret(e.target.value); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
       </div>
 
       {/* check + save */}

@@ -12,8 +12,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle, HelpCircle, Dumbbell } from 'lucide-react'
-import MathCanvas, { type CanvasText } from './MathCanvas'
-import type { Stroke } from '@/components/blocks/DoodleCanvas'
+import WarmupAnswer from './WarmupAnswer'
+import MathWorkReview from './MathWorkReview'
+import type { MathResponse } from '@/lib/math-response'
+
 import { useTranslator } from '@/lib/math-translate-store'
 
 interface PracticeItem {
@@ -22,6 +24,9 @@ interface PracticeItem {
   competencyStatement: string
   prompt: string
   needsGraph?: boolean
+  needsEquationBuilder?: boolean
+  checkMode?: string
+  translations?: Record<string, string>
   /** present on randomized items — echoed back so the server checks the same numbers */
   templateSeed?: string | null
 }
@@ -36,7 +41,8 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
   const [item, setItem] = useState<PracticeItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [answer, setAnswer] = useState('')
-  const [board, setBoard] = useState<{ strokes: Stroke[]; texts: CanvasText[] }>({ strokes: [], texts: [] })
+  const [board, setBoard] = useState<MathResponse>({})
+  const [error, setError] = useState('')
   const [boardKey, setBoardKey] = useState(0) // remount the canvas for a fresh board
   const [checking, setChecking] = useState(false)
   const [verdict, setVerdict] = useState<Verdict | null>(null)
@@ -47,14 +53,15 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
 
   const load = useCallback(() => {
     setLoading(true)
+    setError('')
     setVerdict(null)
     setFeedback(null)
     setAnswer('')
     setLastAward(0)
-    setBoard({ strokes: [], texts: [] })
+    setBoard({})
     setBoardKey((k) => k + 1)
     fetch('/api/math-spine/practice')
-      .then((r) => (r.ok ? r.json() : null))
+      .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load practice'); return d })
       .then((d) => {
         setItem(d?.item ?? null)
         if (d) {
@@ -63,7 +70,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
         }
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(e => { setError(e.message); setLoading(false) })
   }, [])
 
   useEffect(() => { load() }, [load])
@@ -78,18 +85,20 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
         body: JSON.stringify({ spiral_item_id: item.spiralItemId, answer, template_seed: item.templateSeed ?? undefined }),
       })
       const d = await res.json()
+      if (!res.ok) throw new Error(d.error || 'Could not check your answer')
       if (res.ok) {
         setVerdict(d.result as Verdict)
         setFeedback(d.feedback ?? null)
         setPointsToday(d.pointsToday ?? pointsToday)
         setLastAward(d.pointsAwarded ?? 0)
       }
-    } finally {
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not check your answer') } finally {
       setChecking(false)
     }
   }
 
-  if (loading || !item) return null
+  if (loading) return <p>Loading practice…</p>
+  if (!item) return <p>{error || "No practice available for this skill."} <button className="min-h-11 underline" onClick={load}>Retry</button></p>
   const gridded = item.needsGraph ?? needsGraph
 
   return (
@@ -105,33 +114,15 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
         {t("Instant check. Doesn't move the ladder — your teacher's rating does.")}
       </p>
 
-      <p className="mt-3 text-base font-semibold text-foreground leading-snug">{item.prompt}</p>
+      <p className="mt-3 text-base font-semibold text-foreground leading-snug">{(lang && item.translations?.[lang]) || item.prompt}</p>
 
       <div className="mt-3">
-        <MathCanvas
-          key={boardKey}
-          gridded={gridded}
-          readOnly={verdict !== null}
-          value={board}
-          onChange={(v) => setBoard(v)}
-          lang={lang}
-          stamp={verdict === 'match' ? { text: '✓ matches', tone: 'up' } : verdict === 'mismatch' ? { text: '✕ not yet', tone: 'down' } : null}
-        />
+        {verdict === null ? <WarmupAnswer key={boardKey} value={{ ...board, answer }} onChange={v => {setBoard(v);setAnswer(v.answer ?? '')}} needsGraph={gridded} needsEquationBuilder={item.needsEquationBuilder} checkMode={item.checkMode} lang={lang} /> : <MathWorkReview key={'review'+boardKey} value={{...board,answer,needsGraph:gridded}} />}
       </div>
 
+      {error && <p role="alert">{error}</p>}
       {verdict === null ? (
         <div className="mt-3 flex items-center gap-2">
-          <label htmlFor="practice-answer" className="sr-only">{t('Final answer')}</label>
-          <input
-            id="practice-answer"
-            className="flex-1 rounded-md border border-border bg-background px-3 text-foreground"
-            style={{ fontSize: 16, height: 44 }}
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') check() }}
-            placeholder={t('Final answer, with units')}
-            autoComplete="off"
-          />
           <Button className="rounded-full h-11 px-5" disabled={checking || !answer.trim()} onClick={check}>
             {checking ? t('Checking…') : t('Check')}
           </Button>
@@ -156,7 +147,7 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
                 <p className="text-base font-semibold text-foreground tabular-nums">{answer.trim()}</p>
               </div>
               <p className="text-sm text-foreground mt-2 leading-relaxed">
-                {feedback ? feedback.message : t('Re-read what the question asks for and check the units on every number, then try another.')}
+                {feedback ? t('Check whether this hint fits your reasoning: ') + feedback.message : t('Re-read what the question asks for and check the units on every number, then try another.')}
               </p>
             </div>
           )}

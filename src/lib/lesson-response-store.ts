@@ -66,13 +66,18 @@ export class LessonResponseStore {
         if (!record(raw) || typeof raw.updated_at !== 'string') throw new Error('shape')
         if (at(raw.updated_at) > at(merged[id]?.created_at)) merged[id] = { response: raw.response, created_at: raw.updated_at, draft: true }
       }
+      // The server's visible capture IDs retire drafts from removed blocks or a prior track.
+      const validIds = Array.isArray(b.valid_block_ids) ? new Set(b.valid_block_ids.filter((id: unknown): id is string => typeof id === 'string')) : null
+      const recovered = this.read()
       // Never read the old, lesson-only key: its author cannot be established.
-      for (const [id, d] of Object.entries(this.read())) {
+      for (const [id, d] of Object.entries(recovered)) {
+        if (validIds && !validIds.has(id)) { delete recovered[id]; delete this.pending[id]; delete merged[id]; continue }
         if (at(d.updated_at) > at(merged[id]?.created_at)) {
           merged[id] = { response: d.response, created_at: d.updated_at, draft: true }
           this.pending[id] = d
         }
       }
+      if (validIds) this.write(recovered)
       this.update({ responses: merged, loaded: true })
       if (Object.keys(this.pending).length) this.schedule()
     } catch {

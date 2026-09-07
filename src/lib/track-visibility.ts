@@ -98,7 +98,7 @@ function stripAnswerKey(b: ContentBlock): ContentBlock {
   if (b.type !== 'question' || !b.question || typeof b.question !== 'object' || !('correctOptionId' in (b.question as object))) return b;
   const { correctOptionId: _omit, ...rest } = b.question as { correctOptionId?: string } & Record<string, unknown>;
   void _omit;
-  return { ...b, question: rest };
+  return { ...b, question: { ...rest, autoCheckable: Boolean(_omit) } };
 }
 
 // --- Convenience for the common student/teacher-by-track call sites ----------

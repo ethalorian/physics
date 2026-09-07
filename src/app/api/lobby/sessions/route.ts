@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { classLesson } from '@/lib/present-server'
+import { getCourseOwnerEmail } from '@/lib/teacher-scope'
+import { lobbyReadyDefault } from '@/data/content-blocks'
 import { targetIdsForLesson } from '@/lib/lesson-targets'
 import { generateLobbyCode } from '@/lib/lobby/passphrase'
 import { getRoom, encodeEscapeConfig, type EscapePrize, type EscapePrizeTier } from '@/lib/lobby/escape'
@@ -56,6 +59,12 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
     return NextResponse.json({ error: 'group_size must be 2–6' }, { status: 400 })
   }
 
+  if (ctx.role !== 'admin' && (await getCourseOwnerEmail(course_id))?.toLowerCase() !== ctx.email.toLowerCase()) return NextResponse.json({ error: 'Forbidden class' }, { status: 403 })
+  const linkedLesson = typeof lesson_id === 'string' ? await classLesson(lesson_id, course_id, ctx) : null
+  if (lesson_id && !linkedLesson) return NextResponse.json({ error: 'Lesson unavailable for class' }, { status: 400 })
+  const linkedBlock = linkedLesson?.content_blocks.blocks.find(b => b.id === block_id)
+  if (block_id && (!linkedBlock || !lobbyReadyDefault(linkedBlock))) return NextResponse.json({ error: 'Invalid lobby block' }, { status: 400 })
+
   // Jigsaw: clean the authored pieces; require at least two.
   let pieces: string[] | null = null
   if (Array.isArray(jigsaw_pieces)) {
@@ -84,6 +93,10 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   // L-1 · resolve the target: explicit id, else the block's slug, else the lesson's first target.
   let targetId: string | null = typeof target_id === 'string' && target_id ? target_id : null
+  if (linkedBlock?.targetId) {
+    const { data: target } = await supabaseAdmin.from('learning_targets').select('id').eq('slug', linkedBlock.targetId).maybeSingle()
+    targetId = target?.id ?? null
+  }
   if (!targetId && typeof target_slug === 'string' && target_slug) {
     const { data: t } = await supabaseAdmin.from('learning_targets').select('id').eq('slug', target_slug).maybeSingle()
     targetId = (t as { id: string } | null)?.id ?? null

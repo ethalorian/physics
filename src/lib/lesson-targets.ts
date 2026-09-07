@@ -17,6 +17,7 @@ export function targetSlugsInBlocks(doc: Doc): string[] {
   const out = new Set<string>()
   const blocks = Array.isArray(doc?.blocks) ? doc!.blocks! : []
   for (const raw of blocks) {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) continue
     const b = raw as Record<string, unknown>
     if (typeof b.targetId === 'string' && b.targetId) out.add(b.targetId)
     for (const k of ['targetIds', 'targets']) {
@@ -61,7 +62,7 @@ export function lessonsByTarget(
   for (const l of lessons) for (const s of targetSlugsInBlocks(l.content_blocks)) (bySlug.get(s) ?? bySlug.set(s, new Set()).get(s)!).add(l.id)
   const out = new Map<string, string[]>()
   for (const t of targets) {
-    const set = new Set<string>(bySlug.get(t.slug) ?? [])
+    const set = new Set<string>([...(bySlug.get(t.slug) ?? []), ...(bySlug.get(t.id) ?? [])])
     if (t.lesson_id) set.add(t.lesson_id)
     out.set(t.id, [...set])
   }

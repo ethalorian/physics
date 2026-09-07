@@ -11,7 +11,7 @@ export const projectileDef: SimDefinition = {
     { key: 'speed', label: 'Launch speed', type: 'slider', min: 5, max: 50, step: 1, unit: 'm/s', default: 20 },
     { key: 'angle', label: 'Launch angle', type: 'slider', min: 0, max: 90, step: 1, unit: '°', default: 45 },
     { key: 'height', label: 'Launch height', type: 'slider', min: 0, max: 20, step: 0.5, unit: 'm', default: 0 },
-    { key: 'drag', label: 'Air drag', type: 'slider', min: 0, max: 0.3, step: 0.02, default: 0, live: true },
+    { key: 'drag', label: 'Linear air drag', unit: 's⁻¹', type: 'slider', min: 0, max: 0.3, step: 0.02, default: 0, live: true },
   ],
   readouts: [
     { key: 'time', label: 'Time', unit: 's' },
@@ -28,6 +28,11 @@ export const projectileDef: SimDefinition = {
     { key: 'height', kind: 'motion', label: 'Motion Detector', quantity: 'Height', unit: 'm' },
   ],
   learning: {
+    whatToNotice: [
+      'With no drag, horizontal velocity stays constant while vertical velocity changes by −9.8 m/s each second.',
+      'At the peak, vertical velocity is zero; horizontal velocity can still be nonzero.',
+      'Final velocity readouts and the last data row show the instant just before ground impact.',
+    ],
     objectives: [
       'Analyze 2D projectile motion',
       'Separate horizontal and vertical velocity',

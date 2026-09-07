@@ -61,12 +61,13 @@ export const GET = withAuth(async (request, ctx) => {
   let uid = ctx.userId
   if (requested && requested !== ctx.userId) {
     if (!isStaff) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (ctx.role !== 'admin' && !(await teacherCanAccessStudent(ctx.scopeEmail, requested))) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     uid = requested
   }
 
   const { data, error } = await supabaseAdmin
     .from('teacher_feedback')
-    .select('id, teacher_email, target_id, competency_id, message, created_at, target:learning_targets(slug, statement), competency:math_competencies(code, statement)')
+    .select('id, submission_id, teacher_email, target_id, competency_id, message, created_at, target:learning_targets(slug, statement), competency:math_competencies(code, statement)')
     .eq('user_id', uid)
     .order('created_at', { ascending: false })
     .limit(50)

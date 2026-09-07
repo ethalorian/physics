@@ -390,8 +390,9 @@ function significantDigits(text: string): number {
 }
 
 /** Would the checker accept `student` against the published key? */
-function checkerAccepts(student: string, answerKey: string): boolean {
-  return checkAnswer(student, answerKey) === 'match'
+function checkerAccepts(student: string, answerKey: string, unit?: string): boolean {
+  // This validator probes numeric rounding, so supply the authored unit.
+  return checkAnswer(unit ? `${student} ${unit}` : student, answerKey) === 'match'
 }
 
 /**
@@ -463,7 +464,7 @@ export function validateTemplateGrid(
         flag('key-zero', { ...base, detail: 'the key rounds to 0 — nothing left to solve for' })
       }
       for (const name of printed) {
-        if (checkerAccepts(fmt(drawn[name]), item.answerKey)) {
+        if (checkerAccepts(fmt(drawn[name]), item.answerKey, template.answerUnit)) {
           flag('key-equals-given', {
             ...base,
             detail: `the key matches {${name}} = ${fmt(drawn[name])}, already printed in the prompt`,
@@ -472,7 +473,7 @@ export function validateTemplateGrid(
         }
       }
       // (a) the exact answer judged against the published key
-      if (!checkerAccepts(fmt(item.exact), item.answerKey)) {
+      if (!checkerAccepts(fmt(item.exact), item.answerKey, template.answerUnit)) {
         flag('rounding-outside-tolerance', {
           ...base,
           detail: `the exact answer ${fmt(item.exact)} is not accepted against the key ${item.answerKey}`,
@@ -485,7 +486,7 @@ export function validateTemplateGrid(
         for (const digits of precisions) {
           if (digits <= 0) continue
           const asStudent = fmt(roundSig(item.exact, digits))
-          if (!checkerAccepts(asStudent, item.answerKey)) {
+          if (!checkerAccepts(asStudent, item.answerKey, template.answerUnit)) {
             flag('rounding-outside-tolerance', {
               ...base,
               detail: `an answer rounded to ${digits} sig fig${digits === 1 ? '' : 's'} (${asStudent}) is not accepted against the key ${item.answerKey}`,

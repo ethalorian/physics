@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useSimulations } from '@/contexts/SimulationContext'
@@ -44,6 +44,7 @@ const SHELL_CSS = `
 `
 
 export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId?: string }) {
+  const controlId = useId()
   const router = useRouter()
   const { data: session } = useSession()
   const embeddedCtx = useSimEmbedded()
@@ -66,6 +67,9 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   const [data, setData] = useState<SimData | null>(null)
   const [sensorTrace, setSensorTrace] = useState<SensorSample[]>([])
   const [running, setRunning] = useState(false)
+  const [started, setStarted] = useState(false)
+  const [playbackRate, setPlaybackRate] = useState(1)
+  const playbackRateRef = useRef(1)
   // First-interaction cue: an affordance chip on the canvas until the student
   // touches anything (canvas drag, control change, or Run).
   const [hasInteracted, setHasInteracted] = useState(false)
@@ -186,7 +190,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
     const frame = Math.min((ts - last) / 1000, 0.1) // clamp huge gaps (tab switch)
     lastTsRef.current = ts
     if (eng.step) {
-      accumRef.current += frame
+      accumRef.current += frame * playbackRateRef.current
       let n = 0
       while (accumRef.current >= FIXED_DT && n < MAX_SUBSTEPS) {
         eng.step(FIXED_DT)
@@ -196,9 +200,9 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
       if (accumRef.current > FIXED_DT * MAX_SUBSTEPS) accumRef.current = 0 // shed backlog
     }
     eng.render()
-    pullState()
+    pullRef.current()
     if (runningRef.current) rafRef.current = requestAnimationFrame(loop)
-  }, [pullState])
+  }, [])
 
   const startLoop = useCallback(() => {
     if (runningRef.current) return
@@ -219,29 +223,31 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
   // ---- control handlers ---------------------------------------------------
   const handleParam = useCallback((key: string, value: number | string | boolean) => {
     setHasInteracted(true)
-    setValues((prev) => {
-      const next = { ...prev, [key]: value }
-      engineRef.current?.setParams(next)
-      engineRef.current?.render()
-      return next
-    })
+    const next = { ...values, [key]: value }
+    setValues(next)
+    engineRef.current?.setParams(next)
+    engineRef.current?.render()
     trackInteraction(`${key}_changed`, { value })
     // For non-animated sims, refresh readouts immediately.
     if (!runningRef.current) pullState()
     const interaction: SimulationInteraction = { timestamp: Date.now(), action: `${key}_changed`, data: { value } }
     if (activityIdRef.current) recordInteraction(activityIdRef.current, interaction).catch(() => {})
-  }, [trackInteraction, pullState, recordInteraction])
+  }, [values, trackInteraction, pullState, recordInteraction])
 
   const handlePlayPause = useCallback(() => {
     setHasInteracted(true)
     if (running) { stopLoop(); return }
-    engineRef.current?.start?.(values)
+    if (!started) {
+      engineRef.current?.start?.(values)
+      setStarted(true)
+    }
     trackInteraction('play', {})
     startLoop()
-  }, [running, values, startLoop, stopLoop, trackInteraction])
+  }, [running, started, values, startLoop, stopLoop, trackInteraction])
 
   const handleReset = useCallback(() => {
     stopLoop()
+    setStarted(false)
     engineRef.current?.reset()
     engineRef.current?.render()
     pullState()
@@ -355,7 +361,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
         {/* visualization */}
         <div className={embedded ? '' : 'lg:col-span-2 space-y-4'}>
           <div className="relative rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }} onPointerDown={() => setHasInteracted(true)}>
-            <canvas ref={canvasRef} className="w-full block" style={{ height: canvasH }} />
+            <canvas ref={canvasRef} aria-label={`${def.title} interactive simulation. Measurements are available below.`} className="w-full block" style={{ height: canvasH }} />
             {/* affordance cue until the first touch */}
             {!hasInteracted && (
               <div
@@ -404,7 +410,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
           {/* data table */}
           {data && data.rows.length > 0 && (
             <div className="rounded-2xl overflow-hidden" style={{ border: '0.5px solid var(--border)' }}>
-              <div className="max-h-72 overflow-y-auto">
+              <div className="max-h-72 overflow-auto">
                 <table className="w-full text-sm">
                   <thead className="sticky top-0" style={{ background: 'var(--muted)' }}>
                     <tr>{data.columns.map((c) => <th key={c} className="p-2 text-left font-medium" style={{ color: 'var(--muted-foreground)' }}>{c}</th>)}</tr>
@@ -426,24 +432,24 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
         <div className="space-y-4">
           <div className="rounded-2xl p-4 space-y-4" style={{ border: '0.5px solid var(--border)', background: 'var(--card)' }}>
             {def.params.map((p) => {
-              const locked = running && !p.live
+              const locked = started && !p.live
               return (
               <div key={p.key} className="space-y-1.5">
                 {p.type === 'slider' && (
                   <>
                     <div className="flex justify-between text-sm">
-                      <label className="font-medium">{p.label}</label>
+                      <label htmlFor={`${controlId}-${p.key}`} className="font-medium">{p.label}</label>
                       <span style={{ color: 'var(--muted-foreground)' }}>{values[p.key] as number}{p.unit ? ` ${p.unit}` : ''}</span>
                     </div>
-                    <input type="range" min={p.min} max={p.max} step={p.step ?? 1} value={values[p.key] as number} disabled={locked}
+                    <input id={`${controlId}-${p.key}`} type="range" min={p.min} max={p.max} step={p.step ?? 1} value={values[p.key] as number} disabled={locked}
                       onChange={(e) => handleParam(p.key, Number(e.target.value))}
                       className="w-full" style={{ accentColor: 'var(--primary)' }} />
                   </>
                 )}
                 {p.type === 'select' && (
                   <>
-                    <label className="text-sm font-medium">{p.label}</label>
-                    <select value={values[p.key] as string} disabled={locked} onChange={(e) => handleParam(p.key, e.target.value)}
+                    <label htmlFor={`${controlId}-${p.key}`} className="text-sm font-medium">{p.label}</label>
+                    <select id={`${controlId}-${p.key}`} value={values[p.key] as string} disabled={locked} onChange={(e) => handleParam(p.key, e.target.value)}
                       className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
                       {p.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                     </select>
@@ -460,16 +466,29 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
             })}
 
             {/* why a slider stopped responding — say it, don't let it fail silently */}
-            {running && hasLockable && (
+            {started && hasLockable && (
               <div className="sim-fade-in flex items-start gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                <Info size={13} className="mt-0.5 shrink-0" /> Some controls lock while the sim runs — pause to adjust them.
+                <Info size={13} className="mt-0.5 shrink-0" /> Initial conditions stay fixed for this trial. Reset to change them and run a new experiment.
               </div>
             )}
 
+            {showPlay && (
+              <div className="space-y-1.5">
+                <label htmlFor={`${controlId}-speed`} className="text-sm font-medium">Playback speed</label>
+                <select id={`${controlId}-speed`} value={playbackRate}
+                  onChange={(e) => { const rate = Number(e.target.value); playbackRateRef.current = rate; setPlaybackRate(rate) }}
+                  className="w-full rounded-lg border px-2.5 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+                  <option value={0.25}>0.25× — slow motion</option>
+                  <option value={0.5}>0.5× — half speed</option>
+                  <option value={1}>1× — real time</option>
+                </select>
+                <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Readouts and graphs always use simulation time.</p>
+              </div>
+            )}
             <div className="flex flex-col gap-2 pt-1">
               {showPlay && (
                 <button onClick={handlePlayPause} className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-                  {running ? <><Pause size={16} /> Pause</> : <><Play size={16} /> Run</>}
+                  {running ? <><Pause size={16} /> Pause</> : <><Play size={16} /> {started ? 'Resume' : 'Run'}</>}
                 </button>
               )}
               <div className="flex gap-2">

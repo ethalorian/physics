@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { authorizeLesson } from '@/lib/lesson-access'
+import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { withContentEditor } from '@/lib/api-auth'
+import { withAuth, withContentEditor } from '@/lib/api-auth'
 
 export const PUT = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
     const { id } = await ctx.params
@@ -25,7 +26,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     }
 
     // Update lesson in database
-    const updateData: any = {}
+    const updateData: Record<string, unknown> = {}
     if (videos !== undefined) updateData.videos = JSON.stringify(videos)
     if (objectives !== undefined) updateData.objectives = objectives
     if (estimated_time !== undefined) updateData.estimated_time = estimated_time
@@ -53,13 +54,11 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     })
 })
 
-// eslint-disable-next-line no-restricted-syntax -- public read, pending auth review (audit follow-up)
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export const GET = withAuth<{ id: string }>(async (_request, ctx) => {
   try {
-    const { id } = await params
+    const { id } = await ctx.params
+    const access = await authorizeLesson(ctx, id)
+    if (!access.ok) return access.response
 
     const { data: lesson, error } = await supabaseAdmin
       .from('lessons')
@@ -99,4 +98,4 @@ export async function GET(
       { status: 500 }
     )
   }
-}
+})

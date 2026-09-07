@@ -13,62 +13,36 @@
  * Typography scales with a fixed 1920×1080 stage scaled by transform (P-6).
  */
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useSearchParams } from 'next/navigation'
 import { paginateBlocks, type ContentBlock, type BlockDocument, type InlineQuestion } from '@/data/content-blocks'
+import BlockRenderer from '@/components/blocks/BlockRenderer'
+import { sectionAnchor } from '@/lib/lesson-anchors'
 import { buildSections } from '@/components/lessons/lesson-sections'
 
 const W = 1920, H = 1080
 
-interface Slide { label: string; notes: string; kicker: string; title: string; target?: string; lines: string[]; choices?: string[] }
-
-function textOf(b: ContentBlock): string | null {
-  const x = b as unknown as Record<string, unknown>
-  for (const k of ['prompt', 'statement', 'heading', 'title', 'text', 'content', 'markdown']) {
-    const v = x[k]
-    if (typeof v === 'string' && v.trim()) return v.trim()
-  }
-  const q = x.question as InlineQuestion | undefined
-  if (q && typeof q === 'object' && typeof q.prompt === 'string') return q.prompt
-  return null
-}
-const firstSentence = (s: string, max = 160) => {
-  const clean = s.replace(/[#*_`>]/g, '').replace(/\s+/g, ' ').trim()
-  const m = clean.match(/^(.{20,}?[.!?])\s/)
-  const out = m ? m[1] : clean
-  return out.length > max ? out.slice(0, max - 1) + '…' : out
-}
-
+interface Slide { label: string; notes: string; kicker: string; title: string; anchor: string | null; blocks: ContentBlock[] }
 function buildSlides(title: string, doc: Pick<BlockDocument, 'blocks'> | null): Slide[] {
   const pages = paginateBlocks(doc?.blocks ?? [])
   const sections = buildSections(pages)
-  const slides: Slide[] = [{ label: 'Title', notes: 'Title slide. Say the day’s job in one sentence before anything else.', kicker: 'Today', title, lines: [] }]
-  pages.forEach((p, i) => {
-    const target = p.blocks.find((b) => b.type === 'target')
-    const targetText = target ? textOf(target) ?? undefined : undefined
-    const lines: string[] = []
-    let choices: string[] | undefined
-    for (const b of p.blocks) {
-      if (b.type === 'target' || b.type === 'deck' || lines.length >= 4) continue
-      const t = textOf(b)
-      if (!t) continue
-      lines.push(firstSentence(t))
-      const q = (b as { question?: InlineQuestion }).question
-      if (b.type === 'question' && q?.options?.length && !choices) choices = q.options.map((o) => `${o.icon ? o.icon + ' ' : ''}${o.text}`)
-    }
-    const s = sections[i]
-    slides.push({
-      label: s?.title ?? `Section ${i + 1}`,
-      notes: p.hasCapture ? `Section ${i + 1}: students save work here. Wait for "N of M saved" before moving on.` : `Section ${i + 1}: read-and-think. Keep it short; the doing is next.`,
-      kicker: `Section ${i + 1} of ${pages.length}${s?.minutes ? ` · ~${s.minutes} min` : ''}`,
-      title: s?.title ?? `Section ${i + 1}`,
-      target: targetText, lines, choices,
-    })
+  const slides: Slide[] = [{ label: 'Title', notes: '', kicker: 'Today', title, anchor: null, blocks: [] }]
+  pages.forEach((page, section) => {
+    // Explicit continuation slides preserve every representation and full prompt.
+    page.blocks.filter(b => b.type !== 'deck').forEach((block, part, blocks) => slides.push({
+      label: `${sections[section]?.title ?? 'Section'} · ${part + 1}/${blocks.length}`,
+      notes: page.hasCapture ? 'Students save their work in this section.' : '',
+      kicker: `Section ${section + 1} · ${part ? 'Continued · ' : ''}${part + 1}/${blocks.length}`,
+      title: sections[section]?.title ?? `Section ${section + 1}`,
+      anchor: sectionAnchor(page), blocks: [block],
+    }))
   })
   return slides
 }
 
 export default function AutoDeckPage() {
   const { lessonId } = useParams<{ lessonId: string }>()
+  const sessionId = useSearchParams().get('session_id')
+  const [error, setError] = useState<string | null>(null)
   const [lesson, setLesson] = useState<{ title: string; content_blocks: BlockDocument | null } | null>(null)
   const [index, setIndexState] = useState(0)
   const [scale, setScale] = useState(1)
@@ -76,11 +50,12 @@ export default function AutoDeckPage() {
 
   useEffect(() => {
     // /api/lessons/[id] answers { lesson: row }.
-    fetch(`/api/lessons/${lessonId}`).then((r) => (r.ok ? r.json() : null)).then((d: { lesson?: { title?: string; content_blocks?: BlockDocument | null } } | null) => {
+    fetch(`/api/present/document?lesson_id=${lessonId}&session_id=${sessionId ?? ''}`).then((r) => (r.ok ? r.json() : null)).then((d: { lesson?: { title?: string; content_blocks?: BlockDocument | null } } | null) => {
       const l = d?.lesson
+      if (!l) setError('Presentation unavailable. Start a class presentation and reopen slides.')
       if (l) setLesson({ title: l.title ?? 'Lesson', content_blocks: l.content_blocks ?? null })
-    }).catch(() => {})
-  }, [lessonId])
+    }).catch(() => setError('Slides could not load. Reopen the presentation to retry.'))
+  }, [lessonId, sessionId])
   const slides = useMemo(() => (lesson ? buildSlides(lesson.title, lesson.content_blocks) : []), [lesson])
   const total = slides.length
 
@@ -139,27 +114,19 @@ export default function AutoDeckPage() {
 
   const s = slides[index]
   const stageChildren = slides.map((sl, i) => (
-    <section key={i} data-label={sl.label} data-speaker-notes={sl.notes} style={{ display: i === index ? 'flex' : 'none', position: 'absolute', inset: 0, flexDirection: 'column', justifyContent: 'center', padding: '120px 160px', boxSizing: 'border-box' }}>
-      <div style={{ fontSize: 34, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', opacity: 0.7 }}>{sl.kicker}</div>
-      <h1 style={{ fontSize: i === 0 ? 120 : 84, lineHeight: 1.05, margin: '24px 0 0', fontWeight: 800, letterSpacing: '-0.02em' }}>{sl.title}</h1>
-      {sl.target && <p style={{ fontSize: 44, lineHeight: 1.3, margin: '40px 0 0', padding: '28px 36px', borderLeft: '14px solid #F5B942', background: 'rgba(255,255,255,0.06)', borderRadius: 12 }}>🎯 {sl.target}</p>}
-      {sl.lines.length > 0 && (
-        <ul style={{ fontSize: 40, lineHeight: 1.35, margin: '40px 0 0', paddingLeft: 48 }}>
-          {sl.lines.map((l, j) => <li key={j} style={{ marginBottom: 14 }}>{l}</li>)}
-        </ul>
-      )}
-      {sl.choices && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 20, marginTop: 40 }}>
-          {sl.choices.map((c, j) => <div key={j} style={{ fontSize: 40, padding: '20px 28px', borderRadius: 16, border: '3px solid rgba(255,255,255,0.35)' }}>{c}</div>)}
-        </div>
-      )}
-      <div style={{ position: 'absolute', right: 80, bottom: 56, fontSize: 28, opacity: 0.6, fontVariantNumeric: 'tabular-nums' }}>{i + 1} / {slides.length}</div>
+    <section key={i} data-label={sl.label} data-section-anchor={sl.anchor ?? undefined} data-speaker-notes={sl.notes} style={{ display: i === index ? 'flex' : 'none', position: 'absolute', inset: 0, flexDirection: 'column', padding: '50px 100px', boxSizing: 'border-box' }}>
+      <div className="text-muted-foreground" style={{ fontSize: 28 }}>{sl.kicker}</div>
+      <h1 style={{ fontSize: i === 0 ? 100 : 48, lineHeight: 1.1, margin: '16px 0 24px' }}>{sl.title}</h1>
+      <div className="overflow-y-auto flex-1 rounded-xl bg-background text-foreground" style={{ fontSize: 26, padding: 24 }}>
+        <BlockRenderer blocks={sl.blocks} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks} responses={{}} hydrated readOnly />
+      </div>
+      <div style={{ fontSize: 24, textAlign: 'right', marginTop: 12 }}>{i + 1} / {slides.length}</div>
     </section>
   ))
 
   return (
-    <div style={{ position: 'fixed', inset: 0, background: '#0E0B20', color: '#FFFFFF', overflow: 'hidden', fontFamily: 'var(--font-inter, Inter, system-ui, sans-serif)' }}>
-      {!lesson && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 24, opacity: 0.7 }}>Loading slides…</div>}
+    <div style={{ position: 'fixed', inset: 0, background: 'var(--background)', color: 'var(--foreground)', overflow: 'hidden', fontFamily: 'var(--font-inter, Inter, system-ui, sans-serif)' }}>
+      {!lesson && <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', fontSize: 24, opacity: 0.7 }}>{error ?? 'Loading slides…'}</div>}
       {createElement('deck-stage', {
         ref: stageRef, width: W, height: H,
         style: { position: 'absolute', left: '50%', top: '50%', width: W, height: H, transform: `translate(-50%, -50%) scale(${scale})`, transformOrigin: 'center center', display: 'block' },

@@ -27,14 +27,17 @@ export const GET = withAuth(async (request, ctx) => {
   const studentIds = [...nameById.keys()]
   if (studentIds.length === 0) return NextResponse.json({ queue: [] })
 
-  const { data: pend } = await supabaseAdmin
+  const { data: pend, error: pendingError } = await supabaseAdmin
     .from('math_warmup_submissions')
     .select('user_id, submitted_at')
     .eq('status', 'pending')
     .in('user_id', studentIds)
 
+  if (pendingError) return NextResponse.json({ error: 'Could not load warm-ups' }, { status: 503 })
+  const { data: revisions, error: revisionError } = await supabaseAdmin.from('math_warmup_revisions').select('user_id,submitted_at').eq('status','pending').in('user_id', studentIds)
+  if (revisionError) return NextResponse.json({ error: 'Could not load responses' }, { status: 503 })
   const byUser = new Map<string, { count: number; oldest: number }>()
-  for (const p of pend ?? []) {
+  for (const p of [...(pend ?? []), ...(revisions ?? [])]) {
     const t = new Date(p.submitted_at).getTime()
     const cur = byUser.get(p.user_id) ?? { count: 0, oldest: t }
     cur.count++

@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),path=require('node:path'),fs=require('node:fs'),os=require('node:os');
+const root=path.resolve(__dirname,'..'),esbuild=require(path.join(root,'node_modules/esbuild'));
+(async()=>{const dir=fs.mkdtempSync(path.join(os.tmpdir(),'math-evidence-'));const out=path.join(dir,'math.cjs');
+global.__rows=[{id:'competency-1',slug:'signed-quantities'}];global.__error=null;global.__tables=[];
+await esbuild.build({absWorkingDir:root,entryPoints:['src/lib/math-spine-server.ts'],outfile:out,bundle:true,platform:'node',format:'cjs',plugins:[{name:'mock-database',setup(build){build.onResolve({filter:/lib\/supabase$/},()=>({path:'database',namespace:'test'}));build.onLoad({filter:/.*/,namespace:'test'},()=>({loader:'js',contents:`export const supabaseAdmin={from(table){global.__tables.push(table);const query={select(){return query},in(){return query},eq(){return Promise.resolve({data:global.__rows,error:global.__error})}};return query}}`}))}}]});
+const {recordEvidence}=require(out);
+assert.deepEqual(await recordEvidence({competencySlugs:[],evidenceSource:'lesson'}),{competencyIds:[]});assert.equal(global.__tables.length,0);
+assert.deepEqual(await recordEvidence({competencySlugs:[' signed-quantities ','signed-quantities'],evidenceSource:'lesson'}),{competencyIds:['competency-1']});
+assert.ok((await recordEvidence({competencySlugs:['not-authored'],evidenceSource:'lesson'})).error);
+global.__error={message:'unavailable'};assert.equal((await recordEvidence({competencySlugs:['signed-quantities'],evidenceSource:'lesson'})).error,'unavailable');
+assert.ok(global.__tables.every(t=>t==='math_competencies'));console.log('PASS math evidence resolves active authored slugs, deduplicates, rejects unknown mappings/database errors, and never writes ratings or responses');})();

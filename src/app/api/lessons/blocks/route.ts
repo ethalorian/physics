@@ -1,8 +1,12 @@
+import { recordEvidence } from '@/lib/math-spine-server'
+import { checkedLessonResponse } from '@/lib/lesson-response-validation'
+import { authorizeLesson } from '@/lib/lesson-access'
+import { validateLivePoll } from '@/lib/present-server'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { type ContentBlock, isCaptureBlock, isBlockComplete } from '@/data/content-blocks'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
-import { evidenceSourceFor, isConfidence, isEvidenceSource } from '@/lib/evidence'
+import { evidenceSourceFor, isConfidence } from '@/lib/evidence'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
 import { getStudentTrack } from '@/lib/student-enrollment'
 import { isBlockVisible, type Viewer } from '@/lib/track-visibility'
@@ -17,28 +21,29 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     }
     // The lesson's blocks: needed for the auto-check (E-3), the XP award (B-4)
     // and the progress recompute below. One fetch.
-    const { data: lessonRow } = await supabaseAdmin
-      .from('lessons')
-      .select('slug, content_blocks')
-      .eq('id', body.lesson_id)
-      .single()
-    const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
+    const livePoll = body.evidence_source === 'live_poll'
+    let live: { sessionId: string; pollRunId: string } | null = null
+    if (livePoll) {
+      const check = await validateLivePoll({ userId: ctx.userId, lessonId: body.lesson_id, blockId: body.block_id, presentSessionId: body.presentSessionId, pollRunId: body.pollRunId })
+      if (!check.ok) return NextResponse.json({ error: check.error }, { status: check.status })
+      live = check
+    }
+    const access = await authorizeLesson(ctx, body.lesson_id, true, Boolean(live))
+    if (!access.ok) return access.response
+    const lessonRow = access.lesson
+    const blocks: ContentBlock[] = lessonRow.content_blocks?.blocks ?? []
     const block = blocks.find((b) => b.id === body.block_id)
     if (!block || !isCaptureBlock(block)) return NextResponse.json({ error: 'This answer block is no longer in the lesson.' }, { status: 422 })
-    const answerViewer: Viewer = ctx.realRole === 'student' ? { role: 'student', track: await getStudentTrack(ctx.userId) } : { role: 'admin' }
-    if (!isBlockVisible(block, answerViewer)) return NextResponse.json({ error: 'This block is not assigned to your track.' }, { status: 403 })
+    if (!isBlockVisible(block, access.viewer)) return NextResponse.json({ error: 'This block is not assigned to your track.' }, { status: 403 })
 
     // E-3 · self-check for an inline question with an answer key: feedback and a
     // sort key on the response (autoCheck), never a mastery record. The key itself
     // never reaches the student (stripped server-side by the lesson page).
-    let response: unknown = body.response
-    if (block?.type === 'question' && response && typeof response === 'object') {
-      const q = (block as { question?: { correctOptionId?: string; options?: { id: string }[] } }).question
-      const picked = (response as { optionId?: string }).optionId
-      if (q?.correctOptionId && picked) response = { ...(response as object), autoCheck: picked === q.correctOptionId ? 'match' : 'mismatch' }
-    }
+    const checked = checkedLessonResponse(block, body.response)
+    if (!checked.ok) return NextResponse.json({ error: checked.error }, { status: 422 })
+    const response = checked.response
     // The block's own targetId is the default tag when the client sends none (B-2).
-    const targetRef = typeof body.target_id === 'string' && body.target_id.trim() ? body.target_id.trim() : (block?.targetId ?? null)
+    const targetRef = block.targetId ?? null
 
     // E-1 · target: the block's targetId is a learning_targets slug (or id); resolve to the uuid.
     let targetId: string | null = null
@@ -48,12 +53,17 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       const { data: tr } = await supabaseAdmin.from('learning_targets').select('id').eq(isUuid ? 'id' : 'slug', t).maybeSingle()
       targetId = (tr as { id: string } | null)?.id ?? null
     }
+    // Authored math attribution shares the evidence insert; it never creates a teacher rating.
+    const mathEvidence = await recordEvidence({ competencySlugs: block.type === 'gewa' ? block.mathMoveIds ?? [] : [], evidenceSource: 'lesson' })
+    if (mathEvidence.error) console.error('Lesson math attribution unavailable:', mathEvidence.error)
     const { data, error } = await supabaseAdmin
       .from('block_responses')
       .insert({
         user_id: ctx.userId,
         target_id: targetId,
-        evidence_source: isEvidenceSource(body.evidence_source) ? body.evidence_source : evidenceSourceFor(String(body.block_type ?? '')),
+        evidence_source: live ? 'live_poll' : evidenceSourceFor(block.type),
+        present_session_id: live?.sessionId ?? null,
+        poll_run_id: live?.pollRunId ?? null,
         confidence: isConfidence(body.confidence) ? body.confidence : null,
         role: typeof body.role === 'string' ? body.role.slice(0, 40) : null,
         user_email: ctx.email,
@@ -61,6 +71,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         block_id: body.block_id,
         block_type: block.type,
         response,
+        math_competency_ids: mathEvidence.competencyIds,
         // SEI context (design "SEI in Blocks"): how they answered + which scaffolds were on. Never a score.
         response_mode: ['text', 'sketch', 'audio', 'label', 'choice'].includes(body.response_mode) ? body.response_mode : null,
         scaffolds_used: Array.isArray(body.scaffolds_used) ? body.scaffolds_used.filter((s: unknown) => typeof s === 'string').slice(0, 24) : [],
@@ -68,6 +79,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       .select()
       .single()
     if (error) {
+      if (error.message.includes('locked') || error.message.includes('pending')) return NextResponse.json({ error: 'Submitted work is locked until your teacher reviews this lesson.', locked: true }, { status: 409 })
       console.error('Error saving block response:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
@@ -158,13 +170,16 @@ export const GET = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: 'Missing lesson_id' }, { status: 400 })
     }
     if (searchParams.get('expected_user_id') && searchParams.get('expected_user_id') !== ctx.userId) return NextResponse.json({ error: 'Account changed.' }, { status: 409 })
+    const access = await authorizeLesson(ctx, lessonId)
+    if (!access.ok) return access.response
+    const visibleIds = new Set(access.document?.blocks.map((b) => b.id) ?? [])
     const role = ctx.role
     const requested = searchParams.get('user_id')
     // Admins may view any student; a teacher only their own roster.
     const resolved = await resolveTargetStudent({
       role,
       selfId: ctx.userId,
-      scopeEmail: ctx.email,
+      scopeEmail: ctx.scopeEmail,
       requestedUserId: requested,
     })
     if (!resolved.ok) {
@@ -184,6 +199,7 @@ export const GET = withAuth(async (request, ctx) => {
     // latest wins per block_id
     const responses: Record<string, { response: unknown; block_type: string | null; created_at: string }> = {}
     for (const row of data ?? []) {
+      if (access.viewer.role !== 'admin' && !visibleIds.has(row.block_id)) continue
       responses[row.block_id] = { response: row.response, block_type: row.block_type, created_at: row.created_at }
     }
     return NextResponse.json({ responses })

@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import LessonReviewQueue from '@/components/admin/LessonReviewQueue'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
 import MathControlRoom from '@/components/math-spine/MathControlRoom'
@@ -253,6 +254,8 @@ export default function ControlRoomPage() {
   const [error, setError] = useState<string | null>(null)
 
   const [sel, setSel] = useState<{ studentId: string; targetId: string } | null>(null)
+  const workRequestVersion = useRef(0)
+  const ratingInFlight = useRef(false)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
   // M-3 · evidence_source filter on the drawer ('' = all)
@@ -368,23 +371,25 @@ export default function ControlRoomPage() {
 
   const openCell = useCallback((studentId: string, targetId: string) => {
     // The grading drawer is YOUR roster only — admin included.
-    if (grid?.students.find((s) => s.id === studentId)?.ratable === false) return
+    if (ratingInFlight.current || grid?.students.find((s) => s.id === studentId)?.ratable === false) return
+    const version = ++workRequestVersion.current
+    setSuggesting(false)
     setSel({ studentId, targetId })
     setWork(null)
     setSuggestion(null)
     setComparison(null)
     setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
-      .then((r) => r.json())
-      .then((d: WorkData) => { setWork(d); setWorkLoading(false) })
-      .catch(() => setWorkLoading(false))
+      .then(async (r) => { const data = await r.json(); if (!r.ok) throw new Error(data.error ?? 'Could not load work'); return data })
+      .then((d: WorkData) => { if (version === workRequestVersion.current) { setWork(d); setWorkLoading(false) } })
+      .catch((e) => { if (version === workRequestVersion.current) { setError(e.message); setWorkLoading(false) } })
     fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
       .then((r) => r.json())
-      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => setComparison(d))
+      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => { if (version === workRequestVersion.current) setComparison(d) })
       .catch(() => {})
   }, [unitId, grid])
 
-  const closeDrawer = () => { setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
+  const closeDrawer = () => { workRequestVersion.current++; setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
   // A feedback draft belongs to one student — never carry it to the next.
   const fbStudentRef = useRef<string | null>(null)
   useEffect(() => {
@@ -394,16 +399,18 @@ export default function ControlRoomPage() {
       if (sel?.studentId) {
       // Timely feedback builds on what you last said — pull this student's
       // recent notes so the next one continues the conversation.
-      fetch(`/api/feedback?user_id=${sel.studentId}`)
+      const studentId = sel.studentId
+      fetch(`/api/feedback?user_id=${studentId}`)
         .then((r) => (r.ok ? r.json() : null))
-        .then((d) => { if (d?.feedback) setFbHistory(d.feedback.slice(0, 3)) })
-        .catch(() => setFbHistory([]))
+        .then((d) => { if (fbStudentRef.current === studentId && d?.feedback) setFbHistory(d.feedback.slice(0, 3)) })
+        .catch(() => { if (fbStudentRef.current === studentId) setFbHistory([]) })
       }
     }
   }, [sel?.studentId])
 
   const suggestRating = async () => {
     if (!work || !selTarget) return
+    const version = workRequestVersion.current
     setSuggesting(true)
     const workText = work.work
       .map((w) => `${w.lessonTitle}${w.blockType ? ` (${w.blockType})` : ''}: ${workToText(w.response)}`)
@@ -415,38 +422,46 @@ export default function ControlRoomPage() {
         body: JSON.stringify({ targetStatement: selTarget.statement, work: workText }),
       })
       const d = await res.json()
+      if (version !== workRequestVersion.current) return
       if (res.ok) setSuggestion({ level: d.level, rationale: d.rationale })
       else setSuggestion({ level: 0, rationale: d.error ?? 'Could not suggest a rating' })
     } catch {
-      setSuggestion({ level: 0, rationale: 'Could not reach the AI assist' })
+      if (version === workRequestVersion.current) setSuggestion({ level: 0, rationale: 'Could not reach the AI assist' })
     } finally {
-      setSuggesting(false)
+      if (version === workRequestVersion.current) setSuggesting(false)
     }
   }
 
   const saveRating = async (level: 1 | 2 | 3) => {
     // In-flight guard: key auto-repeat or a fast double-tap must never write
     // two records for one intended rating.
-    if (saving) return
+    if (ratingInFlight.current || saving) return
     if (!sel || !grid) return
+    ratingInFlight.current = true
     const student = grid.students.find((s) => s.id === sel.studentId)
     setSaving(true)
     try {
-      await fetch('/api/mastery/records', {
+      const response = await fetch('/api/mastery/records', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: sel.studentId, user_email: student?.email ?? null, target_id: sel.targetId, level, evidence_source: evidence }),
       })
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}))
+        throw new Error(data.error ?? 'Could not save the rating')
+      }
       // Refresh the grid + queue so the cell and queue reflect the new rating.
       loadGrid(unitId)
       loadQueue(unitId)
       // Student-first: clear this student's pending work before the next student.
       const gradedKey = `m:${sel.studentId}:${sel.targetId}`
       setGradedKeys((prev) => new Set(prev).add(gradedKey))
+      ratingInFlight.current = false
       advanceStudentFirst(sel.studentId, gradedKey)
-    } catch {
-      setError('Could not save the rating')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not save the rating')
     } finally {
+      ratingInFlight.current = false
       setSaving(false)
     }
   }
@@ -587,6 +602,7 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <LessonReviewQueue unitId={unitId} classQuery={classQuery} onReviewed={() => { loadGrid(unitId); loadQueue(unitId) }} renderResponse={(response) => <ResponseView response={response} />} />
       {/* toolbar — title · tabs · scope · unit · filter · one CTA on a single
           compact line, so the grid is the first paint on a laptop */}
       <div className="flex items-center gap-2 flex-wrap mb-1">

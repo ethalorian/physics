@@ -36,12 +36,17 @@ export const GET = withAuth(async (_req, ctx) => {
     }
   } catch { /* ignore */ }
 
+  // Acknowledgment closes the response loop and deserves its own notification.
+  {
+    const { data } = await supabaseAdmin.from('math_warmup_revisions').select('id,teacher_reply,acknowledged_at').eq('user_id',me).eq('status','acknowledged').order('acknowledged_at',{ascending:false}).limit(8)
+    for (const r of data ?? []) if (r.acknowledged_at) items.push({ id: 'math-response:' + r.id, type:'feedback', title:'Your teacher responded to your correction', detail:r.teacher_reply ?? 'Open your work to see the response.', at:r.acknowledged_at, href:'/dashboard/math-spine#math-feedback', unread:isUnread(r.acknowledged_at) })
+  }
   // 1b. Written teacher feedback (one-way notes from the grading drawers).
   try {
     const { data } = await supabaseAdmin.from('teacher_feedback').select('id, message, target_id, competency_id, created_at').eq('user_id', me).order('created_at', { ascending: false }).limit(8)
     for (const r of (data ?? []) as { id: string; message: string; target_id: string | null; competency_id: string | null; created_at: string }[]) {
       // All notes render in full on the Growth page ("Notes from your teacher").
-      items.push({ id: `feedback:${r.id}`, type: 'feedback', title: 'Note from your teacher', detail: r.message.length > 140 ? r.message.slice(0, 140) + '…' : r.message, at: r.created_at, href: '/dashboard/growth', unread: isUnread(r.created_at) })
+      items.push({ id: `feedback:${r.id}`, type: 'feedback', title: 'Note from your teacher', detail: r.message.length > 140 ? r.message.slice(0, 140) + '…' : r.message, at: r.created_at, href: r.competency_id ? '/dashboard/math-spine#math-feedback' : '/dashboard/growth', unread: isUnread(r.created_at) })
     }
   } catch { /* ignore */ }
 

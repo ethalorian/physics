@@ -1,17 +1,18 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { classLesson } from '@/lib/present-server'
 import { getAvatarData } from '@/lib/lobby/avatars'
 import { roleForIndex, TALK_MOVES } from '@/lib/lobby/discourse'
 
 async function findOpenSession(code: string) {
   const { data } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('id, code, status, task_type, prompt:task_prompt, group_size, jigsaw_pieces')
+    .select('id, code, status, task_type, prompt:task_prompt, group_size, jigsaw_pieces, course_id, lesson_id, block_id')
     .eq('code', code.toUpperCase())
     .maybeSingle()
   return data as
-    | { id: string; code: string; status: string; task_type: string; prompt: string | null; group_size: number; jigsaw_pieces: string[] | null }
+    | { id: string; code: string; status: string; task_type: string; prompt: string | null; course_id: string; lesson_id: string | null; block_id: string | null; group_size: number; jigsaw_pieces: string[] | null }
     | null
 }
 
@@ -23,6 +24,9 @@ export const POST = withAuth(async (request, ctx) => {
   const session = await findOpenSession(code)
   if (!session) return NextResponse.json({ error: 'No lobby with that code' }, { status: 404 })
   if (session.status === 'closed') return NextResponse.json({ error: 'This lobby is closed' }, { status: 410 })
+
+  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).maybeSingle()
+  if (!enrolled) return NextResponse.json({ error: 'Not enrolled in this lobby class' }, { status: 403 })
 
   const { error } = await supabaseAdmin
     .from('lobby_members')
@@ -41,6 +45,9 @@ export const GET = withAuth(async (request, ctx) => {
   const session = await findOpenSession(code)
   if (!session) return NextResponse.json({ error: 'No lobby with that code' }, { status: 404 })
 
+  const { data: enrolled } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', session.course_id).eq('student_id', ctx.userId).maybeSingle()
+  if (!enrolled) return NextResponse.json({ error: 'Not enrolled in this lobby class' }, { status: 403 })
+
   const { data: member } = await supabaseAdmin
     .from('lobby_members')
     .select('group_id, word, word_index, phrase_completed_at, word_entries')
@@ -48,6 +55,7 @@ export const GET = withAuth(async (request, ctx) => {
     .eq('user_id', ctx.userId)
     .maybeSingle()
 
+  if (!member) return NextResponse.json({ session_id: session.id, joined: false, status: session.status })
   const m = member as
     | { group_id: string | null; word: string | null; word_index: number | null; phrase_completed_at: string | null; word_entries: { word: string; at: string }[] }
     | null
@@ -111,11 +119,17 @@ export const GET = withAuth(async (request, ctx) => {
   const { data: existing } = await supabaseAdmin
     .from('block_responses')
     .select('id')
+    .neq('block_type', 'lobby_reflection')
     .eq('session_id', session.id)
     .eq('user_id', ctx.userId)
     .maybeSingle()
 
+  const lesson = session.lesson_id ? await classLesson(session.lesson_id, session.course_id) : null
+  const block = lesson?.content_blocks.blocks.find(b => b.id === session.block_id) ?? null
+  const { data: sharedArtifact } = groupId ? await supabaseAdmin.from('lobby_group_artifacts').select('response, updated_at').eq('group_id', groupId).maybeSingle() : { data: null }
+
   return NextResponse.json({
+    block, referenceBlocks: lesson?.content_blocks.blocks ?? [], lesson_id: session.lesson_id, sharedArtifact,
     session_id: session.id,
     status: session.status,
     task_type: session.task_type,

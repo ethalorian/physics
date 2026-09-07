@@ -14,8 +14,9 @@
  * to the control room's active class via `classId`.
  */
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
-import { wrapBoardText, LINE_H } from '@/lib/draw/board-text'
-import { StrokeShapes, type Stroke as DrawStroke } from '@/lib/draw/strokes'
+import MathWorkReview from './MathWorkReview'
+import type { MathResponse } from '@/lib/math-response'
+
 
 interface Competency { id: string; code: string; statement: string; strand: string }
 interface Student { id: string; name: string; email: string; ratable?: boolean }
@@ -29,17 +30,7 @@ interface GridData {
 }
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean }
 
-interface StrokePoint { x: number; y: number }
-interface Stroke { color?: string; width?: number; points: StrokePoint[] }
-interface GewaResponse {
-  given?: string
-  equation?: string
-  work?: string
-  answer?: string
-  workStrokes?: Stroke[]
-  workTexts?: { x: number; y: number; text: string; size?: number }[]
-  sandbox?: { lines?: string[]; answerIndex?: number }
-}
+type GewaResponse = MathResponse
 interface Submission {
   id: string
   competency_id: string
@@ -50,64 +41,13 @@ interface Submission {
   submitted_at: string
   tested_competency_ids: string[]
   rated_competency_ids: string[]
+  feedback?: { message: string }[]
+  revision?: { id: string; response_json: MathResponse; message: string; needs_help: boolean; status: string }
   self_check?: 'match' | 'mismatch' | 'unknown' | null
 }
 
-type BoardText = { x: number; y: number; text: string; size?: number }
-
-function BoardSvg({ strokes, texts }: { strokes?: Stroke[]; texts?: BoardText[] }) {
-  const hasStrokes = strokes && strokes.length > 0
-  const hasTexts = texts && texts.length > 0
-  if (!hasStrokes && !hasTexts) return null
-  return (
-    <svg viewBox="0 0 640 360" style={{ width: '100%', maxWidth: 400, height: 'auto', border: '1px solid var(--border)', borderRadius: 8, background: '#fff' }} role="img" aria-label="student work">
-      {/* typed text under the strokes, matching the student's board */}
-      {(texts ?? []).map((t, i) => (
-        <text key={`t${i}`} x={t.x} y={t.y} fontSize={t.size ?? 26} fill="#1A1730" fontFamily="ui-sans-serif, system-ui, sans-serif">
-          {wrapBoardText(t.text, t.x, t.size ?? 26).map((line, j) => (
-            <tspan key={j} x={t.x} dy={j === 0 ? 0 : (t.size ?? 26) * LINE_H}>{line}</tspan>
-          ))}
-        </text>
-      ))}
-      <StrokeShapes strokes={(strokes ?? []) as DrawStroke[]} />
-    </svg>
-  )
-}
-
 function WarmupAnswer({ sub }: { sub: Submission }) {
-  const rj = sub.response_json
-  if (!rj) {
-    return <p className="text-base" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{sub.response}</p>
-  }
-  const field = (label: string, val?: string) =>
-    val && String(val).trim() ? (
-      <div className="text-base" style={{ marginBottom: 5 }}>
-        <b style={{ color: 'var(--secondary-foreground)' }}>{label}:</b> {String(val)}
-      </div>
-    ) : null
-  const hasBoard = (rj.workStrokes && rj.workStrokes.length > 0) || (rj.workTexts && rj.workTexts.length > 0)
-  const eqnLines = Array.isArray(rj.sandbox?.lines) ? rj.sandbox!.lines!.map(String).filter((l) => l.trim()) : []
-  return (
-    <div>
-      {field('Given', rj.given)}
-      {field('Equation', rj.equation)}
-      {eqnLines.length > 0 && (
-        <div className="text-base" style={{ marginBottom: 5 }}>
-          <b style={{ color: 'var(--secondary-foreground)' }}>Equation work:</b> {eqnLines.join('  |  ')}
-        </div>
-      )}
-      {field('Answer', rj.answer)}
-      {hasBoard && (
-        <div className="mt-2">
-          <div className="text-sm mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Work board (typed + drawn)</div>
-          <BoardSvg strokes={rj.workStrokes} texts={rj.workTexts} />
-        </div>
-      )}
-      {!rj.given && !rj.equation && !rj.answer && !hasBoard && eqnLines.length === 0 && (
-        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{sub.response || '[submitted]'}</p>
-      )}
-    </div>
-  )
+  return <MathWorkReview key={sub.id} value={sub.response_json} fallback={sub.response} />
 }
 
 // Snapshot cells speak the picker's four-state vocabulary (the same words
@@ -145,10 +85,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const [savingKey, setSavingKey] = useState<string | null>(null)
   // Written feedback (one-way note to the student, lands in their bell + growth page)
   const [fbText, setFbText] = useState('')
-  const [fbGeneral, setFbGeneral] = useState(false)
-  const [fbSending, setFbSending] = useState(false)
-  const [fbSent, setFbSent] = useState(false)
-  const [fbHistory, setFbHistory] = useState<{ id: string; message: string; created_at: string }[]>([])
+  const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3 | null>(null)
+  const [requestRevision, setRequestRevision] = useState(false)
   const [flash, setFlash] = useState<string | null>(null)
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
@@ -168,71 +106,75 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
 
   useEffect(() => { refresh() }, [refresh])
 
+  const studentLoad = useRef(0)
   const loadStudent = useCallback((studentId: string) => {
+    const generation = ++studentLoad.current
     setDrawerLoading(true)
     return fetch(`/api/math-spine/student-warmups?user_id=${encodeURIComponent(studentId)}`)
-      .then((r) => r.json())
+      .then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load work'); return d })
       .then((d) => {
-        setSubs(d.submissions ?? [])
+        if (generation !== studentLoad.current) return [] as Submission[]
+        const enriched = (d.submissions ?? []).map((sub: Submission) => ({ ...sub,
+          feedback: (d.feedback ?? []).filter((f: { submission_id: string }) => f.submission_id === sub.id),
+          revision: (d.revisions ?? []).find((r: { submission_id: string }) => r.submission_id === sub.id),
+        }))
+        setSubs(enriched)
         setDrawerLoading(false)
-        return (d.submissions ?? []) as Submission[]
+        return enriched as Submission[]
       })
-      .catch(() => { setDrawerLoading(false); return [] as Submission[] })
+      .catch((e) => { if (generation === studentLoad.current) { setDrawerLoading(false); setFlash(e.message) } return [] as Submission[] })
   }, [])
 
   const openStudent = useCallback((studentId: string, name: string) => {
+    if (savingKey) return
     // The grading drawer is YOUR roster only — admin included. Other teachers'
     // students stay visible in the snapshot grid, but never open here.
     if (grid?.students.find((st) => st.id === studentId)?.ratable === false) return
     setSel({ studentId, name })
     setSubs([])
     loadStudent(studentId)
-  }, [loadStudent, grid])
+  }, [loadStudent, grid, savingKey])
 
-  const closeDrawer = () => { setSel(null); setSubs([]); setNextGate(null) }
+  const closeDrawer = useCallback(() => { if (savingKey) return; studentLoad.current++; setSel(null); setSubs([]); setNextGate(null) }, [savingKey])
 
-  // A feedback draft belongs to one student — never carry it to the next.
-  const fbStudentRef = useRef<string | null>(null)
+  const draftId = subs.find(s => s.status === 'pending' || s.revision?.status === 'pending')?.id
+  const loadedDraft = useRef<string | null>(null)
   useEffect(() => {
-    if (sel?.studentId !== fbStudentRef.current) {
-      fbStudentRef.current = sel?.studentId ?? null
-      setFbText(''); setFbGeneral(false); setFbSent(false); setFbHistory([])
-      if (sel?.studentId) {
-      // Timely feedback builds on what you last said — pull this student's
-      // recent notes so the next one continues the conversation.
-      fetch(`/api/feedback?user_id=${sel.studentId}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => { if (d?.feedback) setFbHistory(d.feedback.slice(0, 3)) })
-        .catch(() => setFbHistory([]))
-      }
-    }
-  }, [sel?.studentId])
-
-  const sendFeedback = async (competencyId: string | null) => {
-    const msg = fbText.trim()
-    if (!msg || !sel || fbSending) return
-    setFbSending(true)
+    loadedDraft.current = null
+    setFbText(''); setSelectedLevel(null); setRequestRevision(false)
+    if (!draftId) return
     try {
-      const res = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: sel.studentId, message: msg, competency_id: fbGeneral ? null : competencyId }),
-      })
-      if (!res.ok) throw new Error('send failed')
-      setFbText('')
-      setFbSent(true)
-      setTimeout(() => setFbSent(false), 2500)
-    } catch {
-      setFlash('Could not send the feedback')
-    } finally {
-      setFbSending(false)
-    }
-  }
+      const raw = sessionStorage.getItem('math-review:' + draftId)
+      if (raw) { const d = JSON.parse(raw); setFbText(d.message ?? ''); setSelectedLevel(d.level ?? null); setRequestRevision(d.revision ?? false) }
+    } catch {}
+    loadedDraft.current = draftId
+  }, [draftId])
+  useEffect(() => {
+    if (!draftId || loadedDraft.current !== draftId) return
+    // Defer until the restore effect's state updates have rendered.
+    const timer = setTimeout(() => { try { sessionStorage.setItem('math-review:' + draftId, JSON.stringify({ message: fbText, level: selectedLevel, revision: requestRevision })) } catch {} }, 100)
+    return () => clearTimeout(timer)
+  }, [draftId, fbText, selectedLevel, requestRevision])
+
+  useEffect(() => {
+    if (!sel) return
+    const previous = document.activeElement as HTMLElement | null
+    const dialog = document.querySelector<HTMLElement>('[aria-label="Review math work"]')
+    dialog?.querySelector<HTMLElement>('button')?.focus()
+    return () => previous?.focus()
+  }, [sel])
 
   // Keyboard-first review: 1/2/3 rate the first unrated tested competency.
   useEffect(() => {
     if (!sel) return
     const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Tab') {
+        const dialog = document.querySelector<HTMLElement>('[aria-label="Review math work"]')
+        const fields = Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]') ?? []).filter(el => el.getClientRects().length > 0)
+        const first = fields[0], last = fields[fields.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus() }
+      }
       if (nextGate) return // gate owns the keyboard while it's up
       const el = document.activeElement
       const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
@@ -244,11 +186,11 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       if (typing) return
       if (savingKey || e.repeat) return
       if (sel && isViewOnly(sel.studentId)) return // another teacher's student
-      const active = subs.find((s) => s.status === 'pending')
+      const active = subs.find((s) => s.status === 'pending' || s.revision?.status === 'pending')
       if (!active) return
       const cid = active.tested_competency_ids.find((c) => !active.rated_competency_ids.includes(c))
       if (!cid) return
-      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); rate(active, cid, Number(e.key) as 1 | 2 | 3) }
+      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); setSelectedLevel(Number(e.key) as 1 | 2 | 3) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -271,7 +213,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [nextGate, openStudent])
+  }, [nextGate, openStudent, closeDrawer])
 
   const compById = (id: string) => grid?.competencies.find((c) => c.id === id)
   // View-only = not on YOUR roster (admin monitor mode). The queue never
@@ -280,18 +222,20 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const currentValue = (studentId: string, competencyId: string) =>
     grid?.cells[studentId]?.[competencyId]?.value ?? null
 
-  async function rate(submission: Submission, competencyId: string, level: 1 | 2 | 3) {
-    if (!sel) return
+  async function rate(submission: Submission, competencyId: string, level: 1 | 2 | 3 | null) {
+    if (!sel || savingKey) return
     const key = `${submission.id}:${competencyId}:${level}`
     setSavingKey(key)
     try {
-      const res = await fetch('/api/math-spine/warmup-review', {
+      const res = await fetch(submission.revision?.status === 'pending' ? '/api/math-spine/revision' : '/api/math-spine/warmup-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level }),
+        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level, message: fbText, request_revision: requestRevision, action: submission.revision?.status === 'pending' ? 'acknowledge' : undefined }),
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(d.error || 'Save failed')
+      try { sessionStorage.removeItem('math-review:' + submission.id) } catch {}
+      setFbText(''); setSelectedLevel(null); setRequestRevision(false)
       const awarded = (d.awarded ?? []) as { milestone: string; points: number }[]
       if (awarded.length > 0) {
         const pts = awarded.reduce((s, g) => s + g.points, 0)
@@ -300,7 +244,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       }
       refresh()
       const fresh = await loadStudent(sel.studentId)
-      if (!fresh.some((s) => s.status === 'pending')) {
+      if (!fresh.some((s) => s.status === 'pending' || s.revision?.status === 'pending')) {
         // Student done — advance to the next student with warm-ups to review,
         // skipping those with nothing pending. Close if everyone's caught up.
         const q = await fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json()).catch(() => ({ queue: [] }))
@@ -314,8 +258,8 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         if (next) setNextGate({ id: next.id, name: next.name })
         else closeDrawer()
       }
-    } catch {
-      // keep drawer open on error
+    } catch (error) {
+      setFlash(error instanceof Error ? error.message : 'Review was not saved. Please retry.')
     } finally {
       setSavingKey(null)
     }
@@ -325,7 +269,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   if (!grid) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Could not load the math grid.</p>
   if (grid.students.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No students in scope.</p>
 
-  const activeSub = subs.find((s) => s.status === 'pending') ?? null
+  const activeSub = subs.find((s) => s.status === 'pending' || s.revision?.status === 'pending') ?? null
 
   return (
     <div>
@@ -521,9 +465,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       {sel && (
         <>
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 94vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+          <div role="dialog" aria-modal="true" aria-label="Review math work" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
             {/* roster rail — students with warm-ups to review; greyed when done */}
-            <div style={{ width: 210, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <div className="hidden xl:flex" style={{ width: 180, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
                 {queue.length > 0 ? `${queue.length} to review` : 'All caught up'}
               </div>
@@ -553,7 +497,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             <div style={{ padding: '16px 20px 10px', borderBottom: '1px solid var(--border)' }}>
               <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
               <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
-              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests. Keys <b>1·2·3</b> rate; finishing a student jumps to the next.</p>
+              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests. Keys <b>1·2·3</b> select a rating; Save review sends your feedback and continues.</p>
             </div>
 
             {drawerLoading && <p className="text-sm p-5" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>}
@@ -563,9 +507,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             )}
 
             {!drawerLoading && activeSub && (
-              <div style={{ display: 'flex', flex: 1, minHeight: 0 }}>
+              <div className="flex flex-col lg:flex-row overflow-y-auto" style={{ flex: 1, minHeight: 0 }}>
               {/* left: the work being judged */}
-              <div style={{ flex: 1, minWidth: 0, overflowY: 'auto', padding: 20, borderRight: '1px solid var(--border)' }}>
+              <div className="lg:flex-1 lg:overflow-y-auto" style={{ minWidth: 0, flexShrink: 0, padding: 20, borderRight: '1px solid var(--border)' }}>
                 <div className="flex items-center gap-2 text-sm mb-2" style={{ color: 'var(--muted-foreground)' }}>
                   <span>Submitted {fmtDate(activeSub.submitted_at)}</span>
                   {/* Instant self-check triage chip: the machine's verdict on the ANSWER only */}
@@ -580,16 +524,18 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   <p className="text-base mb-3" style={{ color: 'var(--foreground)' }}><b style={{ color: 'var(--muted-foreground)' }}>Prompt:</b> {activeSub.prompt}</p>
                 )}
                 <WarmupAnswer sub={activeSub} />
+                {activeSub.feedback?.map((f,i) => <p key={i} className="my-3 rounded border p-3"><b>Your feedback:</b> {f.message}</p>)}
+                {activeSub.revision && <section className="mt-4 border-t pt-4"><h4 className="font-bold">Student response {activeSub.revision.needs_help ? '· asks for help' : '· correction'}</h4><p className="my-2 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></section>}
               </div>
 
               {/* right: the teacher's two acts — rate it, then say something
                   useful about it. Always in view. */}
-              <div style={{ width: 440, flexShrink: 0, overflowY: 'auto', padding: 20, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
+              <div className="w-full lg:w-[400px] lg:overflow-y-auto" style={{ flexShrink: 0, padding: 20, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
 
                 <div className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>
-                  Rate the tested competenc{activeSub.tested_competency_ids.length === 1 ? 'y' : 'ies'}
+                  {activeSub.revision ? 'Respond to the student' : 'Rate the tested competency'}
                 </div>
-                {activeSub.tested_competency_ids.map((cid) => {
+                {!activeSub.revision && activeSub.tested_competency_ids.map((cid) => {
                   const comp = compById(cid)
                   const rated = activeSub.rated_competency_ids.includes(cid)
                   const cur = currentValue(sel.studentId, cid)
@@ -609,12 +555,12 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                       ) : (
                         <div className="flex gap-2">
                           {[1, 2, 3].map((lv) => {
-                            const key = `${activeSub.id}:${cid}:${lv}`
                             return (
                               <button
                                 key={lv}
                                 disabled={savingKey !== null}
-                                onClick={() => rate(activeSub, cid, lv as 1 | 2 | 3)}
+                                onClick={() => setSelectedLevel(lv as 1 | 2 | 3)}
+                                aria-pressed={selectedLevel === lv}
                                 className="flex-1 rounded-xl font-bold disabled:opacity-50"
                                 style={{
                                   padding: '14px 0', fontSize: 15, cursor: 'pointer', border: '1.5px solid var(--border)',
@@ -622,7 +568,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                                   color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)',
                                 }}
                               >
-                                {savingKey === key ? '…' : `${lv} · ${levelWord(lv)}`}
+                                {selectedLevel === lv ? '✓ ' : ''}{`${lv} · ${levelWord(lv)}`}
                               </button>
                             )
                           })}
@@ -631,61 +577,20 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                     </div>
                   )
                 })}
-                {!isViewOnly(sel.studentId) && (
-                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Keys <b>1 · 2 · 3</b> rate the first unrated competency.</p>
+                {!activeSub.revision && !isViewOnly(sel.studentId) && (
+                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Keys <b>1 · 2 · 3</b> select a rating. Save when your feedback is ready.</p>
                 )}
-                {/* Written feedback — one-way note, anchored to the tested
-                    competency unless marked general. */}
-                {!isViewOnly(sel.studentId) && (
-                  <div className="mt-4 rounded-lg" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-                    <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: '0.5px solid var(--border)' }}>
-                      <span className="text-base font-bold">✎ Written feedback</span>
-                      {fbSent && <span className="text-sm font-bold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
-                    </div>
-                    <div className="px-3 pb-3 pt-2">
-                      <div className="flex gap-1.5 mb-1.5">
-                        {['Strength: ', 'Next step: '].map((stem) => (
-                          <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                            className="rounded-full px-3 py-1.5 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
-                            + {stem.replace(': ', '')}
-                          </button>
-                        ))}
-                        <label className="ml-auto flex items-center gap-1.5 text-sm" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-                          <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
-                        </label>
-                      </div>
-                      <textarea
-                        value={fbText}
-                        onChange={(e) => setFbText(e.target.value)}
-                        rows={4}
-                        maxLength={2000}
-                        placeholder={fbGeneral ? `A note to ${sel.name.split(' ')[0]}…` : `Feedback on ${compById(activeSub.tested_competency_ids[0])?.code ?? 'this competency'}…`}
-                        className="w-full rounded-lg px-3 py-2.5" 
-                        style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', resize: 'vertical', fontSize: 15, lineHeight: 1.5 }}
-                      />
-                      <div className="flex items-center justify-between mt-1.5">
-                        <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                          {fbGeneral ? 'General note' : 'On this competency'} · lands in their bell + growth page
-                        </span>
-                        <button type="button" onClick={() => sendFeedback(activeSub.tested_competency_ids[0] ?? null)} disabled={fbSending || !fbText.trim()}
-                          className="rounded-lg px-5 py-2.5 text-sm font-bold disabled:opacity-50"
-                          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
-                          {fbSending ? 'Sending…' : 'Send'}
-                        </button>
-                      </div>
-                    {fbHistory.length > 0 && (
-                      <div className="mt-3">
-                        <div className="text-xs font-bold uppercase tracking-wide mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Your recent notes to them</div>
-                        {fbHistory.map((f) => (
-                          <div key={f.id} className="text-xs rounded-md px-2.5 py-1.5 mb-1.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
-                            <span style={{ whiteSpace: 'pre-wrap' }}>{f.message.length > 160 ? f.message.slice(0, 160) + '…' : f.message}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    </div>
-                  </div>
-                )}
+                <div className="mt-4 space-y-3 rounded-lg border p-3">
+                  <p className="text-sm"><b>Rating anchors:</b> 1 — succeeds with mathematical support; 2 — independent in a routine context; 3 — transfers to a new context and explains why. Language access is not a penalty.</p>
+                  <p className="text-xs text-muted-foreground">One observation is evidence, not proof of lasting fluency. Use a later independent task to confirm transfer.</p>
+                  <label className="block text-sm font-semibold" htmlFor="math-review-note">{activeSub.revision ? 'Acknowledge the response / arrange help' : 'Feedback and next step'}</label>
+                  <textarea id="math-review-note" rows={4} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision})) } catch {} }} className="w-full rounded border bg-background p-2" placeholder="Name one useful next step, or record the outcome of a conversation." />
+                  {!activeSub.revision && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={requestRevision} onChange={e => setRequestRevision(e.target.checked)} /> Ask for a correction, explanation, or help request</label>}
+                  {!activeSub.revision && <button type="button" className="min-h-11 text-sm underline" onClick={() => { setSelectedLevel(null); setRequestRevision(true) }}>Need more evidence before rating</button>}
+                  <button type="button" className="min-h-11 w-full rounded bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? !fbText.trim() : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Save acknowledgment' : 'Save review and continue'}</button>
+                  {activeSub.revision && <p className="text-xs text-muted-foreground">Acknowledging a coached correction adds no fluency rating. Check independence on a later task.</p>}
+                  {flash && <p role="status" className="text-sm">{flash}</p>}
+                </div>
               </div>
               </div>
             )}

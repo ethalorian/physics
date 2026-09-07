@@ -1,5 +1,6 @@
 'use client'
 
+import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import MathSpineGrowth, { MathSpineGrowthProps } from '@/components/math-spine/MathSpineGrowth'
@@ -45,6 +46,7 @@ export default function MathSpinePage() {
     <div className="max-w-3xl mx-auto p-4">
       {loading && <p className="text-sm text-muted-foreground">Loading your math literacy…</p>}
       {error && <p className="text-sm text-red-600">Could not load your math literacy: {error}</p>}
+      <MathFeedbackLoop />
       {data && <MathSpineGrowth {...data} />}
     </div>
   )

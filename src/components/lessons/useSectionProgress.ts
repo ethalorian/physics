@@ -15,10 +15,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * load we union the local cache with the server record (so neither device loses
  * progress) and converge the server to that union; every mutation writes both.
  */
-export function useSectionProgress(lessonId: string, sectionCount: number, enabled = true) {
+export function useSectionProgress(lessonId: string, sectionCount: number, enabled = true, anchors: string[] = [], revision = '') {
   const { data: session } = useSession()
   const studentId = session?.user?.id
-  const storageKey = `lesson-sections:v2:${studentId}:${lessonId}`
+  const storageKey = `lesson-sections:v3:${studentId}:${lessonId}:${revision}`
   const [completed, setCompleted] = useState<Set<number>>(new Set())
   const loadedRef = useRef(false)
 
@@ -41,10 +41,10 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
       fetch('/api/lessons/sections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ lesson_id: lessonId, completed: [...set] }),
+        body: JSON.stringify({ lesson_id: lessonId, completed: [...set], completed_anchors: [...set].map(i => anchors[i]).filter(Boolean), document_revision: revision }),
       }).catch(() => { /* optimistic; localStorage already holds it */ })
     },
-    [lessonId, enabled, studentId],
+    [lessonId, enabled, studentId, anchors, revision],
   )
 
   // Restore local immediately, then reconcile with the server (union, converge).
@@ -61,9 +61,9 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
     let active = true
     fetch(`/api/lessons/sections?lesson_id=${lessonId}`)
       .then((r) => (r.ok ? r.json() : { completed: [] }))
-      .then((d: { completed?: unknown[] }) => {
+      .then((d: { completed?: unknown[]; completed_anchors?: string[]; document_revision?: string }) => {
         if (!active) return
-        const server = new Set((d.completed ?? []).filter(valid) as number[])
+        const server = new Set<number>(d.document_revision === revision ? (d.completed_anchors ?? []).map(a => anchors.indexOf(a)).filter(valid) : [])
         const union = new Set<number>([...local, ...server])
         setCompleted(union)
         persistLocal(union)
@@ -74,7 +74,7 @@ export function useSectionProgress(lessonId: string, sectionCount: number, enabl
       .catch(() => { loadedRef.current = true })
     return () => { active = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId, sectionCount, enabled, studentId, storageKey])
+  }, [lessonId, sectionCount, enabled, studentId, storageKey, revision])
 
   const commit = useCallback(
     (next: Set<number>) => { persistLocal(next); persistServer(next) },

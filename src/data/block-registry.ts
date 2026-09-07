@@ -1,3 +1,4 @@
+import { numericCell } from '@/components/blocks/data-plot'
 import type { BlockType, ContentBlock } from './content-blocks'
 
 export type FieldKind = 'text' | 'textarea' | 'number' | 'select' | 'stringlist' | 'terms' | 'simref' | 'visualgen' | 'imageupload' | 'formulapicker' | 'solvefor' | 'toggle' | 'svggen' | 'question' | 'numberlist'
@@ -7,7 +8,7 @@ export interface BlockDef { type: BlockType; label: string; group: 'Teach' | 'Pr
 export const BLOCK_DEFS: BlockDef[] = [
   { type: 'question', label: 'Checkpoint question', group: 'Practice', capture: true, fields: [{ key: 'question', label: 'Question and feedback', kind: 'question' }] },
   { type: 'self_assessment', label: 'Self-assessment', group: 'Practice', capture: true, fields: [{ key: 'targetIds', label: 'Learning target IDs', kind: 'stringlist' }] },
-  { type: 'transfer_prompt', label: 'Transfer task', group: 'Practice', fields: [{ key: 'masteryTaskSlug', label: 'Mastery task slug', kind: 'text' }] },
+  { type: 'transfer_prompt', label: 'Transfer task', group: 'Practice', capture: true, fields: [{ key: 'masteryTaskSlug', label: 'Mastery task slug', kind: 'text' }] },
   { type: 'deck', label: 'Teacher slide deck', group: 'Teach', fields: [{ key: 'title', label: 'Title', kind: 'text' }, { key: 'src', label: 'Deck URL', kind: 'text' }] },
   { type: 'target', label: 'Learning target', group: 'Teach', fields: [
     { key: 'statement', label: 'I can… statement', kind: 'textarea' },
@@ -83,11 +84,13 @@ export const BLOCK_DEFS: BlockDef[] = [
     { key: 'yLabel', label: 'Y-axis label (if grid on)', kind: 'text' },
   ] },
   { type: 'lab_notebook', label: 'Lab notebook (sketch + log)', group: 'Practice', capture: true, fields: [
+    { key: 'requireAllFields', label: 'Require every reasoning field', kind: 'toggle' },
     { key: 'instruction', label: 'Instruction', kind: 'text' },
     { key: 'fields', label: 'Reasoning prompts (boxes)', kind: 'stringlist' },
   ] },
   { type: 'gewa', label: 'GEWA solve', group: 'Practice', capture: true, fields: [
     { key: 'prompt', label: 'Problem prompt', kind: 'textarea' },
+    { key: 'requireCompleteWork', label: 'Require given, work trail and answer units', kind: 'toggle' },
     { key: 'givenHint', label: 'Given hint', kind: 'text' },
     { key: 'equationHint', label: 'Equation hint', kind: 'text' },
     { key: 'equationIds', label: 'Formula bank — pick the formulas students may use', kind: 'formulapicker' },
@@ -99,6 +102,7 @@ export const BLOCK_DEFS: BlockDef[] = [
   { type: 'data_table', label: 'Data table + graph', group: 'Practice', capture: true, fields: [
     { key: 'columns', label: 'Column headers', kind: 'stringlist' },
     { key: 'rows', label: 'Blank rows', kind: 'number' },
+    { key: 'minRows', label: 'Required complete readings', kind: 'number' },
     { key: 'patternPrompt', label: 'Pattern prompt', kind: 'text' },
   ] },
   { type: 'observation', label: 'Observation', group: 'Practice', capture: true, fields: [
@@ -133,28 +137,46 @@ const rating = (v: unknown) => typeof v === 'number' && Number.isInteger(v) && v
 const drawing = (v: unknown) => Array.isArray(v) && v.some((s) => Array.isArray(obj(s).points) && (obj(s).points as unknown[]).length > 0)
 const textAnswer = (v: unknown) => typeof v === 'string' ? text(v) : obj(v).mode === 'sketch' ? drawing(obj(v).strokes) : text(obj(v).text)
 
+/** Unchanged sentence starters and blanks are assistance, not completed reasoning. */
+function substantiveAnswer(v: unknown, b?: ContentBlock): boolean {
+  if (!textAnswer(v)) return false;
+  if (obj(v).mode === 'sketch') return true;
+  const answer = typeof v === 'string' ? v.trim() : String(obj(v).text ?? '').trim();
+  const frames = [...(b?.sei?.frames?.map((f) => f.text) ?? []), ...(b && 'frame' in b && typeof b.frame === 'string' ? [b.frame] : [])];
+  return !/_{2,}/.test(answer) && !frames.some((f) => f.trim() === answer);
+}
+
 /** Metadata never counts as student work. Block context adds requirements such as valid choices. */
 export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block?: ContentBlock) => boolean>> = {
-  exit_ticket: textAnswer,
-  sentence_frame: textAnswer,
-  sketch: (v) => drawing(obj(v).strokes),
-  lab_notebook: (v) => drawing(obj(v).strokes) || Object.values(obj(obj(v).fields)).some(text),
-  observation: (v) => text(obj(v).pattern) && text(obj(v).interpret),
+  exit_ticket: (v, b) => substantiveAnswer(v, b),
+  transfer_prompt: (v, b) => substantiveAnswer(v, b),
+  sentence_frame: (v, b) => substantiveAnswer(v, b),
+  sketch: (v) => drawing(obj(v).strokes) || text(obj(v).text),
+  lab_notebook: (v, b) => !(b?.type === 'lab_notebook' && b.requireAllFields) ? drawing(obj(v).strokes) || Object.values(obj(obj(v).fields)).some(text) : (b?.type === 'lab_notebook' && b.fields?.length ? b.fields : ['What I did', 'What I observed', 'What it means']).every((field) => text(obj(obj(v).fields)[field])),
+  observation: (v, b) => substantiveAnswer({ text: obj(v).pattern }, b) && substantiveAnswer({ text: obj(v).interpret }, b),
   marzano: rating,
   self_assessment: (v, b) => {
     const ids = b?.type === 'self_assessment' ? b.targetIds : Object.keys(obj(v))
     return ids.length > 0 && ids.every((id) => rating(obj(v)[id]))
   },
   equation_sandbox: (v) => Array.isArray(obj(v).lines) && (obj(v).lines as unknown[]).some(text),
-  gewa: (v) => text(obj(v).answer) && (text(obj(v).equationId) || text(obj(v).equation)),
-  data_table: (v) => Array.isArray(obj(v).rows) && (obj(v).rows as unknown[]).some((row) => Array.isArray(row) && row.length > 0 && row.every(text)) && text(obj(v).pattern) && text(obj(v).interpret),
-  concept_exercise: (v) => obj(v).submitted === true && Object.values(obj(obj(v).answers)).some((a) => text(a) || (Array.isArray(a) && a.some(text))),
+  gewa: (v, b) => !(b?.type === 'gewa' && b.requireCompleteWork) ? text(obj(v).answer) && (text(obj(v).equationId) || text(obj(v).equation)) : text(obj(v).given) && text(obj(v).answer) && /[a-zA-Z°%]/.test(String(obj(v).answer).replace(/[eE][+-]?\d+/g, '')) && (text(obj(v).equationId) || text(obj(v).equation)) && (text(obj(v).work) || Object.keys(obj(obj(v).substitutions)).length > 0),
+  data_table: (v, b) => {
+    const rows = obj(v).rows;
+    const required = b?.type === 'data_table' ? b.minRows ?? 1 : 1;
+    const cols = b?.type === 'data_table' ? b.columns.length : 1;
+    const xi = b?.type === 'data_table' ? b.xCol ?? 0 : 0;
+    const yi = b?.type === 'data_table' ? b.yCol ?? 1 : 1;
+    const numeric = b?.type === 'data_table' ? b.plot ?? cols >= 2 : false;
+    return Array.isArray(rows) && rows.filter((row) => Array.isArray(row) && row.length >= cols && row.every(text) && (!numeric || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length >= required && text(obj(v).pattern) && text(obj(v).interpret);
+  },
+  concept_exercise: (v) => obj(v).submitted === true && Number(obj(obj(v).summary).itemCount) > 0 && obj(obj(v).summary).answeredCount === obj(obj(v).summary).itemCount,
   question: (v, b) => {
     const r = obj(v), q = b?.type === 'question' ? obj(b.question) : {}
     const options = Array.isArray(q.options) ? q.options : []
     const choice = options.length > 0 || r.mode === 'choice' || text(r.optionId)
     if (choice && (!text(r.optionId) || (options.length > 0 && !options.some((o) => obj(o).id === r.optionId)))) return false
-    return choice ? (!text(q.explain) || text(r.explain)) : text(r.explain)
+    return choice ? (!text(q.explain) || substantiveAnswer({ text: r.explain }, b)) : substantiveAnswer({ text: r.explain }, b)
   },
 }
 
@@ -172,7 +194,9 @@ export function createBlock(type: string, id: string): ContentBlock {
   }
   if (type === 'graph') data.series = []
   if (type === 'diagram') data.forces = []
-  if (type === 'data_table') { data.columns = ['Time (s)', 'Position (m)']; data.rows = 4 }
+  if (type === 'lab_notebook') data.requireAllFields = true
+  if (type === 'gewa') data.requireCompleteWork = true
+  if (type === 'data_table') { data.minRows = 4; data.columns = ['Time (s)', 'Position (m)']; data.rows = 4 }
   return { id, type, ...(def.capture ? { capture: true } : {}), ...data } as ContentBlock
 }
 
@@ -213,6 +237,7 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
       if (q.correctOptionId && !options.some((o) => obj(o).id === q.correctOptionId)) add('The answer key must match a choice.')
     }
     if (def.type === 'data_table' && (!Array.isArray(b.columns) || !b.columns.length || !b.columns.every(text) || !Number.isInteger(b.rows) || Number(b.rows) < 1)) add('Add column headings and at least one row.')
+    if (def.type === 'data_table' && b.minRows !== undefined && (!Number.isInteger(b.minRows) || Number(b.minRows) < 1)) add('Required readings must be a positive whole number.')
     if (['reading', 'concept_exercise'].includes(def.type) && (!Number.isInteger(b.chapter) || Number(b.chapter) < 1)) add('Choose a chapter number.')
   }
   return issues

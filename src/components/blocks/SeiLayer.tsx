@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useDraft } from './useDraft'
 import PaintPad from './PaintPad'
+import MathMarkdown from '@/components/MathMarkdown'
 import PhysicsDiagram from './PhysicsDiagram'
 import type { Stroke } from './DoodleCanvas'
 import type { DiagramScene, ResponseMode, SeiFrame, SeiScaffold } from '@/data/content-blocks'
@@ -37,7 +38,7 @@ export interface SeiState {
   scaffolds: string[]
 }
 
-export function useSei(sei: SeiScaffold | undefined, opts: { fallbackFrame?: string; wordBank?: string[]; talkFirst?: boolean; defaultMode?: ResponseMode; extraModes?: ResponseMode[] } = {}): SeiState {
+export function useSei(sei: SeiScaffold | undefined, opts: { fallbackFrame?: string; wordBank?: string[]; talkFirst?: boolean; defaultMode?: ResponseMode; extraModes?: ResponseMode[]; supportedModes?: ResponseMode[] } = {}): SeiState {
   const { profile, dial, showL1 } = useLanguageProfile()
   const level = effectiveLevel(sei, profile, dial)
   const [frameRequested, setFrameRequested] = useState(false)
@@ -49,11 +50,13 @@ export function useSei(sei: SeiScaffold | undefined, opts: { fallbackFrame?: str
   const frames: SeiFrame[] | undefined = sei?.frames?.length ? sei.frames : opts.fallbackFrame ? [{ level: 2, text: opts.fallbackFrame }] : undefined
   const frame = tier ? pickFrame(frames, tier) : frameRequested ? pickFrame(frames, 3) ?? pickFrame(frames, 2) : null
   const wordBank = level === 'bare' && !frameRequested ? [] : (sei?.wordBank ?? opts.wordBank ?? [])
-  const modes = modesFor({ ...sei, modes: [...(sei?.modes ?? []), ...(opts.extraModes ?? [])] }, level, [opts.defaultMode ?? 'text'])
+  const offeredModes = modesFor({ ...sei, modes: [...(sei?.modes ?? []), ...(opts.extraModes ?? [])] }, level, [opts.defaultMode ?? 'text'])
+  const modes = offeredModes.filter((m) => (opts.supportedModes ?? ['text', 'sketch', 'choice']).includes(m))
+  if (!modes.length) modes.push('text')
   const talkFirst = Boolean(sei?.talkFirst || opts.talkFirst) && level !== 'bare'
   useEffect(() => { if (!modes.includes(mode)) setMode(modes[0]) }, [modes, mode])
 
-  const scaffolds = useMemo(() => scaffoldsOn({ level, l1: Boolean(l1Text), frame, wordBank: wordBank.length > 0, visual: Boolean(sei?.visual), talkFirst, mode }), [level, l1Text, frame, wordBank.length, sei?.visual, talkFirst, mode])
+  const scaffolds = useMemo(() => scaffoldsOn({ level, l1: Boolean(l1Text), frame, wordBank: wordBank.length > 0, visual: Boolean(sei?.visual || sei?.visualBlockId), talkFirst, mode }), [level, l1Text, frame, wordBank.length, sei?.visual, sei?.visualBlockId, talkFirst, mode])
 
   return { level, l1Text, frame, frameRequested, requestFrame: () => setFrameRequested(true), wordBank, modes, mode, setMode, talkFirst, talkDone, setTalkDone, scaffolds }
 }
@@ -64,7 +67,7 @@ export function SeiPrompt({ prompt, l1Text, children }: { prompt: string; l1Text
   const { profile } = useLanguageProfile()
   return (
     <div className="mb-2">
-      <p className="text-sm" style={{ color: C.indigo }}>{prompt}{children}</p>
+      <div className="text-sm" style={{ color: C.indigo }}><MathMarkdown content={prompt} />{children}</div>
       {l1Text && <p className="text-sm mt-0.5" style={{ color: C.muted }} lang={profile?.homeLang ?? undefined}>{l1Text}</p>}
     </div>
   )
@@ -169,8 +172,8 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   /** as-you-type draft of the same shape onSave sends (autosave; never evidence) */
   onDraft?: (response: { text?: string; strokes?: Stroke[]; mode: ResponseMode }) => void
 }) {
-  const state = useSei(sei, { fallbackFrame, wordBank, talkFirst, extraModes: [] })
-  const prior = (typeof value === 'string' ? { text: value } : (value as { text?: string; strokes?: Stroke[] } | undefined)) ?? {}
+  const prior = (typeof value === 'string' ? { text: value } : (value as { text?: string; strokes?: Stroke[]; mode?: ResponseMode } | undefined)) ?? {}
+  const state = useSei(sei, { fallbackFrame, wordBank, talkFirst, defaultMode: prior.mode === 'sketch' ? 'sketch' : 'text', supportedModes: ['text', 'sketch'], extraModes: prior.mode === 'sketch' ? ['sketch'] : [] })
   const [text, setText] = useState(prior.text ?? '')
   const [strokes, setStrokes] = useState<Stroke[]>(prior.strokes ?? [])
   const [saved, setSaved] = useState(false)
@@ -178,15 +181,15 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
   const [saveError, setSaveError] = useState(false)
   const [touched, setTouched] = useState(false)
   useEffect(() => { if (!touched) { setText(prior.text ?? ''); setStrokes(prior.strokes ?? []) } }, [prior.text, prior.strokes, touched])
-  useDraft(onDraft ?? (() => {}), touched ? (state.mode === 'sketch' ? { strokes, mode: 'sketch' as ResponseMode } : { text, mode: state.mode }) : undefined)
+  useDraft(onDraft ?? (() => {}), touched ? ({ text, strokes, mode: state.mode }) : undefined)
   const gated = state.talkFirst && !state.talkDone
-  const canSave = !gated && (state.mode === 'sketch' ? strokes.length > 0 : text.trim().length > 0)
+  const canSave = !gated && (state.mode === 'sketch' ? strokes.length > 0 : text.trim().length > 0 && !/_{2,}/.test(text) && text.trim() !== state.frame?.text.trim())
   return (
     <div>
       <SeiPrompt prompt={prompt} l1Text={state.l1Text} />
       <SeiVisual visual={sei?.visual} />
       <SeiTalkFirst state={state} />
-      <SeiModeSwitch state={state} />
+      <SeiModeSwitch state={{ ...state, setMode: (mode) => { state.setMode(mode); setTouched(true); setSaved(false) } }} />
       <SeiFrameBox state={state} onUseFrame={(f) => { if (!text.trim()) { setText(f); setTouched(true) } }} />
       {state.mode === 'sketch' ? (
         <SeiSketchAnswer value={strokes} onChange={(s) => { setStrokes(s); setSaved(false); setTouched(true) }} labelBank={sei?.labelBank} />
@@ -199,7 +202,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
           if (!canSave || saving) return
           setSaving(true); setSaveError(false)
           try {
-            const ok = await onSave(state.mode === 'sketch' ? { strokes, mode: 'sketch' } : { text: text.trim(), mode: state.mode }, state.scaffolds, state.mode)
+            const ok = await onSave({ text: text.trim(), strokes, mode: state.mode }, state.scaffolds, state.mode)
             setSaved(ok !== false); setSaveError(ok === false)
             if (ok !== false) setTouched(false)
           } catch { setSaveError(true) } finally { setSaving(false) }
@@ -210,7 +213,7 @@ export function SeiTextCapture({ sei, prompt, fallbackFrame, wordBank, talkFirst
         <span role="status" className="text-sm" style={{ color: C.muted }}>
           {saveError ? 'Couldn’t save. Please retry.' : touched && !saved ? 'Changes need saving. Drafts are kept automatically.' : ''}
         </span>
-        {!canSave && !gated && <span className="text-xs" style={{ color: C.muted }}>Write, sketch or say something first.</span>}
+        {!canSave && !gated && <span className="text-xs" style={{ color: C.muted }}>Add your own reasoning or a sketch first.</span>}
       </div>
       <SeiFairnessNote />
     </div>

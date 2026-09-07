@@ -1,0 +1,17 @@
+const assert = require('node:assert/strict');
+const path = require('node:path');
+const fs = require('node:fs');
+const os = require('node:os');
+const out = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'first-stroke-')), 'input.cjs');
+require('esbuild').buildSync({ entryPoints: [path.join(__dirname, '../src/lib/draw/input.ts')], outfile: out, bundle: true, platform: 'node' });
+const { makeStrokeHandlers } = require(out);
+let saved;
+const strokesRef = { current: [] };
+const handlers = makeStrokeHandlers({ canvas: null, W: 640, H: 360, strokesRef, redoRef: { current: [] }, drawingRef: { current: false }, tool: 'pen', color: '#000000', size: 4, fillShapes: false, repaint() {}, emit() { saved = structuredClone(strokesRef.current); }, bump() {} });
+const currentTarget = { getBoundingClientRect: () => ({ left: 20, top: 10, width: 320, height: 180 }) };
+handlers.onDown({ currentTarget, clientX: 30, clientY: 20 });
+handlers.onMove({ currentTarget, clientX: 60, clientY: 40 });
+handlers.onUp();
+assert.equal(saved.length, 1);
+assert.deepEqual(saved[0].points, [{ x: 20, y: 20 }, { x: 80, y: 60 }]);
+console.log('PASS first drawing stroke captures and scales before the canvas ref has caused a render');

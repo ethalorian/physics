@@ -36,7 +36,7 @@ function taskTypeFor(blockType: string | null): string {
 function promptOf(b: ContentBlock): string {
   const x = b as unknown as Record<string, unknown>
   const q = x.question && typeof x.question === 'object' ? (x.question as { prompt?: string }).prompt : undefined
-  return String(q ?? x.prompt ?? x.instruction ?? x.frame ?? x.patternPrompt ?? '').trim()
+  return String(q ?? x.prompt ?? x.instruction ?? x.frame ?? x.patternPrompt ?? x.title ?? (b.type === 'concept_exercise' ? 'Textbook questions and practice' : b.type === 'data_table' ? 'Collect and interpret data' : b.type === 'transfer_prompt' ? 'Transfer task' : b.type)).trim()
 }
 
 export default function LobbyLauncher() {

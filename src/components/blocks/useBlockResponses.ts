@@ -12,7 +12,7 @@ export interface StoredResponse {
 }
 /** SEI context logged with a save (never a score): how they answered and which
  *  scaffolds were on. See src/lib/sei.ts. */
-export interface SaveMeta { response_mode?: string; scaffolds_used?: string[]; /** E-1: learning target slug or id */ target_id?: string; /** E-2 */ evidence_source?: string; /** MC-5 */ confidence?: 'sure' | 'unsure'; role?: string }
+export interface SaveMeta { response_mode?: string; scaffolds_used?: string[]; /** E-1: learning target slug or id */ target_id?: string; /** E-2 */ evidence_source?: string; /** MC-5 */ confidence?: 'sure' | 'unsure'; role?: string; presentSessionId?: string; pollRunId?: string }
 export type BlockResponseMap = Record<string, StoredResponse>
 export type DraftFn = (blockId: string, blockType: string, response: unknown) => void
 

@@ -16,8 +16,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MonitorPlay, X, ChevronLeft, ChevronRight, Moon, Lock, Unlock, Eye, Timer, Radio, Square, BarChart3, StickyNote } from 'lucide-react'
-import type { ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
-import type { LessonSection } from '@/components/lessons/lesson-sections'
+import { paginateBlocks, type BlockDocument, type ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
+import { buildSections, type LessonSection } from '@/components/lessons/lesson-sections'
+import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 import { watchDeck, deckNext, deckPrev, deckGo, deckBlackout, deckPresenting, sectionForSlideProportional, type DeckSnapshot } from '@/lib/present-bridge'
 import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
@@ -36,7 +37,7 @@ const btn = (active = false): React.CSSProperties => ({
   display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', minHeight: 44,
 })
 
-export default function PresentLiveLayer({ lessonId, lessonTitle, pages, sections, deck, onSectionChange }: {
+export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initialPages, sections: initialSections, deck: initialDeck, onSectionChange }: {
   lessonId: string
   lessonTitle: string
   pages: LessonPage[]
@@ -45,6 +46,13 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
   /** Move the teacher's own preview to the section the projector is on. */
   onSectionChange?: (section: number) => void
 }) {
+  const [classDeck, setClassDeck] = useState<DeckBlock | null>(null)
+  const [classDoc, setClassDoc] = useState<BlockDocument | null>(null)
+  const [answerKeys, setAnswerKeys] = useState<Record<string, string>>({})
+  const [error, setError] = useState<string | null>(null)
+  const deck = classDoc ? classDeck : initialDeck
+  const pages = useMemo(() => classDoc ? paginateBlocks(classDoc.blocks) : initialPages, [classDoc, initialPages])
+  const sections = useMemo(() => classDoc ? buildSections(pages) : initialSections, [classDoc, pages, initialSections])
   const [open, setOpen] = useState(false)
   const [courses, setCourses] = useState<Course[]>([])
   const [courseId, setCourseId] = useState<string>('')
@@ -64,7 +72,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
       setCourses(cs)
       setCourseId((c) => c || cs[0]?.id || '')
     }).catch(() => {})
-    fetch(`/api/present/sessions?lesson_id=${lessonId}`).then((r) => (r.ok ? r.json() : { session: null })).then((d: { session: Session | null }) => { if (d.session) setSession(d.session) }).catch(() => {})
+    fetch(`/api/present/sessions?lesson_id=${lessonId}`).then((r) => (r.ok ? r.json() : { session: null })).then((d: { session: Session | null; deck?: DeckBlock | null; lesson?: { content_blocks: BlockDocument }; answerKeys?: Record<string, string> }) => { if (d.session && d.lesson) { setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {}); setCourseId(d.session.course_id ?? '') } }).catch(() => {})
   }, [open, lessonId])
 
   const patch = useCallback(async (body: Record<string, unknown>) => {
@@ -75,7 +83,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
 
   const start = async () => {
     const r = await fetch('/api/present/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lesson_id: lessonId, course_id: courseId || null }) })
-    if (r.ok) { const d = (await r.json()) as { session: Session }; setSession(d.session) }
+    if (r.ok) { const d = (await r.json()) as { session: Session; deck?: DeckBlock | null; lesson: { content_blocks: BlockDocument }; answerKeys: Record<string, string> }; setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys); setError(null); lastPushed.current = -1 }
+    else setError('Could not start this class lesson. Check class access and publishing.')
   }
   const end = async () => {
     await patch({ status: 'ended', poll_block_id: null, blackout: false, timer_seconds: null })
@@ -84,7 +93,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
   }
 
   // P-2 · the deck window. Auto-generated deck when the lesson has no deck block (P-1).
-  const deckSrc = deck?.src ?? `/embed/present/${lessonId}`
+  const deckSrc = deck?.src ?? `/embed/present/${lessonId}?session_id=${session?.id ?? ''}`
   const openDeck = async () => {
     deckWin.current = await openPresenterWindow(deckSrc)
     setDeckOpen(Boolean(deckWin.current))
@@ -98,11 +107,15 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
     if (!deckOpen) return
     const stop = watchDeck(deckWin.current, (s) => {
       setSnap(s)
-      const section = sectionForSlideProportional(s.index, s.total, sectionCount, deck?.slideMap)
-      onSectionChange?.(section)
+      const anchor = s.slides[s.index]?.anchor
+      const section = anchor ? sectionIndexForAnchor(pages, anchor) : deck?.slideMap?.length ? sectionForSlideProportional(s.index, s.total, sectionCount, deck.slideMap) : -1
+      if (section >= 0) {
+        const original = sectionIndexForAnchor(initialPages, sectionAnchor(pages[section]))
+        if (original >= 0) onSectionChange?.(original)
+      }
       if (lastPushed.current !== s.index) {
         lastPushed.current = s.index
-        void patch({ current_slide: s.index, current_section: section })
+        void patch({ current_slide: s.index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
       }
     })
     const closed = window.setInterval(() => { if (!deckWin.current || deckWin.current.closed) { setDeckOpen(false); setSnap(null) } }, 1000)
@@ -182,6 +195,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
           </div>
 
           <div className="overflow-y-auto p-4 space-y-4">
+            {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+            {deck && !deck.slideMap?.length && <p className="text-xs">This authored deck needs a slide map before student follow is available. Auto slides carry exact section anchors.</p>}
             {/* Start / end */}
             {!live ? (
               <div className="flex items-center gap-2">
@@ -189,7 +204,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                   <option value="">No class (preview)</option>
                   {courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
                 </select>
-                <button type="button" onClick={start} style={{ ...btn(true), background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'var(--primary)' }}><Radio size={14} /> Go live</button>
+                <button type="button" onClick={start} disabled={!courseId} style={{ ...btn(true), background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'var(--primary)' }}><Radio size={14} /> Go live</button>
               </div>
             ) : (
               <div className="flex items-center gap-2 flex-wrap">
@@ -267,7 +282,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                     <div className="space-y-1.5">
                       {(pollQ?.options ?? []).map((o) => {
                         const n = tally?.tally[o.id] ?? 0
-                        const correct = session.poll_revealed && pollQ?.correctOptionId === o.id
+                        const correct = session.poll_revealed && answerKeys[pollBlock?.id ?? ''] === o.id
                         return (
                           <div key={o.id}>
                             <div className="flex items-center justify-between text-xs">
@@ -275,7 +290,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                               <span className="tabular-nums" style={{ color: 'var(--muted-foreground)' }}>{n}</span>
                             </div>
                             <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
-                              <div className="h-full rounded-full" style={{ width: `${(n / maxCount) * 100}%`, background: correct ? 'var(--success)' : 'var(--primary)', transition: 'width .3s' }} />
+                              <div className="h-full rounded-full" style={{ width: `${(n / maxCount) * 100}%`, background: correct ? 'var(--success)' : 'var(--primary)', transition: 'none' }} />
                             </div>
                           </div>
                         )
@@ -287,7 +302,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages, section
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <button type="button" onClick={() => patch({ poll_locked: !session.poll_locked })} style={btn(session.poll_locked)} title="L">{session.poll_locked ? <Lock size={13} /> : <Unlock size={13} />} {session.poll_locked ? 'Locked' : 'Lock'}</button>
-                      <button type="button" onClick={() => patch({ poll_revealed: !session.poll_revealed })} style={btn(session.poll_revealed)} title="R" disabled={!pollQ?.correctOptionId}><Eye size={13} /> Reveal</button>
+                      <button type="button" onClick={() => patch({ poll_revealed: !session.poll_revealed })} style={btn(session.poll_revealed)} title="R" disabled={!answerKeys[pollBlock?.id ?? '']}><Eye size={13} /> Reveal</button>
                       <button type="button" onClick={() => patch({ poll_block_id: null })} style={{ ...btn(), marginLeft: 'auto' }}>Close poll</button>
                     </div>
                   </>

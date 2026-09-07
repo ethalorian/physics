@@ -10,6 +10,7 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 
 export interface LiveSession {
+  currentAnchor: string | null; pollRunId: string | null; reveal: { correctOptionId?: string; feedback?: Record<string, string> } | null
   id: string; currentSlide: number; currentSection: number
   pollBlockId: string | null; pollLocked: boolean; pollRevealed: boolean
   blackout: boolean; timerEndsAt: string | null; updatedAt: string
@@ -28,6 +29,7 @@ export function PresentLiveProvider({ lessonId, enabled, children }: { lessonId:
   const seen = useRef<string | null>(null)
 
   useEffect(() => {
+    setSession(null); seen.current = null
     if (!enabled) return
     let active = true
     const poll = async () => {

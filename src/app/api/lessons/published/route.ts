@@ -1,10 +1,21 @@
+import type { AccessibleLesson } from '@/lib/lesson-access'
+import { getEnrollment, getStudentTrack } from '@/lib/student-enrollment'
+import { canEditArea } from '@/lib/content-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { getStudentLessonWindowStatuses, type LessonWindowStatus } from '@/lib/lesson-windows'
 import { withAuth } from '@/lib/api-auth'
 import { getStudentProgram, getProgramUnitIds, asProgram, PROGRAM_LABEL, type Program } from '@/lib/program'
-import { filterDocumentForViewer, effectiveTrack } from '@/lib/track-visibility'
+import { filterDocumentForViewer, effectiveTrack, isLessonVisible } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
+
+interface LessonListRow extends AccessibleLesson {
+  description?: string | null
+  lesson_number?: number
+  lesson_type?: string | null
+  difficulty?: string | null
+  created_at?: string
+}
 
 /**
  * GET /api/lessons/published
@@ -14,7 +25,10 @@ import type { BlockDocument } from '@/data/content-blocks'
 export const GET = withAuth(async (request, ctx) => {
     // Determine user role based on email
     const userRole = ctx.role
-    const isAdmin = userRole === 'admin' || userRole === 'teacher'
+    const isAdmin = userRole === 'admin' || userRole === 'teacher' || await canEditArea(ctx.email, 'lessons', ctx.realRole === 'admin')
+    if (!isAdmin && userRole !== 'student') return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    if (!isAdmin && !(await getEnrollment(ctx.userId)).enrolled) return NextResponse.json({ error: 'You are not in a class yet.' }, { status: 403 })
+    const studentTrack = isAdmin ? null : await getStudentTrack(ctx.userId)
     const userId = ctx.userId
 
     // Get query parameters for filtering
@@ -27,13 +41,12 @@ export const GET = withAuth(async (request, ctx) => {
     // class may see. Never accept a program/track straight off the query string.
     const courseId = searchParams.get('course_id')
 
-    console.log('Fetching lessons for:', ctx.email, 'Role:', userRole, 'Filters:', { unit, lessonType, difficulty, search })
 
     // Build query with filters
     // Note: Simulation join is optional for backward compatibility
     let query = supabaseAdmin
       .from('lessons')
-      .select('*')
+      .select(isAdmin ? '*' : 'id, title, slug, description, unit, unit_id, lesson_number, lesson_type, difficulty, estimated_time, objectives, created_at, published, visibility_track')
 
     // Students only see published lessons — and only their class's curriculum
     // (physics vs trades). Staff browse everything.
@@ -114,12 +127,12 @@ export const GET = withAuth(async (request, ctx) => {
     // lessons stay invisible: no spoilers, nothing to stumble on. The lesson
     // page enforces the same gate server-side, so nothing can be reached by
     // URL either. Staff are ungated so they can preview/build.
-    let visibleLessons = lessons ?? []
+    let visibleLessons = (lessons ?? []) as unknown as LessonListRow[]
     const windowStatuses: Record<string, LessonWindowStatus> = {}
     if (!isAdmin && userId && visibleLessons.length > 0) {
       const statuses = await getStudentLessonWindowStatuses(userId)
       Object.assign(windowStatuses, statuses)
-      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled')
+      visibleLessons = visibleLessons.filter((l) => statuses[l.id] !== undefined && statuses[l.id].state !== 'scheduled' && isLessonVisible(l.visibility_track, { role: 'student', track: studentTrack }))
     }
 
     // Fetch user progress if available
@@ -147,6 +160,17 @@ export const GET = withAuth(async (request, ctx) => {
 
     // Parse JSONB fields and enhance lesson data
     const enhancedLessons = visibleLessons.map(lesson => {
+      // Student list cards contain metadata only. A closed history card must never
+      // disclose the lesson body, keys, legacy questions or generator notes.
+      if (!isAdmin) return {
+        id: lesson.id, title: lesson.title, slug: lesson.slug, description: lesson.description,
+        unit: lesson.unit, unit_id: lesson.unit_id, lesson_number: lesson.lesson_number,
+        lesson_type: lesson.lesson_type || 'markdown', difficulty: lesson.difficulty,
+        estimated_time: lesson.estimated_time, objectives: lesson.objectives ?? [],
+        progress: progress[lesson.id] || 0, window: windowStatuses[lesson.id] ?? null,
+        isNew: Boolean(lesson.created_at && Date.parse(lesson.created_at) > Date.now() - 7 * 24 * 60 * 60 * 1000),
+      }
+
       // Parse videos if present
       let videos = []
       if (lesson.videos) {
@@ -253,7 +277,6 @@ export const GET = withAuth(async (request, ctx) => {
       }
     })
 
-    console.log(`Fetched ${enhancedLessons?.length || 0} lessons for ${ctx.email}`)
 
     return NextResponse.json({
       lessons: enhancedLessons || [],

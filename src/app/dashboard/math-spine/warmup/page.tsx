@@ -19,6 +19,7 @@
  * (plus "Needs a refresh"). Bonus points are reward, never evidence; the ladder
  * moves only on the teacher's rating.
  */
+import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -37,6 +38,7 @@ import { useTranslator } from '@/lib/math-translate-store'
 type CheckMode = 'numeric' | 'short-answer' | 'teacher-only' | 'exact-form' | 'estimate'
 
 interface DailyItem {
+  instanceId?: string
   spiralItemId: string
   competencyId: string
   competencyCode: string
@@ -55,6 +57,9 @@ type SelfCheck = 'match' | 'mismatch' | 'unknown'
 interface SlipFeedback { tag: string | null; label: string | null; message: string; source: 'slip' | 'fallback' }
 
 interface WorkValue {
+  work?: string
+  needsGraph?: boolean
+  helpUsed?: boolean
   answer: string
   workStrokes: Stroke[]
   workTexts: CanvasText[]
@@ -98,10 +103,11 @@ export default function WarmupPage() {
   useEffect(() => {
     let active = true
     fetch('/api/math-spine/daily')
-      .then((r) => (r.ok ? r.json() : null))
+      .then(async (r) => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load your warm-up'); return d })
       .then((d) => {
         if (!active || !d) return
         setItem(d.item ?? null)
+        if (d.item?.instanceId && !d.alreadySubmitted) { try { const draft = sessionStorage.getItem('math-draft:' + d.item.instanceId); if (draft) setWork(JSON.parse(draft)) } catch {} }
         setPickKind((d.pickKind as PickKind) ?? 'climb')
         setLadder((d.ladder as LadderRung[]) ?? [])
         setDayCount(Number(d.dayCount ?? 0))
@@ -110,13 +116,18 @@ export default function WarmupPage() {
         setTranslationEnabled(Boolean(d.translationEnabled))
         setLoading(false)
       })
-      .catch(() => { if (active) setLoading(false) })
+      .catch((e) => { if (active) { setLoading(false); setError(e.message) } })
     return () => { active = false }
   }, [])
 
+  useEffect(() => {
+    if (!item?.instanceId || alreadySubmitted || submitted) return
+    try { sessionStorage.setItem('math-draft:' + item.instanceId, JSON.stringify(work)) } catch {}
+  }, [item?.instanceId, work, alreadySubmitted, submitted])
+
   // Two named checks (decision 3). Work = anything on the board or in the
   // equation builder; answer = the final box. Teacher-only prompts need either.
-  const workShown = work.workStrokes.length > 0
+  const workShown = !!work.work?.trim() || work.workStrokes.length > 0
     || work.workTexts.some((t) => String(t.text ?? '').trim())
     || (work.sandbox.lines ?? []).some((l) => String(l).trim())
   const answerEntered = work.answer.trim().length > 0
@@ -132,15 +143,18 @@ export default function WarmupPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          instance_id: item.instanceId,
           competency_id: item.competencyId,
           spiral_item_id: item.spiralItemId,
           prompt: item.prompt,
-          response_json: work,
+          response_json: { ...work, needsGraph: item.needsGraph },
         }),
       })
       const j = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(j.error || `Submit failed (${res.status})`)
-      setSelfCheck((j.selfCheck as SelfCheck) ?? 'unknown')
+      setSelfCheck(j.selfCheck === null ? null : (j.selfCheck as SelfCheck) ?? 'unknown')
+      if (j.response_json) setWork(j.response_json)
+      try { sessionStorage.removeItem('math-draft:' + item.instanceId) } catch {}
       setCheckReason(typeof j.selfCheckReason === 'string' ? j.selfCheckReason : null)
       setFeedback(j.feedback ?? null)
       setSubmittedAt(new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))
@@ -195,10 +209,10 @@ export default function WarmupPage() {
   const answerLabel = teacherOnly ? t('Your answer & reasoning')
     : item?.checkMode === 'short-answer' ? t('Final answer')
     : item?.needsGraph ? t('Final answer · from your graph')
-    : t('Final answer · with units')
+    : t('Final answer')
   const answerPlaceholder = teacherOnly ? t('A sentence or two — your teacher reads this one.')
     : item?.checkMode === 'short-answer' ? t('A word or short formula — e.g. t = d/v')
-    : t('e.g. 3.5 m/s')
+    : t('Include all requested parts and units where needed.')
 
   // ------------------------------------------------------------------ render
   const card = 'rounded-xl border bg-card shadow-sm'
@@ -230,6 +244,7 @@ export default function WarmupPage() {
         <span className="ml-auto">{translateControl}</span>
       </div>
 
+      {error && <p role="alert">{error} <button onClick={() => window.location.reload()} className="underline min-h-11">Retry</button></p>}
       {loading && <p className="text-sm text-muted-foreground">{t('Loading your warm-up…')}</p>}
       {!loading && !item && <p className="text-sm text-muted-foreground">{t('No warm-up available right now — check back soon.')}</p>}
 
@@ -253,7 +268,7 @@ export default function WarmupPage() {
 
             {lesson && (
               <section className={card} style={cardStyle}>
-                <button type="button" onClick={() => setHelpOpen(!showHelp)} aria-expanded={showHelp}
+                <button type="button" onClick={() => { setHelpOpen(!showHelp) }} aria-expanded={showHelp}
                   className="w-full flex items-center gap-2 p-4 text-left">
                   <HelpCircle className="h-4 w-4 shrink-0" style={{ color: 'var(--primary)' }} />
                   <span className="text-sm font-semibold text-foreground">{t('How to do it:')} {t(lesson.title)}</span>
@@ -292,7 +307,11 @@ export default function WarmupPage() {
                   <EquationSandbox embedded value={work.sandbox} onChange={(v) => setWork((w) => ({ ...w, sandbox: v }))} />
                 </div>
               )}
+              <label htmlFor="math-reasoning" className="block text-sm font-semibold">{t('Show your reasoning in text or on the board')}</label>
+              <textarea id="math-reasoning" rows={3} value={work.work ?? ''} onChange={e => setWork(w => ({ ...w, work: e.target.value }))} className="my-2 w-full rounded border bg-background p-3" placeholder={t('Explain a step, write an equation, or describe your graph.')} />
+              <label className="mb-3 flex items-center gap-2 text-sm"><input type="checkbox" checked={work.helpUsed ?? false} onChange={e => setWork(w => ({ ...w, helpUsed: e.target.checked }))} />{t('I used the how-to to solve this problem')}</label>
               <MathCanvas
+                key={item.instanceId}
                 gridded={!!item.needsGraph}
                 value={{ strokes: work.workStrokes, texts: work.workTexts }}
                 onChange={(v) => setWork((w) => ({ ...w, workStrokes: v.strokes, workTexts: v.texts }))}
@@ -336,6 +355,7 @@ export default function WarmupPage() {
         </div>
       )}
 
+      {done && <MathFeedbackLoop refreshKey={submitted ? 1 : 0} />}
       {/* ============================================================ after submit */}
       {!loading && item && done && (
         <div className="grid gap-4 min-[900px]:grid-cols-[minmax(320px,2fr)_3fr] min-[900px]:items-start">
@@ -364,9 +384,9 @@ export default function WarmupPage() {
                     <p className="text-lg font-semibold text-foreground tabular-nums">{work.answer.trim()}</p>
                   </div>
                   <div className="mt-3">
-                    <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('Where it went sideways')}</span>
+                    <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('A possible cause to check')}</span>
                     <p className="text-sm text-foreground mt-1 leading-relaxed">
-                      {feedback ? feedback.message : t('Not the expected answer. Re-read what the question asks for and check the units on every number. Your teacher will read your work either way.')}
+                      {feedback ? t('This answer can happen for several reasons. Check whether this hint fits your work: ') + feedback.message : t('Not the expected answer. Re-read what the question asks for and check the units on every number. Your teacher will read your work either way.')}
                     </p>
                   </div>
                 </div>
@@ -408,7 +428,7 @@ export default function WarmupPage() {
                 <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('What happens next')}</span>
                 <ol className="mt-2 space-y-1.5 text-sm">
                   <li className="flex items-center gap-2 text-foreground"><CheckCircle2 className="h-4 w-4" style={{ color: 'var(--viz-up)' }} /> {t('Submitted — work and answer')}</li>
-                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-[10px] font-bold">2</span> {t('Your teacher rates the thinking · usually by tomorrow')}</li>
+                  <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-[10px] font-bold">2</span> {t('Your teacher reviews the thinking and any next step')}</li>
                   <li className="flex items-center gap-2 text-foreground"><span className="grid place-items-center h-4 w-4 rounded-full bg-muted text-[10px] font-bold">3</span> {item.competencyCode} {t('moves on the ladder — the rating decides, not the check')}</li>
                 </ol>
               </div>
@@ -428,6 +448,8 @@ export default function WarmupPage() {
                   <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t('Your submitted board · read-only')}</span>
                   {submittedAt && <span className="ml-auto text-[11px] text-muted-foreground tabular-nums">{t('Submitted')} {submittedAt}</span>}
                 </div>
+                {work.work && <p className="mb-3 whitespace-pre-wrap">{work.work}</p>}
+                {work.sandbox.lines.map((line,i) => <p key={i}>{line}</p>)}
                 <MathCanvas
                   readOnly gridded={!!item.needsGraph}
                   value={{ strokes: work.workStrokes, texts: work.workTexts }}

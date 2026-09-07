@@ -41,6 +41,8 @@ export type ResponseMode = 'text' | 'sketch' | 'audio' | 'label' | 'choice';
 export interface SeiFrame { level: 1 | 2 | 3; text: string; text_l1?: Partial<Record<LangCode, string>> }
 
 export interface SeiScaffold {
+  /** References an authored representation in the same, filtered document. */
+  visualBlockId?: string;
   /** Principle 1 — a visual that carries the meaning on its own. A DiagramScene
    *  (drawn) or an image. A capture block for program `projects` will not publish
    *  without one (or a figure/diagram/sim/graph block immediately before it). */
@@ -63,6 +65,8 @@ export interface SeiScaffold {
 }
 
 interface BaseBlock {
+  /** Essential safety/operating instructions remain visible outside help drawers. */
+  essential?: boolean;
   id: BlockId;
   /** Optional teacher/author note; never shown to students. */
   note?: string;
@@ -145,6 +149,7 @@ export interface SentenceFrameBlock extends BaseBlock {
  *  together in context. Response shape: { strokes, fields: Record<label,text> }. */
 export interface LabNotebookBlock extends BaseBlock {
   type: 'lab_notebook';
+  requireAllFields?: boolean; // new authored notebooks collect the complete reasoning log
   capture: true;
   instruction: string;
   fields?: string[];          // labels for the written-reasoning boxes (defaults provided)
@@ -214,7 +219,10 @@ export interface ProcedureBlock extends BaseBlock {
 // ---------------------------------------------------------------------------
 
 export interface GewaBlock extends BaseBlock {
+  /** Authored active math-competency slugs; links evidence only, never ratings. */
+  mathMoveIds?: string[];
   type: 'gewa';
+  requireCompleteWork?: boolean; // new authoring: given, work trail and answer units
   capture: true;
   prompt: string;
   givenHint?: string;
@@ -274,6 +282,7 @@ export interface InlineQuestion {
   prompt: string;
   options?: InlineQuestionOption[];   // omit for open response
   explain?: string;                   // the explain / justify prompt shown after a choice
+  autoCheckable?: boolean;            // safe key-presence metadata; never the answer
   correctOptionId?: string;           // never shown to students; used by the teacher drawer
 }
 export interface QuestionBlock extends BaseBlock {
@@ -288,6 +297,7 @@ export interface DataTableBlock extends BaseBlock {
   capture: true;
   columns: string[];
   rows: number;               // blank rows for lab data
+  minRows?: number;            // required complete readings; legacy default is one
   plot?: boolean;             // show the live graph (default true when ≥2 columns)
   xCol?: number;              // column index for x-axis (default 0)
   yCol?: number;              // column index for y-axis (default 1)
@@ -313,6 +323,7 @@ export interface SelfAssessmentBlock extends BaseBlock {
 export interface TransferPromptBlock extends BaseBlock {
   type: 'transfer_prompt';
   masteryTaskSlug: string;    // links to mastery_tasks; scored on the 4-D rubric
+  task?: { id: string; prompt: string; rubric?: Record<string, unknown> }; // resolved server-side
 }
 
 // ---------------------------------------------------------------------------
@@ -571,4 +582,13 @@ export function paginateBlocks(blocks: ContentBlock[]): LessonPage[] {
     }
   }
   return pages;
+}
+
+/** A saved attempt is done only when an available automatic check matches. */
+export function isBlockDone(b: ContentBlock, response: unknown): boolean {
+  if (!isBlockComplete(b, response)) return false;
+  const r = response && typeof response === 'object' ? response as Record<string, unknown> : {};
+  const q = b.type === 'question' && b.question && typeof b.question === 'object' ? b.question as InlineQuestion : undefined;
+  if (r.autoCheck === 'mismatch') return false;
+  return q && (q.autoCheckable || q.correctOptionId) ? r.autoCheck === 'match' : true;
 }

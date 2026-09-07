@@ -57,10 +57,10 @@ export function pickFrame(frames: SeiFrame[] | undefined, tier: 1 | 2 | 3): SeiF
   return sorted.find((f) => f.level > tier) ?? sorted[sorted.length - 1] ?? null
 }
 
-/** Default response modes: text always; the block's extra modes are offered at full/partial. */
-export function modesFor(sei: SeiScaffold | undefined, level: ScaffoldLevel, fallback: ResponseMode[] = ['text']): ResponseMode[] {
+/** Authored response alternatives remain available at every support level,
+ * including when restoring an answer after the student's profile changes. */
+export function modesFor(sei: SeiScaffold | undefined, _level: ScaffoldLevel, fallback: ResponseMode[] = ['text']): ResponseMode[] {
   const extra = sei?.modes ?? []
-  if (level === 'bare') return fallback
   return [...new Set([...fallback, ...extra])]
 }
 
@@ -93,6 +93,17 @@ export function scaffoldsOn(opts: { level: ScaffoldLevel; l1: boolean; frame: Se
 const CAPTURE_TEXT: ReadonlySet<string> = new Set(['question', 'exit_ticket', 'observation', 'sentence_frame'])
 const VISUAL_TYPES: ReadonlySet<string> = new Set(['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch', 'lab_notebook'])
 
+function carriesVisual(block: ContentBlock | undefined): boolean {
+  if (!block || !VISUAL_TYPES.has(block.type)) return false
+  if (block.type === 'sketch' || block.type === 'lab_notebook') return Boolean(block.backgroundDiagram)
+  if (block.type === 'figure') return Boolean(block.src?.trim())
+  return true
+}
+
+function compatibleVisual(capture: ContentBlock, visual: ContentBlock | undefined): boolean {
+  return carriesVisual(visual) && (!visual?.visibilityTrack || visual.visibilityTrack === capture.visibilityTrack)
+}
+
 export interface SeiLintIssue { blockId: string; blockType: string; rule: 'visual' | 'frame' | 'vocab' | 'target' | 'exit' | 'feedback'; severity: 'error' | 'warning'; message: string }
 
 /** Lint a block list. `vocabTerms` = the lesson's vocabulary set (lowercased). */
@@ -104,8 +115,11 @@ export function seiLint(blocks: ContentBlock[], vocabTerms: string[] = []): SeiL
     if (b.type === 'sentence_frame' && !(b as { capture?: boolean }).capture) return
     const sei = b.sei
     const prev = blocks[i - 1]
-    const hasVisual = Boolean(sei?.visual) || Boolean(prev && VISUAL_TYPES.has(prev.type))
-    if (!hasVisual) issues.push({ blockId: b.id, blockType: b.type, rule: 'visual', severity: 'error', message: 'No visual carries the meaning: add sei.visual or put a figure/diagram/sim/graph block right before it.' })
+    const referenced = sei?.visualBlockId ? blocks.find((candidate) => candidate.id === sei.visualBlockId) : undefined
+    const inlineVisual = sei?.visual && ('src' in sei.visual ? Boolean(sei.visual.src.trim()) : Boolean(sei.visual.kind))
+    const hasVisual = Boolean(inlineVisual) || compatibleVisual(b, referenced) || compatibleVisual(b, prev)
+    if (sei?.visualBlockId && !compatibleVisual(b, referenced)) issues.push({ blockId: b.id, blockType: b.type, rule: 'visual', severity: 'error', message: 'The referenced visual is missing, has no representation, or is hidden from this block’s track.' })
+    if (!hasVisual) issues.push({ blockId: b.id, blockType: b.type, rule: 'visual', severity: 'error', message: 'No visual carries the meaning: add sei.visual, reference a visible representation with sei.visualBlockId, or place it directly before this task.' })
     const ownFrame = (b as { frame?: string; patternFrame?: string }).frame || (b as { patternFrame?: string }).patternFrame
     const hasFrame = Boolean(sei?.frames?.length) || Boolean(ownFrame) || (b.type === 'question' && Boolean((b as { question?: { options?: unknown[] } }).question?.options?.length))
     if (!hasFrame) issues.push({ blockId: b.id, blockType: b.type, rule: 'frame', severity: 'error', message: 'No frame for output: add sei.frames (tier 1 forced-choice at least) or a frame on the block.' })
@@ -120,7 +134,7 @@ export function seiLint(blocks: ContentBlock[], vocabTerms: string[] = []): SeiL
     }
   })
   // C-1 · every lesson ends with an exit ticket or a transfer prompt.
-  const hasCapture = blocks.some((b) => CAPTURE_TEXT.has(b.type) || ['gewa', 'sketch', 'data_table', 'marzano', 'lab_notebook', 'concept_exercise', 'equation_sandbox'].includes(b.type))
+  const hasCapture = blocks.some((b) => CAPTURE_TEXT.has(b.type) || ['gewa', 'sketch', 'data_table', 'marzano', 'self_assessment', 'lab_notebook', 'concept_exercise', 'equation_sandbox'].includes(b.type))
   if (hasCapture && !blocks.some((b) => b.type === 'exit_ticket' || b.type === 'transfer_prompt')) {
     issues.push({ blockId: '', blockType: 'lesson', rule: 'exit', severity: 'error', message: 'Every lesson with student work ends with an exit_ticket or a transfer_prompt (C-1).' })
   }
