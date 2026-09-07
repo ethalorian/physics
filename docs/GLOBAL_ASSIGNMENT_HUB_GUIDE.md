@@ -1,3 +1,5 @@
+> Historical documentation: the unified assignment hub has been retired. Its unused types were removed during the September 2026 cleanup; the routes and examples below are not current implementation guidance.
+
 # Global Assignment Hub - Complete Guide
 
 ## Overview

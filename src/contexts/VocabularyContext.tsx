@@ -1,5 +1,5 @@
 "use client"
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react'
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef, useMemo } from 'react'
 import { usePathname } from 'next/navigation'
 import { VocabularyTerm } from '@/types/assignment'
 import { useSession } from 'next-auth/react'
@@ -97,10 +97,8 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   // UTILITY: server-confirmed writes
   // ========================================
   
-  const executeWithFallback = useCallback(async (
-    apiCall: () => Promise<Response>,
-    _localMutation: (sets: VocabularySet[]) => VocabularySet[],
-    _operationName: string
+  const executeWrite = useCallback(async (
+    apiCall: () => Promise<Response>
   ): Promise<boolean> => {
     try {
       const response = await apiCall()
@@ -171,31 +169,22 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   const createVocabularySet = useCallback(async (
     data: Omit<VocabularySet, 'id' | 'created_at' | 'updated_at'>
   ) => {
-    const success = await executeWithFallback(
+    const success = await executeWrite(
       () => fetch('/api/vocabulary', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
-      }),
-      (sets) => [...sets, {
-        ...data,
-        id: `vocab-set-${Date.now()}`,
-        published: data.published || false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        created_by: session?.user?.id
-      }],
-      'createVocabularySet'
+      })
     )
     
     if (success) await refreshVocabularySets()
-  }, [executeWithFallback, refreshVocabularySets, session?.user?.id])
+  }, [executeWrite, refreshVocabularySets])
 
   const updateVocabularySet = useCallback(async (id: string, updates: Partial<VocabularySet>) => {
     const currentSet = vocabularySetsRef.current.find(s => s.id === id)
     if (!currentSet) throw new Error('Vocabulary set not found')
 
-    const success = await executeWithFallback(
+    const success = await executeWrite(
       () => fetch('/api/vocabulary', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -208,26 +197,19 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
           terms: updates.terms ?? currentSet.terms,
           published: updates.published ?? currentSet.published
         })
-      }),
-      (sets) => sets.map(s => s.id === id 
-        ? { ...s, ...updates, updated_at: new Date().toISOString() } 
-        : s
-      ),
-      'updateVocabularySet'
+      })
     )
     
     if (success) await refreshVocabularySets()
-  }, [executeWithFallback, refreshVocabularySets])
+  }, [executeWrite, refreshVocabularySets])
 
   const deleteVocabularySet = useCallback(async (id: string) => {
-    const success = await executeWithFallback(
-      () => fetch(`/api/vocabulary?id=${id}`, { method: 'DELETE' }),
-      (sets) => sets.filter(s => s.id !== id),
-      'deleteVocabularySet'
+    const success = await executeWrite(
+      () => fetch(`/api/vocabulary?id=${id}`, { method: 'DELETE' })
     )
     
     if (success) await refreshVocabularySets()
-  }, [executeWithFallback, refreshVocabularySets])
+  }, [executeWrite, refreshVocabularySets])
 
   const publishVocabularySet = useCallback(async (id: string, published: boolean) => {
     await updateVocabularySet(id, { published })
@@ -271,13 +253,13 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     return vocabularySets.find(set => set.id === id)
   }, [vocabularySets])
 
-  const publishedVocabularySets = vocabularySets.filter(set => set.published)
+  const publishedVocabularySets = useMemo(() => vocabularySets.filter(set => set.published), [vocabularySets])
 
   // ========================================
   // CONTEXT VALUE
   // ========================================
 
-  const value: VocabularyContextType = {
+  const value = useMemo<VocabularyContextType>(() => ({
     vocabularySets,
     publishedVocabularySets,
     loading,
@@ -291,7 +273,8 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
     deleteTerm,
     refreshVocabularySets,
     publishVocabularySet
-  }
+  }), [vocabularySets, publishedVocabularySets, loading, error, createVocabularySet, updateVocabularySet,
+    deleteVocabularySet, getVocabularySetById, addTermToSet, updateTerm, deleteTerm, refreshVocabularySets, publishVocabularySet])
 
   return (
     <VocabularyContext.Provider value={value}>

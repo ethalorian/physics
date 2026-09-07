@@ -11,8 +11,6 @@ import AccessGate from '@/components/AccessGate'
 import Navbar from '@/components/navbar'
 import SimulationLauncher from '@/components/simulations/SimulationLauncher'
 import { QuickTestAccountSwitcher } from '@/components/QuickTestAccountSwitcher'
-import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
-import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import { StudentActivityProvider } from '@/contexts/StudentActivityContext'
 import { ViewModeProvider } from '@/contexts/ViewModeContext'
 import { SimulationProvider } from '@/contexts/SimulationContext'
@@ -61,22 +59,18 @@ export default function RootLayout({
         <AuthProvider>
           <ToastProvider>
             <ViewModeProvider>
-              <QuestionBankProvider>
-                <VocabularyProvider>
-                  <SimulationProvider>
-                    <StudentActivityProvider>
-                      <AccessGate>
-                        <Navbar />
-                        <SimulationLauncher />
-                        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
-                          {children}
-                        </main>
-                      </AccessGate>
-                      <QuickTestAccountSwitcher />
-                    </StudentActivityProvider>
-                  </SimulationProvider>
-                </VocabularyProvider>
-              </QuestionBankProvider>
+              <SimulationProvider>
+                <StudentActivityProvider>
+                  <AccessGate>
+                    <Navbar />
+                    <SimulationLauncher />
+                    <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-10">
+                      {children}
+                    </main>
+                  </AccessGate>
+                  <QuickTestAccountSwitcher />
+                </StudentActivityProvider>
+              </SimulationProvider>
             </ViewModeProvider>
           </ToastProvider>
         </AuthProvider>

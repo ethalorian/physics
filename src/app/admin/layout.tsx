@@ -1,6 +1,8 @@
 import { auth } from '@/lib/auth'
 import { canEditArea } from '@/lib/content-access'
 import type { ReactNode } from 'react'
+import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
+import { VocabularyProvider } from '@/contexts/VocabularyContext'
 import AdminShell from '@/components/admin/AdminShell'
 
 /**
@@ -22,7 +24,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const canEditLessons = session?.user?.email ? await canEditArea(session.user.email, 'lessons', false) : false
   return (
     <div className="surface-refined">
-      <AdminShell canEditLessons={canEditLessons}>{children}</AdminShell>
+      <QuestionBankProvider>
+        <VocabularyProvider>
+          <AdminShell canEditLessons={canEditLessons}>{children}</AdminShell>
+        </VocabularyProvider>
+      </QuestionBankProvider>
     </div>
   )
 }

@@ -1,9 +1,16 @@
 "use client"
-import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
-import { QuestionBankItem, QuestionBankFilters, QuestionBankStats, Unit } from '@/types/question-bank'
-import { Question } from '@/types/assignment'
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo, useRef } from 'react'
+import { usePathname } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { getUserRole } from '@/lib/permissions'
+import { filterQuestionBank, importQuestionBankItems } from '@/lib/question-bank-view'
+import type { QuestionBankItem, QuestionBankFilters, QuestionBankStats, Unit } from '@/types/question-bank'
+
+interface QuestionBankRow extends Omit<QuestionBankItem, 'question' | 'unit' | 'lesson'> {
+  question_data: QuestionBankItem['question']
+  unit_id: string
+  lesson_id: string
+}
 
 interface QuestionBankContextType {
   questions: QuestionBankItem[]
@@ -33,10 +40,12 @@ const QuestionBankContext = createContext<QuestionBankContextType | undefined>(u
 
 export function QuestionBankProvider({ children }: { children: ReactNode }) {
   const { data: session } = useSession()
+  const pathname = usePathname()
+  const initialization = useRef<Promise<void> | null>(null)
   const [questions, setQuestions] = useState<QuestionBankItem[]>([])
   const [units, setUnits] = useState<Unit[]>([])
   const [filters, setFilters] = useState<QuestionBankFilters>({})
-  const [filteredQuestions, setFilteredQuestions] = useState<QuestionBankItem[]>([])
+  const filteredQuestions = useMemo(() => filterQuestionBank(questions, filters), [questions, filters])
   const [loading, setLoading] = useState(false) // Start as false, only set to true when actually fetching
   const [error, setError] = useState<string | null>(null)
   const [initialized, setInitialized] = useState(false) // Track if we've attempted to load data
@@ -60,23 +69,13 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
       setLoading(true)
       setError(null)
 
-      // Build query parameters
-      const params = new URLSearchParams()
-      if (filters.units?.length) params.append('unit', filters.units.join(','))
-      if (filters.lessons?.length) params.append('lesson', filters.lessons.join(','))
-      if (filters.difficulty?.length) params.append('difficulty', filters.difficulty.join(','))
-      if (filters.questionTypes?.length) params.append('type', filters.questionTypes.join(','))
-      if (filters.topics?.length) params.append('topics', filters.topics.join(','))
-      if (filters.tags?.length) params.append('tags', filters.tags.join(','))
-      if (filters.searchText) params.append('search', filters.searchText)
-
-      const response = await fetch(`/api/question-bank?${params.toString()}`)
+      const response = await fetch('/api/question-bank')
       if (!response.ok) throw new Error('Failed to fetch questions')
       
       const data = await response.json()
       
       // Transform database format to context format
-      const transformedQuestions: QuestionBankItem[] = data.map((item: any) => ({
+      const transformedQuestions: QuestionBankItem[] = data.map((item: QuestionBankRow) => ({
         id: item.id,
         question: item.question_data,
         unit: item.unit_id,
@@ -93,14 +92,13 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
       }))
 
       setQuestions(transformedQuestions)
-      setFilteredQuestions(transformedQuestions)
     } catch (error) {
       console.error('Error fetching questions:', error)
       setError('Failed to load questions')
     } finally {
       setLoading(false)
     }
-  }, [filters])
+  }, [])
 
   // Check if user can access question bank
   const userRole = getUserRole(session?.user?.email)
@@ -110,32 +108,29 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
   const initializeData = useCallback(async () => {
     if (!canAccessQuestionBank || initialized) return
     
-    try {
-      setLoading(true)
-      setError(null)
-      await Promise.all([fetchUnits(), fetchQuestions()])
-      setInitialized(true)
-    } catch (error) {
-      console.error('Error initializing question bank data:', error)
-      setError('Failed to load question bank data')
-    } finally {
-      setLoading(false)
-    }
+    if (initialization.current) return initialization.current
+    initialization.current = (async () => {
+      try {
+        await Promise.all([fetchUnits(), fetchQuestions()])
+        setInitialized(true)
+      } finally {
+        initialization.current = null
+      }
+    })()
+    return initialization.current
   }, [canAccessQuestionBank, initialized, fetchUnits, fetchQuestions])
 
   // LAZY LOADING: Only load when user navigates to question bank pages
   useEffect(() => {
-    const shouldAutoInit = typeof window !== 'undefined' && 
-      (window.location.pathname.includes('/admin/question-bank') || 
-       window.location.pathname.includes('/admin/assignments/create'))
+    const shouldAutoInit = pathname === '/admin/question-bank' || pathname === '/admin/assignments/create'
     
     if (shouldAutoInit && session?.user?.id && canAccessQuestionBank && !initialized) {
       initializeData()
     }
-  }, [session, canAccessQuestionBank, initialized, initializeData])
+  }, [pathname, session?.user?.id, canAccessQuestionBank, initialized, initializeData])
 
   // Calculate stats
-  const stats: QuestionBankStats = {
+  const stats = useMemo<QuestionBankStats>(() => ({
     total_questions: questions.length,
     by_unit: questions.reduce((acc, q) => {
       acc[q.unit] = (acc[q.unit] || 0) + 1
@@ -156,9 +151,9 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
     recently_added: [...questions]
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
       .slice(0, 5),
-  }
+  }), [questions])
 
-  const addQuestion = async (newQuestion: Omit<QuestionBankItem, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => {
+  const saveQuestion = async (newQuestion: Omit<QuestionBankItem, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => {
     try {
       const response = await fetch('/api/question-bank', {
         method: 'POST',
@@ -177,17 +172,20 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
 
       if (!response.ok) throw new Error('Failed to add question')
       
-      // Refresh questions to get the new one
-      await fetchQuestions()
     } catch (error) {
       console.error('Error adding question:', error)
       throw error
     }
   }
 
+  const addQuestion = async (question: Omit<QuestionBankItem, 'id' | 'created_at' | 'updated_at' | 'usage_count'>) => {
+    await saveQuestion(question)
+    await fetchQuestions()
+  }
+
   const updateQuestion = async (id: string, updates: Partial<QuestionBankItem>) => {
     try {
-      const updateData: any = { id }
+      const updateData: Partial<QuestionBankRow> = { id }
       
       if (updates.question) updateData.question_data = updates.question
       if (updates.unit) updateData.unit_id = updates.unit
@@ -295,27 +293,7 @@ export function QuestionBankProvider({ children }: { children: ReactNode }) {
   }
 
   const importQuestions = async (importedQuestions: QuestionBankItem[]) => {
-    try {
-      // Add each question to the database
-      for (const q of importedQuestions) {
-        await addQuestion({
-          question: q.question,
-          unit: q.unit,
-          lesson: q.lesson,
-          topics: q.topics,
-          difficulty: q.difficulty,
-          tags: q.tags,
-          cognitive_level: q.cognitive_level,
-          estimated_time: q.estimated_time
-        })
-      }
-      
-      // Refresh questions
-      await fetchQuestions()
-    } catch (error) {
-      console.error('Error importing questions:', error)
-      throw error
-    }
+    await importQuestionBankItems(importedQuestions, saveQuestion, fetchQuestions)
   }
 
   const exportQuestions = (questionIds?: string[]): QuestionBankItem[] => {

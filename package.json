@@ -26,10 +26,11 @@
     "avatar:render": "node scripts/render-avatars.cjs",
     "test:avatar-db": "node scripts/test-avatar-integrity.cjs",
     "test:avatar-browser": "node scripts/test-avatar-browser.cjs",
-    "avatar:catalog-check": "node scripts/avatar-catalog-sql.cjs"
+    "avatar:catalog-check": "node scripts/avatar-catalog-sql.cjs",
+    "audit:unused": "node scripts/audit-unused-source.cjs",
+    "test:question-bank": "tsx --test src/lib/question-bank-view.test.ts"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^1.10.0",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -41,12 +42,10 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.0",
     "@types/three": "^0.160.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "encoding": "^0.1.13",
     "googleapis": "^128.0.0",
