@@ -21,6 +21,7 @@ export interface LadderRung {
 }
 
 const STATE_STYLE: Record<RungState, { bg: string; fg: string; icon: string }> = {
+  'unassessed': { bg: 'var(--muted)', fg: 'var(--muted-foreground)', icon: '–' },
   'got-it': { bg: 'var(--viz-up-surface)', fg: 'var(--viz-up)', icon: '★' },
   'almost': { bg: 'color-mix(in oklch, var(--primary) 12%, transparent)', fg: 'var(--primary)', icon: '◐' },
   'not-yet': { bg: 'var(--muted)', fg: 'var(--muted-foreground)', icon: '○' },
@@ -75,7 +76,7 @@ export default function MathLadder({
         <p className="text-xs text-muted-foreground mt-0.5">
           One skill at a time, bottom to top. Your daily warm-up always targets the rung that
           needs you most: a “Needs a refresh” rung jumps the queue, then the lowest rung not yet
-          at “Got it”. A skill reaches <b>Got it</b> when your recent ratings average 2.5+.
+          at “Got it”. A skill reaches <b>Got it</b> when your recent ratings average 2.5+. This is a practice-placement label; open your skill evidence to see how many observations support it.
         </p>
       </div>
       <div className="px-4 pb-3">

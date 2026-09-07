@@ -1,32 +1,10 @@
-/**
- * MathSpineGrowth — the student's math-literacy view.
- *
- * Headline axis: the four math strands (Proportional Reasoning, Quantities &
- * Estimation, Symbolic Manipulation, Graphs & Vectors), each a decaying weighted
- * average (w = 0.60) of the student's competency records — but UNLIKE the unit
- * growth lines, these span the WHOLE YEAR (the spine never resets). Below: the
- * eleven competencies grouped by strand. At the bottom: the celebration trail —
- * the points this student has earned growing their math literacy.
- *
- * Presentational + pure: feed it the student's records & grants; it computes via
- * the source-of-truth rollup. Wire a data loader around it.
- */
+'use client'
 import { MathCompetencyRecord, MathStrand, DEFAULT_RECENCY_WEIGHT } from '@/data/curriculum-types'
 import { STRAND_ORDER, STRAND_LABEL } from '@/lib/math-spine'
-import { rungState, RUNG_STATE_LABEL } from '@/lib/math-spine-picker'
-import MathClimb from './MathClimb'
-import MathLadder, { type LadderRung } from './MathLadder'
-import {
-  PALETTE,
-  levelWord,
-  levelColor,
-  buildRecordsByCompetency,
-  competencyValue,
-  strandValue,
-  strandSeries,
-  trendForCompetency,
-  Trend,
-} from './math-spine-display'
+import { skillEvidence, OBSERVATION_LABEL } from '@/lib/math-student-view'
+import { buildRecordsByCompetency } from './math-spine-display'
+import MathFeedbackLoop from './MathFeedbackLoop'
+import { useState } from 'react'
 
 export interface SpineCompetency {
   id: string
@@ -56,252 +34,42 @@ export interface MathSpineGrowthProps {
   recencyWeight?: number
 }
 
-const MILESTONE_LABEL: Record<string, string> = {
-  'levelup-almost': 'Reached "Almost"',
-  'competency-fluent': 'Reached "Got it"',
-  'strand-complete': 'Completed a strand',
-  'spotlight': 'Teacher spotlight',
-  'practice-rep': 'Extra practice rep',
-}
-
-function TrendIcon({ trend }: { trend: Trend }) {
-  if (trend === 'none') return null
-  const color = trend === 'up' ? PALETTE.sage : trend === 'down' ? 'var(--viz-down)' : PALETTE.indigoMuted
-  const d = trend === 'up' ? 'M3 13l5-5 4 4 6-7' : trend === 'down' ? 'M3 6l5 5 4-4 6 7' : 'M3 10h15'
-  return (
-    <svg width={18} height={18} viewBox="0 0 21 21" aria-label={`trend ${trend}`} role="img">
-      <path d={d} fill="none" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function Sparkline({ series }: { series: number[] }) {
-  if (series.length < 2) return null
-  const w = 80
-  const h = 24
-  const pts = series
-    .map((v, i) => {
-      const x = (i / (series.length - 1)) * w
-      const y = h - (Math.max(0, Math.min(3, v)) / 3) * h
-      return `${x.toFixed(0)},${y.toFixed(0)}`
-    })
-    .join(' ')
-  return (
-    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} role="img" aria-label="growth trend">
-      <polyline points={pts} fill="none" stroke={PALETTE.lavender} strokeWidth={2} />
-    </svg>
-  )
-}
-
-export default function MathSpineGrowth({
-  studentName,
-  competencies,
-  records,
-  grants = [],
-  mathPointsEarned = 0,
-  recencyWeight = DEFAULT_RECENCY_WEIGHT,
-}: MathSpineGrowthProps) {
-  const byCompetency = buildRecordsByCompetency(records)
-  const idsByStrand = (strand: MathStrand) =>
-    competencies.filter((c) => c.strand === strand).map((c) => c.id)
-
-  const fluentCount = competencies.filter(
-    (c) => (competencyValue(byCompetency.get(c.id), recencyWeight) ?? 0) >= 2.5,
-  ).length
-  // Token practice points count toward the total, but the celebration trail
-  // shows real milestones only — reps would drown them out.
-  const trailGrants = grants.filter((g) => g.milestone !== 'practice-rep')
-  const strandsComplete = grants.filter((g) => g.milestone === 'strand-complete').length
-
-  // The ladder: same rung states the daily picker uses (one source of truth).
-  const levelsFor = (id: string) =>
-    (byCompetency.get(id) ?? [])
-      .slice()
-      .sort((a, b) => a.observedAt.localeCompare(b.observedAt))
-      .map((r) => r.level)
-  const ladderRungs: LadderRung[] = [...competencies]
-    .sort(
-      (a, b) =>
-        (a.sequenceOrder ?? 999) - (b.sequenceOrder ?? 999) ||
-        (a.orderIndex ?? 0) - (b.orderIndex ?? 0),
-    )
-    .map((c) => ({
-      competencyId: c.id,
-      code: c.code,
-      statement: c.statement,
-      state: rungState(levelsFor(c.id), recencyWeight),
-    }))
-
-  return (
-    <div style={{ background: 'var(--card)', color: PALETTE.indigo }} className="rounded-xl border p-5 sm:p-6">
-      <div className="flex items-baseline justify-between gap-3">
-        <h2 className="text-xl font-medium" style={{ color: PALETTE.indigo }}>
-          Your math literacy
-        </h2>
-        <span className="text-sm" style={{ color: PALETTE.indigoMuted }}>
-          {studentName}
-        </span>
-      </div>
-      <p className="text-sm mt-1 mb-4" style={{ color: PALETTE.indigoMuted }}>
-        The math that carries every unit. It never goes away — your growth here builds all year.
-      </p>
-
-      {/* Points earned banner */}
-      <div
-        className="flex items-center justify-between rounded-lg border px-4 py-3 mb-4"
-        style={{ background: 'var(--muted)', borderColor: PALETTE.hairline }}
-      >
-        <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-          Math-literacy points earned
-        </span>
-        <span className="text-lg font-semibold tabular-nums" style={{ color: PALETTE.sage }}>
-          {mathPointsEarned} pts
-        </span>
-      </div>
-
-      {/* The skill ladder — the same states the daily picker climbs */}
-      <div className="mb-4">
-        <MathLadder rungs={ladderRungs} />
-      </div>
-
-      {/* Your math climb — ratings over time */}
-      <MathClimb competencies={competencies} records={records} />
-
-      {/* Strand cards */}
-      <div className="grid gap-3 mt-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-        {STRAND_ORDER.map((strand) => {
-          const ids = idsByStrand(strand)
-          const value = strandValue(ids, byCompetency, recencyWeight)
-          const series = strandSeries(ids, records, recencyWeight)
-          const empty = value === null
-          return (
-            <div
-              key={strand}
-              className="rounded-lg border bg-card p-3.5"
-              style={{ borderColor: PALETTE.hairline, borderStyle: empty ? 'dashed' : 'solid' }}
-            >
-              <div
-                className="flex items-center gap-2 text-sm font-medium"
-                style={{ color: empty ? 'var(--muted-foreground)' : 'var(--foreground)' }}
-              >
-                <span
-                  aria-hidden
-                  style={{ width: 8, height: 8, borderRadius: 2, background: empty ? PALETTE.periwinkle : PALETTE.lavender }}
-                />
-                {STRAND_LABEL[strand]}
-              </div>
-              {empty ? (
-                <p className="text-sm mt-2.5 leading-snug" style={{ color: 'var(--muted-foreground)' }}>
-                  No evidence recorded yet.
-                </p>
-              ) : (
-                <>
-                  <div className="flex items-baseline gap-2 mt-2 mb-0.5">
-                    <span className="text-2xl font-medium">{value!.toFixed(1)}</span>
-                    <span className="text-xs font-medium" style={{ color: levelColor(value) }}>
-                      {levelWord(value)}
-                    </span>
-                  </div>
-                  <div className="h-1.5 rounded my-1.5" style={{ background: 'var(--secondary)' }}>
-                    <div
-                      className="h-full rounded"
-                      style={{ width: `${Math.round((value! / 3) * 100)}%`, background: levelColor(value) }}
-                    />
-                  </div>
-                  <Sparkline series={series} />
-                </>
-              )}
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Competencies grouped by strand */}
-      {STRAND_ORDER.map((strand) => {
-        const comps = competencies.filter((c) => c.strand === strand)
-        if (comps.length === 0) return null
-        return (
-          <div key={strand}>
-            <p className="text-sm font-medium mt-5 mb-1" style={{ color: 'var(--foreground)' }}>
-              {STRAND_LABEL[strand]}
-            </p>
-            <div className="rounded-lg border bg-card px-4" style={{ borderColor: PALETTE.hairline }}>
-              {comps.map((c, i) => {
-                const recs = byCompetency.get(c.id)
-                const value = competencyValue(recs, recencyWeight)
-                const trend = trendForCompetency(recs, recencyWeight)
-                const fluent = (value ?? 0) >= 2.5
-                return (
-                  <div
-                    key={c.id}
-                    className="flex items-center gap-3 py-2.5"
-                    style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
-                  >
-                    <span
-                      className="text-[11px] font-medium rounded px-2 py-0.5 tabular-nums"
-                      style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}
-                    >
-                      {c.code}
-                    </span>
-                    <span className="flex-1 text-[13px] leading-snug">{c.statement}</span>
-                    {fluent && (
-                      <span aria-label={RUNG_STATE_LABEL['got-it']} title={RUNG_STATE_LABEL['got-it']} style={{ color: PALETTE.sage }}>
-                        ★
-                      </span>
-                    )}
-                    <span className="text-[13px] font-medium tabular-nums" style={{ color: PALETTE.indigo }}>
-                      {value === null ? '—' : value.toFixed(1)}
-                    </span>
-                    <TrendIcon trend={trend} />
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )
-      })}
-
-      {/* Celebration trail */}
-      <div className="flex items-center gap-2 mt-6 mb-2">
-        <div className="flex-1" style={{ height: '0.5px', background: 'var(--border)' }} />
-        <span className="text-[11px]" style={{ color: 'var(--muted-foreground)', letterSpacing: '0.3px' }}>
-          what you&apos;ve earned
-        </span>
-        <div className="flex-1" style={{ height: '0.5px', background: 'var(--border)' }} />
-      </div>
-      <div className="flex flex-wrap gap-2 mb-1">
-        <span
-          className="text-xs rounded-full px-3 py-1"
-          style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}
-        >
-          ★ {fluentCount} of {competencies.length} skills at &ldquo;Got it&rdquo;
-        </span>
-        <span
-          className="text-xs rounded-full px-3 py-1"
-          style={{ background: 'var(--viz-up-surface)', color: 'var(--viz-up)' }}
-        >
-          {strandsComplete} strand{strandsComplete === 1 ? '' : 's'} complete
-        </span>
-      </div>
-      {trailGrants.length > 0 && (
-        <div className="rounded-lg border bg-card mt-2 px-4" style={{ borderColor: PALETTE.hairline }}>
-          {trailGrants.slice(0, 6).map((g, i) => (
-            <div
-              key={`${g.milestone}-${i}`}
-              className="flex items-center gap-3 py-2 text-[13px]"
-              style={{ borderTop: i === 0 ? 'none' : '0.5px solid var(--secondary)' }}
-            >
-              <span className="flex-1" style={{ color: 'var(--foreground)' }}>
-                {MILESTONE_LABEL[g.milestone] ?? g.milestone}
-                {g.note ? ` — ${g.note}` : ''}
-              </span>
-              <span className="font-medium tabular-nums" style={{ color: PALETTE.sage }}>
-                +{g.points}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
+export default function MathSpineGrowth({ competencies, records, grants = [], mathPointsEarned = 0, recencyWeight = DEFAULT_RECENCY_WEIGHT }: MathSpineGrowthProps) {
+  const bySkill = buildRecordsByCompetency(records)
+  const [selected, setSelected] = useState<string | null>(null)
+  const [workSkill, setWorkSkill] = useState<string | null>(null)
+  const [submission, setSubmission] = useState<string | undefined>()
+  const skill = competencies.find(c => c.id === selected)
+  const evidence = skillEvidence(bySkill.get(selected ?? '') ?? [], recencyWeight)
+  const assessed = competencies.filter(c => bySkill.has(c.id)).length
+  function openSkill(id: string) { setSelected(id); setWorkSkill(null); setSubmission(undefined) }
+  return <section className="space-y-5 rounded-xl border bg-card p-4 sm:p-6" aria-label="My math skills">
+    <div><h2 className="text-xl font-semibold">What I can do</h2><p className="mt-1 text-sm text-muted-foreground">{assessed} of {competencies.length} skills have teacher observations. Choose a skill to see the evidence and your next step.</p></div>
+    {competencies.length === 0 && <p>Your skills will appear here when they are available.</p>}
+    <div className="grid gap-4 sm:grid-cols-2">{STRAND_ORDER.map(strand => {
+      const skills = competencies.filter(c => c.strand === strand).sort((a,b) => (a.sequenceOrder ?? a.orderIndex ?? 0) - (b.sequenceOrder ?? b.orderIndex ?? 0))
+      if (!skills.length) return null
+      return <section key={strand} className="rounded-lg border p-3"><h3 className="mb-2 font-semibold">{STRAND_LABEL[strand]}</h3><ul className="space-y-1">{skills.map(c => {
+        const e = skillEvidence(bySkill.get(c.id) ?? [], recencyWeight)
+        return <li key={c.id}><button type="button" onClick={()=>openSkill(c.id)} aria-pressed={selected === c.id} aria-controls="math-skill-evidence" className={`min-h-11 w-full rounded-lg border p-3 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary ${selected === c.id ? 'border-primary bg-muted' : 'border-transparent hover:bg-muted'}`}>
+          <span className="block text-sm font-medium">{c.code} · {c.statement}</span>
+          <span className="mt-1 block text-xs text-muted-foreground">{e.latest ? OBSERVATION_LABEL[e.latest.level] : 'Not assessed yet'}</span>
+          {e.latest && <span className="mt-1 block text-xs text-muted-foreground">{e.ordered.length} teacher observation{e.ordered.length === 1 ? '' : 's'} · {e.ordered.length === 1 ? 'Initial evidence' : 'View evidence'}</span>}
+        </button></li>
+      })}</ul></section>
+    })}</div>
+    <div id="math-skill-evidence" aria-live="polite">
+      {skill && <section className="space-y-4 rounded-lg border bg-muted/30 p-4">
+        <h3 className="text-lg font-semibold">{skill.statement}</h3>
+        <dl className="grid gap-3 sm:grid-cols-2"><div><dt className="text-xs text-muted-foreground">Latest performance</dt><dd className="font-medium">{evidence.latest ? OBSERVATION_LABEL[evidence.latest.level] : 'Not assessed yet'}</dd></div><div><dt className="text-xs text-muted-foreground">Evidence</dt><dd>{evidence.status}{evidence.latest && <> · last observed {new Date(evidence.latest.observedAt).toLocaleDateString()}</>}</dd></div></dl>
+        <p><b>Next learning step:</b> {evidence.next}</p>
+        <p className="text-sm text-muted-foreground">Your teacher looks at reasoning, accurate steps, units and representations, and applying the skill in another context. Language supports do not automatically mean you needed mathematical help.</p>
+        <button type="button" onClick={()=>{setWorkSkill(skill.id);setSubmission(undefined)}} className="min-h-11 rounded border bg-background px-4">See my work and feedback for this skill</button>
+        {evidence.ordered.length > 0 && <details><summary className="min-h-11 cursor-pointer py-3 font-medium">Teacher observation history ({evidence.ordered.length})</summary><ol className="space-y-3">{[...evidence.ordered].reverse().map((r,i)=><li key={`${r.observedAt}-${i}`} className="rounded border bg-background p-3 text-sm"><p>{new Date(r.observedAt).toLocaleDateString()} · {OBSERVATION_LABEL[r.level]}</p>{r.submissionId ? <button type="button" className="min-h-11 underline" onClick={()=>{setWorkSkill(skill.id);setSubmission(r.submissionId)}}>Open this work and feedback</button> : <p className="mt-1 text-muted-foreground">{r.evidenceSource ?? 'Teacher observation'} · No linked warm-up available.</p>}</li>)}</ol></details>}
+        {workSkill === skill.id && <MathFeedbackLoop key={skill.id} competencyId={skill.id} submissionId={submission} embedded />}
+        <details><summary className="min-h-11 cursor-pointer py-3 text-sm">How the practice placement is determined</summary><p className="text-sm">{evidence.value === null ? 'No rating has been recorded. Missing evidence is not a low score.' : `Your weighted rating is ${evidence.value.toFixed(1)} out of 3. Each new observation contributes ${Math.round(recencyWeight*100)}% to the updated value; earlier evidence contributes the rest. This guides practice. A single observation is still initial evidence.`} Time alone does not lower your rating.</p></details>
+      </section>}
     </div>
-  )
+    <details className="border-t pt-3"><summary className="min-h-11 cursor-pointer py-3 font-medium">Past celebrations · {mathPointsEarned} points earned</summary><p className="mb-3 text-sm text-muted-foreground">These recognize past milestones and practice. They are not your current mastery score.</p><ul className="space-y-2 text-sm">{grants.filter(g=>g.milestone !== 'practice-rep').slice(0,6).map((g,i)=><li key={i}>{g.awardedAt && `${new Date(g.awardedAt).toLocaleDateString()} · `}{g.note ?? ({'competency-fluent':'Skill milestone reached','strand-complete':'Strand milestone reached','levelup-almost':'Progress milestone reached','spotlight':'Teacher spotlight'}[g.milestone] ?? 'Math milestone')} · +{g.points} points</li>)}</ul></details>
+  </section>
 }

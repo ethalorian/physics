@@ -1,3 +1,4 @@
+import { pendingFreshCheck } from '@/lib/math-student-view'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth } from '@/lib/api-auth'
@@ -40,12 +41,13 @@ export const GET = withAuth(async (request, ctx) => {
   const competencyIds = competencies.map((c) => c.id)
 
   // This student's records → per-competency chronological levels.
-  const { data: recRows } = await supabaseAdmin
+  const { data: recRows, error: recordsError } = await supabaseAdmin
     .from('math_competency_records')
     .select('competency_id, level, observed_at')
     .eq('user_id', targetUserId)
     .in('competency_id', competencyIds)
     .order('observed_at', { ascending: true })
+  if (recordsError) return NextResponse.json({ error: 'Could not load your learning evidence.' }, { status: 503 })
   const levelsByComp = new Map<string, number[]>()
   const latestByComp = new Map<string, string>()
   for (const r of recRows ?? []) {
@@ -63,7 +65,16 @@ export const GET = withAuth(async (request, ctx) => {
     levels: levelsByComp.get(c.id) ?? [],
     latestObservedAt: latestByComp.get(c.id) ?? null,
   }))
-  const pick = pickTargetRung(rungs)
+  const { data: followups, error: followupError } = await supabaseAdmin.from('math_warmup_revisions')
+    .select('acknowledged_at,math_warmup_submissions!inner(competency_id)')
+    .eq('user_id', targetUserId).eq('status', 'acknowledged').eq('next_step', 'fresh-check')
+    .order('acknowledged_at', { ascending: true })
+  if (followupError) return NextResponse.json({ error: 'Could not load your next learning step.' }, { status: 503 })
+  const readyId = pendingFreshCheck((followups ?? []).map(f => {
+    const sub = Array.isArray(f.math_warmup_submissions) ? f.math_warmup_submissions[0] : f.math_warmup_submissions
+    return { competencyId: sub?.competency_id ?? '', acknowledgedAt: f.acknowledged_at }
+  }), competencyIds, latestByComp)
+  const pick = readyId ? { id: readyId, kind: 'recheck' as const } : pickTargetRung(rungs)
   const target = competencies.find((c) => c.id === pick?.id) ?? competencies[0]
   const pickKind: PickKind = pick?.kind ?? 'climb'
 

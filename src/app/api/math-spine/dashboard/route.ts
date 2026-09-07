@@ -75,7 +75,7 @@ export const GET = withAuth(async (request, ctx) => {
   if (competencyIds.length > 0) {
     const { data: recRows, error: recErr } = await supabaseAdmin
       .from('math_competency_records')
-      .select('user_id, competency_id, level, observed_at, unit_id, evidence_source')
+      .select('user_id, competency_id, level, observed_at, unit_id, evidence_source, submission_id')
       .eq('user_id', targetUserId)
       .in('competency_id', competencyIds)
       .order('observed_at', { ascending: true })
@@ -84,6 +84,7 @@ export const GET = withAuth(async (request, ctx) => {
     }
     records = (recRows ?? []).map((r) => ({
       studentId: r.user_id,
+      submissionId: r.submission_id ?? undefined,
       competencyId: r.competency_id,
       level: r.level,
       observedAt: r.observed_at,

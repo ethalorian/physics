@@ -14,7 +14,7 @@ CREATE TABLE math_warmup_submissions(id uuid PRIMARY KEY DEFAULT gen_random_uuid
 CREATE TABLE math_competency_records(id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id text,user_email text,competency_id uuid,level smallint,observed_at timestamptz,evidence_source text);
 CREATE TABLE teacher_feedback(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text,teacher_email text,competency_id uuid,message text,created_at timestamptz DEFAULT now());
 `;
-const migration=fs.readFileSync('supabase/migrations/20260907120000_math_feedback_integrity.sql','utf8');
+const migration=fs.readFileSync('supabase/migrations/20260907120000_math_feedback_integrity.sql','utf8') + fs.readFileSync('supabase/migrations/20260907120001_math_revision_outcomes.sql','utf8');
 const tests=`
 INSERT INTO math_competencies VALUES('00000000-0000-0000-0000-000000000001');
 INSERT INTO math_spiral_items(id,prompt) VALUES('00000000-0000-0000-0000-000000000002','Test question');
@@ -55,6 +55,19 @@ DO $$ DECLARE sid uuid; BEGIN
  IF has_table_privilege('authenticated','math_warmup_instances','SELECT') THEN RAISE EXCEPTION 'Student can read checking keys'; END IF;
  RAISE NOTICE 'PASS: no-rating review and RPC/key isolation';
 END $$;
+DO $$ DECLARE before_count bigint; BEGIN
+ SELECT count(*) INTO before_count FROM math_competency_records;
+ UPDATE math_warmup_revisions SET next_step='fresh-check',status='acknowledged',teacher_reply='Try a new task';
+ IF NOT EXISTS(SELECT 1 FROM math_warmup_revisions WHERE next_step='fresh-check') THEN RAISE EXCEPTION 'Outcome was not stored'; END IF;
+ IF (SELECT count(*) FROM math_competency_records) <> before_count THEN RAISE EXCEPTION 'Outcome added a rating'; END IF;
+ BEGIN
+   UPDATE math_warmup_revisions SET next_step='mastered';
+   RAISE EXCEPTION 'Invalid outcome accepted';
+ EXCEPTION WHEN check_violation THEN NULL;
+ END;
+ IF has_table_privilege('authenticated','math_warmup_revisions','UPDATE') THEN RAISE EXCEPTION 'Student can bypass teacher outcome route'; END IF;
+ RAISE NOTICE 'PASS: additive outcome, invalid outcome rejected, no rating, student privilege isolation';
+END $$;
 ROLLBACK;
 `;
-execFileSync('/opt/homebrew/bin/psql',[url,'-X','-v','ON_ERROR_STOP=1'],{input:fixture+migration+tests,stdio:['pipe','inherit','inherit']});
+execFileSync('/opt/homebrew/opt/postgresql@14/bin/psql',[url,'-X','-v','ON_ERROR_STOP=1'],{input:fixture+migration+tests,stdio:['pipe','inherit','inherit']});

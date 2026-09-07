@@ -18,11 +18,12 @@ import { FLUENT_THRESHOLD, ALMOST_THRESHOLD } from '@/lib/math-spine'
 
 export const RECHECK_INTERVAL_DAYS = 14
 
-export type RungState = 'not-yet' | 'almost' | 'got-it' | 'refresh'
+export type RungState = 'unassessed' | 'not-yet' | 'almost' | 'got-it' | 'refresh'
 export type PickKind = 'refresh' | 'recheck' | 'climb' | 'maintenance'
 
 /** One student-facing word per state — the only vocabulary students see. */
 export const RUNG_STATE_LABEL: Record<RungState, string> = {
+  'unassessed': 'Not assessed yet',
   'not-yet': 'Not yet',
   'almost': 'Almost',
   'got-it': 'Got it',
@@ -55,6 +56,7 @@ export function everFluent(levels: number[], w: number = DEFAULT_RECENCY_WEIGHT)
 }
 
 export function rungState(levels: number[], w: number = DEFAULT_RECENCY_WEIGHT): RungState {
+  if (levels.length === 0) return 'unassessed'
   const value = decayingAverage(levels, w)
   if (value !== null && value >= FLUENT_THRESHOLD) return 'got-it'
   if (everFluent(levels, w)) return 'refresh'

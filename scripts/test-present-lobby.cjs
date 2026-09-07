@@ -48,4 +48,29 @@ async function bundle(entry, name, plugins = []) {
  global.__poll.poll_revealed=false;global.__member=false;assert.equal((await server.validateLivePoll(args)).status,403);
  global.__poll.course_id=null;assert.equal((await server.validateLivePoll(args)).ok,false);
  console.log('PASS poll session, round, membership, reveal and lock enforcement');
+ // Launch diagnostics must explain content blockers without bypassing class access.
+ global.__launchCourse={id:'c',teacher_email:'antoccic@fitchburg.k12.ma.us',program:'physics',track:'cpa'};
+ global.__launchLesson={id:'l',title:'Motion',unit_id:'proj-1',published:false,visibility_track:null,content_blocks:{schemaVersion:1,blocks:[{id:'intro',type:'prose',content:'Observe motion.'}]}};
+ const launchPlugin={name:'launch-db',setup(build){
+  build.onResolve({filter:/lib\/(supabase|lesson-access)$/},a=>({path:a.path.endsWith('supabase')?'db':'hydrate',namespace:'launch-test'}));
+  build.onLoad({filter:/.*/,namespace:'launch-test'},a=>({loader:'js',contents:a.path==='hydrate'?'export async function hydrateLessonDocument(d){return d}':`export const supabaseAdmin={from(table){const result=()=>({data:table==='courses'?global.__launchCourse:table==='lessons'?global.__launchLesson:table==='units'?[{id:'unit-1'}]:null});const q={select(){return q},eq(){return q},maybeSingle(){return Promise.resolve(result())},then(resolve,reject){return Promise.resolve(result()).then(resolve,reject)}};return q}}` }));
+ }};
+ const launch=await bundle('src/lib/present-server.ts','launch-server',[launchPlugin]);
+ const actor={role:'teacher',email:'craigantocci@gmail.com'};
+ let result=await launch.resolveClassLesson('l','c',actor);
+ assert.equal(result.ok,false);
+ assert.match(result.error,/unpublished/);
+ assert.match(result.error,/Physics curriculum/);
+ global.__launchLesson.published=true;
+ assert.match((await launch.resolveClassLesson('l','c',actor)).error,/curriculum/);
+ global.__launchLesson.unit_id='unit-1';
+ assert.equal((await launch.resolveClassLesson('l','c',actor)).ok,true);
+ assert.equal((await launch.resolveClassLesson('l','c',{role:'teacher',email:'other@example.org'})).ok,false);
+ assert.equal((await launch.resolveClassLesson('l','c',{...actor,scopeEmail:'other@example.org'})).ok,false);
+ global.__launchLesson.visibility_track='honors';
+ assert.match((await launch.resolveClassLesson('l','c',actor)).error,/track/);
+ global.__launchLesson.visibility_track=null;
+ global.__launchLesson.content_blocks.blocks=[];
+ assert.equal((await launch.resolveClassLesson('l','c',actor)).status,422);
+ console.log('PASS launch publication, curriculum, aliases, effective ownership, track and empty-content checks');
 })().catch(e=>{console.error(e);process.exitCode=1});

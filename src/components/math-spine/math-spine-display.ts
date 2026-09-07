@@ -60,16 +60,14 @@ export function strandSeries(
   w: number = DEFAULT_RECENCY_WEIGHT,
 ): number[] {
   const ids = new Set(competencyIds)
-  const levels = records
-    .filter((r) => ids.has(r.competencyId))
-    .sort((a, b) => a.observedAt.localeCompare(b.observedAt))
-    .map((r) => r.level)
+  const ordered = records.filter(r => ids.has(r.competencyId)).slice().sort((a,b) => a.observedAt.localeCompare(b.observedAt))
+  const current = new Map<string, number>()
   const series: number[] = []
-  let acc = 0
-  levels.forEach((lvl, i) => {
-    acc = i === 0 ? lvl : w * lvl + (1 - w) * acc
-    series.push(acc)
-  })
+  for (const record of ordered) {
+    const previous = current.get(record.competencyId)
+    current.set(record.competencyId, previous === undefined ? record.level : w * record.level + (1-w) * previous)
+    series.push([...current.values()].reduce((sum, v) => sum + v, 0) / current.size)
+  }
   return series
 }
 

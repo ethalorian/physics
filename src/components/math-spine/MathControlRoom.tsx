@@ -20,7 +20,7 @@ import type { MathResponse } from '@/lib/math-response'
 
 interface Competency { id: string; code: string; statement: string; strand: string }
 interface Student { id: string; name: string; email: string; ratable?: boolean }
-type RungState = 'not-yet' | 'almost' | 'got-it' | 'refresh'
+type RungState = 'unassessed' | 'not-yet' | 'almost' | 'got-it' | 'refresh'
 interface Cell { value: number | null; count: number; pending: number; state?: RungState | null }
 interface GridData {
   competencies: Competency[]
@@ -54,6 +54,7 @@ function WarmupAnswer({ sub }: { sub: Submission }) {
 // students see), not raw colour bands. Never colour-only: each state pairs a
 // colour with a glyph/value so the grid survives colour-blindness and print.
 const STATE_META: Record<RungState, { word: string; glyph: string; style: CSSProperties }> = {
+  'unassessed': { word: 'Not assessed yet', glyph: '–', style: { background: 'var(--muted)', color: 'var(--muted-foreground)' } },
   'got-it':  { word: 'Got it',          glyph: '',  style: { background: 'color-mix(in oklch, var(--success) 78%, transparent)', color: '#fff' } },
   'almost':  { word: 'Almost',          glyph: '',  style: { background: 'color-mix(in oklch, var(--reward) 75%, transparent)', color: 'var(--reward-foreground)' } },
   'not-yet': { word: 'Not yet',         glyph: '',  style: { background: 'color-mix(in oklch, var(--destructive) 70%, transparent)', color: '#fff' } },
@@ -61,6 +62,7 @@ const STATE_META: Record<RungState, { word: string; glyph: string; style: CSSPro
 }
 const EMPTY_CELL: CSSProperties = { background: 'var(--muted)', color: 'var(--muted-foreground)', border: '1px dashed var(--border)' }
 function stateOf(cell: Cell): RungState | null {
+  if (cell.state === 'unassessed') return null
   if (cell.state) return cell.state
   if (cell.value == null) return null
   return cell.value >= 2.5 ? 'got-it' : cell.value >= 1.5 ? 'almost' : 'not-yet'
@@ -87,6 +89,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const [fbText, setFbText] = useState('')
   const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3 | null>(null)
   const [requestRevision, setRequestRevision] = useState(false)
+  const [revisionOutcome, setRevisionOutcome] = useState('')
   const [flash, setFlash] = useState<string | null>(null)
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
@@ -141,20 +144,20 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const loadedDraft = useRef<string | null>(null)
   useEffect(() => {
     loadedDraft.current = null
-    setFbText(''); setSelectedLevel(null); setRequestRevision(false)
+    setFbText(''); setSelectedLevel(null); setRequestRevision(false); setRevisionOutcome('')
     if (!draftId) return
     try {
       const raw = sessionStorage.getItem('math-review:' + draftId)
-      if (raw) { const d = JSON.parse(raw); setFbText(d.message ?? ''); setSelectedLevel(d.level ?? null); setRequestRevision(d.revision ?? false) }
+      if (raw) { const d = JSON.parse(raw); setFbText(d.message ?? ''); setSelectedLevel(d.level ?? null); setRequestRevision(d.revision ?? false); setRevisionOutcome(d.outcome ?? '') }
     } catch {}
     loadedDraft.current = draftId
   }, [draftId])
   useEffect(() => {
     if (!draftId || loadedDraft.current !== draftId) return
     // Defer until the restore effect's state updates have rendered.
-    const timer = setTimeout(() => { try { sessionStorage.setItem('math-review:' + draftId, JSON.stringify({ message: fbText, level: selectedLevel, revision: requestRevision })) } catch {} }, 100)
+    const timer = setTimeout(() => { try { sessionStorage.setItem('math-review:' + draftId, JSON.stringify({ message: fbText, level: selectedLevel, revision: requestRevision, outcome: revisionOutcome })) } catch {} }, 100)
     return () => clearTimeout(timer)
-  }, [draftId, fbText, selectedLevel, requestRevision])
+  }, [draftId, fbText, selectedLevel, requestRevision, revisionOutcome])
 
   useEffect(() => {
     if (!sel) return
@@ -230,12 +233,12 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       const res = await fetch(submission.revision?.status === 'pending' ? '/api/math-spine/revision' : '/api/math-spine/warmup-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level, message: fbText, request_revision: requestRevision, action: submission.revision?.status === 'pending' ? 'acknowledge' : undefined }),
+        body: JSON.stringify({ submission_id: submission.id, competency_id: competencyId, level, message: fbText, request_revision: requestRevision, next_step: revisionOutcome, action: submission.revision?.status === 'pending' ? 'acknowledge' : undefined }),
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(d.error || 'Save failed')
       try { sessionStorage.removeItem('math-review:' + submission.id) } catch {}
-      setFbText(''); setSelectedLevel(null); setRequestRevision(false)
+      setFbText(''); setSelectedLevel(null); setRequestRevision(false); setRevisionOutcome('')
       const awarded = (d.awarded ?? []) as { milestone: string; points: number }[]
       if (awarded.length > 0) {
         const pts = awarded.reduce((s, g) => s + g.points, 0)
@@ -332,7 +335,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         const comps = grid.competencies
         // Per-competency class tallies (the ladder strip + column footers).
         const tally = comps.map((c) => {
-          const t = { 'got-it': 0, 'almost': 0, 'not-yet': 0, 'refresh': 0, none: 0 }
+          const t = { 'unassessed': 0, 'got-it': 0, 'almost': 0, 'not-yet': 0, 'refresh': 0, none: 0 }
           for (const st of grid.students) {
             const state = stateOf(grid.cells[st.id]?.[c.id] ?? { value: null, count: 0, pending: 0 })
             if (state) t[state]++
@@ -346,7 +349,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
           let fluent = 0, needs = 0, evidence = 0
           for (const c of comps) {
             const state = stateOf(grid.cells[st.id]?.[c.id] ?? { value: null, count: 0, pending: 0 })
-            if (state) evidence++
+            if (state && state !== 'unassessed') evidence++
             if (state === 'got-it') fluent++
             if (state === 'not-yet' || state === 'refresh') needs++
           }
@@ -583,11 +586,12 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                 <div className="mt-4 space-y-3 rounded-lg border p-3">
                   <p className="text-sm"><b>Rating anchors:</b> 1 — succeeds with mathematical support; 2 — independent in a routine context; 3 — transfers to a new context and explains why. Language access is not a penalty.</p>
                   <p className="text-xs text-muted-foreground">One observation is evidence, not proof of lasting fluency. Use a later independent task to confirm transfer.</p>
-                  <label className="block text-sm font-semibold" htmlFor="math-review-note">{activeSub.revision ? 'Acknowledge the response / arrange help' : 'Feedback and next step'}</label>
-                  <textarea id="math-review-note" rows={4} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision})) } catch {} }} className="w-full rounded border bg-background p-2" placeholder="Name one useful next step, or record the outcome of a conversation." />
+                  <label className="block text-sm font-semibold" htmlFor="math-review-note">{activeSub.revision ? 'Reply and explain the next step' : 'Feedback and next step'}</label>
+                  <textarea id="math-review-note" rows={4} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision,outcome:revisionOutcome})) } catch {} }} className="w-full rounded border bg-background p-2" placeholder="Name one useful next step, or record the outcome of a conversation." />
+                  {activeSub.revision && <label className="block text-sm font-semibold">What happens next?<select value={revisionOutcome} onChange={e=>setRevisionOutcome(e.target.value)} disabled={savingKey !== null} className="mt-1 min-h-11 w-full rounded border bg-background p-2"><option value="">Choose a next step</option><option value="fresh-check">Ready for a fresh independent check</option><option value="practice">Work on the next step with this feedback</option><option value="help">Connect with me for help</option></select></label>}
                   {!activeSub.revision && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={requestRevision} onChange={e => setRequestRevision(e.target.checked)} /> Ask for a correction, explanation, or help request</label>}
                   {!activeSub.revision && <button type="button" className="min-h-11 text-sm underline" onClick={() => { setSelectedLevel(null); setRequestRevision(true) }}>Need more evidence before rating</button>}
-                  <button type="button" className="min-h-11 w-full rounded bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? !fbText.trim() : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Save acknowledgment' : 'Save review and continue'}</button>
+                  <button type="button" className="min-h-11 w-full rounded bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? (!fbText.trim() || !revisionOutcome) : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Send reply and next step' : 'Save review and continue'}</button>
                   {activeSub.revision && <p className="text-xs text-muted-foreground">Acknowledging a coached correction adds no fluency rating. Check independence on a later task.</p>}
                   {flash && <p role="status" className="text-sm">{flash}</p>}
                 </div>

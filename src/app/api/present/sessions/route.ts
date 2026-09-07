@@ -2,7 +2,7 @@ import type { InlineQuestion } from '@/data/content-blocks'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { classLesson } from '@/lib/present-server'
+import { classLesson, resolveClassLesson } from '@/lib/present-server'
 
 // POST /api/present/sessions { lesson_id, course_id? }
 // P-3 · start a live presentation for a lesson. Any earlier live session by this
@@ -11,11 +11,13 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const body = (await request.json().catch(() => ({}))) as { lesson_id?: string; course_id?: string | null }
   if (!body.lesson_id || !body.course_id) return NextResponse.json({ error: 'lesson_id and course_id required' }, { status: 400 })
 
-  const lesson = await classLesson(body.lesson_id, body.course_id!, ctx)
-  if (!lesson) return NextResponse.json({ error: 'Class or lesson unavailable' }, { status: 403 })
+  const result = await resolveClassLesson(body.lesson_id, body.course_id, ctx)
+  if (!result.ok) return NextResponse.json({ error: result.error }, { status: result.status })
+  const lesson = result.lesson
 
-  await supabaseAdmin.from('present_sessions').update({ status: 'ended', updated_at: new Date().toISOString() })
+  const { error: endError } = await supabaseAdmin.from('present_sessions').update({ status: 'ended', updated_at: new Date().toISOString() })
     .eq('teacher_id', ctx.userId).eq('course_id', body.course_id).eq('status', 'live')
+  if (endError) return NextResponse.json({ error: 'Could not finish the previous presentation. Please retry.' }, { status: 500 })
 
   const { data, error } = await supabaseAdmin.from('present_sessions')
     .insert({ lesson_id: body.lesson_id, course_id: body.course_id ?? null, teacher_id: ctx.userId })

@@ -73,7 +73,7 @@ const LEVEL_WORDS = ['Not yet', 'Almost', 'Got it'] as const
 const PICK_FRAMING: Record<PickKind, { label: string; explain: string }> = {
   climb: { label: 'Climbing', explain: 'Your current rung. Get it to “Got it” and the next skill unlocks.' },
   refresh: { label: 'Patch it back up', explain: 'You had this at “Got it” before and it slipped. Refreshing it comes first — it holds up everything above.' },
-  recheck: { label: 'Still got it?', explain: 'A quick check on a skill you already own — keeping it warm is part of fluency.' },
+  recheck: { label: 'A fresh check', explain: 'Show what you can apply now. This may revisit earlier work or follow a teacher conversation.' },
   maintenance: { label: 'Keeping it sharp', explain: 'Your whole ladder is at “Got it” — today is upkeep and stretch.' },
 }
 

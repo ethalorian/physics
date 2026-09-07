@@ -161,6 +161,7 @@ export interface MathCompetencyFocus {
  * work on this unchanged (they only read .observedAt and .level).
  */
 export interface MathCompetencyRecord {
+  submissionId?: string;
   studentId: string;
   competencyId: string;
   observedAt: string;          // ISO date — never overwritten

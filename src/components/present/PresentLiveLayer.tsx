@@ -50,6 +50,8 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   const [classDoc, setClassDoc] = useState<BlockDocument | null>(null)
   const [answerKeys, setAnswerKeys] = useState<Record<string, string>>({})
   const [error, setError] = useState<string | null>(null)
+  const [starting, setStarting] = useState(false)
+  const startPending = useRef(false)
   const deck = classDoc ? classDeck : initialDeck
   const pages = useMemo(() => classDoc ? paginateBlocks(classDoc.blocks) : initialPages, [classDoc, initialPages])
   const sections = useMemo(() => classDoc ? buildSections(pages) : initialSections, [classDoc, pages, initialSections])
@@ -76,18 +78,34 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   }, [open, lessonId])
 
   const patch = useCallback(async (body: Record<string, unknown>) => {
-    if (!session) return
-    const r = await fetch(`/api/present/sessions/${session.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    if (r.ok) { const d = (await r.json()) as { session: Session }; setSession(d.session) }
+    if (!session) return false
+    try {
+      const r = await fetch(`/api/present/sessions/${session.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      const d = await r.json() as { session?: Session; error?: string }
+      if (!r.ok || !d.session) throw new Error(d.error ?? 'Could not update the presentation. Please retry.')
+      setSession(d.session); setError(null)
+      return true
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Connection lost. Please retry the control.')
+      return false
+    }
   }, [session])
 
   const start = async () => {
-    const r = await fetch('/api/present/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lesson_id: lessonId, course_id: courseId || null }) })
-    if (r.ok) { const d = (await r.json()) as { session: Session; deck?: DeckBlock | null; lesson: { content_blocks: BlockDocument }; answerKeys: Record<string, string> }; setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys); setError(null); lastPushed.current = -1 }
-    else setError('Could not start this class lesson. Check class access and publishing.')
+    if (!courseId || startPending.current) return
+    startPending.current = true; setStarting(true); setError(null)
+    try {
+      const r = await fetch('/api/present/sessions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ lesson_id: lessonId, course_id: courseId }) })
+      const d = await r.json() as { session?: Session; deck?: DeckBlock | null; lesson?: { content_blocks: BlockDocument }; answerKeys?: Record<string, string>; error?: string }
+      if (!r.ok || !d.session || !d.lesson) throw new Error(d.error ?? 'Could not start the presentation. Please retry.')
+      setSession(d.session); setClassDoc(d.lesson.content_blocks); setClassDeck(d.deck ?? null); setAnswerKeys(d.answerKeys ?? {}); lastPushed.current = -1
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not connect. Please retry.')
+    } finally { startPending.current = false; setStarting(false) }
   }
   const end = async () => {
-    await patch({ status: 'ended', poll_block_id: null, blackout: false, timer_seconds: null })
+    const ended = await patch({ status: 'ended', poll_block_id: null, blackout: false, timer_seconds: null })
+    if (!ended) return
     deckBlackout(deckWin.current, false)
     setSession(null); setTally(null)
   }
@@ -200,11 +218,11 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
             {/* Start / end */}
             {!live ? (
               <div className="flex items-center gap-2">
-                <select value={courseId} onChange={(e) => setCourseId(e.target.value)} className="flex-1 text-sm rounded-lg px-2" style={{ border: '1px solid var(--border)', background: 'var(--background)', minHeight: 44 }}>
-                  <option value="">No class (preview)</option>
+                <select aria-label="Presentation class" disabled={starting} value={courseId} onChange={(e) => setCourseId(e.target.value)} className="flex-1 text-sm rounded-lg px-2" style={{ border: '1px solid var(--border)', background: 'var(--background)', minHeight: 44 }}>
+                  <option value="">Choose a class</option>
                   {courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
                 </select>
-                <button type="button" onClick={start} disabled={!courseId} style={{ ...btn(true), background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'var(--primary)' }}><Radio size={14} /> Go live</button>
+                <button type="button" onClick={start} disabled={!courseId || starting} style={{ ...btn(true), background: 'var(--primary)', color: 'var(--primary-foreground)', borderColor: 'var(--primary)' }}><Radio size={14} /> {starting ? 'Starting…' : 'Go live'}</button>
               </div>
             ) : (
               <div className="flex items-center gap-2 flex-wrap">
