@@ -94,31 +94,24 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
   }, [canAccessVocabulary])
 
   // ========================================
-  // UTILITY: API call with local fallback
+  // UTILITY: server-confirmed writes
   // ========================================
   
   const executeWithFallback = useCallback(async (
     apiCall: () => Promise<Response>,
-    localMutation: (sets: VocabularySet[]) => VocabularySet[],
-    operationName: string
+    _localMutation: (sets: VocabularySet[]) => VocabularySet[],
+    _operationName: string
   ): Promise<boolean> => {
     try {
       const response = await apiCall()
-      if (response.ok) {
-        return true // Success - caller should refresh
-      }
-      // API returned error - apply local mutation
-      console.warn(`API ${operationName} failed, using local fallback`)
+      if (!response.ok) throw new Error('Vocabulary could not save. Please retry before leaving this page.')
+      return true
     } catch (err) {
-      console.warn(`Network error in ${operationName}, using local fallback:`, err)
+      const message = err instanceof Error ? err.message : 'Vocabulary could not save'
+      setError(message)
+      throw new Error(message)
     }
-    
-    // Apply local mutation as fallback
-    const updatedSets = localMutation(vocabularySetsRef.current)
-    setVocabularySets(updatedSets)
-    saveToStorage(updatedSets)
-    return false
-  }, [saveToStorage])
+  }, [])
 
   // ========================================
   // DATA LOADING

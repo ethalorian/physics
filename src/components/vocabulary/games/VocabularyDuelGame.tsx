@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { languageCode } from '@/lib/vocab-language'
 import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Swords, Check, X, Clock, Wifi, WifiOff, Copy, Ghost } from 'lucide-react'
@@ -82,7 +83,7 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
       m.rounds.forEach((rd, i) => {
         if (rd.correct === undefined || !rd.mine || !rd.termId || recorded.current.has(i)) return
         recorded.current.add(i)
-        attemptsRef.current.record({ id: rd.termId }, rd.mine.answer === rd.correct, rd.mine.ms)
+        attemptsRef.current.record({ id: rd.termId }, rd.mine.answer === rd.correct, rd.mine.ms, `duel:${matchId}:${i}`)
       })
     } catch {
       /* transient network blip — next poll will recover */
@@ -245,7 +246,7 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
       <div className="text-lg font-medium leading-snug mb-4">
         {round.icon && <span aria-hidden className="block text-4xl mb-1">{round.icon}</span>}
         {round.prompt}
-        {sei.showL1 && round.promptEs && <span className="block text-sm opacity-75 mt-1">{round.promptEs}</span>}
+        {sei.showL1 && languageCode(sei.homeLang) === 'es' && round.promptEs && <span className="block text-sm opacity-75 mt-1">{round.promptEs}</span>}
       </div>
       <div className="grid gap-2 sm:grid-cols-2">
         {round.options.map((opt, i) => {
@@ -265,7 +266,7 @@ export default function VocabularyDuelGame({ matchId, onComplete }: { matchId: s
               }}
             >
               {round.optionMeta?.[i]?.icon && <span aria-hidden className="mr-2">{round.optionMeta[i].icon}</span>}{opt}
-              {sei.showL1 && round.optionMeta?.[i]?.cognate && <span className="block text-xs opacity-70">{round.optionMeta[i].cognate}</span>}
+              {sei.showL1 && languageCode(sei.homeLang) === 'es' && round.optionMeta?.[i]?.cognate && <span className="block text-xs opacity-70">{round.optionMeta[i].cognate}</span>}
             </button>
           )
         })}

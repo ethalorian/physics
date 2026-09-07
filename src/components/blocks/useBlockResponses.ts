@@ -1,6 +1,8 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useSyncExternalStore } from 'react'
+import { useSession } from 'next-auth/react'
+import { LessonResponseStore } from '@/lib/lesson-response-store'
 
 export interface StoredResponse {
   response: unknown
@@ -14,175 +16,29 @@ export interface SaveMeta { response_mode?: string; scaffolds_used?: string[]; /
 export type BlockResponseMap = Record<string, StoredResponse>
 export type DraftFn = (blockId: string, blockType: string, response: unknown) => void
 
-// Autosave cadence (decision 2026-09-04, "save as you type, sustainably"):
-// a block's draft is sent DEBOUNCE ms after the last keystroke, and never later
-// than MAX_WAIT ms after the first unsent change; all dirty blocks ride in one
-// POST. Every change also lands in localStorage instantly, so a tab that dies
-// before the flush still restores on the next open.
-const DEBOUNCE_MS = 1500
-const MAX_WAIT_MS = 6000
-const lsKey = (lessonId: string) => `lesson-drafts:${lessonId}`
-
-type LocalDrafts = Record<string, { response: unknown; block_type: string; updated_at: string }>
-function readLocal(lessonId: string): LocalDrafts {
-  try { return JSON.parse(localStorage.getItem(lsKey(lessonId)) ?? '{}') as LocalDrafts } catch { return {} }
-}
-function writeLocal(lessonId: string, d: LocalDrafts) {
-  try { if (Object.keys(d).length === 0) localStorage.removeItem(lsKey(lessonId)); else localStorage.setItem(lsKey(lessonId), JSON.stringify(d)) } catch { /* quota / private mode */ }
-}
-
-/**
- * Loads a student's saved responses (and autosave drafts) for a lesson's capture
- * blocks. `save` is the explicit, append-only record; `draft` is the as-you-type
- * safety net (one upsert row per block, batched). `responses[id].draft === true`
- * marks a value that has not been explicitly saved — display it, never gate on it.
- */
+/** A store is scoped to one signed-in student and one lesson. */
 export function useBlockResponses(lessonId: string, enabled = true) {
-  const [responses, setResponses] = useState<BlockResponseMap>({})
-  const [loaded, setLoaded] = useState(false)
-  /** XP awarded during this session (B-4). */
-  const [xpEarned, setXpEarned] = useState(0)
-  /** 'idle' | 'dirty' | 'saving' | 'saved' | 'offline' — for a quiet status chip */
-  const [draftState, setDraftState] = useState<'idle' | 'dirty' | 'saving' | 'saved' | 'offline'>('idle')
-
-  // pending drafts not yet on the server, keyed by block id
-  const pending = useRef<Record<string, { block_type: string; response: unknown }>>({})
-  const queue = useRef<Promise<unknown>>(Promise.resolve())
-  const revisions = useRef<Record<string, number>>({})
-  const debounceT = useRef<number | null>(null)
-  const maxWaitT = useRef<number | null>(null)
-
+  const { data: session, status } = useSession()
+  const studentId = status === 'authenticated' ? session?.user?.id : undefined
+  const scope = enabled && studentId ? studentId + ':' + lessonId : null
+  const current = useRef(scope)
+  current.current = scope
+  const store = useMemo(() => new LessonResponseStore(studentId ?? '', lessonId, () => scope !== null && current.current === scope), [studentId, lessonId, scope])
+  const snapshot = useSyncExternalStore(store.subscribe, store.getSnapshot, store.getSnapshot)
   useEffect(() => {
-    if (!enabled) return
-    let active = true
-    Promise.all([
-      fetch(`/api/lessons/blocks?lesson_id=${lessonId}`).then((r) => (r.ok ? r.json() : { responses: {} })).catch(() => ({ responses: {} })),
-      fetch(`/api/lessons/drafts?lesson_id=${lessonId}`).then((r) => (r.ok ? r.json() : { drafts: {} })).catch(() => ({ drafts: {} })),
-    ]).then(([a, b]) => {
-      if (!active) return
-      const saved = (a.responses ?? {}) as BlockResponseMap
-      const drafts = (b.drafts ?? {}) as Record<string, { response: unknown; updated_at: string }>
-      const local = readLocal(lessonId)
-      const merged: BlockResponseMap = { ...saved }
-      // newest wins: explicit save < server draft < local draft (local is what the
-      // student last typed on THIS device; it may never have reached the server)
-      const at = (s?: string) => (s ? new Date(s).getTime() : 0)
-      for (const [id, d] of Object.entries(drafts)) {
-        if (at(d.updated_at) > at(saved[id]?.created_at)) merged[id] = { response: d.response, created_at: d.updated_at, draft: true }
-      }
-      for (const [id, d] of Object.entries(local)) {
-        if (at(d.updated_at) > at(merged[id]?.created_at)) {
-          merged[id] = { response: d.response, created_at: d.updated_at, draft: true }
-          pending.current[id] = { block_type: d.block_type, response: d.response } // push what the server missed
-        }
-      }
-      setResponses(merged)
-      setLoaded(true)
-      if (Object.keys(pending.current).length > 0) schedule()
-    })
-    return () => { active = false }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId, enabled])
-
-  const flush = useCallback((_leaving = false) => {
-    if (!enabled) return Promise.resolve()
-    if (debounceT.current) { window.clearTimeout(debounceT.current); debounceT.current = null }
-    if (maxWaitT.current) { window.clearTimeout(maxWaitT.current); maxWaitT.current = null }
-    const task = queue.current.then(async () => {
-      const entries = Object.entries(pending.current)
-      if (!entries.length) return
-      const localAtSend = readLocal(lessonId)
-      setDraftState('saving')
-      try {
-        const r = await fetch('/api/lessons/drafts', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
-          body: JSON.stringify({ lesson_id: lessonId, drafts: entries.map(([block_id, d]) => ({ block_id, ...d })) }),
-        })
-        if (!r.ok) throw new Error('draft')
-        const result = await r.json()
-        if (result.saved !== entries.length) throw new Error('Incomplete draft save')
-        const local = readLocal(lessonId)
-        for (const [id, d] of entries) {
-          if (pending.current[id] === d) delete pending.current[id]
-          if (local[id]?.updated_at === localAtSend[id]?.updated_at &&
-              JSON.stringify(local[id]?.response) === JSON.stringify(d.response)) delete local[id]
-        }
-        writeLocal(lessonId, local)
-        setDraftState(Object.keys(pending.current).length ? 'dirty' : 'saved')
-      } catch {
-        // The pending entries and local mirror remain; never replace newer edits.
-        setDraftState('offline')
-      }
-    })
-    queue.current = task.catch(() => {})
-    return task
-  }, [lessonId, enabled])
-
-  const schedule = useCallback(() => {
-    if (debounceT.current) window.clearTimeout(debounceT.current)
-    debounceT.current = window.setTimeout(() => flush(), DEBOUNCE_MS)
-    if (!maxWaitT.current) maxWaitT.current = window.setTimeout(() => flush(), MAX_WAIT_MS)
-  }, [flush])
-
-  /** As-you-type: remember locally now, send to the server soon (batched). */
-  const draft = useCallback<DraftFn>((blockId, blockType, response) => {
-    if (response === undefined || response === null) return
-    revisions.current[blockId] = (revisions.current[blockId] ?? 0) + 1
-    const now = new Date().toISOString()
-    setResponses((prev) => ({ ...prev, [blockId]: { response, created_at: now, draft: true } }))
-    pending.current[blockId] = { block_type: blockType, response }
-    const local = readLocal(lessonId)
-    local[blockId] = { response, block_type: blockType, updated_at: now }
-    writeLocal(lessonId, local)
-    setDraftState('dirty')
-    schedule()
-  }, [lessonId, schedule])
-
-  // Leaving the page (tab switch, navigation, close): push whatever is pending.
-  useEffect(() => {
-    const onHide = () => { if (document.visibilityState === 'hidden') flush(true) }
-    const onPageHide = () => flush(true)
-    document.addEventListener('visibilitychange', onHide)
-    window.addEventListener('pagehide', onPageHide)
-    const onOnline = () => { void flush() }
-    window.addEventListener('online', onOnline)
+    if (!scope) return
+    store.activate()
+    void store.load()
+    const hide = () => { if (document.visibilityState === 'hidden') void store.flush() }
+    const online = () => { if (store.getSnapshot().loaded) void store.flush(); else void store.load() }
+    document.addEventListener('visibilitychange', hide)
+    window.addEventListener('online', online)
     return () => {
-      document.removeEventListener('visibilitychange', onHide)
-      window.removeEventListener('pagehide', onPageHide)
-      window.removeEventListener('online', onOnline)
-      flush(true)
+      document.removeEventListener('visibilitychange', hide)
+      window.removeEventListener('online', online)
+      store.dispose()
     }
-  }, [flush])
-
-  const save = useCallback(
-    (blockId: string, blockType: string, response: unknown, meta?: SaveMeta): Promise<boolean> => {
-      // Preserve this answer before any network request. All writes share a queue,
-      // so an older draft cannot arrive after and supersede an explicit save.
-      draft(blockId, blockType, response)
-      const revision = revisions.current[blockId]
-      const task = queue.current.then(async () => {
-        try {
-          const r = await fetch('/api/lessons/blocks', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lesson_id: lessonId, block_id: blockId, block_type: blockType, response, ...(meta ?? {}) }),
-          })
-          if (!r.ok) return false
-          const d = await r.json() as { response?: unknown; xp_awarded?: number }
-          if (revisions.current[blockId] === revision) {
-            delete pending.current[blockId]
-            const local = readLocal(lessonId)
-            delete local[blockId]
-            writeLocal(lessonId, local)
-            setResponses((prev) => ({ ...prev, [blockId]: { response: d.response ?? response, created_at: new Date().toISOString() } }))
-          }
-          if (typeof d.xp_awarded === 'number' && d.xp_awarded > 0) setXpEarned((x) => x + d.xp_awarded!)
-          return true
-        } catch { return false }
-      })
-      queue.current = task.catch(() => {})
-      return task
-    }, [lessonId, draft],
-  )
-
-  return { responses, save, draft, draftState, loaded, xpEarned }
+  }, [scope, store])
+  return { ...snapshot, loadError: enabled && status === 'unauthenticated' ? 'Sign in to load your saved work.' : snapshot.loadError,
+    save: store.save, draft: store.draft, retryLoad: store.load, studentId }
 }

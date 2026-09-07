@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
@@ -14,8 +15,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
  * load we union the local cache with the server record (so neither device loses
  * progress) and converge the server to that union; every mutation writes both.
  */
-export function useSectionProgress(lessonId: string, sectionCount: number) {
-  const storageKey = `lesson-sections:${lessonId}`
+export function useSectionProgress(lessonId: string, sectionCount: number, enabled = true) {
+  const { data: session } = useSession()
+  const studentId = session?.user?.id
+  const storageKey = `lesson-sections:v2:${studentId}:${lessonId}`
   const [completed, setCompleted] = useState<Set<number>>(new Set())
   const loadedRef = useRef(false)
 
@@ -26,24 +29,27 @@ export function useSectionProgress(lessonId: string, sectionCount: number) {
 
   const persistLocal = useCallback(
     (set: Set<number>) => {
+      if (!enabled || !studentId) return
       try { localStorage.setItem(storageKey, JSON.stringify([...set])) } catch { /* private mode */ }
     },
-    [storageKey],
+    [storageKey, enabled, studentId],
   )
 
   const persistServer = useCallback(
     (set: Set<number>) => {
+      if (!enabled || !studentId) return
       fetch('/api/lessons/sections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ lesson_id: lessonId, completed: [...set] }),
       }).catch(() => { /* optimistic; localStorage already holds it */ })
     },
-    [lessonId],
+    [lessonId, enabled, studentId],
   )
 
   // Restore local immediately, then reconcile with the server (union, converge).
   useEffect(() => {
+    if (!enabled || !studentId) { setCompleted(new Set()); return }
     loadedRef.current = false
     let local = new Set<number>()
     try {
@@ -68,7 +74,7 @@ export function useSectionProgress(lessonId: string, sectionCount: number) {
       .catch(() => { loadedRef.current = true })
     return () => { active = false }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lessonId, sectionCount])
+  }, [lessonId, sectionCount, enabled, studentId, storageKey])
 
   const commit = useCallback(
     (next: Set<number>) => { persistLocal(next); persistServer(next) },

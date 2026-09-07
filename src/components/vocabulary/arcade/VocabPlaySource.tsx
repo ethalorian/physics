@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useRef } from 'react'
 import type { VocabularyTerm } from '@/types/assignment'
 
 // Shared "what do you want to play?" selector for the arcade: pick a unit OR a
@@ -22,6 +22,14 @@ const LAST_PLAY_KEY = 'vocab:lastPlay'
 const TIERS = ['all', '1', '2', '3']
 
 export default function VocabPlaySource({ onResolved, initialLessonId }: { onResolved: (r: ResolvedPlay) => void; initialLessonId?: string }) {
+  const requestVersion=useRef(0)
+  const [exact, setExact] = useState(false)
+  const [exactLabel,setExactLabel] = useState('Loading assigned words…')
+  useEffect(() => {
+    const sp=new URLSearchParams(window.location.search); const tid=sp.get('task_id'), sid=sp.get('set_id'); if(!tid&&!sid)return; setExact(true)
+    fetch(tid ? `/api/vocab/play?task_id=${tid}` : `/api/vocab/play?set_id=${sid}`).then(async r=>{if(!r.ok)throw new Error('Assigned words could not load.');return r.json()}).then(d=>{onResolved(d);setExactLabel(d.label)}).catch(e=>setExactLabel(e.message))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
   const [units, setUnits] = useState<SourceUnit[]>([])
   const [lessons, setLessons] = useState<SourceLesson[]>([])
   const [assigned, setAssigned] = useState<Assigned[]>([])
@@ -42,7 +50,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
   // Deep-linked from a lesson (e.g. the vocab block's "Play Word Shoot" button):
   // preselect that lesson's vocab and resolve its terms immediately.
   useEffect(() => {
-    if (!initialLessonId) return
+    if (!initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
     setScope('lesson')
     setLessonId(initialLessonId)
     fetch(`/api/vocab/play?lesson_id=${initialLessonId}&tier=all`).then((r) => r.json())
@@ -55,7 +63,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
   // ?unit_id= on ANY game page): preselect and resolve, no prop plumbing
   // needed. window.location (not useSearchParams) keeps prerender happy.
   useEffect(() => {
-    if (initialLessonId) return
+    if (initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
     const sp = new URLSearchParams(window.location.search)
     const lid = sp.get('lesson_id'), uid = sp.get('unit_id')
     if (!lid && !uid) return
@@ -73,9 +81,10 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
     if (!id) { setCount(null); onResolved({ terms: [], scoreSetId: null, label: '' }); return }
     // Remember the pick so the next game (or visit) opens straight into it.
     try { localStorage.setItem(LAST_PLAY_KEY, JSON.stringify({ scope: nextScope, id, tier: t })) } catch { /* ignore */ }
+    const version=++requestVersion.current
     const qs = nextScope === 'lesson' ? `lesson_id=${id}` : `unit_id=${id}`
     fetch(`/api/vocab/play?${qs}&tier=${t}`).then((r) => r.json())
-      .then((d: ResolvedPlay) => { setCount(d.terms?.length ?? 0); onResolved(d) })
+      .then((d: ResolvedPlay) => { if(version!==requestVersion.current)return; setCount(d.terms?.length ?? 0); onResolved(d) })
       .catch(() => { setCount(0); onResolved({ terms: [], scoreSetId: null, label: '' }) })
   }, [onResolved])
 
@@ -84,7 +93,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
   // first lesson (then first unit) with vocab. If there is nothing at all to
   // play, settle with an empty resolve so callers can leave loading state.
   useEffect(() => {
-    if (loading || initialLessonId) return
+    if (loading || initialLessonId || new URLSearchParams(location.search).has('task_id') || new URLSearchParams(location.search).has('set_id')) return
     const sp = new URLSearchParams(window.location.search)
     if (sp.get('lesson_id') || sp.get('unit_id')) return
     if (lessonId || unitId) return
@@ -108,6 +117,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
 
   const sel = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
 
+  if (exact) return <div className="text-sm">{exactLabel} · <a className="underline" href={new URLSearchParams(location.search).get('task_id') ? `/vocabulary/work?task_id=${new URLSearchParams(location.search).get('task_id')}` : '/arcade'}>Back to words</a></div>
   if (loading) return <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading vocab…</div>
   if (units.length === 0 && lessons.length === 0) {
     return <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary published yet — a teacher needs to add lesson vocab first.</div>
@@ -119,7 +129,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
         <div className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'color-mix(in oklch, var(--reward) 45%, var(--border))', background: 'color-mix(in oklch, var(--reward) 12%, var(--card))' }}>
           <span className="font-semibold">Assigned · Asignado:</span>{' '}
           {assigned.map((a, i) => (
-            <button key={a.setId} type="button" className="underline mr-2" onClick={() => { if (a.lessonId) { setScope('lesson'); setLessonId(a.lessonId); resolve('lesson', a.lessonId, tier) } }}>
+            <button key={a.setId} type="button" className="underline mr-2" onClick={() => { window.location.href = `${window.location.pathname}?set_id=${a.setId}` }}>
               {a.label}{a.dueOn ? ` (due ${a.dueOn})` : ''}{i < assigned.length - 1 ? '' : ''}
             </button>
           ))}

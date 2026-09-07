@@ -1,7 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
+import { blockingDrafts } from '@/data/block-registry'
+import type { BlockResponseMap, DraftFn, SaveMeta } from '@/components/blocks/useBlockResponses'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
 import SubmitLessonButton from '@/components/lessons/SubmitLessonButton'
 import SectionRail from '@/components/lessons/SectionRail'
@@ -23,6 +26,8 @@ interface NavLink { slug: string; title: string }
 interface BlockLessonViewerProps {
   /** Staff preview: badge CPA-only / Honors-only blocks. Students never get this. */
   staffView?: boolean
+  preview?: boolean
+  previewAnswerKeys?: Record<string, string>
   lesson: {
     id: string
     title: string
@@ -45,18 +50,19 @@ const DAY_META: Record<string, { label: string; Icon: LucideIcon }> = {
 }
 
 export default function BlockLessonViewer(props: BlockLessonViewerProps) {
+  const { data: session } = useSession()
   // The language profile + scaffold dial are shared by every block on the page.
   // P-4/P-5 · students poll the live presentation (follow mode + open polls); staff drive it.
   return (
-    <LanguageProfileProvider>
-      <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView}>
-        <BlockLessonViewerInner key={props.lesson.id} {...props} />
+    <LanguageProfileProvider preview={props.preview}>
+      <PresentLiveProvider lessonId={props.lesson.id} enabled={!props.staffView && !props.preview}>
+        <BlockLessonViewerInner key={`${props.lesson.id}:${session?.user?.id ?? "anonymous"}:${props.preview ? "preview" : "student"}`} {...props} />
       </PresentLiveProvider>
     </LanguageProfileProvider>
   )
 }
 
-function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonViewerProps) {
+function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewAnswerKeys = {} }: BlockLessonViewerProps) {
   const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
@@ -72,13 +78,14 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   // glossary reads the lesson's tiered vocab set (Tier 2 + 3) as well as key_terms.
   const [vocabTerms, setVocabTerms] = useState<GlossaryEntry[]>([])
   useEffect(() => {
+    if (preview) return
     let active = true
     fetch(`/api/lessons/${lesson.id}/vocab`).then((r) => (r.ok ? r.json() : { terms: [] })).then((d: { terms?: { term: string; definition: string; tier?: number | null; cognate?: string | null; part_of_speech?: string | null; example?: string | null }[] }) => {
       if (!active) return
       setVocabTerms((d.terms ?? []).filter((t) => t.term && t.definition && (t.tier ?? 3) >= 2).map((t) => ({ term: t.term, definition: t.definition, cognate: t.cognate ?? undefined, tier: t.tier ?? undefined, partOfSpeech: t.part_of_speech ?? undefined, example: t.example ?? undefined })))
     }).catch(() => {})
     return () => { active = false }
-  }, [lesson.id])
+  }, [lesson.id, preview])
   const glossary = useMemo<GlossaryEntry[]>(() => {
     const seen = new Set(keyTerms.map((t) => t.term.toLowerCase()))
     return [...keyTerms, ...vocabTerms.filter((t) => !seen.has(t.term.toLowerCase()))]
@@ -86,7 +93,25 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
 
   // One source of truth for responses, shared with the renderer so progress
   // fills as the student saves interactive blocks.
-  const { responses, save, draft, draftState, loaded: responsesLoaded, xpEarned: xpSession } = useBlockResponses(lesson.id)
+  const store = useBlockResponses(lesson.id, !preview)
+  const { draft: persistDraft, save: persistSave } = store
+  const [playResponses, setPlayResponses] = useState<BlockResponseMap>({})
+  const responses = preview ? playResponses : store.responses
+  const responsesLoaded = preview || store.loaded
+  const draftState = preview ? 'idle' : store.draftState
+  const xpSession = preview ? 0 : store.xpEarned
+  const draft: DraftFn = useCallback((id, type, response) => {
+    if (preview) setPlayResponses((prev) => ({ ...prev, [id]: { response, created_at: new Date().toISOString(), draft: true } }))
+    else persistDraft(id, type, response)
+  }, [preview, persistDraft])
+  const save = useCallback(async (id: string, type: string, response: unknown, meta?: SaveMeta) => {
+    if (!preview) return persistSave(id, type, response, meta)
+    const key = previewAnswerKeys[id]
+    const checked = key && response && typeof response === 'object'
+      ? { ...response, autoCheck: (response as { optionId?: string }).optionId === key ? 'match' : 'mismatch' } : response
+    setPlayResponses((prev) => ({ ...prev, [id]: { response: checked, created_at: new Date().toISOString() } }))
+    return true
+  }, [preview, previewAnswerKeys, persistSave])
   // Drafts are shown (the student sees what they typed) but never COUNT: gates,
   // progress, tallies and the exit-ticket hold read only explicit saves.
   const committed = useMemo(() => Object.fromEntries(Object.entries(responses).filter(([, v]) => !v.draft)), [responses])
@@ -94,10 +119,11 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   // A-5 · the class's reader flags + S-4 mastery + S-6 calibration, one fetch.
   const [exp, setExp] = useState<{ flags: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean; presentLive?: boolean }; mastery: Record<string, number>; calibration: { slug: string; statement: string; self: number | null; teacher: number | null; delta: number | null }[]; xpEarned: number; lobbyToday?: boolean } | null>(null)
   useEffect(() => {
+    if (preview) return
     let active = true
     fetch(`/api/lessons/experience?lesson_id=${lesson.id}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (active && d?.flags) setExp(d) }).catch(() => {})
     return () => { active = false }
-  }, [lesson.id])
+  }, [lesson.id, preview])
   const stepped = (exp?.flags.experience ?? 'stepped') === 'stepped'
   const gating = stepped && (exp?.flags.gateCheckpoints ?? true)
   const presentLive = exp?.flags.presentLive ?? true
@@ -109,10 +135,11 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   const sections = useMemo(() => buildSections(pages, lesson.estimated_time), [pages, lesson.estimated_time])
 
   // Current page, restored from localStorage so a reload returns to the spot.
-  const storageKey = `lesson-page:${lesson.id}`
+  const storageKey = `lesson-page:v2:${store.studentId}:${lesson.id}`
   const [pageIdx, setPageIdx] = useState(0)
   const [submitted, setSubmitted] = useState(false)
   useEffect(() => {
+    if (preview || !store.studentId) return
     try {
       const saved = Number(localStorage.getItem(storageKey))
       if (Number.isInteger(saved) && saved >= 0 && saved < pageCount) setPageIdx(saved)
@@ -126,7 +153,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
     const clamped = Math.max(0, Math.min(pageCount - 1, i))
     if (isLocked(clamped)) return
     setPageIdx(clamped)
-    try { localStorage.setItem(storageKey, String(clamped)) } catch { /* ignore */ }
+    try { if (!preview) localStorage.setItem(storageKey, String(clamped)) } catch { /* ignore */ }
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -148,7 +175,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
 
   // Per-section completion (the honest progress thread): explicit "Got it"
   // checkpoints, persisted per lesson. A section also reads done once passed.
-  const { markComplete, isComplete } = useSectionProgress(lesson.id, pageCount)
+  const { markComplete, isComplete } = useSectionProgress(lesson.id, pageCount, !preview)
   const sectionDone = (i: number) => pages[i]?.hasCapture ? pages[i].captureBlocks.every((b) => isBlockComplete(b, committed[b.id]?.response)) : isComplete(i)
 
   // Whole-lesson task progress (the "tasks saved" bar).
@@ -176,6 +203,14 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
   // Tasks bar fills by saved work.
   const taskPct = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0
   const minsLeft = minutesLeft(sections, pageIdx)
+  const pendingBlocks = blockingDrafts(blocks, responses)
+  useEffect(() => {
+    if (responsesLoaded && pageIdx >= lockedFrom) setPageIdx(Math.max(0, lockedFrom - 1))
+  }, [responsesLoaded, lockedFrom, pageIdx])
+  if (!preview && store.loadError) return <div role="alert" className="mx-auto max-w-xl rounded-xl border p-6">
+    <p>{store.loadError}</p><button type="button" onClick={() => void store.retryLoad()} className="mt-3 rounded-lg bg-primary px-4 py-2 text-primary-foreground">Retry loading saved work</button>
+  </div>
+  if (!responsesLoaded) return <p role="status" className="p-6">Loading your saved work…</p>
 
   return (
     <div className="mx-auto px-4 pb-28" style={{ maxWidth: 1120, color: 'var(--foreground)' }}>
@@ -420,7 +455,15 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false }: BlockLessonV
                 <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save each answer, then submit.</span>{' '}
                 Autosave protects your drafts. Use Save answer to record each response, then submit for your teacher’s review.
               </div>
-              <SubmitLessonButton lessonId={lesson.id} blocked={Object.values(responses).some((v) => v.draft)} complete={allTasksDone} onChange={(st) => setSubmitted(Boolean(st.submittedAt))} />
+              {pendingBlocks.length > 0 && <div className="w-full text-sm" role="status">
+                <p>Save these changed answers before submitting:</p>
+                <ul className="mt-1 list-disc pl-5">{pendingBlocks.map((b) => {
+                  const index = pages.findIndex((p) => p.blocks.some((x) => x.id === b.id))
+                  return <li key={b.id}><button type="button" className="underline" onClick={() => breakAway(Math.min(index, Math.max(0, lockedFrom - 1)))}>Section {index + 1}: {sections[index]?.title}</button></li>
+                })}</ul>
+              </div>}
+              {preview ? <button type="button" disabled={pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
+                <SubmitLessonButton lessonId={lesson.id} blocked={pendingBlocks.length > 0} complete={allTasksDone} onChange={(st) => setSubmitted(Boolean(st.submittedAt))} />}
             </div>
           )}
 

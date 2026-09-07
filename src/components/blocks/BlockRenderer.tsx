@@ -511,7 +511,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
   const pollRevealed = isPoll && live.session!.pollRevealed
   if (!q) return <p className="text-sm" style={{ color: C.muted }}>This question isn&apos;t set up yet.</p>
   const hasOptions = Boolean(q.options?.length)
-  const canSave = (hasOptions ? Boolean(optionId) : explain.trim().length > 0) && !pollLocked
+  const canSave = (hasOptions ? Boolean(optionId) && (!q?.explain || explain.trim().length > 0) : explain.trim().length > 0) && !pollLocked
   return (
     <div>
       {isPoll && (
@@ -615,7 +615,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
             className="inline-flex items-center gap-1.5 mt-3 rounded-full px-3 py-1.5 text-xs font-bold"
             style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}
           >
-            <Zap size={13} /> Play Word Shoot with these words
+            <Zap size={13} /> Practice lesson vocabulary
           </Link>
         </div>
       )
@@ -783,12 +783,10 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
 function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft }: { b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
   const meta = BLOCK_META[b.type]
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-  const lastAttempt = useRef<Parameters<SaveFn> | null>(null)
   const busy = useRef(false)
   const trackedSave: SaveFn = async (...args) => {
     if (busy.current) return false
     busy.current = true
-    lastAttempt.current = args
     setSaveStatus('saving')
     let ok = false
     try { ok = (await save(...args)) !== false } catch { /* show retry below */ }
@@ -815,8 +813,7 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
   return <BlockShell meta={meta} done={done} capture={capture}>
     <fieldset disabled={saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
     {capture && saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-2 text-sm font-semibold">
-      {saveStatus === 'saving' ? 'Saving answer…' : saveStatus === 'error' ? 'Answer not saved. Please retry.' : isDraft ? 'Changes need saving.' : 'Answer saved ✓'}
-      {saveStatus === 'error' && <button type="button" className="ml-2 underline" onClick={() => { if (lastAttempt.current) void trackedSave(...lastAttempt.current) }}>Retry save</button>}
+      {saveStatus === 'saving' ? 'Saving answer…' : saveStatus === 'error' ? 'Answer not saved. Use this answer’s Save button to retry your current work.' : isDraft ? 'Changes need saving.' : 'Answer saved ✓'}
     </p>}
   </BlockShell>
 }
@@ -865,6 +862,7 @@ export default function BlockRenderer({
   const save = extSave ?? internal.save
   const draft = extDraft ?? (extResponses ? undefined : internal.draft)
   const hydratedKey = (hydrated ?? internal.loaded) ? 'h' : 'e'
+  if (!extResponses && internal.loadError) return <div role="alert" className="rounded-xl border p-4">{internal.loadError} <button type="button" className="underline" onClick={() => void internal.retryLoad()}>Retry</button></div>
   if (hydratedKey === 'e' && !extResponses) return <p role="status" className="text-sm">Loading your saved work…</p>
   if (hydrated === false) return <p role="status" className="text-sm">Loading your saved work…</p>
   return (

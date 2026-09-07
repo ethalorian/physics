@@ -1,7 +1,7 @@
 "use client"
 
 import { LanguageProfileProvider, LanguageDial } from '@/components/lessons/LanguageProfileProvider'
-import { useState, type ReactNode } from 'react'
+import { useState, useEffect, type ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, HelpCircle, Settings2, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -43,6 +43,8 @@ export default function VocabGameShell({
   sourceLabel,
   children,
 }: Props) {
+  const [saveStatus,setSaveStatus] = useState('')
+  useEffect(() => { const handler = (e: Event) => setSaveStatus((e as CustomEvent<string>).detail); window.addEventListener('vocab-save-status',handler); return () => window.removeEventListener('vocab-save-status',handler) }, [])
   const [helpOpen, setHelpOpen] = useState(false)
   const [optionsOpen, setOptionsOpen] = useState(false)
   const showOptions = optionsOpen || forceOptionsOpen
@@ -126,6 +128,7 @@ export default function VocabGameShell({
 
       <LanguageDial />
 
+      <p role="status" className="text-xs text-muted-foreground">{saveStatus}</p>
       {children}
     </div>
     </LanguageProfileProvider>

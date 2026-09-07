@@ -155,7 +155,7 @@ export default function VocabularyLetterCatchGame({ vocabularyTerms, onGameCompl
     }
     tilesRef.current = seed
     setTarget(word); setScramble([...word].sort(() => Math.random() - 0.5)); setFilled(0); setTiles(seed)
-    setDefinition(clueText(term, sei.showL1)); setFlash(null); setPhase('playing')
+    setDefinition(clueText(term, sei.showL1, sei.homeLang)); setFlash(null); setPhase('playing')
   }, [terms, makeTile, sei.showL1])
 
   const advance = useCallback((answered: number) => {

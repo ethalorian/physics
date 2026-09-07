@@ -28,13 +28,14 @@ const LanguageProfileContext = createContext<Ctx>({
 const DIAL_KEY = 'sei-dial'
 const L1_KEY = 'sei-l1'
 
-export function LanguageProfileProvider({ children }: { children: ReactNode }) {
+export function LanguageProfileProvider({ children, preview = false }: { children: ReactNode; preview?: boolean }) {
   const [profile, setProfile] = useState<LanguageProfile | null>(null)
   const [loaded, setLoaded] = useState(false)
   const [dial, setDialState] = useState<ScaffoldLevel | null>(null)
   const [showL1, setShowL1State] = useState(false)
 
   useEffect(() => {
+    if (preview) { setLoaded(true); return }
     let active = true
     try {
       const d = localStorage.getItem(DIAL_KEY)
@@ -55,18 +56,20 @@ export function LanguageProfileProvider({ children }: { children: ReactNode }) {
       })
       .catch(() => { if (active) setLoaded(true) })
     return () => { active = false }
-  }, [])
+  }, [preview])
 
   const setDial = useCallback((d: ScaffoldLevel | null) => {
     setDialState(d)
+    if (preview) return
     try { if (d) localStorage.setItem(DIAL_KEY, d); else localStorage.removeItem(DIAL_KEY) } catch { /* ignore */ }
-  }, [])
+  }, [preview])
   const setShowL1 = useCallback((v: boolean) => {
     setShowL1State(v)
+    if (preview) return
     try { localStorage.setItem(L1_KEY, v ? '1' : '0') } catch { /* ignore */ }
     // Remember the preference on the profile too (students may set only this field).
     fetch('/api/language-profile', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ l1_default: v }) }).catch(() => {})
-  }, [])
+  }, [preview])
 
   const value = useMemo(() => ({ profile, loaded, dial, setDial, showL1, setShowL1 }), [profile, loaded, dial, setDial, showL1, setShowL1])
   return <LanguageProfileContext.Provider value={value}>{children}</LanguageProfileContext.Provider>

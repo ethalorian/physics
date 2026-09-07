@@ -17,13 +17,13 @@ type SetRow = { id: string; lesson_id: string | null; unit_id: string | null; up
 
 export const GET = withAuth(async (request, ctx) => {
   // published sets that actually have terms — same gate as /api/vocab/sources
-  const { data: termRows } = await supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id')
+  const { data: termRows } = await supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id').eq('archived', false)
   const withTerms = [...new Set(((termRows ?? []) as { vocabulary_set_id: string }[]).map((r) => r.vocabulary_set_id))]
   if (withTerms.length === 0) return NextResponse.json({ scope: null })
   const { data: setRows } = await supabaseAdmin
     .from('vocabulary_sets')
     .select('id, lesson_id, unit_id, updated_at')
-    .eq('published', true)
+    .eq('published', true).eq('archived', false)
     .in('id', withTerms)
   const sets = (setRows ?? []) as SetRow[]
   if (sets.length === 0) return NextResponse.json({ scope: null })

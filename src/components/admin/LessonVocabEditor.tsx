@@ -12,6 +12,9 @@ interface VRow {
   part_of_speech: string
   example: string
   image_url: string
+  icon: string
+  definition_es: string
+  translations: Record<string, {term?:string;definition?:string}>
 }
 
 const TIERS = [
@@ -22,9 +25,11 @@ const TIERS = [
 const TIER_COLOR: Record<number, string> = { 1: 'var(--success)', 2: 'var(--reward)', 3: 'var(--primary)' }
 const POS = ['', 'noun', 'verb', 'adjective', 'adverb', 'phrase']
 
-const blank = (tier = 3): VRow => ({ term: '', definition: '', tier, cognate: '', part_of_speech: '', example: '', image_url: '' })
+const blank = (tier = 3): VRow => ({ term: '', definition: '', tier, cognate: '', part_of_speech: '', example: '', image_url: '', icon: '', definition_es: '', translations: {} })
 
 export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
+  const [error,setError] = useState('')
+  const [language,setLanguage] = useState('pt')
   const [rows, setRows] = useState<VRow[]>([])
   const [published, setPublished] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -39,7 +44,7 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
         setPublished(Boolean(d.published))
         setRows((d.terms ?? []).map((t) => ({
           id: t.id, term: t.term ?? '', definition: t.definition ?? '', tier: t.tier ?? 3,
-          cognate: t.cognate ?? '', part_of_speech: t.part_of_speech ?? '', example: t.example ?? '', image_url: t.image_url ?? '',
+          cognate: t.cognate ?? '', part_of_speech: t.part_of_speech ?? '', example: t.example ?? '', image_url: t.image_url ?? '', icon: t.icon ?? '', definition_es: t.definition_es ?? '', translations: t.translations ?? {},
         })))
       })
       .catch(() => {})
@@ -62,20 +67,24 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
   }, [paste])
 
   const save = async (pub: boolean = published) => {
-    setSaving(true); setSaved(false)
+    setSaving(true); setSaved(false); setError('')
     try {
       const res = await fetch(`/api/lessons/${lessonId}/vocab`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ terms: rows.filter((r) => r.term.trim()), published: pub }),
       })
-      if (res.ok) setSaved(true)
-    } finally { setSaving(false) }
+      if (!res.ok) throw new Error('Could not save vocabulary. Your edits are still here.')
+      const refreshed = await fetch(`/api/lessons/${lessonId}/vocab`)
+      if(!refreshed.ok) throw new Error('Saved, but could not reload. Reload before making another edit.')
+      const data = await refreshed.json()
+      setRows(data.terms.map((t: Partial<VRow>) => ({...blank(),...Object.fromEntries(Object.entries(t).filter(([,v])=>v!==null))})))
+      setPublished(pub); setSaved(true)
+    } catch(e) { setError(e instanceof Error ? e.message : 'Could not save vocabulary') } finally { setSaving(false) }
   }
 
   // Flip publish state and persist it in the same write (also saves current terms).
   const togglePublished = async () => {
     const next = !published
-    setPublished(next)
     await save(next)
   }
 
@@ -111,6 +120,8 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           : 'It’s a draft — hidden from the arcade until you publish.'}
       </p>
 
+      {error && <p role="alert" className="text-destructive">{error}</p>}
+      <label className="block mb-3 text-sm">Additional translation language <select aria-label="Additional translation language" className="min-h-11 rounded-lg border border-border bg-background p-2" value={language} onChange={e=>setLanguage(e.target.value)}>{[['pt','Portuguese'],['ht','Haitian Creole'],['fr','French'],['ar','Arabic'],['zh','Chinese'],['vi','Vietnamese'],['es','Spanish']].map(([code,label])=><option key={code} value={code}>{label}</option>)}</select></label>
       {showPaste && (
         <div className="rounded-xl border p-3 mb-4" style={{ borderColor: 'var(--border)' }}>
           <div className="text-xs mb-1" style={{ color: 'var(--muted-foreground)' }}>One term per line: <code>term | definition | tier</code> (tier 1–3, optional)</div>
@@ -150,6 +161,12 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
                       <div className="grid gap-2 mt-2" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
                         <input value={r.example} onChange={(e) => update(i, { example: e.target.value })} placeholder="Example sentence / frame" className="rounded-md border px-2 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
                         <input value={r.image_url} onChange={(e) => update(i, { image_url: e.target.value })} placeholder="Image URL (optional)" className="rounded-md border px-2 py-1.5 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }} />
+                      </div>
+                      <div className="grid gap-2 mt-2 md:grid-cols-2">
+                        <label className="text-xs">Picture / emoji<input aria-label={`Picture for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.icon} onChange={e=>update(i,{icon:e.target.value})}/></label>
+                        <label className="text-xs">Spanish definition<input aria-label={`Spanish definition for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.definition_es} onChange={e=>update(i,{definition_es:e.target.value})}/></label>
+                        <label className="text-xs">{language} · translated word<input aria-label={`Translated word for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.translations[language]?.term??''} onChange={e=>update(i,{translations:{...r.translations,[language]:{...r.translations[language],term:e.target.value}}})}/></label>
+                        <label className="text-xs">{language} · translated definition<input aria-label={`Translated definition for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.translations[language]?.definition??''} onChange={e=>update(i,{translations:{...r.translations,[language]:{...r.translations[language],definition:e.target.value}}})}/></label>
                       </div>
                       <div className="flex justify-end mt-2">
                         <button onClick={() => remove(i)} className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--viz-down)' }}><Trash2 size={13} /> remove</button>

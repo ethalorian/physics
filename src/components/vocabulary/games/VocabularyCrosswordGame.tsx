@@ -1,5 +1,6 @@
 "use client"
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
+import { wordTranslation } from '@/lib/vocab-language'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { VocabularyCrosswordQuestion } from '@/types/assignment'
 import { Card, CardContent } from '@/components/ui/card'
@@ -53,7 +54,6 @@ export default function VocabularyCrosswordGame({
     clues: CrosswordClue[]
     gridSize: number
   } | null>(null)
-  const lastAnswersRef = useRef<string>('')
 
   // Generate crossword puzzle from vocabulary terms
   useEffect(() => {
@@ -278,18 +278,10 @@ export default function VocabularyCrosswordGame({
     generateCrossword()
   }, [question.vocabularyTerms, question.gridSize])
 
-  // Call onAnswer when answers change, but only if they actually changed
-  useEffect(() => {
-    const answersString = JSON.stringify(answers)
-    if (onAnswer && answersString !== lastAnswersRef.current) {
-      lastAnswersRef.current = answersString
-      // Use setTimeout to prevent infinite loops
-      const timeoutId = setTimeout(() => {
-        onAnswer({ answers })
-      }, 0)
-      return () => clearTimeout(timeoutId)
-    }
-  }, [answers, onAnswer])
+  const submit = () => {
+    const submitted = Object.fromEntries((crosswordData?.clues ?? []).map(c => [c.termId, answers[c.id] ?? '']))
+    onAnswer?.({ answers: submitted })
+  }
 
   const handleCellChange = (clueId: string, position: number, value: string) => {
     if (disabled) return
@@ -576,6 +568,7 @@ export default function VocabularyCrosswordGame({
 
       {!disabled && (
         <div className="flex justify-center">
+          <Button onClick={submit} disabled={disabled}>Submit crossword</Button>
           <Button variant="outline" onClick={handleReset}>
             <RotateCcw className="w-4 h-4 mr-2" />
             Clear All Answers
@@ -615,14 +608,15 @@ export default function VocabularyCrosswordGame({
 
 
 /** SEI: the crossword clue with the term's picture and, when L1 is on, its Spanish definition. */
-function ClueText({ clue, terms }: { clue: { clue: string; termId: string }; terms: { id: string; icon?: string | null; definitionEs?: string | null }[] }) {
-  const { showL1 } = useVocabSei()
+function ClueText({ clue, terms }: { clue: { clue: string; termId: string }; terms: { id: string; icon?: string | null; definitionEs?: string | null; translations?: Record<string,{term?:string;definition?:string}> }[] }) {
+  const { showL1,homeLang } = useVocabSei()
   const t = terms.find((x) => x.id === clue.termId)
+  const translated = t ? wordTranslation(t,homeLang).definition : null
   return (
     <>
       {t?.icon && <span aria-hidden className="mr-1">{t.icon}</span>}
       {clue.clue}
-      {showL1 && t?.definitionEs && <span className="block opacity-75">{t.definitionEs}</span>}
+      {showL1 && translated && <span className="block opacity-75">{translated}</span>}
     </>
   )
 }

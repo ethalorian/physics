@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { wordTranslation } from '@/lib/vocab-language'
 import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei, clueText } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
@@ -123,12 +124,12 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
     answeredRef.current = false
     bubblesRef.current = placed
     setBubbles(placed)
-    setDefinition(clueText(correct, sei.showL1))
+    setDefinition(clueText(correct, sei.showL1, sei.homeLang))
     setTimeLeft(cfg.time)
     deadlineRef.current = Date.now() + cfg.time
     setFlash(null)
     setPhase('playing')
-  }, [terms, cfg.distractors, cfg.time, cfg.speed, sei.showL1])
+  }, [terms, cfg.distractors, cfg.time, cfg.speed, sei.showL1, sei.homeLang])
 
   const advance = useCallback((answered: number, nextScore: number, nextLives: number) => {
     if (answered >= total || nextLives <= 0) { endGame(nextScore, answered); return }
@@ -338,7 +339,7 @@ export default function VocabularyWordShootGame({ vocabularyTerms, onGameComplet
                 <span className="flex flex-col items-center gap-0.5">
                   {b.term.icon && <span aria-hidden style={{ fontSize: 22, lineHeight: 1 }}>{b.term.icon}</span>}
                   <span>{b.term.term}</span>
-                  {sei.showL1 && b.term.cognate && <span className="text-[10px] opacity-70">{b.term.cognate}</span>}
+                  {sei.showL1 && wordTranslation(b.term,sei.homeLang).term && <span className="text-[10px] opacity-70">{wordTranslation(b.term,sei.homeLang).term}</span>}
                 </span>
               </button>
             )

@@ -18,7 +18,8 @@ const MAX_DRAFTS = 40
 const MAX_BYTES = 200_000 // a sketch's strokes; anything larger is dropped, not stored
 
 export const POST = withEnrolledStudent(async (request, ctx) => {
-  const body = await request.json().catch(() => null) as { lesson_id?: string; drafts?: { block_id?: string; block_type?: string; response?: unknown }[] } | null
+  const body = await request.json().catch(() => null) as { lesson_id?: string; expected_user_id?: string; drafts?: { block_id?: string; block_type?: string; response?: unknown }[] } | null
+  if (body?.expected_user_id && body.expected_user_id !== ctx.userId) return NextResponse.json({ error: 'Account changed. Reload before saving.' }, { status: 409 })
   const lessonId = body?.lesson_id
   if (!lessonId || !Array.isArray(body?.drafts)) return NextResponse.json({ error: 'Missing lesson_id or drafts' }, { status: 400 })
   const now = new Date().toISOString()
@@ -35,13 +36,15 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
 
 export const GET = withAuth(async (request, ctx) => {
   const { searchParams } = new URL(request.url)
+  if (searchParams.get('expected_user_id') && searchParams.get('expected_user_id') !== ctx.userId) return NextResponse.json({ error: 'Account changed.' }, { status: 409 })
   const lessonId = searchParams.get('lesson_id')
   if (!lessonId) return NextResponse.json({ error: 'Missing lesson_id' }, { status: 400 })
-  const { data } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('block_drafts')
     .select('block_id, response, updated_at')
     .eq('lesson_id', lessonId)
     .eq('user_id', ctx.userId)
+  if (error) return NextResponse.json({ error: 'Could not load drafts.' }, { status: 500 })
   const drafts: Record<string, { response: unknown; updated_at: string }> = {}
   for (const r of (data ?? []) as { block_id: string; response: unknown; updated_at: string }[]) drafts[r.block_id] = { response: r.response, updated_at: r.updated_at }
   return NextResponse.json({ drafts })

@@ -1,3 +1,4 @@
+import { saveVocabTerms } from '@/lib/vocab-terms'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
@@ -7,6 +8,8 @@ import { withAuth, withContentEditor } from '@/lib/api-auth'
 // PUT  /api/lessons/[id]/vocab  — replace the lesson's terms (admin/teacher)
 
 interface TermInput {
+  [key: string]: unknown
+  id?: string
   term: string
   definition: string
   tier?: number | null
@@ -31,8 +34,8 @@ export const GET = withAuth<{ id: string }>(async (_req, ctx) => {
 
     const { data: terms } = await supabaseAdmin
       .from('vocabulary_terms')
-      .select('id, term, definition, tier, cognate, part_of_speech, example, image_url, order_index, icon, definition_es')
-      .eq('vocabulary_set_id', s.id)
+      .select('id, term, definition, tier, cognate, part_of_speech, example, image_url, order_index, icon, definition_es, translations')
+      .eq('vocabulary_set_id', s.id).eq('archived', false)
       .order('tier', { ascending: true })
       .order('order_index', { ascending: true })
 
@@ -74,23 +77,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (req, ctx)
       await supabaseAdmin.from('vocabulary_sets').update(patch).eq('id', setId)
     }
 
-    // replace terms
-    await supabaseAdmin.from('vocabulary_terms').delete().eq('vocabulary_set_id', setId)
-    if (terms.length > 0) {
-      const rows = terms.map((t, i) => ({
-        vocabulary_set_id: setId,
-        term: t.term.trim(),
-        definition: t.definition ?? '',
-        tier: t.tier ?? null,
-        cognate: t.cognate ?? null,
-        part_of_speech: t.part_of_speech ?? null,
-        example: t.example ?? null,
-        image_url: t.image_url ?? null,
-        order_index: i,
-      }))
-      const { error: insErr } = await supabaseAdmin.from('vocabulary_terms').insert(rows)
-      if (insErr) return NextResponse.json({ error: insErr.message }, { status: 500 })
-    }
+    await saveVocabTerms(setId, terms)
 
     return NextResponse.json({ ok: true, setId, count: terms.length, published: body.published ?? undefined })
 })

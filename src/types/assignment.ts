@@ -158,6 +158,8 @@ export interface OpenResponseQuestion extends BaseQuestion {
 
 // Vocabulary types
 export interface VocabularyTerm {
+  translations?: Record<string, { term?: string; definition?: string }>
+  imageUrl?: string | null
   id: string
   term: string
   definition: string

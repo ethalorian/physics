@@ -187,7 +187,7 @@ export default function TeacherMasteryEntry({
               >
                 {tag}
               </span>
-              <span className="flex-1 min-w-[12rem] text-[13px] leading-snug">{t.statement}</span>
+              <span className="flex-1 min-w-[12rem] text-[13px] leading-snug">{t.statement}<a className="block min-h-11 py-2 text-sm underline" href={`/admin/vocabulary/assign?target_id=${t.id}`}>Assign supporting vocabulary</a></span>
 
               <span className="text-[13px] font-medium tabular-nums" style={{ color: value === null ? PALETTE.indigoMuted : levelColor(value), minWidth: 70, textAlign: "right" }}>
                 {value === null ? "—" : `${value.toFixed(1)} ${levelWord(value)}`}

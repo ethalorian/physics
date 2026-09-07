@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
 import { seiLint } from '@/lib/sei'
-import { targetIdsForLesson, targetSlugsInBlocks } from '@/lib/lesson-targets'
+import { targetIdsForLesson } from '@/lib/lesson-targets'
+import { remainsPublished, validateBlockDocument } from '@/data/block-registry'
 import type { ContentBlock } from '@/data/content-blocks'
 
 /**
@@ -43,16 +44,26 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     // Add updated timestamp
     updateData.updated_at = new Date().toISOString()
 
+    const { data: current, error: currentError } = await supabaseAdmin.from('lessons').select('published, unit_id, content_blocks').eq('id', params.id).maybeSingle()
+    if (currentError) return NextResponse.json({ error: 'Could not load the current lesson.' }, { status: 500 })
+    if (!current) return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+    if (updateData.published !== undefined && typeof updateData.published !== 'boolean') return NextResponse.json({ error: 'Published must be true or false.' }, { status: 400 })
+    const effectiveDoc = updateData.content_blocks !== undefined ? updateData.content_blocks : current.content_blocks
+    const publishing = remainsPublished(Boolean(current.published), updateData)
+    if (effectiveDoc != null) {
+      const issues = validateBlockDocument(effectiveDoc, publishing)
+      if (issues.length) return NextResponse.json({ error: issues.map((i) => i.message).join(' '), block_issues: issues }, { status: 422 })
+    }
+
     // Guardrail: refuse to publish a lesson that has no learning target. Without a
     // target the control room can't open or grade that lesson's work (the cell is
     // dead and the drawer can't resolve the work), so a published-but-targetless
     // lesson silently strands student work — and, in Unit 8, blocks car-part grants.
-    if (updateData.published === true) {
+    if (publishing) {
       // A target counts if this lesson owns it OR its blocks capture against it —
       // MVP day lessons share their week's targets (lib/lesson-targets).
-      const owned = await targetIdsForLesson(params.id)
-      const bodySlugs = targetSlugsInBlocks(updateData.content_blocks as { blocks?: unknown[] } | undefined)
-      const count = owned.length || bodySlugs.length
+      const owned = await targetIdsForLesson(params.id, effectiveDoc)
+      const count = owned.length
       if (!count) {
         return NextResponse.json(
           { error: 'Cannot publish: this lesson has no learning target. Add at least one learning target first — without it, students’ work can’t be opened or graded in the control room.' },
@@ -65,9 +76,8 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
       // does not publish for program `projects`; other programs get warnings
       // back (the asteroid course predates the rule). Blocks come from the body
       // when the save carries them, else from the stored row.
-      const { data: cur } = await supabaseAdmin.from('lessons').select('unit_id, content_blocks').eq('id', params.id).maybeSingle()
-      const curRow = cur as { unit_id: string | null; content_blocks: { blocks?: ContentBlock[] } | null } | null
-      const doc = (updateData.content_blocks as { blocks?: ContentBlock[] } | undefined) ?? curRow?.content_blocks ?? null
+      const curRow = { ...current, unit_id: updateData.unit_id ?? current.unit_id }
+      const doc = effectiveDoc as { blocks?: ContentBlock[] } | null
       const blocks = Array.isArray(doc?.blocks) ? doc!.blocks! : []
       if (blocks.length > 0) {
         const [{ data: unitRow }, { data: setRow }] = await Promise.all([

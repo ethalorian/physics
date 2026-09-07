@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from 'react'
 import EnrollmentGate from '@/components/EnrollmentGate'
+import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import XpGoalRing from '@/components/gamification/XpGoalRing'
 import ChallengeCard from '@/components/gamification/ChallengeCard'
@@ -293,6 +294,7 @@ export default function HomePage() {
                 <DailyMathTask onStatus={(s) => setWarmupOpen(s.hasItem && !s.submitted)} />
               </div>
             </details>
+            <VocabTaskCards />
             {data.continue && data.continue.lesson ? (
               <Glass
                 style={{

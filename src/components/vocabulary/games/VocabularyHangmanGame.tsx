@@ -172,6 +172,9 @@ export default function VocabularyHangmanGame({
     const termLetters = gameState.currentTerm.term.toLowerCase().replace(/[^a-z]/g, '')
     const isCorrectGuess = termLetters.includes(normalizedLetter)
     
+    const won = termLetters.split('').every(letter => newGuessedLetters.has(letter))
+    const lost = !won && gameState.wrongGuesses + (isCorrectGuess ? 0 : 1) >= maxWrongGuesses
+    if (won || lost) attempts.record(gameState.currentTerm, won)
     setGameState(prev => {
       const newWrongGuesses = isCorrectGuess ? prev.wrongGuesses : prev.wrongGuesses + 1
       
@@ -188,8 +191,6 @@ export default function VocabularyHangmanGame({
       let newWordIndex = prev.currentWordIndex
       let newCurrentTerm = prev.currentTerm
       
-      if (wordComplete) attempts.record(prev.currentTerm, true)
-      else if (gameOver) attempts.record(prev.currentTerm, false)
       if (wordComplete) {
         // Calculate score based on difficulty and hints used
         const baseScore = difficulty === 'hard' ? 30 : difficulty === 'medium' ? 20 : 10

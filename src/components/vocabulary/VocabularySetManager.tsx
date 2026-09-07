@@ -207,6 +207,7 @@ export default function VocabularySetManager({ onSelectSet, selectedSetId }: Voc
                     <BookOpen className="w-5 h-5" />
                     {set.name}
                   </CardTitle>
+                  {set.published && <a className="inline-block min-h-11 py-2 underline text-sm" href={`/admin/vocabulary/assign?set_id=${set.id}`}>Assign these words</a>}
                   {set.description && (
                     <p className="text-sm text-muted-foreground mt-1">{set.description}</p>
                   )}

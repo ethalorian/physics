@@ -13,6 +13,7 @@
  *     exit ticket → formative, GEWA → graded work.
  */
 
+import { RESPONSE_RULES } from './block-registry';
 import type { FormulaCategory } from './physics-reference';
 
 export type BlockId = string;
@@ -486,10 +487,7 @@ export interface BlockDocument {
 }
 
 /** Blocks that capture student data (drive the runtime/data-capture layer). */
-export const CAPTURE_BLOCK_TYPES: BlockType[] = [
-  'gewa', 'equation_sandbox', 'exit_ticket', 'marzano', 'question', 'data_table', 'observation', 'self_assessment', 'concept_exercise',
-  'lab_notebook', 'sketch',
-];
+export const CAPTURE_BLOCK_TYPES: BlockType[] = (Object.keys(RESPONSE_RULES) as BlockType[]).filter((t) => t !== 'sentence_frame');
 
 /** B-6 default: which block types render well at group scale. */
 export function lobbyReadyDefault(b: ContentBlock): boolean {
@@ -502,37 +500,12 @@ export function isCaptureBlock(b: ContentBlock): boolean {
   return (CAPTURE_BLOCK_TYPES as string[]).includes(b.type);
 }
 
-/** Does a saved response hold any real student input? (deep, ignores empty
- *  strings / arrays / objects). A blank autosave shouldn't count as "done". */
-function hasContent(v: unknown): boolean {
-  if (v === undefined || v === null) return false;
-  if (typeof v === 'string') return v.trim().length > 0;
-  if (typeof v === 'number') return Number.isFinite(v);
-  if (typeof v === 'boolean') return true;
-  if (Array.isArray(v)) return v.some(hasContent);
-  if (typeof v === 'object') return Object.values(v as Record<string, unknown>).some(hasContent);
-  return false;
-}
-
-/**
- * A capture block is COMPLETE only when the student has deliberately submitted
- * or saved real work — never from merely viewing or a background draft autosave.
- * This is the single source of truth for the per-block "done" chip, the lesson
- * progress bar, and the server-side lesson_progress rollup.
- *  - concept_exercise: complete only when `submitted === true` (drafts don't count).
- *  - everything else: complete when the saved response holds real content.
- */
+/** The same typed rules drive saved progress, gates, and server rollups. */
 export function isResponseComplete(blockType: string, response: unknown): boolean {
-  if (response === undefined || response === null) return false;
-  if (blockType === 'concept_exercise') {
-    return typeof response === 'object' && (response as Record<string, unknown>).submitted === true;
-  }
-  return hasContent(response);
+  return RESPONSE_RULES[blockType as BlockType]?.(response) ?? false;
 }
-
 export function isBlockComplete(b: ContentBlock, response: unknown): boolean {
-  if (!isCaptureBlock(b)) return false;
-  return isResponseComplete(b.type, response);
+  return isCaptureBlock(b) && (RESPONSE_RULES[b.type]?.(response, b) ?? false);
 }
 
 /**

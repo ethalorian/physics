@@ -28,16 +28,23 @@ export function targetSlugsInBlocks(doc: Doc): string[] {
 }
 
 /** Target ids a lesson can be rated on: owned by `lesson_id` ∪ referenced in its blocks. */
-export async function targetIdsForLesson(lessonId: string): Promise<string[]> {
+export async function targetIdsForLesson(lessonId: string, documentOverride?: Doc): Promise<string[]> {
   const [{ data: owned }, { data: row }] = await Promise.all([
     supabaseAdmin.from('learning_targets').select('id').eq('lesson_id', lessonId),
-    supabaseAdmin.from('lessons').select('content_blocks').eq('id', lessonId).maybeSingle(),
+    documentOverride !== undefined ? Promise.resolve({ data: { content_blocks: documentOverride } }) : supabaseAdmin.from('lessons').select('content_blocks').eq('id', lessonId).maybeSingle(),
   ])
   const ids = new Set((owned ?? []).map((t) => (t as { id: string }).id))
   const slugs = targetSlugsInBlocks((row as { content_blocks?: Doc } | null)?.content_blocks)
   if (slugs.length > 0) {
-    const { data: ref } = await supabaseAdmin.from('learning_targets').select('id').in('slug', slugs)
+    const uuids = slugs.filter((s) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s))
+    const { data: ref, error } = await supabaseAdmin.from('learning_targets').select('id').in('slug', slugs)
+    if (error) throw error
     for (const t of ref ?? []) ids.add((t as { id: string }).id)
+    if (uuids.length) {
+      const { data: byId, error: idError } = await supabaseAdmin.from('learning_targets').select('id').in('id', uuids)
+      if (idError) throw idError
+      for (const t of byId ?? []) ids.add((t as { id: string }).id)
+    }
   }
   return [...ids]
 }

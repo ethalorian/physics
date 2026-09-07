@@ -20,8 +20,8 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
 
   const [{ data: asg }, { data: sets }, { data: terms }] = await Promise.all([
     supabaseAdmin.from('vocab_assignments').select('id, vocabulary_set_id, due_on, note, active, created_at').eq('course_id', courseId).order('created_at', { ascending: false }),
-    supabaseAdmin.from('vocabulary_sets').select('id, name, lesson_id, unit_id, published').eq('published', true),
-    supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id'),
+    supabaseAdmin.from('vocabulary_sets').select('id, name, lesson_id, unit_id, published').eq('published', true).eq('archived', false),
+    supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id').eq('archived', false),
   ])
   const countBy = new Map<string, number>()
   for (const t of (terms ?? []) as { vocabulary_set_id: string }[]) countBy.set(t.vocabulary_set_id, (countBy.get(t.vocabulary_set_id) ?? 0) + 1)

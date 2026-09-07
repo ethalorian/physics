@@ -1,5 +1,6 @@
 "use client"
 
+import { wordTranslation } from '@/lib/vocab-language'
 import { useEffect, useState } from 'react'
 import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
 import Link from 'next/link'
@@ -9,6 +10,7 @@ import { Zap } from 'lucide-react'
 // builder), grouped Tier 1/2/3, with cognate, part of speech, example, image.
 
 interface Term {
+  translations?: Record<string,{term?:string;definition?:string}>
   id: string
   term: string
   definition: string
@@ -30,7 +32,7 @@ const TIER_META: Record<number, { label: string; color: string }> = {
 
 export default function LessonVocabView({ lessonId }: { lessonId: string }) {
   // SEI — the Spanish definition shows when the student has their home language on (lesson header dial).
-  const { showL1 } = useLanguageProfile()
+  const { showL1, profile } = useLanguageProfile()
   const [terms, setTerms] = useState<Term[] | null>(null)
 
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function LessonVocabView({ lessonId }: { lessonId: string }) {
                           {x.cognate && <span className="ml-1.5 text-xs" style={{ color: 'var(--muted-foreground)' }}>· {x.cognate}</span>}
                         </div>
                         <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{x.definition}</div>
-                        {showL1 && x.definition_es && <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{x.definition_es}</div>}
+                        {showL1 && wordTranslation(x,profile?.homeLang).definition && <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{wordTranslation(x,profile?.homeLang).definition}</div>}
                         {x.example && <div className="text-xs italic mt-1" style={{ color: 'var(--muted-foreground)' }}>“{x.example}”</div>}
                       </div>
                     </div>

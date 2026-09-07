@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { TermLabel, DefinitionLabel } from '@/components/vocabulary/arcade/VocabSei'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -53,7 +52,6 @@ export default function VocabularyConcentrationGame({
   difficulty = 'medium',
   numberOfPairs = 6
 }: VocabularyConcentrationGameProps) {
-  const attempts = useVocabAttempts(null, 'concentration')
   const [gameState, setGameState] = useState<GameState>({
     gameStatus: 'waiting',
     score: 0,
@@ -220,7 +218,7 @@ export default function VocabularyConcentrationGame({
   const checkForMatch = useCallback((selectedCards: GameCard[]) => {
     const [card1, card2] = selectedCards
     const isMatch = card1.termId === card2.termId && card1.type !== card2.type
-    attempts.record({ id: (card1.type === 'term' ? card1 : card2).termId }, isMatch)
+    // Card flips measure memory. Keep game scores for engagement, not word accuracy.
     
     setGameState(prev => ({
       ...prev,
@@ -280,7 +278,7 @@ export default function VocabularyConcentrationGame({
         ))
       }, 500)
     }
-  }, [gameState, difficulty, onGameComplete, attempts])
+  }, [gameState, difficulty, onGameComplete])
 
   const resetGame = useCallback(() => {
     setGameState(prev => ({
@@ -483,4 +481,3 @@ export default function VocabularyConcentrationGame({
     </div>
   )
 }
-

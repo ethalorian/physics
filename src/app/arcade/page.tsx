@@ -1,5 +1,6 @@
 "use client"
 
+import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, Sigma } from 'lucide-react'
@@ -135,6 +136,7 @@ export default function ArcadePage() {
 
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <VocabTaskCards />
       {/* ===== marquee ===== */}
       <div className="flex items-center justify-between flex-wrap gap-3 mt-2 mb-1">
         <div className="flex items-center gap-3">

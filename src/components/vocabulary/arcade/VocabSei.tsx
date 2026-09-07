@@ -22,6 +22,7 @@
  * Games call useVocabSei() for {showL1, level, timeScale, speak} and render terms through
  * <TermLabel> / <DefinitionLabel> so every cabinet gets the same route.
  */
+import { wordTranslation } from '@/lib/vocab-language'
 import { useCallback } from 'react'
 import { Volume2 } from 'lucide-react'
 import type { VocabularyTerm } from '@/types/assignment'
@@ -49,14 +50,15 @@ function rank(l: ScaffoldLevel) { return l === 'bare' ? 0 : l === 'partial' ? 1 
 
 /** The English term with its picture, its Spanish beneath when L1 is on, and a say-it button. */
 export function TermLabel({ term, size = 'md', speakable = true, className = '' }: { term: VocabularyTerm; size?: 'sm' | 'md' | 'lg'; speakable?: boolean; className?: string }) {
-  const { showL1, speak } = useVocabSei()
+  const { showL1, speak, homeLang } = useVocabSei()
+  const translated = wordTranslation(term, homeLang)
   const iconSize = size === 'lg' ? 34 : size === 'md' ? 24 : 18
   return (
     <span className={`inline-flex items-center gap-2 min-w-0 ${className}`}>
       {term.icon && <span aria-hidden style={{ fontSize: iconSize, lineHeight: 1 }}>{term.icon}</span>}
       <span className="min-w-0">
         <span className="block truncate">{term.term}</span>
-        {showL1 && term.cognate && <span className="block text-xs font-normal opacity-75 truncate">{term.cognate}</span>}
+        {showL1 && translated.term && <span className="block text-xs font-normal opacity-75 truncate">{translated.term}</span>}
       </span>
       {speakable && (
         <button type="button" aria-label={`Say ${term.term}`} title="Say it · Escúchalo"
@@ -71,17 +73,19 @@ export function TermLabel({ term, size = 'md', speakable = true, className = '' 
 
 /** The English definition, with the Spanish definition beneath when L1 is on. */
 export function DefinitionLabel({ term, className = '' }: { term: VocabularyTerm; className?: string }) {
-  const { showL1 } = useVocabSei()
+  const { showL1, homeLang } = useVocabSei()
+  const translated = wordTranslation(term, homeLang)
   return (
     <span className={`block ${className}`}>
       <span className="block">{term.definition}</span>
-      {showL1 && term.definitionEs && <span className="block text-xs opacity-75 mt-0.5">{term.definitionEs}</span>}
+      {showL1 && translated.definition && <span className="block text-xs opacity-75 mt-0.5">{translated.definition}</span>}
     </span>
   )
 }
 
 /** Plain-string helpers for games that render into canvas / non-JSX surfaces. */
-export function clueText(term: VocabularyTerm, showL1: boolean): string {
+export function clueText(term: VocabularyTerm, showL1: boolean, homeLang?: string | null): string {
+  const translated = wordTranslation(term, homeLang)
   const icon = term.icon ? `${term.icon} ` : ''
-  return showL1 && term.definitionEs ? `${icon}${term.definition} · ${term.definitionEs}` : `${icon}${term.definition}`
+  return showL1 && translated.definition ? `${icon}${term.definition} · ${translated.definition}` : `${icon}${term.definition}`
 }

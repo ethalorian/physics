@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { CAPTURE_BLOCK_TYPES, ContentBlock, isResponseComplete } from '@/data/content-blocks'
+import { type ContentBlock, isCaptureBlock, isBlockComplete } from '@/data/content-blocks'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 import { evidenceSourceFor, isConfidence, isEvidenceSource } from '@/lib/evidence'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
@@ -11,6 +11,7 @@ import { isBlockVisible, type Viewer } from '@/lib/track-visibility'
 // Body: { lesson_id, block_id, block_type, response, response_mode?, scaffolds_used?, target_id?, evidence_source?, confidence?, role? }
 export const POST = withEnrolledStudent(async (request, ctx) => {
     const body = await request.json()
+    if (body.expected_user_id && body.expected_user_id !== ctx.userId) return NextResponse.json({ error: 'Account changed. Reload before saving.' }, { status: 409 })
     if (!body.lesson_id || !body.block_id || body.response === undefined) {
       return NextResponse.json({ error: 'Missing lesson_id, block_id, or response' }, { status: 400 })
     }
@@ -23,6 +24,9 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       .single()
     const blocks: ContentBlock[] = lessonRow?.content_blocks?.blocks ?? []
     const block = blocks.find((b) => b.id === body.block_id)
+    if (!block || !isCaptureBlock(block)) return NextResponse.json({ error: 'This answer block is no longer in the lesson.' }, { status: 422 })
+    const answerViewer: Viewer = ctx.realRole === 'student' ? { role: 'student', track: await getStudentTrack(ctx.userId) } : { role: 'admin' }
+    if (!isBlockVisible(block, answerViewer)) return NextResponse.json({ error: 'This block is not assigned to your track.' }, { status: 403 })
 
     // E-3 · self-check for an inline question with an answer key: feedback and a
     // sort key on the response (autoCheck), never a mastery record. The key itself
@@ -55,7 +59,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         user_email: ctx.email,
         lesson_id: body.lesson_id,
         block_id: body.block_id,
-        block_type: body.block_type ?? null,
+        block_type: block.type,
         response,
         // SEI context (design "SEI in Blocks"): how they answered + which scaffolds were on. Never a score.
         response_mode: ['text', 'sketch', 'audio', 'label', 'choice'].includes(body.response_mode) ? body.response_mode : null,
@@ -68,14 +72,14 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
     // The explicit save is the record; the autosave draft for this block is now moot.
-    void supabaseAdmin.from('block_drafts').delete().match({ user_id: ctx.userId, lesson_id: body.lesson_id, block_id: body.block_id }).then(() => undefined, () => undefined)
+    await supabaseAdmin.from('block_drafts').delete().match({ user_id: ctx.userId, lesson_id: body.lesson_id, block_id: body.block_id }).lte('updated_at', (data as { created_at: string }).created_at)
 
     // B-4 · XP once per student per block, on the first COMPLETE save. The dedupe
     // key makes re-saves and re-submits no-ops; the existing grants table is the
     // one XP path.
     let xpAwarded = 0
     const blockXp = typeof block?.xp === 'number' && block.xp > 0 ? Math.round(block.xp) : 0
-    if (blockXp > 0 && isResponseComplete(block?.type ?? '', response) && (response as { autoCheck?: string })?.autoCheck !== 'mismatch') {
+    if (blockXp > 0 && isBlockComplete(block, response) && (response as { autoCheck?: string })?.autoCheck !== 'mismatch') {
       try {
         const { data: grant } = await supabaseAdmin.from('economy_point_grants').upsert(
           { user_id: ctx.userId, user_email: ctx.email, source: 'lesson-block', reference: `${body.lesson_id}:${body.block_id}`, points: blockXp, note: `Lesson block ${body.block_id}`, dedupe_key: `block-xp:${body.lesson_id}:${body.block_id}:${ctx.userId}` },
@@ -101,9 +105,9 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       const viewer: Viewer = ctx.realRole === 'student'
         ? { role: 'student', track: await getStudentTrack(ctx.userId) }
         : { role: 'admin' }
-      const captureBlocks = blocks.filter((b) => (CAPTURE_BLOCK_TYPES as string[]).includes(b.type) && isBlockVisible(b, viewer))
+      const captureBlocks = blocks.filter((b) => isCaptureBlock(b) && isBlockVisible(b, viewer))
       const captureIds = captureBlocks.map((b) => b.id)
-      const typeById = new Map(captureBlocks.map((b) => [b.id, b.type]))
+      const blockById = new Map(captureBlocks.map((b) => [b.id, b]))
 
       if (captureIds.length > 0) {
         // Latest response per block, then count only those DELIBERATELY completed
@@ -119,7 +123,8 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
         for (const r of resp ?? []) latest.set(r.block_id, r.response)
         const done = new Set<string>()
         for (const [blockId, response] of latest) {
-          if (isResponseComplete(typeById.get(blockId) ?? '', response)) done.add(blockId)
+          const capture = blockById.get(blockId)
+          if (capture && isBlockComplete(capture, response)) done.add(blockId)
         }
         const pct = Math.round((done.size / captureIds.length) * 100)
         const completed = pct >= 100
@@ -152,6 +157,7 @@ export const GET = withAuth(async (request, ctx) => {
     if (!lessonId) {
       return NextResponse.json({ error: 'Missing lesson_id' }, { status: 400 })
     }
+    if (searchParams.get('expected_user_id') && searchParams.get('expected_user_id') !== ctx.userId) return NextResponse.json({ error: 'Account changed.' }, { status: 409 })
     const role = ctx.role
     const requested = searchParams.get('user_id')
     // Admins may view any student; a teacher only their own roster.

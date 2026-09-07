@@ -9,13 +9,13 @@ type SetRow = { id: string; lesson_id: string | null; unit_id: string | null }
 
 export const GET = withAuth(async (_request, ctx) => {
     // sets that actually have terms
-    const { data: termRows } = await supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id')
+    const { data: termRows } = await supabaseAdmin.from('vocabulary_terms').select('vocabulary_set_id').eq('archived', false)
     const setIdsWithTerms = [...new Set(((termRows ?? []) as { vocabulary_set_id: string }[]).map((r) => r.vocabulary_set_id))]
     if (setIdsWithTerms.length === 0) return NextResponse.json({ units: [], lessons: [] })
 
     // Only PUBLISHED sets surface in the arcade picker. Draft sets (half-built
     // vocab a teacher hasn't marked game-ready) stay hidden here.
-    const { data: setRows } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id, unit_id').eq('published', true).in('id', setIdsWithTerms)
+    const { data: setRows } = await supabaseAdmin.from('vocabulary_sets').select('id, lesson_id, unit_id').eq('published', true).eq('archived', false).in('id', setIdsWithTerms)
     const sets = (setRows ?? []) as SetRow[]
     const lessonIds = [...new Set(sets.map((s) => s.lesson_id).filter((x): x is string => Boolean(x)))]
     const unitIds = [...new Set(sets.map((s) => s.unit_id).filter((x): x is string => Boolean(x)))]

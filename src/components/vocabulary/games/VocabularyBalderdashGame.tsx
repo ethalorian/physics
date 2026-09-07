@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { languageCode } from '@/lib/vocab-language'
 import { useVocabAttempts } from '@/components/vocabulary/arcade/useVocabAttempts'
 import { useVocabSei } from '@/components/vocabulary/arcade/VocabSei'
 import { Feather, Check, Copy, Crown, Eye, Users, Clock } from 'lucide-react'
@@ -68,7 +69,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
     const rd = v.round
     if (v.phase === 'reveal' && rd?.reveal && rd.termId && rd.myVote !== null && rd.myVote !== undefined && !recorded.current.has(v.currentRound)) {
       recorded.current.add(v.currentRound)
-      attempts.record({ id: rd.termId }, Boolean(rd.reveal[rd.myVote]?.real))
+      attempts.record({ id: rd.termId }, Boolean(rd.reveal[rd.myVote]?.real), undefined, `balderdash:${roomId}:${v.currentRound}`)
     }
   }, [attempts])
 
@@ -208,7 +209,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
       <Panel wide>
         {header}
         <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>Forge a definition for</div>
-        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
+        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && languageCode(sei.homeLang) === 'es' && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
         <div className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>
           Write a fake definition convincing enough to fool your classmates. Sound like the textbook.
         </div>
@@ -245,7 +246,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
       <Panel wide>
         {header}
         <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>Which is the real definition of</div>
-        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
+        <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && languageCode(sei.homeLang) === 'es' && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
         <div className="grid gap-2">
           {(r.ballot ?? []).map((text, i) => {
             const mine = i === r.myEntryIndex
@@ -282,7 +283,7 @@ export default function VocabularyBalderdashGame({ roomId, onComplete }: { roomI
     <Panel wide>
       {header}
       <div className="text-xs uppercase tracking-wide mb-1" style={{ color: 'var(--muted-foreground)' }}>The truth about</div>
-      <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
+      <div className="text-2xl font-bold mb-3" style={{ color: 'var(--primary)' }}>{r.icon && <span aria-hidden className="mr-2">{r.icon}</span>}{r.term}{sei.showL1 && languageCode(sei.homeLang) === 'es' && r.cognate && <span className="block text-sm font-normal opacity-75">{r.cognate}</span>}</div>
       <div className="grid gap-2">
         {(r.reveal ?? []).map((e, i) => (
           <div key={i} className="rounded-xl border px-4 py-3 text-sm" style={{

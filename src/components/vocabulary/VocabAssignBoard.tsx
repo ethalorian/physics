@@ -10,7 +10,7 @@
  * the word was attempted: "with supports" (Spanish clue showing, or full/partial level)
  * vs "without" (bare). A word that is green with supports and empty without is known
  * through the route, not yet on its own — that is the whole point of the split.
- * Bands match the Control Room: ≥80 got it · 50–79 almost · <50 not yet.
+ * Bands match the Control Room: ≥80% practice accuracy · 50–79 almost · <50 not yet.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
@@ -63,6 +63,7 @@ export default function VocabAssignBoard() {
 
   useEffect(() => {
     if (!courseId || !selectedSet) { setGrid(null); return }
+    setGrid(null)
     let active = true
     fetch(`/api/vocab/competency?course_id=${courseId}&set_id=${selectedSet}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (active && d) setGrid(d) }).catch(() => {})
     return () => { active = false }
@@ -100,7 +101,7 @@ export default function VocabAssignBoard() {
         <BookOpen size={20} style={{ color: 'var(--primary)' }} />
         <div className="min-w-0 flex-1">
           <h1 className="text-xl md:text-2xl font-bold leading-tight">Assign words · read competency</h1>
-          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Assign a set to a class; the arcade opens on it. Every word attempt in any game lands here as accuracy — split by whether the SEI route was on.</p>
+          <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Assign a set to a class; the arcade opens on it. Historical game practice only. Use the new assignment reports for vocabulary checks and target evidence.</p>
         </div>
         <select value={courseId} onChange={(e) => setCourseId(e.target.value)} className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'var(--border)', background: 'var(--card)', minHeight: 44 }}>
           {courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}
@@ -156,7 +157,7 @@ export default function VocabAssignBoard() {
           <div className="flex flex-wrap items-center gap-2 mb-3">
             <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Competency · {setBy.get(selectedSet)?.label ?? 'pick an assigned set'}</div>
             <div className="ml-auto inline-flex rounded-full border p-0.5 text-xs" style={{ borderColor: 'var(--border)' }}>
-              {([['all', 'All attempts'], ['supported', 'With supports'], ['bare', 'Without supports']] as [View, string][]).map(([v, label]) => (
+              {([['all', 'All attempts'], ['supported', 'Additional support settings'], ['bare', 'Standard settings']] as [View, string][]).map(([v, label]) => (
                 <button key={v} type="button" onClick={() => setView(v)} className="rounded-full px-3 py-1.5" style={{ background: view === v ? 'var(--primary)' : 'transparent', color: view === v ? 'var(--primary-foreground)' : 'var(--foreground)', fontWeight: view === v ? 700 : 500, minHeight: 32 }}>{label}</button>
               ))}
             </div>
@@ -201,7 +202,7 @@ export default function VocabAssignBoard() {
                             </td>
                           )
                         })}
-                        <td className="px-2 py-1.5 text-right font-bold tabular-nums" style={{ color: bandColor(avg) }}>{avg === null ? '—' : `${avg}%`}</td>
+                        <td className="px-2 py-1.5 text-right font-bold tabular-nums" style={{ color: bandColor(avg) }}>{avg === null ? '—' : `${avg}%`}<div className="text-[10px] font-normal">{grid.terms.filter(t => pick(s.cells[t.id], view).n > 0).length}/{grid.terms.length} words</div></td>
                       </tr>
                     )
                   })}
@@ -213,7 +214,7 @@ export default function VocabAssignBoard() {
                 </tbody>
               </table>
               <p className="text-[11px] mt-3" style={{ color: 'var(--muted-foreground)' }}>
-                Accuracy over every arcade attempt (n = attempts). <b style={{ color: 'var(--success)' }}>≥80 got it</b> · <b style={{ color: 'var(--reward-foreground)' }}>50–79 almost</b> · <b style={{ color: 'var(--destructive)' }}>&lt;50 not yet</b>. “With supports” = the Spanish clue was showing or full/partial support was on; “without” = bare. Green with supports and blank without means the word is known through the route, not yet on its own.
+                Accuracy over every arcade attempt (n = attempts). <b style={{ color: 'var(--success)' }}>≥80% practice accuracy</b> · <b style={{ color: 'var(--reward-foreground)' }}>50–79 almost</b> · <b style={{ color: 'var(--destructive)' }}>&lt;50 not yet</b>. “Additional support settings” = the Spanish clue was showing or full/partial support was on; “without” = bare. Settings are not a record of supports actually used; these game percentages do not establish mastery.
               </p>
             </div>
           )}
