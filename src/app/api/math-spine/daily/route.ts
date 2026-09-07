@@ -29,11 +29,12 @@ export const GET = withAuth(async (request, ctx) => {
   const targetUserId = resolved.userId
 
   // Active competencies.
-  const { data: compRows } = await supabaseAdmin
+  const { data: compRows, error: competencyError } = await supabaseAdmin
     .from('math_competencies')
     .select('id, code, statement, strand, order_index, sequence_order, mini_lesson, misconception_fallback')
     .eq('is_active', true)
     .order('sequence_order', { ascending: true, nullsFirst: false })
+  if (competencyError) return NextResponse.json({ error: 'Could not load the math skills. Please retry.' }, { status: 503 })
   const competencies = compRows ?? []
   if (competencies.length === 0) {
     return NextResponse.json({ item: null, snapshot: { mathPointsEarned: 0, fluentCount: 0, total: 0 } })
@@ -81,11 +82,12 @@ export const GET = withAuth(async (request, ctx) => {
   // Spiral items for that competency; rotate by day so it varies.
   // Re-checks and maintenance prefer the spaced-retrieval bank (is_spaced),
   // and maintenance leans harder (stretch) when difficulty is tagged.
-  const { data: itemRows } = await supabaseAdmin
+  const { data: itemRows, error: itemError } = await supabaseAdmin
     .from('math_spiral_items')
     .select('id, prompt, answer_key, difficulty, needs_graph, needs_equation_builder, translations, is_spaced, template, check_mode, misconceptions')
     .eq('competency_id', target.id)
     .order('created_at', { ascending: true })
+  if (itemError) return NextResponse.json({ error: 'Could not load the math question. Please retry.' }, { status: 503 })
   let pool = itemRows ?? []
   if (pickKind === 'recheck' || pickKind === 'maintenance') {
     const spaced = pool.filter((i) => i.is_spaced)

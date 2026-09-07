@@ -7,7 +7,7 @@
  * to its own screen, where the mini-lesson + GEWA solve block live. Shows
  * what the student has earned and whether today's warm-up is already submitted.
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -38,31 +38,39 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
   const [snapshot, setSnapshot] = useState<DailySnapshot | null>(null)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [retry, setRetry] = useState(0)
+  const onStatusRef = useRef(onStatus)
+  useEffect(() => { onStatusRef.current = onStatus }, [onStatus])
 
   useEffect(() => {
     let active = true
-    fetch('/api/math-spine/daily')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        if (!active || !d) return
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 15000)
+    setLoading(true); setError(null)
+    fetch('/api/math-spine/daily', { signal: controller.signal })
+      .then(async r => {
+        const d = await r.json().catch(() => null)
+        if (!r.ok) throw new Error(d?.error || 'Could not load the warm-up. Please retry.')
+        if (!d || typeof d !== 'object' || !('item' in d)) throw new Error('The warm-up response was incomplete. Please retry.')
+        return d
+      })
+      .then(d => {
+        if (!active) return
         setItem(d.item ?? null)
         setSnapshot(d.snapshot ?? null)
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
-        setLoading(false)
-        // Let the host page decide how prominent to make the card (e.g. the
-        // home hub keeps its disclosure open until today's rep is submitted).
-        onStatus?.({ hasItem: Boolean(d.item), submitted: Boolean(d.alreadySubmitted) })
+        onStatusRef.current?.({ hasItem: Boolean(d.item), submitted: Boolean(d.alreadySubmitted) })
       })
-      .catch(() => {
-        if (active) setLoading(false)
+      .catch(e => {
+        if (active) setError(e instanceof Error && e.name === 'AbortError' ? 'The warm-up took too long to load. Please retry.' : e instanceof Error ? e.message : 'Could not load the warm-up. Please retry.')
       })
-    return () => {
-      active = false
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- fetch once on mount; onStatus is a notification, not an input
-  }, [])
+      .finally(() => { clearTimeout(timeout); if (active) setLoading(false) })
+    return () => { active = false; clearTimeout(timeout); controller.abort() }
+  }, [retry])
 
-  if (loading || !snapshot) return null
+  if (loading) return <div role="status" className="rounded-lg border bg-card p-4 text-sm">Loading today’s math question…</div>
+  if (error) return <div className="space-y-3 rounded-lg border bg-card p-4"><p role="alert" className="text-sm">{error}</p><div className="flex flex-wrap gap-3"><Button onClick={() => setRetry(n => n + 1)}>Retry warm-up</Button><Link className="inline-flex min-h-11 items-center text-sm underline" href="/dashboard/math-spine/warmup">Open warm-up page</Link></div></div>
 
   return (
     <Card className="apple-card overflow-hidden">
@@ -79,7 +87,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
               </CardDescription>
             </div>
           </div>
-          <div className="hidden sm:flex items-center gap-3 text-right">
+          {snapshot && <div className="hidden sm:flex items-center gap-3 text-right">
             <div>
               <div className="text-lg font-bold tracking-tight text-foreground tabular-nums">{snapshot.mathPointsEarned}</div>
               <p className="text-[11px] font-medium text-muted-foreground">pts earned</p>
@@ -90,7 +98,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
                 {snapshot.fluentCount}/{snapshot.total}
               </span>
             </div>
-          </div>
+          </div>}
         </div>
       </CardHeader>
       <CardContent>
@@ -102,7 +110,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
               </span>
               <span className="text-xs text-muted-foreground">{item.competencyStatement}</span>
             </div>
-            <p className="text-sm font-medium text-foreground leading-relaxed line-clamp-2">{item.prompt}</p>
+            <p className="text-sm font-medium text-foreground leading-relaxed whitespace-pre-wrap">{item.prompt}</p>
 
             {alreadySubmitted ? (
               <div className="flex items-center gap-2 text-sm rounded-md px-3 py-2 bg-success/10 text-success">

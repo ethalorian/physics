@@ -291,7 +291,7 @@ export default function HomePage() {
                 <ChevronDown size={15} className="ml-auto" style={{ color: 'var(--muted-foreground)' }} />
               </summary>
               <div className="px-4 pb-4">
-                <DailyMathTask onStatus={(s) => setWarmupOpen(s.hasItem && !s.submitted)} />
+                <DailyMathTask onStatus={(s) => setWarmupOpen(!s.submitted)} />
               </div>
             </details>
             <VocabTaskCards />
