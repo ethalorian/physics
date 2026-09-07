@@ -1,3 +1,4 @@
+import { projectedBlockPages } from '@/lib/projected-block'
 import type { InlineQuestion } from '@/data/content-blocks'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
@@ -11,6 +12,7 @@ import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 //   current_slide, current_section, poll_block_id (null closes the poll),
 //   poll_locked, poll_revealed, blackout, timer_seconds (null clears), status 'ended'.
 type Patch = {
+  projected_block_id?: string | null; projected_block_page?: number
   current_anchor?: string | null; current_slide?: number; current_section?: number; poll_block_id?: string | null
   poll_locked?: boolean; poll_revealed?: boolean; blackout?: boolean
   timer_seconds?: number | null; status?: 'live' | 'ended'; discussion?: 'start' | 'revote'
@@ -19,7 +21,7 @@ type Patch = {
 export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const body = (await request.json().catch(() => ({}))) as Patch
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, poll_block_id, poll_run_id').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, projected_block_id, poll_block_id, poll_run_id').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (ctx.role !== 'admin' && (s as { teacher_id: string }).teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
@@ -45,6 +47,22 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
     update.poll_block_id = body.poll_block_id ?? null
     // Opening a new poll resets lock + reveal.
     if (body.poll_block_id) { update.poll_locked = false; update.poll_revealed = false }
+  }
+  if ('projected_block_id' in body) {
+    if (body.projected_block_id !== null) {
+      const block = lesson.content_blocks.blocks.find(b => b.id === body.projected_block_id)
+      const index = pages.findIndex(p => p.blocks.some(b => b.id === body.projected_block_id))
+      if (!block || block.type === 'deck' || index < 0) return NextResponse.json({ error: 'This lesson block is unavailable for this class.' }, { status: 400 })
+      update.current_anchor = sectionAnchor(pages[index]); update.current_section = index
+    }
+    update.projected_block_id = body.projected_block_id
+    update.projected_block_page = 0
+  }
+  if ('projected_block_page' in body) {
+    const selected = 'projected_block_id' in body ? body.projected_block_id : s.projected_block_id
+    const block = lesson.content_blocks.blocks.find(b => b.id === selected)
+    if (!block || !Number.isInteger(body.projected_block_page) || body.projected_block_page! < 0 || body.projected_block_page! >= projectedBlockPages(block).length) return NextResponse.json({ error: 'Unknown block continuation' }, { status: 400 })
+    update.projected_block_page = body.projected_block_page
   }
   if (typeof body.poll_locked === 'boolean') update.poll_locked = body.poll_locked
   if (typeof body.poll_revealed === 'boolean') { update.poll_revealed = body.poll_revealed; if (body.poll_revealed) update.poll_locked = true }
@@ -82,7 +100,7 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
 export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const blockId = new URL(request.url).searchParams.get('block_id')
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, status, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, status, projected_block_id, projected_block_page, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const sess = s as { id: string; teacher_id: string; lesson_id: string; course_id: string | null; poll_block_id: string | null; poll_run_id: string | null }
   if (ctx.role !== 'admin' && sess.teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })

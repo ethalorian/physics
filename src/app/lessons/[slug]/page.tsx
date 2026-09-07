@@ -17,7 +17,7 @@ async function getNav(unit: string | null | undefined, currentSlug: string, gate
   const { data } = await supabaseAdmin
     .from('lessons')
     .select('id, slug, title, lesson_number, visibility_track')
-    .eq('unit', unit)
+    .eq('unit_id', unit)
     .eq('published', true)
     .order('lesson_number', { ascending: true })
   const list = ((data ?? []) as SiblingRow[]).filter((l) => gate(l.id) && isLessonVisible(l.visibility_track, viewer))
@@ -41,7 +41,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
     return <div className="mx-auto max-w-md p-8"><h1 className="text-xl font-semibold">This lesson is unavailable</h1><p>Your class must be enrolled and have an open lesson window.</p><Link href="/home">Back to home</Link></div>
   }
   const gate = access.viewer.role === 'admin' ? () => true : await getStudentLessonGate(session.user.id)
-  const nav = await getNav(access.lesson.unit, slug, gate, access.viewer)
+  const nav = await getNav(access.lesson.unit_id, slug, gate, access.viewer)
   const lesson = lessonForReader(access.lesson, access.document)
   const reader = <BlockLessonViewer lesson={lesson} nav={nav} staffView={access.viewer.role === 'admin'} />
   return access.viewer.role === 'admin' ? reader : <LessonActivityTracker lessonId={lesson.id}>{reader}</LessonActivityTracker>

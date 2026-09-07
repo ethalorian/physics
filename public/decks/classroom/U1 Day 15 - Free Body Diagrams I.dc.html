@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D15</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="FBDs are the central visual skill of mechanics. Today: JUST the diagram, no calculations. Whiteboards, one per student." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 15 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Free Body Diagrams:<br>Drawing the <span style="color:#E0A93D;">Forces</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Once you can draw the forces, F = ma does the rest. Today: just the picture.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: warm-up bridges Day 10 vocab to today's drawing. Two forces: gravity down, normal up, equal lengths." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Your phone is lying on the desk. <span style="color:#E0A93D;">Draw every force on it as an arrow.</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Think about the lengths, not just the directions.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ DAY 10'S FORCE FAMILY, NOW ON PAPER</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can draw a <span style="color:#5E8B6E;">free body diagram</span> showing all forces on a single object, with arrows <span style="color:#C08F2E;">proportional</span> to force magnitudes.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="The Six Rules" data-speaker-notes="5–25: the rules, then 3-4 board examples (book on desk, person standing, pushed box). Rule 6 is the subtle one — only forces ON the object, never forces it exerts on other things." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 560px; gap:60px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.08; color:#17142E; font-weight:700;">Six Rules, One Picture</h2>
+    <div style="display:flex; flex-direction:column; gap:16px; font-size:29px; line-height:1.45; color:#17142E;">
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:23px; flex:none;">1</span><span>Draw just the object — a dot or a box.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:23px; flex:none;">2</span><span>One arrow per force acting <strong>on</strong> it.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:23px; flex:none;">3</span><span>Arrows point in the force's direction.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:23px; flex:none;">4</span><span>Length proportional to magnitude.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:23px; flex:none;">5</span><span>Label every arrow: F<sub>gravity</sub>, F<sub>normal</sub>, F<sub>friction</sub>…</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C05A5A; font-size:23px; flex:none;">6</span><span><strong>Only forces ON the object</strong> — never the ones it exerts on other things.</span></div>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">WORKED — BOX PUSHED ON ROUGH FLOOR</div>
+    <svg viewBox="0 0 480 400" style="width:100%;">
+      <defs><marker id="d15a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker><marker id="d15b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker><marker id="d15c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker><marker id="d15d" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C05A5A"></path></marker></defs>
+      <rect x="204" y="164" width="72" height="72" rx="6" fill="#262148" stroke="#FAF9FC" stroke-width="3"></rect>
+      <line x1="240" y1="240" x2="240" y2="330" stroke="#9B8EC4" stroke-width="5" marker-end="url(#d15a)"></line>
+      <text x="240" y="362" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4">F_gravity</text>
+      <line x1="240" y1="160" x2="240" y2="70" stroke="#7FA68B" stroke-width="5" marker-end="url(#d15b)"></line>
+      <text x="240" y="48" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7FA68B">F_normal</text>
+      <line x1="280" y1="200" x2="404" y2="200" stroke="#E0A93D" stroke-width="5" marker-end="url(#d15c)"></line>
+      <text x="356" y="176" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">F_applied</text>
+      <line x1="200" y1="200" x2="118" y2="200" stroke="#C05A5A" stroke-width="5" marker-end="url(#d15d)"></line>
+      <text x="150" y="176" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#C05A5A">F_friction</text>
+    </svg>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:18px; color:#8B87A6; margin-top:6px;">APPLIED LONGER THAN FRICTION → THE BOX ACCELERATES</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ LABELS USE SUBSCRIPTS: F_gravity, NOT "GRAVITY ARROW"</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="Build One Live" data-speaker-notes="Teacher demo between whiteboard rounds: build an FBD force-by-force; class judges each arrow before it lands. Includes anti-examples — the sim accepts wrong arrows so the class can catch them." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Build One Together</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · CLASS JUDGES EACH ARROW</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Add forces one at a time. The class calls <strong style="color:#5E8B6E;">keep</strong> or <strong style="color:#C05A5A;">kill</strong> before the next one lands.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="FBDBuilderSim" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THEN: WHITEBOARD ROUNDS, ONE SCENARIO AT A TIME</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Whiteboard Rounds" data-speaker-notes="25–43: one scenario at a time, whole-class check after each. The peak-of-flight ball is the classic trap — ONE force only (gravity). 'Momentum arrows' are the error to hunt." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E; margin-bottom:32px;">WHITEBOARDS · ONE AT A TIME · CHECK AFTER EACH</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Five Rounds</h2>
+  <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:24px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#5E8B6E; margin-bottom:12px;">R1</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Book resting on a table</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#7A75A0; margin-bottom:12px;">R2</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Box pushed on a rough floor</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#C08F2E; margin-bottom:12px;">R3</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Person walking forward</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#5E8B6E; margin-bottom:12px;">R4</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Car going around a curve</p></div>
+    <div style="background:#17142E; border-top:6px solid #C05A5A; border-radius:6px; padding:28px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#C05A5A; margin-bottom:12px;">R5 · TRAP</div><p style="margin:0; font-size:26px; line-height:1.45; color:#D9D6E8;">Ball at the <strong style="color:#FAF9FC;">peak</strong> of its flight — how many forces?</p></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ R5 ANSWER: ONE. GRAVITY. THAT'S IT.</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="The Asteroid's FBD" data-speaker-notes="43–50: the simplest FBD in the room — gravity vectors only, no contact forces. Add the impactor arrow and the diagram becomes a mission plan." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:grid; grid-template-columns:1fr 620px; gap:70px; align-items:center; box-sizing:border-box; height:100%;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:36px;">BACK TO 2026-XJ</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#FAF9FC; font-weight:700;">The Cleanest FBD<br><span style="color:#E0A93D;">You'll Ever Draw</span></h2>
+    <p style="margin:0; font-size:33px; line-height:1.6; color:#D9D6E8; max-width:880px;">No surface, no friction, no rope. Just gravity arrows: the Sun's (long) and Earth's (short, growing). Add one <strong style="color:#7FA68B;">applied arrow</strong> from an impactor and the FBD becomes a <strong style="color:#FAF9FC;">mission plan</strong>.</p>
+  </div>
+  <div style="background:#1D1938; border:1px solid #2E2950; border-radius:8px; padding:36px 42px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.2em; color:#8B87A6; margin-bottom:8px;">FBD · 2026-XJ, DEEP SPACE</div>
+    <svg viewBox="0 0 520 400" style="width:100%;">
+      <defs><marker id="d15e" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker><marker id="d15f" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker><marker id="d15g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker></defs>
+      <circle cx="260" cy="200" r="26" fill="#262148" stroke="#FAF9FC" stroke-width="3"></circle>
+      <line x1="260" y1="230" x2="260" y2="368" stroke="#E0A93D" stroke-width="5" marker-end="url(#d15e)"></line>
+      <text x="282" y="330" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">F_sun · dominant</text>
+      <line x1="288" y1="186" x2="368" y2="146" stroke="#9B8EC4" stroke-width="4" marker-end="url(#d15f)"></line>
+      <text x="380" y="136" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4">F_earth · small</text>
+      <line x1="230" y1="184" x2="122" y2="128" stroke="#7FA68B" stroke-width="4" stroke-dasharray="9 8" marker-end="url(#d15g)"></line>
+      <text x="118" y="106" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7FA68B">F_applied · ours?</text>
+    </svg>
+  </div>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit FBD: box PULLED by a rope with friction resisting — four arrows: gravity, normal, tension, friction. Proportional, labeled." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Draw the FBD: a box <span style="color:#E0A93D;">pulled across the floor by a rope</span>, friction resisting. Every arrow labeled, lengths proportional.</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I draw a complete, labeled, proportional FBD? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 5 — free body diagram sections</strong> (or teacher notes if your edition lacks them).</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: FROM PICTURE TO NUMBER — NET FORCE FROM FBDs</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

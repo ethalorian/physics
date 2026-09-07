@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import LessonContextLinks from '@/components/admin/LessonContextLinks'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap, MonitorPlay } from 'lucide-react'
 import { deckForDay } from '@/data/lesson-decks'
@@ -58,22 +59,33 @@ export default function TeacherPlansPage() {
   const [honorsDays, setHonorsDays] = useState<number[]>([])
   const [sel, setSel] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
+  const [courseId, setCourseId] = useState('')
+  const [ready, setReady] = useState(false)
+  const [error, setError] = useState('')
+  const requestedDay = useRef<number | null>(null)
+  useEffect(() => { const p = new URLSearchParams(window.location.search); setCourseId(p.get('class') ?? ''); if(p.get('unit')) setUnit(p.get('unit')!); requestedDay.current=p.has('day')?Number(p.get('day')):null; setReady(true) }, [])
 
   useEffect(() => {
-    setLoading(true)
-    fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}`)
-      .then((r) => r.json())
+    if (!ready) return
+    const controller = new AbortController()
+    setLoading(true); setError('')
+    fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}${courseId ? `&course_id=${encodeURIComponent(courseId)}` : ''}`, { signal: controller.signal })
+      .then(async r => {const d=await r.json();if(!r.ok)throw new Error(d.error??'Could not load teacher plans.');return d})
       .then((d: { days?: DayPlan[]; track?: string; tracks?: string[]; availableUnits?: string[]; honorsDays?: number[] }) => {
+        if (controller.signal.aborted) return
         setDays(d.days ?? [])
         if (d.tracks?.length) setTracks(d.tracks)
         else if (d.track) setTracks([d.track])
         if (d.availableUnits?.length) setAvailableUnits(d.availableUnits)
         setHonorsDays(d.honorsDays ?? [])
-        setSel((d.days ?? []).length ? d.days![0].day : null)
+        setSel(requestedDay.current !== null ? (d.days ?? []).some(x => x.day === requestedDay.current) ? requestedDay.current : null : d.days?.[0]?.day ?? null)
+        if (requestedDay.current !== null && !(d.days ?? []).some(x => x.day === requestedDay.current)) setError('No teacher plan matches this lesson day. Choose an available plan; student content is edited separately.')
+        requestedDay.current = null
         setLoading(false)
       })
-      .catch(() => setLoading(false))
-  }, [unit])
+      .catch(e => { if (!controller.signal.aborted) { setError(e.message);setLoading(false) } })
+    return () => controller.abort()
+  }, [unit,ready,courseId])
 
   const current = days.find((d) => d.day === sel) ?? null
   const track = planSetFor(unit, tracks)
@@ -92,6 +104,8 @@ export default function TeacherPlansPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <LessonContextLinks unitId={unit} day={sel} />
+      {error && <p role="alert" className="mb-3 text-sm text-destructive">{error}</p>}
       <Link href="/admin/teacher" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
         <ArrowLeft size={15} /> Dashboard
       </Link>

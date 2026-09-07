@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D4</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="THE equation day — the one Day 1 promised. 0–3 min quick check: mass vs weight, why weight changed on Mars. Prep: inverse-square concentric-spheres diagram for the board; PhET Gravity Force Lab loaded (our in-deck sim covers the same moves)." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:300px; width:600px;">
+    <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'Space Grotesk',sans-serif; font-size:58px; font-weight:700; color:#E0A93D; text-align:center;">F = G·m<sub>1</sub>·m<sub>2</sub> / r²</div>
+    <p style="margin:24px 0 0 0; font-family:'IBM Plex Mono',monospace; font-size:22px; color:#8B87A6; text-align:center;">the law Day 1 promised — revealed</p>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · UNIT 2</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1000px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:92px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Every Mass Pulls<br>Every <span style="color:#E0A93D;">Other Mass</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:850px;">Day 4: Newton's law of universal gravitation — the law that decides 2026-XJ's path.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 04 · PHASE 2</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="Quick check 0–3 min — yesterday's distinction has to be solid before the law lands on top of it." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 3 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.24; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">What's mass? What's weight?<br>Why did your weight change on Mars yesterday?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Three quick answers. Today we find out where g comes from.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — DO NOW</span>
+    <span>U2 · 02/10</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — write F = G·m₁·m₂/r², explain each symbol, reason about how F changes when masses or distance change. Targets K1, R1 (preview)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">04</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:1.32; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can write F = G·m<sub>1</sub>·m<sub>2</sub>/r², explain what each symbol means, and <span style="color:#E0A93D;">reason about how F changes</span> when masses or distance change.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — TODAY'S TARGET</span>
+    <span>U2 · 03/10</span>
+  </div>
+</section>
+
+<section data-label="Equation Anatomy" data-speaker-notes="3–18 min direct instruction. Walk each piece. G = 6.67×10⁻¹¹ — TINY, which is why gravity is the weakest force at human scales. r is CENTER to center, not surface to surface. EL support: words above every symbol, exactly as here." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">EQUATION · ANATOMY</span>
+  </div>
+  <div style="width:100%; box-sizing:border-box; background:#17142E; border-radius:8px; padding:44px 60px; margin-bottom:44px; text-align:center;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:72px; font-weight:700; color:#FAF9FC;">F = <span style="color:#E0A93D;">G</span> · <span style="color:#9B8EC4;">m<sub>1</sub></span> · <span style="color:#7FA68B;">m<sub>2</sub></span> / <span style="color:#E0A93D;">r²</span></span>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px 60px; width:100%; font-size:30px; line-height:1.5;">
+    <div style="display:flex; gap:20px;"><strong style="color:#17142E; flex:none; font-family:'IBM Plex Mono',monospace;">F</strong><span>gravitational force between the two masses (newtons)</span></div>
+    <div style="display:flex; gap:20px;"><strong style="color:#C08F2E; flex:none; font-family:'IBM Plex Mono',monospace;">G</strong><span>6.67 × 10⁻¹¹ N·m²/kg² — always the same. That's why it's <em>universal</em>.</span></div>
+    <div style="display:flex; gap:20px;"><strong style="color:#9B8EC4; flex:none; font-family:'IBM Plex Mono',monospace;">m<sub>1</sub> m<sub>2</sub></strong><span>the two masses (kg) — either can be a planet, a moon, or you</span></div>
+    <div style="display:flex; gap:20px;"><strong style="color:#C08F2E; flex:none; font-family:'IBM Plex Mono',monospace;">r²</strong><span>distance between <strong>centers</strong>, squared. Double r → F drops to ¼.</span></div>
+  </div>
+  <div style="display:flex; gap:32px; align-items:center; margin-top:44px; font-size:28px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:20px 32px; max-width:1500px;">
+    <svg viewBox="0 0 300 100" style="width:300px; flex:none;">
+      <defs><marker id="ctr4" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#E0A93D"></path></marker><marker id="ctr4b" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto-start-reverse"><path d="M0,0 L7,2.5 L0,5 Z" fill="#E0A93D"></path></marker></defs>
+      <circle cx="55" cy="50" r="38" fill="#FFFFFF" stroke="#9B8EC4" stroke-width="3"></circle>
+      <circle cx="55" cy="50" r="5" fill="#9B8EC4"></circle>
+      <circle cx="245" cy="50" r="22" fill="#FFFFFF" stroke="#7FA68B" stroke-width="3"></circle>
+      <circle cx="245" cy="50" r="5" fill="#7FA68B"></circle>
+      <line x1="64" y1="50" x2="236" y2="50" stroke="#E0A93D" stroke-width="3" marker-start="url(#ctr4b)" marker-end="url(#ctr4)"></line>
+      <text x="150" y="38" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#C08F2E">r</text>
+    </svg>
+    <span>⚠ r is between <strong>CENTERS</strong>, not surfaces. G is tiny — that's why you don't feel your neighbor's gravity.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — EQUATION ANATOMY</span>
+    <span>U2 · 04/10</span>
+  </div>
+</section>
+
+<section data-label="Why r²?" data-speaker-notes="The geometry argument: gravity spreads over the surface of a sphere, and sphere surface grows as r². Same 'paint' over 4× the area at 2r. When students reach for 'twice the distance, twice the change' — push: 'Look at the EXPONENT. What does squared mean here?'" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 720px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">THE GEOMETRY BEHIND THE LAW</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Why Squared?</h2>
+    <p style="margin:0 0 32px 0; font-size:32px; line-height:1.55; max-width:800px;">Gravity spreads out over the surface of a sphere — and a sphere's surface grows as <strong style="color:#17142E;">r²</strong>.</p>
+    <p style="margin:0; font-size:32px; line-height:1.55; max-width:800px;">At twice the distance, the same influence covers <strong style="color:#E0A93D;">four times the area</strong> — so each point gets a quarter of it. Not half. A quarter.</p>
+  </div>
+  <svg viewBox="0 0 400 380" style="width:680px;">
+    <circle cx="90" cy="190" r="16" fill="#17142E"></circle>
+    <circle cx="90" cy="190" r="80" fill="none" stroke="#9B8EC4" stroke-width="3"></circle>
+    <circle cx="90" cy="190" r="160" fill="none" stroke="#7FA68B" stroke-width="2.5" stroke-dasharray="8 8"></circle>
+    <text x="176" y="184" font-family="IBM Plex Mono" font-size="17" fill="#7A75A0">r</text>
+    <text x="256" y="184" font-family="IBM Plex Mono" font-size="17" fill="#5E8B6E">2r</text>
+    <text x="90" y="330" text-anchor="middle" font-family="IBM Plex Mono" font-size="16" fill="#8B87A6">same pull, spread over 4× the area</text>
+  </svg>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — DOODLE ZONE (PREDICT AT 2r)</span>
+    <span>U2 · 05/10</span>
+  </div>
+</section>
+
+<section data-label="Math Move: Predict the Change" data-speaker-notes="MATH SPINE · PR2 (debuts today). The move: don't recompute — SCALE. Identify which variable changed, apply its factor to F. Inverse-square is the hard case: the factor goes in the denominator AND gets squared. Watch for 'double distance → half force' — that's the linear-thinking failure mode this card exists to prevent. This exact scaling is tomorrow's whole calculation day. Level 1 = with this card; 2 = unprompted; 3 = transfer task." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 760px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E;">MATH MOVE · PR2 · PREDICT THE CHANGE</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Don't Recompute.<br>Scale.</h2>
+    <div style="display:flex; flex-direction:column; gap:26px; font-size:32px; line-height:1.5;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#7FA68B;">01</span><span>Name <strong>which variable</strong> changed, and by what factor.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#9B8EC4;">02</span><span>Find it in the equation — <strong>top or bottom? squared?</strong></span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#E0A93D;">03</span><span>Apply the factor to F — <strong>flipped if it's on the bottom, squared if it's squared.</strong></span></div>
+    </div>
+    <p style="margin:44px 0 0 0; font-size:28px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:24px 32px; max-width:620px;">One scaling step replaces a whole scientific-notation slog — and it's how NASA sanity-checks its own numbers.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; gap:22px;">
+    <div style="font-size:22px; letter-spacing:0.24em; color:#8B87A6;">WORKED — 2026-XJ DOUBLES ITS DISTANCE</div>
+    <div style="font-size:30px; color:#FAF9FC; line-height:1.75;">
+      <div>F ∝ 1 / r²</div>
+      <div style="color:#B8C4DB;">r → 2r <span style="color:#7A75A0; font-size:22px;">&nbsp;← the only change</span></div>
+      <div style="color:#B8C4DB;">F → 1 / (2)² = 1/4 of F <span style="color:#7A75A0; font-size:22px;">&nbsp;← bottom + squared</span></div>
+      <div><span style="color:#E0A93D;">double the distance → quarter the force</span></div>
+      <div style="color:#8B87A6; font-size:24px; padding-top:8px;">triple it? 1/9. No calculator touched.</div>
+    </div>
+    <div style="border-top:1px solid #2E2950; padding-top:18px; font-size:22px; color:#8B87A6; line-height:1.6;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — MATH SPINE CARD PR2</span>
+    <span>U2 · 06/10</span>
+  </div>
+</section>
+
+<section data-label="Inverse-Square — Live Sim" data-speaker-notes="18–32 min (our version of the PhET Gravity Force Lab move). Students predict BEFORE clicking: 'If I double m₁?' (F doubles.) 'Double r?' (quarter.) 'Triple r?' (ninth.) The PREDICT-THEN-CHECK buttons enforce commitment. Let a student driver run it." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Predict, Then Move r</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·04 · INVERSE-SQUARE EXPLORER</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Call your prediction out loud <strong style="color:#17142E;">before</strong> anyone touches a slider. The arrow is the force on m<sub>1</sub>.</p>
+  <div style="width:100%;">
+    <x-import component="InverseSquareSim" from="./sims4.jsx" hint-size="100%,480px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — DOODLE ZONE</span>
+    <span>U2 · 07/10</span>
+  </div>
+</section>
+
+<section data-label="Worked Example" data-speaker-notes="32–42 min. Earth–asteroid at lunar distance: get a NUMBER, name it, contextualize it. F ≈ 9.4×10⁸ N — roughly the weight of an aircraft carrier. Sounds huge — but divide by the asteroid's 3.5×10¹¹ kg and a = F/m ≈ 0.003 m/s². Connect to Unit 1 inertia: gravity needs TIME and DISTANCE to bend this path. NOTE: if the packet still says 9.4 N, correct it — the exponent matters. Advanced: 'Earth's mass halved AND distance doubled — reason before you compute.'" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WORKED EXAMPLE — TOGETHER FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Earth Pulls the Asteroid</h2>
+    <p style="margin:0 0 40px 0; font-size:32px; line-height:1.5;">F between Earth and 2026-XJ (m ≈ 3.5 × 10¹¹ kg) at lunar distance, r = 3.84 × 10⁸ m.</p>
+    <div style="display:flex; flex-direction:column; gap:20px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#3A3654;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;m<sub>1</sub> = 5.97×10²⁴ · m<sub>2</sub> = 3.5×10¹¹ · r = 3.84×10⁸</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;F = ?</span>
+      <span><span style="color:#C08F2E;">EQUATION</span>&nbsp;&nbsp;F = G·m<sub>1</sub>·m<sub>2</sub> / r²</span>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:52px 56px; display:flex; flex-direction:column; gap:28px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:36px; font-weight:700; color:#FAF9FC;">F = (6.67×10⁻¹¹)(5.97×10²⁴)(3.5×10¹¹) / (3.84×10⁸)²</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:#E0A93D;">F ≈ 9.4 × 10⁸ N</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6; line-height:1.7;">the weight of an aircraft carrier — yet a = F/m ≈ 0.003 m/s² on a 350-billion-kg rock. Gravity is patient: it needs distance and time.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — EQUATION ANATOMY + DOODLE</span>
+    <span>U2 · 08/10</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Asteroid thread: every distance the asteroid closes, the force ramps up on the 1/r² curve. This is the equation the rest of the unit spends." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">The Force <span style="color:#E0A93D;">Ramps Up</span><br>as It Closes</h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1420px;">Every kilometer 2026-XJ closes, the pull grows on the 1/r² curve — slowly at first, then steeply. <strong style="color:#FAF9FC;">This one equation decides how much its path bends.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 4 — ASTEROID THREAD</span>
+    <span>U2 · 09/10</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="42–48 exit (verbatim: double r → ¼; triple → 1/9), 48–50 Marzano on K1. Tomorrow is calculation day. TONIGHT: Hewitt inverse-square reading; honors defend g-independence, connecting to what they proved in the free-fall investigation." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">If 2026-XJ doubles its distance from Earth, what happens to F<sub>gravity</sub>? Triples?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 4 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt Ch. 9 — inverse-square law section; sketch the concentric-spheres picture from memory. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: written defense — why doesn't g depend on the falling object's mass? Connect to the free-fall lab evidence.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 4 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 10/10</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

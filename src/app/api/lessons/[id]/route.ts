@@ -24,18 +24,33 @@ export const GET = withAuth<{ id: string }>(async (request, ctx) => {
  */
 export const PUT = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
   const params = await ctx.params
-    const body = await request.json()
+    const body = await request.json().catch(() => null)
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return NextResponse.json({ error: 'Invalid lesson update.' }, { status: 400 })
 
     // Remove fields that shouldn't be updated directly
-    const { id, created_at, created_by, ...updateData } = body
+    const updateData = { ...body }
+    delete updateData.id
+    delete updateData.created_at
+    delete updateData.created_by
 
     // Add updated timestamp
     updateData.updated_at = new Date().toISOString()
 
-    const { data: current, error: currentError } = await supabaseAdmin.from('lessons').select('published, unit_id, content_blocks').eq('id', params.id).maybeSingle()
+    const { data: current, error: currentError } = await supabaseAdmin.from('lessons').select('published, unit_id, unit, content_blocks').eq('id', params.id).maybeSingle()
     if (currentError) return NextResponse.json({ error: 'Could not load the current lesson.' }, { status: 500 })
     if (!current) return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
     if (updateData.published !== undefined && typeof updateData.published !== 'boolean') return NextResponse.json({ error: 'Published must be true or false.' }, { status: 400 })
+    if (updateData.published !== undefined && updateData.published !== current.published && ctx.realRole !== 'admin') return NextResponse.json({ error: 'Only an administrator can change curriculum publication.' }, { status: 403 })
+    if (updateData.unit_id !== undefined) {
+      const { data: unit, error } = await supabaseAdmin.from('units').select('id, name').eq('id', updateData.unit_id).maybeSingle()
+      if (error) throw error
+      if (!unit) return NextResponse.json({ error: 'Choose an existing curriculum unit.' }, { status: 422 })
+      updateData.unit = unit.name
+    } else if (updateData.unit !== undefined && updateData.unit !== current.unit) {
+      return NextResponse.json({ error: 'Choose a curriculum unit in Settings; a text label alone cannot move a lesson.' }, { status: 422 })
+    }
+    if (updateData.title !== undefined && (typeof updateData.title !== 'string' || !updateData.title.trim())) return NextResponse.json({ error: 'Give the lesson a title.' }, { status: 422 })
+    for (const field of ['lesson_number', 'estimated_time']) if (updateData[field] !== undefined && (!Number.isInteger(updateData[field]) || updateData[field] < 1)) return NextResponse.json({ error: 'Lesson number and estimated minutes must be positive whole numbers.' }, { status: 422 })
     const effectiveDoc = updateData.content_blocks !== undefined ? updateData.content_blocks : current.content_blocks
     const publishing = remainsPublished(Boolean(current.published), updateData)
     if (effectiveDoc != null) {
@@ -48,6 +63,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     // dead and the drawer can't resolve the work), so a published-but-targetless
     // lesson silently strands student work — and, in Unit 8, blocks car-part grants.
     if (publishing) {
+      if (!effectiveDoc || !Array.isArray(effectiveDoc.blocks) || !effectiveDoc.blocks.length) return NextResponse.json({ error: 'Add student activities in Content before publishing.' }, { status: 422 })
       // A target counts if this lesson owns it OR its blocks capture against it —
       // MVP day lessons share their week's targets (lib/lesson-targets).
       const owned = await targetIdsForLesson(params.id, effectiveDoc)
@@ -112,6 +128,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
  * Delete a lesson (admin/teacher only)
  */
 export const DELETE = withContentEditor<{ id: string }>('lessons', async (request, ctx) => {
+  if (ctx.realRole !== 'admin') return NextResponse.json({ error: 'Only an administrator can delete or unpublish curriculum.' }, { status: 403 })
   const params = await ctx.params
     console.log(`Attempting to delete lesson with ID: ${params.id}`)
 

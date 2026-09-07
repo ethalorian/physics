@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D18</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Equilibrium = statics foundation + vector reps. Multi-rope problems are HARD — heaviest scaffolding: give the diagram, walk one example, then guided attempts." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 18 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Equilibrium: When<br>Forces <span style="color:#E0A93D;">Balance</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">ΣF = 0 — the special case that runs all of engineering.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: the trap — both are in equilibrium. At rest AND constant velocity both mean a = 0." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.14; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A parked truck. A truck cruising at a steady 65 mph. <span style="color:#E0A93D;">Which one has zero net force on it?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Careful. F = ma has an opinion about this.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ HINT: WHAT'S a IN EACH CASE?</span><span>U1 · 02/07</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can identify situations where <span style="color:#5E8B6E;">ΣF = 0</span>, and I can use this condition to find <span style="color:#C08F2E;">unknown forces</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/07</span>
+  </div>
+</section>
+
+<section data-label="The Special Case" data-speaker-notes="5–20: a = 0 → ΣF = 0. BOTH rest and constant velocity qualify. Two worked cases: book (N = mg = 9.8 N for 1 kg); constant-velocity push (applied = friction = 20 N, regardless of mass!)." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">a = 0 Means the Forces Balance</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#17142E; border-radius:8px; padding:38px 46px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.18em; color:#7FA68B;">CASE 1 · AT REST — BOOK ON DESK</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#FAF9FC;">ΣF<sub>vertical</sub> = 0 → N = F<sub>gravity</sub></div>
+      <p style="margin:0; font-size:28px; line-height:1.5; color:#B8C4DB;">1 kg book: F<sub>gravity</sub> = 9.8 N, so the desk pushes up with exactly <span style="color:#E0A93D;">9.8 N</span>. The desk "knows."</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:38px 46px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.18em; color:#9B8EC4;">CASE 2 · CONSTANT VELOCITY — PUSHED BOX</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#FAF9FC;">ΣF<sub>horizontal</sub> = 0 → F<sub>applied</sub> = f</div>
+      <p style="margin:0; font-size:28px; line-height:1.5; color:#B8C4DB;">Pushing at 20 N and it glides steadily? Then friction is exactly <span style="color:#E0A93D;">20 N</span> — regardless of the box's mass.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ REST AND CONSTANT VELOCITY: BOTH HAVE a = 0</span><span>U1 · 04/07</span>
+  </div>
+</section>
+
+<section data-label="Two Ropes" data-speaker-notes="20–43: the hard one — object hung from two angled ropes. Decompose each tension (M3/M6 skills), write ΣFx = 0 and ΣFy = 0, solve. Sweep the angle: shallower ropes → bigger tensions. That surprise is the hook." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">The Two-Rope Problem</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · THEN GUIDED ATTEMPTS</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Write <strong style="color:#7A75A0;">ΣF<sub>x</sub> = 0</strong> and <strong style="color:#5E8B6E;">ΣF<sub>y</sub> = 0</strong>, decompose each tension, solve. Watch what shallow angles do to T.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="RopeSim" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ SHALLOWER ROPES = BIGGER TENSION. SURPRISED?</span><span>U1 · 05/07</span>
+  </div>
+</section>
+
+<section data-label="Not in Equilibrium" data-speaker-notes="43–50: honesty slide. The asteroid is NOT in equilibrium — solar gravity keeps tugging. But on short timescales the acceleration is so small that constant-velocity was a fine model. This is exactly the bridge to Unit 2." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:44px;">BACK TO 2026-XJ</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:76px; line-height:1.08; color:#FAF9FC; font-weight:700; max-width:1560px;">The Asteroid Is <span style="color:#C05A5A;">Not</span><br>in Equilibrium</h2>
+  <p style="margin:0 0 36px 0; font-size:34px; line-height:1.6; color:#D9D6E8; max-width:1440px;">Solar gravity never stops pulling — ΣF ≠ 0, always. But the acceleration is so small that over weeks, <strong style="color:#FAF9FC;">"almost equilibrium" was a fine model</strong>. That's why Day 5's prediction worked.</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:25px; color:#7FA68B; letter-spacing:0.05em;">WHEN "ALMOST" STOPS BEING GOOD ENOUGH — THAT'S UNIT 2. FIVE SCHOOL DAYS AWAY.</p>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: 5 kg lamp, one rope → T = m·g = 49 N. Clean equilibrium statement expected: ΣF = 0 → T = F_gravity." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:68px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px;">A 5 kg lamp hangs from a single rope. <span style="color:#E0A93D;">What's the tension?</span></h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I spot ΣF = 0 situations and use them to find unknown forces? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt — <strong style="color:#FAF9FC;">re-read equilibrium and Newton's First Law sections.</strong></p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: WORKSHOP — FIND AND FIX YOUR WEAK SPOT</span><span>U1 · 07/07</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

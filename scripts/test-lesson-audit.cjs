@@ -115,7 +115,7 @@ async function bundle(entry, name, plugins = []) {
   const route=await bundle('src/app/api/lessons/[id]/route.ts','lesson-route',[routePlugin]);
   const validDoc={schemaVersion:1,blocks:[{id:'exit',type:'exit_ticket',capture:true,prompt:'Explain.'}]};
   const resetRoute=()=>global.__route={current:{published:true,unit_id:null,content_blocks:validDoc},targets:['target'],sei:[],writes:[]};
-  const put=body=>route.PUT(new Request('http://local/api/lessons/lesson',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),{params:Promise.resolve({id:'lesson'})});
+  const put=(body, realRole="admin")=>route.PUT(new Request('http://local/api/lessons/lesson',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),{realRole,params:Promise.resolve({id:'lesson'})});
   await check('published content-only PUT rejects invalid blocks before writing',async()=>{
     resetRoute();const r=await put({content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}});assert.equal(r.status,422);assert.equal(global.__route.writes.length,0);
   });
@@ -128,5 +128,11 @@ async function bundle(entry, name, plugins = []) {
   await check('unpublishing permits incomplete drafts while keeping structural checks',async()=>{
     resetRoute();assert.equal((await put({published:false,content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}})).status,200);assert.equal(global.__route.writes.length,1);
   });
+  await check('collaborators can edit but cannot change publication',async()=>{
+    resetRoute();assert.equal((await put({published:false},'teacher')).status,403);assert.equal(global.__route.writes.length,0);
+    resetRoute();global.__route.current.published=false;assert.equal((await put({published:true},'teacher')).status,403);assert.equal(global.__route.writes.length,0);
+    resetRoute();assert.equal((await put({content_blocks:validDoc},'teacher')).status,200);
+  });
+  await check('publishing an empty lesson is rejected',async()=>{resetRoute();assert.equal((await put({content_blocks:null})).status,422);assert.equal(global.__route.writes.length,0);});
   console.log(`\n${passed} lesson audit regression scenarios passed.`);
 })().catch((e)=>{console.error(e);process.exitCode=1}).finally(()=>fs.rmSync(temp,{recursive:true,force:true}));

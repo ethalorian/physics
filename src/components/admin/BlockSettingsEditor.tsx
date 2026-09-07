@@ -22,13 +22,13 @@ export function QuestionEditor({ value, onChange }: { value: unknown; onChange: 
   </div>
 }
 
-export function BlockSettingsEditor({ data, capture, onPatch }: { data: Record<string, unknown>; capture: boolean; onPatch: (patch: Record<string, unknown>) => void }) {
+export function BlockSettingsEditor({ data, capture, onPatch, targets = [] }: { targets?: {id:string;slug:string;statement:string}[]; data: Record<string, unknown>; capture: boolean; onPatch: (patch: Record<string, unknown>) => void }) {
   const sei = (data.sei ?? {}) as SeiScaffold
   const updateSei = (patch: Partial<SeiScaffold>) => onPatch({ sei: { ...sei, ...patch } })
   return <div className="space-y-3">
     <details open><summary className="cursor-pointer text-sm font-semibold">Learning target and checkpoint</summary>
       <div className="mt-2 space-y-2">
-        <label className="block text-sm">Learning target ID or slug<input className={input} value={String(data.targetId ?? '')} onChange={(e) => onPatch({ targetId: e.target.value || undefined })} /></label>
+        <label className="block text-sm">Assessment target<select className={input} value={String(data.targetId ?? '')} onChange={e => onPatch({targetId:e.target.value||undefined})}><option value="">Choose a target</option>{data.targetId && !targets.some(t => t.slug === data.targetId || t.id === data.targetId) ? <option value={String(data.targetId)}>Shared target: {String(data.targetId)}</option> : null}{targets.map(t => <option key={t.id} value={data.targetId === t.id ? t.id : t.slug}>{t.statement}</option>)}</select></label><details><summary className="cursor-pointer text-xs">Advanced target reference</summary><label className="block text-sm">Target ID or slug<input className={input} value={String(data.targetId ?? '')} onChange={e => onPatch({targetId:e.target.value||undefined})}/></label></details>
         {capture && <label className="flex items-start gap-2 text-sm"><input type="checkbox" checked={data.gate === true} onChange={(e) => onPatch({ gate: e.target.checked })} />Require this answer before the next section</label>}
         {capture && <label className="block text-sm">XP for completing this answer<input className={input} type="number" min={0} value={typeof data.xp === 'number' ? data.xp : ''} onChange={(e) => onPatch({ xp: e.target.value === '' ? undefined : Math.max(0, Number(e.target.value)) })} /></label>}
       </div>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D2</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="0–5 min: read back the best Day-1 exit tickets. Anchor: 'Gravity pulls everything the same. Bring receipts.' Prep: Vernier motion detector + ball, tape measure, stopwatches for student trials, packet pages." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:250px; width:540px; display:flex; flex-direction:column; gap:24px;">
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D;">g = 9.81 m/s²</div>
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">v = g·t</div>
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">y = ½·g·t²</div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · UNIT 2</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1100px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:94px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Everything Falls<br>at <span style="color:#E0A93D;">g</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:900px;">Day 2: free fall — why a coin, a feather, and an asteroid all accelerate the same near Earth.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 02 · PHASE 1</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="Warm-up 0–5 min, run while reading back Day-1 exit tickets. Most of the room says the bowling ball. Don't resolve it — the Vernier demo resolves it in ten minutes." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.22; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">A bowling ball and a marble are dropped together.<br>Which lands first — and why?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Commit to an answer. Yesterday's demo is your evidence.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — DO NOW</span>
+    <span>U2 · 02/09</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — describe free fall as constant acceleration g, read g off a v-t slope, calculate fall times. Targets: K1 (gravity as constant acceleration near Earth), S4 (reading g off a slope)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">02</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.3; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can describe free fall as constant acceleration g, <span style="color:#E0A93D;">read g off a v-t slope</span>, and calculate fall times for short drops.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — TODAY'S TARGET</span>
+    <span>U2 · 03/09</span>
+  </div>
+</section>
+
+<section data-label="Drop It — Live Sim" data-speaker-notes="5–18 min, alongside the REAL Vernier demo. Drop the tennis ball, FIT LINE, read the slope. Then switch to the bowling ball and repeat — same slope. Talk move: 'What does the slope mean physically? What would a STEEPER slope tell you?' The Do Now resolves here: mass never entered the graph." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">The Slope IS g</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·02 · FREE-FALL v-t</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Drop each ball, then <strong style="color:#17142E;">fit a line</strong> to the v-t graph. Two different balls — watch what the slope does.</p>
+  <div style="width:100%;">
+    <x-import component="FreeFallVTSim" from="./sims4.jsx" hint-size="100%,460px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — DOODLE ZONE (READ THE SLOPE)</span>
+    <span>U2 · 04/09</span>
+  </div>
+</section>
+
+<section data-label="Worked Example" data-speaker-notes="18–32 min: two examples fully worked on the board. This is the first — the packet's 10 m balcony coin. Second example: 100 m (t ≈ 4.5 s) — do it live, students watch the same recipe run twice." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WORKED EXAMPLE — TOGETHER FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">The 10 m Balcony</h2>
+    <p style="margin:0 0 40px 0; font-size:34px; line-height:1.5;">A coin is dropped from rest off a <strong>10 m</strong> balcony. How long until it hits the ground? (Ignore air.)</p>
+    <div style="display:flex; flex-direction:column; gap:20px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#3A3654;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;y = 10 m · v<sub>0</sub> = 0 · g = 9.81 m/s²</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;t = ?</span>
+      <span><span style="color:#C08F2E;">EQUATION</span>&nbsp;&nbsp;y = ½·g·t²</span>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:52px 56px; display:flex; flex-direction:column; gap:32px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#FAF9FC;">10 = ½·(9.81)·t²</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#FAF9FC;">t² = 20 / 9.81 ≈ 2.04</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:#E0A93D;">t ≈ 1.43 s</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">about a second and a half — try it against a stopwatch.</span>
+    <svg viewBox="0 0 560 150" style="width:100%; border-top:1px solid #2E2950; padding-top:14px;">
+      <line x1="20" y1="120" x2="540" y2="120" stroke="#2E2950" stroke-width="0"></line>
+      <g font-family="IBM Plex Mono, monospace" font-size="15" fill="#8B87A6">
+        <circle cx="60" cy="60" r="8" fill="#E0A93D"></circle><text x="60" y="28" text-anchor="middle">t=0</text>
+        <circle cx="115" cy="60" r="8" fill="#E0A93D" opacity="0.85"></circle><text x="115" y="94" text-anchor="middle">0.5s · 1.2m</text>
+        <circle cx="285" cy="60" r="8" fill="#E0A93D" opacity="0.7"></circle><text x="285" y="28" text-anchor="middle">1.0s · 4.9m</text>
+        <circle cx="520" cy="60" r="8" fill="#E0A93D" opacity="0.55"></circle><text x="500" y="94" text-anchor="middle">1.43s · 10m</text>
+      </g>
+      <text x="280" y="144" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="16" fill="#9B8EC4">the gaps GROW — that's what accelerating looks like</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — WORKED EXAMPLE</span>
+    <span>U2 · 05/09</span>
+  </div>
+</section>
+
+<section data-label="Pair Practice" data-speaker-notes="32–45 min. Four problems in the packet, including the 100 m bridge. Predict-then-check: when a drop is safe to do in the room, time it with a stopwatch and compare to the calculation. ELs: pair calculator-fluent with language partner. Advanced: 'what would g be on a planet with twice Earth's mass at the same radius?' (preview Day 6)." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">PAIRS · 4 PROBLEMS · PREDICT-THEN-CHECK</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Calculate, Then Time It</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1460px;">Four fall-time problems in the packet — including the <strong style="color:#17142E;">100 m bridge</strong>. When the drop is safe to run, check your math with a stopwatch.</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">Every answer gets units — <span style="color:#E0A93D;">seconds, not "1.43."</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — YOUR TURN + PRACTICE</span>
+    <span>U2 · 06/09</span>
+  </div>
+</section>
+
+<section data-label="Watch Out" data-speaker-notes="Misconception guard, 2 min. Free fall doesn't mean floating — it means gravity is the ONLY force. This phrasing pays off on Days 6–7 (ISS) and Day 13 (orbits are falling). Vocab cognates on the board: caída libre / queda livre / chit lib." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E;">VOCAB · FREE FALL — WATCH OUT</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.1; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Free Fall ≠ Floating</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:44px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#5E8B6E; margin-bottom:22px;">WHAT IT MEANS</div>
+      <p style="margin:0; font-size:32px; line-height:1.55; color:#17142E;">Motion under gravity <strong>only</strong> — no air resistance, no other forces. Falling IS the motion.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:44px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7A75A0; margin-bottom:22px;">WHY IT MATTERS LATER</div>
+      <p style="margin:0; font-size:32px; line-height:1.55; color:#17142E;">Astronauts "float" because they're in free fall. Hold that thought until Day 6 — and Day 13.</p>
+    </div>
+  </div>
+  <p style="margin:48px 0 0 0; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">COGNATES · Sp. caída libre · Pt. queda livre · HC chit lib</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — VOCAB · FREE FALL</span>
+    <span>U2 · 07/09</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Asteroid thread, 1 min: if 2026-XJ enters Earth's gravity well close enough, it accelerates at g — the SAME g as a coin. That universality is the whole point of today." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">Same g for a Coin<br>and an <span style="color:#E0A93D;">Asteroid</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1400px;">If 2026-XJ came close enough to Earth, it would accelerate at exactly the g you measured today. <strong style="color:#FAF9FC;">Gravity doesn't check the mass of what it pulls.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 2 — ASTEROID THREAD</span>
+    <span>U2 · 08/09</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="45–48 exit (verbatim from packet: coin from 1 m ≈ 0.45 s), 48–50 Marzano on K1. TONIGHT dovetails with today: Hewitt free-fall reading; honors carry the Block-1 transfer — asteroid and Earth are BOTH falling around the Sun." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">How long does it take a coin to fall 1 m from rest, ignoring air? Show your work.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 2 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt Ch. 3 — free-fall section; redo today's worked example without looking. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: Block-1 transfer — the asteroid and Earth are both in solar orbit. Using "an orbit is falling that misses," explain what both objects are continuously doing.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 2 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 09/09</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

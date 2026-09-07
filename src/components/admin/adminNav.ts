@@ -41,7 +41,7 @@ export const GROUPS: ToolGroup[] = [
     title: 'Plan & build',
     tools: [
       { href: '/admin/workshop', label: 'Workshop', desc: 'Curriculum studio — shape seeded lessons, review coverage, target workbench', icon: BookOpenCheck, accent: 'var(--primary)', adminOnly: true },
-      { href: '/admin/dashboard', label: 'Lessons & builder', desc: 'Shape seeded lessons — blocks, settings, publish — unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/dashboard', label: 'Lesson library', desc: 'Shape seeded lessons — blocks, settings, publish — unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Day-by-day teacher plans per unit — Word/PDF downloads and the Present deck launch', icon: CalendarRange, accent: 'var(--primary)' },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
@@ -77,13 +77,13 @@ export const GROUPS: ToolGroup[] = [
 ]
 
 /** Role-gate the groups: drop admin-only tools for non-admins, then drop empties. */
-export function gateGroups(groups: ToolGroup[], isAdmin: boolean): ToolGroup[] {
+export function gateGroups(groups: ToolGroup[], isAdmin: boolean, canEditLessons = false): ToolGroup[] {
   return groups
-    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly) }))
+    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly || (canEditLessons && t.href === '/admin/dashboard')) }))
     .filter((g) => g.tools.length > 0)
 }
 
 /** Flattened, role-gated tool list (for the command palette index). */
-export function flatTools(isAdmin: boolean): Tool[] {
-  return gateGroups(GROUPS, isAdmin).flatMap((g) => g.tools)
+export function flatTools(isAdmin: boolean, canEditLessons = false): Tool[] {
+  return gateGroups(GROUPS, isAdmin, canEditLessons).flatMap((g) => g.tools)
 }

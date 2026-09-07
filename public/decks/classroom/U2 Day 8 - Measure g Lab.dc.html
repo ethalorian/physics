@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D8</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="LAB DAY — Investigation 2.1. Prep: Vernier motion detectors + LabQuest per pair, balls ≥4 cm, clear floor zones, lab write-up template, Logger Pro / Graphical Analysis preloaded. 0–5 min: procedure overview + safety beat." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:250px; width:560px; display:flex; flex-direction:column; gap:24px;">
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#FAF9FC; line-height:1.6;">DRIVING QUESTION<br><span style="color:#E0A93D; font-family:'Space Grotesk',sans-serif; font-size:34px; font-weight:700;">How close can this room get to 9.81?</span></div>
+    <div style="background:#FFFFFF; border:2px solid #7FA68B; border-radius:8px; padding:24px 38px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#17142E;">INVESTIGATION 2.1 · VERNIER</div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · LAB DAY</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1050px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:92px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Today We<br><span style="color:#7FA68B;">Measure</span> g</h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:880px;">Day 8: we've USED 9.81 m/s² for a week. Time to earn it — experiment confirms theory.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 08 · PHASE 2</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5 min while lab stations get distributed. The honest answer is 'someone told us' — today that stops being true." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.22; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">We've used 9.81 all week. Where did that number come from?<br>How would YOU measure it?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Sketch a setup. Any equipment in this room is fair game.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — DO NOW</span>
+    <span>U2 · 02/10</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — capture a v-t graph for a falling ball with a Vernier motion detector and find g from the slope. Targets S4, K1 consolidation." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">08</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.3; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can capture a v-t graph for a falling ball with a Vernier motion detector and <span style="color:#E0A93D;">find g from the slope.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — TODAY'S TARGET</span>
+    <span>U2 · 03/10</span>
+  </div>
+</section>
+
+<section data-label="Procedure + Safety" data-speaker-notes="0–5 min safety beat, 5–15 teacher demo run: detector pointed UP, ball dropped above it, v-t projected, class identifies slope = g. Then release pairs. Roles per pair for SWDs: driver, scribe, time-keeper." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">INVESTIGATION 2.1 — PROCEDURE</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Three Trials, One Slope Each</h2>
+  <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#9B8EC4; margin-bottom:14px;">1</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Detector points <strong>UP</strong>. Hold the ball at a known height above it.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#7FA68B; margin-bottom:14px;">2</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Start collection. Release <strong>cleanly</strong> — no toss.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D; margin-bottom:14px;">3</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Fit a line to the falling portion. <strong>Slope = g.</strong> Record it.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#9B8EC4; margin-bottom:14px;">4</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">3 trials → average → compare to <strong>9.81</strong>.</p></div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:26px 44px; display:flex; gap:32px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">SAFETY</span>
+    <span style="font-size:28px; line-height:1.5; color:#FAF9FC;">Catch the ball before it hits the sensor. Heads and toes out of the drop path. Never release toward another group.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — LAB SETUP · INVESTIGATION 2.1</span>
+    <span>U2 · 04/10</span>
+  </div>
+</section>
+
+<section data-label="What You'll See — Live Sim" data-speaker-notes="Use during the 5–15 min demo run so pairs know what a good capture looks like BEFORE they take the equipment: drop, fit, read the slope. If a pair's real graph looks nothing like this, their release was a toss or the ball left the beam." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700; white-space:nowrap;">A Good Capture</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·02 · FREE-FALL v-t</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Drop, then <strong style="color:#17142E;">FIT LINE</strong>. Your Logger Pro screen should tell this same story — a straight falling portion whose slope is g.</p>
+  <div style="width:100%;">
+    <x-import component="FreeFallVTSim" from="./sims4.jsx" hint-size="100%,460px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — DATA TABLE (TRIAL SLOPES)</span>
+    <span>U2 · 05/10</span>
+  </div>
+</section>
+
+<section data-label="Math Move: Match Your Precision" data-speaker-notes="MATH SPINE · QE4 (debuts today, on real data). The move: report a value only as precisely as the data deserves. Three trials that scatter by a tenth do NOT support five decimal places. Use THIS class's actual trial numbers in the worked panel if you can — the ones shown are typical. Advanced version: g ± standard deviation. Level 1 = with this card; 2 = unprompted; 3 = transfer task." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 760px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E;">MATH MOVE · QE4 · MATCH YOUR PRECISION</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Report What the Data<br>Can Defend</h2>
+    <div style="display:flex; flex-direction:column; gap:26px; font-size:32px; line-height:1.5;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#7FA68B;">01</span><span>Look at the <strong>spread</strong> of your trials — where do they disagree?</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#9B8EC4;">02</span><span>Round the average to the <strong>first uncertain digit</strong>.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#E0A93D;">03</span><span>Say the doubt out loud — <strong>"9.7, give or take 0.2."</strong></span></div>
+    </div>
+    <p style="margin:44px 0 0 0; font-size:28px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:24px 32px; max-width:620px;">A calculator gives you 9.68333… The data only earned <strong>9.7</strong>. Extra digits are a claim you can't back.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; gap:22px;">
+    <div style="font-size:22px; letter-spacing:0.24em; color:#8B87A6;">WORKED — TODAY'S TRIAL SLOPES</div>
+    <div style="font-size:30px; color:#FAF9FC; line-height:1.75;">
+      <div>trials: 9.52 · 9.78 · 9.75 m/s²</div>
+      <div style="color:#B8C4DB;">average = 9.68333… <span style="color:#7A75A0; font-size:22px;">&nbsp;← calculator's story</span></div>
+      <div style="color:#B8C4DB;">spread ≈ ±0.15 <span style="color:#7A75A0; font-size:22px;">&nbsp;← the data's story</span></div>
+      <div><span style="color:#E0A93D;">report: g ≈ 9.7 ± 0.2 m/s²</span></div>
+      <div style="color:#8B87A6; font-size:24px; padding-top:8px;">and 9.81 sits inside that window. Theory survives.</div>
+    </div>
+    <div style="border-top:1px solid #2E2950; padding-top:18px; font-size:22px; color:#8B87A6; line-height:1.6;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — MATH SPINE CARD QE4</span>
+    <span>U2 · 06/10</span>
+  </div>
+</section>
+
+<section data-label="Lab Block" data-speaker-notes="15–35 min: pairs run 3 trials each. Circulate. Watch for: tosses instead of clean releases, detection angle, ball leaving the beam. Class average goes on the board as pairs finish." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">LAB BLOCK · 20 MIN · PAIRS</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Go Measure It</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1460px;">Three trials each: capture, fit, record the slope in the packet's data table — <strong style="color:#17142E;">height, slope, and a note on the release.</strong> Your average joins the class board.</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">A bad trial with an honest note beats <span style="color:#E0A93D;">a good-looking lie.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — DATA · VERNIER FREE-FALL TRIALS</span>
+    <span>U2 · 07/10</span>
+  </div>
+</section>
+
+<section data-label="Sources of Error" data-speaker-notes="35–43 min discussion. If the class average is 3% off, push: 'What in our setup would cause us to read LOW? HIGH?' Rank the candidates — which matters MOST? (Usually release quality and detection angle; air resistance is small for a dense 4-cm ball.)" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">DISCUSSION — WHICH ERROR MATTERS MOST?</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Low or High — and Why?</h2>
+  <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:32px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.16em; color:#7A75A0; margin-bottom:14px;">DETECTION ANGLE</div><p style="margin:0; font-size:25px; line-height:1.45;">Ball drifts off the beam axis — reads the fall <strong>short</strong>.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:32px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.16em; color:#5E8B6E; margin-bottom:14px;">RELEASE QUALITY</div><p style="margin:0; font-size:25px; line-height:1.45;">A tiny toss adds v<sub>0</sub> — <strong>bends the early graph.</strong></p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:32px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.16em; color:#C08F2E; margin-bottom:14px;">AIR RESISTANCE</div><p style="margin:0; font-size:25px; line-height:1.45;">Drags the slope <strong>low</strong> — small for a dense ball.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:32px 30px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.16em; color:#7A75A0; margin-bottom:14px;">SAMPLE RATE</div><p style="margin:0; font-size:25px; line-height:1.45;">Too few points on a short drop — <strong>noisy fit.</strong></p></div>
+  </div>
+  <p style="margin:52px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:40px; line-height:1.35; color:#17142E; font-weight:600;">Which of these would read LOW? Which HIGH? <span style="color:#E0A93D;">Rank them.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — OBSERVATION AND ANALYSIS</span>
+    <span>U2 · 08/10</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="The epistemic beat — the packet's fill-in frame says it: if the lab number matches theory, the F = Gm₁m₂/r² framework we're aiming at 2026-XJ stands on tested ground. This is how physics earns trust." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">Tested Ground<br>Under the <span style="color:#E0A93D;">Framework</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1420px;">Theory predicted 9.81 from Earth's mass and size. Your sensors just checked it. <strong style="color:#FAF9FC;">If the room agrees with the equation, the equation has earned the asteroid.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 8 — ASTEROID CONNECTION</span>
+    <span>U2 · 09/10</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="43–48 lab write-up start; exit = the CER paragraph frame (verbatim from packet). 48–50 Marzano on S4. TONIGHT: finish the write-up; honors add g ± uncertainty from the trial-slope spread (the QE4 card, applied)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET — CER</div>
+      <p style="margin:0; font-size:31px; line-height:1.55; color:#17142E;">"From my data, I claim g = ____. My evidence is ____. This is ____% off from 9.81. I think the difference is because ____."</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 8 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Finish the lab write-up: data table + claim-evidence-reasoning paragraph. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: report g ± uncertainty from your trial-slope spread — the QE4 card, applied to your own data.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 10/10</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

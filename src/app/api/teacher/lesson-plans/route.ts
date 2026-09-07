@@ -24,10 +24,19 @@ export const GET = withAuth(async (request, ctx) => {
     // their physics courses, plus 'trades' if any course follows that program.
     // Admins (no courses) see every available class type.
     let tracks: string[]
-    if (ctx.role === 'admin' || ctx.role === 'observer') {
+    const courseId = new URL(request.url).searchParams.get('course_id')
+    if (courseId) {
+      const { data: course, error } = await supabaseAdmin.from('courses').select('track, program, teacher_email').eq('id', courseId).maybeSingle()
+      if (error) throw error
+      if (!course) return NextResponse.json({ error: 'Class not found' }, { status: 404 })
+      if (ctx.role === 'teacher' && course.teacher_email !== ctx.scopeEmail) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+      const track = trackForCourse(course)
+      tracks = track ? [track] : []
+    } else if (ctx.role === 'admin' || ctx.role === 'observer') {
       tracks = Object.keys(PLANS)
     } else {
-      const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', ctx.scopeEmail)
+      const { data, error } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', ctx.scopeEmail)
+      if (error) throw error
       const rows = (data ?? []) as { track: string | null; program: string | null }[]
       tracks = [...new Set(rows.map(trackForCourse).filter((t): t is string => Boolean(t)))]
     }

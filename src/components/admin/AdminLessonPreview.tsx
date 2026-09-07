@@ -1,445 +1,195 @@
-"use client"
-
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Eye, 
-  EyeOff, 
-  Settings, 
-  ExternalLink, 
-  ArrowLeft,
-  Monitor,
-  Smartphone,
-  Tablet,
-  Edit,
-  Play,
-  Clock,
-  Target,
-  BookOpen,
-  Info
-} from 'lucide-react'
-import { Lesson } from '@/types/assignment'
+'use client'
+import { useEffect, useMemo, useState } from 'react'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
-import MathMarkdown from '@/components/MathMarkdown'
-import LessonVideoManager from '@/components/admin/LessonVideoManager'
+import LessonEditorNav from './LessonEditorNav'
+import { filterDocumentForViewer } from '@/lib/track-visibility'
+import type { BlockDocument } from '@/data/content-blocks'
+import type { GlossaryEntry } from '@/components/MathMarkdown'
+import type { ReleaseClass } from '@/lib/lesson-release'
 
-interface AdminLessonPreviewProps {
-  lesson: Lesson
+export interface PreviewLesson {
+  targets?: { id: string; slug: string; statement: string }[]
+  id: string
+  title: string
+  slug?: string
+  unit_id?: string | null
+  lesson_number?: number | null
+  published?: boolean
+  unit?: string
+  estimated_time?: number
+  hero_image?: string | null
+  content_blocks?: BlockDocument
+  key_terms?: GlossaryEntry[]
 }
-
-export default function AdminLessonPreview({ lesson }: AdminLessonPreviewProps) {
-  const [viewMode, setViewMode] = useState<'student' | 'admin'>('student')
-  const [devicePreview, setDevicePreview] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
-  const [showVideoManager, setShowVideoManager] = useState(false)
-
-  const handleVideoSave = async (videos: any[]) => {
-    try {
-      const response = await fetch(`/api/lessons/${lesson.id}/videos`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ videos })
-      })
-      
-      if (!response.ok) {
-        throw new Error('Failed to save videos')
-      }
-      
-      alert('Videos saved successfully!')
-      // Refresh the page to show updated videos
-      window.location.reload()
-    } catch (error) {
-      console.error('Error saving videos:', error)
-      alert('Failed to save videos. Please try again.')
-    }
-  }
-
-  const getDeviceClasses = () => {
-    switch (devicePreview) {
-      case 'mobile':
-        return 'max-w-sm mx-auto border-8 border-border rounded-3xl overflow-hidden shadow-2xl'
-      case 'tablet':
-        return 'max-w-2xl mx-auto border-4 border-border rounded-2xl overflow-hidden shadow-xl'
-      default:
-        return 'w-full'
-    }
-  }
-
-  const getDeviceHeight = () => {
-    switch (devicePreview) {
-      case 'mobile':
-        return 'h-[800px]'
-      case 'tablet':
-        return 'h-[900px]'
-      default:
-        return 'min-h-screen'
-    }
-  }
-
+export default function AdminLessonPreview({
+  lesson,
+  canEdit = true,
+}: {
+  lesson: PreviewLesson
+  canEdit?: boolean
+}) {
   return (
-    <div className="min-h-screen bg-muted">
-      {/* Admin Header */}
-      <div className="bg-white border-b border-border shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" asChild>
-                <a href="/admin/dashboard?tab=content" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Admin
-                </a>
-              </Button>
-              <div className="h-6 w-px bg-muted" />
-              <div>
-                <h1 className="text-xl font-semibold text-foreground">
-                  Preview: {lesson.title}
-                </h1>
-                <div className="flex items-center gap-2 mt-1">
-                  <Badge variant="outline">{lesson.unit}</Badge>
-                  <Badge variant="secondary">Lesson {lesson.lesson_number}</Badge>
-                  {lesson.estimated_time && (
-                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      {lesson.estimated_time}min
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              {/* View Mode Toggle */}
-              <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-                <Button
-                  size="sm"
-                  variant={viewMode === 'student' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('student')}
-                  className="h-8"
-                >
-                  <Eye className="h-3 w-3 mr-1" />
-                  Student View
-                </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'admin' ? 'default' : 'ghost'}
-                  onClick={() => setViewMode('admin')}
-                  className="h-8"
-                >
-                  <Settings className="h-3 w-3 mr-1" />
-                  Admin View
-                </Button>
-              </div>
-
-              {/* Device Preview Toggle */}
-              {viewMode === 'student' && (
-                <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-                  <Button
-                    size="sm"
-                    variant={devicePreview === 'mobile' ? 'default' : 'ghost'}
-                    onClick={() => setDevicePreview('mobile')}
-                    className="h-8"
-                  >
-                    <Smartphone className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant={devicePreview === 'tablet' ? 'default' : 'ghost'}
-                    onClick={() => setDevicePreview('tablet')}
-                    className="h-8"
-                  >
-                    <Tablet className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant={devicePreview === 'desktop' ? 'default' : 'ghost'}
-                    onClick={() => setDevicePreview('desktop')}
-                    className="h-8"
-                  >
-                    <Monitor className="h-3 w-3" />
-                  </Button>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <Button variant="outline" asChild>
-                <a 
-                  href={`/lessons/${lesson.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Open Live
-                </a>
-              </Button>
-            </div>
-          </div>
+    <div className="mx-auto max-w-6xl p-4 sm:p-5">
+      <LessonEditorNav
+        lessonId={lesson.id}
+        title={lesson.title}
+        unitId={lesson.unit_id}
+        day={lesson.lesson_number}
+        published={lesson.published}
+        active="preview"
+        canEdit={canEdit}
+      />
+      <LessonStudentPreview lesson={lesson} />
+    </div>
+  )
+}
+export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
+  const [mode, setMode] = useState('cpa')
+  const [reset, setReset] = useState(0)
+  const [size, setSize] = useState('full')
+  const [course, setCourse] = useState<ReleaseClass | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get('class')
+    if (!id) {
+      setLoading(false)
+      return
+    }
+    const controller = new AbortController()
+    fetch('/api/lesson-access', { signal: controller.signal })
+      .then(async (r) => {
+        const d = await r.json()
+        if (!r.ok)
+          throw new Error(d.error ?? 'Could not load class preview settings.')
+        const c = (d.classes as ReleaseClass[]).find((c) => c.id === id)
+        if (!c)
+          throw new Error(
+            'This class is not available in your current teacher scope.',
+          )
+        setCourse(c)
+        setMode(c.track === 'honors' ? 'honors' : 'cpa')
+      })
+      .catch((e) => {
+        if (!controller.signal.aborted) setError(e.message)
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false)
+      })
+    return () => controller.abort()
+  }, [])
+  const doc = useMemo(
+    () =>
+      lesson.content_blocks
+        ? filterDocumentForViewer(lesson.content_blocks, {
+            role: mode === 'teacher' ? 'admin' : 'student',
+            track: mode,
+          })
+        : undefined,
+    [lesson.content_blocks, mode],
+  )
+  const keys = useMemo(
+    () =>
+      Object.fromEntries(
+        (lesson.content_blocks?.blocks ?? []).flatMap((b) =>
+          b.type === 'question' &&
+          b.question &&
+          typeof b.question === 'object' &&
+          'correctOptionId' in b.question
+            ? [[b.id, String(b.question.correctOptionId)]]
+            : [],
+        ),
+      ),
+    [lesson.content_blocks],
+  )
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-3">
+        <label className="text-sm">
+          View
+          <select
+            aria-label="Preview mode"
+            value={mode}
+            onChange={(e) => setMode(e.target.value)}
+            className="ml-2 min-h-11 rounded-lg border bg-background px-3"
+          >
+            <option value="cpa">Student preview · CPA</option>
+            <option value="honors">Student preview · Honors</option>
+            <option value="teacher">Teacher view · all sections</option>
+          </select>
+        </label>
+        <label className="text-sm">
+          Width
+          <select
+            aria-label="Preview width"
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
+            className="ml-2 min-h-11 rounded-lg border bg-background px-3"
+          >
+            <option value="full">Desktop</option>
+            <option value="tablet">Tablet</option>
+            <option value="phone">Phone</option>
+          </select>
+        </label>
+        <button
+          className="min-h-11 rounded-lg border px-3 text-sm"
+          onClick={() => setReset((n) => n + 1)}
+        >
+          Reset preview answers
+        </button>
+      </div>
+      <p className="text-sm text-muted-foreground">
+        {mode === 'teacher'
+          ? 'Teacher view can open every section.'
+          : 'Try checkpoints and submission with temporary answers.'}{' '}
+        Preview never saves student work or changes class access.
+        {course
+          ? ` Reader settings: ${course.section ?? course.name}.`
+          : ' Default reader settings.'}
+      </p>
+      {error && (
+        <p role="alert" className="text-sm text-destructive">
+          {error} Return to class access to choose a class.
+        </p>
+      )}
+      {loading ? (
+        <p role="status">Loading preview settings…</p>
+      ) : !doc?.blocks.length ? (
+        <p className="rounded-lg border p-5">
+          No student content yet. Add activities in Content.
+        </p>
+      ) : (
+        <div
+          className="mx-auto overflow-hidden rounded-xl border"
+          style={{
+            maxWidth:
+              size === 'phone' ? 390 : size === 'tablet' ? 768 : undefined,
+          }}
+        >
+          <BlockLessonViewer
+            key={`${mode}:${reset}:${course?.id ?? ''}`}
+            preview
+            staffView={mode === 'teacher'}
+            previewAnswerKeys={keys}
+            previewTargets={lesson.targets?.map((t) => ({
+              slug: t.slug,
+              statement: t.statement,
+              self: null,
+              teacher: null,
+              delta: null,
+            }))}
+            previewFlags={
+              course
+                ? {
+                    experience: course.lesson_experience ?? 'stepped',
+                    gateCheckpoints: course.gate_checkpoints ?? true,
+                  }
+                : undefined
+            }
+            lesson={{ ...lesson, content_blocks: doc }}
+          />
         </div>
-      </div>
-
-      {/* Preview Content */}
-      <div className="p-6">
-        {viewMode === 'student' ? (
-          <div className={getDeviceClasses()}>
-            <div className={`${getDeviceHeight()} overflow-auto bg-white`}>
-              <BlockLessonViewer lesson={lesson} />
-            </div>
-          </div>
-        ) : (
-          <div className="max-w-6xl mx-auto space-y-6">
-            {/* Admin Overview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5" />
-                  Lesson Overview
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-primary mb-1">
-                      <Play className="h-4 w-4" />
-                      <span className="font-medium">Videos</span>
-                    </div>
-                    <div className="text-2xl font-bold text-primary">
-                      {lesson.videos?.length || 0}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-success/5 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-success mb-1">
-                      <Target className="h-4 w-4" />
-                      <span className="font-medium">Objectives</span>
-                    </div>
-                    <div className="text-2xl font-bold text-success">
-                      {lesson.objectives?.length || 0}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-primary/5 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-primary mb-1">
-                      <Clock className="h-4 w-4" />
-                      <span className="font-medium">Est. Time</span>
-                    </div>
-                    <div className="text-2xl font-bold text-primary">
-                      {lesson.estimated_time || 0}min
-                    </div>
-                  </div>
-                  
-                  <div className="bg-orange-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-2 text-orange-700 mb-1">
-                      <BookOpen className="h-4 w-4" />
-                      <span className="font-medium">Content</span>
-                    </div>
-                    <div className="text-2xl font-bold text-orange-900">
-                      {lesson.content ? '✓' : '✗'}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <Button onClick={() => setShowVideoManager(!showVideoManager)}>
-                    <Edit className="h-4 w-4 mr-2" />
-                    {showVideoManager ? 'Hide' : 'Manage'} Videos
-                  </Button>
-                  <Button variant="outline" asChild>
-                    <a href={`/admin/lessons/${lesson.id}/edit`}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit Lesson
-                    </a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Video Management */}
-            {showVideoManager && (
-              <Card>
-                <CardContent className="p-6">
-                  <LessonVideoManager
-                    lessonId={lesson.id}
-                    lessonTitle={lesson.title}
-                    initialVideos={lesson.videos || []}
-                    onSave={handleVideoSave}
-                  />
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Lesson Details */}
-            <Tabs defaultValue="content" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="content">Content</TabsTrigger>
-                <TabsTrigger value="videos">Videos ({lesson.videos?.length || 0})</TabsTrigger>
-                <TabsTrigger value="objectives">Objectives ({lesson.objectives?.length || 0})</TabsTrigger>
-                <TabsTrigger value="metadata">Metadata</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="content" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lesson Content</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {lesson.content ? (
-                      <div className="prose max-w-none">
-                        <MathMarkdown content={lesson.content} />
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <BookOpen className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                        <p>No content added yet</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="videos" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Video Content</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {lesson.videos && lesson.videos.length > 0 ? (
-                      <div className="space-y-4">
-                        {lesson.videos.map((video, index) => (
-                          <div key={video.id} className="border rounded-lg p-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <h3 className="font-semibold">{video.title}</h3>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  YouTube ID: {video.youtubeId}
-                                </p>
-                                {video.description && (
-                                  <p className="text-sm text-foreground mt-2">
-                                    {video.description}
-                                  </p>
-                                )}
-                                <div className="flex gap-2 mt-2">
-                                  {video.duration && (
-                                    <Badge variant="outline">{video.duration}</Badge>
-                                  )}
-                                  {video.timestamp && video.timestamp > 0 && (
-                                    <Badge variant="secondary">
-                                      Starts at {Math.floor(video.timestamp / 60)}:{(video.timestamp % 60).toString().padStart(2, '0')}
-                                    </Badge>
-                                  )}
-                                </div>
-                              </div>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                asChild
-                              >
-                                <a 
-                                  href={`https://youtube.com/watch?v=${video.youtubeId}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  <Play className="h-3 w-3" />
-                                </a>
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <Play className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                        <p>No videos added yet</p>
-                        <Button 
-                          className="mt-4" 
-                          onClick={() => setShowVideoManager(true)}
-                        >
-                          Add Videos
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="objectives" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Learning Objectives</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {lesson.objectives && lesson.objectives.length > 0 ? (
-                      <div className="space-y-2">
-                        {lesson.objectives.map((objective, index) => (
-                          <div key={index} className="flex items-start gap-3 p-3 bg-muted rounded-lg">
-                            <div className="w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-medium mt-0.5">
-                              {index + 1}
-                            </div>
-                            <p className="text-sm leading-relaxed">{objective}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <Target className="h-12 w-12 mx-auto mb-2 opacity-50" />
-                        <p>No learning objectives defined yet</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="metadata" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lesson Metadata</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-foreground">ID</label>
-                        <p className="text-sm text-foreground font-mono bg-muted p-2 rounded">
-                          {lesson.id}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground">Slug</label>
-                        <p className="text-sm text-foreground font-mono bg-muted p-2 rounded">
-                          {lesson.slug}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground">Created</label>
-                        <p className="text-sm text-foreground bg-muted p-2 rounded">
-                          {new Date(lesson.created_at).toLocaleString()}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground">Updated</label>
-                        <p className="text-sm text-foreground bg-muted p-2 rounded">
-                          {new Date(lesson.updated_at).toLocaleString()}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground">Published</label>
-                        <p className="text-sm text-foreground bg-muted p-2 rounded">
-                          {lesson.published ? '✅ Yes' : '❌ No'}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-foreground">Student URL</label>
-                        <p className="text-sm text-primary bg-muted p-2 rounded break-all">
-                          /lessons/{lesson.slug}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   )
 }

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D3</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Prep: worksheet printed, calculators, small bathroom scale as a prop — 'this measures FORCE, not mass.' Cognate pair on the board all day: masa/mass, peso/weight. Refer to it often." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:250px; width:540px; display:flex; flex-direction:column; gap:24px;">
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D;">F<sub>w</sub> = m · g</div>
+    <div style="background:#FFFFFF; border:2px solid #9B8EC4; border-radius:8px; padding:26px 38px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#17142E;">MASS — kg — universal</div>
+    <div style="background:#FFFFFF; border:2px solid #7FA68B; border-radius:8px; padding:26px 38px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#17142E;">WEIGHT — N — local</div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · UNIT 2</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1100px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:94px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Weight Is a Force.<br>Mass Is <span style="color:#9B8EC4;">Universal.</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:900px;">Day 3: F = mg works HERE because g is local. Same you, different weight on every world.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 03 · PHASE 1</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="Hook 0–5 min. Get the class to articulate that ONE of these is the same everywhere. When students conflate them later, push back: 'You just said you'd weigh less on the Moon. Did your mass change? What did?'" style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.24; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">What's your mass? What's your weight?<br>On the Moon — which one changes?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">One of these is the same everywhere in the universe. Which?</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — DO NOW</span>
+    <span>U2 · 02/09</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — distinguish mass from weight, calculate weight on different worlds with F = mg, explain why weight changes but mass does not. Target K2." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">03</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:1.32; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can distinguish mass from weight, calculate weight on different worlds with F = mg, and <span style="color:#E0A93D;">explain why weight changes but mass does not.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — TODAY'S TARGET</span>
+    <span>U2 · 03/09</span>
+  </div>
+</section>
+
+<section data-label="Mass vs Weight" data-speaker-notes="5–18 min direct instruction. Mass = how much stuff (kg, universal). Weight = the force of gravity ON that mass (N, depends on local g). Hold up the bathroom scale: 'this measures FORCE.' Cognate alert on the board: masa/mass, peso/weight — don't mix them." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">DIRECT INSTRUCTION — THE DISTINCTION THAT RUNS THE DAY</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Two Words, Two Physics</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; width:100%;">
+    <div style="position:relative; background:#FFFFFF; border:2px solid #9B8EC4; border-radius:6px; padding:44px 52px;">
+      <svg viewBox="0 0 100 78" style="position:absolute; top:30px; right:40px; width:110px;">
+        <line x1="12" y1="16" x2="88" y2="16" stroke="#9B8EC4" stroke-width="3.5"></line>
+        <line x1="50" y1="16" x2="50" y2="62" stroke="#9B8EC4" stroke-width="3.5"></line>
+        <line x1="32" y1="64" x2="68" y2="64" stroke="#9B8EC4" stroke-width="3.5"></line>
+        <line x1="12" y1="16" x2="12" y2="30" stroke="#9B8EC4" stroke-width="2.5"></line>
+        <line x1="88" y1="16" x2="88" y2="30" stroke="#9B8EC4" stroke-width="2.5"></line>
+        <path d="M 2 30 Q 12 46 22 30" fill="none" stroke="#9B8EC4" stroke-width="3"></path>
+        <path d="M 78 30 Q 88 46 98 30" fill="none" stroke="#9B8EC4" stroke-width="3"></path>
+      </svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7A75A0; margin-bottom:22px;">MASS · kg · <em>masa</em></div>
+      <p style="margin:0 0 18px 0; padding-right:130px; font-size:32px; line-height:1.5; color:#17142E;"><strong>How much stuff.</strong> Same on Earth, on the Moon, on 2026-XJ.</p>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#6E6A8C;">Never changes unless you add or remove matter.</p>
+    </div>
+    <div style="position:relative; background:#FFFFFF; border:2px solid #7FA68B; border-radius:6px; padding:44px 52px;">
+      <svg viewBox="0 0 100 78" style="position:absolute; top:30px; right:40px; width:110px;">
+        <defs><marker id="m3w" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker></defs>
+        <rect x="30" y="6" width="40" height="28" rx="3" fill="none" stroke="#7FA68B" stroke-width="3.5"></rect>
+        <line x1="50" y1="40" x2="50" y2="64" stroke="#7FA68B" stroke-width="3.5" marker-end="url(#m3w)"></line>
+        <line x1="24" y1="74" x2="76" y2="74" stroke="#7FA68B" stroke-width="3"></line>
+      </svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#5E8B6E; margin-bottom:22px;">WEIGHT · N · <em>peso</em></div>
+      <p style="margin:0 0 18px 0; padding-right:130px; font-size:32px; line-height:1.5; color:#17142E;"><strong>The force of gravity on that mass.</strong> F<sub>w</sub> = m·g — depends on local g.</p>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#6E6A8C;">Your bathroom scale measures force, not stuff.</p>
+    </div>
+  </div>
+  <p style="margin:52px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:40px; line-height:1.35; color:#17142E; font-weight:600;">"You'd weigh less on the Moon." Did your mass change? <span style="color:#E0A93D;">What did?</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — VOCAB · MASS AND WEIGHT</span>
+    <span>U2 · 04/09</span>
+  </div>
+</section>
+
+<section data-label="Weight Across Worlds — Live Sim" data-speaker-notes="18–32 min alongside the worked progression. Set the mass slider, then click through Earth → Moon → Mars → 2026-XJ. The mass readout NEVER moves; the weight bars collapse. Pattern: mass constant, weight scales with g. The asteroid's g ≈ 0.0003 gets a laugh — you'd weigh less than an apple does here." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Same You, Four Worlds</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·03 · WEIGHT ACROSS WORLDS</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Pick a mass. Tour the worlds. <strong style="color:#17142E;">Watch which number refuses to change.</strong></p>
+  <div style="width:100%;">
+    <x-import component="WeightWorldsSim" from="./sims4.jsx" hint-size="100%,480px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — DOODLE ZONE (YOUR WEIGHT PER WORLD)</span>
+    <span>U2 · 05/09</span>
+  </div>
+</section>
+
+<section data-label="Worked Example" data-speaker-notes="Worked example from the packet: 70 kg on the Moon = 113 N. Run the full progression on the board after: Earth 686 N, Moon 113 N, Mars 260 N, asteroid ≈ 0.02 N. Then 32–45 min independent practice: 6 worksheet problems, mixed masses and g values, Aspen-style answer column. SWDs: 3-column table (planet | g | weight)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WORKED EXAMPLE — TOGETHER FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">You, on the Moon</h2>
+    <p style="margin:0 0 40px 0; font-size:34px; line-height:1.5;">A <strong>70 kg</strong> student stands on the Moon (g = 1.62 m/s²). What do they weigh?</p>
+    <div style="display:flex; flex-direction:column; gap:20px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#3A3654;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;m = 70 kg · g<sub>Moon</sub> = 1.62 m/s²</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;F<sub>w</sub> = ?</span>
+      <span><span style="color:#C08F2E;">EQUATION</span>&nbsp;&nbsp;F<sub>w</sub> = m·g</span>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:52px 56px; display:flex; flex-direction:column; gap:32px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#FAF9FC;">F<sub>w</sub> = 70 × 1.62</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:#E0A93D;">F<sub>w</sub> ≈ 113 N</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6; line-height:1.6;">about 1/6 of your Earth weight (686 N) — and your mass is exactly the same 70 kg.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — WORKED EXAMPLE</span>
+    <span>U2 · 06/09</span>
+  </div>
+</section>
+
+<section data-label="Your Turn" data-speaker-notes="32–45 min independent practice — 6 worksheet problems. This slide is the packet's YOUR TURN: reverse direction — weight given, find mass FIRST. That reversal is what the exit ticket tests. Advanced: 'derive Mars g from Mars's mass and radius' (preview Day 6)." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">INDEPENDENT · 6 PROBLEMS</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Now Run It Backwards</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1460px;">You weigh <strong style="color:#17142E;">600 N on Earth</strong>. Find your mass first. Then your weight on Mars (g = 3.71 m/s²).</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">The trap: 600 N is <span style="color:#E0A93D;">not your mass.</span> Divide by g first.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — YOUR TURN + WORKSHEET</span>
+    <span>U2 · 07/09</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Asteroid setup for tomorrow: if 2026-XJ stood on a giant scale on Earth's surface, what would it read? We CAN'T answer yet — F = mg needs a g, and who says the asteroid is at the surface? Tomorrow: where g COMES FROM." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD — SETUP FOR TOMORROW</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">Put 2026-XJ on a<br>Giant <span style="color:#E0A93D;">Scale</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1420px;">What would it read? We can't answer yet — F = mg needs a g, and the asteroid isn't AT Earth's surface. <strong style="color:#FAF9FC;">Tomorrow: where g comes from.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 3 — ASTEROID THREAD</span>
+    <span>U2 · 08/09</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="45–48 exit (verbatim from packet — answer: m ≈ 61 kg, weight ≈ 1529 N), 48–50 Marzano on K2, then the hook: 'tomorrow — where does g COME FROM?' TONIGHT: Hewitt weight/weightlessness; honors write the connect-back paragraph: gravity IS Unit 1's F = ma across a vacuum." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">If you weigh 600 N on Earth, what is your mass? What would you weigh on a planet with g = 25 m/s²?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 3 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt Ch. 9 — weight and weightlessness sections. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: one paragraph — gravity is not a new kind of rule; it is Unit 1's F = ma with a force that reaches across a vacuum. Defend it.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 3 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 09/09</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

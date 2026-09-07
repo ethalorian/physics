@@ -16,13 +16,15 @@ import type { GraphSeries } from '@/data/content-blocks'
 const PALETTE = ['var(--primary)', 'var(--success)', 'oklch(0.62 0.16 25)', 'oklch(0.58 0.10 255)', 'var(--reward)']
 
 export default function FigureGraph({
-  title, xLabel, yLabel, series,
+  title, xLabel, yLabel, series, presentation = false,
 }: {
+  presentation?: boolean
   title?: string
   xLabel?: string
   yLabel?: string
   series: GraphSeries[]
 }) {
+  const labelSize = presentation ? 28 : 12
   const [hidden, setHidden] = useState<Set<string>>(new Set())
 
   // Merge all series onto shared x rows so recharts can plot them together.
@@ -47,16 +49,16 @@ export default function FigureGraph({
 
   return (
     <figure style={{ margin: 0 }}>
-      {title && <figcaption style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>{title}</figcaption>}
-      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: 320 }}>
+      {title && <figcaption style={{ fontSize: presentation ? 36 : 13, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>{title}</figcaption>}
+      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: presentation ? 600 : 320 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 6, right: 16, bottom: 26, left: 6 }}>
+          <LineChart data={data} margin={{ top: 20, right: 40, bottom: presentation ? 50 : 26, left: presentation ? 30 : 6 }}>
             <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />
-            <XAxis dataKey="x" type="number" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} height={40}>
-              {xLabel && <Label value={xLabel} position="insideBottom" offset={0} fill="var(--muted-foreground)" fontSize={12} />}
+            <XAxis dataKey="x" type="number" stroke="var(--muted-foreground)" fontSize={labelSize} tickLine={false} height={presentation ? 75 : 40}>
+              {xLabel && <Label value={xLabel} position="insideBottom" offset={0} fill="var(--muted-foreground)" fontSize={labelSize} />}
             </XAxis>
-            <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} width={44}>
-              {yLabel && <Label value={yLabel} angle={-90} position="insideLeft" fill="var(--muted-foreground)" fontSize={12} style={{ textAnchor: 'middle' }} />}
+            <YAxis stroke="var(--muted-foreground)" fontSize={labelSize} tickLine={false} width={presentation ? 100 : 44}>
+              {yLabel && <Label value={yLabel} angle={-90} position="insideLeft" fill="var(--muted-foreground)" fontSize={labelSize} style={{ textAnchor: 'middle' }} />}
             </YAxis>
             <Tooltip
               contentStyle={{ background: 'var(--card)', border: '0.5px solid var(--border)', borderRadius: 10, fontSize: 12 }}
@@ -66,7 +68,7 @@ export default function FigureGraph({
               verticalAlign="top"
               align="center"
               onClick={(e) => toggle(String((e as { value?: string }).value ?? ''))}
-              wrapperStyle={{ fontSize: 12, cursor: 'pointer', paddingBottom: 10 }}
+              wrapperStyle={{ fontSize: labelSize, cursor: 'pointer', paddingBottom: 10 }}
             />
             {series.map((s, i) => (
               <Line
@@ -85,7 +87,7 @@ export default function FigureGraph({
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <figcaption style={{ fontSize: 11.5, color: 'var(--muted-foreground)', marginTop: 6 }}>
+      <figcaption style={{ fontSize: presentation ? 24 : 11.5, color: 'var(--muted-foreground)', marginTop: 6 }}>
         Hover a point for its value · click a name in the key to show or hide that line.
       </figcaption>
     </figure>

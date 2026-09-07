@@ -63,6 +63,7 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
       if (!['ArrowRight', 'ArrowLeft', 'b', 'B'].includes(event.key)) return
       event.preventDefault(); event.stopImmediatePropagation()
       if (event.key.toLowerCase() === 'b') { void patch({ blackout: !live.session.blackout }); return }
+      if (live.session.projected_block_id) return
       const index = live.session.current_slide + (event.key === 'ArrowRight' ? 1 : -1)
       if (index < 0 || index >= snapshot.total) return
       const pages = paginateBlocks(documentData.lesson.content_blocks.blocks)
@@ -113,7 +114,13 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
       const signature = projectorSignature(live, tools)
       const snapshot = readDeck(win)
       let ready = false
-      try { ready = Boolean(win && !win.closed && snapshot?.index === live.session.current_slide && win.document.querySelector('[data-projection-signature]')?.getAttribute('data-projection-signature') === signature) } catch { /* closed */ }
+      try {
+        ready = Boolean(win && !win.closed && snapshot?.index === live.session.current_slide && win.document.querySelector('[data-projection-signature]')?.getAttribute('data-projection-signature') === signature)
+        if (ready && live.session.projected_block_id && !live.session.blackout && live.session.status === 'live') {
+          const frame = win?.document.querySelector<HTMLIFrameElement>('iframe[title="Projected lesson block"]')
+          ready = frame?.contentDocument?.querySelector('[data-projected-block-ready]')?.getAttribute('data-projected-block-ready') === `${live.session.projected_block_id}:${live.session.projected_block_page ?? 0}`
+        }
+      } catch { /* closed or block still loading */ }
       sending = true
       try { await commandRequest(`/api/present/sessions/${sessionId}/tools`, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'ack', signature, ready, slide: snapshot?.index ?? 0 }) }) }
       catch { /* the iPad marks the heartbeat stale */ }
@@ -138,6 +145,7 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
     {portal && state && createPortal(<>
       {teaching.state && <span style={{ display: 'none' }} data-projection-signature={projectorSignature(state, teaching.state)} />}
       {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Presentation ended' : 'Screen blanked'} /> : <>
+        {state.session.projected_block_id && <iframe key={state.session.projected_block_id} title="Projected lesson block" src={`${origin}/embed/present-block/${encodeURIComponent(sessionId)}?lesson=${encodeURIComponent(state.session.lesson_id)}&block=${encodeURIComponent(state.session.projected_block_id)}&part=${state.session.projected_block_page ?? 0}`} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', border: 0, zIndex: 2147483644, background: 'white' }} allow="fullscreen" />}
         {(showLobby || pulse || poll?.type === 'question') && <div style={{ position: 'fixed', inset: 0, zIndex: 2147483645, background: 'var(--background, white)', color: 'var(--foreground, black)', padding: '5vh 7vw', overflowY: 'auto', fontFamily: 'system-ui', fontSize: 'clamp(24px, 3vw, 56px)' }}>
           {state.lobby ? <div style={{ textAlign: 'center', paddingTop: '12vh' }}><p>Join the activity</p><p style={{ fontSize: 'clamp(56px, 12vw, 180px)', fontWeight: 700, letterSpacing: '.12em' }}>{state.lobby.code}</p><p>{origin.replace(/^https?:\/\//, '')}/lobby</p><p>{state.lobby.status === 'open' ? 'Work with your group on your device.' : state.lobby.status === 'grouped' ? 'Find your group on your device.' : 'Enter the code on your device.'}</p></div> : pulse ? <div><h1>{pulse.kind === 'readiness' ? 'How ready are you to move on?' : 'How confident do you feel?'}</h1><p>Respond on your lesson screen · {pulse.anonymous ? 'anonymous totals' : 'your teacher can offer help'}</p>{PULSE_OPTIONS[pulse.kind].map(label => <p key={label} style={{ padding: 16, border: '2px solid currentColor', borderRadius: 12 }}>{label}</p>)}</div> : poll?.type === 'question' && <>{teaching.state?.tools?.discussion_block_id === state.session.poll_block_id && <p>Discuss with a partner. Explain your reasoning before the fresh vote.</p>}<MathMarkdown content={commandQuestion(poll)!.prompt} />{commandQuestion(poll)!.options?.map(o => <div key={o.id} style={{ marginTop: '2vh', padding: '1vh', border: '2px solid currentColor', borderRadius: 12 }}><MathMarkdown content={o.text} />{state.session.poll_revealed && <span>{state.tally[o.id] ?? 0} responses</span>}</div>)}<p style={{ marginTop: '3vh' }}>{state.saved} of {state.enrolled} responses · {state.session.poll_revealed ? 'Results revealed' : state.session.poll_locked ? 'Responses locked' : 'Respond on your device'}</p></>}
         </div>}

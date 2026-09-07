@@ -30,10 +30,12 @@ export function targetSlugsInBlocks(doc: Doc): string[] {
 
 /** Target ids a lesson can be rated on: owned by `lesson_id` ∪ referenced in its blocks. */
 export async function targetIdsForLesson(lessonId: string, documentOverride?: Doc): Promise<string[]> {
-  const [{ data: owned }, { data: row }] = await Promise.all([
+  const [{ data: owned, error: ownedError }, { data: row, error: rowError }] = await Promise.all([
     supabaseAdmin.from('learning_targets').select('id').eq('lesson_id', lessonId),
-    documentOverride !== undefined ? Promise.resolve({ data: { content_blocks: documentOverride } }) : supabaseAdmin.from('lessons').select('content_blocks').eq('id', lessonId).maybeSingle(),
+    documentOverride !== undefined ? Promise.resolve({ data: { content_blocks: documentOverride }, error: null }) : supabaseAdmin.from('lessons').select('content_blocks').eq('id', lessonId).maybeSingle(),
   ])
+  if (ownedError) throw ownedError
+  if (rowError) throw rowError
   const ids = new Set((owned ?? []).map((t) => (t as { id: string }).id))
   const slugs = targetSlugsInBlocks((row as { content_blocks?: Doc } | null)?.content_blocks)
   if (slugs.length > 0) {

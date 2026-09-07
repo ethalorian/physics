@@ -44,5 +44,12 @@ result=await sessions.GET(new Request('http://test/api/present/sessions?active=1
 assert.equal(result.status,200);assert.equal(result.body.sessions[0].id,'s');
 assert.ok(filters.some(f=>f[0]==='eq'&&f[1]==='teacher_id'&&f[2]==='teacher'),'Active discovery stays scoped to the authenticated teacher');
 assert.ok(filters.some(f=>f[0]==='eq'&&f[1]==='status'&&f[2]==='live'),'Ended sessions are excluded');
+const sessionRoute=await build('src/app/api/present/sessions/[id]/route.ts','session-route.cjs',{'@/lib/present-server':`export const classLesson=async()=>({content_blocks:{blocks:[{id:'graph',type:'graph',series:[]},{id:'text',type:'prose',markdown:'One paragraph.'}]}});`});
+let savedUpdate;
+global.db=table=>{let update;const chain=new Proxy({}, {get:(_,key)=>key==='then'?(resolve,reject)=>Promise.resolve({data:update?{...session,...update}:session}).then(resolve,reject):(...args)=>{if(key==='update'){update=args[0];savedUpdate=update}return chain}});return chain};
+result=await sessionRoute.PATCH(request({projected_block_id:'graph'}),ctx);assert.equal(result.status,200);assert.equal(savedUpdate.projected_block_id,'graph');assert.equal(savedUpdate.projected_block_page,0);assert.ok(savedUpdate.current_anchor);assert.equal('current_slide' in savedUpdate,false,'Projecting a block preserves the deck position');
+result=await sessionRoute.PATCH(request({projected_block_id:'hidden'}),ctx);assert.equal(result.status,400);
+result=await sessionRoute.PATCH(request({projected_block_id:'graph',projected_block_page:1}),ctx);assert.equal(result.status,400,'Graphs cannot be split into another screen');
+result=await sessionRoute.PATCH(request({projected_block_id:null}),ctx);assert.equal(result.status,200);assert.equal(savedUpdate.projected_block_id,null);
 console.log('PASS actual server/API modules: anonymous aggregate-only queue, named help/missing queue, display privacy, foreign-session/student rejection, invalid pulse kinds, identity from authentication, late response rejection.');
 })().catch(e=>{console.error(e);process.exitCode=1});

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronRight, Check, CircleDashed, FileText } from 'lucide-react'
@@ -46,6 +47,8 @@ function unitStats(u: ManageUnit) {
 }
 
 function LessonRow({ l, canPublish }: { l: ManageLesson; canPublish: boolean }) {
+  const router = useRouter()
+  const [error, setError] = useState('')
   const n = l.blockCount
   const [pub, setPub] = useState(l.published)
   const [busy, setBusy] = useState(false)
@@ -53,13 +56,13 @@ function LessonRow({ l, canPublish }: { l: ManageLesson; canPublish: boolean }) 
   const togglePublish = async () => {
     if (busy || !canPublish) return
     const next = !pub
-    setBusy(true)
+    setBusy(true); setError('')
     setPub(next) // optimistic
     const res = await fetch(`/api/lessons/${l.id}`, {
       method: 'PUT', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ published: next }),
     }).catch(() => null)
-    if (!res || !res.ok) setPub(!next) // revert on failure
+    if (!res || !res.ok) { setPub(!next); const d = res ? await res.json().catch(() => ({})) : {}; setError(d.error ?? 'Could not change publication. Please retry.') } else router.refresh()
     setBusy(false)
   }
 
@@ -80,6 +83,7 @@ function LessonRow({ l, canPublish }: { l: ManageLesson; canPublish: boolean }) 
           {!pub && <span> · draft</span>}
         </div>
       </div>
+      {error && <p role="alert" className="basis-full text-sm text-destructive">{error}</p>}
       {canPublish ? (
         <button
           onClick={togglePublish}
@@ -99,8 +103,8 @@ function LessonRow({ l, canPublish }: { l: ManageLesson; canPublish: boolean }) 
           {pub ? 'Published' : 'Draft'}
         </span>
       )}
-      <Link href={`/admin/lessons/${l.id}/build`} className="text-xs font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Build blocks</Link>
-      <Link href={`/lessons/${l.slug}`} target="_blank" className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Preview</Link>
+      <Link href={`/admin/lessons/${l.id}/build`} className="text-xs font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Edit lesson</Link>
+      <Link href={`/admin/lessons/${l.id}/preview`} target="_blank" className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Preview</Link>
       <Link href={`/admin/lessons/${l.id}/edit`} className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>Settings</Link>
     </div>
   )

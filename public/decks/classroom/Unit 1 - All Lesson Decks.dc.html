@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">U1</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;min-height:100%;background:#0B0919;}
+@keyframes twinkle{0%,100%{opacity:.9}50%{opacity:.25}}
+@keyframes twinkle2{0%,100%{opacity:.3}50%{opacity:.95}}
+@keyframes drift{0%{transform:translateY(0)}50%{transform:translateY(-10px)}100%{transform:translateY(0)}}
+@keyframes dashflow{to{stroke-dashoffset:-200}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,169,61,.45)}50%{box-shadow:0 0 0 14px rgba(224,169,61,0)}}
+</style>
+</helmet>
+<div style="min-height:100vh; box-sizing:border-box; position:relative; overflow:hidden; background:radial-gradient(1200px 800px at 75% -10%, #1E1A3E, #14112A 55%, #0B0919); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; display:flex; flex-direction:column; align-items:center; padding:54px 40px 70px; gap:34px;">
+  <div style="position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(2px 2px at 11% 19%, rgba(255,255,255,.7) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 33% 64%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 52% 30%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 71% 76%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 88% 47%, rgba(255,255,255,.55) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 22% 88%, rgba(255,255,255,.4) 50%, transparent 52%); animation:twinkle 5s ease-in-out infinite;"></div>
+  <div style="position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(2.5px 2.5px at 18% 42%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(2px 2px at 44% 12%, rgba(224,169,61,.7) 50%, transparent 52%), radial-gradient(2px 2px at 64% 58%, rgba(224,169,61,.75) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 83% 24%, rgba(224,169,61,.8) 50%, transparent 52%), radial-gradient(2px 2px at 8% 68%, rgba(224,169,61,.6) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 57% 86%, rgba(255,255,255,.5) 50%, transparent 52%); animation:twinkle2 7s ease-in-out infinite;"></div>
+
+  <div style="position:relative; width:100%; max-width:1560px; display:flex; justify-content:space-between; align-items:center; border:1px solid #2E2950; background:rgba(20,17,42,0.72); border-radius:8px; padding:20px 30px;">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span style="width:11px; height:11px; background:#E0A93D; display:inline-block; animation:pulse 2.4s infinite; border-radius:2px;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:15px; letter-spacing:0.3em; color:#9B8EC4;">PLANETARY DEFENSE PROGRAM · CPA PHYSICS</span>
+    </div>
+    <div style="display:flex; gap:34px; font-family:'IBM Plex Mono',monospace; font-size:14px; color:#7A75A0;">
+      <span>TARGET <span style="color:#FAF9FC;">2026-XJ</span></span>
+      <span>MASS <span style="color:#E0A93D;">3.5 × 10¹¹ kg</span></span>
+      <span>VELOCITY <span style="color:#FAF9FC;">8,500 m/s · 15°</span></span>
+      <span style="color:#E0A93D;">STATUS: INBOUND</span>
+    </div>
+  </div>
+
+  <div style="position:relative; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:54px; letter-spacing:-0.02em; color:#FAF9FC; font-weight:700;">Unit 1 — The Intercept Course</h1>
+    <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:15px; letter-spacing:0.18em; color:#7A75A0;">HOW FAST — AND WHERE WILL IT ARRIVE? · 22 DAYS · EVERY WAYPOINT IS A LESSON</p>
+  </div>
+
+  <!-- trajectory map -->
+  <div style="position:relative; width:100%; max-width:1560px; height:560px;">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute; inset:0; width:100%; height:100%;">
+      <path d="M 6 80 Q 48 66 90 16" fill="none" stroke="rgba(155,142,196,0.35)" stroke-width="0.35" stroke-dasharray="1.6 1.2" style="animation:dashflow 14s linear infinite;"></path>
+    </svg>
+    <!-- asteroid origin -->
+    <div style="position:absolute; left:6%; top:80%; transform:translate(-50%,-50%); animation:drift 6s ease-in-out infinite;">
+      <svg viewBox="0 0 100 100" style="width:110px; height:110px; display:block;">
+        <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="2.5"></path>
+        <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+        <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+      </svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.2em; color:#E0A93D; text-align:center; margin-top:6px; white-space:nowrap;">2026-XJ · DAY 1</div>
+    </div>
+    <!-- Earth destination -->
+    <div style="position:absolute; left:94%; top:11%; transform:translate(-50%,-50%); animation:drift 8s ease-in-out infinite;">
+      <svg viewBox="0 0 100 100" style="width:96px; height:96px; display:block;">
+        <circle cx="50" cy="50" r="42" fill="#22406B" stroke="#7FA68B" stroke-width="2.5"></circle>
+        <path d="M 26 36 q 14 -10 28 -2 q 16 8 24 2 M 24 62 q 18 10 34 2 q 12 -6 18 2" stroke="#7FA68B" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+      </svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.2em; color:#7FA68B; text-align:center; margin-top:6px;">EARTH · DAY 22</div>
+    </div>
+
+    <!-- waypoints -->
+    <a href="U1 Day 1 - The Briefing.dc.html" title="The Briefing: Something Is Coming" style="position:absolute; left:9.8%; top:78.7%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:20px; height:20px; border-radius:50%; background:#E0A93D; border:3px solid #14112A; box-shadow:0 0 16px rgba(224,169,61,.8); display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#E0A93D;">1</span></a>
+    <a href="U1 Day 2 - Talking About Motion.dc.html" title="How Do We Talk About Motion?" style="position:absolute; left:13.6%; top:77.2%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">2</span></a>
+    <a href="U1 Day 3 - Velocity.dc.html" title="Velocity: Motion with Direction · SIM" style="position:absolute; left:17.5%; top:75.5%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">3</span></a>
+    <a href="U1 Day 4 - Velocity-Time Graphs and Vectors.dc.html" title="Velocity-Time Graphs & Vectors · SIM" style="position:absolute; left:21.3%; top:73.7%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">4</span></a>
+    <a href="U1 Day 5 - The First Prediction.dc.html" title="The First Prediction · M2 · SIM" style="position:absolute; left:25.1%; top:71.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:20px; height:20px; border-radius:50%; background:#E0A93D; border:3px solid #14112A; box-shadow:0 0 16px rgba(224,169,61,.8); display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#E0A93D;">5</span></a>
+    <a href="U1 Day 6 - Vector Addition.dc.html" title="Vector Addition & Decomposition · M3 · SIM" style="position:absolute; left:28.9%; top:69.7%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">6</span></a>
+    <a href="U1 Day 7 - Acceleration.dc.html" title="Acceleration · SIM" style="position:absolute; left:32.7%; top:67.4%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">7</span></a>
+    <a href="U1 Day 8 - Choosing the Equation.dc.html" title="Constant Acceleration Problem-Solving · M4 · SIM" style="position:absolute; left:36.5%; top:65.1%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">8</span></a>
+    <a href="U1 Day 9 - Inertia.dc.html" title="Newton's 1st Law: Inertia · SIM" style="position:absolute; left:40.4%; top:62.5%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">9</span></a>
+    <a href="U1 Day 10 - The Language of Force.dc.html" title="Forces: What Pushes and Pulls" style="position:absolute; left:44.2%; top:59.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">10</span></a>
+    <a href="U1 Day 11 - Cart Lab I.dc.html" title="Cart Lab I: Vary Mass · SIM" style="position:absolute; left:48.0%; top:57.0%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">11</span></a>
+    <a href="U1 Day 12 - Cart Lab II.dc.html" title="Cart Lab II: Derive F = ma · SIM" style="position:absolute; left:51.8%; top:54.0%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:20px; height:20px; border-radius:50%; background:#E0A93D; border:3px solid #14112A; box-shadow:0 0 16px rgba(224,169,61,.8); display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#E0A93D;">12</span></a>
+    <a href="U1 Day 13 - F=ma Fluency.dc.html" title="F = ma in Practice · M5 · SIM" style="position:absolute; left:55.6%; top:50.9%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">13</span></a>
+    <a href="U1 Day 14 - Action and Reaction.dc.html" title="Newton's 3rd Law · SIM" style="position:absolute; left:59.5%; top:47.6%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">14</span></a>
+    <a href="U1 Day 15 - Free Body Diagrams I.dc.html" title="Free Body Diagrams I · SIM" style="position:absolute; left:63.3%; top:44.2%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">15</span></a>
+    <a href="U1 Day 16 - Free Body Diagrams II.dc.html" title="Free Body Diagrams II: Inclines · M6 · SIM" style="position:absolute; left:67.1%; top:40.6%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">16</span></a>
+    <a href="U1 Day 17 - Friction.dc.html" title="Friction · SIM" style="position:absolute; left:70.9%; top:36.9%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">17</span></a>
+    <a href="U1 Day 18 - Equilibrium.dc.html" title="Equilibrium · SIM" style="position:absolute; left:74.7%; top:33.0%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">18</span></a>
+    <a href="U1 Day 19 - Workshop.dc.html" title="Workshop & Revision · SIM" style="position:absolute; left:78.5%; top:29.0%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:14px; height:14px; border-radius:50%; background:#7FA68B; border:3px solid #14112A; display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8B87A6;">19</span></a>
+    <a href="U1 Day 20 - Synthesis.dc.html" title="Synthesis: The Whole Unit, One Asteroid · SIM" style="position:absolute; left:82.4%; top:24.8%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:20px; height:20px; border-radius:50%; background:#E0A93D; border:3px solid #14112A; box-shadow:0 0 16px rgba(224,169,61,.8); display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#E0A93D;">20</span></a>
+    <a href="U1 Days 21-22 - Transfer Task.dc.html" title="The Transfer Task" style="position:absolute; left:86.2%; top:20.5%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:7px; text-decoration:none;" style-hover="transform:translate(-50%,-50%) scale(1.35);"><span style="width:20px; height:20px; border-radius:50%; background:#E0A93D; border:3px solid #14112A; box-shadow:0 0 16px rgba(224,169,61,.8); display:block;"></span><span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#E0A93D;">21–22</span></a>
+
+    <!-- phase banners along the route -->
+    <div style="position:absolute; left:19%; top:92%; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.26em; color:#E0A93D; white-space:nowrap;">PHASE 1 · SETTING UP THE QUESTION</div>
+    <div style="position:absolute; left:42%; top:70%; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.26em; color:#7FA68B;">PHASE 2 · BUILDING THE TOOLS</div>
+    <div style="position:absolute; left:76%; top:14%; font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.26em; color:#9B8EC4;">PHASE 3 · TRANSFER TASK</div>
+  </div>
+
+  <!-- manifest -->
+  <div style="position:relative; width:100%; max-width:1560px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px 28px; border:1px solid #2E2950; background:rgba(20,17,42,0.72); border-radius:8px; padding:26px 32px;">
+    <div style="grid-column:1 / -1; display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #2E2950; padding-bottom:12px; margin-bottom:6px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; letter-spacing:0.28em; color:#9B8EC4;">MISSION MANIFEST — 21 DECKS · CPA LESSON PLANS · M1–M6 MATH MOVES</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; color:#5A5480;">SPEAKER NOTES CARRY TIMING + TEACHER MOVES</span>
+    </div>
+    <a href="U1 Day 1 - The Briefing.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#E0A93D; min-width:52px;">1</span><span>The Briefing: Something Is Coming</span></a>
+    <a href="U1 Day 2 - Talking About Motion.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">2</span><span>How Do We Talk About Motion?</span></a>
+    <a href="U1 Day 3 - Velocity.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">3</span><span>Velocity: Motion with Direction · SIM</span></a>
+    <a href="U1 Day 4 - Velocity-Time Graphs and Vectors.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">4</span><span>Velocity-Time Graphs &amp; Vectors · SIM</span></a>
+    <a href="U1 Day 5 - The First Prediction.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#E0A93D; min-width:52px;">5</span><span>The First Prediction · M2 · SIM</span></a>
+    <a href="U1 Day 6 - Vector Addition.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">6</span><span>Vector Addition &amp; Decomposition · M3 · SIM</span></a>
+    <a href="U1 Day 7 - Acceleration.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">7</span><span>Acceleration · SIM</span></a>
+    <a href="U1 Day 8 - Choosing the Equation.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">8</span><span>Constant Acceleration Problem-Solving · M4 · SIM</span></a>
+    <a href="U1 Day 9 - Inertia.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">9</span><span>Newton's 1st Law: Inertia · SIM</span></a>
+    <a href="U1 Day 10 - The Language of Force.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">10</span><span>Forces: What Pushes and Pulls</span></a>
+    <a href="U1 Day 11 - Cart Lab I.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">11</span><span>Cart Lab I: Vary Mass · SIM</span></a>
+    <a href="U1 Day 12 - Cart Lab II.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#E0A93D; min-width:52px;">12</span><span>Cart Lab II: Derive F = ma · SIM</span></a>
+    <a href="U1 Day 13 - F=ma Fluency.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">13</span><span>F = ma in Practice · M5 · SIM</span></a>
+    <a href="U1 Day 14 - Action and Reaction.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">14</span><span>Newton's 3rd Law · SIM</span></a>
+    <a href="U1 Day 15 - Free Body Diagrams I.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">15</span><span>Free Body Diagrams I · SIM</span></a>
+    <a href="U1 Day 16 - Free Body Diagrams II.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">16</span><span>Free Body Diagrams II: Inclines · M6 · SIM</span></a>
+    <a href="U1 Day 17 - Friction.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">17</span><span>Friction · SIM</span></a>
+    <a href="U1 Day 18 - Equilibrium.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">18</span><span>Equilibrium · SIM</span></a>
+    <a href="U1 Day 19 - Workshop.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#8B87A6; min-width:52px;">19</span><span>Workshop &amp; Revision · SIM</span></a>
+    <a href="U1 Day 20 - Synthesis.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#E0A93D; min-width:52px;">20</span><span>Synthesis: The Whole Unit, One Asteroid · SIM</span></a>
+    <a href="U1 Days 21-22 - Transfer Task.dc.html" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:15px; color:#D9D6E8; display:flex; gap:12px;" style-hover="color:#E0A93D;"><span style="color:#E0A93D; min-width:52px;">21–22</span><span>The Transfer Task</span></a>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

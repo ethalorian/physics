@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect, useMemo, useRef } from 'react'
-import Link from 'next/link'
 import { useSession } from 'next-auth/react'
-import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
-import { filterDocumentForViewer } from '@/lib/track-visibility'
+import LessonEditorNav from './LessonEditorNav'
+import { LessonStudentPreview } from './AdminLessonPreview'
+import type { GlossaryEntry } from '@/components/MathMarkdown'
 import { BlockSettingsEditor, QuestionEditor } from './BlockSettingsEditor'
 import { BlockDocument, isCaptureBlock, type ContentBlock } from '@/data/content-blocks'
 import BlockRenderer from '@/components/blocks/BlockRenderer'
@@ -34,7 +34,7 @@ function fromDocument(doc: BlockDocument | undefined): BlockState[] {
 
 const inputStyle = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' } as const
 
-type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument }
+type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument; unitId?: string; day?: number; published?: boolean; targets?: {id:string;slug:string;statement:string}[]; previewDocument?: BlockDocument; glossary?: GlossaryEntry[] }
 
 export default function LessonBlockBuilder(props: BuilderProps) {
   const { data: session } = useSession()
@@ -42,7 +42,7 @@ export default function LessonBlockBuilder(props: BuilderProps) {
 }
 
 function BuilderSession({
-  lessonId, lessonTitle, lessonSlug, initial,
+  lessonId, lessonTitle, initial, unitId, day, published, targets = [], previewDocument, glossary,
 }: BuilderProps) {
   const { data: session } = useSession()
   const [preview, setPreview] = useState(false)
@@ -90,9 +90,9 @@ function BuilderSession({
 
   // ── Canvas: each block renders live & interactive; play state is throwaway ──
   const [viewAs, setViewAs] = useState<'author' | 'cpa' | 'honors'>('author')
-  const previewTrack = viewAs === 'honors' ? 'honors' : 'cpa'
-  const studentDocument = useMemo(() => filterDocumentForViewer(doc, { role: 'student', track: previewTrack }), [doc, previewTrack])
-  const answerKeys = useMemo(() => Object.fromEntries(doc.blocks.flatMap((b) => b.type === 'question' && b.question && typeof b.question === 'object' && 'correctOptionId' in b.question ? [[b.id, String(b.question.correctOptionId)]] : [])), [doc])
+  const [saveIssues, setSaveIssues] = useState<{blockId?:string;message:string}[]>([])
+  const [moreActivities, setMoreActivities] = useState(false)
+  const previewDoc = useMemo(() => ({ ...doc, blocks: doc.blocks.map(b => { const stored = previewDocument?.blocks.find(p => p.type === 'transfer_prompt' && b.type === 'transfer_prompt' && p.masteryTaskSlug === b.masteryTaskSlug); return b.type === 'transfer_prompt' && stored?.type === 'transfer_prompt' ? {...b, task:stored.task} : b }) }), [doc,previewDocument])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [play, setPlay] = useState<BlockResponseMap>({})
   const playSave = (id: string, _type: string, value: unknown) =>
@@ -161,8 +161,9 @@ function BuilderSession({
 
   const save = async () => {
     if (savingRef.current) return
-    const issues = validateBlockDocument(doc)
-    if (issues.length) { setMsg(issues.map((i) => i.message).join(' ')); return }
+    const issues = validateBlockDocument(doc, Boolean(published))
+    setSaveIssues(issues)
+    if (issues.length) { setMsg('Fix the activities listed below before saving.'); return }
     const sent = documentJSON
     savingRef.current = true; setSaving(true); setMsg(null)
     try {
@@ -170,7 +171,8 @@ function BuilderSession({
         method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content_blocks: JSON.parse(sent) }),
       })
       const result = await res.json().catch(() => ({}))
-      if (!res.ok) { setMsg(result.error || 'Could not save. Your draft is kept on this browser.'); return }
+      if (!res.ok) { setSaveIssues(result.block_issues ?? result.sei_issues ?? []); setMsg(result.error || 'Could not save. Your draft is kept on this browser.'); return }
+      setSaveIssues(result.sei_warnings ?? [])
       setSavedJSON(sent)
       if (currentJSON.current === sent && recoveryKey) { try { localStorage.removeItem(recoveryKey) } catch {} }
       setRecovery(null)
@@ -179,6 +181,7 @@ function BuilderSession({
 
   return (
     <div className="max-w-7xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      <LessonEditorNav lessonId={lessonId} title={lessonTitle} unitId={unitId} day={day} published={published} active="build" />
       <style>{`
         @keyframes bbFlash { 0% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 70%, transparent); background: color-mix(in oklch, var(--primary) 9%, var(--card)); } 100% { box-shadow: 0 0 0 12px transparent; background: var(--card); } }
         @keyframes bbOut { from { opacity: 1; max-height: 1200px; } to { opacity: 0; transform: translateX(12px); max-height: 0; margin-top: -12px; padding-top: 0; padding-bottom: 0; } }
@@ -188,8 +191,8 @@ function BuilderSession({
       {/* header */}
       <div className="flex flex-col gap-4 mb-3">
         <div>
-          <Link href={`/admin/lessons/${lessonId}/edit`} className="text-sm" style={{ color: 'var(--muted-foreground)' }}>← Lesson settings</Link>
-          <h1 className="text-xl font-semibold tracking-tight mt-1">Build: {lessonTitle}</h1>
+
+          <h2 className="text-xl font-semibold tracking-tight mt-1">Lesson content</h2>
         </div>
         <div className="flex flex-wrap items-center gap-2 [&>button]:h-10 [&>button]:shrink-0 [&>button]:whitespace-nowrap [&>button]:rounded-md [&>button]:text-sm [&>button]:font-medium">
           <select aria-label="Lesson day type" value={dayType} onChange={(e) => setDayType(e.target.value)} className="h-10 shrink-0 rounded-md border px-3 text-sm" style={inputStyle}>
@@ -213,9 +216,9 @@ function BuilderSession({
           </div>
           <button onClick={() => { setPlay({}); setPlayVersion((n) => n + 1) }} className="rounded-lg border px-3 py-2 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }} title="Clear your play answers">Reset play</button>
           <button type="button" aria-pressed={preview} onClick={() => setPreview((v) => !v)} className="rounded-lg border px-3 py-2 text-sm">{preview ? 'Back to editing' : 'Student preview'}</button>
-          <Link href={`/lessons/${lessonSlug}`} target="_blank" className="inline-flex h-10 shrink-0 items-center whitespace-nowrap rounded-md border px-3 text-sm font-medium" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Open ↗</Link>
-          <button onClick={save} disabled={saving} className={`${selectedId && !preview ? 'hidden 2xl:inline-flex ' : ''}rounded-lg px-4 py-2 text-sm font-bold`} style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>{saving ? 'Saving…' : 'Save lesson'}</button>
-          <span role={msg ? 'alert' : 'status'} className="text-sm basis-full sm:basis-auto" style={{ color: msg ? 'var(--destructive)' : dirty ? 'var(--foreground)' : 'var(--success)' }}>{msg ?? (saving ? 'Saving this version…' : dirty ? 'Unsaved changes' : 'Saved ✓')}</span>
+
+          <button onClick={save} disabled={saving} className={`${selectedId && !preview ? 'hidden 2xl:inline-flex ' : ''}rounded-lg px-4 py-2 text-sm font-bold`} style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>{saving ? 'Saving…' : 'Save content'}</button>
+          <span role={msg ? 'alert' : 'status'} className="text-sm basis-full sm:basis-auto" style={{ color: msg ? 'var(--destructive)' : dirty ? 'var(--foreground)' : 'var(--success)' }}>{msg ?? (saving ? 'Saving this version…' : dirty ? 'Unsaved changes' : 'Content saved ✓')}</span>
         </div>
       </div>
       <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Select a block to edit it. Use Student preview to try the lesson, then save your changes.</p>
@@ -225,9 +228,10 @@ function BuilderSession({
         <button type="button" className="ml-3 underline" onClick={() => { setBlocks(fromDocument(recovery)); setDayType(recovery.dayType ?? 'STANDARD'); setRecovery(null) }}>Restore draft</button>
         <button type="button" className="ml-3 underline" onClick={() => { if (recoveryKey) localStorage.removeItem(recoveryKey); setRecovery(null) }}>Dismiss</button>
       </div>}
+      {saveIssues.length > 0 && <ul className="my-3 space-y-2 rounded-xl border p-3">{saveIssues.map((issue,i) => <li key={i} className="text-sm">{issue.message} {issue.blockId && <button type="button" className="underline" onClick={() => { setPreview(false); setSelectedId(issue.blockId!); window.setTimeout(() => jumpTo(issue.blockId!), 0) }}>Go to activity</button>}</li>)}</ul>}
       {preview ? <div className="rounded-xl border p-3">
-        <p className="mb-3 text-sm text-muted-foreground">Student preview · {previewTrack.toUpperCase()} · answers and submission stay in this preview.</p>
-        <BlockLessonViewer key={previewTrack + ':' + playVersion} preview previewAnswerKeys={answerKeys} lesson={{ id: lessonId, title: lessonTitle, content_blocks: studentDocument }} />
+        <p className="mb-3 text-sm text-muted-foreground">Try the current content without saving student work.</p>
+        <LessonStudentPreview key={playVersion} lesson={{ id: lessonId, title: lessonTitle, content_blocks: previewDoc, key_terms: glossary, targets }} />
       </div> : <div className={`grid gap-5 items-start grid-cols-1 lg:grid-cols-[minmax(0,1fr)_196px] ${selectedId ? '2xl:grid-cols-[minmax(0,1fr)_196px_360px]' : ''}`}>
         {/* CANVAS — the lesson as students see it, the star */}
         <div className="flex flex-col gap-3">
@@ -307,12 +311,12 @@ function BuilderSession({
                 </ol>}
           </div>
           <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Add a block</div>
+            <div className="text-xs font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--muted-foreground)' }}>Add an activity</div><button type="button" className="my-2 min-h-11 w-full rounded-lg border p-2 text-left text-sm" onClick={() => { const next = ['prose','question','exit_ticket'].map(type => createBlock(type, mkId())); setBlocks(old => [...old,...fromDocument({schemaVersion:1,blocks:next})]); }}>+ Reading, checkpoint &amp; exit ticket starter</button><button type="button" className="min-h-11 text-sm underline" onClick={() => setMoreActivities(v => !v)}>{moreActivities ? 'Common activities' : 'More activities'}</button>
             {(['Teach', 'Practice'] as const).map((group) => (
               <div key={group} className="mb-3">
                 <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>{group}</div>
                 <div className="flex flex-col gap-1.5">
-                  {BLOCK_DEFS.filter((d) => d.group === group).map((d) => (
+                  {BLOCK_DEFS.filter((d) => d.group === group && (moreActivities || ['prose','question','exit_ticket','image','sketch'].includes(d.type))).map((d) => (
                     <button key={d.type} onClick={() => addBlock(d.type)} className="bb-btn text-left text-sm rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>+ {d.label}</button>
                   ))}
                 </div>
@@ -333,8 +337,8 @@ function BuilderSession({
                 <button onClick={() => setSelectedId(null)} className="bb-btn text-sm px-2 rounded" style={{ border: '1px solid var(--border)', color: 'var(--muted-foreground)' }} aria-label="close editor">✕</button>
               </div>
               <div className="2xl:hidden border-b p-3 space-y-2">
-                <button type="button" onClick={save} disabled={saving} className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">{saving ? 'Saving…' : 'Save lesson'}</button>
-                <p role="status" className="text-sm">{msg ?? (saving ? 'Saving this version…' : dirty ? 'Unsaved changes' : 'Saved ✓')}</p>
+                <button type="button" onClick={save} disabled={saving} className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">{saving ? 'Saving…' : 'Save content'}</button>
+                <p role="status" className="text-sm">{msg ?? (saving ? 'Saving this version…' : dirty ? 'Unsaved changes' : 'Content saved ✓')}</p>
               </div>
               <div className="p-3 flex flex-col gap-3">
                 <div>
@@ -348,7 +352,7 @@ function BuilderSession({
                     })}
                   </div>
                 </div>
-                <BlockSettingsEditor data={b.data} capture={isCaptureBlock(liveOf(b))} onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))} />
+                <BlockSettingsEditor targets={targets} data={b.data} capture={isCaptureBlock(liveOf(b))} onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))} />
                 {(def?.fields ?? []).length === 0
                   ? <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>This block has no editable fields.</p>
                   : (def?.fields ?? []).map((f) => (

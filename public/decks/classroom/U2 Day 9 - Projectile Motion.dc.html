@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D9</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="PHASE 3 opens. Frame at 0–5: 'For the next three days we explore curved paths under gravity. Everything here scales up to orbits.' Prep: vector-decomposition reference page from Unit 1 visible; the race sim replaces the monkey-and-hunter applet." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:250px; width:560px; display:flex; flex-direction:column; gap:24px;">
+    <div style="background:#FFFFFF; border:2px solid #7FA68B; border-radius:8px; padding:26px 38px; font-family:'IBM Plex Mono',monospace; font-size:25px; color:#17142E;">HORIZONTAL — v<sub>x</sub> never changes</div>
+    <div style="background:#FFFFFF; border:2px solid #9B8EC4; border-radius:8px; padding:26px 38px; font-family:'IBM Plex Mono',monospace; font-size:25px; color:#17142E;">VERTICAL — free fall at g</div>
+    <div style="background:#17142E; border-radius:8px; padding:26px 38px; font-family:'IBM Plex Mono',monospace; font-size:25px; color:#E0A93D;">INDEPENDENT — time is the only link</div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · PHASE 3 OPENS</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1100px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:90px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Two Motions,<br>One <span style="color:#E0A93D;">Clock</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:920px;">Day 9: projectile motion — gravity acts vertically only. Horizontal motion doesn't notice.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 09 · PHASE 3</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5 min. Everyone commits IN WRITING before the sim runs. The intuition 'the pushed one takes longer' is wrong and nearly universal — that's the lever for the day." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.24; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">Drop one ball. Push an identical ball sideways at the same instant.<br>Which hits the ground first?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Commit in writing. We settle it in five minutes.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — DO NOW</span>
+    <span>U2 · 02/09</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — decompose projectile motion into independent horizontal and vertical pieces; explain why side-pushed and dropped balls land together. Target K3." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">09</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:54px; line-height:1.34; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can decompose a projectile's motion into <span style="color:#E0A93D;">independent horizontal and vertical pieces</span>, and I can explain why a side-pushed ball and a dropped ball hit the ground at the same time.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — TODAY'S TARGET</span>
+    <span>U2 · 03/09</span>
+  </div>
+</section>
+
+<section data-label="The Race — Live Sim" data-speaker-notes="5–18 min. Run it. They tie — every speed, every time. Talk move (resist explaining): 'Why didn't the side-pushed ball take LONGER to fall?' Let the room work to 'gravity acts on the vertical component only.' Raise the launch speed and run it again — still a tie." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Dropped vs. Pushed</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·09 · THE RACE</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Your Do Now prediction, tested. Crank the launch speed up — <strong style="color:#17142E;">does the answer change?</strong></p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="ProjectileSim" mode="race" from="./sims4.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — DOODLE ZONE (CIRCLE THE PREDICTION)</span>
+    <span>U2 · 04/09</span>
+  </div>
+</section>
+
+<section data-label="Independence" data-speaker-notes="18–28 min direct instruction, straight from the packet's equation anatomy. Horizontal: constant velocity (no horizontal force). Vertical: free fall at g. The two are INDEPENDENT — time is the only link. Vector decomposition refresher from Unit 1 if needed." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">EQUATION · ANATOMY — INDEPENDENT MOTION</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Gravity Only Gets One Axis</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 0.85fr; gap:36px; width:100%;">
+    <div style="background:#17142E; border-radius:8px; padding:40px 48px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:20px;">HORIZONTAL — UNTOUCHED</div>
+      <p style="margin:0 0 14px 0; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">x = v<sub>x</sub> · t</p>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#B8C4DB;">No horizontal force → v<sub>x</sub> never changes. Unit 1's inertia, sideways.</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:40px 48px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:20px;">VERTICAL — FREE FALL</div>
+      <p style="margin:0 0 14px 0; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">y = y<sub>0</sub> − ½·g·t²</p>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#B8C4DB;">Gravity lives here. v<sub>y</sub> grows by 9.8 m/s every second of the fall.</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:24px 28px; display:flex; flex-direction:column; gap:10px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.2em; color:#8B87A6;">EVERY STEP, SAME STORY</div>
+      <svg viewBox="0 0 440 300" style="width:100%;">
+        <defs>
+          <marker id="m9s" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker>
+          <marker id="m9l" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker>
+        </defs>
+        <line x1="20" y1="272" x2="420" y2="272" stroke="#2E2950" stroke-width="3"></line>
+        <polyline points="40,40 95,46 150,64 205,94 260,136 315,190 370,256 385,272" fill="none" stroke="#E0A93D" stroke-width="3" stroke-dasharray="1 8" stroke-linecap="round"></polyline>
+        <g stroke="#7FA68B" stroke-width="3.5">
+          <line x1="150" y1="64" x2="202" y2="64" marker-end="url(#m9s)"></line>
+          <line x1="260" y1="136" x2="312" y2="136" marker-end="url(#m9s)"></line>
+          <line x1="370" y1="256" x2="422" y2="256" marker-end="url(#m9s)"></line>
+        </g>
+        <g stroke="#9B8EC4" stroke-width="3.5">
+          <line x1="150" y1="64" x2="150" y2="92" marker-end="url(#m9l)"></line>
+          <line x1="260" y1="136" x2="260" y2="192" marker-end="url(#m9l)"></line>
+          <line x1="370" y1="256" x2="370" y2="268"></line>
+        </g>
+        <circle cx="40" cy="40" r="7" fill="#262148" stroke="#E0A93D" stroke-width="2.5"></circle>
+        <circle cx="150" cy="64" r="7" fill="#262148" stroke="#E0A93D" stroke-width="2.5"></circle>
+        <circle cx="260" cy="136" r="7" fill="#262148" stroke="#E0A93D" stroke-width="2.5"></circle>
+        <circle cx="370" cy="256" r="7" fill="#262148" stroke="#E0A93D" stroke-width="2.5"></circle>
+      </svg>
+      <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:19px; line-height:1.6; color:#B8C4DB;"><span style="color:#7FA68B;">v<sub>x</sub> — same arrow every step.</span><br><span style="color:#9B8EC4;">v<sub>y</sub> — grows every step.</span></p>
+    </div>
+  </div>
+  <p style="margin:52px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:42px; line-height:1.35; color:#17142E; font-weight:600;">The two pieces never talk. <span style="color:#E0A93D;">Time is the only thing they share.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — EQUATION ANATOMY</span>
+    <span>U2 · 05/09</span>
+  </div>
+</section>
+
+<section data-label="Worked Example" data-speaker-notes="28–42 min: worked fully on the board. 5 m cliff, vₓ = 10 m/s. Step 1 (vertical): t ≈ 1.01 s. Step 2 (horizontal): x ≈ 10.1 m. The ORDER is the lesson — you cannot get x without t, and t comes from the vertical motion alone." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WORKED EXAMPLE — TOGETHER FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Off the 5 m Cliff</h2>
+    <p style="margin:0 0 40px 0; font-size:32px; line-height:1.5;">Fired horizontally at <strong>v<sub>x</sub> = 10 m/s</strong> from a <strong>5 m</strong> cliff. (a) How long in the air? (b) How far out does it land?</p>
+    <div style="display:flex; flex-direction:column; gap:20px; font-family:'IBM Plex Mono',monospace; font-size:25px; color:#3A3654;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;h = 5 m · v<sub>x</sub> = 10 m/s · g = 9.81 m/s²</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;t, then x</span>
+      <span><span style="color:#C08F2E;">ORDER</span>&nbsp;&nbsp;(1) h = ½·g·t² &nbsp; (2) x = v<sub>x</sub>·t</span>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:52px 56px; display:flex; flex-direction:column; gap:28px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">5 = ½·(9.81)·t²</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">t = √(2·5 / 9.81) ≈ 1.01 s</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">x = 10 × 1.01</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:#E0A93D;">x ≈ 10.1 m</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">time from the VERTICAL. Distance from the HORIZONTAL. Never mixed.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — WORKED EXAMPLE</span>
+    <span>U2 · 06/09</span>
+  </div>
+</section>
+
+<section data-label="Pair Practice" data-speaker-notes="42–48 min: two horizontal-launch problems in pairs. ELs: visual with horizontal and vertical arrows labeled. SWDs: equation pair pre-printed. Advanced tease: 'what about a 30° launch?' — that's Day 11." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">PAIRS · 2 PROBLEMS</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Your Turn — In Pairs</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1460px;">Two horizontal launches, different heights and speeds. Same recipe every time: <strong style="color:#17142E;">vertical gives t, horizontal gives x.</strong></p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">Tomorrow we vary everything. <span style="color:#E0A93D;">The recipe holds.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — PAIR PRACTICE</span>
+    <span>U2 · 07/09</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Thread: 2026-XJ doesn't travel in a straight line — it curves under gravity, exactly like today's projectiles, just at planetary scale. What students learn in 3 days scales straight up to orbits." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">The Asteroid Is<br>a <span style="color:#E0A93D;">Projectile</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1420px;">No engine, no thrust — just velocity plus gravity, curving the path. <strong style="color:#FAF9FC;">Three days of projectiles scale straight up to orbits.</strong> Only the distances grow.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 9 — ASTEROID THREAD</span>
+    <span>U2 · 08/09</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="Exit verbatim from packet — must use 'independent.' Marzano on K3. TONIGHT: Hewitt projectile reading; honors explain why the race result holds at ANY launch speed (the equations decide, not the speed)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">Why does a side-pushed ball NOT take longer to fall than a dropped ball? Use the word <strong>"independent"</strong> in your answer.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 9 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt Ch. 10 — projectile motion sections; sketch the two-component picture from memory. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: why does the dropped-vs-pushed tie hold at ANY launch speed? Argue from the equations, not the sim.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 9 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 09/09</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -14,6 +14,7 @@ type LessonRow = {
   slug: string
   title: string
   unit: string | null
+  unit_id: string | null
   lesson_number: number | null
   published: boolean
   content_blocks: { blocks?: unknown[] } | null
@@ -46,7 +47,7 @@ export default async function AdminManagePage() {
 
   const { data: lessonRows } = await supabaseAdmin
     .from('lessons')
-    .select('id, slug, title, unit, lesson_number, published, content_blocks')
+    .select('id, slug, title, unit, unit_id, lesson_number, published, content_blocks')
   const lessons = (lessonRows ?? []) as LessonRow[]
   lessons.sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
 
@@ -66,9 +67,9 @@ export default async function AdminManagePage() {
 
   // Shape units (+ an "Other" bucket for orphan lessons) for the client list.
   const manageUnits: ManageUnit[] = units
-    .map((u) => ({ id: u.id, name: u.name, program: u.program, lessons: lessons.filter((l) => l.unit === u.name).map(toManageLesson) }))
+    .map((u) => ({ id: u.id, name: u.name, program: u.program, lessons: lessons.filter((l) => l.unit_id === u.id).map(toManageLesson) }))
     .filter((u) => u.lessons.length > 0)
-  const orphans: ManageLesson[] = lessons.filter((l) => !units.some((u) => u.name === l.unit)).map(toManageLesson)
+  const orphans: ManageLesson[] = lessons.filter((l) => !units.some((u) => u.id === l.unit_id)).map(toManageLesson)
 
   const tile = (value: number | string, label: string, accent: string) => (
     <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
@@ -82,7 +83,7 @@ export default async function AdminManagePage() {
   return (
     <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
       <div className="mb-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Manage</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Lesson library</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Author your curriculum lessons as content blocks, unit by unit.</p>
       </div>
 

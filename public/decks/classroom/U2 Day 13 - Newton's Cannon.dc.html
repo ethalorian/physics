@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="24" fill="#E0A93D">D13</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" width="1920" height="1080" from="./deck-stage.js" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="The unit's conceptual summit — Investigation 2.2 (PhET) + the honors Block 2 derivation. Prep: PhET Gravity and Orbits on lab computers; our cannon sim covers the Newton's-cannon argument itself. 0–5 recap: F_c = mv²/r." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:0;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:230px; height:230px;">
+    <circle cx="50" cy="50" r="26" fill="#3A3458" stroke="#9B8EC4" stroke-width="1.6"></circle>
+    <circle cx="50" cy="50" r="44" fill="none" stroke="#E0A93D" stroke-width="1.8" stroke-dasharray="6 5"></circle>
+    <circle cx="94" cy="50" r="5" fill="#E0A93D"></circle>
+  </svg>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">CPA PHYSICS · HONORS · INVESTIGATION 2.2</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1300px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:94px; line-height:1.05; letter-spacing:-0.02em; color:#FAF9FC; font-weight:700;">An Orbit Is Falling<br>That <span style="color:#E0A93D;">Misses</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.5; color:#D9D6E8; max-width:1080px;">Day 13: Newton's cannon — throw it fast enough, and the ground curves away as fast as you fall.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid rgba(155,142,196,0.3); padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>UNIT 02 · DAY 13 · PHASE 4</span>
+    <span style="color:#E0A93D;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5 min. The answer is gravity — and saying it out loud sets up the whole day: gravity IS the centripetal force for an orbit." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.22; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">F<sub>c</sub> = m·v²/r needs SOME force to provide it.<br>For a satellite around Earth — which force plays the role?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">One word. Then one sentence: what happens if that force switches off?</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — DO NOW</span>
+    <span>U2 · 02/10</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — explain an orbit as continuous free fall, and use PhET Gravity and Orbits to find the launch speed for a circular orbit at a given altitude. Target K5." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">13</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:54px; line-height:1.34; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can explain an orbit as <span style="color:#E0A93D;">continuous free fall</span>, and I can use the PhET Gravity and Orbits sim to find what launch speed produces a circular orbit at a given altitude.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — TODAY'S TARGET</span>
+    <span>U2 · 03/10</span>
+  </div>
+</section>
+
+<section data-label="Newton's Cannon — Live Sim" data-speaker-notes="5–18 min thought experiment made live. Slow → falls into the ground. Faster → falls further around. Fast enough → the ground curves away exactly as fast as it falls: orbit. Talk move: 'What if I fire it at 140%? Twice orbit speed?' (Ellipse, then escape — foreshadow escape velocity for honors.)" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Fire the Cannon</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·13 · NEWTON'S CANNON</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">A cannon on a mountain, fired horizontally. Work the slider up from slow: <strong style="color:#17142E;">crash… crash… longer crash… and then it misses the ground forever.</strong></p>
+  <div style="width:100%;">
+    <x-import component="NewtonCannonSim" from="./sims4.jsx" hint-size="100%,440px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — DOODLE ZONE (LABEL THE PATHS)</span>
+    <span>U2 · 04/10</span>
+  </div>
+</section>
+
+<section data-label="Investigation 2.2 — PhET" data-speaker-notes="18–30 min lab block: PhET Gravity and Orbits. Pairs hunt the circular-orbit speed at a chosen altitude, filling the packet's trial table (crash / oval / circle / escape). Then they'll CHECK it against theory on the next slide. No physical hazards; eyes on screen." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">INVESTIGATION 2.2 — PhET GRAVITY AND ORBITS</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Hunt the Circular Orbit</h2>
+  <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:24px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #D9D3EA; border-top:6px solid #9B8EC4; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#9B8EC4; margin-bottom:14px;">1</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Place a satellite near Earth at a chosen altitude.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #D9D3EA; border-top:6px solid #7FA68B; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#7FA68B; margin-bottom:14px;">2</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Launch slow. Watch it crash. Record the trial.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #D9D3EA; border-top:6px solid #E0A93D; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D; margin-bottom:14px;">3</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Raise v until the path closes into a <strong>circle</strong>. Record that speed.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #D9D3EA; border-top:6px solid #9B8EC4; border-radius:6px; padding:30px 30px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#9B8EC4; margin-bottom:14px;">4</div><p style="margin:0; font-size:26px; line-height:1.45; color:#17142E;">Compute v = √(GM/r) for that altitude. <strong>Compare.</strong></p></div>
+  </div>
+  <p style="margin:48px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:38px; line-height:1.35; color:#17142E; font-weight:600;">Log every trial: <span style="color:#E0A93D;">crash · oval · circle · escape.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — DATA · CIRCULAR ORBIT SEARCH</span>
+    <span>U2 · 05/10</span>
+  </div>
+</section>
+
+<section data-label="The Derivation" data-speaker-notes="30–42 min, from the packet's worked example — set gravity equal to the centripetal requirement and solve. Every step on the board. The m-cancellation is the moment: orbital speed doesn't care what's orbiting. Check at ISS altitude: √(3.98×10¹⁴ / 6.77×10⁶) ≈ 7,700 m/s — EXACTLY Day 12's satellite speed. The 8.7 = 8.7 mystery resolves." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 760px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">THE DERIVATION — GRAVITY MEETS CENTRIPETAL</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Force Them<br>to Agree</h2>
+    <p style="margin:0 0 32px 0; font-size:32px; line-height:1.55; max-width:800px;">For a circular orbit, gravity IS the centripetal force. Set them equal and solve for v — <strong style="color:#17142E;">watch what cancels.</strong></p>
+    <p style="margin:0; font-size:30px; line-height:1.55; max-width:800px; color:#6E6A8C;">Check it at ISS altitude: v ≈ 7,700 m/s — the exact speed from yesterday's worked example. The two 8.7s were never a coincidence.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; gap:22px;">
+    <div style="font-size:22px; letter-spacing:0.24em; color:#8B87A6;">WORKED — EVERY STEP</div>
+    <div style="font-size:30px; color:#FAF9FC; line-height:1.8;">
+      <div>G·M·m / r² = m·v² / r <span style="color:#7A75A0; font-size:22px;">&nbsp;← set F<sub>g</sub> = F<sub>c</sub></span></div>
+      <div style="color:#B8C4DB;">G·M / r² = v² / r <span style="color:#7A75A0; font-size:22px;">&nbsp;← m cancels!</span></div>
+      <div style="color:#B8C4DB;">G·M / r = v² <span style="color:#7A75A0; font-size:22px;">&nbsp;← multiply by r</span></div>
+      <div><span style="color:#E0A93D;">v<sub>orbit</sub> = √(G·M / r)</span></div>
+      <div style="color:#8B87A6; font-size:24px; padding-top:8px;">only the central mass and the radius. The satellite's mass never mattered.</div>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — WORKED EXAMPLE (DERIVE v<sub>orbit</sub>)</span>
+    <span>U2 · 06/10</span>
+  </div>
+</section>
+
+<section data-label="Honors · Block 2" data-speaker-notes="HONORS BLOCK 2 — the breadth-exception block. Push one step past v_orbit: escape velocity v_esc = √(2GM/r) = √2 × v_orbit at the SAME radius. Then the keyhole: a small region where a precise close pass lets Earth's gravity bend an asteroid's orbit into a LATER collision. This content isn't in CPA scope — it fell out of taking the derivation seriously. Homework carries the mass-cancellation defense and the keyhole transfer." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 720px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">HONORS · BLOCK 2 · WHERE DEPTH OVERFLOWS</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.1; letter-spacing:-0.015em; color:#17142E; font-weight:700;">One More Step:<br>Escape — and the Keyhole</h2>
+    <p style="margin:0 0 32px 0; font-size:31px; line-height:1.55; max-width:780px;">In v = √(GM/r), the orbiting mass <strong style="color:#17142E;">canceled</strong>. A pebble and 2026-XJ orbit the Sun at the same speed at the same distance. Why — physically?</p>
+    <p style="margin:0; font-size:31px; line-height:1.55; max-width:780px;">And push √2 harder: fast enough, the fall <strong style="color:#17142E;">never comes back.</strong></p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; display:flex; flex-direction:column; gap:26px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.24em; color:#8B87A6;">TWO SPEEDS, ONE RADIUS</div>
+    <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">v<sub>orbit</sub> = √(GM/r)</div>
+    <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D;">v<sub>esc</sub> = √(2GM/r) = √2 · v<sub>orbit</sub></div>
+    <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:21px; color:#8B87A6; line-height:1.7;">THE KEYHOLE: a small window in space where a near-miss now re-aims the orbit into a hit years later. Units 3–4 decide what we'd do about it.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ HONORS PACKET · BLOCK 2 — DERIVATION + KEYHOLE</span>
+    <span>U2 · 07/10</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Thread: 2026-XJ's orbit and Earth's orbit both cross the same region. Both are falling around the Sun. If they reach the crossing at the same TIME — that's the impact question, and 'orbits are falling' is the frame we'll answer it in." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">Two Falls Around<br>the Same <span style="color:#E0A93D;">Sun</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1420px;">Earth is falling and missing. 2026-XJ is falling and missing. Their paths cross. <strong style="color:#FAF9FC;">The only question left is whether they arrive at the crossing at the same time</strong> — Days 14 and 15 answer it.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 13 — ASTEROID CONNECTION</span>
+    <span>U2 · 08/10</span>
+  </div>
+</section>
+
+<section data-label="Observation &amp; Analysis" data-speaker-notes="Close the lab loop before the exit: the packet's analysis lines. Sim value at 400 km vs theory's 7,700 — do they agree? A pair reads theirs aloud." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">OBSERVATION &amp; ANALYSIS — CLOSE THE LOOP</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:68px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Sim vs. Theory</h2>
+  <div style="width:100%; box-sizing:border-box; background:#17142E; border-radius:8px; padding:44px 56px; display:flex; flex-direction:column; gap:24px; font-family:'IBM Plex Mono',monospace; font-size:29px; color:#FAF9FC; line-height:1.7;">
+    <span>The launch speed for a circular orbit at 400 km is about <span style="color:#E0A93D;">__________</span> m/s.</span>
+    <span>Theory predicts <span style="color:#E0A93D;">__________</span> m/s.</span>
+    <span>The sim agrees <span style="color:#E0A93D;">__________</span>.</span>
+  </div>
+  <p style="margin:48px 0 0 0; font-size:32px; line-height:1.5; max-width:1480px;">Same v<sub>orbit</sub> equation for 2026-XJ around the Sun — <strong style="color:#17142E;">only the central mass changes.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — OBSERVATION AND ANALYSIS</span>
+    <span>U2 · 09/10</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="Exit verbatim — must use 'falling', 'horizontal', 'curves away.' Marzano on K5. Tomorrow: Kepler. TONIGHT: Hewitt satellite motion; honors carry Block 2 homework — the mass-cancellation defense AND the keyhole transfer (seams to Units 3–4)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">In 2–3 sentences: why doesn't the ISS fall straight down? Use <strong>"falling," "horizontal,"</strong> and <strong>"curves away."</strong></p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 13 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt Ch. 10 — satellite motion sections. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors Block 2: (1) defend why a heavy asteroid and a light pebble orbit at the same speed at the same r; (2) the keyhole transfer — how a near-miss now sets up a hit later, and which two units decide what we'd do.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 13 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 10/10</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

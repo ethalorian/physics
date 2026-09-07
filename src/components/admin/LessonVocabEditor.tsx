@@ -100,10 +100,10 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           <span className="font-bold" style={{ fontSize: 15 }}>Lesson vocabulary (SEI tiers)</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={togglePublished} disabled={saving || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before publishing' : ''}
+          <button onClick={togglePublished} disabled={saving || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before making vocabulary available in games' : ''}
             className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-2.5 py-1.5 font-medium"
             style={{ borderColor: published ? 'var(--success)' : 'var(--border)', color: published ? 'var(--success)' : 'var(--muted-foreground)', opacity: (saving || (!hasTerms && !published)) ? 0.5 : 1 }}>
-            {published ? <Eye size={14} /> : <EyeOff size={14} />} {published ? 'Published' : 'Draft'}
+            {published ? <Eye size={14} /> : <EyeOff size={14} />} {published ? 'Available in vocabulary games' : 'Not in vocabulary games'}
           </button>
           <button onClick={() => setShowPaste((v) => !v)} className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
             <ClipboardPaste size={14} /> Bulk paste {showPaste ? <ChevronUp size={13} /> : <ChevronDown size={13} />}

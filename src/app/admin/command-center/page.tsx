@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import { projectedBlockPages } from '@/lib/projected-block'
+import LessonContextLinks from '@/components/admin/LessonContextLinks'
 import { MonitorPlay, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -41,6 +43,7 @@ export default function CommandCenterPage() {
   const [origin, setOrigin] = useState('')
   const [retry, setRetry] = useState(0)
   const [confirmEnd, setConfirmEnd] = useState(false)
+  const [blockChoice, setBlockChoice] = useState('')
   const pending = useRef(false)
   const { state, error: connectionError, busy, patch } = useCommandSession(presentation?.session?.id ?? null)
   const teaching = useTeachingTools(presentation?.session?.id ?? null)
@@ -53,7 +56,7 @@ export default function CommandCenterPage() {
   const poll = lesson?.content_blocks.blocks.find(b => b.id === state?.session.poll_block_id)
   const pollable = lesson?.content_blocks.blocks.filter(b => Boolean(commandQuestion(b)?.options?.length)) ?? []
   const locked = busy || starting || loading
-  useEffect(() => { setOrigin(window.location.origin) }, [])
+  useEffect(() => { setOrigin(window.location.origin); const p=new URLSearchParams(window.location.search); requestedLesson.current=p.get('lesson')??''; if(p.get('class'))setCourseId(p.get('class')!) }, [])
   useEffect(() => {
     if (state?.session.status === 'ended') {
       setPresentation({ session: null, lesson: null, deck: null })
@@ -114,7 +117,7 @@ export default function CommandCenterPage() {
     const slide = slides[index]
     if (!slide || !state) return
     const section = slide.anchor ? sectionIndexForAnchor(pages, slide.anchor) : presentation?.deck?.slideMap?.length ? sectionForSlide(index, pages.length, presentation.deck.slideMap) : -1
-    void patch({ current_slide: index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
+    void patch({ projected_block_id: null, current_slide: index, current_anchor: section >= 0 ? sectionAnchor(pages[section]) : null })
   }
   async function end() {
     if (await patch({ status: 'ended', poll_block_id: null, timer_seconds: null, blackout: false })) { setConfirmEnd(false); setNotice('Presentation ended. The classroom screen is blank.'); setPresentation({ session: null, lesson: null, deck: null }) }
@@ -125,9 +128,12 @@ export default function CommandCenterPage() {
     catch { setNotice(`Open this address on the classroom computer: ${origin}${projectorPath}`) }
   }
   const current = state?.session.current_slide ?? 0
+  const projectedBlock = lesson?.content_blocks.blocks.find(b => b.id === state?.session.projected_block_id)
+  const blockParts = projectedBlock ? projectedBlockPages(projectedBlock).length : 1
+  const blockPart = state?.session.projected_block_page ?? 0
   if (!staff) return <p className="p-6">The Command Center is available to teachers and administrators.</p>
   return <div className="mx-auto max-w-6xl space-y-4 p-4 sm:p-6" style={{ touchAction: 'manipulation', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
-    <header className="flex flex-wrap items-start justify-between gap-3"><div><div className="text-overline text-muted-foreground">Teach live</div><h1 className="text-title-1 flex items-center gap-2"><MonitorPlay aria-hidden />iPad Command Center</h1><p className="text-muted-foreground">Your presentation and classroom activities, in one place.</p></div><Button asChild variant="outline" className="min-h-12"><Link href="/admin/observe" target="_blank">Observe & give feedback</Link></Button></header>
+    <header className="flex flex-wrap items-start justify-between gap-3"><div><div className="text-overline text-muted-foreground">Teach live</div><LessonContextLinks courseId={courseId} lessonId={lessonId} /><h1 className="text-title-1 flex items-center gap-2"><MonitorPlay aria-hidden />iPad Command Center</h1><p className="text-muted-foreground">Your presentation and classroom activities, in one place.</p></div><Button asChild variant="outline" className="min-h-12"><Link href="/admin/observe" target="_blank">Observe & give feedback</Link></Button></header>
     {(error || connectionError) && <div role="alert" className="rounded-xl border border-destructive p-3 text-destructive">{error || connectionError}{!live && <Button className="ml-2 min-h-12" variant="outline" onClick={() => setRetry(n => n + 1)}>Reload</Button>}</div>}
     {teaching.error && <p role="alert" className="text-destructive">{teaching.error}</p>}
     {notice && <p role="status" className="break-words">{notice}</p>}
@@ -137,6 +143,7 @@ export default function CommandCenterPage() {
     </Card>
     {!live && history.length > 0 && <Card className="gap-3 p-4"><h2 className="text-title-2">Saved session recaps</h2>{history.map(h => <Button key={h.id} asChild variant="outline" className="h-auto min-h-12 justify-start whitespace-normal"><Link href={`/admin/command-center/recap?session=${h.id}`}>{lessons.find(l => l.id === h.lesson_id)?.title ?? 'Lesson'} · {new Date(h.created_at).toLocaleString()}</Link></Button>)}</Card>}
     {live && state && lesson && <>
+      <Card className="gap-3 p-4"><h2 className="text-title-2">What’s on the projector?</h2><p role="status">{state.session.projected_block_id ? 'Showing a lesson block · students in Follow mode move to its section.' : `Showing the lesson deck · slide ${current + 1}`}</p><label className="text-caption">Choose a lesson block<select aria-label="Lesson block to project" className={fieldClass} value={blockChoice} onChange={e => setBlockChoice(e.target.value)}><option value="">Choose from this lesson…</option>{lesson.content_blocks.blocks.filter(b => b.type !== 'deck').map((b, i) => <option key={b.id} value={b.id}>{i + 1}. {b.type.replaceAll('_', ' ')} · {('title' in b && typeof b.title === 'string' ? b.title : 'content' in b && typeof b.content === 'string' ? b.content : b.type === 'question' ? commandQuestion(b)?.prompt : b.id)?.slice(0, 110)}</option>)}</select></label><div className="flex flex-wrap gap-2"><Button className="min-h-12" disabled={busy || !blockChoice} onClick={() => patch({ projected_block_id: blockChoice, blackout: false })}>Project lesson block</Button><Button variant="outline" className="min-h-12" disabled={busy || !state.session.projected_block_id} onClick={() => go(current)}>Return to deck · slide {current + 1}</Button></div><div className="flex items-center gap-3">{projectedBlock && blockParts > 1 && <><Button aria-label="Previous block screen" className="min-h-12" disabled={busy || blockPart === 0} onClick={() => patch({ projected_block_page: blockPart - 1 })}>Previous</Button><span>Screen {blockPart + 1} of {blockParts}</span><Button aria-label="Next block screen" className="min-h-12" disabled={busy || blockPart >= blockParts - 1} onClick={() => patch({ projected_block_page: blockPart + 1 })}>Next</Button></>}</div><p className="text-caption text-muted-foreground">Your deck stays open at the same slide. Active polls, pulse checks, and lobbies temporarily cover this view; close them to reveal it.</p></Card>
       <nav aria-label="Live teaching tools" className="flex flex-wrap gap-2">{[['help-queue','Who needs me?'],['pulse-checks','Pulse check'],['student-picker','Pick student'],['teaching-bookmarks','Bookmark']].map(([id,label]) => <Button key={id} asChild variant="outline" className="min-h-12"><a href={`#${id}`}>{label}</a></Button>)}</nav>
       <Card className="gap-3 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><p role="status" className="font-semibold">{teaching.state ? projectorStatus(state, teaching.state, clock) : 'Checking projector…'}</p><Button variant="outline" className="min-h-12" disabled={teaching.busy} onClick={() => teaching.action({ action: 'reconnect' })}>Reconnect projector</Button></div><p className="text-caption text-muted-foreground">Confirmation means the projector window applied the latest command. If its window is closed, reopen it on the classroom computer.</p><Button asChild variant="outline" className="min-h-12"><Link href={`/admin/command-center/recap?session=${state.session.id}`} target="_blank">Open saved session recap</Link></Button></Card>
       <Card className="gap-3 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><div><div className="text-overline text-muted-foreground">Presentation</div><h2 className="text-title-2">{slides[current]?.label ?? lesson.title}</h2><p className="text-caption">Slide {current + 1}{slides.length ? ` of ${slides.length}` : ''}</p></div><Button variant="outline" className="min-h-14" disabled={busy} aria-pressed={state.session.blackout} onClick={() => patch({ blackout: !state.session.blackout })}>{state.session.blackout ? 'Show screen' : 'Blank screen'}</Button></div><div className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-2"><Button aria-label="Previous slide" className="min-h-16 min-w-16" disabled={busy || current === 0 || !slides.length} onClick={() => go(current - 1)}><ChevronLeft /></Button><select aria-label="Jump to slide" className={fieldClass} disabled={busy || !slides.length} value={current} onChange={e => go(Number(e.target.value))}>{slides.map((s, i) => <option key={i} value={i}>{i + 1}. {s.label}</option>)}</select><Button aria-label="Next slide" className="min-h-16 min-w-16" disabled={busy || !slides.length || current >= slides.length - 1} onClick={() => go(current + 1)}><ChevronRight /></Button></div>{slides[current]?.notes && <div className="rounded-xl bg-muted p-3"><div className="text-overline text-muted-foreground">Your speaker notes</div><p className="whitespace-pre-wrap">{slides[current].notes}</p></div>}{presentation?.deck && !presentation.deck.slideMap?.length && !slides[current]?.anchor && <p className="text-caption text-muted-foreground">This slide has no section mapping. Student follow stays unchanged.</p>}</Card>

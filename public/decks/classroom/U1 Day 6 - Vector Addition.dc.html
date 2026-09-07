@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="20" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#FAF9FC">D6</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Skill-building day. Vector Recipe Card goes out today — laminated, no apology. Mastery of decomposition is required ahead; memorization is not." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 6 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Vector Addition<br>and <span style="color:#E0A93D;">Decomposition</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Tools day. Tip-to-tail, the trig recipe, and a mini-quiz to prove it.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: recap Day 4-5. Decomposition made the prediction possible; today we make the skill solid." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">You walk 4 blocks east, then 3 blocks north. <span style="color:#E0A93D;">How far are you from where you started?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Not 7. Sketch it — the answer is hiding in a triangle you already know.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ HINT: 3 · 4 · ?</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can add two vectors graphically (<span style="color:#5E8B6E;">tip-to-tail</span>) and decompose a vector into components using <span style="color:#7A75A0;">simple trigonometry</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="Tip to Tail" data-speaker-notes="5–25: graphical addition. Draw two vectors, copy, add tip-to-tail, measure the resultant. Asteroid example: 8,210 toward + 2,200 perpendicular → ≈ 8,500 resultant (Pythagorean — the Do Now triangle at scale)." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 640px; gap:64px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:32px;">GRAPHICAL ADDITION</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Tip to Tail</h2>
+    <div style="display:flex; flex-direction:column; gap:20px; font-size:33px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">01</span><span>Draw the first vector to scale.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">02</span><span>Start the second vector <strong>at the first one's tip</strong>.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">03</span><span>The <strong style="color:#C08F2E;">resultant</strong> runs start-of-first → tip-of-second. Measure it.</span></div>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">THE ASTEROID'S TRIANGLE</div>
+    <svg viewBox="0 0 540 400" style="width:100%;">
+      <defs><marker id="d6s" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker><marker id="d6l" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker><marker id="d6g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker></defs>
+      <line x1="60" y1="330" x2="452" y2="330" stroke="#7FA68B" stroke-width="5" marker-end="url(#d6s)"></line>
+      <line x1="464" y1="330" x2="464" y2="234" stroke="#9B8EC4" stroke-width="5" marker-end="url(#d6l)"></line>
+      <line x1="60" y1="330" x2="452" y2="238" stroke="#E0A93D" stroke-width="6" marker-end="url(#d6g)"></line>
+      <text x="250" y="368" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="18" fill="#7FA68B">8,210 m/s toward Earth</text>
+      <text x="482" y="288" font-family="IBM Plex Mono, monospace" font-size="18" fill="#9B8EC4" transform="rotate(-90 482 288)"></text>
+      <text x="500" y="292" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4" transform="rotate(-90 500 292)">2,200 m/s</text>
+      <text x="240" y="252" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#E0A93D" transform="rotate(-13 240 252)">resultant ≈ 8,500 m/s</text>
+    </svg>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:19px; color:#8B87A6; margin-top:6px;">√(8210² + 2200²) ≈ 8,500 — THE PIECES REBUILD THE WHOLE</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ ARROWS CONNECT NOSE-TO-TAIL, ALWAYS</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="MATH MOVE · M3" data-speaker-notes="M3 debuts: the Vector Recipe. cos hugs the angle (adjacent); sin takes the rest (opposite). Most common error all year: swapping them. The card is allowed on everything, including the transfer task." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:90px 130px 150px; display:grid; grid-template-columns:1fr 720px; gap:60px; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; flex-direction:column;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.26em; color:#C08F2E; margin-bottom:30px;">MATH MOVE · M3 · THE VECTOR RECIPE</div>
+    <h2 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.1; color:#17142E; font-weight:700;">Splitting Any Vector<br>Into Components</h2>
+    <div style="display:flex; flex-direction:column; gap:20px; font-size:31px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">1</span><span><strong>Draw it.</strong> Vector, reference axis, angle θ between them.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">2</span><span><strong>cos hugs the angle:</strong> the component <em>adjacent</em> to θ is V·cos θ.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">3</span><span><strong>sin takes the rest:</strong> the component <em>opposite</em> θ is V·sin θ.</span></div>
+    </div>
+    <div style="margin-top:auto; font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.06em; color:#8B87A6; line-height:1.7;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:40px 48px; display:flex; flex-direction:column; gap:18px; font-family:'IBM Plex Mono',monospace;">
+    <div style="font-size:20px; letter-spacing:0.22em; color:#8B87A6;">WORKED — THE ASTEROID, FORMALLY</div>
+    <div style="display:flex; flex-direction:column; gap:14px; font-size:27px; color:#B8C4DB; line-height:1.5;">
+      <span>V = 8,500 m/s · θ = 15° from Earth-line</span>
+      <span style="color:#7FA68B;">adjacent: 8,500 · cos 15° ≈ 8,210 m/s</span>
+      <span style="color:#9B8EC4;">opposite: 8,500 · sin 15° ≈ 2,200 m/s</span>
+    </div>
+    <div style="border-top:1px solid #2E2950; padding-top:16px; font-size:21px; color:#8B87A6; line-height:1.6;">DAY 4'S NUMBERS WEREN'T MAGIC — THEY WERE THIS RECIPE.</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THE RECIPE CARD IS ALLOWED ON EVERYTHING — INCLUDING THE TRANSFER TASK</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Practice · Tip-to-Tail Live" data-speaker-notes="Practice block. Pairs work the worksheet (8-10 problems); the sim is the demo for checking answers together. Probe 'why cosine there?' on walk-around." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Build the Resultant</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">PAIRS ON WORKSHEET · DEMO TO CHECK</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Work each problem on paper first — then we check it here, tip-to-tail.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="TipToTailSim" from="./sims3.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ DIAGRAM FIRST · TRIG SECOND · UNITS ALWAYS</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="Mini-Quiz" data-speaker-notes="42–50: 3 problems, 5 minutes. All three right → ready for Day 7. Fewer than 2 → follow-up support tomorrow. Self-check list before turn-in." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C05A5A; margin-bottom:36px;">MINI-QUIZ · 3 PROBLEMS · 5 MINUTES · SOLO</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.08; color:#17142E; font-weight:700;">Prove the Skill</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; margin-bottom:44px;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:32px 38px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#5E8B6E; letter-spacing:0.16em; margin-bottom:12px;">Q1</div><p style="margin:0; font-size:29px; line-height:1.45; color:#17142E;">One vector addition — tip-to-tail.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:32px 38px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#7A75A0; letter-spacing:0.16em; margin-bottom:12px;">Q2</div><p style="margin:0; font-size:29px; line-height:1.45; color:#17142E;">One decomposition — recipe card allowed.</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:32px 38px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#C08F2E; letter-spacing:0.16em; margin-bottom:12px;">Q3</div><p style="margin:0; font-size:29px; line-height:1.45; color:#17142E;">One applied to the asteroid.</p></div>
+  </div>
+  <div style="background:#F1EEF9; border-radius:6px; padding:28px 40px; font-size:29px; line-height:1.5; color:#17142E; max-width:1500px;">Self-check before you turn it in: <strong>Did I draw a diagram? Right trig function? Units on everything?</strong></div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ 3/3 = READY FOR DAY 7</span><span>U1 · 07/08</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: magnitude vs components. Look for: magnitude is the whole arrow's length; components are its shadows on the axes." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">What's the difference between a vector's <span style="color:#E0A93D;">magnitude</span> and its <span style="color:#7A75A0;">components</span>?</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I add tip-to-tail and decompose with the recipe? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Appendix B (Vectors)</strong> — careful read + end-of-appendix problems.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: WHEN VELOCITY CHANGES</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="20" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#FAF9FC">D8</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Skill-building day. Do problem 1 fully on the board, then pairs. Pair format reduces math anxiety." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 8 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Constant Acceleration<br><span style="color:#E0A93D;">Problem-Solving</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Three equations. One strategy: list what's given, list what's asked.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: quick recap problem. a = 3/2 = 1.5 m/s²." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A skateboarder speeds up from 2 m/s to 5 m/s in 2 seconds. <span style="color:#E0A93D;">Acceleration?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Show the equation, the numbers, and the units.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ YESTERDAY'S MOVE: a = Δv/Δt</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can solve problems involving <span style="color:#5E8B6E;">constant acceleration</span> using the equations of motion, and I can identify <span style="color:#C08F2E;">the correct equation</span> for a given scenario.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="Three Equations" data-speaker-notes="5–20: the three equations and what each connects. The third has NO time in it — that's its superpower. Walk 2-3 chooser examples as a class." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Three Tools, Three Jobs</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; flex:1;">
+    <div style="background:#17142E; border-radius:8px; padding:36px 40px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:#FAF9FC;">v = v<sub>0</sub> + a·t</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#7FA68B; letter-spacing:0.1em;">VELOCITY ↔ TIME</div>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#B8C4DB;">No position anywhere in it. Use when x doesn't matter.</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:36px 40px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:#FAF9FC;">x = x<sub>0</sub> + v<sub>0</sub>·t + ½·a·t²</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#E0A93D; letter-spacing:0.1em;">POSITION ↔ TIME</div>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#B8C4DB;">Where you end up. Use when final velocity doesn't matter.</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:36px 40px; display:flex; flex-direction:column; gap:16px;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:42px; font-weight:700; color:#FAF9FC;">v² = v<sub>0</sub>² + 2·a·Δx</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#9B8EC4; letter-spacing:0.1em;">VELOCITY ↔ POSITION · NO TIME</div>
+      <p style="margin:0; font-size:26px; line-height:1.5; color:#B8C4DB;">Its superpower: <strong style="color:#FAF9FC;">no t</strong>. Use when time is neither given nor asked.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THE SKILL ISN'T ALGEBRA — IT'S CHOOSING</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="MATH MOVE · M4" data-speaker-notes="M4 debuts: choosing the equation. Given/asked lists FIRST — the equation picks itself. Worked example: braking car (given v0, v, a; asked Δx; no time → third equation)." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:90px 130px 150px; display:grid; grid-template-columns:1fr 720px; gap:60px; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; flex-direction:column;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.26em; color:#C08F2E; margin-bottom:30px;">MATH MOVE · M4 · CHOOSING THE EQUATION</div>
+    <h2 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.1; color:#17142E; font-weight:700;">Given · Asked ·<br>Then the Equation Picks Itself</h2>
+    <div style="display:flex; flex-direction:column; gap:20px; font-size:31px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">1</span><span><strong>List GIVEN</strong> — every number, with units and a symbol.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">2</span><span><strong>List ASKED</strong> — one symbol you're hunting.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">3</span><span><strong>Pick the equation</strong> that contains your symbols — and nothing you don't have.</span></div>
+    </div>
+    <div style="margin-top:auto; font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.06em; color:#8B87A6; line-height:1.7;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:40px 48px; display:flex; flex-direction:column; gap:18px; font-family:'IBM Plex Mono',monospace;">
+    <div style="font-size:20px; letter-spacing:0.22em; color:#8B87A6;">WORKED — THE BRAKING CAR</div>
+    <div style="display:flex; flex-direction:column; gap:14px; font-size:25px; color:#B8C4DB; line-height:1.55;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;v<sub>0</sub> = 27 m/s · v = 0 · a = −6 m/s²</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;Δx = ? &nbsp;(no time given, none asked)</span>
+      <span><span style="color:#C08F2E;">PICK</span>&nbsp;&nbsp;&nbsp;v² = v<sub>0</sub>² + 2·a·Δx — the no-time equation</span>
+      <span style="color:#FAF9FC;">0 = 27² + 2(−6)Δx → Δx = 729/12</span>
+      <span style="color:#E0A93D; font-size:30px;">Δx ≈ 61 m of braking distance</span>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ EVERY PROBLEM STARTS WITH THE TWO LISTS</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Equation Picker" data-speaker-notes="Teacher demo between pair-work rounds: scenario up, class calls GIVEN and ASKED aloud, then picks. Fast rounds; big readouts." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Call It as a Class</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · BETWEEN ROUNDS</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Scenario up → shout the <strong style="color:#7A75A0;">GIVEN</strong> list → shout the <strong style="color:#5E8B6E;">ASKED</strong> symbol → pick the tool.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="EquationPicker" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ PAIRS: 6–8 PROBLEMS, RISING DIFFICULTY</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="Pair Problems" data-speaker-notes="20–40: pairs on the problem set. 40–48: two pairs present at the board; class discusses WHY they chose that equation, not just the plug-in." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E; margin-bottom:32px;">PAIRS · WHITEBOARDS · THEN TWO PRESENT</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">The Problem Set</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#5E8B6E; letter-spacing:0.14em; margin-bottom:14px;">BRAKING</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">A car brakes from highway speed. <strong>How far</strong> does it travel?</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#7A75A0; letter-spacing:0.14em; margin-bottom:14px;">THROWN UP</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">A ball thrown straight up. <strong>How high</strong> does it go?</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#C08F2E; letter-spacing:0.14em; margin-bottom:14px;">BULLET TRAIN</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">Accelerating from rest. <strong>How long</strong> to cruising speed?</p></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ PRESENTERS EXPLAIN THE CHOICE, NOT JUST THE ALGEBRA</span><span>U1 · 07/08</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: one clean problem from the set. Self-check: units? work shown? two lists first?" style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px;">One problem, clean execution. <span style="color:#E0A93D;">Two lists first.</span></h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I pick the right equation from GIVEN/ASKED — and run it with units? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 3</strong> — review worked examples, try problems 3–7.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: WHY MOTION CHANGES — NEWTON'S 1st LAW</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

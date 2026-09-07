@@ -1,4 +1,5 @@
 "use client"
+import LessonReleasePanel from '@/components/admin/LessonReleasePanel'
 
 // Class Cockpit — per-class screens 2b/2c/2d of the Teacher Experience Rework.
 // Class-tab strip on top (jump between your blocks), then Overview /
@@ -155,7 +156,8 @@ function ClassCockpit() {
         </div>
 
         {/* ============ OVERVIEW (2b) ============ */}
-        {tab === 'Overview' && (
+        <div className="my-5"><LessonReleasePanel key={courseId} courseId={courseId} compact /></div>
+      {tab === 'Overview' && (
           <div className="flex flex-col gap-4">
             <div className="rounded-2xl border p-5 grid gap-4 items-center" style={{ gridTemplateColumns: '1fr auto', borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'radial-gradient(90% 140% at 92% -20%, color-mix(in oklch, var(--primary) 12%, transparent), transparent 55%), var(--card)' }}>
               <div>
@@ -163,10 +165,10 @@ function ClassCockpit() {
                   Today{me?.unitName ? ` · ${me.unitName}` : ''}{me?.dayN && me?.dayM ? ` · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}` : ''}{me?.onPace ? ' · on pace' : ''}
                 </div>
                 <div className="text-lg font-bold mt-1">Today&apos;s plan</div>
-                <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Open the lesson plan for the day&apos;s do-now, mini-lecture, packet work and exit ticket.</div>
+                <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Use the lesson controls above to preview, release, teach, and review it.</div>
               </div>
               <div className="flex gap-2 flex-wrap">
-                <Link href="/admin/teacher/plans" className="text-sm font-semibold rounded-xl px-4 py-2.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Present plan →</Link>
+                <Link href={`/admin/teacher/plans?class=${encodeURIComponent(courseId)}`} className="text-sm font-semibold rounded-xl px-4 py-2.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Browse teacher plans →</Link>
                 <Link href={`/admin/control-room?class=${courseId}&label=${encodeURIComponent(me?.label ?? '')}`} className="text-sm font-semibold rounded-xl px-4 py-2.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Open Control Room</Link>
               </div>
             </div>
@@ -366,7 +368,7 @@ function ClassCockpit() {
         {tab === 'Plans' && (
           <div className="rounded-xl border p-6 text-center" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
             <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>Day-by-day lesson plans with coded targets, per class type.</p>
-            <Link href="/admin/teacher/plans" className="inline-flex text-sm font-semibold rounded-lg px-4 py-2.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Open lesson plans →</Link>
+            <Link href={`/admin/teacher/plans?class=${encodeURIComponent(courseId)}`} className="inline-flex text-sm font-semibold rounded-lg px-4 py-2.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Open lesson plans →</Link>
           </div>
         )}
       </div>

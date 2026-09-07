@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="20" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#FAF9FC">D9</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="The DEMOS are the day. Prep: tablecloth + plastic cups, coin + index card + glass. Shift from describing motion to explaining WHY it changes." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 9 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:104px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Newton's 1st Law:<br><span style="color:#E0A93D;">Inertia</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Today we stop describing motion and start explaining why it changes.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: collect intuitions. 'Friction' is the answer — good. The deeper point: WITHOUT friction, the puck never stops." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A hockey puck slides forever on ice. A brick stops instantly on the floor. <span style="color:#E0A93D;">What's the difference?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">One word will do — but be ready to say what would happen without it.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ WHAT WOULD HAPPEN WITHOUT IT?</span><span>U1 · 02/07</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can explain <span style="color:#5E8B6E;">Newton's 1st Law</span> in my own words and identify everyday examples of <span style="color:#C08F2E;">inertia</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/07</span>
+  </div>
+</section>
+
+<section data-label="Aristotle vs Galileo" data-speaker-notes="5–20: the 2,000-year argument. Aristotle: things naturally stop. Galileo (thought experiments): they keep going unless something stops them. Newton wrote it down. Define inertia — resistance to change in motion, related to mass." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">A 2,000-Year Argument</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; margin-bottom:40px;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:8px solid #C05A5A; border-radius:6px; padding:38px 48px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:23px; letter-spacing:0.2em; color:#C05A5A; margin-bottom:16px;">ARISTOTLE — WRONG, FOR 2,000 YEARS</div>
+      <p style="margin:0; font-size:32px; line-height:1.5; color:#17142E;">"Objects naturally come to rest." Feels true — everything you've ever pushed eventually stops.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:8px solid #7FA68B; border-radius:6px; padding:38px 48px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:23px; letter-spacing:0.2em; color:#5E8B6E; margin-bottom:16px;">GALILEO — RIGHT, BY THOUGHT EXPERIMENT</div>
+      <p style="margin:0; font-size:32px; line-height:1.5; color:#17142E;">"They stop because something <em>stops</em> them." Remove the something, and motion continues forever.</p>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:38px 52px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.22em; color:#E0A93D; margin-bottom:14px;">NEWTON'S 1st LAW</div>
+    <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:40px; line-height:1.35; color:#FAF9FC; font-weight:700; text-wrap:balance;">An object in motion stays in motion, and an object at rest stays at rest — unless acted on by a net force.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ INERTIA: RESISTANCE TO CHANGE IN MOTION · GROWS WITH MASS</span><span>U1 · 04/07</span>
+  </div>
+</section>
+
+<section data-label="The Demos" data-speaker-notes="20–35: tablecloth pull + coin-and-card. PREDICT before each pull — commit out loud. Cups stay; coin drops in the glass. Then: why do passengers lurch forward when a car stops? Inertia — seatbelts exist because of Newton's 1st." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Predict → Watch → Explain</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">LIVE DEMOS · COMMIT BEFORE THE PULL</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">The tablecloth trick isn't a trick — it's the cups' <strong style="color:#C08F2E;">inertia</strong>. Predict fast pull vs slow pull first.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="TableclothSim" from="./sims3.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THEN THE REAL CLOTH AND REAL CUPS</span><span>U1 · 05/07</span>
+  </div>
+</section>
+
+<section data-label="No Friction Up There" data-speaker-notes="35–48: the asteroid connection. Space: no air, no friction. Newton's 1st → 2026-XJ keeps its velocity forever unless a force acts. Only gravity is pushing. To CHANGE the path, add a force — that's the whole deflection game, and the setup for Days 10–15." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:grid; grid-template-columns:1fr 600px; gap:70px; align-items:center; box-sizing:border-box; height:100%;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:36px;">BACK TO 2026-XJ</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#FAF9FC; font-weight:700;">Nothing Up There<br><span style="color:#E0A93D;">Stops It</span></h2>
+    <p style="margin:0 0 32px 0; font-size:33px; line-height:1.6; color:#D9D6E8; max-width:880px;">No air. No friction. By Newton's 1st Law, 2026-XJ keeps doing exactly what it's doing — <strong style="color:#FAF9FC;">forever</strong> — unless something pushes it.</p>
+    <p style="margin:0; font-size:33px; line-height:1.6; color:#D9D6E8; max-width:880px;">Good news: it's <em>predictable</em>. Bad news: it won't stop on its own. To change its path, someone has to apply a <strong style="color:#E0A93D;">force</strong>.</p>
+  </div>
+  <svg viewBox="0 0 520 440" style="width:100%;">
+    <defs><marker id="d9g" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker></defs>
+    <circle cx="120" cy="120" r="11" fill="#E0A93D"></circle>
+    <line x1="140" y1="136" x2="420" y2="360" stroke="#E0A93D" stroke-width="4" stroke-dasharray="3 11" marker-end="url(#d9g)"></line>
+    <text x="120" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#E0A93D">2026-XJ</text>
+    <text x="300" y="212" font-family="IBM Plex Mono, monospace" font-size="18" fill="#8B87A6" transform="rotate(39 300 212)">constant velocity, forever…</text>
+    <text x="330" y="420" font-family="IBM Plex Mono, monospace" font-size="18" fill="#7FA68B">…unless a force acts</text>
+  </svg>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: why must a deflection mission apply a FORCE? Look for: 1st Law says motion doesn't change without one." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Why must a deflection mission apply a <span style="color:#E0A93D;">force</span> to the asteroid? What does Newton's 1st Law tell us about why it keeps coming?</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I state the 1st Law in my own words — and spot inertia in the wild? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 4 (Newton's First Law and Inertia)</strong> — the whole chapter. It's short and excellent.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: THE LANGUAGE OF FORCE</span><span>U1 · 07/07</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D11</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="First 'derive physics from data' day of the year. Prep: dynamics carts, tracks, pulleys, hanging masses, motion detectors, laptops — one kit per group of 4." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 11 · PHASE 2 · INVESTIGATION 1.2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:98px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Newton's 2nd Law:<br>Vary the <span style="color:#E0A93D;">Mass</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Not from a textbook — from your own cart data.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: prediction as Do Now. Commit in writing before touching the equipment — the lab tests THIS." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW · COMMIT BEFORE THE LAB</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Same pull, heavier cart. <span style="color:#E0A93D;">What happens to the acceleration?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Write your prediction and a one-line reason. We test it in 15 minutes.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ PREDICTIONS ON PAPER = HONEST SCIENCE</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can predict and verify how an object's <span style="color:#5E8B6E;">acceleration</span> changes when its <span style="color:#7A75A0;">mass</span> changes at <span style="color:#C08F2E;">constant force</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="The Setup" data-speaker-notes="5–15: walk the rig. Hanging mass over the pulley = constant force. Motion detector reads v-t; slope = a. VARIABLE: cart mass (add weights). CONSTANT: same hanging mass all runs. 3-4 cart masses, table + plot." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 700px; gap:60px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E; margin-bottom:32px;">INVESTIGATION 1.2 · GROUPS OF 4</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.08; color:#17142E; font-weight:700;">The Rig</h2>
+    <div style="display:flex; flex-direction:column; gap:20px; font-size:31px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:24px; flex:none;">CONSTANT</span><span>Same hanging mass every run — same force.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7A75A0; font-size:24px; flex:none;">VARIABLE</span><span>Cart mass — add weights, 3–4 different values.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#5E8B6E; font-size:24px; flex:none;">MEASURE</span><span>Release → v-t graph → slope = acceleration. Record in the table.</span></div>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">THE RIG, SCHEMATIC</div>
+    <svg viewBox="0 0 620 340" style="width:100%;">
+      <line x1="30" y1="220" x2="500" y2="220" stroke="#4A4478" stroke-width="5"></line>
+      <rect x="150" y="160" width="150" height="56" rx="6" fill="#262148" stroke="#9B8EC4" stroke-width="3"></rect>
+      <text x="225" y="196" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#9B8EC4">CART + m</text>
+      <circle cx="510" cy="212" r="16" fill="none" stroke="#8B87A6" stroke-width="4"></circle>
+      <line x1="300" y1="188" x2="508" y2="188" stroke="#D9D6E8" stroke-width="3"></line>
+      <line x1="524" y1="204" x2="524" y2="300" stroke="#D9D6E8" stroke-width="3"></line>
+      <rect x="500" y="300" width="48" height="34" rx="4" fill="#262148" stroke="#E0A93D" stroke-width="3"></rect>
+      <text x="588" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">F</text>
+      <rect x="34" y="176" width="44" height="44" rx="4" fill="#262148" stroke="#7FA68B" stroke-width="3"></rect>
+      <text x="56" y="160" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="16" fill="#7FA68B">detector</text>
+      <text x="56" y="204" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="18" fill="#7FA68B">)))</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ ONE VARIABLE AT A TIME — THAT'S THE WHOLE TRICK</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="Run It" data-speaker-notes="15–40: groups run the experiment. The sim is the teacher demo for groups who need to see the pattern — set F fixed, sweep m, watch a fall. Real data beats the sim; the sim explains the trend." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Heavier Cart, Same Pull</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · GROUPS RUN THE REAL RIG</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Hold <strong style="color:#C08F2E;">F</strong> fixed. Sweep <strong style="color:#7A75A0;">m</strong>. Watch what happens to <strong style="color:#5E8B6E;">a</strong> — then check it against your table.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="FmaLabSim" from="./sims.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ 3–4 MASSES · TABLE · THEN PLOT a vs m</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="What the Data Says" data-speaker-notes="40–48: discuss plots. Smaller mass → bigger a. If the trend is hard to see, plot a vs 1/m — it straightens. m·a stays roughly constant = the hidden F. Language: 'a is INVERSELY proportional to m.'" style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 640px; gap:64px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:68px; line-height:1.08; color:#17142E; font-weight:700;">What Your Table Shows</h2>
+    <div style="display:flex; flex-direction:column; gap:24px; font-size:32px; line-height:1.55; color:#17142E; max-width:800px;">
+      <p style="margin:0;">Double the mass → acceleration <strong style="color:#7A75A0;">halves</strong>.</p>
+      <p style="margin:0;">In symbols: <strong style="color:#17142E;">a ∝ 1/m</strong> at constant force.</p>
+      <p style="margin:0;">And quietly, in every row: <strong style="color:#C08F2E;">m·a ≈ the same number</strong>. That constant has a name. Tomorrow we find its other half.</p>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">a vs m · CONSTANT F</div>
+    <svg viewBox="0 0 540 360" style="width:100%;">
+      <line x1="60" y1="20" x2="60" y2="310" stroke="#4A4478" stroke-width="3"></line>
+      <line x1="60" y1="310" x2="520" y2="310" stroke="#4A4478" stroke-width="3"></line>
+      <text x="28" y="34" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">a</text>
+      <text x="512" y="342" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">m</text>
+      <path d="M 90 50 Q 140 260 500 292" fill="none" stroke="#E0A93D" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"></path>
+      <circle cx="110" cy="80" r="9" fill="#262148" stroke="#E0A93D" stroke-width="3"></circle>
+      <circle cx="190" cy="196" r="9" fill="#262148" stroke="#E0A93D" stroke-width="3"></circle>
+      <circle cx="300" cy="254" r="9" fill="#262148" stroke="#E0A93D" stroke-width="3"></circle>
+      <circle cx="430" cy="282" r="9" fill="#262148" stroke="#E0A93D" stroke-width="3"></circle>
+      <text x="330" y="212" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4">your 4 data points</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ CAN'T SEE THE CURVE? PLOT a vs 1/m — IT STRAIGHTENS</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="Why It Matters" data-speaker-notes="The asteroid's mass is ~3.5 × 10¹¹ kg. Today's law says: for any force we can send, a will be TINY. Deflection lives or dies on lead time. (Honors push: how would you MEASURE an asteroid's mass from a flyby?)" style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:44px;">TODAY'S LAW, AT ASTEROID SCALE</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:76px; line-height:1.08; color:#FAF9FC; font-weight:700; max-width:1560px;">3.5 × 10¹¹ kg of<br><span style="color:#E0A93D;">Pure Stubbornness</span></h2>
+  <p style="margin:0 0 32px 0; font-size:34px; line-height:1.6; color:#D9D6E8; max-width:1420px;">Your cart resisted a little. The asteroid's mass is ~350 billion kg — for any force we can realistically send, the acceleration will be <strong style="color:#FAF9FC;">tiny</strong>. Deflection only works with <strong style="color:#E0A93D;">years of lead time</strong>.</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:22px; color:#9B8EC4; letter-spacing:0.05em;">HONORS FOOTNOTE: HOW WOULD YOU MEASURE AN ASTEROID'S MASS FROM A FLYBY? THINK ABOUT IT — IT COMES BACK IN UNIT 2.</p>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: double the mass, same force → a halves. Compare against the Do Now prediction — who got it right and can now say WHY?" style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Double the cart's mass, keep the force. <span style="color:#7A75A0;">What happens to the acceleration</span> — and does your morning prediction agree?</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I predict and verify how a changes with m at constant F? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 5 — Newton's Second Law</strong> (~4 pages). Study the worked examples.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: SAME RIG, VARY THE FORCE — AND F = ma LANDS</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

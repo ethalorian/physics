@@ -18,7 +18,16 @@ export interface DeckSnapshot { index: number; total: number; slides: DeckSlide[
 interface StageLike extends HTMLElement { index: number; length: number; goTo(i: number): void; next(): void; prev(): void }
 
 function stageOf(win: Window | null): StageLike | null {
-  try { return (win?.document.querySelector('deck-stage') as StageLike | null) ?? null } catch { return null }
+  // Design exports mount the stage inside x-dc's open shadow root.
+  const find = (root: Document | ShadowRoot): StageLike | null => {
+    const stage = root.querySelector('deck-stage') as StageLike | null
+    if (stage && typeof stage.goTo === 'function') return stage
+    for (const el of root.querySelectorAll('*')) {
+      if (el.shadowRoot) { const nested = find(el.shadowRoot); if (nested) return nested }
+    }
+    return null
+  }
+  try { return win && !win.closed ? find(win.document) : null } catch { return null }
 }
 
 /** Read what the deck currently shows. Null while the window is loading or closed. */
@@ -26,7 +35,7 @@ export function readDeck(win: Window | null): DeckSnapshot | null {
   if (!win || win.closed) return null
   const stage = stageOf(win)
   if (!stage) return null
-  const slides: DeckSlide[] = Array.from(stage.children).map((el) => ({
+  const slides: DeckSlide[] = Array.from(stage.children).filter(el => el.tagName === 'SECTION').map((el) => ({
     label: el.getAttribute('data-label') ?? '',
     anchor: el.getAttribute('data-section-anchor'),
     notes: el.getAttribute('data-speaker-notes') ?? '',

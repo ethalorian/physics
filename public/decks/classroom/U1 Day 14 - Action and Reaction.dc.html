@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D14</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Newton's 3rd is COUNTER-intuitive — the force-sensor data dissolves the 'stronger person pulls harder' belief. Prep: two dual-range force sensors, hook/rope, one laptop showing both." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 14 · INVESTIGATION 1.4</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Newton's 3rd Law:<br>Action and <span style="color:#E0A93D;">Reaction</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Forces come in pairs — and the pairs never cancel.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: the horse-cart riddle. Let them argue 2 minutes. Don't resolve it yet — park the answers on the board." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW · THE FAMOUS RIDDLE</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.14; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A horse pulls a cart. The cart pulls back on the horse <span style="color:#E0A93D;">with equal force</span>. So how does the cart ever move?</h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Argue it with your neighbor. We settle it with data in 20 minutes.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ PARK YOUR ANSWER — WE COME BACK TO IT</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can identify <span style="color:#5E8B6E;">Newton's 3rd Law force pairs</span> and explain <span style="color:#C08F2E;">why they don't cancel</span> each other.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="The Law" data-speaker-notes="5–15: state the law. THE key: the two forces act on DIFFERENT objects — that's why they never cancel. A cancellation needs two forces on the SAME object." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 640px; gap:64px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <div style="background:#17142E; border-radius:8px; padding:38px 52px; margin-bottom:40px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.22em; color:#E0A93D; margin-bottom:14px;">NEWTON'S 3rd LAW</div>
+      <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:40px; line-height:1.35; color:#FAF9FC; font-weight:700; text-wrap:balance;">If A pushes B with force F, then B pushes A with force F — opposite direction.</p>
+    </div>
+    <p style="margin:0; font-size:33px; line-height:1.6; color:#17142E; max-width:800px;">The pair acts on <strong style="color:#C05A5A;">different objects</strong>. Forces only cancel when they act on the <strong>same</strong> object — so a 3rd-law pair <strong style="color:#17142E;">never cancels</strong>.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">ONE PAIR, TWO OBJECTS</div>
+    <svg viewBox="0 0 540 320" style="width:100%;">
+      <defs><marker id="d14a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker><marker id="d14b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker></defs>
+      <circle cx="150" cy="160" r="62" fill="#262148" stroke="#7FA68B" stroke-width="3"></circle>
+      <text x="150" y="168" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="20" fill="#7FA68B">A</text>
+      <circle cx="400" cy="160" r="62" fill="#262148" stroke="#E0A93D" stroke-width="3"></circle>
+      <text x="400" y="168" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="20" fill="#E0A93D">B</text>
+      <line x1="228" y1="130" x2="326" y2="130" stroke="#7FA68B" stroke-width="5" marker-end="url(#d14a)"></line>
+      <text x="277" y="106" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7FA68B">A pushes B</text>
+      <line x1="326" y1="196" x2="228" y2="196" stroke="#E0A93D" stroke-width="5" marker-end="url(#d14b)"></line>
+      <text x="277" y="238" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">B pushes A — same size</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ DIFFERENT OBJECTS = NO CANCELLATION</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="Investigation 1.4 · Tug of War" data-speaker-notes="15–35: two force sensors, both on one screen. Hard pull, soft pull, one student much stronger, jerky pulls — the readings ALWAYS match. Let the data dissolve the intuition." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Investigation 1.4 — Tug of War</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TWO FORCE SENSORS · ONE SCREEN</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Strongest kid in class vs anyone. <strong style="color:#C08F2E;">The readings will match. Every time.</strong> Try to break it.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="TugOfWarSim" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THEN THE REAL SENSORS — SAME RESULT</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Riddle, Resolved" data-speaker-notes="Return to the Do Now. Internal pair (horse↔cart) can't move the SYSTEM. The ground pushing the horse's feet — an EXTERNAL force — does. Tug-of-war is won by friction with the floor, not by pulling harder." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:36px;">BACK TO THE HORSE</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.08; color:#17142E; font-weight:700;">The Riddle, Resolved</h2>
+  <div style="display:flex; flex-direction:column; gap:26px; font-size:33px; line-height:1.55; color:#17142E; max-width:1520px;">
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C05A5A; font-size:24px; flex:none;">INTERNAL</span><span>Horse-pulls-cart and cart-pulls-horse act on <strong>different objects</strong> — they can't cancel, and they can't move the system either.</span></div>
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#5E8B6E; font-size:24px; flex:none;">EXTERNAL</span><span>The <strong>ground pushing the horse's hooves</strong> is what moves horse + cart forward.</span></div>
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:24px; flex:none;">SAME IDEA</span><span>Tug-of-war isn't won by pulling harder — the rope forces always match. It's won by <strong>friction with the floor</strong>.</span></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ SYSTEMS MOVE ON EXTERNAL FORCES</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="DART Physics" data-speaker-notes="35–48: kinetic impactors work BECAUSE of the 3rd law. Spacecraft hits asteroid; asteroid hits back equally hard. Massive asteroid barely changes velocity; light spacecraft is destroyed — fine, the momentum transferred. You just need to survive long enough to deliver it." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:grid; grid-template-columns:1fr 620px; gap:70px; align-items:center; box-sizing:border-box; height:100%;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:36px;">BACK TO 2026-XJ</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#FAF9FC; font-weight:700;">Why Kinetic Impactors<br><span style="color:#E0A93D;">Work at All</span></h2>
+    <p style="margin:0 0 30px 0; font-size:33px; line-height:1.6; color:#D9D6E8; max-width:880px;">Hit the asteroid, and it hits back <strong style="color:#FAF9FC;">exactly as hard</strong>. The spacecraft is destroyed; the asteroid's velocity changes by a hair. That hair, with years of travel left, moves the arrival point.</p>
+    <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:23px; color:#7FA68B; letter-spacing:0.04em; line-height:1.7;">YOU DON'T NEED TO SURVIVE THE COLLISION — JUST DELIVER THE MOMENTUM. (NASA'S REAL DART MISSION PROVED THIS IN 2022.)</p>
+  </div>
+  <svg viewBox="0 0 520 420" style="width:100%;">
+    <defs><marker id="d14c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker><marker id="d14d" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C05A5A"></path></marker></defs>
+    <circle cx="330" cy="210" r="90" fill="#1D1938" stroke="#E0A93D" stroke-width="3"></circle>
+    <text x="330" y="218" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#E0A93D">2026-XJ</text>
+    <rect x="80" y="192" width="52" height="36" rx="5" fill="#262148" stroke="#7FA68B" stroke-width="3"></rect>
+    <line x1="140" y1="210" x2="222" y2="210" stroke="#7FA68B" stroke-width="5" marker-end="url(#d14c)"></line>
+    <text x="106" y="168" font-family="IBM Plex Mono, monospace" font-size="16" fill="#7FA68B">impactor force →</text>
+    <line x1="240" y1="252" x2="158" y2="252" stroke="#C05A5A" stroke-width="5" marker-end="url(#d14d)"></line>
+    <text x="252" y="292" font-family="IBM Plex Mono, monospace" font-size="16" fill="#C05A5A">← equal force back</text>
+  </svg>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: push a wall — what pushes back? THE WALL. Also check: does anyone still think the stronger student pulls harder?" style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:68px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px;">When you push against a wall, <span style="color:#E0A93D;">what pushes back</span> on you with equal force?</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I name a 3rd-law pair — and say why the pair never cancels? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 6 (Newton's Third Law)</strong> — short chapter, excellent reading.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: DRAWING THE FORCES — FREE BODY DIAGRAMS</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

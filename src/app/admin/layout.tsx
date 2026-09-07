@@ -1,3 +1,5 @@
+import { auth } from '@/lib/auth'
+import { canEditArea } from '@/lib/content-access'
 import type { ReactNode } from 'react'
 import AdminShell from '@/components/admin/AdminShell'
 
@@ -15,10 +17,12 @@ import AdminShell from '@/components/admin/AdminShell'
  * holds context across its ~25 destinations instead of bouncing through a
  * launcher and back-links.
  */
-export default function AdminLayout({ children }: { children: ReactNode }) {
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const session = await auth()
+  const canEditLessons = session?.user?.email ? await canEditArea(session.user.email, 'lessons', false) : false
   return (
     <div className="surface-refined">
-      <AdminShell>{children}</AdminShell>
+      <AdminShell canEditLessons={canEditLessons}>{children}</AdminShell>
     </div>
   )
 }

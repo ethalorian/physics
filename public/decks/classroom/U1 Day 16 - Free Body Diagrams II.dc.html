@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D16</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="INCLINES ARE HARD for CPA students — heaviest scaffolding of the unit. Walk ONE complete incline problem on the board before anyone tries alone." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 16 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:98px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">From Picture<br>to <span style="color:#E0A93D;">Number</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Net force from FBDs — flat floors first, then the incline.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: 1D warm-up. Net = 30 − 10 = 20 N forward; a = 20/5 = 4 m/s². M5 in action." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A 5 kg box: pulled 30 N forward, friction 10 N back. <span style="color:#E0A93D;">Net force? Acceleration?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">M5: net first. Then the law.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ F_net = ma STARTS WITH THE FBD</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together. The incline clause is the day's summit." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can compute the <span style="color:#5E8B6E;">net force</span> on an object from its FBD, including for <span style="color:#C08F2E;">inclined surfaces</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="1D First" data-speaker-notes="5–20: 1D net force — sum with signs, then a = F_net/m. Two or three quick board examples. This should feel easy after Day 13; it's the on-ramp to the incline." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">One Axis: Sum With Signs</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; max-width:1660px;">
+    <div style="background:#17142E; border-radius:8px; padding:36px 42px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#7FA68B; letter-spacing:0.14em; margin-bottom:16px;">STEP 1 · FBD</div><p style="margin:0; font-size:29px; line-height:1.5; color:#D9D6E8;">Draw every force with its direction.</p></div>
+    <div style="background:#17142E; border-radius:8px; padding:36px 42px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#E0A93D; letter-spacing:0.14em; margin-bottom:16px;">STEP 2 · NET</div><p style="margin:0; font-size:29px; line-height:1.5; color:#D9D6E8;">Positives minus negatives, one axis at a time.</p></div>
+    <div style="background:#17142E; border-radius:8px; padding:36px 42px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#9B8EC4; letter-spacing:0.14em; margin-bottom:16px;">STEP 3 · LAW</div><p style="margin:0; font-size:29px; line-height:1.5; color:#D9D6E8;">a = F<sub>net</sub> / m. Sign carries the direction.</p></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ FLAT-FLOOR PROBLEMS SHOULD FEEL EASY NOW</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="MATH MOVE · M6" data-speaker-notes="M6 debuts: incline decomposition. Tilt the axes WITH the ramp; gravity splits into mg·sinθ (along) and mg·cosθ (into). Worked: 10 kg at 30° → along = 49 N, into = 84.9 N. The recipe card carries this exact pair." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:90px 130px 150px; display:grid; grid-template-columns:1fr 720px; gap:60px; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; flex-direction:column;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.26em; color:#C08F2E; margin-bottom:30px;">MATH MOVE · M6 · THE INCLINE SPLIT</div>
+    <h2 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.1; color:#17142E; font-weight:700;">Tilt the Axes,<br>Split the Gravity</h2>
+    <div style="display:flex; flex-direction:column; gap:20px; font-size:31px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">1</span><span><strong>Axes follow the ramp:</strong> one along the surface, one into it.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">2</span><span><strong>Along the incline:</strong> mg·sin θ — the part that pulls it downhill.</span></div>
+      <div style="display:flex; gap:22px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#C08F2E; font-size:25px; flex:none;">3</span><span><strong>Into the incline:</strong> mg·cos θ — what the normal force answers.</span></div>
+    </div>
+    <div style="margin-top:auto; font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.06em; color:#8B87A6; line-height:1.7;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:40px 48px; display:flex; flex-direction:column; gap:16px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6;">WORKED — 10 kg BLOCK, 30° RAMP</div>
+    <svg viewBox="0 0 620 300" style="width:100%;">
+      <defs><marker id="d16a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker><marker id="d16b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker></defs>
+      <polygon points="40,270 580,270 580,90" fill="#262148" stroke="#4A4478" stroke-width="3"></polygon>
+      <path d="M 130 270 A 90 90 0 0 0 118 240" fill="none" stroke="#8B87A6" stroke-width="2.5"></path>
+      <text x="150" y="256" font-family="IBM Plex Mono, monospace" font-size="17" fill="#8B87A6">30°</text>
+      <rect x="300" y="150" width="70" height="46" rx="5" fill="#1D1938" stroke="#FAF9FC" stroke-width="3" transform="rotate(-18.4 335 173)"></rect>
+      <line x1="335" y1="196" x2="272" y2="238" stroke="#E0A93D" stroke-width="5" marker-end="url(#d16a)" transform="rotate(-4 335 196)"></line>
+      <text x="216" y="222" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">mg·sin θ = 49 N</text>
+      <line x1="352" y1="200" x2="392" y2="286" stroke="#9B8EC4" stroke-width="5" marker-end="url(#d16b)"></line>
+      <text x="408" y="262" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4">mg·cos θ ≈ 85 N</text>
+    </svg>
+    <div style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#FAF9FC;">Frictionless: a = 49 N / 10 kg = <span style="color:#E0A93D;">4.9 m/s² downhill</span></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ ON THE RECIPE CARD: ALONG = mg·sin θ · INTO = mg·cos θ</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Incline Live" data-speaker-notes="20–40: sweep the angle, watch both components trade off. 0° → all normal; steeper → downhill component grows. Then students work matching problems with the recipe card." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Sweep the Angle</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · THEN PAIRED PROBLEMS</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Watch the trade: flat ramp → gravity all <strong style="color:#7A75A0;">into</strong> the surface; steep ramp → more <strong style="color:#C08F2E;">along</strong> it.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="InclineSim" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ PREDICT AT 0° AND 90° — THE ENDPOINTS TELL THE STORY</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="Space Has No Ramps" data-speaker-notes="40–48: honesty about scope. The asteroid has no surfaces — but component-splitting is EXACTLY what Unit 2 does with gravity vectors, and launch trajectories are incline problems." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:44px;">WHY INCLINES, IF SPACE HAS NONE?</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.08; color:#FAF9FC; font-weight:700; max-width:1560px;">The Ramp Is Practice.<br>The <span style="color:#E0A93D;">Split</span> Is Forever.</h2>
+  <p style="margin:0; font-size:34px; line-height:1.6; color:#D9D6E8; max-width:1420px;">2026-XJ will never sit on a ramp. But splitting a force into components along chosen axes is exactly how Unit 2 handles gravity on a curving trajectory — and how launch engineers handle a rocket leaving an inclined pad. <strong style="color:#FAF9FC;">Master the split here, where you can check it with a ruler.</strong></p>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: 10 kg box, 50 N forward, 15 N friction → F_net = 35 N forward. Flat floor on purpose — inclines get more reps on Days 17–19." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A 10 kg box on a flat floor: 50 N forward, 15 N friction. <span style="color:#E0A93D;">Find the net force.</span></h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I get net force from an FBD — including on an incline with M6? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 5 — worked examples with inclined surfaces.</strong></p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: THE FORCE THAT RESISTS — FRICTION</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

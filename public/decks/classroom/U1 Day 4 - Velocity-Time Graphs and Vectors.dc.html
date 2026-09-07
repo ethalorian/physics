@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="20" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#FAF9FC">D4</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Vector thinking is the load-bearing skill of this unit — today is its first explicit day. Don't rush. Visual before trig." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 4 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:98px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Velocity-Time Graphs<br>and <span style="color:#E0A93D;">Vector Thinking</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">What does "8,500 m/s at 15° toward Earth" actually mean?</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: recap p-t slope = velocity. Then the new question. Let students sketch a guess before any instruction." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Yesterday you walked a steady line away from the detector. <span style="color:#E0A93D;">Sketch the velocity-time graph</span> for that same walk.</h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Not position — velocity. What stays the same? What would the line look like?</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ SKETCH FIRST · WE'LL CHECK TOGETHER</span><span>U1 · 02/10</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together. Today is intentionally VISUAL — protractors and rulers before trig." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can interpret a <span style="color:#5E8B6E;">velocity-time graph</span>, decompose a 2D velocity into <span style="color:#7A75A0;">components</span>, and represent velocity vectors with <span style="color:#C08F2E;">proportional arrows</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/10</span>
+  </div>
+</section>
+
+<section data-label="Same Walk, Two Graphs" data-speaker-notes="5–15: students sketch v-t for scenarios from yesterday's p-t graphs. Key: constant velocity → horizontal v-t line; tilted p-t stays tilted, its v-t goes flat. Preview: slope of v-t = acceleration (Day 7)." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Same Walk, Two Graphs</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#17142E; border-radius:8px; padding:34px 40px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.2em; color:#7FA68B;">POSITION-TIME</div>
+      <svg viewBox="0 0 560 260" style="width:100%;">
+        <line x1="50" y1="20" x2="50" y2="220" stroke="#4A4478" stroke-width="3"></line><line x1="50" y1="220" x2="540" y2="220" stroke="#4A4478" stroke-width="3"></line>
+        <text x="20" y="34" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">x</text><text x="532" y="250" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">t</text>
+        <line x1="50" y1="204" x2="520" y2="52" stroke="#7FA68B" stroke-width="5" stroke-linecap="round"></line>
+        <text x="300" y="106" font-family="IBM Plex Mono, monospace" font-size="18" fill="#7FA68B" transform="rotate(-17 300 106)">steady climb</text>
+      </svg>
+      <p style="margin:0; font-size:27px; line-height:1.45; color:#D9D6E8;">Position grows steadily — the slope is the velocity.</p>
+    </div>
+    <div style="background:#17142E; border-radius:8px; padding:34px 40px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.2em; color:#E0A93D;">VELOCITY-TIME · SAME MOTION</div>
+      <svg viewBox="0 0 560 260" style="width:100%;">
+        <line x1="50" y1="20" x2="50" y2="220" stroke="#4A4478" stroke-width="3"></line><line x1="50" y1="220" x2="540" y2="220" stroke="#4A4478" stroke-width="3"></line>
+        <text x="20" y="34" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">v</text><text x="532" y="250" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="16" fill="#8B87A6">t</text>
+        <line x1="50" y1="110" x2="520" y2="110" stroke="#E0A93D" stroke-width="5" stroke-linecap="round"></line>
+        <text x="300" y="90" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="18" fill="#E0A93D">flat — velocity never changes</text>
+      </svg>
+      <p style="margin:0; font-size:27px; line-height:1.45; color:#D9D6E8;">Constant velocity is a <strong style="color:#FAF9FC;">horizontal line</strong> here. Tilted v-t = changing velocity — that's Day 7.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ READ THE AXIS LABEL BEFORE THE LINE</span><span>U1 · 04/10</span>
+  </div>
+</section>
+
+<section data-label="Vectors Are Arrows" data-speaker-notes="15–35: length = magnitude, direction = direction. Practice: 60 mph east, 200 mph north, 5 m/s southwest — arrows must be PROPORTIONAL." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 620px; gap:64px; align-items:center; box-sizing:border-box; height:100%; position:relative;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:32px;">DRAW ON WHITEBOARDS</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">A Vector Is an Arrow</h2>
+    <div style="display:flex; flex-direction:column; gap:22px; font-size:33px; line-height:1.5; color:#17142E;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">LENGTH</span><span>= magnitude. Twice as fast → twice as long.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#E0A93D; font-size:26px; flex:none;">ANGLE</span><span>= direction. The arrow points where the motion goes.</span></div>
+    </div>
+    <p style="margin:36px 0 0 0; font-size:30px; line-height:1.5; color:#4A4661;">Draw: a car at 60 mph east · a plane at 200 mph north · a runner at 5 m/s southwest.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 40px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.22em; color:#8B87A6; margin-bottom:10px;">PROPORTIONAL OR IT'S WRONG</div>
+    <svg viewBox="0 0 520 360" style="width:100%;">
+      <defs><marker id="d4a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#7FA68B"></path></marker><marker id="d4b" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#9B8EC4"></path></marker><marker id="d4c" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#E0A93D"></path></marker></defs>
+      <circle cx="260" cy="190" r="8" fill="#FAF9FC"></circle>
+      <line x1="260" y1="190" x2="392" y2="190" stroke="#7FA68B" stroke-width="5" marker-end="url(#d4a)"></line>
+      <text x="330" y="168" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7FA68B">60 mph E</text>
+      <line x1="260" y1="190" x2="260" y2="0" stroke="#9B8EC4" stroke-width="5" marker-end="url(#d4b)" transform="translate(0 24)"></line>
+      <text x="278" y="60" font-family="IBM Plex Mono, monospace" font-size="17" fill="#9B8EC4">200 mph N</text>
+      <line x1="260" y1="190" x2="212" y2="238" stroke="#E0A93D" stroke-width="5" marker-end="url(#d4c)"></line>
+      <text x="196" y="272" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">5 m/s SW</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ BOTH THINGS MATTER: LENGTH AND ANGLE</span><span>U1 · 05/10</span>
+  </div>
+</section>
+
+<section data-label="The Asteroid's Arrow" data-speaker-notes="The reveal: '8,500 m/s at 15°' is ONE arrow that splits into TWO useful numbers. Today visual only — protractors and rulers. The trig recipe formalizes on Day 6. Sim: drag the angle, watch the components." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">The Asteroid's Arrow, Split in Two</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">8,500 m/s at 15° = <strong style="color:#5E8B6E;">≈ 8,210 m/s toward Earth</strong> + <strong style="color:#7A75A0;">≈ 2,200 m/s perpendicular</strong>. One tells us <em>if</em> it hits; the other, <em>where</em> it'll be.</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="VectorDecompSim" from="./sims.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TODAY: EYES AND RULERS · DAY 6: THE TRIG RECIPE</span><span>U1 · 06/10</span>
+  </div>
+</section>
+
+<section data-label="Graph Paper" data-speaker-notes="35–48: students draw the asteroid's velocity vector on graph paper and decompose visually — ruler + protractor, no trig required yet. Then rough rate × time: how far does each component carry it in 6 months?" style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E; margin-bottom:36px;">YOUR TURN · GRAPH PAPER + RULER + PROTRACTOR</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.1; color:#17142E; font-weight:700;">Draw It, Measure It</h2>
+  <div style="display:flex; flex-direction:column; gap:24px; font-size:33px; line-height:1.5; color:#17142E; max-width:1500px;">
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">01</span><span>Draw the asteroid's velocity arrow: pick a scale (1 cm = 1,000 m/s), angle 15°.</span></div>
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">02</span><span>Drop the perpendicular. <strong>Measure</strong> both components with your ruler.</span></div>
+    <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; color:#7FA68B; font-size:26px; flex:none;">03</span><span>Rough it: at ≈ 8,210 m/s toward Earth, how far in 6 months? (rate × time)</span></div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ THIS IS WHAT NASA IS DOING RIGHT NOW</span><span>U1 · 07/10</span>
+  </div>
+</section>
+
+<section data-label="Why Components" data-speaker-notes="Land the meaning before the exit: toward-Earth answers IF, perpendicular answers WHERE. Students who can do trig but not say this are missing the physics." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:44px;">WHY SPLIT THE ARROW?</div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; max-width:1620px;">
+    <div style="background:#1D1938; border-left:8px solid #C05A5A; padding:44px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.2em; color:#C05A5A; margin-bottom:18px;">TOWARD-EARTH COMPONENT</div>
+      <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.25; color:#FAF9FC; font-weight:700;">Tells us <em>if</em> it will hit.</p>
+    </div>
+    <div style="background:#1D1938; border-left:8px solid #7FA68B; padding:44px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.2em; color:#7FA68B; margin-bottom:18px;">PERPENDICULAR COMPONENT</div>
+      <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.25; color:#FAF9FC; font-weight:700;">Tells us <em>where</em> it will be when it gets here.</p>
+    </div>
+  </div>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="48–50: exit ticket. Look for the if/where articulation, not the trig." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">Why does it matter that we calculate the components of the asteroid's velocity <span style="color:#E0A93D;">separately</span>?</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I read a v-t graph, draw proportional vectors, and split one into components? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 2 — Vectors and Vector Components</strong> (~4 pages). This is where the math starts to come.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: THE FIRST REAL PREDICTION</span><span>U1 · 10/10</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

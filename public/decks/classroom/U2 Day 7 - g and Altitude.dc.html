@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"/><text x="50" y="62" text-anchor="middle" font-family="monospace" font-size="28" fill="#E0A93D">D7</text></svg></template>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Graph day + the orbit seed. Prep: graph templates or Desmos preloaded; an ISS image for the orbit preview. 0–3 recap: g = GM/r², units N/kg." style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:250px; width:560px;">
+    <svg viewBox="0 0 400 300" style="width:100%;">
+      <line x1="50" y1="20" x2="50" y2="260" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="50" y1="260" x2="380" y2="260" stroke="#8B87A6" stroke-width="3"></line>
+      <path d="M 50 40 Q 120 60 170 140 T 380 240" fill="none" stroke="#9B8EC4" stroke-width="5" stroke-linecap="round"></path>
+      <circle cx="86" cy="52" r="8" fill="#E0A93D"></circle>
+      <text x="102" y="46" font-family="IBM Plex Mono" font-size="17" fill="#C08F2E">ISS · 89%</text>
+      <text x="30" y="36" text-anchor="end" font-family="IBM Plex Mono" font-size="18" fill="#8B87A6">g</text>
+      <text x="378" y="288" text-anchor="end" font-family="IBM Plex Mono" font-size="18" fill="#8B87A6">altitude</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · UNIT 2</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1050px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:92px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Where Does<br>g <span style="color:#9B8EC4;">Go?</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:880px;">Day 7: graphing g against altitude — and planting the seed that becomes orbits.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 02 · DAY 07 · PHASE 2</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–3 min. Most will now say 'a bit less' — yesterday's 89% did its job. Anyone who says 'zero' gets the FieldMap sim again later." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 3 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.22; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">Without computing: at the ISS (400 km up),<br>is g zero, a bit less than 9.81, or much less?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Commit. Then defend it with yesterday's number.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — DO NOW</span>
+    <span>U2 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: matches packet — graph g vs altitude, read the curve, explain weightlessness in orbit as FREE FALL. Targets K2, R3." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">07</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:1.32; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can graph g vs. altitude, read the curve, and explain qualitatively why weightlessness in orbit is <span style="color:#E0A93D;">FREE FALL</span> — not the absence of gravity.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — TODAY'S TARGET</span>
+    <span>U2 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="Graph Activity" data-speaker-notes="3–18 min: plot 5 points by hand or in Desmos — surface, 100 km, 1000 km, 10,000 km, lunar distance — then connect the curve. ELs: axes pre-labeled with units. SWDs: partner graphing. Advanced: what altitude gives g = g_Moon (1.62)?" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">GRAPH ACTIVITY · 15 MIN</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:66px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Five Points, One Curve</h2>
+  <div style="display:grid; grid-template-columns:1fr 620px; gap:56px; width:100%; align-items:start;">
+  <div style="display:flex; flex-direction:column;">
+  <p style="margin:0 0 44px 0; font-size:32px; line-height:1.55;">Compute g at each altitude with g = GM/r² (remember: r = R<sub>Earth</sub> + altitude). Plot, then connect.</p>
+  <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:20px; width:100%;">
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:22px 26px; text-align:center;"><div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.14em; color:#5E8B6E; margin-bottom:10px;">SURFACE</div><span style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#17142E;">0 km</span></div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:22px 26px; text-align:center;"><div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.14em; color:#7A75A0; margin-bottom:10px;">LEO-ISH</div><span style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#17142E;">100 km</span></div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:22px 26px; text-align:center;"><div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.14em; color:#7A75A0; margin-bottom:10px;">HIGH LEO</div><span style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#17142E;">1,000 km</span></div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:22px 26px; text-align:center;"><div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.14em; color:#C08F2E; margin-bottom:10px;">MEO</div><span style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#17142E;">10,000 km</span></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:22px 26px; text-align:center; grid-column:1 / -1;"><div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.14em; color:#C08F2E; margin-bottom:10px;">LUNAR</div><span style="font-family:'Space Grotesk',sans-serif; font-size:32px; font-weight:700; color:#17142E;">384,000 km</span></div>
+  </div>
+  <p style="margin:40px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:38px; line-height:1.35; color:#17142E; font-weight:600;">Then read it: where does g hit <span style="color:#E0A93D;">half? 10%? 1%?</span></p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:26px 32px 18px; display:flex; flex-direction:column; gap:6px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.22em; color:#8B87A6;">YOUR AXES — START HERE</div>
+    <svg viewBox="0 0 560 440" style="width:100%;">
+      <line x1="80" y1="30" x2="80" y2="390" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="80" y1="390" x2="540" y2="390" stroke="#8B87A6" stroke-width="3"></line>
+      <text x="36" y="46" font-family="IBM Plex Mono, monospace" font-size="18" fill="#8B87A6">g</text>
+      <text x="20" y="96" font-family="IBM Plex Mono, monospace" font-size="15" fill="#5F5B7E">N/kg</text>
+      <text x="540" y="438" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="18" fill="#8B87A6">altitude (km)</text>
+      <line x1="70" y1="64" x2="90" y2="64" stroke="#E0A93D" stroke-width="3"></line>
+      <text x="62" y="70" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="17" fill="#E0A93D">9.81</text>
+      <circle cx="80" cy="64" r="9" fill="#E0A93D"></circle>
+      <text x="100" y="56" font-family="IBM Plex Mono, monospace" font-size="16" fill="#C08F2E">surface — your anchor</text>
+      <line x1="70" y1="227" x2="90" y2="227" stroke="#7FA68B" stroke-width="3"></line>
+      <text x="62" y="233" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="17" fill="#7FA68B">4.9</text>
+      <text x="100" y="233" font-family="IBM Plex Mono, monospace" font-size="16" fill="#5E8B6E">half-g — where does the curve cross?</text>
+      <g fill="#9B8EC4">
+        <text x="150" y="200" font-family="Space Grotesk, sans-serif" font-size="52" font-weight="700" opacity="0.35">?</text>
+        <text x="200" y="300" font-family="Space Grotesk, sans-serif" font-size="52" font-weight="700" opacity="0.28">?</text>
+        <text x="380" y="340" font-family="Space Grotesk, sans-serif" font-size="52" font-weight="700" opacity="0.22">?</text>
+      </g>
+      <g font-family="IBM Plex Mono, monospace" font-size="14" fill="#5F5B7E">
+        <line x1="120" y1="384" x2="120" y2="396" stroke="#5F5B7E" stroke-width="2"></line><text x="120" y="414" text-anchor="middle">100</text>
+        <line x1="210" y1="384" x2="210" y2="396" stroke="#5F5B7E" stroke-width="2"></line><text x="210" y="414" text-anchor="middle">1k</text>
+        <line x1="330" y1="384" x2="330" y2="396" stroke="#5F5B7E" stroke-width="2"></line><text x="330" y="414" text-anchor="middle">10k</text>
+        <line x1="500" y1="384" x2="500" y2="396" stroke="#5F5B7E" stroke-width="2"></line><text x="500" y="412" text-anchor="middle">384k</text>
+      </g>
+    </svg>
+  </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — DOODLE ZONE (MARK THE GRAPH)</span>
+    <span>U2 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="Read the Curve — Live Sim" data-speaker-notes="18–30 min: check the hand-drawn graphs against the sim. Read off half-g (~2,600 km altitude), 10%, GEO. Connect each altitude to what actually lives there: LEO, GPS, GEO, the Moon." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Check Your Curve</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM U2·06 · FIELD MAP</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Does your hand-drawn curve match? <strong style="color:#17142E;">Find the half-g altitude</strong> — the exit ticket lives there.</p>
+  <div style="width:100%; max-width:1180px;">
+    <x-import component="FieldMapSim" from="./sims4.jsx" hint-size="100%,470px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — YOUR TURN (HALF-g ALTITUDE)</span>
+    <span>U2 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="The Orbit Seed" data-speaker-notes="30–42 min bridge. Push HARD on the misconception: 'If the ISS were ACTUALLY in zero gravity, what would happen to it? Would it stay in orbit?' (It would fly off in a straight line — Unit 1 inertia!) Free fall + horizontal motion = orbit. This is Day 13's argument; plant it, don't finish it." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:grid; grid-template-columns:1fr 560px; gap:70px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">THE SEED — DAY 13 GROWS IT</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">If Gravity Were Really Zero,<br>the ISS Would <span style="color:#E0A93D;">Leave</span></h2>
+  <p style="margin:0 0 48px 0; font-size:34px; line-height:1.6; color:#D9D6E8;">No force → straight line at constant velocity. That's YOUR Unit 1 physics. Something must be bending the ISS's path, constantly. <strong style="color:#FAF9FC;">That something is the 8.7 N/kg you computed.</strong></p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#E0A93D; letter-spacing:0.06em;">free fall + horizontal motion = orbit. Hold it until Day 13.</p>
+  </div>
+  <svg viewBox="0 0 520 520" style="width:100%;">
+    <defs><marker id="osd" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#C05A5A"></path></marker></defs>
+    <circle cx="260" cy="300" r="120" fill="#1D1938" stroke="#7FA68B" stroke-width="3"></circle>
+    <text x="260" y="308" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="20" fill="#7FA68B">EARTH</text>
+    <circle cx="260" cy="300" r="185" fill="none" stroke="#E0A93D" stroke-width="3.5" stroke-dasharray="2 10" stroke-linecap="round"></circle>
+    <line x1="260" y1="115" x2="470" y2="115" stroke="#C05A5A" stroke-width="3.5" stroke-dasharray="10 8" marker-end="url(#osd)"></line>
+    <circle cx="260" cy="115" r="11" fill="#262148" stroke="#FAF9FC" stroke-width="3"></circle>
+    <text x="238" y="122" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="19" fill="#FAF9FC">ISS</text>
+    <text x="470" y="86" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="18" fill="#C05A5A">zero gravity → leaves</text>
+    <text x="84" y="468" font-family="IBM Plex Mono, monospace" font-size="18" fill="#E0A93D">8.7 N/kg → falls around, forever</text>
+  </svg>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 7 — WHY DOESN'T ISS FALL STRAIGHT DOWN?</span>
+    <span>U2 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="Your Turn" data-speaker-notes="Packet YOUR TURN: solve g = GM/r² for r at g = 4.9 — r ≈ 9×10⁶ m, altitude ≈ 2,600 km. SM1 applies: rearrange in symbols first (r = √(GM/g)), then substitute." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">YOUR TURN — SM1 FROM UNIT 1 APPLIES</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Find the Half-g Altitude</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1500px;">At what altitude does g = 4.9 m/s²? Rearrange g = GM/r² for r <strong style="color:#17142E;">in symbols first</strong> — then substitute, then subtract R<sub>Earth</sub>.</p>
+  <div style="background:#17142E; border-radius:8px; padding:30px 48px; font-family:'IBM Plex Mono',monospace; font-size:30px; color:#FAF9FC;">r = √(G·M / g) &nbsp;<span style="color:#7A75A0; font-size:22px;">← no numbers until here</span></div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — YOUR TURN</span>
+    <span>U2 · 07/08</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="42–48 exit (verbatim from packet — (b) falling freely is true), 48–50 Marzano on K2/R3. Tomorrow: measure g in the lab. TONIGHT: finish the graph if incomplete; honors write the FULL weightlessness argument — this is the written version of the Day 6–7 thread." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">Explain the difference between (a) "no gravity in orbit" and (b) "falling freely in orbit." Which one is true?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 7 target in your packet.</p>
+    </div>
+  </div>
+  <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Finish your g-vs-altitude graph — mark half-g, 10%, and the ISS on it. Lab tomorrow: we MEASURE g. <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: the full weightlessness argument, in writing — why "no gravity" is unavailable given 8.7 N/kg at the ISS.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 7 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U2 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

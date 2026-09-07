@@ -19,7 +19,7 @@ import { Menu, X, FlaskConical } from 'lucide-react'
  * route is highlighted with `--primary`, and the sidebar collapses to a drawer
  * on narrow widths. Lives inside `.surface-refined` (set by admin/layout).
  */
-export default function AdminShell({ children }: { children: ReactNode }) {
+export default function AdminShell({ children, canEditLessons = false }: { children: ReactNode; canEditLessons?: boolean }) {
   const { role } = useViewAs()
   const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
@@ -36,8 +36,8 @@ export default function AdminShell({ children }: { children: ReactNode }) {
       ],
     },
   ]
-  const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin)
-  const tools = flatTools(isAdmin)
+  const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin, canEditLessons)
+  const tools = flatTools(isAdmin, canEditLessons)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever the route changes.

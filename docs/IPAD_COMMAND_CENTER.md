@@ -64,3 +64,17 @@ The laptop panel and projector keyboard arrows send commands through the shared 
 The classroom_command_tools migration was applied to the PhysicsAPP production database on September 7, 2026 to resolve missing-table server errors. All six tables were verified with RLS enabled, service-role access, and no anonymous read access.
 
 Run the laptop handoff browser regression with `LAPTOP_HANDOFF=1 node scripts/test-presentation-tools-browser.cjs`. It starts the legacy laptop presenter, joins from a separate iPad browser context, verifies the same session/window, and exercises the full teaching-tools flow.
+
+### Decks and projector lesson blocks (September 7, 2026)
+
+The shared PowerPoint slides request folder contains HTML source decks. Its Unit 1 (22 teaching days), Unit 2 (16 teaching days), alternate Day 1 versions, shared runtime, simulations, and referenced images are imported under `public/decks/classroom`. The day library points to these files. Previously stored single-day Unit 1 URLs resolve to their updated source decks at launch and when reading slide metadata. The older combined Day 11–12 export remains available because a combined stored URL cannot identify which of the two new lab decks to use. Existing exported bundles are unchanged.
+
+The Command Center reads both ordinary deck-stage HTML and the bundled JSON template/x-import format without executing deck code. The live bridge locates controls inside open shadow roots. Decks still open as standalone presentation windows.
+
+Use **What’s on the projector? → Choose a lesson block → Project lesson block** to put a student-visible block over the deck. Its section becomes the students’ Follow destination; existing access gates still apply. **Return to deck** restores the saved slide. Polls, pulses, and lobbies take priority temporarily. The block view uses the shared read-only block renderer; no student evidence is read or written on the projector.
+
+Block projection uses a fixed 1600×900 stage fitted to the display. Long prose, vocabulary sets, and procedures have continuation screens controlled from the iPad. Graphs, figures, and diagrams remain intact; graphs have larger labels, legends, and a 600-pixel chart canvas. Oversized content scales to fit without page scrolling. Very dense unsplittable content may use smaller text. The display supports widescreen and 4:3 letterboxing.
+
+The additive `presentation_projected_block` migration was applied to PhysicsAPP and its two columns verified. Application changes still require deployment.
+
+Verification: `node scripts/test-deck-controls-browser.cjs` checks metadata from 60 actual old/new decks and live controls on five representative decks. `node scripts/test-projected-block-browser.cjs` checks intact graphs at 1920×1080, 1280×720, and 1024×768, no page overflow, text continuation, and no evidence I/O. The presentation API/browser suites cover block selection, rejected foreign blocks and graph continuation, and restoration of the same deck position. Rules: A-1, A-2, P-2, P-4, P-6, M-1.

@@ -1,28 +1,8 @@
-import { supabaseAdmin } from '@/lib/supabase'
-import { notFound } from 'next/navigation'
+import { lessonAuthoringData } from '@/lib/lesson-authoring'
 import LessonBlockBuilder from '@/components/admin/LessonBlockBuilder'
 import LessonVocabEditor from '@/components/admin/LessonVocabEditor'
-import { BlockDocument } from '@/data/content-blocks'
-
 export default async function LessonBuildPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const { data: lesson } = await supabaseAdmin
-    .from('lessons')
-    .select('id, title, slug, content_blocks')
-    .eq('id', id)
-    .single()
-
-  if (!lesson) notFound()
-
-  return (
-    <div className="max-w-5xl mx-auto">
-      <LessonBlockBuilder
-        lessonId={lesson.id}
-        lessonTitle={lesson.title}
-        lessonSlug={lesson.slug}
-        initial={(lesson.content_blocks ?? undefined) as BlockDocument | undefined}
-      />
-      <LessonVocabEditor lessonId={lesson.id} />
-    </div>
-  )
+  const d = await lessonAuthoringData(id)
+  return <div className="mx-auto max-w-7xl"><LessonBlockBuilder lessonId={id} lessonTitle={d.lesson.title} lessonSlug={d.lesson.slug} initial={d.lesson.content_blocks ?? undefined} unitId={d.lesson.unit_id} day={d.lesson.lesson_number} published={d.lesson.published} targets={d.targets} previewDocument={d.document ?? undefined} glossary={d.terms} /><div className="p-5"><LessonVocabEditor lessonId={id} /></div></div>
 }

@@ -12,6 +12,8 @@
  * The returned handle enables the (future) postMessage speaker-notes panel.
  */
 
+import { resolveDeckSrc } from '@/data/lesson-decks'
+
 interface ScreenDetailed {
   isPrimary: boolean
   availLeft: number
@@ -30,7 +32,7 @@ export function fullscreenKeyHint(): string {
 
 /** Open a deck in the presenter window. Returns the window handle (or null if blocked). */
 export async function openPresenterWindow(src: string): Promise<Window | null> {
-  const url = encodeURI(src)
+  const url = encodeURI(resolveDeckSrc(src))
 
   // Preferred: place the deck straight onto the external display, fullscreen.
   try {

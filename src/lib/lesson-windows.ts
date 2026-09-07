@@ -101,10 +101,11 @@ function tieBreak(prev: LessonWindowStatus, next: LessonWindowStatus): boolean {
 
 // All windows for one class, keyed by lesson_id — for the teacher scheduler UI.
 export async function getCourseWindows(courseId: string): Promise<Record<string, { open_at: string | null; close_at: string | null }>> {
-  const { data } = await supabaseAdmin
+  const { data, error } = await supabaseAdmin
     .from('lesson_class_windows')
     .select('lesson_id, open_at, close_at')
     .eq('course_id', courseId)
+  if (error) throw error
   const out: Record<string, { open_at: string | null; close_at: string | null }> = {}
   for (const w of (data ?? []) as LessonWindow[]) out[w.lesson_id] = { open_at: w.open_at, close_at: w.close_at }
   return out

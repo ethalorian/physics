@@ -28,6 +28,8 @@ interface BlockLessonViewerProps {
   /** Staff preview: badge CPA-only / Honors-only blocks. Students never get this. */
   staffView?: boolean
   preview?: boolean
+  previewTargets?: {slug:string;statement:string;self:number|null;teacher:number|null;delta:number|null}[]
+  previewFlags?: { experience: 'classic' | 'stepped'; gateCheckpoints: boolean }
   previewAnswerKeys?: Record<string, string>
   lesson: {
     id: string
@@ -63,7 +65,7 @@ export default function BlockLessonViewer(props: BlockLessonViewerProps) {
   )
 }
 
-function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewAnswerKeys = {} }: BlockLessonViewerProps) {
+function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewTargets, previewFlags, previewAnswerKeys = {} }: BlockLessonViewerProps) {
   const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
@@ -126,8 +128,9 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
     fetch(`/api/lessons/experience?lesson_id=${lesson.id}`).then((r) => (r.ok ? r.json() : null)).then((d) => { if (active && d?.flags) setExp(d) }).catch(() => {})
     return () => { active = false }
   }, [lesson.id, preview])
-  const stepped = (exp?.flags.experience ?? 'stepped') === 'stepped'
-  const gating = stepped && (exp?.flags.gateCheckpoints ?? true)
+  const viewerTargets = preview ? previewTargets : exp?.calibration
+  const stepped = ((preview ? previewFlags?.experience : exp?.flags.experience) ?? 'stepped') === 'stepped'
+  const gating = !staffView && stepped && ((preview ? previewFlags?.gateCheckpoints : exp?.flags.gateCheckpoints) ?? true)
   const presentLive = exp?.flags.presentLive ?? true
 
   // Split the lesson into pages: each save-required block rides with the
@@ -280,7 +283,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 >
                   <Sigma size={11} /> Reference
                 </a>
-                {staffView && presentLive && (
+                {staffView && !preview && presentLive && (
                   <PresentLiveLayer lessonId={lesson.id} lessonTitle={lesson.title} pages={pages} sections={sections} deck={deckBlock} onSectionChange={(i) => { if (!isLocked(i)) setPageIdx(i) }} />
                 )}
               </div>
@@ -397,7 +400,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
           <div className="mt-4 lesson-reading">
             {page && stepped ? (
               splitHelpRuns(page.blocks).map((run, ri) => {
-                if (!run.help) return <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+                if (!run.help) return <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
                 // S-4 · help drawer: open by default unless the student already rates Almost / Got it on the section's target.
                 const t = sectionTarget(page)
                 const level = t ? exp?.mastery[t] : undefined
@@ -408,19 +411,19 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                       <Lightbulb size={15} /> {openDefault ? 'Help & worked example' : 'Need a refresher? Help & worked example'}
                       <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>{openDefault ? '' : `· you’re rated ${level === 3 ? 'Got it' : 'Almost'} on this target`}</span>
                     </summary>
-                    <div className="px-4 pb-3"><BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
+                    <div className="px-4 pb-3"><BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
                   </details>
                 )
               })
             ) : page ? (
-              <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={exp?.calibration} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+              <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}
           </div>
 
           {/* soft nudge: unsaved save-blocks on this page (never blocks Next) */}
-          {pageUnsaved.length > 0 && (
+          {!staffView && pageUnsaved.length > 0 && (
             <div
               className="mt-4 rounded-xl px-4 py-2.5 text-sm flex items-center gap-2"
               style={{ background: 'color-mix(in oklch, var(--reward) 14%, var(--card))', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))', color: 'var(--foreground)' }}
@@ -432,8 +435,8 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             </div>
           )}
 
-          {/* per-section "Got it" checkpoint — advances the honest progress thread */}
-          {page && (
+          {/* per-section checkpoint — students only */}
+          {!staffView && page && (
             <div className="mt-5 flex justify-center">
               {isComplete(pageIdx) ? (
                 <span
@@ -455,7 +458,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
           )}
 
           {/* submit appears on the last page only */}
-          {isLast && blocks.length > 0 && (
+          {!staffView && isLast && blocks.length > 0 && (
             <div
               className="mt-6 p-5 rounded-2xl flex items-center justify-between gap-4 flex-wrap"
               style={{
@@ -474,7 +477,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   return <li key={b.id}><button type="button" className="underline" onClick={() => breakAway(Math.min(index, Math.max(0, lockedFrom - 1)))}>Section {index + 1}: {sections[index]?.title}</button></li>
                 })}</ul>
               </div>}
-              {preview ? <button type="button" disabled={pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
+              {preview ? <button type="button" disabled={!allTasksDone || pendingBlocks.length > 0 || submitted} onClick={() => setSubmitted(true)} className="rounded-lg bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50">{submitted ? 'Preview submitted' : 'Submit lesson (preview)'}</button> :
                 <SubmitLessonButton lessonId={lesson.id} blocked={pendingBlocks.length > 0} complete={allTasksDone} onChange={(st) => { setSubmitted(Boolean(st.submittedAt)); setSubmissionLocked(st.locked) }} />}
             </div>
           )}

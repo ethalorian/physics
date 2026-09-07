@@ -49,7 +49,7 @@ function EvidenceRepair({ evidence, unitId, onLinked }: { evidence: Evidence; un
   </div>
 }
 
-export default function LessonReviewQueue({ unitId, classQuery, onReviewed, renderResponse }: { unitId: string; classQuery: string; onReviewed: () => void; renderResponse: (response: unknown) => ReactNode }) {
+export default function LessonReviewQueue({ unitId, classQuery, onReviewed, renderResponse, lessonId = '', onClearLesson, onRateTarget }: { lessonId?:string; onClearLesson?:()=>void; onRateTarget?:(studentId:string,targetId:string)=>void; unitId: string; classQuery: string; onReviewed: () => void; renderResponse: (response: unknown) => ReactNode }) {
   const loadVersion = useRef(0)
   const workVersion = useRef(0)
   const [expandedEvidence, setExpandedEvidence] = useState<string | null>(null)
@@ -96,20 +96,24 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
     } catch (e) { setError(e instanceof Error ? e.message : 'Review failed') }
     finally { setBusy(false) }
   }
+  const visibleSubmissions = lessonId ? submissions.filter(s => s.lesson_id === lessonId) : submissions
+  const visibleEvidence = lessonId ? evidence.filter(e => e.lesson_id === lessonId) : evidence
+  useEffect(() => { setSelected(null); setWork(null); workVersion.current++ }, [lessonId])
   const snapshot = work?.submissions.find((s) => s.id === selected?.id)
   const responses: BlockResponseMap = Object.fromEntries((work?.work ?? []).map((w) => [w.blockId, { response: w.response, block_type: w.blockType, created_at: w.createdAt }]))
-  return <details className="my-4 rounded-xl border bg-card p-4">
-    <summary className="cursor-pointer font-semibold">Lesson review · {submissions.length} pending submissions</summary>
-    <p className="my-2 text-sm text-muted-foreground">Review each submitted lesson explicitly to unlock revision. Record mastery ratings separately in the target grid.</p>
+  return <details open={Boolean(lessonId) || undefined} className="my-4 rounded-xl border bg-card p-4">
+    <summary className="cursor-pointer font-semibold">Lesson review · {visibleSubmissions.length} pending submissions</summary>
+    <p className="my-2 text-sm text-muted-foreground">Read the submitted lesson, assess its targets, then return it for revision. Rating mastery and returning work are separate actions.</p>
+    {lessonId && <p className="my-2 text-sm">Showing the selected lesson. <button className="underline" onClick={onClearLesson}>Show all lessons</button></p>}
     <div className="mb-3 flex flex-wrap gap-2">
-      <button className="rounded border px-3 py-1" aria-pressed={mode === 'submissions'} onClick={() => setMode('submissions')}>Submitted lessons ({submissions.length})</button>
-      <button className="rounded border px-3 py-1" aria-pressed={mode === 'evidence'} onClick={() => setMode('evidence')}>Low-stakes evidence ({evidence.length})</button>
+      <button className="rounded border px-3 py-1" aria-pressed={mode === 'submissions'} onClick={() => setMode('submissions')}>Submitted lessons ({visibleSubmissions.length})</button>
+      <button className="rounded border px-3 py-1" aria-pressed={mode === 'evidence'} onClick={() => setMode('evidence')}>Low-stakes evidence ({visibleEvidence.length})</button>
       {mode === 'evidence' && <select aria-label="Evidence source" className="rounded border bg-card px-2" value={source} onChange={(e) => setSource(e.target.value)}><option value="">All sources</option>{EVIDENCE_SOURCES.map((s) => <option key={s} value={s}>{EVIDENCE_LABEL[s]}</option>)}<option value="untagged">Missing source</option></select>}
     </div>
     {error && <p role="alert" className="text-destructive">{error}</p>}
     {mode === 'submissions' && <>
-      {submissions.length === 0 && <p className="text-sm text-muted-foreground">No lessons awaiting review.</p>}
-      <div className="flex flex-wrap gap-2">{submissions.map((sub) => <button key={sub.id} className="rounded border p-2 text-left text-sm" onClick={() => void open(sub)}>{sub.name} · {sub.lessonTitle}<span className="block text-xs text-muted-foreground">Submitted {new Date(sub.submitted_at).toLocaleString()}</span></button>)}</div>
+      {visibleSubmissions.length === 0 && <p className="text-sm text-muted-foreground">No lessons awaiting review.</p>}
+      <div className="flex flex-wrap gap-2">{visibleSubmissions.map((sub) => <button key={sub.id} className="rounded border p-2 text-left text-sm" onClick={() => void open(sub)}>{sub.name} · {sub.lessonTitle}<span className="block text-xs text-muted-foreground">Submitted {new Date(sub.submitted_at).toLocaleString()}</span></button>)}</div>
       {selected && <section className="mt-4 border-t pt-3" aria-label="Submitted lesson">
         <h3 className="font-semibold">{selected.name} · {selected.lessonTitle}</h3>
         {!work && !error && <p role="status">Loading submitted work…</p>}
@@ -117,16 +121,17 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
         {snapshot?.contentSnapshot?.blocks && <BlockRenderer key={selected.id} blocks={snapshot.contentSnapshot.blocks} lessonId={selected.lesson_id} responses={responses} targets={work?.targets} hydrated readOnly />}
         {work && <details open={!snapshot?.contentSnapshot?.blocks} className="my-3 rounded border p-3"><summary className="cursor-pointer font-semibold">Captured responses · all saved fields</summary>{work.work.map((w) => <div key={w.blockId} className="my-3 rounded border p-3"><p className="text-xs text-muted-foreground">{w.blockType} · {w.blockId}</p>{renderResponse(w.response)}</div>)}</details>}
 
-        {work && <button disabled={busy} className="mt-3 rounded bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50" onClick={() => void review(selected.id)}>Mark this lesson reviewed · allow revision</button>}
+        {work?.targets && onRateTarget && <section aria-label="Assess this lesson’s targets" className="my-3 rounded-lg border p-3"><h4 className="font-medium">Assessment targets</h4><p className="mb-2 text-xs text-muted-foreground">Open a target to record mastery. The lesson stays awaiting review until you return it.</p>{work.targets.map(t => <button key={t.id} className="mr-2 mb-2 min-h-11 rounded border px-3 py-2 text-sm" onClick={() => onRateTarget(selected.user_id,t.id)}>{t.statement} — assess</button>)}</section>}
+        {work && <button disabled={busy} className="mt-3 rounded bg-primary px-4 py-2 text-primary-foreground disabled:opacity-50" onClick={() => void review(selected.id)}>Return for revision · mark reviewed</button>}
       </section>}
     </>}
     {mode === 'evidence' && <>
       <p className="mb-2 text-sm text-muted-foreground">Saved evidence can be reviewed without turning in or unlocking a lesson. Unlinked work is shown across units.</p>
       {truncated && <p role="status" className="text-sm">Showing the most recent 1,000 responses. Narrow the source or class for older work.</p>}
-      {evidence.map((item) => <details key={item.id} onToggle={(event) => { if (event.currentTarget.open) setExpandedEvidence(item.id) }} className="mb-2 rounded border p-3"><summary className="cursor-pointer text-sm">{item.name} · {item.lessonTitle} · {EVIDENCE_LABEL[item.evidence_source as EvidenceSource] ?? 'Missing source'}{item.untargeted ? ' · Untargeted' : ''}</summary>
+      {visibleEvidence.map((item) => <details key={item.id} onToggle={(event) => { if (event.currentTarget.open) setExpandedEvidence(item.id) }} className="mb-2 rounded border p-3"><summary className="cursor-pointer text-sm">{item.name} · {item.lessonTitle} · {EVIDENCE_LABEL[item.evidence_source as EvidenceSource] ?? 'Missing source'}{item.untargeted ? ' · Untargeted' : ''}</summary>
         <p className="my-1 text-xs text-muted-foreground">{item.block_type} · {new Date(item.created_at).toLocaleString()}</p>
         {renderResponse(item.response)}
-        {expandedEvidence === item.id && (item.untargeted || item.unlinked) && <EvidenceRepair evidence={item} unitId={unitId} onLinked={() => { void load(); onReviewed() }} />}
+        {expandedEvidence === item.id && (item.untargeted || item.unlinked) && <details><summary className="cursor-pointer text-sm">Advanced · repair attribution</summary><EvidenceRepair evidence={item} unitId={unitId} onLinked={() => { void load(); onReviewed() }} /></details>}
 
         <button disabled={busy} className="mt-2 rounded border px-3 py-1 text-sm" onClick={() => void review(item.id, true)}>Mark evidence reviewed</button>
       </details>)}

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import LessonContextLinks from '@/components/admin/LessonContextLinks'
 import LessonReviewQueue from '@/components/admin/LessonReviewQueue'
 import { InlineMath } from '@/components/MathMarkdown'
 import { toLatex } from '@/components/blocks/EquationSandbox'
@@ -250,8 +251,10 @@ function ResponseView({ response }: { response: unknown }) {
 }
 
 export default function ControlRoomPage() {
+  const gridRequestVersion = useRef(0)
   const [grid, setGrid] = useState<GridData | null>(null)
   const [unitId, setUnitId] = useState('unit-1')
+  const [lessonFilter, setLessonFilter] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -295,6 +298,8 @@ export default function ControlRoomPage() {
   const [teacherFilter, setTeacherFilter] = useState('')
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
+    if (sp.get('unit')) setUnitId(sp.get('unit')!)
+    setLessonFilter(sp.get('lesson') ?? '')
     const deepLinked = sp.get('class')
     if (deepLinked) setClassScope(deepLinked, sp.get('label'))
   }, [setClassScope])
@@ -317,10 +322,13 @@ export default function ControlRoomPage() {
   }
 
   const loadGrid = useCallback((unit: string) => {
+    const version = ++gridRequestVersion.current
     setLoading(true)
+    setError(null)
     fetch(`/api/mastery/grid?unit_id=${encodeURIComponent(unit)}${classQuery}`)
       .then((r) => r.json())
       .then((d: GridData & { error?: string }) => {
+        if (version !== gridRequestVersion.current) return
         if (d.error) setError(d.error)
         else {
           setGrid(d)
@@ -329,7 +337,7 @@ export default function ControlRoomPage() {
         }
         setLoading(false)
       })
-      .catch(() => { setError('Could not load the grid'); setLoading(false) })
+      .catch(() => { if (version === gridRequestVersion.current) { setError('Could not load the grid'); setLoading(false) } })
   }, [classQuery])
 
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
@@ -340,7 +348,7 @@ export default function ControlRoomPage() {
     if (!classId) return
     const unitProgram = grid?.units.find((u) => u.id === unitId)?.program
     if (classProgram && unitProgram && unitProgram !== classProgram) setUnitId('auto')
-    else if (classProgram && !unitProgram && unitId !== 'auto') setUnitId('auto')
+    else if (classProgram && grid && !unitProgram && unitId !== 'auto') setUnitId('auto')
   }, [classId, classProgram]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadQueue = useCallback((unit: string) => {
@@ -604,7 +612,7 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <LessonReviewQueue unitId={unitId} classQuery={classQuery} onReviewed={() => { loadGrid(unitId); loadQueue(unitId) }} renderResponse={(response) => <ResponseView response={response} />} />
+      <LessonContextLinks courseId={classId} lessonId={lessonFilter} unitId={unitId} /><LessonReviewQueue lessonId={lessonFilter} onClearLesson={() => setLessonFilter('')} onRateTarget={openCell} unitId={unitId} classQuery={classQuery} onReviewed={() => { loadGrid(unitId); loadQueue(unitId) }} renderResponse={(response) => <ResponseView response={response} />} />
       {/* toolbar — title · tabs · scope · unit · filter · one CTA on a single
           compact line, so the grid is the first paint on a laptop */}
       <div className="flex items-center gap-2 flex-wrap mb-1">

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="18" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="18" fill="#FAF9FC">D10</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Vocabulary day — the foundation for FBDs (Days 15-16). Prep: one Vernier force sensor for the demo." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 10 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Forces: What<br>Pushes and <span style="color:#E0A93D;">Pulls</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">Five force types, measured in newtons, drawn as arrows.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: recap the 1st Law — a force is required to change motion. Today: what IS a force, and how do we measure it?" style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">List every push or pull acting on you <span style="color:#E0A93D;">right now</span>, sitting in that chair.</h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">There are at least two. Most people miss one of them.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ YESTERDAY: NO CHANGE WITHOUT A FORCE</span><span>U1 · 02/07</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.25; color:#17142E; font-weight:700; max-width:1640px; text-wrap:pretty;">I can identify different types of forces in a scenario (<span style="color:#5E8B6E;">gravity, normal, friction, applied, tension</span>), and I can represent forces with <span style="color:#C08F2E;">arrows</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/07</span>
+  </div>
+</section>
+
+<section data-label="The Force Family" data-speaker-notes="5–20: force = push or pull, measured in newtons (1 N ≈ a small apple's weight). Walk the five types. Demo the force sensor: pull, push, watch the sign flip. Forces are VECTORS." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:40px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:68px; line-height:1.05; color:#17142E; font-weight:700;">The Force Family</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; color:#C08F2E; letter-spacing:0.14em;">MEASURED IN NEWTONS · 1 N ≈ ONE SMALL APPLE</span>
+  </div>
+  <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:24px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:28px 28px; display:flex; flex-direction:column; gap:14px;">
+      <svg viewBox="0 0 100 70" style="width:80px;"><defs><marker id="fA" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#9B8EC4"></path></marker></defs><circle cx="50" cy="20" r="13" fill="none" stroke="#9B8EC4" stroke-width="3"></circle><line x1="50" y1="36" x2="50" y2="62" stroke="#9B8EC4" stroke-width="3.5" marker-end="url(#fA)"></line></svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.12em; color:#7A75A0;">GRAVITY</div>
+      <p style="margin:0; font-size:25px; line-height:1.45; color:#17142E;">Pulls toward the center of any large body. Always on.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:28px 28px; display:flex; flex-direction:column; gap:14px;">
+      <svg viewBox="0 0 100 70" style="width:80px;"><defs><marker id="fB" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#7FA68B"></path></marker></defs><line x1="20" y1="58" x2="80" y2="58" stroke="#5E8B6E" stroke-width="4"></line><line x1="50" y1="52" x2="50" y2="16" stroke="#7FA68B" stroke-width="3.5" marker-end="url(#fB)"></line></svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.12em; color:#5E8B6E;">NORMAL</div>
+      <p style="margin:0; font-size:25px; line-height:1.45; color:#17142E;">The surface pushing back. Perpendicular, always.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #C05A5A; border-radius:6px; padding:28px 28px; display:flex; flex-direction:column; gap:14px;">
+      <svg viewBox="0 0 100 70" style="width:80px;"><defs><marker id="fC" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#C05A5A"></path></marker></defs><rect x="34" y="26" width="34" height="24" rx="3" fill="none" stroke="#4A4661" stroke-width="3"></rect><line x1="30" y1="60" x2="76" y2="60" stroke="#4A4661" stroke-width="3"></line><line x1="66" y1="38" x2="24" y2="38" stroke="#C05A5A" stroke-width="3.5" marker-end="url(#fC)" transform="translate(0 0)"></line></svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.12em; color:#C05A5A;">FRICTION</div>
+      <p style="margin:0; font-size:25px; line-height:1.45; color:#17142E;">Resists sliding between surfaces. Points against motion.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:28px 28px; display:flex; flex-direction:column; gap:14px;">
+      <svg viewBox="0 0 100 70" style="width:80px;"><defs><marker id="fD" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#E0A93D"></path></marker></defs><circle cx="30" cy="40" r="14" fill="none" stroke="#4A4661" stroke-width="3"></circle><line x1="48" y1="40" x2="84" y2="40" stroke="#E0A93D" stroke-width="3.5" marker-end="url(#fD)"></line></svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.12em; color:#C08F2E;">APPLIED</div>
+      <p style="margin:0; font-size:25px; line-height:1.45; color:#17142E;">Whatever pushes: a hand, an engine, a spacecraft.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #17142E; border-radius:6px; padding:28px 28px; display:flex; flex-direction:column; gap:14px;">
+      <svg viewBox="0 0 100 70" style="width:80px;"><defs><marker id="fE" markerWidth="8" markerHeight="8" refX="6" refY="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#4A4661"></path></marker></defs><line x1="20" y1="14" x2="20" y2="8" stroke="#4A4661" stroke-width="4"></line><line x1="14" y1="10" x2="88" y2="10" stroke="#4A4661" stroke-width="4"></line><line x1="50" y1="10" x2="50" y2="40" stroke="#4A4661" stroke-width="3"></line><circle cx="50" cy="52" r="11" fill="none" stroke="#4A4661" stroke-width="3"></circle><line x1="50" y1="38" x2="50" y2="18" stroke="#7A75A0" stroke-width="3.5" marker-end="url(#fE)"></line></svg>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:21px; letter-spacing:0.12em; color:#4A4661;">TENSION</div>
+      <p style="margin:0; font-size:25px; line-height:1.45; color:#17142E;">The pull along a rope or string. Only pulls — never pushes.</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ EVERY FORCE: A MAGNITUDE (N) AND A DIRECTION</span><span>U1 · 04/07</span>
+  </div>
+</section>
+
+<section data-label="Find the Forces" data-speaker-notes="20–40: pairs list ALL forces per scenario and draw arrows. Common errors: missing gravity, missing normal, inventing 'momentum' as a force. Correct them live between scenarios." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E; margin-bottom:32px;">PAIRS · LIST EVERY FORCE, DRAW EVERY ARROW</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Find the Forces</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#7A75A0; letter-spacing:0.14em; margin-bottom:14px;">BOOK ON A DESK</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">Two forces. Which directions? Why doesn't it move?</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#5E8B6E; letter-spacing:0.14em; margin-bottom:14px;">CAR ON A ROAD</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">Four forces. Which one is the engine's?</p></div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #E0A93D; border-radius:6px; padding:34px 40px;"><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#C08F2E; letter-spacing:0.14em; margin-bottom:14px;">HANGING FROM A ROPE</div><p style="margin:0; font-size:29px; line-height:1.5; color:#17142E;">Two forces. What holds you up?</p></div>
+  </div>
+  <div style="margin-top:40px; background:#F6E9E9; border-left:8px solid #C05A5A; border-radius:6px; padding:24px 36px; font-size:29px; line-height:1.5; color:#17142E; max-width:1500px;">⚠ <strong>"Momentum" and "inertia" are not forces.</strong> Velocity is the result of past forces — not a force either.</div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ MISSING NORMAL FORCE = #1 ERROR</span><span>U1 · 05/07</span>
+  </div>
+</section>
+
+<section data-label="Forces on 2026-XJ" data-speaker-notes="40–48: build the asteroid's force list together. Solar gravity dominant; Earth's tiny but growing; friction zero; radiation pressure tiny. The punchline: an applied force WE add is the only entry humans control — that's the whole deflection game." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:44px;">THE FORCE LIST FOR 2026-XJ · RIGHT NOW</div>
+  <div style="display:flex; flex-direction:column; gap:18px; max-width:1620px; font-family:'IBM Plex Mono',monospace;">
+    <div style="display:flex; align-items:center; gap:28px;"><span style="width:340px; font-size:24px; color:#E0A93D; flex:none;">SOLAR GRAVITY</span><div style="flex:1; height:30px; background:#1D1938; border-radius:3px; overflow:hidden;"><div style="width:100%; height:100%; background:#E0A93D;"></div></div><span style="width:260px; font-size:21px; color:#8B87A6;">dominant</span></div>
+    <div style="display:flex; align-items:center; gap:28px;"><span style="width:340px; font-size:24px; color:#9B8EC4; flex:none;">EARTH'S GRAVITY</span><div style="flex:1; height:30px; background:#1D1938; border-radius:3px; overflow:hidden;"><div style="width:2%; height:100%; background:#9B8EC4;"></div></div><span style="width:260px; font-size:21px; color:#8B87A6;">tiny — but growing</span></div>
+    <div style="display:flex; align-items:center; gap:28px;"><span style="width:340px; font-size:24px; color:#7FA68B; flex:none;">RADIATION PRESSURE</span><div style="flex:1; height:30px; background:#1D1938; border-radius:3px; overflow:hidden;"><div style="width:0.6%; height:100%; background:#7FA68B;"></div></div><span style="width:260px; font-size:21px; color:#8B87A6;">very small</span></div>
+    <div style="display:flex; align-items:center; gap:28px;"><span style="width:340px; font-size:24px; color:#C05A5A; flex:none;">FRICTION</span><div style="flex:1; height:30px; background:#1D1938; border-radius:3px;"></div><span style="width:260px; font-size:21px; color:#C05A5A;">zero — it's space</span></div>
+    <div style="display:flex; align-items:center; gap:28px; border-top:1px solid #2E2950; padding-top:18px;"><span style="width:340px; font-size:24px; color:#FAF9FC; flex:none;">APPLIED · OURS</span><div style="flex:1; height:30px; background:#1D1938; border:2px dashed #4A4478; border-radius:3px; box-sizing:border-box;"></div><span style="width:260px; font-size:21px; color:#FAF9FC;">the only one we control</span></div>
+  </div>
+  <p style="margin:44px 0 0 0; font-size:32px; line-height:1.5; color:#D9D6E8; max-width:1400px;">A kinetic impactor, an ion engine, a gravity tractor — every deflection idea is a way to <strong style="color:#E0A93D;">write one new line</strong> on this list.</p>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: forces on a car coasting downhill (no engine, no brakes): gravity, normal, friction. Complete list + arrows." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">List all the forces on a car <span style="color:#E0A93D;">coasting down a hill</span> — no engine, no brakes. Arrows included.</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I name all five force types and draw each as a correct arrow? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 5 (Newton's Second Law)</strong> — intro + force sections (~4 pages).</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: THE CART LAB — DERIVING F = ma FROM DATA</span><span>U1 · 07/07</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;} a{color:#9B8EC4;} a:hover{color:#E0A93D;}</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#14112A"></rect><text x="50" y="46" text-anchor="middle" font-family="monospace" font-size="20" fill="#E0A93D">U1</text><text x="50" y="72" text-anchor="middle" font-family="monospace" font-size="20" fill="#FAF9FC">D7</text></svg></template>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Acceleration is conceptually subtle — many students think it means 'speeding up.' The decelerating car breaks that today." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:150px 130px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.3em; color:#9B8EC4; margin-bottom:40px;">CPA PHYSICS · UNIT 1 · DAY 7 · PHASE 2</div>
+  <h1 style="margin:0 0 40px 0; font-family:'Space Grotesk',sans-serif; font-size:100px; line-height:1.04; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Acceleration: When<br>Velocity <span style="color:#E0A93D;">Changes</span></h1>
+  <p style="margin:0; font-size:34px; color:#4A4661; line-height:1.5;">The tool that will retire our constant-velocity assumption — in Unit 2.</p>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="0–5: collect intuitions. '10 mph per second' is RIGHT — celebrate it, then formalize." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">DO NOW</div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.12; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A car goes 0 to 60 mph in 6 seconds. <span style="color:#E0A93D;">What's its acceleration?</span></h2>
+  <p style="margin:0; font-size:32px; line-height:1.55; color:#4A4661;">Any units you like. Trust your gut — it's probably right.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ "10 mph EVERY SECOND" IS A REAL ANSWER</span><span>U1 · 02/08</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="Read together." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; justify-content:center; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:40px;">TODAY'S LEARNING TARGET</div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.27; color:#17142E; font-weight:700; max-width:1660px; text-wrap:pretty;">I can define <span style="color:#5E8B6E;">acceleration</span> as the rate of change of velocity, calculate it from <span style="color:#7A75A0;">velocity-time data</span>, and identify situations where an object is accelerating.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ RATE YOURSELF ON THIS AT THE EXIT</span><span>U1 · 03/08</span>
+  </div>
+</section>
+
+<section data-label="The Definition" data-speaker-notes="5–15: formalize a = Δv/Δt. Units m/s² = 'each second, velocity changes by a m/s.' Car: 60 mph ≈ 27 m/s → a ≈ 4.5 m/s² — about half of g (9.8). Acceleration is a VECTOR: slowing down = negative a." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">Rate of Change of Velocity</h2>
+  <div style="display:grid; grid-template-columns:640px 1fr; gap:52px; flex:1; align-items:start;">
+    <div style="background:#17142E; border-radius:8px; padding:44px 52px; display:flex; flex-direction:column; gap:22px;">
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:64px; font-weight:700; color:#FAF9FC;">a = Δv / Δt</div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; color:#8B87A6; line-height:1.7;">UNITS: m/s² — "EACH SECOND, YOUR VELOCITY CHANGES BY a METERS PER SECOND"</div>
+      <div style="border-top:1px solid #2E2950; padding-top:20px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#B8C4DB; line-height:1.8;">the car: 27 m/s ÷ 6 s ≈ <span style="color:#E0A93D;">4.5 m/s²</span><br>free fall: <span style="color:#7FA68B;">9.8 m/s²</span> — the car pulls half a g</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-left:8px solid #7FA68B; border-radius:6px; padding:30px 40px; font-size:31px; line-height:1.5; color:#17142E;"><strong>Speeding up</strong> → a points the way you're moving.</div>
+      <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-left:8px solid #C05A5A; border-radius:6px; padding:30px 40px; font-size:31px; line-height:1.5; color:#17142E;"><strong>Slowing down</strong> → a points <em>against</em> your motion. Negative sign, real meaning.</div>
+      <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-left:8px solid #9B8EC4; border-radius:6px; padding:30px 40px; font-size:31px; line-height:1.5; color:#17142E;"><strong>Turning</strong> at constant speed → still accelerating. Velocity is a vector.</div>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ ACCELERATION ≠ "SPEEDING UP"</span><span>U1 · 04/08</span>
+  </div>
+</section>
+
+<section data-label="Read the v-t Graph" data-speaker-notes="15–35: v-t graph practice. Accelerating / decelerating / constant from slope. Then extract numbers: slope of v-t = acceleration. M1 (slope card) applies here — same move, new axes." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:80px 130px 130px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.05; color:#17142E; font-weight:700;">Slope of v-t = Acceleration</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#5E8B6E;">TEACHER DEMO · M1 RETURNS</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:29px; line-height:1.45; color:#17142E; max-width:1560px;">Same slope move as Day 3 — new axes. <strong style="color:#C08F2E;">Rise is now Δv</strong>, so the slope reads out in m/s².</p>
+  <div style="width:100%; max-width:1200px;">
+    <x-import component="AccelSim" from="./sims2.jsx" hint-size="100%,500px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:56px; border-top:1px solid #E5E2F0; padding-top:20px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ p-t SLOPE GIVES v · v-t SLOPE GIVES a</span><span>U1 · 05/08</span>
+  </div>
+</section>
+
+<section data-label="Equations Preview" data-speaker-notes="Hand out the equations of motion as a REFERENCE — no derivation today. Tomorrow is the practice day. Just name what each one connects." style="background:#FAF9FC; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:32px;">REFERENCE SHEET — YOURS TO KEEP</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#17142E; font-weight:700;">The Constant-Acceleration Toolkit</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:36px; max-width:1660px;">
+    <div style="background:#17142E; border-radius:8px; padding:36px 48px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:48px; font-weight:700; color:#FAF9FC; margin-bottom:12px;">v = v<sub>0</sub> + a·t</div><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#8B87A6;">HOW FAST, AFTER t SECONDS</div></div>
+    <div style="background:#17142E; border-radius:8px; padding:36px 48px;"><div style="font-family:'Space Grotesk',sans-serif; font-size:48px; font-weight:700; color:#FAF9FC; margin-bottom:12px;">x = x<sub>0</sub> + v<sub>0</sub>·t + ½·a·t²</div><div style="font-family:'IBM Plex Mono',monospace; font-size:21px; color:#8B87A6;">WHERE, AFTER t SECONDS</div></div>
+  </div>
+  <p style="margin:44px 0 0 0; font-size:31px; line-height:1.5; color:#4A4661; max-width:1400px;">You don't memorize these — you learn to <strong style="color:#17142E;">choose</strong> between them. That's tomorrow's whole lesson.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ REFERENCE, NOT MEMORIZATION</span><span>U1 · 06/08</span>
+  </div>
+</section>
+
+<section data-label="The Asteroid's a" data-speaker-notes="35–48: compute Earth's pull at the asteroid's distance — under 0.001 m/s². Day 5's constant-velocity assumption was GOOD physics for this regime. As it closes, inverse-square strengthens the pull — Unit 2 retires the approximation." style="background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:grid; grid-template-columns:1fr 620px; gap:70px; align-items:center; box-sizing:border-box; height:100%;">
+  <div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4; margin-bottom:36px;">BACK TO 2026-XJ</div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; color:#FAF9FC; font-weight:700;">Is the Asteroid<br><span style="color:#E0A93D;">Accelerating?</span></h2>
+    <p style="margin:0 0 32px 0; font-size:33px; line-height:1.6; color:#D9D6E8; max-width:880px;">Yes — but barely. At 1.2 × 10⁸ km out, Earth's gravity tugs it at <strong style="color:#FAF9FC;">less than 0.001 m/s²</strong>. That's why Day 5's constant-velocity prediction was honest work.</p>
+    <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7FA68B; letter-spacing:0.05em; line-height:1.7;">AS IT CLOSES, THE PULL GROWS — RETIRING THIS APPROXIMATION IS UNIT 2.</p>
+  </div>
+  <div style="background:#1D1938; border:1px solid #2E2950; border-radius:8px; padding:38px 44px;">
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:19px; letter-spacing:0.2em; color:#8B87A6; margin-bottom:8px;">EARTH'S PULL vs DISTANCE</div>
+    <svg viewBox="0 0 520 330" style="width:100%;">
+      <line x1="60" y1="20" x2="60" y2="280" stroke="#4A4478" stroke-width="3"></line>
+      <line x1="60" y1="280" x2="500" y2="280" stroke="#4A4478" stroke-width="3"></line>
+      <text x="28" y="34" font-family="IBM Plex Mono, monospace" font-size="15" fill="#8B87A6">a</text>
+      <text x="492" y="312" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="15" fill="#8B87A6">distance</text>
+      <path d="M 84 40 Q 120 240 480 268" fill="none" stroke="#E0A93D" stroke-width="5" stroke-linecap="round"></path>
+      <circle cx="440" cy="266" r="9" fill="#262148" stroke="#FAF9FC" stroke-width="3"></circle>
+      <text x="428" y="240" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="16" fill="#FAF9FC">2026-XJ today: ~0</text>
+      <circle cx="110" cy="114" r="9" fill="#262148" stroke="#C05A5A" stroke-width="3"></circle>
+      <text x="130" y="106" font-family="IBM Plex Mono, monospace" font-size="16" fill="#C05A5A">close approach: strong</text>
+    </svg>
+  </div>
+</section>
+
+<section data-label="Exit Ticket" data-speaker-notes="Exit: 30 m/s → 0 in 5 s. Answer −6 m/s² — the SIGN is the check. +6 means the concept hasn't landed." style="background:#F1EEF9; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px 150px; display:flex; flex-direction:column; box-sizing:border-box; height:100%; position:relative;">
+  <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E; margin-bottom:36px;">EXIT TICKET · RATE YOURSELF</div>
+  <h2 style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.15; color:#17142E; font-weight:700; max-width:1620px; text-wrap:pretty;">A car traveling 30 m/s slows to 0 m/s in 5 seconds. <span style="color:#E0A93D;">What's its acceleration?</span> Show your work — and watch the sign.</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; flex:1;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#7A75A0; margin-bottom:18px;">RATE YOURSELF · TODAY'S TARGET</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#17142E;">Can I compute a = Δv/Δt from data and spot acceleration in the wild? <span style="color:#8B87A6;">0 · 1 · 2 · 3 · 4</span></p>
+    </div>
+    <div style="background:#17142E; border-radius:6px; padding:38px 46px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; letter-spacing:0.2em; color:#E0A93D; margin-bottom:18px;">TONIGHT</div>
+      <p style="margin:0; font-size:30px; line-height:1.55; color:#D9D6E8;">Hewitt <strong style="color:#FAF9FC;">Ch. 3 (Linear Motion)</strong> — intro + acceleration sections (~4–5 pages).</p>
+    </div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E0DBEE; padding-top:22px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">
+    <span>→ TOMORROW: CHOOSING THE RIGHT EQUATION</span><span>U1 · 08/08</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+</body>
+</html>

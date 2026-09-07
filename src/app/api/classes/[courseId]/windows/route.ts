@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server'
 import { withAuth, type AuthContext } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getCourseOwnerEmail } from '@/lib/teacher-scope'
+import { appliesToClass, validateReleaseWindow } from '@/lib/lesson-release'
+import { releaseLessons } from '@/lib/lesson-release-server'
 import { getCourseWindows } from '@/lib/lesson-windows'
 
 // Per-class lesson open/close windows. Only the OWNING teacher (or that teacher
@@ -13,8 +14,10 @@ async function assertOwner(
   courseId: string,
 ): Promise<{ ok: true; email: string } | { ok: false; status: number }> {
   if (ctx.role !== 'admin' && ctx.role !== 'teacher') return { ok: false, status: 403 }
-  const owner = await getCourseOwnerEmail(courseId)
-  if (ctx.role === 'teacher' && owner !== ctx.scopeEmail) return { ok: false, status: 403 }
+  const { data: course, error } = await supabaseAdmin.from('courses').select('teacher_email').eq('id', courseId).maybeSingle()
+  if (error) throw error
+  if (!course) return { ok: false, status: 404 }
+  if (ctx.role === 'teacher' && course.teacher_email !== ctx.scopeEmail) return { ok: false, status: 403 }
   return { ok: true, email: ctx.scopeEmail }
 }
 
@@ -33,16 +36,25 @@ export const POST = withAuth<{ courseId: string }>(async (request, ctx) => {
     const auth = await assertOwner(ctx, courseId)
     if (!auth.ok) return NextResponse.json({ error: 'Forbidden' }, { status: auth.status })
 
-    const body = await request.json()
+    const body = await request.json().catch(() => null)
+    if (!body || typeof body !== 'object') return NextResponse.json({ error: 'Invalid schedule.' }, { status: 400 })
     const lessonId: string | undefined = body.lesson_id
-    if (!lessonId) return NextResponse.json({ error: 'lesson_id required' }, { status: 400 })
-    const openAt: string | null = body.open_at || null
-    const closeAt: string | null = body.close_at || null
+    if (!lessonId || typeof lessonId !== 'string') return NextResponse.json({ error: 'lesson_id required' }, { status: 400 })
+    const openAt = body.open_at ?? null
+    const closeAt = body.close_at ?? null
+    const invalid = validateReleaseWindow(openAt, closeAt)
+    if (invalid) return NextResponse.json({ error: invalid }, { status: 422 })
 
     if (!openAt && !closeAt) {
-      await supabaseAdmin.from('lesson_class_windows').delete().eq('course_id', courseId).eq('lesson_id', lessonId)
+      const { error } = await supabaseAdmin.from('lesson_class_windows').delete().eq('course_id', courseId).eq('lesson_id', lessonId)
+      if (error) throw error
       return NextResponse.json({ ok: true, cleared: true })
     }
+
+    const [lessons, course] = await Promise.all([releaseLessons(), supabaseAdmin.from('courses').select('program, track').eq('id', courseId).single()])
+    if (course.error) throw course.error
+    const lesson = lessons.find(l => l.id === lessonId)
+    if (!lesson || !appliesToClass(lesson, course.data)) return NextResponse.json({ error: 'This lesson is not published for this class’s curriculum and track.' }, { status: 422 })
 
     const { error } = await supabaseAdmin
       .from('lesson_class_windows')

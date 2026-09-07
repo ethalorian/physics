@@ -1,50 +1,17 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getUnitProgramMap, asProgram, type Program } from '@/lib/program'
+import { canEditArea } from '@/lib/content-access'
+import { releaseClasses, releaseLessons } from '@/lib/lesson-release-server'
+import type { ReleaseWindow } from '@/lib/lesson-release'
 
-// GET /api/lesson-access
-// Everything the unified Lesson-access board needs in one shot: the teacher's
-// classes, every published lesson, and all current open/close windows keyed by
-// `${course_id}|${lesson_id}`. Access (open/close) is a teacher concern; the
-// global `published` flag (admin-only) is reflected here read-only.
 export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
-  const { data: owned } = await supabaseAdmin
-    .from('courses').select('id, name, section, track, program').eq('teacher_email', ctx.scopeEmail).order('section')
-  type ClassRow = { id: string; name: string; section: string | null; track: string | null; program: string | null }
-  let classRows = (owned ?? []) as ClassRow[]
-  if (classRows.length === 0 && ctx.role === 'admin') {
-    const { data: all } = await supabaseAdmin.from('courses').select('id, name, section, track, program').order('section')
-    classRows = (all ?? []) as ClassRow[]
+  const [classes, lessons, canEdit] = await Promise.all([releaseClasses(ctx.scopeEmail, ctx.role === 'admin'), releaseLessons(), canEditArea(ctx.email, 'lessons', ctx.realRole === 'admin')])
+  const windows: Record<string, ReleaseWindow> = {}
+  if (classes.length) {
+    const wins = await supabaseAdmin.from('lesson_class_windows').select('course_id, lesson_id, open_at, close_at').in('course_id', classes.map(c => c.id))
+    if (wins.error) throw wins.error
+    for (const w of wins.data ?? []) windows[`${w.course_id}|${w.lesson_id}`] = { open_at: w.open_at, close_at: w.close_at }
   }
-  const classes = classRows.map((c) => ({ ...c, program: asProgram(c.program) as Program }))
-  const courseIds = classes.map((c) => c.id)
-
-  // Teachers can only release what a super-admin has GLOBALLY PUBLISHED, so the
-  // board only ever lists published lessons. Drafts never reach this view.
-  const { data: lessonRows } = await supabaseAdmin
-    .from('lessons')
-    .select('id, title, slug, unit, unit_id, lesson_number, published')
-    .eq('published', true)
-    .order('unit', { ascending: true })
-    .order('lesson_number', { ascending: true })
-  // Tag each lesson with its program so the board only offers a class the
-  // lessons of its own curriculum.
-  const unitProgram = await getUnitProgramMap()
-  const lessons = ((lessonRows ?? []) as {
-    id: string; title: string; slug: string; unit: string | null; unit_id: string | null; lesson_number: number | null; published: boolean
-  }[]).map((l) => ({ ...l, program: l.unit_id ? (unitProgram.get(l.unit_id) ?? 'physics') : 'physics' }))
-
-  const windows: Record<string, { open_at: string | null; close_at: string | null }> = {}
-  if (courseIds.length > 0) {
-    const { data: wins } = await supabaseAdmin
-      .from('lesson_class_windows')
-      .select('course_id, lesson_id, open_at, close_at')
-      .in('course_id', courseIds)
-    for (const w of (wins ?? []) as { course_id: string; lesson_id: string; open_at: string | null; close_at: string | null }[]) {
-      windows[`${w.course_id}|${w.lesson_id}`] = { open_at: w.open_at, close_at: w.close_at }
-    }
-  }
-
-  return NextResponse.json({ classes, lessons, windows })
+  return NextResponse.json({ classes, lessons, windows, canEdit })
 })
