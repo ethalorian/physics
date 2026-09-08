@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="457315a0-7c98-4108-9e0e-54a85068943e"></script>
+</head>
+<body>
+
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("49a3764e-3a29-487e-b538-57c0411935ec") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("2dd4addd-8256-43a1-ae6a-07cb7d6fe84f") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("a57d976b-25ff-4d76-bf10-50556f750a81") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("cd044a2a-e5fa-4a50-8d9e-150f511d55f9") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("aa97d2e6-7bd4-466b-ae9c-fd729d82f2e2") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("65b773a0-f348-41fa-b214-00710d789203") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("bd4a2cfd-2aa0-4c55-9cb2-d1729286d5d3") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("0f2c77e6-9dee-4dcc-a69e-4b29e41d286c") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("05812497-f8ea-4114-80e4-0b8efdaf938f") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("4a94ac7d-45ea-4c21-83da-568893a6144f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("5eccc7fb-90e6-4f00-bfc6-56ffb46024ad") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("917ad273-7d6c-4c4f-b6d3-b5a10732802e") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("b2df1f48-ca68-4277-a9cb-3af8e307666d") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("38995817-23ae-47f7-a241-76a70750309a") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("66bcd774-0108-4d1b-9bec-60f65867d749") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("30303e63-3621-40f9-90be-c68125803aed") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("07a5970e-d2fc-4b66-9047-9403a28573e1") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("00bbebc1-3318-4d21-9787-e83727c2c966") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("b0c20c29-7469-4b8a-bca2-47bb979aaeda") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("7fa37c96-9efd-48b6-9a2c-1fa4c46b331f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("8443bac6-abb9-4394-abd1-74fd3b41b815") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("ccc4a4ae-8c94-4ca9-bce7-d417ddbfe45d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("5418df69-23e8-4f91-b37b-bae56f6949d5") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("bb690df2-cb07-4c81-a8fd-7530650dc8c1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("ccc4a4ae-8c94-4ca9-bce7-d417ddbfe45d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("5418df69-23e8-4f91-b37b-bae56f6949d5") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("bb690df2-cb07-4c81-a8fd-7530650dc8c1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("ccc4a4ae-8c94-4ca9-bce7-d417ddbfe45d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("5418df69-23e8-4f91-b37b-bae56f6949d5") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("bb690df2-cb07-4c81-a8fd-7530650dc8c1") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="efd5408f-ec7b-4e4a-bf63-33324a5ccdcc#/deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="Skill-building day. Do the FIRST problem fully on the board, then release pairs — pair work lowers math anxiety. Warm-up: skateboarder 2→5 m/s in 2 s — acceleration? (1.5 m/s²)" style="position:relative; box-sizing:border-box; overflow:hidden; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:0;">
+  <div style="position:absolute; right:110px; top:230px; width:560px; display:flex; flex-direction:column; gap:24px;">
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">v = v₀ + at</div>
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#FAF9FC;">x = x₀ + v₀t + ½at²</div>
+    <div style="background:#17142E; border-radius:8px; padding:30px 38px; font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#E0A93D;">v² = v₀² + 2a(x − x₀)</div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CPA PHYSICS · HONORS · SKILL DAY</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; width:1040px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:94px; line-height:1.05; letter-spacing:-0.02em; color:#17142E; font-weight:700;">Three Equations,<br>One <span style="color:#9B8EC4;">Strategy</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#6E6A8C; max-width:900px;">Day 8: constant-acceleration problem-solving — and justifying which equation the scenario requires.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>UNIT 01 · DAY 08 · PHASE 2</span>
+    <span style="color:#C08F2E;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Do Now" data-speaker-notes="Warm-up 0–5 min: recap acceleration with the skateboarder quick problem. Fast, low-stakes — it warms up the given/asked habit the day runs on." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:60px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#5E8B6E;">DO NOW · 5 MIN</span>
+  </div>
+  <p style="margin:0 0 48px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.22; letter-spacing:-0.01em; color:#17142E; max-width:1560px; font-weight:600; text-wrap:balance;">A skateboarder speeds up from 2 m/s to 5 m/s in 2 seconds.<br>Acceleration?</p>
+  <p style="margin:0; font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.08em; color:#7A75A0;">Given · asked · units. Thirty seconds.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — DO NOW</span>
+    <span>U1 · 02/11</span>
+  </div>
+</section>
+
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: target matches the packet — including 'justify which equation a given scenario requires.'" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">02</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.3; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can solve constant-acceleration problems using the equations of motion, and <span style="color:#E0A93D;">justify which equation</span> a given scenario requires.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — TODAY'S TARGET</span>
+    <span>U1 · 03/11</span>
+  </div>
+</section>
+
+<section data-label="The Strategy" data-speaker-notes="The whole day in one move: list given, list asked, find the equation that connects them. Common error: wrong equation because given/asked wasn't listed first. Color-code the three equations by which variable they OMIT." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">THE STRATEGY — EVERY PROBLEM, EVERY TIME</span>
+  </div>
+  <div style="display:flex; align-items:center; gap:44px; margin-bottom:70px; flex-wrap:wrap;">
+    <div style="background:#FFFFFF; border:2px solid #9B8EC4; border-radius:6px; padding:34px 52px; font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#17142E;">List GIVEN</div>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; color:#8B87A6;">→</span>
+    <div style="background:#FFFFFF; border:2px solid #7FA68B; border-radius:6px; padding:34px 52px; font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#17142E;">List ASKED</div>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; color:#8B87A6;">→</span>
+    <div style="background:#FFFFFF; border:2px solid #E0A93D; border-radius:6px; padding:34px 52px; font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#17142E;">Pick the equation that connects them</div>
+  </div>
+  <p style="margin:0; font-size:36px; line-height:1.55; max-width:1480px;">Each equation <strong style="color:#17142E;">omits one variable</strong>. No time in the problem? Reach for v² = v₀² + 2a(x − x₀). The equation choice IS the physics reading.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — GIVEN/ASKED CHECKLIST</span>
+    <span>U1 · 04/11</span>
+  </div>
+</section>
+
+<section data-label="Math Move: Rearrange First" data-speaker-notes="MATH SPINE · SM1 (debuts today). Sherin's finding: fluent students operate on the RELATIONSHIP, not the digits. Enforce symbol-first rearrangement all day: no numbers may enter until the unknown is alone. This exact rearrangement is the one the next slide's worked example uses — connect them explicitly. Watch for students who substitute first and drown in arithmetic; that's the plug-and-chug failure mode this move exists to prevent. Level 1 = with this card; 2 = unprompted; 3 = transfer task." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 760px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E;">MATH MOVE · SM1 · REARRANGE FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">No Numbers Until<br>the Unknown Is Alone</h2>
+    <div style="display:flex; flex-direction:column; gap:26px; font-size:32px; line-height:1.5;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#7FA68B;">01</span><span>Circle the unknown <strong>in symbols</strong>.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#9B8EC4;">02</span><span>Undo what's around it — <strong>same move, both sides</strong>.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#E0A93D;">03</span><span>Only then substitute — <strong>numbers with units</strong>.</span></div>
+    </div>
+    <p style="margin:44px 0 0 0; font-size:28px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:24px 32px; max-width:620px;">Rearranging while it's still symbols means you solve the <strong>relationship</strong> once — not the arithmetic five times.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; gap:22px;">
+    <div style="font-size:22px; letter-spacing:0.24em; color:#8B87A6;">WORKED — SOLVE FOR a, SYMBOLS ONLY</div>
+    <div style="font-size:30px; color:#FAF9FC; line-height:1.75;">
+      <div>v² = v₀² + 2aΔx</div>
+      <div style="color:#B8C4DB;">v² − v₀² = 2aΔx <span style="color:#7A75A0; font-size:22px;">&nbsp;← subtract v₀²</span></div>
+      <div><span style="color:#E0A93D;">a = (v² − v₀²) / 2Δx</span> <span style="color:#7A75A0; font-size:22px;">&nbsp;← divide by 2Δx</span></div>
+      <div style="color:#8B87A6; font-size:24px; padding-top:8px;">…and ONLY NOW do the braking-car numbers go in →</div>
+    </div>
+    <div style="border-top:1px solid #2E2950; padding-top:18px; font-size:22px; color:#8B87A6; line-height:1.6;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — MATH SPINE CARD SM1</span>
+    <span>U1 · 05/11</span>
+  </div>
+</section>
+
+<section data-label="Rearrange It — Live Sim" data-speaker-notes="MATH SPINE · SM1, practiced. Students call the moves; you (or a student driver) click. The trap is the point: someone WILL press SUBSTITUTE NUMBERS early — let them, read the red line aloud, and name it: plug-and-chug. Then reset and do it right. The isolated line 'a = (v² − v₀²)/2Δx' solves every problem of this shape — that's the payoff sentence before pairs work." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:60px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Call the Moves</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM 08A · REARRANGE FIRST</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Class drives, one legal move at a time. The <strong style="color:#17142E;">SUBSTITUTE</strong> button is live the whole time — press it too early and see what it says.</p>
+  <div style="width:100%;">
+    <x-import component="RearrangeSim" from="d2599bdd-620f-41e5-9dcc-a94080ead226#/sims3.jsx" hint-size="100%,440px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — MATH SPINE CARD SM1</span>
+    <span>U1 · 06/11</span>
+  </div>
+</section>
+
+<section data-label="Equation Picker — Live" data-speaker-notes="Toggle trainer for equation choice: name what the problem does NOT mention, and the matching equation lights up. Run several verbal scenarios against it before the pairs work." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Name What's Missing</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM 09 · EQUATION PICKER</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Each equation omits exactly one variable. Toggle what your problem <strong style="color:#17142E;">doesn't mention</strong> — the right equation lights up.</p>
+  <div style="width:100%;">
+    <x-import component="EquationPicker" from="ee6adb83-f04c-487d-8234-e42afaf91ef5#/sims2.jsx" hint-size="100%,520px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — GIVEN/ASKED CHECKLIST</span>
+    <span>U1 · 07/11</span>
+  </div>
+</section>
+
+<section data-label="Worked Example" data-speaker-notes="Work this fully on the board before releasing pairs: braking car — 30 m/s, stops in 90 m. Given: v₀=30, v=0, Δx=90. Asked: a. No time → v² equation → a = −v₀²/(2Δx) = −5 m/s²." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WORKED EXAMPLE — TOGETHER FIRST</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">The Braking Car</h2>
+    <p style="margin:0 0 40px 0; font-size:34px; line-height:1.5;">A car at <strong>30 m/s</strong> brakes to a stop in <strong>90 m</strong>. What was its acceleration?</p>
+    <div style="display:flex; flex-direction:column; gap:20px; font-family:'IBM Plex Mono',monospace; font-size:26px; color:#3A3654;">
+      <span><span style="color:#9B8EC4;">GIVEN</span>&nbsp;&nbsp;v₀ = 30 m/s · v = 0 · Δx = 90 m</span>
+      <span><span style="color:#7FA68B;">ASKED</span>&nbsp;&nbsp;a = ?</span>
+      <span><span style="color:#C08F2E;">NO TIME</span>&nbsp;&nbsp;→ v² = v₀² + 2a(x − x₀)</span>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:52px 56px; display:flex; flex-direction:column; gap:32px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#FAF9FC;">0 = (30)² + 2a(90)</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#FAF9FC;">a = −900 / 180</span>
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:56px; font-weight:700; color:#E0A93D;">a = −5 m/s²</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:20px; color:#8B87A6;">negative — it's slowing. The sign is the physics.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — WORKED EXAMPLE</span>
+    <span>U1 · 08/11</span>
+  </div>
+</section>
+
+<section data-label="Pairs Problem Set" data-speaker-notes="Pairs work 6–8 problems of increasing difficulty: braking car, ball thrown up, train from rest. HONORS: each pair writes ONE sentence justifying their equation choice per problem. Extension: a problem solvable two ways — which is cleaner and why?" style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">PAIRS · 6–8 PROBLEMS</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Your Turn — In Pairs</h2>
+  <p style="margin:0 0 52px 0; font-size:36px; line-height:1.55; max-width:1460px;">Braking cars, balls thrown upward, trains from rest — increasing difficulty. Start every problem with <strong style="color:#17142E;">given / asked</strong>.</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:44px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">Honors: one sentence per problem — <span style="color:#E0A93D;">why THIS equation?</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — PROBLEM SET</span>
+    <span>U1 · 09/11</span>
+  </div>
+</section>
+
+<section data-label="Why This Matters" data-speaker-notes="Real asteroids accelerate as they approach Earth. Today's skills are the math infrastructure for Unit 2." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:200px; height:200px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">ASTEROID THREAD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:74px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">Real Asteroids <span style="color:#E0A93D;">Accelerate</span></h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1400px;">As 2026-XJ approaches Earth, gravity grows and its velocity changes. Today's equations are the <strong style="color:#FAF9FC;">math infrastructure</strong> for that — Unit 2 puts them to work.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 8 — ASTEROID THREAD</span>
+    <span>U1 · 10/11</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="Exit: one problem from the set; self-check units + work shown. TEACHER CHECK: matches the packet's Day 8 Exit Ticket." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">One problem from the set. Self-check: units included? Given/asked listed? Work shown?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 8 target in your packet.</p>
+    </div>
+  </div>
+    <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt §§4.5–4.6, free fall (pp. 53–57), and §4.9 (pp. 59–60). Ch. 4 Think and Solve: 51–55 (pp. 66–67). <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: displaced practice set — equations of motion.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 8 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U1 · 11/11</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+
+
+</body></html>

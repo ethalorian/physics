@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="7c1c12d2-9c78-4ea9-9465-983f9154c68b"></script>
+</head>
+<body>
+
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("94d81a40-562c-4dc1-8396-5305303f7a3e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("acb65c18-fd34-4923-a4e9-680240dae2f3") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("46530033-5b58-44d7-b6b2-308c4b76bf55") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("99122a4b-018b-422d-8d8b-6f236d7fc52f") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("f1b5e18a-3189-4af6-b69b-0516c388acac") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("349379ae-6796-4e88-a89c-ecf45e9b391a") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("d8f69cb0-efce-436c-a14a-5c83f97e2815") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("27974ae2-b8ef-4f75-aba4-5498862f6639") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("1052a4e6-9190-436a-a088-e6e853054e5f") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("02d2f687-193f-4d5a-83da-6c8ee1ac9f49") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("8e0b5c0a-65ae-4f47-b3f1-1a93fe5d361f") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("4f244af7-69c8-48bb-a9df-30e4f675451c") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("0a95fb46-916b-4569-9266-5a6b2381d50d") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("996a29c0-6f47-4eab-a18c-c20e35cf265d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("f3d41d78-07ab-4c31-873a-4b732ad3c3f3") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("1946a8e9-a952-4ace-a8e0-eba1d19320de") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fbdedca2-b0cc-4f3d-80ee-6b0aede55dee") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("66885236-1b82-42bb-8adb-9314e8fea58e") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("572bda03-867b-4d94-9eda-2bf56900ee23") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("ede581d0-7f5b-44de-b3ee-3458dccb3a17") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("e575f802-0a66-479d-a519-66b59a3f6a03") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("14b0ac1c-8dc7-4158-a952-2ad6e057240a") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("acfc8513-3a83-4e32-b391-3bbcc8868b8f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("7933c959-1adf-47e5-99de-0d85f0f744ed") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("14b0ac1c-8dc7-4158-a952-2ad6e057240a") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("acfc8513-3a83-4e32-b391-3bbcc8868b8f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("7933c959-1adf-47e5-99de-0d85f0f744ed") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("14b0ac1c-8dc7-4158-a952-2ad6e057240a") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("acfc8513-3a83-4e32-b391-3bbcc8868b8f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("7933c959-1adf-47e5-99de-0d85f0f744ed") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="131897de-038e-469e-9f06-19186c858c42#/deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title" data-speaker-notes="FIRST 'REAL' ASTEROID DAY. Four days of physics now lets students do something concrete. Unit conversions and scientific notation will be painful — work a full example on the board; don't let the math obstruct the meaning." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 45% 82%, rgba(224,169,61,.8) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2px 2px at 63% 58%, rgba(255,255,255,.3) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif;">
+  <div style="position:absolute; right:150px; top:200px; width:420px; display:flex; flex-direction:column; gap:20px;">
+    <div style="border:1px solid rgba(155,142,196,0.4); border-radius:6px; padding:26px 30px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#B8C4DB; display:flex; justify-content:space-between;"><span>x₀</span><span style="color:#FAF9FC;">1.2 × 10⁸ km</span></div>
+    <div style="border:1px solid rgba(155,142,196,0.4); border-radius:6px; padding:26px 30px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#B8C4DB; display:flex; justify-content:space-between;"><span>v→</span><span style="color:#FAF9FC;">8,210 m/s</span></div>
+    <div style="border:1px solid rgba(155,142,196,0.4); border-radius:6px; padding:26px 30px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#B8C4DB; display:flex; justify-content:space-between;"><span>t</span><span style="color:#FAF9FC;">1.6 × 10⁷ s</span></div>
+    <div style="border:1px solid #E0A93D; border-radius:6px; padding:26px 30px; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#E0A93D; display:flex; justify-content:space-between;"><span>x?</span><span>6 months out</span></div>
+  </div>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">CPA PHYSICS · HONORS · FIRST REAL ASTEROID DAY</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; right:640px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:94px; line-height:1.05; letter-spacing:-0.02em; color:#FAF9FC; font-weight:700;">Where Will It Be<br>in <span style="color:#E0A93D;">Six Months?</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.45; color:#B8C4DB; max-width:900px;">Day 5: predict 2026-XJ's position — and say how sure you can be.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>UNIT 01 · DAY 05 · PHASE 2</span>
+    <span style="color:#E0A93D;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: target matches the packet's Day 5 Today's Target — prediction, uncertainty, AND stated assumptions." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">02</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.32; letter-spacing:-0.01em; color:#17142E; max-width:1520px; font-weight:600; text-wrap:balance;">I can use velocity and time to <span style="color:#7FA68B;">predict</span> an object's future position, express <span style="color:#9B8EC4;">uncertainty</span> in the prediction, and state the <span style="color:#E0A93D;">assumptions</span> it rests on.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — TODAY'S TARGET</span>
+    <span>U1 · 02/09</span>
+  </div>
+</section>
+
+<section data-label="The Setup" data-speaker-notes="Recap: displacement = velocity × time. If velocity stays constant we can predict future position. Watch km→m conversions — the #1 error today. Work one full example on the board before releasing students." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">THE CALCULATION</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">displacement = velocity × time</h2>
+  <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:32px; width:100%; margin-bottom:52px;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:34px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.2em; color:#8B87A6; margin-bottom:14px;">POSITION NOW</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#17142E;">1.2 × 10⁸ km</div>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:34px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.2em; color:#7FA68B; margin-bottom:14px;">V TOWARD</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#17142E;">8,210 m/s</div>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:34px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.2em; color:#9B8EC4; margin-bottom:14px;">V PERP</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#17142E;">2,200 m/s</div>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-radius:6px; padding:34px 36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:20px; letter-spacing:0.2em; color:#C08F2E; margin-bottom:14px;">TIME · 6 MO</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:40px; font-weight:700; color:#17142E;">1.6 × 10⁷ s</div>
+    </div>
+  </div>
+  <p style="margin:0; font-size:32px; line-height:1.55; max-width:1480px;">Compute the displacement in <strong style="color:#17142E;">each direction</strong>, add to the current position. <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; color:#C08F2E;">⚠ WATCH km ↔ m — the #1 error today.</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — ASTEROID POSITION WORKSHEET</span>
+    <span>U1 · 03/09</span>
+  </div>
+</section>
+
+<section data-label="Math Move: Scientific Notation" data-speaker-notes="MATH SPINE · QE1 (debuts today) + PR1. Do NOT assume they can multiply in scientific notation — most can't yet. Work this on the board slowly: fronts multiply, exponents add, convert units LAST. The PR1 frame: d = vt is a per-second rate scaled up 16 million times — same move as unit pricing. Level 1 = does it with this card; Level 2 = unprompted on the worksheet; Level 3 = clean on the transfer task. This card returns in warm-ups all year." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 760px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#C08F2E;">MATH MOVE · QE1 · SCIENTIFIC NOTATION</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Big Numbers Without Fear</h2>
+    <div style="display:flex; flex-direction:column; gap:26px; font-size:32px; line-height:1.5;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#7FA68B;">01</span><span>Write every number as <strong>a × 10ⁿ</strong>.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#9B8EC4;">02</span><span>Multiply the fronts. <strong>Add</strong> the exponents.</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'Space Grotesk',sans-serif; font-size:38px; font-weight:700; color:#E0A93D;">03</span><span>Tidy, then convert units <strong>last</strong>.</span></div>
+    </div>
+    <p style="margin:44px 0 0 0; font-size:28px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:24px 32px; max-width:620px;">d = vt is just a <strong>per-second rate scaled up</strong> 16 million times — the same move as price-per-pound.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:44px 52px; font-family:'IBM Plex Mono',monospace; display:flex; flex-direction:column; gap:22px;">
+    <div style="font-size:22px; letter-spacing:0.24em; color:#8B87A6;">WORKED — 6 MONTHS OF TRAVEL</div>
+    <div style="font-size:30px; color:#FAF9FC; line-height:1.7;">
+      <div>d = (<span style="color:#7FA68B;">8.21 × 10³ m/s</span>)(<span style="color:#9B8EC4;">1.6 × 10⁷ s</span>)</div>
+      <div style="color:#B8C4DB;">&nbsp;&nbsp;= (8.21 × 1.6) × 10<span style="color:#E0A93D;">³⁺⁷</span></div>
+      <div style="color:#B8C4DB;">&nbsp;&nbsp;= 13.1 × 10¹⁰ m</div>
+      <div>&nbsp;&nbsp;= <span style="color:#E0A93D;">1.3 × 10¹¹ m</span> &nbsp;=&nbsp; <span style="color:#E0A93D;">1.3 × 10⁸ km</span></div>
+    </div>
+    <div style="border-top:1px solid #2E2950; padding-top:18px; font-size:22px; color:#8B87A6; line-height:1.6;">WITH THIS CARD = LEVEL 1 · UNPROMPTED = LEVEL 2 · ON THE TRANSFER TASK = LEVEL 3</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — MATH SPINE CARD QE1</span>
+    <span>U1 · 04/09</span>
+  </div>
+</section>
+
+<section data-label="The Window" data-speaker-notes="Prediction lands ≈ 0.9 × 10⁸ km, offset by perpendicular motion. Then: HOW SURE are we? ±50,000 km position and ±200 m/s velocity uncertainties → compute the RANGE; sketch the window. TALK MOVES: 'Say more about why the window gets wider over time.'" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:100px 130px 150px; display:grid; grid-template-columns:1fr 620px; gap:80px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">UNCERTAINTY</span>
+    </div>
+    <h2 style="margin:0 0 44px 0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">How Sure Are We?</h2>
+    <div style="display:flex; flex-direction:column; gap:26px; font-size:32px; line-height:1.5;">
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; font-size:24px; color:#9B8EC4; min-width:200px;">POSITION</span><span>known to ± 50,000 km</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7FA68B; min-width:200px;">VELOCITY</span><span>known to ± 200 m/s</span></div>
+      <div style="display:flex; gap:24px; align-items:baseline;"><span style="font-family:'IBM Plex Mono',monospace; font-size:24px; color:#C08F2E; min-width:200px;">RESULT</span><span>a <strong style="color:#17142E;">window</strong> of possible positions — not a point</span></div>
+    </div>
+    <p style="margin:44px 0 0 0; font-size:30px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:28px 36px;">Uncertainty isn't "we're guessing." Measurements have inherent limits — and those limits <strong>propagate</strong> and <strong>grow with time</strong>.</p>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:32px 28px 22px;">
+    <svg viewBox="0 0 520 420" style="width:100%; display:block;">
+      <circle cx="452" cy="80" r="34" fill="#22406B" stroke="#7FA68B" stroke-width="2.5"></circle>
+      <line x1="60" y1="360" x2="420" y2="120" stroke="#8B87A6" stroke-width="2.5" stroke-dasharray="10 10"></line>
+      <path d="M 60 360 L 400 90 L 440 165 Z" fill="rgba(155,142,196,0.16)" stroke="#9B8EC4" stroke-width="2"></path>
+      <g transform="translate(60 360)">
+        <path d="M -18 -6 L -9 -17 L 6 -18 L 18 -8 L 17 7 L 4 17 L -11 14 L -19 4 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="2.5"></path>
+      </g>
+      <text x="70" y="398" font-family="IBM Plex Mono, monospace" font-size="20" fill="#8B87A6">now</text>
+      <text x="330" y="60" font-family="IBM Plex Mono, monospace" font-size="20" fill="#9B8EC4">the window</text>
+      <text x="452" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#7FA68B">EARTH</text>
+    </svg>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:22px; color:#8B87A6; letter-spacing:0.16em; text-align:center; margin-top:10px;">FIG. 01 — THE WINDOW WIDENS WITH TIME</div>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — THE UNCERTAINTY WINDOW</span>
+    <span>U1 · 05/09</span>
+  </div>
+</section>
+
+<section data-label="The Window — Live Sim" data-speaker-notes="Drive the uncertainty window live: advance time and crank the velocity uncertainty. The fan widening with time IS the day's core idea — noise propagates and grows." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Watch the Window Grow</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM 07 · UNCERTAINTY</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">Advance time. Crank the velocity uncertainty. The window <strong style="color:#17142E;">fans out</strong> — then zero the uncertainty and watch it collapse to a point.</p>
+  <div style="width:100%;">
+    <x-import component="WindowSim" from="417ee8d4-915a-4f0e-986c-e63549c5bd06#/sims2.jsx" hint-size="100%,540px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — THE UNCERTAINTY WINDOW</span>
+    <span>U1 · 06/09</span>
+  </div>
+</section>
+
+<section data-label="This Is Real NASA Physics" data-speaker-notes="Whole-class reflection: uncertainties decide whether to deploy a deflection mission. Foreshadow the Unit 1 transfer task — this exact scenario returns on Days 21–22, done independently." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:52px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">WHY THIS MATTERS</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:76px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">This Is Real NASA Physics</h2>
+  <p style="margin:0; font-size:40px; line-height:1.6; color:#D9D6E8; max-width:1400px;">Uncertainty windows decide whether to <strong style="color:#E0A93D;">deploy a deflection mission</strong>. You just did the same calculation, at the same scale, with the same honesty about what you don't know. <strong style="color:#FAF9FC;">This exact scenario returns as your transfer task.</strong></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 5 — REFLECTION</span>
+    <span>U1 · 07/09</span>
+  </div>
+</section>
+
+<section data-label="Honors: The Hidden Assumption" data-speaker-notes="HONORS: even with perfect uncertainty propagation the prediction is still approximate because we ASSUMED constant velocity — Unit 2's problem (gravity will change the velocity). Correct-but-unstated assumptions cap honors Reasoning at 3 on the transfer task. HW: justify the window reasoning and name every modeling assumption." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">JUSTIFY · HOMEWORK</span>
+  </div>
+  <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:72px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">The Assumption Hiding<br>in Your Prediction</h2>
+  <p style="margin:0 0 48px 0; font-size:36px; line-height:1.55; max-width:1460px;">Even with perfect uncertainty math, your prediction is approximate — because you <strong style="color:#17142E;">ASSUMED constant velocity</strong>. Gravity will change the velocity. That's Unit 2's problem. <strong style="color:#17142E;">Name the assumption explicitly.</strong></p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:42px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em;">Correct but unstated assumptions <span style="color:#E0A93D;">cap your Reasoning at 3</span> on the transfer task.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — JUSTIFY THE WINDOW (HOMEWORK)</span>
+    <span>U1 · 08/09</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="TEACHER CHECK: exit prompt matches the packet's Day 5 Exit Ticket. Do students articulate that data has noise and noise propagates?" style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">Why does our prediction have a "window" of possible positions instead of one exact location?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 5 target in your packet.</p>
+    </div>
+  </div>
+    <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt §4.9, motion-equation summary (pp. 59–60). Ch. 4 Check Concepts: 1–5 (p. 62). <span style="color:#9B8EC4;">·</span> <strong style="color:#9B8EC4;">Honors: the “justify the window” paragraph + displaced practice set.</strong></span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 5 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U1 · 09/09</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+
+
+</body></html>

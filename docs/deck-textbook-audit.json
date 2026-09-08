@@ -1,0 +1,357 @@
+[
+  {
+    "deck": "public/decks/classroom/U1 Day 1 - The Briefing (SEI).dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.1, Motion Is Relative (p. 47). The vocabulary starts tomorrow.",
+      "Hewitt §4.1, El movimiento es relativo (p. 47). El vocabulario empieza mañana."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 1 - The Briefing (Spanish).dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.1, El movimiento es relativo (p. 47). El vocabulario empieza mañana."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 1 - The Briefing.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.1, Motion Is Relative (p. 47). The vocabulary starts tomorrow."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 10 - The Language of Force.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§6.1–6.2, force, mass and acceleration (pp. 87–88)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 11 - Cart Lab I.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §6.3, Newton’s Second Law (pp. 88–90). Study the worked examples."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 12 - Cart Lab II.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §6.3 (pp. 88–90). Ch. 6 Think and Solve: 57, 60, 61 (p. 104) — apply F = ma."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 13 - F=ma Fluency.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt Ch. 6 Think and Solve: 55, 56, 59 (pp. 103–104) — force, mass and acceleration."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 14 - Action and Reaction.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§7.1–7.4, interactions, action and reaction (pp. 107–111)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 15 - Free Body Diagrams I.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§2.1–2.3, force, equilibrium and support force (pp. 13–18). Use class notes for free-body diagrams."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 16 - Free Body Diagrams II.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §2.4, moving equilibrium (p. 18), and §5.3, vector components (p. 72). Use class notes for inclined-plane diagrams."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 17 - Friction.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §6.4, Friction (pp. 90–91)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 18 - Equilibrium.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§2.2–2.4, equilibrium (pp. 16–18), and §3.4, Newton’s Law of Inertia (pp. 33–35)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 2 - Talking About Motion.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§4.1–4.3, motion, speed and velocity (pp. 47–50); §5.1, vectors and scalars (p. 69). Mark anything confusing."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 3 - Velocity.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.3, Velocity (p. 50), and §4.7, Graphs of Motion (pp. 57–58)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 4 - Velocity-Time Graphs and Vectors.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§5.1–5.3, vectors and components (pp. 69–72)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 5 - The First Prediction.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.9, motion-equation summary (pp. 59–60). Ch. 4 Check Concepts: 1–5 (p. 62)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 6 - Vector Addition.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§5.1–5.3, vectors and components (pp. 69–72). Ch. 5 Think and Solve: 38–39 (p. 84)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 7 - Acceleration.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.4, Acceleration (pp. 51–53)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 8 - Choosing the Equation.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §§4.5–4.6, free fall (pp. 53–57), and §4.9 (pp. 59–60). Ch. 4 Think and Solve: 51–55 (pp. 66–67)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Day 9 - Inertia.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt Ch. 3, Newton’s First Law of Motion—Inertia, §§3.1–3.6 (pp. 29–39)."
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U1 Days 21-22 - Transfer Task.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt; work stays in the room.\" style=\"background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:grid; grid-template-columns:1fr 620px; gap:80px; align-items:center; box-sizing:border-box; height:100%;\"",
+      "Hewitt §§13.1–13.2, The Falling Apple and The Falling Moon (pp. 233–235). Unit 2 begins tomorrow.",
+      "Hewitt §§13.1–13.2, The Falling Apple and The Falling Moon (pp. 233–235).\" style=\"background:#14112A; font-family:'Atkinson Hyperlegible',sans-serif; padding:100px 130px; display:flex; flex-direction:column; justify-content:center; align-items:center; box-sizing:border-box; height:100%;\""
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 1 - Re-Anchoring.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt gravity reading for all; honors write the Block-1 justification paragraph (ISS at 90% gravity — why floating anyway; must use 'free fall' and 'inertia').\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §§13.1–13.2, The Falling Apple and The Falling Moon (pp. 233–235). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 12 - Circular Motion.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt circular-motion reading; honors the doubled-speed friction question.\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §10.3, Centripetal Force (pp. 175–177); name the force playing that role in three scenarios. ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 13 - Newton's Cannon.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt satellite motion; honors carry Block 2 homework — the mass-cancellation defense AND the keyhole transfer (seams to Units 3–4).\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §§14.1–14.2, satellites and circular orbits (pp. 263–267). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 2 - Free Fall.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt free-fall reading; honors carry the Block-1 transfer — asteroid and Earth are BOTH falling around the Sun.\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §§4.5–4.6, free fall (pp. 53–57); redo today’s worked example without looking. ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 3 - Weight vs Mass.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt weight/weightlessness; honors write the connect-back paragraph: gravity IS Unit 1's F = ma across a vacuum.\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §3.5, mass and weight (pp. 36–37), and §13.8, Weight and Weightlessness (pp. 245–246). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 4 - Universal Gravitation.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt inverse-square reading; honors defend g-independence, connecting to what they proved in the free-fall investigation.\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §13.5, Gravity and Distance: The Inverse-Square Law (pp. 240–241); sketch the concentric spheres from memory. ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 6 - Gravitational Fields.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt field reading; honors write the one-structure paragraph (fields as shared structure — gravity now, electric and magnetic later).\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §13.6, Gravitational Field (pp. 242–243); compute g on Mars from M and r, then check against 3.71 m/s². ·"
+    ]
+  },
+  {
+    "deck": "public/decks/classroom/U2 Day 9 - Projectile Motion.dc.html",
+    "bundled": false,
+    "references": [
+      "Hewitt projectile reading; honors explain why the race result holds at ANY launch speed (the equations decide, not the speed).\" style=\"position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;\"",
+      "Hewitt §§5.4–5.5, projectile motion (pp. 73–75); sketch the two-component picture from memory. ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1-sei/U1 Day 1 - The Briefing (SEI).html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.1, Motion Is Relative (p. 47). The vocabulary starts tomorrow.",
+      "Hewitt §4.1, El movimiento es relativo (p. 47). El vocabulario empieza mañana."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 1-2 - Inertia Anchor.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§4.1–4.3, motion, speed and velocity (pp. 47–50); §5.1, vectors and scalars (p. 69). Mark anything confusing. Finish the justification paragraph and asteroid-mass transfer."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 10 - Forces.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§6.1–6.2, force, mass and acceleration (pp. 87–88). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 11-12 - Derive F=ma.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §6.3, Newton’s Second Law (pp. 88–90). Study the worked examples. Bring your a-vs-(1/m) graph. Day 12: Ch. 6 Think and Solve 57, 60, 61 (p. 104), plus Honors Beat 3 (justification) and Beat 4 (transfer + limits)."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 13 - F=ma in Practice.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt Ch. 6 Think and Solve: 55, 56, 59 (pp. 103–104) — force, mass and acceleration."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 14 - Newton's 3rd Law.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§7.1–7.4, interactions, action and reaction (pp. 107–111). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 15 - Free Body Diagrams 1.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§2.1–2.3, force, equilibrium and support force (pp. 13–18). Use class notes for free-body diagrams."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 16 - Free Body Diagrams 2.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §2.4, moving equilibrium (p. 18), and §5.3, vector components (p. 72). Use class notes for inclined-plane diagrams."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 17 - Friction.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §6.4, Friction (pp. 90–91)."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 18 - Equilibrium.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§2.2–2.4, equilibrium (pp. 16–18), and §3.4, Newton’s Law of Inertia (pp. 33–35)."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 2 - Motion Vocabulary.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§4.1–4.3, motion, speed and velocity (pp. 47–50); §5.1, vectors and scalars (p. 69). Mark anything confusing."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 21-22 - Transfer Task.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§13.1–13.2, The Falling Apple and The Falling Moon (pp. 233–235). Unit 2 begins tomorrow."
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 3 - Graphs as Claims.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §4.3, Velocity (p. 50), and §4.7, Graphs of Motion (pp. 57–58). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 4 - Velocity-Time and Vectors.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§5.1–5.3, vectors and components (pp. 69–72). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 5 - Predicting Position.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §4.9, motion-equation summary (pp. 59–60). Ch. 4 Check Concepts: 1–5 (p. 62). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 6 - Vector Addition.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§5.1–5.3, vectors and components (pp. 69–72). Ch. 5 Think and Solve: 38–39 (p. 84). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 7 - Acceleration.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §4.4, Acceleration (pp. 51–53). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 8 - Equations of Motion.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt §§4.5–4.6, free fall (pp. 53–57), and §4.9 (pp. 59–60). Ch. 4 Think and Solve: 51–55 (pp. 66–67). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/Day 9 - Newton's 1st Law.dc.html",
+    "bundled": true,
+    "references": [
+      "Hewitt Ch. 3, Newton’s First Law of Motion—Inertia, §§3.1–3.6 (pp. 29–39). ·"
+    ]
+  },
+  {
+    "deck": "public/decks/unit-1/U1 Day 1 - The Briefing.html",
+    "bundled": false,
+    "references": [
+      "Hewitt §4.1, Motion Is Relative (p. 47). The vocabulary starts tomorrow."
+    ]
+  }
+]

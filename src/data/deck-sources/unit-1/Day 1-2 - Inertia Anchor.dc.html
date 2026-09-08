@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="3ebd42c1-a30c-4a27-b7a9-3c3e9ab51fd4"></script>
+</head>
+<body>
+
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<style>/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("c8a07634-4cbd-42e9-af9b-a85407e4cd3f") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("e0d4952d-b6a8-4971-97ae-4a78d12932cc") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("33d3997c-bb67-4f43-a254-1438e236d4f6") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("db2ca826-8247-4ea1-b25a-477638c085cd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("5ee067fd-cb99-4111-9855-4b47378fb91e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("8722fd3b-fa6e-44a3-88f9-701ba48d5dee") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fe5a6320-b0b6-47d2-bdba-71343e0f0aac") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("1d2c1734-d7d0-493d-8e97-b1368c14bf32") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("b428b92e-a4ea-484f-b6b4-a3bfd79084b7") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("9147b39e-e980-45f7-9ee8-52451285d626") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("db292531-cd08-4a4b-a0e3-3378e9854198") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("440e3dda-c517-424a-a407-1e7563be665a") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("53deb82b-9a11-429c-a5e8-3a356e5021f1") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("ef3d37aa-3ddb-4e0a-95de-79f02dea5d5d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("043d4045-31b7-40bb-9038-e6c0d91ed66e") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("9807cccb-73dc-4fae-9c98-96391bba4109") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("ada68a71-c2f1-4490-862e-f41fb024907a") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("f279708f-b6bb-42d4-bc04-dd816a63fff0") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("1fe51ad7-1e40-4f09-b459-eb2de7ba869c") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("3612fb6b-eed9-4574-9941-b8658af06243") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("f0d6fdf0-703d-4acc-bee1-40b1de1b9e45") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("fc3593b7-3627-41d0-b68f-7c2604163c78") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("0fb47819-a257-4c0c-a7ab-6b8d51ab0d48") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("83d10677-628a-4ebb-9506-12638074f1bd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fc3593b7-3627-41d0-b68f-7c2604163c78") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("0fb47819-a257-4c0c-a7ab-6b8d51ab0d48") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("83d10677-628a-4ebb-9506-12638074f1bd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fc3593b7-3627-41d0-b68f-7c2604163c78") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("0fb47819-a257-4c0c-a7ab-6b8d51ab0d48") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("83d10677-628a-4ebb-9506-12638074f1bd") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>html,body{margin:0;padding:0;height:100%;background:#0E0B20;}</style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="e4ce1853-0629-4686-beb1-b74771fa0aa5#/deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+<section data-label="Title — Mission Open" data-speaker-notes="ANCHOR day. Run the rig demo live today. Safety: bounded padded drop zone; teacher performs both pulls; eye protection." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 45% 82%, rgba(224,169,61,.8) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2px 2px at 63% 58%, rgba(255,255,255,.3) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 81% 74%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 58% 91%, rgba(224,169,61,.7) 50%, transparent 52%), radial-gradient(2px 2px at 86% 12%, rgba(255,255,255,.45) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif;">
+  <div style="position:absolute; right:-180px; top:-220px; width:640px; height:640px; border-radius:50%; background:radial-gradient(circle at 36% 32%, #4A4468, #262148 58%, #16122E 90%); border:1px solid rgba(155,142,196,0.35);"></div>
+  <div style="position:absolute; right:130px; top:330px; width:900px; border-top:2px dashed rgba(224,169,61,0.5); transform:rotate(-24deg); transform-origin:right top;"></div>
+  <svg viewBox="0 0 100 100" style="position:absolute; right:560px; top:560px; width:110px; height:110px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="2.5"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="position:absolute; left:130px; top:140px; display:flex; align-items:center; gap:18px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">CPA PHYSICS · HONORS · PLANETARY DEFENSE PROGRAM</span>
+  </div>
+  <div style="position:absolute; left:130px; top:300px; right:520px; display:flex; flex-direction:column; gap:44px; align-items:flex-start;">
+    <h1 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:104px; line-height:1.02; letter-spacing:-0.02em; color:#FAF9FC; font-weight:700;">How Fast — <br>and Where Will<br>It <span style="color:#E0A93D;">Arrive?</span></h1>
+    <p style="margin:0; font-size:38px; line-height:1.4; color:#B8C4DB; max-width:880px;">Day 1: A heavy mass refuses to move. We are the jerk on the string.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>UNIT 01 · DAY 01–02 · ANCHOR</span>
+    <span style="color:#E0A93D;">TARGET: ASTEROID 2026-XJ</span>
+  </div>
+</section>
+
+<section data-label="Today's Target" data-speaker-notes="TEACHER CHECK: Target wording matches the packet's Day 1 Today's Target exactly." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="position:absolute; right:90px; top:40px; font-family:'Space Grotesk',sans-serif; font-size:320px; font-weight:700; color:rgba(155,142,196,0.10); line-height:1;">02</div>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:70px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">TODAY'S TARGET</span>
+  </div>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:62px; line-height:1.28; letter-spacing:-0.01em; color:#17142E; max-width:1500px; font-weight:600; text-wrap:balance;">I can surface my own model of motion, record a <span style="color:#9B8EC4;">prediction with reasons</span>, and begin to explain why <span style="color:#E0A93D;">mass resists changes in motion</span>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — TODAY'S TARGET</span>
+    <span>U1 · 02/12</span>
+  </div>
+</section>
+
+<section data-label="Planetary Defense Briefing" data-speaker-notes="The unit's anchoring phenomenon — keep it prominent. This question drives the entire year." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2px 2px at 63% 58%, rgba(255,255,255,.3) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:130px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:170px; top:150px; width:290px; height:290px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+    <circle cx="52" cy="74" r="4" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:64px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">PLANETARY DEFENSE BRIEFING</span>
+  </div>
+  <p style="margin:0 0 76px 0; font-size:42px; line-height:1.5; color:#D9D6E8; max-width:1200px;">NASA is tracking asteroid <strong style="color:#FAF9FC;">2026-XJ</strong>. All year, one question drives this course: <em style="color:#E0A93D;">can we move it?</em> Today we meet the obstacle.</p>
+  <div style="display:flex; flex-direction:column; gap:14px;">
+    <span style="font-family:'Space Grotesk',sans-serif; font-size:150px; font-weight:700; letter-spacing:-0.02em; color:#E0A93D; line-height:1;">3.5 × 10¹¹ kg</span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:26px; letter-spacing:0.22em; color:#7A75A0;">ESTIMATED MASS</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 1 — PLANETARY DEFENSE BRIEFING</span>
+    <span>U1 · 03/12</span>
+  </div>
+</section>
+
+<section data-label="Predict — Commit in Writing" data-speaker-notes="HONORS MOVE: every student STAKES A PREDICTION with reasons before the reveal. There is no exit by being right — the whole room predicts the top breaks both times. Do NOT reveal the answer here (the sim lives on the next slide)." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:440px 1fr; gap:90px; align-items:start;">
+  <div style="background:#17142E; border-radius:8px; padding:30px 26px 20px; margin-top:16px;">
+    <svg viewBox="0 0 380 560" style="width:100%; display:block;">
+      <line x1="90" y1="40" x2="290" y2="40" stroke="#FAF9FC" stroke-width="5"></line>
+      <line x1="104" y1="40" x2="90" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="134" y1="40" x2="120" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="164" y1="40" x2="150" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="194" y1="40" x2="180" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="224" y1="40" x2="210" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="254" y1="40" x2="240" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="284" y1="40" x2="270" y2="20" stroke="#8B87A6" stroke-width="3"></line>
+      <line x1="190" y1="40" x2="190" y2="150" stroke="#9B8EC4" stroke-width="3.5"></line>
+      <text x="210" y="105" font-family="IBM Plex Mono, monospace" font-size="20" fill="#8B87A6">top string</text>
+      <text x="160" y="105" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="30" font-weight="700" fill="#E0A93D">?</text>
+      <rect x="110" y="150" width="160" height="110" rx="6" fill="#262148" stroke="#9B8EC4" stroke-width="2.5"></rect>
+      <text x="190" y="203" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="30" font-weight="700" fill="#FAF9FC">HEAVY</text>
+      <text x="190" y="236" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="17" fill="#8B87A6">m = large</text>
+      <line x1="190" y1="260" x2="190" y2="380" stroke="#9B8EC4" stroke-width="3.5"></line>
+      <text x="210" y="330" font-family="IBM Plex Mono, monospace" font-size="20" fill="#8B87A6">bottom string</text>
+      <text x="160" y="330" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="30" font-weight="700" fill="#E0A93D">?</text>
+      <rect x="130" y="380" width="120" height="16" rx="8" fill="#FAF9FC"></rect>
+      <line x1="190" y1="396" x2="190" y2="470" stroke="#E0A93D" stroke-width="5"></line>
+      <path d="M 190 488 l -12 -20 l 24 0 z" fill="#E0A93D"></path>
+      <text x="212" y="445" font-family="IBM Plex Mono, monospace" font-size="20" fill="#E0A93D">pull</text>
+      <text x="190" y="540" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="18" fill="#8B87A6" letter-spacing="3">FIG. 01 — THE RIG</text>
+    </svg>
+  </div>
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">STAKE YOUR MODEL</span>
+    </div>
+    <h2 style="margin:0 0 52px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Predict — and Commit in Writing</h2>
+    <div style="display:flex; flex-direction:column; gap:30px; margin-bottom:48px;">
+      <div style="display:flex; gap:28px; align-items:baseline;">
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#9B8EC4;">01</span>
+        <span style="font-size:34px; line-height:1.45;"><strong style="color:#17142E;">SLOW pull</strong> on the bottom string — which string breaks, top or bottom? Why?</span>
+      </div>
+      <div style="display:flex; gap:28px; align-items:baseline;">
+        <span style="font-family:'Space Grotesk',sans-serif; font-size:44px; font-weight:700; color:#9B8EC4;">02</span>
+        <span style="font-size:34px; line-height:1.45;"><strong style="color:#17142E;">SHARP JERK</strong> on the bottom string — which string breaks? Why?</span>
+      </div>
+    </div>
+    <p style="margin:0; font-size:30px; line-height:1.5; color:#17142E; background:#F1EEF9; border-radius:6px; padding:30px 36px; max-width:980px;">Write both predictions <strong>WITH REASONS</strong> before we test. You are recording your model so it cannot hide later.</p>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — MAKE YOUR MODEL EXPLICIT</span>
+    <span>U1 · 04/12</span>
+  </div>
+</section>
+
+<section data-label="The Reveal — Live Sim" data-speaker-notes="HONORS MOVE: run both pulls LIVE on the real rig first; use this sim to replay the physics and show the tension bars. Slow pull → TOP snaps. Sharp jerk → BOTTOM snaps and the mass barely moves. Same rig, opposite results — only HOW you pulled changed." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:90px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:36px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:64px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">What Actually Happened</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM 01 · TWO-STRING RIG</span>
+  </div>
+  <div style="width:100%;">
+    <x-import component="TwoStringSim" from="472f7aba-9847-4b08-a214-6de9eb158cc4#/sims.jsx" hint-size="100%,640px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — MAKE YOUR MODEL EXPLICIT</span>
+    <span>U1 · 05/12</span>
+  </div>
+</section>
+
+<section data-label="Same Shove — Live Sim" data-speaker-notes="Same 1000 N·s shove on four masses, from soccer ball to 2026-XJ. The asteroid gains nanometers per second — mass as resistance to change, felt at mission scale. Use right after building the inertia explanation." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:80px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; justify-content:space-between; align-items:baseline; width:100%; margin-bottom:18px;">
+    <h2 style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:58px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Same Shove, Four Masses</h2>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#8B87A6;">SIM 15 · INERTIA AT SCALE</span>
+  </div>
+  <p style="margin:0 0 26px 0; font-size:28px; line-height:1.45; max-width:1560px;">One hard human shove — 1000 N·s — on a soccer ball, a car, a cargo ship, and <strong style="color:#17142E;">2026-XJ</strong>. Watch what mass does to the same push.</p>
+  <div style="width:100%;">
+    <x-import component="InertiaPushSim" from="33c9e334-4d66-4a1c-8744-eec85907b284#/sims3.jsx" hint-size="100%,480px"></x-import>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — VOCAB: INERTIA</span>
+    <span>U1 · 06/12</span>
+  </div>
+</section>
+
+<section data-label="Build the Explanation" data-speaker-notes="HONORS MOVE: build this WITH students, do not hand it over. They construct the idea that mass is resistance to change in motion. This is the seed the whole year grows from." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">BUILD THE MODEL</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Why? Build the Explanation Together</h2>
+  <p style="margin:0 0 68px 0; font-size:38px; line-height:1.55; max-width:1460px;">The jerk loads the bottom string to breaking <strong style="color:#17142E;">FASTER</strong> than the mass's inertia will let it accelerate. The force never reaches the top. The mass resists the <strong style="color:#17142E;">CHANGE</strong> in its motion.</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:52px; line-height:1.3; color:#17142E; font-weight:600; letter-spacing:-0.01em; max-width:1420px;"><span style="color:#9B8EC4;">Inertia</span> is resistance to a change in motion — not just "amount of stuff."</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — VOCAB: INERTIA</span>
+    <span>U1 · 07/12</span>
+  </div>
+</section>
+
+<section data-label="Vocabulary: Inertia" data-speaker-notes="TEACHER CHECK: definition and cognates match the packet's VOCAB · INERTIA box exactly." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:grid; grid-template-columns:1fr 520px; gap:100px; align-items:center;">
+  <div style="display:flex; flex-direction:column; align-items:flex-start;">
+    <div style="display:flex; align-items:center; gap:18px; margin-bottom:40px;">
+      <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">VOCABULARY</span>
+    </div>
+    <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:86px; line-height:1; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Inertia</h2>
+    <div style="display:flex; flex-direction:column; gap:34px;">
+      <div style="display:flex; gap:26px; align-items:baseline;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.18em; color:#9B8EC4; min-width:190px;">DEFINITION</span>
+        <span style="font-size:34px; line-height:1.45; color:#17142E;">An object's resistance to a change in its motion.</span>
+      </div>
+      <div style="display:flex; gap:26px; align-items:baseline;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.18em; color:#7FA68B; min-width:190px;">EXAMPLE</span>
+        <span style="font-size:34px; line-height:1.45;">The heavy mass barely moved during the sharp jerk — its inertia resisted the sudden change.</span>
+      </div>
+      <div style="display:flex; gap:26px; align-items:baseline;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.18em; color:#C08F2E; min-width:190px;">COGNATE</span>
+        <span style="font-size:34px; line-height:1.45; font-style:italic;">Sp. inercia · Pt. inércia</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:#17142E; border-radius:8px; padding:36px 30px 24px;">
+    <svg viewBox="0 0 440 380" style="width:100%; display:block;">
+      <line x1="30" y1="320" x2="410" y2="320" stroke="#8B87A6" stroke-width="3"></line>
+      <path d="M 150 320 L 128 250 L 150 190 L 216 158 L 296 168 L 336 230 L 326 292 L 290 320 Z" fill="#3A3458" stroke="#9B8EC4" stroke-width="3"></path>
+      <circle cx="210" cy="230" r="14" fill="#262148"></circle>
+      <circle cx="280" cy="260" r="9" fill="#262148"></circle>
+      <line x1="40" y1="250" x2="105" y2="250" stroke="#E0A93D" stroke-width="6"></line>
+      <path d="M 122 250 l -20 -12 l 0 24 z" fill="#E0A93D"></path>
+      <text x="72" y="228" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#E0A93D">push</text>
+      <line x1="352" y1="226" x2="252" y2="226" stroke="#9B8EC4" stroke-width="10" opacity="0.85"></line>
+      <path d="M 232 226 l 26 -15 l 0 30 z" fill="#9B8EC4" opacity="0.85"></path>
+      <text x="318" y="200" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#9B8EC4">resists change</text>
+      <text x="220" y="366" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="18" fill="#8B87A6" letter-spacing="3">FIG. 02 — INERTIA</text>
+    </svg>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — VOCAB: INERTIA</span>
+    <span>U1 · 08/12</span>
+  </div>
+</section>
+
+<section data-label="Justify (Homework)" data-speaker-notes="HONORS MOVE: the assessed object is the REASONING that retires the wrong model, not recall of the word 'inertia.' The 'not an available answer' clause blocks the easy escape hatch and forces the inertia argument." style="position:relative; box-sizing:border-box; background:#F1EEF9; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#9B8EC4; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#7A75A0;">JUSTIFY · HOMEWORK</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:76px; line-height:1.06; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Tonight: Defend Why<br>You Were Wrong</h2>
+  <p style="margin:0; font-size:38px; line-height:1.55; max-width:1460px;">Write an AP1-style paragraph: the same rig gave opposite results with no change to the strings. Explain why, using inertia — <strong style="color:#17142E;">AND</strong> explain why <em>"the bottom string was just weaker"</em> is <strong style="color:#17142E;">NOT an available answer</strong>.</p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #D9D3EA; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — JUSTIFY (HOMEWORK)</span>
+    <span>U1 · 09/12</span>
+  </div>
+</section>
+
+<section data-label="Transfer to the Asteroid" data-speaker-notes="HONORS MOVE: this is the CONNECT move on Day 1 — it seams forward to the force and energy units by name. The heavy mass that refused to move IS the asteroid." style="position:relative; box-sizing:border-box; overflow:hidden; background-color:#14112A; background-image:radial-gradient(2px 2px at 11% 19%, rgba(224,169,61,.9) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 24% 71%, rgba(255,255,255,.5) 50%, transparent 52%), radial-gradient(2px 2px at 33% 34%, rgba(255,255,255,.35) 50%, transparent 52%), radial-gradient(1.5px 1.5px at 52% 15%, rgba(255,255,255,.45) 50%, transparent 52%), radial-gradient(2.5px 2.5px at 72% 25%, rgba(224,169,61,.85) 50%, transparent 52%), radial-gradient(2px 2px at 90% 41%, rgba(255,255,255,.4) 50%, transparent 52%), radial-gradient(2px 2px at 17% 88%, rgba(255,255,255,.35) 50%, transparent 52%); font-family:'Atkinson Hyperlegible',Verdana,sans-serif; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <svg viewBox="0 0 100 100" style="position:absolute; right:150px; top:130px; width:240px; height:240px;">
+    <path d="M 24 32 L 44 14 L 74 18 L 90 42 L 84 70 L 58 88 L 30 80 L 14 54 Z" fill="#3A3458" stroke="#E0A93D" stroke-width="1.8"></path>
+    <circle cx="42" cy="40" r="9" fill="#262148"></circle>
+    <circle cx="64" cy="60" r="6" fill="#262148"></circle>
+  </svg>
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#9B8EC4;">TRANSFER · HOMEWORK</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:76px; line-height:1.06; letter-spacing:-0.015em; color:#FAF9FC; font-weight:700;">2026-XJ Is the <span style="color:#E0A93D;">Heavy Mass</span></h2>
+  <p style="margin:0; font-size:36px; line-height:1.6; color:#D9D6E8; max-width:1360px;">The asteroid 2026-XJ has a mass around <strong style="color:#FAF9FC;">3.5 × 10¹¹ kg</strong>. Using what "inertia" meant today, explain why that mass is the obstacle to deflecting it. Predict what it implies about the push we'd need. Name the unit you think will have to answer <em style="color:#E0A93D;">"how big a push?"</em></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:64px; border-top:1px solid rgba(155,142,196,0.3); padding-top:26px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#7A75A0;">
+    <span>→ PACKET · DAY 1 — TRANSFER (HOMEWORK)</span>
+    <span>U1 · 10/12</span>
+  </div>
+</section>
+
+<section data-label="Close Forward" data-speaker-notes="HONORS MOVE: deliver this in ~60 seconds at the close. It is the seam Units 2–7 harvest." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:120px 130px 150px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#E0A93D; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">CLOSE FORWARD</span>
+  </div>
+  <h2 style="margin:0 0 56px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">The Obstacle for the Whole Year</h2>
+  <p style="margin:0 0 60px 0; font-size:38px; line-height:1.55; max-width:1460px;">That heavy mass that refused to move is the asteroid. We are the jerk on the string. The obstacle the entire year is up against is what you just watched: <strong style="color:#17142E;">mass resists change</strong>.</p>
+  <p style="margin:0; font-family:'Space Grotesk',sans-serif; font-size:56px; line-height:1.2; font-weight:700; letter-spacing:-0.01em; color:#17142E;">Every unit from here asks one question —<br><span style="color:#9B8EC4;">can we move it anyway?</span></p>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — CLOSE FORWARD</span>
+    <span>U1 · 11/12</span>
+  </div>
+</section>
+
+<section data-label="Exit Ticket · Rate Yourself" data-speaker-notes="TEACHER CHECK: exit-ticket prompt matches the packet's Day 1 Exit Ticket; Marzano targets match the Day 1 Rate-Yourself targets." style="position:relative; box-sizing:border-box; background:#FAF9FC; font-family:'Atkinson Hyperlegible',Verdana,sans-serif; color:#3A3654; padding:110px 130px 150px; display:flex; flex-direction:column; align-items:flex-start;">
+  <div style="display:flex; align-items:center; gap:18px; margin-bottom:44px;">
+    <span style="width:12px; height:12px; background:#7FA68B; display:inline-block;"></span>
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.28em; color:#8B87A6;">WRAP</span>
+  </div>
+  <h2 style="margin:0 0 64px 0; font-family:'Space Grotesk',sans-serif; font-size:70px; line-height:1.08; letter-spacing:-0.015em; color:#17142E; font-weight:700;">Exit Ticket · Rate Yourself</h2>
+  <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:40px; width:100%;">
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #9B8EC4; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#9B8EC4; margin-bottom:24px;">EXIT TICKET</div>
+      <p style="margin:0; font-size:34px; line-height:1.5; color:#17142E;">In one sentence, what does "mass resists change" mean — and why did it surprise you?</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E5E2F0; border-top:6px solid #7FA68B; box-shadow:0 20px 50px -34px rgba(23,20,46,0.3); border-radius:6px; padding:48px 52px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#7FA68B; margin-bottom:24px;">RATE YOURSELF</div>
+      <div style="display:flex; gap:34px; margin-bottom:26px; font-family:'Space Grotesk',sans-serif; font-weight:700; align-items:baseline;">
+        <span style="font-size:44px; color:#9B8EC4;">1</span>
+        <span style="font-size:44px; color:#C08F2E;">2</span>
+        <span style="font-size:44px; color:#7FA68B;">3</span>
+        <span style="font-family:'Atkinson Hyperlegible',Verdana,sans-serif; font-size:26px; font-weight:400; color:#3A3654;">Not Yet · Almost · Got It</span>
+      </div>
+      <p style="margin:0; font-size:30px; line-height:1.5;">Mark each Day 1 target in your packet.</p>
+    </div>
+  </div>
+    <div style="margin-top:44px; width:100%; box-sizing:border-box; background:#17142E; border-radius:6px; padding:30px 44px; display:flex; gap:36px; align-items:baseline;">
+    <span style="font-family:'IBM Plex Mono',monospace; font-size:24px; letter-spacing:0.24em; color:#E0A93D; flex:none;">TONIGHT</span>
+    <span style="font-size:30px; line-height:1.5; color:#FAF9FC;">Hewitt §§4.1–4.3, motion, speed and velocity (pp. 47–50); §5.1, vectors and scalars (p. 69). Mark anything confusing. Finish the justification paragraph and asteroid-mass transfer.</span>
+  </div>
+  <div style="position:absolute; left:130px; right:130px; bottom:60px; border-top:1px solid #E5E2F0; padding-top:24px; display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:24px; color:#8B87A6;">
+    <span>→ PACKET · DAY 1 — EXIT TICKET AND RATE YOURSELF</span>
+    <span>U1 · 12/12</span>
+  </div>
+</section>
+
+</x-import>
+</x-dc>
+
+
+</body></html>
