@@ -1,3 +1,4 @@
+import { MASTERY_EVIDENCE_RUBRIC, parseMasterySuggestion } from '@/lib/mastery-evidence'
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
 
@@ -17,12 +18,12 @@ export const POST = withRole(['admin', 'teacher'], async (request) => {
     }
 
     const body = await request.json()
-    const targetStatement: string = body.targetStatement ?? ''
-    const work: string = body.work ?? ''
-    if (!work.trim()) return NextResponse.json({ error: 'No student work to assess' }, { status: 400 })
+    const targetStatement = typeof body.targetStatement === 'string' ? body.targetStatement : ''
+    const work = typeof body.work === 'string' ? body.work : ''
+    if (!targetStatement.trim() || !work.trim()) return NextResponse.json({ error: 'No student work to assess' }, { status: 400 })
 
-    const system = `You assist a high school physics teacher who rates student mastery on a 3-level scale (Marzano): 1 = Not yet, 2 = Almost, 3 = Got it. Based on the learning target and the student's captured work, SUGGEST one level and a one-line rationale. This only speeds the teacher's review — the teacher makes the final call, so be conservative and concise. Judge against the target, valuing conceptual understanding over memorization, and only cite evidence actually present in the work. RATE THE PHYSICS ONLY: never lower a level for grammar, spelling, brevity, a sentence frame being used, or an answer written in Spanish or another language — read it for the physics move it makes (a labeled diagram, a one-word prediction with a reason, or a frame completed correctly can each be a 3). If the work carries scaffolds_used or response_mode, read it in that context: a sketch or a labeled diagram IS an answer, and a frame that was on is a tool the student used, not a deduction. Reply with ONLY a JSON object, no prose: {"level": 1, "rationale": "one short sentence"}.`
-    const userText = `LEARNING TARGET: ${targetStatement}\n\nSTUDENT WORK:\n${work}\n\nSuggest a level (1-3) and a one-line rationale as JSON.`
+    const system = MASTERY_EVIDENCE_RUBRIC
+    const userText = `LEARNING TARGET: ${targetStatement}\n\nSTUDENT WORK:\n${work}\n\nAssess the evidence quality. Return a supported level or null, rationale, and one next step as JSON.`
 
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -33,7 +34,7 @@ export const POST = withRole(['admin', 'teacher'], async (request) => {
       },
       body: JSON.stringify({
         model: ANTHROPIC_MODEL,
-        max_tokens: 200,
+        max_tokens: 500,
         system,
         messages: [{ role: 'user', content: userText }],
       }),
@@ -47,10 +48,9 @@ export const POST = withRole(['admin', 'teacher'], async (request) => {
 
     const data = (await res.json()) as { content?: { type?: string; text?: string }[] }
     const text = data.content?.map((c) => c.text ?? '').join('') ?? ''
-    const match = text.match(/\{[\s\S]*\}/)
-    const parsed = (match ? JSON.parse(match[0]) : {}) as { level?: number; rationale?: string }
-
-    let level = Math.round(Number(parsed.level))
-    if (!(level >= 1 && level <= 3)) level = 2
-    return NextResponse.json({ level, rationale: parsed.rationale ?? '' })
+    try {
+      return NextResponse.json(parseMasterySuggestion(text))
+    } catch {
+      return NextResponse.json({ error: 'AI assist returned an invalid suggestion. Please review the evidence or try again.' }, { status: 502 })
+    }
 })

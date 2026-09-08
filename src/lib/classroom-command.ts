@@ -3,7 +3,7 @@ import { buildSlides } from '@/lib/present-auto-slides'
 import { resolveDeckSrc } from '@/data/lesson-decks'
 
 export interface CommandSession {
-  id: string; lesson_id: string; course_id: string; status: 'live' | 'ended'; current_slide: number
+  id: string; lesson_id: string; course_id: string; created_at?: string; status: 'live' | 'ended'; current_slide: number
   current_section: number; current_anchor: string | null; poll_block_id: string | null
   projected_block_id?: string | null; projected_block_page?: number
   poll_run_id: string | null; poll_locked: boolean; poll_revealed: boolean; blackout: boolean

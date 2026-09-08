@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState, useRef, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 const BlockRenderer = dynamic(() => import('@/components/blocks/BlockRenderer'), { ssr: false })
-import type { BlockDocument } from '@/data/content-blocks'
+import { paginateBlocks, type BlockDocument } from '@/data/content-blocks'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 import { EVIDENCE_LABEL, EVIDENCE_SOURCES, type EvidenceSource } from '@/lib/evidence'
 
@@ -58,6 +58,7 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   const [submissions, setSubmissions] = useState<Submission[]>([])
   const [evidence, setEvidence] = useState<Evidence[]>([])
   const [selected, setSelected] = useState<Submission | null>(null)
+  const [sectionIndex, setSectionIndex] = useState(0)
   const [work, setWork] = useState<SubmittedWork | null>(null)
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -76,7 +77,7 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   useEffect(() => { void load(); setSelected(null); setWork(null); workVersion.current++; return invalidateRequests }, [load, invalidateRequests])
   async function open(sub: Submission) {
     const version = ++workVersion.current
-    setSelected(sub); setWork(null); setError('')
+    setSelected(sub); setSectionIndex(0); setWork(null); setError('')
     try {
       const res = await fetch(`/api/mastery/student-work?unit_id=${encodeURIComponent(unitId)}&user_id=${encodeURIComponent(sub.user_id)}&lesson_id=${encodeURIComponent(sub.lesson_id)}&submission_id=${encodeURIComponent(sub.id)}`)
       const data = await res.json()
@@ -100,6 +101,8 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   const visibleEvidence = lessonId ? evidence.filter(e => e.lesson_id === lessonId) : evidence
   useEffect(() => { setSelected(null); setWork(null); workVersion.current++ }, [lessonId])
   const snapshot = work?.submissions.find((s) => s.id === selected?.id)
+  const reviewPages = paginateBlocks(snapshot?.contentSnapshot?.blocks ?? [])
+  const reviewPage = reviewPages[sectionIndex]
   const responses: BlockResponseMap = Object.fromEntries((work?.work ?? []).map((w) => [w.blockId, { response: w.response, block_type: w.blockType, created_at: w.createdAt }]))
   return <details open={Boolean(lessonId) || undefined} className="my-4 rounded-xl border bg-card p-4">
     <summary className="cursor-pointer font-semibold">Lesson review · {visibleSubmissions.length} pending submissions</summary>
@@ -118,7 +121,14 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
         <h3 className="font-semibold">{selected.name} · {selected.lessonTitle}</h3>
         {!work && !error && <p role="status">Loading submitted work…</p>}
         {snapshot?.legacySnapshot && <p className="text-sm text-muted-foreground">Legacy submission: responses are reconstructed up to submission time; the original lesson text was not captured.</p>}
-        {snapshot?.contentSnapshot?.blocks && <BlockRenderer key={selected.id} blocks={snapshot.contentSnapshot.blocks} lessonId={selected.lesson_id} responses={responses} targets={work?.targets} hydrated readOnly />}
+        {reviewPage && <div className="mt-3 rounded-xl border p-4">
+          <nav aria-label="Submitted lesson sections" className="mb-4 flex flex-wrap items-center justify-between gap-2">
+            <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={sectionIndex === 0} onClick={() => setSectionIndex(i => i - 1)}>Previous section</button>
+            <label className="text-sm">Section <select aria-label="Submitted lesson section" className="min-h-11 rounded-lg border bg-card px-2" value={sectionIndex} onChange={e => setSectionIndex(Number(e.target.value))}>{reviewPages.map((_, i) => <option key={i} value={i}>{i + 1} of {reviewPages.length}</option>)}</select></label>
+            <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={sectionIndex === reviewPages.length - 1} onClick={() => setSectionIndex(i => i + 1)}>Next section</button>
+          </nav>
+          <BlockRenderer key={`${selected.id}:${sectionIndex}`} blocks={reviewPage.blocks} referenceBlocks={snapshot?.contentSnapshot?.blocks} lessonId={selected.lesson_id} responses={responses} targets={work?.targets} hydrated readOnly />
+        </div>}
         {work && <details open={!snapshot?.contentSnapshot?.blocks} className="my-3 rounded border p-3"><summary className="cursor-pointer font-semibold">Captured responses · all saved fields</summary>{work.work.map((w) => <div key={w.blockId} className="my-3 rounded border p-3"><p className="text-xs text-muted-foreground">{w.blockType} · {w.blockId}</p>{renderResponse(w.response)}</div>)}</details>}
 
         {work?.targets && onRateTarget && <section aria-label="Assess this lesson’s targets" className="my-3 rounded-lg border p-3"><h4 className="font-medium">Assessment targets</h4><p className="mb-2 text-xs text-muted-foreground">Open a target to record mastery. The lesson stays awaiting review until you return it.</p>{work.targets.map(t => <button key={t.id} className="mr-2 mb-2 min-h-11 rounded border px-3 py-2 text-sm" onClick={() => onRateTarget(selected.user_id,t.id)}>{t.statement} — assess</button>)}</section>}

@@ -135,13 +135,13 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
   const ended = state?.session.status === 'ended'
 
   return <div className={existingWindow !== undefined ? 'hidden' : 'mx-auto max-w-3xl space-y-5 p-6'}>
-    <h1 className="text-title-1">Connect the classroom screen</h1>
-    <p>Keep this page open on the computer connected to your projector. Sign in with the same teaching account on your iPad.</p>
+    <div className="rounded-2xl border bg-primary/5 p-6"><p className="text-overline text-primary">On your classroom computer</p><h1 className="mt-2 text-title-1">Connect the classroom screen</h1><p className="mt-3 text-muted-foreground">This computer displays the lesson. Your iPad is the remote.</p></div>
+    <ol className="grid list-none gap-3 sm:grid-cols-3">{[['1','Open the display','Use the button below to launch your deck in a separate window.'],['2','Move it to the projector','Use Extend display, then make the deck fullscreen.'],['3','Take your iPad','Sign in to the same account. Open Command Center and choose the running presentation.']].map(([step,title,detail]) => <li key={step} className="rounded-xl border bg-card p-4"><p className="text-overline text-primary">Step {step}</p><h2 className="mt-2 text-title-3">{title}</h2><p className="mt-2 text-caption text-muted-foreground">{detail}</p></li>)}</ol>
     <p className="text-title-3">{documentData?.lesson.title ?? 'Loading presentation…'}</p>
     {(error || loadError) && <p role="alert" className="text-destructive">{error || loadError}</p>}
     <Button className="min-h-14" disabled={!documentData || ended} onClick={connect}>{connected ? 'Reopen projector window' : 'Open projector window'}</Button>
     <p role="status">{ended ? 'Presentation ended.' : connected ? 'Projector window open. Move it onto the classroom display and enter fullscreen.' : 'The classroom screen will follow the iPad after you open the projector window.'}</p>
-    <p className="text-muted-foreground">Keep this connection page running beside the projector window. Use the iPad Command Center for slide changes.</p>
+    <div className="rounded-xl border bg-muted p-4"><p className="font-semibold">Keep both windows open on this computer</p><p className="mt-1 text-caption text-muted-foreground">The deck shows the lesson; this page receives your iPad commands. Switching to a lesson block preserves the deck’s slide position.</p><a className="mt-3 inline-flex min-h-12 items-center text-primary underline" href="/admin/command-center">Open Command Center</a></div>
     {portal && state && createPortal(<>
       {teaching.state && <span style={{ display: 'none' }} data-projection-signature={projectorSignature(state, teaching.state)} />}
       {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Presentation ended' : 'Screen blanked'} /> : <>

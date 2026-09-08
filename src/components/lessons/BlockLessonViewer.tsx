@@ -20,7 +20,7 @@ import { Radio, Timer } from 'lucide-react'
 import { calibrationCopy, doneTallies, firstLockedIndex, gateNote, pageBlockedBy, sectionTarget, splitHelpRuns } from '@/components/lessons/stepped'
 import { Lock, Lightbulb } from 'lucide-react'
 import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual, type DeckBlock } from '@/data/content-blocks'
-import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, CheckCircle2, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
+import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
 
@@ -216,7 +216,6 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   const pageUnsaved = page ? page.captureBlocks.filter((b) => !isBlockComplete(b, committed[b.id]?.response)) : []
 
   // Tasks bar fills by saved work.
-  const taskPct = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0
   const minsLeft = minutesLeft(sections, pageIdx)
   const pendingBlocks = blockingDrafts(blocks, responses)
   useEffect(() => {
@@ -333,12 +332,9 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             {/* tasks-saved bar — how much work is logged */}
             {totalTasks > 0 && (
               <div className="mt-1.5 flex items-center gap-2">
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
-                  <div className="h-full rounded-full transition-all" style={{ width: `${taskPct}%`, background: 'var(--reward)' }} />
-                </div>
                 <span className="text-xs font-medium whitespace-nowrap inline-flex items-center gap-1" style={{ color: allTasksDone ? 'var(--success)' : 'var(--muted-foreground)' }}>
                   {allTasksDone ? <Check size={12} /> : <Pencil size={11} />}
-                  {doneTasks} of {totalTasks} tasks saved
+                  {doneTasks} of {totalTasks} responses saved · progress, not a mastery score
                 </span>
               </div>
             )}
@@ -376,7 +372,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   </div>
                   {!ownVisual && (
                     <div className="text-sm" style={{ color: 'var(--foreground)' }}>
-                      {page.hasCapture ? 'Read the setup, then save your work below.' : 'Take this in before you move on.'}
+                      {page.hasCapture ? 'Show the idea and why it makes sense. A short explanation or labeled diagram is welcome.' : 'Take this in before you move on.'}
                     </div>
                   )}
                 </div>
@@ -392,7 +388,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
               <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{stepKind} · section {pageIdx + 1} of {pageCount}</div>
               <h2 className="lesson-headline mt-0.5" style={{ fontSize: 26, lineHeight: 1.15, letterSpacing: '-0.01em', color: 'var(--foreground)' }}>{sections[pageIdx]?.title}</h2>
               <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-                {sections[pageIdx]?.minutes ? `~${sections[pageIdx].minutes} min · ` : ''}{page.hasCapture ? 'Read the setup, then save your work.' : 'Take this in before you move on.'}
+                {sections[pageIdx]?.minutes ? `~${sections[pageIdx].minutes} min · ` : ''}{page.hasCapture ? 'Show the idea and why it makes sense. A short explanation or labeled diagram is welcome.' : 'Take this in before you move on.'}
               </div>
             </div>
           )}
@@ -423,37 +419,15 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
           </div>
 
           {/* soft nudge: unsaved save-blocks on this page (never blocks Next) */}
-          {!staffView && pageUnsaved.length > 0 && (
+          {!staffView && !submissionLocked && pageUnsaved.length > 0 && (
             <div
               className="mt-4 rounded-xl px-4 py-2.5 text-sm flex items-center gap-2"
               style={{ background: 'color-mix(in oklch, var(--reward) 14%, var(--card))', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))', color: 'var(--foreground)' }}
             >
               <Pencil size={15} style={{ color: 'var(--reward-foreground)' }} />
               <span>
-                {pageUnsaved.length === 1 ? 'There’s a task here to save' : `${pageUnsaved.length} tasks here to save`} so it’s logged for your teacher. You can keep going either way.
+                {gating && page && pageBlockedBy(page, committed) ? gateNote(pageBlockedBy(page, committed)) : `${pageUnsaved.length === 1 ? 'Save your response' : 'Save your responses'} when ready. You can return to this section before submitting.`}
               </span>
-            </div>
-          )}
-
-          {/* per-section checkpoint — students only */}
-          {!staffView && page && (
-            <div className="mt-5 flex justify-center">
-              {isComplete(pageIdx) ? (
-                <span
-                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold"
-                  style={{ color: 'var(--success)', background: 'color-mix(in oklch, var(--success) 12%, transparent)', border: '1px solid color-mix(in oklch, var(--success) 40%, var(--border))' }}
-                >
-                  <CheckCircle2 size={16} /> Section viewed
-                </span>
-              ) : (
-                <button
-                  onClick={() => { markComplete(pageIdx); if (!isLast) breakAway(pageIdx + 1) }}
-                  className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold"
-                  style={{ color: 'var(--success)', background: 'transparent', border: '1.5px solid color-mix(in oklch, var(--success) 55%, var(--border))', cursor: 'pointer' }}
-                >
-                  <CheckCircle2 size={16} /> Mark viewed{!isLast ? ' — next section' : ''}
-                </button>
-              )}
             </div>
           )}
 
@@ -468,7 +442,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             >
               <div className="text-sm max-w-sm" style={{ color: 'var(--muted-foreground)' }}>
                 <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save each answer, then submit.</span>{' '}
-                Autosave protects your drafts. Use Save answer to record each response, then submit for your teacher’s review.
+                Check that your answers show what you understand and why. Clear reasoning matters more than length. Autosave keeps drafts; Save answer records your work for review.
               </div>
               {pendingBlocks.length > 0 && <div className="w-full text-sm" role="status">
                 <p>Save these changed answers before submitting:</p>
@@ -553,7 +527,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Lock size={12} /> {gateNote(pageBlockedBy(page, committed))}</span>
                 )}
                 <button
-                  onClick={() => breakAway(pageIdx + 1)}
+                  onClick={() => { if (!staffView && !page?.hasCapture) markComplete(pageIdx); breakAway(pageIdx + 1) }}
                   disabled={isLocked(pageIdx + 1)}
                   className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold disabled:opacity-40"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)', border: 'none', cursor: isLocked(pageIdx + 1) ? 'not-allowed' : 'pointer' }}

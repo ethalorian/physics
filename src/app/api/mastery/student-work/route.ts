@@ -1,8 +1,9 @@
+import { evidenceContext } from '@/lib/mastery-evidence'
 import { evidenceWithLinks } from '@/lib/lesson-evidence-links'
 import { authorizeLesson } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { lessonsByTarget } from '@/lib/lesson-targets'
+import { targetSlugsInBlocks, lessonsByTarget } from '@/lib/lesson-targets'
 import { withAuth } from '@/lib/api-auth'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
 
@@ -75,9 +76,11 @@ export const GET = withAuth(async (request, ctx) => {
     // the owner plus every lesson whose blocks capture against it (MVP days share
     // their week's targets — lib/lesson-targets).
     let scopeLessonIds = lessonIds
+    let selectedTarget: { id: string; slug: string } | null = null
     if (targetId) {
       const { data: tRow } = await supabaseAdmin.from('learning_targets').select('id, slug, lesson_id').eq('id', targetId).maybeSingle()
       const t = tRow as { id: string; slug: string; lesson_id: string | null } | null
+      selectedTarget = t
       const carriers = t ? (lessonsByTarget(lessons, [t]).get(t.id) ?? []) : []
       scopeLessonIds = carriers.filter((id) => lessonIds.includes(id))
     }
@@ -118,7 +121,18 @@ export const GET = withAuth(async (request, ctx) => {
         const lesson = lessons.find((l) => l.id === b.lesson_id)
         if (!lesson?.content_blocks?.blocks?.some((block) => (block as { id: string }).id === b.block_id)) continue
       }
+      const submission = b.lesson_id ? latestSub.get(b.lesson_id) : undefined
+      const currentDocument = lessons.find((l) => l.id === b.lesson_id)?.content_blocks
+      const snapshotDocument = submission?.content_snapshot as { blocks?: unknown[] } | null
+      const document = b.submission_id && snapshotDocument ? snapshotDocument : currentDocument
+      const block = document?.blocks?.find((raw) => raw && typeof raw === 'object' && (raw as { id?: string }).id === b.block_id)
+      const context = evidenceContext(block)
+      const attributed = [...context.targets, ...(b.target_id ? [b.target_id] : [])]
+      // Explicitly unrelated responses must never feed this target's rating.
+      if (selectedTarget && attributed.length && !attributed.some((id) => id === selectedTarget.id || id === selectedTarget.slug)) continue
       work.push({
+        prompt: context.prompt || null, targetLinked: attributed.length > 0,
+
         lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Unlinked group work', lessonId: b.lesson_id,
         blockType: b.block_type, blockId: b.block_id, response: b.response, createdAt: b.created_at,
         responseMode: b.response_mode ?? null, scaffoldsUsed: b.scaffolds_used ?? [], evidenceSource: b.evidence_source ?? null,
@@ -135,10 +149,11 @@ export const GET = withAuth(async (request, ctx) => {
     // Targets + this student's rating history for the unit
     const { data: targetRowsRaw } = await supabaseAdmin
       .from('learning_targets')
-      .select('id, slug, statement, domain, order_index')
+      .select('id, slug, statement, domain, order_index, lesson_id')
       .eq('unit_id', unitId)
       .order('order_index', { ascending: true })
-    const targets = ((targetRowsRaw ?? []) as TargetRow[]).map((t) => ({ id: t.id, slug: t.slug, statement: t.statement, domain: t.domain }))
+    const lessonSlugs = requestedLesson ? targetSlugsInBlocks((latestSub.get(requestedLesson)?.content_snapshot as LessonRow['content_blocks']) ?? lessons.find((l) => l.id === requestedLesson)?.content_blocks) : []
+    const targets = ((targetRowsRaw ?? []) as (TargetRow & { lesson_id?: string })[]).filter((t) => !requestedLesson || t.lesson_id === requestedLesson || lessonSlugs.includes(t.slug) || lessonSlugs.includes(t.id)).map((t) => ({ id: t.id, slug: t.slug, statement: t.statement, domain: t.domain }))
     const targetIds = targets.map((t) => t.id)
 
     let records: RecordRow[] = []

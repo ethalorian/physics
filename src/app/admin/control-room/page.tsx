@@ -1,6 +1,9 @@
 "use client"
 
+import { evidenceResponseText } from '@/lib/mastery-evidence'
+
 import Link from 'next/link'
+import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import LessonContextLinks from '@/components/admin/LessonContextLinks'
@@ -28,7 +31,7 @@ interface GridData {
   cells: Record<string, Record<string, Cell>>
   pending?: Record<string, Record<string, boolean>>
 }
-interface WorkItem { lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[]; evidenceSource?: string | null; confidence?: string | null; role?: string | null }
+interface WorkItem { prompt?: string | null; targetLinked?: boolean; lessonTitle: string; lessonId?: string | null; blockType: string | null; blockId: string; response: unknown; createdAt: string; responseMode?: string | null; scaffoldsUsed?: string[]; evidenceSource?: string | null; confidence?: string | null; role?: string | null }
 interface RecordItem { target_id: string; level: number; observed_at: string; evidence_source?: string | null }
 interface WorkData { userId: string; unitId: string; targets: Target[]; records: RecordItem[]; work: WorkItem[] }
 
@@ -54,28 +57,6 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 // ●=Got it(3) · ◐=Almost(2) · ○=Not yet(1) · –=not rated(0).
 const bandGlyph = (b: 0 | 1 | 2 | 3) => (b === 3 ? '●' : b === 2 ? '◐' : b === 1 ? '○' : '–')
 
-// Flatten a captured block response to a short text blob for the AI assist.
-function workToText(r: unknown): string {
-  if (r && typeof r === 'object') {
-    const o = r as Record<string, unknown>
-    if ('given' in o || 'equation' in o || 'work' in o || 'answer' in o || 'workStrokes' in o || 'sandbox' in o) {
-      const parts = ['given', 'equation', 'work', 'answer'].filter((k) => o[k]).map((k) => `${k}: ${o[k]}`)
-      const sb = o.sandbox && typeof o.sandbox === 'object' ? (o.sandbox as { lines?: unknown[] }) : null
-      if (sb && Array.isArray(sb.lines) && sb.lines.length > 0) parts.push(`work & answer: ${sb.lines.map(String).join(' | ')}`)
-      if (Array.isArray(o.workStrokes) && o.workStrokes.length > 0) parts.push('work & answer: [handwritten — see drawing]')
-      return parts.join('; ')
-    }
-    if ('text' in o && typeof o.text === 'string') return o.text
-    if ('optionId' in o || 'explain' in o) return [o.optionId ? `chose: ${o.optionId}` : '', o.explain ? `explain: ${o.explain}` : ''].filter(Boolean).join('; ')
-    if ('pattern' in o || 'interpret' in o) {
-      return [o.pattern ? `pattern: ${o.pattern}` : '', o.interpret ? `interpret: ${o.interpret}` : ''].filter(Boolean).join('; ')
-    }
-    if ('lines' in o && Array.isArray(o.lines)) return `sandbox: ${(o.lines as unknown[]).map(String).join(' | ')}`
-    if ('strokes' in o) return '[drawing]'
-    return JSON.stringify(o)
-  }
-  return String(r ?? '')
-}
 const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 
 // "Last signed in" for the roster: friendly relative time + recency color.
@@ -110,7 +91,7 @@ function ResponseView({ response }: { response: unknown }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
     // SEI captures: { text | strokes, mode } and the inline question { optionId, explain }.
-    if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{o.text}</p>
+    if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <div><p className="text-sm whitespace-pre-wrap">{o.text}</p>{Array.isArray(o.strokes) && o.strokes.length > 0 && <StrokesSvg strokes={o.strokes as StrokeShape[]} label="Student drawing" />}</div>
     if (('optionId' in o || 'explain' in o) && !('given' in o)) {
       return (
         <div className="text-sm">
@@ -267,13 +248,15 @@ export default function ControlRoomPage() {
   const [sourceFilter, setSourceFilter] = useState<'' | EvidenceSource>('')
   const [evidence, setEvidence] = useState('observation')
   const [saving, setSaving] = useState(false)
+  const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3 | null>(null)
+  const [evidenceIndex, setEvidenceIndex] = useState(0)
   // Written feedback (one-way note to the student, lands in their bell + growth page)
   const [fbText, setFbText] = useState('')
   const [fbGeneral, setFbGeneral] = useState(false)
   const [fbSending, setFbSending] = useState(false)
   const [fbSent, setFbSent] = useState(false)
   const [fbHistory, setFbHistory] = useState<{ id: string; message: string; created_at: string }[]>([])
-  const [suggestion, setSuggestion] = useState<{ level: number; rationale: string } | null>(null)
+  const [suggestion, setSuggestion] = useState<{ level: number | null; rationale: string; nextStep?: string } | null>(null)
   const [suggesting, setSuggesting] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
@@ -381,9 +364,13 @@ export default function ControlRoomPage() {
 
   const openCell = useCallback((studentId: string, targetId: string) => {
     // The grading drawer is YOUR roster only — admin included.
-    if (ratingInFlight.current || grid?.students.find((s) => s.id === studentId)?.ratable === false) return
+    if (ratingInFlight.current || fbSending || grid?.students.find((s) => s.id === studentId)?.ratable === false) return
     const version = ++workRequestVersion.current
     setSuggesting(false)
+    setSourceFilter(''); setEvidenceIndex(0); setError(null)
+    let draft: { text?: string; level?: 1 | 2 | 3 | null; general?: boolean } = {}
+    try { draft = JSON.parse(sessionStorage.getItem(`lesson-review:${studentId}:${targetId}`) ?? '{}') } catch {}
+    setFbText(draft.text ?? ''); setFbGeneral(draft.general ?? false); setSelectedLevel(draft.level ?? null)
     setSel({ studentId, targetId })
     setWork(null)
     setSuggestion(null)
@@ -397,15 +384,15 @@ export default function ControlRoomPage() {
       .then((r) => r.json())
       .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => { if (version === workRequestVersion.current) setComparison(d) })
       .catch(() => {})
-  }, [unitId, grid])
+  }, [unitId, grid, fbSending])
 
-  const closeDrawer = () => { workRequestVersion.current++; setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }
+  const closeDrawer = useCallback(() => { if (ratingInFlight.current || fbSending) return; workRequestVersion.current++; setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }, [fbSending])
   // A feedback draft belongs to one student — never carry it to the next.
   const fbStudentRef = useRef<string | null>(null)
   useEffect(() => {
     if (sel?.studentId !== fbStudentRef.current) {
       fbStudentRef.current = sel?.studentId ?? null
-      setFbText(''); setFbGeneral(false); setFbSent(false); setFbHistory([])
+      setFbSent(false); setFbHistory([])
       if (sel?.studentId) {
       // Timely feedback builds on what you last said — pull this student's
       // recent notes so the next one continues the conversation.
@@ -418,12 +405,21 @@ export default function ControlRoomPage() {
     }
   }, [sel?.studentId])
 
+  useEffect(() => {
+    if (!sel) return
+    try { sessionStorage.setItem(`lesson-review:${sel.studentId}:${sel.targetId}`, JSON.stringify({ text: fbText, level: selectedLevel, general: fbGeneral })) } catch {}
+  }, [sel, fbText, selectedLevel, fbGeneral])
+
+  const visibleWork = (work?.work ?? []).filter((w) => !sourceFilter || w.evidenceSource === sourceFilter)
+  const activeEvidence = visibleWork[Math.min(evidenceIndex, Math.max(0, visibleWork.length - 1))]
+
   const suggestRating = async () => {
     if (!work || !selTarget) return
     const version = workRequestVersion.current
     setSuggesting(true)
-    const workText = work.work
-      .map((w) => `${w.lessonTitle}${w.blockType ? ` (${w.blockType})` : ''}: ${workToText(w.response)}`)
+    const workText = visibleWork
+      .filter((w) => !['marzano', 'self_assessment', 'self_rating'].includes(w.blockType ?? ''))
+      .map((w) => `${w.lessonTitle} (${w.blockType ?? 'response'}), ${w.createdAt}\nPrompt: ${w.prompt || '[original prompt unavailable]'}\nTarget link: ${w.targetLinked ? 'explicit' : 'not confirmed; judge relevance'}\nSource: ${w.evidenceSource ?? 'unknown'}; response mode: ${w.responseMode ?? 'unknown'}; scaffolds: ${(w.scaffoldsUsed ?? []).join(', ') || 'none recorded'}\nStudent response: ${evidenceResponseText(w.response)}`)
       .join('\n')
     try {
       const res = await fetch('/api/mastery/suggest-rating', {
@@ -433,7 +429,7 @@ export default function ControlRoomPage() {
       })
       const d = await res.json()
       if (version !== workRequestVersion.current) return
-      if (res.ok) setSuggestion({ level: d.level, rationale: d.rationale })
+      if (res.ok) setSuggestion({ level: d.level, rationale: d.rationale, nextStep: d.nextStep })
       else setSuggestion({ level: 0, rationale: d.error ?? 'Could not suggest a rating' })
     } catch {
       if (version === workRequestVersion.current) setSuggestion({ level: 0, rationale: 'Could not reach the AI assist' })
@@ -445,12 +441,15 @@ export default function ControlRoomPage() {
   const saveRating = async (level: 1 | 2 | 3) => {
     // In-flight guard: key auto-repeat or a fast double-tap must never write
     // two records for one intended rating.
-    if (ratingInFlight.current || saving) return
+    if (ratingInFlight.current || saving || fbSending) return
     if (!sel || !grid) return
     ratingInFlight.current = true
     const student = grid.students.find((s) => s.id === sel.studentId)
     setSaving(true)
+    setError(null)
     try {
+      // Feedback succeeds first. If the rating fails, retry only the rating.
+      if (fbText.trim() && !(await sendFeedback())) throw new Error('Feedback was not sent. Your rating has not been saved.')
       const response = await fetch('/api/mastery/records', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -460,6 +459,8 @@ export default function ControlRoomPage() {
         const data = await response.json().catch(() => ({}))
         throw new Error(data.error ?? 'Could not save the rating')
       }
+      try { sessionStorage.removeItem(`lesson-review:${sel.studentId}:${sel.targetId}`) } catch {}
+      setSelectedLevel(null)
       // Refresh the grid + queue so the cell and queue reflect the new rating.
       loadGrid(unitId)
       loadQueue(unitId)
@@ -478,7 +479,7 @@ export default function ControlRoomPage() {
 
   const sendFeedback = async () => {
     const msg = fbText.trim()
-    if (!msg || !sel || fbSending) return
+    if (!msg || !sel || fbSending) return false
     setFbSending(true)
     try {
       const res = await fetch('/api/feedback', {
@@ -490,8 +491,10 @@ export default function ControlRoomPage() {
       setFbText('')
       setFbSent(true)
       setTimeout(() => setFbSent(false), 2500)
+      return true
     } catch {
       setError('Could not send the feedback')
+      return false
     } finally {
       setFbSending(false)
     }
@@ -552,7 +555,7 @@ export default function ControlRoomPage() {
     // Pause on the gate before swapping students; null closes when none are left.
     if (next) setNextStudentGate({ id: next.id, name: next.name })
     else closeDrawer()
-  }, [openPendingCell, rosterForView, pendingCellsFor])
+  }, [openPendingCell, rosterForView, pendingCellsFor, closeDrawer])
 
   // "Grade pending" launcher: open the first pending student's first pending cell.
   const startGradingPending = useCallback(() => {
@@ -561,7 +564,7 @@ export default function ControlRoomPage() {
     if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId)
   }, [pendingStudents, pendingCellsFor, openCell])
 
-  // Keyboard-first grading: 1/2/3 rate (mastery); Esc closes. Number keys are
+  // Keyboard-first grading: 1/2/3 select a rating; Esc closes. Number keys are
   // ignored while typing in a field.
   useEffect(() => {
     if (!sel) return
@@ -578,12 +581,12 @@ export default function ControlRoomPage() {
       // e.repeat = the key is being HELD (OS auto-repeat) — one press, one rating.
       if (e.repeat || saving) return
       if (selStudent?.ratable === false) return // view-only (another teacher's student)
-      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); saveRating(Number(e.key) as 1 | 2 | 3) }
+      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); setSelectedLevel(Number(e.key) as 1 | 2 | 3) }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, nextStudentGate, saving])
+  }, [sel, nextStudentGate, saving, closeDrawer])
 
   // Inter-student gate: any key (or Continue) advances to the next student;
   // Esc closes instead. One keystroke per student, giving your eyes a beat.
@@ -603,7 +606,7 @@ export default function ControlRoomPage() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [nextStudentGate, openPendingCell])
+  }, [nextStudentGate, openPendingCell, closeDrawer])
 
   // The queue is demoted to a collapsed "Priority" strip: only the truly urgent
   // (aged 48h+ or self-flagged "Not yet"). Everything else is walked by the one
@@ -842,17 +845,17 @@ export default function ControlRoomPage() {
 
       {/* scrim + drawer */}
       {sel && (
-        <>
-          <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <aside
+        <Dialog.Root open onOpenChange={(open) => { if (!open) closeDrawer() }}><Dialog.Portal>
+          <Dialog.Overlay style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
+          <Dialog.Content aria-describedby="lesson-review-description" onEscapeKeyDown={(event) => event.preventDefault()}
             style={{
-              position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 94vw)', zIndex: 100,
+              position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 100vw)', zIndex: 100,
               background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row',
               boxShadow: '-20px 0 50px -20px color-mix(in oklch, var(--foreground) 40%, transparent)',
             }}
           >
             {/* roster rail — pending students; greyed when done, click to jump */}
-            <div style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+            <div className="hidden xl:flex" style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
               <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
                 {pendingStudents.length > 0 ? `${pendingStudents.length} to grade` : 'All graded'}
               </div>
@@ -889,8 +892,9 @@ export default function ControlRoomPage() {
             {/* content column */}
             <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, position: 'relative' }}>
             <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)' }}>
-              <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
-              <div className="font-bold" style={{ fontSize: 18 }}>{selStudent?.name}</div>
+              <button aria-label="Close lesson mastery review" disabled={saving || fbSending} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
+              <Dialog.Title className="text-2xl font-bold">{selStudent?.name}</Dialog.Title>
+              <p id="lesson-review-description" className="mt-1 text-sm text-muted-foreground">Read the evidence, choose a rating, and give one useful next step.</p>
               <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{selTarget?.statement}</div>
               <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: 'capitalize' }}>{selTarget?.domain}</div>
               {/* Progress lives in the roster rail (and the between-students gate) — no
@@ -899,15 +903,15 @@ export default function ControlRoomPage() {
 
             {/* two columns: evidence on the left; grading + written feedback —
                 the teacher's two acts — always in view on the right. */}
-            <div style={{ display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0 }}>
-            <div style={{ padding: '18px 20px', overflowY: 'auto', flex: 1, minWidth: 0, borderRight: '1px solid var(--border)' }}>
+            <div className="flex flex-col lg:flex-row overflow-y-auto" style={{ flex: 1, minHeight: 0 }}>
+            <div className="lg:flex-1 lg:overflow-y-auto" style={{ padding: '18px 20px', flexShrink: 0, minWidth: 0, borderRight: '1px solid var(--border)' }}>
               {/* submitted work — first, right under the header (the thing being judged) */}
-              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Work for this target&apos;s lesson</div>
+              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Evidence for this target</div>
               {/* M-3 · filter by evidence source; only sources present in this student's work are offered */}
               {work && work.work.some((w) => w.evidenceSource) && (
                 <div className="flex flex-wrap gap-1 mb-2">
                   {(['', ...EVIDENCE_SOURCES.filter((s) => work.work.some((w) => w.evidenceSource === s))] as ('' | EvidenceSource)[]).map((s) => (
-                    <button key={s || 'all'} onClick={() => setSourceFilter(s)} className="text-[11px] rounded-full border px-2 py-0.5"
+                    <button key={s || 'all'} onClick={() => { setSourceFilter(s); setEvidenceIndex(0); setSuggestion(null); workRequestVersion.current++; setSuggesting(false) }} className="text-[11px] rounded-full border px-2 py-0.5"
                       style={{ borderColor: sourceFilter === s ? 'var(--primary)' : 'var(--border)', background: sourceFilter === s ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontWeight: sourceFilter === s ? 700 : 500 }}>
                       {s ? EVIDENCE_LABEL[s] : 'All'}
                     </button>
@@ -918,7 +922,13 @@ export default function ControlRoomPage() {
               {!workLoading && work && work.work.length === 0 && (
                 <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
               )}
-              {!workLoading && work && work.work.filter((w) => !sourceFilter || w.evidenceSource === sourceFilter).map((w) => (
+              {!workLoading && visibleWork.length > 0 && <nav aria-label="Review evidence" className="mb-4 flex items-center justify-between gap-2">
+                <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={evidenceIndex === 0} onClick={() => setEvidenceIndex((i) => i - 1)}>Previous</button>
+                <span className="text-sm text-muted-foreground">Response {Math.min(evidenceIndex + 1, visibleWork.length)} of {visibleWork.length}</span>
+                <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={evidenceIndex >= visibleWork.length - 1} onClick={() => setEvidenceIndex((i) => i + 1)}>Next</button>
+              </nav>}
+              {!workLoading && work && visibleWork.length === 0 && work.work.length > 0 && <p className="text-sm">No evidence matches this source.</p>}
+              {!workLoading && activeEvidence && [activeEvidence].map((w) => (
                 <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
                   <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
                     {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
@@ -932,6 +942,9 @@ export default function ControlRoomPage() {
                       </span>
                     )}
                   </div>
+                  {w.prompt ? <div className="mb-4 border-b pb-3"><p className="mb-1 text-xs font-semibold text-muted-foreground">Original prompt</p><p className="whitespace-pre-wrap text-base">{w.prompt}</p></div> : <p className="mb-3 text-xs text-muted-foreground">Original prompt unavailable. Check the lesson context before rating.</p>}
+                  {w.targetLinked === false && <p className="mb-3 text-xs text-muted-foreground">Target link is unconfirmed. Check whether this response demonstrates the selected target.</p>}
+                  <p className="mb-2 text-xs font-semibold text-muted-foreground">Student response</p>
                   <ResponseView response={w.response} />
                 </div>
               ))}
@@ -995,7 +1008,7 @@ export default function ControlRoomPage() {
 
             {/* action column — rate, then say something useful about it.
                 View-only when this student is on another teacher's roster. */}
-            <div style={{ width: 380, flexShrink: 0, padding: '16px 20px', overflowY: 'auto', background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
+            <div className="w-full lg:w-[380px] lg:overflow-y-auto" style={{ flexShrink: 0, padding: '16px 20px', background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
               {selStudent?.ratable === false ? (
                 <p className="text-sm rounded-lg px-3 py-2.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
                   View only — this student is on another teacher&apos;s roster. Their teacher records the ratings.
@@ -1005,7 +1018,7 @@ export default function ControlRoomPage() {
                 <span className="text-sm font-semibold">Your mastery rating</span>
                 <button
                   onClick={suggestRating}
-                  disabled={suggesting || !work || work.work.length === 0}
+                  disabled={suggesting || workLoading || visibleWork.length === 0}
                   className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold disabled:opacity-50"
                   style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', color: 'var(--primary)', background: 'transparent', cursor: 'pointer' }}
                   title="Ask Claude to suggest a rating"
@@ -1014,17 +1027,19 @@ export default function ControlRoomPage() {
                 </button>
               </div>
               {suggestion && (
-                <div className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
-                  {suggestion.level >= 1 && suggestion.level <= 3 ? (
+                <div role="status" className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
+                  {suggestion.level !== null && suggestion.level >= 1 && suggestion.level <= 3 ? (
                     <>
                       <b>Claude suggests: {levelWord(suggestion.level)} ({suggestion.level})</b> — {suggestion.rationale}
-                      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — tap a level to record it.</div>
+                      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — select a level, then save when ready.</div>
                     </>
                   ) : (
                     <span style={{ color: 'var(--muted-foreground)' }}>{suggestion.rationale}</span>
                   )}
+                  {suggestion.nextStep && <p className="mt-2"><b>Next step:</b> {suggestion.nextStep}</p>}
                 </div>
               )}
+              <div className="mb-3 rounded-xl border p-3 text-sm leading-relaxed"><b>Quality of understanding</b><p className="mt-1">Look for an accurate idea, supporting evidence, and clear reasoning. One concise explanation or labeled diagram can be enough.</p><details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">Rating anchors</summary><p className="mt-2">1 · misconception or conceptual support needed. 2 · partial understanding with a specific gap. 3 · demonstrates the target. Missing evidence stays unrated. Completion and answer length do not raise mastery.</p></details></div>
               <div className="rounded-lg px-3 py-2 mb-2" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)', border: '0.5px dashed var(--border)' }}>
                 <label htmlFor="evidence-src" className="block text-xs font-semibold mb-1" style={{ color: 'var(--secondary-foreground)' }}>
                   Evidence for this rating
@@ -1034,20 +1049,20 @@ export default function ControlRoomPage() {
                     {EVIDENCE.map((ev) => <option key={ev} value={ev}>{ev}</option>)}
                   </select>
                 </div>
-                <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Tags the rating you save below — it&apos;s not a filter.</p>
               </div>
               <div className="flex gap-2">
                 {[1, 2, 3].map((lvl) => (
                   <button
                     key={lvl}
                     disabled={saving}
-                    onClick={() => saveRating(lvl as 1 | 2 | 3)}
+                    onClick={() => setSelectedLevel(lvl as 1 | 2 | 3)}
+                    aria-pressed={selectedLevel === lvl}
                     className="flex-1 rounded-xl font-bold"
                     style={{
                       padding: '12px 0', fontSize: 13, cursor: 'pointer', border: '1.5px solid var(--border)',
                       background: lvl === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lvl === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
                       color: lvl === 1 ? 'var(--destructive)' : lvl === 2 ? 'var(--reward-foreground)' : 'var(--success)',
-                      boxShadow: suggestion && suggestion.level === lvl ? '0 0 0 2px var(--primary)' : undefined,
+                      boxShadow: selectedLevel === lvl ? '0 0 0 2px var(--primary)' : undefined,
                     }}
                   >
                     {lvl} · {levelWord(lvl)}
@@ -1055,7 +1070,7 @@ export default function ControlRoomPage() {
                 ))}
               </div>
               <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                Keys <b>1 · 2 · 3</b> rate and advance. Finishes this student&apos;s pending work, then moves to the next student.
+                Keys <b>1 · 2 · 3</b> select. Save review records your choice and continues.
               </p>
               {/* Written feedback — one-way note to the student (Stiggins: name a
                   strength against the target, then the next step). Sends on its
@@ -1066,10 +1081,10 @@ export default function ControlRoomPage() {
                   {fbSent && <span className="text-sm font-bold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
                 </div>
                 <div className="px-3 pb-3 pt-2">
-                  <div className="flex gap-1.5 mb-1.5">
+                  <div className="flex flex-wrap gap-1.5 mb-1.5">
                     {['Strength: ', 'Next step: '].map((stem) => (
                       <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                        className="rounded-full px-3 py-1.5 text-sm font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
+                        className="whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
                         + {stem.replace(': ', '')}
                       </button>
                     ))}
@@ -1078,6 +1093,8 @@ export default function ControlRoomPage() {
                     </label>
                   </div>
                   <textarea
+                    aria-label="Feedback and next step"
+                    disabled={saving || fbSending}
                     value={fbText}
                     onChange={(e) => setFbText(e.target.value)}
                     rows={3}
@@ -1086,14 +1103,14 @@ export default function ControlRoomPage() {
                     className="w-full rounded-lg px-3 py-2.5" 
                     style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', resize: 'vertical', fontSize: 15, lineHeight: 1.5 }}
                   />
-                  <div className="flex items-center justify-between mt-1.5">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mt-1.5">
                     <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                      {fbGeneral ? 'General note' : 'On this target'} · lands in their bell + growth page
+                      {fbGeneral ? 'General note' : 'Target feedback'}
                     </span>
-                    <button type="button" onClick={sendFeedback} disabled={fbSending || !fbText.trim()}
-                      className="rounded-lg px-5 py-2.5 text-sm font-bold disabled:opacity-50"
+                    <button type="button" onClick={() => void sendFeedback()} disabled={saving || fbSending || !fbText.trim()}
+                      className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold disabled:opacity-50"
                       style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
-                      {fbSending ? 'Sending…' : 'Send'}
+                      {fbSending ? 'Sending…' : 'Send feedback only'}
                     </button>
                   </div>
                   {fbHistory.length > 0 && (
@@ -1107,6 +1124,12 @@ export default function ControlRoomPage() {
                     </div>
                   )}
                 </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <button type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={saving || fbSending || workLoading || !work || selectedLevel === null} onClick={() => { if (selectedLevel !== null) void saveRating(selectedLevel) }}>{saving ? 'Saving review…' : 'Save review and continue'}</button>
+                <button type="button" className="min-h-11 text-sm underline" disabled={saving} onClick={() => { setSelectedLevel(null); setFbText((text) => text || 'Next step: Show how your evidence supports your answer.'); }}>Need more evidence — leave unrated</button>
+                <p className="text-xs text-muted-foreground">Drafts are kept during this session. Send feedback only when you need a follow-up before rating.</p>
+                {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
               </div>
               </>)}
             </div>
@@ -1128,8 +1151,8 @@ export default function ControlRoomPage() {
               </div>
             )}
             </div>
-          </aside>
-        </>
+          </Dialog.Content>
+        </Dialog.Portal></Dialog.Root>
       )}
     </div>
   )
