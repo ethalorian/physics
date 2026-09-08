@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { type ReactNode, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { useSimulations } from '@/contexts/SimulationContext'
@@ -43,7 +43,7 @@ const SHELL_CSS = `
   @media (prefers-reduced-motion: reduce) { .sim-fade-in { animation: none; } }
 `
 
-export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId?: string }) {
+export default function SimLab({ def, lessonId, renderTools }: { def: SimDefinition; lessonId?: string; renderTools?: (engine: SimEngine | null) => ReactNode }) {
   const controlId = useId()
   const router = useRouter()
   const { data: session } = useSession()
@@ -369,7 +369,7 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
                 style={{ background: 'color-mix(in oklch, var(--card) 90%, transparent)', border: '0.5px solid var(--border)', color: 'var(--muted-foreground)', backdropFilter: 'blur(4px)' }}
                 aria-hidden="true"
               >
-                <Hand size={13} /> Drag or adjust a control to explore
+                <Hand size={13} /> {renderTools ? 'Click the maze, then use arrow keys' : 'Drag or adjust a control to explore'}
               </div>
             )}
           </div>
@@ -391,6 +391,8 @@ export default function SimLab({ def, lessonId }: { def: SimDefinition; lessonId
               })}
             </div>
           )}
+
+          {renderTools?.(engineRef.current)}
 
           {/* "what to notice" — optional interpretation prompts beside the numbers */}
           {whatToNotice.length > 0 && (

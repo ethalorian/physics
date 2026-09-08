@@ -1,269 +1,138 @@
 import type { SimEngine, ParamValues } from '@/components/simulations/lab/contract'
-import { PAL, clearField, arrow, chip } from '@/components/simulations/lab/draw'
+import { arrow } from '@/components/simulations/lab/draw'
+import { makeMaze, MazeRun, measure, route, type Direction } from './model'
 
-// Maze Navigator: vector addition — drive a mouse through a 20x20 maze with the
-// arrow keys / WASD to reach the cheese. As it moves, the canvas draws the
-// position vector built from its x-component (coral) and y-component (teal), with
-// the resultant r = x + y as a dashed lavender arrow from the origin. The sim
-// evolves over time (held keys move the mouse continuously), so movement is
-// integrated in step(dt) while the SimLab shell owns the animation loop.
-
-interface Position { x: number; y: number } // cell coordinates (one cell = 1 m)
-
-const MAZE_W = 20
-const MAZE_H = 20
-// Bespoke moved 0.05 cells/frame at ~60fps. Convert to cells/second so the
-// fixed-dt shell loop produces the same on-screen speed.
-const MOVE_SPEED = 0.05 * 60 // cells per second
-const START: Position = { x: 0.5, y: 0.5 }
-const CHEESE: Position = { x: 19.5, y: 19.5 }
-
-// 1 = wall, 0 = path (identical to the bespoke layout)
-const MAZE_LAYOUT = [
-  [0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-  [1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
-]
-
-export function createMazeVectorsEngine(
-  canvas: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D,
-  _initial: ParamValues,
-  _opts?: { invalidate: () => void },
-): SimEngine {
-  let mousePos: Position = { ...START }
-  let moveCount = 0
-  let hasWon = false
-  const keys: Set<string> = new Set()
-
-  const dims = () => {
-    const dpr = window.devicePixelRatio || 1
-    return { w: canvas.width / dpr, h: canvas.height / dpr }
+export interface MazeEngine extends SimEngine {
+  move(direction: Direction): void
+  newMaze(): void
+  hint(): void
+  record(): void
+  checkPrediction(x: string, y: string, magnitude: string): string
+}
+export function createMazeVectorsEngine(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, initial: ParamValues, opts?: { invalidate: () => void }): MazeEngine {
+  let params = initial, seed = 41, run = new MazeRun(makeMaze(Number(initial.size) || 21, seed))
+  let hintCell: { x: number; y: number } | undefined
+  let message = 'Find the gold goal. Each step is 1 m.'
+  let rows: (number | string)[][] = []
+  let predictionCorrect = false, trial = 0
+  const originalTabIndex = canvas.getAttribute('tabindex')
+  canvas.tabIndex = 0
+  canvas.setAttribute('aria-label', 'Vector maze. Focus here and use arrow keys or W A S D. Each step is one metre. North is positive y. Movement buttons and measurements follow the maze.')
+  const update = () => { render(); opts?.invalidate() }
+  function reset() {
+    trial++
+    run = new MazeRun(makeMaze(Number(params.size) || 21, seed)); rows = []; hintCell = undefined; predictionCorrect = false
+    message = 'Find the gold goal. Each step is 1 m.'; update()
   }
-
-  // The maze is square; fit it inside the available canvas and centre it. cellSize
-  // is the on-screen size of one cell; (ox, oy) is the top-left of the maze.
-  const layout = () => {
-    const { w, h } = dims()
-    const size = Math.min(w, h)
-    const cellSize = size / MAZE_W
-    const ox = (w - cellSize * MAZE_W) / 2
-    const oy = (h - cellSize * MAZE_H) / 2
-    return { cellSize, ox, oy }
-  }
-
-  const isWall = (row: number, col: number) =>
-    row >= 0 && row < MAZE_H && col >= 0 && col < MAZE_W && MAZE_LAYOUT[row][col] === 1
-
-  function canMoveTo(x: number, y: number): boolean {
-    if (x < 0 || x >= MAZE_W || y < 0 || y >= MAZE_H) return false
-    const checkRadius = 0.25
-    const checkPoints = [
-      { x: x, y: y },
-      { x: x - checkRadius, y: y },
-      { x: x + checkRadius, y: y },
-      { x: x, y: y - checkRadius },
-      { x: x, y: y + checkRadius },
-      { x: x - checkRadius, y: y - checkRadius },
-      { x: x + checkRadius, y: y - checkRadius },
-      { x: x - checkRadius, y: y + checkRadius },
-      { x: x + checkRadius, y: y + checkRadius },
-    ]
-    for (const point of checkPoints) {
-      const col = Math.floor(point.x)
-      const row = Math.floor(point.y)
-      if (row < 0 || row >= MAZE_H || col < 0 || col >= MAZE_W) return false
-      if (isWall(row, col)) return false
-    }
-    return true
-  }
-
   function render() {
-    const { w, h } = dims()
-    const { cellSize, ox, oy } = layout()
-
-    clearField(ctx, w, h)
-
-    ctx.save()
-    ctx.translate(ox, oy)
-
-    // Draw maze grid — walls in strong grid tone, paths on the surface tone
-    for (let row = 0; row < MAZE_H; row++) {
-      for (let col = 0; col < MAZE_W; col++) {
-        const x = col * cellSize
-        const y = row * cellSize
-        if (isWall(row, col)) {
-          ctx.fillStyle = PAL.gridStrong
-          ctx.fillRect(x, y, cellSize, cellSize)
-        } else {
-          ctx.fillStyle = PAL.surface
-          ctx.fillRect(x, y, cellSize, cellSize)
-        }
-        ctx.strokeStyle = PAL.grid
-        ctx.lineWidth = 1
-        ctx.strokeRect(x, y, cellSize, cellSize)
-      }
+    const dpr = window.devicePixelRatio || 1, w = canvas.width / dpr, h = canvas.height / dpr
+    const size = Math.min(w - 24, h - 78), cell = size / run.maze.size, ox = (w - size) / 2, oy = 48
+    ctx.fillStyle = '#f8fafc'; ctx.fillRect(0, 0, w, h)
+    ctx.fillStyle = '#334155'; ctx.font = '600 13px system-ui'; ctx.textAlign = 'left'
+    ctx.fillText('N ↑ +y   •   E → +x   •   1 step = 1 m', 14, 25)
+    const point = (p: { x: number; y: number }) => ({ x: ox + (p.x + .5) * cell, y: oy + (p.y + .5) * cell })
+    for (let y = 0; y < run.maze.size; y++) for (let x = 0; x < run.maze.size; x++) {
+      ctx.fillStyle = run.maze.walls[y][x] ? '#334155' : '#ffffff'
+      ctx.fillRect(ox + x * cell, oy + y * cell, cell + .3, cell + .3)
+      if (!run.maze.walls[y][x]) { ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = .5; ctx.strokeRect(ox + x * cell, oy + y * cell, cell, cell) }
     }
-
-    // Start cell highlight (origin)
-    ctx.fillStyle = 'rgba(127, 119, 221, 0.18)'
-    ctx.fillRect(0, 0, cellSize, cellSize)
-    ctx.strokeStyle = PAL.primary
-    ctx.lineWidth = 3
-    ctx.strokeRect(0, 0, cellSize, cellSize)
-
-    // End cell highlight (cheese location / reward)
-    ctx.fillStyle = 'rgba(224, 169, 60, 0.2)'
-    ctx.fillRect(19 * cellSize, 19 * cellSize, cellSize, cellSize)
-    ctx.strokeStyle = PAL.accent
-    ctx.lineWidth = 3
-    ctx.strokeRect(19 * cellSize, 19 * cellSize, cellSize, cellSize)
-
-    // Cheese at goal position (kept illustrative)
-    ctx.font = `${cellSize * 0.5}px ui-sans-serif, system-ui, sans-serif`
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('🧀', 19.5 * cellSize, 19.5 * cellSize)
-
-    // START / ORIGIN marker
-    const originX = 0.5 * cellSize
-    const originY = 0.5 * cellSize
-
-    ctx.fillStyle = PAL.primary
-    ctx.beginPath()
-    ctx.arc(originX, originY, 8, 0, 2 * Math.PI)
-    ctx.fill()
-    ctx.fillStyle = PAL.onAccent
-    ctx.font = 'bold 10px ui-sans-serif, system-ui, sans-serif'
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('O', originX, originY)
-
-    ctx.fillStyle = PAL.primary
-    ctx.font = 'bold 9px ui-sans-serif, system-ui, sans-serif'
-    ctx.fillText('Origin', originX, cellSize - 5)
-
-    // Position vectors (from the origin)
-    const mouseScreenX = mousePos.x * cellSize
-    const mouseScreenY = mousePos.y * cellSize
-
-    const xComp = mousePos.x - 0.5
-    const yComp = mousePos.y - 0.5
-    const magnitude = Math.sqrt(xComp ** 2 + yComp ** 2)
-
-    // x-component vector (coral / force)
-    arrow(ctx, originX, originY, mouseScreenX, originY, { color: PAL.force, width: 2, head: 8 })
-    chip(ctx, `x = ${xComp.toFixed(1)}m`, (originX + mouseScreenX) / 2, originY - 12, { color: PAL.force })
-
-    // y-component vector (teal / cool)
-    arrow(ctx, mouseScreenX, originY, mouseScreenX, mouseScreenY, { color: PAL.cool, width: 2, head: 8 })
-    chip(ctx, `y = ${yComp.toFixed(1)}m`, mouseScreenX + 26, (originY + mouseScreenY) / 2, { color: PAL.cool })
-
-    // resultant vector (lavender / primary, dashed)
-    arrow(ctx, originX, originY, mouseScreenX, mouseScreenY, { color: PAL.primary, width: 3, head: 10, dash: [6, 5] })
-    chip(ctx, `r = ${magnitude.toFixed(2)}m`, (originX + mouseScreenX) / 2, (originY + mouseScreenY) / 2 - 12, { color: PAL.primary })
-
-    // mouse
-    ctx.font = `${cellSize * 0.35}px ui-sans-serif, system-ui, sans-serif`
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('🐭', mouseScreenX, mouseScreenY)
-
-    ctx.restore()
-  }
-
-  function hasReachedCheese(): boolean {
-    const dx = mousePos.x - CHEESE.x
-    const dy = mousePos.y - CHEESE.y
-    return Math.sqrt(dx * dx + dy * dy) < 0.6
-  }
-
-  // ---- keyboard input -------------------------------------------------------
-  function onKeyDown(e: KeyboardEvent) {
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 'a', 's', 'd'].includes(e.key)) {
-      e.preventDefault()
-      keys.add(e.key.toLowerCase())
+    if (params.trail !== false) {
+      ctx.beginPath(); run.trail.forEach((p, i) => { const s = point(p); if (!i) ctx.moveTo(s.x, s.y); else ctx.lineTo(s.x, s.y) })
+      ctx.strokeStyle = '#14b8a6'; ctx.lineWidth = Math.max(2, cell * .19); ctx.lineJoin = 'round'; ctx.stroke()
     }
-  }
-  function onKeyUp(e: KeyboardEvent) {
-    keys.delete(e.key.toLowerCase())
-  }
-  window.addEventListener('keydown', onKeyDown)
-  window.addEventListener('keyup', onKeyUp)
-
-  const engine: SimEngine = {
-    render,
-    step(dt: number) {
-      // Held keys move the mouse continuously, with sliding wall collisions —
-      // identical behaviour to the bespoke animate(), now driven by dt.
-      let dx = 0
-      let dy = 0
-      const dist = MOVE_SPEED * dt
-      if (keys.has('arrowup') || keys.has('w')) dy -= dist
-      if (keys.has('arrowdown') || keys.has('s')) dy += dist
-      if (keys.has('arrowleft') || keys.has('a')) dx -= dist
-      if (keys.has('arrowright') || keys.has('d')) dx += dist
-
-      if (dx !== 0 || dy !== 0) {
-        const newX = mousePos.x + dx
-        const newY = mousePos.y + dy
-        if (canMoveTo(newX, newY)) {
-          mousePos.x = newX
-          mousePos.y = newY
-          moveCount++
-        } else if (dx !== 0 && canMoveTo(newX, mousePos.y)) {
-          mousePos.x = newX
-          moveCount++
-        } else if (dy !== 0 && canMoveTo(mousePos.x, newY)) {
-          mousePos.y = newY
-          moveCount++
-        }
+    if (hintCell) { const p = point(hintCell); ctx.fillStyle = '#fbbf24'; ctx.fillRect(p.x - cell * .3, p.y - cell * .3, cell * .6, cell * .6) }
+    const a = point(run.maze.start), b = point(run.position), goal = point(run.maze.goal)
+    if (params.vectors !== false && run.values.magnitude > 0) {
+      // White underlay keeps vector arrows readable over walls.
+      if (params.components !== false) {
+        arrow(ctx, a.x, a.y, b.x, a.y, { color: '#fff', width: 5, head: 9 })
+        arrow(ctx, b.x, a.y, b.x, b.y, { color: '#fff', width: 5, head: 9 })
+        arrow(ctx, a.x, a.y, b.x, a.y, { color: '#dc2626', width: 2, head: 7 })
+        arrow(ctx, b.x, a.y, b.x, b.y, { color: '#2563eb', width: 2, head: 7 })
       }
-
-      if (hasReachedCheese()) hasWon = true
+      arrow(ctx, a.x, a.y, b.x, b.y, { color: '#fff', width: 6, head: 10 })
+      arrow(ctx, a.x, a.y, b.x, b.y, { color: '#7c3aed', width: 3, head: 8, dash: [7, 4] })
+    }
+    for (const [p, color, label] of [[a, '#0f766e', 'S'], [goal, '#b45309', 'G'], [b, '#7c3aed', '●']] as const) {
+      ctx.fillStyle = color; ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(5, cell * .43), 0, Math.PI * 2); ctx.fill()
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke()
+      ctx.fillStyle = '#fff'; ctx.font = `bold ${Math.max(8, cell * .55)}px system-ui`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, p.x, p.y)
+    }
+    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left'; ctx.fillStyle = '#475569'; ctx.font = '12px system-ui'
+    ctx.fillText('S start   G goal   ● you   — trail', 14, h - 12)
+  }
+  function move(direction: Direction) {
+    hintCell = undefined
+    if (!run.move(direction)) message = 'Wall: choose another direction. Distance did not change.'
+    else if (run.returned) message = 'Round trip: displacement is 0 m; distance is still positive.'
+    else if (run.found) message = 'Goal found! Record evidence, then navigate back to S.'
+    else message = 'Exploring: backtracking adds distance, but can reduce displacement.'
+    update()
+  }
+  function onKey(e: KeyboardEvent) {
+    const map: Record<string, Direction> = { arrowup: 'up', w: 'up', arrowdown: 'down', s: 'down', arrowleft: 'left', a: 'left', arrowright: 'right', d: 'right' }
+    const dir = map[e.key.toLowerCase()]
+    if (dir) { e.preventDefault(); move(dir) }
+  }
+  let pointerStart: { x: number; y: number; id: number } | undefined
+  function onPointerDown(e: PointerEvent) {
+    if (e.button !== 0) return
+    canvas.focus({ preventScroll: true })
+    pointerStart = { x: e.clientX, y: e.clientY, id: e.pointerId }
+    canvas.setPointerCapture(e.pointerId)
+  }
+  function onPointerUp(e: PointerEvent) {
+    if (!pointerStart || pointerStart.id !== e.pointerId) return
+    const dx = e.clientX - pointerStart.x, dy = e.clientY - pointerStart.y
+    pointerStart = undefined
+    if (Math.hypot(dx, dy) > 15) {
+      move(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : (dy > 0 ? 'down' : 'up'))
+      return
+    }
+    const rect = canvas.getBoundingClientRect(), size = Math.min(rect.width - 24, rect.height - 78), cell = size / run.maze.size
+    const x = Math.floor((e.clientX - rect.left - (rect.width - size) / 2) / cell) - run.position.x
+    const y = Math.floor((e.clientY - rect.top - 48) / cell) - run.position.y
+    if (Math.abs(x) + Math.abs(y) === 1) move(x ? (x > 0 ? 'right' : 'left') : (y > 0 ? 'down' : 'up'))
+  }
+  function onPointerCancel() { pointerStart = undefined }
+  canvas.addEventListener('keydown', onKey)
+  canvas.addEventListener('pointerdown', onPointerDown)
+  canvas.addEventListener('pointerup', onPointerUp)
+  canvas.addEventListener('pointercancel', onPointerCancel)
+  const engine: MazeEngine = {
+    render, move, reset,
+    newMaze() { seed++; reset() },
+    hint() {
+      hintCell = route(run.maze, run.position, run.found ? run.maze.start : run.maze.goal)[1]
+      message = hintCell ? 'One-step hint highlighted in gold. Explain why you chose that branch.' : 'You are at the destination.'; update()
     },
-    setParams() {},
-    reset() {
-      mousePos = { ...START }
-      keys.clear()
-      moveCount = 0
-      hasWon = false
-      render()
+    record() {
+      const v = run.values
+      rows = [...rows, [rows.length + 1, v.distance, v.x, v.y, Number(v.magnitude.toFixed(2)), run.returned ? 'Round trip' : run.found ? 'After goal' : 'Exploring']]
+      message = 'Evidence recorded. Compare distance and displacement in the table.'; update()
     },
+    checkPrediction(x, y, magnitude) {
+      if ([x, y, magnitude].some(s => !s.trim() || !Number.isFinite(Number(s)))) return 'Enter three numbers before checking.'
+      const v = measure(run.maze.start, run.maze.goal, 0)
+      predictionCorrect = Number(x) === v.x && Number(y) === v.y && Math.abs(Number(magnitude) - v.magnitude) <= .06
+      update()
+      if (predictionCorrect) return 'Correct! These goal components and displacement stay the same whichever route you take.'
+      if (Number(x) !== v.x || Number(y) !== v.y) return 'Count grid steps from S to G horizontally and vertically. East is positive x; north is positive y. Ignore the winding route.'
+      return 'Components are correct. Use √(Δx² + Δy²), then round to the nearest 0.1 m.'
+    },
+    setParams(values) { const changed = values.size !== params.size; params = { ...values }; if (changed) reset(); else update() },
     getReadouts() {
-      const x = mousePos.x - 0.5
-      const y = mousePos.y - 0.5
-      return {
-        x,
-        y,
-        magnitude: Math.sqrt(x ** 2 + y ** 2),
-        moves: moveCount,
-        status: hasWon ? 'Cheese found!' : 'Exploring',
-      }
+      const v = run.values, g = measure(run.maze.start, run.maze.goal, 0)
+      return { ...v, trial, goal: `(${g.x}, ${g.y}) m`, shortest: run.found ? route(run.maze, run.maze.start, run.maze.goal).length - 1 : 'Reach G to reveal', status: message, prediction: predictionCorrect ? 'Verified' : 'Try a prediction' }
     },
-    // Complete once the mouse reaches the cheese — mirrors the bespoke win
-    // condition (hasReachedCheese), keyed to actually solving the maze.
-    isComplete() { return hasWon },
+    getData() { return { columns: ['Record', 'Distance (m)', 'Δx (m)', 'Δy (m)', '|Δr| (m)', 'Stage'], rows } },
+    isComplete() { return run.found },
     destroy() {
-      window.removeEventListener('keydown', onKeyDown)
-      window.removeEventListener('keyup', onKeyUp)
+      canvas.removeEventListener('keydown', onKey)
+      canvas.removeEventListener('pointerdown', onPointerDown)
+      canvas.removeEventListener('pointerup', onPointerUp)
+      canvas.removeEventListener('pointercancel', onPointerCancel)
+      if (originalTabIndex === null) canvas.removeAttribute('tabindex'); else canvas.setAttribute('tabindex', originalTabIndex)
     },
   }
   return engine
