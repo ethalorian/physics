@@ -53,6 +53,11 @@ export const POST = withAuth(async (request, ctx) => {
   if (!play || play.user_id !== ctx.userId) {
     return NextResponse.json({ error: 'Unknown play' }, { status: 404 })
   }
+  // Protocol-2 cabinets can retry after a response is lost or payout fails. Ownership was
+  // checked above; an already finished run is immutable and grants no new XP here.
+  if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug) && play.status === 'finished' && final === true) {
+    return NextResponse.json({ ok: true, score: play.score, finished: true, alreadySaved: true })
+  }
   if (play.status !== 'active') {
     return NextResponse.json({ error: 'Run already closed' }, { status: 409 })
   }

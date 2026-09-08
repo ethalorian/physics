@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Coins, Trophy, Crown } from 'lucide-react'
+import { createTetherBridge } from '@/lib/tether-bridge'
 
 /**
  * One arcade cabinet: the game in an iframe, bridged to the XP economy.
@@ -62,9 +63,17 @@ export default function ArcadeCabinetPage() {
   }, [slug, loadBoard])
 
   useEffect(() => {
+    const tether = createTetherBridge({
+      slug, fetcher: fetch, onBalance: setBalance, onFinished: loadBoard,
+      reply: (message) => frameRef.current?.contentWindow?.postMessage(message, window.location.origin),
+    })
     const onMessage = async (e: MessageEvent) => {
       if (!frameRef.current || e.source !== frameRef.current.contentWindow) return
       const msg = e.data || {}
+      if (msg.protocol === 2) {
+        if (e.origin === window.location.origin) await tether.handle(msg)
+        return
+      }
       const reply = (payload: Record<string, unknown>) =>
         frameRef.current?.contentWindow?.postMessage(payload, '*')
 

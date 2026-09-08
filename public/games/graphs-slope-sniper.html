@@ -263,7 +263,8 @@
     <div class="tag" id="tTag"></div>
     <div class="howto" id="tHow"></div>
     <div id="legend"></div>
-    <div id="doors"></div>
+    <label style="display:block;margin:12px 0;line-height:1.5"><input type="checkbox" id="untimedPractice"> Untimed practice · no XP or leaderboard</label>
+<div id="doors"></div>
     <div id="hsline"></div>
   </div>
 </div>
@@ -274,7 +275,7 @@
     <h1 style="font-size:26px">PAUSED</h1>
     <p>The questions wait for no one… except now.</p>
     <button class="bigbtn med" id="resumeBtn">RESUME</button>
-    <button class="bigbtn hard" id="quitBtn">QUIT TO MENU</button>
+    <button class="bigbtn hard" id="quitBtn">FINISH &amp; BANK</button>
   </div>
 </div>
 
@@ -296,6 +297,7 @@
   </div>
 </div>
 
+<script src="math-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================================
@@ -377,19 +379,23 @@ const TIP_COS  = "x-component uses cos θ; y uses sin θ.";
 const TIP_LINZ = "Whatever you plotted to get a LINE is the relationship.";
 
 /* ---- tiny SVG graph builders (data coords 0..6 × 0..6) ---- */
-const GX0=26, GY0=112, GW=168, GH=96;
+const GX0=38, GY0=114, GW=156, GH=90;
 function px(x){ return GX0 + x*(GW/6); }
 function py(y){ return GY0 - y*(GH/6); }
-function gridSvg(inner, xlab, ylab){
-  let g='<svg width="216" height="132" viewBox="0 0 216 132" xmlns="http://www.w3.org/2000/svg">';
+function gridSvg(inner, xlab, ylab, numbered=true){
+  let g='<svg width="216" height="150" viewBox="0 0 216 150" xmlns="http://www.w3.org/2000/svg">';
   for(let i=0;i<=6;i++){
     g+='<line x1="'+px(i)+'" y1="'+py(0)+'" x2="'+px(i)+'" y2="'+py(6)+'" stroke="#2a3160" stroke-width="1"/>';
     g+='<line x1="'+px(0)+'" y1="'+py(i)+'" x2="'+px(6)+'" y2="'+py(i)+'" stroke="#2a3160" stroke-width="1"/>';
   }
   g+='<line x1="'+px(0)+'" y1="'+py(0)+'" x2="'+px(6)+'" y2="'+py(0)+'" stroke="#8b93c9" stroke-width="1.5"/>';
   g+='<line x1="'+px(0)+'" y1="'+py(0)+'" x2="'+px(0)+'" y2="'+py(6)+'" stroke="#8b93c9" stroke-width="1.5"/>';
-  g+='<text x="'+(px(6)-2)+'" y="'+(py(0)+13)+'" fill="#8b93c9" font-size="10" text-anchor="end">'+xlab+'</text>';
-  g+='<text x="'+(px(0)-14)+'" y="'+(py(6)+4)+'" fill="#8b93c9" font-size="10">'+ylab+'</text>';
+  g+='<text x="116" y="145" fill="#c4caf0" font-size="10" text-anchor="middle">'+xlab+'</text>';
+  g+='<text transform="translate(10 69) rotate(-90)" fill="#c4caf0" font-size="10" text-anchor="middle">'+ylab+'</text>';
+  if(numbered)for(let i=0;i<=6;i++){
+    g+='<text x="'+px(i)+'" y="127" fill="#c4caf0" font-size="9" text-anchor="middle">'+i+'</text>';
+    if(i)g+='<text x="32" y="'+(py(i)+3)+'" fill="#c4caf0" font-size="9" text-anchor="end">'+i+'</text>';
+  }
   return g+inner+'</svg>';
 }
 function lineOn(x1,y1,x2,y2,marks){
@@ -416,7 +422,7 @@ function arrowSvg(dx,dy,thetaLabel,magLabel){
   s+='<path d="M '+(x1+22)+' '+y1+' A 22 22 0 0 0 '+(x1+22*Math.cos(ang))+' '+(y1+22*Math.sin(ang))+'" fill="none" stroke="#ff3df0" stroke-width="1.5"/>';
   s+='<text x="'+(x1+30)+'" y="'+(y1-6)+'" fill="#ff3df0" font-size="10">'+thetaLabel+'</text>';
   s+='<text x="'+((x1+x2)/2-8)+'" y="'+((y1+y2)/2-8)+'" fill="#7dff4a" font-size="11" font-weight="bold">'+magLabel+'</text>';
-  return gridSvg(s,"x","y");
+  return gridSvg(s,"x","y",false);
 }
 
 function fmtSlope(r,n){ // rise r over run n as a clean label, ALWAYS using M for minus
@@ -432,7 +438,7 @@ function genSlopeRead(){
   const [run,rise]=pick(pairs);
   const c = Math.min(Math.floor(6/Math.abs(run)), Math.floor(6/Math.max(1,Math.abs(rise))));
   const x2=run*c, y2v=rise*c;
-  const y0 = rise<0 ? 5 : 0;
+  const y0 = rise<0 ? 6 : 0;
   const fig=gridSvg(lineOn(0,y0,Math.abs(x2),y0+y2v* (run<0?-1:1) ,[[0,y0,""],[Math.abs(x2),y0+y2v*(run<0?-1:1),""]]),"x","y");
   const m=fmtSlope(rise*(run<0?-1:1),Math.abs(run));
   const flip=fmtSlope(Math.abs(run)*(rise<0?-1:1),Math.abs(rise));
@@ -530,18 +536,18 @@ function genVector(){
   const fig=arrowSvg(vx*sc, vy*sc, th, String(mag));
   const aL=String(ans), oL=String(other);
   return {
-    states:[ (wantX?"x":"y")+"-component = ?", (wantX?"x":"y")+" = "+aL ],
+    states:[ (wantX?"x":"y")+"-component ≈ ?", (wantX?"x":"y")+" = "+aL ],
     steps:[ { c:aL, w:[ W(oL,TIP_COS), W(String(mag),"The magnitude isn't a component."),
                         W(String(+(ans/2).toFixed(1)),TIP_COS) ] } ],
-    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above horizontal", fig,
+    banner:"BREAK THE VECTOR", name:"|v| = "+mag+" at "+th+" above horizontal · round to 1 decimal · diagram not to scale", fig,
   };
 }
 
 /* L6 — linearization: what plot makes it straight? */
 const LINZ = [
-  ["y vs x curves UP; y vs x² is a LINE","y ∝ x²",["y ∝ x","y ∝ 1/x","y ∝ √x"]],
-  ["y vs x curves DOWN; y vs 1/x is a LINE","y ∝ 1/x",["y ∝ x","y ∝ x²","y ∝ −x"]],
-  ["y vs x bends; y vs √x is a LINE","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 1/x²"]],
+  ["y vs x curves UP; y vs x² is a LINE through the origin","y ∝ x²",["y ∝ x","y ∝ 1/x","y ∝ √x"]],
+  ["y vs x curves DOWN; y vs 1/x is a LINE through the origin","y ∝ 1/x",["y ∝ x","y ∝ x²","y ∝ −x"]],
+  ["y vs x bends; y vs √x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 1/x²"]],
   ["y² vs x is a LINE through the origin","y ∝ √x",["y ∝ x²","y ∝ x","y ∝ 2x"]],
 ];
 function genLinz(){
@@ -583,39 +589,11 @@ if (typeof document !== "undefined") (function(){
   const MAXJUNK=8, JUNKH=28;
   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
 
-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false;
+  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
 
   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
-  const ARCADE={
-    embedded: window.parent!==window,
-    playId:null, pendingCoin:null,
-    emit(type,data){ if(this.embedded)
-      window.parent.postMessage(Object.assign({source:CONFIG.slug,type},data||{}),"*"); },
-    requestCoin(cb){
-      if(!this.embedded){ cb({ok:true,practice:true}); return; }
-      this.pendingCoin=cb;
-      this.emit("arcade:coinRequest");
-      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
-    },
-    reportScore(final){
-      if(this.playId && S) this.emit("arcade:score",{
-        score:S.score, act:S.level, final:!!final,
-        stats:{ solved:S.solved, right:S.right, wrong:S.wrong,
-                bestStreak:S.bestStreak, startLv:S.startLvNum, mode:CONFIG.mode }
-      });
-    },
-  };
-  window.addEventListener("message",e=>{
-    const m=e.data||{};
-    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
-      ARCADE.playId=m.playId||null;
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
-    }
-    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
-    }
-    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
-  });
+  const normalEndTitle=document.querySelector("#overOv h1").textContent;
+  const ARCADE=createMathCabinet({slug:"slope-sniper",read:()=>({...S,mode:CONFIG.mode}),onReceipt:text=>showXPText(text,false)});
 
   /* ---------- audio ---------- */
   let AC=null;
@@ -693,6 +671,7 @@ if (typeof document !== "undefined") (function(){
   }
 
   function spawn(){
+    S.needsSpawn=false;
     S.cur = S.next || gen();
     S.next = gen();
     S.cur.i=0; S.cur.born=performance.now();
@@ -752,6 +731,7 @@ if (typeof document !== "undefined") (function(){
   /* ---------- core actions ---------- */
   function choose(i){
     if(!S || !S.running || locked) return;
+    const run=S;
     const chip = S.cur.chips[i], btn=chips[i];
     if(chip.ok){
       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
@@ -763,7 +743,7 @@ if (typeof document !== "undefined") (function(){
         S.cur.chips = buildChips(S.cur.steps[S.cur.i]);
         cardEl.classList.remove("pop"); void cardEl.offsetWidth; cardEl.classList.add("pop");
         renderCard();
-        locked=true; setTimeout(()=>{ locked=false; renderChips(); },200);
+        locked=true; setTimeout(()=>{ if(S!==run)return;locked=false; renderChips(); },200);
       }
     }else{
       S.wrong++; S.streak=0;
@@ -771,18 +751,19 @@ if (typeof document !== "undefined") (function(){
          rapid guessing is slower and net-negative (right pays 10·level). */
       S.score = Math.max(0, S.score - 15*S.level);
       locked = true;
-      setTimeout(()=>{ if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
+      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
       btn.classList.add("bad"); sBad(); shake();
       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
-      S.y += Math.max(20,(landY()-S.y)*0.28); place();
+      if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
       toast("❌ "+chip.tip);
     }
     hud();
   }
 
   function clearBlock(){
+    const run=S;S.needsSpawn=true;
     const secs=(performance.now()-S.cur.born)/1000;
-    const bonus=Math.max(0, Math.round((12-secs)*4));
+    const bonus=untimed?0:Math.max(0, Math.round((12-secs)*4));
     S.score += (50*S.level + bonus)*mult();
     S.solved++; S.sinceLvl++;
     particles(); ringAt(); sClear();
@@ -804,13 +785,13 @@ if (typeof document !== "undefined") (function(){
     ARCADE.reportScore(false);
 
     locked=true;
-    setTimeout(()=>{ locked=false; if(S.running) spawn(); },330);
+    setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
     hud();
   }
 
   function land(){
     sLand(); shake(true);
-    S.junk++; S.streak=0; renderStack(); hud();
+    S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
     if(S.junk>=MAXJUNK){ gameOver(); return; }
     toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
     spawn();
@@ -821,13 +802,15 @@ if (typeof document !== "undefined") (function(){
     if(!S.running){ return; }
     const dt=Math.min(.05,(t-lastT)/1000); lastT=t;
     if(!locked){
-      S.y += speed()*dt; place();
+      if(!untimed)S.y += speed()*dt; place();
       if(S.y>=landY()) land();
     }
     raf=requestAnimationFrame(tick);
   }
 
   function start(lv){
+    if(!ARCADE.canStart())return;
+    untimed=$("untimedPractice").checked;locked=false;
     S=freshState(lv);
     $("startOv").classList.add("hidden");
     $("overOv").classList.add("hidden");
@@ -842,32 +825,39 @@ if (typeof document !== "undefined") (function(){
       S.running=true; lastT=performance.now();
       cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
     };
-    ARCADE.playId=null;
     ARCADE.requestCoin(res=>{
+      if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
       practice = !!res.practice || !res.ok;
       document.body.classList.toggle("practice", practice);
       begin();
-    });
+    },untimed);
   }
 
+  function finishRun(){
+    if(!S||!S.running&&$("pauseOv").classList.contains("hidden"))return;
+    S.running=false;cancelAnimationFrame(raf);$("pauseOv").classList.add("hidden");
+    S.finishedByChoice=true;showOverPanel();ARCADE.reportScore(true);
+  }
   function pause(){
     if(!S || !S.running) return;
-    S.running=false; cancelAnimationFrame(raf);
+    S.pausedAt=performance.now();S.running=false; cancelAnimationFrame(raf);
     $("pauseOv").classList.remove("hidden");
   }
   function resume(){
     if(!S) return;
     $("pauseOv").classList.add("hidden");
+    if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
     S.running=true; lastT=performance.now();
+    if(S.needsSpawn&&!locked)spawn();
     raf=requestAnimationFrame(tick);
   }
 
   /* ---------- high score ---------- */
   const HSKEY = "hs_"+CONFIG.slug;
-  function getHS(){ try{ return +localStorage.getItem(HSKEY)||0; }catch(e){ return 0; } }
-  function setHS(v){ try{ localStorage.setItem(HSKEY,v); }catch(e){} }
+  function getHS(calm=untimed){ try{ return +localStorage.getItem((calm?"untimed_":"")+HSKEY)||0; }catch(e){ return 0; } }
+  function setHS(v){ try{ localStorage.setItem((untimed?"untimed_":"")+HSKEY,v); }catch(e){} }
   function hsLine(){
-    const h=getHS();
+    const h=getHS(false);
     $("hsline").textContent = h>0 ? "🏆 HIGH SCORE: "+h : "";
   }
 
@@ -899,17 +889,18 @@ if (typeof document !== "undefined") (function(){
   }
 
   function showOverPanel(){
+    document.querySelector("#overOv h1").textContent=S.finishedByChoice?"RUN COMPLETE":normalEndTitle;
     const acc = S.right+S.wrong>0 ? Math.round(100*S.right/(S.right+S.wrong)) : 0;
     $("fScore").textContent=S.score;
     $("fSolved").textContent=S.solved;
     $("fAcc").textContent=acc+"%";
     $("fStreak").textContent=S.bestStreak;
-    $("overQuip").textContent=pick(CONFIG.quips);
+    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
     const nh = S.score>getHS();
     if(nh) setHS(S.score);
     $("newHS").classList.toggle("hidden",!nh);
-    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
-    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    if(practice) showXPText(untimed?"Untimed practice complete — no XP or leaderboard score saved.":"Practice run — play a timed run in the Arcade to bank XP.", false);
+    else if(ARCADE.embedded) showXPText(ARCADE.savedText||"Saving score and XP…", false);
     $("overOv").classList.remove("hidden");
   }
 
@@ -967,7 +958,7 @@ if (typeof document !== "undefined") (function(){
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
   $("pauseBtn").addEventListener("click",pause);
   $("resumeBtn").addEventListener("click",resume);
-  $("quitBtn").addEventListener("click",()=>{ S.running=false; cancelAnimationFrame(raf); $("pauseOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+  $("quitBtn").addEventListener("click",finishRun);
   $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
 

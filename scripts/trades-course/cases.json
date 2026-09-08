@@ -1,0 +1,192 @@
+[
+  {
+    "name": "Case A - Inspect the mock bay",
+    "slug": "tr.u1.mastery-as-built",
+    "unit": "trades-1",
+    "fig": "wallcase",
+    "brief": "A classroom wall mockup must be checked against Issued Drawing A. Use the supplied survey below, or a teacher-verified physical mockup with its own survey. These numbers are simulated teaching data, not a survey of the fieldhouse. The lower-left outside corner is the datum. All dimensions are inches. Length/position specifications have +/-1/8 inch tolerance. The pipe OD note must match the supplied material reference.",
+    "headers": [
+      "Feature",
+      "Issued specification",
+      "Supplied survey"
+    ],
+    "rows": [
+      [
+        "Overall width",
+        "48 +/-1/8",
+        "48 1/16"
+      ],
+      [
+        "Overall height",
+        "96 +/-1/8",
+        "96"
+      ],
+      [
+        "Opening width",
+        "16 +/-1/8",
+        "15 3/4"
+      ],
+      [
+        "Opening left edge x",
+        "16 +/-1/8",
+        "16 1/4"
+      ],
+      [
+        "Service center x",
+        "40 +/-1/8",
+        "40 1/16"
+      ],
+      [
+        "Service outside diameter",
+        "Drawing note: 2",
+        "Reference: 2 3/8"
+      ]
+    ],
+    "deliverables": [
+      "Write the purpose, constraints, evidence source and information still missing before a real job.",
+      "Complete an inspection table: feature, spec/interval, reading, signed deviation, in/out and amount outside.",
+      "Produce an as-built elevation with corrected positions/dimensions and service note. Add an appropriate section or orthographic view to clarify one interface.",
+      "Write a short inspection note identifying what changes and why. Distinguish a material-label error from a tolerance failure."
+    ],
+    "key": "Width: +1/16, in. Height: 0, in. Opening width: -1/4 from target, below lower limit by 1/8, out. Opening left edge: +1/4 from target, above upper limit by 1/8, out. Service center: +1/16, in. Service OD note: replace 2 with 2 3/8 inches; nominal size is not OD. A revision should preserve the survey, not change it to the intended dimensions. Do not infer opening height or service fitting dimensions: they were not supplied and must be flagged.",
+    "exemplar": "The opening is 15 3/4 in wide. The allowed interval is 15 7/8 to 16 1/8, so it is 1/8 below the lower limit. Its left edge is also 1/8 beyond its upper positional limit. I recorded both on revision B and corrected the service OD note to 2 3/8 in. The source is provided classroom survey data; before using this as a field drawing I need an instrument-checked survey, missing opening height, service fittings and approved details.",
+    "partial": "The opening is too small because 15 3/4 is less than 16. Fix it. This identifies a discrepancy but omits the tolerance interval, amount outside, position error, evidence source and correction detail.",
+    "new_evidence": "Repeat one personally measured feature with a checked reference, or correct the supplied-data interval calculation; submit a revised drawing and explain exactly how the new evidence changed the decision.",
+    "rubric": {
+      "science": {
+        "description": "Use correct dimensions, units and physical relationships; distinguish specified, nominal and observed quantities.\n\n0 - No assessable physics evidence in this dimension.\n1 - A central physical or numerical error makes the decision unreliable.\n2 - Core method is partly correct, but a missing quantity or error prevents a fully supported result.\n3 - Correct quantities, method, units and conclusions meet the supplied case requirements.\n4 - Meets level 3 and independently checks the result or explains a relevant model/measurement limit.",
+        "levels": {
+          "0": "No assessable physics evidence in this dimension.",
+          "1": "A central physical or numerical error makes the decision unreliable.",
+          "2": "Core method is partly correct, but a missing quantity or error prevents a fully supported result.",
+          "3": "Correct quantities, method, units and conclusions meet the supplied case requirements.",
+          "4": "Meets level 3 and independently checks the result or explains a relevant model/measurement limit."
+        }
+      },
+      "reasoning": {
+        "description": "Make every discrepancy and tolerance call traceable to evidence and a stated comparison.\n\n0 - No assessable reasoning evidence.\n1 - Conclusion is asserted or contradicted by the supplied evidence.\n2 - Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.\n3 - Conclusions follow from explicit evidence and all relevant supplied constraints.\n4 - Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction.",
+        "levels": {
+          "0": "No assessable reasoning evidence.",
+          "1": "Conclusion is asserted or contradicted by the supplied evidence.",
+          "2": "Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.",
+          "3": "Conclusions follow from explicit evidence and all relevant supplied constraints.",
+          "4": "Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction."
+        }
+      },
+      "communication": {
+        "description": "Make the survey, inspection table and as-built agree; label datum, dimensions, source and revision.\n\n0 - No assessable communication artifact.\n1 - The report or drawing is too incomplete to reconstruct the decision.\n2 - The main idea is readable but an essential dimension, label or link is missing.\n3 - A reader can reconstruct the calculation and decision from consistent labelled artifacts.\n4 - Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently.",
+        "levels": {
+          "0": "No assessable communication artifact.",
+          "1": "The report or drawing is too incomplete to reconstruct the decision.",
+          "2": "The main idea is readable but an essential dimension, label or link is missing.",
+          "3": "A reader can reconstruct the calculation and decision from consistent labelled artifacts.",
+          "4": "Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently."
+        }
+      },
+      "transfer": {
+        "description": "Explain consequences, missing information and an appropriate verification or coordination step before real use.\n\n0 - No assessable transfer evidence.\n1 - Applies the result beyond the case without recognizing a consequential constraint.\n2 - Names a relevant practical limit but leaves its consequence or next action unclear.\n3 - Names a consequential practical limit and an appropriate next verification/coordination action.\n4 - Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose.",
+        "levels": {
+          "0": "No assessable transfer evidence.",
+          "1": "Applies the result beyond the case without recognizing a consequential constraint.",
+          "2": "Names a relevant practical limit but leaves its consequence or next action unclear.",
+          "3": "Names a consequential practical limit and an appropriate next verification/coordination action.",
+          "4": "Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose."
+        }
+      }
+    }
+  },
+  {
+    "name": "Case B - Route the drain through the service zone",
+    "slug": "tr.u2.mastery-route-the-fall",
+    "unit": "trades-2",
+    "fig": "bay",
+    "brief": "This is a dry classroom coordination model, not an installation approval or permission to alter framing. Original horizontal run is 18 ft; available service-zone depth is 8 in. Required slope is at least 1/4 in/ft. Pipe OD is 2 3/8 in. Minimum top and bottom clearances are 3/4 in each. All vertical dimensions use the zone top as datum. Two changes may be proposed for review: shorten the run to 16 ft, or deepen the zone to 8 1/2 in while keeping the 18-ft run. Other fittings, access and connections are not specified.",
+    "headers": [
+      "Condition",
+      "Value"
+    ],
+    "rows": [
+      [
+        "Original horizontal run",
+        "18 ft"
+      ],
+      [
+        "Available zone depth",
+        "8 in"
+      ],
+      [
+        "Required slope",
+        "1/4 in/ft minimum"
+      ],
+      [
+        "Pipe outside diameter",
+        "2 3/8 in"
+      ],
+      [
+        "Top / bottom clearance",
+        "3/4 in each"
+      ],
+      [
+        "Alternative 1",
+        "16-ft run; 8-in zone"
+      ],
+      [
+        "Alternative 2",
+        "18-ft run; 8 1/2-in zone"
+      ]
+    ],
+    "deliverables": [
+      "List fixed requirements and the two changes available for review.",
+      "Calculate original fall, required depth and quantified conflict. Reject an unsupported slope reduction.",
+      "Evaluate both alternatives, including remaining depth margin.",
+      "Draw a plan and longitudinal section for your proposed route: flow, horizontal run, slope, datum, elevations and outside envelope.",
+      "Write an RFI explaining what another trade must confirm before the proposal could be used."
+    ],
+    "key": "Original fall 18 x 1/4 = 4 1/2 in. Required depth 3/4 + 2 3/8 + 4 1/2 + 3/4 = 8 3/8 in. Shortfall 3/8 in. Alternative 1: fall 4 in; total 7 7/8; margin 1/8 in. Alternative 2: original required 8 3/8 in inside 8 1/2; margin 1/8 in. With zone top datum and upstream pipe outer top 3/4 in down, center starts 1 15/16 in down. Original downstream center is 6 7/16 down; 16-ft alternative center is 5 15/16 down. Original downstream outer bottom is 7 5/8 down. Both alternatives are geometric proposals only: neither accounts for unspecified fittings or authorizes structural changes.",
+    "exemplar": "The original route needs 8 3/8 inches but only 8 is available, so it fails by 3/8 inch. I propose the 16-foot route: fall is 4 inches, total envelope including clearances is 7 7/8 inches, leaving 1/8 inch. My plan and section retain 1/4 in/ft and show the common top datum. The shorter route must be checked for connections, fittings and access; the carpenter/plumber must confirm the coordinated detail before work.",
+    "partial": "It fits because the fall is only 4 1/2 inches and the bay is 8. This omits OD and both clearances, so the central feasibility claim is incorrect even though the fall calculation is right.",
+    "new_evidence": "Correct the complete depth budget, add missing dimensions to both views, and test the selected route against the stated constraints. Submit a revision note showing which previous claim changed.",
+    "rubric": {
+      "science": {
+        "description": "Calculate slope, fall and full outside envelope with matching units; preserve the stated minimum slope.\n\n0 - No assessable physics evidence in this dimension.\n1 - A central physical or numerical error makes the decision unreliable.\n2 - Core method is partly correct, but a missing quantity or error prevents a fully supported result.\n3 - Correct quantities, method, units and conclusions meet the supplied case requirements.\n4 - Meets level 3 and independently checks the result or explains a relevant model/measurement limit.",
+        "levels": {
+          "0": "No assessable physics evidence in this dimension.",
+          "1": "A central physical or numerical error makes the decision unreliable.",
+          "2": "Core method is partly correct, but a missing quantity or error prevents a fully supported result.",
+          "3": "Correct quantities, method, units and conclusions meet the supplied case requirements.",
+          "4": "Meets level 3 and independently checks the result or explains a relevant model/measurement limit."
+        }
+      },
+      "reasoning": {
+        "description": "Prove feasibility or infeasibility numerically and compare both offered alternatives against all constraints.\n\n0 - No assessable reasoning evidence.\n1 - Conclusion is asserted or contradicted by the supplied evidence.\n2 - Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.\n3 - Conclusions follow from explicit evidence and all relevant supplied constraints.\n4 - Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction.",
+        "levels": {
+          "0": "No assessable reasoning evidence.",
+          "1": "Conclusion is asserted or contradicted by the supplied evidence.",
+          "2": "Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.",
+          "3": "Conclusions follow from explicit evidence and all relevant supplied constraints.",
+          "4": "Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction."
+        }
+      },
+      "communication": {
+        "description": "Make the plan and section agree; label route, flow, run, slope, datum, elevations and envelope.\n\n0 - No assessable communication artifact.\n1 - The report or drawing is too incomplete to reconstruct the decision.\n2 - The main idea is readable but an essential dimension, label or link is missing.\n3 - A reader can reconstruct the calculation and decision from consistent labelled artifacts.\n4 - Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently.",
+        "levels": {
+          "0": "No assessable communication artifact.",
+          "1": "The report or drawing is too incomplete to reconstruct the decision.",
+          "2": "The main idea is readable but an essential dimension, label or link is missing.",
+          "3": "A reader can reconstruct the calculation and decision from consistent labelled artifacts.",
+          "4": "Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently."
+        }
+      },
+      "transfer": {
+        "description": "Explain consequences, missing information and an appropriate verification or coordination step before real use.\n\n0 - No assessable transfer evidence.\n1 - Applies the result beyond the case without recognizing a consequential constraint.\n2 - Names a relevant practical limit but leaves its consequence or next action unclear.\n3 - Names a consequential practical limit and an appropriate next verification/coordination action.\n4 - Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose.",
+        "levels": {
+          "0": "No assessable transfer evidence.",
+          "1": "Applies the result beyond the case without recognizing a consequential constraint.",
+          "2": "Names a relevant practical limit but leaves its consequence or next action unclear.",
+          "3": "Names a consequential practical limit and an appropriate next verification/coordination action.",
+          "4": "Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose."
+        }
+      }
+    }
+  }
+]

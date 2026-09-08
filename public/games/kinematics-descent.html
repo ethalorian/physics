@@ -34,6 +34,11 @@
   #overlay{position:fixed;left:0;top:0;bottom:0;width:63%;z-index:10;
     display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
   #overlay.show{display:flex}
+  #pauseFlight{position:fixed;right:12px;bottom:12px;z-index:9;padding:12px;background:#0b1020;color:#5eead4;border:1px solid #5eead4;border-radius:8px;cursor:pointer}
+  button[hidden]{display:none!important}button:disabled{opacity:.45;cursor:wait}
+  button:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+  #overlay .card{margin:auto}
+  @media(max-width:600px){.card{padding:18px}h2{font-size:18px}.tag{letter-spacing:.1em}}
   #overlay.wide{width:100%}
   @media (max-width:900px){ #overlay{width:100%} }
   .card{background:var(--card);border:1px solid var(--edge);border-radius:14px;
@@ -90,7 +95,8 @@
 <body>
 <canvas id="c"></canvas>
 <div id="crt"></div><div id="vig"></div>
-<div id="overlay"></div>
+<div id="overlay" role="region" aria-label="Flight briefing and results"></div>
+<button id="pauseFlight" onclick="pauseRun()" aria-label="Pause flight or finish run">Ⅱ PAUSE</button>
 
 <script>
 "use strict";
@@ -257,34 +263,36 @@ function makeStars(){stars=[];for(let i=0;i<140;i++)
   stars.push({x:Math.random(),y:Math.random(),r:rnd(.4,1.6),tw:rnd(0,6.28)});}
 makeStars();
 
-/* ================================================== host-app bridge
-   Embedded in the classroom arcade (/arcade/descent), a run costs XP:
-   the game asks the host page for a coin and only a coin-backed playId can
-   post ranked scores. Opened standalone (raw file / direct URL), the coin
-   request times out and the game runs as FREE PRACTICE — fully playable,
-   never ranked. One coin = one credit = play until GAME OVER. */
+/* Ranked runs use acknowledged saves. Direct-file play remains practice. */
 const ARCADE={
-  embedded:window.parent!==window,
-  playId:null, pendingCoin:null,
-  emit(type,data){if(this.embedded)
-    window.parent.postMessage(Object.assign({source:'descent-arcade',type},data||{}),'*');},
+  embedded:window.parent!==window, playId:null, pendingCoin:null, finalMessage:null,
+  emit(type,data){if(this.embedded)window.parent.postMessage({source:'descent-arcade',protocol:2,type,...data},window.location.origin);},
   requestCoin(cb){
     if(!this.embedded){cb({ok:true,practice:true});return;}
-    this.pendingCoin=cb;
-    this.emit('arcade:coinRequest');
-    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
+    const requestId=crypto.randomUUID();this.pendingCoin={cb,requestId};
+    this.emit('arcade:coinRequest',{requestId});
   },
   reportScore(final){
-    if(this.playId)this.emit('arcade:score',{score,act,final:!!final,stats:{solved:STATS.solved,right:STATS.right,wrong:STATS.wrong,bestStreak:0,startLv:act,mode:'physics'}});
-  },
+    if(!this.playId)return;
+    const message={requestId:crypto.randomUUID(),playId:this.playId,score,act,final:!!final,
+      stats:{...STATS,bestStreak:0,startLv:act,mode:'physics'}};
+    if(final)this.finalMessage=message;
+    this.emit('arcade:score',message);
+  }
 };
 window.addEventListener('message',e=>{
-  const m=e.data||{};
-  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
-    ARCADE.playId=m.playId||null;
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
-  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+  if(e.source!==window.parent||e.origin!==window.location.origin)return;
+  const m=e.data||{};if(m.protocol!==2)return;
+  if(ARCADE.pendingCoin&&m.requestId===ARCADE.pendingCoin.requestId){
+    if(m.type==='arcade:coinAccepted'){
+      const cb=ARCADE.pendingCoin.cb;ARCADE.pendingCoin=null;ARCADE.playId=m.playId;cb({ok:true});
+    }else if(m.type==='arcade:coinDenied'){
+      const cb=ARCADE.pendingCoin.cb;ARCADE.pendingCoin=null;cb({ok:false});
+    }
+  }
+  if(!ARCADE.finalMessage||m.requestId!==ARCADE.finalMessage.requestId||m.playId!==ARCADE.playId)return;
+  if(m.type==='arcade:saveFailed')saveStatus(false);
+  if(m.type==='arcade:scoreSaved'&&m.final){ARCADE.playId=null;ARCADE.finalMessage=null;saveStatus(true,m.xp);}
 });
 
 /* ================================================== state */
@@ -299,7 +307,8 @@ function bumpHi(){if(score>HIS[act]){HIS[act]=score;saveHi();}}
 
 /* ================================================== overlay */
 function overlay(html,wide){const o=$('#overlay');o.innerHTML=html;
-  o.classList.toggle('wide',!!wide);o.classList.add('show');}
+  o.classList.toggle('wide',!!wide);o.classList.add('show');
+  requestAnimationFrame(()=>o.querySelector('button:not([disabled])')?.focus({preventScroll:true}));}
 function hideOverlay(){$('#overlay').classList.remove('show');}
 
 /* ================================================== screens */
@@ -318,7 +327,7 @@ function title(){
        and gravity starts losing.<br><br>
        <span class="kbd">P</span> pause &nbsp; <span class="kbd">M</span> mute
      </div>
-     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+     <button class="btn" onclick="select_()">▶ OPEN HANGAR</button>
    </div>`);
   primary=select_;
 }
@@ -351,21 +360,23 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  if(runOpen||ARCADE.pendingCoin||ARCADE.finalMessage)return;
   audio();
-  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;runOpen=true;
+    Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;} // credit still live, or standalone practice
   overlay(`<div class="card" style="text-align:center">
     <div class="tag">INSERT COIN</div>
     <h2>CONTACTING CABINET…</h2>
-    <div class="sub">one credit = play until GAME OVER</div></div>`);
+    <div class="sub">Free physics run · waiting for ranked play approval</div></div>`);
   primary=null;
   ARCADE.requestCoin(res=>{
     if(res.ok){begin();return;}
     overlay(`<div class="card">
       <h2 class="bad">COIN REJECTED</h2>
-      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <div class="sub">The cabinet could not start a ranked run. Return to the hangar and try again.</div>
       <button class="btn alt" onclick="select_()">BACK TO HANGAR</button></div>`);
     primary=select_;
   });
@@ -393,10 +404,14 @@ function showMission(level){
    <div class="card">
      <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
      <h2 style="font-size:30px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="tag">BRIEF → FLY → CHECK → BANK</div>
+     <div class="sub">${wave?'Endless wave '+wave:'Mission '+(levelIdx+1)+' of '+ACT_LEVELS[act].length} · ${ARCADE.embedded?'Ranked run':'Practice — no XP saved'}</div>
      <div class="sub">${params}</div>
+     <div class="sub"><b>Before you launch:</b> ${act===1?'Predict when you should burn. Watch the slope of the velocity graph change.':act===2?'Plan your sideways braking separately from your vertical burn. Match the pad’s velocity.':'Choose angle and speed. Predict which velocity component gravity will change.'}</div>
      <div class="explain" style="display:block">${lv.tip}</div>
      <div class="sub" style="margin-top:12px">${controls}</div>
      <button class="btn" onclick="launch()">${act===3?'⌖ TO THE CANNON':'▼ BEGIN DESCENT'}</button>
+     <button class="btn alt" onclick="finishRun()">FINISH &amp; BANK</button>
    </div>`);
   primary=launch;
 }
@@ -413,7 +428,7 @@ function launch(){
   beep(660,.1,'square',.1);beep(880,.1,'square',.1);
 }
 function land(){
-  state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;
   const soft=clamp(1-Math.abs(ship.vy)/lv.safe,0,1);
   const mult=Math.min(3,streak);
   let base=500+soft*300+ship.fuel*5+(act===2?250:0);
@@ -459,14 +474,14 @@ function showResult(){
        <h2 class="good">${act===3?'DIRECT HIT':'TOUCHDOWN'} — ${lv.name}</h2>
        ${body}
        <div class="bigscore">+${r.pts.toLocaleString()}</div>
-       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
-       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+       <button class="btn" onclick="askQuestion()">CHECK YOUR FLIGHT →</button>
+
      </div>`);
     primary=askQuestion;
   }else{
     if(lives<=0){gameOver();return;}
     let hint='';
-    if(act===1)hint=`impact v (no burn) = √(v² + 2·g·Δy)`;
+    if(act===1)hint=`You touched down at ${fmt(r.impact)} m/s; the limit is ${fmt(lv.safe)} m/s. ${ship.fuel<=0?"Fuel ran out. Try a shorter, later burn instead of hovering.":"Start braking earlier. Upward thrust changes velocity gradually; it cannot remove your downward speed instantly."}`;
     else if(act===2)hint=r.reason==='pad'?`You missed the pad — manage x with the SIDE thrusters only; the main engine cannot help you sideways.`:
       r.reason==='vx'?`|vx| was ${fmt(r.impactX)} — kill horizontal speed BEFORE the final drop. The two axes are separate problems.`:
       `|vy| was ${fmt(r.impact)} — same suicide-burn timing as Act I. Nothing about going 2D changed the vertical physics.`;
@@ -477,6 +492,7 @@ function showResult(){
        <div class="sub">${hint}</div>
        <div class="stat"><span>Ships left</span><b>${'▲ '.repeat(lives)}</b></div>
        <button class="btn" onclick="retry()">RETRY ${act===3?'VOLLEY':'DESCENT'}</button>
+       <button class="btn alt" onclick="finishRun()">FINISH &amp; BANK</button>
      </div>`);
     primary=retry;
   }
@@ -490,6 +506,7 @@ function nextLevel(){
   else {wave++;showMission(ENDLESS[act](wave));}
 }
 function actCleared(){
+  state='cleared';
   let unlockMsg='';
   if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — DRIFT unlocked.</b> Two dimensions await.';}
   else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f472b6">ACT III — LAUNCH unlocked.</b> Report to the cannon.';}
@@ -503,29 +520,47 @@ function actCleared(){
      <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
      <div class="bigscore">${score.toLocaleString()}</div>
      <div class="sub">${unlockMsg}</div>
-     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     ${act<3?`<button class="btn" onclick="finishRun()">BANK THIS ACT →</button>`:''}
      <button class="btn alt" onclick="goEndless()">ENDLESS MODE</button>
-     <button class="btn alt" onclick="select_()">HANGAR</button>
+     <button class="btn alt" onclick="finishRun()">FINISH &amp; BANK</button>
    </div>`);
-  primary=act<3?()=>startAct(act+1):goEndless;
+  primary=finishRun;
 }
 function goEndless(){wave=1;showMission(ENDLESS[act](1));}
-function gameOver(){
-  state='gameover';
-  ARCADE.emit('arcade:gameover',{act,score});
-  ARCADE.reportScore(true); // final: closes the ranked run server-side
-  ARCADE.playId=null;       // next INSERT COIN buys a fresh credit
-  overlay(`
-   <div class="card">
-     <div class="tag">GAME OVER</div>
-     <h2>FLIGHT LOG CLOSED</h2>
-     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
-     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
-     <div class="sub" style="margin-top:10px">Gravity is undefeated. But now you know its playbook.</div>
-     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
-     <button class="btn alt" onclick="select_()">HANGAR</button>
-   </div>`);
-  primary=()=>startAct(act);
+let runOpen=false, resumeState='play';
+function pauseRun(){
+  if(!['play','aim'].includes(state))return;
+  resumeState=state;state='paused';ship.up=ship.left=ship.right=false;setThrustSound(false);
+  overlay(`<div class="card"><h2>FLIGHT PAUSED</h2><div class="sub">Your flight is frozen. Resume, or finish now and bank completed flight checks.</div>
+    <button class="btn" onclick="resumeRun()">RESUME</button><button class="btn alt" onclick="finishRun()">FINISH &amp; BANK</button></div>`);
+  primary=resumeRun;
+}
+function resumeRun(){hideOverlay();state=resumeState;acc=0;primary=null;}
+function gameOver(){finishRun();}
+function finishRun(){
+  if(!runOpen)return;
+  runOpen=false;state='finished';primary=null;ship.up=ship.left=ship.right=false;setThrustSound(false);
+  overlay(`<div class="card"><div class="tag">FLIGHT LOG</div><h2>RUN COMPLETE</h2>
+    <div class="stat"><span>Act score</span><b>${score.toLocaleString()}</b></div>
+    <div class="stat"><span>Completed flight checks</span><b>${STATS.solved}</b></div>
+    <div class="stat"><span>Correct / answered</span><b>${STATS.right} / ${STATS.right+STATS.wrong}</b></div>
+    <div class="sub" id="saveStatus" role="status">${ARCADE.playId?'Saving score and XP…':'Practice complete — no score or XP saved.'}</div>
+    <button class="btn" id="retrySave" hidden onclick="retrySave()">RETRY SAVE</button>
+    <button class="btn" id="hangar" ${ARCADE.playId?'disabled':''} onclick="select_()">BACK TO HANGAR</button></div>`);
+  if(ARCADE.playId){ARCADE.reportScore(true);armSaveTimer();}else primary=select_;
+}
+let saveTimer=null;
+function armSaveTimer(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{if(ARCADE.finalMessage)saveStatus(false);},10000);}
+function saveStatus(ok,xp){
+  clearTimeout(saveTimer);
+  $('#saveStatus').textContent=ok?`Saved · ${Number(xp)||0} XP banked. Start your next act from the hangar.`:'Save not confirmed. Keep this page open and retry; your run is retained.';
+  $('#retrySave').hidden=ok;$('#hangar').disabled=!ok;
+  if(ok)primary=select_;
+}
+function retrySave(){
+  if(!ARCADE.finalMessage)return;
+  $('#retrySave').hidden=true;$('#saveStatus').textContent='Retrying save…';
+  ARCADE.emit('arcade:score',ARCADE.finalMessage);armSaveTimer();
 }
 
 /* ================================================== questions */
@@ -540,101 +575,39 @@ function qNum(text,ans,unit,distractors,explain){
 function qCon(text,right,wrongs,explain){
   return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
 }
-function makeQuestion(){
-  const g=+lv.g.toFixed(1);
-  const bank1=[
-   ()=>{const Hh=pick([40,60,80,100,120]);const v=Math.sqrt(2*g*Hh);
-     return qNum(`A supply pod is released from rest ${Hh} m above ${lv.name} (g = ${g} m/s²). How fast is it moving at impact?`,
-       v,'m/s',[Math.sqrt(g*Hh),v/2,v*2],
-       `v² = v₀² + 2gΔy → v = √(2 · ${g} · ${Hh}) = ${fmt(v)} m/s`);},
-   ()=>{const Hh=pick([45,60,90,125]);const tt=Math.sqrt(2*Hh/g);
-     return qNum(`From rest, how long does an object take to fall ${Hh} m on ${lv.name} (g = ${g} m/s²)?`,
-       tt,'s',[Hh/g,tt*2,tt/2],
-       `Δy = ½gt² → t = √(2·${Hh}/${g}) = ${fmt(tt)} s`);},
-   ()=>{const v1=Math.round(rnd(18,30)),v2=Math.round(rnd(2,8)),dt=pick([2,3,4]);
-     return qNum(`Your retro-burn slowed the ship from ${v1} m/s to ${v2} m/s in ${dt} s. What was the magnitude of your average acceleration?`,
-       (v1-v2)/dt,'m/s²',[(v1+v2)/dt,v1-v2,v1/dt],
-       `a = Δv/Δt = (${v1} − ${v2}) / ${dt} = ${fmt((v1-v2)/dt)} m/s²`);},
-   ()=>qCon('On a velocity–time graph, the SLOPE of the line tells you the…',
-     'acceleration',['displacement','position','speed at t = 0'],
-     'Slope = rise/run = Δv/Δt — and Δv/Δt is the definition of acceleration.'),
-   ()=>qCon('On a velocity–time graph, the AREA between the line and the t-axis equals the…',
-     'displacement',['acceleration','average force','final velocity'],
-     'Area = v·t summed over the trip = displacement. That shaded region in your telemetry was the meters you fell.'),
-   ()=>qCon('At the exact instant your ship’s velocity hits zero (thrusters still firing), your acceleration is…',
-     'nonzero — still pointing up',['zero, because v = 0','equal to g, downward','undefined'],
-     'v = 0 says nothing about a. The thrusters are still pushing: a = thrust − g ≠ 0. Velocity and acceleration are independent quantities.'),
-   ()=>qCon(`In free fall near ${lv.name}'s surface, an object's speed increases each second by…`,
-     fmt(g)+' m/s',[fmt(g)+' m',fmt(g/2)+' m/s','it depends on its mass'],
-     `g = ${g} m/s² literally means "+${fmt(g)} m/s of speed, every second" — for ANY mass.`),
-  ];
-  const bank2=[
-   ()=>qCon('Two pods are at the same height. Pod A is dropped from rest; pod B is moving horizontally at 20 m/s. Which hits the ground first?',
-     'they land at the same time',['pod A — it takes the direct path','pod B — it’s moving faster','depends on their masses'],
-     'Vertical motion only cares about vertical things. Both start with vy = 0 under the same g — identical fall times. B’s 20 m/s lives entirely in x.'),
-   ()=>{const vx=pick([6,9,12]),vy=vx/3*4;
-     return qNum(`Your ship drifts with vx = ${vx} m/s and falls with vy = ${fmt(vy)} m/s. What is your SPEED (magnitude of velocity)?`,
-       Math.hypot(vx,vy),'m/s',[vx+vy,(vx+vy)/2,Math.abs(vy-vx)],
-       `Components add like a right triangle: |v| = √(vx² + vy²) = √(${vx}² + ${fmt(vy)}²) = ${fmt(Math.hypot(vx,vy))} m/s. (A 3-4-5 triangle!)`);},
-   ()=>qCon('You fire ONLY the main (vertical) engine. What happens to your horizontal velocity vx?',
-     'nothing — no horizontal force, no change',['it decreases — the engine slows everything','it increases with altitude','it drifts toward zero on its own'],
-     'Each axis obeys F = ma separately. Zero horizontal force means zero horizontal acceleration: vx is frozen until a side thruster (or wind) acts.'),
-   ()=>{const w=pick([2,2.5,3]),tt=pick([3,4,5]);
-     return qNum(`A steady wind gives your ship a constant horizontal acceleration of ${fmt(w)} m/s². Starting with vx = 0, what is vx after ${tt} s?`,
-       w*tt,'m/s',[w,tt/w,w*tt*2],
-       `Constant a → v = at = ${fmt(w)} × ${tt} = ${fmt(w*tt)} m/s. Wind is just gravity turned sideways — same equation.`);},
-   ()=>qCon('On NEPTUNE the pad slides at a constant 3 m/s. For the gentlest touchdown, at the moment of contact your vx should be…',
-     '3 m/s, matching the pad',['0 m/s — always land with zero velocity','−3 m/s, opposing the pad','as large as possible'],
-     'What matters is velocity RELATIVE to the pad. Match its 3 m/s and, in the pad’s frame, you arrive at vx = 0.'),
-  ];
-  const bank3=[
-   ()=>{const th=pick([30,37,45,53,60]),v0=pick([20,25,30,40]);
-     return qNum(`Cargo launched at ${v0} m/s, ${th}° above horizontal. What is the HORIZONTAL component vx?`,
-       v0*Math.cos(th*D2R),'m/s',[v0*Math.sin(th*D2R),v0,v0*Math.tan(th*D2R)],
-       `vx = v₀·cosθ = ${v0} · cos${th}° = ${fmt(v0*Math.cos(th*D2R))} m/s — and it stays that value the whole flight.`);},
-   ()=>{const th=pick([30,37,45,53,60]),v0=pick([20,25,30,40]);
-     return qNum(`Cargo launched at ${v0} m/s, ${th}° above horizontal. What is the INITIAL VERTICAL component vy₀?`,
-       v0*Math.sin(th*D2R),'m/s',[v0*Math.cos(th*D2R),v0,v0/2],
-       `vy₀ = v₀·sinθ = ${v0} · sin${th}° = ${fmt(v0*Math.sin(th*D2R))} m/s — this one gravity immediately starts eating.`);},
-   ()=>{const th=pick([30,45,60]),v0=pick([20,30,40]);const tt=2*v0*Math.sin(th*D2R)/g;
-     return qNum(`Launch at ${v0} m/s, ${th}°, on ${lv.name} (g = ${g} m/s²), landing at launch height. Total time in the air?`,
-       tt,'s',[tt/2,v0/g,tt*2],
-       `Hang time t = 2v₀sinθ/g = 2 · ${fmt(v0*Math.sin(th*D2R))} / ${g} = ${fmt(tt)} s. Up takes half; down takes the other half.`);},
-   ()=>qCon('At the very TOP of the cargo’s arc, its velocity and acceleration are…',
-     'v is horizontal (vy = 0); a = g downward',['both zero — it’s momentarily at rest','v = 0 but a points up','v is horizontal and a = 0'],
-     'vy passes through zero at the apex, but vx never stopped — the cargo is still moving sideways. And gravity never takes a frame off: a = g, down, the entire flight.'),
-   ()=>qCon('Your telemetry shows the cargo’s vx–t graph during flight. Its shape is…',
-     'a horizontal flat line',['a line sloping down with slope −g','a parabola','a line through the origin'],
-     'No horizontal force → no horizontal acceleration → vx never changes. All of gravity’s drama happens on the vy–t graph.'),
-   ()=>qCon('The trail dots are stamped at EQUAL TIME intervals. Horizontally, the spacing between dots…',
-     'stays the same the whole flight',['shrinks near the apex','grows as it falls','depends on the launch angle changing mid-flight'],
-     'Equal times × constant vx = equal horizontal steps. The vertical spacing changes (vy changes); the horizontal rhythm never does.'),
-  ];
-  const bank=act===1?bank1:act===2?bank1.slice(3,5).map(f=>f).concat(bank2):bank3;
-  return pick(bank)();
-}
 let curQ=null;
 function askQuestion(){
-  state='question';curQ=makeQuestion();
+  state='question';
+  const r=lastResult;
+  curQ=act===1?qCon(`You landed at ${fmt(r.impact)} m/s on ${lv.name}. During a burn, what made your downward speed decrease?`,
+    'Net acceleration pointed upward',['Gravity stopped acting','Velocity and acceleration both pointed downward','Thrust instantly set velocity to zero'],
+    `The engine provides ${fmt(lv.thrust)} m/s² upward while gravity provides ${fmt(lv.g)} m/s² downward. Net acceleration during the burn is ${fmt(lv.thrust-lv.g)} m/s² upward, opposite the falling velocity.`):
+    act===2?qCon(`Your speed relative to the pad was ${fmt(r.impactX)} m/s horizontally. What makes a gentle sideways touchdown?`,
+    'Match the pad’s horizontal velocity',['Always force vx to zero, even on a moving pad','Use only the vertical engine','Match the magnitude of your vertical speed'],
+    `The pad’s horizontal velocity is ${fmt(lv.padV||0)} m/s. Side thrusters change vx; the vertical engine changes vy. Landing checks the difference between ship and pad velocities.`):
+    qNum(`Your successful shot had vx = ${fmt(r.vx)} m/s. With no air resistance, what was vx at the top of its arc?`,
+      r.vx,'m/s',[0,r.vx/2,r.vx*2],`Gravity changes vy, not vx. The horizontal velocity stays ${fmt(r.vx)} m/s throughout this shot.`);
   overlay(`
    <div class="card">
-     <div class="tag">PHYSICS BONUS · +750</div>
+     <div class="tag">CHECK YOUR FLIGHT · +750 IF CORRECT</div>
      <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
      <div class="choices">${curQ.choices.map((c,i)=>
        `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
      <div class="explain" id="explain">${curQ.explain}</div>
-     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">NEXT MISSION →</button>
+     <button class="btn alt" id="bankCheck" style="display:none" onclick="finishRun()">FINISH &amp; BANK</button>
    </div>`);
   primary=null;
 }
 const STATS={solved:0,right:0,wrong:0}; // free-cabinet payout evidence
 function answer(i){
-  if(primary)return;
+  if(primary||state!=='question')return;
+  STATS.solved++;
   const right=curQ.choices.findIndex(c=>c.ok);
   curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
-  $('#contBtn').style.display='inline-block';
+  $('#contBtn').style.display='inline-block';$('#bankCheck').style.display='inline-block';
   if(i===right){score+=750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
   else{score=Math.max(0,score-250);beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
@@ -706,7 +679,7 @@ function fire(){
 function endShot(hit){
   trails.push(curTrail||[]);curTrail=null;
   if(hit){
-    state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;
+    state='down';landedOK=true;downTimer=0;streak++;flash=.5;
     const mult=Math.min(3,streak);
     const pts=Math.round([1000,600,300][Math.min(2,shotsUsed)]*mult);
     lastResult={pts,mult,shot:shotsUsed+1,time:t,
@@ -1076,7 +1049,8 @@ function setBurn(key,on){if(state!=='play'||act===3)return;
   if(key==='right')ship.right=on;
   if(key!=='up')setThrustSound((ship.up||ship.left||ship.right)&&ship.fuel>0);}
 window.addEventListener('keydown',e=>{
-  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+  if(['play','aim'].includes(state)&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+  if(e.code==='KeyP'&&!e.repeat){if(state==='paused')resumeRun();else pauseRun();return;}
   if(state==='aim'){
     if(e.code==='ArrowLeft')aim.ang=clamp(aim.ang+1.5,5,85);
     if(e.code==='ArrowRight')aim.ang=clamp(aim.ang-1.5,5,85);
@@ -1089,10 +1063,8 @@ window.addEventListener('keydown',e=>{
   if(e.code==='Space'||e.code==='ArrowUp')setBurn('up',true);
   if(e.code==='ArrowLeft')setBurn('left',true);
   if(e.code==='ArrowRight')setBurn('right',true);
-  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
-  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
-    state=state==='play'?'paused':'play';
-    ship.up=ship.left=ship.right=false;setThrustSound(false);}
+  if(e.code==='Enter'&&e.target.tagName!=='BUTTON'&&primary&&$('#overlay').classList.contains('show'))primary();
+
   if(e.code==='KeyM'){muted=!muted;setThrustSound(false);}
 });
 window.addEventListener('keyup',e=>{
@@ -1125,7 +1097,7 @@ function dragAim(e){
   const k=Math.min(2.6,(SW*0.35)/lv.vmax);
   aim.v0=clamp(Math.hypot(dx,dy)/k,3,lv.vmax);
 }
-window.addEventListener('blur',()=>{setBurn('up',false);setBurn('left',false);setBurn('right',false);});
+window.addEventListener('blur',()=>{setBurn('up',false);setBurn('left',false);setBurn('right',false);pauseRun();});
 document.addEventListener('click',audio,{once:true});
 
 /* ================================================== go */

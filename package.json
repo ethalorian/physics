@@ -28,7 +28,13 @@
     "test:avatar-browser": "node scripts/test-avatar-browser.cjs",
     "avatar:catalog-check": "node scripts/avatar-catalog-sql.cjs",
     "audit:unused": "node scripts/audit-unused-source.cjs",
-    "test:question-bank": "tsx --test src/lib/question-bank-view.test.ts"
+    "test:question-bank": "tsx --test src/lib/question-bank-view.test.ts",
+    "test:tether": "node scripts/test-tether-physics.cjs && tsx --test src/lib/tether-bridge.test.ts && node scripts/test-tether-routes.cjs",
+    "test:tether-browser": "node scripts/test-tether-browser.cjs",
+    "preview:tether": "node scripts/preview-tether.cjs",
+    "test:flywheel": "node scripts/test-flywheel-physics.cjs && tsx --test src/lib/tether-bridge.test.ts && node scripts/test-tether-routes.cjs",
+    "test:flywheel-browser": "node scripts/test-flywheel-browser.cjs",
+    "preview:flywheel": "node scripts/preview-flywheel.cjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.3",

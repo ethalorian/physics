@@ -6,18 +6,18 @@
 <title>CASCADE // an energy arcade</title>
 <!--
   CASCADE — an energy arcade in three acts. Fourth cabinet, after DESCENT
-  (kinematics), PUSH (dynamics), IMPACT (momentum). Single file, no deps.
+  (kinematics), PUSH (dynamics), IMPACT (momentum). Uses physics-cabinet.js.
 
   You drive a gravity-powered mine cart. You cannot create energy — only
   store it (spring, battery), convert it (KE ↔ PE), and spend it (heat).
-  The ledger is EXACT: spring + PE + KE + budget + battery + heat is
-  constant to the joule, every frame. Heat only ever grows.
+  The energy ledger tracks: spring + PE + KE + budget + battery + heat is
+  conserved after launch. Charging adds external work; heat only grows during a run.
 
   ACT I   DROP IN       — charge the spring, clear the hills, dock soft
   ACT II  ROUGH ROAD    — friction taxes by DISTANCE; a work budget to spend
   ACT III THE GENERATOR — regen braking (75%) banks descents into a battery
 
-  Signature visuals: the ENERGY STACK (total never moves, heat ratchets) and
+  Signature visuals: the ENERGY STACK (energy transfers, heat accumulates) and
   the ENERGY HORIZON — a dashed line at h = E/mg across the mountains, the
   height you can still reach. Brake, and watch your horizon sink.
 
@@ -91,13 +91,21 @@
   .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
     letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
   .teachlink:hover{color:var(--dim)}
+  #pauseRun{position:fixed;bottom:12px;right:12px;z-index:9;background:#081520;color:#5eead4;border:1px solid #5eead4;border-radius:8px;padding:12px;cursor:pointer}
+  button[hidden]{display:none!important}button:disabled{opacity:.45;cursor:wait}
+  .choice:disabled{opacity:1;cursor:default}
+  button:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+  #overlay .card{margin:auto}
+  @media(max-width:600px){.card{padding:18px}h2{font-size:18px}.tag{letter-spacing:.1em}}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="crt"></div><div id="vig"></div>
-<div id="overlay"></div>
+<div id="overlay" role="region" aria-label="Mission briefing and results"></div>
+<button id="pauseRun" onclick="ARCADE.pause()">Ⅱ PAUSE / FINISH</button>
 
+<script src="physics-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================== utils */
@@ -149,28 +157,11 @@ function boom(){if(!AC||muted)return;const len=AC.sampleRate*0.6,buf=AC.createBu
   s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
 
 /* ================================================== host-app bridge */
-const ARCADE={
-  embedded:window.parent!==window,
-  playId:null, pendingCoin:null,
-  emit(type,data){if(this.embedded)
-    window.parent.postMessage(Object.assign({source:'cascade-arcade',type},data||{}),'*');},
-  requestCoin(cb){
-    if(!this.embedded){cb({ok:true,practice:true});return;}
-    this.pendingCoin=cb;
-    this.emit('arcade:coinRequest');
-    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
-  },
-  reportScore(final){
-    if(this.playId)this.emit('arcade:score',{score,act,final:!!final,stats:{solved:STATS.solved,right:STATS.right,wrong:STATS.wrong,bestStreak:0,startLv:act,mode:'physics'}});
-  },
-};
-window.addEventListener('message',e=>{
-  const m=e.data||{};
-  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
-    ARCADE.playId=m.playId||null;
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
-  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+const ARCADE=createPhysicsCabinet({
+  slug:'cascade', read:()=>({state,score,act,stats:STATS}),
+  overlay, hide:hideOverlay, menu:select_, setState:value=>{state=value;},
+  primary:value=>{primary=value;}, resetClock:()=>{acc=0;},
+  stop:()=>{braking=boosting=charging=false;setRoll(0);}
 });
 
 /* ================================================== level data
@@ -329,7 +320,7 @@ function burst(wx,wy,n,cols,sp){for(let i=0;i<n;i++){const a=rnd(0,6.28),s2=rnd(
     life:rnd(.3,.9),col:pick(cols),size:rnd(1.5,3.5)});}}
 
 /* ================================================== overlay + screens */
-function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');requestAnimationFrame(()=>o.querySelector('button:not([disabled])')?.focus({preventScroll:true}));}
 function hideOverlay(){$('#overlay').classList.remove('show');}
 function title(){
   state='title';act=1;lv=ACT1[0];buildTrack();
@@ -350,7 +341,7 @@ function title(){
        <span class="kbd">P</span> pause &nbsp; <span class="kbd">M</span> mute
      </div>
      ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — DROP ${HIS[1].toLocaleString()} · ROAD ${HIS[2].toLocaleString()} · GEN ${HIS[3].toLocaleString()}</div>`:''}
-     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+     <button class="btn" onclick="select_()">▶ CHOOSE AN ACT</button>
    </div>`);
   primary=select_;
 }
@@ -383,21 +374,23 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  if(!ARCADE.canStart())return;
   audio();
-  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;ARCADE.runOpen=true;
+    Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
   overlay(`<div class="card" style="text-align:center">
     <div class="tag">INSERT COIN</div>
     <h2>CONTACTING CABINET…</h2>
-    <div class="sub">one credit = play until GAME OVER</div></div>`);
+    <div class="sub">Free physics run · waiting for ranked approval</div></div>`);
   primary=null;
   ARCADE.requestCoin(res=>{
     if(res.ok){begin();return;}
     overlay(`<div class="card">
       <h2 class="bad">COIN REJECTED</h2>
-      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <div class="sub">The cabinet could not start a ranked run. Return to the acts and try again.</div>
       <button class="btn alt" onclick="select_()">BACK TO THE TIPPLE</button></div>`);
     primary=select_;
   });
@@ -420,10 +413,14 @@ function showMission(level){
    <div class="card">
      <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
      <h2 style="font-size:28px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="tag">BRIEF → TRY → CHECK → BANK</div>
+     <div class="sub">${wave?'Endless wave '+wave:'Mission '+(levelIdx+1)+' of '+ACT_LEVELS[act].length} · ${ARCADE.embedded?'Ranked run':'Practice — no XP saved'}</div>
      <div class="sub">${params}</div>
+     <div class="sub"><b>Before you start:</b> ${act===1?'Compare your stored energy with the highest crest. Save enough energy to get there, then brake into the dock.':act===2?'Budget for rough rail: friction turns mechanical energy into heat. Boost only where it helps.':'Plan where to regenerate and where to boost. The generator stores only part of the energy you remove.'}</div>
      <div class="explain" style="display:block">${lv.tip}</div>
      <div class="sub" style="margin-top:12px">${controls}</div>
      <button class="btn" onclick="launch()">▶ ${lv.springMax>0?'TO THE SPRING':'RELEASE THE CART'}</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
   primary=launch;
 }
@@ -441,6 +438,7 @@ function launch(){
 }
 function launchGo(){ // spring → KE, exactly
   if(state!=='charge')return;
+  E0=spring+budget+battery+pe();
   cart.v=Math.sqrt(2*spring/CART_M);
   spring=0;state='play';
   beep(220,.18,'square',.16,300);shake=.3;
@@ -448,13 +446,13 @@ function launchGo(){ // spring → KE, exactly
   burst(cart.x,yAt(cart.x)+1,14,['#c084fc','#34d399'],4);
 }
 function succeed(){
-  state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;setRoll(0);
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;setRoll(0);
   const d0=lv.dock[0],d1=lv.dock[1],center=(d0+d1)/2,hw=(d1-d0)/2;
   const err=Math.abs(cart.x-center)/hw;
   const tier=err<=0.25?'BULLSEYE':err<=0.6?'GREAT':'CLEAN';
   let base=tier==='BULLSEYE'?1400:tier==='GREAT'?950:650;
   let bonus=0,btxt='';
-  if(act===1){const b=Math.round(Math.max(0,1-heat/E0)*300);
+  if(act===1){const b=Math.round(Math.max(0,1-heat/Math.max(1,E0))*300);
     if(b>50){bonus=b;btxt='COOL RUNNING +'+b;}}
   if(act===2){const b=Math.round(budget*0.1);
     if(b>0){bonus=b;btxt='BUDGET BANKED +'+b;}}
@@ -463,7 +461,7 @@ function succeed(){
   const mult=Math.min(3,streak);
   const pts=Math.round((base+bonus)*mult);
   lastResult={tier,pts,mult,btxt,
-    heatF:heat/E0,stop:cart.x};
+    heatF:heat/Math.max(1,E0),stop:cart.x};
   score+=pts;bumpHi();
   popup(tier+'!','#34d399',38);
   if(btxt)setTimeout(()=>popup(btxt,'#fbbf24',20),350);
@@ -488,9 +486,9 @@ function showResult(){
        ${r.btxt?`<div class="stat"><span>Bonus</span><b>${r.btxt}</b></div>`:''}
        <div class="stat"><span>Combo</span><b>×${r.mult}</b></div>
        <div class="bigscore">+${r.pts.toLocaleString()}</div>
-       <div class="sub" style="margin-top:10px">Read the stack like a receipt: every joule you started with is now height, charge, or heat. The total never moved. It never does.</div>
-       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
-       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+       <div class="sub" style="margin-top:10px">Read the stack like a receipt: your energy is now height, motion, stored charge, or heat. Braking changes where the energy is stored; it does not destroy it.</div>
+       <button class="btn" onclick="askQuestion()">CHECK THIS MISSION →</button>
+
      </div>`);
     primary=askQuestion;
   }else{
@@ -501,6 +499,7 @@ function showResult(){
        <div class="sub">${r.hint||''}</div>
        <div class="stat"><span>Carts left</span><b>${'▣ '.repeat(lives)}</b></div>
        <button class="btn" onclick="retry()">ANOTHER CART</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
      </div>`);
     primary=retry;
   }
@@ -514,6 +513,7 @@ function nextLevel(){
   else {wave++;showMission(ENDLESS[act](wave));}
 }
 function actCleared(){
+  state='cleared';
   let unlockMsg='';
   if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — ROUGH ROAD unlocked.</b> The rail gets a toll booth.';}
   else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#c084fc">ACT III — THE GENERATOR unlocked.</b> Your brake learns a better trick.';}
@@ -527,30 +527,14 @@ function actCleared(){
      <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
      <div class="bigscore">${score.toLocaleString()}</div>
      <div class="sub">${unlockMsg}</div>
-     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     ${act<3?`<button class="btn" onclick="ARCADE.finish()">BANK THIS ACT →</button>`:''}
      <button class="btn alt" onclick="goEndless()">ENDLESS SEAM</button>
-     <button class="btn alt" onclick="select_()">TIPPLE HOUSE</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
-  primary=act<3?()=>startAct(act+1):goEndless;
+  primary=()=>ARCADE.finish();
 }
 function goEndless(){wave=1;showMission(ENDLESS[act](1));}
-function gameOver(){
-  state='gameover';
-  ARCADE.emit('arcade:gameover',{act,score});
-  ARCADE.reportScore(true);
-  ARCADE.playId=null;
-  overlay(`
-   <div class="card">
-     <div class="tag">GAME OVER</div>
-     <h2>SEAM CLOSED</h2>
-     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
-     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
-     <div class="sub" style="margin-top:10px">Energy was conserved. Your shift was not.</div>
-     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
-     <button class="btn alt" onclick="select_()">TIPPLE HOUSE</button>
-   </div>`);
-  primary=()=>startAct(act);
-}
+function gameOver(){ARCADE.finish();}
 
 /* ================================================== questions */
 function qNum(text,ans,unit,distractors,explain){
@@ -565,117 +549,59 @@ function qCon(text,right,wrongs,explain){
   return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
 }
 function makeQuestion(){
-  const bank1=[
-   ()=>{const m=pick([2,4,80]),v=pick([3,5,10]);
-     return qNum(`A ${m} kg cart rolls at ${v} m/s. What is its kinetic energy?`,
-       0.5*m*v*v,'J',[m*v,m*v*v,0.5*m*v],
-       `KE = ½mv² = ½ · ${m} · ${v}² = ${fmt(0.5*m*v*v)} J. Note the square — speed counts twice.`);},
-   ()=>{const m=pick([2,10,80]),h=pick([3,5,8]);
-     return qNum(`A ${m} kg cart sits ${h} m above the valley floor. Its gravitational PE (relative to the floor)?`,
-       m*G*h,'J',[m*h,m*G,m*G*h/2],
-       `PE = mgh = ${m} · 9.8 · ${h} = ${fmt(m*G*h)} J — exactly the height tick you saw on the stack.`);},
-   ()=>{const h=pick([5,8,11]);
-     return qNum(`A cart rolls from rest down a frictionless ${h} m drop. Speed at the bottom?`,
-       Math.sqrt(2*G*h),'m/s',[G*h,Math.sqrt(G*h),2*G*h/10],
-       `mgh = ½mv² → v = √(2gh) = √(2 · 9.8 · ${h}) = ${fmt(Math.sqrt(2*G*h))} m/s. The mass cancels — every cart, same speed.`);},
-   ()=>qCon('Your cart doubles its speed. Its kinetic energy…',
-     'quadruples — KE goes as v²',['doubles','triples','stays the same if mass is constant'],
-     'KE = ½mv²: double v, and v² is ×4. This is why braking from high speed makes so much more heat than from low speed.'),
-   ()=>qCon('A loaded cart and an empty cart roll from rest down the same frictionless hill. At the bottom…',
-     'they move at the SAME speed',['the heavy one is faster','the light one is faster','the heavy one never reaches the bottom'],
-     'mgh = ½mv² and the m cancels: v = √(2gh) for everyone. Mass buys you more ENERGY, not more speed.'),
-   ()=>qCon('You hold the brake and the cart slows. Where did its kinetic energy GO?',
-     'into heat at the brake — still energy, just spread out',['it was destroyed','back into the spring','into the cart’s mass'],
-     'Energy is never destroyed — the gray band on your stack grew by exactly what KE lost. Heat is energy’s retirement, not its grave.'),
-  ];
-  const bank2=[
-   ()=>{const F=pick([200,400]),d=pick([5,8,12]);
-     return qNum(`Your booster pushes with ${F} N over ${d} m of track. How much work does it do on the cart?`,
-       F*d,'J',[F+d,F/d,F*d/2],
-       `W = F·d = ${F} · ${d} = ${F*d} J — exactly what ticked off your budget while you held the button.`);},
-   ()=>{const mu=pick([0.1,0.12,0.15]),d=pick([10,15,18]);
-     return qNum(`An ${CART_M} kg cart crosses a ${d} m rough stretch (μ = ${mu}, flat). How much energy does friction take?`,
-       mu*CART_M*G*d,'J',[mu*CART_M*G,mu*d*100,mu*CART_M*G*d/2],
-       `Heat = μmg·d = ${mu} · ${CART_M} · 9.8 · ${d} = ${fmt(mu*CART_M*G*d)} J. Distance is the only variable you control.`);},
-   ()=>qCon('To pay LESS to a rough stretch of flat rail, you should cross it…',
-     'you can’t pay less — the toll is μmg·d, fixed by distance',['as fast as possible','as slowly as possible','while braking'],
-     'Friction’s bill is force × distance, and neither depends on speed. Hurrying changes how LONG you pay, not how MUCH. The only escape is a shorter path — or smoother rail.'),
-   ()=>qCon('Lifting a cart 5 m straight up versus pushing it 5 m higher along a long frictionless ramp. The WORK against gravity is…',
-     'identical — mgh either way',['less on the ramp','more on the ramp','zero on the ramp'],
-     'Gravity only bills the height change: W = mgh. The ramp trades a smaller force for a longer distance — same product. (Friction, of course, bills the ramp extra.)'),
-   ()=>{const Wk=pick([1200,2400]),tt=pick([4,6]);
-     return qNum(`Your booster delivers ${Wk} J of work in ${tt} s. Average power?`,
-       Wk/tt,'W',[Wk*tt,Wk,Wk/tt/2],
-       `P = W/t = ${Wk}/${tt} = ${fmt(Wk/tt)} W. Power is the RATE of spending energy — same joules, faster meter.`);},
-  ];
-  const bank3=[
-   ()=>{const h=pick([6,8,10]);
-     const banked=CART_M*G*h*REGEN_EFF;
-     return qNum(`Your ${CART_M} kg cart regen-brakes down a full ${h} m descent at 75% efficiency. How much lands in the battery?`,
-       banked,'J',[CART_M*G*h,banked/2,CART_M*G*h*0.25],
-       `Available: mgh = ${fmt(CART_M*G*h)} J. Banked: 75% of it = ${fmt(banked)} J. The missing quarter is in the gray band — every conversion pays the house.`);},
-   ()=>qCon('Energy goes PE → battery (75%) → KE (100% here). What fraction of the original PE reaches KE?',
-     '75% — each conversion multiplies, and only one taxed you',['100% — it balances out','56%','25%'],
-     'Chained conversions MULTIPLY their efficiencies: 0.75 × 1.0 = 0.75. Add a second 75% step and you’d keep just 56%. Long energy chains leak at every link.'),
-   ()=>qCon('After a whole run, your stack shows height + battery + heat exactly equal to what you started with. This is because…',
-     'energy is conserved — it changes form, never amount',['the game rounds the numbers','heat doesn’t count as energy','the cart is special'],
-     'That receipt is the first law of thermodynamics wearing a hard hat. No exceptions have ever been found. None.'),
-   ()=>{const k=2000,x=pick([0.5,0.8,1.0]);
-     return qNum(`The launch spring (k = ${k} N/m) is compressed ${fmt(x)} m. How much energy is stored?`,
-       0.5*k*x*x,'J',[k*x,0.5*k*x,k*x*x],
-       `E = ½kx² = ½ · ${k} · ${fmt(x)}² = ${fmt(0.5*k*x*x)} J. Compression counts twice — just like speed does in KE.`);},
-   ()=>qCon('You double the spring compression. The stored energy…',
-     'quadruples — ½kx² goes as x²',['doubles','halves','stays the same'],
-     'Same square law as kinetic energy: the second centimeter of compression stores more than the first, because you’re pushing against a harder spring the whole way.'),
-  ];
-  /* CROSSOVER bank — bridges back to IMPACT, PUSH, and DESCENT. The first
-     one is the payoff the whole arcade was building to. +1000 each. */
-  const cross=[
-   ()=>qCon('CROSSOVER · IMPACT — In the momentum cabinet, two equal rail cars coupled and rolled off at HALF the speed. Momentum survived perfectly. How much of the kinetic energy survived?',
-     'half — the other half became heat and bent metal in the crash',['all of it — energy is always conserved as KE','none; coupling destroys energy','double; the cars share it'],
-     'KE before: ½mv². After: ½(2m)(v/2)² = ¼mv² — exactly half. If you ever wondered where IMPACT’s missing speed went: it has been sitting in CASCADE’s gray heat band all along. Momentum is conserved in EVERY collision; kinetic energy only in the perfectly bouncy ones.'),
-   ()=>{const f=pick([47,59,71]),d=pick([8,12,15]);
-     return qNum(`CROSSOVER · PUSH — In the dynamics cabinet, friction pulled ${f} N backward on your sliding crate. After ${d} m of sliding, how much energy became heat?`,
-       f*d,'J',[f/d,f,f*d/2],
-       `Heat = F·d = ${f} × ${d} = ${f*d} J. PUSH measured friction as a force; CASCADE bills it as energy. Same villain, two ledgers — and the FBD arrow you watched there is the gray band you watch here.`);},
-   ()=>qCon('CROSSOVER · DESCENT — The kinematics cabinet taught v² = 2gΔy for a falling ship. CASCADE teaches mgh = ½mv². Solve the second for v and you get…',
-     'v = √(2gh) — they are one equation in two costumes',['something completely different','v = gh','v = 2gh'],
-     'Divide out the m, multiply by 2, take the root: ½mv² = mgh becomes v² = 2gh. DESCENT derived it from motion; CASCADE derives it from bookkeeping. Physics keeps arriving at the same place by different roads — that is how you know the roads are real.'),
-  ];
-  if(Math.random()<0.35)return Object.assign(pick(cross)(),{cross:true});
-  const bank=act===1?bank1:act===2?bank2:bank3;
-  return pick(bank)();
+  if(act===1&&levelIdx%2)return qNum(`This run started with ${fmtE(E0)} of energy. If all of it were kinetic energy in the ${CART_M} kg cart, how fast would it move?`,
+    Math.sqrt(2*E0/CART_M),'m/s',[Math.sqrt(E0/CART_M),2*E0/CART_M,Math.sqrt(2*E0/CART_M)/2],
+    `KE = ½mv², so v = √(2E/m) = ${fmt(Math.sqrt(2*E0/CART_M))} m/s. Energy stored as height, heat or charge reduces the amount available as kinetic energy.`);
+  if(act===2&&levelIdx%2)return qCon(`You docked at ${fmt(lastResult.stop)} m. On a rough section, what determines the frictional energy loss for a fixed friction force?`,
+    'The distance traveled along the rough rail',['Only the time spent there','Only the cart’s final speed','The number of times you press boost'],
+    'The energy transferred to heat is force × sliding distance. Traveling the same rough distance faster does not avoid that energy cost.');
+  if(act===3&&levelIdx%2)return qNum(`Your generator stores ${Math.round(REGEN_EFF*100)}% of the energy it removes. Out of 1000 J removed in braking, how much becomes heat?`,
+    1000*(1-REGEN_EFF),'J',[1000,1000*REGEN_EFF,0],
+    `${Math.round(1000*REGEN_EFF)} J enters the battery. The remaining ${Math.round(1000*(1-REGEN_EFF))} J becomes heat: stored energy plus heat equals the 1000 J removed.`);
+  if(act===1)return qCon(`You docked at ${fmt(lastResult.stop)} m and converted about ${Math.round(lastResult.heatF*100)}% of your starting energy to heat. Where did the energy removed by ordinary braking go?`,
+    'Into thermal energy in the brakes and surroundings',
+    ['It was destroyed','It became extra gravitational potential energy','It disappeared when speed reached zero'],
+    'Braking transfers mechanical energy into thermal energy. The cart loses kinetic energy, while total energy of the cart and surroundings is conserved.');
+  if(act===2)return qCon(`You finished ${lv.name} with ${fmtE(budget)} of work budget left. If the same friction force acts over twice the sliding distance, how much energy does it transfer to heat?`,
+    'Twice as much',['The same amount','Half as much','Four times as much'],
+    'Work done against a constant friction force is F × distance. Doubling distance doubles the mechanical energy transferred to heat.');
+  return qNum(`Your generator stores ${Math.round(REGEN_EFF*100)}% of the energy it removes. For 1000 J removed by regenerative braking, how much enters the battery?`,
+    1000*REGEN_EFF,'J',[1000,1000*(1-REGEN_EFF),1000/REGEN_EFF],
+    `${Math.round(REGEN_EFF*100)}% × 1000 J = ${Math.round(1000*REGEN_EFF)} J stored; the other ${Math.round(1000*(1-REGEN_EFF))} J becomes heat. Repeated braking and boosting cannot create energy.`);
 }
 let curQ=null;
 function askQuestion(){
   state='question';curQ=makeQuestion();
   overlay(`
    <div class="card">
-     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">CHECK THIS MISSION · +750 IF CORRECT</div>
      <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
      <div class="choices">${curQ.choices.map((c,i)=>
        `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
      <div class="explain" id="explain">${curQ.explain}</div>
-     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">NEXT MISSION →</button>
+     <button class="btn alt" id="bankCheck" style="display:none" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
   primary=null;
 }
 const STATS={solved:0,right:0,wrong:0}; // free-cabinet payout evidence
 function answer(i){
-  if(primary)return;
+  if(primary||state!=='question')return;
+  STATS.solved++;
   const right=curQ.choices.findIndex(c=>c.ok);
   curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
-  $('#contBtn').style.display='inline-block';
+  $('#contBtn').style.display='inline-block';$('#bankCheck').style.display='inline-block';
   if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
   else{beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
 }
 
-/* ================================================== physics — exact ledger */
+/* ================================================== physics — fixed-step energy model */
 const DT=1/120;
 function step(dt){
+  const previousX=cart.x,previousV=cart.v,previousHeat=heat,previousBattery=battery;
   const sl=slopeAt(cart.x), cs=1/Math.sqrt(1+sl*sl), sn=sl*cs;
   const sp=Math.abs(cart.v);
   let a=-G*sn;
@@ -701,7 +627,7 @@ function step(dt){
     const pool=act===3?battery:budget;
     if(pool>=drain){
       a+=BST;
-      const work=CART_M*BST*sp*dt;
+      const work=Math.min(drain,CART_M*BST*(sp+0.5*BST*dt)*dt);
       heat+=drain-work; // idle burn while crawling — the ledger stays exact
       if(act===3)battery-=drain;else budget-=drain;
       if(Math.random()<.5)particles.push({x:cart.x-0.9,y:yAt(cart.x)+0.4,
@@ -710,6 +636,30 @@ function step(dt){
   }
   cart.v+=a*dt;
   cart.x+=cart.v*cs*dt;
+  // Project the fixed-step motion onto the energy budget. Dissipation is
+  // capped at available energy; a hill cannot be crossed on numerical drift.
+  const stored=spring+budget;
+  const batteryBase=Math.min(previousBattery,battery);
+  const available=Math.max(0,E0-stored-previousHeat-batteryBase-CART_M*G*(yAt(previousX)-TRK.ymin));
+  const addedHeat=Math.max(0,heat-previousHeat),addedBattery=Math.max(0,battery-previousBattery);
+  const transferred=addedHeat+addedBattery;
+  if(transferred>available){
+    const fraction=available/transferred;
+    heat=previousHeat+addedHeat*fraction;
+    battery=batteryBase+addedBattery*fraction;
+  }
+  const mechanical=Math.max(0,E0-stored-battery-heat);
+  const potential=x=>CART_M*G*(yAt(x)-TRK.ymin);
+  if(potential(cart.x)>mechanical+1e-8){
+    let low=0,high=1;
+    for(let i=0;i<32;i++){
+      const mid=(low+high)/2;
+      if(potential(previousX+(cart.x-previousX)*mid)>mechanical)high=mid;else low=mid;
+    }
+    cart.x=previousX+(cart.x-previousX)*low;
+  }
+  const direction=Math.sign(cart.v)||Math.sign(previousV);
+  cart.v=direction*Math.sqrt(2*Math.max(0,mechanical-potential(cart.x))/CART_M);
   // start bumper + end of line
   if(cart.x<0.6){cart.x=0.6;
     if(cart.v<0){heat+=0.5*CART_M*cart.v*cart.v*(1-0.09);cart.v=-cart.v*0.3;beep(120,.1,'square',.1);}}
@@ -977,7 +927,7 @@ function drawStack(gx,gy,gw,gh){
   ctx.fillStyle='#0a1a11';ctx.fillRect(gx,gy,gw,gh);
   ctx.strokeStyle='#ffffff14';ctx.strokeRect(gx+.5,gy+.5,gw-1,gh-1);
   ctx.fillStyle='#8b96ad';ctx.font='10px "Share Tech Mono",monospace';
-  ctx.fillText('THE STACK — total never moves; heat only climbs',gx+8,gy+14);
+  ctx.fillText('ENERGY — added while charging; conserved after launch',gx+8,gy+14);
   const bx=gx+gw*0.18,bw=gw*0.3,by1=gy+gh-12,bh=gh-36;
   const segs=[
     {v:pe(),col:'#60a5fa',label:'PE'},
@@ -991,7 +941,7 @@ function drawStack(gx,gy,gw,gh){
   ctx.font='9px "Share Tech Mono",monospace';
   for(const s of segs){
     if(s.v<E0*0.004){acc2+=s.v;continue;}
-    const h0=(acc2/E0)*bh,h1=((acc2+s.v)/E0)*bh;
+    const h0=(acc2/Math.max(1,E0))*bh,h1=((acc2+s.v)/Math.max(1,E0))*bh;
     ctx.fillStyle=s.col;
     ctx.fillRect(bx,by1-h1,bw,h1-h0);
     if(h1-h0>11){ctx.fillStyle='#0b0407';ctx.textAlign='center';
@@ -1004,7 +954,7 @@ function drawStack(gx,gy,gw,gh){
   ctx.textAlign='left';
   TRK.crests.forEach((c,i)=>{
     const eNeed=CART_M*G*(c.y-TRK.ymin);
-    const ty=by1-(clamp(eNeed/E0,0,1))*bh;
+    const ty=by1-(clamp(eNeed/Math.max(1,E0),0,1))*bh;
     ctx.strokeStyle='#34d399aa';ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(bx+bw+2,ty);ctx.lineTo(bx+bw+26,ty);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle='#34d399';
@@ -1014,7 +964,7 @@ function drawStack(gx,gy,gw,gh){
   ctx.fillStyle='#8b96ad';
   ctx.fillText('total '+fmtE(mech()+heat),gx+8,gy+gh-26);
   ctx.fillStyle='#6b7280';
-  ctx.fillText('heat '+fmtE(heat)+'  ('+Math.round(100*heat/E0)+'%)',gx+8,gy+gh-12);
+  ctx.fillText('heat '+fmtE(heat)+'  ('+Math.round(100*heat/Math.max(1,E0))+'%)',gx+8,gy+gh-12);
 }
 function drawEGraph(gx,gy,gw,gh){
   ctx.fillStyle='#0a1a11';ctx.fillRect(gx,gy,gw,gh);
@@ -1031,7 +981,7 @@ function drawEGraph(gx,gy,gw,gh){
     {color:'#6b7280',get:s=>s.heat,w:2},
     {color:'#e7ecf5',get:s=>s.ke+s.pe+s.heat+s.store,w:3},
   ];
-  const lo=0,hi2=E0*1.08;
+  const lo=0,hi2=Math.max(1,E0)*1.08;
   const X=tt=>gx+8+((tt-t0)/WIN)*(gw-16);
   const Y=v=>gy+gh-8-(clamp(v,0,hi2)/hi2)*(gh-28);
   for(const ser of series){
@@ -1062,17 +1012,15 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 window.addEventListener('keydown',e=>{
-  if(['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
+  if(['play','aim','charge'].includes(state)&&['Space','ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.code))e.preventDefault();
   if(e.repeat)return;
   if(state==='charge'&&(e.code==='Space'||e.code==='ArrowUp'))charging=true;
   if(state==='play'){
     if(e.code==='Space'||e.code==='ArrowLeft')braking=true;
     if(e.code==='ArrowRight'&&act>=2)boosting=true;
   }
-  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
-  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
-    state=state==='play'?'paused':'play';
-    braking=boosting=false;setRoll(0);}
+  if(e.code==='Enter'&&e.target.tagName!=='BUTTON'&&primary&&$('#overlay').classList.contains('show'))primary();
+
   if(e.code==='KeyM'){muted=!muted;setRoll(0);}
 });
 window.addEventListener('keyup',e=>{

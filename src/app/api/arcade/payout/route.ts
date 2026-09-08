@@ -62,6 +62,17 @@ export const POST = withAuth(async (request, ctx) => {
     return NextResponse.json({ xp: 0, staff: true })
   }
 
+  // A protocol-2 cabinet final save can be retried after its payout response was lost.
+  // Return the original receipt before evaluating today's cap again.
+  if (['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(play.game_slug)) {
+    const { data: prior } = await supabaseAdmin.from('economy_point_grants')
+      .select('points').eq('dedupe_key', SOURCE + ':' + play.id).maybeSingle()
+    if (prior) {
+      const { balance } = await getBalance(ctx.userId)
+      return NextResponse.json({ xp: prior.points, alreadyPaid: true, balance })
+    }
+  }
+
   const { data: game } = await supabaseAdmin
     .from('arcade_games')
     .select('slug, cost_xp')

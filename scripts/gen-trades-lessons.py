@@ -5,6 +5,8 @@ Planning docx files (lesson plans + student packets). One lesson per SESSION.
   python3 scripts/gen-trades-lessons.py "<MVP ETF Planning folder>" supabase/migrations/seed_trades_lessons_u1_u2.sql
 """
 import zipfile, re, html, json, sys
+from pathlib import Path
+REVIEWED = {x["slug"]: x for x in json.loads((Path(__file__).parent / "trades-opening/lessons.json").read_text())}
 ROOT = sys.argv[1]
 OUT = sys.argv[2]
 
@@ -92,6 +94,10 @@ for uid, U in UNITS.items():
             if k == 5: blocks.append({'id':'b5','type':'self_assessment','capture':True,'targetIds': U['sa'][cyc]})
             if is_mastery: blocks.append({'id':'b6','type':'transfer_prompt','masteryTaskSlug': U['mastery']})
             doc = {'schemaVersion':1,'dayType': ('TRANSFER' if is_mastery else 'ANCHOR' if code=='1.1' else 'LAB' if is_long else 'STANDARD'),'blocks':blocks}
+            if slug in REVIEWED:
+                doc = REVIEWED[slug]["content_blocks"]
+                title = REVIEWED[slug]["title"]
+                P["target"] = next(b["statement"] for b in doc["blocks"] if b["type"] == "target")
             core = is_long or code in U['core_shorts']
             desc = f"Cycle {cyc}, session {k} of 5 — {'long' if is_long else 'short'}."
             sql.append("insert into public.lessons (slug, title, unit, unit_id, lesson_number, lesson_type, published, estimated_time, planned_days, transfer_core, objectives, description, content_blocks, content) values (" +
@@ -99,6 +105,10 @@ for uid, U in UNITS.items():
                                   "array[" + q(P['target']) + "]::text[]", q(desc), q(json.dumps(doc, ensure_ascii=False)) + "::jsonb", q('')]) +
                        ") on conflict (slug) do update set title = excluded.title, unit = excluded.unit, unit_id = excluded.unit_id, lesson_number = excluded.lesson_number, published = excluded.published, estimated_time = excluded.estimated_time, planned_days = excluded.planned_days, transfer_core = excluded.transfer_core, objectives = excluded.objectives, description = excluded.description, content_blocks = excluded.content_blocks, updated_at = now();")
     sql.append("")
+metadata = json.loads((Path(__file__).parent / 'trades-opening/metadata.json').read_text())
+for change in metadata['targetCorrections']:
+    sql.append('update public.learning_targets set statement = ' + q(change['statement']) + ' where slug = ' + q(change['slug']) + ';')
+sql.append('update public.math_competency_focus set physics_hook = ' + q(metadata['mathHook']['after']) + ' where physics_hook = ' + q(metadata['mathHook']['before']) + ';')
 sql.append("-- Unit windows: 15 sessions = 3 academic weeks. Trades cohort's first academic week is Sep 7, 2026 (opposite MVP CPA).")
 sql.append("update public.units set allotted_days = 15, default_start_date = '2026-09-07' where id = 'trades-1';")
 sql.append("update public.units set allotted_days = 15, default_start_date = '2026-10-19' where id = 'trades-2';")

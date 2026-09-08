@@ -146,7 +146,7 @@ export const TRADES_TARGETS: TradesTarget[] = [
   },
   {
     slug: "tr.u1.nominal",
-    statement: "State the actual size of a 2×4, a 1/2\" pipe, a 12-gauge wire.",
+    statement: "Use material-specific references to distinguish nominal names from actual dimensions.",
     domain: "knowledge",
     unitId: "trades-1",
     contentStrand: "trade-math",
@@ -176,7 +176,7 @@ export const TRADES_TARGETS: TradesTarget[] = [
   },
   {
     slug: "tr.u1.gauge",
-    statement: "Bigger gauge number = thinner wire. Three steps double the area.",
+    statement: "A larger AWG number means thinner wire; decreasing by three approximately doubles cross-sectional area.",
     domain: "reasoning",
     unitId: "trades-1",
     contentStrand: "trade-math",
@@ -196,7 +196,7 @@ export const TRADES_TARGETS: TradesTarget[] = [
   },
   {
     slug: "tr.u1.cumul",
-    statement: "Why measuring from the last mark piles error up and a datum does not.",
+    statement: "Explain how chain measurements can accumulate error and how a datum reduces that dependence.",
     domain: "reasoning",
     unitId: "trades-1",
     contentStrand: "trade-math",
@@ -326,7 +326,7 @@ export const TRADES_TARGETS: TradesTarget[] = [
   },
   {
     slug: "tr.u2.bubble",
-    statement: "Why a bubble finds level — and why a laser can be wrong when a plumb bob cannot.",
+    statement: "Explain why a bubble moves toward the high part of a vial and why its instrument still needs checking.",
     domain: "reasoning",
     unitId: "trades-2",
     contentStrand: "physics-model",
@@ -346,7 +346,7 @@ export const TRADES_TARGETS: TradesTarget[] = [
   },
   {
     slug: "tr.u2.slope-why",
-    statement: "Why drain slope has a minimum and a maximum, and what fails at each end.",
+    statement: "Use controlled trials to explain how slope affects transport and distinguish observations from installation requirements.",
     domain: "reasoning",
     unitId: "trades-2",
     contentStrand: "physics-model",

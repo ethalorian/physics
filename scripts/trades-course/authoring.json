@@ -1,0 +1,1627 @@
+[
+  {
+    "u": 1,
+    "n": 6,
+    "slug": "tu1-s06",
+    "title": "2.1 · The block and its joint",
+    "target": "tr.u1.nominal",
+    "fig": "module",
+    "concept": "A nominal masonry module includes the unit and its intended joint. The material name is not a substitute for measuring the actual unit. A reference module predicts a pattern; your wall may differ.",
+    "given": "Supplied block length 15 5/8 in; joint 3/8 in.",
+    "work": "15 5/8 + 3/8 = 16 in. Six modules: 6 x 16 = 96 in.",
+    "answer": "The nominal module is 16 in. Count joints and define endpoints before predicting a real wall length.",
+    "question": "What length does the 16-inch module describe?",
+    "options": [
+      "The bare block only.",
+      "One block plus the specified joint.",
+      "Every block in every building."
+    ],
+    "key": 1,
+    "activity": [
+      "Measure a block/offcut and a visible joint, or use the supplied data. State which route you used.",
+      "Define endpoints for a run of three units. Draw how many joints are included.",
+      "Predict the run using those units and joints; measure it if accessible.",
+      "Compare prediction and measurement; check endpoints and variation before assigning a cause."
+    ],
+    "exit": "Three blocks each measure 15 5/8 in. Your endpoints include only two 3/8-inch joints. Find the overall length and explain why 3 x 16 is different.",
+    "exitkey": "47 5/8 in; three complete modules would include three joints. The missing joint accounts for 3/8 in.",
+    "drawtarget": "tr.u1.dimension",
+    "draw": "Draw three blocks and the two included joints. Give one overall dimension and mark the endpoints.",
+    "materials": "Rule/tape, removable marks, one accessible unit or printed reference.",
+    "fallback": "Use the supplied dimensions on paper; assess reasoning, not observed measurement skill.",
+    "words": [
+      "nominal",
+      "actual",
+      "module",
+      "joint",
+      "endpoint"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 7,
+    "slug": "tu1-s07",
+    "title": "2.2 · Identify the material before the size",
+    "target": "tr.u1.nominal",
+    "fig": "materials",
+    "concept": "Nominal and trade sizes depend on the material system. Copper water tube, steel pipe and EMT do not share one universal half-inch outside diameter. Record material and type as well as the nominal label.",
+    "given": "Supplied Type L copper: OD 0.625 in, wall 0.040 in.",
+    "work": "ID = 0.625 - 2(0.040) = 0.545 in.",
+    "answer": "The inside diameter is 0.545 in in this reference; it is not the nominal label.",
+    "question": "For the same 1/2-inch label, can you assume copper water tube and EMT have the same OD?",
+    "options": [
+      "Yes; the label fixes OD.",
+      "No; identify the material and consult its dimensions.",
+      "Yes; all half-inch material fits a half-inch hole."
+    ],
+    "key": 1,
+    "activity": [
+      "Identify sample material from its label or reference card. Use detached samples only.",
+      "Measure OD at two orientations; record units and tool divisions.",
+      "Compare to the material-specific reference. Inspect damage or uncertainty if values differ.",
+      "Explain what OD, wall thickness and fittings matter to a proposed fit."
+    ],
+    "exit": "Using the reference ODs, how much larger is the EMT than the copper? Why is a 1/2-inch hole not a justified fit for either?",
+    "exitkey": "0.706 - 0.625 = 0.081 in. Both ODs exceed 0.500 in; fittings and required clearance also matter.",
+    "drawtarget": "tr.u1.dimension",
+    "draw": "Sketch a tube section with OD, wall and ID labelled in different places.",
+    "materials": "Detached labelled copper and EMT samples; caliper or reference cards.",
+    "fallback": "Compare supplied dimensions and a drawn section; keep caliper skill unobserved.",
+    "words": [
+      "nominal",
+      "outside diameter",
+      "inside diameter",
+      "wall thickness",
+      "clearance"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 8,
+    "slug": "tu1-s08",
+    "title": "2.3 · Gauge, diameter and area",
+    "target": "tr.u1.gauge",
+    "fig": "wire",
+    "concept": "AWG is a geometric size series. A larger number means a smaller solid conductor. Decreasing by three numbers approximately doubles cross-sectional area. It is not a count of actual manufacturing die passes. Two steps and four steps are different comparisons.",
+    "given": "Provided conductor diameter d = 2.00 mm.",
+    "work": "A = pi x d² / 4 = pi x 4 / 4.",
+    "answer": "A is about 3.14 mm²; diameter and area have different units.",
+    "question": "10 AWG compared with 14 AWG is how many gauge steps?",
+    "options": [
+      "Two, so area doubles.",
+      "Three, so area doubles.",
+      "Four, so area is about 2.53 times as large."
+    ],
+    "key": 2,
+    "activity": [
+      "Use disconnected bare solid wire; do not include insulation in conductor diameter.",
+      "Measure at three orientations without squeezing. Compare to labelled reference dimensions.",
+      "Calculate area from diameter. Compare 14, 12 and 10 AWG reference areas shown.",
+      "For the three-step rule compare 14 AWG with 11 AWG reference area 4.17 mm²; label that comparison as provided data."
+    ],
+    "exit": "A student expects 12 AWG to have twice the area of 14 AWG. Use 3.31 and 2.08 mm² to check the claim, name the interval and describe a useful measurement check.",
+    "exitkey": "3.31/2.08 is about 1.59, a two-step ratio. Three decreasing AWG steps approximately double area. Check bare diameter, caliper zero, contact pressure and sample identity.",
+    "drawtarget": "tr.u1.sketch",
+    "draw": "Draw conductor and insulation separately. Label which diameter belongs in the area calculation.",
+    "materials": "Bare disconnected labelled wire; caliper; calculator.",
+    "fallback": "Use reference areas and supplied diameters; do not claim actual caliper performance.",
+    "words": [
+      "gauge",
+      "diameter",
+      "area",
+      "ratio",
+      "reference"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 9,
+    "slug": "tu1-s09",
+    "title": "2.4 · Four names, four conventions",
+    "target": "tr.u1.vocab",
+    "fig": "materials",
+    "concept": "A name specifies a material family or size class. Actual is a measured or specified physical dimension. Tolerance is a permitted interval; deviation is the signed difference from a stated target. A nominal-to-actual difference is not automatically a manufacturing defect.",
+    "given": "Specified width 3.500 in, allowed +/-0.125 in; measured 3.5625 in.",
+    "work": "Deviation = 3.5625 - 3.500 = +0.0625 in. Allowed interval = 3.375 to 3.625 in.",
+    "answer": "The reading is inside this supplied interval.",
+    "question": "A dressed 2x4 measures 1.5 x 3.5 in. What follows?",
+    "options": [
+      "It is automatically out of tolerance.",
+      "Compare it with the applicable actual-size specification, not the nominal name.",
+      "Its deviation is always two inches."
+    ],
+    "key": 1,
+    "activity": [
+      "Make four reference rows: masonry module, dressed lumber, copper water tube and AWG.",
+      "For each, record the name, actual quantity to measure, units and reference needed.",
+      "Trade one row with a partner; find a claim that needs more information.",
+      "Rewrite it so a reader can tell a size name from a tolerance judgment."
+    ],
+    "exit": "A sample is called a 2x4 and measures 1.5 x 3.5 in. Write one accurate sentence using nominal and actual, then state what additional information is needed for an in/out judgment.",
+    "exitkey": "Nominal 2x4; actual measured 1.5 x 3.5 in. Need applicable size specification/tolerance and measurement confidence; nominal name alone is insufficient.",
+    "drawtarget": "tr.u1.dimension",
+    "draw": "Annotate one sample outline with its nominal note and separate actual dimensions.",
+    "materials": "Four labelled sample cards; ruler if samples available.",
+    "fallback": "All four may be paper cards with supplied values.",
+    "words": [
+      "nominal",
+      "actual",
+      "tolerance",
+      "deviation",
+      "specification"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 10,
+    "slug": "tu1-s10",
+    "title": "2.5 · Does it fit at the stated scale?",
+    "target": "tr.u1.fits",
+    "fig": "clearance",
+    "concept": "Compare the complete outside envelope with the available space. Include specified sleeve, insulation or clearances. A geometric fit does not authorize a bore or notch in structural material. Scale expresses drawing length divided by real length.",
+    "given": "Dry mockup depth 3.500 in; sleeve envelope 2.750 in; pipe OD 2.375 in.",
+    "work": "Remaining space = 3.500 - 2.750 = 0.750 in. Centered side gaps = 0.375 in each.",
+    "answer": "The sleeve fits this empty mockup geometrically. A real wall requires its approved structural/service detail.",
+    "question": "Which quantity should be compared with the empty mockup depth?",
+    "options": [
+      "Nominal pipe name only.",
+      "Outside envelope including the supplied sleeve.",
+      "Pipe inside diameter."
+    ],
+    "key": 1,
+    "activity": [
+      "Measure an empty cardboard channel or use the supplied depth.",
+      "Represent the required envelope with a paper circle; check the full envelope, not its nominal label.",
+      "Draw a 1:2 section: divide every real dimension by two. Verify one drawn dimension with a ruler.",
+      "Hand the section to a partner and ask them to recover the real dimensions."
+    ],
+    "exit": "A 3.500-inch space must contain a 2.750-inch envelope with at least 0.500 inch clearance on each side. Does it fit? What minimum depth is needed?",
+    "exitkey": "No. Required depth = 2.750 + 1.000 = 3.750 in, a 0.250-inch shortfall. Drawing at 1:2 needs 1.875 inches for that depth.",
+    "drawtarget": "tr.u1.scale",
+    "draw": "Produce a 1:2 section with depth, envelope and gaps. Label the scale and the geometric-fit limit.",
+    "materials": "Cardboard channel or paper; ruler; circle template.",
+    "fallback": "Use the supplied dimensions and draw on paper; no fieldhouse visit required.",
+    "words": [
+      "envelope",
+      "clearance",
+      "scale",
+      "nominal",
+      "actual"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "p. 15: scale; verify print size before measuring",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 11,
+    "slug": "tu1-s11",
+    "title": "3.1 · Chain and datum layout",
+    "target": "tr.u1.cumul",
+    "fig": "datum",
+    "concept": "A datum is a fixed reference. Measuring each new interval from the previous mark can carry earlier offsets forward. A datum reduces that dependence but does not eliminate placement or tool errors. Record results even when the methods agree.",
+    "given": "Nine 16-inch intervals; each interval has a supplied +1/16-inch systematic offset.",
+    "work": "9 x 16 = 144 in; 9 x 1/16 = 9/16 in.",
+    "answer": "Under this stated model, the final chain mark is 144 9/16 in.",
+    "question": "What is the last specified mark of a twelve-foot run?",
+    "options": [
+      "144 in.",
+      "176 in.",
+      "160 in."
+    ],
+    "key": 0,
+    "activity": [
+      "Mark a datum and the specified positions shown on the reference.",
+      "One crew uses chain measurements; another measures each position from the datum.",
+      "Independently check each mark from the datum. Record signed deviations.",
+      "Repeat or exchange methods. Compare evidence without assuming a winner."
+    ],
+    "exit": "A chain ends 1/4 inch long. Is that proof each of nine intervals was 1/36 inch long? Explain what the average tells you and what to measure next.",
+    "exitkey": "1/4 divided by nine is 1/36 inch average signed interval deviation if endpoints and interval count are correct. It does not prove equal individual errors. Check each interval and reference measurement.",
+    "drawtarget": "tr.u1.datum",
+    "draw": "Draw the run with every position dimensioned from the same datum.",
+    "materials": "Tape, removable marks, 12-foot accessible run.",
+    "fallback": "Use a 36-inch model with nine 4-inch intervals; compare methods without requiring a detectable error.",
+    "words": [
+      "datum",
+      "chain",
+      "deviation",
+      "systematic",
+      "interval"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 12,
+    "slug": "tu1-s12",
+    "title": "3.2 · Why the centerline matters",
+    "target": "tr.u1.sixteen",
+    "fig": "centers",
+    "concept": "Sixteen-inch centers divide common 48-inch and 96-inch sheet dimensions. Centerlines can give adjacent sheet edges a shared support. This is a coordination example, not a universal framing specification; spacing also depends on the approved assembly.",
+    "given": "Sheet width 48 in; support centers 16 in apart.",
+    "work": "48/16 = 3 intervals; centers at 0, 16, 32 and 48 in.",
+    "answer": "Four center positions bound three intervals.",
+    "question": "Why can measuring between successive stud edges be misleading?",
+    "options": [
+      "Stud width and the chosen edge affect the position.",
+      "Edges and centers are always identical.",
+      "Only the last stud has a center."
+    ],
+    "key": 0,
+    "activity": [
+      "Mark four support centerlines on a paper or cardboard model.",
+      "Place two paper sheet edges so they share one centerline.",
+      "Measure center-to-center and compare with a clear gap between support edges.",
+      "Draw the shared support and label which dimension is spacing and which is clear gap."
+    ],
+    "exit": "Supports are 1.5 inches wide and 16 inches on center. Find the clear gap between adjacent supports. Explain the difference from center spacing.",
+    "exitkey": "14.5 in clear gap, assuming parallel equal-width supports. Center spacing includes one full support width; do not use 16 in as the clear opening.",
+    "drawtarget": "tr.u1.dimension",
+    "draw": "Draw one 1.5-inch-wide support with two sheet edges meeting on its centerline.",
+    "materials": "Paper/cardboard strips, ruler, pencil.",
+    "fallback": "Use scaled paper strips and label real dimensions.",
+    "words": [
+      "centerline",
+      "spacing",
+      "clear gap",
+      "interval",
+      "support"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 13,
+    "slug": "tu1-s13",
+    "title": "3.3 · Estimate it, then align the views",
+    "target": "tr.u1.views",
+    "fig": "views",
+    "concept": "An inaccessible dimension can be estimated from a verified repeating module, but the result inherits uncertainty about the module, count and endpoints. Orthographic views show the same object from consistent directions. They must share corresponding dimensions.",
+    "given": "Six complete modules at a supplied 16 in each.",
+    "work": "Estimated span = 6 x 16 = 96 in.",
+    "answer": "96 in is a model estimate until checked; partial modules or extra joints change it.",
+    "question": "What must align between the front and top views of the same object?",
+    "options": [
+      "Their corresponding width.",
+      "Every height and depth must be equal.",
+      "No dimensions are shared."
+    ],
+    "key": 0,
+    "activity": [
+      "Count a reachable model pattern; identify full and partial modules.",
+      "Predict a span, then independently measure the model. Record what limits the estimate.",
+      "Use a 6 x 4 x 3-inch box reference to make front, top and right views.",
+      "Exchange views and check that width, height and depth agree where shared."
+    ],
+    "exit": "Front view is 6 wide x 4 high. Top is 6 wide x 3 deep. A right view is drawn 6 wide x 4 high. Diagnose the error and correct the right view.",
+    "exitkey": "The right view should be 3 deep x 4 high. It repeats the front width instead of the depth. Direction labels resolve the ambiguity.",
+    "drawtarget": "tr.u1.views",
+    "draw": "Make aligned front, top and right views of the supplied box; label each shared dimension.",
+    "materials": "Box or block, ruler, squared paper.",
+    "fallback": "Use the supplied box dimensions; assess drawing interpretation, not inaccessible-site measurement.",
+    "words": [
+      "estimate",
+      "module",
+      "front",
+      "top",
+      "right view"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 5-6: aligned views",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 14,
+    "slug": "tu1-s14",
+    "title": "3.4 · Make a defensible tolerance call",
+    "target": "tr.u1.tolerance",
+    "fig": "tolerance",
+    "concept": "Build the allowed interval from specification and tolerance, then compare the reading. Deviation is reading minus target; amount out is distance beyond the nearest allowed limit. A reading exactly on a boundary needs measurement confidence before a real acceptance decision.",
+    "given": "Target 16 in +/-1/16 in; reading 16 1/8 in.",
+    "work": "Upper limit = 16 1/16. Reading - upper = 1/16 in.",
+    "answer": "The supplied exact reading is out by 1/16 in; its deviation from target is +1/8 in.",
+    "question": "Which is the complete allowed interval?",
+    "options": [
+      "15 15/16 to 16 1/16 in.",
+      "16 to 16 1/16 in.",
+      "15 to 17 in."
+    ],
+    "key": 0,
+    "activity": [
+      "Mark lower and upper limits on a number line.",
+      "Judge supplied readings: 15 15/16, 16, 16 1/16, and 16 1/8 in.",
+      "For each, report signed deviation and any amount beyond the interval.",
+      "Model a gap check with paper GO and NO-GO strips; discuss gauge tolerance and why a rough paper strip cannot certify a precision part."
+    ],
+    "exit": "Target 48 in +/-1/8 in; reading 47 13/16 in. Give the interval, signed deviation, and amount outside. State one instrument check before a real rejection.",
+    "exitkey": "47 7/8 to 48 1/8 in. Deviation -3/16 in; out below by 1/16 in. Check zero/reference, resolution, endpoints or repeatability appropriate to the task.",
+    "drawtarget": "tr.u1.dimension",
+    "draw": "Draw and label the allowed interval, target, and reading as separate marks.",
+    "materials": "Paper number lines, ruler, cardboard strips; no cutting precision metal gauges.",
+    "fallback": "Use supplied readings as exact for arithmetic and state their real-measurement limits.",
+    "words": [
+      "tolerance",
+      "deviation",
+      "lower limit",
+      "upper limit",
+      "resolution"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 1,
+    "n": 15,
+    "slug": "tu1-s15",
+    "title": "3.5 · Mastery: inspect and revise the bay",
+    "target": "tr.u1.asbuilt",
+    "fig": "wallcase",
+    "concept": "An as-built records what is observed, not what the issued drawing intended. Keep the design specification, inspection record and revised drawing distinct. Identify whether evidence comes from your own measurement or from the provided classroom survey.",
+    "given": "Example target 48 +/-1/8 in; supplied reading 48 1/16 in.",
+    "work": "Allowed interval 47 7/8 to 48 1/8; deviation +1/16.",
+    "answer": "Inside the supplied interval. This arithmetic alone does not demonstrate instrument skill.",
+    "question": "The issued drawing and measured survey disagree. What belongs on the as-built?",
+    "options": [
+      "The issued number, copied unchanged.",
+      "The supported observed number with source and revision note.",
+      "Whichever is easiest to draw."
+    ],
+    "key": 1,
+    "activity": [
+      "Read Classroom Case A and the issued drawing; write purpose, fixed constraints and missing site information.",
+      "Complete an inspection table with supplied or personally measured evidence clearly labelled.",
+      "List discrepancies and consequences; distinguish tolerance calls from inaccurate material notes.",
+      "Produce revised views and an inspection note. Save individual work before any group discussion of the answer key."
+    ],
+    "exit": "Name the most consequential discrepancy you found, cite its numbers and tolerance or reference, and propose a check or correction. State what additional evidence would be required before using the drawing on a real job.",
+    "exitkey": "Use Case A key. Opening width and left offset fail the supplied interval; service OD note is incorrect. Accept a different priority if tied to a supported consequence. Require evidence source and limits.",
+    "drawtarget": "tr.u1.asbuilt",
+    "draw": "Submit an individual as-built of Case A or the teacher-approved physical mockup. Add revision, datum, units, NTS/scale and corrected service note.",
+    "materials": "Case A pages, rule, graph paper; optional pre-surveyed classroom mockup.",
+    "fallback": "Use provided survey; score interpretation and drawings, with physical measurement marked not observed.",
+    "words": [
+      "as-built",
+      "datum",
+      "revision",
+      "discrepancy",
+      "evidence"
+    ],
+    "extra": "case-a",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 11 and 13: sketch check and revision/title block",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 1,
+    "slug": "tu2-s01",
+    "title": "1.1 · Every riser in the flight",
+    "target": "tr.u2.stair-why",
+    "fig": "stairs",
+    "concept": "Compare vertical rises between finished walking surfaces using consistent endpoints. Variation can come from the stair, floor finishes, setup or reading. Measurements identify a pattern; they do not identify its cause automatically.",
+    "given": "Provided rises: 7 1/2, 7 9/16, 7 1/2, 7 7/16, 7 1/2 in.",
+    "work": "Highest - lowest = 7 9/16 - 7 7/16 = 1/8 in.",
+    "answer": "Observed spread is 1/8 in. A compliance decision would also require the applicable stair requirements and measurement confidence.",
+    "question": "Different riser readings prove what?",
+    "options": [
+      "The builder made an error.",
+      "There is observed variation worth checking.",
+      "The largest value is correct."
+    ],
+    "key": 1,
+    "activity": [
+      "Use a low classroom stair model or a facilities-approved accessible stair without obstructing traffic.",
+      "Number rises from bottom to top; mark consistent finished-surface endpoints.",
+      "Measure each vertical rise twice; repeat any disagreement with the same setup.",
+      "Look for a pattern at the ends and compare with possible finish changes."
+    ],
+    "exit": "Using the five supplied rises, state the spread and a test that separates measurement setup from actual riser variation.",
+    "exitkey": "Spread 1/8 in. Repeat selected risers with consistent endpoints and an independent checked reference; explain the expected result if setup caused the variation.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Draw a stair section with numbered risers and the actual endpoints used.",
+    "materials": "Rule, level, low stair model or approved observation route.",
+    "fallback": "Use provided readings on paper; mark field measurement not observed.",
+    "words": [
+      "riser",
+      "finished surface",
+      "vertical",
+      "spread",
+      "evidence"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 9-10: sections",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 2,
+    "slug": "tu2-s02",
+    "title": "1.2 · Why the bubble moves",
+    "target": "tr.u2.bubble",
+    "fig": "bubble",
+    "concept": "In a curved vial, the gas bubble moves toward the higher part while denser liquid occupies lower space. A correctly adjusted level links the centered bubble to its measuring face. Motion, dirt, damage and calibration can affect the reading.",
+    "given": "A horizontal test surface rises 1/8 in over 24 in.",
+    "work": "Rise/run = 0.125/24, about 0.00521.",
+    "answer": "This is about 0.521% grade; a small-looking tilt is still a measurable ratio.",
+    "question": "When one end of the vial rises, where does the bubble tend to move?",
+    "options": [
+      "Toward the higher part of the vial.",
+      "Toward the lower part.",
+      "It must remain centered."
+    ],
+    "key": 0,
+    "activity": [
+      "Predict bubble motion before tilting a level slightly on a desktop.",
+      "Raise one end with a thin card; let the bubble settle.",
+      "Reverse which end is raised and compare. Record observation before explanation.",
+      "Identify what the vial tells you and what must be checked about the instrument."
+    ],
+    "exit": "A bubble is centered, but two measurements disagree. Explain why a centered bubble is not proof of perfect accuracy and name two checks.",
+    "exitkey": "Centering reflects the vial/setup; check clean contact, zero/calibration, consistent placement and reference validity. No instrument is infallible.",
+    "drawtarget": "tr.u2.plumb-level",
+    "draw": "Sketch two vial orientations, label high and low sides, and show predicted bubble positions.",
+    "materials": "Spirit level, thin cards, desktop.",
+    "fallback": "Use the reference illustration and teacher-supplied observations; distinguish prediction from observation.",
+    "words": [
+      "bubble",
+      "liquid",
+      "high point",
+      "calibration",
+      "level"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 3,
+    "slug": "tu2-s03",
+    "title": "1.3 · Check the gravity reference",
+    "target": "tr.u2.gravity-ref",
+    "fig": "reference",
+    "concept": "A free stationary plumb line shows local vertical. Connected water open to the same air pressure can establish equal elevation when at rest. These answer different questions. A spirit level or self-levelling laser also requires correct setup and calibration.",
+    "given": "Two water surfaces are at one level reference. Point A is 6 in below it; point B is 8 in below it.",
+    "work": "B is 8 - 6 = 2 in lower than A.",
+    "answer": "Use the same reference and the same direction convention.",
+    "question": "Which comparison establishes equal elevation directly in this model?",
+    "options": [
+      "Two settled water surfaces connected and open to the same air pressure.",
+      "The length of the plumb string.",
+      "Any laser mark, without checking."
+    ],
+    "key": 0,
+    "activity": [
+      "Hang a plumb line on a low stationary stand; keep it free of contact and wait for settling.",
+      "Compare it with a checked vertical level on the same reference line.",
+      "If water equipment is available, compare the two free surfaces; check bubbles, kinks and movement.",
+      "Draw the two setups and state which establishes vertical and which compares elevation."
+    ],
+    "exit": "A bob and vertical level disagree. Describe two possible causes and a check that could distinguish them without assuming either tool is correct.",
+    "exitkey": "Examples: bob swinging/touching versus level calibration/contact. Free and settle the bob, repeat at the same line, check the level with its specified procedure; predict which reading should change.",
+    "drawtarget": "tr.u2.plumb-level",
+    "draw": "Draw separate vertical-reference and equal-elevation setups with labelled points.",
+    "materials": "String, small weight, level, low stand; optional clear water tube with tray.",
+    "fallback": "Use supplied drawings and readings if water is unavailable.",
+    "words": [
+      "vertical",
+      "elevation",
+      "reference",
+      "settle",
+      "calibration"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 4,
+    "slug": "tu2-s04",
+    "title": "1.4 · Reversal and instrument checks",
+    "target": "tr.u2.level-check",
+    "fig": "bubble",
+    "concept": "For a horizontal spirit-level check, compare readings after reversing the tool at the marked location. Observe the amount of bubble displacement in a consistent room reference, not direction alone. Follow the maker’s check for the particular vial or laser model.",
+    "given": "Supplied room-referenced readings: first +2 divisions, reversed 0 divisions.",
+    "work": "The readings differ by 2 divisions. In an ideal symmetric check, half-difference corresponds to a 1-division instrument offset.",
+    "answer": "Do not convert divisions to angle or length without the vial sensitivity; repeat the check and verify contact.",
+    "question": "The bubble remains on the same side but its displacement changes after reversal. What follows?",
+    "options": [
+      "The level is proven exact.",
+      "Repeat and investigate; direction alone is insufficient.",
+      "The surface must be perfectly flat."
+    ],
+    "key": 1,
+    "activity": [
+      "Inspect the body and clean the contact surface. Mark the position.",
+      "Record horizontal-vial reading with a sketch of tool direction and room direction.",
+      "Reverse end for end at the same contacts; repeat. Compare amount as well as side.",
+      "Identify suspect tools for review. Use the manufacturer’s stated test for other vial orientations or a laser."
+    ],
+    "exit": "Explain why comparing two unverified levels is not enough to certify either one. Propose a repeatable check and state the limit of your conclusion.",
+    "exitkey": "They could share a bias or disagree for several reasons. Use marked-location reversal and model-specific instructions with repeated readings; a field check supports suitability within stated limits, not perfect accuracy.",
+    "drawtarget": "tr.u2.plumb-level",
+    "draw": "Draw both tool orientations at the same location; label your room-reference direction.",
+    "materials": "Horizontal spirit level, stable surface, removable marks.",
+    "fallback": "Analyze the supplied paired readings and state that tool handling was not observed.",
+    "words": [
+      "reversal",
+      "contact",
+      "offset",
+      "reference",
+      "sensitivity"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 5,
+    "slug": "tu2-s05",
+    "title": "1.5 · Square is a measurement",
+    "target": "tr.u2.345",
+    "fig": "square",
+    "concept": "A triangle with side lengths in the ratio 3:4:5 is right-angled. For a intended rectangle, check side lengths and both diagonals. Equal diagonals alone do not prove an arbitrary four-sided shape is a rectangle.",
+    "given": "Rectangle sides 6 ft and 8 ft.",
+    "work": "Diagonal = square root of (6² + 8²) = square root of 100.",
+    "answer": "Both diagonals should be 10 ft in the exact rectangle model.",
+    "question": "Which triangle is a scaled 3:4:5 right triangle?",
+    "options": [
+      "6, 8, 10.",
+      "6, 8, 9.",
+      "3, 4, 6."
+    ],
+    "key": 0,
+    "activity": [
+      "Lay out a small 3:4:5 model with string or strips; use consistent units.",
+      "Check all three lengths rather than drawing a right-angle symbol by eye.",
+      "Make a four-sided frame, check opposite sides and measure both diagonals.",
+      "Shift one corner and describe which measurements change."
+    ],
+    "exit": "A four-sided layout has equal diagonals. What else must be checked before calling it the specified rectangle, and why?",
+    "exitkey": "Verify specified sides/opposite-side lengths and intended geometry (or angles). An isosceles trapezoid can have equal diagonals; equal diagonals alone are insufficient.",
+    "drawtarget": "tr.u2.square-check",
+    "draw": "Draw the measured frame, label its sides and both diagonals, and state the remaining check.",
+    "materials": "String or card strips, tape/rule, paper.",
+    "fallback": "Use a printed dimensioned geometry case and keep physical layout skill unobserved.",
+    "words": [
+      "diagonal",
+      "right angle",
+      "ratio",
+      "rectangle",
+      "square"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 6,
+    "slug": "tu2-s06",
+    "title": "2.1 · Measure the run and its fall",
+    "target": "tr.u2.slope-set",
+    "fig": "slope",
+    "concept": "Slope is vertical fall divided by horizontal run. Use one elevation datum and state units. The classroom slope requirement is a supplied condition; identify the actual system and applicable requirements before evaluating a real installation.",
+    "given": "Endpoint elevations 42 in and 40 in; horizontal run 8 ft.",
+    "work": "Fall = 42 - 40 = 2 in. Slope = 2/8.",
+    "answer": "1/4 inch per foot. Measuring the sloped pipe length instead of horizontal run changes the calculation.",
+    "question": "Which measurement belongs in the denominator for slope?",
+    "options": [
+      "The pipe outside diameter.",
+      "Horizontal run.",
+      "The elevation above the floor."
+    ],
+    "key": 1,
+    "activity": [
+      "Create a dry sloped strip on a tabletop; identify upstream and downstream.",
+      "Measure endpoint heights from a checked level reference and measure horizontal run.",
+      "Calculate fall and slope. Repeat with a second setup or observer.",
+      "Compare with the stated classroom requirement and draw the elevations."
+    ],
+    "exit": "A supplied run falls 1 inch over 8 feet. The case requires 1/4 inch per foot. Find its slope, required fall and shortfall.",
+    "exitkey": "1/8 inch per foot; required fall 2 inches; shortfall 1 inch. Recheck endpoints and run before diagnosing a real route.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Draw the longitudinal section with horizontal run, both elevations and flow direction.",
+    "materials": "Dry strip, blocks, rule, level.",
+    "fallback": "Use the supplied elevations; no installed drain needs to be accessed.",
+    "words": [
+      "slope",
+      "fall",
+      "run",
+      "elevation",
+      "datum"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 7,
+    "slug": "tu2-s07",
+    "title": "2.2 · Convert the same slope",
+    "target": "tr.u2.rise-run",
+    "fig": "slope",
+    "concept": "A ratio requires matching length units. One quarter inch per foot means 0.25 inch per 12 inches. It is different from 1:12 and from a 4-in-12 roof pitch. Always define whether a written ratio means rise:run.",
+    "given": "Slope = 1/4 inch per foot.",
+    "work": "0.25/12 = 1/48; (1/48) x 100 = 2.0833%.",
+    "answer": "Equivalent forms: 1/4 in/ft, rise:run 1:48, about 2.083%.",
+    "question": "Which percent matches 1/4 inch per foot?",
+    "options": [
+      "About 2.083%.",
+      "About 8.333%.",
+      "25%."
+    ],
+    "key": 0,
+    "activity": [
+      "Draw triangles for 1/4 in over 12 in, 1 in over 12 in, and 4 in over 12 in.",
+      "Convert each into rise:run and percent using matching units.",
+      "Exchange tables and reconstruct one original triangle from the labels.",
+      "Diagnose a card that labels one triangle both 1/4 in/ft and 8.3%."
+    ],
+    "exit": "Convert 1/8 inch per foot to a rise:run ratio and percent. Explain why 1:12 means a different slope.",
+    "exitkey": "1:96 and about 1.0417%. 1:12 is 1 inch per foot, about 8.333%, eight times as steep.",
+    "drawtarget": "tr.u2.plan-slope",
+    "draw": "Draw one triangle and annotate three equivalent labels with their units.",
+    "materials": "Paper, ruler, calculator after setup is shown.",
+    "fallback": "All quantities are supplied classroom data.",
+    "words": [
+      "ratio",
+      "percent",
+      "rise",
+      "run",
+      "equivalent"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 8,
+    "slug": "tu2-s08",
+    "title": "2.3 · Investigate slope and transport",
+    "target": "tr.u2.slope-why",
+    "fig": "slope",
+    "concept": "Ask how slope affects transport in this model. Geometry, release conditions, water amount and test material affect results. Do not assume all steeper slopes clog or that an open trough establishes a universal maximum for real drainage.",
+    "given": "Horizontal model run 24 in = 2 ft; chosen slope 1/4 in/ft.",
+    "work": "Required rise = 2 x 1/4 = 1/2 in.",
+    "answer": "Measure the setting; do not choose slope by eye.",
+    "question": "Which test best isolates slope?",
+    "options": [
+      "Change slope, material and water volume together.",
+      "Change slope while keeping other planned conditions consistent and repeat trials.",
+      "Keep only the result that matches your prediction."
+    ],
+    "key": 1,
+    "activity": [
+      "If water is permitted, use a contained tray and identical releases; otherwise use a dry bead/ramp model and label the changed model.",
+      "Set at least three slopes by measured rise and run. Record transport distance or stopping position.",
+      "Repeat each setting three times; keep release, material, volume if used, and observation time consistent.",
+      "Compare the observations and name limits before applying them to another system."
+    ],
+    "exit": "A class reports no decline in transport at its steepest tested setting. What can they conclude, and what can they not conclude? Propose a useful next test.",
+    "exitkey": "Report no decline over these tested conditions; do not invent a maximum or conclude no maximum exists in all systems. Repeat trials or extend one controlled variable and predict measurable outcomes.",
+    "drawtarget": "tr.u2.slope-set",
+    "draw": "Draw the apparatus with measured run, rise, release point and measurement endpoint.",
+    "materials": "Dry ramp, bead, tray and ruler; optional teacher-approved contained water trough.",
+    "fallback": "Analyze supplied trial data: at slopes 1/8, 1/4, 1/2 in/ft, distances 12/13/11, 18/19/18, 22/24/23 in. These are simulated examples.",
+    "words": [
+      "controlled test",
+      "transport",
+      "slope",
+      "repeat",
+      "model"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 9,
+    "slug": "tu2-s09",
+    "title": "2.4 · Budget the depth",
+    "target": "tr.u2.fall-total",
+    "fig": "bay",
+    "concept": "A drain route consumes vertical depth through fall and its complete outside envelope. Include stated clearances. Geometric feasibility is separate from permission to drill, notch or change structure.",
+    "given": "Dry bay: run 16 ft; slope 1/4 in/ft; OD 2 3/8 in; top and bottom clearances 1 in each.",
+    "work": "Fall = 4 in. Required depth = 1 + 2 3/8 + 4 + 1 = 8 3/8 in.",
+    "answer": "A 7 1/2-inch available depth is short by 7/8 inch.",
+    "question": "Which calculation includes the whole depth demand?",
+    "options": [
+      "Fall alone.",
+      "Pipe OD plus fall plus both specified clearances.",
+      "Nominal pipe size only."
+    ],
+    "key": 1,
+    "activity": [
+      "List run, slope requirement, OD, clearances and available depth before calculating.",
+      "Build a paper envelope model; keep all elevations on one datum.",
+      "Test one route change at a time and recalculate.",
+      "State which change requires coordination with another trade or approval."
+    ],
+    "exit": "Keep the example OD and clearances. With 7 1/2 inches of depth and 1/4 in/ft slope, what is the maximum horizontal run in this geometric model?",
+    "exitkey": "Available fall = 7.5 - 2.375 - 2 = 3.125 in. Maximum run = 3.125/0.25 = 12.5 ft. This is not authorization to alter framing.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Draw the outside envelope through the bay and label the four depth components.",
+    "materials": "Paper bay strip, ruler, calculator.",
+    "fallback": "Use the exact supplied dimensions; no real pipe or framing modification.",
+    "words": [
+      "envelope",
+      "clearance",
+      "fall",
+      "depth",
+      "constraint"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 10,
+    "slug": "tu2-s10",
+    "title": "2.5 · Draw the fall",
+    "target": "tr.u2.plan-slope",
+    "fig": "slope",
+    "concept": "A plan locates the route horizontally; a longitudinal section communicates elevations and fall. Link the views with the same labels and datum. Write a slope note and flow direction so a reader does not have to infer them from the sketch angle.",
+    "given": "Route A to B is 12 ft horizontally. A elevation 30 in; required slope 1/4 in/ft.",
+    "work": "Fall = 12 x 1/4 = 3 in. B elevation = 30 - 3.",
+    "answer": "B elevation is 27 in on the same datum.",
+    "question": "Which pair of views communicates this route best?",
+    "options": [
+      "Plan alone with a diagonal-looking line.",
+      "Linked plan and longitudinal section with dimensions and common datum.",
+      "Two unrelated sketches."
+    ],
+    "key": 1,
+    "activity": [
+      "Draw a plan locating A and B and label the horizontal run.",
+      "Draw the corresponding section with both endpoint elevations and outside pipe envelope.",
+      "Add flow arrow, slope note, datum and scale or NTS.",
+      "Give it to a partner who computes fall independently; revise ambiguous information."
+    ],
+    "exit": "A plan calls for 12 ft at 1/4 in/ft, but its section labels A 30 in and B 28 in. Identify the conflict and two ways to make the documentation internally consistent without reducing the required slope.",
+    "exitkey": "Required fall 3 in, drawn fall 2. If A fixed, B must be 27; if B fixed, A must be 31. Check which endpoints can actually move; do not claim either is approved.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Submit matching plan and section with A/B labels, common datum, elevations, flow and required slope.",
+    "materials": "Graph paper, ruler; Drawing Book plan/section reference.",
+    "fallback": "Use the supplied route; state that feasibility at a real bay is unverified.",
+    "words": [
+      "plan",
+      "section",
+      "datum",
+      "elevation",
+      "flow direction"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 9-10 and 15: sections and scale",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 11,
+    "slug": "tu2-s11",
+    "title": "3.1 · When the floor finish changes",
+    "target": "tr.u2.stair-why",
+    "fig": "stairs",
+    "concept": "First and last risers meet floor finishes that may change after stair layout. This is one possible cause of unequal rises, not an automatic diagnosis. Separate the original surfaces, added finish thickness and finished walking surfaces.",
+    "given": "Original end rises both 7 1/2 in. Add 3/4 in finish at bottom floor only.",
+    "work": "New first rise = 7 1/2 - 3/4 = 6 3/4 in.",
+    "answer": "Raising the bottom walking surface reduces the first rise.",
+    "question": "Add 3/4 inch at the upper landing only. What happens to the last rise?",
+    "options": [
+      "It becomes 8 1/4 inches.",
+      "It becomes 6 3/4 inches.",
+      "It cannot change."
+    ],
+    "key": 0,
+    "activity": [
+      "Model the stair with paper strips and marked original walking surfaces.",
+      "Add a measured finish strip at the bottom, then separately at the upper landing.",
+      "Predict before measuring each new rise. Keep other surfaces unchanged.",
+      "Draw before/after sections and identify information needed to investigate an actual stair."
+    ],
+    "exit": "Both ends originally have 7 1/2-inch rises. Add 1/2 inch at the bottom floor and 3/4 inch at the upper landing. Predict the new end rises and a check.",
+    "exitkey": "First 7 in; last 8 1/4 in, assuming tread surfaces unchanged. Verify finish thickness, endpoints and actual elevations before attributing a real variation.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Show original and finished floor lines, added thickness and new end rises.",
+    "materials": "Cardboard steps or paper section, measured strips, rule.",
+    "fallback": "Use labelled before/after diagrams and supplied thicknesses.",
+    "words": [
+      "finished surface",
+      "riser",
+      "thickness",
+      "elevation",
+      "cause"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 12,
+    "slug": "tu2-s12",
+    "title": "3.2 · Rack the frame",
+    "target": "tr.u2.racking",
+    "fig": "racking",
+    "concept": "A hinged four-sided frame can change angles while keeping side lengths. A diagonal constrains that motion through a triangular geometry. Real performance also depends on connections, member behavior and anchorage; a classroom brace is not a structural design.",
+    "given": "Rectangle model 3 units by 4 units.",
+    "work": "Its square diagonal is 5 units. A fixed 5-unit diagonal ties those three lengths together.",
+    "answer": "The triangle constrains shape when its members and connections hold their lengths.",
+    "question": "Why does a diagonal help a hinged rectangular model?",
+    "options": [
+      "It creates a triangle with constrained side lengths.",
+      "It makes all connections infinitely strong.",
+      "It removes every force."
+    ],
+    "key": 0,
+    "activity": [
+      "Make a small card-strip frame with freely moving joints. Apply a gentle sideways push.",
+      "Measure both diagonals before and after; keep side lengths unchanged.",
+      "Add a diagonal strip and repeat the same gentle comparison.",
+      "Observe the joints; explain how looseness changes the result."
+    ],
+    "exit": "A braced model still shifts. Give two plausible causes and tests that distinguish them before adding another brace.",
+    "exitkey": "Connection slip versus brace stretch/buckling or unanchored base. Mark joints, compare diagonal length and track base motion; predict which measurement changes for each cause.",
+    "drawtarget": "tr.u2.square-check",
+    "draw": "Draw the displaced and braced frames. Mark the diagonal and the joints you inspected.",
+    "materials": "Card strips, paper fasteners/tape hinges, ruler.",
+    "fallback": "Use supplied before/after diagonal readings and clearly mark model-only evidence.",
+    "words": [
+      "brace",
+      "diagonal",
+      "triangle",
+      "connection",
+      "racking"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 13,
+    "slug": "tu2-s13",
+    "title": "3.3 · The bay is already full",
+    "target": "tr.u2.bay-conflict",
+    "fig": "bay",
+    "concept": "A coordinated route must satisfy all stated constraints at once. Preserve the required slope and fixed interfaces while examining changes to route length, elevation or available envelope. A supported infeasibility finding is a valid result.",
+    "given": "Practice bay: 7.5 in deep; 16 ft route; 0.25 in/ft slope; OD 2.375 in; clearances 1 in top and bottom.",
+    "work": "Required depth 8.375 in; available 7.5. Shortfall = 0.875 in.",
+    "answer": "The route does not fit this supplied envelope as drawn.",
+    "question": "Which response resolves the calculation honestly?",
+    "options": [
+      "Reduce slope without permission.",
+      "Report the shortfall and calculate a permitted alternative for review.",
+      "Ignore pipe OD because it is small."
+    ],
+    "key": 1,
+    "activity": [
+      "Read every constraint aloud and label which interfaces are fixed.",
+      "Draw the longitudinal outside envelope and prove the conflict numerically.",
+      "Compare shorter run, deeper service zone and changed endpoint options.",
+      "Assign trade roles for discussion; each student writes an individual recommendation and its consequence."
+    ],
+    "exit": "The case allows either a 12-foot run or a deeper service zone. Calculate the depth needed for the 12-foot option and explain what else must be checked before choosing it.",
+    "exitkey": "Fall 3 in; total depth 7.375 in, fitting 7.5 with 0.125 in remaining. Need routing/access, fittings and connection feasibility; the remaining margin may be insufficient once those are specified.",
+    "drawtarget": "tr.u2.plan-slope",
+    "draw": "Draw existing and proposed routes with labelled changed constraints and an RFI note.",
+    "materials": "Practice bay case, paper, ruler; Drawing Set S-102/P-201 for optional comparison.",
+    "fallback": "Complete the paper coordination case; do not infer field dimensions.",
+    "words": [
+      "constraint",
+      "conflict",
+      "envelope",
+      "RFI",
+      "coordinate"
+    ],
+    "extra": "",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 18-23 with Drawing Set S-102/P-201: coordination and RFI",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 14,
+    "slug": "tu2-s14",
+    "title": "3.4 · Call it, then check it",
+    "target": "tr.u2.slope-set",
+    "fig": "slope",
+    "concept": "An estimate is useful when followed by a measurement. Keep prediction, measured result and revised explanation as separate records. A slope that looks nearly level can still have a meaningful fall over a long run.",
+    "given": "Three model runs are 4 ft. Supplied falls are 1/2, 1 and 2 in.",
+    "work": "Divide each fall by 4 ft.",
+    "answer": "Slopes are 1/8, 1/4 and 1/2 in/ft.",
+    "question": "A 4-foot model needs 1/4 in/ft slope. What fall should you set?",
+    "options": [
+      "1/4 in.",
+      "1 in.",
+      "4 in."
+    ],
+    "key": 1,
+    "activity": [
+      "Prepare three dry strips with different slopes. Hide the measured fall values initially.",
+      "Predict which matches a stated requirement, then measure horizontal run and fall.",
+      "Calculate each slope; keep the original prediction visible.",
+      "Explain one mismatch and adjust one strip to the required slope."
+    ],
+    "exit": "A 6-foot model falls 1 1/8 inches. Calculate slope and the change in fall needed to reach 1/4 in/ft.",
+    "exitkey": "Slope 3/16 in/ft. Required fall 1.5 in; increase fall by 3/8 in. State which endpoint moves and the datum.",
+    "drawtarget": "tr.u2.stair-sect",
+    "draw": "Draw your adjusted model with measured horizontal run and before/after elevations.",
+    "materials": "Three dry strips, blocks, ruler, checked level reference.",
+    "fallback": "Use the supplied falls with predictions recorded before calculation.",
+    "words": [
+      "prediction",
+      "measurement",
+      "fall",
+      "run",
+      "revise"
+    ],
+    "extra": "",
+    "minutes": 55,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  },
+  {
+    "u": 2,
+    "n": 15,
+    "slug": "tu2-s15",
+    "title": "3.5 · Mastery: route it and prove it",
+    "target": "tr.u2.bay-conflict",
+    "fig": "bay",
+    "concept": "Your report must show either a feasible route under every supplied condition or a quantified conflict and a revision for review. A changed drawing must still communicate the required slope, outside envelope and fixed interfaces.",
+    "given": "Practice calculation: run 10 ft, slope 1/4 in/ft, OD 2 3/8 in, top and bottom clearances 3/4 in.",
+    "work": "Fall 2 1/2 in; required depth 3/4 + 2 3/8 + 2 1/2 + 3/4.",
+    "answer": "Required depth 6 5/8 in. Use the different values on Case B for the assessed task.",
+    "question": "What makes “it cannot fit as drawn” a valid conclusion?",
+    "options": [
+      "A difficult-looking sketch.",
+      "A calculation showing the violated constraint and the amount.",
+      "A partner’s guess."
+    ],
+    "key": 1,
+    "activity": [
+      "Read Classroom Case B and write the fixed and changeable conditions.",
+      "Calculate fall and full depth demand; draw matching plan and section.",
+      "Evaluate both offered revisions, then recommend one with an explicit remaining check.",
+      "Submit an individual report and drawing. After feedback, revise only with identified new or corrected evidence."
+    ],
+    "exit": "Summarize your Case B decision: quantified conflict, recommended revision, consequence for another trade, and the measurement or approval still required.",
+    "exitkey": "Use Case B key: 18-foot original needs 8 3/8 inches and exceeds 8 by 3/8. Shorter 16-foot route needs 7 7/8; deeper 8 1/2-inch zone fits original with 1/8 margin. Neither margin includes unspecified fittings.",
+    "drawtarget": "tr.u2.plan-slope",
+    "draw": "Submit your linked plan and longitudinal section, with common datum, slope, flow direction and full envelope.",
+    "materials": "Case B pages, paper, ruler, calculator; optional dry classroom bay mockup.",
+    "fallback": "Use the supplied case and keep instrument performance not observed.",
+    "words": [
+      "constraint",
+      "fall",
+      "envelope",
+      "revision",
+      "evidence"
+    ],
+    "extra": "case-b",
+    "minutes": 110,
+    "timing55": [
+      [
+        "0-7",
+        "Individual diagnostic choice; discuss the evidence needed."
+      ],
+      [
+        "7-17",
+        "Teach the model and work the numerical example."
+      ],
+      [
+        "17-35",
+        "Investigation and individual record."
+      ],
+      [
+        "35-45",
+        "Draw, exchange and clarify the handoff."
+      ],
+      [
+        "45-55",
+        "Individual exit; identify one next step."
+      ]
+    ],
+    "timing110": "Extend the investigation by 25 minutes for repeated trials or a second method, add 20 minutes for comparison and drawing revision, and reserve an extra 10 minutes for individual feedback. Do not invent additional results to fill time.",
+    "drawing_book": "pp. 11, 13 and 22-23: handoff and RFI",
+    "rating": "3: an accurate, evidence-linked response matching the key, with quantities/units and an appropriate check. 2: a usable approach with one material omission or teacher cue. 1: an unsupported or incorrect approach needing instruction. Record physical skill only from observed performance; absence or no evidence is not a fabricated low skill score."
+  }
+]

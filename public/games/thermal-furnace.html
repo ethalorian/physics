@@ -334,8 +334,10 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  const freshRun=!ARCADE.playId;
   audio();
   const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    if(freshRun)Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
@@ -364,8 +366,12 @@ function setupLevel(){
       const hot=i%2===0;
       const sp=hot?rnd(120,180):rnd(50,100);
       const a=rnd(0,TAU);
-      parts.push({x:rnd(3,45),y:rnd(3,27),vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,hot});
+      parts.push({x:i<Math.ceil(lv.N/2)?rnd(3,21):rnd(27,45),y:rnd(3,27),vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,hot});
     }
+    // Start at equal temperatures, including odd-sized endless groups.
+    // A random initial imbalance must not complete the sorting task for free.
+    const factor=Math.sqrt(chamberT('L')/chamberT('R'));
+    for(const p of parts)if(p.x>=24){p.vx*=factor;p.vy*=factor;}
   }
 }
 function showMission(level){
@@ -660,6 +666,7 @@ function step(dt){
   }else if(act===2){
     const gap=lv.gapH/2;
     for(const p of parts){
+      const fromLeft=p.x<24;
       p.x+=p.vx*dt/8;p.y+=p.vy*dt/8;
       if(p.x<1){p.x=1;p.vx=Math.abs(p.vx);}
       if(p.x>47){p.x=47;p.vx=-Math.abs(p.vx);}
@@ -670,8 +677,8 @@ function step(dt){
       if(crossing){
         const inGap=Math.abs(p.y-15)<gap;
         if(!(gateOpen&&inGap)){
-          if(p.vx>0&&p.x<24){p.x=23.5;p.vx=-Math.abs(p.vx);}
-          else if(p.vx<0&&p.x>24){p.x=24.5;p.vx=Math.abs(p.vx);}
+          p.x=fromLeft?23.5:24.5;
+          p.vx=fromLeft?-Math.abs(p.vx):Math.abs(p.vx);
         }
       }
     }

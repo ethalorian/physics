@@ -363,8 +363,10 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  const freshRun=!ARCADE.playId;
   audio();
   const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    if(freshRun)Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
@@ -794,7 +796,7 @@ function step(dt){
     if(!hope&&sp2<0.15){adriftT+=dt;if(adriftT>4){failAttempt('ADRIFT','Out of crates, out of motion. Budget the manifest: count the throws a hole needs BEFORE the first one — that is what par is telling you.');return;}}
     else adriftT=0;
     // the course closes eventually, docked or not
-    if(attemptT>75){failAttempt('COURSE CLOSED','Seventy-five seconds on one hole. The line marshal has opinions. Plan the throws, then throw the plan.');return;}
+    if(t>75){failAttempt('COURSE CLOSED','Seventy-five seconds on one hole. The line marshal has opinions. Plan the throws, then throw the plan.');return;}
   }else if(act===2){
     for(const ch of lv.chutes){
       // hand delivery: fly your cargo right into the chute mouth (no recoil — but no range either)

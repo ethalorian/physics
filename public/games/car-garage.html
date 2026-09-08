@@ -355,8 +355,10 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  const freshRun=!ARCADE.playId;
   audio();
   const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    if(freshRun)Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}

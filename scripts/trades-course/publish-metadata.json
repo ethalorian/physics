@@ -1,0 +1,1358 @@
+{
+  "sets": [
+    {
+      "lesson_id": "d3024666-05e7-4694-860d-1dfb2964b176",
+      "unit_id": "trades-1",
+      "name": "2.1 · The block and its joint vocabulary",
+      "terms": [
+        {
+          "term": "nominal",
+          "definition": "A standardized size name that may differ from a directly measured dimension.",
+          "order_index": 0,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "actual",
+          "definition": "The physical dimension observed or specified for the identified material, rather than its size name.",
+          "order_index": 1,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "module",
+          "definition": "A repeating coordination dimension, such as a masonry unit plus its specified joint.",
+          "order_index": 2,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "joint",
+          "definition": "The interface or material between adjoining units or members.",
+          "order_index": 3,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "endpoint",
+          "definition": "The point where a measured length begins or ends.",
+          "order_index": 4,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "5b304695-05ad-418d-951a-dc93d2a560cd",
+      "unit_id": "trades-1",
+      "name": "2.2 · Identify the material before the size vocabulary",
+      "terms": [
+        {
+          "term": "nominal",
+          "definition": "A standardized size name that may differ from a directly measured dimension.",
+          "order_index": 0,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "outside diameter",
+          "definition": "The diameter across the exterior of a round tube or pipe.",
+          "order_index": 1,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "inside diameter",
+          "definition": "The diameter of the internal opening of a tube or pipe.",
+          "order_index": 2,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "wall thickness",
+          "definition": "The distance through the material forming a tube or pipe wall.",
+          "order_index": 3,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        },
+        {
+          "term": "clearance",
+          "definition": "Space required between an object and a boundary or another object.",
+          "order_index": 4,
+          "target": "tr.u1.nominal",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "7d822638-9655-414f-82db-d6de628bb42a",
+      "unit_id": "trades-1",
+      "name": "2.3 · Gauge, diameter and area vocabulary",
+      "terms": [
+        {
+          "term": "gauge",
+          "definition": "A size designation or measuring device; in this lesson AWG names a standardized wire-size series.",
+          "order_index": 0,
+          "target": "tr.u1.gauge",
+          "tier": 3
+        },
+        {
+          "term": "diameter",
+          "definition": "A straight-line distance across a circle through its center.",
+          "order_index": 1,
+          "target": "tr.u1.gauge",
+          "tier": 3
+        },
+        {
+          "term": "area",
+          "definition": "The amount of two-dimensional surface or cross-section, expressed in square units.",
+          "order_index": 2,
+          "target": "tr.u1.gauge",
+          "tier": 3
+        },
+        {
+          "term": "ratio",
+          "definition": "One quantity compared by division with another, with units made explicit.",
+          "order_index": 3,
+          "target": "tr.u1.gauge",
+          "tier": 3
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 4,
+          "target": "tr.u1.gauge",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "dc55bb14-bad4-4de8-9478-1f8927c588a6",
+      "unit_id": "trades-1",
+      "name": "2.4 · Four names, four conventions vocabulary",
+      "terms": [
+        {
+          "term": "nominal",
+          "definition": "A standardized size name that may differ from a directly measured dimension.",
+          "order_index": 0,
+          "target": "tr.u1.vocab",
+          "tier": 3
+        },
+        {
+          "term": "actual",
+          "definition": "The physical dimension observed or specified for the identified material, rather than its size name.",
+          "order_index": 1,
+          "target": "tr.u1.vocab",
+          "tier": 3
+        },
+        {
+          "term": "tolerance",
+          "definition": "The permitted variation from a specified value.",
+          "order_index": 2,
+          "target": "tr.u1.vocab",
+          "tier": 3
+        },
+        {
+          "term": "deviation",
+          "definition": "The measured value minus the specified target, including its positive or negative sign.",
+          "order_index": 3,
+          "target": "tr.u1.vocab",
+          "tier": 3
+        },
+        {
+          "term": "specification",
+          "definition": "The stated required dimensions, conditions or performance for a task.",
+          "order_index": 4,
+          "target": "tr.u1.vocab",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "1c80155c-f321-4707-a559-f52b91f0b4ae",
+      "unit_id": "trades-1",
+      "name": "2.5 · Does it fit at the stated scale? vocabulary",
+      "terms": [
+        {
+          "term": "envelope",
+          "definition": "The full outside space occupied or required by an object or route.",
+          "order_index": 0,
+          "target": "tr.u1.fits",
+          "tier": 3
+        },
+        {
+          "term": "clearance",
+          "definition": "Space required between an object and a boundary or another object.",
+          "order_index": 1,
+          "target": "tr.u1.fits",
+          "tier": 3
+        },
+        {
+          "term": "scale",
+          "definition": "The ratio of a drawing dimension to the corresponding real dimension.",
+          "order_index": 2,
+          "target": "tr.u1.fits",
+          "tier": 3
+        },
+        {
+          "term": "nominal",
+          "definition": "A standardized size name that may differ from a directly measured dimension.",
+          "order_index": 3,
+          "target": "tr.u1.fits",
+          "tier": 3
+        },
+        {
+          "term": "actual",
+          "definition": "The physical dimension observed or specified for the identified material, rather than its size name.",
+          "order_index": 4,
+          "target": "tr.u1.fits",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "c272eb99-2127-4866-9ece-7c9ec3e98215",
+      "unit_id": "trades-1",
+      "name": "3.1 · Chain and datum layout vocabulary",
+      "terms": [
+        {
+          "term": "datum",
+          "definition": "A specified reference point, line or surface from which dimensions are taken.",
+          "order_index": 0,
+          "target": "tr.u1.cumul",
+          "tier": 3
+        },
+        {
+          "term": "chain",
+          "definition": "A sequence of dimensions or measurements taken successively from the previous point.",
+          "order_index": 1,
+          "target": "tr.u1.cumul",
+          "tier": 3
+        },
+        {
+          "term": "deviation",
+          "definition": "The measured value minus the specified target, including its positive or negative sign.",
+          "order_index": 2,
+          "target": "tr.u1.cumul",
+          "tier": 3
+        },
+        {
+          "term": "systematic",
+          "definition": "Describes an effect that consistently biases measurements under the stated conditions.",
+          "order_index": 3,
+          "target": "tr.u1.cumul",
+          "tier": 3
+        },
+        {
+          "term": "interval",
+          "definition": "The span between two specified values, marks or positions.",
+          "order_index": 4,
+          "target": "tr.u1.cumul",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "f1d4a7fb-2b88-4f5d-bb93-c0de41029229",
+      "unit_id": "trades-1",
+      "name": "3.2 · Why the centerline matters vocabulary",
+      "terms": [
+        {
+          "term": "centerline",
+          "definition": "A reference line through the middle of a feature or member.",
+          "order_index": 0,
+          "target": "tr.u1.sixteen",
+          "tier": 3
+        },
+        {
+          "term": "spacing",
+          "definition": "The distance between repeated specified reference points, such as member centers.",
+          "order_index": 1,
+          "target": "tr.u1.sixteen",
+          "tier": 3
+        },
+        {
+          "term": "clear gap",
+          "definition": "The unobstructed distance between the facing edges of two objects.",
+          "order_index": 2,
+          "target": "tr.u1.sixteen",
+          "tier": 3
+        },
+        {
+          "term": "interval",
+          "definition": "The span between two specified values, marks or positions.",
+          "order_index": 3,
+          "target": "tr.u1.sixteen",
+          "tier": 3
+        },
+        {
+          "term": "support",
+          "definition": "A member or contact that carries or restrains another part of an assembly.",
+          "order_index": 4,
+          "target": "tr.u1.sixteen",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "528dec60-0053-4fea-901f-9d375575d5e5",
+      "unit_id": "trades-1",
+      "name": "3.3 · Estimate it, then align the views vocabulary",
+      "terms": [
+        {
+          "term": "estimate",
+          "definition": "An approximate value based on stated observations, assumptions or a model.",
+          "order_index": 0,
+          "target": "tr.u1.views",
+          "tier": 2
+        },
+        {
+          "term": "module",
+          "definition": "A repeating coordination dimension, such as a masonry unit plus its specified joint.",
+          "order_index": 1,
+          "target": "tr.u1.views",
+          "tier": 3
+        },
+        {
+          "term": "front",
+          "definition": "The designated primary viewing direction in an orthographic drawing.",
+          "order_index": 2,
+          "target": "tr.u1.views",
+          "tier": 3
+        },
+        {
+          "term": "top",
+          "definition": "The orthographic view looking down on the designated object.",
+          "order_index": 3,
+          "target": "tr.u1.views",
+          "tier": 3
+        },
+        {
+          "term": "right view",
+          "definition": "An orthographic view from the designated right side of an object.",
+          "order_index": 4,
+          "target": "tr.u1.views",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "c3380bad-e087-4f59-be4f-70d692e8fd79",
+      "unit_id": "trades-1",
+      "name": "3.4 · Make a defensible tolerance call vocabulary",
+      "terms": [
+        {
+          "term": "tolerance",
+          "definition": "The permitted variation from a specified value.",
+          "order_index": 0,
+          "target": "tr.u1.tolerance",
+          "tier": 3
+        },
+        {
+          "term": "deviation",
+          "definition": "The measured value minus the specified target, including its positive or negative sign.",
+          "order_index": 1,
+          "target": "tr.u1.tolerance",
+          "tier": 3
+        },
+        {
+          "term": "lower limit",
+          "definition": "The smallest permitted value in a stated interval.",
+          "order_index": 2,
+          "target": "tr.u1.tolerance",
+          "tier": 3
+        },
+        {
+          "term": "upper limit",
+          "definition": "The largest permitted value in a stated interval.",
+          "order_index": 3,
+          "target": "tr.u1.tolerance",
+          "tier": 3
+        },
+        {
+          "term": "resolution",
+          "definition": "The smallest change an instrument can distinguish or display.",
+          "order_index": 4,
+          "target": "tr.u1.tolerance",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "6c24638c-7785-4ea6-84b6-af0ffe433dac",
+      "unit_id": "trades-1",
+      "name": "3.5 · Mastery: inspect and revise the bay vocabulary",
+      "terms": [
+        {
+          "term": "as-built",
+          "definition": "A drawing that records the supported observed condition of an assembly.",
+          "order_index": 0,
+          "target": "tr.u1.asbuilt",
+          "tier": 3
+        },
+        {
+          "term": "datum",
+          "definition": "A specified reference point, line or surface from which dimensions are taken.",
+          "order_index": 1,
+          "target": "tr.u1.asbuilt",
+          "tier": 3
+        },
+        {
+          "term": "revision",
+          "definition": "An identified version of a document with its changes recorded.",
+          "order_index": 2,
+          "target": "tr.u1.asbuilt",
+          "tier": 3
+        },
+        {
+          "term": "discrepancy",
+          "definition": "A difference between records, requirements or observations that needs explanation.",
+          "order_index": 3,
+          "target": "tr.u1.asbuilt",
+          "tier": 3
+        },
+        {
+          "term": "evidence",
+          "definition": "Observations or measurements used to support or challenge a conclusion.",
+          "order_index": 4,
+          "target": "tr.u1.asbuilt",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "9cb1a5df-04d0-42b6-99d6-7b80e961067d",
+      "unit_id": "trades-2",
+      "name": "1.1 · Every riser in the flight vocabulary",
+      "terms": [
+        {
+          "term": "riser",
+          "definition": "The vertical height between successive stair walking surfaces; also the vertical face at that step.",
+          "order_index": 0,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "finished surface",
+          "definition": "The final exposed surface used by a person, such as a tread or floor finish.",
+          "order_index": 1,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "vertical",
+          "definition": "The local up-down direction aligned with gravity.",
+          "order_index": 2,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "spread",
+          "definition": "The highest reading minus the lowest reading in the set being compared.",
+          "order_index": 3,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "evidence",
+          "definition": "Observations or measurements used to support or challenge a conclusion.",
+          "order_index": 4,
+          "target": "tr.u2.stair-why",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "9932ee89-087d-44be-80ee-ebd68613590d",
+      "unit_id": "trades-2",
+      "name": "1.2 · Why the bubble moves vocabulary",
+      "terms": [
+        {
+          "term": "bubble",
+          "definition": "A pocket of gas within the liquid in a level vial.",
+          "order_index": 0,
+          "target": "tr.u2.bubble",
+          "tier": 3
+        },
+        {
+          "term": "liquid",
+          "definition": "A material that flows and takes the shape of its container while retaining approximately its volume.",
+          "order_index": 1,
+          "target": "tr.u2.bubble",
+          "tier": 3
+        },
+        {
+          "term": "high point",
+          "definition": "The location at the greatest elevation within the stated comparison.",
+          "order_index": 2,
+          "target": "tr.u2.bubble",
+          "tier": 3
+        },
+        {
+          "term": "calibration",
+          "definition": "Establishing how an instrument's indications relate to reference values under stated conditions.",
+          "order_index": 3,
+          "target": "tr.u2.bubble",
+          "tier": 3
+        },
+        {
+          "term": "level",
+          "definition": "Horizontal, perpendicular to local vertical; also an instrument used to check that condition.",
+          "order_index": 4,
+          "target": "tr.u2.bubble",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "a766ffb8-735d-49bf-ae52-bbb98a64ede8",
+      "unit_id": "trades-2",
+      "name": "1.3 · Check the gravity reference vocabulary",
+      "terms": [
+        {
+          "term": "vertical",
+          "definition": "The local up-down direction aligned with gravity.",
+          "order_index": 0,
+          "target": "tr.u2.gravity-ref",
+          "tier": 3
+        },
+        {
+          "term": "elevation",
+          "definition": "Vertical position relative to a stated datum.",
+          "order_index": 1,
+          "target": "tr.u2.gravity-ref",
+          "tier": 3
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 2,
+          "target": "tr.u2.gravity-ref",
+          "tier": 3
+        },
+        {
+          "term": "settle",
+          "definition": "Reach a sufficiently stationary state for the intended reading.",
+          "order_index": 3,
+          "target": "tr.u2.gravity-ref",
+          "tier": 3
+        },
+        {
+          "term": "calibration",
+          "definition": "Establishing how an instrument's indications relate to reference values under stated conditions.",
+          "order_index": 4,
+          "target": "tr.u2.gravity-ref",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "0c0c73c7-31fb-4c95-ab65-22286e36042f",
+      "unit_id": "trades-2",
+      "name": "1.4 · Reversal and instrument checks vocabulary",
+      "terms": [
+        {
+          "term": "reversal",
+          "definition": "Turning an instrument to a specified opposite orientation to compare its readings.",
+          "order_index": 0,
+          "target": "tr.u2.level-check",
+          "tier": 3
+        },
+        {
+          "term": "contact",
+          "definition": "Where the instrument or object touches the measured surface.",
+          "order_index": 1,
+          "target": "tr.u2.level-check",
+          "tier": 3
+        },
+        {
+          "term": "offset",
+          "definition": "A positional difference or a difference between an indicated value and a reference.",
+          "order_index": 2,
+          "target": "tr.u2.level-check",
+          "tier": 3
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 3,
+          "target": "tr.u2.level-check",
+          "tier": 3
+        },
+        {
+          "term": "sensitivity",
+          "definition": "How much an instrument indication changes for a given change in the measured quantity.",
+          "order_index": 4,
+          "target": "tr.u2.level-check",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "7651ea51-61a4-4661-9da1-52de89e5c190",
+      "unit_id": "trades-2",
+      "name": "1.5 · Square is a measurement vocabulary",
+      "terms": [
+        {
+          "term": "diagonal",
+          "definition": "A line joining nonadjacent corners of a shape.",
+          "order_index": 0,
+          "target": "tr.u2.345",
+          "tier": 3
+        },
+        {
+          "term": "right angle",
+          "definition": "An angle of 90 degrees.",
+          "order_index": 1,
+          "target": "tr.u2.345",
+          "tier": 3
+        },
+        {
+          "term": "ratio",
+          "definition": "One quantity compared by division with another, with units made explicit.",
+          "order_index": 2,
+          "target": "tr.u2.345",
+          "tier": 3
+        },
+        {
+          "term": "rectangle",
+          "definition": "A four-sided figure with four right angles.",
+          "order_index": 3,
+          "target": "tr.u2.345",
+          "tier": 3
+        },
+        {
+          "term": "square",
+          "definition": "At right angles in the intended layout; also a tool used to check right angles.",
+          "order_index": 4,
+          "target": "tr.u2.345",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "8c61d850-f782-4004-804e-bc888e623217",
+      "unit_id": "trades-2",
+      "name": "2.1 · Measure the run and its fall vocabulary",
+      "terms": [
+        {
+          "term": "slope",
+          "definition": "Vertical change divided by horizontal run, with units or ratio convention stated.",
+          "order_index": 0,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "fall",
+          "definition": "The decrease in elevation from upstream to downstream over the stated run.",
+          "order_index": 1,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "run",
+          "definition": "The horizontal distance used in the stated slope calculation.",
+          "order_index": 2,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "elevation",
+          "definition": "Vertical position relative to a stated datum.",
+          "order_index": 3,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "datum",
+          "definition": "A specified reference point, line or surface from which dimensions are taken.",
+          "order_index": 4,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "bb75e11e-3fd3-4825-b394-4cd621742730",
+      "unit_id": "trades-2",
+      "name": "2.2 · Convert the same slope vocabulary",
+      "terms": [
+        {
+          "term": "ratio",
+          "definition": "One quantity compared by division with another, with units made explicit.",
+          "order_index": 0,
+          "target": "tr.u2.rise-run",
+          "tier": 3
+        },
+        {
+          "term": "percent",
+          "definition": "A ratio expressed per hundred after quantities are put in compatible units.",
+          "order_index": 1,
+          "target": "tr.u2.rise-run",
+          "tier": 3
+        },
+        {
+          "term": "rise",
+          "definition": "The vertical increase or distance between stated elevations.",
+          "order_index": 2,
+          "target": "tr.u2.rise-run",
+          "tier": 3
+        },
+        {
+          "term": "run",
+          "definition": "The horizontal distance used in the stated slope calculation.",
+          "order_index": 3,
+          "target": "tr.u2.rise-run",
+          "tier": 3
+        },
+        {
+          "term": "equivalent",
+          "definition": "Representing the same quantity or relationship in a different form.",
+          "order_index": 4,
+          "target": "tr.u2.rise-run",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "5c248cf5-a675-4f67-9838-312b1bdfb985",
+      "unit_id": "trades-2",
+      "name": "2.3 · Investigate slope and transport vocabulary",
+      "terms": [
+        {
+          "term": "controlled test",
+          "definition": "A comparison that changes a selected factor while holding other relevant conditions consistent.",
+          "order_index": 0,
+          "target": "tr.u2.slope-why",
+          "tier": 3
+        },
+        {
+          "term": "transport",
+          "definition": "Movement of material from one location to another.",
+          "order_index": 1,
+          "target": "tr.u2.slope-why",
+          "tier": 2
+        },
+        {
+          "term": "slope",
+          "definition": "Vertical change divided by horizontal run, with units or ratio convention stated.",
+          "order_index": 2,
+          "target": "tr.u2.slope-why",
+          "tier": 3
+        },
+        {
+          "term": "repeat",
+          "definition": "Carry out the measurement or trial again under stated conditions.",
+          "order_index": 3,
+          "target": "tr.u2.slope-why",
+          "tier": 2
+        },
+        {
+          "term": "model",
+          "definition": "A simplified representation used to explain or predict a specified situation.",
+          "order_index": 4,
+          "target": "tr.u2.slope-why",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "df70e414-fc77-4222-9d9c-11c4085344dc",
+      "unit_id": "trades-2",
+      "name": "2.4 · Budget the depth vocabulary",
+      "terms": [
+        {
+          "term": "envelope",
+          "definition": "The full outside space occupied or required by an object or route.",
+          "order_index": 0,
+          "target": "tr.u2.fall-total",
+          "tier": 3
+        },
+        {
+          "term": "clearance",
+          "definition": "Space required between an object and a boundary or another object.",
+          "order_index": 1,
+          "target": "tr.u2.fall-total",
+          "tier": 3
+        },
+        {
+          "term": "fall",
+          "definition": "The decrease in elevation from upstream to downstream over the stated run.",
+          "order_index": 2,
+          "target": "tr.u2.fall-total",
+          "tier": 3
+        },
+        {
+          "term": "depth",
+          "definition": "Distance through a space or object in the stated direction.",
+          "order_index": 3,
+          "target": "tr.u2.fall-total",
+          "tier": 3
+        },
+        {
+          "term": "constraint",
+          "definition": "A condition that a proposed solution must satisfy.",
+          "order_index": 4,
+          "target": "tr.u2.fall-total",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "708434ee-8c0e-421b-a125-e9c98a4c26ae",
+      "unit_id": "trades-2",
+      "name": "2.5 · Draw the fall vocabulary",
+      "terms": [
+        {
+          "term": "plan",
+          "definition": "A drawing viewed from above that locates features horizontally.",
+          "order_index": 0,
+          "target": "tr.u2.plan-slope",
+          "tier": 3
+        },
+        {
+          "term": "section",
+          "definition": "A view that shows a specified cut through an object or assembly.",
+          "order_index": 1,
+          "target": "tr.u2.plan-slope",
+          "tier": 3
+        },
+        {
+          "term": "datum",
+          "definition": "A specified reference point, line or surface from which dimensions are taken.",
+          "order_index": 2,
+          "target": "tr.u2.plan-slope",
+          "tier": 3
+        },
+        {
+          "term": "elevation",
+          "definition": "Vertical position relative to a stated datum.",
+          "order_index": 3,
+          "target": "tr.u2.plan-slope",
+          "tier": 3
+        },
+        {
+          "term": "flow direction",
+          "definition": "The direction in which material is intended or observed to move.",
+          "order_index": 4,
+          "target": "tr.u2.plan-slope",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "a40a6a22-0a2c-494e-889d-5493945caf1c",
+      "unit_id": "trades-2",
+      "name": "3.1 · When the floor finish changes vocabulary",
+      "terms": [
+        {
+          "term": "finished surface",
+          "definition": "The final exposed surface used by a person, such as a tread or floor finish.",
+          "order_index": 0,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "riser",
+          "definition": "The vertical height between successive stair walking surfaces; also the vertical face at that step.",
+          "order_index": 1,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "thickness",
+          "definition": "The distance between opposing surfaces of a layer or part.",
+          "order_index": 2,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "elevation",
+          "definition": "Vertical position relative to a stated datum.",
+          "order_index": 3,
+          "target": "tr.u2.stair-why",
+          "tier": 3
+        },
+        {
+          "term": "cause",
+          "definition": "A condition or change that produces an observed effect.",
+          "order_index": 4,
+          "target": "tr.u2.stair-why",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "a86f0b62-770c-4005-a218-e0535f91da88",
+      "unit_id": "trades-2",
+      "name": "3.2 · Rack the frame vocabulary",
+      "terms": [
+        {
+          "term": "brace",
+          "definition": "A member that constrains movement or transfers load through a frame.",
+          "order_index": 0,
+          "target": "tr.u2.racking",
+          "tier": 3
+        },
+        {
+          "term": "diagonal",
+          "definition": "A line joining nonadjacent corners of a shape.",
+          "order_index": 1,
+          "target": "tr.u2.racking",
+          "tier": 3
+        },
+        {
+          "term": "triangle",
+          "definition": "A shape with three sides and three angles.",
+          "order_index": 2,
+          "target": "tr.u2.racking",
+          "tier": 3
+        },
+        {
+          "term": "connection",
+          "definition": "The joint or interface through which parts meet and interact.",
+          "order_index": 3,
+          "target": "tr.u2.racking",
+          "tier": 3
+        },
+        {
+          "term": "racking",
+          "definition": "A change of frame angles that distorts an intended rectangular shape.",
+          "order_index": 4,
+          "target": "tr.u2.racking",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "98177684-0bf0-4e89-9ecf-c4de8aaba8bf",
+      "unit_id": "trades-2",
+      "name": "3.3 · The bay is already full vocabulary",
+      "terms": [
+        {
+          "term": "constraint",
+          "definition": "A condition that a proposed solution must satisfy.",
+          "order_index": 0,
+          "target": "tr.u2.bay-conflict",
+          "tier": 2
+        },
+        {
+          "term": "conflict",
+          "definition": "A situation in which two or more stated requirements cannot all be met as drawn.",
+          "order_index": 1,
+          "target": "tr.u2.bay-conflict",
+          "tier": 2
+        },
+        {
+          "term": "envelope",
+          "definition": "The full outside space occupied or required by an object or route.",
+          "order_index": 2,
+          "target": "tr.u2.bay-conflict",
+          "tier": 3
+        },
+        {
+          "term": "RFI",
+          "definition": "A request for information that asks the responsible person to resolve a missing or conflicting requirement.",
+          "order_index": 3,
+          "target": "tr.u2.bay-conflict",
+          "tier": 3
+        },
+        {
+          "term": "coordinate",
+          "definition": "Check related work together so dimensions, routes and requirements agree.",
+          "order_index": 4,
+          "target": "tr.u2.bay-conflict",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "4f375280-0ace-4534-ae09-2c791cb906e8",
+      "unit_id": "trades-2",
+      "name": "3.4 · Call it, then check it vocabulary",
+      "terms": [
+        {
+          "term": "prediction",
+          "definition": "A stated expected result made before the relevant check or observation.",
+          "order_index": 0,
+          "target": "tr.u2.slope-set",
+          "tier": 2
+        },
+        {
+          "term": "measurement",
+          "definition": "A value obtained by comparing a quantity with a defined unit or reference.",
+          "order_index": 1,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "fall",
+          "definition": "The decrease in elevation from upstream to downstream over the stated run.",
+          "order_index": 2,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "run",
+          "definition": "The horizontal distance used in the stated slope calculation.",
+          "order_index": 3,
+          "target": "tr.u2.slope-set",
+          "tier": 3
+        },
+        {
+          "term": "revise",
+          "definition": "Change an earlier artifact or conclusion in response to identified evidence or feedback.",
+          "order_index": 4,
+          "target": "tr.u2.slope-set",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "b6ca49f4-6fe5-48df-83a2-3c207048026c",
+      "unit_id": "trades-2",
+      "name": "3.5 · Mastery: route it and prove it vocabulary",
+      "terms": [
+        {
+          "term": "constraint",
+          "definition": "A condition that a proposed solution must satisfy.",
+          "order_index": 0,
+          "target": "tr.u2.bay-conflict",
+          "tier": 2
+        },
+        {
+          "term": "fall",
+          "definition": "The decrease in elevation from upstream to downstream over the stated run.",
+          "order_index": 1,
+          "target": "tr.u2.bay-conflict",
+          "tier": 3
+        },
+        {
+          "term": "envelope",
+          "definition": "The full outside space occupied or required by an object or route.",
+          "order_index": 2,
+          "target": "tr.u2.bay-conflict",
+          "tier": 3
+        },
+        {
+          "term": "revision",
+          "definition": "An identified version of a document with its changes recorded.",
+          "order_index": 3,
+          "target": "tr.u2.bay-conflict",
+          "tier": 3
+        },
+        {
+          "term": "evidence",
+          "definition": "Observations or measurements used to support or challenge a conclusion.",
+          "order_index": 4,
+          "target": "tr.u2.bay-conflict",
+          "tier": 2
+        }
+      ]
+    },
+    {
+      "lesson_id": "65f5d97a-4ece-499e-9ded-37dc0b1fde6a",
+      "unit_id": "trades-1",
+      "name": "1.1 · One object, different readings vocabulary",
+      "terms": [
+        {
+          "term": "endpoint",
+          "definition": "The point where a measured length begins or ends.",
+          "order_index": 0,
+          "target": "tr.u1.repeat",
+          "tier": 3
+        },
+        {
+          "term": "spread",
+          "definition": "The highest reading minus the lowest reading in the set being compared.",
+          "order_index": 1,
+          "target": "tr.u1.repeat",
+          "tier": 3
+        },
+        {
+          "term": "evidence",
+          "definition": "Observations or measurements used to support or challenge a conclusion.",
+          "order_index": 2,
+          "target": "tr.u1.repeat",
+          "tier": 2
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 3,
+          "target": "tr.u1.repeat",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "45f6d788-cc5d-4f2f-b9dc-1116e77d3ddd",
+      "unit_id": "trades-1",
+      "name": "1.2 · Reading the divisions vocabulary",
+      "terms": [
+        {
+          "term": "zero",
+          "definition": "The scale starting value, which may not coincide with the physical edge.",
+          "order_index": 0,
+          "target": "tr.u1.read-rule",
+          "tier": 3
+        },
+        {
+          "term": "division",
+          "definition": "The interval between adjacent scale marks.",
+          "order_index": 1,
+          "target": "tr.u1.read-rule",
+          "tier": 3
+        },
+        {
+          "term": "fraction",
+          "definition": "A number expressed as a numerator divided by a nonzero denominator.",
+          "order_index": 2,
+          "target": "tr.u1.read-rule",
+          "tier": 3
+        },
+        {
+          "term": "unit",
+          "definition": "A defined reference amount used to state a measurement.",
+          "order_index": 3,
+          "target": "tr.u1.read-rule",
+          "tier": 3
+        },
+        {
+          "term": "reading",
+          "definition": "The value indicated by an instrument for a particular observation.",
+          "order_index": 4,
+          "target": "tr.u1.read-rule",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "e14ac64b-499b-4100-8894-937842ae8c18",
+      "unit_id": "trades-1",
+      "name": "1.3 · The hook and the drawing vocabulary",
+      "terms": [
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 0,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "outside diameter",
+          "definition": "The diameter across the exterior of a round tube or pipe.",
+          "order_index": 1,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "inside diameter",
+          "definition": "The diameter of the internal opening of a tube or pipe.",
+          "order_index": 2,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "wall thickness",
+          "definition": "The distance through the material forming a tube or pipe wall.",
+          "order_index": 3,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "d64c7a26-8d86-4eb0-bbbe-7ae95ea63b36",
+      "unit_id": "trades-1",
+      "name": "1.4 · Check it before trusting it vocabulary",
+      "terms": [
+        {
+          "term": "zero",
+          "definition": "The scale starting value, which may not coincide with the physical edge.",
+          "order_index": 0,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 1,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "offset",
+          "definition": "A positional difference or a difference between an indicated value and a reference.",
+          "order_index": 2,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "repeatability",
+          "definition": "How closely repeated measurements agree under the same stated conditions.",
+          "order_index": 3,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        },
+        {
+          "term": "accuracy",
+          "definition": "How close a measurement is to a true or accepted reference value.",
+          "order_index": 4,
+          "target": "tr.u1.check-inst",
+          "tier": 3
+        }
+      ]
+    },
+    {
+      "lesson_id": "bbcc1524-d243-4a2b-afd7-2a7de0d97bc1",
+      "unit_id": "trades-1",
+      "name": "1.5 · How much can you trust the number? vocabulary",
+      "terms": [
+        {
+          "term": "resolution",
+          "definition": "The smallest change an instrument can distinguish or display.",
+          "order_index": 0,
+          "target": "tr.u1.choose-inst",
+          "tier": 3
+        },
+        {
+          "term": "tolerance",
+          "definition": "The permitted variation from a specified value.",
+          "order_index": 1,
+          "target": "tr.u1.choose-inst",
+          "tier": 3
+        },
+        {
+          "term": "repeatability",
+          "definition": "How closely repeated measurements agree under the same stated conditions.",
+          "order_index": 2,
+          "target": "tr.u1.choose-inst",
+          "tier": 3
+        },
+        {
+          "term": "accuracy",
+          "definition": "How close a measurement is to a true or accepted reference value.",
+          "order_index": 3,
+          "target": "tr.u1.choose-inst",
+          "tier": 3
+        },
+        {
+          "term": "reference",
+          "definition": "A known value, point or object used for comparison.",
+          "order_index": 4,
+          "target": "tr.u1.choose-inst",
+          "tier": 3
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "edee602a-fb87-450a-a1cd-53b06c1ca3ee",
+      "slug": "tr.u1.mastery-as-built",
+      "previousUpdatedAt": "2026-08-24T13:13:20.73198+00:00",
+      "prompt": "Case A - Inspect the mock bay\n\nA classroom wall mockup must be checked against Issued Drawing A. Use the supplied survey below, or a teacher-verified physical mockup with its own survey. These numbers are simulated teaching data, not a survey of the fieldhouse. The lower-left outside corner is the datum. All dimensions are inches. Length/position specifications have +/-1/8 inch tolerance. The pipe OD note must match the supplied material reference.\n\n| Feature | Issued specification | Supplied survey |\n|---|---|---|\n| Overall width | 48 +/-1/8 | 48 1/16 |\n| Overall height | 96 +/-1/8 | 96 |\n| Opening width | 16 +/-1/8 | 15 3/4 |\n| Opening left edge x | 16 +/-1/8 | 16 1/4 |\n| Service center x | 40 +/-1/8 | 40 1/16 |\n| Service outside diameter | Drawing note: 2 | Reference: 2 3/8 |\n\n1. Write the purpose, constraints, evidence source and information still missing before a real job.\n2. Complete an inspection table: feature, spec/interval, reading, signed deviation, in/out and amount outside.\n3. Produce an as-built elevation with corrected positions/dimensions and service note. Add an appropriate section or orthographic view to clarify one interface.\n4. Write a short inspection note identifying what changes and why. Distinguish a material-label error from a tolerance failure.\n\nRevision: Repeat one personally measured feature with a checked reference, or correct the supplied-data interval calculation; submit a revised drawing and explain exactly how the new evidence changed the decision.",
+      "rubric": {
+        "science": {
+          "description": "Use correct dimensions, units and physical relationships; distinguish specified, nominal and observed quantities.\n\n0 - No assessable physics evidence in this dimension.\n1 - A central physical or numerical error makes the decision unreliable.\n2 - Core method is partly correct, but a missing quantity or error prevents a fully supported result.\n3 - Correct quantities, method, units and conclusions meet the supplied case requirements.\n4 - Meets level 3 and independently checks the result or explains a relevant model/measurement limit.",
+          "levels": {
+            "0": "No assessable physics evidence in this dimension.",
+            "1": "A central physical or numerical error makes the decision unreliable.",
+            "2": "Core method is partly correct, but a missing quantity or error prevents a fully supported result.",
+            "3": "Correct quantities, method, units and conclusions meet the supplied case requirements.",
+            "4": "Meets level 3 and independently checks the result or explains a relevant model/measurement limit."
+          }
+        },
+        "reasoning": {
+          "description": "Make every discrepancy and tolerance call traceable to evidence and a stated comparison.\n\n0 - No assessable reasoning evidence.\n1 - Conclusion is asserted or contradicted by the supplied evidence.\n2 - Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.\n3 - Conclusions follow from explicit evidence and all relevant supplied constraints.\n4 - Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction.",
+          "levels": {
+            "0": "No assessable reasoning evidence.",
+            "1": "Conclusion is asserted or contradicted by the supplied evidence.",
+            "2": "Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.",
+            "3": "Conclusions follow from explicit evidence and all relevant supplied constraints.",
+            "4": "Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction."
+          }
+        },
+        "communication": {
+          "description": "Make the survey, inspection table and as-built agree; label datum, dimensions, source and revision.\n\n0 - No assessable communication artifact.\n1 - The report or drawing is too incomplete to reconstruct the decision.\n2 - The main idea is readable but an essential dimension, label or link is missing.\n3 - A reader can reconstruct the calculation and decision from consistent labelled artifacts.\n4 - Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently.",
+          "levels": {
+            "0": "No assessable communication artifact.",
+            "1": "The report or drawing is too incomplete to reconstruct the decision.",
+            "2": "The main idea is readable but an essential dimension, label or link is missing.",
+            "3": "A reader can reconstruct the calculation and decision from consistent labelled artifacts.",
+            "4": "Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently."
+          }
+        },
+        "transfer": {
+          "description": "Explain consequences, missing information and an appropriate verification or coordination step before real use.\n\n0 - No assessable transfer evidence.\n1 - Applies the result beyond the case without recognizing a consequential constraint.\n2 - Names a relevant practical limit but leaves its consequence or next action unclear.\n3 - Names a consequential practical limit and an appropriate next verification/coordination action.\n4 - Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose.",
+          "levels": {
+            "0": "No assessable transfer evidence.",
+            "1": "Applies the result beyond the case without recognizing a consequential constraint.",
+            "2": "Names a relevant practical limit but leaves its consequence or next action unclear.",
+            "3": "Names a consequential practical limit and an appropriate next verification/coordination action.",
+            "4": "Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose."
+          }
+        }
+      }
+    },
+    {
+      "id": "4ffc0347-3542-48fb-85f5-9e275c68bfb0",
+      "slug": "tr.u2.mastery-route-the-fall",
+      "previousUpdatedAt": "2026-08-24T13:13:20.73198+00:00",
+      "prompt": "Case B - Route the drain through the service zone\n\nThis is a dry classroom coordination model, not an installation approval or permission to alter framing. Original horizontal run is 18 ft; available service-zone depth is 8 in. Required slope is at least 1/4 in/ft. Pipe OD is 2 3/8 in. Minimum top and bottom clearances are 3/4 in each. All vertical dimensions use the zone top as datum. Two changes may be proposed for review: shorten the run to 16 ft, or deepen the zone to 8 1/2 in while keeping the 18-ft run. Other fittings, access and connections are not specified.\n\n| Condition | Value |\n|---|---|\n| Original horizontal run | 18 ft |\n| Available zone depth | 8 in |\n| Required slope | 1/4 in/ft minimum |\n| Pipe outside diameter | 2 3/8 in |\n| Top / bottom clearance | 3/4 in each |\n| Alternative 1 | 16-ft run; 8-in zone |\n| Alternative 2 | 18-ft run; 8 1/2-in zone |\n\n1. List fixed requirements and the two changes available for review.\n2. Calculate original fall, required depth and quantified conflict. Reject an unsupported slope reduction.\n3. Evaluate both alternatives, including remaining depth margin.\n4. Draw a plan and longitudinal section for your proposed route: flow, horizontal run, slope, datum, elevations and outside envelope.\n5. Write an RFI explaining what another trade must confirm before the proposal could be used.\n\nRevision: Correct the complete depth budget, add missing dimensions to both views, and test the selected route against the stated constraints. Submit a revision note showing which previous claim changed.",
+      "rubric": {
+        "science": {
+          "description": "Calculate slope, fall and full outside envelope with matching units; preserve the stated minimum slope.\n\n0 - No assessable physics evidence in this dimension.\n1 - A central physical or numerical error makes the decision unreliable.\n2 - Core method is partly correct, but a missing quantity or error prevents a fully supported result.\n3 - Correct quantities, method, units and conclusions meet the supplied case requirements.\n4 - Meets level 3 and independently checks the result or explains a relevant model/measurement limit.",
+          "levels": {
+            "0": "No assessable physics evidence in this dimension.",
+            "1": "A central physical or numerical error makes the decision unreliable.",
+            "2": "Core method is partly correct, but a missing quantity or error prevents a fully supported result.",
+            "3": "Correct quantities, method, units and conclusions meet the supplied case requirements.",
+            "4": "Meets level 3 and independently checks the result or explains a relevant model/measurement limit."
+          }
+        },
+        "reasoning": {
+          "description": "Prove feasibility or infeasibility numerically and compare both offered alternatives against all constraints.\n\n0 - No assessable reasoning evidence.\n1 - Conclusion is asserted or contradicted by the supplied evidence.\n2 - Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.\n3 - Conclusions follow from explicit evidence and all relevant supplied constraints.\n4 - Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction.",
+          "levels": {
+            "0": "No assessable reasoning evidence.",
+            "1": "Conclusion is asserted or contradicted by the supplied evidence.",
+            "2": "Some evidence is linked to a conclusion, but a required comparison or constraint is omitted.",
+            "3": "Conclusions follow from explicit evidence and all relevant supplied constraints.",
+            "4": "Meets level 3 and evaluates a credible alternative or discriminating check with a justified prediction."
+          }
+        },
+        "communication": {
+          "description": "Make the plan and section agree; label route, flow, run, slope, datum, elevations and envelope.\n\n0 - No assessable communication artifact.\n1 - The report or drawing is too incomplete to reconstruct the decision.\n2 - The main idea is readable but an essential dimension, label or link is missing.\n3 - A reader can reconstruct the calculation and decision from consistent labelled artifacts.\n4 - Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently.",
+          "levels": {
+            "0": "No assessable communication artifact.",
+            "1": "The report or drawing is too incomplete to reconstruct the decision.",
+            "2": "The main idea is readable but an essential dimension, label or link is missing.",
+            "3": "A reader can reconstruct the calculation and decision from consistent labelled artifacts.",
+            "4": "Meets level 3 and handles ambiguity or revision so another reader can verify the handoff efficiently."
+          }
+        },
+        "transfer": {
+          "description": "Explain consequences, missing information and an appropriate verification or coordination step before real use.\n\n0 - No assessable transfer evidence.\n1 - Applies the result beyond the case without recognizing a consequential constraint.\n2 - Names a relevant practical limit but leaves its consequence or next action unclear.\n3 - Names a consequential practical limit and an appropriate next verification/coordination action.\n4 - Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose.",
+          "levels": {
+            "0": "No assessable transfer evidence.",
+            "1": "Applies the result beyond the case without recognizing a consequential constraint.",
+            "2": "Names a relevant practical limit but leaves its consequence or next action unclear.",
+            "3": "Names a consequential practical limit and an appropriate next verification/coordination action.",
+            "4": "Meets level 3 and compares consequences of alternatives or specifies the new evidence needed to choose."
+          }
+        }
+      }
+    }
+  ],
+  "targets": [
+    {
+      "slug": "tr.u1.nominal",
+      "statement": "Use material-specific references to distinguish nominal names from actual dimensions."
+    },
+    {
+      "slug": "tr.u2.bubble",
+      "statement": "Explain why a bubble moves toward the high part of a vial and why its instrument still needs checking."
+    }
+  ]
+}

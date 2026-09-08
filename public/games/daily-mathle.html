@@ -161,6 +161,7 @@
   <div id="puzzleBar">
     <div id="puzzleTag"></div>
     <div id="puzzleSub"></div>
+    <div style="text-align:center;margin:6px"><button id="finishBtn" title="An attempted unfinished puzzle counts as a missed puzzle." style="padding:8px 14px;border-radius:8px;cursor:pointer;background:#102535;color:var(--cyan);border:1px solid var(--cyan);font:600 13px system-ui">FINISH &amp; BANK</button></div>
   </div>
 
   <div id="gridWrap"><div id="grid"></div></div>
@@ -189,6 +190,7 @@
     <button class="bigbtn easy" data-lv="1">APPRENTICE<small>bonus rounds: one-operation equations</small></button>
     <button class="bigbtn med" data-lv="4">CRACKER<small>bonus rounds: mixed</small></button>
     <button class="bigbtn hard" data-lv="7">FIENDISH<small>bonus rounds: two operations, pure PEMDAS</small></button>
+    <label style="display:block;margin:12px 0;color:var(--lime)"><input type="checkbox" id="practiceMode"> Practice · no XP or leaderboard</label>
     <div id="hsline"></div>
   </div>
 </div>
@@ -214,6 +216,7 @@
   </div>
 </div>
 
+<script src="math-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================================
@@ -362,36 +365,7 @@ if (typeof document !== "undefined") (function(){
   let S=null, muted=false, busy=false, practice=false, lastDoor="4";
 
   /* ---------- arcade bridge ---------- */
-  const ARCADE={
-    embedded: window.parent!==window,
-    playId:null, pendingCoin:null,
-    emit(type,data){ if(this.embedded)
-      window.parent.postMessage(Object.assign({source:"mathle",type},data||{}),"*"); },
-    requestCoin(cb){
-      if(!this.embedded){ cb({ok:true,practice:true}); return; }
-      this.pendingCoin=cb;
-      this.emit("arcade:coinRequest");
-      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
-    },
-    reportScore(final){
-      if(this.playId && S) this.emit("arcade:score",{
-        score:S.score, act:S.puzzleNum, final:!!final,
-        stats:{ solved:S.solvedCt, right:S.solvedCt, wrong:S.failedCt,
-                bestStreak:S.solvedCt, startLv:S.startLvNum, mode:"mathle" }
-      });
-    },
-  };
-  window.addEventListener("message",e=>{
-    const m=e.data||{};
-    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
-      ARCADE.playId=m.playId||null;
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
-    }
-    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
-    }
-    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
-  });
+  const ARCADE=createMathCabinet({slug:"mathle",read:()=>({...S,level:S.puzzleNum,solved:S.solvedCt,right:S.solvedCt,wrong:S.failedCt,bestStreak:S.solvedCt,mode:"mathle"}),onReceipt:text=>showXPText(text,false)});
 
   /* ---------- audio ---------- */
   let AC=null;
@@ -516,7 +490,7 @@ if (typeof document !== "undefined") (function(){
       setTimeout(((cell,cls,ch)=>()=>{ cell.classList.add(cls); padColor(ch,cls); })(cell,res[c],g[c]),200);
     }
     await new Promise(r=>setTimeout(r,420));
-    S.guessRecords.push(res);
+    if(S.isDaily) S.guessRecords.push(res);
     if(g===S.target){
       row.classList.add("win"); sWin();
       S.solvedCt++;
@@ -552,37 +526,46 @@ if (typeof document !== "undefined") (function(){
              startLvNum:+door, running:false };
   }
   function start(door){
+    if(!ARCADE.canStart()) return;
+    busy=false;
     lastDoor=door;
     S=freshState(door);
     $("startOv").classList.add("hidden");
     $("overOv").classList.add("hidden");
     $("xpLine").textContent=""; $("xpLine").classList.remove("pulse","capped");
-    ARCADE.playId=null;
     ARCADE.requestCoin(res=>{
-      practice=!!res.practice || !res.ok;
+      if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+      practice=!!res.practice;
       document.body.classList.toggle("practice",practice);
+      $("finishBtn").textContent=practice?"FINISH PRACTICE":"FINISH & BANK";
       S.running=true;
       newPuzzle();
-    });
+    },$("practiceMode").checked);
   }
 
-  function gameOver(){
+  function gameOver(finishedByChoice=false){
+    if(S.ending) return;
+    S.ending=true;
+    if(finishedByChoice && (S.row>0 || S.cur.length>0)){
+      S.failedCt++;
+      if(S.isDaily) S.dailyResult="✗ unfinished";
+    }
     S.running=false; busy=false;
     ARCADE.reportScore(true);
     const att=S.solvedCt+S.failedCt;
-    $("overTitle").textContent = S.solvedCt>0 ? "STUMPED AT LAST" : "STUMPED";
+    $("overTitle").textContent = finishedByChoice? "RUN COMPLETE" : S.solvedCt>0 ? "STUMPED AT LAST" : "STUMPED";
     $("revealEq").textContent=S.target;
     $("fScore").textContent=S.score;
     $("fSolved").textContent=S.solvedCt;
     $("fAcc").textContent = att>0? Math.round(100*S.solvedCt/att)+"%" : "—";
     $("fDaily").textContent=S.dailyResult;
-    $("overQuip").textContent=pickQuip();
-    let hs=0; try{ hs=+localStorage.getItem("hs_mathle")||0; }catch(e){}
+    $("overQuip").textContent=finishedByChoice?"Return for another challenge whenever you are ready.":pickQuip();
+    let hs=0; try{ hs=+localStorage.getItem((practice?"practice_":"")+"hs_mathle")||0; }catch(e){}
     const nh=S.score>hs;
-    if(nh){ try{ localStorage.setItem("hs_mathle",S.score); }catch(e){} }
+    if(nh){ try{ localStorage.setItem((practice?"practice_":"")+"hs_mathle",S.score); }catch(e){} }
     $("newHS").classList.toggle("hidden",!nh);
-    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
-    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
+    else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
     $("overOv").classList.remove("hidden");
   }
   function pickQuip(){
@@ -591,11 +574,11 @@ if (typeof document !== "undefined") (function(){
       "Tomorrow's daily is already waiting."][Math.floor(Math.random()*5)];
   }
 
-  $("shareBtn").addEventListener("click",()=>{
+  $("shareBtn").addEventListener("click",async()=>{
     const map={green:"🟩",gold:"🟨",gray:"⬛"};
     const lines=S.guessRecords.map(r=>r.map(x=>map[x]).join(""));
     const txt="MATHLE #"+dailyNumber(localDateStr())+" · daily "+S.dailyResult+" · cracked "+S.solvedCt+"\n"+lines.slice(0,6).join("\n");
-    try{ navigator.clipboard.writeText(txt); toast("copied! 📋"); }catch(e){ toast("couldn't copy",true); }
+    try{ await navigator.clipboard.writeText(txt); toast("copied! 📋"); }catch(e){ toast("couldn't copy",true); }
   });
 
   function showXPText(txt,capped){
@@ -603,12 +586,6 @@ if (typeof document !== "undefined") (function(){
     el.textContent=txt;
     el.classList.toggle("capped",!!capped);
     el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
-  }
-  function showXP(xp,capped){
-    if(typeof xp!=="number") return;
-    if(xp>0) showXPText("⚡ +"+xp+" XP BANKED"+(capped?" (daily cap reached)":""),capped);
-    else showXPText(capped? "Daily XP cap reached — score still counts!" :
-      "No XP this run — crack at least half your puzzles to get paid.", true);
   }
   function hsLine(){
     let hs=0; try{ hs=+localStorage.getItem("hs_mathle")||0; }catch(e){}
@@ -629,6 +606,11 @@ if (typeof document !== "undefined") (function(){
   });
   document.querySelectorAll("#startOv .bigbtn").forEach(b=>
     b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
+  $("finishBtn").addEventListener("click",()=>{
+    if(!S || !S.running) return;
+    if(busy || S.auditing){ toast("Finish the current move or question first."); return; }
+    gameOver(true);
+  });
   $("againBtn").addEventListener("click",()=>start(lastDoor));
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
   $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });

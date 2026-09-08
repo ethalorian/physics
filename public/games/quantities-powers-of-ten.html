@@ -263,7 +263,8 @@
     <div class="tag" id="tTag"></div>
     <div class="howto" id="tHow"></div>
     <div id="legend"></div>
-    <div id="doors"></div>
+    <label style="display:block;margin:12px 0;line-height:1.5"><input type="checkbox" id="untimedPractice"> Untimed practice · no XP or leaderboard</label>
+<div id="doors"></div>
     <div id="hsline"></div>
   </div>
 </div>
@@ -274,7 +275,7 @@
     <h1 style="font-size:26px">PAUSED</h1>
     <p>The questions wait for no one… except now.</p>
     <button class="bigbtn med" id="resumeBtn">RESUME</button>
-    <button class="bigbtn hard" id="quitBtn">QUIT TO MENU</button>
+    <button class="bigbtn hard" id="quitBtn">FINISH &amp; BANK</button>
   </div>
 </div>
 
@@ -296,6 +297,7 @@
   </div>
 </div>
 
+<script src="math-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================================
@@ -528,39 +530,11 @@ if (typeof document !== "undefined") (function(){
   const MAXJUNK=8, JUNKH=28;
   const SYM_COLOR = { "+":"#7dff4a", [M]:"#ff5d7e", "×":"#2ee6ff", "÷":"#ffc83d", "√":"#c792ff" };
 
-  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false;
+  let S=null, raf=null, lastT=0, muted=false, locked=false, practice=false, untimed=false;
 
   /* ---------- arcade bridge (see docs/ARCADE_PATTERN.md) ---------- */
-  const ARCADE={
-    embedded: window.parent!==window,
-    playId:null, pendingCoin:null,
-    emit(type,data){ if(this.embedded)
-      window.parent.postMessage(Object.assign({source:CONFIG.slug,type},data||{}),"*"); },
-    requestCoin(cb){
-      if(!this.embedded){ cb({ok:true,practice:true}); return; }
-      this.pendingCoin=cb;
-      this.emit("arcade:coinRequest");
-      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
-    },
-    reportScore(final){
-      if(this.playId && S) this.emit("arcade:score",{
-        score:S.score, act:S.level, final:!!final,
-        stats:{ solved:S.solved, right:S.right, wrong:S.wrong,
-                bestStreak:S.bestStreak, startLv:S.startLvNum, mode:CONFIG.mode }
-      });
-    },
-  };
-  window.addEventListener("message",e=>{
-    const m=e.data||{};
-    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
-      ARCADE.playId=m.playId||null;
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
-    }
-    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
-    }
-    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
-  });
+  const normalEndTitle=document.querySelector("#overOv h1").textContent;
+  const ARCADE=createMathCabinet({slug:"powers-of-ten",read:()=>({...S,mode:CONFIG.mode}),onReceipt:text=>showXPText(text,false)});
 
   /* ---------- audio ---------- */
   let AC=null;
@@ -638,6 +612,7 @@ if (typeof document !== "undefined") (function(){
   }
 
   function spawn(){
+    S.needsSpawn=false;
     S.cur = S.next || gen();
     S.next = gen();
     S.cur.i=0; S.cur.born=performance.now();
@@ -697,6 +672,7 @@ if (typeof document !== "undefined") (function(){
   /* ---------- core actions ---------- */
   function choose(i){
     if(!S || !S.running || locked) return;
+    const run=S;
     const chip = S.cur.chips[i], btn=chips[i];
     if(chip.ok){
       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
@@ -708,7 +684,7 @@ if (typeof document !== "undefined") (function(){
         S.cur.chips = buildChips(S.cur.steps[S.cur.i]);
         cardEl.classList.remove("pop"); void cardEl.offsetWidth; cardEl.classList.add("pop");
         renderCard();
-        locked=true; setTimeout(()=>{ locked=false; renderChips(); },200);
+        locked=true; setTimeout(()=>{ if(S!==run)return;locked=false; renderChips(); },200);
       }
     }else{
       S.wrong++; S.streak=0;
@@ -716,18 +692,19 @@ if (typeof document !== "undefined") (function(){
          rapid guessing is slower and net-negative (right pays 10·level). */
       S.score = Math.max(0, S.score - 15*S.level);
       locked = true;
-      setTimeout(()=>{ if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
+      setTimeout(()=>{ if(S!==run)return; if(S && S.cur && S.cur.i < S.cur.steps.length){ S.cur.chips = buildChips(S.cur.steps[S.cur.i]); renderChips(); } locked = false; }, 900);
       btn.classList.add("bad"); sBad(); shake();
       cardEl.classList.add("hurt"); setTimeout(()=>cardEl.classList.remove("hurt"),200);
-      S.y += Math.max(20,(landY()-S.y)*0.28); place();
+      if(!untimed)S.y += Math.max(20,(landY()-S.y)*0.28); place();
       toast("❌ "+chip.tip);
     }
     hud();
   }
 
   function clearBlock(){
+    const run=S;S.needsSpawn=true;
     const secs=(performance.now()-S.cur.born)/1000;
-    const bonus=Math.max(0, Math.round((12-secs)*4));
+    const bonus=untimed?0:Math.max(0, Math.round((12-secs)*4));
     S.score += (50*S.level + bonus)*mult();
     S.solved++; S.sinceLvl++;
     particles(); ringAt(); sClear();
@@ -749,13 +726,13 @@ if (typeof document !== "undefined") (function(){
     ARCADE.reportScore(false);
 
     locked=true;
-    setTimeout(()=>{ locked=false; if(S.running) spawn(); },330);
+    setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
     hud();
   }
 
   function land(){
     sLand(); shake(true);
-    S.junk++; S.streak=0; renderStack(); hud();
+    S.junk++; S.wrong++; S.streak=0; renderStack(); hud();
     if(S.junk>=MAXJUNK){ gameOver(); return; }
     toast("🧱 Buried! Answer: "+S.cur.steps[S.cur.i].c);
     spawn();
@@ -766,13 +743,15 @@ if (typeof document !== "undefined") (function(){
     if(!S.running){ return; }
     const dt=Math.min(.05,(t-lastT)/1000); lastT=t;
     if(!locked){
-      S.y += speed()*dt; place();
+      if(!untimed)S.y += speed()*dt; place();
       if(S.y>=landY()) land();
     }
     raf=requestAnimationFrame(tick);
   }
 
   function start(lv){
+    if(!ARCADE.canStart())return;
+    untimed=$("untimedPractice").checked;locked=false;
     S=freshState(lv);
     $("startOv").classList.add("hidden");
     $("overOv").classList.add("hidden");
@@ -787,32 +766,39 @@ if (typeof document !== "undefined") (function(){
       S.running=true; lastT=performance.now();
       cancelAnimationFrame(raf); raf=requestAnimationFrame(tick);
     };
-    ARCADE.playId=null;
     ARCADE.requestCoin(res=>{
+      if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
       practice = !!res.practice || !res.ok;
       document.body.classList.toggle("practice", practice);
       begin();
-    });
+    },untimed);
   }
 
+  function finishRun(){
+    if(!S||!S.running&&$("pauseOv").classList.contains("hidden"))return;
+    S.running=false;cancelAnimationFrame(raf);$("pauseOv").classList.add("hidden");
+    S.finishedByChoice=true;showOverPanel();ARCADE.reportScore(true);
+  }
   function pause(){
     if(!S || !S.running) return;
-    S.running=false; cancelAnimationFrame(raf);
+    S.pausedAt=performance.now();S.running=false; cancelAnimationFrame(raf);
     $("pauseOv").classList.remove("hidden");
   }
   function resume(){
     if(!S) return;
     $("pauseOv").classList.add("hidden");
+    if(S.pausedAt&&S.cur)S.cur.born+=performance.now()-S.pausedAt;S.pausedAt=0;
     S.running=true; lastT=performance.now();
+    if(S.needsSpawn&&!locked)spawn();
     raf=requestAnimationFrame(tick);
   }
 
   /* ---------- high score ---------- */
   const HSKEY = "hs_"+CONFIG.slug;
-  function getHS(){ try{ return +localStorage.getItem(HSKEY)||0; }catch(e){ return 0; } }
-  function setHS(v){ try{ localStorage.setItem(HSKEY,v); }catch(e){} }
+  function getHS(calm=untimed){ try{ return +localStorage.getItem((calm?"untimed_":"")+HSKEY)||0; }catch(e){ return 0; } }
+  function setHS(v){ try{ localStorage.setItem((untimed?"untimed_":"")+HSKEY,v); }catch(e){} }
   function hsLine(){
-    const h=getHS();
+    const h=getHS(false);
     $("hsline").textContent = h>0 ? "🏆 HIGH SCORE: "+h : "";
   }
 
@@ -844,17 +830,18 @@ if (typeof document !== "undefined") (function(){
   }
 
   function showOverPanel(){
+    document.querySelector("#overOv h1").textContent=S.finishedByChoice?"RUN COMPLETE":normalEndTitle;
     const acc = S.right+S.wrong>0 ? Math.round(100*S.right/(S.right+S.wrong)) : 0;
     $("fScore").textContent=S.score;
     $("fSolved").textContent=S.solved;
     $("fAcc").textContent=acc+"%";
     $("fStreak").textContent=S.bestStreak;
-    $("overQuip").textContent=pick(CONFIG.quips);
+    $("overQuip").textContent=S.finishedByChoice?"Return for another challenge whenever you are ready.":pick(CONFIG.quips);
     const nh = S.score>getHS();
     if(nh) setHS(S.score);
     $("newHS").classList.toggle("hidden",!nh);
-    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
-    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    if(practice) showXPText(untimed?"Untimed practice complete — no XP or leaderboard score saved.":"Practice run — play a timed run in the Arcade to bank XP.", false);
+    else if(ARCADE.embedded) showXPText(ARCADE.savedText||"Saving score and XP…", false);
     $("overOv").classList.remove("hidden");
   }
 
@@ -912,7 +899,7 @@ if (typeof document !== "undefined") (function(){
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
   $("pauseBtn").addEventListener("click",pause);
   $("resumeBtn").addEventListener("click",resume);
-  $("quitBtn").addEventListener("click",()=>{ S.running=false; cancelAnimationFrame(raf); $("pauseOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
+  $("quitBtn").addEventListener("click",finishRun);
   $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
   window.addEventListener("blur",()=>{ if(S&&S.running) pause(); });
 

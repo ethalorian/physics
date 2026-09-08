@@ -346,8 +346,10 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  const freshRun=!ARCADE.playId;
   audio();
   const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    if(freshRun)Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
@@ -673,7 +675,7 @@ function step(dt){
         if(gotCount>=beacons.length){succeed('All beacons collected — transfers flown, fuel respected.');return;}
       }
     }
-  }else if(ast&&ast.alive&&astMiss>=lv.asteroid.missBy){
+  }else if(ast&&ast.alive&&Number.isFinite(astMiss)&&astMiss>=lv.asteroid.missBy){
     ast.alive=false;
     succeed(`2026-XJ’s path now misses by ${fmt(astMiss)} — bent with nothing but your ship’s gravity and ${fmt(lv.fuel-ship.fuel)} s of stationkeeping.`);return;
   }
@@ -892,12 +894,12 @@ function drawHUD(SW){
     ctx.fillText('BEACONS '+gotCount+' / '+beacons.length,16,44);}
   else{
     const need=lv.asteroid.missBy;
-    const ok=astMiss>=need;
+    const ok=Number.isFinite(astMiss)&&astMiss>=need;
     ctx.fillStyle=ok?'#34d399':'#f87171';
     ctx.fillText('PREDICTED MISS '+(astMiss===Infinity?'—':fmt(Math.max(0,astMiss)))+' / '+need,16,44);
     ctx.fillStyle='#1f2937';ctx.fillRect(16,52,200,8);
     ctx.fillStyle=ok?'#34d399':'#f87171';
-    ctx.fillRect(16,52,200*clamp(astMiss/need,0,1),8);
+    ctx.fillRect(16,52,200*(Number.isFinite(astMiss)?clamp(astMiss/need,0,1):0),8);
   }
   ctx.textAlign='right';
   ctx.fillStyle='#0008';ctx.fillRect(SW-238,8,230,52);

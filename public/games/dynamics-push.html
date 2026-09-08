@@ -6,7 +6,7 @@
 <title>PUSH // a dynamics arcade</title>
 <!--
   PUSH — a dynamics arcade in three acts. Companion cabinet to DESCENT.
-  Single file, no dependencies. Works offline.
+  Works offline with physics-cabinet.js alongside this file.
 
   ACT I   THE ALLEY  — impulse shuffleboard: F·Δt, then friction decides
   ACT II  BREAKAWAY  — static vs kinetic friction, conveyor belts, live control
@@ -18,7 +18,7 @@
   μsN ceiling and the crate breaks loose.
 
   Speaks the arcade bridge protocol (see docs/ARCADE_PATTERN.md): embedded at
-  /arcade/push a run costs XP; opened raw it is free practice, never ranked.
+  /arcade/push a free ranked run can bank XP; opened raw it is practice, never ranked.
 -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -88,13 +88,21 @@
   .teachlink{display:inline-block;margin-top:14px;font-size:11px;color:#57534e;
     letter-spacing:.15em;cursor:pointer;border-bottom:1px dotted #57534e}
   .teachlink:hover{color:var(--dim)}
+  #pauseRun{position:fixed;bottom:12px;right:12px;z-index:9;background:#081520;color:#5eead4;border:1px solid #5eead4;border-radius:8px;padding:12px;cursor:pointer}
+  button[hidden]{display:none!important}button:disabled{opacity:.45;cursor:wait}
+  .choice:disabled{opacity:1;cursor:default}
+  button:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+  #overlay .card{margin:auto}
+  @media(max-width:600px){.card{padding:18px}h2{font-size:18px}.tag{letter-spacing:.1em}}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <div id="crt"></div><div id="vig"></div>
-<div id="overlay"></div>
+<div id="overlay" role="region" aria-label="Mission briefing and results"></div>
+<button id="pauseRun" onclick="ARCADE.pause()">Ⅱ PAUSE / FINISH</button>
 
+<script src="physics-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================== utils */
@@ -145,28 +153,11 @@ function boom(){if(!AC||muted)return;const len=AC.sampleRate*0.6,buf=AC.createBu
   s.connect(lp);lp.connect(g);g.connect(AC.destination);s.start();}
 
 /* ================================================== host-app bridge */
-const ARCADE={
-  embedded:window.parent!==window,
-  playId:null, pendingCoin:null,
-  emit(type,data){if(this.embedded)
-    window.parent.postMessage(Object.assign({source:'push-arcade',type},data||{}),'*');},
-  requestCoin(cb){
-    if(!this.embedded){cb({ok:true,practice:true});return;}
-    this.pendingCoin=cb;
-    this.emit('arcade:coinRequest');
-    setTimeout(()=>{if(this.pendingCoin===cb){this.pendingCoin=null;cb({ok:true,practice:true});}},900);
-  },
-  reportScore(final){
-    if(this.playId)this.emit('arcade:score',{score,act,final:!!final,stats:{solved:STATS.solved,right:STATS.right,wrong:STATS.wrong,bestStreak:0,startLv:act,mode:'physics'}});
-  },
-};
-window.addEventListener('message',e=>{
-  const m=e.data||{};
-  if(m.type==='arcade:coinAccepted'&&ARCADE.pendingCoin){
-    ARCADE.playId=m.playId||null;
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:true,practice:!m.playId});}
-  if(m.type==='arcade:coinDenied'&&ARCADE.pendingCoin){
-    const cb=ARCADE.pendingCoin;ARCADE.pendingCoin=null;cb({ok:false,reason:m.reason});}
+const ARCADE=createPhysicsCabinet({
+  slug:'push', read:()=>({state,score,act,stats:STATS}),
+  overlay, hide:hideOverlay, menu:select_, setState:value=>{state=value;},
+  primary:value=>{primary=value;}, resetClock:()=>{acc=0;},
+  stop:()=>{pushL=pushR=false;setPushSound(false);lastPushOn=false;}
 });
 
 /* ================================================== level data
@@ -314,7 +305,7 @@ function posAt(s){
 }
 
 /* ================================================== overlay + screens */
-function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');}
+function overlay(html){const o=$('#overlay');o.innerHTML=html;o.classList.add('show');requestAnimationFrame(()=>o.querySelector('button:not([disabled])')?.focus({preventScroll:true}));}
 function hideOverlay(){$('#overlay').classList.remove('show');}
 function title(){
   state='title';act=1;lv=ACT1[0];buildTrack();
@@ -332,7 +323,7 @@ function title(){
        <span class="kbd">P</span> pause &nbsp; <span class="kbd">M</span> mute
      </div>
      ${HIS[1]||HIS[2]||HIS[3]?`<div class="sub">BEST — ALLEY ${HIS[1].toLocaleString()} · BREAKAWAY ${HIS[2].toLocaleString()} · RAMP ${HIS[3].toLocaleString()}</div>`:''}
-     <button class="btn" onclick="select_()">▶ INSERT COIN</button>
+     <button class="btn" onclick="select_()">▶ CHOOSE AN ACT</button>
    </div>`);
   primary=select_;
 }
@@ -365,21 +356,23 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  if(!ARCADE.canStart())return;
   audio();
-  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+  const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;ARCADE.runOpen=true;
+    Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
   overlay(`<div class="card" style="text-align:center">
     <div class="tag">INSERT COIN</div>
     <h2>CONTACTING CABINET…</h2>
-    <div class="sub">one credit = play until GAME OVER</div></div>`);
+    <div class="sub">Free physics run · waiting for ranked approval</div></div>`);
   primary=null;
   ARCADE.requestCoin(res=>{
     if(res.ok){begin();return;}
     overlay(`<div class="card">
       <h2 class="bad">COIN REJECTED</h2>
-      <div class="sub">Not enough XP for a ranked run. Vocabulary games and lessons are the earners — the arcade only spends.</div>
+      <div class="sub">The cabinet could not start a ranked run. Return to the acts and try again.</div>
       <button class="btn alt" onclick="select_()">BACK TO THE FLOOR</button></div>`);
     primary=select_;
   });
@@ -403,10 +396,14 @@ function showMission(level){
    <div class="card">
      <div class="planetchip" style="border-color:${ACT_META[act].col}55;color:${ACT_META[act].col}">ACT ${'I'.repeat(act)} · ${ACT_META[act].name}</div>
      <h2 style="font-size:30px;margin:8px 0 2px">${lv.name}</h2>
+     <div class="tag">BRIEF → TRY → CHECK → BANK</div>
+     <div class="sub">${wave?'Endless wave '+wave:'Mission '+(levelIdx+1)+' of '+ACT_LEVELS[act].length} · ${ARCADE.embedded?'Ranked run':'Practice — no XP saved'}</div>
      <div class="sub">${params}</div>
+     <div class="sub"><b>Before you start:</b> ${act===1?'Predict your stopping point. A longer shove adds speed; friction then removes it.':act===2?'Predict how much force breaks static friction. Plan when to brake before the dock.':'Look at the slope: gravity adds a force down the ramp. Plan your braking and parking.'}</div>
      <div class="explain" style="display:block">${lv.tip}</div>
      <div class="sub" style="margin-top:12px">${controls}</div>
      <button class="btn" onclick="launch()">${act===1?'⌖ TO THE LINE':'▶ CLOCK IN'}</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
   primary=launch;
 }
@@ -426,7 +423,7 @@ function launch(){
   beep(440,.08,'square',.1);beep(660,.08,'square',.1);
 }
 function succeed(){
-  state='down';landedOK=true;STATS.solved++;downTimer=0;streak++;flash=.5;timeScale=1;
+  state='down';landedOK=true;downTimer=0;streak++;flash=.5;timeScale=1;
   setPushSound(false);
   const z0=lv.zone[0],z1=lv.zone[1],center=(z0+z1)/2,hw=(z1-z0)/2;
   const err=Math.abs(crate.s-center)/hw;
@@ -488,8 +485,8 @@ function showResult(){
        <h2 class="good">${act===1?'IN THE ZONE':'DOCKED'} — ${lv.name}</h2>
        ${body}
        <div class="bigscore">+${r.pts.toLocaleString()}</div>
-       <button class="btn" onclick="askQuestion()">⚡ PHYSICS BONUS</button>
-       <button class="btn alt" onclick="nextLevel()">SKIP →</button>
+       <button class="btn" onclick="askQuestion()">CHECK THIS MISSION →</button>
+
      </div>`);
     primary=askQuestion;
   }else{
@@ -500,12 +497,13 @@ function showResult(){
        <div class="sub">${failHint()}</div>
        <div class="stat"><span>Crates left</span><b>${'■ '.repeat(lives)}</b></div>
        <button class="btn" onclick="retry()">BACK TO WORK</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
      </div>`);
     primary=retry;
   }
 }
 function failHint(){
-  if(act===1)return 'Use your skid marks — every miss is data. Stopping distance scales with v², and v scales with (F−f)·Δt/m. Bracket it like a pro.';
+  if(act===1)return `You stopped at ${fmt(lastResult.stop)} m; the zone is ${fmt(lv.zone[0])}–${fmt(lv.zone[1])} m. ${lastResult.stop<lv.zone[0]?'Try more force or a longer shove.':'Try less force or a shorter shove.'} Use your skid marks — every miss is data. Stopping distance scales with v², and v scales with (F−f)·Δt/m. Bracket the zone with your next attempt.`;
   if(act===3)return 'On a slope the FBD never rests: mg·sinθ pulls down-track even while you think. Brake early going down; keep pushing going up.';
   return 'Static friction sets the price of motion; kinetic friction sets the price of stopping. Push backward to brake — and watch the battery.';
 }
@@ -518,6 +516,7 @@ function nextLevel(){
   else {wave++;showMission(ENDLESS[act](wave));}
 }
 function actCleared(){
+  state='cleared';
   let unlockMsg='';
   if(act===1&&!PROG.a2){PROG.a2=true;saveProg();unlockMsg='<b style="color:#fbbf24">ACT II — BREAKAWAY unlocked.</b> Time to fight static friction in person.';}
   else if(act===2&&!PROG.a3){PROG.a3=true;saveProg();unlockMsg='<b style="color:#f472b6">ACT III — THE RAMP unlocked.</b> Gravity wants a word.';}
@@ -531,30 +530,14 @@ function actCleared(){
      <h2 class="good">${ACT_META[act].name} — COMPLETE</h2>
      <div class="bigscore">${score.toLocaleString()}</div>
      <div class="sub">${unlockMsg}</div>
-     ${act<3?`<button class="btn" onclick="startAct(${act+1})">NEXT ACT →</button>`:''}
+     ${act<3?`<button class="btn" onclick="ARCADE.finish()">BANK THIS ACT →</button>`:''}
      <button class="btn alt" onclick="goEndless()">ENDLESS SHIFT</button>
-     <button class="btn alt" onclick="select_()">THE FLOOR</button>
+     <button class="btn alt" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
-  primary=act<3?()=>startAct(act+1):goEndless;
+  primary=()=>ARCADE.finish();
 }
 function goEndless(){wave=1;showMission(ENDLESS[act](1));}
-function gameOver(){
-  state='gameover';
-  ARCADE.emit('arcade:gameover',{act,score});
-  ARCADE.reportScore(true);
-  ARCADE.playId=null;
-  overlay(`
-   <div class="card">
-     <div class="tag">GAME OVER</div>
-     <h2>SHIFT TERMINATED</h2>
-     <div class="stat"><span>Final score</span><b>${score.toLocaleString()}</b></div>
-     <div class="stat"><span>Act high score</span><b>${HIS[act].toLocaleString()}</b></div>
-     <div class="sub" style="margin-top:10px">Friction is undefeated. But now you know its rates.</div>
-     <button class="btn" onclick="startAct(act)">INSERT COIN ↻</button>
-     <button class="btn alt" onclick="select_()">THE FLOOR</button>
-   </div>`);
-  primary=()=>startAct(act);
-}
+function gameOver(){ARCADE.finish();}
 
 /* ================================================== questions */
 function qNum(text,ans,unit,distractors,explain){
@@ -569,113 +552,54 @@ function qCon(text,right,wrongs,explain){
   return {text,choices:shuffle([{s:right,ok:1}].concat(wrongs.map(s=>({s,ok:0})))),explain};
 }
 function makeQuestion(){
-  const bank1=[
-   ()=>{const F=pick([60,90,120,150]),m=pick([10,15,20,30]);
-     return qNum(`A ${F} N net force acts on a ${m} kg crate. What is its acceleration?`,
-       F/m,'m/s²',[m/F,F*m/100,F/m/2],
-       `a = F_net/m = ${F}/${m} = ${fmt(F/m)} m/s². Newton's second law — the whole game in one line.`);},
-   ()=>{const mu=pick([0.2,0.3,0.4,0.5]);
-     return qNum(`A crate slides freely with μk = ${mu}. What is the magnitude of its deceleration? (g = 9.8)`,
-       mu*G,'m/s²',[mu,G,mu*G/2],
-       `f = μk·m·g, so a = f/m = μk·g = ${mu} × 9.8 = ${fmt(mu*G)} m/s². The mass cancels — every crate slows the same on this floor.`);},
-   ()=>{const v=pick([4,6,8]),mu=pick([0.2,0.25,0.4]);
-     return qNum(`A crate is sliding at ${v} m/s on a floor with μk = ${mu}. How far does it slide before stopping?`,
-       v*v/(2*mu*G),'m',[v/(mu*G),v*v/(mu*G),v*mu*G],
-       `v² = 2·a·d with a = μk·g → d = v²/(2μk·g) = ${v}²/(2·${mu}·9.8) = ${fmt(v*v/(2*mu*G))} m.`);},
-   ()=>qCon('A crate slides onto a PERFECTLY frictionless floor. With no one touching it, the crate will…',
-     'keep moving at constant velocity forever',['gradually slow and stop','speed up','stop immediately'],
-     'Newton’s first law. Things don’t "run out" of motion — they only change velocity when a net force acts. The ice strip is this law, almost.'),
-   ()=>qCon('Two crates get the IDENTICAL push (same force, same time). Crate B has twice the mass of crate A. Just after the push…',
-     'B moves at half of A’s speed',['B moves at the same speed','B moves at twice A’s speed','B doesn’t move at all'],
-     'Same F·Δt means same momentum change: m·v is equal, so double m → half v. Inertia is the price tag on motion.'),
-   ()=>qCon('A 10 kg crate and a 40 kg crate slide across the same floor at the SAME speed. Which stops in a shorter distance?',
-     'neither — identical stopping distance',['the 10 kg crate','the 40 kg crate','depends on their material'],
-     'Friction force grows with mass (f = μmg) but so does inertia (ma). They cancel: a = μg for both. Distance = v²/2μg — no m anywhere.'),
-  ];
-  const bank2=[
-   ()=>{const m=pick([12,20,25]),mus=pick([0.4,0.5,0.6]);
-     return qNum(`A ${m} kg crate sits on a floor with μs = ${mus}. What minimum force starts it moving? (g = 9.8)`,
-       mus*m*G,'N',[mus*m,m*G,mus*G],
-       `Breakaway: F > μs·N = μs·m·g = ${mus} × ${m} × 9.8 = ${fmt(mus*m*G)} N. One newton less and it sits there forever.`);},
-   ()=>{const m=pick([15,20]),mus=0.5,F=Math.round(mus*m*G*0.6);
-     return qNum(`That ${m} kg crate (μs = 0.5) is being pushed with only ${F} N — not enough to move it. What is the friction force right now?`,
-       F,'N',[mus*m*G,0,m*G],
-       `Static friction is a MATCHER, not a constant: it equals your push exactly (${F} N) until you exceed its ceiling of μs·m·g = ${fmt(mus*m*G)} N. Watch the F–t graph do this live.`);},
-   ()=>qCon('Why does a heavy crate LURCH forward the moment it starts moving?',
-     'static friction (holding it) is stronger than kinetic friction (once moving)',['kinetic friction is stronger than static','the crate stores up force','your push gets stronger automatically'],
-     'μs > μk. The instant it breaks away, the opposing force DROPS, so the same push suddenly has leftover net force. That surplus is the lurch.'),
-   ()=>qCon('A crate rides a conveyor belt moving at CONSTANT velocity, moving with the belt. The friction force on the crate is…',
-     'zero',['kinetic, pointing forward','static, pointing backward','equal to μs·mg'],
-     'Constant velocity → ΣF = 0. No other horizontal force acts, so friction must be zero too. Friction only acts when something needs resisting — or accelerating.'),
-   ()=>qCon('A crate sits on a belt that suddenly ACCELERATES forward. The friction on the crate points…',
-     'forward — friction is what accelerates the crate',['backward — friction always opposes motion','nowhere; friction is zero','downward'],
-     'Friction opposes RELATIVE sliding, not motion itself. The belt slides backward under the crate, so friction on the crate points forward. Friction is the engine here.'),
-   ()=>{const m=pick([16,24]),muk=pick([0.3,0.35]);
-     return qNum(`A ${m} kg crate slides while you push it. What is the kinetic friction force? (μk = ${muk}, g = 9.8)`,
-       muk*m*G,'N',[muk*m,m*G,muk*G*10],
-       `f_k = μk·N = μk·m·g = ${muk} × ${m} × 9.8 = ${fmt(muk*m*G)} N — constant while sliding, no matter how hard you push.`);},
-  ];
-  const bank3=[
-   ()=>{const m=pick([10,14,20]),th=pick([30,37,53]);
-     return qNum(`A ${m} kg crate rests on a ${th}° ramp. What is gravity's component ALONG the ramp? (g = 9.8)`,
-       m*G*Math.sin(th*D2R),'N',[m*G*Math.cos(th*D2R),m*G,m*G*Math.tan(th*D2R)],
-       `F_along = mg·sinθ = ${m} × 9.8 × sin${th}° = ${fmt(m*G*Math.sin(th*D2R))} N. It pulls down-track the entire time you're on the slope.`);},
-   ()=>qCon('On a ramp, the normal force on the crate is…',
-     'less than its weight: N = mg·cosθ',['equal to its weight','greater than its weight','zero unless it moves'],
-     'The surface only pushes back against the component of weight pressing INTO it: mg·cosθ. Tilt the floor and the normal arrow shrinks — watch it in the FBD.'),
-   ()=>qCon('A crate rests on a slope. It will start sliding down on its own when…',
-     'tanθ exceeds μs',['θ exceeds 45° exactly','its mass is large enough','μk exceeds μs'],
-     'Slide-back: mg·sinθ > μs·mg·cosθ → tanθ > μs. Mass cancels — Steepside betrays every crate equally.'),
-   ()=>{const m=pick([12,15]),th=30,muk=0.2;
-     const F=m*G*(Math.sin(th*D2R)+muk*Math.cos(th*D2R));
-     return qNum(`Pushing a ${m} kg crate UP a ${th}° ramp at CONSTANT velocity (μk = ${muk}). How hard are you pushing?`,
-       F,'N',[m*G*Math.sin(th*D2R),m*G,muk*m*G],
-       `Constant v → ΣF = 0: F = mg·sinθ + μk·mg·cosθ = ${fmt(m*G*Math.sin(th*D2R))} + ${fmt(muk*m*G*Math.cos(th*D2R))} = ${fmt(F)} N. You pay gravity AND friction.`);},
-   ()=>{const m=pick([10,16]),th=pick([30,37]);
-     return qNum(`On a FRICTIONLESS ${th}° ramp, what force (along the ramp) holds a ${m} kg crate still?`,
-       m*G*Math.sin(th*D2R),'N',[m*G,m*G*Math.cos(th*D2R),m*G/2],
-       `Just balance the track component: F = mg·sinθ = ${fmt(m*G*Math.sin(th*D2R))} N. The ramp's normal force handles the rest of the weight for free.`);},
-   ()=>qCon('You push a crate UP a ramp; going up, friction points…',
-     'down the ramp — opposing the crate’s sliding',['up the ramp, helping you','horizontally','nowhere; ramps have no friction'],
-     'Kinetic friction opposes relative sliding. Moving up-track → friction acts down-track, teaming up with mg·sinθ against you. Coming down, friction switches sides.'),
-  ];
-  /* CROSSOVER bank — bridges back to the DESCENT cabinet (kinematics).
-     Connections pay more than facts: these award +1000. */
-  const cross=[
-   ()=>qCon('CROSSOVER · DESCENT — While the tug-bot pushes with a constant net force, your crate’s v–t graph is a straight ramp. In DESCENT you learned that slope is the acceleration. Here, that same slope equals…',
-     'F_net/m — dynamics names the cause of the slope kinematics measured',['μk·g always','the applied force in newtons','zero, since the force is constant'],
-     'This is the hinge between the two cabinets: DESCENT read a = slope of v–t off the graph; PUSH explains WHERE the slope comes from — a = F_net/m. Same number, two units of physics shaking hands.'),
-   ()=>{const v=pick([4,6,8]),a=pick([2,3,4]);
-     return qNum(`CROSSOVER · DESCENT — In DESCENT you used v² = 2aΔy for a falling ship. Your crate slides at ${v} m/s and friction decelerates it at ${a} m/s². How far does it slide?`,
-       v*v/(2*a),'m',[v/a,v*v/a,v*a],
-       `d = v²/2a = ${v}²/(2·${a}) = ${fmt(v*v/(2*a))} m — the exact equation from the kinematics cabinet, with friction now playing the role gravity played there. New cause, same mathematics.`);},
-  ];
-  if(Math.random()<0.3)return Object.assign(pick(cross)(),{cross:true});
-  const bank=act===1?bank1:act===2?bank2:bank3;
-  return pick(bank)();
+  const r=lastResult;
+  if(act===1&&levelIdx%2){const sg=lv.segs[0],net=aim.F-sg.muk*lv.m*G;
+    return qNum(`On the first level section of this mission, your ${lv.m} kg crate slid forward during a ${fmt(aim.F)} N shove. With μk = ${sg.muk}, what was its forward acceleration? (g = 9.8 m/s²)`,
+      net/lv.m,'m/s²',[aim.F/lv.m,sg.muk*G,net/lv.m/2],
+      `Fnet = Fpush − μkmg = ${fmt(net)} N. Dividing by ${lv.m} kg gives ${fmt(net/lv.m)} m/s². Use the net force, not the push alone.`);}
+  if(act===1)return qCon(`Your crate stopped at ${fmt(r.stop)} m. After your shove ended on this rough floor, why did it slow down?`,
+    'Kinetic friction supplied a net force opposite its motion',
+    ['It used up its force','Gravity pulled it backward along the horizontal floor','Mass decreased as it moved'],
+    'Once the shove ends, sliding friction opposes motion. The net force changes velocity: a = Fnet/m. Motion itself does not need a continuing forward force.');
+  if(act===2&&levelIdx%2){const sg=lv.segs[0],force=sg.mus*lv.m*G/2;
+    return qNum(`On the starting level surface, suppose you pushed this ${lv.m} kg crate with just ${fmt(force)} N, below its static-friction limit. While it stayed at rest, what was the friction-force magnitude?`,
+      force,'N',[force*2,0,lv.m*G],
+      `Static friction adjusts to balance the applied force, up to its maximum. Here it is ${fmt(force)} N opposite your push, so the net force and acceleration are zero.`);}
+  if(act===2){const sg=lv.segs[0],limit=sg.mus*lv.m*G;
+    return qNum(`At the start of ${lv.name}, the ${lv.m} kg crate rested on a level surface with μs = ${sg.mus}. What was the MAXIMUM static-friction force? (g = 9.8 m/s²)`,
+      limit,'N',[limit/2,lv.m*G,sg.mus*G],`fs,max = μsN = μsmg = ${fmt(limit)} N. Static friction adjusts up to this limit; breaking away requires a larger unbalanced applied force.`);}
+  const angle=Math.max(...lv.segs.map(s=>Math.abs(s.ang)));
+  if(levelIdx%2)return qNum(`On this mission’s ${angle}° ramp, what is the normal-force magnitude on the ${lv.m} kg crate? Assume pushes act along the ramp.`,
+    lv.m*G*Math.cos(angle*D2R),'N',[lv.m*G,lv.m*G*Math.sin(angle*D2R),0],
+    `The perpendicular forces balance: N = mg cosθ = ${fmt(lv.m*G*Math.cos(angle*D2R))} N. Gravity’s along-ramp component is different.`);
+  return qNum(`You parked at ${fmt(r.stop)} m. On this mission’s ${angle}° ramp, what is the magnitude of gravity’s component ALONG the ramp for your ${lv.m} kg crate?`,
+    lv.m*G*Math.sin(angle*D2R),'N',[lv.m*G,lv.m*G*Math.cos(angle*D2R),0],
+    `The along-ramp component is mg sinθ = ${fmt(lv.m*G*Math.sin(angle*D2R))} N downhill. The perpendicular component determines the normal force.`);
 }
 let curQ=null;
 function askQuestion(){
   state='question';curQ=makeQuestion();
   overlay(`
    <div class="card">
-     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">${curQ.cross?'★ CROSSOVER BONUS · +1000':'PHYSICS BONUS · +750'}</div>
+     <div class="tag" style="${curQ.cross?'color:#facc15;border:1px solid #facc1555;border-radius:99px;padding:3px 10px':''}">CHECK THIS MISSION · +750 IF CORRECT</div>
      <div style="font-size:16px;line-height:1.5">${curQ.text}</div>
      <div class="choices">${curQ.choices.map((c,i)=>
        `<button class="choice" id="ch${i}" onclick="answer(${i})">${'ABCD'[i]}&nbsp;·&nbsp;${c.s}</button>`).join('')}</div>
      <div class="explain" id="explain">${curQ.explain}</div>
-     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">CONTINUE →</button>
+     <button class="btn" id="contBtn" style="display:none" onclick="nextLevel()">NEXT MISSION →</button>
+     <button class="btn alt" id="bankCheck" style="display:none" onclick="ARCADE.finish()">FINISH &amp; BANK</button>
    </div>`);
   primary=null;
 }
 const STATS={solved:0,right:0,wrong:0}; // free-cabinet payout evidence
 function answer(i){
-  if(primary)return;
+  if(primary||state!=='question')return;
+  STATS.solved++;
   const right=curQ.choices.findIndex(c=>c.ok);
   curQ.choices.forEach((c,j)=>{const el=$('#ch'+j);el.disabled=true;
     if(j===right)el.classList.add('right');else if(j===i)el.classList.add('wrong');});
   $('#explain').style.display='block';
-  $('#contBtn').style.display='inline-block';
+  $('#contBtn').style.display='inline-block';$('#bankCheck').style.display='inline-block';
   if(i===right){score+=curQ.cross?1000:750;bumpHi();chord([784,988,1175]);flash=.4;STATS.right++;}
   else{beep(180,.3,'sawtooth',.15,-100);STATS.wrong++;}
   primary=nextLevel;
@@ -1202,7 +1126,7 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 window.addEventListener('keydown',e=>{
-  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
+  if(['play','aim','charge'].includes(state)&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();
   if(state==='aim'){
     if(e.code==='ArrowRight')aim.F=clamp(aim.F+5,5,lv.F);
     if(e.code==='ArrowLeft')aim.F=clamp(aim.F-5,5,lv.F);
@@ -1216,10 +1140,8 @@ window.addEventListener('keydown',e=>{
     if(e.code==='ArrowRight'||e.code==='KeyD')pushR=true;
     if(e.code==='ArrowLeft'||e.code==='KeyA')pushL=true;
   }
-  if(e.code==='Enter'&&primary&&$('#overlay').classList.contains('show'))primary();
-  if(e.code==='KeyP'&&(state==='play'||state==='paused')){
-    state=state==='play'?'paused':'play';
-    pushL=pushR=false;setPushSound(false);lastPushOn=false;}
+  if(e.code==='Enter'&&e.target.tagName!=='BUTTON'&&primary&&$('#overlay').classList.contains('show'))primary();
+
   if(e.code==='KeyM'){muted=!muted;setPushSound(false);lastPushOn=false;}
 });
 window.addEventListener('keyup',e=>{

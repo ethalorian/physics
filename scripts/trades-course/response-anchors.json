@@ -1,0 +1,162 @@
+{
+  "tu1-s01": [
+    {
+      "id": "ready-notice",
+      "type": "question"
+    },
+    {
+      "id": "ready-readings",
+      "type": "data_table"
+    },
+    {
+      "id": "ready-range-check",
+      "type": "question"
+    },
+    {
+      "id": "ready-sketch",
+      "type": "sketch"
+    },
+    {
+      "id": "ready-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu1-s02": [
+    {
+      "id": "r2-q",
+      "type": "question"
+    },
+    {
+      "id": "r2-record",
+      "type": "data_table"
+    },
+    {
+      "id": "r2-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu1-s03": [
+    {
+      "id": "r3-q",
+      "type": "question"
+    },
+    {
+      "id": "r3-table",
+      "type": "data_table"
+    },
+    {
+      "id": "r3-sketch",
+      "type": "sketch"
+    },
+    {
+      "id": "r3-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu1-s04": [
+    {
+      "id": "r4-q",
+      "type": "question"
+    },
+    {
+      "id": "r4-table",
+      "type": "data_table"
+    },
+    {
+      "id": "r4-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu1-s05": [
+    {
+      "id": "r5-q",
+      "type": "question"
+    },
+    {
+      "id": "r5-table",
+      "type": "data_table"
+    },
+    {
+      "id": "r5-exit",
+      "type": "exit_ticket"
+    },
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "audit-evidence-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu1-s06": [],
+  "tu1-s07": [],
+  "tu1-s08": [],
+  "tu1-s09": [],
+  "tu1-s11": [],
+  "tu1-s12": [],
+  "tu1-s13": [],
+  "tu1-s14": [],
+  "tu1-s15": [
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "b6",
+      "type": "transfer_prompt"
+    }
+  ],
+  "tu1-s10": [
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "audit-evidence-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu2-s03": [],
+  "tu2-s01": [],
+  "tu2-s02": [],
+  "tu2-s06": [],
+  "tu2-s04": [],
+  "tu2-s05": [
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "audit-evidence-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu2-s08": [],
+  "tu2-s07": [],
+  "tu2-s09": [],
+  "tu2-s10": [
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "audit-evidence-exit",
+      "type": "exit_ticket"
+    }
+  ],
+  "tu2-s11": [],
+  "tu2-s12": [],
+  "tu2-s13": [],
+  "tu2-s14": [],
+  "tu2-s15": [
+    {
+      "id": "b5",
+      "type": "self_assessment"
+    },
+    {
+      "id": "b6",
+      "type": "transfer_prompt"
+    }
+  ]
+}

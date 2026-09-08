@@ -1,0 +1,105 @@
+{
+  "targetCorrections": [
+    {
+      "slug": "tr.u1.gauge",
+      "statement": "A larger AWG number means thinner wire; decreasing by three approximately doubles cross-sectional area."
+    },
+    {
+      "slug": "tr.u1.cumul",
+      "statement": "Explain how chain measurements can accumulate error and how a datum reduces that dependence."
+    },
+    {
+      "slug": "tr.u2.slope-why",
+      "statement": "Use controlled trials to explain how slope affects transport and distinguish observations from installation requirements."
+    },
+    {
+      "slug": "tr.u1.nominal",
+      "statement": "Use material-specific references to distinguish nominal names from actual dimensions."
+    },
+    {
+      "slug": "tr.u2.bubble",
+      "statement": "Explain why a bubble moves toward the high part of a vial and why its instrument still needs checking."
+    }
+  ],
+  "vocabulary": {
+    "id": "09df583a-9ea8-4b9b-b04a-b52920716efe",
+    "unit_id": "trades-1",
+    "name": "Trades Unit 1 — Measurement and evidence",
+    "terms": [
+      {
+        "term": "endpoint",
+        "definition": "The point where a measured length begins or ends.",
+        "definition_es": "El punto donde empieza o termina una longitud medida.",
+        "target": "tr.u1.repeat",
+        "order_index": 0
+      },
+      {
+        "term": "spread",
+        "definition": "The highest reading minus the lowest reading in a set.",
+        "definition_es": "La lectura mayor menos la lectura menor de un conjunto.",
+        "target": "tr.u1.repeat",
+        "order_index": 1
+      },
+      {
+        "term": "evidence",
+        "definition": "Observations or measurements used to support a conclusion.",
+        "definition_es": "Observaciones o medidas que apoyan una conclusión.",
+        "target": "tr.u1.repeat",
+        "order_index": 2
+      },
+      {
+        "term": "reference",
+        "definition": "A known value, point or object used for comparison.",
+        "definition_es": "Un valor, punto u objeto conocido que se usa para comparar.",
+        "target": "tr.u1.check-inst",
+        "order_index": 3
+      },
+      {
+        "term": "zero",
+        "definition": "The starting value on an instrument scale; it may differ from the physical edge.",
+        "definition_es": "El valor inicial de una escala; puede estar separado del borde físico.",
+        "target": "tr.u1.read-rule",
+        "order_index": 4
+      },
+      {
+        "term": "division",
+        "definition": "The interval between adjacent marks on a scale.",
+        "definition_es": "El intervalo entre marcas consecutivas de una escala.",
+        "target": "tr.u1.read-rule",
+        "order_index": 5
+      },
+      {
+        "term": "resolution",
+        "definition": "The smallest change an instrument can distinguish or display.",
+        "definition_es": "El cambio más pequeño que un instrumento puede distinguir o mostrar.",
+        "target": "tr.u1.choose-inst",
+        "order_index": 6
+      },
+      {
+        "term": "repeatability",
+        "definition": "How closely repeated measurements agree under the same conditions.",
+        "definition_es": "Qué tan cercanas son las medidas repetidas en las mismas condiciones.",
+        "target": "tr.u1.repeat",
+        "order_index": 7
+      },
+      {
+        "term": "accuracy",
+        "definition": "How close a measurement is to a true or accepted reference value.",
+        "definition_es": "Qué tan cerca está una medida de un valor verdadero o de referencia aceptado.",
+        "target": "tr.u1.check-inst",
+        "order_index": 8
+      },
+      {
+        "term": "tolerance",
+        "definition": "The permitted variation from a specified value.",
+        "definition_es": "La variación permitida respecto a un valor especificado.",
+        "target": "tr.u1.choose-inst",
+        "order_index": 9
+      }
+    ]
+  },
+  "mathHook": {
+    "before": "a quarter inch per foot is also 8.3 percent and 1-in-48",
+    "after": "a quarter inch per foot is 1-in-48, or approximately 2.083 percent"
+  }
+}

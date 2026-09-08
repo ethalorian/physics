@@ -361,8 +361,10 @@ function teacherPrompt(){
 
 /* ================================================== flow */
 function startAct(a){
+  const freshRun=!ARCADE.playId;
   audio();
   const begin=()=>{act=a;score=0;streak=0;lives=3;levelIdx=0;wave=0;
+    if(freshRun)Object.assign(STATS,{solved:0,right:0,wrong:0});
     ARCADE.emit('arcade:start',{act:a});
     showMission(ACT_LEVELS[a][0]);};
   if(ARCADE.playId||!ARCADE.embedded){begin();return;}
@@ -381,7 +383,7 @@ function startAct(a){
   });
 }
 function setupLevel(){
-  myF=220;lockT=0;lockIdx=-1;doneCount=0;amp=0;zoneT=0;
+  myF=160;lockT=0;lockIdx=-1;doneCount=0;amp=0;zoneT=0;
   fret=lv.fretMax>0?lv.L:(lv.L||1);
   crystals=(lv.crystals||[]).map(c=>({...c,target:0,got:false}));
   for(const c of crystals)c.target=crystalF(c);

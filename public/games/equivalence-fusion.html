@@ -169,7 +169,9 @@
   <div id="modeBar">
     <div id="modeTag"></div>
     <div id="modeSub"></div>
+    <div style="text-align:center;margin:6px"><button id="finishBtn" style="padding:8px 14px;border-radius:8px;cursor:pointer;background:#102535;color:var(--cyan);border:1px solid var(--cyan);font:600 13px system-ui">FINISH &amp; BANK</button></div>
   </div>
+
 
   <div id="board">
     <div id="overload"><span>O</span><span>V</span><span>E</span><span>R</span><span>L</span><span>O</span><span>A</span><span>D</span></div>
@@ -208,6 +210,7 @@
     <button class="bigbtn easy" data-lv="1">FRACTIONS<small>fractions · decimals · percents</small></button>
     <button class="bigbtn med" data-lv="4">POWERS<small>scientific notation joins the party</small></button>
     <button class="bigbtn hard" data-lv="7">UNITS<small>cm vs m vs km — convert or clog</small></button>
+    <label style="display:block;margin:12px 0;color:var(--lime)"><input type="checkbox" id="practiceMode"> Practice · no XP or leaderboard</label>
     <div id="hsline"></div>
   </div>
 </div>
@@ -230,6 +233,7 @@
   </div>
 </div>
 
+<script src="math-cabinet.js"></script>
 <script>
 "use strict";
 /* ================================================================
@@ -283,7 +287,13 @@ const UNIT_MODES=["length","mass","volume"];
 function modeForDoor(door){
   return door==="1" ? "fractions" : door==="4" ? "powers" : pick(UNIT_MODES);
 }
-function labelFor(mode,tier){ return pick(LADDERS[mode][tier]); }
+function tierLabel(mode,tier){
+  if(LADDERS[mode][tier])return LADDERS[mode][tier][0];
+  const bases={fractions:0.125,powers:0.005,length:0.25,mass:0.25,volume:0.25};
+  const units={fractions:"",powers:"",length:" m",mass:" kg",volume:" L"};
+  return String(Number((bases[mode]*Math.pow(2,tier)).toPrecision(12)))+units[mode];
+}
+function labelFor(mode,tier){ return LADDERS[mode][tier]?pick(LADDERS[mode][tier]):tierLabel(mode,tier); }
 function maxTier(mode){ return LADDERS[mode].length-1; }
 
 /* ---------- tiles & board (4×4) ---------- */
@@ -386,36 +396,7 @@ if (typeof document !== "undefined") (function(){
   let S=null, muted=false, busy=false, practice=false, lastDoor="1";
 
   /* ---------- arcade bridge ---------- */
-  const ARCADE={
-    embedded: window.parent!==window,
-    playId:null, pendingCoin:null,
-    emit(type,data){ if(this.embedded)
-      window.parent.postMessage(Object.assign({source:"fusion",type},data||{}),"*"); },
-    requestCoin(cb){
-      if(!this.embedded){ cb({ok:true,practice:true}); return; }
-      this.pendingCoin=cb;
-      this.emit("arcade:coinRequest");
-      setTimeout(()=>{ if(this.pendingCoin===cb){ this.pendingCoin=null; cb({ok:true,practice:true}); } },900);
-    },
-    reportScore(final){
-      if(this.playId && S) this.emit("arcade:score",{
-        score:S.score, act:S.bestTier, final:!!final,
-        stats:{ solved:S.merges, right:S.right, wrong:S.wrong,
-                bestStreak:S.bestTier, startLv:S.startLvNum, mode:"fusion" }
-      });
-    },
-  };
-  window.addEventListener("message",e=>{
-    const m=e.data||{};
-    if(m.type==="arcade:coinAccepted"&&ARCADE.pendingCoin){
-      ARCADE.playId=m.playId||null;
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:true,practice:!m.playId});
-    }
-    if(m.type==="arcade:coinDenied"&&ARCADE.pendingCoin){
-      const cb=ARCADE.pendingCoin; ARCADE.pendingCoin=null; cb({ok:false,reason:m.reason});
-    }
-    if(m.type==="arcade:xpAwarded") showXP(m.xp, m.capped);
-  });
+  const ARCADE=createMathCabinet({slug:"fusion",read:()=>({...S,level:S.bestTier,solved:S.merges,bestStreak:S.bestTier,mode:"fusion"}),onReceipt:text=>showXPText(text,false)});
 
   /* ---------- audio ---------- */
   let AC=null;
@@ -486,7 +467,7 @@ if (typeof document !== "undefined") (function(){
   function hud(){
     $("scoreV").textContent=S.score;
     $("mergesV").textContent=S.merges;
-    $("bestTileV").textContent = S.bestTier>=0 ? LADDERS[S.mode][Math.min(S.bestTier,maxTier(S.mode))][0] : "—";
+    $("bestTileV").textContent = S.bestTier>=0 ? tierLabel(S.mode,S.bestTier) : "—";
     $("modeTag").textContent =
       (S.mode==="fractions"?"FRACTIONS · DECIMALS · PERCENTS":
        S.mode==="powers"?"POWERS OF TEN · DECIMALS · PERCENTS":
@@ -526,7 +507,7 @@ if (typeof document !== "undefined") (function(){
     board.forEach((t,i)=>{
       if(!t) return;
       if(t.from){
-        t.label=labelFor(S.mode, Math.min(t.tier,maxTier(S.mode)));
+        t.label=labelFor(S.mode,t.tier);
         for(const srcId of t.from){
           const n=nodes.get(srcId);
           if(n){ n.style.left=xOf(i%4)+"px"; n.style.top=yOf(Math.floor(i/4))+"px"; }
@@ -637,6 +618,8 @@ if (typeof document !== "undefined") (function(){
              startLvNum:+door, running:false };
   }
   function start(door){
+    if(!ARCADE.canStart()) return;
+    busy=false;
     lastDoor=door;
     S=freshState(door);
     $("startOv").classList.add("hidden");
@@ -646,10 +629,11 @@ if (typeof document !== "undefined") (function(){
     for(const n of nodes.values()) n.remove();
     nodes.clear();
     sizeBoard();
-    ARCADE.playId=null;
     ARCADE.requestCoin(res=>{
-      practice=!!res.practice || !res.ok;
+      if(!res.ok){ $("startOv").classList.remove("hidden"); return; }
+      practice=!!res.practice;
       document.body.classList.toggle("practice",practice);
+      $("finishBtn").textContent=practice?"FINISH PRACTICE":"FINISH & BANK";
       S.running=true;
       for(let k=0;k<3;k++){
         const i=pick(emptyCells(S.board));
@@ -657,10 +641,12 @@ if (typeof document !== "undefined") (function(){
         S.board[i]=t; posNode(t,i,true);
       }
       hud();
-    });
+    },$("practiceMode").checked);
   }
 
-  async function gameOver(){
+  async function gameOver(finishedByChoice=false){
+    if(S.ending) return;
+    S.ending=true;
     S.running=false; busy=true;
     // every run produces accuracy data: if no audit fired yet, one final
     // audit decides whether this run banks XP at all
@@ -670,26 +656,29 @@ if (typeof document !== "undefined") (function(){
       await runAudit();
     }
     ARCADE.reportScore(true);
-    const order=shuffle(Array.from({length:16},(_,i)=>i));
-    for(let k=0;k<order.length;k++){
-      const t=S.board[order[k]];
-      if(t){ const n=nodes.get(t.id); if(n) n.classList.add("dying"); }
-      if(k%4===0){ sThud(140-k*3); boardEl.classList.remove("shake"); void boardEl.offsetWidth; boardEl.classList.add("shake"); }
-      await wait(45);
+    if(!finishedByChoice){
+      const order=shuffle(Array.from({length:16},(_,i)=>i));
+      for(let k=0;k<order.length;k++){
+        const t=S.board[order[k]];
+        if(t){ const n=nodes.get(t.id); if(n) n.classList.add("dying"); }
+        if(k%4===0){ sThud(140-k*3); boardEl.classList.remove("shake"); void boardEl.offsetWidth; boardEl.classList.add("shake"); }
+        await wait(45);
+      }
+      $("overload").classList.add("show");
+      const spans=document.querySelectorAll("#overload span");
+      spans.forEach((s,k)=>{
+        s.style.animationDelay=(k*0.08)+"s";
+        setTimeout(()=>sThud(70+k*7), k*80+200);
+      });
+      await wait(spans.length*80+700);
     }
-    $("overload").classList.add("show");
-    const spans=document.querySelectorAll("#overload span");
-    spans.forEach((s,k)=>{
-      s.style.animationDelay=(k*0.08)+"s";
-      setTimeout(()=>sThud(70+k*7), k*80+200);
-    });
-    await wait(spans.length*80+700);
+    $("overOv").querySelector("h1").textContent=finishedByChoice?"RUN COMPLETE":"OVERLOAD";
     const audits=S.right+S.wrong;
     const acc=audits>0? Math.round(100*S.right/audits) : 100;
     $("fScore").textContent=S.score;
     $("fSolved").textContent=S.merges;
     $("fAcc").textContent=audits>0? acc+"%" : "—";
-    $("fBest").textContent=S.bestTier>=0? LADDERS[S.mode][Math.min(S.bestTier,maxTier(S.mode))][0] : "—";
+    $("fBest").textContent=S.bestTier>=0? tierLabel(S.mode,S.bestTier) : "—";
     $("overQuip").textContent=pick([
       "0.5 and 50% were right next to each other. Tragic.",
       "The board filled with strangers who were secretly twins.",
@@ -697,12 +686,13 @@ if (typeof document !== "undefined") (function(){
       "Every tile on that board had a soulmate.",
       "kilo- means 1000. The tiles remember.",
     ]);
-    let hs=0; try{ hs=+localStorage.getItem("hs_fusion")||0; }catch(e){}
+    if(finishedByChoice) $("overQuip").textContent="Return for another challenge whenever you are ready.";
+    let hs=0; try{ hs=+localStorage.getItem((practice?"practice_":"")+"hs_fusion")||0; }catch(e){}
     const nh=S.score>hs;
-    if(nh){ try{ localStorage.setItem("hs_fusion",S.score); }catch(e){} }
+    if(nh){ try{ localStorage.setItem((practice?"practice_":"")+"hs_fusion",S.score); }catch(e){} }
     $("newHS").classList.toggle("hidden",!nh);
-    if(practice) showXPText("Practice run — play in the Arcade to bank XP.", false);
-    else if(ARCADE.embedded) showXPText("Banking XP…", false);
+    if(practice) showXPText("Practice complete — no XP or leaderboard score saved.", false);
+    else if(ARCADE.embedded) showXPText(ARCADE.savedText || "Banking XP…", false);
     $("overOv").classList.remove("hidden");
     busy=false;
   }
@@ -712,12 +702,6 @@ if (typeof document !== "undefined") (function(){
     el.textContent=txt;
     el.classList.toggle("capped",!!capped);
     el.classList.remove("pulse"); void el.offsetWidth; el.classList.add("pulse");
-  }
-  function showXP(xp,capped){
-    if(typeof xp!=="number") return;
-    if(xp>0) showXPText("⚡ +"+xp+" XP BANKED"+(capped?" (daily cap reached)":""),capped);
-    else showXPText(capped? "Daily XP cap reached — score still counts!" :
-      "No XP this run — audit accuracy below 50% pays nothing.", true);
   }
   function hsLine(){
     let hs=0; try{ hs=+localStorage.getItem("hs_fusion")||0; }catch(e){}
@@ -742,6 +726,11 @@ if (typeof document !== "undefined") (function(){
 
   document.querySelectorAll("#startOv .bigbtn").forEach(b=>
     b.addEventListener("click",()=>{ ac(); start(b.dataset.lv); }));
+  $("finishBtn").addEventListener("click",()=>{
+    if(!S || !S.running) return;
+    if(busy || S.auditing){ toast("Finish the current move or question first."); return; }
+    gameOver(true);
+  });
   $("againBtn").addEventListener("click",()=>start(lastDoor));
   $("menuBtn").addEventListener("click",()=>{ $("overOv").classList.add("hidden"); hsLine(); $("startOv").classList.remove("hidden"); });
   $("muteBtn").addEventListener("click",()=>{ muted=!muted; $("muteBtn").textContent=muted?"🔇":"🔊"; });
