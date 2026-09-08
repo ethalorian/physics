@@ -2,7 +2,7 @@ import assert from 'node:assert/strict'
 import fs from 'node:fs'
 import { validateBlockDocument } from '../src/data/block-registry'
 import { seiLint } from '../src/lib/sei'
-import { paginateBlocks, type BlockDocument } from '../src/data/content-blocks'
+import { paginateBlocks, type BlockDocument, type InlineQuestion } from '../src/data/content-blocks'
 import { filterDocumentForViewer } from '../src/lib/track-visibility'
 import { checkedLessonResponse } from '../src/lib/lesson-response-validation'
 import { buildSlides } from '../src/lib/present-auto-slides'
@@ -21,8 +21,11 @@ for(const l of lessons){
  for(const b of doc.blocks){
   if(b.targetId)assert.ok(targets.has(b.targetId),l.slug+': unknown target '+b.targetId)
   if(b.type==='question'){
-   assert.ok(b.question.options?.every(o=>o.feedback))
-   const result=checkedLessonResponse(b,{optionId:b.question.correctOptionId,autoCheck:'mismatch'})
+   // These authored fixtures use inline questions; the shared block also permits legacy shapes.
+   const question=b.question as InlineQuestion | undefined
+   assert.ok(question, l.slug+': missing inline question')
+   assert.ok(question.options?.every(o=>o.feedback))
+   const result=checkedLessonResponse(b,{optionId:question.correctOptionId,autoCheck:'mismatch'})
    assert.ok(result.ok);if(result.ok)assert.equal((result.response as {autoCheck:string}).autoCheck,'match')
   }
   if(b.sei?.visualBlockId)assert.ok(doc.blocks.some(x=>x.id===b.sei?.visualBlockId))
