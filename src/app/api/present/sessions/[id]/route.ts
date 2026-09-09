@@ -25,6 +25,15 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (ctx.role !== 'admin' && (s as { teacher_id: string }).teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
+  // Ending requires ownership, not a still-published/reachable class lesson.
+  if (body.status === 'ended') {
+    const pulse = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', id).eq('status', 'open')
+    if (pulse.error) return NextResponse.json({ error: 'Could not close the pulse check. Retry ending the presentation.' }, { status: 503 })
+    const { data, error } = await supabaseAdmin.from('present_sessions').update({ status: 'ended', poll_block_id: null, poll_run_id: null, poll_locked: true, poll_revealed: false, timer_ends_at: null, projected_block_id: null, projected_block_page: 0, blackout: true, updated_at: new Date().toISOString() }).eq('id', id).select('*').single()
+    if (error) return NextResponse.json({ error: 'Could not end the presentation. Please retry.' }, { status: 503 })
+    return NextResponse.json({ session: data })
+  }
+
   const lesson = s.course_id ? await classLesson(s.lesson_id, s.course_id, ctx) : null
   if (!lesson) return NextResponse.json({ error: 'Class lesson unavailable' }, { status: 403 })
   const pages = paginateBlocks(lesson.content_blocks.blocks)
@@ -68,7 +77,6 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
   if (typeof body.poll_revealed === 'boolean') { update.poll_revealed = body.poll_revealed; if (body.poll_revealed) update.poll_locked = true }
   if (typeof body.blackout === 'boolean') update.blackout = body.blackout
   if ('timer_seconds' in body) update.timer_ends_at = body.timer_seconds ? new Date(Date.now() + body.timer_seconds * 1000).toISOString() : null
-  if (body.status === 'ended') update.status = 'ended'
 
   if (body.discussion) {
     if (!s.poll_block_id || !s.poll_run_id || !['start', 'revote'].includes(body.discussion)) return NextResponse.json({ error: 'Open a lesson poll first' }, { status: 409 })
@@ -86,7 +94,7 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
       if (cleared.error) throw cleared.error
     }
   }
-  if (body.poll_block_id || body.status === 'ended') {
+  if (body.poll_block_id) {
     const pulse = await supabaseAdmin.from('present_pulses').update({ status: 'closed' }).eq('session_id', id).eq('status', 'open')
     if (pulse.error) throw pulse.error
   }

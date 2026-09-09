@@ -51,5 +51,15 @@ result=await sessionRoute.PATCH(request({projected_block_id:'graph'}),ctx);asser
 result=await sessionRoute.PATCH(request({projected_block_id:'hidden'}),ctx);assert.equal(result.status,400);
 result=await sessionRoute.PATCH(request({projected_block_id:'graph',projected_block_page:1}),ctx);assert.equal(result.status,400,'Graphs cannot be split into another screen');
 result=await sessionRoute.PATCH(request({projected_block_id:null}),ctx);assert.equal(result.status,200);assert.equal(savedUpdate.projected_block_id,null);
+const unavailable=await build('src/app/api/present/sessions/[id]/route.ts','unavailable-session.cjs',{'@/lib/present-server':`export const classLesson=async()=>{globalThis.lessonChecks++;return null};`});
+global.lessonChecks=0;let writes=[],failPulse=false;
+global.db=table=>{let update;const chain=new Proxy({}, {get:(_,key)=>key==='then'?(resolve,reject)=>Promise.resolve({data:update?{...session,...update}:session,error:table==='present_pulses'&&failPulse?{message:'unavailable'}:null}).then(resolve,reject):(...args)=>{if(key==='update'){update=args[0];writes.push({table,update})}return chain}});return chain};
+result=await unavailable.PATCH(request({status:'ended'}),{...ctx,userId:'other'});assert.equal(result.status,403);assert.equal(writes.length,0,'Foreign owners cannot end or close pulses');
+for(const course of ['c',null]){session.course_id=course;result=await unavailable.PATCH(request({status:'ended',current_slide:999}),ctx);assert.equal(result.status,200);assert.equal(result.body.session.status,'ended');assert.equal(result.body.session.blackout,true);assert.equal(result.body.session.poll_block_id,null);assert.equal(result.body.session.timer_ends_at,null);assert.equal(result.body.session.projected_block_id,null);assert.equal(result.body.session.current_slide,1,'Ending preserves deck position');}
+assert.equal(global.lessonChecks,0,'Ending bypasses unavailable class/lesson lookup');
+assert.ok(writes.some(w=>w.table==='present_pulses'&&w.update.status==='closed'));
+session.course_id='c';writes=[];result=await unavailable.PATCH(request({current_slide:2}),ctx);assert.equal(result.status,403);assert.equal(writes.length,0,'Regular controls still require class access');
+failPulse=true;result=await unavailable.PATCH(request({status:'ended'}),ctx);assert.equal(result.status,503,'Failed cleanup gives retryable error, never false success');
+console.log('PASS stale-session ending, null class, repeated end, foreign-owner rejection, activity cleanup, class checks retained, cleanup failure.');
 console.log('PASS actual server/API modules: anonymous aggregate-only queue, named help/missing queue, display privacy, foreign-session/student rejection, invalid pulse kinds, identity from authentication, late response rejection.');
 })().catch(e=>{console.error(e);process.exitCode=1});

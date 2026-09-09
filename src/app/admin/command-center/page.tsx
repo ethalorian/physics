@@ -44,6 +44,8 @@ export default function CommandCenterPage() {
   const [retry, setRetry] = useState(0)
   const [confirmEnd, setConfirmEnd] = useState(false)
   const pending = useRef(false)
+  const ending = useRef(false)
+  const [endingId, setEndingId] = useState('')
   const { state, error: connectionError, busy, patch } = useCommandSession(presentation?.session?.id ?? null)
   const teaching = useTeachingTools(presentation?.session?.id ?? null)
   const [clock, setClock] = useState(Date.now())
@@ -105,6 +107,17 @@ export default function CommandCenterPage() {
     commandSlides(presentation.lesson, presentation.deck, controller.signal).then(d => { if (!controller.signal.aborted) setSlides(d) }).catch(e => { if (!controller.signal.aborted) setError(e.message) })
     return () => controller.abort()
   }, [presentation])
+  async function endListed(id: string) {
+    if (ending.current) return
+    ending.current = true; setEndingId(id); setError('')
+    try {
+      await commandRequest('/api/present/sessions/' + encodeURIComponent(id), { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'ended' }) })
+      setActiveSessions(old => old.filter(s => s.id !== id))
+      setNotice('Presentation ended. Saved notes and student work are kept.')
+      setRetry(n => n + 1)
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not end the presentation.') }
+    finally { ending.current = false; setEndingId('') }
+  }
   async function start() {
     if (pending.current || !courseId || !lessonId) return
     pending.current = true; setStarting(true); setError('')
@@ -134,7 +147,7 @@ export default function CommandCenterPage() {
     {teaching.error && <p role="alert" className="text-destructive">{teaching.error}</p>}
     {notice && <p role="status" className="break-words">{notice}</p>}
     {!presentation?.session && <div className="grid gap-3 sm:grid-cols-3">{[['1','Start on your Mac','Choose the class and lesson, then open its projector window.'],['2','Connect your iPad','Sign in with the same account and choose the running presentation.'],['3','Teach from anywhere','Switch slides, project lesson blocks, and launch activities.']].map(([step,title,detail]) => <div key={step} className="rounded-xl border bg-card p-4"><span className="text-overline text-primary">Step {step}</span><h2 className="mt-2 text-title-3">{title}</h2><p className="mt-1 text-caption text-muted-foreground">{detail}</p></div>)}</div>}
-    {!live && activeSessions.length > 0 && <Card className="gap-3 p-4"><h2 className="text-title-2">Presentations already running</h2><p className="text-caption text-muted-foreground">Take control of the session you started on your Mac. Keep its presentation page and projector window open.</p>{activeSessions.map(s => <div key={s.id} className="flex flex-wrap items-center justify-between gap-3"><span>{courses.find(c => c.id === s.course_id)?.name ?? 'Live presentation'} · {lessons.find(l => l.id === s.lesson_id)?.title ?? 'Presentation'} · Slide {s.current_slide + 1}</span><Button className="min-h-12" disabled={locked} onClick={() => { if (courseId !== s.course_id) { requestedLesson.current = s.lesson_id; setCourseId(s.course_id) } else setLessonId(s.lesson_id); setAttachVersion(n => n + 1) }}>Control this presentation</Button></div>)}</Card>}
+    {!live && activeSessions.length > 0 && <Card className="gap-3 p-4"><h2 className="text-title-2">Presentations already running</h2><p className="text-caption text-muted-foreground">Take control of the session you started on your Mac. Keep its presentation page and projector window open.</p>{activeSessions.map(s => <div key={s.id} className="flex flex-wrap items-center justify-between gap-3"><span>{courses.find(c => c.id === s.course_id)?.name ?? 'Live presentation'} · {lessons.find(l => l.id === s.lesson_id)?.title ?? 'Presentation'} · Slide {s.current_slide + 1}</span><Button className="min-h-12" disabled={locked || Boolean(endingId) || !courses.some(c => c.id === s.course_id)} onClick={() => { if (courseId !== s.course_id) { requestedLesson.current = s.lesson_id; setCourseId(s.course_id) } else setLessonId(s.lesson_id); setAttachVersion(n => n + 1) }}>Control this presentation</Button><Button variant="outline" className="min-h-12" disabled={Boolean(endingId)} onClick={() => endListed(s.id)}>{endingId === s.id ? 'Ending…' : 'End presentation'}</Button></div>)}</Card>}
     <Card className="gap-3 p-4"><fieldset disabled={locked || Boolean(presentation?.session)} className="grid min-w-0 gap-3 sm:grid-cols-2"><label className="min-w-0 text-caption">Class<select aria-label="Class" className={fieldClass} value={courseId} onChange={e => setCourseId(e.target.value)}><option value="">Choose class</option>{courses.map(c => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}</select></label><label className="min-w-0 text-caption">Lesson<select aria-label="Lesson" className={fieldClass} value={lessonId} onChange={e => setLessonId(e.target.value)}><option value="">Choose lesson</option>{lessons.map(l => <option key={l.id} value={l.id}>{l.title}</option>)}</select></label></fieldset>
       {!presentation?.session ? <><Button className="min-h-14" disabled={!courseId || !lessonId || locked || !presentation} onClick={start}>{loading ? 'Checking presentation…' : starting ? 'Starting…' : 'Start presentation'}</Button><p className="text-caption text-muted-foreground">An existing live presentation for this lesson and class reconnects automatically.</p></> : <div className="flex flex-wrap items-center gap-2"><span className="mr-auto text-caption">{live ? 'Live session connected' : state?.session.status === 'ended' ? 'Session ended' : 'Connecting…'}</span><Button className="min-h-12" variant="outline" onClick={copyLink}>Copy projector link</Button><Button asChild className="min-h-12" variant="outline"><Link href={projectorPath} target="_blank">Open projector connection</Link></Button></div>}
     </Card>

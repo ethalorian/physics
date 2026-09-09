@@ -15,6 +15,7 @@ CREATE TABLE math_competency_records(id uuid PRIMARY KEY DEFAULT gen_random_uuid
 CREATE TABLE teacher_feedback(id uuid PRIMARY KEY DEFAULT gen_random_uuid(),user_id text,teacher_email text,competency_id uuid,message text,created_at timestamptz DEFAULT now());
 `;
 const migration=fs.readFileSync('supabase/migrations/20260907120000_math_feedback_integrity.sql','utf8') + fs.readFileSync('supabase/migrations/20260907120001_math_revision_outcomes.sql','utf8');
+const submissionFix=fs.readFileSync('supabase/migrations/20260908142742_math_submission_user_id_type.sql','utf8');
 const tests=`
 INSERT INTO math_competencies VALUES('00000000-0000-0000-0000-000000000001');
 INSERT INTO math_spiral_items(id,prompt) VALUES('00000000-0000-0000-0000-000000000002','Test question');
@@ -70,4 +71,9 @@ DO $$ DECLARE before_count bigint; BEGIN
 END $$;
 ROLLBACK;
 `;
-execFileSync('/opt/homebrew/opt/postgresql@14/bin/psql',[url,'-X','-v','ON_ERROR_STOP=1'],{input:fixture+migration+tests,stdio:['pipe','inherit','inherit']});
+execFileSync('/opt/homebrew/opt/postgresql@14/bin/psql',[url,'-X','-v','ON_ERROR_STOP=1'],{input:fixture+migration+submissionFix+tests,stdio:['pipe','inherit','inherit']});
+
+// Repeat against production UUID user columns.
+const uuidFixture=fixture.replaceAll("user_id text", "user_id uuid");
+const uuidTests=tests.replaceAll("'uncertain'", "'00000000-0000-0000-0000-000000000013'").replaceAll("'student'", "'00000000-0000-0000-0000-000000000011'").replaceAll("'failure'", "'00000000-0000-0000-0000-000000000012'");
+execFileSync('/opt/homebrew/opt/postgresql@14/bin/psql',[url,'-X','-v','ON_ERROR_STOP=1'],{input:uuidFixture+migration+submissionFix+uuidTests,stdio:['pipe','inherit','inherit']});
