@@ -60,6 +60,15 @@ assert.equal(global.lessonChecks,0,'Ending bypasses unavailable class/lesson loo
 assert.ok(writes.some(w=>w.table==='present_pulses'&&w.update.status==='closed'));
 session.course_id='c';writes=[];result=await unavailable.PATCH(request({current_slide:2}),ctx);assert.equal(result.status,403);assert.equal(writes.length,0,'Regular controls still require class access');
 failPulse=true;result=await unavailable.PATCH(request({status:'ended'}),ctx);assert.equal(result.status,503,'Failed cleanup gives retryable error, never false success');
+failPulse=false;writes=[];let tables=[];
+const previousDb=global.db;global.db=table=>{tables.push(table);return previousDb(table)};
+result=await unavailable.GET(new Request('http://test/api/present/sessions/s?state_only=1'),ctx);assert.equal(result.status,200);assert.deepEqual(tables,['present_sessions'],'Notification read skips roster, lobby and answer aggregation');
+result=await unavailable.GET(new Request('http://test/api/present/sessions/s?state_only=1'),{...ctx,userId:'other'});assert.equal(result.status,403,'Notification does not authorize access');
+const realtimeRoute=await build('src/app/api/present/sessions/[id]/realtime/route.ts','realtime-route.cjs');
+result=await realtimeRoute.GET(new Request('http://test/realtime'),{...ctx,userId:'other'});assert.equal(result.status,403);
+process.env.NEXT_PUBLIC_SUPABASE_URL='https://fixture.supabase.co';process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY='public-fixture';
+result=await realtimeRoute.GET(new Request('http://test/realtime'),ctx);assert.equal(result.status,200);assert.equal(result.body.realtime.topic,'present:s');assert.equal('token' in result.body.realtime,false,'No signing secret or user JWT is distributed');
+console.log('PASS notification read authorization, one-query read, notification setup authorization.');
 console.log('PASS stale-session ending, null class, repeated end, foreign-owner rejection, activity cleanup, class checks retained, cleanup failure.');
 console.log('PASS actual server/API modules: anonymous aggregate-only queue, named help/missing queue, display privacy, foreign-session/student rejection, invalid pulse kinds, identity from authentication, late response rejection.');
 })().catch(e=>{console.error(e);process.exitCode=1});

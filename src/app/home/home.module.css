@@ -1,0 +1,56 @@
+.lesson {
+  border-top: 4px solid var(--primary);
+  background: linear-gradient(120deg, color-mix(in oklab, var(--primary) 12%, var(--card)), var(--card) 78%);
+}
+
+.practice > [data-slot='card'] {
+  border-top: 4px solid var(--viz-up);
+  background: linear-gradient(120deg, color-mix(in oklab, var(--viz-up) 15%, var(--card)), var(--card) 85%);
+}
+
+.practice > section {
+  border-left: 4px solid var(--viz-down);
+  background: color-mix(in oklab, var(--viz-down) 12%, var(--card));
+}
+
+.feedback {
+  border-top: 4px solid var(--viz-up);
+}
+
+.feedback details {
+  background: color-mix(in oklab, var(--viz-up) 10%, var(--card));
+}
+
+.directoryGroup {
+  --group-accent: var(--primary);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: color-mix(in oklab, var(--group-accent) 9%, var(--card));
+  border-top: 3px solid var(--group-accent);
+}
+
+.directoryGroup:nth-child(2) { --group-accent: var(--viz-up); }
+.directoryGroup:nth-child(3) { --group-accent: var(--reward); }
+
+.directoryIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: color-mix(in oklab, var(--group-accent) 25%, var(--card));
+  color: var(--foreground);
+}
+
+.rewards {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--reward);
+  border-radius: var(--radius);
+  padding: 20px;
+  background: color-mix(in oklab, var(--reward) 13%, var(--card));
+}
+
+.startLabel {
+  color: var(--primary-foreground);
+}

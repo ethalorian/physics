@@ -1,19 +1,18 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { ArrowRight, BookOpen, BookText, ChevronDown, Gift, Joystick, Sigma, Target, Trophy, Users, UserRound } from 'lucide-react'
 import EnrollmentGate from '@/components/EnrollmentGate'
 import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
 import DailyMathTask from '@/components/math-spine/DailyMathTask'
 import XpGoalRing from '@/components/gamification/XpGoalRing'
 import ChallengeCard from '@/components/gamification/ChallengeCard'
-import Link from 'next/link'
-import { Coins, Zap, ChevronDown } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
 import { decayingAverage } from '@/data/curriculum-types'
-import { SectionLabel, StatPill } from '@/components/ds'
+import styles from './home.module.css'
 
-// ---------------------------------------------------------------------------
-// Types (mirror the /api/home response)
-// ---------------------------------------------------------------------------
 type Domain = 'knowledge' | 'reasoning' | 'skill' | 'product'
 
 interface SequenceItem { lessonNumber: number; title: string; slug: string; status: 'done' | 'current' | 'todo' }
@@ -45,61 +44,6 @@ const DOMAINS: { key: Domain; label: string }[] = [
   { key: 'product', label: 'Product' },
 ]
 
-const STYLES = `
-  .hub-sky { position: fixed; inset: 0; z-index: -2;
-    background:
-      radial-gradient(60% 50% at 82% -6%, color-mix(in oklch, var(--secondary) 75%, transparent), transparent 70%),
-      radial-gradient(52% 42% at 8% 2%, color-mix(in oklch, var(--primary) 20%, transparent), transparent 62%),
-      var(--background); }
-  /* Static by default (Surface 16: no idle motion) — the twinkle loop is gone. */
-  .hub-stars { position: fixed; inset: 0; z-index: -1; opacity: .55;
-    background-image:
-      radial-gradient(1.4px 1.4px at 14% 16%, var(--foreground), transparent),
-      radial-gradient(1.2px 1.2px at 32% 44%, var(--foreground), transparent),
-      radial-gradient(1.5px 1.5px at 52% 10%, var(--foreground), transparent),
-      radial-gradient(1.1px 1.1px at 68% 30%, var(--foreground), transparent),
-      radial-gradient(1.4px 1.4px at 82% 22%, var(--foreground), transparent),
-      radial-gradient(1.2px 1.2px at 90% 52%, var(--foreground), transparent),
-      radial-gradient(1.3px 1.3px at 38% 70%, var(--foreground), transparent),
-      radial-gradient(1.1px 1.1px at 73% 78%, var(--foreground), transparent),
-      radial-gradient(1.5px 1.5px at 20% 86%, var(--foreground), transparent); }
-  @keyframes hubPulse { 0%,100% { box-shadow: 0 0 0 5px color-mix(in oklch, var(--reward) 28%, transparent), 0 0 16px var(--reward) }
-    50% { box-shadow: 0 0 0 9px color-mix(in oklch, var(--reward) 16%, transparent), 0 0 28px var(--reward) } }
-  /* Current-waypoint pulse is guarded: a static ring under reduced motion. */
-  @media (prefers-reduced-motion: reduce) {
-    .hub-current-waypoint { animation: none !important; box-shadow: 0 0 0 5px color-mix(in oklch, var(--reward) 28%, transparent); }
-  }
-  @keyframes onbGlow {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklch, var(--primary) 0%, transparent); transform: scale(1); }
-    50% { box-shadow: 0 0 18px 2px color-mix(in oklch, var(--primary) 50%, transparent); transform: scale(1.015); }
-  }
-  .onb-glow { animation: onbGlow 2.4s ease-in-out infinite; will-change: box-shadow, transform; }
-  .onb-glow:hover { animation-play-state: paused; }
-  @media (prefers-reduced-motion: reduce) { .onb-glow { animation: none; } }
-`
-
-function Glass({ children, style, className }: { children: ReactNode; style?: CSSProperties; className?: string }) {
-  return (
-    <div
-      className={`rounded-2xl ${className ?? ''}`}
-      style={{
-        background: 'color-mix(in oklch, var(--card) 80%, transparent)',
-        backdropFilter: 'blur(16px) saturate(1.2)',
-        WebkitBackdropFilter: 'blur(16px) saturate(1.2)',
-        border: '1px solid color-mix(in oklch, var(--border) 75%, transparent)',
-        ...style,
-      }}
-    >
-      {children}
-    </div>
-  )
-}
-
-// LaneLabel now lives in the design-system kit as <SectionLabel> (prop: accent).
-
-// ---------------------------------------------------------------------------
-// Mastery climb chart
-// ---------------------------------------------------------------------------
 function ClimbChart({ points }: { points: ClimbPoint[] }) {
   const W = 720, L = 60, R = 700, T = 18, B = 210
   const sorted = [...points].sort((a, b) => a.observedAt.localeCompare(b.observedAt))
@@ -107,7 +51,7 @@ function ClimbChart({ points }: { points: ClimbPoint[] }) {
   if (n === 0) {
     return (
       <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-        Your climb will appear here once your teacher logs your first mastery ratings.
+        Your progress will appear after your teacher reviews your work.
       </p>
     )
   }
@@ -127,14 +71,14 @@ function ClimbChart({ points }: { points: ClimbPoint[] }) {
   return (
     <svg viewBox={`0 0 ${W} 240`} role="img" aria-label="Mastery over time" style={{ width: '100%', height: 'auto' }}>
       <rect x={L} y={15} width={R - L} height={70} style={{ fill: 'var(--success)', opacity: 0.1 }} />
-      <rect x={L} y={85} width={R - L} height={70} style={{ fill: 'var(--reward)', opacity: 0.12 }} />
+      <rect x={L} y={85} width={R - L} height={70} style={{ fill: 'var(--primary)', opacity: 0.12 }} />
       <rect x={L} y={155} width={R - L} height={70} style={{ fill: 'var(--destructive)', opacity: 0.09 }} />
       <text x={8} y={54} style={{ fill: 'var(--success)', fontWeight: 700 }} fontSize="11">Got it</text>
       <text x={8} y={124} style={{ fill: 'var(--muted-foreground)' }} fontSize="11">Almost</text>
       <text x={8} y={194} style={{ fill: 'var(--muted-foreground)' }} fontSize="11">Not yet</text>
       {n > 1 && <polyline points={linePts} fill="none" style={{ stroke: 'var(--primary)' }} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />}
       {sorted.map((p, i) => (
-        <circle key={i} cx={sx(i)} cy={sy(p.level)} r={6} style={{ fill: 'var(--reward)' }}>
+        <circle key={i} cx={sx(i)} cy={sy(p.level)} r={6} style={{ fill: 'var(--primary)' }}>
           <title>{`${fmt(p.observedAt)} — level ${p.level}`}</title>
         </circle>
       ))}
@@ -144,321 +88,131 @@ function ClimbChart({ points }: { points: ClimbPoint[] }) {
   )
 }
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
+const DESTINATIONS = [
+  { title: 'Classwork', items: [
+    { href: '/lessons', title: 'All lessons', description: 'Find your lessons and return to earlier work.', icon: BookOpen },
+    { href: '/lobby', title: 'Lobby', description: 'Join the activity your teacher starts in the Lobby.', icon: Users },
+    { href: '/dashboard/growth', title: 'My progress', description: 'See teacher ratings and feedback.', icon: Target },
+  ] },
+  { title: 'Practice & help', items: [
+    { href: '/dashboard/math-spine', title: 'Math practice', description: 'Build the math skills you use in class.', icon: Sigma },
+    { href: '/vocabulary/work', title: 'Vocabulary', description: 'Open assigned words and review activities.', icon: BookText },
+    { href: '/reference', title: 'Reference', description: 'Look up equations, units, and problem-solving help.', icon: BookOpen },
+    { href: '/textbook', title: 'Textbook', description: 'Read Conceptual Physics.', icon: BookText },
+  ] },
+  { title: 'Play & rewards', items: [
+    { href: '/arcade', title: 'Arcade', description: 'Play games and put your skills to work.', icon: Joystick },
+    { href: '/leaderboard', title: 'Leaderboard', description: 'See class rankings.', icon: Trophy },
+    { href: '/store', title: 'Store', description: 'Use your points for rewards.', icon: Gift },
+    { href: '/avatar', title: 'My avatar', description: 'Customize your character and display name.', icon: UserRound },
+  ] },
+]
+
 export default function HomePage() {
   const [data, setData] = useState<HomeData | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [retry, setRetry] = useState(0)
   const [domain, setDomain] = useState<Domain>('reasoning')
-  // Onboarding nudge: prompt the student to set up their face + leaderboard
-  // name the first time they sign in. Null = haven't checked yet, so we don't
-  // flash the banner on initial render.
-  const [needsProfileSetup, setNeedsProfileSetup] = useState<boolean | null>(null)
-  // The warm-up disclosure starts OPEN so a first-time student actually sees
-  // today's problem; it folds itself once today's rep is submitted (or when
-  // there's nothing to do), keeping "Continue" as the primary path after that.
-  const [warmupOpen, setWarmupOpen] = useState(true)
 
   useEffect(() => {
+    const controller = new AbortController()
+    let active = true
     setLoading(true)
     setLoadError(false)
-    fetch('/api/home')
+    fetch('/api/home', { signal: controller.signal })
       .then((r) => { if (!r.ok) throw new Error('home'); return r.json() })
       .then((d: HomeData) => {
+        if (!active) return
         setData(d)
-        setLoading(false)
-        const firstWithData = DOMAINS.find((dm) => d.climb?.some((c) => c.domain === dm.key))
+        const firstWithData = DOMAINS.find((dm) => d.climb.some((c) => c.domain === dm.key))
         if (firstWithData) setDomain(firstWithData.key)
       })
-      .catch(() => { setLoading(false); setLoadError(true) })
+      .catch(() => { if (active) setLoadError(true) })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false; controller.abort() }
   }, [retry])
 
-  useEffect(() => {
-    fetch('/api/avatar/me')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d: { setup_completed?: boolean; alias?: string | null } | null) => {
-        if (!d) { setNeedsProfileSetup(false); return }
-        // Disappears once the avatar is built (the alias is a soft nudge in the
-        // builder itself, not a blocker for hiding this onboarding glow).
-        setNeedsProfileSetup(!d.setup_completed)
-      })
-      .catch(() => setNeedsProfileSetup(false))
-  }, [])
-
-  const climbForDomain = useMemo(
-    () => (data?.climb ?? []).filter((c) => c.domain === domain),
-    [data, domain],
-  )
-
-  // Compact climb summary for the header row (Surface 16): current weighted
-  // band for the selected domain + direction of the latest rating.
-  const climbSummary = useMemo(() => {
-    const pts = [...climbForDomain].sort((a, b) => a.observedAt.localeCompare(b.observedAt))
-    if (pts.length === 0) return null
-    const levels = pts.map((p) => p.level)
-    const now = decayingAverage(levels)
-    if (now === null) return null
-    const band = now >= 2.5 ? 'Got it' : now >= 1.5 ? 'Almost' : 'Not yet'
-    const before = levels.length > 1 ? decayingAverage(levels.slice(0, -1)) : null
-    const arrow = before === null ? '' : now > before ? ' ↑' : now < before ? ' ↓' : ''
-    const label = DOMAINS.find((d) => d.key === domain)?.label ?? domain
-    return `${label} · ${band}${arrow}`
-  }, [climbForDomain, domain])
+  const climbForDomain = useMemo(() => (data?.climb ?? []).filter((c) => c.domain === domain), [data, domain])
+  const current = data?.continue
 
   return (
     <EnrollmentGate>
-    <>
-      <style>{STYLES}</style>
-      <div className="hub-sky" />
-      <div className="hub-stars" />
-
-      <div className="max-w-3xl mx-auto px-5 pb-24" style={{ color: 'var(--foreground)' }}>
-        {/* greeting + points */}
-        <div className="flex items-end justify-between flex-wrap gap-3 pt-7 pb-1">
+      <div className="mx-auto max-w-6xl space-y-8 pb-12 text-foreground">
+        <header className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h1 className="font-semibold tracking-tight" style={{ fontSize: 26 }}>
-              {loading ? 'Welcome back.' : `Welcome back, ${data?.student?.name ?? 'there'}.`}
-            </h1>
-            {needsProfileSetup && (
-              <Link
-                href="/avatar"
-                className="onb-glow inline-flex items-center gap-2 mt-3 rounded-full px-4 py-2 text-sm font-semibold"
-                style={{
-                  background: 'color-mix(in oklch, var(--primary) 16%, var(--card))',
-                  color: 'var(--primary)',
-                  border: '1px solid color-mix(in oklch, var(--primary) 45%, var(--border))',
-                }}
-              >
-                Build your Mii &mdash; make it yours
-                <span aria-hidden style={{ opacity: 0.65 }}>&rarr;</span>
-              </Link>
-            )}
-            <p className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-              Here&rsquo;s your path for today — a quick warm-up, then your next lesson.
-            </p>
+            <p className="text-overline text-primary">Your classroom</p>
+            <h1 className="text-title-1 mt-2">{data && !loadError ? `Hi, ${data.student.name}.` : 'Welcome to class.'}</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Open your lesson, find your work, and get help when you need it.</p>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <StatPill tone="reward"><Coins size={13} /> {loading ? '—' : data?.points?.xp ?? 0} XP</StatPill>
-            {!loading && (data?.streak?.current ?? 0) > 0 && (
-              <StatPill tone="muted">
-                <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 8px var(--success)' }} /> {data!.streak.current}-day streak
-              </StatPill>
-            )}
-            {/* compact climb summary — the point of the page, lifted up top */}
-            {!loading && climbSummary && (
-              <StatPill tone="muted">⛰ {climbSummary}</StatPill>
-            )}
+          <div className="flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-11"><Link href="/lobby"><Users aria-hidden="true" />Lobby</Link></Button><Button asChild variant="outline" className="min-h-11 lg:hidden"><a href="#classroom-directory">Find what you need<ChevronDown aria-hidden="true" /></a></Button></div>
+        </header>
+
+        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
+          <div className="min-w-0 space-y-6">
+            <section aria-labelledby="next-heading">
+              <Card className={`${styles.lesson} gap-4 border-primary/40 p-5 sm:p-7`}>
+                <p className={`${styles.startLabel} text-overline self-start rounded-full bg-primary px-3 py-1.5`}>Start here</p>
+                {loading ? <div role="status" className="space-y-3"><h2 id="next-heading" className="text-title-2">Finding your next lesson…</h2><p className="text-sm text-muted-foreground">Your classroom links are ready below.</p></div>
+                  : loadError ? <div role="alert" className="space-y-3"><h2 id="next-heading" className="text-title-2">Your lesson could not load</h2><p className="text-sm text-muted-foreground">Try again, or open All lessons to find your work.</p><Button onClick={() => setRetry(n => n + 1)} className="min-h-11">Try again</Button></div>
+                  : current ? <>
+                    <div><p className="mb-2 text-sm text-muted-foreground">{current.unitName ?? 'Your next lesson'}</p><h2 id="next-heading" className="text-title-2">{current.lesson.title}</h2></div>
+                    <p className="text-sm text-muted-foreground">{current.lesson.progress > 0 ? 'Continue where you left off. Your saved work is in the lesson.' : 'Open the lesson to see the reading and activities.'} Follow your teacher’s directions during class.</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button asChild className="min-h-11"><Link href={`/lessons/${current.lesson.slug}`}>{current.lesson.progress > 0 ? 'Resume lesson' : 'Start lesson'}<ArrowRight aria-hidden="true" /></Link></Button>
+                      <Button asChild variant="outline" className="min-h-11"><Link href="/lessons">All lessons</Link></Button>
+                    </div>
+                    <p className="border-t pt-4 text-sm text-muted-foreground">{current.completed} of {current.total} lessons completed{current.unitName ? ` in ${current.unitName}` : ''}</p>
+                  </> : <>
+                    <h2 id="next-heading" className="text-title-2">No next lesson to show</h2>
+                    <p className="text-sm text-muted-foreground">Check All lessons for available work, or ask your teacher what to open next.</p>
+                    <Button asChild variant="outline" className="min-h-11 self-start"><Link href="/lessons">Open all lessons<ArrowRight aria-hidden="true" /></Link></Button>
+                  </>}
+              </Card>
+            </section>
+
+            <section aria-labelledby="practice-heading" className={`${styles.practice} space-y-4`}>
+              <div><h2 id="practice-heading" className="text-title-3">Daily practice</h2><p className="mt-1 text-sm text-muted-foreground">Your math warm-up and assigned vocabulary, together in one place.</p></div>
+              <DailyMathTask />
+              <VocabTaskCards />
+            </section>
+
+            {!loading && !loadError && data && <section aria-labelledby="feedback-heading" className="space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2"><h2 id="feedback-heading" className="text-title-3">Teacher feedback & progress</h2><Button asChild variant="ghost" className="min-h-11"><Link href="/dashboard/growth">My progress<ArrowRight aria-hidden="true" /></Link></Button></div>
+              <Card className={`${styles.feedback} gap-0 overflow-hidden py-0`}>
+                {data.retry.length ? data.retry.map(r => <div key={r.targetId} className="flex flex-wrap items-center gap-3 border-b p-5 last:border-0">
+                  <div className="min-w-0 flex-1 basis-48"><p className="mb-1 text-xs font-semibold text-muted-foreground">{r.level === 1 ? 'Not yet' : 'Almost'} · {r.domain}</p><h3 className="text-sm font-medium">{r.statement}</h3></div>
+                  <Button asChild variant="outline" className="min-h-11"><Link href={`/review/${r.targetId}`} aria-label={`Practice: ${r.statement}`}>Practice<ArrowRight aria-hidden="true" /></Link></Button>
+                </div>) : <p className="p-5 text-sm text-muted-foreground">No skills are listed for extra practice right now. Your teacher’s ratings and feedback appear in My progress.</p>}
+                <details className="group border-t">
+                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-5 text-sm font-semibold">View progress over time<ChevronDown aria-hidden="true" className="h-4 w-4 group-open:rotate-180" /></summary>
+                  <div className="space-y-4 px-5 pb-5"><p className="text-sm text-muted-foreground">Each dot is a teacher rating. The line gives more weight to recent work.</p><div className="flex flex-wrap gap-2" aria-label="Progress category">{DOMAINS.map(dm => <Button key={dm.key} variant={domain === dm.key ? 'default' : 'outline'} className="min-h-11" aria-pressed={domain === dm.key} onClick={() => setDomain(dm.key)}>{dm.label}</Button>)}</div><ClimbChart points={climbForDomain} /></div>
+                </details>
+              </Card>
+            </section>}
           </div>
+
+          <aside className="min-w-0 space-y-6" aria-label="Classroom directory and goals">
+            <section id="classroom-directory" aria-labelledby="find-heading" className="scroll-mt-28">
+              <h2 id="find-heading" className="text-title-3 mb-4">Find what you need</h2>
+              <Card className="gap-3 p-3">
+                {DESTINATIONS.map(group => <nav key={group.title} aria-label={group.title} className={styles.directoryGroup}>
+                  <h3 className="text-overline mb-2 text-muted-foreground">{group.title}</h3>
+                  <ul className="space-y-1">{group.items.map(item => <li key={item.href}><Link href={item.href} className="flex min-h-11 items-start gap-3 rounded-lg p-2 -mx-2 hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2">
+                    <span className={styles.directoryIcon}><item.icon aria-hidden="true" className="h-4 w-4" /></span><span className="min-w-0"><span className="block text-sm font-semibold">{item.title}</span><span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{item.description}</span></span>
+                  </Link></li>)}</ul>
+                </nav>)}
+              </Card>
+            </section>
+            <section aria-labelledby="goals-heading" className={`${styles.rewards} space-y-3`}>
+              <h2 id="goals-heading" className="text-title-3">Goals & rewards</h2>
+              {!loading && !loadError && data && <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm"><span className="rounded-full bg-reward px-3 py-1 font-semibold text-reward-foreground">{data.points.xp.toLocaleString()} XP earned</span><span className="text-muted-foreground">{data.points.balance.toLocaleString()} points to spend</span>{data.streak.current > 0 && <span className="text-muted-foreground">{data.streak.current}-day streak</span>}</div>}
+              <XpGoalRing compact />
+              <ChallengeCard compact />
+            </section>
+          </aside>
         </div>
-
-        {loading && <p className="text-sm mt-8" style={{ color: 'var(--muted-foreground)' }}>Loading your home…</p>}
-
-        {loadError && <div role="alert" className="mt-6 rounded-xl border p-4 text-sm">
-          Couldn’t load your coursework. <button className="ml-2 underline font-semibold" onClick={() => setRetry((n) => n + 1)}>Retry</button>
-        </div>}
-        {!loading && !loadError && data && (
-          <>
-            {/* CONTINUE — the single primary path. The daily math warm-up is
-                folded in as a compact "2-min first" step rather than opening
-                the page as an obligation (Surface 16: lead with the path). */}
-            <SectionLabel accent="var(--primary)">Continue your journey</SectionLabel>
-
-            {/* Today's XP goal — set by this student's teacher */}
-            <div className="mb-3"><XpGoalRing compact /></div>
-            {/* Teacher-set daily challenges */}
-            <div className="mb-3"><ChallengeCard compact /></div>
-
-            <details
-              open={warmupOpen}
-              onToggle={(e) => setWarmupOpen((e.currentTarget as HTMLDetailsElement).open)}
-              className="mb-3 rounded-2xl overflow-hidden"
-              style={{
-                border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))',
-                background: 'color-mix(in oklch, var(--reward) 8%, var(--card))',
-              }}
-            >
-              <summary
-                className="flex items-center gap-2 px-4 py-3 text-sm font-semibold"
-                style={{ cursor: 'pointer', listStyle: 'none', color: 'var(--foreground)' }}
-              >
-                <span className="grid place-items-center shrink-0" style={{ width: 26, height: 26, borderRadius: 8, background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
-                  <Zap size={14} />
-                </span>
-                Step 1 · 2-minute math warm-up
-                <ChevronDown size={15} className="ml-auto" style={{ color: 'var(--muted-foreground)' }} />
-              </summary>
-              <div className="px-4 pb-4">
-                <DailyMathTask onStatus={(s) => setWarmupOpen(!s.submitted)} />
-              </div>
-            </details>
-            <VocabTaskCards />
-            {data.continue && data.continue.lesson ? (
-              <Glass
-                style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  padding: 26,
-                  border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))',
-                  background:
-                    'radial-gradient(90% 130% at 90% -10%, color-mix(in oklch, var(--primary) 26%, transparent), transparent 55%), color-mix(in oklch, var(--card) 80%, transparent)',
-                  boxShadow: '0 18px 50px -20px color-mix(in oklch, var(--primary) 50%, transparent)',
-                }}
-              >
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)', fontWeight: 600 }}>
-                  {data.continue.unitName ?? 'Your unit'}
-                </div>
-                <div className="font-semibold tracking-tight" style={{ fontSize: 22, margin: '5px 0 6px' }}>
-                  Lesson {data.continue.lesson.lessonNumber} — {data.continue.lesson.title}
-                </div>
-                <div className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-                  {data.continue.lesson.progress > 0 ? 'Pick up where you left off.' : 'Ready when you are — this is your next waypoint.'}
-                </div>
-                <Link
-                  href={`/lessons/${data.continue.lesson.slug}`}
-                  className="inline-flex items-center gap-2 rounded-xl font-bold"
-                  style={{ fontSize: 15, padding: '13px 26px', background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 10px 28px -8px color-mix(in oklch, var(--primary) 70%, transparent)' }}
-                >
-                  {data.continue.lesson.progress > 0 ? 'Resume lesson' : 'Start lesson'} →
-                </Link>
-
-                {/* journey map */}
-                {data.continue.sequence.length > 0 && (
-                  <div className="mt-6 pt-5" style={{ borderTop: '1px solid color-mix(in oklch, var(--border) 70%, transparent)' }}>
-                    {/* py-4 gives the current-day hubPulse glow (up to ~12px outside the
-                        bubble) room to breathe inside the overflow-x scroll box, which
-                        otherwise clips it on top/bottom. */}
-                    <div className="flex items-center overflow-x-auto py-4">
-                      {data.continue.sequence.map((s, i) => {
-                        // The bubble already shows the day number (or ✓), so
-                        // strip the "Day N — " prefix from the label to stop
-                        // wasting characters on duplication. Allow up to two
-                        // lines of natural wrapping at a slightly wider cell.
-                        const cleanTitle = s.title.replace(/^\s*Day\s+\d+\s*[—–-]\s*/, '')
-                        return (
-                        <div key={s.slug} className="flex items-center">
-                          <div className="flex flex-col items-center gap-1.5" style={{ minWidth: 96 }}>
-                            <div
-                              className={`grid place-items-center font-bold ${s.status === 'current' ? 'hub-current-waypoint' : ''}`}
-                              style={{
-                                width: s.status === 'current' ? 36 : 30,
-                                height: s.status === 'current' ? 36 : 30,
-                                borderRadius: '50%',
-                                fontSize: 13,
-                                background: s.status === 'done' ? 'var(--primary)' : s.status === 'current' ? 'var(--reward)' : 'transparent',
-                                color: s.status === 'done' ? 'var(--primary-foreground)' : s.status === 'current' ? 'var(--reward-foreground)' : 'var(--muted-foreground)',
-                                border: s.status === 'todo' ? '1.5px dashed var(--border)' : 'none',
-                                animation: s.status === 'current' ? 'hubPulse 2s ease-in-out infinite' : undefined,
-                              }}
-                            >
-                              {s.status === 'done' ? '✓' : s.lessonNumber}
-                            </div>
-                            <div
-                              title={s.title}
-                              style={{
-                                fontSize: 11,
-                                color: s.status === 'current' ? 'var(--foreground)' : 'var(--muted-foreground)',
-                                textAlign: 'center',
-                                maxWidth: 100,
-                                lineHeight: 1.2,
-                                display: '-webkit-box',
-                                WebkitBoxOrient: 'vertical',
-                                WebkitLineClamp: 2,
-                                overflow: 'hidden',
-                                wordBreak: 'break-word',
-                              }}
-                            >
-                              {cleanTitle}
-                            </div>
-                          </div>
-                          {i < data.continue!.sequence.length - 1 && (
-                            <div style={{ height: 2.5, width: 24, borderRadius: 2, background: s.status === 'done' ? 'var(--primary)' : 'var(--border)' }} />
-                          )}
-                        </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )}
-              </Glass>
-            ) : (
-              <Glass style={{ padding: 22 }}>
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-                  {data.program === 'trades'
-                    ? 'Your Trades Physics lessons aren\u2019t published yet — your targets and mastery tasks are live, and lessons will show up here as your teacher releases them.'
-                    : data.program === 'projects'
-                      ? 'Your project weeks aren\u2019t published yet — your targets are live, and each week\u2019s page will show up here as your teacher releases it. · Tus semanas de proyecto todavía no están publicadas.'
-                      : 'No lessons are published yet — check back soon.'}
-                </p>
-              </Glass>
-            )}
-
-            {/* RETRY */}
-            <SectionLabel accent="var(--destructive)">Skills to strengthen</SectionLabel>
-            {data.retry.length > 0 ? (
-              <div className="flex flex-col gap-3">
-                {data.retry.map((r) => (
-                  <Glass key={r.targetId} style={{ padding: '16px 18px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 5, background: r.level === 1 ? 'var(--destructive)' : 'var(--reward)' }} />
-                    <div className="flex items-center gap-4 pl-2">
-                      <div className="grid place-items-center font-bold flex-shrink-0" style={{ width: 46, height: 46, borderRadius: '50%', fontSize: 15, background: r.level === 1 ? 'color-mix(in oklch, var(--destructive) 18%, transparent)' : 'color-mix(in oklch, var(--reward) 32%, transparent)', color: r.level === 1 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>
-                        {r.level}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-sm">{r.statement}</div>
-                        <div style={{ fontSize: 12, color: 'var(--muted-foreground)', marginTop: 2 }}>
-                          <span style={{ textTransform: 'uppercase', fontWeight: 700 }}>{r.level === 1 ? 'Not yet' : 'Almost'}</span> · {r.domain}
-                        </div>
-                      </div>
-                      <Link href={`/review/${r.targetId}`} className="rounded-lg text-sm" style={{ padding: '9px 16px', border: '1px solid var(--border)', background: 'color-mix(in oklch, var(--card) 60%, transparent)', color: 'var(--foreground)' }}>
-                        Practice
-                      </Link>
-                    </div>
-                  </Glass>
-                ))}
-              </div>
-            ) : (
-              <Glass style={{ padding: 30, textAlign: 'center', border: '1px solid color-mix(in oklch, var(--success) 40%, var(--border))', background: 'radial-gradient(80% 120% at 50% -20%, color-mix(in oklch, var(--success) 20%, transparent), transparent 60%), color-mix(in oklch, var(--card) 80%, transparent)' }}>
-                <div className="grid place-items-center mx-auto mb-3" style={{ width: 56, height: 56, borderRadius: '50%', background: 'var(--success)', color: '#fff', fontSize: 28, boxShadow: '0 0 26px color-mix(in oklch, var(--success) 55%, transparent)' }}>✓</div>
-                <h3 className="font-semibold" style={{ fontSize: 18 }}>All current skills at &ldquo;Got it&rdquo;</h3>
-                <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Nothing to retry right now — you&apos;re on top of every target your teacher has checked. Keep climbing.</p>
-              </Glass>
-            )}
-
-            {/* MASTERY CLIMB */}
-            <SectionLabel accent="var(--reward)">Your mastery climb</SectionLabel>
-            <Glass style={{ padding: 22 }}>
-              <div className="flex justify-between items-start gap-4 flex-wrap mb-2">
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)', maxWidth: 440 }}>
-                  Each dot is a rating from your teacher. The line is your weighted mastery — recent work counts more, but earlier work still counts.
-                </p>
-                <div className="flex gap-1.5 flex-wrap">
-                  {DOMAINS.map((dm) => (
-                    <button
-                      key={dm.key}
-                      onClick={() => setDomain(dm.key)}
-                      className="rounded-full"
-                      style={{
-                        fontSize: 12, fontWeight: 600, padding: '5px 12px',
-                        border: domain === dm.key ? '1px solid transparent' : '1px solid var(--border)',
-                        background: domain === dm.key ? 'var(--reward)' : 'transparent',
-                        color: domain === dm.key ? 'var(--reward-foreground)' : 'var(--muted-foreground)',
-                      }}
-                    >
-                      {dm.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <ClimbChart points={climbForDomain} />
-            </Glass>
-
-          </>
-        )}
       </div>
-    </>
     </EnrollmentGate>
   )
 }

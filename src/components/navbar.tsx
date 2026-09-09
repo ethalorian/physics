@@ -143,20 +143,6 @@ export default function Navbar() {
         <button onClick={() => { clearStudentView(); window.location.reload() }} className="underline font-medium">Exit</button>
       </div>
     )}
-    {/* Hover rail: at rest each tab is its icon and only the CURRENT tab keeps
-        its label, so the bar reads as "where am I" without seven words. Moving
-        the pointer into the rail (or tabbing into it) slides every label open.
-        Devices without hover (touch) always show labels — glyphs alone were
-        unreadable on Chromebooks before. */}
-    <style>{`
-      .nav-rail .nav-label{display:inline-block;max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:opacity .15s ease;margin-left:0}
-      .nav-rail .nav-link[data-active="true"] .nav-label,
-      .nav-rail:hover .nav-label,
-      .nav-rail:focus-within .nav-label{max-width:9rem;opacity:1;margin-left:.375rem}
-      @media (min-width:1024px){.nav-rail .nav-label{max-width:9rem;margin-left:.375rem}}
-      @media (hover:none){.nav-rail .nav-label{max-width:9rem;opacity:1;margin-left:.375rem}}
-      @media (prefers-reduced-motion:reduce){.nav-rail .nav-label{transition:none}}
-    `}</style>
     <nav className="sticky top-0 z-50 border-b border-border/70 bg-background/80 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/60">
       <div className="w-full px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
@@ -172,14 +158,14 @@ export default function Navbar() {
               </span>
             </Link>
             {/* Physics Level Badge - Hidden on Mobile */}
-            <div className="hidden xl:block">
+            <div className="hidden 2xl:block">
               <PhysicsLevelBadge variant="compact" />
             </div>
           </div>
           
           {/* Desktop navigation links */}
           {isAuthenticated && navigationItems.length > 0 && (
-            <div className="nav-rail hidden md:flex items-center gap-0.5 rounded-xl px-1 py-0.5" aria-label="Main">
+            <div className="nav-rail hidden xl:flex items-center gap-0.5 rounded-xl px-1 py-0.5" aria-label="Main">
               {navigationItems.map((item) => {
                 const Icon = item.icon
                 const isActive = isActivePath(item.href)
@@ -191,14 +177,14 @@ export default function Navbar() {
                     title={item.label}
                     aria-label={item.label}
                     aria-current={isActive ? 'page' : undefined}
-                    className={`nav-link flex items-center px-2.5 py-2 text-sm font-medium rounded-lg transition-colors ${
+                    className={`nav-link flex min-h-11 items-center px-2.5 py-2 text-sm font-medium rounded-lg transition-colors ${
                       isActive
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <Icon className="h-4 w-4 shrink-0" />
-                    <span className="nav-label">{item.label}</span>
+                    <span className="ml-1.5 whitespace-nowrap">{item.label}</span>
                   </Link>
                 )
               })}
@@ -207,12 +193,12 @@ export default function Navbar() {
 
           {/* Mobile Hamburger Menu - Only show when authenticated and has nav items */}
           {isAuthenticated && navigationItems.length > 0 && (
-            <div className="md:hidden">
+            <div className="xl:hidden">
               <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+                  <Button variant="ghost" size="sm" className="min-h-11 gap-2 px-3">
                     <Menu className="h-5 w-5" />
-                    <span className="sr-only">Open navigation menu</span>
+                    <span>Menu</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] sm:w-[320px] p-0 bg-background/95 backdrop-blur-xl">

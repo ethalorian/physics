@@ -88,7 +88,7 @@ export default function FigureGraph({
         </ResponsiveContainer>
       </div>
       <figcaption style={{ fontSize: presentation ? 24 : 11.5, color: 'var(--muted-foreground)', marginTop: 6 }}>
-        Hover a point for its value · click a name in the key to show or hide that line.
+        {presentation ? 'Compare the axes, the patterns, and the evidence.' : 'Hover a point for its value · click a name in the key to show or hide that line.'}
       </figcaption>
     </figure>
   )

@@ -376,7 +376,7 @@ export default function LobbyActivityPage() {
           </div>
           {st.block ? <LanguageProfileProvider><BlockRenderer referenceBlocks={st.referenceBlocks} blocks={[st.block]} lessonId={st.lesson_id ?? ''} responses={st.sharedArtifact ? { [st.block.id]: { response: st.sharedArtifact.response, created_at: st.sharedArtifact.updated_at } } : {}} hydrated save={async (_id, _type, artifact) => {
             const r = await fetch('/api/lobby/submit', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ session_id: st.session_id, response: artifact }) })
-            if (!r.ok) { const d = await r.json(); setGroupError(d.error ?? 'Group work could not save'); return false }
+            if (!r.ok) { const d = await r.json(); setGroupError(d.error ?? 'Lobby work could not save'); return false }
             setGroupError(null); poll(); return true
           }} /></LanguageProfileProvider> : isDrawing ? (
             <PaintPad value={strokes} onChange={setStrokes} />

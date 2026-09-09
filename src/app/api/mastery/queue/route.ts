@@ -70,6 +70,6 @@ export const GET = withAuth(async (request, ctx) => {
     if (seen.has(key)) return false
     seen.add(key)
     return !reviewed.has(r.id)
-  }).map((r) => ({ ...r, name: names.get(r.user_id) ?? 'Student', lessonTitle: r.lesson_id ? titles.get(r.lesson_id) ?? 'Lesson' : 'Unlinked group work', untargeted: !r.target_id, unlinked: !r.lesson_id }))
+  }).map((r) => ({ ...r, name: names.get(r.user_id) ?? 'Student', lessonTitle: r.lesson_id ? titles.get(r.lesson_id) ?? 'Lesson' : 'Unlinked Lobby work', untargeted: !r.target_id, unlinked: !r.lesson_id }))
   return NextResponse.json({ unitId, queue: [...byUser.values()], submissions, evidence, evidenceLimit: 1000, evidenceMayBeTruncated: (raw ?? []).length === 1000 })
 })

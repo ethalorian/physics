@@ -16,7 +16,7 @@ export function projectedBlockPages(block: ContentBlock): ContentBlock[] {
     return Array.from({ length: Math.ceil(block.terms.length / 4) }, (_, i) => ({ ...block, terms: block.terms.slice(i * 4, i * 4 + 4) }))
   }
   if (block.type === 'procedure' && block.steps.length > 4) {
-    return Array.from({ length: Math.ceil(block.steps.length / 4) }, (_, i) => ({ ...block, title: `${block.title ?? 'Procedure'} · steps ${i * 4 + 1}–${Math.min(block.steps.length, i * 4 + 4)}`, steps: block.steps.slice(i * 4, i * 4 + 4) }))
+    return Array.from({ length: Math.ceil(block.steps.length / 4) }, (_, i) => ({ ...block, title: `${block.title ?? 'Procedure'} · steps ${i * 4 + 1}–${Math.min(block.steps.length, i * 4 + 4)}`, steps: block.steps.slice(i * 4, i * 4 + 4), startNumber: (block.startNumber ?? 1) + i * 4 }))
   }
   return [block]
 }

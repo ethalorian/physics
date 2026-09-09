@@ -1,4 +1,5 @@
 import { paginateBlocks, type ContentBlock, type BlockDocument } from '@/data/content-blocks'
+import { projectedBlockPages } from '@/lib/projected-block'
 import { sectionAnchor } from '@/lib/lesson-anchors'
 import { buildSections } from '@/components/lessons/lesson-sections'
 
@@ -9,7 +10,7 @@ export function buildSlides(title: string, doc: Pick<BlockDocument, 'blocks'> | 
   const slides: Slide[] = [{ label: 'Title', notes: '', kicker: 'Today', title, anchor: null, blocks: [] }]
   pages.forEach((page, section) => {
     // Explicit continuation slides preserve every representation and full prompt.
-    page.blocks.filter(b => b.type !== 'deck').forEach((block, part, blocks) => slides.push({
+    page.blocks.filter(b => b.type !== 'deck').flatMap(projectedBlockPages).forEach((block, part, blocks) => slides.push({
       label: `${sections[section]?.title ?? 'Section'} · ${part + 1}/${blocks.length}`,
       notes: page.hasCapture ? 'Students save their work in this section.' : '',
       kicker: `Section ${section + 1} · ${part ? 'Continued · ' : ''}${part + 1}/${blocks.length}`,

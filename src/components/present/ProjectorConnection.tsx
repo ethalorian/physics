@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Button } from '@/components/ui/button'
-import MathMarkdown from '@/components/MathMarkdown'
+import TeachingActivity from './TeachingActivity'
 import { useTimerLeft, fmtTimer } from '@/components/lessons/PresentLiveProvider'
 import { deckGo, deckPresenting, readDeck, sectionForSlide } from '@/lib/present-bridge'
 import { openPresenterWindow } from '@/lib/present-deck'
@@ -10,7 +10,7 @@ import { commandRequest, commandQuestion, type CommandLesson } from '@/lib/class
 import { paginateBlocks, type DeckBlock } from '@/data/content-blocks'
 import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
 import { useTeachingTools } from './useTeachingTools'
-import { projectorSignature, PULSE_OPTIONS } from '@/lib/presentation-tools'
+import { projectorSignature } from '@/lib/presentation-tools'
 import { useCommandSession } from './useCommandSession'
 
 /** Run on the projector COMPUTER. The iPad writes session state; this bridge drives the second window. */
@@ -33,6 +33,14 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
   }, [existingWindow])
   const stateRef = useRef(state)
   stateRef.current = state
+  const receivedSlide = state?.session.current_slide
+  // Apply received commands on render; the interval only handles late deck readiness.
+  useEffect(() => {
+    if (!connected || receivedSlide === undefined) return
+    const win = deckWindow.current
+    const snapshot = readDeck(win)
+    if (snapshot && snapshot.index !== receivedSlide) deckGo(win, receivedSlide)
+  }, [connected, receivedSlide])
   const left = useTimerLeft(state?.session.timer_ends_at)
   const lessonId = state?.session.lesson_id
   useEffect(() => { setOrigin(window.location.origin) }, [])
@@ -146,10 +154,8 @@ export default function ProjectorConnection({ sessionId, existingWindow }: { ses
       {teaching.state && <span style={{ display: 'none' }} data-projection-signature={projectorSignature(state, teaching.state)} />}
       {(state.session.blackout || ended) ? <div style={{ position: 'fixed', inset: 0, zIndex: 2147483647, background: '#000' }} aria-label={ended ? 'Presentation ended' : 'Screen blanked'} /> : <>
         {state.session.projected_block_id && <iframe key={state.session.projected_block_id} title="Projected lesson block" src={`${origin}/embed/present-block/${encodeURIComponent(sessionId)}?lesson=${encodeURIComponent(state.session.lesson_id)}&block=${encodeURIComponent(state.session.projected_block_id)}&part=${state.session.projected_block_page ?? 0}`} style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', border: 0, zIndex: 2147483644, background: 'white' }} allow="fullscreen" />}
-        {(showLobby || pulse || poll?.type === 'question') && <div style={{ position: 'fixed', inset: 0, zIndex: 2147483645, background: 'var(--background, white)', color: 'var(--foreground, black)', padding: '5vh 7vw', overflowY: 'auto', fontFamily: 'system-ui', fontSize: 'clamp(24px, 3vw, 56px)' }}>
-          {state.lobby ? <div style={{ textAlign: 'center', paddingTop: '12vh' }}><p>Join the activity</p><p style={{ fontSize: 'clamp(56px, 12vw, 180px)', fontWeight: 700, letterSpacing: '.12em' }}>{state.lobby.code}</p><p>{origin.replace(/^https?:\/\//, '')}/lobby</p><p>{state.lobby.status === 'open' ? 'Work with your group on your device.' : state.lobby.status === 'grouped' ? 'Find your group on your device.' : 'Enter the code on your device.'}</p></div> : pulse ? <div><h1>{pulse.kind === 'readiness' ? 'How ready are you to move on?' : 'How confident do you feel?'}</h1><p>Respond on your lesson screen · {pulse.anonymous ? 'anonymous totals' : 'your teacher can offer help'}</p>{PULSE_OPTIONS[pulse.kind].map(label => <p key={label} style={{ padding: 16, border: '2px solid currentColor', borderRadius: 12 }}>{label}</p>)}</div> : poll?.type === 'question' && <>{teaching.state?.tools?.discussion_block_id === state.session.poll_block_id && <p>Discuss with a partner. Explain your reasoning before the fresh vote.</p>}<MathMarkdown content={commandQuestion(poll)!.prompt} />{commandQuestion(poll)!.options?.map(o => <div key={o.id} style={{ marginTop: '2vh', padding: '1vh', border: '2px solid currentColor', borderRadius: 12 }}><MathMarkdown content={o.text} />{state.session.poll_revealed && <span>{state.tally[o.id] ?? 0} responses</span>}</div>)}<p style={{ marginTop: '3vh' }}>{state.saved} of {state.enrolled} responses · {state.session.poll_revealed ? 'Results revealed' : state.session.poll_locked ? 'Responses locked' : 'Respond on your device'}</p></>}
-        </div>}
-        {left !== null && <div style={{ position: 'fixed', right: 24, top: 20, zIndex: 2147483646, borderRadius: 16, padding: '12px 24px', background: 'var(--background, white)', color: 'var(--foreground, black)', fontFamily: 'system-ui', fontSize: 'clamp(28px, 4vw, 64px)', fontVariantNumeric: 'tabular-nums' }}>{fmtTimer(left)}</div>}
+        {(showLobby || pulse || poll?.type === 'question') && <div style={{ position: 'fixed', inset: 0, zIndex: 2147483645 }}><TeachingActivity lesson={documentData?.lesson.title ?? 'Today’s lesson'} live={state} pulse={pulse} question={commandQuestion(poll)} discussion={Boolean(teaching.state?.tools?.discussion_block_id && teaching.state.tools.discussion_block_id === state.session.poll_block_id)} origin={origin} /></div>}
+        {left !== null && <div style={{ position: 'fixed', right: 24, bottom: 20, zIndex: 2147483646, borderRadius: 16, padding: '12px 24px', background: 'var(--background, white)', color: 'var(--foreground, black)', fontFamily: 'system-ui', fontSize: 'clamp(28px, 4vw, 64px)', fontVariantNumeric: 'tabular-nums' }}>{fmtTimer(left)}</div>}
         {error && <div style={{ position: 'fixed', left: 20, bottom: 20, zIndex: 2147483646, padding: 12, background: 'var(--background, white)', color: 'var(--foreground, black)' }}>Connection interrupted · holding the last view</div>}
       </>}
     </>, portal)}

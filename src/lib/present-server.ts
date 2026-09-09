@@ -8,12 +8,16 @@ import { isSameIdentity } from '@/lib/identity-aliases'
 type PresentationActor = { role: string; email: string; scopeEmail?: string }
 
 /** Explain launch blockers while preserving class, publication, and track gates. */
-export async function resolveClassLesson(lessonId: string, courseId: string, actor?: PresentationActor) {
+export async function resolveClassLesson(lessonId: string, courseId: string, actor?: PresentationActor, options: { hydrate?: boolean } = {}) {
   const unavailable = (error: string, status = 403) => ({ ok: false as const, error, status })
-  const { data: course, error } = await supabaseAdmin.from('courses').select('id, teacher_email, program, track').eq('id', courseId).maybeSingle()
+  const [courseResult, lessonResult] = await Promise.all([
+    supabaseAdmin.from('courses').select('id, teacher_email, program, track').eq('id', courseId).maybeSingle(),
+    supabaseAdmin.from('lessons').select('id, title, unit_id, visibility_track, published, content_blocks').eq('id', lessonId).maybeSingle(),
+  ])
+  const { data: course, error } = courseResult
   if (error) return unavailable('Could not check class access. Please retry.', 503)
   if (!course || (actor && actor.role !== 'admin' && !isSameIdentity(actor.scopeEmail ?? actor.email, course.teacher_email))) return unavailable('This class is not available to your teaching account. Choose one of your classes.')
-  const { data: lesson, error: lessonError } = await supabaseAdmin.from('lessons').select('id, title, unit_id, visibility_track, published, content_blocks').eq('id', lessonId).maybeSingle()
+  const { data: lesson, error: lessonError } = lessonResult
   if (lessonError) return unavailable('Could not load this lesson. Please retry.', 503)
   if (!lesson) return unavailable('This lesson is unavailable.', 404)
   const program = asProgram(course.program)
@@ -24,14 +28,14 @@ export async function resolveClassLesson(lessonId: string, courseId: string, act
   if (blockers.length) return unavailable(blockers.join(' '))
   const original = lesson.content_blocks as BlockDocument | null
   if (!original?.blocks?.length) return unavailable('This lesson has no content to present. Add lesson content first.', 422)
-  const doc = filterDocumentForViewer(await hydrateLessonDocument(original, lesson.unit_id), { role: 'student', track: effectiveTrack(course.track) })
+  const doc = filterDocumentForViewer(options.hydrate === false ? original : await hydrateLessonDocument(original, lesson.unit_id), { role: 'student', track: effectiveTrack(course.track) })
   if (!doc.blocks.length) return unavailable('This lesson has no student-visible content for the selected class.', 422)
   const deck = original.blocks.find(b => b.type === 'deck' && isBlockVisible(b, {role:'teacher',track:course.track})) ?? null
   return { ok: true as const, lesson: { ...lesson, content_blocks: doc, original, deck, track: effectiveTrack(course.track) } }
 }
 
-export async function classLesson(lessonId: string, courseId: string, actor?: PresentationActor) {
-  const result = await resolveClassLesson(lessonId, courseId, actor)
+export async function classLesson(lessonId: string, courseId: string, actor?: PresentationActor, options: { hydrate?: boolean } = {}) {
+  const result = await resolveClassLesson(lessonId, courseId, actor, options)
   return result.ok ? result.lesson : null
 }
 export async function validateLivePoll(args: { userId: string; lessonId: string; blockId: string; presentSessionId?: string | null; pollRunId?: string | null }): Promise<{ok:true;sessionId:string;pollRunId:string}|{ok:false;error:string;status:number}> {

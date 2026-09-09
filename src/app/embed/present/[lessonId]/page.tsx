@@ -15,10 +15,11 @@
 import { createElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import { type BlockDocument } from '@/data/content-blocks'
-import BlockRenderer from '@/components/blocks/BlockRenderer'
+import { TeachingStage, FitTeachingContent } from '@/components/present/TeachingStage'
+import TeachingBlockContent, { blockMode } from '@/components/present/TeachingBlockContent'
 import { buildSlides } from '@/lib/present-auto-slides'
 
-const W = 1920, H = 1080
+const W = 1600, H = 900
 
 
 export default function AutoDeckPage() {
@@ -96,13 +97,10 @@ export default function AutoDeckPage() {
 
   const s = slides[index]
   const stageChildren = slides.map((sl, i) => (
-    <section key={i} data-label={sl.label} data-section-anchor={sl.anchor ?? undefined} data-speaker-notes={sl.notes} style={{ display: i === index ? 'flex' : 'none', position: 'absolute', inset: 0, flexDirection: 'column', padding: '50px 100px', boxSizing: 'border-box' }}>
-      <div className="text-muted-foreground" style={{ fontSize: 28 }}>{sl.kicker}</div>
-      <h1 style={{ fontSize: i === 0 ? 100 : 48, lineHeight: 1.1, margin: '16px 0 24px' }}>{sl.title}</h1>
-      <div className="overflow-y-auto flex-1 rounded-xl bg-background text-foreground" style={{ fontSize: 26, padding: 24 }}>
-        <BlockRenderer blocks={sl.blocks} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks} responses={{}} hydrated readOnly />
-      </div>
-      <div style={{ fontSize: 24, textAlign: 'right', marginTop: 12 }}>{i + 1} / {slides.length}</div>
+    <section key={i} data-label={sl.label} data-section-anchor={sl.anchor ?? undefined} data-speaker-notes={sl.notes} style={{ display: i === index ? 'block' : 'none', position: 'absolute', inset: 0 }}>
+      <TeachingStage embedded lesson={lesson?.title ?? 'Today’s lesson'} mode={i === 0 ? 'Let’s investigate' : blockMode(sl.blocks[0])} footer={<>{i + 1} / {slides.length} · {i === 0 ? 'Notice. Question. Make sense of it.' : 'Follow along on your device'}</>}>
+        {sl.blocks[0] ? <TeachingBlockContent block={sl.blocks[0]} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks ?? []} /> : <FitTeachingContent><div className="teach-intro" style={{ minHeight: 660 }}><div><p className="teach-eyebrow">Today’s investigation</p><h1 className="teach-headline">{sl.title}</h1><p className="teach-subtitle">Explore the ideas.<br />Find the evidence.<br />Build your explanation.</p></div><div className="teach-orbit" aria-hidden>φ</div></div></FitTeachingContent>}
+      </TeachingStage>
     </section>
   ))
 

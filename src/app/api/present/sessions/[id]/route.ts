@@ -34,7 +34,7 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
     return NextResponse.json({ session: data })
   }
 
-  const lesson = s.course_id ? await classLesson(s.lesson_id, s.course_id, ctx) : null
+  const lesson = s.course_id ? await classLesson(s.lesson_id, s.course_id, ctx, { hydrate: Boolean(body.projected_block_id) || 'projected_block_page' in body }) : null
   if (!lesson) return NextResponse.json({ error: 'Class lesson unavailable' }, { status: 403 })
   const pages = paginateBlocks(lesson.content_blocks.blocks)
   const update: Record<string, unknown> = { updated_at: new Date().toISOString() }
@@ -108,10 +108,13 @@ export const PATCH = withRole<{ id: string }>(['teacher', 'admin'], async (reque
 export const GET = withRole<{ id: string }>(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
   const blockId = new URL(request.url).searchParams.get('block_id')
-  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, status, projected_block_id, projected_block_page, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
+  const { data: s } = await supabaseAdmin.from('present_sessions').select('id, teacher_id, lesson_id, course_id, command_revision, status, projected_block_id, projected_block_page, current_slide, current_section, current_anchor, poll_block_id, poll_run_id, poll_locked, poll_revealed, blackout, timer_ends_at, created_at, updated_at').eq('id', id).maybeSingle()
   if (!s) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   const sess = s as { id: string; teacher_id: string; lesson_id: string; course_id: string | null; poll_block_id: string | null; poll_run_id: string | null }
   if (ctx.role !== 'admin' && sess.teacher_id !== ctx.userId) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+
+  // One small read for live notifications; no roster, lobby, or answer aggregation.
+  if (new URL(request.url).searchParams.get('state_only') === '1') return NextResponse.json({ session: s }, { headers: { 'Cache-Control': 'no-store' } })
 
   // A lobby launched during this presentation temporarily takes the board.
   // Read existing session relationships; no second presentation state store.

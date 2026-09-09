@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { watchPresentation } from '@/lib/presentation-realtime'
 import { commandRequest } from '@/lib/classroom-command'
 import type { TeachingStudent, ToolsState } from '@/lib/presentation-tools'
 
@@ -13,19 +14,23 @@ export function useTeachingTools(id: string | null, display = false) {
   useEffect(() => {
     setState(null)
     if (!id) return
-    let active = true
+    let active = true, reading = false, again = false
     let timer: ReturnType<typeof setTimeout>
     const controller = new AbortController()
     const poll = async () => {
+      clearTimeout(timer)
+      if (reading) { again = true; return }
+      reading = true
       const v = version.current
       try {
         const data = await commandRequest<ToolsState>(`/api/present/sessions/${id}/tools${display ? '?display=1' : ''}`, { signal: controller.signal })
         if (active && !pending.current && v === version.current) { setState(data); setReadError('') }
       } catch(e) { if (active) setReadError(e instanceof Error ? e.message : 'Could not load teaching tools') }
-      finally { if (active) timer = setTimeout(poll, 2500) }
+      finally { reading = false; if (active) { timer = setTimeout(poll, again ? 0 : 2500); again = false } }
     }
+    const stop = watchPresentation(id, event => { if (event.type === 'tools' || event.type === 'sync') void poll() })
     void poll()
-    return () => { active = false; controller.abort(); clearTimeout(timer) }
+    return () => { active = false; stop(); controller.abort(); clearTimeout(timer) }
   }, [id, display])
   const action = useCallback(async (body: Record<string, unknown>) => {
     if (!id || pending.current) return null

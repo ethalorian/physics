@@ -133,7 +133,7 @@ export const GET = withAuth(async (request, ctx) => {
       work.push({
         prompt: context.prompt || null, targetLinked: attributed.length > 0,
 
-        lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Unlinked group work', lessonId: b.lesson_id,
+        lessonTitle: (b.lesson_id && titleByLesson.get(b.lesson_id)) || 'Unlinked Lobby work', lessonId: b.lesson_id,
         blockType: b.block_type, blockId: b.block_id, response: b.response, createdAt: b.created_at,
         responseMode: b.response_mode ?? null, scaffoldsUsed: b.scaffolds_used ?? [], evidenceSource: b.evidence_source ?? null,
         confidence: b.confidence ?? null, role: b.role ?? null, submissionId: b.submission_id ?? null,
