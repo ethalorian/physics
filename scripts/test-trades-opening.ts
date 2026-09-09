@@ -16,8 +16,8 @@ for(const l of lessons){
  for(const b of filtered.blocks){if(b.type==='question')assert.ok(!JSON.stringify(b.question).includes('correctOptionId'))}
  for(const b of l.content_blocks.blocks){
   if(b.type==='question'){
-   const q=b.question as {correctOptionId:string};const result=checkedLessonResponse(b,{optionId:q.correctOptionId,autoCheck:'mismatch'})
-   assert.equal(result.ok,true);if(result.ok)assert.equal((result.response as {autoCheck:string}).autoCheck,'match')
+   const q=b.question as {correctOptionId?:string};const result=checkedLessonResponse(b,q.correctOptionId?{optionId:q.correctOptionId,autoCheck:'mismatch'}:{text:'My partner needed the endpoints identified.',autoCheck:'match'})
+   assert.equal(result.ok,true);if(result.ok)assert.equal((result.response as {autoCheck?:string}).autoCheck,q.correctOptionId?'match':undefined)
   }
   if(['question','exit_ticket','sketch','data_table'].includes(b.type))assert.ok(b.targetId,l.slug+':'+b.id)
  }

@@ -111,3 +111,11 @@
 @media(max-width:600px) { .prominentRating { padding: 16px; }.prominentRating .ratings { grid-template-columns: 1fr; }.prominentRating .rating { flex-direction: row; min-height: 66px; } }
 .responseList, .responseList button { min-width: 0; max-width: 100%; }
 .roster button > span:nth-child(2) { white-space: normal !important; }
+
+.studentBar { display: flex; align-items: center; gap: 16px; flex-shrink: 0; margin-top: auto; padding: 12px 22px; padding-bottom: max(12px, env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--card); }
+.studentIdentity { flex: 1; min-width: 0; }
+.studentBar h3 { font-size: 20px; line-height: 1.25; letter-spacing: -.025em; margin: 3px 0 0; overflow-wrap: anywhere; }
+.studentBar .eyebrow { font-size: 9px; gap: 10px; flex-wrap: wrap; margin: 0; }
+.studentBar .studentNav { margin: 0; flex-wrap: nowrap; }
+.studentBar .close { flex-shrink: 0; }
+@media (max-width: 700px) { .studentBar { flex-wrap: wrap; gap: 8px; padding: 10px 14px; padding-bottom: max(10px, env(safe-area-inset-bottom)); } .studentIdentity { flex-basis: calc(100% - 50px); } .studentBar h3 { font-size: 18px; } .studentBar .studentNav { order: 3; width: 100%; } .studentBar .studentNav button { flex: 1; padding: 6px 8px; } .studentBar .eyebrow { flex-direction: row; } }

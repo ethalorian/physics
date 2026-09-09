@@ -341,46 +341,7 @@ export default function MasteryReviewDesk({
           aria-describedby="mastery-desk-description"
           onEscapeKeyDown={(e) => e.preventDefault()}
         >
-          <header className={styles.header}>
-            <div>
-              <p>THE REVIEW DESK · LESSON MASTERY</p>
-              <Dialog.Title>{student?.name ?? "Student"}</Dialog.Title>
-              <p id="mastery-desk-description">
-                Student {studentIndex + 1} of {roster.length} · Drafts stay with
-                each student
-              </p>
-            </div>
-            <div className={styles.studentNav}>
-              <button
-                aria-label="Previous student"
-                disabled={saving || studentIndex === 0}
-                onClick={() => changeStudent(studentIndex - 1)}
-              >
-                ← Previous student<small>Shift + ←</small>
-              </button>
-              <button
-                aria-label="Next student"
-                disabled={saving || !next}
-                onClick={() => changeStudent(studentIndex + 1)}
-              >
-                Next student →
-                <small>{next?.name ?? "End of queue"} · Shift + →</small>
-              </button>
-              <button
-                onClick={() => setHelp(true)}
-                aria-label="Keyboard shortcuts"
-              >
-                ⌨ ?
-              </button>
-              <button
-                aria-label="Close lesson mastery review"
-                disabled={saving}
-                onClick={onClose}
-              >
-                ×
-              </button>
-            </div>
-          </header>
+
           <div className={styles.layout}>
             <aside className={styles.queue} aria-label="Student queue">
               <h3>✦ Student queue</h3>
@@ -713,6 +674,46 @@ export default function MasteryReviewDesk({
               )}
             </aside>
           </div>
+          <footer className={styles.studentBar} aria-label="Active student">
+            <div>
+              <p>THE REVIEW DESK · LESSON MASTERY</p>
+              <Dialog.Title>{student?.name ?? "Student"}</Dialog.Title>
+              <p id="mastery-desk-description">
+                Student {studentIndex + 1} of {roster.length} · Drafts stay with
+                each student
+              </p>
+            </div>
+            <div className={styles.studentNav}>
+              <button
+                aria-label="Previous student"
+                disabled={saving || studentIndex === 0}
+                onClick={() => changeStudent(studentIndex - 1)}
+              >
+                ← Previous student<small>Shift + ←</small>
+              </button>
+              <button
+                aria-label="Next student"
+                disabled={saving || !next}
+                onClick={() => changeStudent(studentIndex + 1)}
+              >
+                Next student →
+                <small>{next?.name ?? "End of queue"} · Shift + →</small>
+              </button>
+              <button
+                onClick={() => setHelp(true)}
+                aria-label="Keyboard shortcuts"
+              >
+                ⌨ ?
+              </button>
+              <button
+                aria-label="Close lesson mastery review"
+                disabled={saving}
+                onClick={onClose}
+              >
+                ×
+              </button>
+            </div>
+          </footer>
           <Dialog.Root
             open={confirm}
             onOpenChange={(open) => {

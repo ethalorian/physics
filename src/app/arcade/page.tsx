@@ -206,6 +206,17 @@ export default function ArcadePage() {
         </div>
       )}
 
+      <section className="mt-7 rounded-2xl border p-5" style={{ borderColor: '#6c5931', background: 'var(--card)' }} aria-labelledby="trades-workshop-title">
+        <h2 id="trades-workshop-title" className="text-xs font-bold uppercase tracking-widest" style={{ color: '#d9a648' }}>Trades workshop · free practice</h2>
+        <Link href="/arcade/tape-measure" className="mt-3 flex flex-wrap items-center justify-between gap-4 rounded-xl border p-4 transition-colors hover:bg-white/5" style={{ borderColor: 'var(--border)' }}>
+          <span>
+            <span className="block text-lg font-bold">Tape Workshop</span>
+            <span className="mt-1 block text-sm" style={{ color: 'var(--muted-foreground)' }}>Pull out a tape, measure shop materials, and connect fractions with decimals. Practice halves through sixteenths or decimal tenths.</span>
+          </span>
+          <span className="shrink-0 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: '#eeb347', color: '#16252c' }}>Enter workshop →</span>
+        </Link>
+      </section>
+
       {/* ===== TRAINING FLOOR — the earners ===== */}
       <div className="flex items-center justify-between flex-wrap gap-2 mt-7 mb-3">
         <div className="flex items-center gap-2">

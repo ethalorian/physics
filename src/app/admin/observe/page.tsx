@@ -29,6 +29,10 @@ const PHRASES = [
   'Next: connect your observation to the physics idea.',
   'Next: label your quantities and check the units.',
   'Next: try a new example independently.',
+  'Next: repeat the measurement and compare your trials.',
+  'Next: change one variable and keep the others the same.',
+  'Next: use a specific measurement to support your claim.',
+  'Next: label both graph axes with quantities and units.',
 ]
 const fieldClass = 'min-h-12 w-full min-w-0 rounded-xl border bg-background px-3 text-base'
 
@@ -50,6 +54,8 @@ export default function ObservationPage() {
   const [targetId, setTargetId] = useState('')
   const [studentId, setStudentId] = useState('')
   const [search, setSearch] = useState('')
+  const [unvisitedOnly, setUnvisitedOnly] = useState(false)
+  const feedbackPanel = useRef<HTMLDivElement>(null)
   const [drafts, setDrafts] = useState<Record<string, Draft>>({})
   const [observed, setObserved] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
@@ -110,12 +116,26 @@ export default function ObservationPage() {
     return () => window.removeEventListener('beforeunload', warn)
   }, [hasDrafts, saving])
 
-  const students = grid?.students.filter((s) => s.ratable === true) ?? []
-  const visibleStudents = students.filter((s) => s.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+  const students = grid?.students.filter((s) => s.ratable === true).sort((a, b) => a.name.localeCompare(b.name)) ?? []
+  const searchWords = search.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean)
+  const visibleStudents = students.filter((s) => searchWords.every((word) => `${s.name} ${s.email}`.toLocaleLowerCase().includes(word)) && (!unvisitedOnly || !observed.has(JSON.stringify([s.id, targetId]))))
   const student = students.find((s) => s.id === studentId)
   const target = grid?.targets.find((t) => t.id === targetId)
   const cell = grid?.cells[studentId]?.[targetId]
   const completed = students.filter((s) => observed.has(JSON.stringify([s.id, targetId]))).length
+  function chooseClass(id: string) {
+    const course = courses.find((c) => c.id === id)
+    setUnit('auto')
+    setSearch('')
+    setNotice('')
+    setClassScope(id || null, course ? `${course.name}${course.section ? ` · ${course.section}` : ''}` : null)
+  }
+  function chooseStudent(id: string) {
+    setStudentId(id)
+    setNotice('')
+    setError('')
+    if (window.matchMedia('(max-width: 767px)').matches) feedbackPanel.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
   function updateDraft(change: Partial<Draft>) {
     setDrafts((old) => ({ ...old, [key]: { ...(old[key] ?? EMPTY), ...change } }))
   }
@@ -148,6 +168,7 @@ export default function ObservationPage() {
           body: JSON.stringify({ user_id: student.id, target_id: target.id, message: draft.message.trim() }),
         })
       }
+      setObserved((old) => new Set(old).add(key))
       setDrafts((old) => { const copy = { ...old }; delete copy[key]; return copy })
       setNotice(`${student.name}: ${ratingSaved ? 'observation saved' : 'feedback sent'}${ratingSaved && draft.message.trim() ? ' and feedback sent' : ''}.`)
       // Reload the canonical rollup without blocking the next student or inventing an average.
@@ -169,38 +190,54 @@ export default function ObservationPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-5 p-4 pb-8 sm:p-6" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))', touchAction: 'manipulation' }}>
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div><div className="text-overline text-muted-foreground">Teach & grade</div><h1 className="text-title-1 flex items-center gap-2"><ClipboardCheck aria-hidden />Classroom observations</h1><p className="mt-1 text-muted-foreground">Choose a target. Notice the learning. Give a next step.</p></div>
+        <div><div className="text-overline text-muted-foreground">Teach & grade</div><h1 className="text-title-1 flex items-center gap-2"><ClipboardCheck aria-hidden />Classroom observations</h1><p className="mt-1 text-muted-foreground">Pick your class, find a student, and give one useful next step.</p></div>
         <div className="flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-12"><Link href="/admin/command-center">Command Center</Link></Button><Button asChild variant="outline" className="min-h-12"><Link href="/admin/control-room">Control Room</Link></Button></div>
       </header>
-      <fieldset disabled={saving} className="grid min-w-0 gap-3 sm:grid-cols-2">
-        <label className="min-w-0 space-y-1 text-caption">Class<select aria-label="Class" className={fieldClass} value={classId ?? ''} onChange={(e) => { const course = courses.find((c) => c.id === e.target.value); setUnit('auto'); setSearch(''); setNotice(''); setClassScope(e.target.value || null, course?.name) }}><option value="">All my students</option>{courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}</select></label>
+      <fieldset disabled={saving} className="min-w-0 space-y-3 rounded-2xl border bg-card p-4">
+        <legend className="sr-only">Class and unit</legend>
+        <div className="flex flex-wrap gap-2" aria-label="Quick class selection">
+          <Button variant={!classId ? 'default' : 'outline'} aria-pressed={!classId} className="min-h-12" onClick={() => chooseClass('')}>All my students</Button>
+          {courses.map((c) => <Button key={c.id} variant={classId === c.id ? 'default' : 'outline'} aria-pressed={classId === c.id} className="h-auto min-h-12 whitespace-normal text-left" onClick={() => chooseClass(c.id)}>{c.name}{c.section ? ' · ' + c.section : ''}</Button>)}
+        </div>
+        <div className="grid min-w-0 gap-3 sm:grid-cols-2">
+        <label className="min-w-0 space-y-1 text-caption">Class<select aria-label="Class" className={fieldClass} value={classId ?? ''} onChange={(e) => chooseClass(e.target.value)}><option value="">All my students</option>{courses.map((c) => <option key={c.id} value={c.id}>{c.name}{c.section ? ` · ${c.section}` : ''}</option>)}</select></label>
         <label className="min-w-0 space-y-1 text-caption">Unit<select aria-label="Unit" disabled={loading} className={fieldClass} value={unit === 'auto' ? grid?.unitId ?? 'auto' : unit} onChange={(e) => { setUnit(e.target.value); setNotice('') }}>{!grid && <option value={unit}>Loading units…</option>}{grid?.units.map((u) => <option key={u.id} value={u.id}>{u.label ?? u.name}</option>)}</select></label>
+        </div>
       </fieldset>
       {coursesError && <div role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{coursesError}<Button variant="outline" disabled={saving} className="ml-3 min-h-12" onClick={() => setReload((n) => n + 1)}>Retry loading classes</Button></div>}
       {error && <div role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{error}{!grid && <Button variant="outline" className="ml-3 min-h-12" onClick={() => setReload((n) => n + 1)}>Retry loading</Button>}</div>}
-      <p role="status" className="text-caption min-h-5" style={{ color: 'var(--viz-up)' }}>{saving ? 'Saving… Keep this view open.' : notice}</p>
+      <p role="status" className={notice || saving ? 'text-caption rounded-xl bg-primary/10 p-3' : 'sr-only'} style={{ color: 'var(--viz-up)' }}>{saving ? 'Saving… Keep this view open.' : notice}</p>
       {loading ? <p role="status">Loading your roster and mastery targets…</p> : grid && <>
         <Card className="gap-3 p-4">
           <label className="block text-caption" htmlFor="observation-target">Observation focus · stays selected as you move between students</label>
           <select id="observation-target" disabled={saving} className={fieldClass} value={targetId} onChange={(e) => { setTargetId(e.target.value); setNotice('') }}>{grid.targets.map((t, i) => <option key={t.id} value={t.id}>{i + 1}. {t.statement}</option>)}</select>
-          {target ? <div><span className="text-overline text-muted-foreground">{target.domain}</span><div className="text-title-3"><MathMarkdown content={target.statement} /></div></div> : <p>No learning targets are available for this unit.</p>}
-          <p className="text-caption text-muted-foreground">{completed} of {students.length} students observed on this target in this visit</p>
+          {!target && <p>No learning targets are available for this unit.</p>}
+          <p className="text-caption text-muted-foreground">{completed} of {students.length} students visited this session · {students.length - completed} still to visit</p>
           <progress className="h-2 w-full" style={{ accentColor: 'var(--primary)' }} aria-label="Students observed on this target" value={completed} max={students.length || 1} />
         </Card>
         {!students.length ? <Card className="p-6">No students from your own roster are available here. Choose another class or sync your roster.</Card> : <div className="grid items-start gap-4 md:grid-cols-[minmax(180px,0.7fr)_minmax(0,1.6fr)]">
-          <Card className="min-w-0 gap-3 p-3">
+          <Card className="min-w-0 gap-3 p-3 md:sticky md:top-4">
             <label className="text-caption" htmlFor="observation-search">Find a student</label>
-            <Input id="observation-search" className="min-h-12 text-base" placeholder="Search names" value={search} disabled={saving} onChange={(e) => setSearch(e.target.value)} />
+            <div className="flex gap-1">
+              <Input id="observation-search" autoComplete="off" className="min-h-12 text-base" placeholder="Name or email…" value={search} disabled={saving} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && visibleStudents.length) { e.preventDefault(); chooseStudent(visibleStudents[0].id) } if (e.key === 'Escape') setSearch('') }} />
+              {search && <Button variant="ghost" aria-label="Clear student search" disabled={saving} className="min-h-12 px-2" onClick={() => setSearch('')}>Clear</Button>}
+            </div>
+            <div className="grid grid-cols-2 gap-2" aria-label="Visit filter">
+              <Button variant={!unvisitedOnly ? 'secondary' : 'outline'} aria-pressed={!unvisitedOnly} disabled={saving} className="min-h-12 px-2" onClick={() => setUnvisitedOnly(false)}>Everyone</Button>
+              <Button variant={unvisitedOnly ? 'secondary' : 'outline'} aria-pressed={unvisitedOnly} disabled={saving} className="h-auto min-h-12 whitespace-normal px-2" onClick={() => setUnvisitedOnly(true)}>Still to visit</Button>
+            </div>
+            <p className="text-xs text-muted-foreground" role="status">{visibleStudents.length} {visibleStudents.length === 1 ? 'student' : 'students'}{search ? ' found · Enter selects the first match' : ' · alphabetical'}</p>
             <div className="flex max-h-48 flex-col gap-2 overflow-y-auto md:max-h-[55dvh]" aria-label="Student roster">
-              {visibleStudents.map((s) => { const studentKey = JSON.stringify([s.id, targetId]); return <Button key={s.id} variant={studentId === s.id ? 'default' : 'outline'} disabled={saving} aria-pressed={studentId === s.id} className="h-auto min-h-14 w-full justify-between whitespace-normal px-3 text-left" onClick={() => { setStudentId(s.id); setNotice(''); setError('') }}><span>{s.name}{drafts[studentKey] && <span className="block text-xs">Draft</span>}</span>{observed.has(studentKey) && <Check aria-label="Observed this visit" />}</Button> })}
-              {!visibleStudents.length && <p className="p-2 text-muted-foreground">No names match your search.</p>}
+              {visibleStudents.map((s) => { const studentKey = JSON.stringify([s.id, targetId]); return <Button key={s.id} variant={studentId === s.id ? 'default' : 'outline'} disabled={saving} aria-pressed={studentId === s.id} className="h-auto min-h-14 w-full justify-between whitespace-normal px-3 text-left" onClick={() => chooseStudent(s.id)}><span>{s.name}{drafts[studentKey] && <span className="block text-xs">Draft</span>}</span>{observed.has(studentKey) && <Check aria-label="Observed this visit" />}</Button> })}
+              {!visibleStudents.length && <p className="p-2 text-muted-foreground">{search ? 'No matching students in this class. Try another name or clear the search.' : 'Everyone has been visited on this target. Choose Everyone to revisit a student.'}</p>}
             </div>
           </Card>
-          {student && target && <Card className="min-w-0 gap-4 p-4 sm:p-5">
+          {student && target && <Card ref={feedbackPanel} className="min-w-0 scroll-mt-4 gap-4 p-4 sm:p-5">
             <div><div className="text-overline text-muted-foreground">Observing</div><h2 className="text-title-1">{student.name}</h2><p className="text-caption text-muted-foreground">Current mastery: {cell?.value == null ? 'No observations yet' : `${cell.value.toFixed(1)} · ${levelWord(cell.value)} · ${cell.count} observation${cell.count === 1 ? '' : 's'}`}</p></div>
+            <div className="rounded-xl bg-muted/50 px-3 py-2 text-sm"><MathMarkdown content={target.statement} /></div>
             <fieldset disabled={saving || draft.ratingSaved} className="space-y-2"><legend className="mb-2 text-caption">What did you observe?</legend><div className="grid grid-cols-3 gap-2">{([1, 2, 3] as const).map((level) => <Button key={level} variant={draft.level === level ? 'default' : 'outline'} aria-pressed={draft.level === level} className="h-auto min-h-20 flex-col gap-1 px-2 text-base" onClick={() => updateDraft({ level: draft.level === level ? undefined : level })}><span className="text-title-2">{level}</span>{levelWord(level)}</Button>)}</div></fieldset>
             {draft.ratingSaved && <p className="text-caption">Rating saved. Only the remaining feedback will be sent.</p>}
-            <div className="space-y-3"><label htmlFor="observation-feedback" className="block text-caption">Feedback to {student.name} <span className="text-muted-foreground">· optional</span></label><p className="text-caption text-muted-foreground">Tap a phrase to add it, then edit or use iPad keyboard dictation.</p><div className="flex flex-wrap gap-2">{PHRASES.map((phrase) => <Button key={phrase} variant="outline" disabled={saving || draft.message.length + phrase.length + 1 > 2000} className="h-auto min-h-12 whitespace-normal px-3 py-2 text-left" onClick={() => updateDraft({ message: `${draft.message}${draft.message ? '\n' : ''}${phrase}` })}>{phrase}</Button>)}</div><Textarea id="observation-feedback" className="min-h-28 text-base" maxLength={2000} disabled={saving} placeholder="Name a strength or one concrete next step…" value={draft.message} onChange={(e) => updateDraft({ message: e.target.value })} /><p className="text-caption text-muted-foreground">{draft.message.length}/2000 · Feedback appears in the student’s feedback feed.</p></div>
+            <div className="space-y-3"><label htmlFor="observation-feedback" className="block text-caption">Feedback to {student.name} <span className="text-muted-foreground">· optional</span></label><p className="text-caption text-muted-foreground">Choose a strength and one next step, then add details from the lab.</p><div className="max-h-56 overflow-y-auto rounded-xl border p-2"><div className="flex flex-wrap gap-2">{PHRASES.map((phrase) => <Button key={phrase} variant="outline" disabled={saving || draft.message.length + phrase.length + 1 > 2000 || draft.message.split('\n').includes(phrase)} className="h-auto min-h-12 max-w-full whitespace-normal px-3 py-2 text-left" onClick={() => updateDraft({ message: `${draft.message}${draft.message ? '\n' : ''}${phrase}` })}>{phrase}</Button>)}</div></div><Textarea id="observation-feedback" className="min-h-28 text-base" maxLength={2000} disabled={saving} placeholder="Name a strength or one concrete next step…" value={draft.message} onChange={(e) => updateDraft({ message: e.target.value })} /><p className="text-caption text-muted-foreground">{draft.message.length}/2000 · Feedback appears in the student’s feedback feed.</p></div>
             <div className="sticky bottom-0 -mx-1 flex flex-wrap gap-2 border-t bg-card p-2" style={{ paddingBottom: 'max(.5rem, env(safe-area-inset-bottom))' }}>
               <Button className="min-h-14 flex-1 text-base" disabled={saving || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(true)}>Save & next<ArrowRight aria-hidden /></Button>
               <Button variant="outline" className="min-h-14" disabled={saving || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(false)}>Save & stay</Button>

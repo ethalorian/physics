@@ -36,23 +36,23 @@
   outline: 3px solid var(--primary);
   outline-offset: 3px;
 }
-.header {
+.studentBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  padding: 20px 26px;
+  padding: 12px 22px;
   background: var(--card);
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   flex-shrink: 0;
 }
-.header h2 {
-  font-size: 25px;
+.studentBar h2 {
+  font-size: 20px;
   letter-spacing: -0.6px;
   font-weight: 700;
   margin: 4px 0;
 }
-.header p {
+.studentBar p {
   font-size: 11px;
   color: var(--muted-foreground);
 }
@@ -577,7 +577,7 @@
   }
 }
 @media (max-width: 950px) {
-  .header {
+  .studentBar {
     align-items: flex-start;
     flex-direction: column;
     padding: 16px;
@@ -647,3 +647,8 @@
     transform: none;
   }
 }
+
+.studentBar { padding-bottom: max(12px, env(safe-area-inset-bottom)); gap: 12px; }
+.studentBar > div { min-width: 0; }
+.studentBar h2 { overflow-wrap: anywhere; }
+@media (max-width: 950px) { .studentBar { gap: 6px; padding: 10px 14px; padding-bottom: max(10px, env(safe-area-inset-bottom)); } .studentBar h2 { font-size: 18px; margin: 2px 0; } .studentBar .studentNav { gap: 6px; } .studentBar .studentNav button { padding: 6px 8px; } }

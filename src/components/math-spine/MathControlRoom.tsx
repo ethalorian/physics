@@ -518,17 +518,12 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             </div>
             {/* content column */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <div className={styles.header} style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
-              <button aria-label="Close math review" className={styles.close} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
-              <p className={styles.eyebrow}>✦ The review desk <span>Warm-up · {queue.length} students remaining</span></p>
-              <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
-              <div className={styles.studentNav}><button type="button" aria-label="Previous student" disabled={!previousStudent || savingKey !== null} onClick={() => previousStudent && openStudent(previousStudent.id, previousStudent.name)}>← Previous student <small>Shift + ←</small></button><button type="button" aria-label="Next student" disabled={!nextStudent || savingKey !== null} onClick={() => nextStudent && openStudent(nextStudent.id, nextStudent.name)}>Next student → <small>{nextStudent?.name ?? 'End of queue'} · Shift + →</small></button></div>
-            </div>
+
 
             {drawerLoading && <p className="text-sm p-5" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>}
 
             {!drawerLoading && !activeSub && (
-              <div className="overflow-y-auto p-5"><h4 className="font-semibold mb-4">No pending warm-ups · Review history</h4>{subs.map(sub => <section key={sub.id} className="rounded-xl border p-4 mb-4"><p className="text-xs text-muted-foreground mb-2">{fmtDate(sub.submitted_at)} · {sub.status}</p><p className="mb-3">{sub.prompt}</p><WarmupAnswer sub={sub}/>{sub.feedback?.map((f,i)=><p key={i} className="mt-3 text-sm"><b>Your feedback:</b> {f.message}</p>)}</section>)}</div>
+              <div className="overflow-y-auto p-5" style={{ flex: 1, minHeight: 0 }}><h4 className="font-semibold mb-4">No pending warm-ups · Review history</h4>{subs.map(sub => <section key={sub.id} className="rounded-xl border p-4 mb-4"><p className="text-xs text-muted-foreground mb-2">{fmtDate(sub.submitted_at)} · {sub.status}</p><p className="mb-3">{sub.prompt}</p><WarmupAnswer sub={sub}/>{sub.feedback?.map((f,i)=><p key={i} className="mt-3 text-sm"><b>Your feedback:</b> {f.message}</p>)}</section>)}</div>
             )}
 
             {!drawerLoading && activeSub && (
@@ -633,6 +628,14 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
               </div>
               </div>
             )}
+            <footer className={styles.studentBar} aria-label="Active student">
+              <div className={styles.studentIdentity}>
+              <p className={styles.eyebrow}>✦ The review desk <span>Warm-up · {queue.length} students remaining</span></p>
+              <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
+              </div>
+              <div className={styles.studentNav}><button type="button" aria-label="Previous student" disabled={!previousStudent || savingKey !== null} onClick={() => previousStudent && openStudent(previousStudent.id, previousStudent.name)}>← Previous student <small>Shift + ←</small></button><button type="button" aria-label="Next student" disabled={!nextStudent || savingKey !== null} onClick={() => nextStudent && openStudent(nextStudent.id, nextStudent.name)}>Next student → <small>{nextStudent?.name ?? 'End of queue'} · Shift + →</small></button></div>
+              <button aria-label="Close math review" className={styles.close} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
+            </footer>
             {nextGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
                 <div className={styles.savedSeal} aria-hidden="true">✓</div><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>

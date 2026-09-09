@@ -6,8 +6,10 @@ import { filterDocumentForViewer } from '@/lib/track-visibility'
 import type { BlockDocument } from '@/data/content-blocks'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
 import type { ReleaseClass } from '@/lib/lesson-release'
+import type { LessonRewardMaps } from '@/lib/xp-policy'
 
 export interface PreviewLesson {
+  rewardMaps?: LessonRewardMaps
   targets?: { id: string; slug: string; statement: string }[]
   id: string
   title: string
@@ -79,14 +81,19 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
     return () => controller.abort()
   }, [])
   const doc = useMemo(
-    () =>
-      lesson.content_blocks
-        ? filterDocumentForViewer(lesson.content_blocks, {
-            role: mode === 'teacher' ? 'admin' : 'student',
-            track: mode,
-          })
-        : undefined,
-    [lesson.content_blocks, mode],
+    () => {
+      if (!lesson.content_blocks) return undefined
+      const rewardTrack = mode === 'honors' || (mode === 'teacher' && course?.track === 'honors') ? 'honors' : 'cpa'
+      const rewards = lesson.rewardMaps?.[rewardTrack]
+      const blocks = lesson.content_blocks.blocks.map(block =>
+        rewards ? { ...block, xp: rewards[block.id] ?? 0 } : block,
+      )
+      return filterDocumentForViewer({ ...lesson.content_blocks, blocks }, {
+        role: mode === 'teacher' ? 'admin' : 'student',
+        track: mode,
+      })
+    },
+    [lesson.content_blocks, lesson.rewardMaps, mode, course?.track],
   )
   const keys = useMemo(
     () =>

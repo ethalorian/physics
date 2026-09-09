@@ -16,7 +16,8 @@ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});const page=await browser.newPage({viewport:{width:820,height:1180},isMobile:true,hasTouch:true,deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port);await page.getByRole('heading',{name:'Alex Rivera',exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Not My Student'}).count(),0);
 assert.equal(await page.getByRole('alert').count(),0);
 assert.equal(await page.getByLabel('Class',{exact:true}).locator('option').count(),2);
-await page.getByLabel('Class',{exact:true}).selectOption('class');
+await page.getByRole('button',{name:'Physics · A',exact:true}).click();
+assert.equal(await page.getByLabel('Class',{exact:true}).inputValue(),'class');
 await page.getByRole('heading',{name:'Alex Rivera',exact:true}).waitFor();
 assert.ok(requests.some(url=>url.includes('/api/mastery/grid?')&&url.includes('class=class')));
 await page.getByRole('button',{name:'3 Got it',exact:true}).click();await page.getByRole('button',{name:'You explained your reasoning clearly.',exact:true}).click();await page.getByRole('button',{name:'Blair Chen',exact:true}).click();assert.equal(await page.locator('textarea').inputValue(),'');await page.getByRole('button',{name:'Alex Rivera Draft',exact:true}).click();assert.match(await page.locator('textarea').inputValue(),/reasoning clearly/);
@@ -24,7 +25,27 @@ await page.getByRole('button',{name:'Save & next',exact:true}).dblclick();await 
 ratingFails=true;await page.getByRole('button',{name:'2 Almost',exact:true}).click();await page.getByRole('button',{name:'Save & stay',exact:true}).click();await page.getByRole('alert').waitFor();assert.equal(await page.getByRole('button',{name:'2 Almost',exact:true}).getAttribute('aria-pressed'),'true');ratingFails=false;await page.getByRole('button',{name:'Save & stay',exact:true}).click();await page.getByRole('status').filter({hasText:'Blair Chen: observation saved'}).waitFor();
 await page.getByRole('button',{name:'Next: label your quantities and check the units.',exact:true}).click();await page.getByLabel('Observation focus',{exact:false}).selectOption('t2');assert.equal(await page.locator('textarea').inputValue(),'');await page.getByLabel('Observation focus',{exact:false}).selectOption('t');assert.match(await page.locator('textarea').inputValue(),/check the units/);
 await page.getByLabel('Find a student').fill('Casey');assert.equal(await page.getByRole('button',{name:'Alex Rivera',exact:true}).count(),0);await page.getByLabel('Find a student').fill('');
-for(const [name,width,height] of [['ipad-portrait',820,1180],['ipad-landscape',1180,820],['split-view',568,820]]){await page.setViewportSize({width,height});await page.screenshot({path:out+'/'+name+'.png',fullPage:true});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,name+' overflow');const small=await page.locator('button,select,input,textarea').evaluateAll(els=>els.filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height<44}).map(e=>e.textContent));assert.deepEqual(small,[],name+' undersized controls');}
+await page.getByRole('button',{name:'Still to visit',exact:true}).click();
+assert.equal(await page.getByRole('button',{name:'Alex Rivera',exact:true}).count(),0);
+assert.equal(await page.getByRole('button',{name:'Blair Chen Draft',exact:true}).count(),0);
+await page.getByLabel('Find a student').fill('  c@example.test  ');
+await page.getByLabel('Find a student').press('Enter');
+await page.getByRole('heading',{name:'Casey Morgan',exact:true}).waitFor();
+await page.getByRole('button',{name:'Next: repeat the measurement and compare your trials.',exact:true}).click();
+assert.equal(await page.getByRole('button',{name:'Next: repeat the measurement and compare your trials.',exact:true}).isDisabled(),true);
+const ratingsBeforeFeedbackOnly=writes.filter(w=>w.url==='/api/mastery/records').length;
+await page.getByRole('button',{name:'Save & stay',exact:true}).click();
+await page.getByRole('status').filter({hasText:'Casey Morgan: feedback sent'}).waitFor();
+assert.equal(writes.filter(w=>w.url==='/api/mastery/records').length,ratingsBeforeFeedbackOnly);
+await page.getByRole('button',{name:'Clear student search',exact:true}).click();
+await page.getByText('Everyone has been visited on this target.',{exact:false}).waitFor();
+await page.getByRole('button',{name:'Everyone',exact:true}).click();
+await page.getByLabel('Find a student').fill('  Chen Blair  ');
+await page.getByLabel('Find a student').press('Enter');
+await page.getByRole('heading',{name:'Blair Chen',exact:true}).waitFor();
+assert.match(await page.locator('textarea').inputValue(),/check the units/);
+await page.getByLabel('Find a student').press('Escape');
+for(const [name,width,height] of [['ipad-portrait',820,1180],['ipad-landscape',1180,820],['split-view',568,820],['phone',390,844]]){await page.setViewportSize({width,height});await page.evaluate(()=>window.scrollTo(0,0));await page.screenshot({path:out+'/'+name+'.png',fullPage:true});assert.equal(await page.locator('textarea').evaluate(e=>e.parentElement.scrollWidth>e.parentElement.clientWidth),false,name+' feedback overflow');assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,name+' overflow');const small=await page.locator('button,select,input,textarea').evaluateAll(els=>els.filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height<44}).map(e=>e.textContent));assert.deepEqual(small,[],name+' undersized controls');}
 courseFails=true;await page.reload();await page.getByRole('alert').waitFor();
 assert.match(await page.getByRole('alert').innerText(),/Could not load your classes.*unexpected response \(502\)/);
 assert.doesNotMatch(await page.getByRole('alert').innerText(),/Unexpected token|DOCTYPE/);
@@ -33,6 +54,6 @@ assert.equal(await page.getByRole('alert').count(),1,'Class failure remains visi
 courseFails=false;await page.getByRole('button',{name:'Retry loading classes',exact:true}).click();
 await page.getByRole('alert').waitFor({state:'detached'});
 await page.waitForFunction(()=>document.querySelector('select[aria-label="Class"]').options.length===2);
-assert.deepEqual(errors,[]);console.log('PASS: iPad portrait, landscape, split view; 44px controls; roster scope; student/target draft isolation; rating + feedback payloads; double-tap guard; partial-save retry; failed-rating recovery; save-and-next; search; no browser errors.');
+assert.deepEqual(errors,[]);console.log('PASS: iPad portrait, landscape, split view; 44px controls; roster scope; student/target draft isolation; rating + feedback payloads; double-tap guard; partial-save retry; failed-rating recovery; save-and-next; search by email and reversed name; one-tap class selection; unvisited filter; feedback-only completion; duplicate phrase prevention; phone layout; no browser errors.');
 }finally{if(browser)await browser.close();server.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});

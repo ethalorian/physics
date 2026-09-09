@@ -100,8 +100,11 @@ for uid, U in UNITS.items():
                 P["target"] = next(b["statement"] for b in doc["blocks"] if b["type"] == "target")
             core = is_long or code in U['core_shorts']
             desc = f"Cycle {cyc}, session {k} of 5 — {'long' if is_long else 'short'}."
+            reviewed = REVIEWED.get(slug, {})
+            minutes = reviewed.get('estimated_time', 110 if is_long else 55)
+            desc = reviewed.get('description') or desc
             sql.append("insert into public.lessons (slug, title, unit, unit_id, lesson_number, lesson_type, published, estimated_time, planned_days, transfer_core, objectives, description, content_blocks, content) values (" +
-                       ", ".join([q(slug), q(title), q(U['name']), q(uid), str(n), q('markdown'), 'true', str(110 if is_long else 55), '1', 'true' if core else 'false',
+                       ", ".join([q(slug), q(title), q(U['name']), q(uid), str(n), q('markdown'), 'true', str(minutes), '1', 'true' if core else 'false',
                                   "array[" + q(P['target']) + "]::text[]", q(desc), q(json.dumps(doc, ensure_ascii=False)) + "::jsonb", q('')]) +
                        ") on conflict (slug) do update set title = excluded.title, unit = excluded.unit, unit_id = excluded.unit_id, lesson_number = excluded.lesson_number, published = excluded.published, estimated_time = excluded.estimated_time, planned_days = excluded.planned_days, transfer_core = excluded.transfer_core, objectives = excluded.objectives, description = excluded.description, content_blocks = excluded.content_blocks, updated_at = now();")
     sql.append("")

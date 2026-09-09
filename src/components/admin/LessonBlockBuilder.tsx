@@ -34,7 +34,7 @@ function fromDocument(doc: BlockDocument | undefined): BlockState[] {
 
 const inputStyle = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' } as const
 
-type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument; unitId?: string; day?: number; published?: boolean; targets?: {id:string;slug:string;statement:string}[]; previewDocument?: BlockDocument; glossary?: GlossaryEntry[] }
+type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument; unitId?: string; day?: number; published?: boolean; targets?: {id:string;slug:string;statement:string}[]; previewDocument?: BlockDocument; glossary?: GlossaryEntry[]; rewardMaps?: import('@/lib/xp-policy').LessonRewardMaps }
 
 export default function LessonBlockBuilder(props: BuilderProps) {
   const { data: session } = useSession()
@@ -42,7 +42,7 @@ export default function LessonBlockBuilder(props: BuilderProps) {
 }
 
 function BuilderSession({
-  lessonId, lessonTitle, initial, unitId, day, published, targets = [], previewDocument, glossary,
+  lessonId, lessonTitle, initial, unitId, day, published, targets = [], previewDocument, glossary, rewardMaps,
 }: BuilderProps) {
   const { data: session } = useSession()
   const [preview, setPreview] = useState(false)
@@ -231,7 +231,7 @@ function BuilderSession({
       {saveIssues.length > 0 && <ul className="my-3 space-y-2 rounded-xl border p-3">{saveIssues.map((issue,i) => <li key={i} className="text-sm">{issue.message} {issue.blockId && <button type="button" className="underline" onClick={() => { setPreview(false); setSelectedId(issue.blockId!); window.setTimeout(() => jumpTo(issue.blockId!), 0) }}>Go to activity</button>}</li>)}</ul>}
       {preview ? <div className="rounded-xl border p-3">
         <p className="mb-3 text-sm text-muted-foreground">Try the current content without saving student work.</p>
-        <LessonStudentPreview key={playVersion} lesson={{ id: lessonId, title: lessonTitle, content_blocks: previewDoc, key_terms: glossary, targets }} />
+        <LessonStudentPreview key={playVersion} lesson={{ id: lessonId, title: lessonTitle, content_blocks: previewDoc, key_terms: glossary, targets, rewardMaps }} />
       </div> : <div className={`grid gap-5 items-start grid-cols-1 lg:grid-cols-[minmax(0,1fr)_196px] ${selectedId ? '2xl:grid-cols-[minmax(0,1fr)_196px_360px]' : ''}`}>
         {/* CANVAS — the lesson as students see it, the star */}
         <div className="flex flex-col gap-3">

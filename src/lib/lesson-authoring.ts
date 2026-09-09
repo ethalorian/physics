@@ -7,6 +7,7 @@ import { targetIdsForLesson } from '@/lib/lesson-targets'
 import { hydrateLessonDocument } from '@/lib/lesson-access'
 import type { BlockDocument } from '@/data/content-blocks'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
+import type { LessonRewardMaps } from '@/lib/xp-policy'
 
 export async function lessonAuthoringData(id: string, editing = true) {
   const session = await auth()
@@ -31,7 +32,7 @@ export async function lessonAuthoringData(id: string, editing = true) {
   if (error) throw error
   if (!lesson) notFound()
   const document = lesson.content_blocks as BlockDocument | null
-  const [ids, units, targets, vocabulary, hydrated] = await Promise.all([
+  const [ids, units, targets, vocabulary, hydrated, cpaRewards, honorsRewards] = await Promise.all([
     targetIdsForLesson(id, document),
     supabaseAdmin
       .from('units')
@@ -49,10 +50,15 @@ export async function lessonAuthoringData(id: string, editing = true) {
     document
       ? hydrateLessonDocument(document, lesson.unit_id)
       : Promise.resolve(null),
+    supabaseAdmin.rpc('lesson_reward_map', { p_lesson: id, p_track: 'cpa' }),
+    supabaseAdmin.rpc('lesson_reward_map', { p_lesson: id, p_track: 'honors' }),
   ])
   if (units.error) throw units.error
   if (targets.error) throw targets.error
   if (vocabulary.error) throw vocabulary.error
+  if (cpaRewards.error) throw cpaRewards.error
+  if (honorsRewards.error) throw honorsRewards.error
+  const rewardMaps: LessonRewardMaps = { cpa: cpaRewards.data ?? {}, honors: honorsRewards.data ?? {} }
   const allTargets = [...(targets.data ?? [])]
   const missingIds = ids.filter(
     (id) => !allTargets.some((target) => target.id === id),
@@ -92,6 +98,7 @@ export async function lessonAuthoringData(id: string, editing = true) {
   )
   return {
     lesson,
+    rewardMaps,
     document: hydrated,
     terms,
     targetIds: ids,
