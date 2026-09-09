@@ -19,19 +19,23 @@
  * (plus "Needs a refresh"). Bonus points are reward, never evidence; the ladder
  * moves only on the teacher's rating.
  */
+import ProblemReward from '@/components/math-spine/ProblemReward'
+import MathStudioHeader from '@/components/math-spine/MathStudioHeader'
+import StandardFocus from '@/components/math-spine/StandardFocus'
+import ReasoningWorkspace from '@/components/math-spine/ReasoningWorkspace'
+import styles from '@/components/math-spine/StudentMathInput.module.css'
 import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Languages, Flame } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, HelpCircle, Languages, ArrowRight } from 'lucide-react'
 import MathCanvas, { type CanvasText } from '@/components/math-spine/MathCanvas'
-import EquationSandbox, { type SandboxValue } from '@/components/blocks/EquationSandbox'
+import { type SandboxValue } from '@/components/blocks/EquationSandbox'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
 import MathTutor from '@/components/math-spine/MathTutor'
-import type { LadderRung } from '@/components/math-spine/MathLadder'
 import PracticeRep from '@/components/math-spine/PracticeRep'
 import { pickTier, type MiniLesson } from '@/lib/math-spine-lessons'
-import { RUNG_STATE_LABEL, type PickKind } from '@/lib/math-spine-picker'
+import { type PickKind } from '@/lib/math-spine-picker'
 import { MATH_LANGUAGES } from '@/lib/math-languages'
 import { useTranslator } from '@/lib/math-translate-store'
 
@@ -67,25 +71,17 @@ interface WorkValue {
 }
 
 
-/** Why today's problem is THIS problem — the picker's reason, in student words. */
-const PICK_FRAMING: Record<PickKind, { label: string; explain: string }> = {
-  climb: { label: 'Climbing', explain: 'Your current rung. Get it to “Got it” and the next skill unlocks.' },
-  refresh: { label: 'Patch it back up', explain: 'You had this at “Got it” before and it slipped. Refreshing it comes first — it holds up everything above.' },
-  recheck: { label: 'A fresh check', explain: 'Show what you can apply now. This may revisit earlier work or follow a teacher conversation.' },
-  maintenance: { label: 'Keeping it sharp', explain: 'Your whole ladder is at “Got it” — today is upkeep and stretch.' },
-}
-
 const LABEL = 'text-[11px] font-bold uppercase tracking-widest'
 
 export default function WarmupPage() {
   const [item, setItem] = useState<DailyItem | null>(null)
   const [pickKind, setPickKind] = useState<PickKind>('climb')
-  const [ladder, setLadder] = useState<LadderRung[]>([])
-  const [dayCount, setDayCount] = useState(0)
-  const [streak, setStreak] = useState(0)
   const [loading, setLoading] = useState(true)
   const [alreadySubmitted, setAlreadySubmitted] = useState(false)
   const [work, setWork] = useState<WorkValue>({ answer: '', workStrokes: [], workTexts: [], sandbox: { lines: [] } })
+  const [resumedDraft, setResumedDraft] = useState(false)
+  const [draftSaved, setDraftSaved] = useState(false)
+  const [xpEarned, setXpEarned] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submittedAt, setSubmittedAt] = useState<string | null>(null)
@@ -104,11 +100,8 @@ export default function WarmupPage() {
       .then((d) => {
         if (!active || !d) return
         setItem(d.item ?? null)
-        if (d.item?.instanceId && !d.alreadySubmitted) { try { const draft = sessionStorage.getItem('math-draft:' + d.item.instanceId); if (draft) setWork(JSON.parse(draft)) } catch {} }
+        if (d.item?.instanceId && !d.alreadySubmitted) { try { const draft = sessionStorage.getItem('math-draft:' + d.item.instanceId); if (draft) { setWork(JSON.parse(draft)); setResumedDraft(true) } } catch {} }
         setPickKind((d.pickKind as PickKind) ?? 'climb')
-        setLadder((d.ladder as LadderRung[]) ?? [])
-        setDayCount(Number(d.dayCount ?? 0))
-        setStreak(Number(d.streak ?? 0))
         setAlreadySubmitted(Boolean(d.alreadySubmitted))
         setTranslationEnabled(Boolean(d.translationEnabled))
         setLoading(false)
@@ -119,7 +112,7 @@ export default function WarmupPage() {
 
   useEffect(() => {
     if (!item?.instanceId || alreadySubmitted || submitted) return
-    try { sessionStorage.setItem('math-draft:' + item.instanceId, JSON.stringify(work)) } catch {}
+    try { sessionStorage.setItem('math-draft:' + item.instanceId, JSON.stringify(work)); setDraftSaved(true) } catch { setDraftSaved(false) }
   }, [item?.instanceId, work, alreadySubmitted, submitted])
 
   // Two named checks (decision 3). Work = anything on the board or in the
@@ -155,6 +148,7 @@ export default function WarmupPage() {
       setCheckReason(typeof j.selfCheckReason === 'string' ? j.selfCheckReason : null)
       setFeedback(j.feedback ?? null)
       setSubmittedAt(new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }))
+      setXpEarned(j.xpEarned ?? 0)
       setSubmitted(true)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (e) {
@@ -166,14 +160,6 @@ export default function WarmupPage() {
 
   const tierIdx = pickTier(item?.competencyValue)
   const done = submitted || alreadySubmitted
-  const framing = PICK_FRAMING[pickKind]
-
-  // Ladder position: where today sits, and what "Got it" unlocks.
-  const { rungIdx, todayRung, nextRung } = useMemo(() => {
-    const i = ladder.findIndex((r) => r.isToday)
-    return { rungIdx: i, todayRung: i >= 0 ? ladder[i] : null, nextRung: i >= 0 ? ladder[i + 1] ?? null : null }
-  }, [ladder])
-
   // Help drawer default follows the tier: open for "Not yet" and "Needs a
   // refresh", collapsed for re-checks and "Got it" — tiering governs disclosure.
   const helpDefaultOpen = tierIdx === 0 || pickKind === 'refresh'
@@ -199,7 +185,6 @@ export default function WarmupPage() {
     </div>
   ) : null
 
-  const stateWord = todayRung ? RUNG_STATE_LABEL[todayRung.state] : ''
   const answerLabel = teacherOnly ? t('Your answer & reasoning')
     : item?.checkMode === 'short-answer' ? t('Final answer')
     : item?.needsGraph ? t('Final answer · from your graph')
@@ -213,117 +198,88 @@ export default function WarmupPage() {
   const cardStyle = { borderColor: 'var(--border)' }
 
   return (
-    <div className="max-w-6xl mx-auto p-3 sm:p-4 space-y-3">
+    <div data-math-studio className={`max-w-6xl mx-auto p-3 sm:p-4 space-y-3 ${styles.studio}`}>
       {/* Ribbon: where I am, in one 44px line */}
       <div className="flex items-center gap-x-3 gap-y-1 flex-wrap min-h-11">
         <Link href="/dashboard/math-spine" className="inline-flex items-center h-11 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4 mr-1.5" /> {t('Math hub')}
         </Link>
-        <span className="text-sm font-semibold text-foreground">{t('Daily warm-up')}</span>
-        {item && todayRung && (
-          <span className="inline-flex items-center gap-1.5 text-xs rounded-full px-3 h-8 bg-muted text-foreground tabular-nums">
-            <span className="font-semibold">{t('Rung')} {rungIdx + 1} {t('of')} {ladder.length}</span>
-            <span aria-hidden>·</span>
-            <span>{item.competencyCode}</span>
-            <span aria-hidden>·</span>
-            <span style={{ color: todayRung.state === 'refresh' ? 'var(--reward-foreground)' : 'var(--primary)' }}>{t(stateWord)}</span>
-          </span>
-        )}
-        {dayCount > 0 && (
-          <span className="inline-flex items-center gap-1 text-xs text-muted-foreground tabular-nums">
-            {t('Day')} {dayCount}
-            {streak >= 2 && <><span aria-hidden>·</span><Flame className="h-3.5 w-3.5" style={{ color: 'var(--reward-foreground)' }} /> {streak}-{t('day streak')}</>}
-          </span>
-        )}
         <span className="ml-auto">{translateControl}</span>
       </div>
 
-      {error && <p role="alert">{error} <button onClick={() => window.location.reload()} className="underline min-h-11">Retry</button></p>}
+      <MathStudioHeader resumed={resumedDraft} done={done} lang={activeLang} />
+
+      {!loading && item && <StandardFocus code={item.competencyCode} statement={item.competencyStatement} mode={done ? 'submitted' : 'assessment'} lang={activeLang} />}
+
+      {error && !item && <p role="alert">{error} <button onClick={() => window.location.reload()} className="underline min-h-11">Retry</button></p>}
       {loading && <p className="text-sm text-muted-foreground">{t('Loading your warm-up…')}</p>}
       {!loading && !item && <p className="text-sm text-muted-foreground">{t('No warm-up available right now — check back soon.')}</p>}
 
       {!loading && item && !done && (
         <div className="grid gap-4 min-[900px]:grid-cols-[minmax(320px,2fr)_3fr] min-[900px]:items-start">
           {/* ---------------------------------------------------------- left: problem + help */}
-          <div className="space-y-3 min-[900px]:sticky min-[900px]:top-3">
-            <section className={`${card} p-4`} style={cardStyle} aria-labelledby="problem-label">
+          <div className="space-y-3">
+            <section className={styles.problemCard} aria-labelledby="problem-label">
               <div className="flex items-center gap-2">
-                <span id="problem-label" className={LABEL} style={{ color: 'var(--primary)' }}>{t("Today's problem")} · {t(framing.label)}</span>
-                <span className="ml-auto text-[11px] font-medium rounded px-2 py-0.5 bg-muted text-muted-foreground tabular-nums">{item.competencyCode}</span>
+                <span id="problem-label" className={styles.eyebrow}>{t("Today's challenge")}</span>
+
               </div>
-              <p className="mt-2 text-lg font-semibold text-foreground leading-snug">{displayPrompt}</p>
-              <p className="mt-3 text-xs text-muted-foreground">{t(framing.explain)}</p>
-              {nextRung && pickKind === 'climb' && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {t('Next up:')} <span className="font-semibold text-foreground">{nextRung.code}</span> · {t(nextRung.statement)}
-                </p>
-              )}
+              
+              <p className="mt-2 text-xl font-semibold text-foreground leading-relaxed whitespace-pre-wrap">{displayPrompt}</p>
+              <ProblemReward lang={activeLang} />
+
+
+            <div className={styles.inlineHelp}><MathTutor key={item.instanceId ?? item.spiralItemId} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={activeLang} initiallyOpen={helpDefaultOpen} onReturnToWork={()=>document.getElementById('math-reasoning')?.focus()} /></div>
             </section>
 
-            <MathTutor key={item.instanceId ?? item.spiralItemId} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={activeLang} initiallyOpen={helpDefaultOpen} onReturnToWork={()=>document.getElementById('math-reasoning')?.focus()} />
           </div>
 
           {/* ---------------------------------------------------------- right: the board */}
-          <div className="space-y-3">
-            <section className={`${card} p-4`} style={cardStyle} aria-label="work board">
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className={LABEL} style={{ color: 'var(--muted-foreground)' }}>{t(item.needsGraph ? 'Graph & work it out' : 'Work it out')}</span>
-                <span className="text-[11px] text-muted-foreground">{t('Your teacher rates the thinking, not just the answer.')}</span>
-              </div>
-              {item.needsEquationBuilder && (
-                <div className="mb-3">
-                  <span className="text-xs font-semibold text-foreground">{t('Build your equation')}</span>
-                  <EquationSandbox embedded value={work.sandbox} onChange={(v) => setWork((w) => ({ ...w, sandbox: v }))} />
-                </div>
-              )}
-              <label htmlFor="math-reasoning" className="block text-sm font-semibold">{t('Show your reasoning in text or on the board')}</label>
-              <textarea id="math-reasoning" rows={3} value={work.work ?? ''} onChange={e => setWork(w => ({ ...w, work: e.target.value }))} className="my-2 w-full rounded border bg-background p-3" placeholder={t('Explain a step, write an equation, or describe your graph.')} />
-              <label className="mb-3 flex items-center gap-2 text-sm"><input type="checkbox" checked={work.helpUsed ?? false} onChange={e => setWork(w => ({ ...w, helpUsed: e.target.checked }))} />{t('I used the how-to to solve this problem')}</label>
-              <MathCanvas
-                key={item.instanceId}
-                gridded={!!item.needsGraph}
-                value={{ strokes: work.workStrokes, texts: work.workTexts }}
-                onChange={(v) => setWork((w) => ({ ...w, workStrokes: v.strokes, workTexts: v.texts }))}
-                lang={activeLang}
-              />
+          <div className={styles.workDesk}>
+            <section className={styles.workCard} aria-label="work board">
+              <div className={styles.sectionHeader}><h2 className={styles.step}>{t('Your work')}</h2>{(workShown || answerEntered) && <span className={styles.draft}>{t(draftSaved ? 'Draft saved in this tab' : 'Draft not saved in this tab')}</span>}</div>
+              <ReasoningWorkspace key={item.instanceId ?? item.spiralItemId} reasoningId="math-reasoning" value={work} onChange={v => setWork(w => ({ ...w, ...v }))} needsGraph={!!item.needsGraph} needsEquationBuilder={!!item.needsEquationBuilder} lang={activeLang} />
+              <label className="mt-4 flex min-h-11 items-center gap-3 text-sm text-muted-foreground"><input type="checkbox" checked={work.helpUsed ?? false} onChange={e => setWork(w => ({ ...w, helpUsed: e.target.checked }))} />{t('I used the how-to to solve this problem')}</label>
             </section>
 
-            <section className={`${card} p-4`} style={cardStyle}>
+            <section className={styles.answer}>
+              
               <label htmlFor="final-answer" className={LABEL} style={{ color: 'var(--foreground)' }}>{answerLabel}</label>
               {teacherOnly ? (
                 <textarea id="final-answer" rows={3} value={work.answer}
                   onChange={(e) => setWork((w) => ({ ...w, answer: e.target.value }))}
                   placeholder={answerPlaceholder}
-                  className="mt-2 w-full rounded-md border border-border bg-background px-3 py-2 text-[15px] text-foreground" style={{ resize: 'vertical' }} />
+                  className={styles.input} style={{ resize: 'vertical' }} />
               ) : (
                 <input id="final-answer" value={work.answer}
                   onChange={(e) => setWork((w) => ({ ...w, answer: e.target.value }))}
-                  onKeyDown={(e) => { if (e.key === 'Enter') submit() }}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) submit() }}
                   placeholder={answerPlaceholder} inputMode="text" autoComplete="off"
-                  className="mt-2 w-full rounded-md border border-border bg-background px-3 text-foreground" style={{ fontSize: 18, height: 48 }} />
+                  className={styles.input} style={{ fontSize: 18, height: 48 }} />
               )}
-              <div className="mt-3 flex items-center gap-3 flex-wrap">
-                <div className="flex items-center gap-3 text-xs" aria-live="polite">
-                  <span className={workShown ? 'text-foreground font-medium' : 'text-muted-foreground'}>{workShown ? '✓ ' : '○ '}{t('Work shown')}</span>
-                  <span className={answerEntered ? 'text-foreground font-medium' : 'text-muted-foreground'}>{answerEntered ? '✓ ' : '○ '}{t(teacherOnly ? 'Answer written' : 'Answer entered')}</span>
+              <div className={styles.submitArea}>
+                <div className={styles.readiness} aria-live="polite">
+                  <span className={workShown ? styles.complete : styles.incomplete}>{workShown ? '✓ ' : '○ '}{t('Work shown')}</span>
+                  <span className={answerEntered ? styles.complete : styles.incomplete}>{answerEntered ? '✓ ' : '○ '}{t(teacherOnly ? 'Answer written' : 'Answer entered')}</span>
                 </div>
-                <Button disabled={submitting || !canSubmit} onClick={submit} className="rounded-full ml-auto h-11 px-6">
-                  {submitting ? t('Submitting…') : t('Submit')}
+                <Button disabled={submitting || !canSubmit} onClick={submit} className={styles.submitButton}>
+                  {submitting ? t('Submitting…') : error ? t('Retry submission') : t('Submit warm-up')}<ArrowRight size={16} aria-hidden="true" />
                 </Button>
-                <span className="basis-full text-xs text-muted-foreground">
-                  {teacherOnly ? t('Your teacher reads and rates this one.')
-                    : !workShown && !answerEntered ? t('Show your work on the board and enter a final answer.')
-                    : !workShown ? t('Show your work on the board — the instant check needs it.')
+                <span className={styles.submitHint}>
+                  {teacherOnly ? t('Write an explanation or show your reasoning. Your teacher reads and rates this one.')
+                    : !workShown && !answerEntered ? t('Add your reasoning, then enter a final answer.')
+                    : !workShown ? t('Add your reasoning in text, equations, or a drawing.')
                     : !answerEntered ? t('Enter your final answer so it can be checked.')
                     : t('Checked the moment you submit. Your teacher rates the work.')}
                 </span>
-                {error && <span className="basis-full text-xs" style={{ color: 'var(--viz-down)' }}>{error}</span>}
+                {error && <span role="alert" className={styles.submitError}>{error} {t('Your work is still here.')}</span>}
               </div>
             </section>
           </div>
         </div>
       )}
 
+      {submitted && xpEarned > 0 && <p role="status" className={styles.problemReward}>+{xpEarned} XP · {t('Added to your XP balance')}</p>}
       {done && <MathFeedbackLoop refreshKey={submitted ? 1 : 0} />}
       {/* ============================================================ after submit */}
       {!loading && item && done && (
@@ -388,7 +344,7 @@ export default function WarmupPage() {
               </div>
 
               <div className="mt-4 flex items-center gap-2 flex-wrap">
-                <a href="#practice" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>{t('Try one more · bonus')}</a>
+                <a href="#practice" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>{t('Try one more · +1 XP')}</a>
                 <Link href="/dashboard/math-spine" className="inline-flex items-center h-10 px-4 rounded-full text-sm font-semibold border" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>{t('See my ladder')}</Link>
                 <Link href="/home" className="inline-flex items-center h-10 px-3 text-sm text-muted-foreground">{t('Done for today')}</Link>
               </div>

@@ -2,6 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import styles from './LessonViewer.module.css'
+import { lessonIdentityStyles, lessonNumber } from './LessonVisualIdentity'
+import AnswerChecklist from './AnswerChecklist'
+import LessonAvatar from './LessonAvatar'
+import LessonXp from './LessonXp'
+import { answerAnchor, answerGuide, answerStatus } from './lesson-answer-guide'
 import { useSession } from 'next-auth/react'
 import { blockingDrafts } from '@/data/block-registry'
 import type { BlockResponseMap, DraftFn, SaveMeta } from '@/components/blocks/useBlockResponses'
@@ -144,6 +150,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   const revision = useMemo(() => documentRevision(pages), [pages])
   const storageKey = `lesson-page:v3:${store.studentId}:${lesson.id}`
   const [pageIdx, setPageIdx] = useState(0)
+  const [pendingAnswer, setPendingAnswer] = useState<string | null>(null)
   const [submissionLocked, setSubmissionLocked] = useState(false)
   useEffect(() => {
     if (preview || staffView) return
@@ -169,6 +176,12 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
     setPageIdx(clamped)
     try { if (!preview && !staffView) localStorage.setItem(storageKey, anchors[clamped] ?? '') } catch { /* ignore */ }
     if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const openAnswer = (index: number, blockId: string) => {
+    if (isLocked(index)) return
+    breakAway(index)
+    setPendingAnswer(blockId)
   }
 
   // P-4 · follow mode: a student device moves to the projector's section while
@@ -206,6 +219,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
 
   const page = pages[pageIdx]
   const isLast = pageIdx === pageCount - 1
+  const checkpointNote = gating && page ? gateNote(pageBlockedBy(page, committed)) : null
   // Every page leads with a visual. If the page's own blocks already include a
   // figure/diagram/sketch, we let those carry it; otherwise we render an
   // illustrated step banner so no page is a wall of text.
@@ -221,44 +235,49 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   useEffect(() => {
     if (responsesLoaded && pageIdx >= lockedFrom) setPageIdx(Math.max(0, lockedFrom - 1))
   }, [responsesLoaded, lockedFrom, pageIdx])
+  useEffect(() => {
+    if (!pendingAnswer || !responsesLoaded) return
+    const target = document.getElementById(answerAnchor(lesson.id, pendingAnswer))
+    if (!target) return
+    target.focus({ preventScroll: true })
+    target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' })
+    setPendingAnswer(null)
+  }, [pendingAnswer, pageIdx, responsesLoaded, lesson.id])
   if (!preview && store.loadError) return <div role="alert" className="mx-auto max-w-xl rounded-xl border p-6">
     <p>{store.loadError}</p><button type="button" onClick={() => void store.retryLoad()} className="mt-3 rounded-lg bg-primary px-4 py-2 text-primary-foreground">Retry loading saved work</button>
   </div>
   if (!responsesLoaded) return <p role="status" className="p-6">Loading your saved work…</p>
 
   return (
-    <div className="mx-auto px-4 pb-28" style={{ maxWidth: 1120, color: 'var(--foreground)' }}>
-      <div className="lg:grid lg:gap-8" style={{ gridTemplateColumns: '216px minmax(0, 1fr)' }}>
-        {/* sticky section rail — the lesson's wayfinding spine (desktop only) */}
-        <aside className="hidden lg:block">
-          <div className="sticky" style={{ top: 96 }}>
-            <SectionRail sections={sections} currentIndex={pageIdx} isComplete={sectionDone} isLocked={isLocked} onJump={breakAway} />
-          </div>
-        </aside>
-
+    <div className={`${styles.viewer} mx-auto px-4 pb-28`} style={{ maxWidth: 1240, color: 'var(--foreground)' }}>
+      <style>{lessonIdentityStyles}</style>
+      <div className="lg:grid lg:gap-8" style={{ gridTemplateColumns: 'minmax(0, 1fr) 256px' }}>
         {/* main reading column */}
         <div className="min-w-0" style={{ maxWidth: 760, marginInline: 'auto', width: '100%' }}>
           {/* compact sticky header: identity + section counter + progress */}
           <div
-            className="relative z-20 -mx-4 px-4 pt-3 pb-3"
+            className={`${styles.header} relative z-20 px-4 pt-3 pb-3`}
             style={{ background: 'color-mix(in oklch, var(--background) 92%, transparent)', backdropFilter: 'blur(8px)', borderBottom: '1px solid var(--border)' }}
           >
             <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className={styles.identity}>
+              {!staffView && !preview && <LessonAvatar />}
               <div className="min-w-0">
                 <Link href="/home" className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--muted-foreground)' }}>
                   <ChevronLeft size={14} /> Home
                 </Link>
                 <div className="flex items-center gap-2 mt-0.5">
                   {day && (
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-2 py-0.5" style={{ background: 'var(--secondary)', color: 'var(--primary)' }}>
                       <day.Icon size={11} /> {day.label}
                     </span>
                   )}
-                  <h1 className="text-base font-semibold tracking-tight truncate" style={{ maxWidth: 360 }}>{lesson.title}</h1>
+                  <h1 className={styles.title}>{lesson.title}</h1>
                 </div>
               </div>
+              </div>
               {/* honest section counter: where you are + how much is left */}
-              <div className="inline-flex items-center gap-2 text-xs whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>
+              <div className="inline-flex items-center gap-2 text-xs flex-wrap" style={{ color: 'var(--muted-foreground)' }}>
                 <span className="font-semibold" style={{ color: 'var(--foreground)' }}>
                   Section {pageIdx + 1} of {pageCount}
                 </span>
@@ -323,7 +342,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                     style={{
                       height: 6,
                       transition: 'background .2s cubic-bezier(0.16,1,0.3,1)',
-                      background: cur ? 'var(--reward)' : done ? 'var(--primary)' : 'var(--secondary)',
+                      background: cur ? 'var(--primary)' : done ? 'var(--success)' : 'var(--secondary)',
                     }}
                   />
                 )
@@ -332,13 +351,15 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             {/* tasks-saved bar — how much work is logged */}
             {totalTasks > 0 && (
               <div className="mt-1.5 flex items-center gap-2">
-                <span className="text-xs font-medium whitespace-nowrap inline-flex items-center gap-1" style={{ color: allTasksDone ? 'var(--success)' : 'var(--muted-foreground)' }}>
+                <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: allTasksDone ? 'var(--success)' : 'var(--muted-foreground)' }}>
                   {allTasksDone ? <Check size={12} /> : <Pencil size={11} />}
                   {doneTasks} of {totalTasks} responses saved · progress, not a mastery score
                 </span>
               </div>
             )}
           </div>
+
+          <LessonXp blocks={blocks} earned={preview || staffView || !store.loaded ? undefined : xpSession} />
 
           {/* visual step banner — guarantees a non-text element atop every page. */}
           {page && !stepped && (
@@ -382,37 +403,61 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
 
           {/* the current page — blocks get the full column width.
               `lesson-reading` scopes the key-equation styling (see globals.css). */}
-          {/* S-3 · section header: eyebrow + serif headline + one context line */}
           {page && stepped && (
-            <div className="mt-5 mb-1">
-              <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{stepKind} · section {pageIdx + 1} of {pageCount}</div>
-              <h2 className="lesson-headline mt-0.5" style={{ fontSize: 26, lineHeight: 1.15, letterSpacing: '-0.01em', color: 'var(--foreground)' }}>{sections[pageIdx]?.title}</h2>
-              <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-                {sections[pageIdx]?.minutes ? `~${sections[pageIdx].minutes} min · ` : ''}{page.hasCapture ? 'Show the idea and why it makes sense. A short explanation or labeled diagram is welcome.' : 'Take this in before you move on.'}
+            <section className={`${styles.stepCard} lesson-chapter`} aria-labelledby="lesson-step-title">
+              <span className={`${styles.chapterNumber} lesson-chapter-number`} aria-hidden="true">{lessonNumber(pageIdx + 1)}</span>
+              <div className={styles.stepTop}>
+                <span className={styles.stepIcon}><StepIcon size={24} aria-hidden="true" /></span>
+                <span className={styles.eyebrow}>{stepKind} · Step {pageIdx + 1} of {pageCount}</span>
+                {sections[pageIdx]?.minutes > 0 && <span className={styles.time}><Clock size={13} /> ~{sections[pageIdx].minutes} min</span>}
               </div>
-            </div>
+              <h2 id="lesson-step-title" className="lesson-headline lesson-chapter-title">{sections[pageIdx]?.title}</h2>
+              <div className={styles.activityFlow} aria-label="Activity sequence">
+                <span><BookOpen size={15} /> Explore</span><ChevronRight size={14} aria-hidden="true" /><span><PencilRuler size={15} /> {page.hasCapture ? 'Try it' : 'Think it through'}</span><ChevronRight size={14} aria-hidden="true" /><span><Check size={15} /> {page.hasCapture ? 'Save your work' : 'Continue'}</span>
+              </div>
+              <div className={styles.instruction}><div>
+                <strong>{submissionLocked ? 'Review your work' : page.hasCapture ? (pageUnsaved.length ? 'What to do' : 'Responses saved') : 'Start here'}</strong>
+                <p>{submissionLocked ? 'Read your submitted answers and any available feedback below.'
+                  : checkpointNote && pageUnsaved.length === 0 ? checkpointNote
+                  : page.hasCapture ? (pageUnsaved.length ? 'Read the material, complete the activity below, then save your answer.' : isLast ? 'Review your answers, then submit your lesson below.' : 'Check your thinking, then continue to the next step.')
+                  : 'Read and explore the material below. When you’re ready, continue to the next step.'}</p>
+                </div><button type="button" className={styles.startActivity} onClick={() => { const first = page.captureBlocks.find(b => answerStatus(b, responses) !== 'Saved') ?? page.captureBlocks[0]; if (first) { openAnswer(pageIdx, first.id); return } const activity = document.getElementById('lesson-activity'); activity?.focus({ preventScroll: true }); activity?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }) }}>{submissionLocked ? 'View work' : page.hasCapture ? 'Open activity' : 'Let’s explore'} <ChevronRight size={16} aria-hidden="true" /></button>
+              </div>
+              {page.hasCapture && <div className={styles.stepStatus} role="status">{pageUnsaved.length ? <Pencil size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />} {page.captureBlocks.length - pageUnsaved.length} of {page.captureBlocks.length} responses saved in this step</div>}
+            </section>
           )}
 
-          <div className="mt-4 lesson-reading">
+          {totalTasks > 0 && <details className={`${styles.mobileAnswers} lg:hidden`}>
+            <summary>All lesson answers · {doneTasks} of {totalTasks} saved</summary>
+            <AnswerChecklist pages={pages} responses={responses} currentIndex={pageIdx} isLocked={isLocked} onOpen={openAnswer} />
+          </details>}
+          {page?.hasCapture && <div className={styles.currentAnswers} aria-label="Answers in this step">
+            <strong><Pencil size={17} /> Responses in this step</strong>
+            {page.captureBlocks.map(block => <button type="button" key={block.id} onClick={() => openAnswer(pageIdx, block.id)}>
+              <span>{answerGuide(block).title}<small>{answerGuide(block).parts.join(' · ')}</small></span><span>{answerStatus(block, responses)} <ChevronRight size={15} /></span>
+            </button>)}
+          </div>}
+          <div id="lesson-activity" tabIndex={-1} aria-label="Current lesson activity" className={`${styles.workspace} mt-4 lesson-reading`}>
+            <div className={styles.workspaceLabel}><span>{page?.hasCapture ? 'THE ACTIVITY' : 'EXPLORE THE IDEA'}</span><span>STEP {lessonNumber(pageIdx + 1)}</span></div>
             {page && stepped ? (
               splitHelpRuns(page.blocks).map((run, ri) => {
-                if (!run.help) return <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+                if (!run.help) return <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} key={ri} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
                 // S-4 · help drawer: open by default unless the student already rates Almost / Got it on the section's target.
                 const t = sectionTarget(page)
                 const level = t ? exp?.mastery[t] : undefined
                 const openDefault = !(typeof level === 'number' && level >= 2)
                 return (
-                  <details key={ri} open={openDefault} className="my-3 rounded-2xl border" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))' }}>
+                  <details key={`${pageIdx}:${ri}`} open={openDefault} className={`${styles.help} my-3 rounded-2xl border`} style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))' }}>
                     <summary className="cursor-pointer list-none px-4 py-2.5 text-sm font-semibold inline-flex items-center gap-2" style={{ color: 'var(--primary)' }}>
-                      <Lightbulb size={15} /> {openDefault ? 'Help & worked example' : 'Need a refresher? Help & worked example'}
-                      <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>{openDefault ? '' : `· you’re rated ${level === 3 ? 'Got it' : 'Almost'} on this target`}</span>
+                      <Lightbulb size={15} /> Help & worked example
+                      <span className="text-xs font-normal" style={{ color: 'var(--muted-foreground)' }}>· open or close</span>
                     </summary>
-                    <div className="px-4 pb-3"><BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
+                    <div className="px-4 pb-3"><BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={run.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} /></div>
                   </details>
                 )
               })
             ) : page ? (
-              <BlockRenderer referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
+              <BlockRenderer showResponseGuide referenceBlocks={blocks} readOnly={staffView || submissionLocked} readOnlyExceptBlockId={!staffView && submissionLocked ? live.session?.pollBlockId ?? undefined : undefined} blocks={page.blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} selfRatingHold={selfRatingHold} />
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>This lesson does not have content yet.</p>
             )}
@@ -459,7 +504,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
           {/* S-6 · Done screen: what was auto-checked, what awaits rating, XP earned + pending, calibration read-back */}
           {isLast && stepped && submitted && (() => {
             const t = doneTallies(blocks, committed)
-            const xpTotal = (exp?.xpEarned ?? 0) + xpSession
+            const xpTotal = xpSession
             const rated = (exp?.calibration ?? []).filter((c) => c.teacher !== null)
             return (
               <div className="mt-4 rounded-2xl border p-5" style={{ borderColor: 'color-mix(in oklch, var(--success) 45%, var(--border))', background: 'color-mix(in oklch, var(--success) 8%, var(--card))' }}>
@@ -468,7 +513,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 <div className="mt-3 grid gap-2 text-sm" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
                   <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Auto-checked</div><div className="text-lg font-bold">{t.autoChecked > 0 ? `${t.autoRight} of ${t.autoChecked} right` : '—'}</div></div>
                   <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Awaiting your teacher’s rating</div><div className="text-lg font-bold">{t.awaiting}</div></div>
-                  <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>XP</div><div className="text-lg font-bold" style={{ color: 'var(--reward-foreground)' }}>+{xpTotal} earned{t.xpPending > 0 ? <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}> · +{t.xpPending} pending</span> : null}</div></div>
+                  <div className="rounded-xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}><div className="text-xs" style={{ color: 'var(--muted-foreground)' }}>XP</div><div className="text-lg font-bold" style={{ color: 'var(--reward-foreground)' }}>+{xpTotal} earned{Math.max(0,blocks.reduce((sum,b)=>sum+(b.xp ?? 0),0)-xpTotal) > 0 ? <span className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}> · +{Math.max(0,blocks.reduce((sum,b)=>sum+(b.xp ?? 0),0)-xpTotal)} available</span> : null}</div></div>
                 </div>
                 {rated.length > 0 && (
                   <div className="mt-4">
@@ -488,7 +533,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
           })()}
 
           {/* page nav — S-5: pinned in the stepped reader, with the gate note naming the missing thing */}
-          <div className={stepped ? 'mt-6 pt-3 pb-3 flex items-center justify-between gap-3 sticky bottom-0 z-20 -mx-4 px-4' : 'mt-6 pt-5 flex items-center justify-between gap-3'}
+          <div className={`${styles.navigation} ${stepped ? 'mt-6 pt-3 pb-3 flex items-center justify-between gap-3 sticky bottom-0 z-20 px-4' : 'mt-6 pt-5 flex items-center justify-between gap-3'}`}
             style={stepped ? { borderTop: '1px solid var(--border)', background: 'color-mix(in oklch, var(--background) 94%, transparent)', backdropFilter: 'blur(8px)' } : { borderTop: '1px solid var(--border)' }}>
             <button
               onClick={() => breakAway(pageIdx - 1)}
@@ -522,7 +567,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 </Link>
               )
             ) : (
-              <div className="flex items-center gap-3">
+              <div className={styles.nextAction}>
                 {stepped && page && gateNote(pageBlockedBy(page, committed)) && gating && (
                   <span className="text-xs inline-flex items-center gap-1" style={{ color: 'var(--reward-foreground)' }}><Lock size={12} /> {gateNote(pageBlockedBy(page, committed))}</span>
                 )}
@@ -532,7 +577,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                   className="inline-flex items-center gap-1.5 rounded-2xl px-5 py-2.5 text-sm font-bold disabled:opacity-40"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', boxShadow: '0 8px 22px -8px color-mix(in oklch, var(--primary) 70%, transparent)', border: 'none', cursor: isLocked(pageIdx + 1) ? 'not-allowed' : 'pointer' }}
                 >
-                  Next <ChevronRight size={16} />
+                  {page?.hasCapture ? 'Continue' : 'Read & continue'} <ChevronRight size={16} />
                 </button>
               </div>
             )}
@@ -545,6 +590,14 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
             </Link>
           </div>
         </div>
+        {/* Supporting lesson path follows the reading column (desktop only). */}
+        <aside className="hidden lg:block">
+          <div className="sticky" style={{ top: 96 }}>
+            <AnswerChecklist pages={pages} responses={responses} currentIndex={pageIdx} isLocked={isLocked} onOpen={openAnswer} />
+            <details className={styles.pathDetails}><summary>Lesson path</summary><SectionRail sections={sections} currentIndex={pageIdx} isComplete={sectionDone} isLocked={isLocked} onJump={breakAway} /></details>
+          </div>
+        </aside>
+
       </div>
     </div>
   )

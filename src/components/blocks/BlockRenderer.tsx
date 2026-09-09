@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { answerAnchor, answerGuide, answerStatus } from '@/components/lessons/lesson-answer-guide'
+import answerStyles from '@/components/lessons/LessonViewer.module.css'
 import MathMarkdown, { type GlossaryEntry } from '@/components/MathMarkdown'
 import { ContentBlock, BlockType, isBlockComplete, isBlockDone, isCaptureBlock, type DiagramForce, type DiagramVector, type GraphSeries, type CircuitComponent, type EnergyChainLink, type DiagramScene, type LabNotebookBlock } from '@/data/content-blocks'
 import type { Stroke } from './DoodleCanvas'
@@ -93,6 +95,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   marzano: { label: 'Self-check', domain: 'meta', Icon: Gauge },
   exit_ticket: { label: 'Exit ticket', domain: 'P', Icon: Ticket },
   gewa: { label: 'Solve it', domain: 'S', Icon: PencilRuler },
+  lab_notebook: { label: 'Lab notebook', domain: 'S', Icon: PencilRuler },
   sketch: { label: 'Draw it', domain: 'S', Icon: Pencil },
   equation_sandbox: { label: 'Equation sandbox', domain: 'S', Icon: Sigma },
   data_table: { label: 'Collect data', domain: 'R', Icon: Table },
@@ -109,7 +112,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
 // `deck` draws its own presenter card (teacher-only; students never receive it).
 const BARE: Set<BlockType> = new Set(['prose', 'callout', 'lesson_vocab', 'figure', 'deck'])
 
-function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: boolean; capture?: boolean; children: ReactNode }) {
+function BlockShell({ meta, done, capture, children, hideHeading = false }: { hideHeading?: boolean; meta: Meta; done?: boolean; capture?: boolean; children: ReactNode }) {
   const accent = ACCENT[meta.domain]
   const { Icon } = meta
   // Save-required blocks signal their state explicitly; reference blocks say so
@@ -120,14 +123,14 @@ function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: bool
       style={{
         borderRadius: 16,
         // An unsaved save-block gets a warm amber edge so it reads as "do something here".
-        border: needsSaving
+        border: hideHeading ? 'none' : needsSaving
           ? '1.5px solid color-mix(in oklch, var(--reward) 55%, var(--border))'
           : `0.5px solid color-mix(in oklch, ${accent} 28%, var(--border))`,
         overflow: 'hidden',
         background: 'var(--card)',
       }}
     >
-      <div className="flex items-center gap-2" style={{ padding: '8px 14px', background: `color-mix(in oklch, ${accent} 12%, var(--card))` }}>
+      {!hideHeading && <div className="flex items-center gap-2" style={{ padding: '8px 14px', background: `color-mix(in oklch, ${accent} 12%, var(--card))` }}>
         <span className="flex items-center justify-center shrink-0" style={{ width: 26, height: 26, borderRadius: '50%', background: accent, color: CHIP_FG[meta.domain] }}>
           <Icon size={15} />
         </span>
@@ -140,7 +143,7 @@ function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: bool
               </span>
             ) : (
               <span className="inline-flex items-center gap-1 rounded-full px-2 py-0.5" style={{ fontSize: 11, fontWeight: 700, color: 'var(--reward-foreground)', background: 'var(--reward)' }}>
-                <Pencil size={12} /> Save to log
+                <Pencil size={12} /> Answer here
               </span>
             )
           ) : (
@@ -152,7 +155,7 @@ function BlockShell({ meta, done, capture, children }: { meta: Meta; done?: bool
             {DOMAIN_WORD[meta.domain]}
           </span>
         </span>
-      </div>
+      </div>}
       <div style={{ padding: '14px 16px' }}>{children}</div>
     </div>
   )
@@ -367,7 +370,7 @@ function LabNotebook({ b, saved, save, onDraft = NO_DRAFT }: { b: LabNotebookBlo
   return <div className="rounded-xl border p-3 space-y-3 bg-card">
     <p className="text-sm font-medium">{b.instruction}</p>
     <PaintPad value={strokes} onChange={setStrokes} background={b.backgroundDiagram ? <DiagramBackground scene={b.backgroundDiagram} /> : undefined} />
-    {fields.map((label) => <label key={label} className="block text-sm">{label}<textarea className="mt-1 w-full rounded border p-2 bg-card" rows={2} value={text[label] ?? ''} onChange={(e) => setText((v) => ({ ...v, [label]: e.target.value }))} /></label>)}
+    {fields.map((label) => <label key={label} className="block text-sm">{label}<textarea aria-label={label} className="mt-1 w-full rounded border p-2 bg-card" rows={2} value={text[label] ?? ''} onChange={(e) => setText((v) => ({ ...v, [label]: e.target.value }))} /></label>)}
     <button className="rounded bg-primary text-primary-foreground px-3 py-2 disabled:opacity-50" disabled={b.requireAllFields ? !fields.every((f) => text[f]?.trim()) : !strokes.length && !Object.values(text).some((v) => v.trim())} onClick={() => save(b.id, 'lab_notebook', { strokes, fields: text })}>Save notebook</button>
     <p className="text-xs text-muted-foreground">Describe objects, labels, and directions in the reasoning boxes if you use a keyboard instead of drawing.</p>
   </div>
@@ -563,8 +566,8 @@ function ObservationCapture({ b, saved, save, onDraft }: { b: Extract<ContentBlo
   return <div className="space-y-3">
     <SeiVisual visual={b.sei?.visual} />
     <SeiFrameBox state={state} onUseFrame={(frame) => setValue((v) => ({ ...v, pattern: v.pattern || frame }))} />
-    <label className="block text-sm">{b.patternPrompt}<textarea className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.pattern ?? ''} onChange={(e) => setValue((v) => ({ ...v, pattern: e.target.value }))} /></label>
-    <label className="block text-sm">{b.interpretPrompt}<textarea className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.interpret ?? ''} onChange={(e) => setValue((v) => ({ ...v, interpret: e.target.value }))} /></label>
+    <label className="block text-sm">{b.patternPrompt}<textarea aria-label={b.patternPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.pattern ?? ''} onChange={(e) => setValue((v) => ({ ...v, pattern: e.target.value }))} /></label>
+    <label className="block text-sm">{b.interpretPrompt}<textarea aria-label={b.interpretPrompt} className="mt-1 w-full rounded border p-2 bg-card" rows={3} value={value.interpret ?? ''} onChange={(e) => setValue((v) => ({ ...v, interpret: e.target.value }))} /></label>
     <button type="button" className="rounded bg-primary text-primary-foreground px-3 py-2 disabled:opacity-50" disabled={!value.pattern?.trim() || !value.interpret?.trim() || /_{2,}/.test(value.pattern ?? '')} onClick={() => save(b.id, b.type, value, { response_mode: 'text', scaffolds_used: state.scaffolds })}>Save observation and interpretation</button>
     <SeiFairnessNote />
   </div>;
@@ -771,7 +774,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
   }
 }
 
-function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft, readOnly = false, visualReference }: { visualReference?: ContentBlock; readOnly?: boolean; b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
+function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft, readOnly = false, visualReference, responseGuided = false }: { responseGuided?: boolean; visualReference?: ContentBlock; readOnly?: boolean; b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
   const meta = BLOCK_META[b.type]
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const busy = useRef(false)
@@ -793,7 +796,7 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
         <span aria-hidden>⏳</span> <span>{selfRatingHold}</span>
       </div>
     )
-    return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture>{held}</BlockShell> : held
+    return meta && !BARE.has(b.type) ? <BlockShell meta={meta} done={false} capture hideHeading={responseGuided}>{held}</BlockShell> : held
   }
   const body = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets)
   if (body === null) return null
@@ -801,7 +804,7 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
   const capture = !readOnly && isCaptureBlock(b)
   // A draft is shown but is not done — the student still has to Save.
   const done = !isDraft && isBlockDone(b, saved)
-  return <BlockShell meta={meta} done={done} capture={capture}>
+  return <BlockShell meta={meta} done={done} capture={capture} hideHeading={responseGuided}>
     {visualReference && <div className="mb-3" aria-label="Task representation">{visualReference.type === 'sketch' ? visualReference.backgroundDiagram ? <DiagramBackground scene={visualReference.backgroundDiagram} /> : visualReference.scaffoldSvg ? <div dangerouslySetInnerHTML={{ __html: visualReference.scaffoldSvg }} /> : <CoordinateGrid xLabel={visualReference.xLabel} yLabel={visualReference.yLabel} quadrants={visualReference.quadrants} /> : renderBody(visualReference, undefined, async () => false, lessonId, glossary, () => {}, targets)}</div>}
     <fieldset disabled={(readOnly && isCaptureBlock(b)) || saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
     {capture && saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-2 text-sm font-semibold">
@@ -828,8 +831,12 @@ class BlockBoundary extends Component<{ label?: string; children: ReactNode }, {
 }
 
 export default function BlockRenderer({
-  blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null,
+  blocks, referenceBlocks, lessonId, responses: extResponses, hydrated, save: extSave, draft: extDraft, targets, glossary, readOnly = false, readOnlyExceptBlockId, trackBadges = false, selfRatingHold = null, showResponseGuide = false, hideBlockHeadings = false,
 }: {
+  /** Student lesson response headings and direct navigation anchors. */
+  showResponseGuide?: boolean
+  /** Projector supplies its own matching response cue above the content. */
+  hideBlockHeadings?: boolean
   /** flips to true once saved responses + drafts have loaded; blocks remount so their local state picks them up */
   hydrated?: boolean
   blocks: ContentBlock[]
@@ -866,19 +873,27 @@ export default function BlockRenderer({
   return (
     <div className="space-y-4">
       {blocks.map((b) => {
+        const guided = showResponseGuide && isCaptureBlock(b)
+        const guide = guided ? answerGuide(b) : null
+        const responseNumber = (referenceBlocks ?? blocks).filter(isCaptureBlock).findIndex(block => block.id === b.id) + 1
         const gate = trackBadges && (b.visibilityTrack === 'cpa' || b.visibilityTrack === 'honors') ? b.visibilityTrack : null
         const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
         const gateFg = gate === 'honors' ? 'var(--reward-foreground)' : 'var(--success)'
         return (
-          <div key={`${b.id}:${hydratedKey}`} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
+          <div key={`${b.id}:${hydratedKey}`} id={guided ? answerAnchor(lessonId, b.id) : undefined} tabIndex={guided ? -1 : undefined} className={guided ? answerStyles.responseSurface : undefined} style={gate ? { borderLeft: `4px solid ${gateColor}`, borderRadius: 6, paddingLeft: 12, position: 'relative' } : undefined}>
             {gate && (
               <span className="text-[10px] font-bold uppercase tracking-wide rounded px-1.5 py-0.5"
                 style={{ background: `color-mix(in oklch, ${gateColor} 18%, var(--card))`, color: gateFg, border: `1px solid color-mix(in oklch, ${gateColor} 50%, transparent)` }}>
                 {gate === 'honors' ? 'Honors only' : 'CPA only'}
               </span>
             )}
+            {guide && <div className={answerStyles.responseHeading}>
+              <div><span className={`${answerStyles.responseEyebrow} lesson-response-badge`}>{readOnly && b.id !== readOnlyExceptBlockId ? 'YOUR SAVED WORK' : 'YOUR RESPONSE'} {String(responseNumber).padStart(2, '0')}</span><strong>{guide.title}</strong>{typeof b.xp === 'number' && b.xp > 0 && <span className={answerStyles.blockXp}>{b.xp} XP · earn once</span>}<span className={answerStyles.responseState}>{answerStatus(b, responses)}</span></div>
+              <p>{readOnly && b.id !== readOnlyExceptBlockId ? 'Review your response below.' : 'Answer in the area below. Check each part before moving on.'}</p>
+              <ul aria-label="Response parts">{guide.parts.map((part, i) => <li key={i}>{part}</li>)}</ul>
+            </div>}
             <BlockBoundary label={b.type}>
-              <RenderedBlock visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
+              <RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
             </BlockBoundary>
           </div>
         )

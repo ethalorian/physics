@@ -36,10 +36,10 @@ export default function AvatarGallery() {
     finally { locks.current.delete(a.user_id); setPending(new Set(locks.current)) }
   }
   return <section aria-label="Class avatar gallery" className="space-y-4">
-    <p className="text-sm text-muted-foreground">Avatars shared with your classes. Only you see your appreciation total.</p>
+    <p className="text-sm text-muted-foreground">Avatars from your classes. Only you see your appreciation total.</p>
     {error && <div role="alert" className="rounded-xl border p-3 text-sm">{error} <Button variant="outline" onClick={() => load(data?.next_offset ?? 0)}>Retry</Button></div>}
     {!data && loading && <p role="status">Loading the gallery…</p>}
-    {data?.avatars.length === 0 && <p className="rounded-xl border p-6 text-sm text-muted-foreground">No shared avatars yet. Use “Share in my class gallery” in your avatar settings to join.</p>}
+    {data?.avatars.length === 0 && <p className="rounded-xl border p-6 text-sm text-muted-foreground">No completed avatars in your classes yet. Saved avatars appear here automatically.</p>}
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {data?.avatars.map(a => <div key={a.user_id} className="flex flex-col items-center rounded-xl border bg-card p-3">
         <Avatar traits={a.traits} equipped={a.equipped} items={data.items} size={104} crop="medium" decorative />

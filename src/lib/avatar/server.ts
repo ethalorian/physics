@@ -25,7 +25,10 @@ export async function saveAvatar(request: Request, ctx: AuthContext): Promise<Re
   if (!Number.isSafeInteger(b.revision) || Number(b.revision) < 0 || Object.keys(b).some(k => !allowed.includes(k))) return invalid()
   if ('traits' in b) { if (!validTraits(b.traits)) return invalid(); patch.traits = b.traits }
   if ('equipped' in b) { if (!validEquipped(b.equipped)) return invalid(); patch.equipped = b.equipped }
-  for (const key of ['complete', 'gallery_visible']) if (key in b) { if (typeof b[key] !== 'boolean') return invalid(); patch[key] = b[key] }
+  // Accept the retired field from older clients, but never permit hiding.
+  if ('gallery_visible' in b && typeof b.gallery_visible !== 'boolean') return invalid()
+  patch.gallery_visible = true
+  for (const key of ['complete']) if (key in b) { if (typeof b[key] !== 'boolean') return invalid(); patch[key] = b[key] }
   if ('alias' in b) {
     if (b.alias !== null && typeof b.alias !== 'string') return invalid()
     const alias = typeof b.alias === 'string' ? b.alias.trim() : ''

@@ -59,6 +59,7 @@ export class LessonResponseStore {
         return r.json()
       }))
       if (!this.current() || n !== this.loadNumber) return
+      if (typeof a.xpEarned === 'number') this.update({ xpEarned: a.xpEarned })
       if (!record(a.responses) || !record(b.drafts)) throw new Error('shape')
       const merged = { ...a.responses } as BlockResponseMap
       const at = (s?: string) => s ? Date.parse(s) || 0 : 0
@@ -136,7 +137,9 @@ export class LessonResponseStore {
         if (!r.ok) return false
         const d = await r.json()
         if (!this.current()) return false
-        if (typeof d.xp_awarded === 'number' && d.xp_awarded > 0) this.update({ xpEarned: this.state.xpEarned + d.xp_awarded })
+        if (typeof d.xpEarned === 'number') this.update({ xpEarned: d.xpEarned })
+        else if (typeof d.xp_awarded === 'number' && d.xp_awarded > 0) this.update({ xpEarned: this.state.xpEarned + d.xp_awarded })
+        if (typeof window !== 'undefined' && d.xp_awarded > 0) window.dispatchEvent(new CustomEvent('xp-updated'))
         if (this.revisions[id] !== revision) return false
         delete this.pending[id]
         const local = this.read(); delete local[id]; this.write(local)

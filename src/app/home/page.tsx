@@ -1,4 +1,5 @@
 "use client"
+import XpRequirements from './XpRequirements'
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
@@ -182,6 +183,7 @@ export default function HomePage() {
             </details>
         </section>
 
+        <XpRequirements />
         <StudentCheckIn name={data?.student.name} points={!loadError ? data?.points : undefined} streak={!loadError ? data?.streak.current : undefined} loading={loading} />
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div><h2 className="text-title-3">What’s happening today</h2><p className="mt-1 text-sm text-muted-foreground">Your next lesson, daily practice, and something to work toward.</p></div>

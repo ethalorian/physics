@@ -22,7 +22,7 @@ export async function currentPulse(sessionId: string): Promise<Pulse | null> {
 export async function teachingTools(session: NonNullable<Awaited<ReturnType<typeof presentationForActor>>>, displayOnly: boolean) {
   const [pulse, tools, projector] = await Promise.all([
     currentPulse(session.id),
-    supabaseAdmin.from('present_session_tools').select('reconnect_token, discussion_block_id, discussion_poll_run_id, updated_at').eq('session_id', session.id).maybeSingle(),
+    supabaseAdmin.from('present_session_tools').select('sei_enabled, reconnect_token, discussion_block_id, discussion_poll_run_id, updated_at').eq('session_id', session.id).maybeSingle(),
     supabaseAdmin.from('present_projector_state').select('signature, seen_at, slide, ready').eq('session_id', session.id).maybeSingle(),
   ])
   if (tools.error || projector.error) throw tools.error || projector.error

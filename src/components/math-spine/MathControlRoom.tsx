@@ -15,6 +15,7 @@
  */
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react'
 import MathWorkReview from './MathWorkReview'
+import styles from './MathControlRoom.module.css'
 import type { MathResponse } from '@/lib/math-response'
 
 
@@ -83,6 +84,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const [loading, setLoading] = useState(true)
   const [sel, setSel] = useState<{ studentId: string; name: string } | null>(null)
   const [subs, setSubs] = useState<Submission[]>([])
+  const [submissionId, setSubmissionId] = useState<string | null>(null)
   const [drawerLoading, setDrawerLoading] = useState(false)
   const [savingKey, setSavingKey] = useState<string | null>(null)
   // Written feedback (one-way note to the student, lands in their bell + growth page)
@@ -90,6 +92,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3 | null>(null)
   const [requestRevision, setRequestRevision] = useState(false)
   const [revisionOutcome, setRevisionOutcome] = useState('')
+  const [reviewsSaved, setReviewsSaved] = useState(0)
   const [flash, setFlash] = useState<string | null>(null)
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
@@ -133,6 +136,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     // The grading drawer is YOUR roster only — admin included. Other teachers'
     // students stay visible in the snapshot grid, but never open here.
     if (grid?.students.find((st) => st.id === studentId)?.ratable === false) return
+    setSubmissionId(null)
     setSel({ studentId, name })
     setSubs([])
     loadStudent(studentId)
@@ -140,7 +144,9 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
 
   const closeDrawer = useCallback(() => { if (savingKey) return; studentLoad.current++; setSel(null); setSubs([]); setNextGate(null) }, [savingKey])
 
-  const draftId = subs.find(s => s.status === 'pending' || s.revision?.status === 'pending')?.id
+  const pendingSubs = subs.filter(s => s.status === 'pending' || s.revision?.status === 'pending')
+  const activeSub = pendingSubs.find(s => s.id === submissionId) ?? pendingSubs[0] ?? null
+  const draftId = activeSub?.id
   const loadedDraft = useRef<string | null>(null)
   useEffect(() => {
     loadedDraft.current = null
@@ -150,13 +156,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       const raw = sessionStorage.getItem('math-review:' + draftId)
       if (raw) { const d = JSON.parse(raw); setFbText(d.message ?? ''); setSelectedLevel(d.level ?? null); setRequestRevision(d.revision ?? false); setRevisionOutcome(d.outcome ?? '') }
     } catch {}
-    loadedDraft.current = draftId
+    // The next render persists the restored fields, never the outgoing draft.
+    queueMicrotask(() => { loadedDraft.current = draftId })
   }, [draftId])
   useEffect(() => {
     if (!draftId || loadedDraft.current !== draftId) return
     // Defer until the restore effect's state updates have rendered.
-    const timer = setTimeout(() => { try { sessionStorage.setItem('math-review:' + draftId, JSON.stringify({ message: fbText, level: selectedLevel, revision: requestRevision, outcome: revisionOutcome })) } catch {} }, 100)
-    return () => clearTimeout(timer)
+    try { sessionStorage.setItem('math-review:' + draftId, JSON.stringify({ message: fbText, level: selectedLevel, revision: requestRevision, outcome: revisionOutcome })) } catch {}
   }, [draftId, fbText, selectedLevel, requestRevision, revisionOutcome])
 
   useEffect(() => {
@@ -173,7 +179,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Tab') {
         const dialog = document.querySelector<HTMLElement>('[aria-label="Review math work"]')
-        const fields = Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), a[href]') ?? []).filter(el => el.getClientRects().length > 0)
+        const fields = Array.from(dialog?.querySelectorAll<HTMLElement>('button:not(:disabled), textarea:not(:disabled), input:not(:disabled), select:not(:disabled), a[href], summary') ?? []).filter(el => el.getClientRects().length > 0)
         const first = fields[0], last = fields[fields.length - 1]
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus() }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus() }
@@ -186,11 +192,21 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
         if (typing && el.tagName === 'TEXTAREA') { (el as HTMLElement).blur(); return }
         closeDrawer(); return
       }
-      if (typing) return
-      if (savingKey || e.repeat) return
+      if (savingKey || e.repeat || drawerLoading) return
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); const save = document.querySelector<HTMLButtonElement>('[data-math-save]'); if (save && !save.disabled) save.click(); return }
+      if (typing || e.metaKey || e.ctrlKey || e.altKey) return
+      if (e.key.toLowerCase() === 'f') { e.preventDefault(); document.getElementById('math-review-note')?.focus(); return }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault()
+        const direction = e.key === 'ArrowRight' ? 1 : -1
+        if (e.shiftKey) { const roster = grid?.students.filter(s => s.ratable !== false) ?? []; const next = roster[roster.findIndex(s => s.id === sel.studentId) + direction]; if (next) openStudent(next.id, next.name) }
+        else { const next = pendingSubs[pendingSubs.findIndex(s => s.id === activeSub?.id) + direction]; if (next) setSubmissionId(next.id) }
+        return
+      }
+      if (e.shiftKey) return
       if (sel && isViewOnly(sel.studentId)) return // another teacher's student
-      const active = subs.find((s) => s.status === 'pending' || s.revision?.status === 'pending')
-      if (!active) return
+      const active = activeSub
+      if (!active || active.revision) return
       const cid = active.tested_competency_ids.find((c) => !active.rated_competency_ids.includes(c))
       if (!cid) return
       if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); setSelectedLevel(Number(e.key) as 1 | 2 | 3) }
@@ -198,7 +214,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, subs, savingKey, nextGate])
+  }, [sel, subs, savingKey, nextGate, activeSub, drawerLoading, grid, openStudent])
 
   // Inter-student gate: any key (or Continue) advances; Esc closes instead.
   // Grace period: a rating keystroke in flight when the gate appears must not
@@ -237,12 +253,13 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       })
       const d = await res.json().catch(() => ({}))
       if (!res.ok) throw new Error(d.error || 'Save failed')
+      setReviewsSaved(count => count + 1)
       try { sessionStorage.removeItem('math-review:' + submission.id) } catch {}
       setFbText(''); setSelectedLevel(null); setRequestRevision(false); setRevisionOutcome('')
       const awarded = (d.awarded ?? []) as { milestone: string; points: number }[]
       if (awarded.length > 0) {
         const pts = awarded.reduce((s, g) => s + g.points, 0)
-        setFlash(`🎉 +${pts} pts for ${sel.name}`)
+        setFlash(`🎉 +${pts} XP for ${sel.name}`)
         setTimeout(() => setFlash(null), 3000)
       }
       refresh()
@@ -272,7 +289,11 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   if (!grid) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Could not load the math grid.</p>
   if (grid.students.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No students in scope.</p>
 
-  const activeSub = subs.find((s) => s.status === 'pending' || s.revision?.status === 'pending') ?? null
+  const reviewRoster = grid.students.filter(s => s.ratable !== false)
+  const studentIndex = reviewRoster.findIndex(s => s.id === sel?.studentId)
+  const previousStudent = reviewRoster[studentIndex - 1]
+  const nextStudent = reviewRoster[studentIndex + 1]
+  const responseIndex = pendingSubs.findIndex(s => s.id === activeSub?.id)
 
   return (
     <div>
@@ -468,26 +489,26 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       {sel && (
         <>
           <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <div role="dialog" aria-modal="true" aria-label="Review math work" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
+          <div className={styles.drawer} role="dialog" aria-modal="true" aria-label="Review math work" style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1440px, 100vw)', zIndex: 100, background: 'var(--background)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row' }}>
             {/* roster rail — students with warm-ups to review; greyed when done */}
-            <div className="hidden xl:flex" style={{ width: 180, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
-                {queue.length > 0 ? `${queue.length} to review` : 'All caught up'}
-              </div>
+            <div className={`hidden xl:flex ${styles.roster}`} style={{ width: 212, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
+              <div className={styles.queueHeading}><span className={styles.queueMark} aria-hidden="true">✦</span><strong>Your review queue</strong><p>{queue.length > 0 ? `${queue.length} students to go` : 'All caught up'}</p><div className={styles.sessionCount} aria-live="polite">✓ {reviewsSaved} reviews saved this session</div></div>
               <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
-                {grid.students.filter((st) => st.ratable !== false).map((st) => {
+                {grid.students.filter((st) => st.ratable !== false).sort((a, b) => Number(queue.some(q => q.studentId === b.id)) - Number(queue.some(q => q.studentId === a.id))).map((st) => {
                   const qc = queue.find((q) => q.studentId === st.id)?.count ?? 0
                   const done = qc === 0
                   const active = sel.studentId === st.id
                   return (
                     <button
                       key={st.id}
-                      onClick={() => { if (!done) openStudent(st.id, st.name) }}
-                      disabled={done}
+                      aria-current={active ? 'true' : undefined}
+                      onClick={() => openStudent(st.id, st.name)}
+                      disabled={savingKey !== null}
                       title={st.name}
                       style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left', padding: '10px 14px', border: 'none', borderLeft: `2px solid ${active ? 'var(--reward)' : 'transparent'}`, background: active ? 'color-mix(in oklch, var(--reward) 14%, transparent)' : 'transparent', color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer' }}
                     >
-                      <span style={{ flex: 1, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}</span>
+                      <span className={styles.initials} aria-hidden="true">{st.name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('')}</span>
+                      <span style={{ flex: 1, fontSize: 14, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{st.name}<small className={styles.studentStatus}>{active ? 'Reviewing now' : done ? 'Reviewed · open history' : `${qc} to review`}</small></span>
                       {done ? <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
                         : <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{qc}</span>}
                     </button>
@@ -497,22 +518,24 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             </div>
             {/* content column */}
             <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', position: 'relative' }}>
-            <div style={{ padding: '16px 20px 10px', borderBottom: '1px solid var(--border)' }}>
-              <button onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
+            <div className={styles.header} style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
+              <button aria-label="Close math review" className={styles.close} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 26, lineHeight: 1, cursor: 'pointer' }}>×</button>
+              <p className={styles.eyebrow}>✦ The review desk <span>Warm-up · {queue.length} students remaining</span></p>
               <h3 className="text-2xl font-bold" style={{ color: 'var(--foreground)' }}>{sel.name}</h3>
-              <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Review the warm-up; rate only the competencies it tests. Keys <b>1·2·3</b> select a rating; Save review sends your feedback and continues.</p>
+              <div className={styles.studentNav}><button type="button" aria-label="Previous student" disabled={!previousStudent || savingKey !== null} onClick={() => previousStudent && openStudent(previousStudent.id, previousStudent.name)}>← Previous student <small>Shift + ←</small></button><button type="button" aria-label="Next student" disabled={!nextStudent || savingKey !== null} onClick={() => nextStudent && openStudent(nextStudent.id, nextStudent.name)}>Next student → <small>{nextStudent?.name ?? 'End of queue'} · Shift + →</small></button></div>
             </div>
 
             {drawerLoading && <p className="text-sm p-5" style={{ color: 'var(--muted-foreground)' }}>Loading…</p>}
 
             {!drawerLoading && !activeSub && (
-              <p className="text-sm p-5" style={{ color: 'var(--muted-foreground)' }}>No pending warm-up for this student.</p>
+              <div className="overflow-y-auto p-5"><h4 className="font-semibold mb-4">No pending warm-ups · Review history</h4>{subs.map(sub => <section key={sub.id} className="rounded-xl border p-4 mb-4"><p className="text-xs text-muted-foreground mb-2">{fmtDate(sub.submitted_at)} · {sub.status}</p><p className="mb-3">{sub.prompt}</p><WarmupAnswer sub={sub}/>{sub.feedback?.map((f,i)=><p key={i} className="mt-3 text-sm"><b>Your feedback:</b> {f.message}</p>)}</section>)}</div>
             )}
 
             {!drawerLoading && activeSub && (
-              <div className="flex flex-col lg:flex-row overflow-y-auto" style={{ flex: 1, minHeight: 0 }}>
+              <div className={styles.body} style={{ flex: 1, minHeight: 0 }}>
               {/* left: the work being judged */}
-              <div className="lg:flex-1 lg:overflow-y-auto" style={{ minWidth: 0, flexShrink: 0, padding: 20, borderRight: '1px solid var(--border)' }}>
+              <div className={styles.work} style={{ minWidth: 0, flexShrink: 0, padding: 20, borderRight: '1px solid var(--border)' }}>
+                <h4 className={styles.step}><span>1</span> Review the work</h4>
                 <div className="flex items-center gap-2 text-sm mb-2" style={{ color: 'var(--muted-foreground)' }}>
                   <span>Submitted {fmtDate(activeSub.submitted_at)}</span>
                   {/* Instant self-check triage chip: the machine's verdict on the ANSWER only */}
@@ -524,26 +547,17 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   )}
                 </div>
                 {activeSub.prompt && (
-                  <p className="text-base mb-3" style={{ color: 'var(--foreground)' }}><b style={{ color: 'var(--muted-foreground)' }}>Prompt:</b> {activeSub.prompt}</p>
+                  <p className={styles.prompt} style={{ color: 'var(--foreground)' }}><b className={styles.promptLabel}>THE CHALLENGE</b> {activeSub.prompt}</p>
                 )}
-                <WarmupAnswer sub={activeSub} />
-                {activeSub.feedback?.map((f,i) => <p key={i} className="my-3 rounded border p-3"><b>Your feedback:</b> {f.message}</p>)}
-                {activeSub.revision && <section className="mt-4 border-t pt-4"><h4 className="font-bold">Student response {activeSub.revision.needs_help ? '· asks for help' : '· correction'}</h4><p className="my-2 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></section>}
-              </div>
-
-              {/* right: the teacher's two acts — rate it, then say something
-                  useful about it. Always in view. */}
-              <div className="w-full lg:w-[400px] lg:overflow-y-auto" style={{ flexShrink: 0, padding: 20, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
-
-                <div className="text-sm font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>
-                  {activeSub.revision ? 'Respond to the student' : 'Rate the tested competency'}
+                {!activeSub.revision && <section className={styles.prominentRating} aria-label="Rate this evidence">                <div className={styles.step}>
+                  <span>2</span>{activeSub.revision ? 'Respond to the student' : 'Rate this evidence'}
                 </div>
                 {!activeSub.revision && activeSub.tested_competency_ids.map((cid) => {
                   const comp = compById(cid)
                   const rated = activeSub.rated_competency_ids.includes(cid)
                   const cur = currentValue(sel.studentId, cid)
                   return (
-                    <div key={cid} className="rounded-xl p-4 mb-3" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
+                    <div key={cid} className={`rounded-xl p-4 mb-3 ${styles.competency}`} style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
                       <div className="flex items-start gap-2.5 mb-2">
                         <span className="text-sm font-bold rounded-md px-2.5 py-1 tabular-nums shrink-0" style={{ background: 'var(--muted)', color: 'var(--foreground)' }}>{comp?.code ?? '?'}</span>
                         <span className="text-[15px]" style={{ color: 'var(--foreground)', lineHeight: 1.45 }}>{comp?.statement ?? cid}</span>
@@ -556,7 +570,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                       ) : sel && isViewOnly(sel.studentId) ? (
                         <div className="text-sm rounded-lg py-2.5 px-3" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>View only — their teacher rates this</div>
                       ) : (
-                        <div className="flex gap-2">
+                        <div className={styles.ratings}>
                           {[1, 2, 3].map((lv) => {
                             return (
                               <button
@@ -564,14 +578,15 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                                 disabled={savingKey !== null}
                                 onClick={() => setSelectedLevel(lv as 1 | 2 | 3)}
                                 aria-pressed={selectedLevel === lv}
-                                className="flex-1 rounded-xl font-bold disabled:opacity-50"
+                                className={styles.rating}
+                                aria-label={`${lv} · ${levelWord(lv)}`}
                                 style={{
-                                  padding: '14px 0', fontSize: 15, cursor: 'pointer', border: '1.5px solid var(--border)',
+                                  padding: '12px', fontSize: 14, cursor: 'pointer', border: selectedLevel === lv ? '2px solid currentColor' : '2px solid transparent',
                                   background: lv === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lv === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
                                   color: lv === 1 ? 'var(--destructive)' : lv === 2 ? 'var(--reward-foreground)' : 'var(--success)',
                                 }}
                               >
-                                {selectedLevel === lv ? '✓ ' : ''}{`${lv} · ${levelWord(lv)}`}
+                                <span className={styles.ratingKey} aria-hidden="true">{lv}</span><span className={styles.ratingCopy}><strong>{levelWord(lv)}</strong><small>{lv === 1 ? 'With mathematical support' : lv === 2 ? 'Independent in a routine context' : 'Transfers and explains why'}</small></span><kbd className={styles.shortcut}>{lv}</kbd>
                               </button>
                             )
                           })}
@@ -581,17 +596,37 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
                   )
                 })}
                 {!activeSub.revision && !isViewOnly(sel.studentId) && (
-                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Keys <b>1 · 2 · 3</b> select a rating. Save when your feedback is ready.</p>
+                  <p className="text-sm mb-1" style={{ color: 'var(--muted-foreground)' }}>Shortcut: <b>1 · 2 · 3</b> to select. Your review saves when you continue.</p>
                 )}
-                <div className="mt-4 space-y-3 rounded-lg border p-3">
-                  <p className="text-sm"><b>Rating anchors:</b> 1 — succeeds with mathematical support; 2 — independent in a routine context; 3 — transfers to a new context and explains why. Language access is not a penalty.</p>
-                  <p className="text-xs text-muted-foreground">One observation is evidence, not proof of lasting fluency. Use a later independent task to confirm transfer.</p>
+</section>}
+                <div className={styles.paper}><div className={styles.paperHeading}><span>STUDENT WORK</span><span aria-hidden="true">✎</span></div><WarmupAnswer sub={activeSub} /></div>
+                {activeSub.feedback?.map((f,i) => <p key={i} className="my-3 rounded border p-3"><b>Your feedback:</b> {f.message}</p>)}
+                {activeSub.revision && <section className="mt-4 border-t pt-4"><h4 className="font-bold">Student response {activeSub.revision.needs_help ? '· asks for help' : '· correction'}</h4><p className="my-2 whitespace-pre-wrap">{activeSub.revision.message}</p><MathWorkReview key={activeSub.revision.id} value={activeSub.revision.response_json} /></section>}
+              </div>
+
+              {/* right: the teacher's two acts — rate it, then say something
+                  useful about it. Always in view. */}
+              <div className={styles.review} style={{ flexShrink: 0, padding: 20, background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
+
+                <div className={styles.formScroll}>
+                <h4 className="font-semibold mb-3">Student responses</h4><div className={styles.responseList}>{pendingSubs.map((sub,i) => <button key={sub.id} type="button" aria-current={sub.id === activeSub.id ? 'step' : undefined} disabled={savingKey !== null} onClick={() => setSubmissionId(sub.id)}><strong>{i+1}. {compById(sub.competency_id)?.code ?? 'Warm-up'}</strong><small>{sub.prompt ?? 'Student response'}</small></button>)}</div>
+                <div className={styles.responseNav}><button type="button" aria-label="Previous response" disabled={responseIndex <= 0 || savingKey !== null} onClick={()=>setSubmissionId(pendingSubs[responseIndex-1].id)}>← Previous</button><span>{responseIndex+1} / {pendingSubs.length}</span><button type="button" aria-label="Next response" disabled={responseIndex >= pendingSubs.length-1 || savingKey !== null} onClick={()=>setSubmissionId(pendingSubs[responseIndex+1].id)}>Next →</button></div>
+                <div className={styles.feedback}>
+                  <details className={styles.guidance}><summary>Rating guidance</summary><p>Language access is not a penalty. One observation is evidence, not proof of lasting fluency. Use a later independent task to confirm transfer.</p></details>
+                  <h4 className={styles.step}><span>3</span> Written feedback <kbd>F</kbd></h4>
                   <label className="block text-sm font-semibold" htmlFor="math-review-note">{activeSub.revision ? 'Reply and explain the next step' : 'Feedback and next step'}</label>
-                  <textarea id="math-review-note" rows={4} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision,outcome:revisionOutcome})) } catch {} }} className="w-full rounded border bg-background p-2" placeholder="Name one useful next step, or record the outcome of a conversation." />
+                  <div className={styles.starters} aria-label="Feedback starters">{['Explain your thinking', 'Try another way', 'Let’s talk it through'].map((starter, index) => <button type="button" key={starter} disabled={savingKey !== null} onClick={() => { const prompts = ['Explain how you chose your approach.', 'Can you show another way to solve this?', 'Let’s talk through your approach together.']; setFbText(text => text.trim() ? `${text}\n${prompts[index]}` : prompts[index]); document.getElementById('math-review-note')?.focus() }}>{starter}<span aria-hidden="true"> +</span></button>)}</div>
+                  <textarea id="math-review-note" rows={5} maxLength={2000} disabled={savingKey !== null} value={fbText} onChange={e => { setFbText(e.target.value); try { sessionStorage.setItem('math-review:' + activeSub.id, JSON.stringify({message:e.target.value,level:selectedLevel,revision:requestRevision,outcome:revisionOutcome})) } catch {} }} className={styles.note} placeholder="What went well? What should they try next?" />
+                  <p className="text-xs text-muted-foreground">{activeSub.revision || requestRevision ? 'A message is required so the student knows what to do.' : 'Optional · shared with the student when you save.'}</p>
                   {activeSub.revision && <label className="block text-sm font-semibold">What happens next?<select value={revisionOutcome} onChange={e=>setRevisionOutcome(e.target.value)} disabled={savingKey !== null} className="mt-1 min-h-11 w-full rounded border bg-background p-2"><option value="">Choose a next step</option><option value="fresh-check">Ready for a fresh independent check</option><option value="practice">Work on the next step with this feedback</option><option value="help">Connect with me for help</option></select></label>}
-                  {!activeSub.revision && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={requestRevision} onChange={e => setRequestRevision(e.target.checked)} /> Ask for a correction, explanation, or help request</label>}
-                  {!activeSub.revision && <button type="button" className="min-h-11 text-sm underline" onClick={() => { setSelectedLevel(null); setRequestRevision(true) }}>Need more evidence before rating</button>}
-                  <button type="button" className="min-h-11 w-full rounded bg-primary px-4 text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? (!fbText.trim() || !revisionOutcome) : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Send reply and next step' : 'Save review and continue'}</button>
+                  {!activeSub.revision && <label className={styles.revisionRequest}><input type="checkbox" disabled={savingKey !== null} checked={requestRevision} onChange={e => setRequestRevision(e.target.checked)} /> Ask for a correction, explanation, or help request</label>}
+                  {!activeSub.revision && <button type="button" className={styles.defer} disabled={savingKey !== null} onClick={() => { setSelectedLevel(null); setRequestRevision(true) }}>Need more evidence before rating</button>}
+                </div>
+                </div>
+                <div className={styles.actions}>
+                  <p className="text-xs text-muted-foreground">1 / 2 / 3 rate · ← → responses · Shift + ← → students · F feedback · ⌘ / Ctrl + Enter save</p>
+                  <p className="text-xs text-muted-foreground" role="status">{activeSub.revision ? 'Reply and choose what happens next.' : requestRevision ? (fbText.trim() ? 'Ready to send a request for more evidence.' : 'Add a next step to request a response.') : selectedLevel ? `${levelWord(selectedLevel)} selected · ready to save` : 'Choose a rating to continue.'}</p>
+                  <button data-math-save type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={savingKey !== null || (activeSub.revision ? (!fbText.trim() || !revisionOutcome) : (!selectedLevel && !requestRevision) || (requestRevision && !fbText.trim()))} onClick={() => rate(activeSub, activeSub.competency_id, selectedLevel)}>{savingKey ? 'Saving…' : activeSub.revision ? 'Send reply and next step' : 'Save review and continue'}</button>
                   {activeSub.revision && <p className="text-xs text-muted-foreground">Acknowledging a coached correction adds no fluency rating. Check independence on a later task.</p>}
                   {flash && <p role="status" className="text-sm">{flash}</p>}
                 </div>
@@ -600,7 +635,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
             )}
             {nextGate && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--background) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {sel.name} — all rated</div>
+                <div className={styles.savedSeal} aria-hidden="true">✓</div><div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>Review saved. One more next step delivered.</div><div className={styles.sessionCount}>{reviewsSaved} reviews saved this session</div>
                 <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextGate.name}</div>
                 <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
                   {queue.find((q) => q.studentId === nextGate.id)?.count ?? 0} to review · {queue.length} student{queue.length === 1 ? '' : 's'} left

@@ -76,5 +76,11 @@ export const GET = withAuth(async (request, ctx) => {
     console.error('Error loading feedback:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-  return NextResponse.json({ feedback: data ?? [] })
+  const ids = (data ?? []).map(f => f.id)
+  const { data: reviews, error: reviewError } = ids.length ? await supabaseAdmin.from('mastery_evidence_reviews').select('feedback_id, mean, overall_level, evidence').in('feedback_id', ids).eq('user_id', uid) : { data: [], error: null }
+  if (reviewError) throw reviewError
+  return NextResponse.json({ feedback: (data ?? []).map(f => {
+    const review = reviews?.find(r => r.feedback_id === f.id)
+    return { ...f, evidence_review: review ? { mean: review.mean, overall_level: review.overall_level, evidence: (review.evidence as {blockType?:string;prompt?:string;level:number|null;reason?:string}[]).map(e => ({ activity: e.blockType?.replace(/_/g, ' ') ?? 'Response', prompt: e.prompt, level: e.level, reason: e.reason })) } : null }
+  }) })
 })

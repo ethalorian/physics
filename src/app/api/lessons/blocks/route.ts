@@ -86,20 +86,8 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     // The explicit save is the record; the autosave draft for this block is now moot.
     await supabaseAdmin.from('block_drafts').delete().match({ user_id: ctx.userId, lesson_id: body.lesson_id, block_id: body.block_id }).lte('updated_at', (data as { created_at: string }).created_at)
 
-    // B-4 · XP once per student per block, on the first COMPLETE save. The dedupe
-    // key makes re-saves and re-submits no-ops; the existing grants table is the
-    // one XP path.
-    let xpAwarded = 0
-    const blockXp = typeof block?.xp === 'number' && block.xp > 0 ? Math.round(block.xp) : 0
-    if (blockXp > 0 && isBlockComplete(block, response) && (response as { autoCheck?: string })?.autoCheck !== 'mismatch') {
-      try {
-        const { data: grant } = await supabaseAdmin.from('economy_point_grants').upsert(
-          { user_id: ctx.userId, user_email: ctx.email, source: 'lesson-block', reference: `${body.lesson_id}:${body.block_id}`, points: blockXp, note: `Lesson block ${body.block_id}`, dedupe_key: `block-xp:${body.lesson_id}:${body.block_id}:${ctx.userId}` },
-          { onConflict: 'dedupe_key', ignoreDuplicates: true },
-        ).select('id')
-        if (Array.isArray(grant) && grant.length > 0) xpAwarded = blockXp
-      } catch { /* XP is best-effort; never block the save */ }
-    }
+    // Evidence and its one-time reward are committed together by the database.
+    const xpAwarded = Number((data as { xp_awarded?: number }).xp_awarded ?? 0)
 
     // Earning loop (best-effort): log activity + recompute lesson engagement so the
     // work feeds the activity feed, streaks, leaderboard points, and the dashboard.
@@ -158,7 +146,8 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       console.error('block save side-effects failed:', e)
     }
 
-    return NextResponse.json({ ...(data as object), response, xp_awarded: xpAwarded }, { status: 201 })
+    const { data: xpEarned } = await supabaseAdmin.rpc('lesson_xp_earned', { p_user: ctx.userId, p_lesson: body.lesson_id })
+    return NextResponse.json({ ...(data as object), response, xp_awarded: xpAwarded, ...(typeof xpEarned === 'number' ? { xpEarned } : {}) }, { status: 201 })
 })
 
 // GET /api/lessons/blocks?lesson_id=...  — latest response per block for the current student.
@@ -202,5 +191,7 @@ export const GET = withAuth(async (request, ctx) => {
       if (access.viewer.role !== 'admin' && !visibleIds.has(row.block_id)) continue
       responses[row.block_id] = { response: row.response, block_type: row.block_type, created_at: row.created_at }
     }
-    return NextResponse.json({ responses })
+    const { data: xpEarned, error: xpError } = await supabaseAdmin.rpc('lesson_xp_earned', { p_user: targetUserId, p_lesson: lessonId })
+    if (xpError) return NextResponse.json({ error: 'Could not load lesson XP. Please retry.' }, { status: 503 })
+    return NextResponse.json({ responses, xpEarned })
 })

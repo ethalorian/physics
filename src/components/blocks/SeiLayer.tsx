@@ -1,6 +1,7 @@
 "use client"
 
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { ProjectionSeiContext } from '@/components/present/ProjectionSeiContext'
+import { useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useDraft } from './useDraft'
 import PaintPad from './PaintPad'
 import MathMarkdown from '@/components/MathMarkdown'
@@ -40,16 +41,17 @@ export interface SeiState {
 
 export function useSei(sei: SeiScaffold | undefined, opts: { fallbackFrame?: string; wordBank?: string[]; talkFirst?: boolean; defaultMode?: ResponseMode; extraModes?: ResponseMode[]; supportedModes?: ResponseMode[] } = {}): SeiState {
   const { profile, dial, showL1 } = useLanguageProfile()
-  const level = effectiveLevel(sei, profile, dial)
+  const projectionSupports = useContext(ProjectionSeiContext)
+  const level = projectionSupports === null ? effectiveLevel(sei, profile, dial) : projectionSupports ? 'full' : 'bare'
   const [frameRequested, setFrameRequested] = useState(false)
   const [mode, setMode] = useState<ResponseMode>(opts.defaultMode ?? 'text')
   const [talkDone, setTalkDone] = useState(false)
 
-  const l1Text = showL1 ? pickL1(sei?.prompt_l1, profile?.homeLang) : null
+  const l1Text = projectionSupports !== false && showL1 ? pickL1(sei?.prompt_l1, profile?.homeLang) : null
   const tier = frameTierFor(level)
   const frames: SeiFrame[] | undefined = sei?.frames?.length ? sei.frames : opts.fallbackFrame ? [{ level: 2, text: opts.fallbackFrame }] : undefined
-  const frame = tier ? pickFrame(frames, tier) : frameRequested ? pickFrame(frames, 3) ?? pickFrame(frames, 2) : null
-  const wordBank = level === 'bare' && !frameRequested ? [] : (sei?.wordBank ?? opts.wordBank ?? [])
+  const frame = projectionSupports === false ? null : tier ? pickFrame(frames, tier) : frameRequested ? pickFrame(frames, 3) ?? pickFrame(frames, 2) : null
+  const wordBank = projectionSupports === false ? [] : level === 'bare' && !frameRequested ? [] : (sei?.wordBank ?? opts.wordBank ?? [])
   const offeredModes = modesFor({ ...sei, modes: [...(sei?.modes ?? []), ...(opts.extraModes ?? [])] }, level, [opts.defaultMode ?? 'text'])
   const modes = offeredModes.filter((m) => (opts.supportedModes ?? ['text', 'sketch', 'choice']).includes(m))
   if (!modes.length) modes.push('text')
@@ -85,6 +87,8 @@ export function SeiVisual({ visual }: { visual: SeiScaffold['visual'] }) {
 }
 
 export function SeiFrameBox({ state, onUseFrame }: { state: SeiState; onUseFrame?: (text: string) => void }) {
+  const projectionSupports = useContext(ProjectionSeiContext)
+  if (projectionSupports === false) return null
   const { frame, wordBank, level, frameRequested, requestFrame } = state
   if (!frame && wordBank.length === 0) {
     if (level === 'bare' && !frameRequested) return (
@@ -144,6 +148,8 @@ export function SeiTalkFirst({ state }: { state: SeiState }) {
 }
 
 export function SeiFairnessNote() {
+  const projectionSupports = useContext(ProjectionSeiContext)
+  if (projectionSupports === false) return null
   return <p className="text-[11px] mt-1" style={{ color: C.muted }}>Rated on the physics, not the English. · Se evalúa la física, no el inglés.</p>
 }
 

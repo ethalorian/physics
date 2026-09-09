@@ -25,7 +25,7 @@ function TeachingCheck({ practice, t }: { practice: TeachingGuide['practice']; t
   const [checked,setChecked]=useState(false)
   return <fieldset className="space-y-3 rounded-lg border p-3 sm:p-4">
     <legend className="px-1 font-semibold">{t('Try a small step')}</legend>
-    <p className="text-sm text-muted-foreground">{t('This is practice inside the lesson. It does not submit your warm-up, award points, or change mastery.')}</p>
+    <p className="text-sm text-muted-foreground">{t('This is practice inside the lesson. It does not submit your warm-up, award XP, or change mastery.')}</p>
     <p className="font-medium">{t(practice.prompt)}</p>
     {practice.choices.map((answer,i)=><label key={i} className="flex min-h-11 cursor-pointer items-center gap-3 rounded border bg-background p-3"><input type="radio" name={id} checked={choice===i} onChange={()=>{setChoice(i);setChecked(false)}} /><span className="text-sm">{t(answer)}</span></label>)}
     <button type="button" className="min-h-11 rounded bg-primary px-4 text-sm text-primary-foreground disabled:opacity-50" disabled={choice===null} onClick={()=>setChecked(true)}>{t('Check this practice step')}</button>

@@ -51,6 +51,9 @@ const doc = {
       prompt: 'Explain the change.',
       targetId: 'motion',
     },
+    { id: 'observe', type: 'observation', capture: true, patternPrompt: 'What changed?', interpretPrompt: 'Why did it change?' },
+    { id: 'notebook', type: 'lab_notebook', capture: true, instruction: 'Record the investigation.', requireAllFields: true, fields: ['Measurements', 'Reasoning'] },
+    { id: 'frame', type: 'sentence_frame', capture: true, frame: 'The motion changes because ___.' },
   ],
 }
 const lesson = {
@@ -167,7 +170,7 @@ let browser, server, activePage
   ]).process(fs.readFileSync(root + '/src/app/globals.css', 'utf8'), {
     from: root + '/src/app/globals.css',
   })
-  fs.writeFileSync(out + '/style.css', css.css)
+  fs.writeFileSync(out + '/style.css', css.css + '\n' + fs.readFileSync(out + '/app.css', 'utf8'))
   server = http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://local')
     res.setHeader('Content-Type', 'application/json')
@@ -417,11 +420,47 @@ let browser, server, activePage
         .evaluateAll((xs) => xs.map((x) => x.disabled))
     ).some(Boolean),
   )
+  await page.setViewportSize({ width: 1280, height: 900 })
+  await page.getByRole('navigation', { name: 'Lesson answer checklist' }).waitFor()
+  assert.equal(await page.getByRole('navigation', { name: 'Lesson answer checklist' }).getByRole('button', { name: /2. Exit ticket/ }).isDisabled(), true)
+  await page.getByText('What to do', { exact: true }).waitFor()
+  assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).isDisabled(), true)
+  await page.locator('#lesson-step-title').locator('../../..').screenshot({ path: out + '/student-desktop.png' })
+  await page.setViewportSize({ width: 390, height: 844 })
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+  await page.locator('#lesson-step-title').locator('../../..').screenshot({ path: out + '/student-phone.png' })
+  await page.getByRole('button', { name: 'Open activity', exact: true }).click()
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'lesson-answer-first-q')
   const previewWrites = countWrites()
   await page.getByRole('button', { name: 'Forward', exact: true }).click()
   await page.getByRole('button', { name: 'Save', exact: true }).click()
   await page.getByRole('button', { name: 'Saved ✓', exact: true }).waitFor()
   assert.equal(countWrites(), previewWrites)
+  assert.equal(await page.getByRole('button', { name: 'Continue', exact: true }).isDisabled(), false)
+  await page.getByText('Responses saved', { exact: true }).waitFor()
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
+  await page.getByText('Exit ticket', { exact: true }).first().waitFor()
+  await page.getByText(/All lesson answers/).click()
+  const answers = page.getByRole('navigation', { name: 'Lesson answer checklist' }).filter({ visible: true })
+  await answers.getByRole('button', { name: /3. Observation/ }).click()
+  await page.locator('#lesson-answer-first-observe').waitFor()
+  assert.equal(await page.evaluate(() => document.activeElement.id), 'lesson-answer-first-observe')
+  await page.getByLabel('What changed?', { exact: true }).fill('The distance increased.')
+  await page.getByLabel('Why did it change?', { exact: true }).fill('The cart moved forward.')
+  await page.getByRole('button', { name: 'Save observation and interpretation', exact: true }).click()
+  await answers.getByRole('button', { name: /3. Observation.*Saved/ }).waitFor()
+  await answers.getByRole('button', { name: /4. Lab notebook/ }).click()
+  await page.getByLabel('Measurements', { exact: true }).fill('Two meters in one second.')
+  assert.equal(await page.getByRole('button', { name: 'Save notebook' }).isDisabled(), true)
+  await page.getByLabel('Reasoning', { exact: true }).fill('The position change is positive.')
+  await page.getByRole('button', { name: 'Save notebook' }).click()
+  await answers.getByRole('button', { name: /4. Lab notebook.*Saved/ }).waitFor()
+  await page.getByLabel('Reasoning', { exact: true }).fill('Revised reasoning, not yet saved.')
+  await answers.getByRole('button', { name: /4. Lab notebook.*Changes need saving/ }).waitFor()
+  await answers.getByRole('button', { name: /5. Complete the sentence/ }).click()
+  await page.locator('#lesson-answer-first-frame').waitFor()
+  assert.ok(await page.locator('#lesson-answer-first-frame').getByRole('textbox').count() > 0)
+  console.log('PASS answer checklist jumps to every response type; partial notebooks and drafts remain unfinished')
   await page.getByRole('button', { name: 'Reset preview answers' }).click()
   assert.equal(countWrites(), previewWrites)
   console.log(

@@ -13,12 +13,18 @@ import styles from './teacher-feedback.module.css'
 
 interface FeedbackItem {
   id: string
+  evidence_review?: {mean:number;overall_level:number;evidence:{activity:string;prompt?:string;level:number|null;reason?:string}[]} | null
   submission_id?: string | null
   teacher_email: string
   message: string
   created_at: string
   target: { slug: string | null; statement: string | null } | null
   competency: { code: string | null; statement: string | null } | null
+}
+
+function EvidenceBreakdown({ review }: { review: FeedbackItem['evidence_review'] }) {
+  if (!review) return null
+  return <details className="mt-3 rounded-lg border p-3 text-sm"><summary className="cursor-pointer font-semibold">Your evidence ratings · {Number(review.mean).toFixed(2)} / 3 average</summary><ol className="mt-3 space-y-3">{review.evidence.map((e,i)=><li key={i}><p className="font-semibold">{i+1}. {e.activity} · {e.level === null ? 'Not included in the average' : `${e.level} / 3`}</p>{e.prompt&&<p className="whitespace-pre-wrap text-muted-foreground">{e.prompt}</p>}{e.reason&&<p className="text-muted-foreground">{e.reason}</p>}</li>)}</ol><p className="mt-3 text-xs text-muted-foreground">Rated responses count equally. The average rounds to overall level {review.overall_level}.</p></details>
 }
 
 function when(iso: string): string {
@@ -64,7 +70,7 @@ export default function TeacherFeedbackCard({ initialCount = 3, featured = false
     <div className={styles.noteHeader}><span className={styles.noteIcon}><MessageCircle size={20} aria-hidden="true" /></span><div><h3 className="text-sm font-semibold">From your teacher</h3><p className="text-xs text-muted-foreground">Your latest written feedback</p></div></div>
     {shown.map(f => <article key={f.id} className={styles.note}>
       <p className="mb-2 text-xs font-semibold text-muted-foreground">{when(f.created_at)}</p>
-      <p className={styles.message}>{f.message}</p>
+      <p className={styles.message}>{f.message}</p><EvidenceBreakdown review={f.evidence_review}/>
       {(f.target?.statement || f.target?.slug || f.competency?.statement || f.competency?.code) && <p className={styles.context}>{[f.target?.slug, f.target?.statement, f.competency?.code, f.competency?.statement].filter(Boolean).join(' · ')}</p>}
       {f.submission_id && <Button asChild className="mt-4 min-h-11"><Link href="/dashboard/math-spine#math-feedback">Open my work and respond<ArrowRight aria-hidden="true" /></Link></Button>}
     </article>)}
@@ -95,7 +101,7 @@ export default function TeacherFeedbackCard({ initialCount = 3, featured = false
               <span className="ml-auto">{when(f.created_at)}</span>
             </div>
             {f.submission_id && <a className="block min-h-11 underline text-sm" href="/dashboard/math-spine#math-feedback">Open my work and respond</a>}
-            <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{f.message}</p>
+            <p className="text-sm" style={{ color: 'var(--foreground)', whiteSpace: 'pre-wrap' }}>{f.message}</p><EvidenceBreakdown review={f.evidence_review}/>
           </div>
         ))}
       </div>

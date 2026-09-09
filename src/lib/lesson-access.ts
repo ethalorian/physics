@@ -44,7 +44,12 @@ export async function authorizeLesson(actor: Actor, lessonId: string, write = fa
     if (state.locked) return { ok: false, response: NextResponse.json({ error: 'Submitted work is locked until your teacher reviews this lesson.', ...state }, { status: 409 }) }
   }
   const doc = lesson.content_blocks && Array.isArray(lesson.content_blocks.blocks) ? lesson.content_blocks : null
-  const document = doc ? filterDocumentForViewer(await hydrateLessonDocument(doc, lesson.unit_id), viewer) : null
+  let document = doc ? filterDocumentForViewer(await hydrateLessonDocument(doc, lesson.unit_id), viewer) : null
+  if (document && lesson.unit_id) {
+    const { data: rewards, error: rewardError } = await supabaseAdmin.rpc('lesson_reward_map', { p_lesson: lessonId, p_track: viewer.track === 'honors' ? 'honors' : 'cpa' })
+    if (rewardError) throw rewardError
+    document = { ...document, blocks: document.blocks.map(b => ({ ...b, xp: typeof rewards?.[b.id] === 'number' ? rewards[b.id] : 0 })) }
+  }
   return { ok: true, lesson, viewer, document }
 }
 

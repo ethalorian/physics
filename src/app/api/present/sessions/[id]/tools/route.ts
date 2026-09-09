@@ -56,6 +56,10 @@ export const POST = withRole<{ id: string }>(['teacher', 'admin'], async (reques
     const result = await supabaseAdmin.from('present_teacher_marks').insert({ session_id: session.id, teacher_id: session.teacher_id, kind: 'called', student_id: selected.id, slide: session.current_slide, note: 'Called on' })
     if (result.error) throw result.error
     return NextResponse.json({ selected, state: await teachingTools(session, false) })
+  } else if (action === 'sei_supports') {
+    if (typeof body.enabled !== 'boolean') return NextResponse.json({ error: 'Choose SEI supports on or off' }, { status: 400 })
+    const result = await supabaseAdmin.from('present_session_tools').upsert({ session_id: session.id, sei_enabled: body.enabled, updated_at: now }, { onConflict: 'session_id' })
+    if (result.error) throw result.error
   } else if (action === 'reconnect') {
     const result = await supabaseAdmin.from('present_session_tools').upsert({ session_id: session.id, reconnect_token: randomUUID(), updated_at: now })
     if (result.error) throw result.error

@@ -5,13 +5,14 @@
  *
  * Same board, same tools, new numbers. Self-checked only: work it on the board,
  * type an answer, get an instant verdict — and on a ✗, the same descriptive
- * feedback the daily rep gives. Correct reps earn a bonus point (capped per
- * day, server-enforced). Bonus points are the REWARD layer; none of this writes
+ * feedback the daily rep gives. Correct reps earn 1 XP once per issued problem. Bonus points are the REWARD layer; none of this writes
  * mastery records — the teacher's rating on the daily warm-up moves the ladder.
  */
 import { useCallback, useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { CheckCircle2, XCircle, HelpCircle, Dumbbell } from 'lucide-react'
+import ProblemReward from './ProblemReward'
+import StandardFocus from './StandardFocus'
 import WarmupAnswer from './WarmupAnswer'
 import MathTutor from './MathTutor'
 import MathWorkReview from './MathWorkReview'
@@ -20,6 +21,7 @@ import type { MathResponse } from '@/lib/math-response'
 import { useTranslator } from '@/lib/math-translate-store'
 
 interface PracticeItem {
+  instanceId: string
   spiralItemId: string
   competencyCode: string
   competencyStatement: string
@@ -49,8 +51,6 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
   const [checking, setChecking] = useState(false)
   const [verdict, setVerdict] = useState<Verdict | null>(null)
   const [feedback, setFeedback] = useState<SlipFeedback | null>(null)
-  const [pointsToday, setPointsToday] = useState(0)
-  const [dailyCap, setDailyCap] = useState(3)
   const [lastAward, setLastAward] = useState(0)
 
   const load = useCallback(() => {
@@ -66,10 +66,6 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
       .then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error || 'Could not load practice'); return d })
       .then((d) => {
         setItem(d?.item ?? null)
-        if (d) {
-          setPointsToday(d.pointsToday ?? 0)
-          setDailyCap(d.dailyCap ?? 3)
-        }
         setLoading(false)
       })
       .catch(e => { setError(e.message); setLoading(false) })
@@ -80,19 +76,19 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
   async function check() {
     if (!item || !answer.trim() || checking) return
     setChecking(true)
+    setError('')
     try {
       const res = await fetch('/api/math-spine/practice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ spiral_item_id: item.spiralItemId, answer, template_seed: item.templateSeed ?? undefined }),
+        body: JSON.stringify({ instance_id: item.instanceId, answer }),
       })
       const d = await res.json()
       if (!res.ok) throw new Error(d.error || 'Could not check your answer')
       if (res.ok) {
         setVerdict(d.result as Verdict)
         setFeedback(d.feedback ?? null)
-        setPointsToday(d.pointsToday ?? pointsToday)
-        setLastAward(d.pointsAwarded ?? 0)
+        setLastAward(d.xpEarned ?? 0)
       }
     } catch (e) { setError(e instanceof Error ? e.message : 'Could not check your answer') } finally {
       setChecking(false)
@@ -108,15 +104,15 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
       <div className="flex items-center gap-2 flex-wrap">
         <Dumbbell className="h-4 w-4" style={{ color: 'var(--reward-foreground)' }} />
         <span className="text-sm font-semibold text-foreground">{t('Practice: new numbers on a fresh board')}</span>
-        <span className="ml-auto text-[11px] rounded-full px-2 py-0.5 tabular-nums" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}>
-          {t('bonus')} {pointsToday} {t('of')} {dailyCap}
-        </span>
+
       </div>
       <p className="text-[11px] text-muted-foreground mt-1">
         {t("Instant check. Doesn't move the ladder — your teacher's rating does.")}
       </p>
 
+      <StandardFocus code={item.competencyCode} statement={item.competencyStatement} mode="practice" lang={lang} />
       <p className="mt-3 text-base font-semibold text-foreground leading-snug">{(lang && item.translations?.[lang]) || item.prompt}</p>
+      <ProblemReward practice earned={lastAward} lang={lang} />
 
       <div className="mt-3"><MathTutor key={'practice-help-'+boardKey} code={item.competencyCode} customTiers={item.miniLessonTiers} lang={lang} /></div>
       <div className="mt-3">
@@ -136,8 +132,8 @@ export default function PracticeRep({ needsGraph = false, lang = '' }: { needsGr
             <p className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--viz-up)' }}>
               <CheckCircle2 className="h-4 w-4" />
               {answer.trim()} — {t('matches')}
-              {lastAward > 0 ? <span className="font-normal text-foreground">· +{lastAward} {t('bonus')}</span>
-                : pointsToday >= dailyCap ? <span className="font-normal text-muted-foreground">· {t('bonus maxed for today — reps still count for you')}</span> : null}
+              {lastAward > 0 ? <span className="font-normal text-foreground">· +{lastAward} XP</span>
+                : null}
             </p>
           )}
           {verdict === 'mismatch' && (

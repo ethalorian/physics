@@ -10,6 +10,7 @@
  * Value out: { strokes, texts } in a 640×360 coordinate space (matches the
  * teacher review renderer's viewBox, so both show up when graded).
  */
+import styles from './StudentMathInput.module.css'
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as RPointerEvent } from 'react'
 import type { Stroke } from '@/components/blocks/DoodleCanvas'
@@ -31,7 +32,8 @@ const TEXT_SIZE = 26
 type Tool = EditorTool | 'text' | 'plot'
 
 
-export default function MathCanvas({ value, onChange, gridded = false, lang = '', readOnly = false, stamp }: {
+export default function MathCanvas({ value, onChange, gridded = false, lang = '', readOnly = false, stamp, compact = false }: {
+  compact?: boolean
   value?: MathCanvasValue
   onChange: (v: MathCanvasValue) => void
   gridded?: boolean
@@ -193,14 +195,14 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
   const TB = ({ id, label, Icon, text }: { id: Tool; label: string; Icon: typeof Pen; text?: string }) => (
     <button type="button" onClick={() => setTool(id)} aria-label={label} title={label} aria-pressed={tool === id}
       className="rounded-lg border inline-flex items-center justify-center gap-1.5 text-xs font-semibold"
-      style={{ ...tb(tool === id), height: 40, minWidth: 40, padding: text ? '0 12px' : 0 }}>
+      style={{ ...tb(tool === id), height: 44, minWidth: 44, padding: text ? '0 12px' : 0 }}>
       <Icon size={17} />{text && <span>{text}</span>}
     </button>
   )
   const HB = ({ onClick, label, Icon, disabled }: { onClick: () => void; label: string; Icon: typeof Pen; disabled?: boolean }) => (
     <button type="button" onClick={onClick} disabled={disabled} aria-label={label} title={label}
       className="rounded-lg border grid place-items-center disabled:opacity-40"
-      style={{ ...tb(false), height: 40, width: 40 }}>
+      style={{ ...tb(false), height: 44, width: 44 }}>
       <Icon size={17} />
     </button>
   )
@@ -220,7 +222,10 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
           <TB id="pen" label="Pen" Icon={Pen} text={t('Pen')} />
           <TB id="line" label="Line" Icon={Slash} text={t('Line')} />
           <TB id="eraser" label="Eraser" Icon={Eraser} text={t('Erase')} />
-          <Sep />
+          {compact && <><HB onClick={undo} label="Undo" Icon={Undo2} disabled={historyIndex.current === 0} /><HB onClick={redo} label="Redo" Icon={Redo2} disabled={historyIndex.current >= historyRef.current.length - 1} /></>}
+          <details className={styles.moreTools} open={compact ? undefined : true}>
+          <summary>{t('Shapes & ink')}</summary>
+          <div className={styles.toolOptions}>
           <TB id="arrow" label="Arrow (for vectors & forces)" Icon={MoveUpRight} />
           <TB id="rect" label="Rectangle" Icon={Square} />
           <TB id="ellipse" label="Ellipse" Icon={Circle} />
@@ -232,20 +237,22 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
             </label>
           )}
           <Sep />
-          <div className="inline-flex items-center gap-1 flex-wrap" aria-label="ink color" style={{ maxWidth: 150 }}>
+          <div className="inline-flex items-center gap-1 flex-wrap" aria-label="ink color" style={{ maxWidth: 300 }}>
             {PAINT_PALETTE.slice(0, 8).map((c) => (
               <button key={c} type="button" onClick={() => { setColor(c); if (tool === 'eraser' || tool === 'fill' || tool === 'text') setTool('pen') }} aria-label={`color ${c}`}
-                className="rounded-full" style={{ width: 18, height: 18, background: c, border: color === c ? '3px solid var(--foreground)' : '1px solid var(--border)' }} />
+                aria-pressed={color === c} className={styles.swatch} style={{ width: 32, height: 32, minHeight: 32, padding: 0, background: c, border: color === c ? '3px solid var(--foreground)' : '1px solid var(--border)' }} />
             ))}
           </div>
           <div className="inline-flex items-center gap-1.5" title="Thickness">
             <span style={{ display: 'inline-block', width: Math.min(18, width + 2), height: Math.min(18, width + 2), borderRadius: 999, background: 'var(--foreground)' }} />
             <input type="range" min={1} max={24} step={1} value={width} onChange={(e) => setWidth(Number(e.target.value))} style={{ width: 70 }} aria-label="thickness" />
           </div>
-          <Sep />
+          </div></details>
+          {!compact && <><Sep />
           <HB onClick={undo} label="Undo" Icon={Undo2} disabled={historyIndex.current === 0} />
           <HB onClick={redo} label="Redo" Icon={Redo2} disabled={historyIndex.current >= historyRef.current.length - 1} />
-          <HB onClick={clearAll} label="Clear board" Icon={Trash2} />
+          </>}
+          <HB onClick={clearAll} label="Clear board" Icon={Trash2} disabled={!strokesRef.current.length && !textsRef.current.length} />
         </div>
       )}
 
@@ -266,15 +273,15 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
         {editor && !readOnly && (
           <div
             style={{
-              position: 'absolute',
-              left: `${Math.min(Math.max((editor.x / W) * 100, 1), 60)}%`,
-              top: `${Math.min(Math.max(((editor.y - TEXT_SIZE) / H) * 100, 1), 82)}%`,
+              position: 'relative',
+              marginTop: 8, width: '100%', boxSizing: 'border-box',
               display: 'flex', gap: 4, alignItems: 'center', zIndex: 10,
               background: '#fff', border: '1px solid var(--primary)', borderRadius: 8, padding: 4,
               boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
             }}
           >
             <textarea
+              aria-label={t('Board text')}
               autoFocus
               rows={Math.min(4, Math.max(1, editor.value.split('\n').length))}
               value={editor.value}
@@ -285,11 +292,11 @@ export default function MathCanvas({ value, onChange, gridded = false, lang = ''
               }}
               placeholder={t('type a number or equation… (Shift+Enter for a new line)')}
               className="rounded border px-1.5 py-1 text-sm"
-              style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 220, maxWidth: 360, resize: 'none', lineHeight: 1.3 }}
+              style={{ borderColor: 'var(--border)', background: '#fff', color: '#1A1730', minWidth: 0, width: '100%', flex: 1, resize: 'none', lineHeight: 1.3 }}
             />
             <button onClick={commitEditor}
               aria-label="add to board" className="rounded-md grid place-items-center"
-              style={{ width: 30, height: 30, background: 'var(--primary)', color: 'var(--primary-foreground)', flexShrink: 0 }}>✓</button>
+              style={{ width: 44, height: 44, background: 'var(--primary)', color: 'var(--primary-foreground)', flexShrink: 0 }}>✓</button>
             <button onClick={() => { if (editor.index !== null) { deleteEditing() } else { setEditor(null) } }}
               aria-label="cancel" className="rounded-md border grid place-items-center"
               style={{ width: 30, height: 30, background: '#fff', color: 'var(--destructive)', flexShrink: 0 }}>×</button>

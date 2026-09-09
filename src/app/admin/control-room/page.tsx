@@ -1,9 +1,8 @@
 "use client"
 
-import { evidenceResponseText } from '@/lib/mastery-evidence'
+import MasteryReviewDesk from '@/components/admin/MasteryReviewDesk'
 
 import Link from 'next/link'
-import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/button'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import LessonContextLinks from '@/components/admin/LessonContextLinks'
@@ -14,7 +13,6 @@ import MathControlRoom from '@/components/math-spine/MathControlRoom'
 import TeacherDailyMathTask from '@/components/math-spine/TeacherDailyMathTask'
 import { StrokeShapes, type Stroke } from '@/lib/draw/strokes'
 import { useClassScope } from '@/lib/use-class-scope'
-import { EVIDENCE_LABEL, EVIDENCE_SOURCES, type EvidenceSource } from '@/lib/evidence'
 
 // ---------------------------------------------------------------------------
 // Types (mirror /api/mastery/grid and /api/mastery/student-work)
@@ -37,7 +35,6 @@ interface WorkData { userId: string; unitId: string; targets: Target[]; records:
 
 interface QueueItem { studentId: string; name: string; count: number; oldestAgeHours: number; aged: boolean; needsHelp: boolean }
 
-const EVIDENCE = ['observation', 'exit ticket', 'lab', 'conversation', 'quiz']
 
 // value (1..3 float) -> band 1/2/3 (0 = not rated)
 function band(v: number | null): 0 | 1 | 2 | 3 {
@@ -57,7 +54,7 @@ const levelWord = (l: number) => (l === 1 ? 'Not yet' : l === 2 ? 'Almost' : 'Go
 // ●=Got it(3) · ◐=Almost(2) · ○=Not yet(1) · –=not rated(0).
 const bandGlyph = (b: 0 | 1 | 2 | 3) => (b === 3 ? '●' : b === 2 ? '◐' : b === 1 ? '○' : '–')
 
-const fmtDate = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+
 
 // "Last signed in" for the roster: friendly relative time + recency color.
 function lastSeenLabel(iso: string | null): string {
@@ -87,16 +84,19 @@ function StrokesSvg({ strokes, label }: { strokes: StrokeShape[]; label: string 
   )
 }
 
-function ResponseView({ response }: { response: unknown }) {
+
+
+function ResponseView({ response, prompt }: { response: unknown; prompt?: string | null }) {
   if (response && typeof response === 'object') {
     const o = response as Record<string, unknown>
     // SEI captures: { text | strokes, mode } and the inline question { optionId, explain }.
     if ('text' in o && typeof o.text === 'string' && !('given' in o)) return <div><p className="text-sm whitespace-pre-wrap">{o.text}</p>{Array.isArray(o.strokes) && o.strokes.length > 0 && <StrokesSvg strokes={o.strokes as StrokeShape[]} label="Student drawing" />}</div>
     if (('optionId' in o || 'explain' in o) && !('given' in o)) {
+      const option = prompt?.split('\n').find(line => line.trim().startsWith(`${String(o.optionId)}: `))?.trim()
       return (
         <div className="text-sm">
-          {o.optionId ? <div><b style={{ color: 'var(--secondary-foreground)' }}>Chose:</b> {String(o.optionId)}</div> : null}
-          {o.explain ? <div style={{ whiteSpace: 'pre-wrap' }}><b style={{ color: 'var(--secondary-foreground)' }}>Explain:</b> {String(o.explain)}</div> : null}
+          {o.optionId ? <div><b style={{ color: 'var(--secondary-foreground)' }}>Selected answer:</b> {option ?? `Option ${String(o.optionId)} (answer text unavailable)`}</div> : null}
+          {o.explain ? <div style={{ whiteSpace: 'pre-wrap' }}><b style={{ color: 'var(--secondary-foreground)' }}>Student’s explanation:</b> {String(o.explain)}</div> : null}
         </div>
       )
     }
@@ -241,34 +241,17 @@ export default function ControlRoomPage() {
 
   const [sel, setSel] = useState<{ studentId: string; targetId: string } | null>(null)
   const workRequestVersion = useRef(0)
-  const ratingInFlight = useRef(false)
   const [work, setWork] = useState<WorkData | null>(null)
   const [workLoading, setWorkLoading] = useState(false)
-  // M-3 · evidence_source filter on the drawer ('' = all)
-  const [sourceFilter, setSourceFilter] = useState<'' | EvidenceSource>('')
-  const [evidence, setEvidence] = useState('observation')
-  const [saving, setSaving] = useState(false)
-  const [selectedLevel, setSelectedLevel] = useState<1 | 2 | 3 | null>(null)
-  const [evidenceIndex, setEvidenceIndex] = useState(0)
-  // Written feedback (one-way note to the student, lands in their bell + growth page)
-  const [fbText, setFbText] = useState('')
-  const [fbGeneral, setFbGeneral] = useState(false)
-  const [fbSending, setFbSending] = useState(false)
-  const [fbSent, setFbSent] = useState(false)
-  const [fbHistory, setFbHistory] = useState<{ id: string; message: string; created_at: string }[]>([])
-  const [suggestion, setSuggestion] = useState<{ level: number | null; rationale: string; nextStep?: string } | null>(null)
-  const [suggesting, setSuggesting] = useState(false)
   const [queue, setQueue] = useState<QueueItem[]>([])
   const [nameFilter, setNameFilter] = useState('')
-  const [comparison, setComparison] = useState<{ studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null } | null>(null)
+
   // Lesson completion grading (the old Aspen gradebook flow) is retired —
   // lessons are engagement, mastery is the grade. Views: targets + math spine.
   const [view, setView] = useState<'mastery' | 'math'>('mastery')
   // Student-first grading: keys we've graded this session (so the queue and
   // roster shrink immediately, before the server refresh lands).
   const [gradedKeys, setGradedKeys] = useState<Set<string>>(new Set())
-  // Between students we pause on a gate so your eyes land before the next swap.
-  const [nextStudentGate, setNextStudentGate] = useState<{ id: string; name: string } | null>(null)
   // Class/section scope. Aspen's gradebook is partitioned by section, so the
   // grade copy must be filterable to one class. The scope is SHARED with
   // analytics, roster, and pacing via localStorage (use-class-scope) — pick a
@@ -363,146 +346,15 @@ export default function ControlRoomPage() {
   }
 
   const openCell = useCallback((studentId: string, targetId: string) => {
-    // The grading drawer is YOUR roster only — admin included.
-    if (ratingInFlight.current || fbSending || grid?.students.find((s) => s.id === studentId)?.ratable === false) return
+    if (grid?.students.find(s => s.id === studentId)?.ratable === false) return
     const version = ++workRequestVersion.current
-    setSuggesting(false)
-    setSourceFilter(''); setEvidenceIndex(0); setError(null)
-    let draft: { text?: string; level?: 1 | 2 | 3 | null; general?: boolean } = {}
-    try { draft = JSON.parse(sessionStorage.getItem(`lesson-review:${studentId}:${targetId}`) ?? '{}') } catch {}
-    setFbText(draft.text ?? ''); setFbGeneral(draft.general ?? false); setSelectedLevel(draft.level ?? null)
-    setSel({ studentId, targetId })
-    setWork(null)
-    setSuggestion(null)
-    setComparison(null)
-    setWorkLoading(true)
+    setSel({ studentId, targetId }); setWork(null); setError(null); setWorkLoading(true)
     fetch(`/api/mastery/student-work?user_id=${encodeURIComponent(studentId)}&unit_id=${encodeURIComponent(unitId)}&target_id=${encodeURIComponent(targetId)}`)
-      .then(async (r) => { const data = await r.json(); if (!r.ok) throw new Error(data.error ?? 'Could not load work'); return data })
-      .then((d: WorkData) => { if (version === workRequestVersion.current) { setWork(d); setWorkLoading(false) } })
-      .catch((e) => { if (version === workRequestVersion.current) { setError(e.message); setWorkLoading(false) } })
-    fetch(`/api/mastery/lesson-comparison?user_id=${encodeURIComponent(studentId)}&target_id=${encodeURIComponent(targetId)}`)
-      .then((r) => r.json())
-      .then((d: { studentAvg: number | null; globalAvg: number | null; nStudents: number; lessonTitle: string | null }) => { if (version === workRequestVersion.current) setComparison(d) })
-      .catch(() => {})
-  }, [unitId, grid, fbSending])
-
-  const closeDrawer = useCallback(() => { if (ratingInFlight.current || fbSending) return; workRequestVersion.current++; setSel(null); setWork(null); setSuggestion(null); setComparison(null); setNextStudentGate(null) }, [fbSending])
-  // A feedback draft belongs to one student — never carry it to the next.
-  const fbStudentRef = useRef<string | null>(null)
-  useEffect(() => {
-    if (sel?.studentId !== fbStudentRef.current) {
-      fbStudentRef.current = sel?.studentId ?? null
-      setFbSent(false); setFbHistory([])
-      if (sel?.studentId) {
-      // Timely feedback builds on what you last said — pull this student's
-      // recent notes so the next one continues the conversation.
-      const studentId = sel.studentId
-      fetch(`/api/feedback?user_id=${studentId}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .then((d) => { if (fbStudentRef.current === studentId && d?.feedback) setFbHistory(d.feedback.slice(0, 3)) })
-        .catch(() => { if (fbStudentRef.current === studentId) setFbHistory([]) })
-      }
-    }
-  }, [sel?.studentId])
-
-  useEffect(() => {
-    if (!sel) return
-    try { sessionStorage.setItem(`lesson-review:${sel.studentId}:${sel.targetId}`, JSON.stringify({ text: fbText, level: selectedLevel, general: fbGeneral })) } catch {}
-  }, [sel, fbText, selectedLevel, fbGeneral])
-
-  const visibleWork = (work?.work ?? []).filter((w) => !sourceFilter || w.evidenceSource === sourceFilter)
-  const activeEvidence = visibleWork[Math.min(evidenceIndex, Math.max(0, visibleWork.length - 1))]
-
-  const suggestRating = async () => {
-    if (!work || !selTarget) return
-    const version = workRequestVersion.current
-    setSuggesting(true)
-    const workText = visibleWork
-      .filter((w) => !['marzano', 'self_assessment', 'self_rating'].includes(w.blockType ?? ''))
-      .map((w) => `${w.lessonTitle} (${w.blockType ?? 'response'}), ${w.createdAt}\nPrompt: ${w.prompt || '[original prompt unavailable]'}\nTarget link: ${w.targetLinked ? 'explicit' : 'not confirmed; judge relevance'}\nSource: ${w.evidenceSource ?? 'unknown'}; response mode: ${w.responseMode ?? 'unknown'}; scaffolds: ${(w.scaffoldsUsed ?? []).join(', ') || 'none recorded'}\nStudent response: ${evidenceResponseText(w.response)}`)
-      .join('\n')
-    try {
-      const res = await fetch('/api/mastery/suggest-rating', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ targetStatement: selTarget.statement, work: workText }),
-      })
-      const d = await res.json()
-      if (version !== workRequestVersion.current) return
-      if (res.ok) setSuggestion({ level: d.level, rationale: d.rationale, nextStep: d.nextStep })
-      else setSuggestion({ level: 0, rationale: d.error ?? 'Could not suggest a rating' })
-    } catch {
-      if (version === workRequestVersion.current) setSuggestion({ level: 0, rationale: 'Could not reach the AI assist' })
-    } finally {
-      if (version === workRequestVersion.current) setSuggesting(false)
-    }
-  }
-
-  const saveRating = async (level: 1 | 2 | 3) => {
-    // In-flight guard: key auto-repeat or a fast double-tap must never write
-    // two records for one intended rating.
-    if (ratingInFlight.current || saving || fbSending) return
-    if (!sel || !grid) return
-    ratingInFlight.current = true
-    const student = grid.students.find((s) => s.id === sel.studentId)
-    setSaving(true)
-    setError(null)
-    try {
-      // Feedback succeeds first. If the rating fails, retry only the rating.
-      if (fbText.trim() && !(await sendFeedback())) throw new Error('Feedback was not sent. Your rating has not been saved.')
-      const response = await fetch('/api/mastery/records', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: sel.studentId, user_email: student?.email ?? null, target_id: sel.targetId, level, evidence_source: evidence }),
-      })
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}))
-        throw new Error(data.error ?? 'Could not save the rating')
-      }
-      try { sessionStorage.removeItem(`lesson-review:${sel.studentId}:${sel.targetId}`) } catch {}
-      setSelectedLevel(null)
-      // Refresh the grid + queue so the cell and queue reflect the new rating.
-      loadGrid(unitId)
-      loadQueue(unitId)
-      // Student-first: clear this student's pending work before the next student.
-      const gradedKey = `m:${sel.studentId}:${sel.targetId}`
-      setGradedKeys((prev) => new Set(prev).add(gradedKey))
-      ratingInFlight.current = false
-      advanceStudentFirst(sel.studentId, gradedKey)
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not save the rating')
-    } finally {
-      ratingInFlight.current = false
-      setSaving(false)
-    }
-  }
-
-  const sendFeedback = async () => {
-    const msg = fbText.trim()
-    if (!msg || !sel || fbSending) return false
-    setFbSending(true)
-    try {
-      const res = await fetch('/api/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: sel.studentId, message: msg, target_id: fbGeneral ? null : sel.targetId }),
-      })
-      if (!res.ok) throw new Error('send failed')
-      setFbText('')
-      setFbSent(true)
-      setTimeout(() => setFbSent(false), 2500)
-      return true
-    } catch {
-      setError('Could not send the feedback')
-      return false
-    } finally {
-      setFbSending(false)
-    }
-  }
-
-  const selStudent = grid && sel ? grid.students.find((s) => s.id === sel.studentId) : null
-  const selTarget = grid && sel ? grid.targets.find((t) => t.id === sel.targetId) : null
-  const selHistory = work && sel ? work.records.filter((r) => r.target_id === sel.targetId) : []
+      .then(async r => { const data = await r.json(); if (!r.ok) throw new Error(data.error ?? 'Could not load work'); return data })
+      .then((data: WorkData) => { if (version === workRequestVersion.current) { setWork(data); setWorkLoading(false) } })
+      .catch(e => { if (version === workRequestVersion.current) { setError(e.message); setWorkLoading(false) } })
+  }, [unitId, grid])
+  const closeDrawer = useCallback(() => { workRequestVersion.current++; setSel(null); setWork(null) }, [])
 
   // ---- student-first grading flow ------------------------------------------
   // Visible students in display order (roster order + name filter).
@@ -537,76 +389,12 @@ export default function ControlRoomPage() {
     [pendingStudents, studentPendingCount]
   )
 
-  const openPendingCell = useCallback((sid: string, exclude?: string) => {
-    const cells = pendingCellsFor(sid, exclude)
-    if (cells.length === 0) return false
-    openCell(sid, cells[0].targetId)
-    return true
-  }, [pendingCellsFor, openCell])
-
-  // After a save: stay on this student until their pending work is cleared,
-  // then jump to the next student (display order, wrapping) who still has
-  // pending. Students with nothing pending are skipped.
-  const advanceStudentFirst = useCallback((sid: string, gradedKey: string) => {
-    if (openPendingCell(sid, gradedKey)) return // same student still has pending work
-    const idx = rosterForView.findIndex((s) => s.id === sid)
-    const order = [...rosterForView.slice(idx + 1), ...rosterForView.slice(0, Math.max(0, idx))]
-    const next = order.find((s) => pendingCellsFor(s.id, gradedKey).length > 0)
-    // Pause on the gate before swapping students; null closes when none are left.
-    if (next) setNextStudentGate({ id: next.id, name: next.name })
-    else closeDrawer()
-  }, [openPendingCell, rosterForView, pendingCellsFor, closeDrawer])
-
   // "Grade pending" launcher: open the first pending student's first pending cell.
   const startGradingPending = useCallback(() => {
     setGradedKeys(new Set())
     const first = pendingStudents[0]
     if (first) openCell(first.id, pendingCellsFor(first.id)[0]?.targetId)
   }, [pendingStudents, pendingCellsFor, openCell])
-
-  // Keyboard-first grading: 1/2/3 select a rating; Esc closes. Number keys are
-  // ignored while typing in a field.
-  useEffect(() => {
-    if (!sel) return
-    const onKey = (e: KeyboardEvent) => {
-      if (nextStudentGate) return // gate owns the keyboard while it's up
-      const el = document.activeElement
-      const typing = !!el && (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA')
-      if (e.key === 'Escape') {
-        // Mid-draft Escape must not close the drawer and eat the feedback text.
-        if (typing && el.tagName === 'TEXTAREA') { (el as HTMLElement).blur(); return }
-        closeDrawer(); return
-      }
-      if (typing) return
-      // e.repeat = the key is being HELD (OS auto-repeat) — one press, one rating.
-      if (e.repeat || saving) return
-      if (selStudent?.ratable === false) return // view-only (another teacher's student)
-      if (e.key === '1' || e.key === '2' || e.key === '3') { e.preventDefault(); setSelectedLevel(Number(e.key) as 1 | 2 | 3) }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sel, nextStudentGate, saving, closeDrawer])
-
-  // Inter-student gate: any key (or Continue) advances to the next student;
-  // Esc closes instead. One keystroke per student, giving your eyes a beat.
-  // GRACE PERIOD: saves land async, so the gate can appear mid-keystroke — a
-  // 1/2/3 aimed at the previous student must not silently advance (or close)
-  // the gate. Ignore held-key repeats and anything in the first 400ms.
-  useEffect(() => {
-    if (!nextStudentGate) return
-    const armedAt = Date.now()
-    const onKey = (e: KeyboardEvent) => {
-      if (e.repeat || Date.now() - armedAt < 400) return
-      e.preventDefault()
-      if (e.key === 'Escape') { setNextStudentGate(null); closeDrawer(); return }
-      const g = nextStudentGate
-      setNextStudentGate(null)
-      openPendingCell(g.id)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [nextStudentGate, openPendingCell, closeDrawer])
 
   // The queue is demoted to a collapsed "Priority" strip: only the truly urgent
   // (aged 48h+ or self-flagged "Not yet"). Everything else is walked by the one
@@ -620,6 +408,7 @@ export default function ControlRoomPage() {
           compact line, so the grid is the first paint on a laptop */}
       <div className="flex items-center gap-2 flex-wrap mb-1">
         <h1 className="text-xl font-semibold tracking-tight" style={{ marginRight: 4 }}>Class mastery</h1>
+        <Button asChild variant="outline" className="min-h-12"><Link href="/admin/xp-terms">Term XP requirements</Link></Button>
         <Button asChild variant="outline" className="min-h-12"><Link href="/admin/observe">Classroom observations</Link></Button>
         {/* tabs: mastery (targets) vs lessons (completion) vs math (spine); the
             active tab carries its keyboard contract so the scheme is visible
@@ -770,7 +559,7 @@ export default function ControlRoomPage() {
                 {q.needsHelp && <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: 'color-mix(in oklch, var(--reward) 26%, transparent)', color: 'var(--reward-foreground)' }}>self: Not yet</span>}
                 <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{q.count} item{q.count === 1 ? '' : 's'} · waiting {q.oldestAgeHours}h</span>
                 <button
-                  onClick={() => { if (!openPendingCell(q.studentId) && grid && grid.targets[0]) openCell(q.studentId, grid.targets[0].id) }}
+                  onClick={() => { const target = pendingCellsFor(q.studentId)[0]?.targetId ?? grid?.targets[0]?.id; if (target) openCell(q.studentId, target) }}
                   disabled={!grid || grid.targets.length === 0}
                   className="text-xs font-bold rounded-lg px-3 py-1.5 disabled:opacity-50"
                   style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}
@@ -843,317 +632,7 @@ export default function ControlRoomPage() {
 
       {/* Lesson-completion gradebook removed — lessons are engagement, mastery is the grade. */}
 
-      {/* scrim + drawer */}
-      {sel && (
-        <Dialog.Root open onOpenChange={(open) => { if (!open) closeDrawer() }}><Dialog.Portal>
-          <Dialog.Overlay style={{ position: 'fixed', inset: 0, zIndex: 90, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)' }} />
-          <Dialog.Content aria-describedby="lesson-review-description" onEscapeKeyDown={(event) => event.preventDefault()}
-            style={{
-              position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(1200px, 100vw)', zIndex: 100,
-              background: 'var(--card)', borderLeft: '1px solid var(--border)', display: 'flex', flexDirection: 'row',
-              boxShadow: '-20px 0 50px -20px color-mix(in oklch, var(--foreground) 40%, transparent)',
-            }}
-          >
-            {/* roster rail — pending students; greyed when done, click to jump */}
-            <div className="hidden xl:flex" style={{ width: 168, flexShrink: 0, borderRight: '1px solid var(--border)', flexDirection: 'column', minHeight: 0 }}>
-              <div style={{ padding: '10px 12px', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
-                {pendingStudents.length > 0 ? `${pendingStudents.length} to grade` : 'All graded'}
-              </div>
-              <div style={{ overflowY: 'auto', flex: 1, padding: '4px 0' }}>
-                {rosterForView.map((s) => {
-                  const count = studentPendingCount(s.id)
-                  const done = count === 0
-                  const active = sel?.studentId === s.id
-                  return (
-                    <button
-                      key={s.id}
-                      onClick={() => { if (!done) openPendingCell(s.id) }}
-                      disabled={done}
-                      title={s.name}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: 8, width: '100%', textAlign: 'left',
-                        padding: '7px 12px', border: 'none', borderLeft: `2px solid ${active ? 'var(--primary)' : 'transparent'}`,
-                        background: active ? 'color-mix(in oklch, var(--primary) 12%, transparent)' : 'transparent',
-                        color: 'var(--foreground)', opacity: done ? 0.45 : 1, cursor: done ? 'default' : 'pointer',
-                      }}
-                    >
-                      <span style={{ flex: 1, fontSize: 13, fontWeight: active ? 700 : 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}{seenTag(s.id)}</span>
-                      {done ? (
-                        <span style={{ color: 'var(--success)', fontWeight: 700, fontSize: 12 }}>✓</span>
-                      ) : (
-                        <span style={{ minWidth: 18, height: 18, padding: '0 5px', borderRadius: 9, fontSize: 11, fontWeight: 700, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: active ? 'var(--primary)' : 'var(--secondary)', color: active ? 'var(--primary-foreground)' : 'var(--muted-foreground)' }}>{count}</span>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* content column */}
-            <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, position: 'relative' }}>
-            <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)' }}>
-              <button aria-label="Close lesson mastery review" disabled={saving || fbSending} onClick={closeDrawer} style={{ float: 'right', border: 'none', background: 'transparent', color: 'var(--muted-foreground)', fontSize: 20, cursor: 'pointer' }}>×</button>
-              <Dialog.Title className="text-2xl font-bold">{selStudent?.name}</Dialog.Title>
-              <p id="lesson-review-description" className="mt-1 text-sm text-muted-foreground">Read the evidence, choose a rating, and give one useful next step.</p>
-              <div className="text-sm" style={{ color: 'var(--muted-foreground)', marginTop: 2 }}>{selTarget?.statement}</div>
-              <div className="text-xs" style={{ color: 'var(--muted-foreground)', marginTop: 4, textTransform: 'capitalize' }}>{selTarget?.domain}</div>
-              {/* Progress lives in the roster rail (and the between-students gate) — no
-                  redundant header counts. */}
-            </div>
-
-            {/* two columns: evidence on the left; grading + written feedback —
-                the teacher's two acts — always in view on the right. */}
-            <div className="flex flex-col lg:flex-row overflow-y-auto" style={{ flex: 1, minHeight: 0 }}>
-            <div className="lg:flex-1 lg:overflow-y-auto" style={{ padding: '18px 20px', flexShrink: 0, minWidth: 0, borderRight: '1px solid var(--border)' }}>
-              {/* submitted work — first, right under the header (the thing being judged) */}
-              <div className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--muted-foreground)' }}>Evidence for this target</div>
-              {/* M-3 · filter by evidence source; only sources present in this student's work are offered */}
-              {work && work.work.some((w) => w.evidenceSource) && (
-                <div className="flex flex-wrap gap-1 mb-2">
-                  {(['', ...EVIDENCE_SOURCES.filter((s) => work.work.some((w) => w.evidenceSource === s))] as ('' | EvidenceSource)[]).map((s) => (
-                    <button key={s || 'all'} onClick={() => { setSourceFilter(s); setEvidenceIndex(0); setSuggestion(null); workRequestVersion.current++; setSuggesting(false) }} className="text-[11px] rounded-full border px-2 py-0.5"
-                      style={{ borderColor: sourceFilter === s ? 'var(--primary)' : 'var(--border)', background: sourceFilter === s ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: 'var(--foreground)', fontWeight: sourceFilter === s ? 700 : 500 }}>
-                      {s ? EVIDENCE_LABEL[s] : 'All'}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {workLoading && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading work…</p>}
-              {!workLoading && work && work.work.length === 0 && (
-                <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No work captured yet for this target&apos;s lesson.</p>
-              )}
-              {!workLoading && visibleWork.length > 0 && <nav aria-label="Review evidence" className="mb-4 flex items-center justify-between gap-2">
-                <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={evidenceIndex === 0} onClick={() => setEvidenceIndex((i) => i - 1)}>Previous</button>
-                <span className="text-sm text-muted-foreground">Response {Math.min(evidenceIndex + 1, visibleWork.length)} of {visibleWork.length}</span>
-                <button className="min-h-11 rounded-lg border px-3 disabled:opacity-40" disabled={evidenceIndex >= visibleWork.length - 1} onClick={() => setEvidenceIndex((i) => i + 1)}>Next</button>
-              </nav>}
-              {!workLoading && work && visibleWork.length === 0 && work.work.length > 0 && <p className="text-sm">No evidence matches this source.</p>}
-              {!workLoading && activeEvidence && [activeEvidence].map((w) => (
-                <div key={`${w.lessonTitle}-${w.blockId}`} className="rounded-lg border p-3 mb-3" style={{ borderColor: 'var(--border)', background: 'color-mix(in oklch, var(--secondary) 40%, transparent)' }}>
-                  <div className="text-xs mb-1.5" style={{ color: 'var(--muted-foreground)' }}>
-                    {w.lessonTitle}{w.blockType ? ` · ${w.blockType}` : ''} · {fmtDate(w.createdAt)}
-                    {(w.responseMode || (w.scaffoldsUsed && w.scaffoldsUsed.length > 0)) && (
-                      <span className="ml-2 inline-flex flex-wrap gap-1 align-middle" title="SEI context: how they answered and which scaffolds were on. Read the work in context — rate the physics only.">
-                        {w.evidenceSource && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'var(--secondary)', color: 'var(--foreground)' }}>{EVIDENCE_LABEL[w.evidenceSource as EvidenceSource] ?? w.evidenceSource}</span>}
-                        {w.confidence && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" title="MC-5: the student's own confidence. Wrong + sure = misconception flag." style={{ background: w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? 'color-mix(in oklch, var(--destructive) 14%, transparent)' : 'var(--secondary)', color: w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? 'var(--destructive)' : 'var(--muted-foreground)' }}>{w.confidence === 'sure' ? 'sure' : 'not sure'}{w.confidence === 'sure' && (w.response as { autoCheck?: string } | null)?.autoCheck === 'mismatch' ? ' · wrong' : ''}</span>}
-                        {w.role && <span className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{w.role}</span>}
-                        {w.responseMode && <span className="rounded px-1.5 py-0.5 text-[10px] font-bold" style={{ background: 'color-mix(in oklch, var(--primary) 14%, transparent)', color: 'var(--primary)' }}>{w.responseMode}</span>}
-                        {(w.scaffoldsUsed ?? []).filter((s) => !s.startsWith('mode:')).map((s) => <span key={s} className="rounded px-1.5 py-0.5 text-[10px]" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>{s}</span>)}
-                      </span>
-                    )}
-                  </div>
-                  {w.prompt ? <div className="mb-4 border-b pb-3"><p className="mb-1 text-xs font-semibold text-muted-foreground">Original prompt</p><p className="whitespace-pre-wrap text-base">{w.prompt}</p></div> : <p className="mb-3 text-xs text-muted-foreground">Original prompt unavailable. Check the lesson context before rating.</p>}
-                  {w.targetLinked === false && <p className="mb-3 text-xs text-muted-foreground">Target link is unconfirmed. Check whether this response demonstrates the selected target.</p>}
-                  <p className="mb-2 text-xs font-semibold text-muted-foreground">Student response</p>
-                  <ResponseView response={w.response} />
-                </div>
-              ))}
-
-              {/* this student vs. the class — collapsed below the work */}
-              {comparison && (comparison.studentAvg !== null || comparison.globalAvg !== null) && (
-                <details className="mb-5">
-                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>This lesson · mastery vs. class</summary>
-                  {(() => {
-                const s = comparison.studentAvg, g = comparison.globalAvg
-                const bar = (v: number | null) => `${v === null ? 0 : Math.max(4, (v / 3) * 100)}%`
-                const delta = s !== null && g !== null ? s - g : null
-                const deltaColor = delta === null ? 'var(--muted-foreground)' : delta >= 0.05 ? 'var(--success)' : delta <= -0.05 ? 'oklch(0.62 0.16 25)' : 'var(--muted-foreground)'
-                const deltaText = delta === null ? '' : Math.abs(delta) < 0.05 ? 'at class average' : `${delta > 0 ? '+' : ''}${delta.toFixed(1)} vs class`
-                return (
-                  <div className="rounded-lg px-3 py-2.5 mb-5" style={{ background: 'var(--secondary)' }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--muted-foreground)' }}>This lesson · mastery vs. class</span>
-                      {delta !== null && <span className="text-xs font-bold" style={{ color: deltaColor }}>{deltaText}</span>}
-                    </div>
-                    {[{ label: 'This student', v: s, c: 'var(--primary)' }, { label: `Class avg${comparison.nStudents ? ` (${comparison.nStudents})` : ''}`, v: g, c: 'var(--muted-foreground)' }].map((row) => (
-                      <div key={row.label} className="flex items-center gap-2 mb-1.5">
-                        <span className="text-xs shrink-0" style={{ width: 96, color: 'var(--foreground)' }}>{row.label}</span>
-                        <span className="flex-1 rounded-full" style={{ height: 8, background: 'var(--card)', overflow: 'hidden' }}>
-                          <span style={{ display: 'block', height: '100%', width: bar(row.v), background: row.c, borderRadius: 9999 }} />
-                        </span>
-                        <span className="text-sm font-bold shrink-0" style={{ width: 34, textAlign: 'right', color: 'var(--foreground)' }}>{row.v === null ? '—' : row.v.toFixed(1)}</span>
-                      </div>
-                    ))}
-                    <p className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Decaying-average rollup on a 1–3 scale, across this lesson&apos;s targets.</p>
-                  </div>
-                )
-                  })()}
-                </details>
-              )}
-
-              {/* rating history — collapsed below the work */}
-              <details className="mb-5">
-                  <summary style={{ cursor: 'pointer', listStyle: 'none', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted-foreground)', padding: '6px 0' }}>Rating history</summary>
-                  {selHistory.length > 0 ? (
-                    <div className="flex flex-col gap-1.5">
-                  {selHistory.map((r, i) => (
-                    <div key={i} className="flex items-center justify-between gap-2 text-sm rounded-md px-3 py-1.5" style={{ background: 'var(--secondary)' }}>
-                      <span className="flex items-center gap-2 min-w-0">
-                        <span className="shrink-0">{fmtDate(r.observed_at)}</span>
-                        {r.evidence_source && (
-                          <span className="truncate text-xs rounded-full px-2 py-0.5" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', border: '0.5px solid var(--border)' }}>
-                            {r.evidence_source}
-                          </span>
-                        )}
-                      </span>
-                      <span className="shrink-0" style={{ fontWeight: 700 }}>{levelWord(r.level)} ({r.level})</span>
-                    </div>
-                  ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No prior ratings on this target.</p>
-                  )}
-                </details>
-            </div>
-
-            {/* action column — rate, then say something useful about it.
-                View-only when this student is on another teacher's roster. */}
-            <div className="w-full lg:w-[380px] lg:overflow-y-auto" style={{ flexShrink: 0, padding: '16px 20px', background: 'color-mix(in oklch, var(--secondary) 18%, transparent)' }}>
-              {selStudent?.ratable === false ? (
-                <p className="text-sm rounded-lg px-3 py-2.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
-                  View only — this student is on another teacher&apos;s roster. Their teacher records the ratings.
-                </p>
-              ) : (<>
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <span className="text-sm font-semibold">Your mastery rating</span>
-                <button
-                  onClick={suggestRating}
-                  disabled={suggesting || workLoading || visibleWork.length === 0}
-                  className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold disabled:opacity-50"
-                  style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', color: 'var(--primary)', background: 'transparent', cursor: 'pointer' }}
-                  title="Ask Claude to suggest a rating"
-                >
-                  {suggesting ? 'Asking…' : '✨ Suggest'}
-                </button>
-              </div>
-              {suggestion && (
-                <div role="status" className="mb-2 rounded-lg px-3 py-2 text-sm" style={{ background: 'color-mix(in oklch, var(--primary) 10%, transparent)' }}>
-                  {suggestion.level !== null && suggestion.level >= 1 && suggestion.level <= 3 ? (
-                    <>
-                      <b>Claude suggests: {levelWord(suggestion.level)} ({suggestion.level})</b> — {suggestion.rationale}
-                      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>Your call — select a level, then save when ready.</div>
-                    </>
-                  ) : (
-                    <span style={{ color: 'var(--muted-foreground)' }}>{suggestion.rationale}</span>
-                  )}
-                  {suggestion.nextStep && <p className="mt-2"><b>Next step:</b> {suggestion.nextStep}</p>}
-                </div>
-              )}
-              <div className="mb-3 rounded-xl border p-3 text-sm leading-relaxed"><b>Quality of understanding</b><p className="mt-1">Look for an accurate idea, supporting evidence, and clear reasoning. One concise explanation or labeled diagram can be enough.</p><details className="mt-2 text-xs text-muted-foreground"><summary className="cursor-pointer">Rating anchors</summary><p className="mt-2">1 · misconception or conceptual support needed. 2 · partial understanding with a specific gap. 3 · demonstrates the target. Missing evidence stays unrated. Completion and answer length do not raise mastery.</p></details></div>
-              <div className="rounded-lg px-3 py-2 mb-2" style={{ background: 'color-mix(in oklch, var(--secondary) 50%, transparent)', border: '0.5px dashed var(--border)' }}>
-                <label htmlFor="evidence-src" className="block text-xs font-semibold mb-1" style={{ color: 'var(--secondary-foreground)' }}>
-                  Evidence for this rating
-                </label>
-                <div className="flex items-center gap-2">
-                  <select id="evidence-src" value={evidence} onChange={(e) => setEvidence(e.target.value)} className="flex-1 text-sm rounded-md px-2 py-1.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-                    {EVIDENCE.map((ev) => <option key={ev} value={ev}>{ev}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                {[1, 2, 3].map((lvl) => (
-                  <button
-                    key={lvl}
-                    disabled={saving}
-                    onClick={() => setSelectedLevel(lvl as 1 | 2 | 3)}
-                    aria-pressed={selectedLevel === lvl}
-                    className="flex-1 rounded-xl font-bold"
-                    style={{
-                      padding: '12px 0', fontSize: 13, cursor: 'pointer', border: '1.5px solid var(--border)',
-                      background: lvl === 1 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : lvl === 2 ? 'color-mix(in oklch, var(--reward) 22%, transparent)' : 'color-mix(in oklch, var(--success) 14%, transparent)',
-                      color: lvl === 1 ? 'var(--destructive)' : lvl === 2 ? 'var(--reward-foreground)' : 'var(--success)',
-                      boxShadow: selectedLevel === lvl ? '0 0 0 2px var(--primary)' : undefined,
-                    }}
-                  >
-                    {lvl} · {levelWord(lvl)}
-                  </button>
-                ))}
-              </div>
-              <p className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>
-                Keys <b>1 · 2 · 3</b> select. Save review records your choice and continues.
-              </p>
-              {/* Written feedback — one-way note to the student (Stiggins: name a
-                  strength against the target, then the next step). Sends on its
-                  own; rating keys stay untouched while typing. */}
-              <div className="mt-4 rounded-lg" style={{ border: '1px solid var(--border)', background: 'var(--card)' }}>
-                <div className="flex items-center justify-between px-3 py-2" style={{ borderBottom: '0.5px solid var(--border)' }}>
-                  <span className="text-base font-bold">✎ Written feedback</span>
-                  {fbSent && <span className="text-sm font-bold" style={{ color: 'var(--success)' }}>Sent ✓</span>}
-                </div>
-                <div className="px-3 pb-3 pt-2">
-                  <div className="flex flex-wrap gap-1.5 mb-1.5">
-                    {['Strength: ', 'Next step: '].map((stem) => (
-                      <button key={stem} type="button" onClick={() => setFbText((t) => (t ? t.replace(/\s*$/, '\n') : '') + stem)}
-                        className="whitespace-nowrap rounded-full px-2 py-1 text-xs font-semibold" style={{ border: '1px solid var(--border)', background: 'var(--secondary)', color: 'var(--foreground)', cursor: 'pointer' }}>
-                        + {stem.replace(': ', '')}
-                      </button>
-                    ))}
-                    <label className="ml-auto flex items-center gap-1.5 text-sm" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-                      <input type="checkbox" checked={fbGeneral} onChange={(e) => setFbGeneral(e.target.checked)} /> General note
-                    </label>
-                  </div>
-                  <textarea
-                    aria-label="Feedback and next step"
-                    disabled={saving || fbSending}
-                    value={fbText}
-                    onChange={(e) => setFbText(e.target.value)}
-                    rows={3}
-                    maxLength={2000}
-                    placeholder={fbGeneral ? `A note to ${selStudent?.name?.split(' ')[0] ?? 'this student'}…` : `Feedback on “${selTarget?.statement?.slice(0, 60) ?? 'this target'}…”`}
-                    className="w-full rounded-lg px-3 py-2.5" 
-                    style={{ border: '1px solid var(--border)', background: 'var(--background)', color: 'var(--foreground)', resize: 'vertical', fontSize: 15, lineHeight: 1.5 }}
-                  />
-                  <div className="flex flex-wrap items-center justify-between gap-2 mt-1.5">
-                    <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
-                      {fbGeneral ? 'General note' : 'Target feedback'}
-                    </span>
-                    <button type="button" onClick={() => void sendFeedback()} disabled={saving || fbSending || !fbText.trim()}
-                      className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-bold disabled:opacity-50"
-                      style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
-                      {fbSending ? 'Sending…' : 'Send feedback only'}
-                    </button>
-                  </div>
-                  {fbHistory.length > 0 && (
-                    <div className="mt-3">
-                      <div className="text-xs font-bold uppercase tracking-wide mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Your recent notes to them</div>
-                      {fbHistory.map((f) => (
-                        <div key={f.id} className="text-xs rounded-md px-2.5 py-1.5 mb-1.5" style={{ background: 'var(--secondary)', color: 'var(--muted-foreground)' }}>
-                          <span style={{ whiteSpace: 'pre-wrap' }}>{f.message.length > 160 ? f.message.slice(0, 160) + '…' : f.message}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <button type="button" className="min-h-11 w-full rounded-xl bg-primary px-4 py-3 font-semibold text-primary-foreground disabled:opacity-50" disabled={saving || fbSending || workLoading || !work || selectedLevel === null} onClick={() => { if (selectedLevel !== null) void saveRating(selectedLevel) }}>{saving ? 'Saving review…' : 'Save review and continue'}</button>
-                <button type="button" className="min-h-11 text-sm underline" disabled={saving} onClick={() => { setSelectedLevel(null); setFbText((text) => text || 'Next step: Show how your evidence supports your answer.'); }}>Need more evidence — leave unrated</button>
-                <p className="text-xs text-muted-foreground">Drafts are kept during this session. Send feedback only when you need a follow-up before rating.</p>
-                {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-              </div>
-              </>)}
-            </div>
-            </div>
-            {nextStudentGate && (
-              <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'color-mix(in oklch, var(--card) 94%, transparent)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, padding: 24, textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--success)' }}>✓ {selStudent?.name ?? 'Student'} — all done</div>
-                <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--foreground)' }}>Next: {nextStudentGate.name}</div>
-                <div style={{ fontSize: 13, color: 'var(--muted-foreground)' }}>
-                  {studentPendingCount(nextStudentGate.id)} to grade · {pendingStudents.length} student{pendingStudents.length === 1 ? '' : 's'} left
-                </div>
-                <button
-                  onClick={() => { const g = nextStudentGate; setNextStudentGate(null); openPendingCell(g.id) }}
-                  style={{ marginTop: 4, background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', borderRadius: 10, padding: '10px 22px', fontSize: 14, fontWeight: 700, cursor: 'pointer' }}
-                >
-                  Continue →
-                </button>
-                <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>or press any key · Esc to close</div>
-              </div>
-            )}
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal></Dialog.Root>
-      )}
+      {sel && grid && <MasteryReviewDesk studentId={sel.studentId} targetId={sel.targetId} unitId={unitId} students={rosterForView} targets={grid.targets} work={work} loading={workLoading} loadError={error} onSelect={openCell} onClose={closeDrawer} onSaved={() => { loadGrid(unitId); loadQueue(unitId) }} pendingCount={studentPendingCount} renderResponse={w => <ResponseView response={w.response} prompt={w.prompt}/>} />}
     </div>
   )
 }

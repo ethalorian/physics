@@ -1,0 +1,98 @@
+.workspace { display: grid; gap: 18px; min-width: 0; }
+.label { display: block; font-size: 15px; font-weight: 650; color: var(--foreground); }
+.hint { font-size: 13px; line-height: 1.5; color: var(--muted-foreground); margin: 5px 0 10px; font-weight: 400; }
+.input { width: 100%; min-height: 52px; resize: vertical; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--background); color: var(--foreground); font: inherit; line-height: 1.6; }
+.input:focus-visible, .board summary:focus-visible { outline: 3px solid var(--ring); outline-offset: 3px; }
+.tool, .board { border: 1px solid var(--border); border-radius: 14px; background: var(--background); min-width: 0; }
+.tool { padding: 14px; }
+.board summary { padding: 14px 16px; cursor: pointer; font-size: 14px; font-weight: 650; min-height: 48px; }
+.board summary .hint { display: block; margin: 4px 0 0 18px; }
+.boardBody { padding: 12px; border-top: 1px solid var(--border); }
+.answer { border: 1px solid var(--border); border-top: 3px solid var(--primary); border-radius: 16px; padding: 20px; background: var(--card); }
+.step { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 17px; font-weight: 650; }
+.sectionHeader { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 16px; }
+.sectionHeader .step { margin-bottom: 0; }
+.draft { font-size: 11px; color: var(--muted-foreground); }
+.moreTools { flex-basis: 100%; order: 2; border-top: 1px solid var(--border); margin-top: 6px; padding-top: 4px; }
+.moreTools summary { font-size: 12px; font-weight: 600; cursor: pointer; padding: 10px 2px; min-height: 44px; }
+.toolOptions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 6px 0 12px; }
+.swatch { flex-shrink: 0; border-radius: 50%; }
+.submitArea { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 14px; margin-top: 18px; }
+.readiness { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; }
+.complete, .incomplete { display: inline-flex; align-items: center; padding: 6px 9px; border-radius: 8px; }
+.complete { color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, var(--card)); font-weight: 550; }
+.incomplete { color: var(--muted-foreground); background: var(--muted); }
+.submitButton { min-height: 48px; padding: 0 22px; border-radius: 12px; font-weight: 600; }
+.submitHint { grid-column: 1 / -1; font-size: 12px; line-height: 1.6; color: var(--muted-foreground); }
+.submitError { grid-column: 1 / -1; border-radius: 10px; padding: 12px; font-size: 13px; line-height: 1.5; background: var(--muted); color: var(--destructive); }
+.answer > label { margin-bottom: 10px; }
+@media (max-width: 560px) {
+  .answer { padding: 16px; }
+  .submitArea { grid-template-columns: 1fr; }
+  .submitButton { width: 100%; }
+  .boardBody { padding: 10px; }
+}
+.eyebrow { color: var(--primary); font-size: 10px; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; }
+.problemCard { position: relative; overflow: hidden; border: 1px solid color-mix(in srgb, var(--primary) 24%, var(--border)); border-radius: 20px; padding: 24px; background: linear-gradient(160deg, color-mix(in srgb, var(--primary) 6%, var(--card)), var(--card) 65%); box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 5%, transparent); }
+.problemCard::before { content: ''; position: absolute; height: 4px; left: 24px; right: 24px; top: 0; background: var(--primary); border-radius: 0 0 4px 4px; opacity: .65; }
+.workCard { padding: 24px; border: 1px solid var(--border); border-radius: 20px; background: var(--card); box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 3%, transparent); }
+.answer { border-top-width: 1px; border-radius: 20px; box-shadow: 0 4px 16px color-mix(in srgb, var(--foreground) 3%, transparent); }
+.input { transition: border-color .15s ease, box-shadow .15s ease; }
+.input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 10%, transparent); }
+@media (max-width: 560px) {
+ .problemCard, .workCard { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .input { transition: none; } }
+.studio { --math-nav-height: 0px; --math-focus-height: 150px; }
+.studio :is(textarea, input, button, summary, a) { scroll-margin-top: calc(var(--math-nav-height) + var(--math-focus-height) + 24px); }
+.standardFocus { position: sticky; top: calc(var(--math-nav-height, 0px) + 8px); z-index: 20; display: flex; gap: 14px; align-items: flex-start; background: var(--card); border: 1px solid color-mix(in srgb, var(--primary) 36%, var(--border)); border-left: 4px solid var(--primary); border-radius: 16px; padding: 17px 20px; box-shadow: 0 6px 22px color-mix(in srgb, var(--foreground) 9%, transparent); margin-bottom: 20px; }
+.standardStatic { position: relative; top: auto; }
+.standardIcon { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: color-mix(in srgb, var(--primary) 10%, var(--card)); color: var(--primary); }
+.standardContent { min-width: 0; flex: 1; }
+.standardHeading { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; color: var(--primary); font-size: 10px; font-weight: 750; text-transform: uppercase; letter-spacing: .09em; }
+.standardCode { font-size: 12px; letter-spacing: 0; padding: 2px 7px; background: var(--muted); border-radius: 5px; }
+.standardContent > p { font-size: 16px; font-weight: 600; line-height: 1.5; margin-top: 6px; overflow-wrap: anywhere; white-space: pre-wrap; }
+.standardNote { display: block; margin-top: 6px; color: var(--muted-foreground); font-size: 11px; line-height: 1.5; }
+@media (max-width: 560px) {
+ .standardFocus { padding: 12px; gap: 8px; top: calc(var(--math-nav-height, 0px) + 4px); }
+ .standardIcon { display: none; }
+ .standardContent > p { font-size: 13px; line-height: 1.45; }
+ .standardNote { font-size: 10px; }
+ .standardHeading { font-size: 9px; }
+
+}
+.studioHeader { display: flex; align-items: center; gap: 22px; padding: 12px 8px 24px; }
+.portrait { width: 104px; min-width: 104px; height: 116px; display: flex; justify-content: center; align-items: center; border-radius: 32px 32px 24px 24px; color: var(--primary); background: radial-gradient(ellipse at 45% 35%, var(--card), color-mix(in srgb, var(--primary) 13%, var(--card))); }
+.portrait svg { flex-shrink: 0; }
+.portrait:focus-visible { outline: 3px solid var(--ring); outline-offset: 4px; }
+.studioGreeting { min-width: 0; }
+.studioGreeting > p { font-size: 13px; color: var(--primary); overflow-wrap: anywhere; }
+.studioGreeting h1 { font-size: clamp(28px, 4vw, 38px); line-height: 1.2; letter-spacing: -.045em; font-weight: 650; margin: 5px 0 8px; }
+.studioGreeting > span { color: var(--muted-foreground); font-size: 14px; line-height: 1.5; }
+.studioGreeting > a { display: block; min-height: 44px; padding-top: 8px; font-size: 12px; color: var(--primary); }
+.workDesk { border: 1px solid var(--border); border-radius: 22px; background: var(--card); box-shadow: 0 8px 32px color-mix(in srgb, var(--foreground) 4%, transparent); overflow: clip; }
+.workDesk .workCard, .workDesk .answer { border: none; box-shadow: none; border-radius: 0; padding: 24px; }
+.workDesk .answer { border-top: 1px solid var(--border); }
+.inlineHelp { margin-top: 24px; border-top: 1px solid var(--border); padding-top: 16px; }
+.inlineHelp > :is(div, section) { border: none !important; box-shadow: none !important; background: transparent !important; }
+.problemCard::before { display: none; }
+.problemCard { box-shadow: none; padding: 26px; border-color: var(--border); background: linear-gradient(155deg, color-mix(in srgb, var(--primary) 5%, var(--card)), var(--card)); }
+.standardFocus { box-shadow: 0 3px 14px color-mix(in srgb, var(--foreground) 5%, transparent); border-left-width: 1px; padding: 15px 20px; }
+.standardIcon { display: none; }
+.standardHeading { letter-spacing: .06em; }
+@media (max-width: 560px) {
+ .studioHeader { gap: 14px; padding: 8px 0 18px; }
+ .portrait { width: 76px; min-width: 76px; height: 92px; border-radius: 24px; }
+ .portrait > svg { width: 68px; height: auto; }
+ .studioGreeting h1 { font-size: 29px; }
+ .studioGreeting > span { font-size: 12px; }
+ .problemCard, .workDesk .workCard, .workDesk .answer { padding: 18px; }
+ .standardFocus { padding: 12px 14px; }
+}
+.problemReward { margin-top: 20px; border-radius: 12px; padding: 12px 14px; background: color-mix(in srgb, var(--reward) 24%, var(--card)); color: var(--reward-foreground); }
+.rewardAmount { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rewardAmount strong { font-size: 22px; font-weight: 750; letter-spacing: -.03em; }
+.rewardAmount > span { font-size: 12px; }
+.rewardDetails { font-size: 12px; line-height: 1.6; margin-top: 4px; }
+.rewardDetails summary { cursor: pointer; min-height: 44px; padding-top: 12px; }
+.rewardDetails p { color: var(--foreground); padding: 4px 0; }

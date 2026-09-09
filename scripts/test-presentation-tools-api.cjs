@@ -30,7 +30,14 @@ const tools=await build('src/app/api/present/sessions/[id]/tools/route.ts','tool
 const respond=await build('src/app/api/present/respond/route.ts','respond.cjs',{'@/lib/presentation-tools-server':helper});
 const ctx={params:Promise.resolve({id:'s'}),role:'teacher',userId:'teacher'};
 const request=body=>new Request('http://test/tools',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});
-let result=await tools.POST(request({action:'bookmark',student_id:'other',note:'private'}),ctx);assert.equal(result.status,403);
+let savedSei;global.db=table=>{assert.equal(table,'present_session_tools');return {upsert:async(value,options)=>{savedSei=value;assert.equal(options.onConflict,'session_id');return {error:null}}}};
+let result;
+for(const enabled of [true,false]){result=await tools.POST(request({action:'sei_supports',enabled}),ctx);assert.equal(result.status,200);assert.equal(savedSei.sei_enabled,enabled);assert.deepEqual(Object.keys(savedSei).sort(),['sei_enabled','session_id','updated_at']);}
+for(const enabled of ['false',null,1]){result=await tools.POST(request({action:'sei_supports',enabled}),ctx);assert.equal(result.status,400);}
+global.allowed=false;result=await tools.POST(request({action:'sei_supports',enabled:true}),ctx);assert.equal(result.status,403);global.allowed=true;
+session.status='ended';result=await tools.POST(request({action:'sei_supports',enabled:true}),ctx);assert.equal(result.status,409);session.status='live';
+console.log('PASS SEI setting on/off, strict validation, presentation ownership and ended-session checks.');
+result=await tools.POST(request({action:'bookmark',student_id:'other',note:'private'}),ctx);assert.equal(result.status,403);
 result=await tools.POST(request({action:'pulse',kind:'constructor',anonymous:true}),ctx);assert.equal(result.status,400);
 global.allowed=false;result=await tools.GET(new Request('http://test/tools'),ctx);assert.equal(result.status,403);
 result=await respond.POST(request({action:'pulse',session_id:'s',pulse_id:'p',choice:0}),{userId:'a'});assert.equal(result.status,403);

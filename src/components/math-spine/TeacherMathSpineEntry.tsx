@@ -164,7 +164,7 @@ export default function TeacherMathSpineEntry({
       </div>
       <p className="text-sm mb-4" style={{ color: PALETTE.indigoMuted }}>
         Each tap adds a new observation — it never overwrites. Reaching Almost, Fluent, or a whole strand
-        earns points into the class economy automatically.
+        earns XP into the class economy automatically.
       </p>
 
       <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -208,7 +208,7 @@ export default function TeacherMathSpineEntry({
         >
           🎉 {celebration.name}{' '}
           {celebration.grants
-            .map((g) => `${MILESTONE_LABEL[g.milestone] ?? g.milestone} (+${g.points} pts)`)
+            .map((g) => `${MILESTONE_LABEL[g.milestone] ?? g.milestone} (+${g.points} XP)`)
             .join(', ')}
           .
         </div>

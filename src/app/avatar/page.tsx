@@ -17,8 +17,8 @@ const GROUPS: { name: string; keys: (keyof AvatarTraits)[] }[] = [
   { name: 'Fine-tune', keys: ['eye_spacing', 'eye_scale', 'eye_tilt', 'brow_height', 'mouth_width'] },
 ]
 type Tab = 'identity' | 'items' | 'looks' | 'gallery'
-interface Draft { traits: AvatarTraits; equipped: EquippedItems; alias: string; gallery_visible: boolean; saved_looks: SavedLook[] }
-const fromBundle = (b: AvatarBundle): Draft => ({ traits: withDefaults(b.traits), equipped: b.equipped, alias: b.alias ?? '', gallery_visible: b.gallery_visible, saved_looks: b.saved_looks })
+interface Draft { traits: AvatarTraits; equipped: EquippedItems; alias: string; saved_looks: SavedLook[] }
+const fromBundle = (b: AvatarBundle): Draft => ({ traits: withDefaults(b.traits), equipped: b.equipped, alias: b.alias ?? '', saved_looks: b.saved_looks })
 const nice = (s: string) => s.replaceAll('_', ' ')
 async function getBundle(): Promise<AvatarBundle> {
   const r = await fetch('/api/avatar', { cache: 'no-store' }); const d = await r.json()
@@ -125,8 +125,7 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
               <label className="block text-sm font-semibold" htmlFor="avatar-name">Display name</label>
               <input id="avatar-name" maxLength={32} value={draft.alias} placeholder={bundle.name?.split(' ')[0] || 'Your first name'} onChange={e => setDraft(p => ({ ...p, alias: e.target.value }))} className="min-h-11 w-full rounded-lg border bg-background px-3" />
               <p className="text-xs text-muted-foreground">Used in the gallery and leaderboard. Leave blank for your first name in the gallery and your roster name elsewhere.</p>
-              <label className="flex min-h-11 items-center gap-3 text-sm"><input type="checkbox" checked={draft.gallery_visible} onChange={e => setDraft(p => ({ ...p, gallery_visible: e.target.checked }))} className="h-5 w-5" />Share in my class gallery</label>
-              <p className="text-xs text-muted-foreground">Your classmates and their teachers can see your shared avatar and display name. School administrators can also see it. Appreciation totals are visible only to you. Your avatar still appears beside your classroom work when gallery sharing is off.</p>
+              <p className="text-xs text-muted-foreground">Your avatar is automatically shared in your class gallery. Your classmates, their teachers, and school administrators can see your avatar and display name. Appreciation totals are visible only to you.</p>
             </section>
           </>}
           {tab === 'items' && <>

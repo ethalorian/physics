@@ -90,7 +90,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
           {snapshot && <div className="hidden sm:flex items-center gap-3 text-right">
             <div>
               <div className="text-lg font-bold tracking-tight text-foreground tabular-nums">{snapshot.mathPointsEarned}</div>
-              <p className="text-[11px] font-medium text-muted-foreground">pts earned</p>
+              <p className="text-[11px] font-medium text-muted-foreground">XP earned</p>
             </div>
             <div className="flex items-center gap-1">
               <Star className="h-4 w-4 text-reward" />

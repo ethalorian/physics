@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
+import { getStudentTrack } from '@/lib/student-enrollment'
 import { getBalance } from '@/lib/points'
 import { isStaff, type ArcadeGame, type PlayRow } from '@/lib/arcade'
 
@@ -15,14 +16,13 @@ import { isStaff, type ArcadeGame, type PlayRow } from '@/lib/arcade'
  *   - Only a FINISHED play belonging to the caller, never staff runs.
  *   - Pay = floor(min(25, solved × tier × accuracy²)), zero below 50% accuracy
  *     — precision earns, spam doesn't. Tier: 1 easy / 1.5 mid / 2 hard+physics.
- *   - Daily cap of 75 across all free-cabinet payouts — deliberately HIGHER
- *     than the vocab-game cap (25/day, points.ts): math remediation is the
- *     priority, so the math gym is the best-paying floor in the arcade.
+ *   - Shared daily math cap: 10 XP standard / 15 XP Honors, including issued problems.
+ *     The database serializes concurrent claims and returns the actual award.
  *   - Idempotent: dedupe_key = 'arcade-payout:<playId>' (unique index).
  */
 
 const PER_RUN_CAP = 25
-const DAILY_CAP = 75 // higher than vocab (25): math fluency is the priority paycheck
+
 const MIN_ACCURACY = 0.5
 const SOURCE = 'arcade-payout'
 
@@ -85,6 +85,7 @@ export const POST = withAuth(async (request, ctx) => {
   const stats = (play.meta as { stats?: RunStats } | null)?.stats
   if (!stats) return NextResponse.json({ xp: 0 })
 
+  const DAILY_CAP = await getStudentTrack(ctx.userId) === 'honors' ? 15 : 10
   const earned = computeXp(stats)
   if (earned === 0) return NextResponse.json({ xp: 0, capped: false })
 
@@ -103,7 +104,7 @@ export const POST = withAuth(async (request, ctx) => {
     return NextResponse.json({ xp: 0, capped: true, balance })
   }
 
-  const { error } = await supabaseAdmin.from('economy_point_grants').insert({
+  const { data: receipt, error } = await supabaseAdmin.from('economy_point_grants').insert({
     user_id: ctx.userId,
     user_email: ctx.email ?? play.user_email,
     source: SOURCE,
@@ -111,7 +112,7 @@ export const POST = withAuth(async (request, ctx) => {
     points: xp,
     note: `Arcade payout — ${play.game_slug} (${stats.mode}, ${stats.solved} solved)`,
     dedupe_key: `${SOURCE}:${play.id}`,
-  })
+  }).select('points').single()
   if (error) {
     // 23505 = unique violation on dedupe_key → already paid; report idempotently.
     if ((error as { code?: string }).code === '23505') {
@@ -123,5 +124,6 @@ export const POST = withAuth(async (request, ctx) => {
   }
 
   const { balance } = await getBalance(ctx.userId)
-  return NextResponse.json({ xp, capped: xp < earned, balance })
+  const awarded = receipt?.points ?? 0
+  return NextResponse.json({ xp: awarded, capped: awarded < earned, balance })
 })

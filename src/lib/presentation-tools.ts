@@ -10,7 +10,7 @@ export interface TeachingStudent { id: string; name: string }
 export interface TeachingNeed extends TeachingStudent { reasons: string[]; requestedAt?: string }
 export interface ToolsState {
   pulse: Pulse | null
-  tools: { reconnect_token: string | null; discussion_block_id: string | null; discussion_poll_run_id: string | null; updated_at: string } | null
+  tools: { sei_enabled?: boolean; reconnect_token: string | null; discussion_block_id: string | null; discussion_poll_run_id: string | null; updated_at: string } | null
   projector: { signature: string; seen_at: string; slide: number; ready: boolean } | null
   roster: TeachingStudent[]
   needs: TeachingNeed[]

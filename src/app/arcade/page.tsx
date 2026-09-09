@@ -322,7 +322,7 @@ export default function ArcadePage() {
               </h2>
             </div>
             <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-              sloppy speed pays nothing · the best-paying floor: up to 75 XP/day
+              sloppy speed pays nothing · the best-paying floor: up to 10 XP/day · 15 for Honors
             </span>
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -337,7 +337,7 @@ export default function ArcadePage() {
 
       {data && data.balance.balance < 25 && !data.freeCreditAvailable && (
         <p className="text-xs mt-6 text-center" style={{ color: 'var(--muted-foreground)' }}>
-          Short on coins? The physics floor and math gym pay up to 75 XP a day for accurate runs. Vocabulary games add up to 25 a day, and lessons pay too.
+          Short on coins? The physics floor and math gym share a daily allowance of 10 XP, or 15 for Honors, for accurate runs and completed math problems. Vocabulary adds up to 5 XP a day. See your unit requirements on Home.
         </p>
       )}
     </div>

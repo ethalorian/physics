@@ -6,11 +6,11 @@ import { Sparkles } from 'lucide-react'
 /**
  * The Daily Spin — one free wheel spin per day. The SERVER rolls the prize
  * (/api/arcade/spin); this component only animates the wheel to the wedge
- * the server chose. Mostly crumbs (2–5 XP), one gold jackpot wedge (500 XP)
+ * the server chose. Mostly crumbs (1–2 XP), one gold jackpot wedge (25 XP)
  * at very long odds.
  */
 
-const SEGMENTS = [2, 5, 3, 10, 2, 25, 3, 5, 2, 500, 3, 5] // mirror of the API route
+import { SPIN_SEGMENTS as SEGMENTS } from '@/lib/xp-policy'
 const SEG_COLORS = ['#1d4ed8', '#0f766e', '#7c3aed', '#0e7490', '#1d4ed8', '#b45309',
                     '#7c3aed', '#0f766e', '#1d4ed8', '#eab308', '#7c3aed', '#0f766e']
 const SEG = (Math.PI * 2) / SEGMENTS.length
@@ -41,7 +41,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
     ctx.globalAlpha = done ? 0.45 : 1
     for (let i = 0; i < SEGMENTS.length; i++) {
       const a0 = rot + i * SEG - Math.PI / 2, a1 = a0 + SEG
-      const jackpot = SEGMENTS[i] >= 500
+      const jackpot = SEGMENTS[i] >= 25
       ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath()
       ctx.fillStyle = SEG_COLORS[i]; ctx.fill()
       ctx.strokeStyle = '#0b0407'; ctx.lineWidth = 2; ctx.stroke()
@@ -52,7 +52,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
       ctx.fillStyle = jackpot ? '#1a1203' : '#fff'
       ctx.font = `${jackpot ? '900 11px' : '700 11px'} Orbitron, monospace`
       ctx.textAlign = 'center'
-      ctx.fillText(jackpot ? '★500' : String(SEGMENTS[i]), 0, 4)
+      ctx.fillText(jackpot ? '★25' : String(SEGMENTS[i]), 0, 4)
       ctx.restore()
       if (jackpot) { // gold glow on the jackpot wedge
         ctx.save(); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, a0, a1); ctx.closePath()

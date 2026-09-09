@@ -16,8 +16,22 @@ create table public.present_sessions(id uuid primary key, course_id uuid, status
 create table public.course_students(course_id uuid, student_id uuid);
 SQL
 "$PG_BIN/psql" -h 127.0.0.1 -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f supabase/migrations/20260907145933_classroom_command_tools.sql >/dev/null
+"$PG_BIN/psql" -h 127.0.0.1 -p "$PORT" -d postgres -v ON_ERROR_STOP=1 -f supabase/migrations/20260909045016_presentation_sei_supports.sql >/dev/null
 "$PG_BIN/psql" -h 127.0.0.1 -p "$PORT" -d postgres -v ON_ERROR_STOP=1 <<'SQL'
 insert into present_sessions values ('00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000002','live');
+insert into present_session_tools(session_id) values ('00000000-0000-0000-0000-000000000001');
+do $$ begin
+ if (select sei_enabled from present_session_tools) then raise exception 'SEI default should be off'; end if;
+end $$;
+insert into present_session_tools(session_id,sei_enabled) values ('00000000-0000-0000-0000-000000000001',true) on conflict(session_id) do update set sei_enabled=excluded.sei_enabled;
+do $$ begin
+ if not (select sei_enabled from present_session_tools) then raise exception 'SEI on not saved'; end if;
+end $$;
+update present_session_tools set sei_enabled=false;
+do $$ begin
+ if (select sei_enabled from present_session_tools) then raise exception 'SEI off not saved'; end if;
+ if has_table_privilege('anon','present_session_tools','update') or has_table_privilege('authenticated','present_session_tools','update') then raise exception 'SEI browser write granted'; end if;
+end $$;
 insert into course_students values ('00000000-0000-0000-0000-000000000002','00000000-0000-0000-0000-000000000003');
 insert into present_pulses(id,session_id,kind,anonymous) values ('00000000-0000-0000-0000-000000000004','00000000-0000-0000-0000-000000000001','readiness',false);
 select submit_present_pulse('00000000-0000-0000-0000-000000000001','00000000-0000-0000-0000-000000000004','00000000-0000-0000-0000-000000000003',0);
