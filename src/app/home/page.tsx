@@ -2,16 +2,22 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, BookOpen, BookText, ChevronDown, Gift, Joystick, Sigma, Target, Trophy, Users, UserRound } from 'lucide-react'
+import { MessageCircle, ArrowRight, BookOpen, BookText, ChevronDown, Gift, Joystick, Sigma, Target, Trophy, Users, UserRound } from 'lucide-react'
 import EnrollmentGate from '@/components/EnrollmentGate'
-import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
-import DailyMathTask from '@/components/math-spine/DailyMathTask'
+import VocabTaskCards, { type VocabPracticeStatus } from '@/components/vocabulary/VocabTaskCards'
+import DailyMathTask, { type DailyMathStatus } from '@/components/math-spine/DailyMathTask'
+import PracticeCompletionBadge from '@/components/PracticeCompletionBadge'
 import XpGoalRing from '@/components/gamification/XpGoalRing'
 import ChallengeCard from '@/components/gamification/ChallengeCard'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { decayingAverage } from '@/data/curriculum-types'
 import styles from './home.module.css'
+import StudentCheckIn from './StudentCheckIn'
+import StudentClasses from './StudentClasses'
+import AvatarSpotlight from './AvatarSpotlight'
+import HomeSectionHeader from './HomeSectionHeader'
+import TeacherFeedbackCard from '@/components/feedback/TeacherFeedbackCard'
 
 type Domain = 'knowledge' | 'reasoning' | 'skill' | 'product'
 
@@ -104,6 +110,7 @@ const DESTINATIONS = [
     { href: '/arcade', title: 'Arcade', description: 'Play games and put your skills to work.', icon: Joystick },
     { href: '/leaderboard', title: 'Leaderboard', description: 'See class rankings.', icon: Trophy },
     { href: '/store', title: 'Store', description: 'Use your points for rewards.', icon: Gift },
+    { href: '/avatar/gallery', title: 'Avatar gallery', description: 'Meet the characters in your classroom.', icon: Users },
     { href: '/avatar', title: 'My avatar', description: 'Customize your character and display name.', icon: UserRound },
   ] },
 ]
@@ -113,6 +120,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(false)
   const [retry, setRetry] = useState(0)
+  const [mathStatus, setMathStatus] = useState<DailyMathStatus | null>(null)
+  const [vocabStatus, setVocabStatus] = useState<VocabPracticeStatus | null>(null)
   const [domain, setDomain] = useState<Domain>('reasoning')
 
   useEffect(() => {
@@ -135,24 +144,56 @@ export default function HomePage() {
 
   const climbForDomain = useMemo(() => (data?.climb ?? []).filter((c) => c.domain === domain), [data, domain])
   const current = data?.continue
+  const practiceLoading = !mathStatus || mathStatus.loading || !vocabStatus || vocabStatus.state === 'loading'
+  const practiceError = mathStatus?.error || vocabStatus?.state === 'error'
+  const practiceTotal = (mathStatus?.hasItem || mathStatus?.submitted ? 1 : 0) + (vocabStatus?.total ?? 0)
+  const practiceCompleted = (mathStatus?.submitted ? 1 : 0) + (vocabStatus?.completed ?? 0)
+  const practiceState = practiceError ? 'error' : practiceLoading ? 'loading' : practiceTotal === 0 ? 'empty' : practiceCompleted === practiceTotal ? 'done' : 'todo'
+  const practiceLabel = practiceError ? 'Status unavailable' : practiceLoading ? 'Checking progress…' : practiceTotal === 0 ? 'Nothing assigned yet' : practiceCompleted === practiceTotal ? 'All done for now!' : `${practiceCompleted} of ${practiceTotal} done`
+
 
   return (
     <EnrollmentGate>
       <div className="mx-auto max-w-6xl space-y-8 pb-12 text-foreground">
-        <header className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-overline text-primary">Your classroom</p>
-            <h1 className="text-title-1 mt-2">{data && !loadError ? `Hi, ${data.student.name}.` : 'Welcome to class.'}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">Open your lesson, find your work, and get help when you need it.</p>
+        <StudentClasses />
+        <section aria-labelledby="feedback-heading" className={styles.coaching}>
+          <header className={styles.coachingHeader}>
+            <div className="flex items-center gap-4"><span className={styles.coachingIcon}><MessageCircle size={26} aria-hidden="true" /></span><div><p className={styles.coachingEyebrow}>Read · Revisit · Grow</p><h2 id="feedback-heading" className={styles.coachingTitle}>Your teacher’s feedback</h2></div></div>
+            <Button asChild variant="outline" className="min-h-11 bg-card text-foreground"><Link href="/dashboard/growth">All feedback & progress<ArrowRight aria-hidden="true" /></Link></Button>
+          </header>
+          <div className={styles.coachingBody}>
+            <TeacherFeedbackCard initialCount={1} featured />
+            <div className={styles.coachingAction}>
+              <span className={styles.actionIcon}><Target size={22} aria-hidden="true" /></span>
+              <p className="text-overline mt-4">Put it into practice</p>
+              {loading ? <p role="status" className="mt-3 text-sm text-muted-foreground">Loading your next step…</p>
+                : loadError ? <p className="mt-3 text-sm text-muted-foreground">Open your progress to find the work you want to revisit.</p>
+                : data?.retry.length ? <>
+                  <p className="mt-2 text-xs font-medium text-muted-foreground">From your latest ratings · {data.retry[0].level === 1 ? 'Not yet' : 'Almost'}</p>
+                  <h3 className="mt-3 text-title-3">{data.retry[0].statement}</h3>
+                  <Button asChild className="mt-5 min-h-11"><Link href={`/review/${data.retry[0].targetId}`} aria-label={`Practice: ${data.retry[0].statement}`}>Revisit this skill<ArrowRight aria-hidden="true" /></Link></Button>
+                  {data.retry.length > 1 && <p className="mt-3 text-xs text-muted-foreground">{data.retry.length - 1} more skills in All feedback & progress.</p>}
+                </> : <><h3 className="mt-3 text-title-3">Keep building on your work.</h3><p className="mt-2 text-sm text-muted-foreground">No skills are listed for extra practice right now. Use your teacher’s notes to guide your next step.</p></>}
+            </div>
           </div>
-          <div className="flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-11"><Link href="/lobby"><Users aria-hidden="true" />Lobby</Link></Button><Button asChild variant="outline" className="min-h-11 lg:hidden"><a href="#classroom-directory">Find what you need<ChevronDown aria-hidden="true" /></a></Button></div>
-        </header>
+            <details className="group border-t border-border">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-5 text-sm font-semibold">View progress over time<ChevronDown aria-hidden="true" className="h-4 w-4 group-open:rotate-180" /></summary>
+              <div className="space-y-4 px-5 pb-5"><p className="text-sm text-muted-foreground">Each dot is a teacher rating. The line gives more weight to recent work.</p><div className="flex flex-wrap gap-2" aria-label="Progress category">{DOMAINS.map(dm => <Button key={dm.key} variant={domain === dm.key ? 'default' : 'outline'} className="min-h-11" aria-pressed={domain === dm.key} onClick={() => setDomain(dm.key)}>{dm.label}</Button>)}</div><ClimbChart points={climbForDomain} /></div>
+            </details>
+        </section>
 
-        <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-          <div className="min-w-0 space-y-6">
+        <StudentCheckIn name={data?.student.name} points={!loadError ? data?.points : undefined} streak={!loadError ? data?.streak.current : undefined} loading={loading} />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div><h2 className="text-title-3">What’s happening today</h2><p className="mt-1 text-sm text-muted-foreground">Your next lesson, daily practice, and something to work toward.</p></div>
+          <Button asChild variant="outline" className="min-h-11 lg:hidden"><a href="#classroom-directory">Find what you need<ChevronDown aria-hidden="true" /></a></Button>
+        </div>
+
+        <div className={`${styles.activityGrid} grid items-start gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]`}>
+          <div className={`${styles.mainColumn} min-w-0 space-y-6`}>
             <section aria-labelledby="next-heading">
-              <Card className={`${styles.lesson} gap-4 border-primary/40 p-5 sm:p-7`}>
-                <p className={`${styles.startLabel} text-overline self-start rounded-full bg-primary px-3 py-1.5`}>Start here</p>
+              <Card className={`${styles.lesson} gap-0 overflow-hidden p-0`}>
+                <HomeSectionHeader title="Continue learning" eyebrow="Your next lesson" icon={BookOpen} tone="indigo" />
+                <div className="space-y-4 p-5 sm:p-6">
                 {loading ? <div role="status" className="space-y-3"><h2 id="next-heading" className="text-title-2">Finding your next lesson…</h2><p className="text-sm text-muted-foreground">Your classroom links are ready below.</p></div>
                   : loadError ? <div role="alert" className="space-y-3"><h2 id="next-heading" className="text-title-2">Your lesson could not load</h2><p className="text-sm text-muted-foreground">Try again, or open All lessons to find your work.</p><Button onClick={() => setRetry(n => n + 1)} className="min-h-11">Try again</Button></div>
                   : current ? <>
@@ -162,54 +203,44 @@ export default function HomePage() {
                       <Button asChild className="min-h-11"><Link href={`/lessons/${current.lesson.slug}`}>{current.lesson.progress > 0 ? 'Resume lesson' : 'Start lesson'}<ArrowRight aria-hidden="true" /></Link></Button>
                       <Button asChild variant="outline" className="min-h-11"><Link href="/lessons">All lessons</Link></Button>
                     </div>
-                    <p className="border-t pt-4 text-sm text-muted-foreground">{current.completed} of {current.total} lessons completed{current.unitName ? ` in ${current.unitName}` : ''}</p>
+                    <div className={styles.lessonProgress}><p className="text-sm text-muted-foreground">{current.completed} of {current.total} lessons completed{current.unitName ? ` in ${current.unitName}` : ''}</p><progress className={styles.unitProgress} value={current.completed} max={Math.max(1, current.total)} aria-label="Lessons completed in this unit" /></div>
                   </> : <>
                     <h2 id="next-heading" className="text-title-2">No next lesson to show</h2>
                     <p className="text-sm text-muted-foreground">Check All lessons for available work, or ask your teacher what to open next.</p>
                     <Button asChild variant="outline" className="min-h-11 self-start"><Link href="/lessons">Open all lessons<ArrowRight aria-hidden="true" /></Link></Button>
                   </>}
+                </div>
               </Card>
             </section>
 
             <section aria-labelledby="practice-heading" className={`${styles.practice} space-y-4`}>
-              <div><h2 id="practice-heading" className="text-title-3">Daily practice</h2><p className="mt-1 text-sm text-muted-foreground">Your math warm-up and assigned vocabulary, together in one place.</p></div>
-              <DailyMathTask />
-              <VocabTaskCards />
+              <HomeSectionHeader title="Daily practice" eyebrow="A little progress, every day" description="Your math warm-up and assigned vocabulary, together in one place." icon={Sigma} tone="sage" id="practice-heading" status={<span role="status" aria-label="Daily practice completion"><PracticeCompletionBadge state={practiceState} label={practiceLabel} /></span>} />
+              <DailyMathTask onStatus={setMathStatus} />
+              <VocabTaskCards onStatus={setVocabStatus} />
             </section>
 
-            {!loading && !loadError && data && <section aria-labelledby="feedback-heading" className="space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-2"><h2 id="feedback-heading" className="text-title-3">Teacher feedback & progress</h2><Button asChild variant="ghost" className="min-h-11"><Link href="/dashboard/growth">My progress<ArrowRight aria-hidden="true" /></Link></Button></div>
-              <Card className={`${styles.feedback} gap-0 overflow-hidden py-0`}>
-                {data.retry.length ? data.retry.map(r => <div key={r.targetId} className="flex flex-wrap items-center gap-3 border-b p-5 last:border-0">
-                  <div className="min-w-0 flex-1 basis-48"><p className="mb-1 text-xs font-semibold text-muted-foreground">{r.level === 1 ? 'Not yet' : 'Almost'} · {r.domain}</p><h3 className="text-sm font-medium">{r.statement}</h3></div>
-                  <Button asChild variant="outline" className="min-h-11"><Link href={`/review/${r.targetId}`} aria-label={`Practice: ${r.statement}`}>Practice<ArrowRight aria-hidden="true" /></Link></Button>
-                </div>) : <p className="p-5 text-sm text-muted-foreground">No skills are listed for extra practice right now. Your teacher’s ratings and feedback appear in My progress.</p>}
-                <details className="group border-t">
-                  <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 p-5 text-sm font-semibold">View progress over time<ChevronDown aria-hidden="true" className="h-4 w-4 group-open:rotate-180" /></summary>
-                  <div className="space-y-4 px-5 pb-5"><p className="text-sm text-muted-foreground">Each dot is a teacher rating. The line gives more weight to recent work.</p><div className="flex flex-wrap gap-2" aria-label="Progress category">{DOMAINS.map(dm => <Button key={dm.key} variant={domain === dm.key ? 'default' : 'outline'} className="min-h-11" aria-pressed={domain === dm.key} onClick={() => setDomain(dm.key)}>{dm.label}</Button>)}</div><ClimbChart points={climbForDomain} /></div>
-                </details>
-              </Card>
-            </section>}
+
           </div>
 
-          <aside className="min-w-0 space-y-6" aria-label="Classroom directory and goals">
-            <section id="classroom-directory" aria-labelledby="find-heading" className="scroll-mt-28">
-              <h2 id="find-heading" className="text-title-3 mb-4">Find what you need</h2>
-              <Card className="gap-3 p-3">
+          <aside className={`${styles.sideColumn} min-w-0 space-y-6`} aria-label="Classroom directory and goals">
+            <section aria-labelledby="goals-heading" className={`${styles.rewards} space-y-3`}>
+              <HomeSectionHeader title="Goals & rewards" eyebrow="Your effort adds up" description="Track your daily goal and teacher challenges." icon={Gift} tone="gold" id="goals-heading" />
+              <XpGoalRing compact />
+              <ChallengeCard compact />
+            </section>
+            <AvatarSpotlight />
+            <section id="classroom-directory" aria-labelledby="find-heading" className={`${styles.directory} scroll-mt-28`}>
+              <HomeSectionHeader title="Find what you need" eyebrow="Around your classroom" icon={BookOpen} tone="indigo" id="find-heading" />
+              <Card className="gap-3 border-0 bg-transparent p-3 shadow-none">
                 {DESTINATIONS.map(group => <nav key={group.title} aria-label={group.title} className={styles.directoryGroup}>
                   <h3 className="text-overline mb-2 text-muted-foreground">{group.title}</h3>
-                  <ul className="space-y-1">{group.items.map(item => <li key={item.href}><Link href={item.href} className="flex min-h-11 items-start gap-3 rounded-lg p-2 -mx-2 hover:bg-muted focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2">
-                    <span className={styles.directoryIcon}><item.icon aria-hidden="true" className="h-4 w-4" /></span><span className="min-w-0"><span className="block text-sm font-semibold">{item.title}</span><span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{item.description}</span></span>
+                  <ul className="space-y-1">{group.items.map(item => <li key={item.href}><Link href={item.href} className={styles.directoryLink}>
+                    <span className={styles.directoryIcon}><item.icon aria-hidden="true" className="h-4 w-4" /></span><span className="min-w-0 flex-1"><span className="block text-sm font-semibold">{item.title}</span><span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">{item.description}</span></span><ArrowRight aria-hidden="true" className="mt-2 h-4 w-4 shrink-0 text-muted-foreground" />
                   </Link></li>)}</ul>
                 </nav>)}
               </Card>
             </section>
-            <section aria-labelledby="goals-heading" className={`${styles.rewards} space-y-3`}>
-              <h2 id="goals-heading" className="text-title-3">Goals & rewards</h2>
-              {!loading && !loadError && data && <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm"><span className="rounded-full bg-reward px-3 py-1 font-semibold text-reward-foreground">{data.points.xp.toLocaleString()} XP earned</span><span className="text-muted-foreground">{data.points.balance.toLocaleString()} points to spend</span>{data.streak.current > 0 && <span className="text-muted-foreground">{data.streak.current}-day streak</span>}</div>}
-              <XpGoalRing compact />
-              <ChallengeCard compact />
-            </section>
+
           </aside>
         </div>
       </div>

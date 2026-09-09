@@ -101,7 +101,8 @@ function AvatarEditor({ initial }: { initial: AvatarBundle }) {
           <div className="flex flex-col items-center gap-2"><div className="h-10 w-10 overflow-hidden rounded-full bg-secondary"><Avatar traits={draft.traits} equipped={previewEquipped} items={bundle.catalog} size={40} crop="head" decorative /></div><span className="text-xs text-muted-foreground">Menu preview</span></div>
         </div>
         {tryOn && <div className="my-3 rounded-lg border p-2 text-sm">Trying {tryOn.name}.<Button variant="ghost" onClick={() => setTryOn(null)}>End try-on</Button></div>}
-        <p className="mt-3 text-center font-semibold">{bundle.isStaff ? 'All catalog items are free for staff' : `${bundle.balance.toLocaleString()} XP available`}</p>
+        {!bundle.isStaff && <p className="text-center text-sm text-muted-foreground">{bundle.lifetimeEarned.toLocaleString()} lifetime XP earned · Purchases keep your rankings and goal progress intact.</p>}
+        <p className="mt-3 text-center font-semibold">{bundle.isStaff ? 'All catalog items are free for staff' : `${bundle.balance.toLocaleString()} XP to spend`}</p>
         <div className="mt-4 space-y-2 border-t pt-4">
           <Button className="min-h-11 w-full" onClick={save} disabled={busy || conflict || (!dirty && bundle.setup_completed)}><Save size={16} />{busy ? 'Working…' : bundle.setup_completed ? 'Save changes' : 'Finish & save avatar'}</Button>
           {dirty && <Button variant="ghost" className="min-h-11 w-full" disabled={busy} onClick={() => { setDraft(fromBundle(bundle)); setTryOn(null); setError(''); setMessage('Draft discarded.') }}><RotateCcw size={15} />Discard changes</Button>}

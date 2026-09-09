@@ -87,10 +87,12 @@ export default function StorePage() {
         <div className="text-3xl font-medium" style={{ color: C.reward }}>{bal}</div>
         {balance && (
           <div className="text-xs mt-1" style={{ color: C.muted }}>
-            {balance.lifetimeEarned} earned · {balance.spent} spent
+            {balance.lifetimeEarned.toLocaleString()} lifetime XP earned · {balance.spent.toLocaleString()} XP spent or reserved
           </div>
         )}
       </div>
+
+      <p className="text-xs mb-4" style={{ color: C.muted }}>Purchases use your spendable XP only. Your earned XP, rankings, and goal progress stay intact. Pending rewards reserve XP; denied requests return it.</p>
 
       {msg && <div className="text-sm rounded-md px-3 py-2 mb-3" style={{ background: C.tint, color: C.indigo }}>{msg}</div>}
       {loading && <p className="text-sm" style={{ color: C.muted }}>Loading the store…</p>}

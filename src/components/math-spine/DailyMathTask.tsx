@@ -11,7 +11,8 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Sigma, ArrowRight, Star, CheckCircle2 } from 'lucide-react'
+import PracticeCompletionBadge from '@/components/PracticeCompletionBadge'
+import { ArrowRight, Star, CheckCircle2 } from 'lucide-react'
 
 interface DailyItem {
   spiralItemId: string
@@ -29,6 +30,8 @@ interface DailySnapshot {
 }
 
 export interface DailyMathStatus {
+  loading?: boolean
+  error?: boolean
   hasItem: boolean
   submitted: boolean
 }
@@ -48,6 +51,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 15000)
     setLoading(true); setError(null)
+    onStatusRef.current?.({ hasItem: false, submitted: false, loading: true })
     fetch('/api/math-spine/daily', { signal: controller.signal })
       .then(async r => {
         const d = await r.json().catch(() => null)
@@ -63,6 +67,7 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
         onStatusRef.current?.({ hasItem: Boolean(d.item), submitted: Boolean(d.alreadySubmitted) })
       })
       .catch(e => {
+        if (active) onStatusRef.current?.({ hasItem: false, submitted: false, error: true })
         if (active) setError(e instanceof Error && e.name === 'AbortError' ? 'The warm-up took too long to load. Please retry.' : e instanceof Error ? e.message : 'Could not load the warm-up. Please retry.')
       })
       .finally(() => { clearTimeout(timeout); if (active) setLoading(false) })
@@ -73,20 +78,15 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
   if (error) return <div className="space-y-3 rounded-lg border bg-card p-4"><p role="alert" className="text-sm">{error}</p><div className="flex flex-wrap gap-3"><Button onClick={() => setRetry(n => n + 1)}>Retry warm-up</Button><Link className="inline-flex min-h-11 items-center text-sm underline" href="/dashboard/math-spine/warmup">Open warm-up page</Link></div></div>
 
   return (
-    <Card className="apple-card overflow-hidden">
-      <CardHeader>
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-muted/80">
-              <Sigma className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <div>
-              <CardTitle className="text-foreground">Today&apos;s Math Warm-Up</CardTitle>
-              <CardDescription className="text-muted-foreground">
-                A quick rep on the math that carries every unit — your teacher rates your fluency.
-              </CardDescription>
-            </div>
-          </div>
+    <Card className="apple-card overflow-hidden py-4">
+      <CardHeader className="px-4">
+        <div className="flex items-start justify-between gap-3">
+          <CardTitle className="min-w-0 text-foreground">Today&apos;s Math Warm-Up</CardTitle>
+          <PracticeCompletionBadge state={alreadySubmitted ? 'done' : item ? 'todo' : 'empty'} label={alreadySubmitted ? 'Done for today' : item ? 'To do' : 'Not available yet'} />
+        </div>
+        <CardDescription className="text-muted-foreground">
+          A quick rep on the math that carries every unit — your teacher rates your fluency.
+        </CardDescription>
           {snapshot && <div className="hidden sm:flex items-center gap-3 text-right">
             <div>
               <div className="text-lg font-bold tracking-tight text-foreground tabular-nums">{snapshot.mathPointsEarned}</div>
@@ -99,9 +99,8 @@ export default function DailyMathTask({ onStatus }: { onStatus?: (s: DailyMathSt
               </span>
             </div>
           </div>}
-        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-4">
         {item ? (
           <div className="space-y-3">
             <div className="flex items-center gap-2">

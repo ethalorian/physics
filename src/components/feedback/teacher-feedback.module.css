@@ -1,0 +1,8 @@
+.featured { min-width: 0; padding: 24px; }
+.noteHeader { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 18px; }
+.noteIcon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; color: var(--foreground); background: color-mix(in oklab, var(--viz-down) 25%, var(--card)); }
+.note { border-left: 3px solid var(--viz-down); padding-left: 18px; }
+.note + .note { margin-top: 24px; }
+.message { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 18px; line-height: 1.65; font-weight: 500; color: var(--foreground); }
+.context { margin-top: 14px; font-size: 12px; line-height: 1.5; color: var(--muted-foreground); }
+@media (max-width: 540px) { .featured { padding: 20px; } .message { font-size: 16px; } }

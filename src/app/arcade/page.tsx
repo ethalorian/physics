@@ -153,7 +153,7 @@ export default function ArcadePage() {
         {data && (
           <div className="flex items-center gap-2 rounded-xl border px-4 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
             <Coins size={18} style={{ color: 'var(--primary)' }} />
-            <span className="font-semibold">{data.balance.balance.toLocaleString()} XP</span>
+            <span className="font-semibold">{data.balance.balance.toLocaleString()} XP to spend</span>
             <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>spendable</span>
           </div>
         )}

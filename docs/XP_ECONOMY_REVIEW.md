@@ -1,5 +1,8 @@
 # XP & Rewards Economy — Review
 
+> Current contract (2026-09-09): one XP currency with separate earned and spendable totals. Lifetime earnings drive all-time rankings; earnings within the selected period drive weekly rankings and daily goals. Purchases never subtract from either earned measure. Spendable XP is lifetime earnings minus committed purchases (including pending rewards). Denials restore spendable XP without creating new earnings. The review below is historical; its proposed separate Coins currency is not the selected design.
+
+
 Audited against the live PhysicsAPP database and `src/lib/points.ts` (the canonical economy). Bottom line: you're right — students earn far too fast, and the cause isn't the prices, it's that **raw game scores are spent like cash**.
 
 ---

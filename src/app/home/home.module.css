@@ -54,3 +54,166 @@
 .startLabel {
   color: var(--primary-foreground);
 }
+
+.checkIn {
+  position: relative;
+  display: grid;
+  grid-template-columns: 296.875px minmax(0, 1fr) 287.5px;
+  align-items: center;
+  gap: 30px;
+  padding: 30px;
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  background:
+    radial-gradient(ellipse at 5% 90%, color-mix(in oklab, var(--viz-up) 25%, transparent), transparent 42%),
+    radial-gradient(ellipse at 65% 0%, color-mix(in oklab, var(--viz-down) 18%, transparent), transparent 55%),
+    color-mix(in oklab, var(--primary) 9%, var(--card));
+}
+
+.portraitArea { min-width: 0; }
+.portraitLink { position: relative; display: flex; flex-direction: column; align-items: center; border-radius: 24px; }
+.portraitHalo { position: absolute; width: 281.25px; height: 281.25px; bottom: 40px; border-radius: 50%; background: color-mix(in oklab, var(--primary) 24%, var(--card)); border: 10px solid color-mix(in oklab, var(--primary) 10%, var(--card)); transform: rotate(-10deg); }
+.portraitHalo::before, .portraitHalo::after { content: ''; position: absolute; border-radius: 50%; background: var(--viz-down); width: 18px; height: 18px; right: -12px; top: 20px; }
+.portraitHalo::after { background: var(--viz-up); width: 12px; height: 12px; left: -10px; top: 110px; }
+.portrait { position: relative; z-index: 1; max-width: 100%; height: auto; transition: transform 180ms ease; }
+.portraitLink:hover .portrait { transform: translateY(-4px) rotate(-3deg); }
+.portraitPlaceholder { position: relative; display: flex; min-height: 287.5px; align-items: center; justify-content: center; flex-direction: column; gap: 12px; font-size: 16.25px; color: var(--foreground); }
+.editAvatar { position: relative; z-index: 2; display: flex; min-height: 55px; align-items: center; gap: 7px; padding: 10px 17.5px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); font-size: 15px; font-weight: 600; }
+.welcome { min-width: 0; }
+.streak { display: inline-flex; align-items: center; gap: 6px; padding: 11.25px 15px; border-radius: 999px; font-size: 16.25px; font-weight: 600; background: color-mix(in oklab, var(--viz-up) 22%, var(--card)); }
+.xpDisplay { min-width: 0; padding: 27.5px; border: 1px solid color-mix(in oklab, var(--reward) 70%, var(--border)); border-radius: 24px; color: var(--reward-foreground); background: color-mix(in oklab, var(--reward) 70%, var(--card)); box-shadow: 5px 6px 0 color-mix(in oklab, var(--reward) 25%, transparent); }
+.xpTotal { font-size: clamp(3.125rem, 5vw, 4.375rem); font-weight: 800; line-height: 1.15; letter-spacing: -.05em; margin: 12px 0 8px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.balance { display: flex; align-items: center; gap: 8px; margin-top: 22.5px; padding-top: 17.5px; min-height: 55px; border-top: 1px solid currentColor; font-size: 15px; }
+.balance > span { flex: 1; }
+.portraitLink:focus-visible, .balance:focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; }
+
+@media (max-width: 1023px) {
+  .checkIn { grid-template-columns: 250px minmax(0, 1fr); gap: 20px; }
+  .xpDisplay { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 0 20px; align-items: center; padding: 18px 22px; }
+  .xpTotal { grid-row: 2 / 4; margin: 6px 0 0; }
+  .xpDisplay > p:not(.xpTotal) { grid-column: 2; }
+  .balance { grid-column: 2; }
+  .portraitHalo { width: 234.375px; height: 234.375px; }
+}
+@media (max-width: 540px) {
+  .checkIn { grid-template-columns: 171.875px minmax(0, 1fr); gap: 16px 12px; padding: 18px 14px; border-radius: 24px; }
+  .portraitHalo { width: 159.375px; height: 159.375px; bottom: 40px; border-width: 5px; }
+  .portraitHalo::after { top: 60px; }
+  .portraitPlaceholder { min-height: 150px; font-size: 13.75px; }
+  .editAvatar { padding: 6px 8px; font-size: 13.75px; gap: 4px; }
+  .welcome h1 { font-size: 30px; }
+  .welcome nav { grid-column: 1 / -1; }
+  .xpDisplay { padding: 16px; gap: 0 12px; }
+  .xpDisplay > div { font-size: 15px; }
+  .xpDisplay > p:not(.xpTotal) { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) { .portrait { transition: none; } .portraitLink:hover .portrait { transform: none; } }
+
+.checkIn { grid-template-areas: 'portrait welcome xp' 'portrait shortcuts xp'; row-gap: 8px; }
+.portraitArea { grid-area: portrait; }
+.welcome { grid-area: welcome; align-self: end; }
+.shortcuts { grid-area: shortcuts; align-self: start; }
+.xpDisplay { grid-area: xp; }
+@media (max-width: 1023px) {
+  .checkIn { grid-template-areas: 'portrait welcome' 'shortcuts shortcuts' 'xp xp'; row-gap: 16px; }
+  .welcome { align-self: center; }
+  .shortcuts { justify-content: center; }
+  .activityGrid { display: flex; flex-direction: column; align-items: stretch; }
+  .mainColumn, .sideColumn { display: contents; }
+  .activityGrid section { margin-block: 0; }
+  .mainColumn > section:nth-child(1) { order: 1; }
+  .sideColumn > section:nth-child(1) { order: 2; }
+  .mainColumn > section:nth-child(2) { order: 3; }
+  .sideColumn > section:nth-child(2) { order: 5; }
+}
+
+.classIdentity { border: 1px solid var(--border); border-radius: 18px; padding: 14px 18px; background: var(--card); }
+.levelBadge { display: inline-flex; align-items: center; gap: 7px; padding: 8px 13px; border-radius: 999px; background: color-mix(in oklab, var(--primary) 14%, var(--card)); color: var(--foreground); border: 1px solid var(--primary); font-size: 13px; font-weight: 700; }
+.honorsBadge { background: var(--reward); color: var(--reward-foreground); border-color: color-mix(in oklab, var(--reward) 60%, var(--foreground)); }
+
+.spotlight { border: 1px solid var(--border); border-radius: 24px; padding: 20px; background: linear-gradient(145deg, color-mix(in oklab, var(--primary) 12%, var(--card)), color-mix(in oklab, var(--viz-down) 13%, var(--card))); }
+.avatarDeck { position: relative; height: 285px; margin: 12px 0 4px; }
+.playerCard { position: absolute; left: 50%; top: 14px; width: 158px; min-height: 239px; padding: 14px 12px; border-radius: 18px; border: 2px solid var(--border); display: flex; align-items: center; flex-direction: column; color: var(--foreground); background: var(--card); box-shadow: 0 8px 18px color-mix(in oklab, var(--foreground) 12%, transparent); transition: transform 220ms ease, box-shadow 220ms ease; cursor: pointer; }
+.playerCard[data-position='0'] { transform: translateX(-50%); z-index: 3; border-color: var(--primary); }
+.playerCard[data-position='1'] { transform: translateX(calc(-50% - 65px)) translateY(14px) rotate(-12deg); z-index: 1; background: color-mix(in oklab, var(--viz-up) 16%, var(--card)); }
+.playerCard[data-position='2'] { transform: translateX(calc(-50% + 65px)) translateY(14px) rotate(12deg); z-index: 2; background: color-mix(in oklab, var(--viz-down) 16%, var(--card)); }
+.playerCard:focus-visible { outline: 3px solid var(--primary); outline-offset: 4px; z-index: 4; }
+.cardRank { align-self: start; border-radius: 999px; background: var(--reward); color: var(--reward-foreground); padding: 2px 9px; font-size: 12px; font-weight: 700; }
+@media (max-width: 380px) { .playerCard { width: 142px; } .playerCard[data-position='1'] { transform: translateX(calc(-50% - 49px)) translateY(14px) rotate(-10deg); } .playerCard[data-position='2'] { transform: translateX(calc(-50% + 49px)) translateY(14px) rotate(10deg); } }
+@media (max-width: 1023px) { .sideColumn > section[aria-labelledby='spotlight-heading'] { order: 5; } .sideColumn > section#classroom-directory { order: 6; } }
+@media (prefers-reduced-motion: reduce) { .playerCard { transition: none; } }
+
+.coaching { overflow: hidden; border: 1px solid var(--primary); border-radius: 24px; background: var(--card); box-shadow: 0 8px 28px color-mix(in oklab, var(--primary) 10%, transparent); }
+.coachingHeader { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px; padding: 24px; background: var(--primary); color: var(--primary-foreground); }
+.coachingIcon { display: grid; place-items: center; width: 52px; height: 52px; flex-shrink: 0; border-radius: 17px; background: color-mix(in oklab, var(--primary-foreground) 16%, transparent); border: 1px solid color-mix(in oklab, var(--primary-foreground) 28%, transparent); }
+.coachingEyebrow { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 5px; }
+.coachingTitle { font-size: 24px; line-height: 1.2; font-weight: 600; letter-spacing: -.025em; }
+.coachingBody { display: grid; grid-template-columns: minmax(0,1.6fr) minmax(0,1fr); }
+.coachingAction { margin: 18px; padding: 22px; border: 1px solid color-mix(in oklab, var(--viz-up) 65%, var(--border)); border-radius: 18px; background: color-mix(in oklab, var(--viz-up) 13%, var(--card)); }
+.actionIcon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px; color: var(--foreground); background: color-mix(in oklab, var(--viz-up) 28%, var(--card)); }
+@media (max-width: 700px) { .coachingHeader { padding: 20px; gap: 16px; } .coachingTitle { font-size: 22px; } .coachingBody { grid-template-columns: minmax(0,1fr); } .coachingAction { margin-top: 0; } }
+
+/* The feedback card establishes the page's header → content → action rhythm.
+   Supporting areas use lighter palette tints so feedback remains the lead. */
+.sectionHeader { --section-tone: var(--primary); padding: 20px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--section-tone) 17%, var(--card)); }
+.sectionHeader[data-tone='sage'] { --section-tone: var(--viz-up); }
+.sectionHeader[data-tone='rose'] { --section-tone: var(--viz-down); }
+.sectionHeader[data-tone='gold'] { --section-tone: var(--reward); }
+.sectionHeadingRow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.sectionHeadingIcon { display: grid; place-items: center; flex-shrink: 0; width: 44px; height: 44px; border-radius: 14px; background: color-mix(in oklab, var(--section-tone) 29%, var(--card)); color: var(--foreground); border: 1px solid color-mix(in oklab, var(--section-tone) 65%, var(--border)); }
+.sectionEyebrow { font-size: 10px; line-height: 1.5; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--muted-foreground); margin-bottom: 3px; }
+.sectionTitle { font-size: 20px; line-height: 1.3; letter-spacing: -.025em; font-weight: 600; }
+.sectionDescription { margin-top: 12px; color: var(--muted-foreground); font-size: 13px; line-height: 1.6; }
+.lesson { border: 1px solid var(--border); border-radius: 24px; background: var(--card); }
+.lessonProgress { padding: 16px; border-radius: 14px; background: color-mix(in oklab, var(--primary) 7%, var(--card)); }
+.unitProgress { display: block; width: 100%; height: 7px; margin-top: 12px; border: 0; border-radius: 999px; overflow: hidden; appearance: none; background: var(--secondary); }
+.unitProgress::-webkit-progress-bar { background: var(--secondary); }
+.unitProgress::-webkit-progress-value { background: var(--primary); border-radius: 999px; }
+.unitProgress::-moz-progress-bar { background: var(--primary); border-radius: 999px; }
+.practice { padding: 0 16px 16px; border: 1px solid var(--border); border-radius: 24px; background: color-mix(in oklab, var(--viz-up) 6%, var(--card)); }
+.practice > .sectionHeader { margin: 0 -16px 16px; border-radius: 23px 23px 0 0; }
+.practice > [data-slot='card'] { padding: 0; border: 1px solid var(--border); background: var(--card); box-shadow: none; }
+.practice > [data-slot='card'] > [data-slot='card-header'] { padding: 18px; background: color-mix(in oklab, var(--viz-up) 13%, var(--card)); border-bottom: 1px solid var(--border); }
+.practice > [data-slot='card'] > [data-slot='card-content'] { padding: 0 18px 18px; }
+.practice > section { border: 1px solid var(--border); padding: 0 18px 18px; overflow: hidden; background: var(--card); }
+.practice > section > div:first-child { margin: 0 -18px 16px; padding: 18px; background: color-mix(in oklab, var(--viz-down) 16%, var(--card)); border-bottom: 1px solid var(--border); }
+.practice > section > a { padding: 16px; background: color-mix(in oklab, var(--viz-down) 5%, var(--card)); }
+.rewards { padding: 0 16px 16px; border: 1px solid var(--border); border-radius: 24px; }
+.rewards > .sectionHeader { margin: 0 -16px 16px; border-radius: 23px 23px 0 0; }
+.spotlight { border-radius: 24px; padding: 0 20px 20px; }
+.spotlight > .sectionHeader { margin: 0 -20px 16px; border-radius: 23px 23px 0 0; }
+.directory { border: 1px solid var(--border); border-radius: 24px; overflow: hidden; background: var(--card); }
+.directoryGroup { border: none; padding: 12px; }
+.directoryGroup > h3 { padding: 4px 6px 8px; }
+.directoryIcon { width: 36px; height: 36px; border-radius: 12px; }
+.directoryLink { display: flex; min-height: 44px; align-items: start; gap: 12px; border-radius: 12px; padding: 10px 6px; transition: background 150ms ease; }
+.directoryLink:hover { background: color-mix(in oklab, var(--group-accent) 15%, var(--card)); }
+.directoryLink:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+@media (max-width: 540px) { .sectionHeader { padding: 18px; } .sectionTitle { font-size: 18px; } .sectionHeadingRow { column-gap: 10px; row-gap: 12px; } .sectionHeadingRow > [role='status'] { margin-left: auto; } }
+@media (prefers-reduced-motion: reduce) { .directoryLink { transition: none; } }
+
+/* Keep the check-in typography and controls proportional to the portrait. */
+.welcome h1 { font-size: 40px; overflow-wrap: anywhere; }
+.welcome > p:not(:first-child), .welcome a, .xpDisplay > div, .xpDisplay > p:not(.xpTotal) { font-size: 17.5px; }
+.welcome > p:first-child { font-size: 12.5px; }
+.welcome svg, .editAvatar svg, .balance svg, .xpDisplay > div svg { flex-shrink: 0; width: 1.25em; height: 1.25em; }
+.welcome a, .shortcuts > a { min-height: 55px; }
+.shortcuts { gap: 10px; }
+.shortcuts > a { padding-inline: 20px; font-size: 17.5px; }
+.shortcuts > a svg { width: 20px; height: 20px; }
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .checkIn { grid-template-columns: 296.875px minmax(0, 1fr); grid-template-areas: 'portrait welcome' 'shortcuts shortcuts' 'xp xp'; row-gap: 20px; }
+  .welcome { align-self: center; }
+  .shortcuts { justify-content: center; }
+}
+@media (max-width: 540px) {
+  .checkIn { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'portrait' 'welcome' 'shortcuts' 'xp'; row-gap: 20px; }
+  .portraitArea { width: 171.875px; justify-self: center; }
+  .welcome { text-align: center; }
+  .welcome h1 { font-size: 30px; }
+  .welcome > div { justify-content: center; }
+  .xpDisplay { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 20px; }
+  .xpTotal { grid-row: auto; margin: 0; }
+  .xpDisplay > p:not(.xpTotal), .balance { grid-column: 1; }
+  .balance { margin-top: 0; }
+}
