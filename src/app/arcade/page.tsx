@@ -211,7 +211,7 @@ export default function ArcadePage() {
         <Link href="/arcade/tape-measure" className="mt-3 flex flex-wrap items-center justify-between gap-4 rounded-xl border p-4 transition-colors hover:bg-white/5" style={{ borderColor: 'var(--border)' }}>
           <span>
             <span className="block text-lg font-bold">Tape Workshop</span>
-            <span className="mt-1 block text-sm" style={{ color: 'var(--muted-foreground)' }}>Pull out a tape, measure shop materials, and connect fractions with decimals. Practice halves through sixteenths or decimal tenths.</span>
+            <span className="mt-1 block text-sm" style={{ color: 'var(--muted-foreground)' }}>Learn the graduations, align zero, mark a cut, and measure from nonzero starts. Explore inch fractions, decimal inches, and metric scales.</span>
           </span>
           <span className="shrink-0 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: '#eeb347', color: '#16252c' }}>Enter workshop →</span>
         </Link>
