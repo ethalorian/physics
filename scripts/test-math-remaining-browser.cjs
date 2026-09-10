@@ -10,7 +10,7 @@ module.exports=async function({page,base,out,remaining,scores,fail,deny,plays}){
    // One real swipe fills a controlled board with no legal merges left.
    await game.evaluate(()=>{const s=window.__mathTest.state();s.board=Array.from({length:16},(_,i)=>i===15?null:mkTile(s.mode,2+((i>=12?0:Math.floor(i/4))+i%4)%2));window.__mathTest.render()});
    await game.locator('body').press('ArrowRight');await frame.locator('#auditOv.show').waitFor();
-   const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>c.ok));fail();await frame.locator('.achip').nth(k).click();
+   fail();for(let audit=0;audit<3;audit++){await game.waitForFunction(a=>window.__mathTest.state().right+window.__mathTest.state().wrong===a&&document.querySelector('#auditOv').classList.contains('show'),audit);const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>c.ok));await frame.locator('.achip').nth(k).click();await frame.locator('#auditOv.show').waitFor({state:'hidden'});}
   }else if(slug==='expression-crush'){
    // Known boards exercise nine round transitions and all three phases.
    // Outcomes are scored by production handlers; tests never assign score.
@@ -48,17 +48,17 @@ module.exports=async function({page,base,out,remaining,scores,fail,deny,plays}){
   if(slug==='expression-crush')await game.evaluate(()=>window.__mathTest.click([window.__mathTest.state().round.grid[0].id]));
   if(slug==='mathle')await game.evaluate(()=>window.__mathTest.press('1'));
   await frame.locator('#finishBtn').click();
-  if(slug==='fusion'){await frame.locator('#auditOv.show').waitFor();const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>c.ok));await frame.locator('.achip').nth(k).click();}
+  if(slug==='fusion'){for(let audit=0;audit<3;audit++){await frame.locator('#auditOv.show').waitFor();const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>c.ok));await frame.locator('.achip').nth(k).click();await frame.locator('#auditOv.show').waitFor({state:'hidden'});}}
   await frame.locator('#overOv:not(.hidden)').waitFor();await game.waitForFunction(()=>window.__mathTest.bridge.playId===null);
   if(slug==='mathle')assert.equal(await game.evaluate(()=>window.__mathTest.state().failedCt),1);
   assert.match(await frame.locator('#overOv h1').innerText(),/RUN COMPLETE/);assert.match(await frame.locator('#xpLine').innerText(),/4 XP banked/);
-  await frame.locator('#menuBtn').click();deny();await frame.locator('#startOv .bigbtn').first().click();await frame.locator('#mathConnection').filter({hasText:'Could not start'}).waitFor();assert.equal(await game.evaluate(()=>window.__mathTest.state().running),false);
+  await frame.locator('#menuBtn').click();deny();await frame.locator('#startOv .bigbtn').first().click();await frame.locator('#mathConnection').filter({hasText:'Try again'}).waitFor();assert.equal(await game.evaluate(()=>window.__mathTest.state().running),false);
   const before=plays();await frame.locator('#practiceMode').check();await frame.locator('#startOv .bigbtn').first().click();await game.waitForFunction(()=>window.__mathTest.state().running);assert.equal(plays(),before);
   if(slug==='expression-crush')await game.evaluate(()=>window.__mathTest.click(window.__mathTest.state().round.grid.slice(0,2).map(t=>t.id)));
   await game.waitForFunction(()=>!window.__mathTest.busy());
   const scoreCount=scores.length;
   await frame.locator('#finishBtn').click();
-  if(slug==='fusion'){await frame.locator('#auditOv.show').waitFor();const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>!c.ok));await frame.locator('.achip').nth(k).click();}
+  if(slug==='fusion'){for(let audit=0;audit<3;audit++){await frame.locator('#auditOv.show').waitFor();const k=await game.evaluate(()=>window.__audit.chips.findIndex(c=>!c.ok));await frame.locator('.achip').nth(k).click();await frame.locator('#auditOv.show').waitFor({state:'hidden'});}}
   await frame.locator('#overOv:not(.hidden)').waitFor();assert.match(await frame.locator('#xpLine').innerText(),/Practice complete/);assert.equal(scores.length,scoreCount);
   for(let door=0;door<3;door++){
    await page.setViewportSize({width:390,height:844});await page.goto(base+'/games/'+file+'.html');await page.locator('#practiceMode').check();await page.locator('#startOv .bigbtn').nth(door).click();

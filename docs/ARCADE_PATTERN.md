@@ -39,7 +39,7 @@ leaderboard should hook them *before* the grind. Eligibility is simply
 
 **Practice is free by design.** A game opened at its raw URL
 (`/games/whatever.html`) has no bridge, gets no coin reply, and falls back
-to practice mode after ~900 ms: fully playable, never ranked. Students pay
+to practice mode when the bridge is unavailable: fully playable, never ranked. Students pay
 for the *right to rank*, not the right to play. Staff coins are free and
 their plays never appear on student boards (`meta.staff`).
 
@@ -104,9 +104,7 @@ are ranked as usual, and when a run finishes the player page calls
 `POST /api/arcade/payout { playId }` — the deliberate `economy_point_grants`
 path this doc prescribes, never the score route. The payout is
 **mastery-weighted**: `floor(min(25, solved × tier × accuracy²))`, zero below
-50% accuracy, daily cap **75** across all free cabinets — deliberately higher
-than the vocab cap (25/day in `points.ts`) because math remediation is the
-priority earner. Idempotent via `dedupe_key = 'arcade-payout:<playId>'`.
+50% accuracy, shared Physics + Math daily cap **10 XP**, or **15 XP for Honors**. Idempotent via `dedupe_key = 'arcade-payout:<playId>'`.
 Games attach a whitelisted `stats` object to their `arcade:score` posts; the
 score route stores it on `meta`, the payout route reads it.
 
@@ -124,3 +122,9 @@ score route stores it on `meta`, the payout route reads it.
 - **Leaderboards are alias-first** (student-chosen alias, fallback real
   name) — same peer-facing policy as `/api/arcade/hub` and the main
   leaderboard.
+
+## Standards-based math missions
+
+The seven React missions at `/arcade/missions` supplement the HTML cabinets and cover all 13 local Math Spine competencies. They support six-step practice, delayed checks, and daily challenges; assisted work never enters ranked boards. The server generates and grades tasks, records first-attempt evidence, and awards up to 3 XP under the existing shared daily cap. Teacher assignments and formative feedback do not automatically change mastery ratings.
+
+Mathle uses one atomic ranked claim per student per UTC day; repeat practice remains free. Apply `20260910005836_math_missions.sql` before releasing the application changes. See [implementation and verification](math-missions-verification/README.md).

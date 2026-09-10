@@ -223,7 +223,7 @@
     <div class="statgrid">
       <div class="stat"><div class="lab">Final Score</div><div class="val" id="fScore" style="color:var(--cyan)">0</div></div>
       <div class="stat"><div class="lab">Merges</div><div class="val" id="fSolved" style="color:var(--lime)">0</div></div>
-      <div class="stat"><div class="lab">Audit Accuracy</div><div class="val" id="fAcc" style="color:var(--amber)">0%</div></div>
+      <div class="stat"><div class="lab">Equivalence checks</div><div class="val" id="fAcc" style="color:var(--amber)">0%</div></div>
       <div class="stat"><div class="lab">Best Tile</div><div class="val" id="fBest" style="color:var(--mag); font-size:15px;">—</div></div>
     </div>
     <div id="xpLine"></div>
@@ -648,10 +648,9 @@ if (typeof document !== "undefined") (function(){
     if(S.ending) return;
     S.ending=true;
     S.running=false; busy=true;
-    // every run produces accuracy data: if no audit fired yet, one final
-    // audit decides whether this run banks XP at all
-    if(S.right+S.wrong===0){
-      toast("⚡ FINAL AUDIT — pass it to bank this run's XP");
+    // A small set of checks provides evidence separately from puzzle merges.
+    while(S.right+S.wrong<3){
+      toast("Equivalence check "+(S.right+S.wrong+1)+" of 3 — take your time.");
       await wait(900);
       await runAudit();
     }
@@ -677,7 +676,7 @@ if (typeof document !== "undefined") (function(){
     const acc=audits>0? Math.round(100*S.right/audits) : 100;
     $("fScore").textContent=S.score;
     $("fSolved").textContent=S.merges;
-    $("fAcc").textContent=audits>0? acc+"%" : "—";
+    $("fAcc").textContent=audits>0? S.right+" / "+audits+" checks" : "No checks";
     $("fBest").textContent=S.bestTier>=0? tierLabel(S.mode,S.bestTier) : "—";
     $("overQuip").textContent=pick([
       "0.5 and 50% were right next to each other. Tragic.",

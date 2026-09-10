@@ -214,6 +214,7 @@
     #chips{grid-area:chips; align-self:stretch; grid-auto-rows:1fr;}
     .chip{min-height:84px;}
   }
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
@@ -611,13 +612,22 @@ if (typeof document !== "undefined") (function(){
     for(let i=0;i<S.junk;i++){ const d=document.createElement("div"); d.className="junkrow"; stackEl.appendChild(d); }
   }
 
+  function practiceReview(message,label,done){
+    locked=true;
+    let panel=document.getElementById("practiceReview");if(panel)panel.remove();
+    panel=document.createElement("div");panel.id="practiceReview";panel.setAttribute("role","status");
+    panel.style.cssText="position:absolute;left:5%;right:5%;bottom:16px;z-index:10;background:#10283b;color:white;padding:18px;border:1px solid #78ffcf;border-radius:14px;font:18px/1.5 system-ui";
+    const text=document.createElement("p");text.textContent=message;panel.append(text);
+    const button=document.createElement("button");button.textContent=label;button.style.cssText="padding:12px 18px;margin-top:12px;background:#78ffcf;color:#102030;border:0;border-radius:9px;font:700 17px system-ui";
+    button.onclick=()=>{panel.remove();done();};panel.append(button);boardEl.append(panel);button.focus();
+  }
   function spawn(){
     S.needsSpawn=false;
     S.cur = S.next || gen();
     S.next = gen();
     S.cur.i=0; S.cur.born=performance.now();
     S.cur.chips = buildChips(S.cur.steps[0]);
-    S.y = -cardEl.offsetHeight - 10;
+    S.y = untimed ? 24 : -cardEl.offsetHeight - 10;
     nextEqEl.textContent = (S.next.banner? S.next.banner+" · ":"") + S.next.states[0];
     renderCard(); renderChips(); place();
   }
@@ -674,6 +684,7 @@ if (typeof document !== "undefined") (function(){
     if(!S || !S.running || locked) return;
     const run=S;
     const chip = S.cur.chips[i], btn=chips[i];
+    if(untimed && !chip.ok){ S.wrong++; practiceReview(chip.tip,"Try again",()=>{locked=false;renderChips();}); hud(); return; }
     if(chip.ok){
       S.right++; S.streak++; S.bestStreak=Math.max(S.bestStreak,S.streak);
       S.score += 10*S.level*mult();
@@ -718,7 +729,7 @@ if (typeof document !== "undefined") (function(){
       if(rows.length){ const r=rows[rows.length-1]; r.classList.add("melt"); setTimeout(()=>renderStack(),280); }
       comboPop("🔥 STACK MELT!");
     }
-    if(S.sinceLvl>=6){
+    if(S.sinceLvl>=6 && !untimed){
       S.sinceLvl=0; S.level++; sLvl();
       sweepEl.classList.remove("go"); void sweepEl.offsetWidth; sweepEl.classList.add("go");
       comboPop("⚡ LEVEL "+S.level+" ⚡");
@@ -726,7 +737,8 @@ if (typeof document !== "undefined") (function(){
     ARCADE.reportScore(false);
 
     locked=true;
-    setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
+    if(untimed)practiceReview("Answer: "+S.cur.states[S.cur.states.length-1],"Next problem",()=>{if(S!==run)return;locked=false;if(S.running&&S.needsSpawn)spawn();});
+    else setTimeout(()=>{ if(S!==run)return;locked=false; if(S.running&&S.needsSpawn) spawn(); },330);
     hud();
   }
 
@@ -744,13 +756,14 @@ if (typeof document !== "undefined") (function(){
     const dt=Math.min(.05,(t-lastT)/1000); lastT=t;
     if(!locked){
       if(!untimed)S.y += speed()*dt; place();
-      if(S.y>=landY()) land();
+      if(!untimed&&S.y>=landY()) land();
     }
     raf=requestAnimationFrame(tick);
   }
 
   function start(lv){
     if(!ARCADE.canStart())return;
+    document.getElementById("practiceReview")?.remove();
     untimed=$("untimedPractice").checked;locked=false;
     S=freshState(lv);
     $("startOv").classList.add("hidden");

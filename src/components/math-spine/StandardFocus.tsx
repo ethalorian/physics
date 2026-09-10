@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+import {missionForCode,missionHref} from '@/lib/math-missions/catalog'
 import { useEffect, useRef } from 'react'
 import { Target } from 'lucide-react'
 import { useTranslator } from '@/lib/math-translate-store'
@@ -39,6 +41,7 @@ export default function StandardFocus({ code, statement, mode = 'assessment', la
       <div className={styles.standardHeading}><span>{t(mode === 'practice' ? 'Practicing now' : mode === 'submitted' ? 'Submitted for assessment' : 'Assessing now')}</span><span className={styles.standardCode}>{code}</span><span>{t('Mathematics')}</span></div>
       <p>{t(statement)}</p>
       <span className={styles.standardNote}>{t(mode === 'practice' ? 'Practice only · this check does not change your teacher rating.' : 'Your teacher assesses this standard from your work and explanation.')}</span>
+    {mode!=="assessment"&&missionForCode(code)&&<Link className="inline-flex min-h-11 items-center text-sm underline" href={missionHref(code)}>Practice this skill in a math mission →</Link>}
     </div>
   </section>
 }

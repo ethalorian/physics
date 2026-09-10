@@ -34,5 +34,7 @@ for(let lv=1;lv<=8;lv++)for(let j=0;j<80;j++){
 }
 const graphs=load('graphs-slope-sniper');assert.match(graphs('genArea().fig'),/>6<\/text>/);assert.match(graphs('genLinz().states[0]'),/origin/);
 const crush=load('logic-expression-crush');assert.equal(crush("evalChain([2,3,4],['+','×'],true)"),14);assert.equal(crush("evalChain([8,2,2],['÷','×'],true)"),8);assert.equal(crush("evalChain([2,3,4],['+','×'],false)"),20);
-console.log('PASS Fusion equivalence/doubling, 200 deterministic Mathle puzzles, Expression Crush order of operations');
+assert.equal(crush("evaluationTrace([mkNum(2),mkOp('+'),mkNum(3),mkOp('×'),mkNum(4)])"),'2 + 3 × 4 → 2 + 12 → 14');
+assert.equal(crush("evaluationTrace([mkNum(8),mkOp('÷'),mkNum(2),mkOp('×'),mkNum(2)])"),'8 ÷ 2 × 2 → 4 × 2 → 8');
+console.log('PASS Fusion equivalence/doubling, 200 deterministic Mathle puzzles, Expression Crush order of operations and evaluation traces');
 if(failures.length){console.error('INVALID QUESTIONS',failures.length,JSON.stringify(failures.slice(0,8),null,2));process.exitCode=1}else console.log('All sampled math logic checks passed');

@@ -1,0 +1,371 @@
+:root {
+  color-scheme: dark;
+  --bg:#0b1420;
+  --panel:#142231;
+  --line:#304253;
+  --text:#eff5fc;
+  --muted:#afc0d1;
+  --mint:#71efd0;
+  --amber:#ffd078;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 system-ui, sans-serif;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 5%;
+  border-bottom: 1px solid var(--line);
+}
+header strong {
+  letter-spacing: .15em;
+}
+header strong span {
+  color: var(--mint);
+}
+a {
+  color: var(--muted);
+}
+main {
+  max-width: 1240px;
+  margin: auto;
+  padding: 28px;
+}
+.mode,
+.topline,
+.eyebrow {
+  font-size: 14px;
+  color: var(--muted);
+}
+.topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  letter-spacing: .06em;
+}
+nav {
+  display: flex;
+  gap: 8px;
+  margin: 18px 0 28px;
+  flex-wrap: wrap;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  background: #1d3042;
+  border: 1px solid #466076;
+  color: var(--text);
+  border-radius: 9px;
+  padding: 10px 16px;
+  cursor: pointer;
+  min-height: 44px;
+}
+button:hover {
+  border-color: var(--mint);
+  background: #264156;
+}
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 3px;
+}
+button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+nav button {
+  min-width: 44px;
+  padding: 8px;
+}
+nav button[aria-current=step] {
+  background: var(--mint);
+  color: #08231c;
+  border-color: var(--mint);
+}
+nav button.done {
+  border-color: var(--mint);
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 26px;
+}
+.work,
+aside {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--panel);
+  padding: 28px;
+}
+h1 {
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.15;
+  margin: 8px 0 16px;
+  letter-spacing: -.03em;
+}
+h2 {
+  font-size: 18px;
+  margin: 26px 0 8px;
+}
+p {
+  margin: 10px 0 18px;
+}
+.target {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding: 18px;
+  background: #0b1926;
+  border-radius: 12px;
+  margin: 24px 0;
+}
+.target span {
+  color: var(--muted);
+  font-size: 13px;
+}
+.target strong {
+  display: block;
+  color: var(--mint);
+  font-size: 23px;
+  font-family: ui-monospace, monospace;
+}
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+.bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.factor {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  font-family: ui-monospace, monospace;
+}
+.fraction > span:first-child {
+  border-bottom: 1px solid currentColor;
+  padding: 0 5px 3px;
+}
+.fraction > span:last-child {
+  padding: 3px 5px 0;
+}
+.chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 18px 12px;
+  border: 1px dashed #557086;
+  border-radius: 12px;
+  min-height: 100px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.tileActions {
+  display: flex;
+  gap: 4px;
+}
+.tileActions button {
+  font-size: 13px;
+  padding: 4px 9px;
+  min-height: 36px;
+}
+.expression {
+  font-size: 18px;
+}
+.cancel {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  color: var(--mint);
+}
+.result {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  color: var(--muted);
+}
+.result strong {
+  color: var(--amber);
+  font-family: ui-monospace, monospace;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+.result button {
+  margin-left: auto;
+  font-size: 14px;
+}
+.answerRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+input {
+  width: 160px;
+  min-width: 0;
+  background: #071421;
+  color: white;
+  border: 1px solid #597185;
+  border-radius: 9px;
+  padding: 10px;
+}
+.primary {
+  background: var(--mint);
+  color: #07251c;
+  border-color: var(--mint);
+  font-weight: 700;
+}
+.primary:hover {
+  background: #a0ffe5;
+  color: #07251c;
+}
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.hint {
+  padding: 14px;
+  border-left: 3px solid var(--amber);
+  color: var(--amber);
+}
+#feedback:not(:empty) {
+  padding: 18px;
+  border-radius: 10px;
+  background: #092b2b;
+  margin-top: 18px;
+}
+#feedback.error {
+  background: #392c1d;
+  color: #ffe0a1;
+}
+aside {
+  align-self: start;
+  background: #10202d;
+}
+.eyebrow {
+  letter-spacing: .13em;
+  color: var(--mint);
+}
+#scene {
+  margin: 22px 0;
+}
+.unitHero {
+  font-size: 52px;
+  font-weight: 700;
+  color: var(--mint);
+  font-family: ui-monospace, monospace;
+}
+.meter {
+  height: 26px;
+  border: 1px solid #577285;
+  border-radius: 5px;
+  position: relative;
+  margin: 15px 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(10% - 1px),
+      #577285 10%);
+}
+.fill {
+  height: 100%;
+  width: 0;
+  background: var(--mint);
+  opacity: .8;
+  transition: width .6s;
+}
+.axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--muted);
+}
+.rule {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  margin-top: 28px;
+}
+.rule p,
+details {
+  font-size: 14px;
+  color: var(--muted);
+}
+summary {
+  cursor: pointer;
+  padding: 10px 0;
+  min-height: 44px;
+}
+.choice {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin: 12px 0;
+  padding: 15px;
+}
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 25px;
+  font-size: 14px;
+  color: var(--muted);
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    display: block;
+  }
+  .mode {
+    display: none;
+  }
+  main {
+    padding: 18px;
+  }
+  .work,
+  aside {
+    padding: 20px;
+  }
+  footer {
+    flex-direction: column;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

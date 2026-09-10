@@ -160,6 +160,8 @@
     #targetBar{grid-area:target;}
     #boardWrap{grid-area:board;}
   }
+.tile:focus-visible{outline:4px solid white;outline-offset:2px;z-index:4}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -182,6 +184,7 @@
   </div>
 
   <div id="boardWrap">
+  <p id="evaluationTrace" role="status" style="font-size:14px;line-height:1.5;color:var(--dim);overflow-wrap:anywhere">Select a tile, then an adjacent tile. Escape cancels selection.</p>
 
   <div id="board">
       <div id="vig"></div>
@@ -278,6 +281,16 @@ function evalChain(nums, ops, pemdas){
     acc = ops[i]==="+"?acc+b : ops[i]==="−"?acc-b : ops[i]==="×"?acc*b : acc/b;
   }
   return acc;
+}
+
+function evaluationTrace(tiles){
+  const p=parseWin(tiles);if(!p)return tiles.map(t=>t?.l||'').join(' ');
+  const N=p.nums.slice(),O=p.ops.slice();
+  const show=()=>N.map((n,i)=>String(Number(n.toFixed(6)))+(O[i]?' '+O[i]+' ':'')).join('');
+  const steps=[show()];
+  for(let i=0;i<O.length;){if(O[i]==='×'||O[i]==='÷'){N.splice(i,2,O[i]==='×'?N[i]*N[i+1]:N[i]/N[i+1]);O.splice(i,1);steps.push(show());}else i++;}
+  while(O.length){N.splice(0,2,O[0]==='+'?N[0]+N[1]:N[0]-N[1]);O.shift();steps.push(show());}
+  return steps.join(' → ');
 }
 
 /* tiles → {nums, ops} if alternating num-op-num…, else null */
@@ -535,6 +548,13 @@ if (typeof document !== "undefined") (function(){
     n=document.createElement("div");
     n.className="tile"+(t.k==="o"?" op":t.k==="g"?" given":t.k==="s"?" sym":"");
     n.textContent=t.l;
+    n.tabIndex=0;n.setAttribute("role","button");n.setAttribute("aria-label","Tile "+t.l+". Enter to select; arrows to move; Escape to deselect.");
+    n.addEventListener("keydown",ev=>{
+      if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();onTilePress(t.id);}
+      if(ev.key==="Escape"){if(selId!==null)nodes.get(selId)?.classList.remove("sel");selId=null;}
+      const delta={ArrowLeft:-1,ArrowRight:1,ArrowUp:-C,ArrowDown:C}[ev.key];
+      if(delta){ev.preventDefault();const i=S.round.grid.findIndex(v=>v?.id===t.id),j=i+delta;if(j>=0&&j<R*C&&(Math.abs(delta)!==1||Math.floor(i/C)===Math.floor(j/C)))nodes.get(S.round.grid[j]?.id)?.focus();}
+    });
     n.style.width=TS+"px"; n.style.height=TS+"px";
     n.style.fontSize=(t.l.length>2? TS*.34 : TS*.44)+"px";
     n.addEventListener("pointerdown",ev=>{ ev.preventDefault(); onTilePress(t.id); });
@@ -628,6 +648,7 @@ if (typeof document !== "undefined") (function(){
       const {traps}=findClears(g,R,C,S.round);
       if(traps.length){
         S.wrong++;
+        $("evaluationTrace").textContent="Multiply and divide first: "+evaluationTrace(traps[0].cells.map(i=>g[i]));
         traps[0].cells.forEach(ci=>{ const t=g[ci]; if(t){ const n=nodes.get(t.id); n.classList.remove("trap"); void n.offsetWidth; n.classList.add("trap"); } });
         sBad();
         toast("❌ Left-to-right says yes — PEMDAS says "+traps[0].correct+". × and ÷ go first!");
@@ -645,6 +666,7 @@ if (typeof document !== "undefined") (function(){
     const g=S.round.grid;
     const {hits}=findClears(g,R,C,S.round);
     if(hits.length===0) return false;
+    $("evaluationTrace").textContent="Valid expression: "+evaluationTrace(hits[0].map(i=>g[i]));
     const cells=new Set(); hits.forEach(w=>w.forEach(i=>cells.add(i)));
     // score & fx
     const gain=(40 + depth*25) * (S.round.phase==="A"?1:S.round.phase==="B"?2:3) * multNow();

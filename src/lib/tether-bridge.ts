@@ -18,10 +18,17 @@ export function createTetherBridge(options: BridgeOptions) {
   const finals = new Map<string, Record<string, unknown>>()
   const reply = (message: Record<string, unknown>) => options.reply({ protocol: 2, ...message })
   async function post(path: string, body: Record<string, unknown>): Promise<Record<string, unknown>> {
-    const response = await fetcher(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    const data = await response.json().catch(() => ({}))
-    if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.')
-    return data
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 8000)
+    try {
+      const response = await fetcher(path, { method: 'POST', signal: controller.signal, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Could not save. Please retry.')
+      return data
+    } catch (error) {
+      if (controller.signal.aborted) throw new Error('Connection timed out. Try again or choose practice.')
+      throw error
+    } finally { clearTimeout(timeout) }
   }
   async function handle(message: Record<string, unknown>): Promise<void> {
     if (!['tether', 'flywheel', 'descent', 'push', 'cascade', 'inverse-blitz', 'magnitude', 'scale-storm', 'powers-of-ten', 'slope-sniper', 'fusion', 'expression-crush', 'mathle'].includes(options.slug) || message.protocol !== 2 || message.source !== `${options.slug}-arcade` || typeof message.requestId !== 'string' || message.requestId.length > 120) return

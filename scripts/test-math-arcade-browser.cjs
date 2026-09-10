@@ -2,7 +2,7 @@
 // into served HTML to observe state and exercise timeout boundaries; never shipped.
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict'),esbuild=require('esbuild');
 const {chromium}=require('/Users/craigantocci/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const root=path.resolve(__dirname,'..'),out=path.join(root,'docs/math-arcade-verification');fs.mkdirSync(out,{recursive:true});
+const root=path.resolve(__dirname,'..'),out=process.env.MATH_TEST_OUT||path.join(root,'docs/math-arcade-verification');fs.mkdirSync(out,{recursive:true});
 const games={'inverse-blitz':'algebra-inverse-blitz','magnitude':'numbersense-magnitude','scale-storm':'proportion-scale-storm','powers-of-ten':'quantities-powers-of-ten','slope-sniper':'graphs-slope-sniper'};
 const remaining={'fusion':'equivalence-fusion','expression-crush':'logic-expression-crush','mathle':'daily-mathle'};
 let browser,server;
@@ -43,7 +43,7 @@ let browser,server;
   const timedRecords=await game.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>k.startsWith('hs_')||k.startsWith('ib_hs_'))));
   await frame.locator('#menuBtn').click();const before=plays;await frame.locator('#untimedPractice').check();await frame.locator('#startOv .bigbtn').first().click();
   await game.waitForFunction(()=>window.__mathTest.state().running);const y=await game.evaluate(()=>window.__mathTest.state().y);await page.waitForTimeout(250);assert.equal(await game.evaluate(()=>window.__mathTest.state().y),y);assert.equal(plays,before);
-  assert.equal(await game.evaluate(()=>window.__mathTest.state().wrong),0);for(let i=0;i<2;i++){const k=await game.evaluate(()=>window.__mathTest.state().cur.chips.findIndex(c=>c.ok));await page.keyboard.press(String(k+1));await page.waitForTimeout(400);}
+  assert.equal(await game.evaluate(()=>window.__mathTest.state().wrong),0);for(let i=0;i<2;i++){const k=await game.evaluate(()=>window.__mathTest.state().cur.chips.findIndex(c=>c.ok));await page.keyboard.press(String(k+1));await page.waitForTimeout(400);await frame.getByRole('button',{name:'Next problem',exact:true}).click();assert(await game.evaluate(()=>{const b=document.querySelector('#board').getBoundingClientRect(),q=document.querySelector('#card .eq').getBoundingClientRect();return q.top>=b.top&&q.bottom<=b.bottom}),slug+' next practice question visible');}
   await frame.locator('#pauseBtn').click();await frame.locator('#quitBtn').click();assert.match(await frame.locator('#xpLine').innerText(),/Untimed practice complete/);
   assert.deepEqual(await game.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>k.startsWith('hs_')||k.startsWith('ib_hs_')))),timedRecords);
   // Practice must not alter the timed local record.
@@ -53,7 +53,7 @@ let browser,server;
   await page.screenshot({path:path.join(out,slug+'-mobile.png')});await page.locator('#pauseBtn').click();await page.locator('#quitBtn').click();
   await page.setViewportSize({width:1366,height:1050});console.log('PASS',slug,'ranked delay, solve/pause/resume, wrong-answer guard, missed problem, final retry, fresh untimed run, mobile controls');
  }
- deny=true;await page.goto(base+'/arcade/magnitude');const deniedFrame=page.frameLocator('iframe');await deniedFrame.locator('#startOv .bigbtn').first().click();await deniedFrame.locator('#mathConnection').filter({hasText:'Could not start'}).waitFor();
+ deny=true;await page.goto(base+'/arcade/magnitude');const deniedFrame=page.frameLocator('iframe');await deniedFrame.locator('#startOv .bigbtn').first().click();await deniedFrame.locator('#mathConnection').filter({hasText:'Try again'}).waitFor();
  const deniedGame=page.frames().find(f=>f.url().endsWith('numbersense-magnitude.html'));assert.equal(await deniedGame.evaluate(()=>window.__mathTest.state().running),false);assert.equal(await deniedGame.evaluate(()=>window.__mathTest.bridge.playId),null);
  await deniedFrame.locator('#untimedPractice').check();await deniedFrame.locator('#startOv .bigbtn').first().click();await deniedGame.waitForFunction(()=>window.__mathTest.state().running);console.log('PASS denied ranked start does not silently start practice; deliberate practice remains available');
  await require('./test-math-remaining-browser.cjs')({page,base,out,remaining,scores,fail:()=>{failPayout=true},deny:()=>{deny=true},plays:()=>plays});

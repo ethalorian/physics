@@ -1,5 +1,6 @@
 'use client'
 
+import { MissionAssignments } from '@/components/math-missions/MissionHub'
 import MathFeedbackLoop from '@/components/math-spine/MathFeedbackLoop'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
@@ -50,6 +51,7 @@ export default function MathSpinePage() {
       {loading && <p className="text-sm text-muted-foreground">Loading your math literacy…</p>}
       {error && <p className="text-sm text-red-600">Could not load your math literacy: {error}</p>}
       <MathFeedbackLoop refreshKey={reload} />
+      <MissionAssignments />
       {data && <MathSpineGrowth {...data} />}
     </div>
   )

@@ -1,4 +1,5 @@
 'use client'
+import MissionLessonLink from '@/components/math-missions/MissionLessonLink'
 import { MathCompetencyRecord, MathStrand, DEFAULT_RECENCY_WEIGHT } from '@/data/curriculum-types'
 import { STRAND_ORDER, STRAND_LABEL } from '@/lib/math-spine'
 import { skillEvidence, OBSERVATION_LABEL } from '@/lib/math-student-view'
@@ -66,6 +67,7 @@ export default function MathSpineGrowth({ competencies, records, grants = [], ma
         <p className="text-sm text-muted-foreground">Your teacher looks at reasoning, accurate steps, units and representations, and applying the skill in another context. Language supports do not automatically mean you needed mathematical help.</p>
         <button type="button" onClick={()=>{setWorkSkill(skill.id);setSubmission(undefined)}} className="min-h-11 rounded border bg-background px-4">See my work and feedback for this skill</button>
         {evidence.ordered.length > 0 && <details><summary className="min-h-11 cursor-pointer py-3 font-medium">Teacher observation history ({evidence.ordered.length})</summary><ol className="space-y-3">{[...evidence.ordered].reverse().map((r,i)=><li key={`${r.observedAt}-${i}`} className="rounded border bg-background p-3 text-sm"><p>{new Date(r.observedAt).toLocaleDateString()} · {OBSERVATION_LABEL[r.level]}</p>{r.submissionId ? <button type="button" className="min-h-11 underline" onClick={()=>{setWorkSkill(skill.id);setSubmission(r.submissionId)}}>Open this work and feedback</button> : <p className="mt-1 text-muted-foreground">{r.evidenceSource ?? 'Teacher observation'} · No linked warm-up available.</p>}</li>)}</ol></details>}
+        <MissionLessonLink code={skill.code} />
         {workSkill === skill.id && <MathFeedbackLoop key={skill.id} competencyId={skill.id} submissionId={submission} embedded />}
         <details><summary className="min-h-11 cursor-pointer py-3 text-sm">How the practice placement is determined</summary><p className="text-sm">{evidence.value === null ? 'No rating has been recorded. Missing evidence is not a low score.' : `Your weighted rating is ${evidence.value.toFixed(1)} out of 3. Each new observation contributes ${Math.round(recencyWeight*100)}% to the updated value; earlier evidence contributes the rest. This guides practice. A single observation is still initial evidence.`} Time alone does not lower your rating.</p></details>
       </section>}

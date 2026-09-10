@@ -3,6 +3,8 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { ArrowDown, ArrowUpRight, Atom, Coins, Trophy, Crown, Gamepad2, Joystick, Target, Zap, Sigma, Search, X, Ruler, ArrowRight } from 'lucide-react'
+import MissionHub from '@/components/math-missions/MissionHub'
+import { MISSIONS } from '@/lib/math-missions/catalog'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 import GamePreview from '@/components/arcade/GamePreview'
 import { UNIT_XP_TARGETS } from '@/lib/xp-policy'
@@ -121,12 +123,14 @@ export default function ArcadePage() {
     midway: (data?.games ?? []).filter(g => g.costXp > 0),
   }
   const matches = (...values: (string | null)[]) => values.some(v => v?.toLowerCase().includes(query.trim().toLowerCase()))
-  const counts = { all: (data?.games.length ?? 0) + 1, physics: groups.physics.length, math: groups.math.length, workshop: 1, midway: groups.midway.length }
+  const counts = { all: (data?.games.length ?? 0) + 3 + MISSIONS.length, physics: groups.physics.length + 2, math: groups.math.length + MISSIONS.length, workshop: 1, midway: groups.midway.length }
   const visible = CATEGORIES.filter(c => c.id !== 'all' && (category === 'all' || c.id === category)).map(c => {
     const id = c.id as Exclude<Category, 'all'>
     const cabinets = id === 'physics' || id === 'math' || id === 'midway' ? groups[id].filter(g => matches(g.name, g.blurb, g.unit)) : []
     const workshop = id === 'workshop' && matches('Tape Workshop', 'measure ruler fractions inches metric trades')
-    return { ...c, id, cabinets, workshop, count: cabinets.length + (workshop ? 1 : 0) }
+    const unitLab = id === 'physics' && matches('Unit Lab', 'units dimensional analysis conversion factors speed acceleration force density')
+    const conversions = id === 'physics' && matches('Conversion Workshop', 'unit conversions metric length mass time speed area learn practice')
+    return { ...c, id, cabinets, workshop, unitLab, conversions, count: cabinets.length + (workshop ? 1 : 0) + (id === "math" ? MISSIONS.filter(m => matches(m.name, m.description, ...m.codes)).length : 0) + (unitLab ? 1 : 0) + (conversions ? 1 : 0) }
   }).filter(c => c.count > 0)
   const resultCount = visible.reduce((sum, c) => sum + c.count, 0)
 
@@ -139,7 +143,7 @@ export default function ArcadePage() {
 
     <div className={styles.playerBar} aria-label="Your arcade progress">
       <div><span className={styles.statIcon}><Coins size={19} /></span><span><small>Ready to spend</small><strong>{data ? `${data.balance.balance.toLocaleString()} XP` : '—'}</strong></span></div>
-      <div><span className={styles.statIcon}><Zap size={19} /></span><span><small>Free to play</small><strong>{data ? groups.physics.length + groups.math.length + 1 : '—'} activities</strong></span></div>
+      <div><span className={styles.statIcon}><Zap size={19} /></span><span><small>Free to play</small><strong>{data ? groups.physics.length + groups.math.length + 3 + MISSIONS.length : '—'} activities</strong></span></div>
       <div><span className={styles.statIcon}><Gamepad2 size={19} /></span><span><small>Your collection</small><strong>{data ? data.games.filter(g => g.myBest > 0).length : '—'} personal bests</strong></span></div>
       <div><span className={styles.statIcon}><Trophy size={19} /></span><span><small>This week</small><strong>{data ? data.games.filter(g => g.myWeeklyRank !== null).length : '—'} ranked cabinets</strong></span></div>
     </div>
@@ -157,8 +161,11 @@ export default function ArcadePage() {
         <span className={styles.srOnly} role="status">{resultCount} matching games and activities</span>
         {visible.map(section => <section key={section.id} className={styles.floor} aria-labelledby={`floor-${section.id}`}>
           <div className={styles.floorHeading}><span className={styles.floorIcon} style={{ color: FLOORS[section.id].color }}><section.icon size={20} /></span><div><h3 id={`floor-${section.id}`}>{FLOORS[section.id].title}</h3><p>{FLOORS[section.id].desc}</p></div><span className={styles.floorCount}>{String(section.count).padStart(2, '0')}</span></div>
+          {section.id === 'math' && <MissionHub embedded query={query} />}
           <div className={styles.gameGrid}>
             {section.cabinets.map(g => <CabinetCard key={g.slug} game={g} category={section.id as 'physics' | 'math' | 'midway'} balance={data?.balance.balance ?? 0} freeCredit={!!data?.freeCreditAvailable} />)}
+            {section.conversions && <article className={styles.gameCard} style={{ '--game-color': FLOORS.physics.color } as CSSProperties}><Link href="/arcade/conversion-workshop" className={styles.gameLink}><div className={styles.cardBody}><span className={styles.eyebrow}>Learn, then practice</span><h3>Conversion Workshop<ArrowUpRight size={18} /></h3><p>Learn why conversion factors work, then practice length, mass, time, speed, and area.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Ruler size={15} /> Guided lesson + 12 conversions</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Hints, worked examples, and new practice sets. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Start converting</strong><ArrowRight size={16} /></div></div></Link></article>}
+            {section.unitLab && <article className={styles.gameCard} style={{ '--game-color': FLOORS.physics.color } as CSSProperties}><Link href="/arcade/unit-lab" className={styles.gameLink}><div className={styles.cardBody}><span className={styles.eyebrow}>Units & dimensional analysis</span><h3>Unit Lab<ArrowUpRight size={18} /></h3><p>Build a conversion chain, flip factors, and watch units cancel. From meters to net force.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Atom size={15} /> Eight physics challenges</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Unlimited retries and hints. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Enter Unit Lab</strong><ArrowRight size={16} /></div></div></Link></article>}
             {section.workshop && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}><Link href="/arcade/tape-measure" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/tape-workshop/index.html" name="Tape Workshop" /></div><div className={styles.cardBody}><span className={styles.eyebrow}>Trades workshop</span><h3>Tape Workshop<ArrowUpRight size={18} /></h3><p>Read the marks, align zero, and measure with confidence. Inch fractions, decimals, and metric.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Ruler size={15} /> Hands-on workshop</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Practice your measuring skills. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Enter workshop</strong><ArrowRight size={16} /></div></div></Link></article>}
           </div>
         </section>)}

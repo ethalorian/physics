@@ -39,7 +39,8 @@ export default function AdminMathSpinePage() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <div className="flex justify-end mb-3">
+      <div className="flex justify-end gap-3 mb-3">
+        <Link href="/admin/math-spine/missions"><Button variant="outline" size="sm">Math missions & evidence</Button></Link>
         <Link href="/admin/math-spine/bank">
           <Button variant="outline" size="sm" className="rounded-full">
             <BookOpen className="h-4 w-4 mr-1.5" /> Warm-Up Bank

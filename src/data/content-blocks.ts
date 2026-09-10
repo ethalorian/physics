@@ -111,6 +111,11 @@ export interface ProseBlock extends BaseBlock {
   markdown: string;           // markdown + KaTeX
 }
 
+export interface MathMissionBlock extends BaseBlock {
+  type: 'math_mission';
+  competencyCode: string;
+}
+
 export interface VocabBlock extends BaseBlock {
   type: 'vocab';
   terms: { term: string; definition: string; cognate?: string }[];
@@ -483,7 +488,7 @@ export interface ReadingBlock extends BaseBlock {
 // ---------------------------------------------------------------------------
 
 export type ContentBlock =
-  | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
+  | MathMissionBlock | TargetBlock | AsteroidThreadBlock | ProseBlock | VocabBlock | WorkedExampleBlock
   | CalloutBlock | SentenceFrameBlock | LabNotebookBlock | SimEmbedBlock | DeckBlock | Animation3DBlock | EquationVisualizerBlock | LessonVocabBlock | ProcedureBlock
   | GewaBlock | EquationSandboxBlock | ExitTicketBlock | MarzanoBlock | QuestionBlock | DataTableBlock | SketchBlock
   | ObservationBlock | SelfAssessmentBlock | TransferPromptBlock

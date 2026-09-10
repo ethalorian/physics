@@ -1,0 +1,72 @@
+[
+  {
+    "game": "algebra-inverse-blitz",
+    "width": 1366,
+    "cardVisibleHeight": 1.4864864349365234,
+    "questionVisibleHeight": 0,
+    "question": "x − 6 = 9"
+  },
+  {
+    "game": "numbersense-magnitude",
+    "width": 1366,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "👑  ?"
+  },
+  {
+    "game": "proportion-scale-storm",
+    "width": 1366,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "7 : 6  =  ? : 12"
+  },
+  {
+    "game": "quantities-powers-of-ten",
+    "width": 1366,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "950,000"
+  },
+  {
+    "game": "graphs-slope-sniper",
+    "width": 1366,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "slope = ?"
+  },
+  {
+    "game": "algebra-inverse-blitz",
+    "width": 390,
+    "cardVisibleHeight": 1.0160369873046875,
+    "questionVisibleHeight": 0,
+    "question": "x + 8 = 10"
+  },
+  {
+    "game": "numbersense-magnitude",
+    "width": 390,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "👑  ?"
+  },
+  {
+    "game": "proportion-scale-storm",
+    "width": 390,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "6 : 9  =  ? : 54"
+  },
+  {
+    "game": "quantities-powers-of-ten",
+    "width": 390,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "17,000"
+  },
+  {
+    "game": "graphs-slope-sniper",
+    "width": 390,
+    "cardVisibleHeight": 0,
+    "questionVisibleHeight": 0,
+    "question": "slope = ?"
+  }
+]

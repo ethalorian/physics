@@ -55,6 +55,7 @@ export const BLOCK_DEFS: BlockDef[] = [
     { key: 'caption', label: 'Caption — frame what to watch for (optional)', kind: 'textarea' },
   ] },
   { type: 'equation_visualizer', label: 'Equation visualizer', group: 'Teach', fields: [] },
+  { type: 'math_mission', label: 'Math remediation mission', group: 'Teach', fields: [{ key: 'competencyCode', label: 'Competency code (NS1, NS2, PR1, PR2, QE1–QE4, SM1, SM2, GV1–GV3)', kind: 'text' }] },
   { type: 'lesson_vocab', label: 'Lesson vocabulary', group: 'Teach', fields: [] },
   { type: 'figure', label: 'Figure / image', group: 'Teach', fields: [
     { key: 'src', label: 'Image — upload a file or paste a URL', kind: 'imageupload', placeholder: 'https://…' },
@@ -220,10 +221,11 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
       if (['stringlist', 'terms', 'numberlist'].includes(field.kind) && !Array.isArray(v)) add(`${field.label} must be a list.`)
       if (field.kind === 'number' && (typeof v !== 'number' || !Number.isFinite(v))) add(`${field.label} must be a number.`)
     }
+    if (b.type==='math_mission' && !/^(NS[12]|PR[12]|QE[1-4]|SM[12]|GV[1-3])$/.test(String(b.competencyCode??''))) add('Choose a valid math competency code: NS1–2, PR1–2, QE1–4, SM1–2, or GV1–3.');
     if (!publishing) continue
     const required: Partial<Record<BlockType, string[]>> = {
       target: ['statement'], prose: ['markdown'], asteroid_thread: ['connection'], worked_example: ['prompt'], callout: ['markdown'], sentence_frame: ['frame'],
-      lab_notebook: ['instruction'], sketch: ['instruction'], sim_embed: ['simulationSlug'], deck: ['src', 'title'], animation_3d: ['animationSlug'],
+      lab_notebook: ['instruction'], sketch: ['instruction'], sim_embed: ['simulationSlug'], math_mission: ['competencyCode'], deck: ['src', 'title'], animation_3d: ['animationSlug'],
       gewa: ['prompt'], exit_ticket: ['prompt'], observation: ['patternPrompt', 'interpretPrompt'], figure: ['src', 'alt'], transfer_prompt: ['masteryTaskSlug'], marzano: ['targetId'],
     }
     for (const key of required[def.type] ?? []) if (!text(b[key])) add(`Fill in ${key}.`)

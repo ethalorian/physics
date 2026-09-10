@@ -21,6 +21,7 @@ import { useDraft } from './useDraft'
 import { SeiTextCapture, SeiPrompt, SeiVisual, SeiFrameBox, SeiFairnessNote, useSei } from './SeiLayer'
 import { useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
 import type { InlineQuestion, SeiFrame } from '@/data/content-blocks'
+import MissionLessonLink from '@/components/math-missions/MissionLessonLink'
 import { SIM_COMPONENTS } from '@/components/simulations/registry'
 import { textbookChapter } from '@/data/textbook'
 import { TEXTBOOK_SECTIONS, sectionPageRange } from '@/data/textbook-sections'
@@ -89,6 +90,7 @@ const BLOCK_META: Partial<Record<BlockType, Meta>> = {
   worked_example: { label: 'Worked example', domain: 'S', Icon: Calculator },
   procedure: { label: 'Build steps', domain: 'S', Icon: Wrench },
   sentence_frame: { label: 'Sentence frame', domain: 'R', Icon: MessageSquareQuote },
+  math_mission: { label: 'Math mission', domain: 'S', Icon: Sigma },
   sim_embed: { label: 'Simulation', domain: 'S', Icon: FlaskConical },
   animation_3d: { label: 'Watch & predict', domain: 'R', Icon: Orbit },
   equation_visualizer: { label: 'Equation explorer', domain: 'S', Icon: Sigma },
@@ -650,6 +652,8 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       return <Animation3DView slug={b.animationSlug} caption={b.caption} />
     case 'equation_visualizer':
       return <EquationVisualizer />
+    case 'math_mission':
+      return <MissionLessonLink code={b.competencyCode} />
     case 'lesson_vocab':
       return <LessonVocabView lessonId={lessonId} />
     case 'lab_notebook':
