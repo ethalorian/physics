@@ -6,7 +6,7 @@ import { ArrowRight, Check, ClipboardCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import ObservationFeedback from '@/components/admin/ObservationFeedback'
 import MathMarkdown from '@/components/MathMarkdown'
 import { levelWord } from '@/components/mastery/mastery-display'
 import { useClassScope } from '@/lib/use-class-scope'
@@ -60,6 +60,7 @@ export default function ObservationPage() {
   const [observed, setObserved] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [dictating, setDictating] = useState(false)
   const [error, setError] = useState('')
   const [coursesError, setCoursesError] = useState('')
   const [notice, setNotice] = useState('')
@@ -146,7 +147,7 @@ export default function ObservationPage() {
     if (next) { setStudentId(next.id); setSearch('') }
   }
   async function save(advance: boolean) {
-    if (inFlight.current || !student || !target || (!draft.level && !draft.message.trim() && !draft.ratingSaved)) return
+    if (inFlight.current || dictating || !student || !target || (!draft.level && !draft.message.trim() && !draft.ratingSaved)) return
     inFlight.current = true
     setSaving(true)
     setError('')
@@ -188,12 +189,12 @@ export default function ObservationPage() {
   if (!staff) return <div className="p-6">Classroom observations are available to teachers and administrators.</div>
 
   return (
-    <div className="mx-auto max-w-6xl space-y-5 p-4 pb-8 sm:p-6" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))', touchAction: 'manipulation' }}>
+    <div className="mx-auto min-h-dvh w-full space-y-4 p-4 pb-8 sm:p-5" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))', paddingLeft: 'max(1rem, env(safe-area-inset-left))', paddingRight: 'max(1rem, env(safe-area-inset-right))', touchAction: 'manipulation' }}>
       <header className="flex flex-wrap items-start justify-between gap-3">
-        <div><div className="text-overline text-muted-foreground">Teach & grade</div><h1 className="text-title-1 flex items-center gap-2"><ClipboardCheck aria-hidden />Classroom observations</h1><p className="mt-1 text-muted-foreground">Pick your class, find a student, and give one useful next step.</p></div>
+        <div><h1 className="text-title-1 flex items-center gap-2"><ClipboardCheck aria-hidden />Classroom observations</h1></div>
         <div className="flex flex-wrap gap-2"><Button asChild variant="outline" className="min-h-12"><Link href="/admin/command-center">Command Center</Link></Button><Button asChild variant="outline" className="min-h-12"><Link href="/admin/control-room">Control Room</Link></Button></div>
       </header>
-      <fieldset disabled={saving} className="min-w-0 space-y-3 rounded-2xl border bg-card p-4">
+      <fieldset disabled={saving} className="min-w-0 space-y-3 border-y py-3">
         <legend className="sr-only">Class and unit</legend>
         <div className="flex flex-wrap gap-2" aria-label="Quick class selection">
           <Button variant={!classId ? 'default' : 'outline'} aria-pressed={!classId} className="min-h-12" onClick={() => chooseClass('')}>All my students</Button>
@@ -208,15 +209,15 @@ export default function ObservationPage() {
       {error && <div role="alert" className="rounded-xl border border-destructive p-4 text-destructive">{error}{!grid && <Button variant="outline" className="ml-3 min-h-12" onClick={() => setReload((n) => n + 1)}>Retry loading</Button>}</div>}
       <p role="status" className={notice || saving ? 'text-caption rounded-xl bg-primary/10 p-3' : 'sr-only'} style={{ color: 'var(--viz-up)' }}>{saving ? 'Saving… Keep this view open.' : notice}</p>
       {loading ? <p role="status">Loading your roster and mastery targets…</p> : grid && <>
-        <Card className="gap-3 p-4">
-          <label className="block text-caption" htmlFor="observation-target">Observation focus · stays selected as you move between students</label>
+        <section className="space-y-2 border-b pb-3">
+          <label className="block text-caption" htmlFor="observation-target">Observation focus</label>
           <select id="observation-target" disabled={saving} className={fieldClass} value={targetId} onChange={(e) => { setTargetId(e.target.value); setNotice('') }}>{grid.targets.map((t, i) => <option key={t.id} value={t.id}>{i + 1}. {t.statement}</option>)}</select>
           {!target && <p>No learning targets are available for this unit.</p>}
           <p className="text-caption text-muted-foreground">{completed} of {students.length} students visited this session · {students.length - completed} still to visit</p>
           <progress className="h-2 w-full" style={{ accentColor: 'var(--primary)' }} aria-label="Students observed on this target" value={completed} max={students.length || 1} />
-        </Card>
-        {!students.length ? <Card className="p-6">No students from your own roster are available here. Choose another class or sync your roster.</Card> : <div className="grid items-start gap-4 md:grid-cols-[minmax(180px,0.7fr)_minmax(0,1.6fr)]">
-          <Card className="min-w-0 gap-3 p-3 md:sticky md:top-4">
+        </section>
+        {!students.length ? <Card className="p-6">No students from your own roster are available here. Choose another class or sync your roster.</Card> : <div className="grid items-start gap-5 md:grid-cols-[minmax(220px,0.55fr)_minmax(0,1.6fr)]">
+          <section className="min-w-0 space-y-3 md:sticky md:top-4 md:border-r md:pr-5">
             <label className="text-caption" htmlFor="observation-search">Find a student</label>
             <div className="flex gap-1">
               <Input id="observation-search" autoComplete="off" className="min-h-12 text-base" placeholder="Name or email…" value={search} disabled={saving} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && visibleStudents.length) { e.preventDefault(); chooseStudent(visibleStudents[0].id) } if (e.key === 'Escape') setSearch('') }} />
@@ -231,20 +232,23 @@ export default function ObservationPage() {
               {visibleStudents.map((s) => { const studentKey = JSON.stringify([s.id, targetId]); return <Button key={s.id} variant={studentId === s.id ? 'default' : 'outline'} disabled={saving} aria-pressed={studentId === s.id} className="h-auto min-h-14 w-full justify-between whitespace-normal px-3 text-left" onClick={() => chooseStudent(s.id)}><span>{s.name}{drafts[studentKey] && <span className="block text-xs">Draft</span>}</span>{observed.has(studentKey) && <Check aria-label="Observed this visit" />}</Button> })}
               {!visibleStudents.length && <p className="p-2 text-muted-foreground">{search ? 'No matching students in this class. Try another name or clear the search.' : 'Everyone has been visited on this target. Choose Everyone to revisit a student.'}</p>}
             </div>
-          </Card>
-          {student && target && <Card ref={feedbackPanel} className="min-w-0 scroll-mt-4 gap-4 p-4 sm:p-5">
+          </section>
+          {student && target && <div ref={feedbackPanel} className="min-w-0 scroll-mt-4 space-y-4">
             <div><div className="text-overline text-muted-foreground">Observing</div><h2 className="text-title-1">{student.name}</h2><p className="text-caption text-muted-foreground">Current mastery: {cell?.value == null ? 'No observations yet' : `${cell.value.toFixed(1)} · ${levelWord(cell.value)} · ${cell.count} observation${cell.count === 1 ? '' : 's'}`}</p></div>
             <div className="rounded-xl bg-muted/50 px-3 py-2 text-sm"><MathMarkdown content={target.statement} /></div>
             <fieldset disabled={saving || draft.ratingSaved} className="space-y-2"><legend className="mb-2 text-caption">What did you observe?</legend><div className="grid grid-cols-3 gap-2">{([1, 2, 3] as const).map((level) => <Button key={level} variant={draft.level === level ? 'default' : 'outline'} aria-pressed={draft.level === level} className="h-auto min-h-20 flex-col gap-1 px-2 text-base" onClick={() => updateDraft({ level: draft.level === level ? undefined : level })}><span className="text-title-2">{level}</span>{levelWord(level)}</Button>)}</div></fieldset>
             {draft.ratingSaved && <p className="text-caption">Rating saved. Only the remaining feedback will be sent.</p>}
-            <div className="space-y-3"><label htmlFor="observation-feedback" className="block text-caption">Feedback to {student.name} <span className="text-muted-foreground">· optional</span></label><p className="text-caption text-muted-foreground">Choose a strength and one next step, then add details from the lab.</p><div className="max-h-56 overflow-y-auto rounded-xl border p-2"><div className="flex flex-wrap gap-2">{PHRASES.map((phrase) => <Button key={phrase} variant="outline" disabled={saving || draft.message.length + phrase.length + 1 > 2000 || draft.message.split('\n').includes(phrase)} className="h-auto min-h-12 max-w-full whitespace-normal px-3 py-2 text-left" onClick={() => updateDraft({ message: `${draft.message}${draft.message ? '\n' : ''}${phrase}` })}>{phrase}</Button>)}</div></div><Textarea id="observation-feedback" className="min-h-28 text-base" maxLength={2000} disabled={saving} placeholder="Name a strength or one concrete next step…" value={draft.message} onChange={(e) => updateDraft({ message: e.target.value })} /><p className="text-caption text-muted-foreground">{draft.message.length}/2000 · Feedback appears in the student’s feedback feed.</p></div>
-            <div className="sticky bottom-0 -mx-1 flex flex-wrap gap-2 border-t bg-card p-2" style={{ paddingBottom: 'max(.5rem, env(safe-area-inset-bottom))' }}>
-              <Button className="min-h-14 flex-1 text-base" disabled={saving || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(true)}>Save & next<ArrowRight aria-hidden /></Button>
-              <Button variant="outline" className="min-h-14" disabled={saving || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(false)}>Save & stay</Button>
+            <ObservationFeedback key={key} value={draft.message} disabled={saving} onChange={(message) => updateDraft({ message })} onActiveChange={setDictating} />
+            <details className="border-y py-2">
+              <summary className="min-h-12 cursor-pointer content-center text-caption">Quick feedback phrases</summary>
+              <div className="flex max-h-56 flex-wrap gap-2 overflow-y-auto py-2">{PHRASES.map((phrase) => <Button key={phrase} variant="outline" disabled={saving || dictating || draft.message.length + phrase.length + 1 > 2000 || draft.message.split('\n').includes(phrase)} className="h-auto min-h-12 max-w-full whitespace-normal px-3 py-2 text-left" onClick={() => updateDraft({ message: `${draft.message}${draft.message ? '\n' : ''}${phrase}` })}>{phrase}</Button>)}</div>
+            </details>
+            <div className="flex flex-wrap gap-2 border-t bg-background py-2" style={{ paddingBottom: 'max(.5rem, env(safe-area-inset-bottom))' }}>
+              <Button className="min-h-14 flex-1 text-base" disabled={saving || dictating || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(true)}>Save & next<ArrowRight aria-hidden /></Button>
+              <Button variant="outline" className="min-h-14" disabled={saving || dictating || (!draft.level && !draft.message.trim() && !draft.ratingSaved)} onClick={() => save(false)}>Save & stay</Button>
               <Button variant="ghost" className="min-h-14" disabled={saving || students.length < 2} onClick={nextStudent}>Skip</Button>
             </div>
-            <p className="text-caption text-muted-foreground">Drafts stay with each student and target while this view is open. Ratings save to the existing mastery history.</p>
-          </Card>}
+          </div>}
         </div>}
       </>}
     </div>

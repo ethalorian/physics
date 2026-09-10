@@ -1,0 +1,45 @@
+.page { max-width: 1320px; margin: 0 auto; padding: 20px 24px 40px; color: var(--foreground); }
+.classNav { display: flex; align-items: center; gap: 18px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted-foreground); }
+.classNav > .eyebrow { white-space: nowrap; }
+.classLinks { display: flex; gap: 5px; overflow-x: auto; flex: 1; }
+.classLinks a { padding: 9px 12px; border-radius: 8px; white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--muted-foreground); }
+.classLinks a[aria-current] { background: color-mix(in oklch, var(--primary) 10%, var(--card)); color: var(--primary); }
+.header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 28px 0 24px; }
+.header h1 { font-size: clamp(26px, 3vw, 34px); font-weight: 750; letter-spacing: -.04em; margin: 6px 0; line-height: 1.15; }
+.unit { font-size: 13px; color: var(--muted-foreground); line-height: 1.6; }
+.tabs { display: flex; overflow-x: auto; gap: 26px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.tabs button { white-space: nowrap; padding: 12px 0; min-height: 44px; border-bottom: 3px solid transparent; color: var(--muted-foreground); font-size: 13px; font-weight: 600; cursor: pointer; }
+.tabs button[aria-current] { color: var(--primary); border-color: var(--primary); }
+.lesson { border: 1px solid color-mix(in oklch, var(--primary) 22%, var(--border)); border-radius: 18px; background: var(--card); overflow: hidden; box-shadow: 0 5px 20px color-mix(in oklch, var(--primary) 4%, transparent); }
+.lesson > [role] { margin: 16px 24px; }
+.lessonTop { padding: 18px 24px 0; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.lessonTop .eyebrow { color: var(--primary); }
+.lessonPicker { padding: 18px 24px 0; display: flex; gap: 18px; align-items: center; font-size: 12px; color: var(--muted-foreground); }
+.lessonPicker > span { flex-shrink: 0; }
+.lessonPicker select { min-width: 0; background: var(--background); color: var(--foreground); }
+.lessonBody { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 32px; padding: 28px 24px; }
+.lessonCopy h2 { font-size: clamp(23px, 2.5vw, 30px); font-weight: 700; letter-spacing: -.025em; line-height: 1.25; max-width: 650px; margin: 8px 0 10px; text-wrap: balance; }
+.lessonActions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.primary, .secondary, .textLink { display: inline-flex; justify-content: center; align-items: center; gap: 8px; min-height: 44px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.primary { border-radius: 9px; background: var(--primary); color: var(--primary-foreground); padding: 12px 18px; }
+.secondary { border: 1px solid var(--border); border-radius: 9px; background: var(--card); color: var(--foreground); padding: 10px 14px; }
+.textLink { color: var(--primary); }
+.access { padding: 16px 0 16px 24px; border-left: 1px solid var(--border); display: flex; flex-direction: column; align-items: flex-start; gap: 12px; justify-content: center; }
+.accessStatus { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.accessStatus > span { height: 7px; width: 7px; border-radius: 50%; background: var(--muted-foreground); }
+.accessStatus[data-open=true] > span { background: var(--success); }
+.access p { font-size: 12px; color: var(--muted-foreground); }
+.lessonFooter { display: flex; align-items: center; justify-content: space-between; gap: 20px; background: color-mix(in oklch, var(--primary) 3%, var(--card)); border-top: 1px solid var(--border); padding: 12px 24px; }
+.nextLesson { display: flex; align-items: center; gap: 12px; text-align: left; font-size: 12px; min-height: 44px; cursor: pointer; }
+.nextLesson > .eyebrow, .nextLesson > svg { flex-shrink: 0; }
+.footerLinks { display: flex; flex-shrink: 0; gap: 18px; font-size: 12px; color: var(--muted-foreground); }
+.footerLinks a { display: inline-flex; align-items: center; min-height: 44px; }
+.sectionHeading { display: flex; justify-content: space-between; gap: 16px; align-items: center; margin-top: 12px; }
+.sectionHeading h2 { font-size: 17px; font-weight: 700; }
+.sectionHeading span { font-size: 12px; color: var(--muted-foreground); }
+.page a:hover, .page button:hover { filter: brightness(.92); }
+.page :is(a, button, select):focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.lesson button:disabled { opacity: .5; cursor: wait; }
+@media (max-width: 1050px) { .classNav > .eyebrow { display: none; } .lessonFooter { align-items: flex-start; flex-direction: column; gap: 0; } }
+@media (max-width: 700px) { .page { padding: 12px 12px 30px; } .header { align-items: flex-start; flex-direction: column; gap: 10px; } .classNav { gap: 8px; } .classNav > a { font-size: 11px; white-space: nowrap; } .tabs { gap: 22px; } .lessonTop, .lessonPicker { padding-left: 18px; padding-right: 18px; } .lessonPicker { align-items: stretch; flex-direction: column; gap: 6px; } .lessonBody { grid-template-columns: 1fr; padding: 22px 18px; gap: 22px; } .access { border-left: 0; border-top: 1px solid var(--border); padding: 18px 0 0; } .lessonFooter { padding: 12px 18px; } .sectionHeading { align-items: flex-start; flex-direction: column; gap: 4px; } }

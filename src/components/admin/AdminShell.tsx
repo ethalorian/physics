@@ -64,6 +64,8 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   const homeHref = isAdmin ? '/admin/home' : role === 'observer' ? '/admin/oversight' : '/admin/classes'
   const roleLabel = isAdmin ? 'Admin' : role === 'observer' ? 'Observer' : 'Teacher'
 
+  if (pathname === '/admin/observe') return <div className="observation-workspace">{children}</div>
+
   const NavBody = (
     <div className="flex flex-col h-full" style={{ background: 'var(--card)' }}>
       <Link href={homeHref} className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>

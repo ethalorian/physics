@@ -127,7 +127,7 @@ export default function Navbar() {
   const logoHref = isAuthenticated ? (role === 'observer' ? '/admin/oversight' : role === 'teacher' && !studentViewActive ? '/admin/classes' : isStaff && !studentViewActive ? '/admin/home' : '/home') : '/'
 
   // Chrome-free embed pages (e.g. simulations rendered inside a lesson iframe).
-  if (pathname?.startsWith('/embed')) return null
+  if (pathname?.startsWith('/embed') || pathname === '/admin/observe') return null
 
   return (
     <>

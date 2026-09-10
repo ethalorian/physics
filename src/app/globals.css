@@ -1,4 +1,12 @@
 @import "tailwindcss";
+
+body > main:has(.observation-workspace),
+main.container:has(.observation-workspace) {
+  max-width: none;
+  padding: 0;
+}
+
+.observation-workspace { min-height: 100dvh; background: var(--background); }
 @import "katex/dist/katex.min.css";
 
 /* Re-enable enter/exit animation utilities (animate-in, fade-in-0, zoom-in-95,

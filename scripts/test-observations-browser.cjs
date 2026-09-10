@@ -15,11 +15,41 @@ const server=http.createServer(async(r,s)=>{s.setHeader('Content-Type','applicat
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));let browser;
 try{browser=await chromium.launch({headless:true,executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'});const page=await browser.newPage({viewport:{width:820,height:1180},isMobile:true,hasTouch:true,deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:'+server.address().port);await page.getByRole('heading',{name:'Alex Rivera',exact:true}).waitFor();assert.equal(await page.getByRole('button',{name:'Not My Student'}).count(),0);
 assert.equal(await page.getByRole('alert').count(),0);
+await page.addInitScript(() => {
+  window.SpeechRecognition = window.webkitSpeechRecognition = class {
+    start() { window.speech = this; }
+    stop() { this.onend?.(); }
+    abort() { window.speechAborted = true; this.onend?.(); }
+  };
+});
+await page.reload();
+await page.getByRole('heading',{name:'Alex Rivera',exact:true}).waitFor();
+await page.locator('textarea').fill('Existing note.');
+await page.getByRole('button',{name:'Dictate feedback',exact:true}).click();
+await page.evaluate(() => window.speech.onresult({resultIndex:0,results:[{isFinal:true,0:{transcript:'Clear explanation.'}}]}));
+await page.evaluate(() => window.speech.onresult({resultIndex:0,results:[{isFinal:true,0:{transcript:'Clear explanation.'}}]}));
+await page.waitForFunction(()=>document.querySelector('textarea').value==='Existing note. Clear explanation.');
+assert.equal(await page.getByRole('button',{name:'Save & stay',exact:true}).isDisabled(),true);
+await page.getByRole('button',{name:'Stop dictation',exact:true}).click();
+assert.equal(await page.getByRole('button',{name:'Save & stay',exact:true}).isEnabled(),true);
+await page.getByRole('button',{name:'Dictate feedback',exact:true}).click();
+await page.getByRole('button',{name:'Blair Chen',exact:true}).click();
+assert.equal(await page.evaluate(()=>window.speechAborted),true);
+await page.evaluate(() => window.speech.onresult?.({resultIndex:1,results:[{isFinal:true,0:{transcript:'Wrong student'}}]}));
+assert.equal(await page.locator('textarea').inputValue(),'');
+await page.getByRole('button',{name:'Dictate feedback',exact:true}).click();
+await page.evaluate(() => { window.speech.onerror({error:'not-allowed'}); window.speech.onend(); });
+await page.getByRole('status').filter({hasText:'Microphone access was denied'}).waitFor();
+await page.getByRole('button',{name:'Alex Rivera Draft',exact:true}).click();
+assert.equal(await page.locator('textarea').inputValue(),'Existing note. Clear explanation.');
+await page.locator('textarea').fill('');
+await page.getByText('Quick feedback phrases',{exact:true}).click();
 assert.equal(await page.getByLabel('Class',{exact:true}).locator('option').count(),2);
 await page.getByRole('button',{name:'Physics · A',exact:true}).click();
 assert.equal(await page.getByLabel('Class',{exact:true}).inputValue(),'class');
 await page.getByRole('heading',{name:'Alex Rivera',exact:true}).waitFor();
 assert.ok(requests.some(url=>url.includes('/api/mastery/grid?')&&url.includes('class=class')));
+await page.getByText('Quick feedback phrases',{exact:true}).click();
 await page.getByRole('button',{name:'3 Got it',exact:true}).click();await page.getByRole('button',{name:'You explained your reasoning clearly.',exact:true}).click();await page.getByRole('button',{name:'Blair Chen',exact:true}).click();assert.equal(await page.locator('textarea').inputValue(),'');await page.getByRole('button',{name:'Alex Rivera Draft',exact:true}).click();assert.match(await page.locator('textarea').inputValue(),/reasoning clearly/);
 await page.getByRole('button',{name:'Save & next',exact:true}).dblclick();await page.getByRole('alert').waitFor();assert.match(await page.getByRole('alert').innerText(),/Rating saved/);assert.equal(writes.filter(w=>w.url==='/api/mastery/records').length,1);feedbackFails=false;await page.getByRole('button',{name:'Save & next',exact:true}).click();await page.getByRole('heading',{name:'Blair Chen',exact:true}).waitFor();assert.equal(writes.filter(w=>w.url==='/api/mastery/records').length,1);assert.equal(writes.filter(w=>w.url==='/api/feedback').length,2);assert.equal(writes[0].user_id,'a');assert.equal(writes[0].target_id,'t');assert.equal(writes[0].evidence_source,'observation');
 ratingFails=true;await page.getByRole('button',{name:'2 Almost',exact:true}).click();await page.getByRole('button',{name:'Save & stay',exact:true}).click();await page.getByRole('alert').waitFor();assert.equal(await page.getByRole('button',{name:'2 Almost',exact:true}).getAttribute('aria-pressed'),'true');ratingFails=false;await page.getByRole('button',{name:'Save & stay',exact:true}).click();await page.getByRole('status').filter({hasText:'Blair Chen: observation saved'}).waitFor();

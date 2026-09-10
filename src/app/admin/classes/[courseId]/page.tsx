@@ -1,4 +1,5 @@
 "use client"
+import styles from '@/components/admin/ClassOverview.module.css'
 import LessonReleasePanel from '@/components/admin/LessonReleasePanel'
 
 // Class Cockpit — per-class screens 2b/2c/2d of the Teacher Experience Rework.
@@ -62,7 +63,8 @@ function ClassCockpit() {
   const search = useSearchParams()
   const router = useRouter()
   const courseId = params.courseId
-  const tab = (search.get('tab') as Tab) || 'Overview'
+  const requestedTab = search.get('tab') as Tab
+  const tab = TABS.includes(requestedTab) ? requestedTab : 'Overview'
 
   const [cockpit, setCockpit] = useState<Cockpit | null>(null)
   const [roster, setRoster] = useState<RosterData | null>(null)
@@ -110,69 +112,31 @@ function ClassCockpit() {
   const shownRows = roster ? (showAll ? roster.students : roster.students.slice(0, 8)) : []
 
   return (
-    <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      {/* class-tab strip */}
-      <div className="flex gap-1.5 items-end flex-wrap">
-        {(cockpit?.classes ?? []).map((c) => {
-          const active = c.id === courseId
-          return (
-            <Link key={c.id} href={`/admin/classes/${c.id}?tab=${encodeURIComponent(tab)}`}
-              className="text-sm font-semibold px-4 py-2 rounded-t-xl"
-              style={{
-                color: active ? 'var(--primary)' : 'var(--muted-foreground)',
-                background: 'var(--card)',
-                border: `1px solid ${active ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'}`,
-                borderBottom: active ? '2px solid var(--card)' : 'none',
-                position: 'relative', top: 1, fontWeight: active ? 700 : 600,
-              }}>
-              {c.label}{c.toRate > 0 && !active && <span style={{ color: 'var(--reward-foreground)' }}> ·</span>}
-            </Link>
-          )
-        })}
-        <Link href="/admin/classes" className="text-sm font-semibold px-3 py-2 ml-auto" style={{ color: 'var(--muted-foreground)' }}>All classes ↗</Link>
-      </div>
-
-      <div className="rounded-b-2xl rounded-tr-2xl border p-5" style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'var(--card)' }}>
-        {/* header + inner tabs */}
-        <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
+    <div className={styles.page} style={{ color: 'var(--foreground)' }}>
+      <nav aria-label="Your classes" className={styles.classNav}>
+        <span className={styles.eyebrow}>Your classes</span>
+        <div className={styles.classLinks}>{(cockpit?.classes ?? []).map((c) => <Link key={c.id} href={`/admin/classes/${c.id}?tab=${encodeURIComponent(tab)}`} aria-current={c.id === courseId ? 'page' : undefined}>{c.label}</Link>)}</div>
+        <Link href="/admin/classes" className={styles.textLink}>All classes ↗</Link>
+      </nav>
+      <div>
+        <header className={styles.header}>
           <div>
-            <div className="text-xl font-bold tracking-tight">{me?.label ?? '…'}</div>
-            <div className="text-sm mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-              {me ? `${me.students} students${me.unitName ? ` · ${me.unitName}` : ''}${me.dayN && me.dayM ? ` · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}` : ''}` : ''}
-            </div>
+            <p className={styles.eyebrow}>Class overview</p>
+            <h1>{me?.label ?? 'Loading class…'}</h1>
+            <p className={styles.unit}>{me ? `${me.students} students${me.unitName ? ` · ${me.unitName}` : ''}` : ''}</p>
           </div>
-          <div className="flex gap-0.5 rounded-xl p-1" style={{ border: '1px solid var(--border)', background: 'var(--secondary)' }}>
-            {TABS.map((t) => (
-              <button key={t} onClick={() => setTab(t)} className="text-sm px-3.5 py-1.5 rounded-lg"
-                style={{
-                  fontWeight: t === tab ? 700 : 500,
-                  color: t === tab ? 'var(--primary)' : 'var(--muted-foreground)',
-                  background: t === tab ? 'var(--card)' : 'transparent',
-                  border: 'none', cursor: 'pointer',
-                  boxShadow: t === tab ? '0 1px 3px color-mix(in oklch, var(--primary) 12%, transparent)' : 'none',
-                }}>{t}</button>
-            ))}
-          </div>
-        </div>
+          <Link href={`/admin/observe?class=${encodeURIComponent(courseId)}`} className={styles.secondary}>Classroom observations ↗</Link>
+        </header>
+        <nav aria-label="Class sections" className={styles.tabs}>
+          {TABS.map((t) => <button key={t} onClick={() => setTab(t)} aria-current={t === tab ? 'page' : undefined}>{t}</button>)}
+        </nav>
 
         {/* ============ OVERVIEW (2b) ============ */}
-        <div className="my-5"><LessonReleasePanel key={courseId} courseId={courseId} compact /></div>
+
       {tab === 'Overview' && (
           <div className="flex flex-col gap-4">
-            <div className="rounded-2xl border p-5 grid gap-4 items-center" style={{ gridTemplateColumns: '1fr auto', borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'radial-gradient(90% 140% at 92% -20%, color-mix(in oklch, var(--primary) 12%, transparent), transparent 55%), var(--card)' }}>
-              <div>
-                <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>
-                  Today{me?.unitName ? ` · ${me.unitName}` : ''}{me?.dayN && me?.dayM ? ` · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}` : ''}{me?.onPace ? ' · on pace' : ''}
-                </div>
-                <div className="text-lg font-bold mt-1">Today&apos;s plan</div>
-                <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Use the lesson controls above to preview, release, teach, and review it.</div>
-              </div>
-              <div className="flex gap-2 flex-wrap">
-                <Link href={`/admin/teacher/plans?class=${encodeURIComponent(courseId)}`} className="text-sm font-semibold rounded-xl px-4 py-2.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Browse teacher plans →</Link>
-                <Link href={`/admin/control-room?class=${courseId}&label=${encodeURIComponent(me?.label ?? '')}`} className="text-sm font-semibold rounded-xl px-4 py-2.5" style={{ border: '1px solid var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Open Control Room</Link>
-              </div>
-            </div>
-
+            <LessonReleasePanel key={courseId} courseId={courseId} compact />
+            <div className={styles.sectionHeading}><h2>At a glance</h2><span>{me?.dayN && me?.dayM ? `Pacing · Day ${Math.min(me.dayN, me.dayM)} of ${me.dayM}${me.onPace ? ' · On pace' : ''}` : 'Class activity and follow-up'}</span></div>
             <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
               {/* needs attention */}
               <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
@@ -180,7 +144,7 @@ function ClassCockpit() {
                   <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Needs attention</span>
                   <button onClick={() => setTab('Roster & analytics')} className="text-xs font-semibold" style={{ color: 'var(--primary)', border: 'none', background: 'transparent', cursor: 'pointer' }}>Roster →</button>
                 </div>
-                {attention.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Everyone is steady.</p>}
+                {attention.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>{roster ? 'No students flagged for follow-up.' : 'Loading student activity…'}</p>}
                 {attention.map((s) => (
                   <div key={s.id} className="flex items-center gap-2.5 py-2" style={{ borderBottom: '1px solid color-mix(in oklch, var(--border) 50%, transparent)' }}>
                     <span className="grid place-items-center text-[10px] font-bold rounded-full shrink-0" style={{ width: 26, height: 26, background: (s.idleDays ?? 0) >= 3 ? 'color-mix(in oklch, var(--destructive) 12%, transparent)' : 'color-mix(in oklch, var(--reward) 20%, transparent)', color: (s.idleDays ?? 0) >= 3 ? 'var(--destructive)' : 'var(--reward-foreground)' }}>{initials(s.name)}</span>
@@ -197,7 +161,7 @@ function ClassCockpit() {
               <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
                 <div className="flex justify-between items-baseline mb-2">
                   <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Grading queue</span>
-                  <span className="text-xs font-bold" style={{ color: 'var(--primary)' }}>{me?.toRate ?? 0} waiting</span>
+                  <span className="text-xs font-bold" style={{ color: 'var(--primary)' }}>{me ? `${me.toRate} waiting` : 'Loading…'}</span>
                 </div>
                 <p className="text-sm" style={{ lineHeight: 1.5 }}>
                   {me && me.toRate > 0
@@ -214,13 +178,13 @@ function ClassCockpit() {
               <div className="rounded-xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
                 <div className="flex justify-between items-baseline mb-2">
                   <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Engagement</span>
-                  <button onClick={() => setTab('Engagement')} className="text-xs font-semibold" style={{ color: 'var(--primary)', border: 'none', background: 'transparent', cursor: 'pointer' }}>Tab →</button>
+                  <button onClick={() => setTab('Engagement')} className="text-xs font-semibold" style={{ color: 'var(--primary)', border: 'none', background: 'transparent', cursor: 'pointer' }}>View →</button>
                 </div>
                 <div className="flex flex-col gap-2 text-sm">
                   <div className="flex justify-between"><span>Store redemptions</span><b style={{ color: redemptions.length ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>{redemptions.length} pending</b></div>
                   <div className="flex justify-between"><span>Live challenges</span><b style={{ color: classChallenges.length ? 'var(--reward-foreground)' : 'var(--muted-foreground)' }}>{classChallenges.filter((c) => c.active).length}</b></div>
                 </div>
-                <p className="text-xs mt-3 pt-2" style={{ color: 'var(--muted-foreground)', borderTop: '1px solid color-mix(in oklch, var(--border) 50%, transparent)' }}>Gold marks real reward only — nothing here pulses.</p>
+                <p className="text-xs mt-3 pt-2" style={{ color: 'var(--muted-foreground)', borderTop: '1px solid color-mix(in oklch, var(--border) 50%, transparent)' }}>View challenges and manage reward requests.</p>
               </div>
             </div>
           </div>
