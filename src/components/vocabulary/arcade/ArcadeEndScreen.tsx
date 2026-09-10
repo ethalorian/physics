@@ -139,8 +139,8 @@ export default function ArcadeEndScreen({ gameType, gameTitle, vocabularySetId, 
         <button onClick={onPlayAgain} className="inline-flex items-center gap-1.5 text-sm rounded-lg px-4 py-2 font-medium" style={{ background: accent, color: 'var(--primary-foreground, white)' }}>
           <RotateCcw size={15} /> Play again
         </button>
-        <Link href="/arcade" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
-          <ArrowLeft size={15} /> Arcade
+        <Link href="/vocabulary/work" className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-4 py-2" style={{ borderColor: 'var(--border)' }}>
+          <ArrowLeft size={15} /> Assignments
         </Link>
       </div>
     </div>

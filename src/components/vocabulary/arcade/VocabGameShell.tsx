@@ -8,8 +8,7 @@ import type { LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 // Shared chrome for every arcade vocab game (one build, ten games):
-//   - Back goes straight to /arcade in ONE hop (never via the /vocabulary
-//     redirect page).
+//   - Back returns to assigned vocabulary, separate from the arcade.
 //   - The old "How to Play" wall is a one-line hint; full rules live behind
 //     the "?" toggle for whoever wants them.
 //   - Setup is demoted to a collapsed "Options" panel. The panel stays
@@ -56,9 +55,9 @@ export default function VocabGameShell({
     <div className="container mx-auto px-4 py-6 space-y-4">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <Button variant="outline" size="sm" asChild>
-          <Link href="/arcade">
+          <Link href="/vocabulary/work">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Arcade
+            Assignments
           </Link>
         </Button>
         <Icon className="h-7 w-7 shrink-0" style={{ color: 'var(--primary)' }} aria-hidden />

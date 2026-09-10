@@ -59,7 +59,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLessonId])
 
-  // Deep-linked from the arcade hub's "current focus" steer (?lesson_id= or
+  // Deep-linked from a lesson or assignment (?lesson_id= or
   // ?unit_id= on ANY game page): preselect and resolve, no prop plumbing
   // needed. window.location (not useSearchParams) keeps prerender happy.
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function VocabPlaySource({ onResolved, initialLessonId }: { onRes
 
   const sel = { borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }
 
-  if (exact) return <div className="text-sm">{exactLabel} · <a className="underline" href={new URLSearchParams(location.search).get('task_id') ? `/vocabulary/work?task_id=${new URLSearchParams(location.search).get('task_id')}` : '/arcade'}>Back to words</a></div>
+  if (exact) return <div className="text-sm">{exactLabel} · <a className="underline" href={new URLSearchParams(location.search).get('task_id') ? `/vocabulary/work?task_id=${new URLSearchParams(location.search).get('task_id')}` : '/vocabulary/work'}>Back to words</a></div>
   if (loading) return <div className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading vocab…</div>
   if (units.length === 0 && lessons.length === 0) {
     return <div className="rounded-lg border p-3 text-sm" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>No vocabulary published yet — a teacher needs to add lesson vocab first.</div>
