@@ -2,9 +2,10 @@
 
 import { useEffect, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { ArrowDown, ArrowUpRight, Atom, Coins, Trophy, Gamepad2, Joystick, Target, Zap, Sigma, Search, X, Ruler, ArrowRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Atom, Coins, Trophy, Crown, Gamepad2, Joystick, Target, Zap, Sigma, Search, X, Ruler, ArrowRight } from 'lucide-react'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 import GamePreview from '@/components/arcade/GamePreview'
+import { UNIT_XP_TARGETS } from '@/lib/xp-policy'
 import styles from './arcade.module.css'
 
 type Cabinet = {
@@ -43,18 +44,59 @@ const FLOORS = {
 function CabinetCard({ game, category, balance, freeCredit }: { game: Cabinet; category: 'physics' | 'math' | 'midway'; balance: number; freeCredit: boolean }) {
   const free = game.costXp === 0
   const shortfall = Math.max(0, game.costXp - balance)
-  return <article className={styles.gameCard} style={{ '--game-color': FLOORS[category].color } as CSSProperties}>
-    <Link href={`/arcade/${game.slug}`} className={styles.gameLink}>
-      <div className={styles.artWrap}><GamePreview srcPath={game.srcPath} name={game.name} /><span className={styles.price}>{free ? 'Free · earn XP' : freeCredit ? 'Free first run' : `${game.costXp} XP / run`}</span></div>
-      <div className={styles.cardBody}>
-        <span className={styles.eyebrow}>{game.unit || (free ? 'Learning cabinet' : 'The Midway')}</span>
-        <h3>{game.name}<ArrowUpRight size={18} /></h3>
-        <p>{game.blurb || 'Step up to the cabinet and set your next personal best.'}</p>
-        <div className={styles.cardBottom}><span>{game.myBest ? `Best ${game.myBest.toLocaleString()}` : 'Set your first score'}{game.myWeeklyRank ? ` · #${game.myWeeklyRank}` : ''}</span><strong>{!free && !freeCredit && shortfall > 0 ? `Need ${shortfall} more XP` : 'Play'}<ArrowRight size={14} /></strong></div>
-      </div>
-    </Link>
-    <details className={styles.records}><summary><Trophy size={13} /> Leaderboards</summary><dl><div><dt>This week</dt><dd>{game.weeklyLeader ? `${game.weeklyLeader.name} · ${game.weeklyLeader.score.toLocaleString()}` : 'Be the first'}</dd></div><div><dt>All time</dt><dd>{game.hallOfFame ? `${game.hallOfFame.name} · ${game.hallOfFame.score.toLocaleString()}` : 'Be the first'}</dd></div></dl></details>
-  </article>
+  const price = freeCredit ? 0 : game.costXp
+
+  return (
+    <article className={styles.gameCard} style={{ '--game-color': FLOORS[category].color } as CSSProperties}>
+      <Link href={`/arcade/${game.slug}`} className={styles.gameLink}>
+        <div className={styles.artWrap}>
+          <GamePreview srcPath={game.srcPath} name={game.name} />
+        </div>
+        <div className={styles.cardBody}>
+          <span className={styles.eyebrow}>{game.unit || (free ? 'Learning cabinet' : 'The Midway')}</span>
+          <h3>{game.name}<ArrowUpRight size={18} /></h3>
+          <p>{game.blurb || 'Step up to the cabinet and set your next personal best.'}</p>
+
+          <div className={free ? styles.rewardPanel : styles.costPanel}>
+            <span className={styles.economyLabel}>{free ? <><Zap size={15} /> Earn up to</> : <><Coins size={15} /> Ranked run cost</>}</span>
+            <strong className={styles.economyAmount}>
+              {free ? UNIT_XP_TARGETS.cpa.dailyMath : price} <span>XP{free ? ' / day' : ' / run'}</span>
+            </strong>
+            <span className={styles.economyDetail}>
+              {free ? `${UNIT_XP_TARGETS.honors.dailyMath} XP / day for Honors` : freeCredit ? `First run free · normally ${game.costXp} XP` : 'One credit · play until game over'}
+            </span>
+            {free && <span className={styles.economyNote}>Shared Physics + Math daily cap. Accuracy determines your reward.</span>}
+          </div>
+
+          <div className={styles.leaderPanel}>
+            <h4><Trophy size={15} /> Leaderboard</h4>
+            <dl>
+              <div className={styles.weeklyLeader}>
+                <dt>This week’s leader</dt>
+                <dd>
+                  <span>{game.weeklyLeader?.name || 'Take the top spot'}</span>
+                  <strong>{game.weeklyLeader ? game.weeklyLeader.score.toLocaleString() : '—'}</strong>
+                </dd>
+              </div>
+              <div className={styles.recordRow}>
+                <dt><Crown size={13} /> All-time best</dt>
+                <dd><span>{game.hallOfFame?.name || 'Be the first'}</span><strong>{game.hallOfFame ? game.hallOfFame.score.toLocaleString() : '—'}</strong></dd>
+              </div>
+              <div className={styles.personalRecord}>
+                <dt>Your best <span>{game.myWeeklyRank ? `#${game.myWeeklyRank} this week` : 'Not ranked yet'}</span></dt>
+                <dd>{game.myBest ? game.myBest.toLocaleString() : '—'}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className={styles.playAction}>
+            <strong>{free ? 'Play free · earn XP' : freeCredit ? 'Use free first run' : shortfall > 0 ? `Need ${shortfall} more XP` : `Play for ${game.costXp} XP`}</strong>
+            <ArrowRight size={16} />
+          </div>
+        </div>
+      </Link>
+    </article>
+  )
 }
 
 export default function ArcadePage() {
@@ -117,7 +159,7 @@ export default function ArcadePage() {
           <div className={styles.floorHeading}><span className={styles.floorIcon} style={{ color: FLOORS[section.id].color }}><section.icon size={20} /></span><div><h3 id={`floor-${section.id}`}>{FLOORS[section.id].title}</h3><p>{FLOORS[section.id].desc}</p></div><span className={styles.floorCount}>{String(section.count).padStart(2, '0')}</span></div>
           <div className={styles.gameGrid}>
             {section.cabinets.map(g => <CabinetCard key={g.slug} game={g} category={section.id as 'physics' | 'math' | 'midway'} balance={data?.balance.balance ?? 0} freeCredit={!!data?.freeCreditAvailable} />)}
-            {section.workshop && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}><Link href="/arcade/tape-measure" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/tape-workshop/index.html" name="Tape Workshop" /><span className={styles.price}>Free practice</span></div><div className={styles.cardBody}><span className={styles.eyebrow}>Trades workshop</span><h3>Tape Workshop<ArrowUpRight size={18} /></h3><p>Read the marks, align zero, and measure with confidence. Inch fractions, decimals, and metric.</p><div className={styles.cardBottom}><span>Real-world skills</span><strong>Explore <ArrowRight size={14} /></strong></div></div></Link></article>}
+            {section.workshop && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}><Link href="/arcade/tape-measure" className={styles.gameLink}><div className={styles.artWrap}><GamePreview srcPath="/games/tape-workshop/index.html" name="Tape Workshop" /></div><div className={styles.cardBody}><span className={styles.eyebrow}>Trades workshop</span><h3>Tape Workshop<ArrowUpRight size={18} /></h3><p>Read the marks, align zero, and measure with confidence. Inch fractions, decimals, and metric.</p><div className={styles.rewardPanel}><span className={styles.economyLabel}><Ruler size={15} /> Hands-on workshop</span><strong className={styles.economyAmount}>Free <span>practice</span></strong><span className={styles.economyNote}>Practice your measuring skills. No XP or ranked leaderboard.</span></div><div className={styles.playAction}><strong>Enter workshop</strong><ArrowRight size={16} /></div></div></Link></article>}
           </div>
         </section>)}
         {visible.length === 0 && (data || query || category === 'workshop') && <div className={styles.empty}><Search size={26} /><h3>{query ? 'No games found' : 'No cabinets here yet'}</h3><p>{query ? 'Try a different topic or explore the other categories.' : 'Explore another category while this floor gets ready.'}</p><button onClick={() => { setQuery(''); setCategory('all') }}>Show all games</button></div>}

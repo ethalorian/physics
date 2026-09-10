@@ -4,6 +4,8 @@ The arcade contains Physics, Math, Workshop, and Midway. Vocabulary games, vocab
 
 Vocabulary remains available through lesson blocks and assignments. The vocabulary index and shared game-return links now lead to vocabulary assignments instead of the arcade. Lesson and assignment practice logic is unchanged.
 
+Game cards keep weekly leaders, all-time records, personal bests, and weekly rank visible without disclosure controls. Learning cards prominently show the shared daily earning cap (10 XP, or 15 XP for Honors), sourced from `UNIT_XP_TARGETS`, with the accuracy qualification. Midway cards prominently show the actual ranked-run price; eligible first runs display 0 XP and the normal price. Tape Workshop explicitly remains free practice without XP or ranked standings.
+
 ## Game previews
 
 Every shipped active game has its own real gameplay capture, including the Tape Workshop. The 24 WebP images in `public/arcade/previews` are 720 × 450 and mapped by the cabinet's `srcPath` in `src/components/arcade/game-previews.json`. Next Image handles loading and sizing. An unknown or failed preview displays an explicit placeholder rather than another game's art.

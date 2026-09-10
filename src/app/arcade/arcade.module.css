@@ -65,3 +65,45 @@
 /* Cabinet-based stats can have longer labels than the former vocabulary stats. */
 .playerBar strong{white-space:normal;overflow-wrap:break-word;line-height:1.4;display:block}
 .dailyFooter{display:block;margin-top:12px}
+
+/* Rewards and standings are always visible where students choose a game. */
+.rewardPanel,.costPanel {
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #376a5d;
+  background: #153c33;
+  color: #cbf5e5;
+}
+.costPanel { background: #49321b; border-color: #82643c; color: #ffe2aa; }
+.economyLabel { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; }
+.economyAmount { display: block; margin: 5px 0 3px; font-size: 30px; line-height: 1.2; font-weight: 750; letter-spacing: -1px; }
+.economyAmount span { font-size: 15px; font-weight: 600; letter-spacing: -.2px; }
+.economyDetail { display: block; font-size: 11px; font-weight: 600; line-height: 1.6; }
+.economyNote { display: block; margin-top: 7px; font-size: 10px; line-height: 1.6; color: #b6d6c9; }
+.leaderPanel { margin-bottom: 14px; }
+.leaderPanel h4 { display: flex; align-items: center; gap: 6px; margin-bottom: 10px; font-size: 12px; font-weight: 700; }
+.leaderPanel h4 svg { color: var(--primary); }
+.weeklyLeader { padding: 11px; border: 1px solid var(--border); border-radius: 8px; background: color-mix(in srgb, var(--primary) 5%, var(--card)); }
+.weeklyLeader dt { font-size: 10px; color: var(--muted-foreground); margin-bottom: 5px; }
+.weeklyLeader dd { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 5px 10px; font-size: 13px; font-weight: 600; }
+.weeklyLeader dd span,.recordRow dd span { min-width: 0; overflow-wrap: anywhere; }
+.weeklyLeader strong { font-size: 19px; letter-spacing: -.5px; font-variant-numeric: tabular-nums; }
+.recordRow { padding: 11px 1px; border-bottom: 1px solid var(--border); }
+.recordRow dt { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted-foreground); margin-bottom: 5px; }
+.recordRow dd { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 10px; font-size: 11px; }
+.recordRow strong { font-variant-numeric: tabular-nums; }
+.personalRecord { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 1px 0; }
+.personalRecord dt { font-size: 11px; font-weight: 600; }
+.personalRecord dt span { display: block; margin-top: 3px; color: var(--muted-foreground); font-size: 10px; font-weight: 400; }
+.personalRecord dd { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.playAction { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 12px; min-height: 44px; border-radius: 8px; background: var(--foreground); color: var(--background); font-size: 11px; margin-top: auto; }
+.playAction svg { flex-shrink: 0; }
+@media(max-width:620px) {
+  .rewardPanel,.costPanel { padding: 12px; }
+  .economyAmount { font-size: 27px; }
+  .economyAmount span { font-size: 12px; }
+  .economyLabel { font-size: 9px; letter-spacing: .3px; }
+  .weeklyLeader { padding: 9px; }
+  .weeklyLeader dd { font-size: 12px; }
+}
