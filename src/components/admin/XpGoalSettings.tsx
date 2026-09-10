@@ -20,10 +20,14 @@ export default function XpGoalSettings() {
   const [error, setError] = useState<string | null>(null)
 
   const load = useCallback(() => {
+    setError(null)
     fetch('/api/teacher/xp-goals')
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => { if (d) { setGoals(d.goals); setDays(d.specialDays ?? []) } })
-      .catch(() => {})
+      .then(async (r) => {
+        if (!r.ok) throw new Error('XP goals could not load. Please try again.')
+        return r.json()
+      })
+      .then((d) => { setGoals(d.goals); setDays(d.specialDays ?? []) })
+      .catch(() => { setError('XP goals could not load. Please try again.') })
   }, [])
   useEffect(() => { load() }, [load])
 
@@ -43,7 +47,11 @@ export default function XpGoalSettings() {
     }
   }
 
-  if (!goals) return null
+  if (!goals) return (
+    <div className="py-4 text-sm">
+      {error ? <div role="alert"><p>{error}</p><button onClick={load} className="mt-3 rounded-lg border px-4 py-2">Retry XP goals</button></div> : <p role="status">Loading XP goals…</p>}
+    </div>
+  )
   const num = (v: string) => Math.max(0, Math.min(500, parseInt(v || '0', 10) || 0))
 
   const field = (label: string, value: number, onChange: (n: number) => void, hint: string) => (

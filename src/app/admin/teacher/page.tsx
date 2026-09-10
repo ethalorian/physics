@@ -1,366 +1,127 @@
 "use client"
 
-import { useEffect, useState, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
+import { ArrowRight, BookOpen, CalendarDays, Check, Compass, Eye, GraduationCap, MonitorPlay, Settings2, ClipboardCheck, Gift, DoorOpen } from 'lucide-react'
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import XpGoalSettings from '@/components/admin/XpGoalSettings'
-import {
-  LayoutGrid, GraduationCap, CalendarClock, Gift, Eye, Sparkles,
-  BookOpen, Compass, Check, ArrowRight, DoorOpen, Lock, type LucideIcon,
-} from 'lucide-react'
+import { setStudentView } from '@/lib/view-as-shared'
+import styles from './teacher.module.css'
 
 type StepKey = 'classroom' | 'curriculum' | 'pacing' | 'tour'
-interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean; classCount: number; untracked?: number }
+interface Status { steps: Record<StepKey, boolean>; doneCount: number; total: number; complete: boolean }
 interface Course { id: string; name: string; section: string | null; track: string | null; program?: string | null }
-
-// The four onboarding steps. `action` says how the CTA behaves:
-//  - 'link'   → go to `href` (optionally with a "Mark done" for no-signal steps)
-//  - 'tracks' → open the curriculum-track picker (real action)
-//  - 'tour'   → open the guided walkthrough (real action)
-type StepAction = 'link' | 'tracks' | 'tour'
-const STEPS: { key: StepKey; label: string; desc: string; href?: string; cta: string; mark: boolean; action: StepAction; Icon: LucideIcon }[] = [
-  { key: 'classroom', label: 'Connect Google Classroom', desc: 'Sync a class roster so your students flow into the app.', href: '/admin/roster', cta: 'Connect & import', mark: false, action: 'link', Icon: GraduationCap },
-  { key: 'curriculum', label: 'Choose your class type', desc: 'Pick the course you’re teaching. More types are coming.', cta: 'Choose class type', mark: false, action: 'tracks', Icon: BookOpen },
-  { key: 'pacing', label: 'Set up pacing & calendar', desc: 'Map your sections to the school calendar.', href: '/admin/pacing', cta: 'Open pacing', mark: true, action: 'link', Icon: CalendarClock },
-  { key: 'tour', label: 'Take the quick tour', desc: 'A 2-minute orientation to grading and the Control Room.', cta: 'Show me around', mark: false, action: 'tour', Icon: Compass },
+const TYPES = [
+  { id: 'cpa', label: 'CPA Physics', description: 'Core concepts, investigations, and practice.', track: 'cpa', program: 'physics' },
+  { id: 'honors', label: 'Honors Physics', description: 'The core curriculum with deeper quantitative work.', track: 'honors', program: 'physics' },
+  { id: 'trades', label: 'Trades Physics', description: 'Measurement, structures, energy, and practical applications.', track: 'cpa', program: 'trades' },
+  { id: 'projects', label: 'Project Physics', description: 'Build-based learning with bilingual project packets.', track: 'cpa', program: 'projects' },
 ]
-
-// Curriculum tracks. CPA and Honors are live; AP and Project-Based come later
-// (shown but disabled). A class typed 'honors' unlocks the honors thread —
-// honors-only lessons and blocks become visible for that class.
-// Class types. `track` is the level gate for physics content; `program` picks the
-// curriculum (units/targets/lessons). Trades is its own curriculum, not a level.
-const TRACKS: { id: string; label: string; desc: string; enabled: boolean; track: string; program: 'physics' | 'trades' | 'projects' }[] = [
-  { id: 'cpa', label: 'CPA Physics', desc: 'College-Prep Physics — the base curriculum.', enabled: true, track: 'cpa', program: 'physics' },
-  { id: 'honors', label: 'Honors Physics', desc: 'Extends CPA with the honors thread — deeper demand, same scope.', enabled: true, track: 'honors', program: 'physics' },
-  { id: 'trades', label: 'Trades Physics', desc: 'The fieldhouse curriculum — length & tolerance, plumb/level/square, load, pressure, heat, electrical.', enabled: true, track: 'cpa', program: 'trades' },
-  { id: 'ap', label: 'AP Physics', desc: 'Coming soon.', enabled: false, track: 'ap', program: 'physics' },
-  { id: 'projects', label: 'Project Physics', desc: 'The MVP section — one build per academic week, physics pulled in as each build demands it. Bilingual packets.', enabled: true, track: 'cpa', program: 'projects' },
+const TOUR = [
+  { title: 'Start with your class.', body: 'Open a class to find its roster, lesson access, and student progress. Your workspace brings together the classes you imported from Google Classroom.', href: '/admin/classes', link: 'Explore your classes', Icon: GraduationCap },
+  { title: 'A plan you can teach from.', body: 'Lesson plans organize each unit day by day. Use Pacing to place lessons on your calendar, then choose which lessons students can open.', href: '/admin/teacher/plans', link: 'Browse lesson plans', Icon: BookOpen },
+  { title: 'Keep your attention in the room.', body: 'The iPad Command Center runs your projected lesson, polls, and timers. Classroom observations lets you record feedback and mastery evidence as you walk.', href: '/admin/command-center', link: 'Open Command Center', Icon: MonitorPlay },
+  { title: 'Evidence for your next decision.', body: 'The Control Room brings student work and mastery ratings together. Use that evidence to decide what to revisit and whom to support. Final grades remain your professional judgment.', href: '/admin/control-room', link: 'Open Control Room', Icon: ClipboardCheck },
 ]
-
-// Short guided-tour slides.
-const TOUR: { title: string; body: string }[] = [
-  { title: 'Welcome to your dashboard', body: 'This is home base. The tiles below are your tools; the setup checklist clears as you finish each step.' },
-  { title: 'The Control Room', body: 'Mission control for grading. Tap any cell to open a student’s work and rate it, or grade lesson completion as a percentage.' },
-  { title: 'Mastery, not grades', body: 'The app records mastery ratings (1·2·3 per target) and math fluency — it never asserts a grade. Term grades are your professional judgment, made from the mastery and fluency evidence.' },
-  { title: 'Roster, classes & pacing', body: 'Roster syncs your Google Classroom. Open a class to see its students and set lesson open/close dates. Pacing keeps your sections on the calendar.' },
+const SETUP: { key: StepKey; title: string; body: string; href?: string }[] = [
+  { key: 'classroom', title: 'Bring in your classes', body: 'Connect Google Classroom and import a roster.', href: '/admin/roster' },
+  { key: 'curriculum', title: 'Choose a curriculum', body: 'Match each class to the course you teach.' },
+  { key: 'pacing', title: 'Make the calendar yours', body: 'Set your rotation and lesson schedule.', href: '/admin/pacing' },
+  { key: 'tour', title: 'Find your way around', body: 'A short introduction to your teaching tools.' },
 ]
-
-// Teacher tools. `needs` ties a tile to an onboarding step — while that step is
-// incomplete the tile wears a "Set up" badge.
-const TILES: { href: string; label: string; desc: string; Icon: LucideIcon; accent: string; needs?: StepKey }[] = [
-  { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Your day-by-day teacher plans for each unit', Icon: BookOpen, accent: 'var(--primary)', needs: 'curriculum' },
-  { href: '/admin/command-center', label: 'iPad Command Center', desc: 'Control the projector, polls, timers and group activities', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
-  { href: '/admin/observe', label: 'Classroom observations', desc: 'Quick mastery ratings and feedback while you walk the room', Icon: Eye, accent: 'var(--primary)', needs: 'classroom' },
-  { href: '/admin/control-room', label: 'Control Room', desc: 'Rate mastery from student work, grade lessons, copy grades to Aspen', Icon: LayoutGrid, accent: 'var(--primary)', needs: 'classroom' },
-  { href: '/admin/roster', label: 'Roster & classes', desc: 'Your synced classes and student performance', Icon: GraduationCap, accent: 'var(--primary)', needs: 'classroom' },
-  { href: '/admin/pacing', label: 'Pacing', desc: 'Where each of your sections is on the calendar', Icon: CalendarClock, accent: 'var(--reward)', needs: 'pacing' },
-  { href: '/admin/lesson-access', label: 'Lesson access', desc: 'Open & close published lessons for each class, and schedule dates', Icon: DoorOpen, accent: 'var(--primary)', needs: 'classroom' },
-  { href: '/admin/store', label: 'Rewards', desc: 'Fulfil redemptions and manage the points store', Icon: Gift, accent: 'var(--reward)' },
-  { href: '/home', label: 'View as student', desc: 'See what your students see', Icon: Eye, accent: 'var(--muted-foreground)' },
-]
-
+function typeFor(course: Course) {
+  return TYPES.find(type => type.program === (course.program ?? 'physics') && type.track === course.track)
+}
+async function request<T>(url: string, body?: object): Promise<T> {
+  const response = await fetch(url, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : undefined)
+  const data = await response.json()
+  if (!response.ok || data.error) throw new Error(data.error || 'The request could not be completed. Please try again.')
+  return data as T
+}
 
 export default function TeacherDashboard() {
-  const { data: session } = useSession()
   const [status, setStatus] = useState<Status | null>(null)
   const [courses, setCourses] = useState<Course[]>([])
-  const [showTracks, setShowTracks] = useState(false)
-  const [showTour, setShowTour] = useState(false)
-  const [tourIdx, setTourIdx] = useState(0)
-  const firstName = (session?.user?.name ?? 'there').split(' ')[0]
-
-  const load = useCallback(() => {
-    fetch('/api/teacher/onboarding')
-      .then((r) => r.json())
-      .then((d: Status & { error?: string }) => { if (!d.error) setStatus(d) })
-      .catch(() => {})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [saveError, setSaveError] = useState('')
+  const [notice, setNotice] = useState('')
+  const [saving, setSaving] = useState(false)
+  const [dialog, setDialog] = useState<'types' | 'tour' | 'goals' | null>(null)
+  const [tourIndex, setTourIndex] = useState(0)
+  const load = useCallback(async () => {
+    setLoading(true); setError('')
+    try {
+      const [nextStatus, nextCourses] = await Promise.all([request<Status>('/api/teacher/onboarding'), request<{ courses: Course[] }>('/api/teacher/courses')])
+      setStatus(nextStatus); setCourses(nextCourses.courses)
+    } catch (e) { setError(e instanceof Error ? e.message : 'Your workspace could not load.') }
+    finally { setLoading(false) }
   }, [])
-  const loadCourses = useCallback(() => {
-    fetch('/api/teacher/courses')
-      .then((r) => r.json())
-      .then((d: { courses?: Course[] }) => setCourses(d.courses ?? []))
-      .catch(() => {})
-  }, [])
-  useEffect(() => { load(); loadCourses() }, [load, loadCourses])
-
-  const markDone = async (step: StepKey) => {
-    await fetch('/api/teacher/onboarding', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ step, done: true }),
-    }).catch(() => {})
-    load()
+  useEffect(() => { void load() }, [load])
+  const openDialog = (value: 'types' | 'tour' | 'goals') => { setSaveError(''); setNotice(''); setTourIndex(0); setDialog(value) }
+  const save = async (url: string, body: object, message: string, close = false) => {
+    setSaving(true); setSaveError(''); setNotice('')
+    try {
+      await request(url, body)
+      setNotice(message)
+      if (close) setDialog(null)
+      await load()
+    } catch (e) { setSaveError(e instanceof Error ? e.message : 'Your changes could not be saved.') }
+    finally { setSaving(false) }
   }
-
-  // Assign a class type to ONE course; re-derives the curriculum step.
-  const assignTrack = async (courseId: string, typeId: string) => {
-    const t = TRACKS.find((x) => x.id === typeId)
-    if (!t) return
-    await fetch('/api/teacher/courses', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ course_id: courseId, track: t.track, program: t.program }),
-    }).catch(() => {})
-    loadCourses()
-    load()
-  }
-  const openTracks = () => { loadCourses(); setShowTracks(true) }
-
-  const finishTour = async () => {
-    await fetch('/api/teacher/onboarding', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ step: 'tour', done: true }),
-    }).catch(() => {})
-    setShowTour(false)
-    setTourIdx(0)
-    load()
-  }
-
-  const steps = status?.steps
-  const setupComplete = status?.complete ?? false
+  const ready = !loading && !error && status
+  const tour = TOUR[tourIndex]
+  const TourIcon = tour.Icon
 
   return (
-    <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      {/* header */}
-      <div
-        className="rounded-2xl p-6 mb-6"
-        style={{
-          border: '1px solid color-mix(in oklch, var(--primary) 30%, var(--border))',
-          background: 'radial-gradient(90% 140% at 92% -20%, color-mix(in oklch, var(--primary) 22%, transparent), transparent 55%), var(--card)',
-        }}
-      >
-        <div className="flex items-center gap-2 mb-1">
-          <Sparkles size={16} style={{ color: 'var(--primary)' }} />
-          <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Teacher dashboard</span>
+    <div className={styles.workspace}>
+      <header className={styles.heading}>
+        <div><p className={styles.eyebrow}>Antocci Physics / Teacher workspace</p><h1>A good day to teach.</h1><p>Your classes, your next lesson, and the evidence that moves learning forward.</p></div>
+        <button className={styles.quietButton} onClick={() => openDialog('tour')}><Compass size={17} /> Quick tour</button>
+      </header>
+
+      <section className={styles.hero} aria-labelledby="lesson-heading">
+        <div className={styles.heroCopy}><p className={styles.eyebrow}>From preparation to participation</p><h2 id="lesson-heading">Bring physics<br />into the room.</h2><p>Start with a lesson plan. Make space for investigation, conversation, and the moment an idea clicks.</p><Link className={styles.primaryButton} href="/admin/teacher/plans">Find your next lesson <ArrowRight size={17} /></Link></div>
+        <div className={styles.lessonPath} aria-label="Teaching workflow">
+          <span className={styles.pathLabel}>Your teaching rhythm</span>
+          {[{ number: '01', title: 'Prepare with purpose', body: 'Day-by-day plans, ready to make your own.', Icon: BookOpen }, { number: '02', title: 'Make thinking visible', body: 'Live questions, investigations, and discussion.', Icon: MonitorPlay }, { number: '03', title: 'Know what comes next', body: 'Student work and observations in one place.', Icon: ClipboardCheck }].map(({ number, title, body, Icon }) => <div className={styles.pathStep} key={number}><span>{number}</span><div><h3><Icon size={17} />{title}</h3><p>{body}</p></div></div>)}
         </div>
-        <h1 className="text-2xl font-semibold tracking-tight">Welcome{status ? `, ${firstName}` : ''}.</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-          {setupComplete
-            ? 'You’re all set up. Everything you need to teach is below.'
-            : 'Let’s get your room ready — finish the setup steps and the badges below will clear.'}
-        </p>
+      </section>
+
+      {error && <div role="alert" className={styles.error}><div><strong>We couldn’t load your workspace.</strong><p>{error}</p></div><button className={styles.quietButton} onClick={() => void load()}>Try again</button></div>}
+      {notice && <p role="status" className={styles.notice}><Check size={16} />{notice}</p>}
+      {!dialog && saveError && <p role="alert" className={styles.error}>{saveError}</p>}
+
+      <div className={styles.workspaceGrid}>
+        <section className={styles.classes} aria-labelledby="classes-heading">
+          <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>Your starting point</p><h2 id="classes-heading">Your classes{ready && courses.length > 0 && <span className={styles.count}>{courses.length}</span>}</h2></div><Link className={styles.textLink} href="/admin/roster">Manage classes <ArrowRight size={15} /></Link></div>
+          {loading ? <div className={styles.empty} role="status">Loading your classes…</div> : error ? <div className={styles.empty}>Your classes will appear when the connection is restored.</div> : courses.length === 0 ? <div className={styles.empty}><GraduationCap size={32} /><h3>One class is all you need to begin.</h3><p>Import a Google Classroom roster, choose its curriculum, and start planning for your students.</p><Link className={styles.darkButton} href="/admin/roster">Connect Google Classroom <ArrowRight size={16} /></Link><small>You can explore lesson plans before connecting.</small></div> : <div className={styles.classList}>{courses.map((course, i) => <Link className={styles.classRow} key={course.id} href={`/admin/classes/${course.id}`}><span className={styles.classNumber}>{String(i + 1).padStart(2, '0')}</span><div><h3>{course.name}</h3><p>{course.section ? `${course.section} · ` : ''}{typeFor(course)?.label ?? (course.track === 'ap' ? 'AP Physics' : 'Choose a curriculum')}</p></div><ArrowRight size={18} /></Link>)}</div>}
+        </section>
+
+        <aside className={styles.setup} aria-labelledby="setup-heading"><div className={styles.sectionHeading}><h2 id="setup-heading">{ready && status.complete ? 'Make it yours' : 'A confident start'}</h2><Settings2 size={18} /></div>
+          {loading ? <p role="status">Checking your setup…</p> : error ? <p>Setup status is unavailable. Try loading the workspace again.</p> : status && <><p>{status.complete ? 'Your setup is complete. Adjust it whenever your classes change.' : `${status.doneCount} of ${status.total} setup steps complete`}</p><progress aria-label="Setup progress" max={status.total} value={status.doneCount} />
+            <ol className={styles.setupList}>{SETUP.map((step, i) => { const done = status.steps[step.key]; const needsClass = step.key === 'curriculum' && courses.length === 0; return <li key={step.key}><span className={done ? styles.stepDone : styles.stepNumber}>{done ? <Check size={14} aria-label="Complete" /> : i + 1}</span><div>{step.href ? <Link href={step.href}>{step.title}<ArrowRight size={13} /></Link> : <button disabled={needsClass} onClick={() => openDialog(step.key === 'tour' ? 'tour' : 'types')}>{step.title}<ArrowRight size={13} /></button>}<p>{needsClass ? 'Import a class first to choose its curriculum.' : step.body}</p>{step.key === 'pacing' && !done && <button className={styles.confirmPacing} disabled={saving} onClick={() => void save('/api/teacher/onboarding', { step: 'pacing', done: true }, 'Calendar setup marked complete.')}>{saving ? 'Saving…' : 'I’ve set my calendar'}</button>}</div></li> })}</ol></>}
+        </aside>
       </div>
 
-      {/* onboarding checklist (until all four are done) */}
-      {status && !setupComplete && (
-        <div className="rounded-2xl border p-5 mb-7" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Get set up</div>
-            <div className="flex items-center gap-2">
-              <div className="rounded-full overflow-hidden" style={{ width: 140, height: 8, background: 'var(--secondary)' }}>
-                <span style={{ display: 'block', height: '100%', width: `${(status.doneCount / status.total) * 100}%`, background: 'var(--primary)', borderRadius: 9999 }} />
-              </div>
-              <span className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>{status.doneCount} of {status.total}</span>
-            </div>
-          </div>
-          {/* ordered path: each step unlocks the next. This is honest about the
-              real dependency chain (typing classes NEEDS an imported roster;
-              pacing needs typed classes) instead of a flat grid that lets a
-              teacher click step 2 and dead-end in an empty picker. */}
-          <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-            {STEPS.map((s, i) => {
-              const done = steps?.[s.key] ?? false
-              // Locked until every earlier step is done.
-              const locked = !done && STEPS.slice(0, i).some((prev) => !(steps?.[prev.key] ?? false))
-              const prevLabel = i > 0 ? STEPS[i - 1].label : ''
-              const Ico = s.Icon
-              return (
-                <div
-                  key={s.key}
-                  className="rounded-xl border p-4 flex flex-col"
-                  style={{
-                    borderColor: done ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'var(--border)',
-                    background: done ? 'color-mix(in oklch, var(--success) 8%, var(--card))' : 'var(--card)',
-                    opacity: locked ? 0.62 : 1,
-                  }}
-                >
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className="grid place-items-center shrink-0" style={{ width: 30, height: 30, borderRadius: 8, background: done ? 'var(--success)' : locked ? 'var(--secondary)' : `color-mix(in oklch, var(--primary) 14%, transparent)`, color: done ? 'var(--card)' : locked ? 'var(--muted-foreground)' : 'var(--primary)' }}>
-                      {done ? <Check size={17} /> : locked ? <Lock size={15} /> : <Ico size={17} />}
-                    </span>
-                    <span className="text-[11px] font-bold" style={{ color: 'var(--muted-foreground)' }}>{i + 1}</span>
-                    <span className="font-semibold text-sm">{s.label}</span>
-                  </div>
-                  <p className="text-xs mb-3 flex-1" style={{ color: 'var(--muted-foreground)' }}>{s.desc}</p>
-                  {done ? (
-                    <span className="text-xs font-semibold" style={{ color: 'var(--success)' }}>
-                      {s.key === 'curriculum' ? 'Classes typed ✓' : 'Done'}
-                    </span>
-                  ) : locked ? (
-                    <span className="text-xs font-medium inline-flex items-center gap-1" style={{ color: 'var(--muted-foreground)' }}>
-                      <Lock size={11} /> Unlocks after &ldquo;{prevLabel}&rdquo;
-                    </span>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      {s.action === 'link' && s.href ? (
-                        <Link href={s.href} className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-                          {s.cta} <ArrowRight size={13} />
-                        </Link>
-                      ) : (
-                        <button
-                          onClick={() => { if (s.action === 'tracks') openTracks(); else if (s.action === 'tour') { setTourIdx(0); setShowTour(true) } }}
-                          className="inline-flex items-center gap-1 text-xs font-semibold rounded-lg px-2.5 py-1.5"
-                          style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}
-                        >
-                          {s.cta} <ArrowRight size={13} />
-                        </button>
-                      )}
-                      {s.mark && (
-                        <button onClick={() => markDone(s.key)} className="text-xs font-medium rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'transparent', color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-                          Mark done
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
-          </div>
+      <section aria-labelledby="workflow-heading"><div className={styles.sectionHeading}><div><p className={styles.eyebrow}>Built around your day</p><h2 id="workflow-heading">Prepare. Teach. Understand.</h2></div></div>
+        <div className={styles.workflows}>
+          <article className={styles.workflow}><span className={styles.workflowIcon}><CalendarDays size={23} /></span><h3>Before the bell</h3><p>Know where you’re headed and give students a clear place to begin.</p><Link href="/admin/teacher/plans">Lesson plans <ArrowRight size={16} /></Link><Link href="/admin/pacing">Pacing & calendar <ArrowRight size={16} /></Link><Link href="/admin/lesson-access">Open lessons for a class <DoorOpen size={16} /></Link></article>
+          <article className={styles.workflow}><span className={styles.workflowIcon}><MonitorPlay size={23} /></span><h3>In the classroom</h3><p>Lead the lesson, listen to students, and capture thinking as it happens.</p><Link href="/admin/command-center">iPad Command Center <ArrowRight size={16} /></Link><Link href="/admin/observe">Classroom observations <ArrowRight size={16} /></Link><Link href="/admin/lobby">Group activities <ArrowRight size={16} /></Link></article>
+          <article className={styles.workflow}><span className={styles.workflowIcon}><ClipboardCheck size={23} /></span><h3>See the learning</h3><p>Look at the evidence. Find the next question, conversation, or small-group lesson.</p><Link href="/admin/control-room">Review student work <ArrowRight size={16} /></Link><Link href="/admin/classes">Class progress <ArrowRight size={16} /></Link><Link href="/admin/vocabulary/tasks">Vocabulary practice <ArrowRight size={16} /></Link></article>
         </div>
-      )}
+      </section>
+      <footer className={styles.footer}><div><h2>The details that support your day.</h2><p>Fine-tune motivation or take a look from the student’s side.</p></div><div className={styles.footerActions}><button onClick={() => openDialog('goals')}><Settings2 size={16} /> XP goals</button><Link href="/admin/store"><Gift size={16} /> Rewards</Link><button onClick={() => { setStudentView(); window.location.assign('/home') }}><Eye size={16} /> Preview student view</button></div></footer>
 
-      {/* tools */}
-      <div className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--muted-foreground)' }}>Your tools</div>
-      <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))' }}>
-        {/* Daily XP goals — this teacher's own config (never global) */}
-        <XpGoalSettings />
-        {/* Class setup — persistent (Surface 9): setup doesn't evaporate once the
-            checklist clears. Re-type a class, revisit pacing, or replay the tour
-            any time, without hunting for the onboarding flow. */}
-        <div
-          className="rounded-2xl border p-5 h-full"
-          style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))' }}
-        >
-          <div className="grid place-items-center mb-3" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
-            <Compass size={22} />
-          </div>
-          <div className="font-bold" style={{ fontSize: 16 }}>Class setup</div>
-          <div className="text-sm mt-1 mb-3" style={{ color: 'var(--muted-foreground)' }}>Re-type your classes, adjust pacing, or replay the tour.</div>
-          <div className="flex flex-wrap gap-2">
-            <button onClick={openTracks} className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}>
-              Class types
-            </button>
-            <Link href="/admin/pacing" className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
-              Pacing
-            </Link>
-            <button onClick={() => { setTourIdx(0); setShowTour(true) }} className="text-xs font-semibold rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)', cursor: 'pointer' }}>
-              Replay tour
-            </button>
-          </div>
-        </div>
-        {TILES.map((t) => {
-          const Ico = t.Icon
-          const needsSetup = t.needs ? !(steps?.[t.needs] ?? false) : false
-          return (
-            <Link key={t.href} href={t.href}>
-              <div
-                className="rounded-2xl border p-5 h-full transition-transform relative"
-                style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.borderColor = t.accent }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)' }}
-              >
-                {needsSetup && (
-                  <span className="absolute" style={{ top: 12, right: 12, fontSize: 10, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--reward-foreground)', background: 'color-mix(in oklch, var(--reward) 30%, transparent)', borderRadius: 9999, padding: '3px 8px' }}>
-                    Set up
-                  </span>
-                )}
-                <div className="grid place-items-center mb-3" style={{ width: 44, height: 44, borderRadius: 12, background: `color-mix(in oklch, ${t.accent} 16%, transparent)`, color: t.accent }}>
-                  <Ico size={22} />
-                </div>
-                <div className="font-bold" style={{ fontSize: 16 }}>{t.label}</div>
-                <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>{t.desc}</div>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* per-course class-type picker overlay */}
-      {showTracks && (
-        <div onClick={() => setShowTracks(false)} style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
-          <div onClick={(e) => e.stopPropagation()} className="rounded-2xl border p-6 w-full" style={{ maxWidth: 520, maxHeight: '85vh', overflowY: 'auto', background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <div className="text-lg font-semibold tracking-tight mb-1">Assign a class type to each course</div>
-            <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Set the course type for each imported class. CPA and Honors follow the physics curriculum; Trades follows its own.</p>
-            {courses.length === 0 ? (
-              // Not a dead-end: hand the teacher the actual next action.
-              <div>
-                <p className="text-sm mb-3" style={{ color: 'var(--muted-foreground)' }}>No imported courses yet — class types attach to imported classes, so the roster comes first.</p>
-                <Link href="/admin/roster" className="inline-flex items-center gap-1.5 text-sm font-semibold rounded-lg px-3 py-2" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>
-                  <GraduationCap size={15} /> Connect Google Classroom <ArrowRight size={14} />
-                </Link>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {courses.map((c) => (
-                  <div key={c.id} className="rounded-xl border p-3" style={{ borderColor: c.track ? 'color-mix(in oklch, var(--success) 40%, var(--border))' : 'color-mix(in oklch, var(--reward) 40%, var(--border))', background: 'var(--card)' }}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold text-sm">{c.name}{c.section ? ` · ${c.section}` : ''}</span>
-                      {!c.track && <span className="text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--reward-foreground)' }}>Needs type</span>}
-                    </div>
-                    <div className="flex gap-2 flex-wrap">
-                      {TRACKS.map((tr) => {
-                        const selected = c.program === 'trades' || c.program === 'projects' ? tr.id === c.program : (c.track === tr.id && tr.program === 'physics')
-                        return (
-                          <button
-                            key={tr.id}
-                            onClick={() => tr.enabled && assignTrack(c.id, tr.id)}
-                            disabled={!tr.enabled}
-                            className="text-xs font-semibold rounded-lg border px-2.5 py-1.5"
-                            style={{
-                              borderColor: selected ? 'var(--success)' : 'var(--border)',
-                              background: selected ? 'color-mix(in oklch, var(--success) 16%, var(--card))' : tr.enabled ? 'var(--card)' : 'color-mix(in oklch, var(--secondary) 50%, transparent)',
-                              color: selected ? 'var(--success)' : tr.enabled ? 'var(--foreground)' : 'var(--muted-foreground)',
-                              opacity: tr.enabled ? 1 : 0.5, cursor: tr.enabled ? 'pointer' : 'not-allowed',
-                            }}
-                          >
-                            {tr.label}{selected ? ' ✓' : tr.enabled ? '' : ' · soon'}
-                          </button>
-                        )
-                      })}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <button onClick={() => setShowTracks(false)} className="mt-4 text-xs font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Close</button>
-          </div>
-        </div>
-      )}
-
-      {/* guided tour overlay */}
-      {showTour && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'color-mix(in oklch, var(--foreground) 45%, transparent)', display: 'grid', placeItems: 'center', padding: 16 }}>
-          <div className="rounded-2xl border p-6 w-full" style={{ maxWidth: 460, background: 'var(--card)', borderColor: 'var(--border)' }}>
-            <div className="flex items-center gap-2 mb-1">
-              <Compass size={16} style={{ color: 'var(--primary)' }} />
-              <span className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--primary)' }}>Quick tour · {tourIdx + 1} of {TOUR.length}</span>
-            </div>
-            <div className="text-lg font-semibold tracking-tight mb-1">{TOUR[tourIdx].title}</div>
-            <p className="text-sm mb-5" style={{ color: 'var(--muted-foreground)' }}>{TOUR[tourIdx].body}</p>
-            <div className="flex items-center justify-between">
-              <button
-                onClick={() => setTourIdx((i) => Math.max(0, i - 1))}
-                disabled={tourIdx === 0}
-                className="text-sm font-medium rounded-lg px-3 py-1.5 disabled:opacity-40"
-                style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--foreground)', cursor: tourIdx === 0 ? 'default' : 'pointer' }}
-              >
-                Back
-              </button>
-              <div className="flex items-center gap-2">
-                <button onClick={finishTour} className="text-sm font-medium" style={{ background: 'none', border: 'none', color: 'var(--muted-foreground)', cursor: 'pointer' }}>Skip</button>
-                {tourIdx < TOUR.length - 1 ? (
-                  <button onClick={() => setTourIdx((i) => Math.min(TOUR.length - 1, i + 1))} className="inline-flex items-center gap-1 text-sm font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)', border: 'none', cursor: 'pointer' }}>
-                    Next <ArrowRight size={14} />
-                  </button>
-                ) : (
-                  <button onClick={finishTour} className="inline-flex items-center gap-1 text-sm font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--success)', color: 'var(--card)', border: 'none', cursor: 'pointer' }}>
-                    Done <Check size={14} />
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <Dialog open={dialog !== null} onOpenChange={open => { if (!open && !saving) setDialog(null) }}><DialogContent className={styles.dialog}>
+        <DialogTitle>{dialog === 'types' ? 'Choose each class’s curriculum' : dialog === 'goals' ? 'Daily XP goals' : 'Your teaching workspace'}</DialogTitle>
+        <DialogDescription>{dialog === 'types' ? 'Changes apply to the selected class. Choose the curriculum that matches what you teach.' : dialog === 'goals' ? 'Set goals and bonuses for your students.' : `Quick tour · ${tourIndex + 1} of ${TOUR.length}`}</DialogDescription>
+        {saveError && <p role="alert" className={styles.error}>{saveError}</p>}
+        {notice && dialog === 'types' && <p role="status" className={styles.notice}>{notice}</p>}
+        {dialog === 'types' && <div className={styles.typeList}>{courses.length === 0 ? <Link href="/admin/roster">Connect Google Classroom to import your first class.</Link> : courses.map(course => <label key={course.id}><strong>{course.name}{course.section ? ` · ${course.section}` : ''}</strong><select disabled={saving} value={typeFor(course)?.id ?? ''} onChange={event => { const type = TYPES.find(item => item.id === event.target.value); if (type) void save('/api/teacher/courses', { course_id: course.id, track: type.track, program: type.program }, `Curriculum saved for ${course.name}.`) }}><option value="" disabled>Choose a curriculum</option>{TYPES.map(type => <option key={type.id} value={type.id}>{type.label}</option>)}</select><small>{typeFor(course)?.description ?? 'Choose the course this class will follow.'}</small></label>)}</div>}
+        {dialog === 'tour' && <div className={styles.tour}><TourIcon size={36} /><h3>{tour.title}</h3><p>{tour.body}</p><Link className={styles.textLink} href={tour.href}>{tour.link}<ArrowRight size={15} /></Link><div className={styles.tourActions}><button className={styles.quietButton} disabled={tourIndex === 0 || saving} onClick={() => setTourIndex(i => i - 1)}>Back</button>{tourIndex < TOUR.length - 1 ? <button className={styles.darkButton} onClick={() => setTourIndex(i => i + 1)}>Next <ArrowRight size={15} /></button> : <button className={styles.darkButton} disabled={saving} onClick={() => void save('/api/teacher/onboarding', { step: 'tour', done: true }, 'Tour complete. Your workspace is ready to explore.', true)}>{saving ? 'Saving…' : 'Finish tour'}<Check size={15} /></button>}</div></div>}
+        {dialog === 'goals' && <XpGoalSettings />}
+      </DialogContent></Dialog>
     </div>
   )
 }
