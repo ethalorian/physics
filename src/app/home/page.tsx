@@ -156,8 +156,46 @@ export default function HomePage() {
   return (
     <EnrollmentGate>
       <div className="mx-auto max-w-6xl space-y-8 pb-12 text-foreground">
+        <StudentCheckIn name={data?.student.name} points={!loadError ? data?.points : undefined} streak={!loadError ? data?.streak.current : undefined} loading={loading} />
+        <nav aria-label="Home sections" className={styles.homeNavigation}>
+          <Button asChild className="min-h-11"><a href="#daily-work">Daily work<ArrowRight aria-hidden="true" /></a></Button>
+          <Button asChild variant="outline" className="min-h-11"><a href="#teacher-feedback">Teacher feedback<MessageCircle aria-hidden="true" /></a></Button>
+          <Button asChild variant="outline" className="min-h-11"><a href="#classroom-directory">Find what you need<ChevronDown aria-hidden="true" /></a></Button>
+        </nav>
         <StudentClasses />
-        <section aria-labelledby="feedback-heading" className={styles.coaching}>
+        <section id="daily-work" aria-labelledby="daily-work-heading" className={styles.dailyWork}>
+          <div className="mb-5"><h2 id="daily-work-heading" className="text-title-2">Your daily work</h2><p className="mt-1 text-sm text-muted-foreground">Check off your practice and pick up your lesson. Follow your teacher’s directions during class.</p></div>
+          <div className={styles.dailyWorkGrid}>
+            <section aria-labelledby="practice-heading" className={`${styles.practice} space-y-4`}>
+              <HomeSectionHeader title="Daily practice" eyebrow="A little progress, every day" description="Your math warm-up and assigned vocabulary, together in one place." icon={Sigma} tone="sage" id="practice-heading" status={<span role="status" aria-label="Daily practice completion"><PracticeCompletionBadge state={practiceState} label={practiceLabel} /></span>} />
+              <DailyMathTask onStatus={setMathStatus} />
+              <VocabTaskCards onStatus={setVocabStatus} />
+            </section>
+            <section aria-labelledby="next-heading">
+              <Card className={`${styles.lesson} gap-0 overflow-hidden p-0`}>
+                <HomeSectionHeader title="Continue learning" eyebrow="Your next lesson" icon={BookOpen} tone="indigo" />
+                <div className="space-y-4 p-5 sm:p-6">
+                {loading ? <div role="status" className="space-y-3"><h2 id="next-heading" className="text-title-2">Finding your next lesson…</h2><p className="text-sm text-muted-foreground">Your classroom links are ready below.</p></div>
+                  : loadError ? <div role="alert" className="space-y-3"><h2 id="next-heading" className="text-title-2">Your lesson could not load</h2><p className="text-sm text-muted-foreground">Try again, or open All lessons to find your work.</p><Button onClick={() => setRetry(n => n + 1)} className="min-h-11">Try again</Button></div>
+                  : current ? <>
+                    <div><p className="mb-2 text-sm text-muted-foreground">{current.unitName ?? 'Your next lesson'}</p><h2 id="next-heading" className="text-title-2">{current.lesson.title}</h2></div>
+                    <p className="text-sm text-muted-foreground">{current.lesson.progress > 0 ? 'Continue where you left off. Your saved work is in the lesson.' : 'Open the lesson to see the reading and activities.'} Follow your teacher’s directions during class.</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button asChild className="min-h-11"><Link href={`/lessons/${current.lesson.slug}`}>{current.lesson.progress > 0 ? 'Resume lesson' : 'Start lesson'}<ArrowRight aria-hidden="true" /></Link></Button>
+                      <Button asChild variant="outline" className="min-h-11"><Link href="/lessons">All lessons</Link></Button>
+                    </div>
+                    <div className={styles.lessonProgress}><p className="text-sm text-muted-foreground">{current.completed} of {current.total} lessons completed{current.unitName ? ` in ${current.unitName}` : ''}</p><progress className={styles.unitProgress} value={current.completed} max={Math.max(1, current.total)} aria-label="Lessons completed in this unit" /></div>
+                  </> : <>
+                    <h2 id="next-heading" className="text-title-2">No next lesson to show</h2>
+                    <p className="text-sm text-muted-foreground">Check All lessons for available work, or ask your teacher what to open next.</p>
+                    <Button asChild variant="outline" className="min-h-11 self-start"><Link href="/lessons">Open all lessons<ArrowRight aria-hidden="true" /></Link></Button>
+                  </>}
+                </div>
+              </Card>
+            </section>
+          </div>
+        </section>
+        <section id="teacher-feedback" aria-labelledby="feedback-heading" className={styles.coaching}>
           <header className={styles.coachingHeader}>
             <div className="flex items-center gap-4"><span className={styles.coachingIcon}><MessageCircle size={26} aria-hidden="true" /></span><div><p className={styles.coachingEyebrow}>Read · Revisit · Grow</p><h2 id="feedback-heading" className={styles.coachingTitle}>Your teacher’s feedback</h2></div></div>
             <Button asChild variant="outline" className="min-h-11 bg-card text-foreground"><Link href="/dashboard/growth">All feedback & progress<ArrowRight aria-hidden="true" /></Link></Button>
@@ -182,49 +220,8 @@ export default function HomePage() {
               <div className="space-y-4 px-5 pb-5"><p className="text-sm text-muted-foreground">Each dot is a teacher rating. The line gives more weight to recent work.</p><div className="flex flex-wrap gap-2" aria-label="Progress category">{DOMAINS.map(dm => <Button key={dm.key} variant={domain === dm.key ? 'default' : 'outline'} className="min-h-11" aria-pressed={domain === dm.key} onClick={() => setDomain(dm.key)}>{dm.label}</Button>)}</div><ClimbChart points={climbForDomain} /></div>
             </details>
         </section>
-
         <XpRequirements />
-        <StudentCheckIn name={data?.student.name} points={!loadError ? data?.points : undefined} streak={!loadError ? data?.streak.current : undefined} loading={loading} />
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div><h2 className="text-title-3">What’s happening today</h2><p className="mt-1 text-sm text-muted-foreground">Your next lesson, daily practice, and something to work toward.</p></div>
-          <Button asChild variant="outline" className="min-h-11 lg:hidden"><a href="#classroom-directory">Find what you need<ChevronDown aria-hidden="true" /></a></Button>
-        </div>
-
-        <div className={`${styles.activityGrid} grid items-start gap-6 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]`}>
-          <div className={`${styles.mainColumn} min-w-0 space-y-6`}>
-            <section aria-labelledby="next-heading">
-              <Card className={`${styles.lesson} gap-0 overflow-hidden p-0`}>
-                <HomeSectionHeader title="Continue learning" eyebrow="Your next lesson" icon={BookOpen} tone="indigo" />
-                <div className="space-y-4 p-5 sm:p-6">
-                {loading ? <div role="status" className="space-y-3"><h2 id="next-heading" className="text-title-2">Finding your next lesson…</h2><p className="text-sm text-muted-foreground">Your classroom links are ready below.</p></div>
-                  : loadError ? <div role="alert" className="space-y-3"><h2 id="next-heading" className="text-title-2">Your lesson could not load</h2><p className="text-sm text-muted-foreground">Try again, or open All lessons to find your work.</p><Button onClick={() => setRetry(n => n + 1)} className="min-h-11">Try again</Button></div>
-                  : current ? <>
-                    <div><p className="mb-2 text-sm text-muted-foreground">{current.unitName ?? 'Your next lesson'}</p><h2 id="next-heading" className="text-title-2">{current.lesson.title}</h2></div>
-                    <p className="text-sm text-muted-foreground">{current.lesson.progress > 0 ? 'Continue where you left off. Your saved work is in the lesson.' : 'Open the lesson to see the reading and activities.'} Follow your teacher’s directions during class.</p>
-                    <div className="flex flex-wrap gap-3">
-                      <Button asChild className="min-h-11"><Link href={`/lessons/${current.lesson.slug}`}>{current.lesson.progress > 0 ? 'Resume lesson' : 'Start lesson'}<ArrowRight aria-hidden="true" /></Link></Button>
-                      <Button asChild variant="outline" className="min-h-11"><Link href="/lessons">All lessons</Link></Button>
-                    </div>
-                    <div className={styles.lessonProgress}><p className="text-sm text-muted-foreground">{current.completed} of {current.total} lessons completed{current.unitName ? ` in ${current.unitName}` : ''}</p><progress className={styles.unitProgress} value={current.completed} max={Math.max(1, current.total)} aria-label="Lessons completed in this unit" /></div>
-                  </> : <>
-                    <h2 id="next-heading" className="text-title-2">No next lesson to show</h2>
-                    <p className="text-sm text-muted-foreground">Check All lessons for available work, or ask your teacher what to open next.</p>
-                    <Button asChild variant="outline" className="min-h-11 self-start"><Link href="/lessons">Open all lessons<ArrowRight aria-hidden="true" /></Link></Button>
-                  </>}
-                </div>
-              </Card>
-            </section>
-
-            <section aria-labelledby="practice-heading" className={`${styles.practice} space-y-4`}>
-              <HomeSectionHeader title="Daily practice" eyebrow="A little progress, every day" description="Your math warm-up and assigned vocabulary, together in one place." icon={Sigma} tone="sage" id="practice-heading" status={<span role="status" aria-label="Daily practice completion"><PracticeCompletionBadge state={practiceState} label={practiceLabel} /></span>} />
-              <DailyMathTask onStatus={setMathStatus} />
-              <VocabTaskCards onStatus={setVocabStatus} />
-            </section>
-
-
-          </div>
-
-          <aside className={`${styles.sideColumn} min-w-0 space-y-6`} aria-label="Classroom directory and goals">
+        <div className={styles.extrasGrid}>
             <section aria-labelledby="goals-heading" className={`${styles.rewards} space-y-3`}>
               <HomeSectionHeader title="Goals & rewards" eyebrow="Your effort adds up" description="Track your daily goal and teacher challenges." icon={Gift} tone="gold" id="goals-heading" />
               <XpGoalRing compact />
@@ -242,8 +239,6 @@ export default function HomePage() {
                 </nav>)}
               </Card>
             </section>
-
-          </aside>
         </div>
       </div>
     </EnrollmentGate>

@@ -1,3 +1,4 @@
+import { isAssignedTrade } from '@/lib/vocational'
 import { recordEvidence } from '@/lib/math-spine-server'
 import { checkedLessonResponse } from '@/lib/lesson-response-validation'
 import { authorizeLesson } from '@/lib/lesson-access'
@@ -41,7 +42,14 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
     // never reaches the student (stripped server-side by the lesson page).
     const checked = checkedLessonResponse(block, body.response)
     if (!checked.ok) return NextResponse.json({ error: checked.error }, { status: 422 })
-    const response = checked.response
+    let response = checked.response
+    if (blocks.some(b=>b.vocational)) {
+      const {data:profile,error:profileError}=await supabaseAdmin.from('vocational_profiles').select('trade').eq('user_id',ctx.userId).maybeSingle()
+      if(profileError) throw profileError
+      if(!isAssignedTrade(profile?.trade)) return NextResponse.json({error:'Save your assigned trade before completing this lesson.'},{status:409})
+      if(body.response?.assignedTrade && body.response.assignedTrade !== profile.trade) return NextResponse.json({error:'Your assigned trade changed. Reload this lesson before saving.'},{status:409})
+      if(response && typeof response==='object' && !Array.isArray(response)) response = {...response, assignedTrade:profile.trade}
+    }
     // The block's own targetId is the default tag when the client sends none (B-2).
     const targetRef = block.targetId ?? null
 

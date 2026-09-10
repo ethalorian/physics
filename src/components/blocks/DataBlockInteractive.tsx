@@ -11,6 +11,8 @@ export interface DataValue {
 }
 
 interface DataBlockProps {
+  analysisMode?: 'pattern' | 'record'
+  rowLabels?: string[]
   columns: string[]
   rows: number
   minRows?: number
@@ -32,14 +34,14 @@ function blankGrid(cols: number, rows: number): string[][] {
 
 const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
 
-export default function DataBlockInteractive({ columns, rows, minRows = 1, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
+export default function DataBlockInteractive({ analysisMode = 'pattern', rowLabels, columns, rows, minRows = 1, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
   const clipId = useId()
   const cols = columns && columns.length > 0 ? columns : ['x', 'y']
   const xi = xCol ?? 0
   const yi = yCol ?? 1
   const showPlot = (plot ?? cols.length >= 2) && cols.length >= 2
 
-  const [grid, setGrid] = useState<string[][]>(value?.rows && value.rows.length > 0 ? value.rows : blankGrid(cols.length, rows))
+  const [grid, setGrid] = useState<string[][]>(value?.rows && value.rows.length > 0 ? value.rows : blankGrid(cols.length, rows).map((r,i)=>rowLabels?.[i]?[rowLabels[i],...r.slice(1)]:r))
   const [trend, setTrend] = useState(false)
   const [pattern, setPattern] = useState(value?.pattern ?? '')
   const [interpret, setInterpret] = useState(value?.interpret ?? '')
@@ -67,8 +69,8 @@ export default function DataBlockInteractive({ columns, rows, minRows = 1, plot,
     const filled = grid.filter((row) => row.length >= cols.length && row.every((v) => v.trim()) && (!showPlot || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length
     const n: { ok: boolean; msg: string }[] = [
       filled >= minRows ? { ok: true, msg: `You recorded ${filled} readings.` } : { ok: false, msg: `Record at least ${minRows} complete readings${showPlot ? '; use numbers in the plotted columns' : ''}.` },
-      pattern ? { ok: true, msg: `You named the pattern: ${pattern}.` } : { ok: false, msg: 'Choose what kind of relationship your data shows.' },
-      interpret.trim().length > 3 ? { ok: true, msg: 'You explained what it means.' } : { ok: false, msg: 'Finish the sentence — what does this tell you?' },
+      ...(analysisMode === 'record' ? [] : [pattern ? { ok: true, msg: `You named the pattern: ${pattern}.` } : { ok: false, msg: 'Choose what kind of relationship your data shows.' },
+      interpret.trim().length > 3 ? { ok: true, msg: 'You explained what it means.' } : { ok: false, msg: 'Finish the sentence — what does this tell you?' }]),
     ]
     setNudges(n)
   }
@@ -116,7 +118,7 @@ export default function DataBlockInteractive({ columns, rows, minRows = 1, plot,
                 <tr key={ri}>
                   {cols.map((_, ci) => (
                     <td key={ci} className="px-1 py-0.5">
-                      <input aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />
+                      {ci === 0 && rowLabels?.[ri] ? <span className="block min-w-32 whitespace-normal text-sm">{row[ci]}</span> : <input aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />}
                     </td>
                   ))}
                   <td className="px-1">
@@ -157,8 +159,8 @@ export default function DataBlockInteractive({ columns, rows, minRows = 1, plot,
         </div>
       )}
 
-      {/* PATTERN + MEANING */}
-      <div>
+      {/* Pattern questions are only for actual relationship investigations. */}
+      {analysisMode !== 'record' && <div>
         <div className="flex items-center gap-2 mb-2">{badge('3', 'var(--success)')}<span className="text-sm font-semibold">Pattern &amp; meaning</span></div>
         <p className="text-xs mb-2" style={{ color: 'var(--muted-foreground)' }}>{patternPrompt ?? 'What kind of relationship is this — and what does it tell you?'}</p>
         <div className="flex gap-2 flex-wrap mb-3">
@@ -170,7 +172,7 @@ export default function DataBlockInteractive({ columns, rows, minRows = 1, plot,
           })}
         </div>
         <textarea aria-label={patternPrompt ?? 'Interpret the measured pattern'} value={interpret} onChange={(e) => { setInterpret(e.target.value); setSaved(false) }} rows={3} placeholder="In your own words: what does this pattern tell you?" className="w-full rounded-lg border p-3 text-sm" style={fieldBg} />
-      </div>
+      </div>}
 
       {/* check + save */}
       <div className="flex items-center gap-2">

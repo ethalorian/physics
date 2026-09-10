@@ -4,7 +4,7 @@ export function evidenceContext(raw: unknown) {
   const q = b.question && typeof b.question === 'object' ? b.question as Record<string, unknown> : {}
   const task = b.task && typeof b.task === 'object' ? b.task as Record<string, unknown> : {}
   const targets = [b.targetId, ...(Array.isArray(b.targetIds) ? b.targetIds : []), ...(Array.isArray(b.targets) ? b.targets : [])].filter((v): v is string => typeof v === 'string')
-  const prompt = [b.prompt, q.prompt, task.prompt, b.instruction, b.patternPrompt, b.interpretPrompt].filter((v): v is string => typeof v === 'string').join('\n')
+  const prompt = [...(Array.isArray(b.studentDirections) ? b.studentDirections : []), b.prompt, q.prompt, task.prompt, b.instruction, b.patternPrompt, b.interpretPrompt].filter((v): v is string => typeof v === 'string').join('\n')
   const options = Array.isArray(q.options) ? q.options.flatMap((o) => o && typeof o === 'object' && 'id' in o && 'text' in o ? [`${o.id}: ${o.text}`] : []) : []
   return { targets, prompt: [prompt, ...options].filter(Boolean).join('\n') }
 }

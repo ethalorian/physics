@@ -65,6 +65,10 @@ export interface SeiScaffold {
 }
 
 interface BaseBlock {
+  /** Short, explicit actions, shared across reader and presentation. */
+  studentDirections?: string[];
+  vocational?: Partial<Record<import('@/lib/vocational').AssignedTrade, import('@/lib/vocational').TradeConnection>>;
+
   /** Essential safety/operating instructions remain visible outside help drawers. */
   essential?: boolean;
   id: BlockId;
@@ -298,6 +302,8 @@ export interface QuestionBlock extends BaseBlock {
 }
 
 export interface DataTableBlock extends BaseBlock {
+  analysisMode?: 'pattern' | 'record';
+  rowLabels?: string[];
   type: 'data_table';
   capture: true;
   columns: string[];

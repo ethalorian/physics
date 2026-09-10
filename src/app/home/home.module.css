@@ -217,3 +217,33 @@
   .xpDisplay > p:not(.xpTotal), .balance { grid-column: 1; }
   .balance { margin-top: 0; }
 }
+
+/* Work and feedback stay ahead of goals and exploration in DOM and visual order. */
+.homeNavigation { display: flex; flex-wrap: wrap; gap: 10px; }
+.dailyWork, .coaching { scroll-margin-top: 100px; }
+.dailyWorkGrid, .extrasGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+.extrasGrid > .directory { grid-column: 1 / -1; }
+.extrasGrid > .directory > [data-slot='card'] { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 767px) {
+  .dailyWorkGrid, .extrasGrid { grid-template-columns: minmax(0, 1fr); }
+  .extrasGrid > .directory > [data-slot='card'] { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 540px) {
+  .checkIn { grid-template-columns: 171.875px minmax(0, 1fr); grid-template-areas: 'portrait welcome' 'xp xp' 'shortcuts shortcuts'; gap: 16px 12px; }
+  .welcome { text-align: left; }
+  .welcome h1 { font-size: 26px; }
+  .welcome > p:last-of-type { display: none; }
+  .welcome > div { justify-content: flex-start; }
+  .welcome a { padding-inline: 0; font-size: 14px; }
+  .streak { font-size: 13px; padding: 8px; }
+  .xpDisplay { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 8px 12px; }
+  .xpDisplay > div { grid-column: 1 / -1; }
+  .xpDisplay > p:not(.xpTotal) { grid-column: 2; font-size: 13px; }
+  .balance { grid-column: 1 / -1; min-height: 44px; padding-top: 10px; }
+  .shortcuts > a { min-height: 44px; padding-inline: 14px; font-size: 15px; }
+}
+@media (max-width: 359px) {
+  .checkIn { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'portrait' 'welcome' 'xp' 'shortcuts'; }
+  .welcome { text-align: center; }
+  .welcome > div { justify-content: center; }
+}

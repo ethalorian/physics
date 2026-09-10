@@ -6,6 +6,7 @@ import { notFound, redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
 import { getEffectiveContext } from '@/lib/effective-context'
 import { getStudentLessonGate } from '@/lib/lesson-windows'
+import TradeLessonShell from '@/components/lessons/TradeLessonShell'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import LessonActivityTracker from '@/components/lessons/LessonActivityTracker'
 
@@ -43,6 +44,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
   const gate = access.viewer.role === 'admin' ? () => true : await getStudentLessonGate(session.user.id)
   const nav = await getNav(access.lesson.unit_id, slug, gate, access.viewer)
   const lesson = lessonForReader(access.lesson, access.document)
-  const reader = <BlockLessonViewer lesson={lesson} nav={nav} staffView={access.viewer.role === 'admin'} />
+  const LessonReader = lesson.content_blocks?.blocks.some(b=>b.vocational) ? TradeLessonShell : BlockLessonViewer
+  const reader = <LessonReader lesson={lesson} nav={nav} staffView={access.viewer.role === 'admin'} />
   return access.viewer.role === 'admin' ? reader : <LessonActivityTracker lessonId={lesson.id}>{reader}</LessonActivityTracker>
 }

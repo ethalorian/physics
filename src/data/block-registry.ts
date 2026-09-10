@@ -169,7 +169,7 @@ export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block
     const xi = b?.type === 'data_table' ? b.xCol ?? 0 : 0;
     const yi = b?.type === 'data_table' ? b.yCol ?? 1 : 1;
     const numeric = b?.type === 'data_table' ? b.plot ?? cols >= 2 : false;
-    return Array.isArray(rows) && rows.filter((row) => Array.isArray(row) && row.length >= cols && row.every(text) && (!numeric || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length >= required && text(obj(v).pattern) && text(obj(v).interpret);
+    return Array.isArray(rows) && rows.filter((row) => Array.isArray(row) && row.length >= cols && row.every(text) && (!numeric || [row[xi], row[yi]].every((v) => numericCell(v) !== null))).length >= required && (b?.type === 'data_table' && b.analysisMode === 'record' || text(obj(v).pattern) && text(obj(v).interpret));
   },
   concept_exercise: (v) => obj(v).submitted === true && Number(obj(obj(v).summary).itemCount) > 0 && obj(obj(v).summary).answeredCount === obj(obj(v).summary).itemCount,
   question: (v, b) => {
@@ -222,6 +222,15 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
       if (field.kind === 'number' && (typeof v !== 'number' || !Number.isFinite(v))) add(`${field.label} must be a number.`)
     }
     if (b.type==='math_mission' && !/^(NS[12]|PR[12]|QE[1-4]|SM[12]|GV[1-3])$/.test(String(b.competencyCode??''))) add('Choose a valid math competency code: NS1–2, PR1–2, QE1–4, SM1–2, or GV1–3.');
+    if (b.studentDirections !== undefined && (!Array.isArray(b.studentDirections) || !b.studentDirections.every(text))) add('Directions must be a list of nonempty steps.')
+    if (b.type === 'data_table' && b.analysisMode !== undefined && !['record','pattern'].includes(String(b.analysisMode))) add('Choose record or pattern table mode.')
+    if (b.vocational !== undefined) {
+      const connections = obj(b.vocational)
+      for (const [trade, rawConnection] of Object.entries(connections)) {
+        const connection = obj(rawConnection)
+        if (!['electrical','carpentry','plumbing'].includes(trade) || !Array.isArray(connection.directions) || !connection.directions.every(text) || !connection.directions.length) add('Every trade connection needs a valid trade and explicit directions.')
+      }
+    }
     if (!publishing) continue
     const required: Partial<Record<BlockType, string[]>> = {
       target: ['statement'], prose: ['markdown'], asteroid_thread: ['connection'], worked_example: ['prompt'], callout: ['markdown'], sentence_frame: ['frame'],

@@ -1,5 +1,7 @@
 "use client"
 
+import BlockGuidance from './BlockGuidance'
+import { useAssignedTrade } from '@/components/lessons/TradeContext'
 import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
@@ -669,7 +671,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'equation_sandbox':
       return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
-      return <DataBlockInteractive columns={b.columns} rows={b.rows} minRows={b.minRows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'data_table', v)} />
+      return <DataBlockInteractive analysisMode={b.analysisMode} rowLabels={b.rowLabels} columns={b.columns} rows={b.rows} minRows={b.minRows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'data_table', v)} />
     case 'observation':
       return <ObservationCapture b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'transfer_prompt':
@@ -779,11 +781,13 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
 }
 
 function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, selfRatingHold, isDraft, readOnly = false, visualReference, responseGuided = false }: { responseGuided?: boolean; visualReference?: ContentBlock; readOnly?: boolean; b: ContentBlock; saved: unknown; save: SaveFn; draft?: DraftFn; targets?: TargetInfo[]; lessonId: string; glossary?: GlossaryEntry[]; selfRatingHold?: string | null; isDraft?: boolean }) {
+  const assignedTrade = useAssignedTrade()
   const meta = BLOCK_META[b.type]
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
   const busy = useRef(false)
   const trackedSave: SaveFn = async (...args) => {
     if (readOnly || busy.current) return false
+    if (assignedTrade && args[2] && typeof args[2] === 'object' && !Array.isArray(args[2])) args[2] = { ...(args[2] as Record<string, unknown>), assignedTrade }
     busy.current = true
     setSaveStatus('saving')
     let ok = false
@@ -804,11 +808,12 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
   }
   const body = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets)
   if (body === null) return null
-  if (!meta || BARE.has(b.type)) return <>{body}</>
+  if (!meta || BARE.has(b.type)) return <><BlockGuidance block={b} />{body}</>
   const capture = !readOnly && isCaptureBlock(b)
   // A draft is shown but is not done — the student still has to Save.
   const done = !isDraft && isBlockDone(b, saved)
   return <BlockShell meta={meta} done={done} capture={capture} hideHeading={responseGuided}>
+    <BlockGuidance block={b} />
     {visualReference && <div className="mb-3" aria-label="Task representation">{visualReference.type === 'sketch' ? visualReference.backgroundDiagram ? <DiagramBackground scene={visualReference.backgroundDiagram} /> : visualReference.scaffoldSvg ? <div dangerouslySetInnerHTML={{ __html: visualReference.scaffoldSvg }} /> : <CoordinateGrid xLabel={visualReference.xLabel} yLabel={visualReference.yLabel} quadrants={visualReference.quadrants} /> : renderBody(visualReference, undefined, async () => false, lessonId, glossary, () => {}, targets)}</div>}
     <fieldset disabled={(readOnly && isCaptureBlock(b)) || saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
     {capture && saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-2 text-sm font-semibold">

@@ -43,6 +43,7 @@ export default function LessonReleasePanel({
   }>({ unit: null, day: null })
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
+  const [programFilter, setProgramFilter] = useState('selected')
   const [matrix, setMatrix] = useState(false)
   const [schedule, setSchedule] = useState<{
     course: ReleaseClass
@@ -451,6 +452,7 @@ export default function LessonReleasePanel({
           {matrix && (
             <div className="mt-3 space-y-3">
               <div className="flex flex-wrap gap-2">
+                <select aria-label="Lesson program" className={field + ' sm:max-w-64'} value={programFilter} onChange={e=>setProgramFilter(e.target.value)}><option value="selected">Selected class · {course?.program ?? 'physics'}</option><option value="trades">Trades</option><option value="physics">Physics</option><option value="projects">Project Physics</option><option value="all">All programs</option></select>
                 <input
                   aria-label="Search lessons"
                   placeholder="Search lessons or units…"
@@ -491,6 +493,7 @@ export default function LessonReleasePanel({
                     {data.lessons
                       .filter(
                         (l) =>
+                          (programFilter === 'all' || l.program === (programFilter === 'selected' ? course?.program ?? 'physics' : programFilter)) &&
                           `${l.unit} ${lessonLabel(l)}`
                             .toLowerCase()
                             .includes(query.toLowerCase()) &&

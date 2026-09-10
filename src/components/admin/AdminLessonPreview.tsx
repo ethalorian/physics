@@ -1,5 +1,7 @@
 'use client'
 import { useEffect, useMemo, useState } from 'react'
+import { TradeContext } from '@/components/lessons/TradeContext'
+import { TRADE_LABELS, type AssignedTrade } from '@/lib/vocational'
 import BlockLessonViewer from '@/components/lessons/BlockLessonViewer'
 import LessonEditorNav from './LessonEditorNav'
 import { filterDocumentForViewer } from '@/lib/track-visibility'
@@ -46,6 +48,7 @@ export default function AdminLessonPreview({
   )
 }
 export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
+  const [trade,setTrade] = useState<AssignedTrade>('electrical')
   const [mode, setMode] = useState('cpa')
   const [reset, setReset] = useState(0)
   const [size, setSize] = useState('full')
@@ -110,8 +113,9 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
     [lesson.content_blocks],
   )
   return (
-    <div className="space-y-4">
+    <TradeContext.Provider value={trade}><div className="space-y-4">
       <div className="flex flex-wrap gap-3">
+        {lesson.content_blocks?.blocks.some(b=>b.vocational) && <label>Assigned trade <select aria-label="Preview assigned trade" className="min-h-11 border rounded p-2" value={trade} onChange={e=>setTrade(e.target.value as AssignedTrade)}>{Object.entries(TRADE_LABELS).map(([v,label])=><option value={v} key={v}>{label}</option>)}</select></label>}
         <label className="text-sm">
           View
           <select
@@ -197,6 +201,6 @@ export function LessonStudentPreview({ lesson }: { lesson: PreviewLesson }) {
           />
         </div>
       )}
-    </div>
+    </div></TradeContext.Provider>
   )
 }
