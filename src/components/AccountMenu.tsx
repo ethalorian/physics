@@ -149,7 +149,7 @@ export default function AccountMenu() {
             </DropdownMenuItem>
           )}
           {realRole === 'admin' && !viewingAs && !studentViewActive && (
-            <DropdownMenuItem onSelect={() => { if (session?.user?.email) { clearStudentView(); setViewAs(session.user.email); window.location.reload() } }}>
+            <DropdownMenuItem onSelect={() => { if (session?.user?.email) { clearStudentView(); setViewAs(session.user.email); window.location.assign('/admin/classes') } }}>
               <Eye className="h-4 w-4 mr-2" />
               View as teacher
             </DropdownMenuItem>

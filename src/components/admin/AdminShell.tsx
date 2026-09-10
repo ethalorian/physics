@@ -5,8 +5,9 @@ import LobbyLauncher from '@/components/admin/LobbyLauncher'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signIn } from 'next-auth/react'
-import { useViewAs } from '@/lib/use-view-as'
-import { GROUPS, gateGroups, flatTools } from './adminNav'
+import type { UserRole } from '@/lib/permissions'
+import type { ContentArea } from '@/lib/content-access'
+import { GROUPS, gateGroups } from './adminNav'
 import { BookOpen } from 'lucide-react'
 import AdminCommand from './AdminCommand'
 import { Menu, X, FlaskConical } from 'lucide-react'
@@ -15,12 +16,12 @@ import { Menu, X, FlaskConical } from 'lucide-react'
  * Persistent admin/teacher shell: a grouped sidebar (the launcher, moved into
  * the nav) + a header carrying the global search. Replaces the old
  * card → page → "← Command center" loop so context is always held. Role gating
- * is preserved via `useViewAs` (adminOnly tools hidden for teachers), the active
+ * uses the server-resolved preview role (adminOnly tools hidden for teachers), the active
  * route is highlighted with `--primary`, and the sidebar collapses to a drawer
  * on narrow widths. Lives inside `.surface-refined` (set by admin/layout).
  */
-export default function AdminShell({ children, canEditLessons = false }: { children: ReactNode; canEditLessons?: boolean }) {
-  const { role } = useViewAs()
+export default function AdminShell({ children, effectiveRole, editableAreas = [] }: { children: ReactNode; effectiveRole: UserRole; editableAreas?: ContentArea[] }) {
+  const role = effectiveRole
   const { data: session, status } = useSession()
   const isAdmin = role === 'admin'
   const pathname = usePathname()
@@ -36,8 +37,8 @@ export default function AdminShell({ children, canEditLessons = false }: { child
       ],
     },
   ]
-  const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin, canEditLessons)
-  const tools = flatTools(isAdmin, canEditLessons)
+  const groups = role === 'observer' ? observerGroups : gateGroups(GROUPS, isAdmin, editableAreas)
+  const tools = groups.flatMap((group) => group.tools)
   const [mobileOpen, setMobileOpen] = useState(false)
 
   // Close the mobile drawer whenever the route changes.
@@ -60,11 +61,12 @@ export default function AdminShell({ children, canEditLessons = false }: { child
   const isActive = (href: string) =>
     href === '/home' ? pathname === '/home' : pathname === href || pathname.startsWith(href + '/')
 
+  const homeHref = isAdmin ? '/admin/home' : role === 'observer' ? '/admin/oversight' : '/admin/classes'
   const roleLabel = isAdmin ? 'Admin' : role === 'observer' ? 'Observer' : 'Teacher'
 
   const NavBody = (
     <div className="flex flex-col h-full" style={{ background: 'var(--card)' }}>
-      <Link href="/admin/home" className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
+      <Link href={homeHref} className="flex items-center gap-2 px-4 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
         <span className="grid place-items-center shrink-0" style={{ width: 32, height: 32, borderRadius: 9, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
           <FlaskConical size={18} />
         </span>
@@ -74,7 +76,7 @@ export default function AdminShell({ children, canEditLessons = false }: { child
         </span>
       </Link>
 
-      <nav aria-label="Admin navigation" className="flex-1 overflow-y-auto px-2 py-3">
+      <nav aria-label={`${roleLabel} navigation`} className="flex-1 overflow-y-auto px-2 py-3">
         {groups.map((g) => (
           <div key={g.title} className="mb-4">
             <div className="text-overline px-2 mb-1.5" style={{ color: 'var(--muted-foreground)' }}>{g.title}</div>

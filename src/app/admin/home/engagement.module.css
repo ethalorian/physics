@@ -1,0 +1,68 @@
+.page { max-width: 1600px; margin: 0 auto; padding: clamp(16px, 2.5vw, 36px); color: var(--foreground); }
+.toolbar { display:flex; flex-wrap:wrap; gap:12px; align-items:end; padding:16px 0 24px; }
+.field { display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted-foreground); }
+.field select,.field input { min-height:44px; border:1px solid var(--border); border-radius:10px; background:var(--card); color:var(--foreground); padding:0 12px; max-width:100%; }
+.hero { display:grid; grid-template-columns:minmax(220px,.8fr) minmax(0,1.8fr); border:1px solid var(--border); border-radius:20px; overflow:hidden; background:var(--card); }
+.score { padding:28px; border-right:1px solid var(--border); background:color-mix(in oklch,var(--primary) 5%,var(--card)); }
+.number { font-size:clamp(42px,5vw,66px); font-weight:600; letter-spacing:-.055em; line-height:1.1; margin:14px 0; font-variant-numeric:tabular-nums; }
+.trend { padding:24px; min-width:0; }
+.bars { display:flex; height:145px; align-items:stretch; gap:4px; margin-top:16px; border-bottom:1px solid var(--border); }
+.barButton { flex:1; min-width:0; display:flex; flex-direction:column; justify-content:flex-end; padding:0; border:0; background:transparent; cursor:pointer; border-radius:4px 4px 0 0; }
+.barButton:focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+.barFill { display:block; min-height:3px; width:100%; background:var(--primary); border-radius:4px 4px 0 0; }
+.offFill { background:var(--reward); }
+.layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(300px,1fr); gap:24px; align-items:start; margin-top:24px; }
+.panel { border:1px solid var(--border); border-radius:18px; background:var(--card); overflow:hidden; }
+.panelHeader { padding:20px; border-bottom:1px solid var(--border); }
+.tableScroll { overflow-x:auto; }
+.table { width:100%; border-collapse:collapse; font-size:13px; }
+.table th { text-align:left; color:var(--muted-foreground); font-size:11px; font-weight:500; padding:12px; border-bottom:1px solid var(--border); white-space:nowrap; }
+.table td { padding:12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.table tr:last-child td { border-bottom:0; }
+.selected { background:color-mix(in oklch,var(--primary) 7%,var(--card)); }
+.studentButton { display:block; min-height:44px; text-align:left; font-weight:600; background:transparent; border:0; color:var(--foreground); cursor:pointer; }
+.meter { width:110px; height:7px; background:var(--muted); border-radius:8px; overflow:hidden; margin-top:5px; }
+.meter span { display:block; height:100%; background:var(--primary); border-radius:8px; }
+.miniDays { display:flex; gap:3px; }
+.day { display:grid; place-items:center; border:1px solid var(--border); border-radius:4px; color:var(--muted-foreground); background:var(--muted); }
+.miniDays .day { width:7px; height:22px; }
+.classActive { background:var(--primary); color:var(--primary-foreground); border-color:var(--primary); }
+.offActive { background:var(--reward); color:var(--reward-foreground); border-color:var(--reward); }
+.classMiss { background:var(--card); border-color:var(--muted-foreground); }
+.excluded { opacity:.3; border-style:dashed; }
+.calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px; }
+.calendar .day { min-height:38px; font-size:12px; cursor:pointer; }
+.legend { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:var(--muted-foreground); }
+.legend span { display:inline-flex; align-items:center; gap:5px; }
+.legend i { display:inline-block; width:10px; height:10px; border-radius:3px; }
+.empty { padding:24px; color:var(--muted-foreground); font-size:14px; }
+@media(max-width:1100px) { .layout { grid-template-columns:minmax(0,1fr); } }
+@media(max-width:640px) { .hero { grid-template-columns:minmax(0,1fr); } .score { border-right:0; border-bottom:1px solid var(--border); padding:20px; } .trend { padding:20px; } .field { flex:1 1 130px; min-width:0; } .number { font-size:48px; } }
+
+/* Movement confirms selection and changes in data; nothing loops at rest. */
+.barFill { transform-origin: bottom; animation: revealBar 260ms ease-out both; transition: height 260ms ease-out, opacity 160ms ease-out; }
+.barButton { transition: background-color 160ms ease-out; }
+.barButton:hover { background:var(--muted); }
+.barButton[aria-pressed="true"] { outline:2px solid var(--foreground); outline-offset:3px; }
+.meter span,.progressFill { transition:width 260ms ease-out; }
+.table tr { transition:background-color 160ms ease-out; }
+.studentButton { min-width:100px; }
+.detailPanel { animation: revealDetail 180ms ease-out both; }
+.calendar .day { min-height:44px; transition:background-color 160ms ease-out, box-shadow 160ms ease-out; }
+.calendar .day[aria-pressed="true"] { outline:2px solid var(--foreground); outline-offset:1px; }
+.calendar .day:hover { box-shadow:inset 0 0 0 2px var(--foreground); }
+.followUp { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-top:20px; }
+.followUpAction { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px; border:1px solid var(--border); border-radius:14px; background:var(--card); text-align:left; color:var(--foreground); cursor:pointer; transition:background-color 160ms ease-out,border-color 160ms ease-out; }
+.followUpAction strong { display:block; font-size:26px; font-weight:600; font-variant-numeric:tabular-nums; margin-bottom:4px; }
+.followUpAction:hover:not(:disabled),.groupAction:hover:not(:disabled) { border-color:var(--primary); background:var(--accent); }
+.followUpAction:disabled { cursor:default; }
+.followUpAction:disabled > svg { opacity:.25; }
+.groupAction { display:flex; flex-direction:column; gap:4px; min-height:64px; border:1px solid var(--border); border-radius:10px; background:var(--card); padding:10px 6px; text-align:center; cursor:pointer; transition:background-color 160ms ease-out,border-color 160ms ease-out; }
+.groupAction strong { font-size:20px; font-variant-numeric:tabular-nums; }
+.groupAction span { font-size:11px; color:var(--muted-foreground); }
+.groupAction:disabled { cursor:default; opacity:.65; }
+.followUpAction:focus-visible,.groupAction:focus-visible,.studentButton:focus-visible { outline:2px solid var(--primary); outline-offset:3px; }
+@keyframes revealBar { from { transform:scaleY(.94); } to { transform:scaleY(1); } }
+@keyframes revealDetail { from { opacity:.65; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
+@media(max-width:640px) { .followUp { grid-template-columns:minmax(0,1fr); gap:8px; } .followUpAction { padding:12px 16px; } .followUpAction > span { display:grid; grid-template-columns:32px minmax(0,1fr); column-gap:12px; align-items:center; } .followUpAction strong { grid-row:span 2; margin:0; } }
+@media(prefers-reduced-motion:reduce) { .barFill,.detailPanel { animation:none; } .barFill,.barButton,.meter span,.progressFill,.table tr,.calendar .day,.followUpAction,.groupAction { transition:none; } }

@@ -1,3 +1,4 @@
+import type { ContentArea } from '@/lib/content-access'
 import {
   LayoutGrid, Gift, Microscope, Gamepad2, Joystick,
   Eye, Users, Activity, BookOpen, BookOpenCheck, BookText, BarChart3, CalendarClock, CalendarRange, Smile, Trophy, GraduationCap, Image as ImageIcon,
@@ -17,6 +18,7 @@ export type Tool = {
   icon: LucideIcon
   accent: string
   adminOnly?: boolean
+  editorArea?: ContentArea
 }
 
 export type ToolGroup = { title: string; tools: Tool[] }
@@ -41,7 +43,7 @@ export const GROUPS: ToolGroup[] = [
     title: 'Plan & build',
     tools: [
       { href: '/admin/workshop', label: 'Workshop', desc: 'Curriculum studio — shape seeded lessons, review coverage, target workbench', icon: BookOpenCheck, accent: 'var(--primary)', adminOnly: true },
-      { href: '/admin/dashboard', label: 'Lesson library', desc: 'Shape seeded lessons — blocks, settings, publish — unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
+      { href: '/admin/dashboard', editorArea: 'lessons', label: 'Lesson library', desc: 'Shape seeded lessons — blocks, settings, publish — unit by unit', icon: BookOpen, accent: 'var(--primary)', adminOnly: true },
       { href: '/admin/reviews', label: 'Review library', desc: 'Generate and approve AI skill reviews shared with students app-wide', icon: BookOpenCheck, accent: 'var(--success)', adminOnly: true },
       { href: '/admin/teacher/plans', label: 'Lesson plans', desc: 'Day-by-day teacher plans per unit — Word/PDF downloads and the Present deck launch', icon: CalendarRange, accent: 'var(--primary)' },
       { href: '/admin/pacing', label: 'Pacing', desc: 'Map your sections to the calendar — all-section overview inside', icon: CalendarClock, accent: 'var(--reward)' },
@@ -61,8 +63,8 @@ export const GROUPS: ToolGroup[] = [
     title: 'Content library',
     tools: [
       { href: '/admin/textbook', label: 'Textbook chapters', desc: 'Upload Conceptual Physics chapter PDFs to the private bucket and see what students can open', icon: BookText, accent: 'var(--primary)', adminOnly: true },
-      { href: '/admin/simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
-      { href: '/admin/vocabulary', label: 'Vocabulary word sets', desc: 'Create and publish words for vocabulary tasks', icon: Gamepad2, accent: 'var(--reward)' },
+      { href: '/admin/simulations', adminOnly: true, editorArea: 'simulations', label: 'Simulations', desc: 'Manage the interactive labs', icon: Microscope, accent: 'var(--primary)' },
+      { href: '/admin/vocabulary', adminOnly: true, editorArea: 'vocabulary', label: 'Vocabulary word sets', desc: 'Create and publish words for vocabulary tasks', icon: Gamepad2, accent: 'var(--reward)' },
       { href: '/admin/media', label: 'Media upload', desc: 'Drop a PDF or image, get a URL to paste into any lesson block', icon: ImageIcon, accent: 'var(--primary)' },
       { href: '/admin/arcade', label: 'Arcade cabinets', desc: 'Power cabinets on/off, set coin prices, see which game files are deployed', icon: Joystick, accent: 'var(--reward)' },
       { href: '/admin/avatar', label: 'Avatar catalog', desc: 'Every Mii item with art preview and owner counts', icon: Smile, accent: 'var(--primary)', adminOnly: true },
@@ -77,13 +79,13 @@ export const GROUPS: ToolGroup[] = [
 ]
 
 /** Role-gate the groups: drop admin-only tools for non-admins, then drop empties. */
-export function gateGroups(groups: ToolGroup[], isAdmin: boolean, canEditLessons = false): ToolGroup[] {
+export function gateGroups(groups: ToolGroup[], isAdmin: boolean, editableAreas: readonly ContentArea[] = []): ToolGroup[] {
   return groups
-    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly || (canEditLessons && t.href === '/admin/dashboard')) }))
+    .map((g) => ({ ...g, tools: isAdmin ? g.tools : g.tools.filter((t) => !t.adminOnly || (t.editorArea !== undefined && editableAreas.includes(t.editorArea))) }))
     .filter((g) => g.tools.length > 0)
 }
 
 /** Flattened, role-gated tool list (for the command palette index). */
-export function flatTools(isAdmin: boolean, canEditLessons = false): Tool[] {
-  return gateGroups(GROUPS, isAdmin, canEditLessons).flatMap((g) => g.tools)
+export function flatTools(isAdmin: boolean, editableAreas: readonly ContentArea[] = []): Tool[] {
+  return gateGroups(GROUPS, isAdmin, editableAreas).flatMap((g) => g.tools)
 }

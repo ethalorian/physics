@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
-import { canEditArea } from '@/lib/content-access'
+import { getEditableAreas } from '@/lib/content-access'
+import { getEffectiveContext } from '@/lib/effective-context'
 import type { ReactNode } from 'react'
 import { QuestionBankProvider } from '@/contexts/QuestionBankContext'
 import { VocabularyProvider } from '@/contexts/VocabularyContext'
@@ -21,12 +22,13 @@ import AdminShell from '@/components/admin/AdminShell'
  */
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const session = await auth()
-  const canEditLessons = session?.user?.email ? await canEditArea(session.user.email, 'lessons', false) : false
+  const context = session?.user?.email ? await getEffectiveContext(session.user.email) : null
+  const editableAreas = context ? await getEditableAreas(context.scopeEmail, context.role === 'admin') : []
   return (
     <div className="surface-refined">
       <QuestionBankProvider>
         <VocabularyProvider>
-          <AdminShell canEditLessons={canEditLessons}>{children}</AdminShell>
+          <AdminShell effectiveRole={context?.role ?? 'student'} editableAreas={editableAreas}>{children}</AdminShell>
         </VocabularyProvider>
       </QuestionBankProvider>
     </div>
