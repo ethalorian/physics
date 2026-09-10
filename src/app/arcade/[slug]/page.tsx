@@ -3,8 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Coins, Trophy, Crown } from 'lucide-react'
+import { ArrowLeft, Coins, Trophy, Crown, Maximize2 } from 'lucide-react'
 import { createTetherBridge } from '@/lib/tether-bridge'
+import styles from '../arcade.module.css'
 
 /**
  * One arcade cabinet: the game in an iframe, bridged to the XP economy.
@@ -141,13 +142,13 @@ export default function ArcadeCabinetPage() {
   const accent = game?.accent || 'var(--primary)'
 
   return (
-    <div className="max-w-5xl mx-auto p-4" style={{ color: 'var(--foreground)' }}>
-      <div className="flex items-center justify-between flex-wrap gap-2 mb-3">
-        <div className="flex items-center gap-3">
+    <div className={`${styles.arcade} ${styles.player}`} style={{ color: 'var(--foreground)' }}>
+      <div className={styles.playerHeader}>
+        <div className="flex items-center gap-3 flex-wrap">
           <Link href="/arcade" className="flex items-center gap-1 text-sm" style={{ color: 'var(--muted-foreground)' }}>
             <ArrowLeft size={16} /> Arcade
           </Link>
-          {game && <h1 className="text-xl font-bold tracking-wide" style={{ color: accent }}>{game.name}</h1>}
+          {game && <h1 className="text-xl font-bold tracking-tight">{game.name}</h1>}
           {game?.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{game.unit}</span>}
         </div>
         <div className="flex items-center gap-3 text-sm">
@@ -158,22 +159,25 @@ export default function ArcadeCabinetPage() {
             </span>
           )}
           {balance !== null && <span className="font-semibold">{balance.toLocaleString()} XP</span>}
+          {gameOk && <button className={styles.fullscreenButton} onClick={() => { frameRef.current?.requestFullscreen?.().catch(() => setNotice('Fullscreen isn’t available in this browser. You can keep playing here.')) }}><Maximize2 size={15} /> Fullscreen</button>}
         </div>
       </div>
 
       {notice && (
-        <p className="text-sm mb-2 rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
+        <p role="status" className="text-sm mb-2 rounded-lg border px-3 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
           {notice}
         </p>
       )}
-      {err && <p className="text-sm" style={{ color: 'var(--destructive)' }}>{err}</p>}
+      {err && <p role="alert" className="text-sm" style={{ color: 'var(--destructive)' }}>{err}</p>}
+
+      {!err && (!game || gameOk === null) && <div className={styles.playerLoading} role="status">Getting your cabinet ready…</div>}
 
       {game && gameOk === true && (
         <iframe
           ref={frameRef}
           src={game.srcPath}
           title={game.name}
-          className="w-full rounded-xl border"
+          className={styles.gameFrame}
           style={{ borderColor: 'var(--border)', height: 'clamp(520px, calc(100vh - 200px), 1100px)', background: '#04060d' }}
           allow="autoplay"
           // keyboard goes wherever focus is — hand it to the game immediately,
@@ -202,7 +206,7 @@ export default function ArcadeCabinetPage() {
             </h2>
             {board.weekly.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No ranked runs yet this week. The throne is empty.</p>}
             {board.weekly.map((r) => (
-              <div key={r.rank} className="flex justify-between text-sm py-1" style={{ fontWeight: r.isMe ? 700 : 400 }}>
+              <div key={r.rank} className={styles.boardRow} style={{ fontWeight: r.isMe ? 700 : 400 }}>
                 <span>#{r.rank} {r.name}</span><span>{r.score.toLocaleString()}</span>
               </div>
             ))}
@@ -211,7 +215,7 @@ export default function ArcadeCabinetPage() {
             <h2 className="flex items-center gap-2 font-semibold mb-2"><Crown size={16} style={{ color: accent }} /> Hall of Fame</h2>
             {board.hallOfFame.length === 0 && <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No records yet. Make history.</p>}
             {board.hallOfFame.map((r) => (
-              <div key={r.rank} className="flex justify-between text-sm py-1" style={{ fontWeight: r.isMe ? 700 : 400 }}>
+              <div key={r.rank} className={styles.boardRow} style={{ fontWeight: r.isMe ? 700 : 400 }}>
                 <span>#{r.rank} {r.name}</span><span>{r.score.toLocaleString()}</span>
               </div>
             ))}

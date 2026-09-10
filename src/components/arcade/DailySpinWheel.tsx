@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
+import styles from './daily-spin.module.css'
 
 /**
  * The Daily Spin — one free wheel spin per day. The SERVER rolls the prize
@@ -24,6 +25,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
   const animRef = useRef<number>(0)
   const [status, setStatus] = useState<Status | null>(null)
   const [spinning, setSpinning] = useState(false)
+  const [error, setError] = useState('')
   const [result, setResult] = useState<{ prize: number; jackpot: boolean } | null>(null)
 
   const draw = useCallback(() => {
@@ -73,9 +75,9 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
   }, [status, spinning])
 
   useEffect(() => {
-    fetch('/api/arcade/spin').then((r) => r.json())
+    fetch('/api/arcade/spin').then((r) => { if (!r.ok) throw new Error('Unavailable'); return r.json() })
       .then((s: Status) => setStatus({ spunToday: !!s.spunToday, prize: s.prize ?? null }))
-      .catch(() => setStatus({ spunToday: false, prize: null }))
+      .catch(() => setError('Daily spin is unavailable. Refresh to try again.'))
   }, [])
   useEffect(() => { draw() }, [draw, status])
   useEffect(() => () => cancelAnimationFrame(animRef.current), [])
@@ -83,11 +85,14 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
   const spin = async () => {
     if (spinning || !status || status.spunToday) return
     setSpinning(true)
-    const r = await fetch('/api/arcade/spin', { method: 'POST' })
+    setError('')
+    const r = await fetch('/api/arcade/spin', { method: 'POST' }).catch(() => null)
+    if (!r) { setSpinning(false); setError('Connection lost. Try your spin again.'); return }
     const d = await r.json().catch(() => ({}))
     if (!r.ok || typeof d.segment !== 'number') {
       setSpinning(false)
-      setStatus({ spunToday: true, prize: d.prize ?? null })
+      if (r.status === 409 || d.spunToday) setStatus({ spunToday: true, prize: d.prize ?? null })
+      else setError(d.error || 'The spin couldn’t start. Please try again.')
       return
     }
     // animate: several full turns, ease out, land with the wedge under the pointer
@@ -95,7 +100,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
     const start = rotRef.current
     const delta = ((target - start) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)
     const total = Math.PI * 2 * 6 + delta
-    const dur = 4200, t0 = performance.now()
+    const dur = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 4200, t0 = performance.now()
     const tick = (now: number) => {
       const t = Math.min(1, (now - t0) / dur)
       rotRef.current = start + total * (1 - Math.pow(1 - t, 3))
@@ -112,14 +117,14 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
   }
 
   return (
-    <div className="rounded-2xl border p-4 flex items-center gap-4 flex-wrap"
+    <div className={styles.spin}
       style={{ borderColor: result?.jackpot ? '#eab308' : 'var(--border)', background: 'var(--card)' }}>
-      <button onClick={spin} disabled={spinning || !!status?.spunToday}
+      <button onClick={spin} aria-label="Spin the daily reward wheel" disabled={!status || spinning || !!status?.spunToday}
         title={status?.spunToday ? 'Come back tomorrow' : 'Spin!'}
         style={{ background: 'none', border: 'none', cursor: status?.spunToday ? 'default' : 'pointer', lineHeight: 0 }}>
-        <canvas ref={canvasRef} style={{ width: (R + 14) * 2, height: (R + 14) * 2 }} />
+        <canvas ref={canvasRef} aria-hidden="true" style={{ width: 132, height: 132 }} />
       </button>
-      <div className="flex-1 min-w-[180px]">
+      <div className={styles.copy} aria-live="polite">
         <div className="font-semibold flex items-center gap-1.5">
           <Sparkles size={16} style={{ color: '#eab308' }} /> Daily spin
         </div>
@@ -129,7 +134,7 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
               ★ JACKPOT! +{result.prize} XP ★
             </div>
           ) : (
-            <div className="text-sm mt-1">You won <b style={{ color: 'var(--reward, #f59e0b)' }}>+{result.prize} XP</b>. The gold wedge is still out there.</div>
+            <div className="text-sm mt-1">You won <b style={{ color: 'var(--reward, #f59e0b)' }}>+{result.prize} XP</b>. Added to your balance.</div>
           )
         ) : status?.spunToday ? (
           <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
@@ -137,15 +142,16 @@ export default function DailySpinWheel({ onWon }: { onWon?: (xp: number) => void
           </div>
         ) : (
           <div className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>
-            One free spin a day. Mostly crumbs — but one wedge is gold.
+            One free spin a day. A little bonus for showing up.
           </div>
         )}
         {!status?.spunToday && !spinning && (
-          <button onClick={spin} className="mt-2 text-xs font-bold rounded-lg px-3 py-1.5"
+          <button onClick={spin} disabled={!status} className={styles.button}
             style={{ background: 'var(--reward, #f59e0b)', color: '#1a1203', border: 'none', cursor: 'pointer' }}>
-            SPIN
+            {status ? 'Spin for XP' : error ? 'Spin unavailable' : 'Loading…'}
           </button>
         )}
+        {error && <p role="alert" className="text-xs mt-2">{error}</p>}
         {spinning && <div className="text-xs mt-2" style={{ color: 'var(--muted-foreground)' }}>Round and round it goes…</div>}
       </div>
     </div>

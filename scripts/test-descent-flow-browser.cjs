@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'docs/descent-verific
 const clientPlugin={name:'cabinet-test',setup(b){b.onResolve({filter:/^next\/(navigation|link)$/},a=>({path:a.path,namespace:'test'}));b.onLoad({filter:/.*/,namespace:'test'},a=>({contents:a.path.endsWith('navigation')?'export const useParams=()=>({slug:"descent"});':'export default function Link(p){return <a {...p}/>}',loader:'jsx',resolveDir:root}));}};
 let server,browser;
 (async()=>{try{
- const js=await esbuild.build({stdin:{contents:"import React from 'react';import{createRoot}from'react-dom/client';import Page from './src/app/arcade/[slug]/page';createRoot(document.getElementById('root')).render(<Page/>);",loader:'jsx',resolveDir:root},bundle:true,platform:'browser',format:'iife',jsx:'automatic',plugins:[clientPlugin],write:false,define:{'process.env.NODE_ENV':'"development"'}});
+ const js=await esbuild.build({stdin:{contents:"import React from 'react';import{createRoot}from'react-dom/client';import Page from './src/app/arcade/[slug]/page';createRoot(document.getElementById('root')).render(<Page/>);",loader:'jsx',resolveDir:root},bundle:true,platform:'browser',format:'iife',jsx:'automatic',plugins:[clientPlugin],write:false,outfile:'arcade-fixture.js',define:{'process.env.NODE_ENV':'"development"'}});
  let play=0,scoreRequests=[],payouts=0,failPayout=false,delay=1200;
  server=http.createServer(async(req,res)=>{try{
    const pathname=new URL(req.url,'http://localhost').pathname;

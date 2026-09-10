@@ -1,24 +1,12 @@
 "use client"
 
-import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import Link from 'next/link'
-import { Coins, Trophy, Crown, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, Sigma } from 'lucide-react'
+import { ArrowDown, ArrowUpRight, Atom, BookOpen, Coins, Trophy, Gamepad2, Joystick, Flame, Target, Zap, Shuffle, Brain, ShoppingBasket, Swords, Feather, Sigma, Search, X, Ruler, ArrowRight } from 'lucide-react'
 import DailySpinWheel from '@/components/arcade/DailySpinWheel'
 import ChallengeCard from '@/components/gamification/ChallengeCard'
-
-/**
- * THE ARCADE — one unified hub for the whole economy loop.
- *
- *   TRAINING FLOOR (top): vocabulary games — XP EARNERS (capped daily).
- *   PHYSICS FLOOR: the curriculum cabinets — FREE, ranked, and accuracy
- *     EARNS XP via /api/arcade/payout (clears × question accuracy²).
- *   MATH SPINE GYM: free fluency cabinets — XP EARNERS (same payout route),
- *     one per math_competencies strand.
- *   THE MIDWAY (bottom): pure-fun cabinets — the XP SPENDERS.
- *
- * Learn to earn; spend it on the Midway. One door for everything.
- */
+import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
+import styles from './arcade.module.css'
 
 type Cabinet = {
   slug: string
@@ -58,299 +46,150 @@ const VOCAB_GAMES = [
 ]
 type Focus = { scope: 'lesson' | 'unit' | null; id?: string; label?: string }
 
+type Category = 'all' | 'physics' | 'math' | 'vocabulary' | 'workshop' | 'midway'
+const CATEGORIES = [
+  { id: 'all', label: 'All games', icon: Gamepad2 },
+  { id: 'physics', label: 'Physics', icon: Atom },
+  { id: 'math', label: 'Math', icon: Sigma },
+  { id: 'vocabulary', label: 'Vocabulary', icon: BookOpen },
+  { id: 'workshop', label: 'Workshop', icon: Ruler },
+  { id: 'midway', label: 'The Midway', icon: Joystick },
+] as const
+const FLOORS = {
+  physics: { title: 'Physics in motion', desc: 'Put the concepts to work. Free to play; accuracy earns XP.', color: '#73dfca' },
+  math: { title: 'Find your fluency', desc: 'Small challenges. Sharper math. Free to play and earn XP.', color: '#b9a3fa' },
+  vocabulary: { title: 'Make the words stick', desc: 'Build your physics vocabulary, solo or with friends.', color: '#8ebfff' },
+  workshop: { title: 'Made for hands-on minds', desc: 'Practice the skills that bring precision to your work.', color: '#efc57f' },
+  midway: { title: 'You’ve earned a little fun', desc: 'Spend your XP on a ranked run. Chase a new personal best.', color: '#f3a6ba' },
+}
+
+// Lightweight vector artwork keeps every cabinet crisp without image downloads.
+function CabinetArt({ kind, seed = 0 }: { kind: Exclude<Category, 'all'>; seed?: number }) {
+  return <svg viewBox="0 0 320 130" fill="none" aria-hidden="true" className={styles.art}>
+    <path d="M0 105H320M0 75H320M0 45H320M40 0V130M100 0V130M160 0V130M220 0V130M280 0V130" stroke="currentColor" opacity=".08" />
+    <g transform={`translate(${(seed % 3 - 1) * 18} 0)`}>
+      {kind === 'physics' ? <>
+        <ellipse cx="164" cy="65" rx="84" ry="28" transform={`rotate(${seed % 2 ? -28 : 28} 164 65)`} stroke="currentColor" strokeWidth="1.5" />
+        <ellipse cx="164" cy="65" rx="84" ry="28" transform="rotate(-55 164 65)" stroke="currentColor" opacity=".4" />
+        <circle cx="164" cy="65" r="19" fill="currentColor" opacity=".12" /><circle cx="164" cy="65" r="8" fill="currentColor" />
+        <circle cx="239" cy={seed % 2 ? 34 : 101} r="5" fill="currentColor" /><path d="M64 25h12m-6-6v12M249 50h8m-4-4v8" stroke="currentColor" />
+      </> : kind === 'math' ? <>
+        {[0,1,2,3,4].map(i => <rect key={i} x={82+i*32} y={94-((i+seed)%5)*15} width="24" height={18+((i+seed)%5)*15} rx="4" fill="currentColor" opacity={.2+i*.15} />)}
+        <path d="m83 60 40-25 32 10 50-26 28 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /><circle cx="205" cy="19" r="4" fill="currentColor" />
+      </> : kind === 'vocabulary' ? <>
+        {['A','B','C'].map((letter,i) => <g key={letter} transform={`translate(${92+i*49} ${35+(i===1?-10:8)}) rotate(${i===1?0:i===0?-10:10} 22 25)`}><rect width="44" height="52" rx="8" fill="currentColor" fillOpacity=".12" stroke="currentColor" strokeOpacity=".55" /><text x="22" y="34" fill="currentColor" textAnchor="middle" fontSize="26" fontWeight="600">{letter}</text></g>)}
+      </> : kind === 'workshop' ? <>
+        <g transform="rotate(-12 160 65)"><rect x="57" y="42" width="210" height="47" rx="5" fill="currentColor" fillOpacity=".12" stroke="currentColor" />{Array.from({length:19},(_,i)=><path key={i} d={`M${70+i*10} 43v${i%5===0?27:i%2===0?18:10}`} stroke="currentColor" />)}</g>
+      </> : <>
+        {[0,1,2,3].map(i => <g key={i} transform={`translate(${112+(i%2)*12} ${94-i*23})`}><path d="m0 0 57-17 43 12-57 17Z" fill="currentColor" fillOpacity={.35+i*.17} /><path d="m0 0 43 12v12L0 12Zm43 12 57-17V7L43 24Z" fill="currentColor" fillOpacity=".18" stroke="currentColor" strokeOpacity=".3" /></g>)}
+        <path d="M75 32h14m-7-7v14m164 31h10m-5-5v10" stroke="currentColor" />
+      </>}
+    </g>
+  </svg>
+}
+
+function CabinetCard({ game, category, index, balance, freeCredit }: { game: Cabinet; category: 'physics' | 'math' | 'midway'; index: number; balance: number; freeCredit: boolean }) {
+  const free = game.costXp === 0
+  const shortfall = Math.max(0, game.costXp - balance)
+  return <article className={styles.gameCard} style={{ '--game-color': FLOORS[category].color } as CSSProperties}>
+    <Link href={`/arcade/${game.slug}`} className={styles.gameLink}>
+      <div className={styles.artWrap}><CabinetArt kind={category} seed={index} /><span className={styles.price}>{free ? 'Free · earn XP' : freeCredit ? 'Free first run' : `${game.costXp} XP / run`}</span></div>
+      <div className={styles.cardBody}>
+        <span className={styles.eyebrow}>{game.unit || (free ? 'Learning cabinet' : 'The Midway')}</span>
+        <h3>{game.name}<ArrowUpRight size={18} /></h3>
+        <p>{game.blurb || 'Step up to the cabinet and set your next personal best.'}</p>
+        <div className={styles.cardBottom}><span>{game.myBest ? `Best ${game.myBest.toLocaleString()}` : 'Set your first score'}{game.myWeeklyRank ? ` · #${game.myWeeklyRank}` : ''}</span><strong>{!free && !freeCredit && shortfall > 0 ? `Need ${shortfall} more XP` : 'Play'}<ArrowRight size={14} /></strong></div>
+      </div>
+    </Link>
+    <details className={styles.records}><summary><Trophy size={13} /> Leaderboards</summary><dl><div><dt>This week</dt><dd>{game.weeklyLeader ? `${game.weeklyLeader.name} · ${game.weeklyLeader.score.toLocaleString()}` : 'Be the first'}</dd></div><div><dt>All time</dt><dd>{game.hallOfFame ? `${game.hallOfFame.name} · ${game.hallOfFame.score.toLocaleString()}` : 'Be the first'}</dd></div></dl></details>
+  </article>
+}
+
 export default function ArcadePage() {
   const [data, setData] = useState<CabinetResponse | null>(null)
   const [hub, setHub] = useState<HubData | null>(null)
   const [focus, setFocus] = useState<Focus | null>(null)
   const [err, setErr] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  const [category, setCategory] = useState<Category>('all')
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
-    fetch('/api/arcade/cabinet')
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('Sign in to enter the arcade'))))
-      .then(setData)
-      .catch((e) => setErr(e.message))
-    fetch('/api/arcade/hub')
-      .then((r) => r.json())
-      .then((d: HubData) => { if (d && typeof d.level === 'number') setHub(d) })
-      .catch(() => {})
-    fetch('/api/arcade/focus')
-      .then((r) => r.json())
-      .then((f: Focus) => { if (f && f.scope) setFocus(f) })
-      .catch(() => {})
-  }, [])
+    const controller = new AbortController()
+    const options = { signal: controller.signal }
+    fetch('/api/arcade/cabinet', options)
+      .then(async r => { if (!r.ok) throw new Error(r.status === 401 ? 'Sign in to load the arcade cabinets.' : 'The cabinets couldn’t load. Please try again.'); return r.json() })
+      .then(setData).catch(e => { if (!controller.signal.aborted) setErr(e.message) })
+    fetch('/api/arcade/hub', options).then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && typeof d.level === 'number') setHub(d) }).catch(() => {})
+    fetch('/api/arcade/focus', options).then(r => r.ok ? r.json() : null)
+      .then(f => { if (f?.scope) setFocus(f) }).catch(() => {})
+    return () => controller.abort()
+  }, [attempt])
 
-  const steerQS = focus?.scope ? `?${focus.scope === 'lesson' ? 'lesson_id' : 'unit_id'}=${focus.id}` : ''
-  const games = focus?.scope
-    ? [...VOCAB_GAMES].sort((a, b) => Number(b.steer) - Number(a.steer))
-    : VOCAB_GAMES
-
-  const bestById = new Map((hub?.games ?? []).map((g) => [g.id, g]))
-  const dailyPct = hub ? Math.min(100, Math.round(((hub.daily.gamesPlayed / hub.daily.gamesGoal) * 50) + ((hub.daily.pointsToday / hub.daily.pointsGoal) * 50))) : 0
-
-  const physicsGames = (data?.games ?? []).filter((g) => g.costXp === 0 && g.unit !== 'Math Spine')
-  const mathGames = (data?.games ?? []).filter((g) => g.costXp === 0 && g.unit === 'Math Spine')
-  const coinGames = (data?.games ?? []).filter((g) => g.costXp > 0)
-
-  const renderCabinet = (g: Cabinet) => {
-    const accent = g.accent || 'var(--primary)'
-    const free = g.costXp === 0
-    const canAfford = free || (data ? data.balance.balance >= g.costXp || data.freeCreditAvailable : false)
-    return (
-      <div key={g.slug} className="rounded-2xl border p-5 flex flex-col" style={{ borderColor: 'var(--border)', background: 'var(--card)', boxShadow: `inset 0 3px 0 ${accent}` }}>
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <h3 className="text-lg font-bold tracking-wide" style={{ color: accent }}>{g.name}</h3>
-            {g.unit && <span className="text-[11px] uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>{g.unit}</span>}
-          </div>
-          <span className="flex items-center gap-1 text-sm font-semibold rounded-full border px-3 py-1" style={{ borderColor: 'var(--border)' }}>
-            <Coins size={14} style={{ color: accent }} /> {free ? 'EARNS XP' : g.costXp}
-          </span>
-        </div>
-        {g.blurb && <p className="text-sm mt-2 flex-1" style={{ color: 'var(--muted-foreground)' }}>{g.blurb}</p>}
-
-        <div className="mt-4 grid grid-cols-1 gap-1.5 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Trophy size={14} /> Week</span>
-            <span className="font-medium">{g.weeklyLeader ? `${g.weeklyLeader.name} — ${g.weeklyLeader.score.toLocaleString()}` : 'unclaimed'}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5" style={{ color: 'var(--muted-foreground)' }}><Crown size={14} /> All-time</span>
-            <span className="font-medium">{g.hallOfFame ? `${g.hallOfFame.name} — ${g.hallOfFame.score.toLocaleString()}` : 'be the first'}</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span style={{ color: 'var(--muted-foreground)' }}>Your best</span>
-            <span className="font-medium">{g.myBest ? g.myBest.toLocaleString() : '—'}{g.myWeeklyRank ? ` (#${g.myWeeklyRank})` : ''}</span>
-          </div>
-        </div>
-
-        <Link
-          href={`/arcade/${g.slug}`}
-          className="mt-4 text-center text-sm font-semibold rounded-lg px-4 py-2.5"
-          style={{ background: canAfford ? accent : 'var(--muted)', color: canAfford ? '#04060d' : 'var(--muted-foreground)' }}
-        >
-          {free ? '▶ PLAY FREE · EARN XP' : data?.freeCreditAvailable ? '▶ FREE CREDIT' : canAfford ? '▶ INSERT COIN' : `Need ${g.costXp} XP`}
-        </Link>
-      </div>
-    )
+  const steerQS = focus?.scope && focus.id ? `?${focus.scope === 'lesson' ? 'lesson_id' : 'unit_id'}=${encodeURIComponent(focus.id)}` : ''
+  const bestById = new Map((hub?.games ?? []).map(g => [g.id, g]))
+  const dailyPct = hub ? Math.min(100, Math.round(Math.min(1, hub.daily.gamesPlayed / Math.max(1, hub.daily.gamesGoal)) * 50 + Math.min(1, hub.daily.pointsToday / Math.max(1, hub.daily.pointsGoal)) * 50)) : 0
+  const groups = {
+    physics: (data?.games ?? []).filter(g => g.costXp === 0 && g.unit !== 'Math Spine'),
+    math: (data?.games ?? []).filter(g => g.costXp === 0 && g.unit === 'Math Spine'),
+    midway: (data?.games ?? []).filter(g => g.costXp > 0),
   }
+  const matches = (...values: (string | null)[]) => values.some(v => v?.toLowerCase().includes(query.trim().toLowerCase()))
+  const counts = { all: (data?.games.length ?? 0) + VOCAB_GAMES.length + 1, physics: groups.physics.length, math: groups.math.length, vocabulary: VOCAB_GAMES.length, workshop: 1, midway: groups.midway.length }
+  const visible = CATEGORIES.filter(c => c.id !== 'all' && (category === 'all' || c.id === category)).map(c => {
+    const id = c.id as Exclude<Category, 'all'>
+    const cabinets = id === 'physics' || id === 'math' || id === 'midway' ? groups[id].filter(g => matches(g.name, g.blurb, g.unit)) : []
+    const vocab = id === 'vocabulary' ? VOCAB_GAMES.filter(g => matches(g.title, g.desc, 'vocabulary')) : []
+    const workshop = id === 'workshop' && matches('Tape Workshop', 'measure ruler fractions inches metric trades')
+    return { ...c, id, cabinets, vocab, workshop, count: cabinets.length + vocab.length + (workshop ? 1 : 0) }
+  }).filter(c => c.count > 0)
+  const resultCount = visible.reduce((sum, c) => sum + c.count, 0)
 
-  return (
-    <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <VocabTaskCards />
-      {/* ===== marquee ===== */}
-      <div className="flex items-center justify-between flex-wrap gap-3 mt-2 mb-1">
-        <div className="flex items-center gap-3">
-          <div className="grid place-items-center" style={{ width: 44, height: 44, borderRadius: 12, background: 'color-mix(in oklch, var(--primary) 16%, transparent)', color: 'var(--primary)' }}>
-            <Joystick size={24} />
-          </div>
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">The Arcade</h1>
-            <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-              Physics pays. The Midway costs. One door.
-            </p>
-          </div>
-        </div>
-        {data && (
-          <div className="flex items-center gap-2 rounded-xl border px-4 py-2" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-            <Coins size={18} style={{ color: 'var(--primary)' }} />
-            <span className="font-semibold">{data.balance.balance.toLocaleString()} XP to spend</span>
-            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>spendable</span>
-          </div>
-        )}
-      </div>
+  return <div className={styles.arcade}>
+    <header className={styles.masthead}><Link href="/arcade" className={styles.brand}><Joystick size={22} /><span>The Arcade<span className={styles.brandDot}>.</span></span></Link><span className={styles.mastheadNote}>A playground for curious minds</span></header>
+    <section className={styles.hero} aria-labelledby="arcade-title">
+      <div className={styles.heroCopy}><span className={styles.heroKicker}><span /> Learn. Play. Level up.</span><h1 id="arcade-title">A little practice.<br /><em>A new high score.</em></h1><p>Build your skills, bank some XP, and find your next favorite game. There’s a cabinet with your name on it.</p><a href="#game-library" className={styles.heroButton}>Find your game <ArrowDown size={16} /></a></div>
+      <div className={styles.heroArt} aria-hidden="true"><div className={styles.orbitOne} /><div className={styles.orbitTwo} /><span className={styles.artStar}>✦</span><div className={styles.miniCabinet}><div className={styles.cabinetMarquee}>ANTOCCI / ARCADE</div><div className={styles.cabinetScreen}><Atom size={66} strokeWidth={1} /><span>READY, PLAYER?</span><i>PRESS PLAY</i></div><div className={styles.cabinetControls}><span /><i /><i /></div><div className={styles.cabinetBase}><span>01</span><i /></div></div><span className={styles.artCaption}>GOOD THINKING. GREAT PLAY.</span></div>
+    </section>
 
-      {/* Teacher-set challenges — shown where the game choice happens, so the
-          challenge steers what gets played. */}
-      <div className="mt-4"><ChallengeCard /></div>
-
-      {err && <p className="text-sm mt-3" style={{ color: 'var(--destructive)' }}>{err}</p>}
-      {!data && !err && <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)' }}>Powering on the cabinets…</p>}
-
-      {data?.freeCreditAvailable && (
-        <div className="rounded-xl border px-4 py-3 mt-4 text-sm font-medium flex items-center gap-2"
-          style={{ borderColor: 'var(--primary)', background: 'color-mix(in oklch, var(--primary) 12%, transparent)' }}>
-          <Coins size={16} style={{ color: 'var(--primary)' }} />
-          Your first coin is on the house — one free ranked run downstairs. Make it count.
-        </div>
-      )}
-
-      {/* daily spin — a tiny trickle of XP, one distant jackpot */}
-      <div className="mt-4">
-        <DailySpinWheel onWon={(xp) => setData((d) => d ? {
-          ...d,
-          balance: { ...d.balance, balance: d.balance.balance + xp, lifetimeEarned: d.balance.lifetimeEarned + xp },
-        } : d)} />
-      </div>
-
-      {/* ===== THE MIDWAY — featured up top: the visible reason to earn ===== */}
-      {coinGames.length > 0 && (
-        <div className="rounded-2xl border p-5 mt-5" style={{
-          borderColor: 'color-mix(in oklch, var(--primary) 45%, transparent)',
-          background: 'linear-gradient(135deg, color-mix(in oklch, var(--primary) 10%, var(--card)), var(--card))',
-          boxShadow: '0 0 32px color-mix(in oklch, var(--primary) 16%, transparent)',
-        }}>
-          <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
-            <div className="flex items-center gap-2">
-              <Gamepad2 size={18} style={{ color: 'var(--primary)' }} />
-              <h2 className="text-sm font-extrabold uppercase tracking-widest">
-                The Midway · pure fun · {coinGames[0]?.costXp ?? 25} XP a coin
-              </h2>
-            </div>
-            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-              coins are earned on the floors below — one mastered physics run ≈ one Midway coin
-            </span>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {coinGames.map(renderCabinet)}
-          </div>
-        </div>
-      )}
-
-      <section className="mt-7 rounded-2xl border p-5" style={{ borderColor: '#6c5931', background: 'var(--card)' }} aria-labelledby="trades-workshop-title">
-        <h2 id="trades-workshop-title" className="text-xs font-bold uppercase tracking-widest" style={{ color: '#d9a648' }}>Trades workshop · free practice</h2>
-        <Link href="/arcade/tape-measure" className="mt-3 flex flex-wrap items-center justify-between gap-4 rounded-xl border p-4 transition-colors hover:bg-white/5" style={{ borderColor: 'var(--border)' }}>
-          <span>
-            <span className="block text-lg font-bold">Tape Workshop</span>
-            <span className="mt-1 block text-sm" style={{ color: 'var(--muted-foreground)' }}>Learn the graduations, align zero, mark a cut, and measure from nonzero starts. Explore inch fractions, decimal inches, and metric scales.</span>
-          </span>
-          <span className="shrink-0 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: '#eeb347', color: '#16252c' }}>Enter workshop →</span>
-        </Link>
-      </section>
-
-      {/* ===== TRAINING FLOOR — the earners ===== */}
-      <div className="flex items-center justify-between flex-wrap gap-2 mt-7 mb-3">
-        <div className="flex items-center gap-2">
-          <Gamepad2 size={16} style={{ color: 'var(--success, #22c55e)' }} />
-          <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-            Training floor · earn XP
-          </h2>
-        </div>
-        {hub && (
-          <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
-            <span title={`${hub.xp.into}/${hub.xp.forNext} XP into level ${hub.level}`}>
-              Lv <b style={{ color: 'var(--primary)' }}>{hub.level}</b>
-              <span className="inline-block align-middle ml-1.5 h-1.5 w-14 rounded-full overflow-hidden" style={{ background: 'var(--border)' }}>
-                <span className="block h-full" style={{ width: `${Math.round((hub.xp.into / hub.xp.forNext) * 100)}%`, background: 'var(--primary)' }} />
-              </span>
-            </span>
-            {hub.myRank && <span>this week <b style={{ color: 'var(--success, #22c55e)' }}>#{hub.myRank}</b></span>}
-          </div>
-        )}
-      </div>
-
-      {/* daily challenge strip */}
-      <div className="rounded-2xl border p-4 flex items-center gap-4 flex-wrap mb-3" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-        <div className="grid place-items-center" style={{ width: 38, height: 38, borderRadius: '50%', background: 'color-mix(in oklch, var(--reward, #f59e0b) 18%, transparent)', color: 'var(--reward, #f59e0b)' }}>
-          <Target size={20} />
-        </div>
-        <div className="flex-1 min-w-[200px]">
-          <div className="font-medium text-sm">
-            Daily challenge {hub?.daily.complete && <span className="text-xs ml-1" style={{ color: 'var(--success, #22c55e)' }}>done ✓</span>}
-            {hub && <span className="text-xs font-normal ml-2" style={{ color: 'var(--muted-foreground)' }}>
-              {hub.daily.gamesPlayed}/{hub.daily.gamesGoal} games · {hub.daily.pointsToday}/{hub.daily.pointsGoal} pts
-            </span>}
-          </div>
-          <div className="h-1.5 rounded-full mt-2 overflow-hidden" style={{ background: 'var(--border)' }}>
-            <div className="h-full" style={{ width: `${dailyPct}%`, background: 'var(--reward, #f59e0b)' }} />
-          </div>
-        </div>
-        {hub && (
-          <div className="flex items-center gap-1.5 text-sm" title="Daily play streak">
-            <Flame size={16} style={{ color: 'var(--reward, #f59e0b)' }} />
-            <span className="font-semibold">{hub.streakDays}d</span>
-          </div>
-        )}
-      </div>
-
-      {focus?.scope && (
-        <div className="rounded-xl border px-4 py-2.5 mb-3 text-sm flex items-center gap-2 flex-wrap"
-          style={{ borderColor: 'color-mix(in oklch, var(--success, #22c55e) 45%, transparent)', background: 'color-mix(in oklch, var(--success, #22c55e) 10%, transparent)' }}>
-          <Target size={15} style={{ color: 'var(--success, #22c55e)' }} />
-          <span><b>Current focus: {focus.label}</b></span>
-          <span style={{ color: 'var(--muted-foreground)' }}>
-            — starred games open preloaded with the words you’re learning right now.
-          </span>
-        </div>
-      )}
-
-      <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))' }}>
-        {games.map((g) => {
-          const Icon = g.icon
-          const best = bestById.get(g.id)
-          const steered = !!focus?.scope && g.steer
-          return (
-            <Link key={g.id} href={steered ? g.href + steerQS : g.href}
-              className="rounded-xl border p-3 flex items-start gap-3 transition-transform hover:-translate-y-0.5"
-              style={{
-                borderColor: steered ? 'color-mix(in oklch, var(--success, #22c55e) 55%, transparent)' : 'var(--border)',
-                background: 'var(--card)',
-                boxShadow: steered ? 'inset 0 2px 0 color-mix(in oklch, var(--success, #22c55e) 60%, transparent)' : 'none',
-              }}>
-              <span className="mt-0.5" style={{ color: 'var(--success, #22c55e)' }}><Icon size={18} /></span>
-              <span>
-                <span className="block text-sm font-semibold">
-                  {g.title}{steered && <span title={`preloaded: ${focus?.label}`} style={{ color: 'var(--success, #22c55e)' }}> ★</span>}
-                </span>
-                <span className="block text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{g.desc}</span>
-                {steered && <span className="block text-[11px] mt-1" style={{ color: 'var(--success, #22c55e)' }}>{focus?.label}</span>}
-                {best && best.best > 0 && (
-                  <span className="block text-[11px] mt-1" style={{ color: 'var(--reward, #f59e0b)' }}>best {best.best.toLocaleString()}</span>
-                )}
-              </span>
-            </Link>
-          )
-        })}
-      </div>
-
-      {/* ===== PHYSICS FLOOR — the curriculum cabinets: free, accuracy EARNS ===== */}
-      {physicsGames.length > 0 && (
-        <>
-          <div className="flex items-center justify-between flex-wrap gap-2 mt-8 mb-3">
-            <div className="flex items-center gap-2">
-              <Joystick size={16} style={{ color: 'var(--primary)' }} />
-              <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-                Physics floor · free cabinets · play the unit, earn XP
-              </h2>
-            </div>
-            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-              ranked runs · clears + bonus-question accuracy bank the XP
-            </span>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {physicsGames.map(renderCabinet)}
-          </div>
-        </>
-      )}
-
-      {/* ===== MATH SPINE GYM — free cabinets that EARN ===== */}
-      {mathGames.length > 0 && (
-        <>
-          <div className="flex items-center justify-between flex-wrap gap-2 mt-8 mb-3">
-            <div className="flex items-center gap-2">
-              <Sigma size={16} style={{ color: 'var(--success, #22c55e)' }} />
-              <h2 className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-                Math gym · free cabinets · accuracy earns XP
-              </h2>
-            </div>
-            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-              sloppy speed pays nothing · the best-paying floor: up to 10 XP/day · 15 for Honors
-            </span>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {mathGames.map(renderCabinet)}
-          </div>
-        </>
-      )}
-
-      {data && data.games.length === 0 && (
-        <p className="text-sm mt-6" style={{ color: 'var(--muted-foreground)' }}>No cabinets are powered on yet. Check back soon.</p>
-      )}
-
-      {data && data.balance.balance < 25 && !data.freeCreditAvailable && (
-        <p className="text-xs mt-6 text-center" style={{ color: 'var(--muted-foreground)' }}>
-          Short on coins? The physics floor and math gym share a daily allowance of 10 XP, or 15 for Honors, for accurate runs and completed math problems. Vocabulary adds up to 5 XP a day. See your unit requirements on Home.
-        </p>
-      )}
+    <div className={styles.playerBar} aria-label="Your arcade progress">
+      <div><span className={styles.statIcon}><Coins size={19} /></span><span><small>Ready to spend</small><strong>{data ? `${data.balance.balance.toLocaleString()} XP` : '—'}</strong></span></div>
+      <div><span className={styles.statIcon}><Zap size={19} /></span><span><small>Your level</small><strong>{hub ? `Level ${hub.level}` : '—'}</strong></span>{hub && <progress aria-label="Progress to next level" max={Math.max(1, hub.xp.forNext)} value={hub.xp.into} />}</div>
+      <div><span className={styles.statIcon}><Flame size={19} /></span><span><small>Play streak</small><strong>{hub ? `${hub.streakDays} ${hub.streakDays === 1 ? 'day' : 'days'}` : '—'}</strong></span></div>
+      <div><span className={styles.statIcon}><Trophy size={19} /></span><span><small>This week</small><strong>{hub?.myRank ? `Rank #${hub.myRank}` : 'Make your mark'}</strong></span></div>
     </div>
-  )
+
+    <div className={styles.assignmentArea}><VocabTaskCards /><ChallengeCard compact /></div>
+
+    <div className={styles.libraryLayout}>
+      <div className={styles.library} id="game-library">
+        <div className={styles.libraryHeading}><div><span className={styles.eyebrow}>Pick your next challenge</span><h2>The game library</h2></div><span>{counts.all} games & activities</span></div>
+        <div className={styles.browseTools}>
+          <div className={styles.search}><Search size={17} /><input aria-label="Search games" placeholder="Search games, skills, or topics…" value={query} onChange={e => setQuery(e.target.value)} />{query && <button aria-label="Clear search" onClick={() => setQuery('')}><X size={16} /></button>}</div>
+          <div className={styles.filters} role="group" aria-label="Game categories">{CATEGORIES.map(c => <button key={c.id} aria-pressed={category === c.id} onClick={() => setCategory(c.id)}><c.icon size={15} />{c.label}<span>{counts[c.id]}</span></button>)}</div>
+        </div>
+        {err && <div className={styles.empty} role="alert"><p>{err}</p><button onClick={() => { setErr(''); setAttempt(a => a + 1) }}>Try again</button></div>}
+        {!data && !err && <div className={styles.loading} role="status">Powering on the cabinets…<div /><div /><div /></div>}
+        <span className={styles.srOnly} role="status">{resultCount} matching games and activities</span>
+        {visible.map(section => <section key={section.id} className={styles.floor} aria-labelledby={`floor-${section.id}`}>
+          <div className={styles.floorHeading}><span className={styles.floorIcon} style={{ color: FLOORS[section.id].color }}><section.icon size={20} /></span><div><h3 id={`floor-${section.id}`}>{FLOORS[section.id].title}</h3><p>{FLOORS[section.id].desc}</p></div><span className={styles.floorCount}>{String(section.count).padStart(2, '0')}</span></div>
+          {section.id === 'vocabulary' && focus?.scope && <p className={styles.focusNote}><Target size={15} /> Current focus: <strong>{focus.label}</strong> · Solo games open with these words.</p>}
+          <div className={styles.gameGrid}>
+            {section.cabinets.map((g, i) => <CabinetCard key={g.slug} game={g} category={section.id as 'physics' | 'math' | 'midway'} index={i} balance={data?.balance.balance ?? 0} freeCredit={!!data?.freeCreditAvailable} />)}
+            {section.vocab.map((g, i) => <article key={g.id} className={styles.gameCard} style={{ '--game-color': FLOORS.vocabulary.color } as CSSProperties}><Link href={g.steer ? g.href + steerQS : g.href} className={styles.gameLink}><div className={styles.artWrap}><CabinetArt kind="vocabulary" seed={i} /><span className={styles.price}>{g.steer ? 'Solo · earn XP' : g.id === 'duel' ? '2 players' : '3+ players'}</span></div><div className={styles.cardBody}><span className={styles.eyebrow}><g.icon size={12} /> Vocabulary</span><h3>{g.title}<ArrowUpRight size={18} /></h3><p>{g.desc}</p><div className={styles.cardBottom}><span>{bestById.get(g.id)?.best ? `Best ${bestById.get(g.id)!.best.toLocaleString()}` : g.steer && focus?.scope ? 'Current focus loaded' : 'Ready when you are'}</span><strong>Play <ArrowRight size={14} /></strong></div></div></Link></article>)}
+            {section.workshop && <article className={styles.gameCard} style={{ '--game-color': FLOORS.workshop.color } as CSSProperties}><Link href="/arcade/tape-measure" className={styles.gameLink}><div className={styles.artWrap}><CabinetArt kind="workshop" /><span className={styles.price}>Free practice</span></div><div className={styles.cardBody}><span className={styles.eyebrow}>Trades workshop</span><h3>Tape Workshop<ArrowUpRight size={18} /></h3><p>Read the marks, align zero, and measure with confidence. Inch fractions, decimals, and metric.</p><div className={styles.cardBottom}><span>Real-world skills</span><strong>Explore <ArrowRight size={14} /></strong></div></div></Link></article>}
+          </div>
+        </section>)}
+        {visible.length === 0 && (data || query || category === 'vocabulary' || category === 'workshop') && <div className={styles.empty}><Search size={26} /><h3>{query ? 'No games found' : 'No cabinets here yet'}</h3><p>{query ? 'Try a different topic or explore the other categories.' : 'Explore another category while this floor gets ready.'}</p><button onClick={() => { setQuery(''); setCategory('all') }}>Show all games</button></div>}
+      </div>
+      <aside className={styles.sidebar} aria-label="Daily goals and rewards">
+        <section className={styles.dailyCard}><span className={styles.eyebrow}><Target size={14} /> Your daily goal</span><h2>{hub?.daily.complete ? 'Nicely played.' : 'A little better, every day.'}</h2><p>{hub ? `${hub.daily.gamesPlayed} / ${hub.daily.gamesGoal} games · ${hub.daily.pointsToday} / ${hub.daily.pointsGoal} points` : 'Play vocabulary games to build your daily progress.'}</p><progress aria-label="Daily challenge progress" max="100" value={dailyPct} /><span className={styles.dailyFooter}>{hub?.daily.complete ? 'Daily challenge complete ✓' : 'Every round is a fresh start.'}</span></section>
+        <DailySpinWheel onWon={xp => setData(d => d ? { ...d, balance: { ...d.balance, balance: d.balance.balance + xp, lifetimeEarned: d.balance.lifetimeEarned + xp } } : d)} />
+        {data?.freeCreditAvailable && <section className={styles.creditCard}><Coins size={21} /><h2>Your first run is on us.</h2><p>One free ranked run on the Midway. Pick a game and make it count.</p><button onClick={() => { setCategory('midway'); setQuery(''); document.getElementById('game-library')?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }}>Explore the Midway <ArrowRight size={15} /></button></section>}
+        <details className={styles.howItWorks}><summary>How XP works</summary><p>Physics and math games are free. Accurate runs and completed math problems share a daily allowance of 10 XP, or 15 for Honors. Vocabulary adds up to 5 XP a day.</p><p>Spend your balance on ranked Midway runs. Each cabinet shows its price before you play.</p><Link href="/">View your unit requirements <ArrowUpRight size={13} /></Link></details>
+      </aside>
+    </div>
+    <footer className={styles.footer}><Joystick size={16} /><span>Stay curious. Keep playing.</span><a href="#arcade-title">Back to top ↑</a></footer>
+  </div>
 }
