@@ -12,7 +12,7 @@ export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
   const courseId = sp.get('course_id'), setId = sp.get('set_id')
   if (!courseId || !setId) return NextResponse.json({ error: 'course_id and set_id required' }, { status: 400 })
   const { data: course } = await supabaseAdmin.from('courses').select('id, teacher_email').eq('id', courseId).maybeSingle()
-  if (!course || (ctx.role !== 'admin' && (course as { teacher_email: string | null }).teacher_email !== ctx.scopeEmail)) return NextResponse.json({ error: 'Not your class' }, { status: 403 })
+  if (!course || (course as { teacher_email: string | null }).teacher_email !== ctx.scopeEmail) return NextResponse.json({ error: 'Not your class' }, { status: 403 })
 
   const { data: enrolls } = await supabaseAdmin.from('course_students').select('student_id').eq('course_id', courseId).eq('enrollment_state', 'ACTIVE')
   const ids = ((enrolls ?? []) as { student_id: string }[]).map((e) => e.student_id)

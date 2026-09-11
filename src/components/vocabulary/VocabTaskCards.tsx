@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import PracticeCompletionBadge from '@/components/PracticeCompletionBadge'
+import type { quizSummary } from '@/lib/vocab-quiz'
 import type { VocabTask } from '@/lib/vocab-learning'
 
-type CardTask = VocabTask & { progress: { covered: number; ready: number; total: number; complete: boolean; reviewDue: boolean }[] }
+type CardTask = VocabTask & { progress: { quiz?: ReturnType<typeof quizSummary>; covered: number; ready: number; total: number; complete: boolean; reviewDue: boolean }[] }
 export interface VocabPracticeStatus {
   state: 'loading' | 'ready' | 'error'
   total: number
@@ -33,7 +34,7 @@ export default function VocabTaskCards({ onStatus }: { onStatus?: (status: Vocab
       .then(tasks => {
         if (!active) return
         setTasks(tasks)
-        onStatusRef.current?.({ state: 'ready', total: tasks.length, completed: tasks.filter(t => t.progress[0]?.complete && !t.progress[0]?.reviewDue).length })
+        onStatusRef.current?.({ state: 'ready', total: tasks.length, completed: tasks.filter(t => (t.task_kind==='quiz'?t.progress[0]?.quiz?.submitted:t.progress[0]?.complete && !t.progress[0]?.reviewDue)).length })
       })
       .catch(() => {
         if (!active) return
@@ -47,7 +48,7 @@ export default function VocabTaskCards({ onStatus }: { onStatus?: (status: Vocab
   if (error) return <p role="alert" className="text-sm text-destructive">{error} <Link className="inline-flex min-h-11 items-center underline" href="/vocabulary/work">Open vocabulary</Link></p>
   if (loading) return <p role="status" className="text-sm text-muted-foreground">Checking assigned vocabulary…</p>
   if (!tasks.length) return null
-  const allDone = tasks.every(t => t.progress[0]?.complete && !t.progress[0]?.reviewDue)
+  const allDone = tasks.every(t => (t.task_kind==='quiz'?t.progress[0]?.quiz?.submitted:t.progress[0]?.complete && !t.progress[0]?.reviewDue))
   const reviewDue = tasks.some(t => t.progress[0]?.reviewDue)
   return <section className="rounded-xl border border-border p-4 space-y-3">
     <div className="flex items-start justify-between gap-3">
@@ -56,11 +57,11 @@ export default function VocabTaskCards({ onStatus }: { onStatus?: (status: Vocab
     </div>
     {tasks.map(t => {
       const p = t.progress[0]
-      const done = p?.complete && !p?.reviewDue
+      const done = t.task_kind==='quiz'?p?.quiz?.submitted:p?.complete && !p?.reviewDue
       return <Link key={t.id} href={`/vocabulary/work?task_id=${t.id}`} className="block rounded-lg border border-border p-3 min-h-11 hover:bg-muted">
         <div className="flex items-start justify-between gap-3"><strong className="min-w-0">{t.title}</strong>{tasks.length > 1 && <PracticeCompletionBadge state={done ? 'done' : 'todo'} label={done ? 'Done' : p?.reviewDue ? 'Review due' : 'To do'} />}</div>
-        <p className="mt-2 text-sm text-muted-foreground">{p?.ready ?? 0}/{p?.total ?? t.term_ids.length} words ready · {p?.covered ?? 0} checked{t.due_on ? ` · due ${t.due_on}` : ''}</p>
-        <span className="text-sm">{p?.reviewDue ? 'Time for a review' : p?.complete ? 'Requirement met · review again' : 'Practice and check words'}</span>
+        {t.task_kind==='quiz'?<p className="mt-2 text-sm">QUIZ · {p?.quiz?.needsReview?'Awaiting teacher review':p?.quiz?.submitted?`Score: ${p.quiz.score}%`:'One submission'}{t.due_on?` · due ${t.due_on}`:''}</p>:<p className="mt-2 text-sm text-muted-foreground">{p?.ready ?? 0}/{p?.total ?? t.term_ids.length} words ready · {p?.covered ?? 0} checked{t.due_on ? ` · due ${t.due_on}` : ''}</p>}
+        <span className="text-sm">{t.task_kind==='quiz'?(done?'View quiz results':'Open quiz'):p?.reviewDue ? 'Time for a review' : p?.complete ? 'Requirement met · review again' : 'Practice and check words'}</span>
       </Link>
     })}
   </section>

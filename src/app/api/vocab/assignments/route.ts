@@ -10,7 +10,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 async function ownsCourse(ctx: { role: string; scopeEmail?: string | null }, courseId: string) {
   const { data } = await supabaseAdmin.from('courses').select('id, teacher_email').eq('id', courseId).maybeSingle()
   if (!data) return false
-  return ctx.role === 'admin' || (data as { teacher_email: string | null }).teacher_email === ctx.scopeEmail
+  return (data as { teacher_email: string | null }).teacher_email === ctx.scopeEmail
 }
 
 export const GET = withRole(['teacher', 'admin'], async (request, ctx) => {
@@ -41,9 +41,13 @@ export const POST = withRole(['teacher', 'admin'], async (request, ctx) => {
   const body = (await request.json().catch(() => ({}))) as { course_id?: string; vocabulary_set_id?: string; due_on?: string | null; note?: string | null }
   if (!body.course_id || !body.vocabulary_set_id) return NextResponse.json({ error: 'course_id and vocabulary_set_id required' }, { status: 400 })
   if (!(await ownsCourse(ctx, body.course_id))) return NextResponse.json({ error: 'Not your class' }, { status: 403 })
+  const {data:existing,error:lookupError}=await supabaseAdmin.from('vocab_assignments').select('id,active').eq('course_id',body.course_id).eq('vocabulary_set_id',body.vocabulary_set_id).maybeSingle()
+  if(lookupError)throw lookupError
+  if(existing?.active)return NextResponse.json({error:'This set is already assigned.'},{status:409})
   const { data, error } = await supabaseAdmin.from('vocab_assignments')
     .upsert({ course_id: body.course_id, vocabulary_set_id: body.vocabulary_set_id, assigned_by: ctx.email, due_on: body.due_on || null, note: body.note ?? null, active: true }, { onConflict: 'course_id,vocabulary_set_id' })
     .select('id, vocabulary_set_id, due_on, note, active, created_at').single()
+  if(error?.code==='23505')return NextResponse.json({error:'This set is already assigned.'},{status:409})
   if (error) return NextResponse.json({ error: 'Could not assign' }, { status: 500 })
   return NextResponse.json({ assignment: data })
 })

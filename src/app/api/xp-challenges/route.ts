@@ -1,107 +1,68 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-
-// GET /api/challenges — the signed-in student's ACTIVE challenges for today:
-// definition, live progress since local midnight, and the bonus state. The
-// daily target resets each day of the challenge's range; hitting it awards the
-// bonus once per day (economy grant deduped by challenge:id:user:date).
-
-const TZ = 'America/New_York'
-
-function localToday(): { dateStr: string; startIso: string } {
-  const now = new Date()
-  const fmt = (t: number) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(t))
-  const dateStr = fmt(now.getTime())
-  let probe = now.getTime()
-  while (fmt(probe - 15 * 60000) === dateStr) probe -= 15 * 60000
-  while (fmt(probe - 60000) === dateStr) probe -= 60000
-  return { dateStr, startIso: new Date(probe).toISOString() }
-}
-
-interface Challenge {
-  id: string; title: string; kind: string; game_slug: string | null
-  metric: string; target: number; bonus_xp: number
-}
+import { bountyRows } from '@/lib/xp-bounty-data'
+import { bountyToday, bountyWindow } from '@/lib/xp-bounty-period'
+import { bountyPlayHref } from '@/lib/xp-bounty-catalog'
+import { bountyProgress } from '@/lib/xp-bounty-progress'
 
 export const GET = withAuth(async (_req, ctx) => {
+  // Staff previews must never receive student bonus grants.
+  if (ctx.role !== 'student' || ctx.realRole === 'admin') return NextResponse.json({ challenges: [] })
   const uid = ctx.userId
-  const { dateStr, startIso } = localToday()
-
-  // Which challenges apply to me: my active enrollments' courses + direct picks.
-  const { data: enrolls } = await supabaseAdmin
-    .from('course_students').select('course_id').eq('student_id', uid).eq('enrollment_state', 'ACTIVE')
-  const courseIds = (enrolls ?? []).map((e) => e.course_id)
-
-  const orParts = [`student_id.eq.${uid}`]
-  if (courseIds.length > 0) orParts.push(`course_id.in.(${courseIds.join(',')})`)
-  const { data: assigns } = await supabaseAdmin
-    .from('xp_challenge_assignments').select('challenge_id').or(orParts.join(','))
-  const chIds = [...new Set((assigns ?? []).map((a) => a.challenge_id))]
-
-  // Assigned challenges + admin GLOBAL challenges (those apply to everyone).
-  let q = supabaseAdmin
-    .from('xp_challenges')
-    .select('id, title, kind, game_slug, metric, target, bonus_xp')
-    .eq('active', true)
-    .lte('starts_on', dateStr).gte('ends_on', dateStr)
-  q = chIds.length > 0 ? q.or(`is_global.eq.true,id.in.(${chIds.join(',')})`) : q.eq('is_global', true)
-  const { data: chRows } = await q
-  const challenges = (chRows ?? []) as Challenge[]
-  if (challenges.length === 0) return NextResponse.json({ challenges: [] })
-
-  // ---- today's raw activity, fetched once and sliced per challenge ----------
-  const [{ data: arcadeGrants }, { data: plays }, { data: vocab }, { data: mathGrants }] = await Promise.all([
-    supabaseAdmin.from('economy_point_grants').select('points, reference').eq('user_id', uid).eq('source', 'arcade-payout').gte('awarded_at', startIso),
-    supabaseAdmin.from('arcade_plays').select('game_slug').eq('user_id', uid).gte('created_at', startIso),
-    supabaseAdmin.from('vocabulary_game_scores').select('score').eq('user_id', uid).gte('completed_at', startIso),
-    supabaseAdmin.from('math_spine_point_grants').select('points').eq('user_id', uid).gte('awarded_at', startIso),
+  const now = new Date()
+  const today = bountyToday(now)
+  const enrollments = await bountyRows((from, to) => supabaseAdmin.from('course_students')
+    .select('course_id').eq('student_id', uid).eq('enrollment_state', 'ACTIVE').order('course_id').range(from, to))
+  const courseIds = enrollments.map(e => e.course_id)
+  if (!courseIds.length) return NextResponse.json({ challenges: [] })
+  const courses = await bountyRows((from, to) => supabaseAdmin.from('courses').select('id, teacher_email')
+    .in('id', courseIds).order('id').range(from, to))
+  const owners = [...new Set(courses.map(c => c.teacher_email).filter(Boolean))]
+  if (!owners.length) return NextResponse.json({ challenges: [] })
+  const candidates = await bountyRows((from, to) => supabaseAdmin.from('xp_challenges')
+    .select('id, teacher_email, title, kind, game_slug, metric, target, bonus_xp, period, starts_on, ends_on, is_global')
+    .in('teacher_email', owners).eq('active', true).lte('starts_on', today).gte('ends_on', today).order('id').range(from, to))
+  if (!candidates.length) return NextResponse.json({ challenges: [] })
+  const assigns = await bountyRows((from, to) => supabaseAdmin.from('xp_challenge_assignments')
+    .select('id, challenge_id, student_id, course_id').in('challenge_id', candidates.map(c => c.id)).order('id').range(from, to))
+  // Legacy global definitions now apply only to that teacher's active roster.
+  const challenges = candidates.filter(c => c.is_global || assigns.some(a => a.challenge_id === c.id
+    && (a.student_id === uid || courses.some(course => course.id === a.course_id && course.teacher_email === c.teacher_email))))
+  if (!challenges.length) return NextResponse.json({ challenges: [] })
+  const windows = new Map(challenges.map(c => [c.id, bountyWindow(c, today)]))
+  const startIso = [...windows.values()].map(w => w.startIso).sort()[0]
+  const until = now.toISOString()
+  const [arcade, plays, vocab, math] = await Promise.all([
+    bountyRows((from, to) => supabaseAdmin.from('economy_point_grants').select('id, points, reference, awarded_at')
+      .eq('user_id', uid).eq('source', 'arcade-payout').gte('awarded_at', startIso).lte('awarded_at', until).order('id').range(from, to)),
+    bountyRows((from, to) => supabaseAdmin.from('arcade_plays').select('id, game_slug, finished_at, meta')
+      .eq('user_id', uid).eq('status', 'finished').gte('finished_at', startIso).lte('finished_at', until).order('id').range(from, to)),
+    bountyRows((from, to) => supabaseAdmin.from('vocabulary_game_scores').select('id, score, game_type, completed_at')
+      .eq('user_id', uid).gte('completed_at', startIso).lte('completed_at', until).order('id').range(from, to)),
+    bountyRows((from, to) => supabaseAdmin.from('math_spine_point_grants').select('id, points, awarded_at')
+      .eq('user_id', uid).gte('awarded_at', startIso).lte('awarded_at', until).order('id').range(from, to)),
   ])
-
-  const progressFor = (c: Challenge): number => {
-    if (c.kind === 'arcade-any' || c.kind === 'arcade-game') {
-      const slug = c.kind === 'arcade-game' ? c.game_slug : null
-      if (c.metric === 'plays') {
-        return (plays ?? []).filter((p) => !slug || p.game_slug === slug).length
-      }
-      return Math.round((arcadeGrants ?? []).filter((g) => !slug || g.reference === slug).reduce((a, g) => a + (g.points ?? 0), 0))
-    }
-    if (c.kind === 'vocab-games') {
-      if (c.metric === 'plays') return (vocab ?? []).length
-      // mirrors the leaderboard formula's per-play cap
-      return (vocab ?? []).reduce((a, v) => a + Math.min(25, Math.round((v.score ?? 0) / 10)), 0)
-    }
-    // math: XP earned in the math spine today (metric is always 'xp' here)
-    return Math.round((mathGrants ?? []).reduce((a, g) => a + (g.points ?? 0), 0))
-  }
-
-  // Existing bonuses for today (so progress can exclude them and UI shows state).
-  const keys = challenges.map((c) => `challenge:${c.id}:${uid}:${dateStr}`)
-  const { data: paid } = await supabaseAdmin
-    .from('economy_point_grants').select('dedupe_key').in('dedupe_key', keys)
-  const paidSet = new Set((paid ?? []).map((p) => p.dedupe_key))
-
+  const keyFor = (id: string) => `challenge:${id}:${uid}:${windows.get(id)!.key}`
+  const paid = await bountyRows((from, to) => supabaseAdmin.from('economy_point_grants').select('id, dedupe_key')
+    .in('dedupe_key', challenges.map(c => keyFor(c.id))).order('id').range(from, to))
+  const paidSet = new Set(paid.map(p => p.dedupe_key))
   const out = []
   for (const c of challenges) {
-    const progress = progressFor(c)
-    let bonusAwarded = paidSet.has(`challenge:${c.id}:${uid}:${dateStr}`)
+    const window = windows.get(c.id)!
+    const progress = bountyProgress(c, window, { arcade, plays, vocab, math })
+    let bonusAwarded = paidSet.has(keyFor(c.id))
     if (!bonusAwarded && c.bonus_xp > 0 && progress >= c.target) {
       const { error } = await supabaseAdmin.from('economy_point_grants').insert({
-        user_id: uid,
-        user_email: ctx.email,
-        source: 'challenge-bonus',
-        points: c.bonus_xp,
-        reference: c.id,
-        note: `Challenge hit — ${c.title}`,
-        dedupe_key: `challenge:${c.id}:${uid}:${dateStr}`,
+        user_id: uid, user_email: ctx.email, source: 'challenge-bonus', points: c.bonus_xp,
+        reference: c.id, note: `Bounty earned — ${c.title}`, dedupe_key: keyFor(c.id),
       })
-      if (!error || error.code === '23505') bonusAwarded = true
+      if (error && error.code !== '23505') throw error
+      bonusAwarded = true
     }
-    out.push({
-      id: c.id, title: c.title, kind: c.kind, gameSlug: c.game_slug,
-      metric: c.metric, target: c.target, bonusXp: c.bonus_xp,
-      progress, done: progress >= c.target, bonusAwarded,
+    out.push({ id: c.id, title: c.title, kind: c.kind, gameSlug: c.game_slug,
+      metric: c.metric, target: c.target, bonusXp: c.bonus_xp, period: c.period, window,
+      progress, done: progress >= c.target, bonusAwarded, playHref: bountyPlayHref(c.kind, c.game_slug),
     })
   }
   return NextResponse.json({ challenges: out })

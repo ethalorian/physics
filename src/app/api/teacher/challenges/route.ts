@@ -1,146 +1,128 @@
 import { NextResponse } from 'next/server'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
-import { getTeacherStudentGids } from '@/lib/teacher-scope'
-
-// Teacher CRUD for daily XP challenges — scoped to ctx.scopeEmail. A teacher
-// can assign only their OWN courses and students from their own roster (same
-// principle as rating: admin widens nothing here).
+import { bountyRoster, bountyRows } from '@/lib/xp-bounty-data'
+import { BOUNTY_PERIODS, bountyToday, bountyWindow, validBountyDate } from '@/lib/xp-bounty-period'
+import { BOUNTY_KIND_LABELS, VOCAB_BOUNTY_GAMES } from '@/lib/xp-bounty-catalog'
 
 const staffOnly = (role: string) => role === 'admin' || role === 'teacher'
+const bad = (error: string, status = 400) => NextResponse.json({ error }, { status })
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export const GET = withAuth(async (_req, ctx) => {
-  if (!staffOnly(ctx.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-
-  // The teacher's OWN classes (imported or created) — the only assignable set,
-  // for admins too. Returned even with zero challenges so the form can render.
-  const { data: courses } = await supabaseAdmin
-    .from('courses').select('id, name, section').eq('teacher_email', ctx.scopeEmail).order('name')
-  const myCourses = (courses ?? []).map((c) => ({ id: c.id, label: [c.name, c.section].filter(Boolean).join(' · ') }))
-  const isAdmin = ctx.role === 'admin'
-
-  const { data: chRows } = await supabaseAdmin
-    .from('xp_challenges')
-    .select('id, title, kind, game_slug, metric, target, bonus_xp, starts_on, ends_on, active, is_global, created_at')
-    .eq('teacher_email', ctx.scopeEmail)
-    .order('created_at', { ascending: false })
-  const challenges = chRows ?? []
-  if (challenges.length === 0) return NextResponse.json({ challenges: [], myCourses, isAdmin })
-
-  const ids = challenges.map((c) => c.id)
-  const { data: assigns } = await supabaseAdmin
-    .from('xp_challenge_assignments').select('challenge_id, course_id, student_id').in('challenge_id', ids)
-  const courseName = new Map(myCourses.map((c) => [c.id, c.label]))
-
-  // Today's completions: bonus grants keyed challenge:<id>:<uid>:<today ET>
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
-  const { data: paidToday } = await supabaseAdmin
-    .from('economy_point_grants').select('reference').eq('source', 'challenge-bonus').in('reference', ids)
-    .like('dedupe_key', `%:${today}`)
-  const doneBy = new Map<string, number>()
-  for (const p of paidToday ?? []) if (p.reference) doneBy.set(p.reference, (doneBy.get(p.reference) ?? 0) + 1)
-
-  return NextResponse.json({
-    myCourses,
-    isAdmin,
-    challenges: challenges.map((c) => ({
-      ...c,
-      assignments: (assigns ?? []).filter((a) => a.challenge_id === c.id).map((a) => ({
-        course_id: a.course_id, student_id: a.student_id,
-        label: a.course_id ? (courseName.get(a.course_id) ?? 'Class') : 'Student',
-      })),
-      completedToday: doneBy.get(c.id) ?? 0,
-    })),
+  if (!staffOnly(ctx.role)) return bad('Forbidden', 403)
+  const [roster, challenges, games] = await Promise.all([
+    bountyRoster(ctx.scopeEmail),
+    bountyRows((from, to) => supabaseAdmin.from('xp_challenges')
+      .select('id, title, kind, game_slug, metric, target, bonus_xp, starts_on, ends_on, period, active, is_global, created_at')
+      .eq('teacher_email', ctx.scopeEmail).order('created_at', { ascending: false }).order('id').range(from, to)),
+    bountyRows((from, to) => supabaseAdmin.from('arcade_games').select('slug, name, enabled')
+      .order('sort_order').order('slug').range(from, to)),
+  ])
+  const ids = challenges.map(c => c.id)
+  const [assigns, grants] = ids.length ? await Promise.all([
+    bountyRows((from, to) => supabaseAdmin.from('xp_challenge_assignments')
+      .select('id, challenge_id, course_id, student_id').in('challenge_id', ids).order('id').range(from, to)),
+    bountyRows((from, to) => supabaseAdmin.from('economy_point_grants')
+      .select('id, reference, user_id, dedupe_key').eq('source', 'challenge-bonus').in('reference', ids).order('id').range(from, to)),
+  ]) : [[], []]
+  const today = bountyToday()
+  return NextResponse.json({ myCourses: roster.courses, students: roster.students, games, teacherEmail: ctx.scopeEmail,
+    challenges: challenges.map(c => {
+      const window = bountyWindow(c, today)
+      const assignments = assigns.filter(a => a.challenge_id === c.id)
+      const recipients = roster.students.filter(s => c.is_global || assignments.some(a => a.student_id === s.id || s.courseIds.includes(a.course_id)))
+      const recipientIds = new Set(recipients.map(s => s.id))
+      const completed = new Set(grants.filter(g => g.reference === c.id && recipientIds.has(g.user_id)
+        && g.dedupe_key === `challenge:${c.id}:${g.user_id}:${window.key}`).map(g => g.user_id))
+      return { ...c, window, recipientCount: recipients.length, completedPeriod: completed.size,
+        assignments: assignments.map(a => ({ ...a, label: a.course_id
+          ? roster.courses.find(course => course.id === a.course_id)?.label ?? 'Former class'
+          : roster.students.find(s => s.id === a.student_id)?.name ?? 'Former student' })),
+      }
+    }),
   })
 })
 
-// POST { title, kind, game_slug?, metric, target, bonus_xp, starts_on, ends_on,
-//        course_ids: [], student_emails: [] }
 export const POST = withAuth(async (request, ctx) => {
-  if (!staffOnly(ctx.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const b = await request.json()
+  if (!staffOnly(ctx.role)) return bad('Forbidden', 403)
+  const b = await request.json().catch(() => null)
+  if (!b || typeof b !== 'object' || Array.isArray(b)) return bad('Invalid request')
+  if (typeof b.title !== 'string' || !b.title.trim() || b.title.trim().length > 120
+    || !Object.hasOwn(BOUNTY_KIND_LABELS, b.kind) || !['xp', 'plays'].includes(b.metric)) return bad('Valid title, activity, and measure required')
+  const period = b.period ?? 'daily'
+  if (!BOUNTY_PERIODS.includes(period)) return bad('Choose a valid reward period')
+  if (b.is_global === true) return bad('Bounties can only be assigned to your own classes or students', 403)
+  if (b.kind === 'math' && b.metric !== 'xp') return bad('Math bounties measure XP earned')
+  if (!Number.isInteger(b.target) || b.target < 1 || b.target > 1000) return bad('Target must be 1–1000')
+  if (!Number.isInteger(b.bonus_xp) || b.bonus_xp < 1 || b.bonus_xp > 100) return bad('Bounty must be 1–100 XP')
+  if (!validBountyDate(b.starts_on) || !validBountyDate(b.ends_on) || b.ends_on < b.starts_on) return bad('Valid start and end dates are required')
+  if (Date.parse(b.ends_on) - Date.parse(b.starts_on) > 366 * 86400000) return bad('Choose a date range of one year or less')
+  let slug: string | null = null
+  if (b.kind === 'arcade-game') {
+    if (typeof b.game_slug !== 'string') return bad('Choose a game')
+    const { data: game, error } = await supabaseAdmin.from('arcade_games').select('slug').eq('slug', b.game_slug).eq('enabled', true).maybeSingle()
+    if (error) throw error
+    if (!game) return bad('Choose an available arcade game')
+    slug = game.slug
+  } else if (b.kind === 'vocab-games' && b.game_slug) {
+    if (!VOCAB_BOUNTY_GAMES.some(g => g.slug === b.game_slug)) return bad('Choose a valid vocabulary game')
+    slug = b.game_slug
+  }
+  for (const key of ['course_ids', 'student_ids', 'student_emails']) {
+    if (b[key] !== undefined && (!Array.isArray(b[key]) || b[key].some((v: unknown) => typeof v !== 'string'))) return bad('Invalid recipients')
+  }
+  const courseIds = [...new Set<string>(b.course_ids ?? [])]
+  const studentIds = new Set<string>(b.student_ids ?? [])
+  const emails = [...new Set<string>((b.student_emails ?? []).map((e: string) => e.trim().toLowerCase()).filter(Boolean))]
+  const roster = await bountyRoster(ctx.scopeEmail)
+  if (courseIds.some(id => !roster.courses.some(c => c.id === id))) return bad('You can only assign your own classes', 403)
+  for (const email of emails) {
+    const student = roster.students.find(s => s.email?.toLowerCase() === email)
+    if (!student) return bad('Every student must be on your active roster', 403)
+    studentIds.add(student.id)
+  }
+  if ([...studentIds].some(id => !roster.students.some(s => s.id === id))) return bad('Every student must be on your active roster', 403)
+  if (!courseIds.length && !studentIds.size) return bad('Choose at least one class or student')
 
-  const KINDS = ['arcade-any', 'arcade-game', 'vocab-games', 'math']
-  if (!b.title?.trim() || !KINDS.includes(b.kind) || !['xp', 'plays'].includes(b.metric)) {
-    return NextResponse.json({ error: 'Missing/invalid title, kind, or metric' }, { status: 400 })
-  }
-  if (b.kind === 'arcade-game' && !b.game_slug) return NextResponse.json({ error: 'Pick a game' }, { status: 400 })
-  if (b.kind === 'math' && b.metric !== 'xp') return NextResponse.json({ error: 'Math challenges are XP-based' }, { status: 400 })
-  const target = Number(b.target), bonus = Number(b.bonus_xp)
-  if (!Number.isInteger(target) || target < 1 || target > 1000) return NextResponse.json({ error: 'Target must be 1-1000' }, { status: 400 })
-  if (!Number.isInteger(bonus) || bonus < 0 || bonus > 100) return NextResponse.json({ error: 'Bonus must be 0-100' }, { status: 400 })
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(b.starts_on ?? '') || !/^\d{4}-\d{2}-\d{2}$/.test(b.ends_on ?? '') || b.ends_on < b.starts_on) {
-    return NextResponse.json({ error: 'Valid start and end dates are required' }, { status: 400 })
-  }
-
-  // Global challenges (every student, automatically) are the ADMIN's lever;
-  // teachers always assign explicit slices of their own classes/roster.
-  const isGlobal = ctx.role === 'admin' && b.is_global === true
-
-  // Assignment slices — validate ownership before anything is written.
-  const courseIds: string[] = isGlobal ? [] : (Array.isArray(b.course_ids) ? b.course_ids : [])
-  const studentEmails: string[] = isGlobal ? [] : (Array.isArray(b.student_emails) ? b.student_emails : [])
-  if (!isGlobal && courseIds.length === 0 && studentEmails.length === 0) {
-    return NextResponse.json({ error: 'Assign at least one class or student' }, { status: 400 })
-  }
-  if (courseIds.length > 0) {
-    const { data: own } = await supabaseAdmin.from('courses').select('id').eq('teacher_email', ctx.scopeEmail).in('id', courseIds)
-    if ((own ?? []).length !== courseIds.length) return NextResponse.json({ error: 'You can only assign your own classes' }, { status: 400 })
-  }
-  let studentIds: string[] = []
-  if (studentEmails.length > 0) {
-    const emails = studentEmails.map((e: string) => e.trim().toLowerCase()).filter(Boolean)
-    const { data: studs } = await supabaseAdmin.from('students').select('id, email').in('email', emails)
-    const found = (studs ?? [])
-    if (found.length !== emails.length) {
-      const missing = emails.filter((e) => !found.some((s) => (s.email ?? '').toLowerCase() === e))
-      return NextResponse.json({ error: `Unknown student email(s): ${missing.join(', ')}` }, { status: 400 })
-    }
-    const roster = new Set(await getTeacherStudentGids(ctx.scopeEmail))
-    const off = found.filter((s) => !roster.has(s.id))
-    if (off.length > 0) return NextResponse.json({ error: 'Students must be on your own roster' }, { status: 400 })
-    studentIds = found.map((s) => s.id)
-  }
-
-  const { data: ch, error } = await supabaseAdmin.from('xp_challenges').insert({
-    teacher_email: ctx.scopeEmail,
-    title: b.title.trim().slice(0, 120),
-    kind: b.kind,
-    game_slug: b.kind === 'arcade-game' ? b.game_slug : null,
-    metric: b.metric, target, bonus_xp: bonus,
-    starts_on: b.starts_on, ends_on: b.ends_on,
-    is_global: isGlobal,
+  // Activate only after all recipient rows exist. A failed assignment is never live.
+  const { data: challenge, error } = await supabaseAdmin.from('xp_challenges').insert({
+    teacher_email: ctx.scopeEmail, title: b.title.trim(), kind: b.kind, game_slug: slug,
+    metric: b.metric, target: b.target, bonus_xp: b.bonus_xp, period,
+    starts_on: b.starts_on, ends_on: b.ends_on, is_global: false, active: false,
   }).select('id').single()
-  if (error || !ch) return NextResponse.json({ error: error?.message ?? 'Insert failed' }, { status: 500 })
-
-  if (!isGlobal) {
-    const rows = [
-      ...courseIds.map((cid) => ({ challenge_id: ch.id, course_id: cid, student_id: null })),
-      ...studentIds.map((sid) => ({ challenge_id: ch.id, course_id: null, student_id: sid })),
-    ]
-    const { error: aErr } = await supabaseAdmin.from('xp_challenge_assignments').insert(rows)
-    if (aErr) return NextResponse.json({ error: aErr.message }, { status: 500 })
+  if (error || !challenge) throw error ?? new Error('Could not create bounty')
+  const { error: assignmentError } = await supabaseAdmin.from('xp_challenge_assignments').insert([
+    ...courseIds.map(id => ({ challenge_id: challenge.id, course_id: id, student_id: null })),
+    ...[...studentIds].map(id => ({ challenge_id: challenge.id, course_id: null, student_id: id })),
+  ])
+  if (assignmentError) {
+    await supabaseAdmin.from('xp_challenges').delete().eq('id', challenge.id).eq('teacher_email', ctx.scopeEmail)
+    throw assignmentError
   }
-  return NextResponse.json({ ok: true, id: ch.id }, { status: 201 })
+  const { error: activationError } = await supabaseAdmin.from('xp_challenges').update({ active: true }).eq('id', challenge.id).eq('teacher_email', ctx.scopeEmail)
+  if (activationError) throw activationError
+  return NextResponse.json({ ok: true, id: challenge.id }, { status: 201 })
 })
 
-// PUT { id, active }  — pause/resume. DELETE ?id= — remove (cascade drops slices).
 export const PUT = withAuth(async (request, ctx) => {
-  if (!staffOnly(ctx.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  const b = await request.json()
-  if (!b.id || typeof b.active !== 'boolean') return NextResponse.json({ error: 'id and active required' }, { status: 400 })
-  const { error } = await supabaseAdmin.from('xp_challenges')
-    .update({ active: b.active }).eq('id', b.id).eq('teacher_email', ctx.scopeEmail)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!staffOnly(ctx.role)) return bad('Forbidden', 403)
+  const b = await request.json().catch(() => null)
+  if (!b || !uuid.test(b.id) || typeof b.active !== 'boolean') return bad('Valid id and active state required')
+  const { data, error } = await supabaseAdmin.from('xp_challenges').update({ active: b.active })
+    .eq('id', b.id).eq('teacher_email', ctx.scopeEmail).select('id').maybeSingle()
+  if (error) throw error
+  if (!data) return bad('Bounty not found', 404)
   return NextResponse.json({ ok: true })
 })
 
 export const DELETE = withAuth(async (request, ctx) => {
-  if (!staffOnly(ctx.role)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  if (!staffOnly(ctx.role)) return bad('Forbidden', 403)
   const id = new URL(request.url).searchParams.get('id')
-  if (!id) return NextResponse.json({ error: 'id required' }, { status: 400 })
-  const { error } = await supabaseAdmin.from('xp_challenges')
-    .delete().eq('id', id).eq('teacher_email', ctx.scopeEmail)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!id || !uuid.test(id)) return bad('Valid id required')
+  const { data, error } = await supabaseAdmin.from('xp_challenges').delete()
+    .eq('id', id).eq('teacher_email', ctx.scopeEmail).select('id').maybeSingle()
+  if (error) throw error
+  if (!data) return bad('Bounty not found', 404)
   return NextResponse.json({ ok: true })
 })

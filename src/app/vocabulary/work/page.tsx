@@ -2,6 +2,7 @@
 import { useEffect,useState } from 'react'
 import Link from 'next/link'
 import { LanguageProfileProvider,useLanguageProfile } from '@/components/lessons/LanguageProfileProvider'
+import VocabQuizWork from '@/components/vocabulary/VocabQuizWork'
 import VocabTaskCards from '@/components/vocabulary/VocabTaskCards'
 import { languageCode } from '@/lib/vocab-language'
 import type { VocabTask,VocabResult } from '@/lib/vocab-learning'
@@ -19,6 +20,7 @@ function Work(){
  const start=()=>run(async()=>{const d=await api({task_id:id});setCheck(d.check_id);setItems(d.items);setResponses({});setSupports({});setResults(null)})
  const submit=()=>run(async()=>{const d=await api({task_id:id,check_id:check,responses:items.map(i=>({id:i.id,response:responses[i.id]??'',supports:supports[i.id]??[]}))});setResults(d.result)})
  const languages=[...new Set(['es',...(task?.words??[]).flatMap(w=>Object.keys(w.translations??{}))])]
+ if(task?.task_kind==='quiz')return <div className="mx-auto max-w-3xl p-4 md:p-6 space-y-5"><Link href="/home" className="underline">Home</Link><h1 className="text-2xl font-bold">{task.title}</h1><VocabQuizWork task={task}/></div>
  return <div className="mx-auto max-w-3xl p-4 md:p-6 space-y-5"><Link href="/home" className="underline">Home</Link><h1 className="text-2xl font-bold">{task?.title??'Vocabulary assignments'}</h1>{error&&<p role="alert" className="text-destructive">{error}</p>}{!id?<VocabTaskCards/>:!task?<p>Loading assignment…</p>:<>
  <p>{task.note}</p><p className="text-sm text-muted-foreground">{task.term_ids.length} words · {task.min_checks} checks per word · {task.threshold}% recent accuracy{task.due_on?` · due ${task.due_on}`:''}. These checks show word learning. Your teacher rates your physics understanding separately.</p>
  <label>Translation language <select className={field} value={language} onChange={e=>setLanguage(e.target.value)}><option value="">Choose language</option>{languages.map(l=><option key={l} value={l}>{({es:'Spanish',pt:'Portuguese',ht:'Haitian Creole',fr:'French',ar:'Arabic',zh:'Chinese',vi:'Vietnamese'} as Record<string,string>)[l]??l}</option>)}</select></label>

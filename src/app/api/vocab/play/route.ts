@@ -19,7 +19,7 @@ export const GET = withAuth(async (req, ctx) => {
     const taskId = sp.get('task_id')
     if (taskId) {
       const task = await accessVocabTask(taskId,ctx)
-      if(!task || !task.active) return NextResponse.json({error:'Assignment unavailable'},{status:403})
+      if(!task || !task.active || task.task_kind==='quiz') return NextResponse.json({error:'Assignment unavailable'},{status:403})
       return NextResponse.json({label:task.title,scoreSetId:task.words[0]?.vocabulary_set_id??null,terms:task.words.map(t=>({...t,definitionEs:t.definition_es}))})
     }
     const setId = sp.get('set_id')

@@ -2,8 +2,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import type { AuthContext } from '@/lib/api-auth'
 import type { VocabTask } from './vocab-learning'
 export async function vocabCourses(ctx: AuthContext) {
- let q = supabaseAdmin.from('courses').select('id,name,section,program,teacher_email').is('archived_at',null)
- if(ctx.role !== 'admin') q=q.eq('teacher_email',ctx.scopeEmail)
+ const q = supabaseAdmin.from('courses').select('id,name,section,program,teacher_email').is('archived_at',null).eq('teacher_email',ctx.scopeEmail).order('name')
  const {data,error}=await q; if(error) throw error
  return data ?? []
 }

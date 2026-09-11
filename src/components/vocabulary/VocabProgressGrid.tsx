@@ -1,70 +1,25 @@
 'use client'
-
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { QUIZ_FORMATS,type quizSummary } from '@/lib/vocab-quiz'
 import type { VocabTask, summarizeWords } from '@/lib/vocab-learning'
-
-type Progress = ReturnType<typeof summarizeWords> & { studentId: string; name: string }
-interface Props {
-  tasks: (VocabTask & { progress: Progress[] })[]
-  courses: { id: string; name: string; section: string | null }[]
-  targets: { id: string; slug: string; statement: string }[]
-  onOpen: (id: string) => void
-  onAssign: () => void
-}
-
-export default function VocabProgressGrid({ tasks, courses, targets, onOpen, onAssign }: Props) {
-  const [courseId, setCourseId] = useState('')
-  const [includeArchived, setIncludeArchived] = useState(false)
-  const visible = tasks.filter(t => (!courseId || t.course_id === courseId) && (includeArchived || t.active))
-  const students = [...new Map(visible.flatMap(t => t.progress.map(p => [p.studentId, p] as const))).values()]
-    .sort((a, b) => a.name.localeCompare(b.name))
-
-  return <Card>
-    <CardHeader><CardTitle>Class vocabulary tracker</CardTitle></CardHeader>
-    <CardContent className="space-y-4">
-      <p className="text-sm text-muted-foreground">Students down the side, assigned tasks across the top. Open a task to see accuracy and evidence for each word, or assign follow-up practice.</p>
-      <div className="flex flex-wrap items-center gap-4">
-        <label>Class <select aria-label="Tracker class" className="min-h-11 rounded-lg border border-border bg-background px-3" value={courseId} onChange={e => setCourseId(e.target.value)}>
-          <option value="">All my classes</option>{courses.map(c => <option key={c.id} value={c.id}>{c.name} {c.section}</option>)}
-        </select></label>
-        <label className="flex min-h-11 items-center gap-2"><input type="checkbox" checked={includeArchived} onChange={e => setIncludeArchived(e.target.checked)} />Include archived tasks</label>
-      </div>
-      {!visible.length ? <div className="space-y-3 rounded-lg bg-muted p-5">
-        <p className="font-semibold">No vocabulary tasks assigned{courseId ? ' to this class' : ''} yet.</p>
-        <p className="text-sm">Choose your word set, select students, and assign a word check. Their results will appear here automatically.</p>
-        <Button className="min-h-11" onClick={onAssign}>Assign vocabulary</Button>
-      </div> : <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <caption className="sr-only">Vocabulary task progress by student. A dash means the task was not assigned to that student.</caption>
-          <thead><tr><th scope="col" className="p-3">Student</th>{visible.map(t => {
-            const target = targets.find(target => target.id === t.target_id)
-            const course = courses.find(c => c.id === t.course_id)
-            return <th scope="col" key={t.id} className="min-w-48 p-3 align-top">
-              <Button variant="link" className="min-h-11 h-auto whitespace-normal p-0 text-left" onClick={() => onOpen(t.id)}>{t.title}</Button>
-              <p className="font-normal text-muted-foreground">{course?.name} {course?.section}{!t.active ? ' · Archived' : ''}</p>
-              <p className="font-normal text-muted-foreground">{target ? `${target.slug} · ${target.statement}` : 'Vocabulary goal'}</p>
-              <p className="font-normal">{t.progress.filter(p => p.complete).length}/{t.progress.length} students met goal{t.due_on ? ` · Due ${t.due_on}` : ''}</p>
-            </th>
-          })}</tr></thead>
-          <tbody>{students.map(student => <tr key={student.studentId} className="border-t border-border">
-            <th scope="row" className="p-3 font-medium">{student.name}</th>
-            {visible.map(t => {
-              const p = t.progress.find(p => p.studentId === student.studentId)
-              if (!p) return <td key={t.id} className="p-3 text-muted-foreground"><span aria-label="Not assigned">—</span></td>
-              const status = p.reviewDue ? 'Review due' : p.complete ? 'Goal met' : p.covered ? 'In progress' : 'Not started'
-              return <td key={t.id} className="p-3">
-                <Button variant="ghost" className="h-auto min-h-11 flex-col items-start whitespace-normal text-left" onClick={() => onOpen(t.id)} aria-label={`${student.name}, ${t.title}: ${status}. Open report`}>
-                  <span className={p.complete && !p.reviewDue ? 'text-success' : ''}>{status}</span>
-                  <span className="font-normal">{p.ready}/{p.total} words ready · {p.accuracy === null ? 'No checks yet' : `${p.accuracy}% accuracy`}</span>
-                </Button>
-              </td>
-            })}
-          </tr>)}</tbody>
-        </table>
-      </div>}
-      <p className="text-sm text-muted-foreground">Goal met means every word meets the task’s accuracy and check requirements. Physics mastery stays teacher-rated.</p>
-    </CardContent>
-  </Card>
+import type { summarizeVocabActivity } from '@/lib/vocab-activity'
+type Progress=ReturnType<typeof summarizeWords>&{studentId:string;name:string;quiz?:ReturnType<typeof quizSummary>;activity?:ReturnType<typeof summarizeVocabActivity>}
+interface Props {tasks:(VocabTask&{progress:Progress[]})[];courses:{id:string;name:string;section:string|null}[];targets:{id:string;slug:string;statement:string}[];enrollments?:{course_id:string;student_id:string;students:{id:string;name:string}|null}[];selectedCourseId?:string;onClassChange?:(id:string)=>void;onOpen:(id:string)=>void;onAssign:(courseId?:string)=>void}
+export default function VocabProgressGrid({tasks,courses,enrollments=[],onOpen,onAssign,onClassChange,selectedCourseId}:Props){
+ const [choice,setChoice]=useState(''),[search,setSearch]=useState(''),[archived,setArchived]=useState(false)
+ const courseId=courses.some(c=>c.id===(selectedCourseId??choice))?(selectedCourseId??choice):courses[0]?.id??'',course=courses.find(c=>c.id===courseId)
+ const active=tasks.filter(t=>t.course_id===courseId&&t.active),shown=tasks.filter(t=>t.course_id===courseId&&(t.active||archived))
+ const roster=[...new Map(enrollments.filter(e=>e.course_id===courseId).map(e=>[e.student_id,{id:e.student_id,name:e.students?.name??'Student'}])).values()].sort((a,b)=>a.name.localeCompare(b.name))
+ const progress=(id:string)=>active.flatMap(t=>t.progress.filter(p=>p.studentId===id))
+ const started=roster.filter(s=>progress(s.id).some(p=>p.activity?.lastAt||p.covered)).length
+ const needing=roster.filter(s=>progress(s.id).some(p=>!p.complete||p.reviewDue)).length
+ return <div className="space-y-5"><section aria-label="My classes" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{courses.map(c=>{const n=tasks.filter(t=>t.course_id===c.id&&t.active).length;return <button key={c.id} onClick={()=>{setChoice(c.id);onClassChange?.(c.id)}} aria-pressed={c.id===courseId} className={`min-h-24 rounded-xl border p-4 text-left ${c.id===courseId?'border-primary bg-primary/5 ring-1 ring-primary':'border-border bg-card hover:bg-muted'}`}><span className="block font-semibold">{c.name}{c.section?` · ${c.section}`:''}</span><span className="mt-1 block text-sm text-muted-foreground">{n} active assignments · {enrollments.filter(e=>e.course_id===c.id).length} students</span></button>})}</section>
+ {!courses.length?<Card><CardContent className="p-6"><p className="font-semibold">No classes are assigned to you as teacher.</p><p className="mt-2 text-sm">A class must list you as its teacher before you can assign vocabulary.</p></CardContent></Card>:<>
+ <div className="flex flex-wrap justify-between gap-3"><div><h2 className="text-xl font-semibold">{course?.name} {course?.section}</h2><p className="text-sm text-muted-foreground">Assignments and student progress for this class.</p></div><Button className="min-h-11" onClick={()=>onAssign(courseId)}>Assign to this class</Button></div>
+ <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">{[[active.length,'Active assignments'],[roster.length,'Students'],[started,'Students with activity'],[needing,'Students with goals to finish or review']].map(([n,label])=><Card key={label}><CardContent className="p-4"><p className="text-2xl font-semibold">{n}</p><p className="text-sm text-muted-foreground">{label}</p></CardContent></Card>)}</div>
+ <Card><CardHeader><CardTitle>Assigned to this class</CardTitle></CardHeader><CardContent className="space-y-3"><label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={archived} onChange={e=>setArchived(e.target.checked)}/>Show archived assignments</label>{!shown.length&&<p>No assignments yet. Assign a set to give students a word goal.</p>}<div className="grid gap-3 md:grid-cols-2">{shown.map(t=><article key={t.id} className="rounded-lg border border-border p-4"><div className="flex justify-between gap-2"><h3 className="font-semibold">{t.title}</h3><span className="rounded-full bg-muted px-2 py-1 text-xs">{t.active?'Assigned':'Archived'}</span></div><p className="mt-2 text-sm text-muted-foreground">{t.term_ids.length} words · {t.task_kind==='quiz'?QUIZ_FORMATS.find(f=>f.id===t.quiz_format)?.label:t.check_mode==='recall'?'Recall and spelling':'Recognition'} · {t.due_on?`Due ${t.due_on}`:'No due date'}</p><p className="mt-2 text-sm">{t.progress.filter(p=>t.task_kind==='quiz'?p.quiz?.submitted:p.complete).length}/{t.progress.length} students {t.task_kind==='quiz'?'submitted':'met goal'} · {t.progress.filter(p=>!p.covered&&!p.activity?.lastAt).length} not started</p><Button variant="outline" className="mt-3 min-h-11" onClick={()=>onOpen(t.id)}>View report: {t.title}</Button></article>)}</div></CardContent></Card>
+ <Card><CardHeader><CardTitle>Student activity and word proficiency</CardTitle></CardHeader><CardContent className="space-y-4"><label className="block text-sm">Find a student<input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Student name" className="ml-3 min-h-11 rounded-lg border border-border bg-background px-3"/></label><div className="overflow-x-auto"><table className="w-full text-left text-sm"><caption className="sr-only">Current roster and vocabulary progress by assignment</caption><thead><tr>{['Student','Assignment progress','Completed checks','Last activity'].map(h=><th key={h} scope="col" className="p-3">{h}</th>)}</tr></thead><tbody>{roster.filter(s=>s.name.toLowerCase().includes(search.toLowerCase())).map(s=>{const ps=progress(s.id);const dates=ps.map(p=>p.activity?.lastAt??p.words.map(w=>w.lastAt??'').sort().at(-1)??'').filter(Boolean).sort();const last=dates.at(-1);return <tr key={s.id} className="border-t border-border"><th scope="row" className="p-3 font-medium">{s.name}</th><td className="p-3">{!ps.length?'No active assignment':active.filter(t=>t.student_ids.includes(s.id)).map(t=>{const p=t.progress.find(p=>p.studentId===s.id);return p&&<button key={t.id} className="block min-h-11 text-left underline underline-offset-4" onClick={()=>onOpen(t.id)}>{t.title}: {t.task_kind==='quiz'?(p.quiz?.needsReview?'Awaiting teacher review':p.quiz?.submitted?`Score ${p.quiz.score}%`:'Quiz to do'):p.reviewDue?'Review due':p.complete?'Goal met':p.covered?'In progress':p.activity?.lastAt?'Practising':'Not started'} · {p.ready}/{p.total} words ready</button>})}</td><td className="p-3">{ps.reduce((n,p)=>n+(p.activity?.completedChecks??0),0)}</td><td className="p-3">{last?new Date(last).toLocaleString():'No activity recorded'}</td></tr>})}</tbody></table></div>{!roster.length&&<p>No active students in this class.</p>}<p className="text-sm text-muted-foreground">Open an assignment for each word’s check accuracy, practice attempts and review status. Word proficiency uses the assignment’s check requirements; game activity alone does not establish proficiency.</p></CardContent></Card>
+ </>}</div>
 }
