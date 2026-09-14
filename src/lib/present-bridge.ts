@@ -12,7 +12,7 @@
  * live layer never knows which kind of deck it is driving (P-1).
  */
 
-export interface DeckSlide { label: string; notes: string; anchor?: string | null }
+export interface DeckSlide { label: string; notes: string; anchor?: string | null; binding?: string | null }
 export interface DeckSnapshot { index: number; total: number; slides: DeckSlide[] }
 
 interface StageLike extends HTMLElement { index: number; length: number; goTo(i: number): void; next(): void; prev(): void }
@@ -38,6 +38,7 @@ export function readDeck(win: Window | null): DeckSnapshot | null {
   const slides: DeckSlide[] = Array.from(stage.children).filter(el => el.tagName === 'SECTION').map((el) => ({
     label: el.getAttribute('data-label') ?? '',
     anchor: el.getAttribute('data-section-anchor'),
+    binding: el.getAttribute('data-lesson-block'),
     notes: el.getAttribute('data-speaker-notes') ?? '',
   }))
   let index = typeof stage.index === 'number' ? stage.index : 0
@@ -54,7 +55,7 @@ export function deckPrev(win: Window | null) { const s = stageOf(win); if (s) s.
 
 /** Tell the deck it is on the projector: hides its nav overlay + rail. */
 export function deckPresenting(win: Window | null, on: boolean) {
-  try { win?.postMessage({ __omelette_presenting: on }, '*') } catch { /* closed */ }
+  try { stageOf(win)?.toggleAttribute('data-session-controlled', on); win?.postMessage({ __omelette_presenting: on }, '*') } catch { /* closed */ }
 }
 
 const BLACKOUT_ID = 'live-layer-blackout'

@@ -105,7 +105,7 @@ async function bundle(entry, name, plugins = []) {
     const mocks={
       'next/server':`exports.NextResponse={json:(body,options)=>new Response(JSON.stringify(body),{status:options?.status??200})};`,
       '@/lib/api-auth':`exports.withAuth=(fn)=>fn;exports.withContentEditor=(_table,fn)=>fn;`,
-      '@/lib/supabase':`exports.supabaseAdmin={from:(table)=>{let updated=false;const q={select:()=>q,eq:()=>q,maybeSingle:async()=>({data:table==='lessons'?global.__route.current:null}),single:async()=>({data:{id:'lesson'}}),update:(patch)=>{global.__route.writes.push(patch);updated=true;return q}};return q;}};`,
+      '@/lib/supabase':`exports.supabaseAdmin={from:(table)=>{let updated=false;const q={select:()=>q,eq:()=>q,is:()=>q,then:(resolve)=>Promise.resolve({data:table==='learning_targets'?[{id:'target',slug:'target',statement:'Explain motion',unit_id:'unit-1'}]:[]}).then(resolve),maybeSingle:async()=>({data:updated?{id:'lesson',updated_at:'next'}:table==='lessons'?global.__route.current:null}),single:async()=>({data:{id:'lesson'}}),update:(patch)=>{global.__route.writes.push(patch);updated=true;return q}};return q;}};`,
       '@/lib/lesson-targets':`exports.targetIdsForLesson=async(_id,doc)=>{global.__route.checkedDoc=doc;return global.__route.targets;};`,
       '@/lib/sei':`exports.seiLint=()=>global.__route.sei;`,
     };
@@ -113,9 +113,9 @@ async function bundle(entry, name, plugins = []) {
     build.onLoad({filter:/.*/,namespace:'fixture'},a=>({contents:mocks[a.path]}));
   }};
   const route=await bundle('src/app/api/lessons/[id]/route.ts','lesson-route',[routePlugin]);
-  const validDoc={schemaVersion:1,blocks:[{id:'exit',type:'exit_ticket',capture:true,prompt:'Explain.'}]};
-  const resetRoute=()=>global.__route={current:{published:true,unit_id:null,content_blocks:validDoc},targets:['target'],sei:[],writes:[]};
-  const put=(body, realRole="admin")=>route.PUT(new Request('http://local/api/lessons/lesson',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}),{realRole,params:Promise.resolve({id:'lesson'})});
+  const validDoc={schemaVersion:1,blocks:[{id:'exit',type:'exit_ticket',capture:true,prompt:'Explain.',targetId:'target'}]};
+  const resetRoute=()=>global.__route={current:{updated_at:null,published:true,unit_id:null,content_blocks:validDoc},targets:['target'],sei:[],writes:[]};
+  const put=(body, realRole="admin")=>route.PUT(new Request('http://local/api/lessons/lesson',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({expected_updated_at:global.__route.current.updated_at,...body})}),{realRole,params:Promise.resolve({id:'lesson'})});
   await check('published content-only PUT rejects invalid blocks before writing',async()=>{
     resetRoute();const r=await put({content_blocks:{schemaVersion:1,blocks:[registry.createBlock('question','q')]}});assert.equal(r.status,422);assert.equal(global.__route.writes.length,0);
   });

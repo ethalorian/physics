@@ -17,7 +17,7 @@ export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher
     return NextResponse.json({ error: 'Bad request' }, { status: 400 })
   }
 
-  const tracks = await resolveTracks({ role: ctx.role, scopeEmail: ctx.scopeEmail })
+  const tracks = await resolveTracks({ role: ctx.role, scopeEmail: ctx.scopeEmail, courseId: new URL(request.url).searchParams.get('course_id') })
   const plan = findDay(unitId, day, tracks)
   if (!plan) return NextResponse.json({ error: 'Plan not found' }, { status: 404 })
 

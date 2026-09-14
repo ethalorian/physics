@@ -1,4 +1,6 @@
 'use client'
+import { teachingPrompt, teachingTitle, teachingCue } from '@/lib/teaching-content'
+import TeachingVisual, { questionVisual } from './TeachingVisual'
 import { isCaptureBlock, type ContentBlock, type GraphSeries } from '@/data/content-blocks'
 import { lessonLocation, lessonNumber } from '@/components/lessons/LessonVisualIdentity'
 import { answerGuide } from '@/components/lessons/lesson-answer-guide'
@@ -7,6 +9,7 @@ import FigureGraph from '@/components/blocks/FigureGraph'
 import MathMarkdown from '@/components/MathMarkdown'
 import { ProjectionSeiContext } from './ProjectionSeiContext'
 import TeachingQuestion from './TeachingQuestion'
+import TeachingToolRenderer from '@/components/teaching-tools/TeachingToolRenderer'
 import TeachingSeiSupports from './TeachingSeiSupports'
 import { FitTeachingContent } from './TeachingStage'
 
@@ -24,6 +27,16 @@ function TeachingBlockContentInner({ block, lessonId, referenceBlocks, seiEnable
   const guide = isCaptureBlock(block) ? answerGuide(block) : null
   let series: GraphSeries[] = []
   if (block.type === 'graph') { series = block.series ?? []; if (!series.length && block.spec) { try { series = JSON.parse(block.spec).series ?? [] } catch { /* renderer retains invalid graph fallback */ } } }
+  if (block.teachingTool) return <FitTeachingContent className="projected-content"><div style={{fontFamily:'var(--font-inter,Inter,Arial,sans-serif)'}}><h1 style={{fontFamily:'inherit',fontSize:48,fontWeight:800,lineHeight:1.1,margin:'0 0 12px'}}>{block.workshop?.title??'Teaching tool'}</h1><p style={{fontSize:25,margin:'0 0 12px'}}>{block.workshop?.lead}</p><TeachingToolRenderer block={block}/></div></FitTeachingContent>
+  if (block.type === 'data_table' && block.sourceRows?.length) {
+    const xi = block.xCol ?? 0, yi = block.yCol ?? 1
+    const points = block.sourceRows.map(row => [Number(row[xi]), Number(row[yi])] as [number, number]).filter(p => p.every(Number.isFinite))
+    return <FitTeachingContent className="projected-content"><p className="teach-eyebrow">Supplied data · {teachingCue(block)}</p><div className="teach-data-model"><div><h1 style={{fontSize:38}}>Read the measurements</h1><table aria-label="Supplied readings"><thead><tr>{block.columns.map(c => <th key={c}>{c}</th>)}</tr></thead><tbody>{block.sourceRows.map((row,i) => <tr key={i}>{row.map((v,j) => <td key={j}>{v}</td>)}</tr>)}</tbody></table></div>{points.length > 1 && block.plot !== false && <FigureGraph presentation presentationHeight={450} title="Read the pattern" xLabel={block.columns[xi]} yLabel={block.columns[yi]} series={[{label:'Supplied readings',points}]} />}</div><div style={{fontSize:30,marginTop:16}}><MathMarkdown content={teachingPrompt(block)} /></div><TeachingSeiSupports block={block} enabled={seiEnabled} /></FitTeachingContent>
+  }
+  if (block.type !== 'question' && isCaptureBlock(block)) {
+    const hasVisual = Boolean(questionVisual(block, referenceBlocks) || block.sei?.visual)
+    return <FitTeachingContent className="projected-content"><p className="teach-question-kicker">{teachingCue(block)}</p><section className={hasVisual ? 'teach-capture-with-visual' : ''}><div className="teach-block-card"><h1 style={{fontSize:38,margin:'0 0 18px'}}>{block.workshop?.title ?? guide?.title ?? teachingTitle(block)}</h1><MathMarkdown content={teachingPrompt(block)} />{block.type === 'sketch' && block.grid && <p>Axes: {block.xLabel ?? 'x'} · {block.yLabel ?? 'y'}</p>}{block.studentDirections?.length ? <ol>{block.studentDirections.map(x => <li key={x}>{x}</li>)}</ol> : <ul>{guide?.parts.map(x => <li key={x}>{x}</li>)}</ul>}{!hasVisual && <TeachingSeiSupports block={block} enabled={seiEnabled} />}</div>{hasVisual && <div><TeachingVisual block={block} blocks={referenceBlocks} lessonId={lessonId} /><TeachingSeiSupports block={block} enabled={seiEnabled} /></div>}</section></FitTeachingContent>
+  }
   if (block.type === 'question') return <TeachingQuestion seiEnabled={seiEnabled} block={block} lessonId={lessonId} referenceBlocks={referenceBlocks} />
   if ((block.type === 'prose' || block.type === 'callout') && !block.sei?.visualBlockId) {
     const heading = block.markdown.match(/^#{1,3}\s+([^\n]+)\n+/)

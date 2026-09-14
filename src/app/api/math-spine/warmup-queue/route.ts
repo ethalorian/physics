@@ -21,7 +21,8 @@ export const GET = withAuth(async (request, ctx) => {
   const own = new Set(await getTeacherStudentGids(ctx.scopeEmail))
   scope.gids = scope.gids ? scope.gids.filter((g) => own.has(g)) : [...own]
   if (scope.gids) sQuery = sQuery.in('id', scope.gids)
-  const { data: sr } = await sQuery
+  const { data: sr, error: studentError } = await sQuery
+  if(studentError)throw studentError
   const students = ((sr ?? []) as StudentRow[]).filter((s) => s.id)
   const nameById = new Map<string, string>(students.map((s): [string, string] => [s.id as string, s.name ?? 'Student']))
   const studentIds = [...nameById.keys()]

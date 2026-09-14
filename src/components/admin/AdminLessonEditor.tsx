@@ -6,7 +6,9 @@ import LessonEditorNav from './LessonEditorNav'
 import LessonVideoManager from './LessonVideoManager'
 import { validateBlockDocument } from '@/data/block-registry'
 import type { BlockDocument } from '@/data/content-blocks'
-import type { GlossaryEntry } from '@/components/MathMarkdown'
+import { lessonContextHref } from '@/lib/lesson-release'
+import { changedLessonFields } from '@/lib/lesson-editing'
+import LessonSaveConflict from './LessonSaveConflict'
 import type { LessonVideo } from '@/types/assignment'
 
 interface SettingsLesson {
@@ -16,12 +18,12 @@ interface SettingsLesson {
   unit_id: string
   unit?: string
   lesson_number?: number
-  estimated_time?: number
+  updated_at: string | null
+  estimated_time?: number | null
   description?: string
   content?: string
   content_blocks?: BlockDocument
   objectives?: unknown
-  key_terms?: unknown
   hero_image?: string
   videos?: unknown
   published: boolean
@@ -58,7 +60,7 @@ export default function AdminLessonEditor({
     slug: lesson.slug ?? '',
     unit_id: lesson.unit_id ?? '',
     lesson_number: lesson.lesson_number ?? 1,
-    estimated_time: lesson.estimated_time ?? 30,
+    estimated_time: lesson.estimated_time ?? null,
     description: lesson.description ?? '',
     content: lesson.content ?? '',
     objectives: array(lesson.objectives).filter(
@@ -67,16 +69,12 @@ export default function AdminLessonEditor({
     hero_image: lesson.hero_image ?? '',
     published: lesson.published,
   }))
-  const [terms, setTerms] = useState<GlossaryEntry[]>(() =>
-    array(lesson.key_terms).filter((t): t is GlossaryEntry =>
-      Boolean(t && typeof t === 'object' && 'term' in t && 'definition' in t),
-    ),
-  )
-  const [termsTouched, setTermsTouched] = useState(false)
+  const [version, setVersion] = useState(lesson.updated_at)
+  const [conflict, setConflict] = useState<unknown>(null)
   const [videos, setVideos] = useState(
     () => array(lesson.videos) as LessonVideo[],
   )
-  const [saved, setSaved] = useState(() => JSON.stringify({ form, terms }))
+  const [saved, setSaved] = useState(() => JSON.stringify(form))
   const [savedPublished, setSavedPublished] = useState(lesson.published)
   const [busy, setBusy] = useState(false)
   const pending = useRef(false)
@@ -84,12 +82,13 @@ export default function AdminLessonEditor({
   const [error, setError] = useState('')
   const [notice, setNotice] = useState('')
   const [courseId, setCourseId] = useState('')
-  const json = JSON.stringify({ form, terms }),
+  const [returnTo,setReturnTo]=useState(''),[target,setTarget]=useState('')
+  const json = JSON.stringify(form),
     dirty = json !== saved
   const dirtyRef = useRef(dirty)
   dirtyRef.current = dirty
   useEffect(() => {
-    setCourseId(new URLSearchParams(window.location.search).get('class') ?? '')
+    const p=new URLSearchParams(window.location.search);setCourseId(p.get('class')??'');setReturnTo(p.get('return')??'');setTarget(p.get('target')??'')
   }, [])
   useEffect(() => {
     const unload = (e: BeforeUnloadEvent) => {
@@ -118,7 +117,7 @@ export default function AdminLessonEditor({
       document.removeEventListener('click', leave, true)
     }
   }, [])
-  const buildHref = `/admin/lessons/${lesson.id}/build${courseId ? '?class=' + encodeURIComponent(courseId) : ''}`
+  const buildHref = lessonContextHref('/admin/lessons/'+lesson.id+'/build',{class:courseId,unit:form.unit_id,day:form.lesson_number,target,return:returnTo})
   const check = (publishing: boolean) => {
     const issues = validateBlockDocument(
       lesson.content_blocks ?? { schemaVersion: 1, blocks: [] },
@@ -132,13 +131,6 @@ export default function AdminLessonEditor({
     if (publishing && !targetCount)
       issues.push(
         'Choose an assessment target on a student activity in Content.',
-      )
-    if (
-      termsTouched &&
-      terms.some((t) => !t.term.trim() || !t.definition.trim())
-    )
-      issues.push(
-        'Each glossary term needs a term and definition, or remove its row.',
       )
     return issues
   }
@@ -157,19 +149,18 @@ export default function AdminLessonEditor({
     const sent = json,
       published = form.published
     try {
-      const body = {
-        ...form,
-        ...(!canPublish ? { published: undefined } : {}),
-        ...(termsTouched ? { key_terms: terms } : {}),
-        hero_image: form.hero_image || null,
-      }
+      const body = changedLessonFields(form, JSON.parse(saved))
+      if (!canPublish) delete body.published
+      if ('hero_image' in body) body.hero_image = body.hero_image || null
+      body.expected_updated_at = version
       const res = await fetch(`/api/lessons/${lesson.id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       })
       const d = await res.json()
-      if (!res.ok) throw new Error(d.error ?? 'Could not save settings.')
+      if (!res.ok) { if (res.status === 409) setConflict(d.current); throw new Error(d.error ?? 'Could not save settings.') }
+      setVersion(d.lesson.updated_at); setConflict(null)
       setSaved(sent)
       setSavedPublished(published)
       setNotice('Lesson settings saved.')
@@ -211,6 +202,7 @@ export default function AdminLessonEditor({
   }
   return (
     <div className="mx-auto max-w-4xl p-4 sm:p-5">
+      {conflict != null && <LessonSaveConflict local={form} current={conflict} />}
       <LessonEditorNav
         lessonId={lesson.id}
         title={form.title || lesson.title}
@@ -287,7 +279,7 @@ export default function AdminLessonEditor({
                 <input
                   className={field}
                   type="number"
-                  min={1}
+                  min={lesson.content_blocks?.lessonKind==='week-overview'?0:1}
                   step={1}
                   required
                   value={form.lesson_number}
@@ -313,10 +305,10 @@ export default function AdminLessonEditor({
                 className={field}
                 type="number"
                 min={1}
-                required
-                value={form.estimated_time}
+                placeholder="Unknown"
+                value={form.estimated_time ?? ''}
                 onChange={(e) =>
-                  setForm({ ...form, estimated_time: Number(e.target.value) })
+                  setForm({ ...form, estimated_time: e.target.value ? Number(e.target.value) : null })
                 }
               />
             </label>
@@ -433,65 +425,8 @@ export default function AdminLessonEditor({
             <summary className="cursor-pointer font-semibold">
               Reader extras · glossary and cover image
             </summary>
-            <p className="text-sm text-muted-foreground">
-              The vocabulary editor in Content supplies the main lesson
-              glossary. These optional extra terms are saved with settings.
-            </p>
-            {terms.map((t, i) => (
-              <fieldset key={i} className="space-y-2 rounded-lg border p-3">
-                <legend className="text-sm">Extra term {i + 1}</legend>
-                <label className="block text-sm">
-                  Term
-                  <input
-                    className={field}
-                    value={t.term}
-                    onChange={(e) => {
-                      setTermsTouched(true)
-                      setTerms(
-                        terms.map((x, j) =>
-                          i === j ? { ...x, term: e.target.value } : x,
-                        ),
-                      )
-                    }}
-                  />
-                </label>
-                <label className="block text-sm">
-                  Definition
-                  <textarea
-                    className={field}
-                    value={t.definition}
-                    onChange={(e) => {
-                      setTermsTouched(true)
-                      setTerms(
-                        terms.map((x, j) =>
-                          i === j ? { ...x, definition: e.target.value } : x,
-                        ),
-                      )
-                    }}
-                  />
-                </label>
-                <button
-                  type="button"
-                  className={button}
-                  onClick={() => {
-                    setTermsTouched(true)
-                    setTerms(terms.filter((_, j) => i !== j))
-                  }}
-                >
-                  Remove term
-                </button>
-              </fieldset>
-            ))}
-            <button
-              type="button"
-              className={button}
-              onClick={() => {
-                setTermsTouched(true)
-                setTerms([...terms, { term: '', definition: '' }])
-              }}
-            >
-              Add glossary term
-            </button>
+            <p className="text-sm text-muted-foreground">The lesson glossary and vocabulary tools share one vocabulary set.</p>
+            <Link className={button + ' inline-flex items-center'} href={buildHref + '#lesson-vocabulary'}>Edit lesson vocabulary</Link>
             <label className="block text-sm">
               Cover image URL
               <input

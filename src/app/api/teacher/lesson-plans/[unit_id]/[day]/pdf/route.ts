@@ -18,5 +18,6 @@ export async function GET(
     `/api/teacher/lesson-plans/${encodeURIComponent(unit_id)}/${encodeURIComponent(day)}/print`,
     request.url,
   )
+  target.search = new URL(request.url).search
   return NextResponse.redirect(target, 308)
 }

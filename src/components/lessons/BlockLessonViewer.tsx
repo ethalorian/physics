@@ -7,6 +7,9 @@ import { lessonIdentityStyles, lessonNumber } from './LessonVisualIdentity'
 import AnswerChecklist from './AnswerChecklist'
 import LessonAvatar from './LessonAvatar'
 import LessonXp from './LessonXp'
+import TradesWorkshopView from './TradesWorkshopView'
+import TeachingToolRenderer, { TeachingToolContext } from '@/components/teaching-tools/TeachingToolRenderer'
+import { useCommandSession } from '@/components/present/useCommandSession'
 import { answerAnchor, answerGuide, answerStatus } from './lesson-answer-guide'
 import { useSession } from 'next-auth/react'
 import { blockingDrafts } from '@/data/block-registry'
@@ -25,7 +28,7 @@ import { documentRevision, sectionAnchor, sectionIndexForAnchor } from '@/lib/le
 import { Radio, Timer } from 'lucide-react'
 import { calibrationCopy, doneTallies, firstLockedIndex, gateNote, pageBlockedBy, sectionTarget, splitHelpRuns } from '@/components/lessons/stepped'
 import { Lock, Lightbulb } from 'lucide-react'
-import { BlockDocument, isCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual, type DeckBlock } from '@/data/content-blocks'
+import { BlockDocument, isCaptureBlock, isRequiredCaptureBlock, isBlockComplete, paginateBlocks, pageHasVisual, type DeckBlock } from '@/data/content-blocks'
 import { Home, ChevronLeft, ChevronRight, Clock, Sparkles, FlaskConical, BookOpen, Wrench, Rocket, Layers, Check, Pencil, PencilRuler, Eye, Compass, Sigma, type LucideIcon } from 'lucide-react'
 
 interface NavLink { slug: string; title: string }
@@ -72,6 +75,8 @@ export default function BlockLessonViewer(props: BlockLessonViewerProps) {
 }
 
 function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = false, previewTargets, previewFlags, previewAnswerKeys = {} }: BlockLessonViewerProps) {
+  const [teachingSessionId,setTeachingSessionId] = useState<string|null>(null)
+  const teachingCommand = useCommandSession(staffView?teachingSessionId:null)
   const blocks = useMemo(() => lesson.content_blocks?.blocks ?? [], [lesson.content_blocks])
   const dayType = lesson.content_blocks?.dayType
   const day = dayType ? DAY_META[dayType] : undefined
@@ -199,20 +204,25 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liveSection, live.follow, live.session?.id, lockedFrom])
   const breakAway = (i: number) => { if (live.session && i !== liveSection) live.setFollow(false); goTo(i) }
+  const pollPage = pages.findIndex(p => p.blocks.some(b => b.id === live.session?.pollBlockId))
+  const liveQuestionLink = !staffView && live.session?.pollBlockId && pollPage >= 0 ? <div className="rounded-lg border bg-card p-3 text-sm" role="status">
+    <strong>{live.session.pollRevealed ? 'Live question · results revealed' : live.session.pollLocked ? 'Live question · responses paused' : 'Live question open'}</strong>
+    {isLocked(pollPage) ? <p>Finish the current checkpoint to open the question in step {pollPage + 1}.</p> : <button type="button" className="ml-2 min-h-11 rounded-lg border px-3 font-semibold" onClick={() => openAnswer(pollPage, live.session!.pollBlockId!)}>Open this question · step {pollPage + 1}</button>}
+  </div> : null
   const deckBlock = useMemo(() => (blocks.find((b) => b.type === 'deck') as DeckBlock | undefined) ?? null, [blocks])
 
   // Per-section completion (the honest progress thread): explicit "Got it"
   // checkpoints, persisted per lesson. A section also reads done once passed.
   const { markComplete, isComplete } = useSectionProgress(lesson.id, pageCount, !preview && !staffView, anchors, revision)
-  const sectionDone = (i: number) => pages[i]?.hasCapture ? pages[i].captureBlocks.every((b) => isBlockComplete(b, committed[b.id]?.response)) : isComplete(i)
+  const sectionDone = (i: number) => pages[i]?.hasCapture ? pages[i].captureBlocks.filter(isRequiredCaptureBlock).every((b) => isBlockComplete(b, committed[b.id]?.response)) : isComplete(i)
 
   // Whole-lesson task progress (the "tasks saved" bar).
-  const interactive = useMemo(() => blocks.filter(isCaptureBlock), [blocks])
+  const interactive = useMemo(() => blocks.filter(isRequiredCaptureBlock), [blocks])
   const totalTasks = interactive.length
   const doneTasks = interactive.filter((b) => isBlockComplete(b, committed[b.id]?.response)).length
   const allTasksDone = totalTasks > 0 && doneTasks === totalTasks
   // MC-6 · lobby day: self-rating opens only after the individual exit ticket is saved.
-  const exitPending = blocks.filter((b) => b.type === 'exit_ticket').some((b) => !isBlockComplete(b, committed[b.id]?.response))
+  const exitPending = blocks.filter((b) => b.type === 'exit_ticket' && isRequiredCaptureBlock(b)).some((b) => !isBlockComplete(b, committed[b.id]?.response))
   const selfRatingHold = !staffView && exp?.lobbyToday && exitPending
     ? 'Your group worked on this today. Save your own exit ticket first — then rate yourself on what YOU can do. · Primero guarda tu boleto de salida, luego califícate.'
     : null
@@ -225,9 +235,10 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
   // illustrated step banner so no page is a wall of text.
   const ownVisual = page ? pageHasVisual(page) : false
   const StepIcon: LucideIcon = page?.hasCapture ? PencilRuler : isLast ? Rocket : pageIdx === 0 ? Compass : Eye
-  const stepKind = page?.hasCapture ? 'Your task' : pageIdx === 0 ? 'Get oriented' : isLast ? 'Wrap up' : 'Read & think'
+  const optionalPractice = Boolean(page?.hasCapture && page.captureBlocks.every(b => b.requiredForCompletion === false))
+  const stepKind = optionalPractice ? 'Optional practice' : page?.hasCapture ? 'Your task' : pageIdx === 0 ? 'Get oriented' : isLast ? 'Wrap up' : 'Read & think'
   // Soft-gate: an unsaved save-block on this page shows a nudge but never blocks Next.
-  const pageUnsaved = page ? page.captureBlocks.filter((b) => !isBlockComplete(b, committed[b.id]?.response)) : []
+  const pageUnsaved = page ? page.captureBlocks.filter((b) => isRequiredCaptureBlock(b) && !isBlockComplete(b, committed[b.id]?.response)) : []
 
   // Tasks bar fills by saved work.
   const minsLeft = minutesLeft(sections, pageIdx)
@@ -247,6 +258,22 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
     <p>{store.loadError}</p><button type="button" onClick={() => void store.retryLoad()} className="mt-3 rounded-lg bg-primary px-4 py-2 text-primary-foreground">Retry loading saved work</button>
   </div>
   if (!responsesLoaded) return <p role="status" className="p-6">Loading your saved work…</p>
+
+  if (stepped && lesson.content_blocks?.presentation === 'trades-workshop' && page) {
+    const opener = page.blocks.find(b => b.teachingTool)
+    return <TeachingToolContext.Provider value={staffView&&teachingCommand.state?{role:'teacher',states:teachingCommand.state.session.teaching_tool_state??{},busy:teachingCommand.busy,command:c=>teachingCommand.patch({teaching_tool:c,expected_command_revision:teachingCommand.state!.session.command_revision})}:null}><TradesWorkshopView title={lesson.title} pages={pages} current={pageIdx} responses={responses} staff={staffView} locked={submissionLocked} done={doneTasks} total={totalTasks} onGo={breakAway} isLocked={isLocked}
+      toolbar={staffView && !preview && presentLive ? <PresentLiveLayer onSessionChange={setTeachingSessionId} lessonId={lesson.id} lessonTitle={lesson.title} pages={pages} sections={sections} deck={deckBlock} onSectionChange={i=>{if(!isLocked(i))setPageIdx(i)}}/> : <span>Teacher preview</span>}
+      follow={<>{liveQuestionLink}{!staffView && live.session ? <button type="button" onClick={()=>{live.setFollow(!live.follow);if(!live.follow&&liveSection!==null)goTo(liveSection)}}>{live.follow?'Following teacher':'Rejoin teacher'}{timerLeft!==null?' · '+fmtTimer(timerLeft):''}</button> : null}</>}
+      scene={<>{teachingCommand.error && <p role="alert">{teachingCommand.error}</p>}{opener ? <TeachingToolRenderer key={opener.id} block={opener}/> : null}<BlockRenderer hideBlockHeadings blocks={page.blocks.filter(b=>b!==opener && !page.captureBlocks.includes(b))} referenceBlocks={blocks} lessonId={lesson.id} readOnly /></>}
+      task={<BlockRenderer hideBlockHeadings blocks={page.captureBlocks} referenceBlocks={blocks} lessonId={lesson.id} responses={responses} hydrated={responsesLoaded} save={save} draft={draft} targets={viewerTargets} glossary={glossary} trackBadges={staffView} readOnly={staffView||submissionLocked} readOnlyExceptBlockId={!staffView&&submissionLocked?live.session?.pollBlockId??undefined:undefined} />}
+      submit={!staffView && isLast ? <>
+        {submissionLocked ? <p>This lesson was submitted. Your teacher can return it if you need to work on the rebuilt activity; your earlier submission is kept.</p> : <p>Save your {totalTasks} responses, then send them for review. Your teacher checks the work; practice attempts do not become grades.</p>}
+        {pendingBlocks.length>0 && <p role="status">Save your changed responses before submitting.</p>}
+        {preview ? <button type="button" disabled={!allTasksDone||pendingBlocks.length>0||submitted} onClick={()=>setSubmitted(true)}>{submitted?'Preview submitted':'Submit workshop (preview)'}</button> : <SubmitLessonButton lessonId={lesson.id} blocked={pendingBlocks.length>0} complete={allTasksDone} onChange={st=>{setSubmitted(Boolean(st.submittedAt));setSubmissionLocked(st.locked)}}/>}
+        {submitted && <p role="status">Submitted · awaiting your teacher’s review. {xpSession} XP earned.</p>}
+      </> : null}
+    /></TeachingToolContext.Provider>
+  }
 
   return (
     <div className={`${styles.viewer} mx-auto px-4 pb-28`} style={{ maxWidth: 1240, color: 'var(--foreground)' }}>
@@ -329,6 +356,8 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 )}
               </div>
             )}
+
+            {liveQuestionLink}
 
             {/* segmented progress — one segment per section */}
             <div className="mt-2 flex items-center gap-1" aria-hidden>
@@ -416,14 +445,14 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                 <span><BookOpen size={15} /> Explore</span><ChevronRight size={14} aria-hidden="true" /><span><PencilRuler size={15} /> {page.hasCapture ? 'Try it' : 'Think it through'}</span><ChevronRight size={14} aria-hidden="true" /><span><Check size={15} /> {page.hasCapture ? 'Save your work' : 'Continue'}</span>
               </div>
               <div className={styles.instruction}><div>
-                <strong>{submissionLocked ? 'Review your work' : page.hasCapture ? (pageUnsaved.length ? 'What to do' : 'Responses saved') : 'Start here'}</strong>
+                <strong>{submissionLocked ? 'Review your work' : optionalPractice ? 'Optional practice' : page.hasCapture ? (pageUnsaved.length ? 'What to do' : 'Responses saved') : 'Start here'}</strong>
                 <p>{submissionLocked ? 'Read your submitted answers and any available feedback below.'
                   : checkpointNote && pageUnsaved.length === 0 ? checkpointNote
-                  : page.hasCapture ? (pageUnsaved.length ? 'Read the material, complete the activity below, then save your answer.' : isLast ? 'Review your answers, then submit your lesson below.' : 'Check your thinking, then continue to the next step.')
+                  : optionalPractice ? 'Discuss or try this activity if it helps. You can continue without saving a response. Any response you do save remains available to your teacher.' : page.hasCapture ? (pageUnsaved.length ? 'Read the material, complete the activity below, then save your answer.' : isLast ? 'Review your answers, then submit your lesson below.' : 'Check your thinking, then continue to the next step.')
                   : 'Read and explore the material below. When you’re ready, continue to the next step.'}</p>
                 </div><button type="button" className={styles.startActivity} onClick={() => { const first = page.captureBlocks.find(b => answerStatus(b, responses) !== 'Saved') ?? page.captureBlocks[0]; if (first) { openAnswer(pageIdx, first.id); return } const activity = document.getElementById('lesson-activity'); activity?.focus({ preventScroll: true }); activity?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' }) }}>{submissionLocked ? 'View work' : page.hasCapture ? 'Open activity' : 'Let’s explore'} <ChevronRight size={16} aria-hidden="true" /></button>
               </div>
-              {page.hasCapture && <div className={styles.stepStatus} role="status">{pageUnsaved.length ? <Pencil size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />} {page.captureBlocks.length - pageUnsaved.length} of {page.captureBlocks.length} responses saved in this step</div>}
+              {page.hasCapture && !optionalPractice && <div className={styles.stepStatus} role="status">{pageUnsaved.length ? <Pencil size={14} aria-hidden="true" /> : <Check size={14} aria-hidden="true" />} {page.captureBlocks.filter(isRequiredCaptureBlock).filter(b => isBlockComplete(b, committed[b.id]?.response)).length} of {page.captureBlocks.filter(isRequiredCaptureBlock).length} required responses saved in this step</div>}
             </section>
           )}
 
@@ -486,7 +515,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
               }}
             >
               <div className="text-sm max-w-sm" style={{ color: 'var(--muted-foreground)' }}>
-                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save each answer, then submit.</span>{' '}
+                <span className="font-semibold" style={{ color: 'var(--foreground)' }}>Save your required answers, then submit.</span>{' '}
                 Check that your answers show what you understand and why. Clear reasoning matters more than length. Autosave keeps drafts; Save answer records your work for review.
               </div>
               {pendingBlocks.length > 0 && <div className="w-full text-sm" role="status">
@@ -527,7 +556,7 @@ function BlockLessonViewerInner({ lesson, nav, staffView = false, preview = fals
                     ))}
                   </div>
                 )}
-                {rated.length === 0 && <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)' }}>Your teacher’s rating usually lands within a day. When it does, this screen shows how your self-rating compared.</p>}
+                {rated.length === 0 && <p className="text-sm mt-3" style={{ color: 'var(--muted-foreground)' }}>When your teacher adds a rating, this screen shows how your self-rating compared.</p>}
               </div>
             )
           })()}

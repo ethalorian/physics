@@ -1,6 +1,9 @@
 "use client"
+import responseStyles from '@/components/lessons/WorkshopResponses.module.css'
 
 import BlockGuidance from './BlockGuidance'
+import TeachingToolRenderer from '@/components/teaching-tools/TeachingToolRenderer'
+import WorkshopPeerCheck from '@/components/lessons/WorkshopPeerCheck'
 import { useAssignedTrade } from '@/components/lessons/TradeContext'
 import { useState, useEffect, useRef, Component, type ReactNode } from 'react'
 import dynamic from 'next/dynamic'
@@ -425,26 +428,26 @@ function SketchPad({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract<ContentB
         ? <CoordinateGrid xLabel={b.xLabel} yLabel={b.yLabel} quadrants={b.quadrants} />
         : undefined
   return (
-    <div>
+    <div className={b.workshop ? responseStyles.response : undefined}>
       <p className="text-sm mb-2" style={{ color: C.indigo }}>{b.instruction}</p>
       {(b.labelBank ?? b.sei?.labelBank) && (b.labelBank ?? b.sei?.labelBank)!.length > 0 && (
-        <p className="text-xs mb-2" style={{ color: C.muted }}>Labels · Etiquetas: {(b.labelBank ?? b.sei?.labelBank)!.join(' · ')}</p>
+        b.workshop ? <div className={responseStyles.labelChips} aria-label="Labels to include">{(b.labelBank ?? b.sei?.labelBank)!.map(label => <span key={label}>{label}</span>)}</div> : <p className="text-xs mb-2">Labels · Etiquetas: {(b.labelBank ?? b.sei?.labelBank)!.join(' · ')}</p>
       )}
       {b.prompts && b.prompts.length > 0 && (
-        <ul className="text-sm mb-2" style={{ color: C.muted, paddingLeft: 18, listStyle: 'disc' }}>
+        <details className={b.workshop ? responseStyles.taskBrief : undefined} open={!b.workshop}><summary>Task steps</summary><ul className="text-sm mb-2" style={{ color: C.muted, paddingLeft: 18, listStyle: 'disc' }}>
           {b.prompts.map((p, i) => <li key={i}>{p}</li>)}
-        </ul>
+        </ul></details>
       )}
-      <PaintPad value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} background={background} />
-      <label className="block text-sm mt-2">Describe your drawing with words (keyboard alternative). Include objects, labels, directions, and relationships.
-        <textarea className="w-full rounded border bg-card p-2 mt-1" rows={3} value={description} onChange={(e) => { setDescription(e.target.value); setSavedFlag(false) }} />
-      </label>
-      <div className="flex items-center gap-2 mt-1">
-        <button
+      <PaintPad workshop={Boolean(b.workshop)} value={strokes} onChange={(s) => { setStrokes(s); setSavedFlag(false) }} background={background} />
+      <details className={b.workshop ? responseStyles.notesDrawer : undefined} open={!b.workshop || Boolean(description)}><summary>Written labels / keyboard alternative</summary><label className="block text-sm mt-2">{b.workshop ? b.workshop.keyboardPrompt ?? 'Labels or keyboard alternative: name the piece, the starting edge, and the distance to your mark in inches.' : 'Describe your drawing with words (keyboard alternative). Include objects, labels, directions, and relationships.'}
+        <textarea className="w-full rounded border bg-card p-2 mt-1" placeholder={b.workshop ? "Name your piece, starting edge and measured distance…" : undefined} rows={3} value={description} onChange={(e) => { setDescription(e.target.value); setSavedFlag(false) }} />
+      </label></details>
+      <div data-response-footer className="flex items-center gap-2 mt-1">
+        <button data-response-action
           onClick={async () => { if (strokes.length === 0 && !description.trim()) return; const ok = await save(b.id, 'sketch', { strokes, text: description.trim(), mode: strokes.length ? 'sketch' : 'text' }); setSavedFlag(ok !== false) }}
           disabled={strokes.length === 0 && !description.trim()}
           className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
-          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: strokes.length ? 'pointer' : 'not-allowed' }}
+          style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: strokes.length || description.trim() ? 'pointer' : 'not-allowed' }}
         >
           Save drawing / description
         </button>
@@ -499,16 +502,16 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
   const hasOptions = Boolean(q.options?.length)
   const canSave = (hasOptions ? Boolean(optionId) && (!q?.explain || explain.trim().length > 0) : explain.trim().length > 0) && !pollLocked
   return (
-    <div>
+    <div className={b.workshop ? responseStyles.response : undefined}>
       {isPoll && (
         <div className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 mb-2 text-[11px] font-semibold" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', color: 'var(--reward-foreground)', border: '1px solid color-mix(in oklch, var(--reward) 45%, var(--border))' }}>
           <span aria-hidden>●</span> Live poll{pollLocked ? ' · answers locked' : ' · answer now'}
         </div>
       )}
       <SeiPrompt prompt={q.prompt} l1Text={state.l1Text} />
-      <SeiVisual visual={b.sei?.visual} />
+      {b.workshop?.hotspots ? <div className="relative mb-5"><SeiVisual visual={b.sei?.visual} />{b.workshop.hotspots.map(h=><button type="button" key={h.optionId} aria-label={q.options?.find(o=>o.id===h.optionId)?.text??h.label} aria-pressed={optionId===h.optionId} disabled={pollLocked} onClick={()=>{setOptionId(h.optionId);setSavedFlag(false)}} className="absolute grid place-items-center rounded-full border-2 font-bold" style={{left:h.x+'%',top:h.y+'%',transform:'translate(-50%,-50%)',width:48,height:48,minHeight:48,padding:0,background:optionId===h.optionId?'var(--primary)':'var(--card)',color:optionId===h.optionId?'var(--primary-foreground)':'var(--foreground)',borderColor:'var(--primary)'}}>{h.label}</button>)}</div> : <SeiVisual visual={b.sei?.visual} />}
       {hasOptions && (
-        <div className="grid gap-2 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
+        <div data-response-options className="grid gap-2 mb-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))' }}>
           {q.options!.map((o) => {
             const on = optionId === o.id
             const l1 = showL1 && profile?.homeLang ? o.text_l1?.[profile.homeLang] : undefined
@@ -517,6 +520,7 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
               <button key={o.id} type="button" aria-pressed={on} disabled={pollLocked} onClick={() => { setOptionId(o.id); setSavedFlag(false) }}
                 className="rounded-lg border p-2 text-left text-sm flex items-center gap-2 disabled:opacity-70"
                 style={{ borderColor: key ? 'var(--success)' : on ? C.lavender : C.hairline, background: key ? 'color-mix(in oklch, var(--success) 12%, var(--card))' : on ? 'color-mix(in oklch, var(--primary) 12%, var(--card))' : 'var(--card)', color: C.indigo, boxShadow: key ? '0 0 0 2px color-mix(in oklch, var(--success) 40%, transparent)' : undefined }}>
+                {b.workshop && <span aria-hidden className={responseStyles.choiceMark}>✓</span>}
                 {o.icon && <span aria-hidden className="text-lg" style={{ width: 28, textAlign: 'center' }}>{o.icon}</span>}
                 <span>{o.text}{l1 && <span className="block text-xs" style={{ color: C.muted }}>{l1}</span>}</span>
               </button>
@@ -530,10 +534,10 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
         </div>
       )}
       {hasOptions && (
-        <div className="flex items-center gap-2 mb-3 text-xs" style={{ color: C.muted }}>
+        <div data-confidence className="flex items-center gap-2 mb-3 text-xs" style={{ color: C.muted }}>
           <span>How sure are you? · ¿Qué tan seguro estás?</span>
           {(['sure', 'unsure'] as const).map((c) => (
-            <button key={c} type="button" onClick={() => setConfidence(c)} className="rounded-full border px-2.5 py-1"
+            <button key={c} type="button" aria-pressed={confidence === c} onClick={() => setConfidence(c)} className="rounded-full border px-2.5 py-1"
               style={{ borderColor: confidence === c ? C.lavender : C.hairline, background: confidence === c ? 'color-mix(in oklch, var(--primary) 14%, var(--card))' : 'var(--card)', color: C.indigo, fontWeight: confidence === c ? 700 : 500 }}>
               {c === 'sure' ? 'Sure · Seguro' : 'Not sure · No seguro'}
             </button>
@@ -548,8 +552,8 @@ function InlineQuestionView({ b, saved, save, onDraft = NO_DRAFT }: { b: Extract
             className="w-full rounded-md border p-2 text-sm" style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)' }} />
         </>
       )}
-      <div className="flex items-center gap-2 mt-1">
-        <button onClick={async () => { if (!canSave) return; const ok = await save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence, ...(isPoll ? { presentSessionId: live.session!.id, pollRunId: live.session!.pollRunId ?? undefined } : {}) }); setSavedFlag(ok !== false) }}
+      <div data-response-footer className="flex items-center gap-2 mt-1">
+        <button data-response-action onClick={async () => { if (!canSave) return; const ok = await save(b.id, 'question', { optionId, explain: explain.trim(), mode: hasOptions ? 'choice' : 'text' }, { response_mode: hasOptions ? 'choice' : 'text', scaffolds_used: state.scaffolds, target_id: b.targetId, evidence_source: isPoll ? 'live_poll' : 'lesson_checkpoint', confidence, ...(isPoll ? { presentSessionId: live.session!.id, pollRunId: live.session!.pollRunId ?? undefined } : {}) }); setSavedFlag(ok !== false) }}
           disabled={!canSave} className="text-xs rounded-md border px-3 py-1 disabled:opacity-50"
           style={{ borderColor: C.hairline, color: C.indigo, background: 'var(--card)', cursor: canSave ? 'pointer' : 'not-allowed' }}>
           {savedFlag ? 'Saved ✓' : 'Save'}
@@ -590,6 +594,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
         </>
       )
     case 'prose':
+      if (b.teachingTool) return <div><h2 className="text-3xl font-bold">{b.workshop?.title}</h2><p className="mt-3 text-xl">{b.workshop?.lead}</p><TeachingToolRenderer block={b} /><details className="my-4"><summary className="min-h-11 cursor-pointer font-semibold">Steps and catch-up help</summary><MathMarkdown content={b.markdown} glossary={glossary} /></details></div>
       return <div className="markdown-content prose-block"><MathMarkdown content={b.markdown} glossary={glossary} /></div>
     case 'callout': {
       const tone = b.variant === 'warning' || b.variant === 'misconception' ? 'var(--viz-down)' : C.lavender
@@ -601,10 +606,11 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
       )
     }
     case 'vocab':
+      if (b.termIds && !b.terms?.length) return <LessonVocabView lessonId={lessonId} termIds={b.termIds} contextKey={b.id} />
       return (
         <div>
           <dl className="space-y-1.5">
-            {(b.terms ?? []).map(t => ({ ...t, ...(glossary?.find(entry => entry.term.toLowerCase() === t.term.toLowerCase()) ?? {}) })).map((t, i) => (
+            {(b.terms ?? []).map(t => b.termIds ? t : ({ ...t, ...(glossary?.find(entry => entry.term.toLowerCase() === t.term.toLowerCase()) ?? {}) })).map((t, i) => (
               <div key={i} className="text-sm">
                 <span style={{ color: C.indigo, fontWeight: 500 }}>{t.term}</span>
                 {t.cognate && <span style={{ color: C.muted }}> · {t.cognate}</span>}
@@ -657,7 +663,7 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'math_mission':
       return <MissionLessonLink code={b.competencyCode} />
     case 'lesson_vocab':
-      return <LessonVocabView lessonId={lessonId} />
+      return <LessonVocabView lessonId={lessonId} termIds={b.termIds} contextKey={b.id} />
     case 'lab_notebook':
       return <LabNotebook b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'sketch':
@@ -665,13 +671,14 @@ function renderBody(b: ContentBlock, saved: unknown, save: SaveFn, lessonId: str
     case 'marzano':
       return <div><p className="text-sm mb-2">{targets?.find((t) => t.slug === b.targetId || t.id === b.targetId)?.statement ?? b.targetId}</p><MarzanoInput value={saved as number | undefined} onSave={(n) => save(b.id, 'marzano', n, { target_id: b.targetId })} /></div>
     case 'exit_ticket':
+      if (b.workshop?.peerCheck) return <WorkshopPeerCheck value={saved} onDraft={onDraft} onSave={v=>save(b.id,b.type,v,{target_id:b.targetId,evidence_source:'exit_ticket',response_mode:'text'})} />
       return <SeiTextCapture sei={b.sei} prompt={b.prompt} fallbackFrame={b.frame} talkFirst={b.talkFirst} value={saved} onDraft={onDraft} onSave={(r, scaffolds, mode) => save(b.id, 'exit_ticket', r, { response_mode: mode, scaffolds_used: scaffolds, target_id: b.targetId, evidence_source: 'exit_ticket' })} />
     case 'gewa':
       return <GewaInteractive sei={b.sei} prompt={b.prompt} givenHint={b.givenHint} equationHint={b.equationHint} equationOptions={b.equationOptions} equationIds={b.equationIds} solveFor={b.solveFor} equationCategories={b.equationCategories} value={saved as GewaValue | undefined} onDraft={onDraft} onSave={(v, scaffolds) => save(b.id, 'gewa', v, { response_mode: 'text', scaffolds_used: scaffolds })} />
     case 'equation_sandbox':
       return <EquationSandbox prompt={b.prompt} variables={b.variables} value={saved as SandboxValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'equation_sandbox', v)} />
     case 'data_table':
-      return <DataBlockInteractive analysisMode={b.analysisMode} rowLabels={b.rowLabels} columns={b.columns} rows={b.rows} minRows={b.minRows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'data_table', v)} />
+      return <DataBlockInteractive workshop={Boolean(b.workshop)} analysisMode={b.analysisMode} rowLabels={b.rowLabels} columns={b.columns} rows={b.rows} minRows={b.minRows} plot={b.plot} xCol={b.xCol} yCol={b.yCol} patternPrompt={b.patternPrompt} value={saved as DataValue | undefined} onDraft={onDraft} onSave={(v) => save(b.id, 'data_table', v)} />
     case 'observation':
       return <ObservationCapture b={b} saved={saved} save={save} onDraft={onDraft} />
     case 'transfer_prompt':
@@ -808,6 +815,10 @@ function RenderedBlock({ b, saved, save, draft, targets, lessonId, glossary, sel
   }
   const body = renderBody(b, saved, trackedSave, lessonId, glossary, draft, targets)
   if (body === null) return null
+  if (b.workshop && isCaptureBlock(b)) return <div className={responseStyles.response}>
+    <fieldset disabled={readOnly || saveStatus === 'saving'} className="min-w-0 border-0 p-0 m-0">{body}</fieldset>
+    {saveStatus !== 'idle' && <p role={saveStatus === 'error' ? 'alert' : 'status'} className="mt-3">{saveStatus === 'saving' ? 'Saving…' : saveStatus === 'error' ? 'Not saved. Try the Save button again; your work is still here.' : isDraft ? 'Changes need saving.' : 'Saved for your teacher.'}</p>}
+  </div>
   if (!meta || BARE.has(b.type)) return <><BlockGuidance block={b} />{body}</>
   const capture = !readOnly && isCaptureBlock(b)
   // A draft is shown but is not done — the student still has to Save.
@@ -884,6 +895,7 @@ export default function BlockRenderer({
       {blocks.map((b) => {
         const guided = showResponseGuide && isCaptureBlock(b)
         const guide = guided ? answerGuide(b) : null
+        const ReferenceContainer = b.referencePanel && !b.essential ? 'details' : 'div'
         const responseNumber = (referenceBlocks ?? blocks).filter(isCaptureBlock).findIndex(block => block.id === b.id) + 1
         const gate = trackBadges && (b.visibilityTrack === 'cpa' || b.visibilityTrack === 'honors') ? b.visibilityTrack : null
         const gateColor = gate === 'honors' ? 'var(--reward)' : 'var(--success)'
@@ -896,13 +908,19 @@ export default function BlockRenderer({
                 {gate === 'honors' ? 'Honors only' : 'CPA only'}
               </span>
             )}
+            {b.evidenceRole && <p className="mb-2 text-sm font-medium">{b.requiredForCompletion===false ? 'Optional practice · save if useful' : b.evidenceRole==='diagnostic'?'Diagnostic checkpoint':b.evidenceRole==='main'?'Main work artifact':'Individual exit'}</p>}
             {guide && <div className={answerStyles.responseHeading}>
               <div><span className={`${answerStyles.responseEyebrow} lesson-response-badge`}>{readOnly && b.id !== readOnlyExceptBlockId ? 'YOUR SAVED WORK' : 'YOUR RESPONSE'} {String(responseNumber).padStart(2, '0')}</span><strong>{guide.title}</strong>{typeof b.xp === 'number' && b.xp > 0 && <span className={answerStyles.blockXp}>{b.xp} XP · earn once</span>}<span className={answerStyles.responseState}>{answerStatus(b, responses)}</span></div>
               <p>{readOnly && b.id !== readOnlyExceptBlockId ? 'Review your response below.' : 'Answer in the area below. Check each part before moving on.'}</p>
               <ul aria-label="Response parts">{guide.parts.map((part, i) => <li key={i}>{part}</li>)}</ul>
             </div>}
             <BlockBoundary label={b.type}>
-              <RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} />
+              {b.referenceBlockIds?.map(id => {
+                const reference = (referenceBlocks ?? blocks).find(v => v.id === id && v.id !== b.id && !isCaptureBlock(v) && v.type !== 'deck')
+                return reference ? <details key={id} className="mb-3 rounded-lg border p-3"><summary className="min-h-11 cursor-pointer font-semibold">Open shared reference · {'title' in reference && reference.title ? String(reference.title) : 'Case data'}</summary><RenderedBlock responseGuided readOnly saved={undefined} b={reference} save={async () => false} lessonId={lessonId} /></details> : null
+              })}
+              {b.type === 'data_table' && b.sourceRows?.length ? <div className="mb-4 overflow-x-auto rounded-lg border p-3"><p className="mb-2 font-semibold">Supplied readings · use these as your source</p><table className="w-full text-left"><thead><tr>{b.columns.map(c => <th key={c} className="p-2">{c}</th>)}</tr></thead><tbody>{b.sourceRows.map((row,i) => <tr key={i}>{row.map((v,j) => <td key={j} className="border-t p-2">{v}</td>)}</tr>)}</tbody></table></div> : null}
+              <ReferenceContainer>{b.referencePanel && !b.essential && <summary className="min-h-11 cursor-pointer rounded-lg border p-3 font-semibold">{b.teachingMoment?.title ?? 'Open background and reference'}</summary>}<RenderedBlock responseGuided={guided || hideBlockHeadings} visualReference={(referenceBlocks ?? blocks).find((v) => v.id === b.sei?.visualBlockId && v.id !== b.id && ['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch'].includes(v.type))} readOnly={readOnly && b.id !== readOnlyExceptBlockId} b={b} saved={responses[b.id]?.response ?? (b.workshop?.seedFrom ? responses[b.workshop.seedFrom]?.response : undefined)} isDraft={responses[b.id]?.draft} save={save} draft={draft} targets={targets} lessonId={lessonId} glossary={glossary} selfRatingHold={selfRatingHold} /></ReferenceContainer>
             </BlockBoundary>
           </div>
         )

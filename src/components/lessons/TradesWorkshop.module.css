@@ -1,0 +1,76 @@
+.workshop { --workshop-space: clamp(20px, 3vw, 44px); max-width: 1440px; margin: auto; padding: 24px var(--workshop-space) 100px; color: var(--foreground); font-family: var(--font-inter), Arial, sans-serif; }
+.workshop * { box-sizing: border-box; }
+.workshop h1,.workshop h2,.workshop h3 { font-family: inherit !important; letter-spacing: -.035em; line-height: 1.1; }
+.masthead { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-bottom:22px; border-bottom:1px solid var(--border); }
+.brand { font-size:13px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+.masthead h1 { margin:6px 0 0; font-size:24px; font-weight:750; }
+.progress { display:flex; gap:8px; align-items:center; font-size:14px; }
+.steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; padding:18px 0; }
+.steps button { display:flex; gap:14px; align-items:center; text-align:left; background:var(--card); color:var(--foreground); border:1px solid var(--border); border-radius:12px; padding:16px; min-height:72px; font-size:17px; font-weight:700; }
+.steps button[aria-current=step] { border:2px solid var(--primary); background:color-mix(in oklch,var(--primary) 7%,var(--card)); }
+.steps small { display:block; font-size:12px; font-weight:500; margin-top:4px; color:var(--muted-foreground); }
+.stepNumber { width:34px;height:34px;border-radius:50%;background:var(--secondary);display:grid;place-items:center; flex-shrink:0; }
+.stageHeader { display:flex; justify-content:space-between; gap:24px; align-items:flex-end; margin:8px 0 18px; }
+.stageHeader h2 { font-size:clamp(34px,4vw,52px); font-weight:800; margin:8px 0 10px; max-width:900px; }
+.stageHeader p { font-size:clamp(19px,2vw,23px); max-width:760px; line-height:1.5; margin:0; }
+.eyebrow { color:var(--primary); font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; }
+.scene { border:1px solid var(--border); background:var(--card); border-radius:18px; overflow:hidden; padding:clamp(16px,2.5vw,30px); margin:12px 0 24px; color:var(--foreground); }
+.sceneTop { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; font-size:13px; font-weight:700; color:var(--muted-foreground); }
+.scene svg { display:block; width:100%; max-height:280px; margin:10px 0 12px; }
+.scene button,.workshop button:not(.unstyled) { cursor:pointer; }
+.scene button { min-height:48px; padding:12px 18px; border:1px solid var(--border); border-radius:9px; font:inherit; font-size:16px; font-weight:650; background:var(--card); color:var(--foreground); }
+.scene button[aria-pressed=true] { border-color:var(--primary); background:var(--secondary); }
+.buttons { display:flex; gap:10px; flex-wrap:wrap; }
+.markControls label { font-size:18px; font-weight:650; }
+.markControls input { width:100%;min-height:48px; accent-color:var(--primary); }
+.feedback { background:var(--secondary); border-left:4px solid var(--primary); padding:18px; border-radius:8px; margin-top:18px; font-size:19px; line-height:1.5; }
+.practiceNote { font-size:13px; color:var(--muted-foreground); margin:16px 0 0; }
+:global([data-tool-mode=projector]) .scene svg { max-height:380px; }
+:global([data-tool-mode=projector]) .feedback { font-size:24px; }
+:global([data-tool-mode=projector]) .practiceNote { display:none; }
+.taskGrid { display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:28px; align-items:start; }
+.task { min-width:0; }
+.taskTitle { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:14px 0; }
+.taskTitle h3 { font-size:26px; margin:0; }
+.taskTitle span { font-size:13px; color:var(--muted-foreground); }
+.task p,.task li,.task label { line-height:1.6; font-size:18px !important; }
+.task button { min-height:48px; font-size:16px !important; padding:12px 16px !important; border-radius:9px !important; }
+.task textarea,.task input:not([type=range]) { font-size:18px !important; min-height:48px; }
+.task :global(.text-xs) { font-size:14px; }
+.support { border-left:1px solid var(--border); padding-left:24px; }
+.support h3 { font-size:20px; margin:0 0 12px; }
+.support p,.support li { font-size:16px; line-height:1.6; }
+.support details { border-top:1px solid var(--border); margin-top:20px; padding-top:14px; }
+.support summary { cursor:pointer; min-height:44px; font-weight:700; }
+.support ol { padding-left:22px; }
+.support li { margin:8px 0; }
+.teacherCue { border-radius:12px; padding:20px; background:var(--secondary); margin-bottom:22px; }
+.teacherCue p { margin-bottom:0; }
+.footer { position:sticky; bottom:0; z-index:25; background:var(--background); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; border-top:1px solid var(--border); margin-top:32px; padding:18px 0; }
+.footer button,.footer a { min-height:48px; padding:12px 22px; border:1px solid var(--border); border-radius:10px; font-weight:700; }
+.footer .primary { background:var(--primary); color:var(--primary-foreground); }
+.footer span { font-size:14px; color:var(--muted-foreground); }
+.submit { margin-top:28px; padding:22px; background:var(--secondary); border-radius:12px; }
+.submit p { font-size:17px; line-height:1.5; }
+.workshop :is(button,a,input,summary,textarea):focus-visible,.scene :is(button,input):focus-visible { outline:3px solid var(--primary); outline-offset:4px; }
+.workshop button:disabled,.scene button:disabled { opacity:.45;cursor:not-allowed; }
+@media(max-width:900px) { .taskGrid { grid-template-columns:1fr; } .support { border-left:0;padding-left:0; } .support { display:grid;grid-template-columns:1fr 1fr;gap:18px; } .support details { margin-top:0; } }
+@media(max-width:560px) { .workshop { padding:16px 16px 70px; } .steps { gap:6px; } .steps button { flex-direction:column;align-items:flex-start;padding:12px 8px;font-size:14px;gap:8px; } .steps small { font-size:11px; } .stageHeader { margin-top:4px; } .stageHeader h2 { font-size:36px; } .support { display:block; } .support details { margin-top:18px; } .scene { padding:14px; } .sceneTop { font-size:12px; } .scene button { flex-grow:1;font-size:14px;padding:10px; } .progress { width:100%; } }
+@media(prefers-reduced-motion:reduce) { .workshop * { scroll-behavior:auto !important;transition:none !important;animation:none !important; } }
+
+.task { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:clamp(18px,2.5vw,30px); box-shadow:0 4px 20px #00000004; }
+.taskTitle { align-items:flex-start; margin:0 0 24px; padding-bottom:18px; border-bottom:1px solid var(--border); }
+.taskTitle h3 { font-size:28px; }
+.taskTitle span { flex-shrink:0; padding:6px 10px; border-radius:8px; background:var(--secondary); }
+@media(max-width:560px) { .task { padding:16px; } .taskTitle { flex-direction:column; gap:10px; } }
+.workbenchLayout { grid-template-columns:1fr; gap:24px; }
+.workbenchLayout .task { padding:24px; border-radius:12px; }
+.workbenchLayout .taskTitle { margin-bottom:14px; padding-bottom:14px; }
+.workbenchLayout .taskTitle h3 { font-size:25px; font-weight:750; }
+.workbenchLayout .support { border-left:0; padding-left:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:24px; }
+.workbenchLayout .support details { margin-top:0; }
+@media(max-width:560px) { .workbenchLayout .task { padding:12px; } }
+.manySteps { display:flex; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity; }
+.manySteps button { flex:0 0 180px; scroll-snap-align:start; }
+@media(max-width:560px) { .manySteps button { flex-basis:130px; } .steps { overflow-x:auto; } }
+.stageHeader .targetLine { margin-top:12px; font-size:16px; padding-left:12px; border-left:3px solid var(--primary); color:var(--muted-foreground); }

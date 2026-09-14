@@ -97,17 +97,22 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   // Between students we pause on a gate so your eyes land before the next swap.
   const [nextGate, setNextGate] = useState<{ id: string; name: string } | null>(null)
 
+  const refreshVersion=useRef(0)
+  const [queueError,setQueueError]=useState(''),[agedOnly,setAgedOnly]=useState(false)
   const refresh = useCallback(() => {
+    const version=++refreshVersion.current
+    setLoading(true);setQueueError('')
     Promise.all([
-      fetch(`/api/math-spine/math-grid${classQuery}`).then((r) => r.json()),
+      fetch(`/api/math-spine/math-grid${classQuery}`).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error??'Could not load math review');return d}),
       fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json()),
     ])
       .then(([g, q]) => {
+        if(version!==refreshVersion.current)return
         setGrid(g?.error ? null : g)
         setQueue(q?.queue ?? [])
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch(e=>{if(version===refreshVersion.current){setLoading(false);setQueueError(e.message??'Could not load math review')}})
   }, [classQuery])
 
   useEffect(() => { refresh() }, [refresh])
@@ -267,7 +272,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       if (!fresh.some((s) => s.status === 'pending' || s.revision?.status === 'pending')) {
         // Student done — advance to the next student with warm-ups to review,
         // skipping those with nothing pending. Close if everyone's caught up.
-        const q = await fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json()).catch(() => ({ queue: [] }))
+        const q = await fetch(`/api/math-spine/warmup-queue${classQuery}`).then((r) => r.json())
         const pendingIds = ((q.queue ?? []) as QueueItem[]).map((x) => x.studentId)
         const order = grid?.students.map((s) => s.id) ?? []
         const idx = order.indexOf(sel.studentId)
@@ -286,7 +291,7 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
   }
 
   if (loading) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Loading math spine…</p>
-  if (!grid) return <p className="text-sm" style={{ color: 'var(--destructive)' }}>Could not load the math grid.</p>
+  if (!grid) return <p role="alert" className="text-sm" style={{ color: 'var(--destructive)' }}>{queueError||'Could not load the math grid.'} <button className="min-h-11 underline" onClick={refresh}>Retry</button></p>
   if (grid.students.length === 0) return <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No students in scope.</p>
 
   const reviewRoster = grid.students.filter(s => s.ratable !== false)
@@ -307,25 +312,28 @@ export default function MathControlRoom({ classId, teacher }: { classId?: string
       <div className="rounded-xl border p-4 mb-5" style={{ borderColor: 'color-mix(in oklch, var(--reward) 35%, var(--border))', background: 'color-mix(in oklch, var(--reward) 8%, transparent)' }}>
         <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
           <div className="text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-            Warm-ups to review · {queue.length}
+            Warm-ups to review · {queue.reduce((sum,q)=>sum+q.count,0)} from {queue.length} learners
           </div>
           {queue.length > 0 && (
             <button onClick={() => openStudent(queue[0].studentId, queue[0].name)} className="text-xs font-bold rounded-lg px-3 py-1.5" style={{ background: 'var(--reward)', color: 'var(--reward-foreground)', border: 'none', cursor: 'pointer' }}>Review all →</button>
           )}
         </div>
-        {queue.length === 0 ? (
+        <p className="mb-2 text-sm">{classId?'Selected class · your enrolled learners':'Your classes · enrolled learners'} · Oldest work first. Decide: feedback, revision, or another independent observation.</p>
+        <label className="mb-2 flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={agedOnly} onChange={e=>setAgedOnly(e.target.checked)}/>Waiting 48 hours or more</label>
+        {queueError&&<p role="alert">{queueError} <button className="min-h-11 underline" onClick={refresh}>Retry</button></p>}
+        {!queueError&&queue.length === 0 ? (
           <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>All caught up — no warm-ups waiting.</p>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {queue.map((q) => (
+            {queue.filter(q=>!agedOnly||q.aged).map((q) => (
               <button
                 key={q.studentId}
                 onClick={() => openStudent(q.studentId, q.name)}
-                className="text-sm rounded-lg px-3 py-1.5 border"
+                className="min-h-11 text-sm rounded-lg px-3 py-1.5 border"
                 style={{ borderColor: q.aged ? 'var(--destructive)' : 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}
                 title={`${q.count} pending · oldest ${q.oldestAgeHours}h`}
               >
-                {q.name} · {q.count}{q.aged ? ' ⚠' : ''}
+                {q.name} · {q.count}<span className="block text-xs">Oldest: {q.oldestAgeHours>=24?Math.floor(q.oldestAgeHours/24)+' days':q.oldestAgeHours+' hours'} waiting</span>
               </button>
             ))}
           </div>

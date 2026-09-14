@@ -34,17 +34,19 @@ export function FitTeachingContent({ children, className = '' }: { children: Rea
   useLayoutEffect(() => {
     const fit = () => {
       const box = bounds.current, el = content.current
-      if (box && el) setScale(Math.min(1, box.clientHeight / Math.max(1, el.scrollHeight), box.clientWidth / Math.max(1, el.scrollWidth)))
+      if (box && el) setScale(Math.max(0.8, Math.min(1, box.clientHeight / Math.max(1, el.scrollHeight), box.clientWidth / Math.max(1, el.scrollWidth))))
     }
     fit(); const observer = new ResizeObserver(fit)
     if (bounds.current) observer.observe(bounds.current)
     if (content.current) observer.observe(content.current)
     return () => observer.disconnect()
   }, [children])
-  return <div ref={bounds} style={{ height: '100%', width: '100%', overflow: 'hidden' }}><div ref={content} className={className} style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}>{children}</div></div>
+  return <div ref={bounds} data-teaching-fit={scale} style={{ height: '100%', width: '100%', overflow: 'hidden' }}><div ref={content} className={className} style={{ transform: `scale(${scale})`, transformOrigin: 'top center' }}>{children}</div></div>
 }
 
 export const teachingStyles = `
+.teach-data-model{display:grid;grid-template-columns:.8fr 1.4fr;gap:36px;align-items:center}.teach-data-model table{border-collapse:collapse;width:100%;font-size:32px}.teach-data-model th,.teach-data-model td{padding:12px;border-bottom:2px solid var(--border);text-align:left}.teach-capture-with-visual{display:grid;grid-template-columns:1fr 1fr;gap:28px}.teach-poll-count{font-size:22px!important;color:var(--primary);margin-top:8px!important}
+
 .teach-sei-supports{margin-top:24px;padding:18px 22px;border:1px solid var(--border);border-radius:14px;background:var(--card);color:var(--foreground);font-size:23px;line-height:1.4}
 .teach-sei-supports>strong{display:block;color:var(--primary);text-transform:uppercase;letter-spacing:.08em;font-size:17px;margin-bottom:10px}.teach-sei-supports>div+div{margin-top:10px}.teach-sei-supports span{display:block;font-size:16px;font-weight:700;color:var(--muted-foreground)}.teach-sei-supports p{margin:4px 0 0}.teach-sei-supports .markdown-content{font-size:inherit!important;line-height:inherit!important}
 
@@ -61,7 +63,7 @@ export const teachingStyles = `
 .teach-question-explain{margin-top:38px;padding:2px 0 2px 24px;border-left:4px solid var(--primary);font-size:28px;line-height:1.4}
 .teach-question-explain strong{display:block;font-size:18px;letter-spacing:.06em;text-transform:uppercase;color:var(--primary);margin-bottom:8px}
 .teach-question-explain p{margin:0}.teach-question-explain .markdown-content{font-size:inherit!important;line-height:inherit!important}
-.teach-question-with-visual{display:grid;grid-template-columns:1fr 1fr;gap:36px;padding:24px 12px}.teach-question-with-visual .teach-question-prompt{font-size:44px}.teach-question-with-visual .teach-question-choices{grid-template-columns:1fr}.teach-question-visual{min-width:0;font-size:26px}.teach-question-visual img{max-height:500px;object-fit:contain}
+.teach-question-with-visual{display:grid;grid-template-columns:1fr 1fr;gap:36px;padding:16px 12px}.teach-question-with-visual .teach-question-prompt{font-size:42px}.teach-question-with-visual .teach-question-choices{grid-template-columns:1fr;margin-top:24px;gap:12px}.teach-question-with-visual .teach-question-choices li{padding:16px 22px;font-size:30px}.teach-question-with-visual .teach-question-explain{margin-top:24px;font-size:25px}.teach-question-with-visual .teach-question-kicker{margin-bottom:16px}.teach-question-visual{min-width:0;font-size:26px}.teach-question-visual img{max-height:380px;object-fit:contain}
 
 .teach-location{margin-left:auto;display:flex;align-items:center;gap:18px;color:var(--primary);font-size:17px;white-space:nowrap}
 .teach-response-cue{border:2px solid var(--primary);border-radius:18px;background:color-mix(in oklch,var(--primary) 8%,var(--card));padding:18px 24px;margin-bottom:18px;font-size:26px;line-height:1.4}

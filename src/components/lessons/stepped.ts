@@ -2,7 +2,7 @@
  * Stepped-reader logic (S-*, B-3) — pure helpers so the viewer stays readable
  * and the rules are testable. See docs/LESSON_SYSTEM_RULES.md.
  */
-import { isBlockDone, isBlockComplete, isCaptureBlock, type ContentBlock, type LessonPage } from '@/data/content-blocks'
+import { isBlockDone, isBlockComplete, isCaptureBlock, isRequiredCaptureBlock, type ContentBlock, type LessonPage } from '@/data/content-blocks'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 
 /** B-3 · a gate block is satisfied when complete and, if auto-checked, correct. */
@@ -12,7 +12,7 @@ export function gateSatisfied(b: ContentBlock, responses: BlockResponseMap): boo
 
 /** The gate blocks on a page (capture blocks flagged gate: true). */
 export function pageGates(page: LessonPage): ContentBlock[] {
-  return page.blocks.filter((b) => b.gate === true && isCaptureBlock(b))
+  return page.blocks.filter((b) => b.gate === true && isRequiredCaptureBlock(b))
 }
 
 /** The first unsatisfied gate on a page, or null. */
@@ -68,7 +68,7 @@ export function sectionTarget(page: LessonPage): string | null {
 /** S-6 · Done-screen tallies. */
 export function doneTallies(blocks: ContentBlock[], responses: BlockResponseMap) {
   const capture = blocks.filter(isCaptureBlock)
-  const autoCheckable = capture.filter((b) => b.type === 'question' && Boolean((b as { question?: { correctOptionId?: string; autoCheckable?: boolean } }).question?.autoCheckable || (b as { question?: { correctOptionId?: string } }).question?.correctOptionId))
+  const autoCheckable = capture.filter((b) => b.type === 'question' && !responses[b.id]?.draft && ['match', 'mismatch'].includes((responses[b.id]?.response as { autoCheck?: string } | undefined)?.autoCheck ?? ''))
   const autoRight = autoCheckable.filter((b) => (responses[b.id]?.response as { autoCheck?: string } | undefined)?.autoCheck === 'match').length
   const awaiting = capture.filter((b) => !autoCheckable.includes(b) && isBlockComplete(b, responses[b.id]?.response)).length
   const xpPending = capture.filter((b) => typeof b.xp === 'number' && b.xp > 0 && !isBlockComplete(b, responses[b.id]?.response)).reduce((a, b) => a + (b.xp ?? 0), 0)

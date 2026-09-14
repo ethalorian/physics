@@ -3,157 +3,24 @@ import { getEffectiveContext } from '@/lib/effective-context'
 import { canEditArea } from '@/lib/content-access'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase'
-import ManageUnits, { type ManageUnit, type ManageLesson } from '@/components/admin/ManageUnits'
-import LessonAccessSnapshot from '@/components/admin/LessonAccessSnapshot'
-
-// Manage hub — the real application: author lessons as content blocks, per unit.
-// (The launcher lives at /admin/home; this is where content gets built.)
-
-type LessonRow = {
-  id: string
-  slug: string
-  title: string
-  unit: string | null
-  unit_id: string | null
-  lesson_number: number | null
-  published: boolean
-  content_blocks: { blocks?: unknown[] } | null
-}
-type UnitRow = { id: string; name: string; order_index: number; program: string | null }
-
-function blockCount(l: LessonRow): number {
-  return Array.isArray(l.content_blocks?.blocks) ? l.content_blocks!.blocks!.length : 0
-}
-function toManageLesson(l: LessonRow): ManageLesson {
-  return { id: l.id, slug: l.slug, title: l.title, lessonNumber: l.lesson_number, published: l.published, blockCount: blockCount(l) }
-}
+import ManageUnits from '@/components/admin/ManageUnits'
+import LibraryNav from '@/components/admin/LibraryNav'
+import type { CatalogLesson } from '@/lib/curriculum-readiness'
 
 export default async function AdminManagePage() {
-  const session = await auth()
-  const email = session?.user?.email ?? ''
+  const session = await auth(), email = session?.user?.email ?? ''
   if (!email) redirect('/home')
-  // This is the curriculum AUTHORING hub — admins and collaborators granted the
-  // 'lessons' area only. Teachers (who assign but don't author) are sent back to
-  // their command center, not the content builder.
-  const ec = await getEffectiveContext(email)
-  const isAdmin = ec.realRole === 'admin'
-  if (!(await canEditArea(email, 'lessons', isAdmin))) {
-    redirect(ec.realRole === 'student' ? '/home' : '/admin/home')
-  }
-  const role = ec.realRole // drives publish (super-admin only)
-
-  const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index, program').order('order_index', { ascending: true })
-  const units = (unitRows ?? []) as UnitRow[]
-
-  const { data: lessonRows } = await supabaseAdmin
-    .from('lessons')
-    .select('id, slug, title, unit, unit_id, lesson_number, published, content_blocks')
-  const lessons = (lessonRows ?? []) as LessonRow[]
-  lessons.sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
-
-  const authored = lessons.filter((l) => blockCount(l) > 0).length
-  const needBlocks = lessons.filter((l) => blockCount(l) === 0).length
-  const draftCount = lessons.filter((l) => !l.published).length
-
-  // Block-type usage across every lesson — a content-authoring metric.
-  const blockUsage: Record<string, number> = {}
-  for (const l of lessons) {
-    for (const b of ((l.content_blocks?.blocks ?? []) as { type?: string }[])) {
-      if (b?.type) blockUsage[b.type] = (blockUsage[b.type] ?? 0) + 1
-    }
-  }
-  const blockUsageSorted = Object.entries(blockUsage).sort((a, b) => b[1] - a[1])
-  const totalBlocks = blockUsageSorted.reduce((s, [, n]) => s + n, 0)
-
-  // Shape units (+ an "Other" bucket for orphan lessons) for the client list.
-  const manageUnits: ManageUnit[] = units
-    .map((u) => ({ id: u.id, name: u.name, program: u.program, lessons: lessons.filter((l) => l.unit_id === u.id).map(toManageLesson) }))
-    .filter((u) => u.lessons.length > 0)
-  const orphans: ManageLesson[] = lessons.filter((l) => !units.some((u) => u.id === l.unit_id)).map(toManageLesson)
-
-  const tile = (value: number | string, label: string, accent: string) => (
-    <div className="rounded-2xl border p-4" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-      <div className="text-2xl font-bold" style={{ color: accent }}>{value}</div>
-      <div className="text-xs mt-1" style={{ color: 'var(--muted-foreground)' }}>{label}</div>
-    </div>
-  )
-
-  const allCaughtUp = needBlocks === 0 && draftCount === 0
-
-  return (
-    <div className="max-w-5xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <div className="mb-1">
-        <h1 className="text-2xl font-semibold tracking-tight">Lesson library</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--muted-foreground)' }}>Author your curriculum lessons as content blocks, unit by unit.</p>
-      </div>
-
-      <div className="grid gap-3 my-5" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))' }}>
-        {tile(lessons.length, 'Lessons', 'var(--primary)')}
-        {tile(authored, 'Authored as blocks', 'var(--success)')}
-        {tile(needBlocks, 'Still need blocks', needBlocks > 0 ? 'var(--destructive)' : 'var(--muted-foreground)')}
-        {tile(totalBlocks, 'Blocks total', 'var(--reward-foreground)')}
-      </div>
-
-      {totalBlocks > 0 && (
-        <section className="rounded-2xl border p-4 mb-6" style={{ borderColor: 'var(--border)', background: 'var(--card)' }}>
-          <div className="flex items-baseline justify-between mb-3">
-            <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Block usage</h2>
-            <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{totalBlocks.toLocaleString()} blocks · {blockUsageSorted.length} types</span>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {blockUsageSorted.map(([type, n]) => (
-              <span key={type} className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs" style={{ borderColor: 'var(--border)' }}>
-                <span style={{ color: 'var(--foreground)' }}>{type.replace(/_/g, ' ')}</span>
-                <span className="font-bold" style={{ color: 'var(--primary)' }}>{n}</span>
-              </span>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* NEEDS YOU NOW — one unified band of the day's actionable work, so the
-          top of the page IS the to-do list. Units below are the library. */}
-      <section className="rounded-2xl border mb-6" style={{ borderColor: 'color-mix(in oklch, var(--primary) 30%, var(--border))', background: 'color-mix(in oklch, var(--primary) 5%, var(--card))', overflow: 'hidden' }}>
-        <div className="px-4 pt-3 pb-2 text-xs font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
-          Needs you now
-        </div>
-
-        {/* authoring to-dos, only when there's something to do */}
-        {(needBlocks > 0 || draftCount > 0) && (
-          <div className="px-4 pb-4 flex flex-wrap gap-2">
-            {needBlocks > 0 && (
-              <span className="inline-flex items-center gap-2 text-sm rounded-xl px-3 py-2" style={{ background: 'color-mix(in oklch, var(--destructive) 12%, var(--card))', border: '1px solid color-mix(in oklch, var(--destructive) 35%, var(--border))', color: 'var(--foreground)' }}>
-                <strong style={{ color: 'var(--destructive)' }}>{needBlocks}</strong> lesson{needBlocks === 1 ? '' : 's'} still need blocks — open the flagged unit below.
-              </span>
-            )}
-            {draftCount > 0 && (
-              <span className="inline-flex items-center gap-2 text-sm rounded-xl px-3 py-2" style={{ background: 'color-mix(in oklch, var(--reward) 18%, var(--card))', border: '1px solid color-mix(in oklch, var(--reward) 40%, var(--border))', color: 'var(--foreground)' }}>
-                <strong style={{ color: 'var(--reward-foreground)' }}>{draftCount}</strong> draft{draftCount === 1 ? '' : 's'} not yet published.
-              </span>
-            )}
-          </div>
-        )}
-        {allCaughtUp && (
-          <div className="px-4 pb-4 text-sm" style={{ color: 'var(--success)' }}>
-            ✓ Every lesson is authored and published — nothing waiting on the authoring side.
-          </div>
-        )}
-      </section>
-
-      <LessonAccessSnapshot />
-
-      <div className="flex items-center justify-between mb-1">
-        <h2 className="text-sm font-bold uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>Your units</h2>
-      </div>
-      <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-        {role === 'admin'
-          ? <><strong>Publish</strong> marks a lesson as ready in the catalog (super-admin only).</>
-          : <>Lessons are published by your administrator.</>}
-      </p>
-
-      {lessons.length === 0
-        ? <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>No lessons yet.</p>
-        : <ManageUnits units={manageUnits} orphans={orphans} canPublish={role === 'admin'} />}
-    </div>
-  )
+  const ec = await getEffectiveContext(email), isAdmin = ec.realRole === 'admin'
+  if (!(await canEditArea(email, 'lessons', isAdmin))) redirect(ec.realRole === 'student' ? '/home' : '/admin/home')
+  const [ur, lr] = await Promise.all([
+    supabaseAdmin.from('units').select('id, name, program').order('order_index'),
+    supabaseAdmin.from('lesson_catalog_summary').select('*').order('lesson_number'),
+  ])
+  if (ur.error) throw ur.error
+  if (lr.error) throw lr.error
+  const units = ur.data ?? [], lessons = (lr.data ?? []) as CatalogLesson[]
+  const shape = (l: CatalogLesson) => ({ id: l.id, slug: l.slug, title: l.title, lessonNumber: l.lesson_number, published: l.published, blockCount: l.block_count, updatedAt: l.updated_at })
+  const usage = new Map<string, number>()
+  lessons.forEach(l => l.block_summary.forEach(b => usage.set(b.type, (usage.get(b.type) ?? 0) + 1)))
+  return <main className="mx-auto max-w-5xl space-y-5 p-4 sm:p-6"><LibraryNav active="lessons" admin={isAdmin} /><header><h1 className="text-2xl font-semibold">Lesson library</h1><p className="mt-2 text-sm text-muted-foreground">Find the lesson, prepare its content, and check coverage before releasing it to a class.</p></header><ManageUnits units={units.map(u => ({ ...u, lessons: lessons.filter(l => l.unit_id === u.id).map(shape) }))} orphans={lessons.filter(l => !units.some(u => u.id === l.unit_id)).map(shape)} canPublish={isAdmin} /><details className="rounded-xl border p-4"><summary className="min-h-11 cursor-pointer font-medium">Authoring statistics</summary><p className="mb-3 text-sm">{lessons.length} lessons · {[...usage.values()].reduce((a,b) => a+b,0)} blocks</p><div className="flex flex-wrap gap-2">{[...usage.entries()].sort((a,b) => b[1]-a[1]).map(([type,n]) => <span key={type} className="rounded border px-2 py-1 text-xs">{type.replaceAll('_', ' ')} · {n}</span>)}</div></details></main>
 }

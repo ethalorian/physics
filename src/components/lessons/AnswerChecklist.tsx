@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, Lock, Pencil } from 'lucide-react'
-import { isBlockComplete, isCaptureBlock, type LessonPage } from '@/data/content-blocks'
+import { isBlockComplete, isRequiredCaptureBlock, type LessonPage } from '@/data/content-blocks'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 import { answerGuide, answerStatus } from './lesson-answer-guide'
 import styles from './LessonViewer.module.css'
@@ -10,12 +10,12 @@ export default function AnswerChecklist({ pages, responses, currentIndex, isLock
   pages: LessonPage[]; responses: BlockResponseMap; currentIndex: number
   isLocked: (index: number) => boolean; onOpen: (index: number, blockId: string) => void
 }) {
-  const answers = pages.flatMap((page, index) => page.blocks.filter(isCaptureBlock).map(block => ({ block, index })))
+  const answers = pages.flatMap((page, index) => page.blocks.filter(isRequiredCaptureBlock).map(block => ({ block, index })))
   if (!answers.length) return null
   const saved = answers.filter(({ block }) => !responses[block.id]?.draft && isBlockComplete(block, responses[block.id]?.response)).length
   return <nav className={styles.answerChecklist} aria-label="Lesson answer checklist">
     <div className={styles.answerListHeading}><Pencil size={17} /><strong>Answers to complete</strong><span>{saved}/{answers.length} saved</span></div>
-    <p>Every response in this lesson. Select one to find it.</p>
+    <p>Required evidence checkpoints. Select one to find it; extra practice stays available in the lesson.</p>
     <ol>{answers.map(({ block, index }, i) => {
       const locked = isLocked(index)
       const status = answerStatus(block, responses)

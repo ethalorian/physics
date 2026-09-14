@@ -17,7 +17,7 @@ import proj2 from '@/data/proj-2-lesson-plans.json'
 import proj3 from '@/data/proj-3-lesson-plans.json'
 import proj4 from '@/data/proj-4-lesson-plans.json'
 
-export interface DayPlan { day: number; title: string; bodyHtml: string }
+export interface DayPlan { day: number; title: string; bodyHtml: string; kind?: 'daily' | 'week-overview'; lessonId?: string }
 
 export const PLANS: Record<string, Record<string, DayPlan[]>> = {
   cpa: {
@@ -69,13 +69,13 @@ export const UNIT_LABEL: Record<string, string> = {
 export function trackForCourse(c: { track: string | null; program: string | null }): string | null {
   if (c.program === 'trades') return 'trades'
   if (c.program === 'projects') return 'projects'
-  return c.track
+  return c.track === 'honors' ? 'cpa' : c.track
 }
 
 /** Find a day's plan across the teacher's tracks (only `cpa` ships today). */
 export function findDay(unitId: string, day: number, tracks: string[]): DayPlan | null {
   for (const t of tracks) {
-    const u = PLANS[t]?.[unitId]
+    const u = PLANS[t === 'honors' ? 'cpa' : t]?.[unitId]
     if (!u) continue
     const hit = u.find((p) => p.day === day)
     if (hit) return hit
@@ -126,10 +126,17 @@ export function buildLessonPlanHtml(unitId: string, day: DayPlan, opts: BuildOpt
 
 /** Compute the list of curriculum tracks the requester is scoped to. Admins
  *  see all tracks; teachers see only the tracks they teach (from `courses`). */
-export async function resolveTracks(opts: { role: string; scopeEmail: string }): Promise<string[]> {
-  if (opts.role === 'admin') return Object.keys(PLANS)
+export async function resolveTracks(opts: { role: string; scopeEmail: string; courseId?: string | null }): Promise<string[]> {
   const { supabaseAdmin } = await import('@/lib/supabase')
-  const { data } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', opts.scopeEmail)
+  if (opts.courseId) {
+    const r = await supabaseAdmin.from('courses').select('track, program, teacher_email').eq('id', opts.courseId).maybeSingle()
+    if (r.error) throw r.error
+    if (!r.data || (opts.role === 'teacher' && r.data.teacher_email !== opts.scopeEmail)) return []
+    const track = trackForCourse(r.data); return track ? [track] : []
+  }
+  if (opts.role === 'admin' || opts.role === 'observer') return Object.keys(PLANS)
+  const { data, error } = await supabaseAdmin.from('courses').select('track, program').eq('teacher_email', opts.scopeEmail)
+  if (error) throw error
   const rows = (data ?? []) as { track: string | null; program: string | null }[]
   return [...new Set(rows.map(trackForCourse).filter((t): t is string => Boolean(t)))]
 }

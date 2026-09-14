@@ -1,8 +1,10 @@
 import { type BlockDocument, type DeckBlock, type ContentBlock, type InlineQuestion } from '@/data/content-blocks'
+import { presentationBinding } from '@/lib/presentation-bindings'
 import { buildSlides } from '@/lib/present-auto-slides'
 import { resolveDeckSrc } from '@/data/lesson-decks'
 
 export interface CommandSession {
+  teaching_tool_state?: import('@/lib/teaching-tool-spec').TeachingToolStates;
   command_revision?: number
   id: string; lesson_id: string; course_id: string; created_at?: string; status: 'live' | 'ended'; current_slide: number
   current_section: number; current_anchor: string | null; poll_block_id: string | null
@@ -12,12 +14,12 @@ export interface CommandSession {
 }
 export interface LiveCommandState {
   session: CommandSession
-  lobby: { id: string; code: string; status: string } | null
+  lobby: { id: string; code: string; status: string; block_id?: string | null; debrief_meta?: { debrief?: string | null; then?: string | null; projection_phase?: 'working' | 'debrief' } | null } | null
   saved: number; enrolled: number; tally: Record<string, number>
 }
 export interface CommandLesson { id: string; title: string; content_blocks: BlockDocument }
 export interface PresentationData { session: CommandSession | null; lesson: CommandLesson | null; deck: DeckBlock | null; answerKeys?: Record<string, string> }
-export interface CommandSlide { label: string; notes: string; anchor: string | null }
+export interface CommandSlide { binding?: string | null; label: string; notes: string; anchor: string | null }
 
 export async function commandRequest<T>(url: string, options?: RequestInit): Promise<T> {
   const controller = new AbortController()
@@ -49,6 +51,8 @@ export async function commandSlides(lesson: CommandLesson, deck: DeckBlock | nul
   if (!response.ok) throw new Error('Could not read slide titles. Retry loading the presentation.')
   const slides = deckSlidesFromHtml(await response.text())
   if (!slides.length) throw new Error('This deck does not expose slide controls.')
+  if (deck.navigation === 'mapped' && slides.some(slide => !slide.anchor || !lesson.content_blocks.blocks.some(b => b.id === slide.anchor))) throw new Error('The resolved deck no longer matches this lesson. Review its section anchors before presenting.')
+  if (slides.some(slide => slide.binding && !presentationBinding(slide.binding, lesson.content_blocks))) throw new Error('A linked teaching block is missing. Review this lesson before presenting.')
   return slides
 }
 
@@ -65,7 +69,7 @@ export function deckSlidesFromHtml(html: string): CommandSlide[] {
   return [...(stage?.children ?? [])].filter(el => el.tagName === 'SECTION').map((slide, i) => ({
     label: slide.getAttribute('data-label') || `Slide ${i + 1}`,
     notes: slide.getAttribute('data-speaker-notes') || '',
-    anchor: slide.getAttribute('data-section-anchor'),
+    binding: slide.getAttribute('data-lesson-block'), anchor: slide.getAttribute('data-section-anchor'),
   }))
 }
 

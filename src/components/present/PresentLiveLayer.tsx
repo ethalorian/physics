@@ -18,6 +18,7 @@ import { createPortal } from 'react-dom'
 import { MonitorPlay, X, ChevronLeft, ChevronRight, Moon, Lock, Unlock, Eye, Timer, Radio, Square, BarChart3, StickyNote } from 'lucide-react'
 import ProjectorConnection from '@/components/present/ProjectorConnection'
 import { useCommandSession } from '@/components/present/useCommandSession'
+import TeachingToolControls from '@/components/teaching-tools/TeachingToolControls'
 import { paginateBlocks, type BlockDocument, type ContentBlock, LessonPage, DeckBlock, InlineQuestion } from '@/data/content-blocks'
 import { buildSections, type LessonSection } from '@/components/lessons/lesson-sections'
 import { sectionAnchor, sectionIndexForAnchor } from '@/lib/lesson-anchors'
@@ -39,7 +40,7 @@ const btn = (active = false): React.CSSProperties => ({
   display: 'inline-flex', alignItems: 'center', gap: 6, cursor: 'pointer', minHeight: 44,
 })
 
-export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initialPages, sections: initialSections, deck: initialDeck, onSectionChange }: {
+export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initialPages, sections: initialSections, deck: initialDeck, onSectionChange, onSessionChange }: {
   lessonId: string
   lessonTitle: string
   pages: LessonPage[]
@@ -47,6 +48,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   deck: DeckBlock | null
   /** Move the teacher's own preview to the section the projector is on. */
   onSectionChange?: (section: number) => void
+  onSessionChange?: (id: string|null) => void
 }) {
   const [classDeck, setClassDeck] = useState<DeckBlock | null>(null)
   const [classDoc, setClassDoc] = useState<BlockDocument | null>(null)
@@ -62,6 +64,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
   const [courseId, setCourseId] = useState<string>('')
   const [session, setSession] = useState<Session | null>(null)
   const remote = useCommandSession(session?.id ?? null)
+  useEffect(()=>{onSessionChange?.(session?.id??null)},[session?.id,onSessionChange])
   useEffect(() => {
     if (remote.state) setSession(remote.state.session)
   }, [remote.state])
@@ -236,6 +239,7 @@ export default function PresentLiveLayer({ lessonId, lessonTitle, pages: initial
             )}
 
             {live && <p className="text-xs">On your iPad, sign in to the same account and open the <a className="underline" href="/admin/command-center" target="_blank" rel="noreferrer">Command Center</a>. Choose “Control this presentation.” Keep this laptop page and deck open.</p>}
+            {remote.state && <TeachingToolControls document={classDoc??{schemaVersion:1,blocks:pages.flatMap(p=>p.blocks)}} session={remote.state.session} busy={remote.busy} patch={patch}/>}
             {remote.error && <p role="alert" className="text-destructive text-xs">{remote.error}</p>}
             {/* Slide + section */}
             {live && (

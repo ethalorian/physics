@@ -5,7 +5,7 @@ import { authorizeLesson } from '@/lib/lesson-access'
 import { validateLivePoll } from '@/lib/present-server'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
-import { type ContentBlock, isCaptureBlock, isBlockComplete } from '@/data/content-blocks'
+import { type ContentBlock, isCaptureBlock, isRequiredCaptureBlock, isBlockComplete } from '@/data/content-blocks'
 import { withAuth, withEnrolledStudent } from '@/lib/api-auth'
 import { evidenceSourceFor, isConfidence } from '@/lib/evidence'
 import { resolveTargetStudent } from '@/lib/teacher-scope'
@@ -113,7 +113,7 @@ export const POST = withEnrolledStudent(async (request, ctx) => {
       const viewer: Viewer = ctx.realRole === 'student'
         ? { role: 'student', track: await getStudentTrack(ctx.userId) }
         : { role: 'admin' }
-      const captureBlocks = blocks.filter((b) => isCaptureBlock(b) && isBlockVisible(b, viewer))
+      const captureBlocks = blocks.filter((b) => isRequiredCaptureBlock(b) && isBlockVisible(b, viewer))
       const captureIds = captureBlocks.map((b) => b.id)
       const blockById = new Map(captureBlocks.map((b) => [b.id, b]))
 

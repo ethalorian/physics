@@ -1,194 +1,30 @@
 'use client'
-
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Check, CircleDashed, FileText } from 'lucide-react'
+import { lessonContextHref } from '@/lib/lesson-release'
+export interface ManageLesson { id: string; slug: string; title: string; lessonNumber: number | null; published: boolean; blockCount: number; updatedAt: string | null }
+export interface ManageUnit { id: string; name: string; program?: string | null; lessons: ManageLesson[] }
+const control = 'inline-flex min-h-11 items-center rounded-lg border px-3 py-2 text-sm'
 
-// Collapsible unit list for the admin Manage page. Server fetches + shapes the
-// data; this component owns only the open/closed UI state. Units start
-// collapsed (teacher's choice) — each header carries enough signal (progress
-// bar + counts) to decide what to open without expanding it.
-
-export interface ManageLesson {
-  id: string
-  slug: string
-  title: string
-  lessonNumber: number | null
-  published: boolean
-  blockCount: number
-}
-export interface ManageUnit {
-  id: string
-  name: string
-  /** 'physics' | 'trades' | 'projects' — which course this unit belongs to (units.program). */
-  program?: string | null
-  lessons: ManageLesson[]
-}
-
-// Both courses number their units from 1, so "Unit 1" alone is ambiguous.
-// The list is grouped by program and every card carries a program chip.
-const PROGRAMS: { id: string; label: string; color: string; fg: string }[] = [
-  { id: 'physics', label: 'Physics', color: 'var(--primary)', fg: 'var(--primary)' },
-  { id: 'trades', label: 'Trades', color: 'var(--reward)', fg: 'var(--reward-foreground)' },
-  { id: 'projects', label: 'Projects', color: 'var(--success)', fg: 'var(--success)' },
-]
-function programMeta(id: string | null | undefined) {
-  return PROGRAMS.find((p) => p.id === id) ?? { id: id ?? 'other', label: id ? id[0].toUpperCase() + id.slice(1) : 'Other', color: 'var(--muted-foreground)', fg: 'var(--muted-foreground)' }
-}
-
-function unitStats(u: ManageUnit) {
-  const total = u.lessons.length
-  const authored = u.lessons.filter((l) => l.blockCount > 0).length
-  const drafts = u.lessons.filter((l) => !l.published).length
-  const needsBlocks = total - authored
-  const pct = total ? Math.round((authored / total) * 100) : 0
-  return { total, authored, drafts, needsBlocks, pct }
-}
-
-function LessonRow({ l, canPublish }: { l: ManageLesson; canPublish: boolean }) {
-  const router = useRouter()
-  const [error, setError] = useState('')
-  const n = l.blockCount
-  const [pub, setPub] = useState(l.published)
-  const [busy, setBusy] = useState(false)
-
-  const togglePublish = async () => {
-    if (busy || !canPublish) return
-    const next = !pub
+function LessonRow({ l, href, canPublish }: { l: ManageLesson; href: (path: string) => string; canPublish: boolean }) {
+  const router = useRouter(), [busy, setBusy] = useState(false), [error, setError] = useState('')
+  const toggle = async () => {
+    if (busy) return
     setBusy(true); setError('')
-    setPub(next) // optimistic
-    const res = await fetch(`/api/lessons/${l.id}`, {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ published: next }),
-    }).catch(() => null)
-    if (!res || !res.ok) { setPub(!next); const d = res ? await res.json().catch(() => ({})) : {}; setError(d.error ?? 'Could not change publication. Please retry.') } else router.refresh()
-    setBusy(false)
+    try { const r = await fetch(`/api/lessons/${l.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ published: !l.published, expected_updated_at: l.updatedAt }) }); const d = await r.json(); if (!r.ok) throw new Error(d.error ?? 'Publication was not saved.'); router.refresh() }
+    catch(e) { setError(e instanceof Error ? e.message : 'Could not save publication. Please retry.') } finally { setBusy(false) }
   }
-
-  const pubStyle: React.CSSProperties = {
-    border: `1px solid ${pub ? 'color-mix(in oklch, var(--success) 45%, var(--border))' : 'var(--border)'}`,
-    background: pub ? 'color-mix(in oklch, var(--success) 16%, transparent)' : 'transparent',
-    color: pub ? 'var(--success)' : 'var(--muted-foreground)',
-  }
-
-  return (
-    <div className="flex items-center gap-3 flex-wrap py-3" style={{ borderTop: '1px solid var(--border)' }}>
-      <div className="flex-1 min-w-[12rem]">
-        <div className="text-sm font-medium">{l.lessonNumber ? `${l.lessonNumber}. ` : ''}{l.title}</div>
-        <div className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>
-          {n > 0
-            ? <span style={{ color: 'var(--success)' }}>{n} block{n === 1 ? '' : 's'} authored</span>
-            : <span style={{ color: 'var(--destructive)' }}>Needs blocks</span>}
-          {!pub && <span> · draft</span>}
-        </div>
-      </div>
-      {error && <p role="alert" className="basis-full text-sm text-destructive">{error}</p>}
-      {canPublish ? (
-        <button
-          onClick={togglePublish}
-          disabled={busy}
-          role="switch"
-          aria-checked={pub}
-          title={pub ? 'Published — click to unpublish (make it a draft)' : 'Draft — click to publish (mark it ready)'}
-          className="text-xs font-semibold rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5"
-          style={{ ...pubStyle, cursor: busy ? 'default' : 'pointer', opacity: busy ? 0.6 : 1 }}
-        >
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: pub ? 'var(--success)' : 'var(--muted-foreground)' }} />
-          {busy ? 'Saving…' : pub ? 'Published' : 'Publish'}
-        </button>
-      ) : (
-        <span className="text-xs font-semibold rounded-lg px-3 py-1.5 inline-flex items-center gap-1.5" title="Only the super admin can publish" style={pubStyle}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: pub ? 'var(--success)' : 'var(--muted-foreground)' }} />
-          {pub ? 'Published' : 'Draft'}
-        </span>
-      )}
-      <Link href={`/admin/lessons/${l.id}/build`} className="text-xs font-semibold rounded-lg px-3 py-1.5" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Edit lesson</Link>
-      <Link href={`/admin/lessons/${l.id}/preview`} target="_blank" className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--foreground)' }}>Preview</Link>
-      <Link href={`/admin/lessons/${l.id}/edit`} className="text-xs font-semibold rounded-lg border px-3 py-1.5" style={{ borderColor: 'var(--border)', color: 'var(--muted-foreground)' }}>Settings</Link>
-    </div>
-  )
+  return <article className="space-y-2 border-t py-4"><h3 className="break-words font-medium">{l.lessonNumber ? `${l.lessonNumber}. ` : ''}{l.title}</h3><p className="text-xs text-muted-foreground">{l.published ? 'Published' : 'Draft'} · {l.blockCount ? `${l.blockCount} authored blocks` : 'Needs student activities'}</p><div className="flex flex-wrap gap-2"><Link className={control} href={href(`/admin/lessons/${l.id}/build`)}>Content</Link><Link className={control} href={href(`/admin/lessons/${l.id}/preview`)}>Preview</Link><Link className={control} href={href(`/admin/lessons/${l.id}/edit`)}>Settings</Link>{canPublish && <button className={control} onClick={toggle} disabled={busy}>{busy ? 'Saving…' : l.published ? 'Unpublish' : 'Check and publish'}</button>}</div>{error && <p role="alert" className="text-sm text-destructive">{error} <button className="min-h-11 underline" onClick={() => router.refresh()}>Reload latest status</button></p>}</article>
 }
-
-function UnitCard({ u, canPublish }: { u: ManageUnit; canPublish: boolean }) {
-  const [open, setOpen] = useState(false)
-  const { total, authored, drafts, needsBlocks, pct } = unitStats(u)
-  const complete = needsBlocks === 0 && drafts === 0
-
-  return (
-    <div className="rounded-2xl border mb-3" style={{ borderColor: 'var(--border)', background: 'var(--card)', overflow: 'hidden' }}>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="w-full flex items-center gap-3 px-4 py-3 text-left"
-        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
-      >
-        <ChevronRight size={18} style={{ color: 'var(--muted-foreground)', transition: 'transform .15s', transform: open ? 'rotate(90deg)' : 'none', flexShrink: 0 }} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            {u.id !== '__orphans__' && (() => { const pm = programMeta(u.program); return (
-              <span className="text-[10px] font-bold uppercase tracking-widest rounded-md px-1.5 py-0.5" style={{ background: `color-mix(in oklch, ${pm.color} 16%, transparent)`, color: pm.fg }}>{pm.label}</span>
-            ) })()}
-            <span className="text-sm font-bold truncate">{u.name}</span>
-            {complete ? (
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--success) 14%, transparent)', color: 'var(--success)' }}>
-                <Check size={11} /> Complete
-              </span>
-            ) : (
-              <>
-                {needsBlocks > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--destructive) 14%, transparent)', color: 'var(--destructive)' }}>
-                    <CircleDashed size={11} /> {needsBlocks} need{needsBlocks === 1 ? 's' : ''} blocks
-                  </span>
-                )}
-                {drafts > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-semibold rounded-full px-2 py-0.5" style={{ background: 'color-mix(in oklch, var(--reward) 22%, transparent)', color: 'var(--reward-foreground)' }}>
-                    <FileText size={11} /> {drafts} draft{drafts === 1 ? '' : 's'}
-                  </span>
-                )}
-              </>
-            )}
-          </div>
-          {/* progress bar — read the unit at a glance without opening it */}
-          <div className="flex items-center gap-2 mt-1.5">
-            <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--secondary)' }}>
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: complete ? 'var(--success)' : 'var(--primary)' }} />
-            </div>
-            <span className="text-[11px] whitespace-nowrap" style={{ color: 'var(--muted-foreground)' }}>{authored}/{total} authored</span>
-          </div>
-        </div>
-      </button>
-      {open && (
-        <div className="px-4 pb-2">
-          {u.lessons.map((l) => <LessonRow key={l.id} l={l} canPublish={canPublish} />)}
-        </div>
-      )}
-    </div>
-  )
-}
-
-export default function ManageUnits({ units, orphans, canPublish }: { units: ManageUnit[]; orphans: ManageLesson[]; canPublish: boolean }) {
-  // Group by program in a fixed order (physics, trades, then anything else),
-  // preserving the server's order_index sort inside each group.
-  const groups: { meta: ReturnType<typeof programMeta>; units: ManageUnit[] }[] = []
-  const known = PROGRAMS.map((p) => p.id)
-  for (const id of [...known, ...Array.from(new Set(units.map((u) => u.program ?? 'other'))).filter((id) => !known.includes(id))]) {
-    const inGroup = units.filter((u) => (u.program ?? 'other') === id)
-    if (inGroup.length > 0) groups.push({ meta: programMeta(id), units: inGroup })
-  }
-  return (
-    <div>
-      {groups.map((g) => (
-        <section key={g.meta.id} className="mb-5">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="inline-block rounded-full" style={{ width: 8, height: 8, background: g.meta.color }} />
-            <h3 className="text-xs font-bold uppercase tracking-widest" style={{ color: g.meta.fg }}>{g.meta.label}</h3>
-            <span className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{g.units.length} unit{g.units.length === 1 ? '' : 's'}</span>
-          </div>
-          {g.units.map((u) => <UnitCard key={u.id} u={u} canPublish={canPublish} />)}
-        </section>
-      ))}
-      {orphans.length > 0 && <UnitCard u={{ id: '__orphans__', name: 'Other lessons', lessons: orphans }} canPublish={canPublish} />}
-    </div>
-  )
+export default function ManageUnits({ units, orphans, canPublish = false }: { units: ManageUnit[]; orphans: ManageLesson[]; canPublish?: boolean }) {
+  const [query, setQuery] = useState('')
+  useEffect(() => { const sync=()=>setQuery(window.location.search); sync(); window.addEventListener('popstate', sync); return ()=>window.removeEventListener('popstate',sync) }, [])
+  const params = new URLSearchParams(query), q = params.get('q') ?? '', program = params.get('program') ?? '', unit = params.get('unit') ?? '', status = params.get('status') ?? '', needs = params.get('needs') ?? ''
+  const set = (key: string, value: string) => { const p = new URLSearchParams(query); value ? p.set(key,value) : p.delete(key); const next = p.size ? '?' + p : ''; window.history.replaceState(null,'','/admin/dashboard'+next); setQuery(next) }
+  const href = (path: string) => lessonContextHref(path, { class: params.get('class'), unit: unit || undefined, return: '/admin/dashboard' + query })
+  const all = [...units, ...(orphans.length ? [{ id:'__orphans__', name:'Other lessons', program:'other', lessons:orphans }] : [])]
+  const match = (l: ManageLesson) => (!q || `${l.title} ${l.slug}`.toLowerCase().includes(q.toLowerCase())) && (!status || l.published === (status === 'published')) && (!needs || (needs === 'blocks' ? !l.blockCount : !l.published || !l.blockCount))
+  const visible = all.filter(u => (!program || (u.program ?? 'physics') === program) && (!unit || u.id === unit)).map(u => ({ ...u, lessons:u.lessons.filter(match), total:u.lessons.length })).filter(u => u.lessons.length || (!u.total && !q && !status))
+  return <section className="space-y-4"><div className="flex flex-wrap gap-2"><button className={control} onClick={()=>{ set('status','draft') }}>{all.flatMap(u=>u.lessons).filter(l=>!l.published).length} drafts</button><button className={control} onClick={()=>set('needs','blocks')}>{all.flatMap(u=>u.lessons).filter(l=>!l.blockCount).length} lessons need blocks</button><Link className={control} href={href('/admin/lessons/new')}>{units.filter(u=>!u.lessons.length).length} empty units · create a draft</Link></div><div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5"><label className="text-sm">Search<input className={control+' w-full bg-background'} placeholder="Title or slug" value={q} onChange={e=>set('q',e.target.value)}/></label><label className="text-sm">Program<select className={control+' w-full bg-background'} value={program} onChange={e=>set('program',e.target.value)}><option value="">All programs</option>{[...new Set(units.map(u=>u.program??'physics'))].map(p=><option key={p}>{p}</option>)}</select></label><label className="text-sm">Unit<select className={control+' w-full bg-background'} value={unit} onChange={e=>set('unit',e.target.value)}><option value="">All units</option>{units.map(u=><option key={u.id} value={u.id}>{u.name}</option>)}</select></label><label className="text-sm">Status<select className={control+' w-full bg-background'} value={status} onChange={e=>set('status',e.target.value)}><option value="">All statuses</option><option value="draft">Draft</option><option value="published">Published</option></select></label><label className="text-sm">Needs work<select className={control+' w-full bg-background'} value={needs} onChange={e=>set('needs',e.target.value)}><option value="">Any</option><option value="ready">Draft or no blocks</option><option value="blocks">Missing blocks</option></select></label></div><button className="min-h-11 text-sm underline" onClick={()=>{ const p=new URLSearchParams(); if(params.get('class'))p.set('class',params.get('class')!); const n=p.size?'?'+p:''; window.history.replaceState(null,'','/admin/dashboard'+n);setQuery(n) }}>Clear filters</button>{visible.length===0&&<p>No lessons match these filters.</p>}{visible.map(u=><details key={u.id+query} open={Boolean(q||unit||status||needs)} className="rounded-xl border bg-card p-4"><summary className="min-h-11 cursor-pointer py-2 font-semibold">{u.program??'physics'} · {u.name} <span className="font-normal text-muted-foreground">· {u.total?`${u.lessons.length} of ${u.total} lessons`:'No lessons authored yet'}</span></summary><div className="my-2 flex flex-wrap gap-2"><Link className={control} href={lessonContextHref('/admin/lessons/new',{class:params.get('class'),unit:u.id,return:'/admin/dashboard'+query})}>Create or import</Link>{canPublish&&<Link className={control} href={lessonContextHref('/admin/workshop',{class:params.get('class'),unit:u.id})}>Check coverage and readiness</Link>}</div>{u.lessons.map(l=><LessonRow key={l.id+String(l.updatedAt)} l={l} canPublish={canPublish} href={path=>lessonContextHref(href(path),{unit:u.id,lesson:l.id,day:l.lessonNumber})}/>)}</details>)}</section>
 }

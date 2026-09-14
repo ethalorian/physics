@@ -18,21 +18,27 @@ export default function LessonContextLinks({
     lesson?: string
     unit?: string
     day?: number
+    target?: string
+    return?: string
   }>({})
   useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     setSaved({
+      target: p.get('target') ?? undefined,
+      return: p.get('return') ?? undefined,
       class: p.get('class') ?? undefined,
       lesson: p.get('lesson') ?? undefined,
       unit: p.get('unit') ?? undefined,
       day: p.has('day') ? Number(p.get('day')) : undefined,
     })
-  }, [])
+  }, [lessonId, unitId, day, courseId])
   const changedLesson = lessonId !== undefined && lessonId !== saved.lesson
   const changedPlan =
     (unitId !== undefined && unitId !== saved.unit) ||
     (day !== undefined && day !== saved.day)
   const context = {
+    target: saved.target,
+    return: saved.return,
     class: courseId ?? saved.class,
     lesson: lessonId ?? (changedPlan ? undefined : saved.lesson),
     unit: unitId ?? (changedLesson ? undefined : saved.unit),

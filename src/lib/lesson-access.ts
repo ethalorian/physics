@@ -55,6 +55,12 @@ export async function authorizeLesson(actor: Actor, lessonId: string, write = fa
 
 /** Transfer tasks remain references in the stored BlockDocument; hydrate their authored task at read time. */
 export async function hydrateLessonDocument(document: BlockDocument, unitId: string | null): Promise<BlockDocument> {
+  const wordIds = [...new Set(document.blocks.flatMap(b => b.type === 'vocab' ? b.termIds ?? [] : []))]
+  if (wordIds.length) {
+    const r = await supabaseAdmin.from('vocabulary_terms').select('id, term, definition, cognate, contexts').in('id', wordIds).eq('archived', false)
+    if (r.error) throw r.error
+    document = { ...document, blocks: document.blocks.map(b => b.type === 'vocab' && b.termIds ? { ...b, terms: b.termIds.flatMap(id => { const t = r.data?.find(t => t.id === id); if (!t) return []; const context = t.contexts?.[b.id] ?? {}; return [{ term: t.term, definition: context.definition ?? t.definition, cognate: context.cognate ?? t.cognate }] }) } : b) }
+  }
   const refs = document.blocks.filter((b) => b.type === 'transfer_prompt').map((b) => b.masteryTaskSlug)
   if (!refs.length || !unitId) return document
   const { data: unit, error: unitError } = await supabaseAdmin.from('units').select('program').eq('id', unitId).maybeSingle()

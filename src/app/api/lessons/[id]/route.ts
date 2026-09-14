@@ -2,10 +2,12 @@ import { authorizeLesson, lessonForReader } from '@/lib/lesson-access'
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import { withAuth, withContentEditor } from '@/lib/api-auth'
-import { seiLint } from '@/lib/sei'
+import { lessonReadiness } from '@/lib/curriculum-readiness'
+import type { BlockDocument } from '@/data/content-blocks'
 import { targetIdsForLesson } from '@/lib/lesson-targets'
 import { remainsPublished, validateBlockDocument } from '@/data/block-registry'
 import type { ContentBlock } from '@/data/content-blocks'
+import { LESSON_EDIT_FIELDS } from '@/lib/lesson-editing'
 
 /**
  * GET /api/lessons/[id]
@@ -27,18 +29,19 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     const body = await request.json().catch(() => null)
     if (!body || typeof body !== 'object' || Array.isArray(body)) return NextResponse.json({ error: 'Invalid lesson update.' }, { status: 400 })
 
-    // Remove fields that shouldn't be updated directly
+    if (!Object.prototype.hasOwnProperty.call(body, 'expected_updated_at')) return NextResponse.json({ error: 'Reload this lesson before saving so its version can be checked.' }, { status: 428 })
+    const unknown = Object.keys(body).filter(key => key !== 'expected_updated_at' && !LESSON_EDIT_FIELDS.has(key))
+    if (unknown.length) return NextResponse.json({ error: `Unsupported lesson fields: ${unknown.join(', ')}.` }, { status: 400 })
     const updateData = { ...body }
-    delete updateData.id
-    delete updateData.created_at
-    delete updateData.created_by
+    delete updateData.expected_updated_at
 
     // Add updated timestamp
     updateData.updated_at = new Date().toISOString()
 
-    const { data: current, error: currentError } = await supabaseAdmin.from('lessons').select('published, unit_id, unit, content_blocks').eq('id', params.id).maybeSingle()
+    const { data: current, error: currentError } = await supabaseAdmin.from('lessons').select('*').eq('id', params.id).maybeSingle()
     if (currentError) return NextResponse.json({ error: 'Could not load the current lesson.' }, { status: 500 })
     if (!current) return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+    if (body.expected_updated_at !== current.updated_at) return NextResponse.json({ error: 'This lesson changed after you opened it. Compare your changes with the latest saved version.', current }, { status: 409 })
     if (updateData.published !== undefined && typeof updateData.published !== 'boolean') return NextResponse.json({ error: 'Published must be true or false.' }, { status: 400 })
     if (updateData.published !== undefined && updateData.published !== current.published && ctx.realRole !== 'admin') return NextResponse.json({ error: 'Only an administrator can change curriculum publication.' }, { status: 403 })
     if (updateData.unit_id !== undefined) {
@@ -50,7 +53,7 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
       return NextResponse.json({ error: 'Choose a curriculum unit in Settings; a text label alone cannot move a lesson.' }, { status: 422 })
     }
     if (updateData.title !== undefined && (typeof updateData.title !== 'string' || !updateData.title.trim())) return NextResponse.json({ error: 'Give the lesson a title.' }, { status: 422 })
-    for (const field of ['lesson_number', 'estimated_time']) if (updateData[field] !== undefined && (!Number.isInteger(updateData[field]) || updateData[field] < 1)) return NextResponse.json({ error: 'Lesson number and estimated minutes must be positive whole numbers.' }, { status: 422 })
+    for (const field of ['lesson_number', 'estimated_time']) if (updateData[field] !== undefined && !(field === 'estimated_time' && updateData[field] === null) && (!Number.isInteger(updateData[field]) || updateData[field] < (field==='lesson_number' && (updateData.content_blocks??current.content_blocks)?.lessonKind==='week-overview'?0:1))) return NextResponse.json({ error: 'Lesson number and estimated minutes must be positive whole numbers; unknown duration may be blank.' }, { status: 422 })
     const effectiveDoc = updateData.content_blocks !== undefined ? updateData.content_blocks : current.content_blocks
     const publishing = remainsPublished(Boolean(current.published), updateData)
     if (effectiveDoc != null) {
@@ -82,19 +85,22 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
       if (blocks.length > 0) {
         const { data: setRow, error: setError } = await supabaseAdmin.from('vocabulary_sets').select('id').eq('lesson_id', params.id).maybeSingle()
         if (setError) return NextResponse.json({ error: 'Could not validate lesson vocabulary. Try saving again.' }, { status: 500 })
-        let vocab: string[] = []
+        let vocab: string[] = [], vocabIds:string[]=[]
         const setId = (setRow as { id: string } | null)?.id
         if (setId) {
-          const { data: terms, error: termsError } = await supabaseAdmin.from('vocabulary_terms').select('term').eq('vocabulary_set_id', setId)
+          const { data: terms, error: termsError } = await supabaseAdmin.from('vocabulary_terms').select('id, term').eq('vocabulary_set_id', setId).eq('archived',false)
           if (termsError) return NextResponse.json({ error: 'Could not validate vocabulary terms. Try saving again.' }, { status: 500 })
           vocab = ((terms ?? []) as { term: string }[]).map((t) => t.term)
+          vocabIds=(terms??[]).map(t=>t.id)
         }
         if (blocks.some((block) => block.type === 'lesson_vocab') && !vocab.length) return NextResponse.json({ error: 'Cannot publish: the lesson vocabulary block has no associated terms. Add terms to this lesson’s vocabulary set first.' }, { status: 422 })
-        const issues = seiLint(blocks, vocab)
+        const targets = await supabaseAdmin.from('learning_targets').select('id,slug,statement,unit_id')
+        if(targets.error)throw targets.error
+        const issues = lessonReadiness(effectiveDoc as BlockDocument, targets.data??[], vocab, vocabIds)
         const errors = issues.filter((i) => i.severity === 'error')
         if (errors.length > 0) {
           return NextResponse.json(
-            { error: `Cannot publish: ${errors.length} rule${errors.length === 1 ? '' : 's'} fail (SEI-2 / C-1: every capture block needs a visual and a frame; gated questions need per-option feedback; the lesson ends with an exit ticket or transfer prompt). Fix them in the builder or add sei{} to the block.`, sei_issues: issues },
+            { error: `Cannot publish: ${errors.length} readiness check${errors.length === 1 ? '' : 's'} fail. ${errors.map(i=>[i.blockId,i.message].filter(Boolean).join(': ')).join(' ')}`, sei_issues: issues },
             { status: 422 },
           )
         }
@@ -104,12 +110,14 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     const seiWarnings = updateData.__sei_warnings as unknown[] | undefined
     delete updateData.__sei_warnings
 
-    const { data, error } = await supabaseAdmin
+    let update = supabaseAdmin
       .from('lessons')
       .update(updateData)
       .eq('id', params.id)
+    update = current.updated_at === null ? update.is('updated_at', null) : update.eq('updated_at', current.updated_at)
+    const { data, error } = await update
       .select()
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error('Error updating lesson:', error)
@@ -117,11 +125,14 @@ export const PUT = withContentEditor<{ id: string }>('lessons', async (request, 
     }
 
     if (!data) {
-      return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+      const latest = await supabaseAdmin.from('lessons').select('*').eq('id', params.id).maybeSingle()
+      return NextResponse.json({ error: 'This lesson changed while saving. Your changes were not overwritten.', current: latest.data }, { status: 409 })
     }
 
     return NextResponse.json(seiWarnings && seiWarnings.length > 0 ? { lesson: data, sei_warnings: seiWarnings } : { lesson: data })
 })
+
+export const PATCH = PUT
 
 /**
  * DELETE /api/lessons/[id]

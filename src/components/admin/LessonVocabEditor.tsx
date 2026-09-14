@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Plus, Trash2, ClipboardPaste, BookA, ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react'
 
 interface VRow {
+  contexts: Record<string, { definition?: string; cognate?: string; visibilityTrack?: string; label?: string }>
   id?: string
   term: string
   definition: string
@@ -25,9 +26,12 @@ const TIERS = [
 const TIER_COLOR: Record<number, string> = { 1: 'var(--success)', 2: 'var(--reward)', 3: 'var(--primary)' }
 const POS = ['', 'noun', 'verb', 'adjective', 'adverb', 'phrase']
 
-const blank = (tier = 3): VRow => ({ term: '', definition: '', tier, cognate: '', part_of_speech: '', example: '', image_url: '', icon: '', definition_es: '', translations: {} })
+const blank = (tier = 3): VRow => ({ term: '', definition: '', tier, cognate: '', part_of_speech: '', example: '', image_url: '', icon: '', definition_es: '', translations: {}, contexts: {} })
 
 export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
+  const [version, setVersion] = useState<string | null>(null)
+  const [retry, setRetry] = useState(0)
+  const [loaded, setLoaded] = useState(false)
   const [error,setError] = useState('')
   const [language,setLanguage] = useState('pt')
   const [rows, setRows] = useState<VRow[]>([])
@@ -39,17 +43,19 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
   const [paste, setPaste] = useState('')
 
   useEffect(() => {
-    fetch(`/api/lessons/${lessonId}/vocab`).then((r) => r.json())
-      .then((d: { terms?: Partial<VRow>[]; published?: boolean }) => {
+    setLoading(true); setLoaded(false); setError('')
+    fetch(`/api/lessons/${lessonId}/vocab`).then(async r => { const d = await r.json(); if (!r.ok) throw new Error(d.error ?? 'Could not load vocabulary.'); return d })
+      .then((d: { terms?: Partial<VRow>[]; published?: boolean; updated_at?: string | null }) => {
+        setVersion(d.updated_at ?? null); setLoaded(true)
         setPublished(Boolean(d.published))
         setRows((d.terms ?? []).map((t) => ({
           id: t.id, term: t.term ?? '', definition: t.definition ?? '', tier: t.tier ?? 3,
-          cognate: t.cognate ?? '', part_of_speech: t.part_of_speech ?? '', example: t.example ?? '', image_url: t.image_url ?? '', icon: t.icon ?? '', definition_es: t.definition_es ?? '', translations: t.translations ?? {},
+          cognate: t.cognate ?? '', part_of_speech: t.part_of_speech ?? '', example: t.example ?? '', image_url: t.image_url ?? '', icon: t.icon ?? '', definition_es: t.definition_es ?? '', translations: t.translations ?? {}, contexts: t.contexts ?? {},
         })))
       })
-      .catch(() => {})
+      .catch(e => setError(e.message ?? 'Could not load vocabulary.'))
       .finally(() => setLoading(false))
-  }, [lessonId])
+  }, [lessonId, retry])
 
   const update = (i: number, patch: Partial<VRow>) => { setSaved(false); setRows((p) => p.map((r, j) => (j === i ? { ...r, ...patch } : r))) }
   const remove = (i: number) => { setSaved(false); setRows((p) => p.filter((_, j) => j !== i)) }
@@ -67,18 +73,19 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
   }, [paste])
 
   const save = async (pub: boolean = published) => {
+    if (!loaded || saving) return
     setSaving(true); setSaved(false); setError('')
     try {
       const res = await fetch(`/api/lessons/${lessonId}/vocab`, {
         method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ terms: rows.filter((r) => r.term.trim()), published: pub }),
+        body: JSON.stringify({ terms: rows.filter((r) => r.term.trim()), published: pub, expected_updated_at: version }),
       })
-      if (!res.ok) throw new Error('Could not save vocabulary. Your edits are still here.')
+      const savedResult = await res.json(); if (!res.ok) throw new Error(savedResult.error ?? 'Could not save vocabulary. Your edits are still here.')
       const refreshed = await fetch(`/api/lessons/${lessonId}/vocab`)
       if(!refreshed.ok) throw new Error('Saved, but could not reload. Reload before making another edit.')
       const data = await refreshed.json()
       setRows(data.terms.map((t: Partial<VRow>) => ({...blank(),...Object.fromEntries(Object.entries(t).filter(([,v])=>v!==null))})))
-      setPublished(pub); setSaved(true)
+      setVersion(data.updated_at ?? null); setPublished(pub); setSaved(true)
     } catch(e) { setError(e instanceof Error ? e.message : 'Could not save vocabulary') } finally { setSaving(false) }
   }
 
@@ -93,14 +100,14 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
   const byTier = (t: number) => rows.map((r, i) => ({ r, i })).filter((x) => x.r.tier === t)
 
   return (
-    <div className="rounded-2xl border p-5 mt-6" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
+    <fieldset disabled={saving} id="lesson-vocabulary" className="rounded-2xl border p-5 mt-6 [&_button]:min-h-11 [&_input]:min-h-11 [&_select]:min-h-11" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>
       <div className="flex items-center justify-between gap-3 mb-1 flex-wrap">
         <div className="flex items-center gap-2">
           <BookA size={18} style={{ color: 'var(--primary)' }} />
           <span className="font-bold" style={{ fontSize: 15 }}>Lesson vocabulary (SEI tiers)</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={togglePublished} disabled={saving || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before making vocabulary available in games' : ''}
+          <button onClick={togglePublished} disabled={saving || !loaded || (!hasTerms && !published)} title={!hasTerms && !published ? 'Add at least one term before making vocabulary available in games' : ''}
             className="inline-flex items-center gap-1.5 text-sm rounded-lg border px-2.5 py-1.5 font-medium"
             style={{ borderColor: published ? 'var(--success)' : 'var(--border)', color: published ? 'var(--success)' : 'var(--muted-foreground)', opacity: (saving || (!hasTerms && !published)) ? 0.5 : 1 }}>
             {published ? <Eye size={14} /> : <EyeOff size={14} />} {published ? 'Available in vocabulary games' : 'Not in vocabulary games'}
@@ -108,19 +115,19 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           <button onClick={() => setShowPaste((v) => !v)} className="inline-flex items-center gap-1 text-sm rounded-lg border px-2.5 py-1.5" style={{ borderColor: 'var(--border)' }}>
             <ClipboardPaste size={14} /> Bulk paste {showPaste ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
           </button>
-          <button onClick={() => save()} disabled={saving} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
+          <button onClick={() => save()} disabled={saving || !loaded} className="text-sm rounded-lg px-3 py-1.5 font-medium" style={{ background: 'var(--primary)', color: 'var(--primary-foreground, white)', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Saving…' : 'Save vocab'}
           </button>
           {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
         </div>
       </div>
       <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
-        This list always shows in the lesson&apos;s vocab block. {published
+        Choose which words appear in each vocabulary block above. Definitions and translations are saved here. {published
           ? 'It’s published — students can also play it in the arcade.'
           : 'It’s a draft — hidden from the arcade until you publish.'}
       </p>
 
-      {error && <p role="alert" className="text-destructive">{error}</p>}
+      {error && <div role="alert" className="text-destructive"><p>{error}</p>{!loaded ? <button className="min-h-11 underline" onClick={()=>setRetry(n=>n+1)}>Retry loading</button> : <><button className="min-h-11 underline" onClick={()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(rows,null,2)],{type:'application/json'}));a.download='vocabulary-unsaved.json';a.click();URL.revokeObjectURL(a.href)}}>Download your edits</button><button className="ml-3 min-h-11 underline" onClick={()=>window.open(window.location.href,'_blank','noopener')}>Open latest in another tab</button></>}</div>}
       <label className="block mb-3 text-sm">Additional translation language <select aria-label="Additional translation language" className="min-h-11 rounded-lg border border-border bg-background p-2" value={language} onChange={e=>setLanguage(e.target.value)}>{[['pt','Portuguese'],['ht','Haitian Creole'],['fr','French'],['ar','Arabic'],['zh','Chinese'],['vi','Vietnamese'],['es','Spanish']].map(([code,label])=><option key={code} value={code}>{label}</option>)}</select></label>
       {showPaste && (
         <div className="rounded-xl border p-3 mb-4" style={{ borderColor: 'var(--border)' }}>
@@ -168,6 +175,7 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
                         <label className="text-xs">{language} · translated word<input aria-label={`Translated word for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.translations[language]?.term??''} onChange={e=>update(i,{translations:{...r.translations,[language]:{...r.translations[language],term:e.target.value}}})}/></label>
                         <label className="text-xs">{language} · translated definition<input aria-label={`Translated definition for ${r.term}`} className="block w-full min-h-11 rounded-md border border-border bg-background p-2 text-sm" value={r.translations[language]?.definition??''} onChange={e=>update(i,{translations:{...r.translations,[language]:{...r.translations[language],definition:e.target.value}}})}/></label>
                       </div>
+                      {Object.keys(r.contexts).length > 0 && <details className="mt-3"><summary className="min-h-11 cursor-pointer text-sm">Definitions in lesson context</summary>{Object.entries(r.contexts).map(([key, context])=><label key={key} className="my-2 block text-xs">{context.label ?? key}{context.visibilityTrack ? ' · '+context.visibilityTrack : ''}<textarea className="mt-1 w-full rounded border bg-background p-2 text-sm" value={context.definition ?? r.definition} onChange={e=>update(i,{contexts:{...r.contexts,[key]:{...context,definition:e.target.value}}})}/></label>)}</details>}
                       <div className="flex justify-end mt-2">
                         <button onClick={() => remove(i)} className="inline-flex items-center gap-1 text-xs" style={{ color: 'var(--viz-down)' }}><Trash2 size={13} /> remove</button>
                       </div>
@@ -179,6 +187,6 @@ export default function LessonVocabEditor({ lessonId }: { lessonId: string }) {
           ))}
         </div>
       )}
-    </div>
+    </fieldset>
   )
 }

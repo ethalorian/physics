@@ -1,7 +1,11 @@
 "use client"
 
+import TeachingMomentEditor from './TeachingMomentEditor'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useSession } from 'next-auth/react'
+import { editLessonDocument } from '@/lib/lesson-editing'
+import LessonVocabularySelection from './LessonVocabularySelection'
+import LessonSaveConflict from './LessonSaveConflict'
 import LessonEditorNav from './LessonEditorNav'
 import { LessonStudentPreview } from './AdminLessonPreview'
 import type { GlossaryEntry } from '@/components/MathMarkdown'
@@ -34,7 +38,7 @@ function fromDocument(doc: BlockDocument | undefined): BlockState[] {
 
 const inputStyle = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' } as const
 
-type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument; unitId?: string; day?: number; published?: boolean; targets?: {id:string;slug:string;statement:string}[]; previewDocument?: BlockDocument; glossary?: GlossaryEntry[]; rewardMaps?: import('@/lib/xp-policy').LessonRewardMaps }
+type BuilderProps = { lessonId: string; lessonTitle: string; lessonSlug: string; initial?: BlockDocument; updatedAt: string | null; unitId?: string; day?: number; published?: boolean; targets?: {id:string;slug:string;statement:string}[]; previewDocument?: BlockDocument; glossary?: GlossaryEntry[]; rewardMaps?: import('@/lib/xp-policy').LessonRewardMaps }
 
 export default function LessonBlockBuilder(props: BuilderProps) {
   const { data: session } = useSession()
@@ -42,16 +46,19 @@ export default function LessonBlockBuilder(props: BuilderProps) {
 }
 
 function BuilderSession({
-  lessonId, lessonTitle, initial, unitId, day, published, targets = [], previewDocument, glossary, rewardMaps,
+  lessonId, lessonTitle, initial, updatedAt, unitId, day, published, targets = [], previewDocument, glossary, rewardMaps,
 }: BuilderProps) {
   const { data: session } = useSession()
+  const [source, setSource] = useState(initial)
+  const [version, setVersion] = useState(updatedAt)
+  const [conflict, setConflict] = useState<unknown>(null)
   const [preview, setPreview] = useState(false)
   const [playVersion, setPlayVersion] = useState(0)
   const [dayType, setDayType] = useState<string>(initial?.dayType ?? 'STANDARD')
   const [blocks, setBlocks] = useState<BlockState[]>(fromDocument(initial))
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<string | null>(null)
-  const doc = useMemo<BlockDocument>(() => ({ schemaVersion: 1, dayType: dayType as BlockDocument['dayType'], blocks: blocks.map((b) => ({ id: b.id, type: b.type, ...(DEF_BY_TYPE.get(b.type)?.capture ? { capture: true } : {}), ...b.data } as ContentBlock)) }), [blocks, dayType])
+  const doc = useMemo<BlockDocument>(() => editLessonDocument(source, { dayType: dayType as BlockDocument['dayType'], blocks: blocks.map((b) => ({ id: b.id, type: b.type, ...(DEF_BY_TYPE.get(b.type)?.capture ? { capture: true } : {}), ...b.data } as ContentBlock)) }), [source, blocks, dayType])
   const documentJSON = JSON.stringify(doc)
   const [savedJSON, setSavedJSON] = useState(documentJSON)
   const dirty = documentJSON !== savedJSON
@@ -168,11 +175,12 @@ function BuilderSession({
     savingRef.current = true; setSaving(true); setMsg(null)
     try {
       const res = await fetch(`/api/lessons/${lessonId}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content_blocks: JSON.parse(sent) }),
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content_blocks: JSON.parse(sent), expected_updated_at: version }),
       })
       const result = await res.json().catch(() => ({}))
-      if (!res.ok) { setSaveIssues(result.block_issues ?? result.sei_issues ?? []); setMsg(result.error || 'Could not save. Your draft is kept on this browser.'); return }
+      if (!res.ok) { if (res.status === 409) setConflict(result.current); setSaveIssues(result.block_issues ?? result.sei_issues ?? []); setMsg(result.error || 'Could not save. Your draft is kept on this browser.'); return }
       setSaveIssues(result.sei_warnings ?? [])
+      setVersion(result.lesson.updated_at); setConflict(null)
       setSavedJSON(sent)
       if (currentJSON.current === sent && recoveryKey) { try { localStorage.removeItem(recoveryKey) } catch {} }
       setRecovery(null)
@@ -223,9 +231,10 @@ function BuilderSession({
       </div>
       <p className="text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>Select a block to edit it. Use Student preview to try the lesson, then save your changes.</p>
 
+      {conflict != null && <LessonSaveConflict local={doc} current={conflict} />}
       {recovery && <div role="status" className="mb-4 rounded-xl border p-4 text-sm">
         A recoverable draft is available from this browser.
-        <button type="button" className="ml-3 underline" onClick={() => { setBlocks(fromDocument(recovery)); setDayType(recovery.dayType ?? 'STANDARD'); setRecovery(null) }}>Restore draft</button>
+        <button type="button" className="ml-3 underline" onClick={() => { setSource({ ...initial, ...recovery }); setBlocks(fromDocument(recovery)); setDayType(recovery.dayType ?? 'STANDARD'); setRecovery(null) }}>Restore draft</button>
         <button type="button" className="ml-3 underline" onClick={() => { if (recoveryKey) localStorage.removeItem(recoveryKey); setRecovery(null) }}>Dismiss</button>
       </div>}
       {saveIssues.length > 0 && <ul className="my-3 space-y-2 rounded-xl border p-3">{saveIssues.map((issue,i) => <li key={i} className="text-sm">{issue.message} {issue.blockId && <button type="button" className="underline" onClick={() => { setPreview(false); setSelectedId(issue.blockId!); window.setTimeout(() => jumpTo(issue.blockId!), 0) }}>Go to activity</button>}</li>)}</ul>}
@@ -340,7 +349,7 @@ function BuilderSession({
                 <button type="button" onClick={save} disabled={saving} className="w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground">{saving ? 'Saving…' : 'Save content'}</button>
                 <p role="status" className="text-sm">{msg ?? (saving ? 'Saving this version…' : dirty ? 'Unsaved changes' : 'Content saved ✓')}</p>
               </div>
-              <div className="p-3 flex flex-col gap-3">
+              <div className="p-3 flex flex-col gap-3">{isCaptureBlock({...b.data,id:b.id,type:b.type} as ContentBlock)&&<label className="block text-sm">Evidence purpose<select className="mt-1 min-h-11 w-full rounded border bg-background p-2" value={String(b.data.evidenceRole??'main')} onChange={e=>{setField(b.id,'evidenceRole',e.target.value);setField(b.id,'requiredForCompletion',e.target.value!=='practice');if(e.target.value==='practice')setField(b.id,'gate',false)}}><option value="diagnostic">Diagnostic checkpoint</option><option value="main">Main work artifact</option><option value="exit">Individual exit</option><option value="practice">Optional practice</option></select></label>}
                 <div>
                   <div className="text-xs font-semibold mb-1" style={{ color: 'var(--muted-foreground)' }}>Who sees this block</div>
                   <div className="flex rounded-md border overflow-hidden w-max" style={{ borderColor: 'var(--border)' }}>
@@ -352,8 +361,9 @@ function BuilderSession({
                     })}
                   </div>
                 </div>
+                <TeachingMomentEditor value={b.data.teachingMoment as ContentBlock['teachingMoment']} onChange={value=>setField(b.id,'teachingMoment',value)} />
                 <BlockSettingsEditor targets={targets} data={b.data} capture={isCaptureBlock(liveOf(b))} onPatch={(patch) => Object.entries(patch).forEach(([k, v]) => setField(b.id, k, v))} />
-                {(def?.fields ?? []).length === 0
+                {b.type === 'vocab' || b.type === 'lesson_vocab' ? <LessonVocabularySelection lessonId={lessonId} blockId={b.id} data={b.data} onPatch={patch => Object.entries(patch).forEach(([k,v]) => setField(b.id,k,v))} /> : (def?.fields ?? []).length === 0
                   ? <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>This block has no editable fields.</p>
                   : (def?.fields ?? []).map((f) => (
                       <FieldEditor key={f.key} field={f} value={b.data[f.key]} sims={sims} blockType={b.type} blockData={b.data}

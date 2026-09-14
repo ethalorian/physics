@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server'
+import { canEditArea } from '@/lib/content-access'
 import { withAuth } from '@/lib/api-auth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { PLANS, trackForCourse, type DayPlan } from '@/lib/lesson-plan-export'
+import { planAlignment, planFingerprint, lessonPlanRevision, type PlanLink } from '@/lib/lesson-plan-alignment'
 import { honorsDaysFor } from '@/lib/honors-extension-export'
 
 // Teacher day-by-day lesson plans, READ-ONLY, scoped to the class types the
@@ -66,5 +68,9 @@ export const GET = withAuth(async (request, ctx) => {
       return pa === pb ? na - nb : pa.localeCompare(pb)
     })
 
-    return NextResponse.json({ track: tracks[0] ?? null, tracks, unitId, days, availableUnits, honorsDays: honorsDaysFor(unitId) })
+    const [lr, ar] = await Promise.all([supabaseAdmin.from('lesson_catalog_summary').select('id,title,unit_id,lesson_number,published,estimated_time,content_fingerprint').eq('unit_id',unitId),supabaseAdmin.from('lesson_plan_links').select('*').eq('unit_id',unitId)])
+    if(lr.error)throw lr.error; if(ar.error)throw ar.error
+    const linkedDays=days.map(day=>{const matches=(lr.data??[]).filter(l=>l.lesson_number===day.day);const lesson=matches.length===1?matches[0]:null;return {...day,kind:day.kind??'daily',plan_fingerprint:planFingerprint(day),lesson:lesson?{...lesson,revision:lessonPlanRevision(lesson)}:null,alignment:lesson?planAlignment(lesson,ar.data as PlanLink[]):{status:'missing',message:matches.length?'Several lessons share this day. Choose the intended lesson.':'No student lesson matches this plan.'}}})
+    const canConfirm=ctx.role!=='observer' && await canEditArea(ctx.email,'lessons',ctx.realRole==='admin')
+    return NextResponse.json({ canConfirm, track: tracks[0] ?? null, tracks, unitId, days: linkedDays, availableUnits, honorsDays: honorsDaysFor(unitId) })
 })

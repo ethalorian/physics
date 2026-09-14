@@ -16,9 +16,10 @@ import type { GraphSeries } from '@/data/content-blocks'
 const PALETTE = ['var(--primary)', 'var(--success)', 'oklch(0.62 0.16 25)', 'oklch(0.58 0.10 255)', 'var(--reward)']
 
 export default function FigureGraph({
-  title, xLabel, yLabel, series, presentation = false,
+  title, xLabel, yLabel, series, presentation = false, presentationHeight = 600,
 }: {
   presentation?: boolean
+  presentationHeight?: number
   title?: string
   xLabel?: string
   yLabel?: string
@@ -50,7 +51,7 @@ export default function FigureGraph({
   return (
     <figure style={{ margin: 0 }}>
       {title && <figcaption style={{ fontSize: presentation ? 36 : 13, fontWeight: 600, color: 'var(--foreground)', marginBottom: 6 }}>{title}</figcaption>}
-      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: presentation ? 600 : 320 }}>
+      <div style={{ borderRadius: 12, border: '0.5px solid var(--border)', background: 'var(--card)', padding: '12px 10px 6px', width: '100%', height: presentation ? presentationHeight : 320 }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data} margin={{ top: 20, right: 40, bottom: presentation ? 50 : 26, left: presentation ? 30 : 6 }}>
             <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" />

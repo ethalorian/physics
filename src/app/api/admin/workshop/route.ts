@@ -1,205 +1,86 @@
 import { NextResponse } from 'next/server'
 import { withRole } from '@/lib/api-auth'
-import { supabaseAdmin } from '@/lib/supabase'
+import { supabaseAdmin as db } from '@/lib/supabase'
 import { decayingAverage } from '@/data/curriculum-types'
-
-// GET /api/admin/workshop — the curriculum studio's data (Workshop design):
-//   (no params)      → the SHELF: one row per unit with lesson + review-coverage
-//                      rollups, where sections are, the next content gap.
-//   ?unit=<unitId>   → the UNIT board: lessons w/ status + open classes, targets
-//                      w/ coverage and mastery.
-//   ?target=<id>     → the TARGET workbench: per-class mastery, evidence counts,
-//                      pending AI reviews (approval itself stays on
-//                      /api/admin/reviews — one gate, one place).
-
-type Block = { type?: string; visibilityTrack?: string }
-const blocksOf = (cb: unknown): Block[] => {
-  const b = (cb as { blocks?: Block[] } | null)?.blocks
-  return Array.isArray(b) ? b : []
-}
+import { lookAhead } from '@/lib/curriculum-lookahead'
+import { planAlignment } from '@/lib/lesson-plan-alignment'
+import { targetCoverage, lessonReadiness, type CatalogLesson, type CatalogTarget } from '@/lib/curriculum-readiness'
+import { viewerCanSeeGate } from '@/lib/track-visibility'
+import { releaseStatus } from '@/lib/lesson-release'
+import type { BlockDocument } from '@/data/content-blocks'
 
 export const GET = withRole('admin', async (request) => {
-  const url = new URL(request.url)
-  const unitParam = url.searchParams.get('unit')
-  const targetParam = url.searchParams.get('target')
-
-  // ---------- shared rollups ----------
-  const [{ data: units }, { data: lessons }, { data: targets }, { data: reviews }, { data: pacing }, { data: courses }] = await Promise.all([
-    supabaseAdmin.from('units').select('id, name, order_index, allotted_days, default_start_date, program').order('order_index'),
-    supabaseAdmin.from('lessons').select('id, title, unit_id, lesson_number, published, visibility_track, content_blocks'),
-    supabaseAdmin.from('learning_targets').select('id, slug, statement, unit_id, order_index').eq('exclude_from_growth', false).order('order_index'),
-    supabaseAdmin.from('target_reviews').select('id, target_id, status, questions, reteach, created_at'),
-    supabaseAdmin.from('section_pacing').select('course_id, current_unit_id'),
-    supabaseAdmin.from('courses').select('id, name, section, teacher_email, program').is('archived_at', null),
+  const params = new URL(request.url).searchParams
+  const courseId = params.get('class'), unitParam = params.get('unit'), targetParam = params.get('target')
+  const cr = await db.from('courses').select('id, name, section, program, track').is('archived_at', null)
+  if (cr.error) throw cr.error
+  const courses = cr.data ?? [], selected = courses.find(c => c.id === courseId)
+  if (courseId && !selected) return NextResponse.json({ error: 'Class not found.' }, { status: 404 })
+  let targetUnit = unitParam
+  if (targetParam) {
+    const r = await db.from('learning_targets').select('unit_id').eq('id', targetParam).maybeSingle()
+    if (r.error) throw r.error
+    if (!r.data) return NextResponse.json({ error: 'Target not found.' }, { status: 404 })
+    targetUnit = r.data.unit_id
+  }
+  let uq = db.from('units').select('id, name, order_index, program, allotted_days').order('order_index')
+  if (selected) uq = uq.eq('program', selected.program ?? 'physics')
+  const ur = await uq; if (ur.error) throw ur.error
+  const units = ur.data ?? [], unitIds = units.map(u => u.id)
+  if (targetUnit && !unitIds.includes(targetUnit)) return NextResponse.json({ error: 'This unit is outside the selected class curriculum.' }, { status: 404 })
+  // Only summaries on the shelf; only the selected unit on drilldown.
+  const scope = targetUnit ? [targetUnit] : unitIds
+  const [lr, tr, pr] = await Promise.all([
+    db.from('lesson_catalog_summary').select('*').in('unit_id', scope).order('lesson_number'),
+    db.from('learning_targets').select('id, slug, statement, unit_id, lesson_id').in('unit_id', scope).eq('exclude_from_growth', false).order('order_index'),
+    db.from('section_pacing').select('course_id, current_unit_id, current_lesson_id, updated_at').in('course_id', selected ? [selected.id] : courses.map(c => c.id)),
   ])
-
-  const courseLabel = new Map((courses ?? []).map((c) => [c.id, [c.name, c.section].filter(Boolean).join(' · ')]))
-  const targetsByUnit = new Map<string, typeof targets & object[]>()
-  for (const t of (targets ?? [])) {
-    const arr = (targetsByUnit.get(t.unit_id) ?? []) as typeof targets & object[]
-    arr.push(t); targetsByUnit.set(t.unit_id, arr)
-  }
-  const approvedTargets = new Set((reviews ?? []).filter((r) => r.status === 'approved').map((r) => r.target_id))
-  const pendingByTarget = new Map<string, number>()
-  for (const r of (reviews ?? [])) if (r.status === 'pending') pendingByTarget.set(r.target_id, (pendingByTarget.get(r.target_id) ?? 0) + 1)
-  const questionsByTarget = new Map<string, number>()
-  for (const r of (reviews ?? [])) if (r.status === 'approved') {
-    const q = Array.isArray(r.questions) ? r.questions.length : 0
-    questionsByTarget.set(r.target_id, (questionsByTarget.get(r.target_id) ?? 0) + q)
-  }
-  const sectionsOnUnit = new Map<string, string[]>()
-  for (const p of (pacing ?? [])) {
-    if (!p.current_unit_id) continue
-    const arr = sectionsOnUnit.get(p.current_unit_id) ?? []
-    const label = courseLabel.get(p.course_id)
-    if (label) arr.push(label)
-    sectionsOnUnit.set(p.current_unit_id, arr)
-  }
-
-  const shelfRows = (units ?? []).map((u) => {
-    const ls = (lessons ?? []).filter((l) => l.unit_id === u.id)
-    const ts = (targetsByUnit.get(u.id) ?? []) as { id: string }[]
-    const covered = ts.filter((t) => approvedTargets.has(t.id)).length
-    const pending = ts.reduce((a, t) => a + (pendingByTarget.get(t.id) ?? 0), 0)
-    const questions = ts.reduce((a, t) => a + (questionsByTarget.get(t.id) ?? 0), 0)
-    const teaching = (sectionsOnUnit.get(u.id) ?? [])
-    return {
-      id: u.id, name: u.name,
-      published: ls.filter((l) => l.published).length,
-      drafts: ls.filter((l) => !l.published).length,
-      targets: ts.length, covered, pending, questions,
-      teachingSections: teaching,
-      program: u.program ?? 'physics',
-      status: teaching.length > 0 ? 'teaching' : ls.length === 0 ? 'outline' : ls.every((l) => l.published) && ts.length > 0 ? 'complete' : 'building',
-    }
-  })
-
-  const totalLessons = (lessons ?? []).length
-  const totalPublished = (lessons ?? []).filter((l) => l.published).length
-  const totalTargets = (targets ?? []).length
-  const totalCovered = (targets ?? []).filter((t) => approvedTargets.has(t.id)).length
-  const pendingTotal = [...pendingByTarget.values()].reduce((a, b) => a + b, 0)
-
-  // Next gap: the first unit at/after the one being taught with fewer published
-  // lessons than targets (content thinner than the target list demands).
-  const teachingIdx = shelfRows.findIndex((r) => r.status === 'teaching')
-  const gap = shelfRows.slice(Math.max(0, teachingIdx)).find((r) => r.targets > 0 && r.published < r.targets && r.status !== 'complete') ?? null
-
-  if (!unitParam && !targetParam) {
-    // Course list for the shelf's class filter — label + program so the client
-    // can show one course's curriculum sequence (its program's units).
-    const courseList = (courses ?? [])
-      .map((c) => ({ id: c.id, label: [c.name, c.section].filter(Boolean).join(' \u00b7 '), program: c.program ?? 'physics' }))
-      .sort((a, b) => a.label.localeCompare(b.label))
-    return NextResponse.json({
-      shelf: shelfRows,
-      courses: courseList,
-      gap: gap ? { unitId: gap.id, unitName: gap.name, missing: gap.targets - gap.published } : null,
-      desk: pendingTotal,
-      year: { published: totalPublished, lessons: totalLessons, covered: totalCovered, targets: totalTargets },
+  for (const r of [lr, tr, pr]) if (r.error) throw r.error
+  const lessons = ((lr.data ?? []) as CatalogLesson[]).filter(l => !selected || viewerCanSeeGate({ role: 'student', track: selected.track }, l.visibility_track))
+  const targets = (tr.data ?? []) as CatalogTarget[], pacing = pr.data ?? []
+  const rr = await db.from('review_catalog_summary').select('*').in('target_id', targets.map(t => t.id)); if (rr.error) throw rr.error
+  const reviews = rr.data ?? []
+  const coverage = targets.map(t => ({ ...t, ...targetCoverage(lessons, t, selected ? selected.track : undefined), approved: reviews.filter(r => r.target_id === t.id && r.status === 'approved').length, pending: reviews.filter(r => r.target_id === t.id && r.status === 'pending').length }))
+  const courseList = courses.map(c => ({ id: c.id, label: [c.name, c.section].filter(Boolean).join(' · '), program: c.program ?? 'physics' }))
+  const context = { courses: courseList, scope: selected ? courseList.find(c => c.id === selected.id)?.label : 'App-wide comparison', classId: courseId }
+  if (!targetUnit) {
+    const shelf = units.map(u => {
+      const ls = lessons.filter(l => l.unit_id === u.id), ts = coverage.filter(t => t.unit_id === u.id)
+      return { ...u, lessons: ls.length, published: ls.filter(l => l.published).length, drafts: ls.filter(l => !l.published).length, targets: ts.length, covered: ts.filter(t => t.published.length).length, reviews: ts.filter(t => t.approved).length, pending: ts.reduce((s, t) => s + t.pending, 0), missing: ts.filter(t => !t.published.length), teachingSections: pacing.filter(p => p.current_unit_id === u.id).map(p => courseList.find(c => c.id === p.course_id)?.label).filter(Boolean) }
     })
-  }
-
-  // ---------- unit board ----------
-  if (unitParam) {
-    const unitLessons = (lessons ?? []).filter((l) => l.unit_id === unitParam)
-      .sort((a, b) => (a.lesson_number ?? 0) - (b.lesson_number ?? 0))
-    const lessonIds = unitLessons.map((l) => l.id)
-    const { data: windows } = lessonIds.length
-      ? await supabaseAdmin.from('lesson_class_windows').select('lesson_id, course_id, open_at, close_at').in('lesson_id', lessonIds)
-      : { data: [] as { lesson_id: string; course_id: string; open_at: string | null; close_at: string | null }[] }
-    const now = Date.now()
-    const openBy = new Map<string, string[]>()
-    for (const w of windows ?? []) {
-      const open = (!w.open_at || new Date(w.open_at).getTime() <= now) && (!w.close_at || new Date(w.close_at).getTime() > now)
-      if (!open) continue
-      const arr = openBy.get(w.lesson_id) ?? []
-      const label = courseLabel.get(w.course_id)
-      if (label) arr.push(label)
-      openBy.set(w.lesson_id, arr)
+    let upcoming=null
+    if(selected){
+      const position=pacing.find(p=>p.course_id===selected.id), window=lookAhead(lessons,units,position,params.get('from'))
+      const ids=window.items.map(l=>l.id)
+      const [dr,vr,ar,pl]=await Promise.all([
+        ids.length?db.from('lessons').select('id,content_blocks').in('id',ids):Promise.resolve({data:[],error:null}),
+        ids.length?db.from('vocabulary_sets').select('lesson_id,vocabulary_terms(id,term,archived)').in('lesson_id',ids):Promise.resolve({data:[],error:null}),
+        db.from('learning_targets').select('id,slug,statement,unit_id'),
+        ids.length?db.from('lesson_plan_links').select('*').in('lesson_id',ids):Promise.resolve({data:[],error:null})
+      ]);for(const r of [dr,vr,ar,pl])if(r.error)throw r.error
+      upcoming={...window,pacingUpdatedAt:position?.updated_at,choices:lessons.map(l=>({id:l.id,title:l.title,unit_id:l.unit_id})),unbuilt:units.filter(u=>!lessons.some(l=>l.unit_id===u.id)).map(u=>({id:u.id,name:u.name})),items:window.items.map(l=>({...l,block_summary:undefined,alignment:planAlignment(l,pl.data??[]),issues:lessonReadiness(dr.data?.find(d=>d.id===l.id)?.content_blocks as BlockDocument,ar.data??[],(vr.data?.find(v=>v.lesson_id===l.id)?.vocabulary_terms??[]).filter(t=>!t.archived).map(t=>t.term))}))}
     }
-    const ts = ((targetsByUnit.get(unitParam) ?? []) as { id: string; slug: string; statement: string }[])
-    // per-target mastery avg (all students)
-    const { data: recs } = ts.length
-      ? await supabaseAdmin.from('mastery_records').select('target_id, user_id, level, observed_at').in('target_id', ts.map((t) => t.id)).order('observed_at')
-      : { data: [] as { target_id: string; user_id: string; level: number }[] }
-    const seq = new Map<string, number[]>()
-    for (const r of (recs ?? []) as { target_id: string; user_id: string; level: number }[]) {
-      const k = `${r.user_id}:${r.target_id}`
-      ;(seq.get(k) ?? seq.set(k, []).get(k)!).push(r.level)
-    }
-    const perTarget = ts.map((t) => {
-      const vals: number[] = []
-      for (const [k, levels] of seq) if (k.endsWith(`:${t.id}`)) {
-        const v = decayingAverage(levels)
-        if (v !== null && v !== undefined) vals.push(v)
-      }
-      const avg = vals.length ? Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10 : null
-      return {
-        id: t.id, slug: t.slug, statement: t.statement,
-        approved: approvedTargets.has(t.id),
-        pending: pendingByTarget.get(t.id) ?? 0,
-        avg, rated: vals.length,
-      }
-    })
-    return NextResponse.json({
-      unit: (units ?? []).find((u) => u.id === unitParam) ?? null,
-      teachingSections: sectionsOnUnit.get(unitParam) ?? [],
-      lessons: unitLessons.map((l) => {
-        const blocks = blocksOf(l.content_blocks)
-        return {
-          id: l.id, number: l.lesson_number, title: l.title, published: l.published,
-          blockCount: blocks.length,
-          exitTickets: blocks.filter((b) => b.type === 'exit_ticket').length,
-          honorsBlocks: blocks.filter((b) => b.visibilityTrack === 'honors').length,
-          track: l.visibility_track ?? null,
-          openIn: openBy.get(l.id) ?? [],
-        }
-      }),
-      targets: perTarget,
-    })
+    return NextResponse.json({ ...context, shelf, pacing, upcoming })
   }
+  const relevantCourses = selected ? [selected.id] : courses.filter(c => (c.program ?? 'physics') === (units.find(u => u.id === targetUnit)?.program ?? 'physics')).map(c => c.id)
+  const er = await db.from('course_students').select('course_id, student_id').eq('enrollment_state', 'ACTIVE').in('course_id', relevantCourses); if (er.error) throw er.error
+  const enrollments = er.data ?? [], studentIds = [...new Set(enrollments.map(e => e.student_id))]
+  const records: {target_id:string;user_id:string;level:number;observed_at:string}[]=[]
+  if(studentIds.length)for(let offset=0;;offset+=1000){const mr=await db.from('mastery_records').select('target_id,user_id,level,observed_at').in('target_id',targetParam?[targetParam]:targets.map(t=>t.id)).in('user_id',studentIds).order('observed_at').order('id').range(offset,offset+999);if(mr.error)throw mr.error;records.push(...(mr.data??[]));if((mr.data??[]).length<1000)break}
 
-  // ---------- target workbench ----------
-  const t = (targets ?? []).find((x) => x.id === targetParam)
-  if (!t) return NextResponse.json({ error: 'Unknown target' }, { status: 404 })
-  const [{ data: recs }, { data: enrolls }] = await Promise.all([
-    supabaseAdmin.from('mastery_records').select('user_id, level, observed_at').eq('target_id', t.id).order('observed_at'),
-    supabaseAdmin.from('course_students').select('course_id, student_id').eq('enrollment_state', 'ACTIVE'),
+  const ratings = (targetId: string, ids = studentIds) => {
+    const byUser = new Map<string, number[]>()
+    for (const r of records) if (r.target_id === targetId && ids.includes(r.user_id)) byUser.set(r.user_id, [...(byUser.get(r.user_id) ?? []), r.level])
+    const vals = [...byUser.values()].map(decayingAverage).filter((v): v is number => v != null)
+    return { rated: vals.length, avg: vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length * 10) / 10 : null }
+  }
+  if (targetParam) return NextResponse.json({ ...context, unit: units.find(u => u.id === targetUnit), target: coverage.find(t => t.id === targetParam), evidence: records.length, sections: courseList.filter(c => relevantCourses.includes(c.id)).map(c => ({ ...c, ...ratings(targetParam, enrollments.filter(e => e.course_id === c.id).map(e => e.student_id)) })), pending: reviews.filter(r => r.target_id === targetParam && r.status === 'pending') })
+  const [dr, wr, vr, ar] = await Promise.all([
+    db.from('lessons').select('id, content_blocks').in('id', lessons.map(l => l.id)),
+    db.from('lesson_class_windows').select('lesson_id, course_id, open_at, close_at').in('lesson_id', lessons.map(l => l.id)).in('course_id', relevantCourses),
+    db.from('vocabulary_sets').select('id, lesson_id, vocabulary_terms(term, archived)').in('lesson_id', lessons.map(l => l.id)),
+    db.from('learning_targets').select('id, slug, statement, unit_id'),
   ])
-  const classOf = new Map<string, string>()
-  for (const e of (enrolls ?? [])) if (!classOf.has(e.student_id)) classOf.set(e.student_id, e.course_id)
-  const seq = new Map<string, number[]>()
-  for (const r of (recs ?? []) as { user_id: string; level: number }[]) {
-    ;(seq.get(r.user_id) ?? seq.set(r.user_id, []).get(r.user_id)!).push(r.level)
-  }
-  const byClass = new Map<string, number[]>()
-  for (const [uid, levels] of seq) {
-    const v = decayingAverage(levels)
-    if (v === null || v === undefined) continue
-    const cid = classOf.get(uid)
-    if (!cid) continue
-    ;(byClass.get(cid) ?? byClass.set(cid, []).get(cid)!).push(v)
-  }
-  const sections = [...byClass.entries()].map(([cid, vals]) => ({
-    label: courseLabel.get(cid) ?? 'Class',
-    teacher: (courses ?? []).find((c) => c.id === cid)?.teacher_email?.split('@')[0] ?? '',
-    avg: Math.round((vals.reduce((a, b) => a + b, 0) / vals.length) * 10) / 10,
-    n: vals.length,
-  })).sort((a, b) => a.avg - b.avg)
-  const pendingList = (reviews ?? []).filter((r) => r.target_id === t.id && r.status === 'pending')
-    .map((r) => ({
-      id: r.id,
-      title: (r.reteach ?? '').split('\n')[0].slice(0, 80) || 'Generated review',
-      questions: Array.isArray(r.questions) ? r.questions.length : 0,
-      created_at: r.created_at,
-    }))
-  return NextResponse.json({
-    target: { id: t.id, slug: t.slug, statement: t.statement },
-    sections,
-    evidence: (recs ?? []).length,
-    approvedCount: (reviews ?? []).filter((r) => r.target_id === t.id && r.status === 'approved').length,
-    approvedQuestions: questionsByTarget.get(t.id) ?? 0,
-    pending: pendingList,
-  })
+  for (const r of [dr, wr, vr, ar]) if (r.error) throw r.error
+  return NextResponse.json({ ...context, unit: units.find(u => u.id === targetUnit), lessons: lessons.map(l => ({ ...l, block_summary: undefined, issues: lessonReadiness(dr.data?.find(d => d.id === l.id)?.content_blocks as BlockDocument | null, ar.data ?? [], (vr.data?.find(s => s.lesson_id === l.id)?.vocabulary_terms ?? []).filter(t => !t.archived).map(t => t.term)), openIn: l.published ? (wr.data ?? []).filter(w => w.lesson_id === l.id && releaseStatus(w) === 'open').filter(w => { const c = courses.find(c => c.id === w.course_id); return c && viewerCanSeeGate({ role: 'student', track: c.track }, l.visibility_track) }).map(w => courseList.find(c => c.id === w.course_id)?.label) : [] })), targets: coverage.map(t => ({ ...t, ...ratings(t.id) })) })
 })

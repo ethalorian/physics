@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState, type ReactNode } from 'react'
 import Link from 'next/link'
-import { lessonContextHref } from '@/lib/lesson-release'
+import { lessonContextHref, safeLessonReturn } from '@/lib/lesson-release'
 export default function LessonEditorNav({
   lessonId,
   title,
@@ -21,13 +21,15 @@ export default function LessonEditorNav({
   canEdit?: boolean
   children?: ReactNode
 }) {
+  const [returnTo, setReturnTo] = useState<string | null>(null)
+  const [target, setTarget] = useState('')
   const [courseId, setCourseId] = useState('')
   useEffect(() => {
-    setCourseId(new URLSearchParams(window.location.search).get('class') ?? '')
+    const p = new URLSearchParams(window.location.search); setCourseId(p.get('class') ?? ''); setReturnTo(safeLessonReturn(p.get('return'))); setTarget(p.get('target') ?? '')
   }, [])
   const href = (path: string) =>
     lessonContextHref(path, {
-      class: courseId,
+      class: courseId, return: returnTo, target,
       lesson: lessonId,
       unit: unitId,
       day,
@@ -37,15 +39,15 @@ export default function LessonEditorNav({
       <Link
         className="text-sm underline"
         href={
-          courseId
+          returnTo ?? (courseId
             ? href(`/admin/classes/${encodeURIComponent(courseId)}`)
             : canEdit
               ? '/admin/dashboard'
-              : '/admin/lesson-access'
+              : '/admin/lesson-access')
         }
       >
         ←{' '}
-        {courseId
+        {returnTo ? 'Back to library view' : courseId
           ? 'Back to class'
           : canEdit
             ? 'Lesson library'
@@ -89,6 +91,7 @@ export default function LessonEditorNav({
         >
           Class access
         </Link>
+        {!courseId && unitId && day!==undefined && <Link className="min-h-11 rounded-lg border px-4 py-2 text-sm" href={href('/admin/teacher/plans')}>Teacher plan</Link>}
         {courseId && (
           <>
             <Link

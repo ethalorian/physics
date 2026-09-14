@@ -10,6 +10,7 @@ import { Zap } from 'lucide-react'
 // builder), grouped Tier 1/2/3, with cognate, part of speech, example, image.
 
 interface Term {
+  contexts?: Record<string, {definition?:string;cognate?:string}>
   translations?: Record<string,{term?:string;definition?:string}>
   id: string
   term: string
@@ -30,18 +31,24 @@ const TIER_META: Record<number, { label: string; color: string }> = {
   3: { label: 'Tier 3 · physics', color: 'var(--primary)' },
 }
 
-export default function LessonVocabView({ lessonId }: { lessonId: string }) {
+export default function LessonVocabView({ lessonId, termIds, contextKey }: { lessonId: string; termIds?: string[]; contextKey?: string }) {
   // SEI — the Spanish definition shows when the student has their home language on (lesson header dial).
   const { showL1, profile } = useLanguageProfile()
-  const [terms, setTerms] = useState<Term[] | null>(null)
+  const [error, setError] = useState('')
+  const [retry, setRetry] = useState(0)
+  const [published, setPublished] = useState(false)
+  const [loadedTerms, setTerms] = useState<Term[] | null>(null)
 
   useEffect(() => {
-    fetch(`/api/lessons/${lessonId}/vocab`).then((r) => r.json())
-      .then((d: { terms?: Term[] }) => setTerms(d.terms ?? []))
-      .catch(() => setTerms([]))
-  }, [lessonId])
+    setError('')
+    fetch(`/api/lessons/${lessonId}/vocab`).then(async r => { const d=await r.json();if(!r.ok)throw Error(d.error??'Could not load the glossary.');return d })
+      .then((d: { terms?: Term[]; published?:boolean }) => {setTerms(d.terms ?? []);setPublished(Boolean(d.published))})
+      .catch(e => setError(e.message ?? 'Could not load the glossary.'))
+  }, [lessonId, retry])
 
-  if (terms === null) return null
+  if (error) return <p role="alert" className="text-sm">{error} <button className="min-h-11 underline" onClick={()=>setRetry(n=>n+1)}>Retry</button></p>
+  if (loadedTerms === null) return <p role="status" className="text-sm">Loading vocabulary…</p>
+  const terms = (termIds ? loadedTerms.filter(t=>termIds.includes(t.id)) : loadedTerms).map(t=>({...t,...(contextKey ? t.contexts?.[contextKey] ?? {} : {})}))
   if (terms.length === 0) return null
 
   const tiers = [1, 2, 3].filter((t) => terms.some((x) => (x.tier ?? 3) === t))
@@ -51,13 +58,13 @@ export default function LessonVocabView({ lessonId }: { lessonId: string }) {
       <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
         <div className="text-xs font-medium" style={{ color: 'var(--secondary-foreground, var(--muted-foreground))' }}>Key terms</div>
         {/* Practice these exact words in Word Shoot — this lesson's vocab preselected. */}
-        <Link
+        {published && <Link
           href={`/vocabulary/word-shoot?lesson_id=${lessonId}`}
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold"
           style={{ background: 'var(--reward)', color: 'var(--reward-foreground)' }}
         >
           <Zap size={13} /> Play Word Shoot with these words
-        </Link>
+        </Link>}
       </div>
       <div className="space-y-4">
         {tiers.map((t) => {

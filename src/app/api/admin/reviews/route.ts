@@ -28,10 +28,11 @@ export interface ReviewTargetGroup {
 }
 
 export const GET = withRole('admin', async () => {
-    const { data } = await supabaseAdmin
+    const { data, error } = await supabaseAdmin
       .from('target_reviews')
       .select('id, target_id, reteach, blocks, questions, status, created_by, created_at')
       .order('created_at', { ascending: false })
+    if (error) throw error
     const all = (data ?? []) as Row[]
     const pending = all.filter((r) => r.status === 'pending')
 
@@ -39,13 +40,15 @@ export const GET = withRole('admin', async () => {
     const targetIds = [...new Set(all.map((r) => r.target_id))]
     const targetById = new Map<string, TargetRow>()
     if (targetIds.length > 0) {
-      const { data: ts } = await supabaseAdmin
+      const { data: ts, error: targetError } = await supabaseAdmin
         .from('learning_targets')
         .select('id, statement, domain, unit_id, order_index, reviews_capped')
         .in('id', targetIds)
+      if (targetError) throw targetError
       for (const t of (ts ?? []) as TargetRow[]) targetById.set(t.id, t)
     }
-    const { data: unitRows } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
+    const { data: unitRows, error: unitError } = await supabaseAdmin.from('units').select('id, name, order_index').order('order_index', { ascending: true })
+    if (unitError) throw unitError
     const unitName = new Map<string, string>()
     const unitOrder = new Map<string, number>()
     for (const u of (unitRows ?? []) as { id: string; name: string; order_index: number | null }[]) {
@@ -118,9 +121,10 @@ export const POST = withRole('admin', async (request, ctx) => {
     // Trust the admin's edited blocks on approve (the admin IS the gate).
     if (decision === 'approve' && Array.isArray(editedBlocks)) update.blocks = editedBlocks
 
-    const { error } = await supabaseAdmin.from('target_reviews').update(update).eq('id', id)
+    const { data: saved, error } = await supabaseAdmin.from('target_reviews').update(update).eq('id', id).eq('status', 'pending').select('id, status').maybeSingle()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-    return NextResponse.json({ ok: true })
+    if (!saved) return NextResponse.json({ error: 'This review is no longer pending. Reload the queue before deciding.' }, { status: 409 })
+    return NextResponse.json({ ok: true, review: saved })
 })
 
 // PATCH { target_id, reviews_capped } — flip the per-target cap. When capped,

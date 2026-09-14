@@ -64,7 +64,29 @@ export interface SeiScaffold {
   override?: 'full' | 'partial' | 'bare';
 }
 
+export interface WorkshopBlock {
+  stage?: string; target?:string; title?: string; lead?: string; minutes?: number;
+  tool?: 'measure' | 'mark' | 'inspect';
+  taskLabel?: string; purpose?: string; steps?: string[]; catchUp?: string[];
+  peerCheck?: boolean;
+  seedFrom?: string;
+  keyboardPrompt?: string;
+  hotspots?: { optionId: string; label: string; x: number; y: number }[];
+}
+
 interface BaseBlock {
+  /** Collapsible background reading; essential instructions must stay open. */
+  referencePanel?: boolean;
+  /** Authored shared-attention moment. References and practice remain available in the block picker. */
+  teachingMoment?: { phase: 'launch' | 'model' | 'investigate' | 'discuss' | 'exit' | 'reference'; title?: string; purpose?: string };
+  /** Reusable source material, reachable from every task that needs it. */
+  referenceBlockIds?: string[];
+  /** Practice remains saveable and earns its existing XP, but is not required for completion. */
+  requiredForCompletion?: boolean;
+  evidenceRole?: 'diagnostic' | 'main' | 'exit' | 'practice';
+  teachingTool?: import('@/lib/teaching-tool-spec').TeachingToolDescriptor;
+  /** Optional workshop face; content stays on the shared blocks. */
+  workshop?: WorkshopBlock;
   /** Short, explicit actions, shared across reader and presentation. */
   studentDirections?: string[];
   vocational?: Partial<Record<import('@/lib/vocational').AssignedTrade, import('@/lib/vocational').TradeConnection>>;
@@ -122,6 +144,7 @@ export interface MathMissionBlock extends BaseBlock {
 
 export interface VocabBlock extends BaseBlock {
   type: 'vocab';
+  termIds?: string[]; // canonical vocabulary_terms selection; terms are hydrated for display
   terms: { term: string; definition: string; cognate?: string }[];
   vocabularySetId?: string;   // links to vocabulary_sets
 }
@@ -180,6 +203,7 @@ export interface SimEmbedBlock extends BaseBlock {
  * in src/lib/track-visibility.ts, alongside the track gates. Display-only.
  */
 export interface DeckBlock extends BaseBlock {
+  navigation?: 'mapped' | 'manual';
   type: 'deck';
   src: string;                // static asset path, e.g. '/decks/unit-1/Day 5 - Predicting Position.dc.html'
   title: string;              // e.g. 'Day 5 — Predicting Position'
@@ -206,6 +230,7 @@ export interface EquationVisualizerBlock extends BaseBlock {
 }
 
 export interface LessonVocabBlock extends BaseBlock {
+  termIds?: string[];
   type: 'lesson_vocab';        // renders the lesson's tiered SEI vocab (authored in the builder)
 }
 
@@ -302,6 +327,8 @@ export interface QuestionBlock extends BaseBlock {
 }
 
 export interface DataTableBlock extends BaseBlock {
+  /** Supplied case readings, shown as reference on all surfaces; never prefill a student's response. */
+  sourceRows?: (string | number)[][];
   analysisMode?: 'pattern' | 'record';
   rowLabels?: string[];
   type: 'data_table';
@@ -503,6 +530,8 @@ export type ContentBlock =
 export type BlockType = ContentBlock['type'];
 
 export interface BlockDocument {
+  presentation?: 'trades-workshop';
+  lessonKind?: 'daily' | 'week-overview';
   schemaVersion: 1;
   dayType?: DayType;
   blocks: ContentBlock[];
@@ -521,6 +550,8 @@ export function isCaptureBlock(b: ContentBlock): boolean {
   if (b.type === 'sentence_frame') return b.capture === true; // SEI: a frame the student writes INTO
   return (CAPTURE_BLOCK_TYPES as string[]).includes(b.type);
 }
+
+export function isRequiredCaptureBlock(b: ContentBlock): boolean { return isCaptureBlock(b) && b.requiredForCompletion !== false; }
 
 /** The same typed rules drive saved progress, gates, and server rollups. */
 export function isResponseComplete(blockType: string, response: unknown): boolean {
@@ -559,7 +590,7 @@ export const VISUAL_BLOCK_TYPES: BlockType[] = [
   'lab_notebook', 'data_table', 'asteroid_thread', 'sketch',
 ];
 export function isVisualBlock(b: ContentBlock): boolean {
-  return (VISUAL_BLOCK_TYPES as string[]).includes(b.type)
+  return Boolean(b.teachingTool) || (VISUAL_BLOCK_TYPES as string[]).includes(b.type)
     // a vocab term carrying an image, or a figure-bearing block, also counts
     || (b.type === 'figure');
 }

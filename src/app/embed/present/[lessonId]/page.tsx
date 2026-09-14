@@ -1,5 +1,7 @@
 'use client'
-
+import { useCommandSession } from '@/components/present/useCommandSession'
+import { TeachingToolContext } from '@/components/teaching-tools/TeachingToolRenderer'
+ 
 /**
  * Auto-generated deck — P-1 / P-6 of docs/LESSON_SYSTEM_RULES.md.
  *
@@ -19,6 +21,7 @@ import { useTeachingTools } from '@/components/present/useTeachingTools'
 import { lessonLocation } from '@/components/lessons/LessonVisualIdentity'
 import { TeachingStage, FitTeachingContent } from '@/components/present/TeachingStage'
 import TeachingBlockContent, { blockMode } from '@/components/present/TeachingBlockContent'
+import { teachingCue } from '@/lib/teaching-content'
 import { buildSlides } from '@/lib/present-auto-slides'
 
 const W = 1600, H = 900
@@ -27,6 +30,7 @@ const W = 1600, H = 900
 export default function AutoDeckPage() {
   const { lessonId } = useParams<{ lessonId: string }>()
   const sessionId = useSearchParams().get('session_id')
+  const command = useCommandSession(sessionId)
   const teaching = useTeachingTools(sessionId, true)
   const [error, setError] = useState<string | null>(null)
   const [lesson, setLesson] = useState<{ title: string; content_blocks: BlockDocument | null } | null>(null)
@@ -101,8 +105,8 @@ export default function AutoDeckPage() {
   const s = slides[index]
   const stageChildren = slides.map((sl, i) => (
     <section key={i} data-label={sl.label} data-section-anchor={sl.anchor ?? undefined} data-speaker-notes={sl.notes} style={{ display: i === index ? 'block' : 'none', position: 'absolute', inset: 0 }}>
-      <TeachingStage location={lessonLocation(sl.blocks[0]?.id, lesson?.content_blocks?.blocks ?? [])} embedded lesson={lesson?.title ?? 'Today’s lesson'} mode={i === 0 ? 'Let’s investigate' : blockMode(sl.blocks[0])} footer={<>{i + 1} / {slides.length} · {i === 0 ? 'Notice. Question. Make sense of it.' : sl.blocks[0]?.type === 'question' ? 'Answer on your lesson screen.' : 'Follow along on your device'}</>}>
-        {sl.blocks[0] ? <TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} block={sl.blocks[0]} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks ?? []} /> : <FitTeachingContent><div className="teach-intro lesson-chapter" style={{ minHeight: 660 }}><div><p className="teach-eyebrow">Today’s investigation</p><h1 className="teach-headline lesson-chapter-title">{sl.title}</h1><p className="teach-subtitle">Explore the ideas.<br />Find the evidence.<br />Build your explanation.</p></div><div className="teach-orbit" aria-hidden>φ</div></div></FitTeachingContent>}
+      <TeachingStage location={lessonLocation(sl.blocks[0]?.id, lesson?.content_blocks?.blocks ?? [])} embedded lesson={lesson?.title ?? 'Today’s lesson'} mode={i === 0 ? 'Let’s investigate' : blockMode(sl.blocks[0])} footer={<>{i + 1} / {slides.length} · {teachingCue(sl.blocks[0])}</>}>
+        {sl.blocks[0] ? <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{}}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} block={sl.blocks[0]} lessonId={lessonId} referenceBlocks={lesson?.content_blocks?.blocks ?? []} /></TeachingToolContext.Provider> : <FitTeachingContent><div className="teach-intro lesson-chapter" style={{ minHeight: 660 }}><div><p className="teach-eyebrow">Today’s investigation</p><h1 className="teach-headline lesson-chapter-title">{sl.title}</h1><p className="teach-subtitle">Explore the ideas.<br />Find the evidence.<br />Build your explanation.</p></div><div className="teach-orbit" aria-hidden>φ</div></div></FitTeachingContent>}
       </TeachingStage>
     </section>
   ))

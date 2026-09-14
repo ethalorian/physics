@@ -64,7 +64,7 @@ export const GET = withAuth(async (request, ctx) => {
         console.error('Database vocabulary tables not found, falling back to localStorage:', error)
         
         // Fallback to localStorage - return empty array for now, context will handle localStorage fallback
-        return NextResponse.json([])
+        return NextResponse.json({error:'Could not load vocabulary. Retry before editing.'},{status:500})
       }
 
       // Transform to match the expected format
@@ -135,22 +135,12 @@ export const PUT = withContentEditor('vocabulary', async (request) => {
     if (lesson !== undefined) updateData.lesson_id = lesson
     if (published !== undefined) updateData.published = published
 
-    // Update vocabulary set
-    const { data: vocabularySet, error: setError } = await supabaseAdmin
-      .from('vocabulary_sets')
-      .update(updateData)
-      .eq('id', id)
-      .select()
-      .single()
-
-    if (setError) {
-      console.error('Error updating vocabulary set:', setError)
-      return NextResponse.json({ error: setError.message }, { status: 500 })
-    }
-
-    if (terms) await saveVocabTerms(id, terms)
-
-    return NextResponse.json(vocabularySet)
+    if(!Object.prototype.hasOwnProperty.call(body,'expected_updated_at'))return NextResponse.json({error:'Reload before saving so the vocabulary version can be checked.'},{status:428})
+    const aliases:Record<string,string>={definitionEs:'definition_es',partOfSpeech:'part_of_speech',imageUrl:'image_url'}
+    const rows=terms?terms.map((t:Record<string,unknown>)=>Object.fromEntries(Object.entries(t).map(([k,v])=>[aliases[k]??k,v]))):null
+    const saved=await supabaseAdmin.rpc('update_vocabulary_set',{p_set:id,p_expected:body.expected_updated_at,p_patch:updateData,p_terms:rows})
+    if(saved.error)return NextResponse.json({error:saved.error.message},{status:saved.error.code==='40001'?409:422})
+    return NextResponse.json(saved.data)
 })
 
 export const DELETE = withContentEditor('vocabulary', async (request) => {

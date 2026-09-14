@@ -7,6 +7,8 @@ import { paginateBlocks, type BlockDocument } from '@/data/content-blocks'
 import type { BlockResponseMap } from '@/components/blocks/useBlockResponses'
 import { EVIDENCE_LABEL, EVIDENCE_SOURCES, type EvidenceSource } from '@/lib/evidence'
 
+const ageDays=(value:string)=>Math.max(0,Math.floor((Date.now()-new Date(value).getTime())/86400000))
+const ageLabel=(value:string)=>{const d=ageDays(value);return d===0?'Today':d===1?'1 day waiting':d+' days waiting'}
 interface Submission { id: string; user_id: string; lesson_id: string; name: string; lessonTitle: string; submitted_at: string }
 interface Evidence { id: string; user_id: string; lesson_id: string | null; name: string; lessonTitle: string; response: unknown; block_type: string; evidence_source: string | null; untargeted: boolean; unlinked: boolean; created_at: string }
 interface SubmittedWork {
@@ -53,6 +55,8 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   const loadVersion = useRef(0)
   const workVersion = useRef(0)
   const [expandedEvidence, setExpandedEvidence] = useState<string | null>(null)
+  const [olderOnly,setOlderOnly]=useState(false)
+  const [queueLoading,setQueueLoading]=useState(true)
   const [mode, setMode] = useState<'submissions' | 'evidence'>('submissions')
   const [source, setSource] = useState('')
   const [submissions, setSubmissions] = useState<Submission[]>([])
@@ -65,13 +69,14 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   const [truncated, setTruncated] = useState(false)
   const load = useCallback(async () => {
     const version = ++loadVersion.current
+    setQueueLoading(true)
     try {
       const res = await fetch(`/api/mastery/queue?unit_id=${encodeURIComponent(unitId)}${classQuery}&evidence_source=${encodeURIComponent(source)}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? 'Could not load review queue')
       if (version !== loadVersion.current) return
       setSubmissions(data.submissions ?? []); setEvidence(data.evidence ?? []); setTruncated(Boolean(data.evidenceMayBeTruncated)); setError('')
-    } catch (e) { if (version === loadVersion.current) setError(e instanceof Error ? e.message : 'Could not load review queue') }
+    } catch (e) { if (version === loadVersion.current) setError(e instanceof Error ? e.message : 'Could not load review queue') } finally { if(version===loadVersion.current)setQueueLoading(false) }
   }, [unitId, classQuery, source])
   const invalidateRequests = useCallback(() => { loadVersion.current++; workVersion.current++ }, [])
   useEffect(() => { void load(); setSelected(null); setWork(null); workVersion.current++; return invalidateRequests }, [load, invalidateRequests])
@@ -97,8 +102,8 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
     } catch (e) { setError(e instanceof Error ? e.message : 'Review failed') }
     finally { setBusy(false) }
   }
-  const visibleSubmissions = lessonId ? submissions.filter(s => s.lesson_id === lessonId) : submissions
-  const visibleEvidence = lessonId ? evidence.filter(e => e.lesson_id === lessonId) : evidence
+  const visibleSubmissions = submissions.filter(s => (!lessonId || s.lesson_id===lessonId) && (!olderOnly || ageDays(s.submitted_at)>=3)).sort((a,b)=>a.submitted_at.localeCompare(b.submitted_at))
+  const visibleEvidence = evidence.filter(e => (!lessonId || e.lesson_id===lessonId) && (!olderOnly || ageDays(e.created_at)>=3)).sort((a,b)=>a.created_at.localeCompare(b.created_at))
   useEffect(() => { setSelected(null); setWork(null); workVersion.current++ }, [lessonId])
   const snapshot = work?.submissions.find((s) => s.id === selected?.id)
   const reviewPages = paginateBlocks(snapshot?.contentSnapshot?.blocks ?? [])
@@ -106,17 +111,17 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
   const responses: BlockResponseMap = Object.fromEntries((work?.work ?? []).map((w) => [w.blockId, { response: w.response, block_type: w.blockType, created_at: w.createdAt }]))
   return <details open={Boolean(lessonId) || undefined} className="my-4 rounded-xl border bg-card p-4">
     <summary className="cursor-pointer font-semibold">Lesson review · {visibleSubmissions.length} pending submissions</summary>
-    <p className="my-2 text-sm text-muted-foreground">Read the submitted lesson, assess its targets, then return it for revision. Rating mastery and returning work are separate actions.</p>
+    <p className="my-2 text-sm font-medium">Scope: {classQuery ? 'Selected class(es)' : 'All classes available to you'} · Oldest work first. Next decision: feedback, reteach, or gather another observation.</p><label className="flex min-h-11 items-center gap-2 text-sm"><input type="checkbox" checked={olderOnly} onChange={e=>setOlderOnly(e.target.checked)}/>Waiting 3 or more days</label><p className="my-2 text-sm text-muted-foreground">Read the submitted lesson, assess its targets, then return it for revision. Rating mastery and returning work are separate actions.</p>
     {lessonId && <p className="my-2 text-sm">Showing the selected lesson. <button className="underline" onClick={onClearLesson}>Show all lessons</button></p>}
     <div className="mb-3 flex flex-wrap gap-2">
       <button className="rounded border px-3 py-1" aria-pressed={mode === 'submissions'} onClick={() => setMode('submissions')}>Submitted lessons ({visibleSubmissions.length})</button>
       <button className="rounded border px-3 py-1" aria-pressed={mode === 'evidence'} onClick={() => setMode('evidence')}>Low-stakes evidence ({visibleEvidence.length})</button>
       {mode === 'evidence' && <select aria-label="Evidence source" className="rounded border bg-card px-2" value={source} onChange={(e) => setSource(e.target.value)}><option value="">All sources</option>{EVIDENCE_SOURCES.map((s) => <option key={s} value={s}>{EVIDENCE_LABEL[s]}</option>)}<option value="untagged">Missing source</option></select>}
     </div>
-    {error && <p role="alert" className="text-destructive">{error}</p>}
+    {error && <p role="alert" className="text-destructive">{error} <button className="min-h-11 underline" onClick={()=>load()}>Retry queue</button></p>}{queueLoading && <p role="status">Loading review queue…</p>}
     {mode === 'submissions' && <>
-      {visibleSubmissions.length === 0 && <p className="text-sm text-muted-foreground">No lessons awaiting review.</p>}
-      <div className="flex flex-wrap gap-2">{visibleSubmissions.map((sub) => <button key={sub.id} className="rounded border p-2 text-left text-sm" onClick={() => void open(sub)}>{sub.name} · {sub.lessonTitle}<span className="block text-xs text-muted-foreground">Submitted {new Date(sub.submitted_at).toLocaleString()}</span></button>)}</div>
+      {!queueLoading && !error && visibleSubmissions.length === 0 && <p className="text-sm text-muted-foreground">No lessons awaiting review.</p>}
+      <div className="flex flex-wrap gap-2">{visibleSubmissions.map((sub) => <button key={sub.id} className="rounded border p-2 text-left text-sm" onClick={() => void open(sub)}>{sub.name} · {sub.lessonTitle}<span className="block text-xs text-muted-foreground">{ageLabel(sub.submitted_at)} · {new Date(sub.submitted_at).toLocaleString()}</span></button>)}</div>
       {selected && <section className="mt-4 border-t pt-3" aria-label="Submitted lesson">
         <h3 className="font-semibold">{selected.name} · {selected.lessonTitle}</h3>
         {!work && !error && <p role="status">Loading submitted work…</p>}
@@ -138,7 +143,7 @@ export default function LessonReviewQueue({ unitId, classQuery, onReviewed, rend
     {mode === 'evidence' && <>
       <p className="mb-2 text-sm text-muted-foreground">Saved evidence can be reviewed without turning in or unlocking a lesson. Unlinked work is shown across units.</p>
       {truncated && <p role="status" className="text-sm">Showing the most recent 1,000 responses. Narrow the source or class for older work.</p>}
-      {visibleEvidence.map((item) => <details key={item.id} onToggle={(event) => { if (event.currentTarget.open) setExpandedEvidence(item.id) }} className="mb-2 rounded border p-3"><summary className="cursor-pointer text-sm">{item.name} · {item.lessonTitle} · {EVIDENCE_LABEL[item.evidence_source as EvidenceSource] ?? 'Missing source'}{item.untargeted ? ' · Untargeted' : ''}</summary>
+      {visibleEvidence.map((item) => <details key={item.id} onToggle={(event) => { if (event.currentTarget.open) setExpandedEvidence(item.id) }} className="mb-2 rounded border p-3"><summary className="cursor-pointer text-sm">{ageLabel(item.created_at)} · {item.name} · {item.lessonTitle} · {EVIDENCE_LABEL[item.evidence_source as EvidenceSource] ?? 'Missing source'}{item.untargeted ? ' · Untargeted' : ''}</summary>
         <p className="my-1 text-xs text-muted-foreground">{item.block_type} · {new Date(item.created_at).toLocaleString()}</p>
         {renderResponse(item.response)}
         {expandedEvidence === item.id && (item.untargeted || item.unlinked) && <details><summary className="cursor-pointer text-sm">Advanced · repair attribution</summary><EvidenceRepair evidence={item} unitId={unitId} onLinked={() => { void load(); onReviewed() }} /></details>}

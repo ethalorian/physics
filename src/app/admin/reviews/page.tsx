@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import LibraryNav from '@/components/admin/LibraryNav'
 import { useRouter } from 'next/navigation'
 import { useViewAs } from '@/lib/use-view-as'
 import { ArrowLeft, Check, X, BookOpenCheck, Sparkles, Loader2, ArrowUp, ArrowDown, Trash2, Edit3, ChevronDown, ChevronRight, Lock, Unlock } from 'lucide-react'
@@ -30,6 +31,12 @@ export default function ReviewQueuePage() {
 
   // Queue, grouped by target (see /api/admin/reviews).
   const [groups, setGroups] = useState<Group[]>([])
+  const [error, setError] = useState('')
+  const [notice, setNotice] = useState('')
+  const [targetFilter, setTargetFilter] = useState('')
+  const [locationSearch,setLocationSearch]=useState('')
+  useEffect(() => {const sync=()=>{const p=new URLSearchParams(window.location.search);setLocationSearch(window.location.search);setFilterUnit(p.get('unit')??'');const t=p.get('target')??'';setTargetFilter(t);setPendingOnly(p.get('pending')!=='all');setSortBy(p.get('sort')==='pending'?'pending':'curriculum');if(t)setExpanded(new Set([t]))};sync();window.addEventListener('popstate',sync);return()=>window.removeEventListener('popstate',sync)},[])
+  const setFilter=(key:string,value:string)=>{const p=new URLSearchParams(window.location.search);value?p.set(key,value):p.delete(key);window.history.pushState(null,'','?'+p);window.dispatchEvent(new PopStateEvent('popstate'))}
   const [loading, setLoading] = useState(true)
   const [expanded, setExpanded] = useState<Set<string>>(new Set())
   const [filterUnit, setFilterUnit] = useState<string>('')
@@ -53,11 +60,10 @@ export default function ReviewQueuePage() {
   const [genOne, setGenOne] = useState<string | null>(null)
   const [genResult, setGenResult] = useState<Record<string, { ok: boolean; message?: string }>>({})
 
-  const load = useCallback(() => {
-    fetch('/api/admin/reviews')
-      .then((r) => r.json())
-      .then((d: { targets?: ReviewTargetGroup[] }) => { setGroups((d.targets ?? []) as unknown as Group[]); setLoading(false) })
-      .catch(() => setLoading(false))
+  const load = useCallback(async () => {
+    setLoading(true); setError('')
+    try { const r = await fetch('/api/admin/reviews'); const d = await r.json(); if (!r.ok) throw new Error(d.error ?? 'Could not load reviews.'); setGroups(d.targets ?? []) }
+    catch (e) { setError(e instanceof Error ? e.message : 'Could not load reviews.') } finally { setLoading(false) }
   }, [])
 
   const toggleExpanded = (id: string) => setExpanded((s) => { const n = new Set(s); if (n.has(id)) n.delete(id); else n.add(id); return n })
@@ -65,14 +71,11 @@ export default function ReviewQueuePage() {
   // Per-target cap: reuse an existing draft instead of generating one per student.
   const setCap = async (g: Group, capped: boolean) => {
     setCapBusy(g.target_id)
-    // Optimistic — the row flips immediately; reload confirms.
-    setGroups((gs) => gs.map((x) => (x.target_id === g.target_id ? { ...x, reviews_capped: capped } : x)))
-    await fetch('/api/admin/reviews', {
-      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ target_id: g.target_id, reviews_capped: capped }),
-    }).catch(() => {})
-    setCapBusy(null)
-    load()
+    setError(''); setNotice('')
+    try {
+      const r = await fetch('/api/admin/reviews', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ target_id: g.target_id, reviews_capped: capped }) });
+      const d = await r.json(); if (!r.ok) throw new Error(d.error ?? 'Could not update the cap.'); await load()
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not update the cap. Retry using the same button.') } finally { setCapBusy(null) }
   }
   useEffect(() => { if (isAdmin) load() }, [load, isAdmin])
 
@@ -80,12 +83,12 @@ export default function ReviewQueuePage() {
   // exposes both, scoped to the teacher's roster).
   const loadTargets = useCallback((uid: string) => {
     fetch(`/api/mastery/grid?unit_id=${encodeURIComponent(uid)}`)
-      .then((r) => r.json())
+      .then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.error??'Could not load review targets');return d})
       .then((d: { units?: UnitOpt[]; targets?: TargetOpt[] }) => {
         if (d.units && units.length === 0) setUnits(d.units)
         setTargets(d.targets ?? [])
       })
-      .catch(() => {})
+      .catch(e=>setError(e.message??'Could not load review targets'))
   }, [units.length])
 
   useEffect(() => {
@@ -181,25 +184,21 @@ export default function ReviewQueuePage() {
   }
 
   const decide = async (rv: Review, decision: 'approve' | 'reject') => {
-    setBusy(rv.id)
+    if (busy) return
+    setBusy(rv.id); setError(''); setNotice('')
     const body: Record<string, unknown> = { id: rv.id, decision }
-    // Only send blocks when approving AND the admin touched them.
     if (decision === 'approve' && edits[rv.id]) body.blocks = edits[rv.id]
-    await fetch('/api/admin/reviews', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    }).catch(() => {})
-    setBusy(null)
-    setEdits((m) => {
-      const next = { ...m }
-      delete next[rv.id]
-      return next
-    })
-    load()
+    try {
+      const r = await fetch('/api/admin/reviews', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      const d = await r.json(); if (!r.ok || !d.ok) throw new Error(d.error ?? 'Could not save this decision.')
+      setEdits(m => { const next = {...m}; delete next[rv.id]; return next })
+      setNotice(decision === 'approve' ? 'Approved and shared with students app-wide.' : 'Review rejected.')
+      await load()
+    } catch (e) { setError((e instanceof Error ? e.message : 'Could not save this decision.') + ' Your edits are kept. Retry using the decision button.') } finally { setBusy(null) }
   }
 
   const visible = groups
-    .filter((g) => (!filterUnit || g.unit_id === filterUnit) && (!pendingOnly || g.counts.pending > 0))
+    .filter((g) => (!targetFilter || g.target_id === targetFilter) && (!filterUnit || g.unit_id === filterUnit) && (!pendingOnly || g.counts.pending > 0))
     .sort((a, b) => (sortBy === 'pending' ? b.counts.pending - a.counts.pending : 0))
   const totalPending = groups.reduce((n, g) => n + g.counts.pending, 0)
   const totalCapped = groups.filter((g) => g.reviews_capped).length
@@ -212,7 +211,11 @@ export default function ReviewQueuePage() {
 
   return (
     <div className="max-w-3xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <Link href="/admin/home" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
+      <LibraryNav active="reviews" locationSearch={locationSearch} />
+      {error && <p role="alert" className="my-4 rounded border border-destructive p-3">{error} <button className="min-h-11 underline" onClick={() => load()}>Reload queue</button></p>}
+      {notice && <p role="status" className="my-4">{notice}</p>}
+      {targetFilter && <button className="min-h-11 underline" onClick={()=>setFilter('target','')}>Show all skills</button>}
+      <Link href="/admin/command-center" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
         <ArrowLeft size={15} /> Command center
       </Link>
       <div className="flex items-center gap-2 mb-1">
@@ -304,16 +307,16 @@ export default function ReviewQueuePage() {
             </>
           )}
         </div>
-        <select value={filterUnit} onChange={(e) => setFilterUnit(e.target.value)} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
+        <select value={filterUnit} onChange={(e) => setFilter('unit',e.target.value)} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
           <option value="">All units</option>
           {unitOpts.map(([id, name]) => <option key={id} value={id}>{name}</option>)}
         </select>
-        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as 'curriculum' | 'pending')} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
+        <select value={sortBy} onChange={(e) => setFilter('sort',e.target.value)} className="text-xs rounded-lg px-2 py-1.5" style={{ background: 'var(--card)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
           <option value="curriculum">Curriculum order</option>
           <option value="pending">Most drafts first</option>
         </select>
         <label className="inline-flex items-center gap-1.5 text-xs" style={{ color: 'var(--muted-foreground)', cursor: 'pointer' }}>
-          <input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} /> Waiting only
+          <input type="checkbox" checked={pendingOnly} onChange={(e) => setFilter('pending',e.target.checked?'':'all')} /> Waiting only
         </label>
       </div>
 

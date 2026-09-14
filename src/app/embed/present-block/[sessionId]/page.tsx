@@ -1,7 +1,10 @@
 'use client'
-
+import { useCommandSession } from '@/components/present/useCommandSession'
+import { TeachingToolContext } from '@/components/teaching-tools/TeachingToolRenderer'
+ 
 import { useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
+import { teachingCue } from '@/lib/teaching-content'
 import { projectedBlockPages } from '@/lib/projected-block'
 import { useTeachingTools } from '@/components/present/useTeachingTools'
 import { lessonLocation } from '@/components/lessons/LessonVisualIdentity'
@@ -12,6 +15,7 @@ import { commandRequest, type CommandLesson } from '@/lib/classroom-command'
 /** Shared student-visible block content, with evidence reads and writes disabled. */
 export default function ProjectedBlockPage() {
   const { sessionId } = useParams<{ sessionId: string }>()
+  const command = useCommandSession(sessionId)
   const teaching = useTeachingTools(sessionId, true)
   const params = useSearchParams()
   const lessonId = params.get('lesson') ?? ''
@@ -31,8 +35,8 @@ export default function ProjectedBlockPage() {
   const parts = block ? projectedBlockPages(block) : []
   const shown = parts[Math.min(part, parts.length - 1)]
   return <div data-projected-sei={String(teaching.state?.tools?.sei_enabled ?? false)} data-projected-block-ready={shown && !error ? `${blockId}:${part}` : undefined}>
-    <TeachingStage location={lessonLocation(blockId, lesson?.content_blocks.blocks ?? [])} lesson={lesson?.title ?? 'Today’s lesson'} mode={blockMode(shown)} footer={<>{parts.length > 1 ? `Screen ${Math.min(part + 1, parts.length)} of ${parts.length} · ` : ''}{shown?.type === 'question' ? 'Answer on your lesson screen.' : 'Follow along on your device'}</>}>
-      {error ? <p role="alert">{error}</p> : !lesson ? <p>Loading lesson block…</p> : !shown ? <p>This block is unavailable for the selected class.</p> : <TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} key={shown.id + ':' + part} block={shown} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} />}
+    <TeachingStage location={lessonLocation(blockId, lesson?.content_blocks.blocks ?? [])} lesson={lesson?.title ?? 'Today’s lesson'} mode={blockMode(shown)} footer={<>{parts.length > 1 ? `Screen ${Math.min(part + 1, parts.length)} of ${parts.length} · ` : ''}{teachingCue(shown)}</>}>
+      {error ? <p role="alert">{error}</p> : !lesson ? <p>Loading lesson block…</p> : !shown ? <p>This block is unavailable for the selected class.</p> : <TeachingToolContext.Provider value={{role:'projector',states:command.state?.session.teaching_tool_state??{}}}><TeachingBlockContent seiEnabled={teaching.state?.tools?.sei_enabled ?? false} key={shown.id + ':' + part} block={shown} lessonId={lesson.id} referenceBlocks={lesson.content_blocks.blocks} /></TeachingToolContext.Provider>}
     </TeachingStage>
   </div>
 }

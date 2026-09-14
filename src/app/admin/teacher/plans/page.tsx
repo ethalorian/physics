@@ -7,7 +7,7 @@ import { ArrowLeft, CalendarRange, BookOpen, Download, FileText, GraduationCap, 
 import { deckForDay } from '@/data/lesson-decks'
 import { openPresenterWindow, fullscreenKeyHint } from '@/lib/present-deck'
 
-interface DayPlan { day: number; title: string; bodyHtml: string }
+interface DayPlan { day: number; title: string; bodyHtml: string; kind?: 'daily'|'week-overview'; plan_fingerprint: string; lesson?: {id:string;published:boolean;content_fingerprint:string;revision:string}|null; alignment?: {status:string;message:string} }
 const TRACK_LABEL: Record<string, string> = { cpa: 'CPA Physics', honors: 'Honors Physics', ap: 'AP Physics', pbl: 'Project-Based Physics', trades: 'Trades Physics', projects: 'Project Physics (MVP)' }
 const UNIT_LABEL: Record<string, string> = {
   'unit-1': 'Unit 1 · Motion & Forces',
@@ -61,9 +61,12 @@ export default function TeacherPlansPage() {
   const [loading, setLoading] = useState(true)
   const [courseId, setCourseId] = useState('')
   const [ready, setReady] = useState(false)
+  const [canConfirm,setCanConfirm]=useState(false)
+  const [checking, setChecking] = useState(false)
+  const [reload, setReload] = useState(0)
   const [error, setError] = useState('')
   const requestedDay = useRef<number | null>(null)
-  useEffect(() => { const p = new URLSearchParams(window.location.search); setCourseId(p.get('class') ?? ''); if(p.get('unit')) setUnit(p.get('unit')!); requestedDay.current=p.has('day')?Number(p.get('day')):null; setReady(true) }, [])
+  useEffect(() => { const sync = () => { const p = new URLSearchParams(window.location.search); setCourseId(p.get('class') ?? ''); setUnit(p.get('unit') ?? 'unit-1'); requestedDay.current=p.has('day')?Number(p.get('day')):null; setSel(requestedDay.current); setReady(true) }; sync(); window.addEventListener('popstate', sync); return () => window.removeEventListener('popstate', sync) }, [])
 
   useEffect(() => {
     if (!ready) return
@@ -71,9 +74,9 @@ export default function TeacherPlansPage() {
     setLoading(true); setError('')
     fetch(`/api/teacher/lesson-plans?unit_id=${encodeURIComponent(unit)}${courseId ? `&course_id=${encodeURIComponent(courseId)}` : ''}`, { signal: controller.signal })
       .then(async r => {const d=await r.json();if(!r.ok)throw new Error(d.error??'Could not load teacher plans.');return d})
-      .then((d: { days?: DayPlan[]; track?: string; tracks?: string[]; availableUnits?: string[]; honorsDays?: number[] }) => {
+      .then((d: { days?: DayPlan[]; track?: string; tracks?: string[]; availableUnits?: string[]; honorsDays?: number[];canConfirm?:boolean }) => {
         if (controller.signal.aborted) return
-        setDays(d.days ?? [])
+        setDays(d.days ?? []);setCanConfirm(Boolean(d.canConfirm))
         if (d.tracks?.length) setTracks(d.tracks)
         else if (d.track) setTracks([d.track])
         if (d.availableUnits?.length) setAvailableUnits(d.availableUnits)
@@ -85,7 +88,7 @@ export default function TeacherPlansPage() {
       })
       .catch(e => { if (!controller.signal.aborted) { setError(e.message);setLoading(false) } })
     return () => controller.abort()
-  }, [unit,ready,courseId])
+  }, [unit,ready,courseId,reload])
 
   const current = days.find((d) => d.day === sel) ?? null
   const track = planSetFor(unit, tracks)
@@ -104,10 +107,10 @@ export default function TeacherPlansPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
-      <LessonContextLinks unitId={unit} day={sel} />
-      {error && <p role="alert" className="mb-3 text-sm text-destructive">{error}</p>}
-      <Link href="/admin/teacher" className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
-        <ArrowLeft size={15} /> Dashboard
+      <LessonContextLinks unitId={unit} day={sel} lessonId={current?.lesson?.id ?? null} />
+      {error && <p role="alert" className="mb-3 text-sm text-destructive">{error} <button className="min-h-11 underline" onClick={()=>setReload(n=>n+1)}>Retry</button></p>}
+      <Link href={courseId ? `/admin/classes/${encodeURIComponent(courseId)}` : '/admin/classes'} className="inline-flex items-center gap-1.5 text-sm mb-4" style={{ color: 'var(--muted-foreground)' }}>
+        <ArrowLeft size={15} /> {courseId ? 'Back to class' : 'Classes'}
       </Link>
 
       <div className="flex items-center gap-2 mb-1">
@@ -130,7 +133,7 @@ export default function TeacherPlansPage() {
             return (
               <button
                 key={u}
-                onClick={() => setUnit(u)}
+                onClick={() => { setUnit(u); setSel(null); const p = new URLSearchParams(window.location.search); p.set('unit',u); p.delete('day'); p.delete('lesson'); window.history.pushState(null,'','?' + p) }}
                 className="rounded-full px-3 py-1 text-xs font-semibold"
                 style={{
                   border: '1px solid ' + (active ? 'color-mix(in oklch, var(--primary) 50%, var(--border))' : 'var(--border)'),
@@ -191,7 +194,7 @@ export default function TeacherPlansPage() {
               return (
                 <button
                   key={d.day}
-                  onClick={() => setSel(d.day)}
+                  onClick={() => { setSel(d.day); const p = new URLSearchParams(window.location.search); p.set('day',String(d.day)); p.delete('lesson'); window.history.pushState(null,'','?' + p) }}
                   className="text-left rounded-lg px-3 py-2 text-sm"
                   style={{
                     border: '1px solid ' + (active ? 'color-mix(in oklch, var(--primary) 45%, var(--border))' : 'var(--border)'),
@@ -225,7 +228,7 @@ export default function TeacherPlansPage() {
                       </button>
                     )}
                     <a
-                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx`}
+                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/docx${courseId ? '?course_id=' + encodeURIComponent(courseId) : ''}`}
                       download
                       className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
                       style={{
@@ -238,7 +241,7 @@ export default function TeacherPlansPage() {
                       <Download size={13} /> Word
                     </a>
                     <a
-                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/print`}
+                      href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/print${courseId ? '?course_id=' + encodeURIComponent(courseId) : ''}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5 whitespace-nowrap"
@@ -262,12 +265,12 @@ export default function TeacherPlansPage() {
                 {honorsDays.includes(current.day) && (
                   <div className="flex items-center flex-wrap gap-2 mb-3 rounded-lg border px-3 py-2" style={{ borderColor: 'color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'color-mix(in oklch, var(--primary) 7%, var(--card))' }}>
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide" style={{ color: 'var(--primary)' }}><GraduationCap size={14} /> Honors Extension</span>
-                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors-docx`} download className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Download the Honors Extension as a Word document"><Download size={13} /> Word</a>
-                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Open a print view of the Honors Extension, then 'Save as PDF'"><FileText size={13} /> PDF</a>
+                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors-docx${courseId ? '?course_id=' + encodeURIComponent(courseId) : ''}`} download className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Download the Honors Extension as a Word document"><Download size={13} /> Word</a>
+                    <a href={`/api/teacher/lesson-plans/${encodeURIComponent(unit)}/${current.day}/honors${courseId ? '?course_id=' + encodeURIComponent(courseId) : ''}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-lg px-2.5 py-1.5" style={{ border: '1px solid color-mix(in oklch, var(--primary) 35%, var(--border))', background: 'var(--card)', color: 'var(--primary)' }} title="Open a print view of the Honors Extension, then 'Save as PDF'"><FileText size={13} /> PDF</a>
                     <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Differentiation for honors classes — the honors thread for this day.</span>
                   </div>
                 )}
-                <div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
+                <section className="mb-4 rounded-xl border p-4 text-sm" aria-label="Plan alignment"><p className="font-medium">{current.kind==='week-overview'?'Week overview':'Daily lesson'} · {current.alignment?.message}</p>{current.lesson ? <><p>{current.lesson.published?'Student lesson published':'Student lesson is a draft'}</p><Link className="mr-4 inline-flex min-h-11 items-center underline" href={'/admin/lessons/'+current.lesson.id+'/preview?class='+encodeURIComponent(courseId)+'&return='+encodeURIComponent('/admin/teacher/plans?unit='+unit+'&day='+current.day+(courseId?'&class='+courseId:''))}>Compare student preview</Link>{canConfirm&&current.alignment?.status!=='aligned'&&<button className="min-h-11 underline" disabled={checking} onClick={async()=>{setChecking(true);setError('');try{const r=await fetch('/api/admin/lesson-plan-links',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lesson_id:current.lesson!.id,content_fingerprint:current.lesson!.revision,plan_fingerprint:current.plan_fingerprint})});const d=await r.json();if(!r.ok)throw Error(d.error??'Could not save alignment');setDays(ds=>ds.map(day=>day.day===current.day?{...day,alignment:{status:'aligned',message:'Plan and lesson alignment checked.'}}:day))}catch(e){setError(e instanceof Error?e.message:'Could not save alignment')}finally{setChecking(false)}}}>{checking?'Saving…':'I compared these: plan matches lesson'}</button>}</>:<Link className="inline-flex min-h-11 items-center underline" href={'/admin/lessons/new?unit='+unit+'&day='+current.day}>Create the missing lesson draft</Link>}</section><div className="plan-html" dangerouslySetInnerHTML={{ __html: current.bodyHtml }} />
               </>
             ) : (
               <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Pick a day on the left.</p>

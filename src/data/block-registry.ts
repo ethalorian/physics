@@ -149,7 +149,7 @@ function substantiveAnswer(v: unknown, b?: ContentBlock): boolean {
 
 /** Metadata never counts as student work. Block context adds requirements such as valid choices. */
 export const RESPONSE_RULES: Partial<Record<BlockType, (response: unknown, block?: ContentBlock) => boolean>> = {
-  exit_ticket: (v, b) => substantiveAnswer(v, b),
+  exit_ticket: (v, b) => b?.type === 'exit_ticket' && b.workshop?.peerCheck ? ['ready', 'fix'].includes(String(obj(v).decision)) && text(obj(v).reading) && text(obj(v).source) && (obj(v).decision !== 'fix' || text(obj(v).fix)) : substantiveAnswer(v, b),
   transfer_prompt: (v, b) => substantiveAnswer(v, b),
   sentence_frame: (v, b) => substantiveAnswer(v, b),
   sketch: (v) => drawing(obj(v).strokes) || text(obj(v).text),
@@ -221,7 +221,7 @@ export function validateBlockDocument(value: unknown, publishing = false): Block
       if (['stringlist', 'terms', 'numberlist'].includes(field.kind) && !Array.isArray(v)) add(`${field.label} must be a list.`)
       if (field.kind === 'number' && (typeof v !== 'number' || !Number.isFinite(v))) add(`${field.label} must be a number.`)
     }
-    if (b.type==='math_mission' && !/^(NS[12]|PR[12]|QE[1-4]|SM[12]|GV[1-3])$/.test(String(b.competencyCode??''))) add('Choose a valid math competency code: NS1–2, PR1–2, QE1–4, SM1–2, or GV1–3.');
+    if (b.type==='math_mission' && (publishing || b.competencyCode) && !/^(NS[12]|PR[12]|QE[1-4]|SM[12]|GV[1-3])$/.test(String(b.competencyCode??''))) add('Choose a valid math competency code: NS1–2, PR1–2, QE1–4, SM1–2, or GV1–3.');
     if (b.studentDirections !== undefined && (!Array.isArray(b.studentDirections) || !b.studentDirections.every(text))) add('Directions must be a list of nonempty steps.')
     if (b.type === 'data_table' && b.analysisMode !== undefined && !['record','pattern'].includes(String(b.analysisMode))) add('Choose record or pattern table mode.')
     if (b.vocational !== undefined) {

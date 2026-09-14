@@ -548,6 +548,7 @@
       user-select: none;
       box-shadow: 0 4px 18px rgba(0,0,0,.35);
     }
+    :host([data-session-controlled]) .timer-chip, :host([data-session-controlled]) .timer-panel { display:none!important; }
     .timer-chip[data-on] { display: inline-flex; }
     .timer-chip[data-warn] { color: #f2b24a; }
     .timer-chip[data-paused] { opacity: .65; }
@@ -1616,6 +1617,7 @@
       }
       if (e.metaKey || e.ctrlKey || e.altKey) return;
 
+      if (this.hasAttribute('data-session-controlled')) return;
       const key = e.key;
       let handled = true;
 
@@ -1646,6 +1648,10 @@
     }
 
     _go(i, reason = 'api') {
+      if (this.hasAttribute('data-session-controlled') && reason !== 'api' && reason !== 'init') {
+        this.dispatchEvent(new CustomEvent('classroomnavigate', { detail: { index: i }, bubbles: true, composed: true }));
+        return;
+      }
       if (!this._slides.length) return;
       const clamped = Math.max(0, Math.min(this._slides.length - 1, i));
       if (clamped === this._index) {

@@ -8,10 +8,12 @@ import React from 'react'
 export type Point = { x: number; y: number }
 
 /** Tool that produced a stroke. Absent = freehand pen (back-compat with old data). */
-export type StrokeTool = 'pen' | 'line' | 'arrow' | 'rect' | 'ellipse' | 'spray'
+export type StrokeTool = 'pen' | 'line' | 'arrow' | 'rect' | 'ellipse' | 'spray' | 'text'
 
 export interface Stroke {
   color: string
+  /** Typed annotation; rendered identically in the editor and teacher review. */
+  text?: string
   points: Point[]
   width?: number
   /** Defaults to 'pen' when omitted. */
@@ -55,6 +57,9 @@ export function paintStroke(ctx: CanvasRenderingContext2D, s: Stroke) {
   ctx.lineJoin = 'round'; ctx.lineCap = 'round'
   ctx.strokeStyle = s.color; ctx.fillStyle = s.color; ctx.lineWidth = s.width ?? 4
   const tool = s.tool ?? 'pen'
+  if (tool === 'text') {
+    ctx.font = `${Math.max(12, Math.min(28, s.width ?? 16))}px Arial, sans-serif`; ctx.textBaseline = 'alphabetic'; ctx.fillText((s.text ?? '').slice(0,48), pts[0].x, pts[0].y); return
+  }
   if (tool === 'pen') {
     ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y)
     if (pts.length === 1) ctx.lineTo(pts[0].x + 0.1, pts[0].y + 0.1)
@@ -102,6 +107,7 @@ export function StrokeShapeEl({ s }: { s: Stroke }) {
   const stroke = s.color || 'var(--foreground)'
   const w = s.width ?? 3
   const tool = s.tool ?? 'pen'
+  if (tool === 'text') return <text x={pts[0].x} y={pts[0].y} fill={stroke} fontSize={Math.max(12,Math.min(28,s.width??16))} fontFamily="Arial, sans-serif">{(s.text??'').slice(0,48)}</text>
   if (tool === 'line') {
     const a = pts[0]; const b = pts[pts.length - 1]
     return <line x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke={stroke} strokeWidth={w} strokeLinecap="round" />

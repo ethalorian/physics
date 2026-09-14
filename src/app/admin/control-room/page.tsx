@@ -261,11 +261,14 @@ export default function ControlRoomPage() {
   const [classes, setClasses] = useState<{ id: string; label: string; teacher: string | null; program: string }[]>([])
   // Admin-only teacher filter: '' = all teachers. Teachers never see the
   // dropdown (their /api/courses only returns their own classes).
+  const [targetFilter, setTargetFilter] = useState('')
   const [teacherFilter, setTeacherFilter] = useState('')
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search)
     if (sp.get('unit')) setUnitId(sp.get('unit')!)
     setLessonFilter(sp.get('lesson') ?? '')
+    setTargetFilter(sp.get('target') ?? '')
+    if (sp.get('view') === 'app-wide') setClassScope(null, null)
     const deepLinked = sp.get('class')
     if (deepLinked) setClassScope(deepLinked, sp.get('label'))
   }, [setClassScope])
@@ -297,14 +300,14 @@ export default function ControlRoomPage() {
         if (version !== gridRequestVersion.current) return
         if (d.error) setError(d.error)
         else {
-          setGrid(d)
+          setGrid(targetFilter ? { ...d, targets: d.targets.filter(t => t.id === targetFilter) } : d)
           // unit_id=auto resolved server-side to the unit this class is in.
           if (d.unitId && d.unitId !== unit) setUnitId(d.unitId)
         }
         setLoading(false)
       })
       .catch(() => { if (version === gridRequestVersion.current) { setError('Could not load the grid'); setLoading(false) } })
-  }, [classQuery])
+  }, [classQuery, targetFilter])
 
   useEffect(() => { loadGrid(unitId) }, [unitId, loadGrid])
   // Picking a class moves the unit to the one THAT class is working in — a Trades
@@ -403,6 +406,7 @@ export default function ControlRoomPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-5" style={{ color: 'var(--foreground)' }}>
+      {targetFilter && <p className="my-3 rounded border p-3 text-sm">Showing the selected target. <button className="min-h-11 underline" onClick={() => { setTargetFilter(''); const p = new URLSearchParams(window.location.search); p.delete('target'); window.history.replaceState(null, '', '?' + p) }}>Show all targets</button></p>}
       <LessonContextLinks courseId={classId} lessonId={lessonFilter} unitId={unitId} /><LessonReviewQueue lessonId={lessonFilter} onClearLesson={() => setLessonFilter('')} onRateTarget={openCell} unitId={unitId} classQuery={classQuery} onReviewed={() => { loadGrid(unitId); loadQueue(unitId) }} renderResponse={(response) => <ResponseView response={response} />} />
       {/* toolbar — title · tabs · scope · unit · filter · one CTA on a single
           compact line, so the grid is the first paint on a laptop */}

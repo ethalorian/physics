@@ -110,11 +110,21 @@ export function lessonContextHref(
     lesson?: string | null
     unit?: string | null
     day?: number | null
+    target?: string | null
+    view?: string | null
+    return?: string | null
   },
 ) {
-  const params = new URLSearchParams()
+  const [withoutHash, hash] = path.split('#')
+  const [pathname, query] = withoutHash.split('?')
+  const params = new URLSearchParams(query)
   Object.entries(values).forEach(([k, v]) => {
     if (v != null && v !== '') params.set(k, String(v))
   })
-  return `${path}${params.size ? '?' + params.toString() : ''}`
+  return `${pathname}${params.size ? '?' + params.toString() : ''}${hash ? '#' + hash : ''}`
+}
+
+export function safeLessonReturn(value: string | null): string | null {
+  if (!value || !/^\/admin\/(dashboard|workshop|reviews|classes(?:\/[^/?#]+)?)(?:[?#]|$)/.test(value) || value.includes('\\')) return null
+  return value
 }

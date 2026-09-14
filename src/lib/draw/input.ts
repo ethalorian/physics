@@ -22,6 +22,8 @@ export interface StrokeHandlerOpts {
   /** Object eraser removes whole strokes near the cursor (good over a background);
    *  otherwise the eraser paints with white (good on a plain white pad). */
   objectErase?: boolean
+  /** Constrain line and arrow directions to 45-degree increments. */
+  snapAngles?: boolean
   repaint: () => void
   emit: () => void
   bump: () => void
@@ -76,7 +78,11 @@ export function makeStrokeHandlers(o: StrokeHandlerOpts) {
 
   const onMove = (e: RPointerEvent<HTMLCanvasElement>) => {
     if (!o.drawingRef.current) return
-    const p = toPoint(e)
+    let p = toPoint(e)
+    if (o.snapAngles && (o.tool === 'line' || o.tool === 'arrow')) {
+      const start = o.strokesRef.current[o.strokesRef.current.length-1]?.points[0]
+      if (start) { const dx=p.x-start.x, dy=p.y-start.y, distance=Math.hypot(dx,dy), angle=Math.round(Math.atan2(dy,dx)/(Math.PI/4))*(Math.PI/4); p={x:start.x+Math.cos(angle)*distance,y:start.y+Math.sin(angle)*distance} }
+    }
     if (o.tool === 'eraser' && o.objectErase) { eraseAt(p); return }
     const cur = o.strokesRef.current[o.strokesRef.current.length - 1]
     if (!cur) return

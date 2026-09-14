@@ -29,7 +29,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
   // app oversight, leaderboard) plus lesson plans. adminOnly flags don't apply;
   // the observer role is itself the gate, and every destination is read-only.
   const observerGroups: typeof GROUPS = [
-    GROUPS.find((g) => g.title === 'Insights') ?? { title: 'Insights', tools: [] },
+    { title: 'Insights', tools: (GROUPS.find((g) => g.title === 'Insights')?.tools ?? []).filter(t => t.href !== '/admin/collaborators') },
     {
       title: 'Plan',
       tools: [
@@ -83,7 +83,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
           <div key={g.title} className="mb-4">
             <div className="text-overline px-2 mb-1.5" style={{ color: 'var(--muted-foreground)' }}>{g.title}</div>
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              {g.tools.map((t) => {
+              {g.tools.slice(0, 1).map((t) => {
                 const Ico = t.icon
                 const act = isActive(t.href)
                 return (
@@ -107,6 +107,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
                 )
               })}
             </ul>
+            {g.tools.length > 1 && <details open={g.tools.slice(1).some(t => isActive(t.href)) || undefined} className="mt-1"><summary className="min-h-11 cursor-pointer px-2 py-3 text-xs text-muted-foreground">More {g.title.toLowerCase()} tools</summary><ul className="space-y-1 pl-2">{g.tools.slice(1).map(t => <li key={t.href}><Link href={t.href} aria-current={isActive(t.href) ? 'page' : undefined} className={`flex min-h-11 items-center rounded-lg px-2 py-2 text-sm ${isActive(t.href) ? 'bg-primary/10 font-semibold' : ''}`}>{t.label}</Link></li>)}</ul></details>}
           </div>
         ))}
       </nav>
@@ -131,7 +132,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
               onClick={() => setMobileOpen(false)}
               aria-label="Close navigation"
               className="absolute"
-              style={{ top: 12, right: -42, width: 34, height: 34, borderRadius: 8, background: 'var(--card)', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', cursor: 'pointer', color: 'var(--foreground)' }}
+              style={{ top: 12, right: -46, width: 44, height: 44, borderRadius: 8, background: 'var(--card)', border: '1px solid var(--border)', display: 'grid', placeItems: 'center', cursor: 'pointer', color: 'var(--foreground)' }}
             >
               <X size={17} />
             </button>
@@ -150,7 +151,7 @@ export default function AdminShell({ children, effectiveRole, editableAreas = []
             onClick={() => setMobileOpen(true)}
             aria-label="Open navigation"
             className="lg:hidden grid place-items-center shrink-0"
-            style={{ width: 36, height: 36, borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)', cursor: 'pointer', color: 'var(--foreground)' }}
+            style={{ width: 44, height: 44, borderRadius: 8, border: '1px solid var(--border)', background: 'var(--card)', cursor: 'pointer', color: 'var(--foreground)' }}
           >
             <Menu size={18} />
           </button>

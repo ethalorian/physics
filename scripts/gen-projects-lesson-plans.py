@@ -8,7 +8,8 @@ Two grains, per Craig 2026-09-04:
     generated from the year map's own data in gen-projects-curriculum.py, so the
     plans page and the week-pages can never drift apart; and
   * DAY PLANS for the weeks that have them (day = week*10 + n), hand-authored in
-    scripts/projects_day_plans.py — Weeks 1 and 2 today.
+    scripts/projects_day_plans.py — Weeks 1 and 2 today. The authored Week 0
+    daily plans are retained in scripts/project-week0-plans.json.
 
 A day plan deliberately does NOT repeat the student prompts, frames, word bank
 or Spanish: for MVP the app IS the packet (claude/Physics-Classroom-App-Decisions.md,
@@ -266,7 +267,22 @@ def main():
         for d in DP.DAYS.get(w["slug"], []):
             by_unit[w["unit"]].append(day_plan(w, idx, d))
 
+    # Week 0 daily lessons are authored separately from the year-map overview.
+    # Keep their plans in the generation source so a rebuild cannot erase them.
+    with open(os.path.join(HERE, "project-week0-plans.json"), encoding="utf8") as f:
+        by_unit["proj-1"].extend(json.load(f))
+
+    with open(os.path.join(HERE, "project-classroom-plan-overrides.json"), encoding="utf8") as f:
+        for unit, overrides in json.load(f).items():
+            by_day = {p["day"]: p for p in by_unit[unit]}
+            by_day.update({p["day"]: p for p in overrides})
+            by_unit[unit] = list(by_day.values())
+
     for unit, plans in by_unit.items():
+        for plan in plans:
+            plan["kind"] = "week-overview" if plan["day"] % 10 == 0 else "daily"
+        if len({plan["day"] for plan in plans}) != len(plans):
+            raise ValueError(f"Duplicate plan day in {unit}")
         plans.sort(key=lambda p: p["day"])
         path = os.path.abspath(os.path.join(OUT_DIR, f"{unit}-lesson-plans.json"))
         with open(path, "w", encoding="utf8") as f:

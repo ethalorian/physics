@@ -128,20 +128,30 @@ export const GET = withRole(['teacher', 'admin'], async (_request, ctx) => {
 // PATCH /api/lobby/sessions/[id] — change status (lobby|grouped|open|closed).
 export const PATCH = withRole(['teacher', 'admin'], async (request, ctx) => {
   const { id } = await ctx.params
-  const body = (await request.json().catch(() => ({}))) as { status?: string }
+  const body = (await request.json().catch(() => ({}))) as { status?: string; projection_phase?: 'working' | 'debrief' }
   const status = body.status
-  if (!status || !['lobby', 'grouped', 'open', 'closed'].includes(status)) {
+  if (body.projection_phase !== undefined && !['working', 'debrief'].includes(body.projection_phase)) {
+    return NextResponse.json({ error: 'invalid projection phase' }, { status: 400 })
+  }
+  if ((!status || !['lobby', 'grouped', 'open', 'closed'].includes(status)) && !['working', 'debrief'].includes(body.projection_phase ?? '')) {
     return NextResponse.json({ error: 'invalid status' }, { status: 400 })
   }
 
   const { data: session } = await supabaseAdmin
     .from('lobby_sessions')
-    .select('created_by')
+    .select('created_by, status, debrief_meta')
     .eq('id', id)
     .maybeSingle()
   if (!session) return NextResponse.json({ error: 'Session not found' }, { status: 404 })
   if (ctx.role !== 'admin' && (session as { created_by: string }).created_by !== ctx.userId) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  if (body.projection_phase) {
+    if (session.status !== 'open') return NextResponse.json({ error: 'Start group work before changing its presentation phase.' }, { status: 409 })
+    const { error } = await supabaseAdmin.from('lobby_sessions').update({ debrief_meta: { ...(session.debrief_meta ?? {}), projection_phase: body.projection_phase } }).eq('id', id)
+    if (error) return NextResponse.json({ error: 'Could not update the activity phase.' }, { status: 503 })
+    return NextResponse.json({ ok: true })
   }
 
   const now = new Date().toISOString()

@@ -190,6 +190,7 @@ export function VocabularyProvider({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id,
+          expected_updated_at: currentSet.updated_at,
           name: updates.name ?? currentSet.name,
           description: updates.description ?? currentSet.description,
           unit: updates.unit ?? currentSet.unit,

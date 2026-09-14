@@ -94,6 +94,8 @@ const CAPTURE_TEXT: ReadonlySet<string> = new Set(['question', 'exit_ticket', 'o
 const VISUAL_TYPES: ReadonlySet<string> = new Set(['figure', 'diagram', 'graph', 'sim_embed', 'animation_3d', 'sketch', 'lab_notebook'])
 
 function carriesVisual(block: ContentBlock | undefined): boolean {
+  if(block?.teachingTool?.kind==='case-board')return block.teachingTool.frames.some(f=>Boolean(f.image))
+  if(block?.teachingTool?.kind==='measurement-bench')return true
   if (!block || !VISUAL_TYPES.has(block.type)) return false
   if (block.type === 'sketch' || block.type === 'lab_notebook') return Boolean(block.backgroundDiagram)
   if (block.type === 'figure') return Boolean(block.src?.trim())

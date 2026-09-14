@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { resolveTracks,findDay } from '@/lib/lesson-plan-export'
 import { withRole } from '@/lib/api-auth'
 import { findHonorsExtension, buildHonorsExtensionHtml } from '@/lib/honors-extension-export'
 
@@ -9,13 +10,15 @@ import { findHonorsExtension, buildHonorsExtensionHtml } from '@/lib/honors-exte
 
 export const runtime = 'nodejs'
 
-export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher'], async (_request, ctx) => {
+export const GET = withRole<{ unit_id: string; day: string }>(['admin', 'teacher','observer'], async (_request, ctx) => {
   const { unit_id: unitId, day: dayStr } = await ctx.params
   const day = Number(dayStr)
   if (!unitId || !Number.isFinite(day)) {
     return NextResponse.json({ error: 'Bad request' }, { status: 400 })
   }
 
+  const tracks=await resolveTracks({role:ctx.role,scopeEmail:ctx.scopeEmail,courseId:new URL(_request.url).searchParams.get('course_id')})
+  if(!findDay(unitId,day,tracks))return NextResponse.json({error:'No plan in this class curriculum.'},{status:404})
   const ext = findHonorsExtension(unitId, day)
   if (!ext) return NextResponse.json({ error: 'No honors extension for this day' }, { status: 404 })
 

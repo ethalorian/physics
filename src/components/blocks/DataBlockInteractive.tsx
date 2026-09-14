@@ -1,5 +1,6 @@
 "use client"
 
+import styles from '@/components/lessons/WorkshopResponses.module.css'
 import { useId, useState } from 'react'
 import { useDraft } from './useDraft'
 import { numericCell, axisRange, formatTick } from './data-plot'
@@ -11,6 +12,7 @@ export interface DataValue {
 }
 
 interface DataBlockProps {
+  workshop?:boolean
   analysisMode?: 'pattern' | 'record'
   rowLabels?: string[]
   columns: string[]
@@ -34,7 +36,7 @@ function blankGrid(cols: number, rows: number): string[][] {
 
 const fieldBg = { background: 'var(--card)', color: 'var(--foreground)', borderColor: 'var(--border)' }
 
-export default function DataBlockInteractive({ analysisMode = 'pattern', rowLabels, columns, rows, minRows = 1, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
+export default function DataBlockInteractive({ workshop=false, analysisMode = 'pattern', rowLabels, columns, rows, minRows = 1, plot, xCol, yCol, patternPrompt, value, onSave, onDraft }: DataBlockProps) {
   const clipId = useId()
   const cols = columns && columns.length > 0 ? columns : ['x', 'y']
   const xi = xCol ?? 0
@@ -104,10 +106,10 @@ export default function DataBlockInteractive({ analysisMode = 'pattern', rowLabe
   )
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className={workshop?styles.recordSheet:"flex flex-col gap-4"}>
       {/* RECORD */}
       <div>
-        <div className="flex items-center gap-2 mb-2">{badge('1', 'var(--primary)')}<span className="text-sm font-semibold">Record — enter what you measured</span></div>
+        <div className="flex items-center gap-2 mb-2">{badge('1', 'var(--primary)')}<span className="text-sm font-semibold">{workshop?'Record sheet · readings or supplied data':'Record — enter what you measured'}</span></div>
         <div className="overflow-x-auto">
           <table style={{ borderCollapse: 'collapse', width: '100%' }}>
             <thead>
@@ -117,12 +119,12 @@ export default function DataBlockInteractive({ analysisMode = 'pattern', rowLabe
               {grid.map((row, ri) => (
                 <tr key={ri}>
                   {cols.map((_, ci) => (
-                    <td key={ci} className="px-1 py-0.5">
+                    <td key={ci} className="px-1 py-0.5" data-column={cols[ci]}>
                       {ci === 0 && rowLabels?.[ri] ? <span className="block min-w-32 whitespace-normal text-sm">{row[ci]}</span> : <input aria-label={`Reading ${ri + 1}, ${cols[ci]}`} aria-invalid={showPlot && (ci === xi || ci === yi) && Boolean(row[ci]?.trim()) && numericCell(row[ci]) === null} value={row[ci] ?? ''} onChange={(e) => setCell(ri, ci, e.target.value)} className="w-full rounded-md border px-2 py-1.5 text-sm" style={fieldBg} />}
                     </td>
                   ))}
                   <td className="px-1">
-                    {grid.length > 1 && <button onClick={() => { setSaved(false); setGrid((prev) => prev.filter((_, i) => i !== ri)) }} className="text-lg" style={{ color: 'var(--muted-foreground)' }} aria-label="remove row">×</button>}
+                    {(workshop ? ri >= (rowLabels?.length??minRows) : grid.length > 1) && <button onClick={() => { setSaved(false); setGrid((prev) => prev.filter((_, i) => i !== ri)) }} className="text-lg" style={{ color: 'var(--muted-foreground)' }} aria-label="remove row">×</button>}
                   </td>
                 </tr>
               ))}
@@ -177,7 +179,7 @@ export default function DataBlockInteractive({ analysisMode = 'pattern', rowLabe
       {/* check + save */}
       <div className="flex items-center gap-2">
         <button onClick={runCheck} className="rounded-lg border px-3 py-2 text-sm font-semibold" style={{ borderColor: 'var(--border)', background: 'var(--card)', color: 'var(--foreground)' }}>Check my work</button>
-        <button onClick={handleSave} className="rounded-lg px-3 py-2 text-sm font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Save</button>
+        <button data-response-action onClick={handleSave} className="rounded-lg px-3 py-2 text-sm font-semibold" style={{ background: 'var(--primary)', color: 'var(--primary-foreground)' }}>Save</button>
         {saved && <span className="text-xs" style={{ color: 'var(--success)' }}>Saved ✓</span>}
       </div>
 
